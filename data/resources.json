@@ -1,0 +1,56 @@
+{
+  "pain_management": [
+    {
+      "title": "Managing Pain at Home",
+      "description": "Practical tips for pain relief",
+      "content": "Pain management strategies include:\n\n• Proper positioning - Use pillows for support\n• Heat/cold therapy - Apply as directed by your care team\n• Relaxation techniques - Deep breathing, meditation\n• Medication adherence - Take medications as prescribed\n• Gentle movement - Light stretching if approved\n\nAlways consult your care team before making changes to your pain management plan.",
+      "external_links": []
+    },
+    {
+      "title": "When to Call Your Care Team",
+      "description": "Signs that require immediate attention",
+      "content": "Contact your hospice care team immediately if:\n\n• Pain suddenly worsens or changes\n• Current pain medication isn't working\n• New pain appears in a different location\n• Pain prevents sleep or basic activities\n• You experience side effects from pain medication\n\nYour comfort is the priority - never hesitate to reach out.",
+      "external_links": []
+    }
+  ],
+  "nausea_relief": [
+    {
+      "title": "Coping with Nausea",
+      "description": "Strategies to reduce nausea",
+      "content": "Try these approaches:\n\n• Small, frequent meals instead of large ones\n• Avoid strong odors and greasy foods\n• Stay hydrated with clear fluids\n• Rest after eating\n• Ginger tea may help (check with your care team)\n• Keep the room well-ventilated\n• Eat bland foods like crackers or toast\n\nIf nausea persists or worsens, contact your care team about anti-nausea medications.",
+      "external_links": []
+    }
+  ],
+  "anxiety_coping": [
+    {
+      "title": "Managing Anxiety",
+      "description": "Techniques for emotional well-being",
+      "content": "Anxiety is common and manageable:\n\n• Deep breathing exercises - Breathe in for 4, hold for 4, out for 4\n• Meditation or guided imagery\n• Gentle music or nature sounds\n• Talk with loved ones about your feelings\n• Keep a journal\n• Focus on what you can control\n• Ask about anxiety medications if needed\n\nDon't hesitate to ask for professional support - it's a sign of strength, not weakness.",
+      "external_links": []
+    }
+  ],
+  "breathing_techniques": [
+    {
+      "title": "Breathing Exercises",
+      "description": "Techniques to ease breathing",
+      "content": "These techniques can help:\n\n• Sit upright with good posture\n• Use a fan for air circulation\n• Pursed-lip breathing: Breathe in through nose, out slowly through pursed lips\n• Diaphragmatic breathing: Place hand on belly, breathe deeply so belly rises\n• Keep the room cool and well-ventilated\n• Use oxygen as prescribed\n\nContact your care team immediately if breathing becomes severely difficult.",
+      "external_links": []
+    }
+  ],
+  "family_communication": [
+    {
+      "title": "Talking with Family",
+      "description": "Communication guidance",
+      "content": "Open communication helps everyone:\n\n• Share your feelings honestly\n• Ask questions - there are no silly questions\n• Listen actively to others\n• It's okay to have difficult conversations\n• Express your wishes and preferences\n• Allow others to express their emotions\n• Consider family meetings with your care team\n\nYour care team can facilitate family discussions if needed.",
+      "external_links": []
+    }
+  ],
+  "emergency_contacts": [
+    {
+      "title": "Emergency Contacts",
+      "description": "Important phone numbers",
+      "content": "Keep these numbers accessible:\n\n• Hospice 24/7 Nurse Line: [Contact your provider]\n• Your Primary Hospice Nurse: [Contact your provider]\n• Hospice Social Worker: [Contact your provider]\n• Chaplain Services: [Contact your provider]\n• Emergency Services: 911\n\nFor non-emergency questions, call during business hours. For urgent concerns, the 24/7 line is always available.",
+      "external_links": []
+    }
+  ]
+}

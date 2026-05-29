@@ -1,0 +1,86 @@
+{
+  "grief_stages": {
+    "shock": [
+      {
+        "title": "Understanding Initial Grief",
+        "content": "The first days and weeks after loss can feel surreal. You might feel numb, disbelieving, or in shock. This is your mind's way of protecting you from overwhelming pain. There's no timeline for this stage - be patient with yourself."
+      },
+      {
+        "title": "Self-Care in Early Days",
+        "content": "During this time:\n• Accept help from others\n• Don't make major decisions if possible\n• Eat and sleep as best you can\n• Allow yourself to feel whatever comes\n• Lean on your support system\n• Be gentle with yourself"
+      }
+    ],
+    "anger": [
+      {
+        "title": "Processing Difficult Emotions",
+        "content": "Anger is a natural part of grief. You might feel angry at the situation, at medical providers, at yourself, or even at your loved one for leaving. These feelings are normal and valid."
+      },
+      {
+        "title": "Healthy Expression",
+        "content": "Ways to process anger:\n• Physical activity (if able)\n• Writing or journaling\n• Talking with a counselor\n• Creative expression\n• Support groups where others understand\n\nAvoid directing anger harmfully at yourself or others."
+      }
+    ],
+    "bargaining": [
+      {
+        "title": "Making Sense of Loss",
+        "content": "You might find yourself thinking 'what if' or 'if only.' This is bargaining - trying to make sense of the loss or wishing you could change the outcome. This is a normal part of processing grief."
+      },
+      {
+        "title": "Finding Meaning",
+        "content": "While we can't change what happened, we can:\n• Honor their memory\n• Find ways to carry their legacy forward\n• Learn from the experience\n• Eventually find peace with what is"
+      }
+    ],
+    "depression": [
+      {
+        "title": "Coping with Sadness",
+        "content": "Deep sadness is a natural response to loss. You might feel empty, exhausted, or wonder if you'll ever feel joy again. These feelings are part of the healing process, though they can be overwhelming."
+      },
+      {
+        "title": "When to Seek Help",
+        "content": "Reach out for professional help if:\n• You can't function in daily life\n• You have thoughts of self-harm\n• Depression lasts for many months without improvement\n• You're isolating completely\n• You're unable to care for yourself\n\nDepression is treatable - you don't have to suffer alone."
+      }
+    ],
+    "acceptance": [
+      {
+        "title": "Moving Forward",
+        "content": "Acceptance doesn't mean forgetting or being 'over it.' It means learning to live with the loss, finding a new normal, and allowing joy back into your life while still honoring your loved one's memory."
+      },
+      {
+        "title": "Honoring Memory",
+        "content": "Ways to honor their memory:\n• Share stories about them\n• Continue traditions they loved\n• Support causes they cared about\n• Live in a way that would make them proud\n• Allow yourself to smile when remembering them"
+      }
+    ]
+  },
+  "support_types": {
+    "hotlines": [
+      {
+        "title": "Crisis Support",
+        "content": "National Suicide Prevention Lifeline: 988\nCrisis Text Line: Text HOME to 741741\nGrief Support Hotline: 1-800-445-4808"
+      },
+      {
+        "title": "24/7 Support",
+        "content": "These services are available anytime:\n• SAMHSA National Helpline: 1-800-662-4357\n• Disaster Distress Helpline: 1-800-985-5990\n• Veterans Crisis Line: 988 then press 1"
+      }
+    ],
+    "support_groups": [
+      {
+        "title": "Finding Support Groups",
+        "content": "Support groups connect you with others who understand:\n• Local hospice organizations often offer free grief groups\n• Online communities provide 24/7 connection\n• Faith-based organizations may offer grief support\n• Specialized groups exist for specific types of loss\n\nAsk your hospice social worker for local recommendations."
+      },
+      {
+        "title": "Online Communities",
+        "content": "Online grief support can be accessed anytime:\n• GriefShare.org\n• The Compassionate Friends\n• What's Your Grief community\n• Reddit r/GriefSupport\n\nRemember to protect your privacy and emotional well-being online."
+      }
+    ],
+    "professional_help": [
+      {
+        "title": "Finding a Grief Counselor",
+        "content": "Professional support can be invaluable:\n• Ask your hospice for referrals\n• Check with your insurance for covered providers\n• Look for counselors specializing in grief/bereavement\n• Consider both individual and group therapy\n• Telehealth options are widely available\n\nYou deserve support during this difficult time."
+      },
+      {
+        "title": "Types of Therapy",
+        "content": "Different approaches that may help:\n• Grief counseling (short-term, focused)\n• Cognitive Behavioral Therapy (CBT)\n• Complicated grief therapy\n• Art or music therapy\n• EMDR for traumatic loss\n\nA therapist can help you find the right approach for you."
+      }
+    ]
+  }
+}
