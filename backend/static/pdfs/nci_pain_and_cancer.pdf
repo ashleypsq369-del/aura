@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+<script>window.CDEConfig = {
+  "exitDisclaimerHref":{
+    "en":"\/policies\/linking",
+    "es":"\/espanol\/politicas\/enlaces"
+  },
+  "showFloatingDelighters":true,
+  "environmentConfig":{
+    
+  },
+  "glossaryConfig":{
+    "apiServer":"https:\/\/webapis.cancer.gov\/glossary\/v1\/"
+  },
+  "drugDictionaryConfig":{
+    "apiServer":"https:\/\/webapis.cancer.gov\/drugdictionary\/v1\/"
+  },
+  "ctsConfig":{
+    "apiServer":"https:\/\/clinicaltrialsapi.cancer.gov\/api\/v2",
+    "printApiBase":"https:\/\/www.cancer.gov\/CTS.Print",
+    "zipConversionEndpoint":"\/cts_api\/zip_code_lookup",
+    "listingApiServer": "https:\/\/webapis.cancer.gov\/triallistingsupport\/v1\/"
+  },
+  "r4rConfig":{
+    "apiServer":"https:\/\/webapis.cancer.gov\/r4r\/v1"
+  },
+  "general":{
+    "apiServer":"https:\/\/webapis.cancer.gov",
+    "mediaServer":"https:\/\/nci-media.cancer.gov"
+  },
+  "sitewideSearchConfig":{
+    "bestBetsApiServer":"https:\/\/webapis.cancer.gov\/bestbets\/v1\/",
+    "searchApiServer":"https:\/\/webapis.cancer.gov\/sitewidesearch\/v1\/"
+  },
+  "chartData": {
+    "factBook": {
+      "baseUrl": "\/about-nci\/budget\/fact-book",
+      "dataType": "json"
+    }
+  }
+};</script>
+<script id="ncids-nav-info">window.ncidsNavInfo = { nav: { id: "11844", menu_type: "section-nav"}, item_id: 11844};</script>
+<meta name="description" content="Controlling pain is an important part of your cancer treatment plan. Learn how to track levels of pain. Find out how pain, a side effect of cancer treatment, is treated using acupuncture, biofeedback, and physical therapy." />
+<link rel="canonical" href="https://www.cancer.gov/about-cancer/treatment/side-effects/pain" />
+<meta http-equiv="content-language" content="en" />
+<meta name="robots" content="index" />
+<meta property="og:type" content="Website" />
+<meta property="og:url" content="https://www.cancer.gov/about-cancer/treatment/side-effects/pain" />
+<meta property="og:title" content="Pain and Cancer Treatment - Side Effects" />
+<meta property="og:description" content="Controlling pain is an important part of your cancer treatment plan. Learn how to track levels of pain. Find out how pain, a side effect of cancer treatment, is treated using acupuncture, biofeedback, and physical therapy." />
+<meta property="og:image" content="https://www.cancer.gov/sites/www/files/styles/cgov_social_media/public/cgov_image/media_image/900/600/files/doctor-explaining-drugs-to-senior-patient-article.jpg" />
+<meta name="cgdp.domain" content="www-prod" />
+<meta name="cgdp.template" content="default" />
+<meta name="dcterms.subject" content="About Cancer" />
+<meta name="dcterms.type" content="cgvArticle" />
+<meta name="dcterms.coverage" content="nciglobal,ncienterprise" />
+<meta name="dcterms.issued" content="2015-04-29" />
+<meta name="dcterms.isReferencedBy" content="event1" />
+<meta name="dcterms.isPartOf" content="Treatment" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="https://www.cancer.gov/profiles/custom/cgov_site/themes/custom/cgov/static/images/design-elements/icons/favicons/favicon.ico" sizes="32x32"/>
+<link rel="icon" href="https://www.cancer.gov/profiles/custom/cgov_site/themes/custom/cgov/static/images/design-elements/icons/favicons/favicon.svg" type="image/svg+xml"/>
+<link rel="apple-touch-icon" href="https://www.cancer.gov/profiles/custom/cgov_site/themes/custom/cgov/static/images/design-elements/icons/favicons/apple-touch-icon.png"/>
+<link rel="manifest" href="https://www.cancer.gov/profiles/custom/cgov_site/themes/custom/cgov/static/images/design-elements/icons/favicons/site.webmanifest"/>
+<meta name="x-no-op" content="none" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, minimum-scale=1" />
+<script id="cgov-adobe-url" type="text/javascript" src="//assets.adobedtm.com/6a4249cd0a2c/949e98979342/launch-5f2a5357bf66.min.js" async="async"></script>
+<script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "WebSite",
+            "name": "National Cancer Institute (.gov)",
+            "url": "https://www.cancer.gov"
+        }
+    ]
+}</script>
+<link rel="alternate" hreflang="en" href="https://www.cancer.gov/about-cancer/treatment/side-effects/pain" />
+<link rel="alternate" hreflang="es" href="https://www.cancer.gov/espanol/cancer/tratamiento/efectos-secundarios/dolor" />
+
+    <title>Pain and Cancer Treatment - Side Effects - NCI</title>
+    <link rel="preconnect" href="https://static.cancer.gov" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Roboto+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <meta name="apple-mobile-web-app-title" content="Cancer.gov" />
+    <meta name="application-name" content="Cancer.gov" />
+    <link rel="stylesheet" media="all" href="/sites/www/files/css/css_l21oDyF0Eb4MxHknBwqoWRpM0XoxzeYoFRY5u-wMsl0.css?delta=0&amp;language=en&amp;theme=ncids_trans&amp;include=eJxFyDEOwCAIAMAPGXmSQSGVRCkBHPx9x954rCl5G-_OBAMt5dWiQyhaOmoAespYXAwdH0ebAeTHcNV_6lE7fUlMphI3kjd0DP4AwzYkvQ" />
+<link rel="stylesheet" media="all" href="/profiles/custom/cgov_site/themes/custom/ncids_trans/dist/css/ncids-inner-minimal.css?tfezq9" />
+<link rel="stylesheet" media="all" href="/profiles/custom/cgov_site/themes/custom/ncids_trans/dist/css/article.css?tfezq9" />
+
+    
+  </head>
+  <body class="has-translated-content">
+        <a href="#main-content" class="usa-skipnav">
+      Skip to main content
+    </a>
+    
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+
+  <section id="usa-banner" class="usa-banner" aria-label="Official government website">
+  <header class="usa-banner__header">
+    <div class="usa-banner__inner">
+      <div class="usa-banner__header-text">
+        An official website of the United States government
+      </div>
+            <a href="/espanol/cancer/tratamiento/efectos-secundarios/dolor" id="lang-toggle" class="usa-button usa-banner__language-toggle" hreflang="es">Español</a>
+    </div>
+  </header>
+</section>
+
+
+
+  <header id="nci-header" class="nci-header nci-header--megamenu" data-base-path="/">
+	<div class="nci-header__navbar">
+		<div class="nci-logo" id="extended-mega-logo">
+			<a href="/">
+				<picture><source media="(min-width: 1024px)" srcset="/sites/www/files/ncids_header/logos/Logo_NCI.svg" />
+<img src="/sites/www/files/ncids_header/logos/Logo_NCI_Mobile.svg" alt="National Cancer Institute Home Page" />
+</picture>
+
+			</a>
+		</div>
+
+		<div class="nci-header-nav__secondary">
+			<button class="usa-button nci-header-mobilenav__open-btn">Menu</button>
+
+							<form class="nci-header-search" method="get" action="/search/results" role="search">
+					<label class="usa-sr-only" for="nci-header-search__field">
+						Search
+					</label>
+
+																										<input class="usa-input" id="nci-header-search__field" type="search" name="swKeyword"  data-autosuggest-collection="cgov"/>
+					<button class="usa-button nci-header-search__search-button" type="submit" aria-label="Search">
+						<span class="nci-header-search__label" aria-hidden="true">Search</span>
+						<svg class="usa-icon" xmlns="http://www.w3.org/2000/svg" role="img" viewbox="0 0 24 24" aria-hidden="true">
+							<path d="M0 0h24v24H0z" fill="none"/>
+							<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+						</svg>
+					</button>
+				</form>
+					</div>
+	</div>
+
+			<nav aria-label="Primary navigation" class="nci-header-nav">
+			<div class="nci-header-nav__inner">
+				<ul class="nci-header-nav__primary">
+											<li class="nci-header-nav__primary-item">
+																																																										<a  href="/about-cancer" class="nci-header-nav__primary-link usa-current" data-menu-id="829">
+								<span>About Cancer</span>
+							</a>
+						</li>
+											<li class="nci-header-nav__primary-item">
+																																											<a  href="/types" class="nci-header-nav__primary-link" data-menu-id="11868">
+								<span>Cancer Types</span>
+							</a>
+						</li>
+											<li class="nci-header-nav__primary-item">
+																																											<a  href="/research" class="nci-header-nav__primary-link" data-menu-id="12732">
+								<span>Research</span>
+							</a>
+						</li>
+											<li class="nci-header-nav__primary-item">
+																																											<a  href="/grants-training" class="nci-header-nav__primary-link" data-menu-id="914792">
+								<span>Grants &amp; Training</span>
+							</a>
+						</li>
+											<li class="nci-header-nav__primary-item">
+																																											<a  href="/news-events" class="nci-header-nav__primary-link" data-menu-id="12664">
+								<span>News &amp; Events</span>
+							</a>
+						</li>
+											<li class="nci-header-nav__primary-item">
+																																											<a  href="/about-nci" class="nci-header-nav__primary-link" data-menu-id="10952">
+								<span>About NCI</span>
+							</a>
+						</li>
+									</ul>
+			</div>
+		</nav>
+	
+</header>
+
+
+
+<div class="grid-container">
+	<div class="grid-row flex-no-wrap">
+		<div
+			class="grid-col-10">
+			    <nav class="usa-breadcrumb usa-breadcrumb--wrap" aria-label="Breadcrumbs">
+    <ol class="usa-breadcrumb__list">
+              <li class="usa-breadcrumb__list-item">
+          <a href="/" class="usa-breadcrumb__link">
+            <span>Home</span>
+          </a>
+        </li>
+              <li class="usa-breadcrumb__list-item">
+          <a href="/about-cancer" class="usa-breadcrumb__link">
+            <span>About Cancer</span>
+          </a>
+        </li>
+              <li class="usa-breadcrumb__list-item">
+          <a href="/about-cancer/treatment" class="usa-breadcrumb__link">
+            <span>Cancer Treatment</span>
+          </a>
+        </li>
+              <li class="usa-breadcrumb__list-item">
+          <a href="/about-cancer/treatment/side-effects" class="usa-breadcrumb__link">
+            <span>Side Effects of Cancer Treatment</span>
+          </a>
+        </li>
+                    <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+          <span>Pain and Cancer</span>
+        </li>
+          </ol>
+  </nav>
+
+
+		</div>
+		
+
+      
+
+
+<section  class="cgdp-page-options cgdp-page-options--top" aria-label="Page options top">
+  <button class="usa-button usa-button--unstyled" onclick="window.print()">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" class="usa-icon" role="img" aria-hidden="true" focusable="false">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+    </svg>
+    <span class="usa-sr-only">
+      Print    </span>
+  </button>
+  <a class="usa-button usa-button--unstyled" href="mailto:?subject=Information from the National Cancer Institute Web Site &body=I found this information on www.cancer.gov and I'd like to share it with you: https://www.cancer.gov/about-cancer/treatment/side-effects/pain %0D%0A%0D%0A NCI's Web site, www.cancer.gov, provides accurate, up-to-date, comprehensive cancer information from the U.S. government's principal agency for cancer research. If you have questions or need additional information, we invite you to contact NCI's LiveHelp instant messaging service at https://livehelp.cancer.gov, or call the NCI's Contact Center 1-800-4-CANCER (1-800-422-6237) (toll-free from the United States).">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" class="usa-icon" role="img" aria-hidden="true" focusable="false">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+    </svg>
+    <span class="usa-sr-only">
+      Email    </span>
+  </a>
+</section>
+
+	</div>
+</div>
+
+<div id="page" class="grid-container">
+	<div class="grid-row grid-gap">
+		  <!-- SECTION NAVIGATION -->
+  <div class="desktop:grid-col-3 nci-no-print">
+    
+
+
+
+  <nav aria-label="Secondary navigation">
+    <ul class="usa-sidenav">
+             
+        
+  <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment" data-menu-id="11844" class="usa-current usa-current--nci-ancestor">Cancer Treatment</a>
+          <ul class="usa-sidenav__sublist">
+                                    <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/types" data-menu-id="911277" class="nci-has-children">Types of Cancer Treatment</a>
+  </li>
+
+  
+                         
+        
+  <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/side-effects" data-menu-id="898464" class="usa-current usa-current--nci-ancestor">Side Effects of Cancer Treatment</a>
+    
+  </li>
+
+  
+                                    <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/drugs" data-menu-id="918919" class="nci-has-children">Cancer Drugs</a>
+  </li>
+
+  
+                                    <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/cam" data-menu-id="917500" class="nci-has-children">Complementary &amp; Alternative Medicine (CAM)</a>
+  </li>
+
+  
+                              <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/questions" data-menu-id="936692">Questions to Ask about Your Treatment</a>
+  </li>
+
+  
+                              <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/clinical-center" data-menu-id="1153716">NIH Clinical Center</a>
+  </li>
+
+  
+                              <li class="usa-sidenav__item">
+    <a  href="/about-cancer/treatment/research" data-menu-id="937976">Research</a>
+  </li>
+
+  
+              </ul>
+    
+  </li>
+
+  
+    </ul>
+  </nav>
+
+  </div>
+
+		<div class="desktop:grid-col-9">
+			<main class="cgdp-main-content" id="main-content">
+				  
+<!-- ********************************* BEGIN Page Content ********************************** -->
+<article>
+	<h1 class="nci-heading-h1">
+		Pain and Cancer
+	</h1>
+	<div class="cgdp-inner-content-area">
+		<div class="cgdp-field-image-article">
+      
+
+<div class="cgdp-image">
+  <figure>
+                <img loading="lazy" src="/sites/www/files/styles/cgov_article/public/cgov_image/media_image/900/600/files/doctor-explaining-drugs-to-senior-patient-article.jpg?h=b48714fe&amp;itok=NifRJtZM" width="600" height="450" alt="Doctor explaining when and how often to take medicine for pain, to a man with cancer. " />
+
+
+
+
+              <figcaption class="cgdp-image__caption">
+        <div class="cgdp-image__caption-text">
+          <p>Taking pain medicine is an important part of your cancer treatment plan.</p>
+        </div>
+                  <p class="cgdp-image__credit">Credit: iStock</p>
+              </figcaption>
+      </figure>
+  </div>
+
+
+  </div>
+
+		<div class="cgdp-field-intro-text">
+	<div class="usa-prose">
+		<p>Having cancer doesn’t mean that you’ll have pain. But if you do, pain can usually be controlled with pain medicine and non-drug approaches. Pain may be caused by cancer or cancer treatment. The information on this page will help you talk with your doctor to develop a pain management strategy to relieve your pain.</p>	</div>
+</div>
+
+        <nav
+    class="cgdp-on-this-page" role="navigation">
+        <h2 class="cgdp-on-this-page__header">On This Page</h2>
+    <ul>
+                        <li>
+            <a
+              href="#key-facts-about-pain-for-people-with-cancer">
+              <p>Key facts about pain for people with cancer</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#common-types-of-pain-in-people-with-cancer">
+              <p>Common types of pain in people with cancer</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#causes-of-cancer-related-pain">
+              <p>Causes of cancer-related pain</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#specialists-who-treat-people-with-pain">
+              <p>Specialists who treat people with pain</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#developing-a-pain-control-plan">
+              <p>Developing a pain control plan&nbsp;</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#taking-your-pain-control-medicine">
+              <p>Taking your pain control medicine</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#complementary-and-integrative-medicine-practices-to-manage-pain">
+              <p>Complementary and integrative medicine practices to manage pain</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#questions-to-ask-doctors-about-pain">
+              <p>Questions to ask doctors about pain&nbsp;</p>
+</a>
+          </li>
+                                <li>
+            <a
+              href="#related-resources">
+              <p>Related resources&nbsp;</p>
+</a>
+          </li>
+                  </ul>
+  </nav>
+
+    <div  class="cgdp-article-body cgdp-article-body--multiple">
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="key-facts-about-pain-for-people-with-cancer">
+                    <h2 class="cgdp-article-body__heading" id="key-facts-about-pain-for-people-with-cancer">
+      <p>Key facts about pain for people with cancer</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <ul>
+	<li>Controlling pain is an important part of your cancer treatment plan. You may have pain that feels more intense at times than others. Therefore, sometimes you may need stronger medicines or different approaches to control the pain.</li><li>Your doctor will develop a pain control plan that is unique to you, based on your symptoms and what is causing the pain.</li><li>Tell your health care team how the plan to control pain is working. Trying to “deal with” the pain can make it harder to control in the future.</li><li>Effectively treating pain can make a big difference in your everyday life, as well as improve your mood, help you sleep better, and give you energy.</li>
+</ul>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="common-types-of-pain-in-people-with-cancer">
+                    <h2 class="cgdp-article-body__heading" id="common-types-of-pain-in-people-with-cancer">
+      <p>Common types of pain in people with cancer</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <ul>
+	<li><a data-gloss-id="44638" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44638" class="cgdp-definition-link">Acute pain</a>, which may feel sharp and come on quickly. It often lasts for only a short time.</li><li><a data-gloss-id="45612" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/45612" class="cgdp-definition-link">Breakthrough pain</a>, which may come on suddenly, is pain that may occur while you are taking medicine to manage chronic pain. It usually lasts for a short time and may be intense. Breakthrough pain may happen even when you’re taking the correct amount of pain medicine, if the current medicine is wearing off, for example.</li><li><a data-gloss-id="44654" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44654" class="cgdp-definition-link">Chronic pain</a>, also called persistent pain, is pain that usually lasts more than three months. It may be mild or severe. Chronic pain may come and go or be constant. Chronic pain levels may also stay the same, or get worse, over time.</li>
+</ul>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="causes-of-cancer-related-pain">
+                    <h2 class="cgdp-article-body__heading" id="causes-of-cancer-related-pain">
+      <p>Causes of cancer-related pain</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <p>There are different causes of pain in people being treated for cancer. Sometimes cancer is the cause of your pain. This may happen if a <a data-gloss-id="46634" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/46634" class="cgdp-definition-link">tumor</a> presses on nerves or other parts of your body. Some cancer treatments or tests cause pain, such as surgery or bone marrow aspiration. Another cause of pain may be the <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="e7202b67-b320-4e4e-bdfe-bd307e7cba5e" href="/about-cancer/treatment/side-effects">side effects of cancer treatment</a>, such as mouth sores, peripheral neuropathy, or skin reactions.</p>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="specialists-who-treat-people-with-pain">
+                    <h2 class="cgdp-article-body__heading" id="specialists-who-treat-people-with-pain">
+      <p>Specialists who treat people with pain</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <p>Some hospitals have pain specialists. These specialists often work together as a team to treat pain. Your pain control team may be led by your doctor or a <a data-gloss-id="805616" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/805616" class="cgdp-definition-link">palliative care specialist</a>. Other specialists on the team may include experts such as a nurse, an acupuncturist, a <a data-gloss-id="649005" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/649005" class="cgdp-definition-link">pharmacist</a>, a <a data-gloss-id="44306" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44306" class="cgdp-definition-link">surgeon</a>, a <a data-gloss-id="454706" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/454706" class="cgdp-definition-link">psychiatrist</a> or a <a data-gloss-id="44716" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44716" class="cgdp-definition-link">psychologist</a>.</p>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="developing-a-pain-control-plan">
+                    <h2 class="cgdp-article-body__heading" id="developing-a-pain-control-plan">
+      <p>Developing a pain control plan&nbsp;</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <p>Based on your description of the pain, your symptoms, a physical exam, and sometimes <a data-gloss-id="689578" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/689578" class="cgdp-definition-link">imaging tests</a>, your doctor will develop a plan to control your pain. This plan usually includes pain control medicine and may include other practices such as those <a href="#integrative">listed in the integrative medicine section</a> below.</p><p><b>Describing your pain: </b>When you talk with your doctor or nurse, be as specific as you can about the pain. Your health care team may ask you questions like these to better understand and treat your pain:&nbsp;</p><div class="cgdp-embed-media-wrapper">
+  <div data-embed-button="cgov_image_button" data-entity-embed-display="view_mode:media.image_display_article_medium" data-entity-embed-display-settings="[]" data-entity-type="media" data-entity-uuid="b87ff9bf-5b28-4095-83b5-9dec18c4af45" data-langcode="en" class="align-right embedded-entity cgdp-embed-image cgdp-embed-image--medium">
+
+<div class="cgdp-image">
+  <figure>
+                <img loading="lazy" longdesc="/media/1135200/long-description" src="/sites/www/files/styles/cgov_article/public/cgov_contextual_image/100/500/0/files/cancer-pain-management-factoid-1-article.jpg?itok=fljFLD-O" width="650" height="558" alt="Pain occurs in up to 50% of people with cancer. Source: van den Beuken-van Everdingen MHJ et al. Cancers (Basel). 2018 Dec; 10(12). cancer.gov">
+
+
+
+
+          </figure>
+  </div>
+
+</div>
+</div>
+<ul>
+	<li>Where do you feel pain?&nbsp;</li><li>What does the pain feel like (is it sharp, burning, shooting, or throbbing)? Here are <a href="https://www.nichd.nih.gov/health/topics/pelvicpain/conditioninfo/describe">words you can use to help describe pain</a>.</li><li>Does the pain come and go, or is it constant?</li><li>When does the pain start? How long does the pain last?</li><li>How bad is the pain, on a scale of 1 to 10, where “10” is the most pain and “1” the least?</li><li>What helps to lower the pain or make it go away?</li><li>What makes the pain get worse?</li><li>Does the pain interfere with eating, sleeping, exercise, or other daily activities?&nbsp;</li><li>How does pain affect your mood and mental health?</li>
+</ul><p>Ask your nurse how to track pain-related information. Some people write down their levels of pain and the medicine they took for it, in a notebook. Others may get a chart from their nurse or use a pain app on their phone.&nbsp; &nbsp;&nbsp;</p><p><b>Getting a pain control plan that works for you: </b>Once a pain control plan has been developed, your health care team will talk with you about whether your pain is going down. They may ask you questions:</p><ul>
+	<li>Is your pain medicine helping to lower the pain?</li><li>How much medicine do you take?</li><li>When and how often do you take it?</li><li>Is the pain medicine causing side effects that are bothering you?</li><li>Would you like to try other practices that may help with your pain? For example, <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="3ca1c789-adac-4af9-a79f-07f7d11b6c68" href="/news-events/cancer-currents-blog/2021/acupuncture-for-pain-cancer-survivors">acupuncture</a>, <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6371675/#:~:text=Therefore%2C%20multidimensional%20interventions%20are%20needed,away%20from%20the%20unpleasant%20symptom.">mindfulness</a>, <a data-gloss-id="44675" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44675" class="cgdp-definition-link">hypnosis</a>, or <a data-gloss-id="689577" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/689577" class="cgdp-definition-link">guided imagery</a>.</li>
+</ul><p>Based on your answers to these questions, your doctor may change the type or amount of pain medicine and make other suggestions.</p><p><b>When to call your doctor: </b>Contact your doctor or nurse if you feel new pain, if your pain isn’t decreasing or going away with pain medicine, or if you have side effects from the pain medicine. Pain is not something that you have to “put up with.” Ask your doctor about any other times you should call.</p>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="taking-your-pain-control-medicine">
+                    <h2 class="cgdp-article-body__heading" id="taking-your-pain-control-medicine">
+      <p>Taking your pain control medicine</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <p>Different types of pain medicine (also called painkillers, pain relievers, and <a data-gloss-id="45590" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/45590" class="cgdp-definition-link">analgesics</a>) are used to control pain. Your doctor will explain what medicine is recommended for you, when to take it, and exactly how much to take (<a data-gloss-id="44664" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44664" class="cgdp-definition-link">dose</a>) at one time. It’s also important to learn about side effects and how to manage them.</p><p><b>Types of pain medicine </b></p><p>These different types of medicine may be used to control pain:</p><ul>
+	<li><a data-gloss-id="44696" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44696" class="cgdp-definition-link">over-the-counter</a> pain medicine such as aspirin, <a data-gloss-id="45165" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/45165" class="cgdp-definition-link">acetaminophen</a> (Tylenol), <a data-gloss-id="613511" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/613511" class="cgdp-definition-link">ibuprofen</a> (Advil), or <a data-gloss-id="615394" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/615394" class="cgdp-definition-link">naproxen</a> (Aleve)</li><li><a data-gloss-id="44711" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44711" class="cgdp-definition-link">prescription</a> medicines such as <a data-gloss-id="44105" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44105" class="cgdp-definition-link">antidepressants</a>, antiseizure medicines,&nbsp;<a data-gloss-id="809740" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/809740" class="cgdp-definition-link">muscle relaxants</a>, or <a data-gloss-id="46601" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/46601" class="cgdp-definition-link">steroids</a></li><li><a data-gloss-id="45054" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/45054" class="cgdp-definition-link">opioids</a>, also called&nbsp;<a data-gloss-id="44691" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44691" class="cgdp-definition-link">narcotics</a>, for moderate to severe cancer pain, such as tramadol, hydromorphone, methadone, morphine, oxycodone, and hydrocodone.</li>
+</ul><p>Learn more about these and other drugs in the <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="0798a39e-9fc8-41db-9740-75c419b96c10" href="/publications/dictionaries/cancer-drug">NCI Drug Dictionary</a>.&nbsp;</p><p><b>How much and when to take pain control medicine</b></p><div class="cgdp-embed-media-wrapper">
+  <div data-embed-button="cgov_featured_content_button" data-entity-embed-display="view_mode:node.embedded_feature_card" data-entity-type="node" data-entity-uuid="da6eeb8a-099e-4199-a10a-0cbf4f18ec4c" data-langcode="en" class="align-right embedded-entity cgdp-embed-feature-card" data-entity-embed-display-settings="[]">
+  
+
+  
+
+<div class="nci-card">
+  				          	<a href="/publications/patient-education/pain-control" aria-labelledby="block_content-464419" data-eddl-landing-item="feature_card" data-eddl-landing-item-link-type="Internal">
+				  <picture class="nci-card__image">
+                <img loading="lazy" src="/sites/www/files/styles/ncids_featured_16x9/public/cgov_image/media_image/800/200/files/cancer-pain-control.jpg?h=0e6f5cd9&amp;itok=i6gYI5PT" width="1408" height="792" alt="Cover image for a publication by the National Cancer Institute titled &quot;Cancer Pain Control: Support for People with Cancer.&quot; The background features a scenic field of wildflowers with rolling hills and a clear sky.">
+
+
+
+
+      </picture>
+
+		<div class="nci-card__body">
+			<span class="nci-card__title" id="block_content-464419">Cancer Pain Control: Support for People With Cancer</span>
+							<p class="nci-card__description">Learn what you can do to help manage the physical and emotional effects of cancer-related pain.</p>
+					</div>
+	</a>
+
+</div>
+</div>
+</div>
+<p>Take the prescribed amount of medicine, at the scheduled time. If you aren’t sure exactly when to take your pain medicine, ask your doctor.</p><ul>
+	<li>Don’t wait until your pain gets bad before taking pain medicine. If you wait to take your medicine, the pain may take longer to go away, or you may need to take more medicine. The best way to control pain is to stop it from starting or keep it from getting worse. &nbsp;</li><li>Tell your doctor if the medicine is not working. The type of pain medicine or the amount you are taking may need to be changed.</li><li>Never stop taking your pain medicine without first talking to your doctor. Taking less pain medicine than your doctor has prescribed or stopping the medication abruptly could cause a condition called <a data-gloss-id="748333" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/748333" class="cgdp-definition-link">withdrawal</a>. Symptoms of withdrawal may include anxiety, sweating, nausea, and vomiting.</li><li>Sometimes your body gets used to a medicine and it no longer works as it first did. This is called <a data-gloss-id="44739" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44739" class="cgdp-definition-link">drug tolerance</a>. Either more medicine or a different type of medicine may be prescribed.</li>
+</ul><p><b>Side effects of pain control medicines</b></p><p>It’s important to ask about side effects that pain medicine may cause so you know what to expect and how to manage them. Common side effects of pain medicine include <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="363bd454-a71d-49b7-9e66-1992b8276f4d" href="/about-cancer/treatment/side-effects/constipation">constipation</a>, drowsiness, <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="b30661ad-472a-498f-87ce-dbfa25d3cb29" href="/about-cancer/treatment/side-effects/nausea-vomiting">nausea, or vomiting</a>. Some of these may go away as your body gets used to the pain medicine. Talk with your doctor to learn about any reactions you should seek emergency medical care for or call about.</p><p><b>What to know about drug tolerance, physical dependence, and addiction </b></p><p>People with cancer often need to take strong pain medicine, such as <a data-gloss-id="45054" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/45054" class="cgdp-definition-link">opioids</a>. Ask your health care team about drug tolerance, physical dependence, and addiction, especially if you were prescribed opioids to control pain.</p><p><b>Drug tolerance</b> is a condition that happens when your body gets used to medicine. Some people with cancer pain stop getting pain relief from pain medicine over time. If drug tolerance happens, your doctor may increase the dose or prescribe a different pain medicine.</p><p><b>Physical dependence</b> is a condition in which a person takes a drug over time and has unpleasant physical symptoms if the drug is suddenly stopped, or the dose is significantly reduced. It happens when the body gets used to a certain level of the medicine. Physical dependence can happen with the chronic use of a drug, even when taken as instructed.</p><p><b>Addiction</b> involves compulsive drug seeking behavior and the inability to stop taking the drug, despite harmful consequences—such as not meeting important family, work, or social obligations. Know that addiction can happen to anyone, regardless of age, race, or income levels.</p><p>It’s common for people with cancer to worry about becoming addicted to pain medicines. Know that needing a higher dose of pain medicine or having symptoms when the dose is decreased or stopped is not the same as addiction. Your doctor will carefully prescribe your pain medicine and monitor you, so that your pain is safely treated. Each person’s pain control plan is tailored to them. Most people with cancer who take strong pain medicine, such as opioids, use them safely and effectively.</p>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="complementary-and-integrative-medicine-practices-to-manage-pain">
+                    <h2 class="cgdp-article-body__heading" id="complementary-and-integrative-medicine-practices-to-manage-pain">
+      <p>Complementary and integrative medicine practices to manage pain</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <p><a></a>In addition to prescribing medicine to manage pain, your health care team may suggest other practices. These non-drug practices are often called <a data-gloss-id="44951" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/44951" class="cgdp-definition-link">complementary medicine</a>, <a data-gloss-id="689097" data-gloss-dictionary="Cancer.gov" data-gloss-audience="Patient" data-gloss-lang="en" href="/publications/dictionaries/cancer-terms/def/689097" class="cgdp-definition-link">integrative medicine</a>, and <a href="https://www.nccih.nih.gov/health/whole-person-health-what-you-need-to-know">whole person health</a>. Some examples of natural pain relief include:</p><ul>
+	<li><b>Acupuncture</b> is the technique of inserting very thin needles about the thickness of a hair into specific points on your body. It can help to relieve discomfort and pain. <a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="4df6adb1-4200-496f-9fb5-d958d8c82e6a" href="/about-cancer/treatment/cam/patient/acupuncture-pdq">Learn about acupuncture</a>.</li><li><b>Biofeedback</b> is a technique that helps you learn how to control functions such as heartbeat, blood pressure, and muscle tension to reduce pain. <a href="https://www.nccih.nih.gov/health/relaxation-techniques-what-you-need-to-know">Learn about biofeedback-assisted relaxation</a>.</li><li><b>Distraction</b> is a technique that can help you take your attention away from the pain by focusing on something else, such as listening to music, walking outside, or watching a movie.</li><li><b>Guided imagery</b>, also called visualization, is a technique in which you focus on positive scenes, pictures, or experiences to lower pain. <a href="https://www.nccih.nih.gov/health/relaxation-techniques-what-you-need-to-know">Learn about guided imagery</a>.</li><li><b>Hypnosis</b> is a trance-like state of deep relaxation that can be used to relieve pain. <a href="https://www.nccih.nih.gov/health/hypnosis">Learn about hypnosis</a>.</li><li><b>Meditation</b> can help to relax your mind and body, which can improve your overall sense of well-being and lower pain. <a href="https://www.nccih.nih.gov/health/meditation-in-depth">Learn about meditation and mindfulness.</a></li>
+</ul><p>These and other integrative medicine practices are available in communities and hospitals. There are also online programs. Ask your health care team to suggest the best options for you. &nbsp;</p>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="questions-to-ask-doctors-about-pain">
+                    <h2 class="cgdp-article-body__heading" id="questions-to-ask-doctors-about-pain">
+      <p>Questions to ask doctors about pain&nbsp;</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <ul>
+	<li>What symptoms should I call you about?</li><li>What symptoms should I go to the emergency room for?</li><li>Which medicine(s) do you recommend for me?</li><li>What side effects may I have from the pain medicine?</li><li>If the pain doesn’t go away, can I take more pain medicine or take it more frequently?</li><li>If so, how much and how often can I take the pain medicine?</li><li>Is there a pain specialist that you could refer me to for more information?</li><li>Are there approaches other than or in addition to pain medication that may help my pain?&nbsp;</li>
+</ul><div class="cgdp-embed-media-wrapper"><div class="align-center embedded-entity cgdp-embed-summary-box cgdp-embed-summary-box--full"><div class="usa-summary-box"><div class="usa-summary-box__body"><div class="usa-prose usa-summary-box__text"><p>NCI's Cancer Pain PDQ summary has in-depth information on managing and treating cancer-associated pain. View the&nbsp;<a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="927cad1f-d023-4951-8b5f-8a8235755e38" href="/about-cancer/treatment/side-effects/pain/pain-pdq">patient</a>&nbsp;or&nbsp;<a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="85337ffd-7a2b-4862-a14a-7d96cce4a338" href="/about-cancer/treatment/side-effects/pain/pain-hp-pdq">health professional</a>&nbsp;version.</p></div></div></div></div></div>
+
+  </div>
+    </section>
+
+          
+
+
+    
+
+  <section  class="cgdp-article-body__section" aria-labelledby="related-resources">
+                    <h2 class="cgdp-article-body__heading" id="related-resources">
+      <p>Related resources&nbsp;</p>
+</h2>
+        <div  class="usa-prose usa-prose--ncids-full-html">
+    <ul>
+	<li><a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="da6eeb8a-099e-4199-a10a-0cbf4f18ec4c" href="/publications/patient-education/pain-control">Cancer Pain Control: Support for People With Cancer</a></li><li><a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="3ca1c789-adac-4af9-a79f-07f7d11b6c68" href="/news-events/cancer-currents-blog/2021/acupuncture-for-pain-cancer-survivors">Can Acupuncture Help Cancer Survivors with Chronic Pain?</a></li><li><a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="7c017f3f-aa2e-4db8-9004-bfa867948439" href="/news-events/cancer-currents-blog/2019/cancer-pain-new-approaches">Managing Cancer Pain: Are Better Approaches on the Horizon?</a></li><li><a href="https://www-cms.cancer.gov/news-events/cancer-currents-blog/2024/cancer-symptoms-stepped-collaborative-care">New Approach May Help People with Cancer Better Manage Depression, Pain, and Fatigue</a></li><li><a data-entity-substitution="canonical" data-entity-type="node" data-entity-uuid="94bd0c80-91eb-41fd-af11-a38c40fe8a69" href="/news-events/cancer-currents-blog/2018/opioid-crisis-cancer-pain-paice">The Opioid Epidemic and Cancer Pain Management: A Conversation with Dr. Judith Paice</a></li>
+</ul>
+
+  </div>
+    </section>
+
+      </div>
+
+
+
+	</div>
+	<footer class="cgdp-article-footer">
+		
+		
+					<div class="cgdp-document-dates">
+			<ul class="usa-list usa-list--unstyled">
+																	<li>
+						<strong>Reviewed:</strong>
+						<time datetime="2024-06-17T12:00:00Z">June 17, 2024</time>
+
+					</li>
+							</ul>
+		</div>
+	
+
+		              <div class="cgdp-article-footer__separator">
+              <div class="cgdp-public-use">
+        <p><em>If you would like to reproduce some or all of this content, see <a href="/policies/copyright-reuse">Reuse of NCI Information</a> for guidance about copyright and permissions. In the case of permitted digital reproduction, please credit the National Cancer Institute as the source and link to the original NCI product using the original product's title; e.g., “Pain and Cancer was originally published by the National Cancer Institute.”</em></p>
+
+  
+
+</div>
+
+                      <div class="cgdp-hhs-syndication">
+   <svg class="usa-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 48 48" fill="none"><path fill="#1B1B1B" fill-rule="evenodd" d="M19.616 12h21.818A2.57 2.57 0 0 1 44 14.575v15.24a2.57 2.57 0 0 1-2.567 2.567H28.937a.645.645 0 0 1-.618-.465c-.067-.228.152-.625.324-.936.034-.06.066-.119.093-.171l.102-.198c.232-.454.544-1.064.99-1.446a.653.653 0 0 1 .424-.16h10.38V15.368H20.699l-.024 3.634c.008.256-.056.497-.265.641-.2.145-.449.097-.69.024l-2.382-.722a.645.645 0 0 1-.305-.44l.016-1.34v-2.6A2.57 2.57 0 0 1 19.616 12Zm8.68 12.353a.613.613 0 0 1 .368.337c.064.152.064.337-.032.417l-4.86 9.874a.603.603 0 0 1-.554.337.587.587 0 0 1-.53-.361l-1.652-3.85c-6.209 2.454-10.468.69-12.97-1.268-2.174-1.7-3.394-3.786-3.843-4.66a6.678 6.678 0 0 1-.2-.417.598.598 0 0 1 1.123-.401c.006.025.026.068.057.135l.031.065c2.19 4.468 10.765 3.089 13.46 1.1l-1.629-3.803a.593.593 0 0 1 .722-.802l10.508 3.297Z" clip-rule="evenodd"/></svg>
+  <p>Want to use this content on your website or other digital platform? Our <a class="usa-link" href="/syndication">syndication services page</a> shows you how.</p>
+
+</div>
+
+
+            </div>
+    	</footer>
+</article>
+
+
+			</main>
+		</div>
+		<div class="desktop:grid-col-9 desktop:grid-offset-3">
+			
+
+      
+
+
+<section  class="cgdp-page-options cgdp-page-options--bottom" aria-label="Page options bottom">
+  <button class="usa-button usa-button--unstyled" onclick="window.print()">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" class="usa-icon" role="img" aria-hidden="true" focusable="false">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+    </svg>
+    <span class="usa-sr-only">
+      Print    </span>
+  </button>
+  <a class="usa-button usa-button--unstyled" href="mailto:?subject=Information from the National Cancer Institute Web Site &body=I found this information on www.cancer.gov and I'd like to share it with you: https://www.cancer.gov/about-cancer/treatment/side-effects/pain %0D%0A%0D%0A NCI's Web site, www.cancer.gov, provides accurate, up-to-date, comprehensive cancer information from the U.S. government's principal agency for cancer research. If you have questions or need additional information, we invite you to contact NCI's LiveHelp instant messaging service at https://livehelp.cancer.gov, or call the NCI's Contact Center 1-800-4-CANCER (1-800-422-6237) (toll-free from the United States).">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" class="usa-icon" role="img" aria-hidden="true" focusable="false">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+    </svg>
+    <span class="usa-sr-only">
+      Email    </span>
+  </a>
+</section>
+
+		</div>
+	</div>
+</div>
+
+  <div id="block-ncidsfooterenglish">
+  
+    
+      <style>
+   .cgdpl .usa-button {
+      color: #fff !important;
+   }
+   .cgdpl .usa-button.usa-button--accent-warm {
+      color: #1b1b1b !important;
+   }
+</style>
+<footer
+  class="usa-footer usa-footer--nci-big"
+  id="nci-footer"
+  aria-label="Footer"
+>
+  <div class="grid-container usa-footer__return-to-top">
+    <a href="#top" aria-label="Back To Top"><span>Back To Top</span></a>
+  </div>
+  <div class="usa-footer__primary-section">
+    <div class="grid-container">
+      <div class="grid-row grid-gap">
+        <div class="tablet:grid-col-8">
+          <nav class="usa-footer__nav" aria-label="Footer navigation">
+            <div class="grid-row grid-gap-4">
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section
+                  class="usa-footer__primary-content usa-footer__primary-content--collapsible"
+                >
+                  <div class="usa-footer__primary-link">About</div>
+                  <ul class="usa-list usa-list--unstyled">
+                    <li class="usa-footer__secondary-link">
+                      <a href="/about-website">About This Website</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/espanol">en Español</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/policies/copyright-reuse">Reuse &amp; Copyright</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/social-media">Social Media</a>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section
+                  class="usa-footer__primary-content usa-footer__primary-content--collapsible"
+                >
+                  <div class="usa-footer__primary-link">Resources</div>
+                  <ul class="usa-list usa-list--unstyled">
+                    <li class="usa-footer__secondary-link">
+                      <a href="/contact">Contact Us</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/publications">Publications</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/publications/dictionaries/cancer-terms"
+                        >Dictionary of Cancer Terms</a
+                      >
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/research/participate/clinical-trials-search"
+                        >Find a Clinical Trial</a
+                      >
+                    </li>
+                  </ul>
+                </section>
+              </div>
+              <div class="mobile-lg:grid-col-6 desktop:grid-col-4">
+                <section
+                  class="usa-footer__primary-content usa-footer__primary-content--collapsible"
+                >
+                  <div class="usa-footer__primary-link">Policies</div>
+                  <ul class="usa-list usa-list--unstyled">
+                    <li class="usa-footer__secondary-link">
+                      <a href="/policies/accessibility">Accessibility</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="https://www.nih.gov/institutes-nih/nih-office-director/office-communications-public-liaison/freedom-information-act-office">FOIA</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/policies/privacy-security"
+                        >Privacy &amp; Security</a
+                      >
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a href="/policies/disclaimer">Disclaimers</a>
+                    </li>
+                    <li class="usa-footer__secondary-link">
+                      <a
+                        href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html"
+                        >Vulnerability Disclosure</a
+                      >
+                    </li>
+                  </ul>
+                </section>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div class="tablet:grid-col-4">
+          <div class="usa-sign-up">
+            <div class="usa-sign-up__heading">Sign up for email updates</div>
+            <form
+              action="https://public.govdelivery.com/accounts/USNIHNCI/subscribers/qualify"
+              aria-label="Footer subscribe"
+              class="usa-form"
+              accept-charset="UTF-8"
+              method="post"
+              novalidate
+              target="_blank"
+              id="signup"
+            >
+              <input
+                type="hidden"
+                name="category_id"
+                id="category_id"
+                value=""
+              />
+              <div class="usa-form-group">
+                <label class="usa-label" for="email">
+                  Enter your email address
+                </label>
+                <input
+                  class="usa-input width-full"
+                  id="email"
+                  name="email"
+                  type="email"
+                  value=""
+                />
+              </div>
+              <button class="usa-button usa-button--accent-warm" type="submit">
+                Sign up
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section">
+    <div class="grid-container">
+      <div class="grid-row grid-gap">
+        <div class="usa-footer__logo grid-row desktop:grid-col-5">
+          <div class="mobile-lg:grid-col-auto desktop:margin-bottom-3">
+            <p class="usa-footer__logo-heading">
+              <span class="logo__agency-name">National Cancer Institute </span>
+              <span class="logo__parent-organization"
+                >at the National Institutes of Health</span
+              >
+            </p>
+          </div>
+        </div>
+        <div class="usa-footer__contact-links mobile-lg:grid-col-7">
+          <div class="usa-footer__contact-heading">Contact Us</div>
+          <div class="usa-footer__address">
+            <div class="usa-footer__contact-info grid-row grid-gap">
+              <div class="tablet:grid-col-auto">
+                <a href="https://livehelp.cancer.gov/">Live Chat</a>
+              </div>
+              <div class="tablet:grid-col-auto">
+                <a href="tel:1-800-4-CANCER">1-800-4-CANCER</a>
+              </div>
+              <div class="tablet:grid-col-auto">
+                <a href="mailto:NCIinfo@nih.gov">NCIinfo@nih.gov</a>
+              </div>
+              <div class="tablet:grid-col-auto">
+                <a
+                  class="no-exit-notification"
+                  href="https://ncidccpssurveys.gov1.qualtrics.com/jfe/form/SV_egtxdVcMuOiM3Yi"
+                  target="_blank"
+                  >Site Feedback</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-row grid-gap">
+        <div class="usa-footer__social-links desktop:grid-col-5">
+          <div class="usa-footer__social-heading">Follow us</div>
+          <div class="grid-row grid-gap-1 nci-big__social">
+            <div class="grid-col-auto">
+              <a
+                class="usa-social-link no-exit-notification"
+                href="https://www.facebook.com/cancer.gov"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  class="usa-icon"
+                  role="img"
+                  aria-labelledby="facebook-title"
+                >
+                  <title id="facebook-title">Facebook</title>
+                  <rect fill="none" height="24" width="24" />
+                  <path
+                    d="M22,12c0-5.52-4.48-10-10-10S2,6.48,2,12c0,4.84,3.44,8.87,8,9.8V15H8v-3h2V9.5C10,7.57,11.57,6,13.5,6H16v3h-2 c-0.55,0-1,0.45-1,1v2h3v3h-3v6.95C18.05,21.45,22,17.19,22,12z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a
+                class="usa-social-link no-exit-notification"
+                href="https://twitter.com/thenci"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="usa-icon"
+                  role="img"
+                  aria-labelledby="x-title"
+                >
+                  <title id="x-title">Follow on X</title>
+                  <path
+                    d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10zm5.2-15.6L13.3 11l4.3 6.2h-3.1L11.6 13 8 17.2h-.9l4.1-4.8-4.1-6h3.1l2.7 3.9 3.4-3.9h.9zm-5.6 5.4.4.6 2.8 4h1.4l-3.5-5-.4-.6-2.6-3.7H8.3l3.3 4.7z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a
+                class="usa-social-link no-exit-notification"
+                href="https://www.instagram.com/nationalcancerinstitute/"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="usa-icon"
+                  role="img"
+                  aria-labelledby="instagram-title"
+                >
+                  <title id="instagram-title">Instagram</title>
+                  <g id="Instagram">
+                    <path d="M12,10a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z" />
+                    <path
+                      d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm6,12.69A3.32,3.32,0,0,1,14.69,18H9.31A3.32,3.32,0,0,1,6,14.69V9.31A3.32,3.32,0,0,1,9.31,6h5.38A3.32,3.32,0,0,1,18,9.31Z"
+                    />
+                    <path
+                      d="M16.94,9.31a2.25,2.25,0,0,0-2.25-2.25H9.31A2.25,2.25,0,0,0,7.06,9.31v5.38a2.25,2.25,0,0,0,2.25,2.25h5.38a2.25,2.25,0,0,0,2.25-2.25h0ZM12,15.09A3.09,3.09,0,1,1,15.09,12,3.09,3.09,0,0,1,12,15.09Zm3.77-5.75a.79.79,0,0,1-.55.23.83.83,0,0,1-.55-.23.78.78,0,0,1,0-1.11A.82.82,0,0,1,15.22,8a.78.78,0,0,1,.55,1.33Z"
+                    />
+                  </g>
+                </svg>
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a
+                class="usa-social-link no-exit-notification"
+                href="https://www.youtube.com/NCIgov"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="usa-icon"
+                  role="img"
+                  aria-labelledby="youtube-title"
+                >
+                  <title id="youtube-title">Youtube</title>
+                  <g id="YouTube">
+                    <path
+                      d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm5.75,12.91A1.49,1.49,0,0,1,16.69,16a34.65,34.65,0,0,1-4.69.26A34.65,34.65,0,0,1,7.31,16a1.49,1.49,0,0,1-1.06-1.06A15.88,15.88,0,0,1,6,12a15.88,15.88,0,0,1,.25-2.91A1.49,1.49,0,0,1,7.31,8,34.65,34.65,0,0,1,12,7.77,34.65,34.65,0,0,1,16.69,8a1.49,1.49,0,0,1,1.06,1.06A15.88,15.88,0,0,1,18,12,15.88,15.88,0,0,1,17.75,14.91Z"
+                    />
+                    <polygon
+                      points="10.77 13.78 13.91 12 10.77 10.22 10.77 13.78"
+                    />
+                  </g>
+                </svg>
+              </a>
+            </div>
+            <div class="grid-col-auto">
+              <a
+                class="usa-social-link no-exit-notification"
+                href="https://www.linkedin.com/company/nationalcancerinstitute/"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="usa-icon"
+                  role="img"
+                  aria-labelledby="linkedin-title"
+                >
+                  <title id="linkedin-title">Linkedin</title>
+                  <g id="final">
+                    <path
+                      d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M8.912001,17.584H6.584v-7.472h2.328001V17.584z
+                          M7.744,9.104C6.992,9.104,6.4,8.488,6.4,7.76c0-0.752,0.592-1.344,1.344-1.344c0.728,0,1.343999,0.592,1.343999,1.344
+                          C9.087999,8.488,8.472,9.104,7.744,9.104z M17.6,17.584h-2.328v-3.64c0-0.856-0.024001-1.967999-1.216001-1.967999
+                          s-1.392,0.927999-1.392,1.912v3.696H10.36v-7.472h2.224v1.008h0.024c0.464-0.752,1.296-1.216001,2.199999-1.192
+                          c2.352001,0,2.792,1.552001,2.792,3.544001C17.6,13.472,17.6,17.584,17.6,17.584z"
+                    />
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="usa-footer__contact-links desktop:grid-col-7">
+          <div class="usa-footer__address height-full">
+            <div class="usa-footer__contact-info grid-row grid-gap height-full">
+              <address>
+                <a href="https://www.hhs.gov/"
+                  >U.S. Department of Health and Human Services
+                </a>
+                <a href="https://www.nih.gov/"
+                  >National Institutes of Health
+                </a>
+                <a href="https://www.cancer.gov/">National Cancer Institute </a>
+                <a href="https://usa.gov/">USA.gov</a>
+              </address>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  </div>
+
+
+
+  </div>
+
+    <script src="/profiles/custom/cgov_site/themes/custom/ncids_trans/dist/js/ncids-inner-minimal.js?tfezq9"></script>
+<script src="/profiles/custom/cgov_site/themes/custom/ncids_trans/dist/js/article.js?tfezq9"></script>
+
+    
+  </body>
+</html>

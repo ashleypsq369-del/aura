@@ -1,0 +1,352 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import "tailwindcss";
+@import "./styles/interactive.css";
+
+/* -- Tailwind v4 safelist: force-emit dynamic classes used in JS template literals -- */
+@source inline("{text,bg,border}-{teal,emerald,sky,indigo,rose,amber,orange,violet,red,slate}-{50,100,200,300,400,500,600,700,800,900}");
+@source inline("border-l-{rose,orange,amber,sky,teal,emerald,red,slate}-{400,500,600}");
+@source inline("from-{teal,rose,red,emerald,sky,indigo,violet,amber}-{400,500,600,700}");
+@source inline("to-{teal,rose,red,emerald,sky,indigo,violet,amber,cyan}-{400,500,600,700}");
+@source inline("hover:{bg,text,border}-{teal,emerald,sky,indigo,rose,amber,orange,violet,red,slate}-{50,100,200,300,400,500,600,700}");
+@source inline("group-hover:{text,bg}-{teal,slate,rose,red,sky}-{500,600,700,800}");
+
+
+@theme {
+  /* Primary Colors - Healthcare Blue-Green Palette */
+  --color-primary: #0D7377;
+  --color-primary-light: #14AABB;
+  --color-primary-dark: #053B3E;
+  
+  /* Forest Theme (Keeping existing) */
+  --color-forest: #1B4332;
+  --color-forest-mid: #2D6A4F;
+  --color-forest-light: #52B788;
+  
+  /* Backgrounds - Soft, Modern */
+  --color-bg-primary: #F0F4F8;
+  --color-bg-secondary: #E8EEF3;
+  --color-card-bg: #FFFFFF;
+  --color-card-hover: #F8FAFB;
+  
+  /* Borders - SHARP & VISIBLE */
+  --color-border-light: #CBD5E1;
+  --color-border-medium: #94A3B8;
+  --color-border-strong: #64748B;
+  --color-border-accent: #0D7377;
+  
+  /* Text Colors */
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #475569;
+  --color-text-slate-500: #64748B;
+  --color-text-light: #94A3B8;
+  
+  /* Legacy Support */
+  --color-warm-white: #F0F4F8;
+  --color-warm-card: #FFFFFF;
+  --color-charcoal: #1E293B;
+  --color-muted: #64748B;
+  
+  /* Status Colors - Medical Standard */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  --color-amber: #D4A017;
+  --color-crisis: #DC2626;
+  --color-bereavement: #6B4F7A;
+  
+  /* Shadow System */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  
+  /* Fonts */
+  --font-family-serif: "DM Serif Display", serif;
+  --font-family-sans: "Source Sans 3", sans-serif;
+  
+  /* Animations */
+  --animate-crisis-pulse: crisis-pulse 2s infinite;
+}
+
+@keyframes crisis-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
+  }
+}
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Dark mode CSS variable overrides ──────────────────────────────── */
+  html.dark {
+    --color-text-primary:   #f8fafc;   /* near white — max readability */
+    --color-text-secondary: #e2e8f0;   /* light — clearly visible */
+    --color-text-slate-500: #b0c4d4;   /* body text — readable */
+    --color-text-light:     #94a3b8;   /* hint text — still visible */
+    --color-card-bg:        #1e293b;
+    --color-card-hover:     #263347;
+    --color-border-light:   #334155;
+    --color-border-medium:  #475569;
+    --color-border-strong:  #64748b;
+  }
+  /* ─────────────────────────────────────────────────────────────────── */
+  
+  body {
+    /* Healthcare blue-gray -- subtle depth, not pure white
+       Note: color-system.css overrides background with !important.
+       animation/background-size kept for fallback if color-system.css fails. */
+    background: linear-gradient(160deg,
+      #e8edf5 0%,
+      #edf2f9 20%,
+      #e5eaf3 40%,
+      #edf2f9 60%,
+      #e8ecf6 80%,
+      #e8edf5 100%
+    ) fixed;
+    color: var(--color-text-primary);
+    font-family: var(--font-family-sans);
+    min-height: 100vh;
+  }
+
+  html.dark body {
+    background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #0f172a 100%) fixed !important;
+    color: var(--color-text-primary);
+  }
+
+  /* ── All unclassed body text inherits bright color in dark ─────────── */
+  html.dark p,
+  html.dark span:not([class*="badge"]):not([class*="chip"]):not([class]),
+  html.dark li,
+  html.dark label,
+  html.dark td,
+  html.dark th {
+    /* let the explicit class rules take priority, but set a readable base */
+  }
+
+  /* ── Placeholder text — always readable ────────────────────────────── */
+  html.dark input::placeholder,
+  html.dark textarea::placeholder,
+  html.dark select::placeholder    { color: #64748b !important; opacity: 1 !important; }
+
+  /* ── Small text and descriptions that use no class ─────────────────── */
+  html.dark p:not([class]) { color: var(--color-text-secondary); }
+  html.dark li:not([class]) { color: var(--color-text-secondary); }
+  
+  /* Respect user motion preferences (Accessibility) */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-serif);
+    color: var(--color-text-primary);
+  }
+
+  /* Image card & slideshow headings - override the base heading color */
+  .img-heading {
+    color: #fef08a !important;
+    font-family: var(--font-family-serif);
+  }
+}
+
+@layer components {
+  /* Modern Card Styles - Healthcare Standard with Excellent Contrast */
+  .card {
+    background: linear-gradient(145deg, #FFFFFF 0%, #FEFEFF 100%);
+    border: 3px solid #94A3B8;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+  }
+  
+  .card:hover {
+    border-color: #64748B;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+  
+  .card-elevated {
+    background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+    border: 3px solid #CBD5E1;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Content Cards - High Contrast Background */
+  .content-card {
+    background: #FFFFFF;
+    border: 3px solid #CBD5E1;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Page Container - Subtle Overlay */
+  .page-container {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 2rem;
+  }
+  
+  /* Page Transitions */
+  .page-enter {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  
+  .page-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 200ms ease-out;
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.3);
+    transition: all 0.2s ease;
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  /* Stat Card Enhancement - Healthcare Colors */
+  .stat-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFB 100%);
+    border: 3px solid #CBD5E1;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: #94A3B8;
+  }
+  
+  /* Form Elements - Clear Contrast */
+  input, textarea, select {
+    background: #FFFFFF;
+    border: 2px solid #CBD5E1;
+    transition: all 0.2s ease;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    background: #FFFFFF;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(13, 115, 119, 0.1);
+  }
+  
+  /* Section Headers */
+  .section-header {
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    border-left: 4px solid var(--color-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  /*
+   * Search input wrapper - ensures icon never overlaps text at any font size.
+   * Use: wrap input + icon in a div with class="search-wrap"
+   * The icon uses left-0 w-10, input uses pl-10.
+   * All values are pixel-fixed so they don't shift with rem changes.
+   */
+  .search-wrap {
+    position: relative;
+  }
+
+  .search-wrap .search-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+    color: #94A3B8;
+  }
+
+  .search-wrap input {
+    padding-left: 40px !important;
+  }
+}
+
+/* ── Inline search pattern (relative div + absolute icon + pl-10 input) ──────
+   Ensures the Search icon never overlaps placeholder text when using the
+   inline absolute-position pattern instead of .search-wrap               */
+.relative > input[class*="pl-8"],
+.relative > input[class*="pl-9"],
+.relative > input[class*="pl-10"] {
+  /* Already has padding — just ensure icon doesn't stack on text */
+}
+
+/* If an absolute Search icon sits at left-3.5 (14px), the input needs
+   at least pl-10 (40px) to clear 14px offset + ~16px icon width        */
+.relative:has(> svg) > input {
+  padding-left: 2.5rem !important; /* 40px */
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+
+/* Custom Scrollbar Styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #0D9488 #F1F5F9;
+  overflow-y: auto; /* Shows scrollbar only when content overflows */
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #0D9488;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #0F766E;
+}
+
+.scrollbar-thumb-teal-500::-webkit-scrollbar-thumb {
+  background: #14B8A6;
+}
+
+.scrollbar-track-slate-100::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}

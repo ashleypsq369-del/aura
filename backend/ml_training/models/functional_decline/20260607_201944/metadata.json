@@ -1,0 +1,16 @@
+{
+  "task_name": "functional_decline",
+  "model_type": "xgboost",
+  "features": [
+    "pps_score",
+    "barthel_score",
+    "ecog_score",
+    "karnofsky_score",
+    "age",
+    "comorbidities_count",
+    "recent_hospitalizations"
+  ],
+  "target": "significant_decline_30day",
+  "version": "20260607_201944",
+  "trained_at": "2026-06-07T20:19:44.456783"
+}

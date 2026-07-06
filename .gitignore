@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/venv/
+backend/__pycache__/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Build output
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+# Database & sensitive files
+backend/aura.db
+backend/*.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Compiled executables & binaries
+ace.exe
+ace.spec
+dist/
+build/
+
+# ML model files (large binaries)
+backend/ml_models/*.pkl
+backend/ml_models/*.joblib
+backend/ml_training/__pycache__/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Backup folder
+frontend_old_backup/

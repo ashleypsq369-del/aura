@@ -1,0 +1,8 @@
+feature,importance,display_name
+pps_score,3.699347,Palliative Performance (%)
+karnofsky_score,0.8914253,karnofsky_score
+barthel_score,0.36265513,ADL Independence (Barthel)
+age,0.35753873,age
+comorbidities_count,0.2383562,comorbidities_count
+ecog_score,0.15383115,ecog_score
+recent_hospitalizations,0.11449985,recent_hospitalizations

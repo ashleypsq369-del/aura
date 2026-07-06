@@ -1,0 +1,19 @@
+{
+  "task_name": "vital_risk",
+  "model_type": "xgboost",
+  "features": [
+    "heart_rate",
+    "blood_pressure_sys",
+    "blood_pressure_dia",
+    "oxygen_saturation",
+    "temperature",
+    "respiratory_rate",
+    "age",
+    "weight",
+    "height",
+    "bmi"
+  ],
+  "target": "critical_vital_event_7day",
+  "version": "20260607_201936",
+  "trained_at": "2026-06-07T20:19:36.480850"
+}

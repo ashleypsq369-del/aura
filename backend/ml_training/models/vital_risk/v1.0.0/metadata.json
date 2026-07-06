@@ -1,0 +1,41 @@
+{
+  "task": "vital_risk",
+  "version": "v1.0.0",
+  "trained_at": "2026-07-01T21:09:43.788949",
+  "n_samples": 8000,
+  "feature_names": [
+    "heart_rate",
+    "bp_systolic",
+    "bp_diastolic",
+    "oxygen_saturation",
+    "temperature",
+    "respiratory_rate",
+    "age",
+    "pps",
+    "comorbidities",
+    "esas_breath"
+  ],
+  "n_features": 10,
+  "metrics": {
+    "auc": 0.9788,
+    "accuracy": 0.9231,
+    "precision": 0.7715,
+    "recall": 0.9128,
+    "f1": 0.8362
+  },
+  "feature_importance": {
+    "oxygen_saturation": 0.2691,
+    "heart_rate": 0.2229,
+    "bp_systolic": 0.1506,
+    "pps": 0.0931,
+    "respiratory_rate": 0.0807,
+    "temperature": 0.0553,
+    "comorbidities": 0.0336,
+    "esas_breath": 0.0323,
+    "age": 0.0319,
+    "bp_diastolic": 0.0306
+  },
+  "shap_available": true,
+  "model_type": "xgboost",
+  "xgb_version": "2.0.3"
+}

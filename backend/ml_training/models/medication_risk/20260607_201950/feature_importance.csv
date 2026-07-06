@@ -1,0 +1,8 @@
+feature,importance,display_name
+mmas8_score,0.70004815,mmas8_score
+high_risk_medications,0.6088125,high_risk_medications
+drug_interactions,0.5180758,drug_interactions
+liver_function,0.44704545,liver_function
+kidney_function,0.42113,kidney_function
+age,0.32654294,age
+medications_count,0.26183936,medications_count

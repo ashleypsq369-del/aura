@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Family Login</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #fff; padding: 10px; border: 1px solid #ddd; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Test Family Login Flow</h1>
+    
+    <div class="section">
+        <h2>Step 1: Login</h2>
+        <button onclick="login()">Login as Family</button>
+        <div id="login-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Step 2: Test Dashboard</h2>
+        <button onclick="testDashboard()">Fetch Dashboard</button>
+        <div id="dashboard-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Step 3: Test Patients</h2>
+        <button onclick="testPatients()">Fetch Patients</button>
+        <div id="patients-result"></div>
+    </div>
+
+    <div class="section">
+        <h2>Local Storage</h2>
+        <button onclick="checkStorage()">Check Storage</button>
+        <button onclick="clearStorage()">Clear Storage</button>
+        <div id="storage-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let token = null;
+
+        async function login() {
+            const resultDiv = document.getElementById('login-result');
+            resultDiv.innerHTML = 'Logging in...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: 'family',
+                        password: 'family123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    token = data.access_token;
+                    localStorage.setItem('auth_token', token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">✓ Login successful!</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">✗ Login failed: ${data.detail}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">✗ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testDashboard() {
+            const resultDiv = document.getElementById('dashboard-result');
+            resultDiv.innerHTML = 'Fetching dashboard...';
+            
+            const currentToken = localStorage.getItem('auth_token') || token;
+            if (!currentToken) {
+                resultDiv.innerHTML = '<div class="error">✗ No token. Please login first.</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard/summary`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✓ Dashboard fetched (${response.status})</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">✗ Failed (${response.status}): ${JSON.stringify(data)}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">✗ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testPatients() {
+            const resultDiv = document.getElementById('patients-result');
+            resultDiv.innerHTML = 'Fetching patients...';
+            
+            const currentToken = localStorage.getItem('auth_token') || token;
+            if (!currentToken) {
+                resultDiv.innerHTML = '<div class="error">✗ No token. Please login first.</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/patients`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">✓ Patients fetched (${response.status})</div>
+                        <pre>${JSON.stringify(data, null, 2).substring(0, 500)}...</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">✗ Failed (${response.status}): ${JSON.stringify(data)}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">✗ Error: ${error.message}</div>`;
+            }
+        }
+
+        function checkStorage() {
+            const resultDiv = document.getElementById('storage-result');
+            const token = localStorage.getItem('auth_token');
+            const user = localStorage.getItem('user');
+            
+            resultDiv.innerHTML = `
+                <h3>Local Storage Contents:</h3>
+                <p><strong>Token:</strong> ${token ? token.substring(0, 50) + '...' : 'NOT SET'}</p>
+                <p><strong>User:</strong></p>
+                <pre>${user || 'NOT SET'}</pre>
+            `;
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            token = null;
+            document.getElementById('storage-result').innerHTML = '<div class="success">✓ Storage cleared</div>';
+        }
+
+        // Check storage on load
+        window.onload = checkStorage;
+    </script>
+</body>
+</html>

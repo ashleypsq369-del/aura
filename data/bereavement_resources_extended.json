@@ -1,0 +1,184 @@
+{
+  "resources": [
+    {
+      "resource_type": "article",
+      "title": "Understanding the Grief Process",
+      "description": "A comprehensive guide to the stages of grief and what to expect",
+      "content_url": "https://www.hospicefoundation.org/grief",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["denial", "shock"],
+      "tags": ["education", "grief stages", "coping"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Self-Care During Early Grief",
+      "description": "Practical tips for taking care of yourself in the first days and weeks",
+      "content_url": "https://www.griefshare.org/self-care",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "denial"],
+      "tags": ["self-care", "practical tips", "early grief"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Processing Difficult Emotions",
+      "description": "How to work through anger, guilt, and other challenging feelings",
+      "content_url": "https://www.whatsyourgrief.com/anger-in-grief",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["anger", "bargaining"],
+      "tags": ["anger", "emotions", "processing"]
+    },
+    {
+      "resource_type": "article",
+      "title": "When Sadness Feels Overwhelming",
+      "description": "Recognizing depression in grief and when to seek professional help",
+      "content_url": "https://www.apa.org/topics/grief",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["depression"],
+      "tags": ["depression", "mental health", "professional help"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Moving Forward While Honoring Memory",
+      "description": "Finding ways to continue living while keeping your loved one's memory alive",
+      "content_url": "https://www.centerforloss.com/moving-forward",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["acceptance"],
+      "tags": ["moving forward", "memory", "healing"]
+    },
+    {
+      "resource_type": "support_group",
+      "title": "Local Hospice Grief Support Group",
+      "description": "Weekly in-person meetings for those who have lost a loved one",
+      "content_url": "contact-hospice",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["support group", "in-person", "community"]
+    },
+    {
+      "resource_type": "support_group",
+      "title": "Online Grief Support Community",
+      "description": "24/7 online forum for sharing experiences and finding support",
+      "content_url": "https://www.griefshare.org/online",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["support group", "online", "24/7"]
+    },
+    {
+      "resource_type": "support_group",
+      "title": "Widows and Widowers Support Group",
+      "description": "Specialized support for those who have lost a spouse or partner",
+      "content_url": "contact-hospice",
+      "target_audience": ["spouse"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["support group", "spouse loss", "specialized"]
+    },
+    {
+      "resource_type": "support_group",
+      "title": "Children's Grief Support",
+      "description": "Age-appropriate grief support for children and teens",
+      "content_url": "https://www.dougy.org",
+      "target_audience": ["children"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["support group", "children", "age-appropriate"]
+    },
+    {
+      "resource_type": "counselor",
+      "title": "Finding a Grief Counselor",
+      "description": "Directory of licensed grief counselors and therapists in your area",
+      "content_url": "https://www.psychologytoday.com/us/therapists/grief",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["anger", "bargaining", "depression"],
+      "tags": ["professional help", "counseling", "therapy"]
+    },
+    {
+      "resource_type": "hotline",
+      "title": "National Grief Hotline",
+      "description": "24/7 crisis support and grief counseling - Call 1-800-273-8255",
+      "content_url": "tel:1-800-273-8255",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["hotline", "crisis", "24/7", "immediate help"]
+    },
+    {
+      "resource_type": "hotline",
+      "title": "Crisis Text Line",
+      "description": "Text HOME to 741741 for 24/7 crisis support via text message",
+      "content_url": "sms:741741",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["hotline", "text", "crisis", "24/7"]
+    },
+    {
+      "resource_type": "book",
+      "title": "The Year of Magical Thinking by Joan Didion",
+      "description": "A powerful memoir about grief and loss",
+      "content_url": "https://www.amazon.com/Year-Magical-Thinking-Joan-Didion/dp/1400078431",
+      "target_audience": ["spouse", "parents"],
+      "grief_stage": ["shock", "denial", "bargaining"],
+      "tags": ["book", "memoir", "spouse loss"]
+    },
+    {
+      "resource_type": "book",
+      "title": "When Breath Becomes Air by Paul Kalanithi",
+      "description": "A neurosurgeon's reflections on life and death",
+      "content_url": "https://www.amazon.com/When-Breath-Becomes-Paul-Kalanithi/dp/081298840X",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["bargaining", "depression", "acceptance"],
+      "tags": ["book", "memoir", "meaning"]
+    },
+    {
+      "resource_type": "book",
+      "title": "The Grief Recovery Handbook",
+      "description": "A practical action program for moving beyond loss",
+      "content_url": "https://www.amazon.com/Grief-Recovery-Handbook-Anniversary-Expanded/dp/0061686077",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["depression", "acceptance"],
+      "tags": ["book", "practical", "recovery"]
+    },
+    {
+      "resource_type": "video",
+      "title": "Understanding Grief: A Video Series",
+      "description": "Educational videos about the grief process from grief experts",
+      "content_url": "https://www.youtube.com/griefshare",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["shock", "denial", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["video", "education", "expert advice"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Helping Children Cope with Loss",
+      "description": "A guide for parents on supporting grieving children",
+      "content_url": "https://www.aacap.org/AACAP/Families_and_Youth/Facts_for_Families/FFF-Guide/Children-And-Grief-008.aspx",
+      "target_audience": ["parents"],
+      "grief_stage": ["shock", "denial", "anger", "bargaining", "depression", "acceptance"],
+      "tags": ["children", "parenting", "support"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Grief and the Holidays",
+      "description": "Navigating special occasions and anniversaries after loss",
+      "content_url": "https://www.whatsyourgrief.com/grief-and-holidays",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["anger", "bargaining", "depression", "acceptance"],
+      "tags": ["holidays", "anniversaries", "special occasions"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Creating a Memorial",
+      "description": "Ideas for honoring your loved one's memory",
+      "content_url": "https://www.legacy.com/memorial-ideas",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["bargaining", "depression", "acceptance"],
+      "tags": ["memorial", "tribute", "remembrance"]
+    },
+    {
+      "resource_type": "article",
+      "title": "Complicated Grief: When to Seek Help",
+      "description": "Recognizing when grief becomes complicated and requires professional intervention",
+      "content_url": "https://www.mayoclinic.org/diseases-conditions/complicated-grief/symptoms-causes/syc-20360374",
+      "target_audience": ["spouse", "children", "parents", "siblings"],
+      "grief_stage": ["depression"],
+      "tags": ["complicated grief", "professional help", "warning signs"]
+    }
+  ]
+}

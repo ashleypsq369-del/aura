@@ -1,0 +1,16 @@
+{
+  "task_name": "mental_health_risk",
+  "model_type": "xgboost",
+  "features": [
+    "phq9_score",
+    "gad7_score",
+    "esas_depression",
+    "esas_anxiety",
+    "age",
+    "social_support_score",
+    "recent_life_events"
+  ],
+  "target": "mental_health_intervention_needed",
+  "version": "20260607_201948",
+  "trained_at": "2026-06-07T20:19:48.538352"
+}

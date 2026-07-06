@@ -1,0 +1,7 @@
+feature,importance,display_name
+care_hours_per_week,3.864584,care_hours_per_week
+zarit_score,3.646817,Caregiver Burden (Zarit)
+respite_care_access,0.46819893,respite_care_access
+caregiver_age,0.3298367,caregiver_age
+patient_functional_status,0.2974345,patient_functional_status
+financial_strain,0.17005607,financial_strain

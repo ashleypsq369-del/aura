@@ -1,0 +1,13 @@
+feature,importance,display_name
+esas_depression,2.337803,esas_depression
+esas_drowsiness,1.882275,esas_drowsiness
+esas_tiredness,1.8010395,Fatigue Score (ESAS)
+esas_pain,1.7681774,Pain Score (ESAS)
+esas_appetite,1.733219,esas_appetite
+esas_anxiety,1.7195401,esas_anxiety
+esas_shortness_of_breath,1.5740732,esas_shortness_of_breath
+esas_nausea,1.469222,esas_nausea
+esas_wellbeing,0.8899687,esas_wellbeing
+age,0.086354315,age
+medications_count,0.08341892,medications_count
+primary_diagnosis,0.06415977,primary_diagnosis

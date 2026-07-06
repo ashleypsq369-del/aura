@@ -1,0 +1,11 @@
+/* Override NProgress default red bar with teal to match app theme */
+#nprogress .bar {
+  background: #0d9488 !important;
+  height: 3px !important;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #0d9488, 0 0 5px #0d9488 !important;
+}
+#nprogress .spinner-icon {
+  display: none !important;
+}

@@ -1,0 +1,361 @@
+/*
+ * interactive.css - Global hover, focus, tooltip, and cursor polish
+ * Applies to ALL interactive elements across the entire app automatically.
+ * No per-file changes needed.
+ */
+
+/* ---------------------------------------------------------------------------
+   1. CURSOR - every clickable/interactive thing gets pointer
+   --------------------------------------------------------------------------- */
+button,
+[role="button"],
+a,
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+select,
+summary,
+[tabindex]:not([tabindex="-1"]) {
+  cursor: pointer;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea {
+  cursor: text;
+}
+
+input[type="range"] {
+  cursor: ew-resize;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ---------------------------------------------------------------------------
+   2. FOCUS RINGS - consistent visible focus for keyboard navigation
+   --------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Remove ugly default outline but keep our custom one */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------------------------------------------------------------------------
+   3. BUTTON GLOBAL POLISH - press feedback on all buttons
+   --------------------------------------------------------------------------- */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  /* Only transition what needs to change - NOT background-color globally.
+     background-color transitions can cause "fading to white" during page
+     animations when combined with transition-all and Framer Motion opacity. */
+  transition-property: transform, box-shadow, opacity, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Buttons that explicitly use transition-all get a narrowed scope */
+button[class*="transition-all"]:not(:disabled) {
+  transition-property: transform, box-shadow, opacity, border-color !important;
+}
+
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active {
+  transform: scale(0.97);
+}
+
+/* Teal primary CTA buttons - subtle lift on hover (only explicit bg-teal classes) */
+button.bg-teal-700:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+/* Danger buttons - subtle red glow on hover */
+button.bg-red-600:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+/* ---------------------------------------------------------------------------
+   3b. ENHANCED HOVER STATES
+   Note: Tailwind hover: classes handle button hover states.
+   Only add here what Tailwind cannot express.
+   --------------------------------------------------------------------------- */
+
+/* Table row action buttons - subtle scale */
+table button:not(:disabled):hover {
+  transform: scale(1.04);
+}
+
+/* ---------------------------------------------------------------------------
+   4. INPUT FOCUS GLOW - teal ring on all text inputs
+   --------------------------------------------------------------------------- */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   5. NATIVE BROWSER TOOLTIP ENHANCEMENT
+      [title] attribute tooltips - styled via CSS on [data-tip].
+      We also style [title] directly for elements that already have it.
+   --------------------------------------------------------------------------- */
+
+/* Only data-tip elements get tooltip treatment - not every element with a title attr */
+[data-tip] {
+  position: relative;
+}
+
+/* Tooltip bubble */
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.92);
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 5px 10px;
+  border-radius: 7px;
+  white-space: nowrap;
+  max-width: 220px;
+  white-space: pre-wrap;
+  pointer-events: none;
+  opacity: 0;
+  /* Hide instantly - no delay, fast fade out */
+  transition: opacity 0.08s ease 0s, transform 0.08s ease 0s;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-family: var(--font-family-sans, sans-serif);
+}
+
+/* Arrow */
+[data-tip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 1px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.92);
+  border: 5px solid transparent;
+  border-top-color: #1e293b;
+  pointer-events: none;
+  opacity: 0;
+  /* Hide instantly */
+  transition: opacity 0.08s ease 0s, transform 0.08s ease 0s;
+  z-index: 9999;
+}
+
+/* Show: wait 700ms, then fade in over 150ms */
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  transition: opacity 0.15s ease 0.7s, transform 0.15s ease 0.7s;
+}
+
+[data-tip]:hover::before,
+[data-tip]:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  transition: opacity 0.15s ease 0.7s, transform 0.15s ease 0.7s;
+}
+
+/* Tooltip below (for header buttons where tooltip would clip top of screen) */
+[data-tip-below]::after {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+[data-tip-below]::before {
+  bottom: auto;
+  top: calc(100% + 1px);
+  border-top-color: transparent;
+  border-bottom-color: #1e293b;
+}
+
+/* Tooltip right-aligned (for right-edge buttons) */
+[data-tip-right]::after {
+  left: auto;
+  right: 0;
+  transform: translateX(0) scale(0.92);
+}
+[data-tip-right]:hover::after {
+  transform: translateX(0) scale(1);
+}
+[data-tip-right]::before {
+  left: auto;
+  right: 14px;
+  transform: translateX(0) scale(0.92);
+}
+[data-tip-right]:hover::before {
+  transform: translateX(0) scale(1);
+}
+
+/* ---------------------------------------------------------------------------
+   6. LINK HOVER - smooth underline animation
+   --------------------------------------------------------------------------- */
+a:not([class*="btn"]):not([class*="button"]):not([class*="no-underline"]) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+/* ---------------------------------------------------------------------------
+   7. SELECT ELEMENT - custom arrow + hover
+   --------------------------------------------------------------------------- */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   8. CHECKBOX / RADIO - teal accent
+   --------------------------------------------------------------------------- */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #0d9488;
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+   9. TABLE ROWS - row hover highlight
+   --------------------------------------------------------------------------- */
+table tbody tr {
+  transition: background-color 0.12s ease;
+}
+
+/* ---------------------------------------------------------------------------
+   10. CARD / INTERACTIVE DIVS - lift on hover
+   --------------------------------------------------------------------------- */
+[data-interactive],
+.interactive-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+[data-interactive]:hover,
+.interactive-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+
+/* ---------------------------------------------------------------------------
+   11. LOADING STATES - skeleton pulse
+   --------------------------------------------------------------------------- */
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---------------------------------------------------------------------------
+   12. FORM FIELD LABELS - float/highlight when input is focused
+   --------------------------------------------------------------------------- */
+.field-group:focus-within label {
+  color: #0d9488;
+}
+
+/* ---------------------------------------------------------------------------
+   13. TOAST / BADGE HOVER
+   --------------------------------------------------------------------------- */
+.badge-interactive {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.badge-interactive:hover {
+  transform: scale(1.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* ---------------------------------------------------------------------------
+   14. RESPECT REDUCED MOTION
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-tip]::after,
+  [data-tip]::before,
+  button,
+  [role="button"],
+  [data-interactive],
+  .interactive-card {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* -- Radix UI Tooltip animations ------------------------------------------- */
+@keyframes tooltip-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes tooltip-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.92); }
+}
+.animate-tooltip-in  { animation: tooltip-in  0.12s ease forwards; }
+.animate-tooltip-out { animation: tooltip-out 0.08s ease forwards; }
+
+/* -- Radix Switch focus ring ----------------------------------------------- */
+[data-radix-switch-root]:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
+
+/* -- Radix Dialog overlay -------------------------------------------------- */
+[data-radix-dialog-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+/* -- Radix Progress track background -------------------------------------- */
+[data-radix-progress-root] {
+  overflow: hidden;
+}
+
+/* -- Clinical density overrides ------------------------------------------
+   Professional clinical dashboards use tighter spacing than consumer apps.
+   These overrides tighten the most common oversized patterns globally.
+   ----------------------------------------------------------------------- */
+
+/* Tighten border-3 (non-standard Tailwind) */
+.border-3 { border-width: 1.5px !important; }
+.border-b-3 { border-bottom-width: 1.5px !important; }
+.border-t-3 { border-top-width: 1.5px !important; }
+
+/* Section headers - clinical apps use smaller, tighter headings */
+.font-serif.text-2xl { font-size: 1.15rem !important; }
+.font-serif.text-3xl { font-size: 1.3rem !important; }
+.font-serif.text-4xl { font-size: 1.5rem !important; }
+
+/* Remove heavy shadow from cards that don't need it */
+.shadow-xl { box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05) !important; }
+.shadow-2xl { box-shadow: 0 4px 16px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05) !important; }
+
+/* Tighten rounded-2xl corners - clinical tools use slightly less rounded corners */
+.rounded-2xl { border-radius: 12px !important; }
+.rounded-3xl { border-radius: 14px !important; }
+
+/* Remove emoji from page section headers - use a ::before instead */
+/* (Emojis in UI look unprofessional; CSS can't remove them but we can shrink them) */

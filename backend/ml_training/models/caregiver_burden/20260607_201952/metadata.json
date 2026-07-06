@@ -1,0 +1,15 @@
+{
+  "task_name": "caregiver_burden",
+  "model_type": "xgboost",
+  "features": [
+    "zarit_score",
+    "care_hours_per_week",
+    "caregiver_age",
+    "patient_functional_status",
+    "financial_strain",
+    "respite_care_access"
+  ],
+  "target": "caregiver_burnout_risk",
+  "version": "20260607_201952",
+  "trained_at": "2026-06-07T20:19:53.210854"
+}

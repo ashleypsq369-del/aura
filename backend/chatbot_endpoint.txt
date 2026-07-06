@@ -1,0 +1,127 @@
+    # Detect crisis and intent
+    is_crisis = detect_crisis(request.message)
+    intent = detect_intent(request.message)
+    
+    # Get or create session
+    session = get_or_create_session(current_user.id, db)
+    
+    # Try to query real data first
+    assistant_message = None
+    structured_data = None
+    thinking_steps = []
+    
+    data_query_intents = [
+        "patient_list", "vitals_query", "symptoms_query", 
+        "medication_query", "appointment_query", "alerts_query", "statistics"
+    ]
+    
+    if intent in data_query_intents:
+        query_result = query_patient_data(intent, request.message, db)
+        if query_result:
+            assistant_message, structured_data = query_result
+            # Generate thinking process for data queries
+            thinking_steps = generate_thinking_process(intent, request.message, structured_data, current_user.role)
+    
+    # If no data query or query failed, use normal response generation
+    if not assistant_message:
+        # Generate thinking process for non-data queries
+        thinking_steps = generate_thinking_process(intent, request.message, None, current_user.role)
+        
+        # Generate response
+        if ANTHROPIC_AVAILABLE:
+            # Build message history
+            recent_messages = db.query(ChatbotMessage).filter(
+                ChatbotMessage.session_id == session.id
+            ).order_by(ChatbotMessage.created_at.desc()).limit(10).all()
+            
+            messages = []
+            for msg in reversed(recent_messages):
+                messages.append({"role": msg.role, "content": msg.content})
+            messages.append({"role": "user", "content": request.message})
+            
+            # Call API
+            assistant_message = call_anthropic_api(messages, SYSTEM_PROMPT)
+            
+            # Fallback if API fails
+            if not assistant_message:
+                assistant_message = get_fallback_response(intent, is_crisis, request.message, db, current_user.role)
+        else:
+            # Fallback mode
+            assistant_message = get_fallback_response(intent, is_crisis, request.message, db, current_user.role)
+    
+    # Calculate confidence
+    confidence = calculate_response_confidence(intent, structured_data, request.message)
+    
+    # Add crisis prefix if needed
+    if is_crisis:
+        crisis_prefix = (
+            " I'm concerned about what you've shared. "
+            "Please reach out immediately:\n"
+            " Mental Health Authority Ghana: 0800-111-011\n"
+            " Befrienders Ghana: 0244-846-472\n\n"
+        )
+        assistant_message = crisis_prefix + assistant_message
+        confidence = 1.0  # Always high confidence for crisis detection
+        
+        # Create crisis alert
+        alert = Alert(
+            patient_id=request.patient_context_id if request.patient_context_id else None,
+            alert_type="chatbot_crisis",
+            severity="crisis",
+            triggered_value="Crisis detected in chatbot",
+            message=f"User {current_user.full_name} expressed crisis indicators in chat",
+            is_acknowledged=False
+        )
+        db.add(alert)
+        session.escalated = True
+        session.escalation_reason = "Crisis language detected"
+    
+    # Log messages
+    user_msg = ChatbotMessage(
+        session_id=session.id,
+        role="user",
+        content=request.message,
+        intent_detected=intent,
+        crisis_flagged=is_crisis
+    )
+    db.add(user_msg)
+    
+    assistant_msg = ChatbotMessage(
+        session_id=session.id,
+        role="assistant",
+        content=assistant_message,
+        intent_detected=intent
+    )
+    db.add(assistant_msg)
+    
+    # Update session
+    session.message_count += 2
+    db.commit()
+    
+    return {
+        "message": assistant_message,
+        "intent": intent,
+        "is_crisis": is_crisis,
+        "session_id": session.id,
+        "structured_data": structured_data,
+        "thinking_process": thinking_steps,
+        "confidence": confidence
+    }
+
+
+@router.get("/session/{session_id}/history")
+async def get_history(
+    session_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get chat history for a session"""
+    messages = db.query(ChatbotMessage).filter(
+        ChatbotMessage.session_id == session_id
+    ).order_by(ChatbotMessage.created_at).all()
+    
+    return [{
+        "role": msg.role,
+        "content": msg.content,
+        "created_at": msg.created_at
+    } for msg in messages]

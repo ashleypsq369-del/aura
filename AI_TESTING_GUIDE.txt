@@ -1,0 +1,335 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║         🧪 AI FEATURES TESTING GUIDE 🧪                       ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ APP IS NOW RUNNING WITH AI
+═══════════════════════════════════════════════════════════════
+
+Backend:  ✅ http://localhost:8000 (with AI enabled)
+Frontend: ✅ http://localhost:5173 (opened in browser)
+Database: ✅ aura.db (8 demo patients with data)
+
+Login Credentials:
+  Username: clinician
+  Password: clinician123
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 1: AI RISK PREDICTION
+═══════════════════════════════════════════════════════════════
+
+1. Login as clinician
+2. Go to "Patients" tab (left sidebar)
+3. Click on any patient (e.g., "Kwame Asante")
+4. Look for "AI Analysis" or "Risk Prediction" tab
+5. Should see:
+   ✓ Risk Score (Low/Moderate/High/Critical)
+   ✓ Deterioration Probability
+   ✓ Contributing Factors
+   ✓ Recommendations
+
+What to check:
+  - Does risk score display?
+  - Are predictions shown?
+  - Is confidence level visible?
+  - Are recommendations listed?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 2: SHAP EXPLAINABILITY
+═══════════════════════════════════════════════════════════════
+
+1. In patient's AI Analysis section
+2. Look for "Why this prediction?" or "Explanation"
+3. Should see:
+   ✓ Feature Importance Chart
+   ✓ Contributing Factors List
+   ✓ Impact of each symptom/vital
+   ✓ Visual explanation (bar chart or waterfall)
+
+What to check:
+  - Are explanations clear?
+  - Do charts display properly?
+  - Can you understand WHY the prediction was made?
+  - Are factors ranked by importance?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 3: INTELLIGENT RECOMMENDATIONS
+═══════════════════════════════════════════════════════════════
+
+1. View patient dashboard
+2. Look for "AI Recommendations" panel
+3. Should see:
+   ✓ Suggested interventions
+   ✓ Care pathway recommendations
+   ✓ Priority actions
+   ✓ Evidence-based suggestions
+
+What to check:
+  - Are recommendations relevant?
+  - Do they match patient condition?
+  - Are they actionable?
+  - Is urgency indicated?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 4: PROACTIVE MONITORING
+═══════════════════════════════════════════════════════════════
+
+1. Add abnormal vitals to a patient:
+   - Go to patient → Record Vitals
+   - Enter: BP 180/110, HR 120, Temp 38.5°C
+   - Save
+
+2. Check alerts (bell icon, top right)
+3. Should see:
+   ✓ AI-generated alert
+   ✓ Risk level
+   ✓ Recommended action
+
+What to check:
+  - Does alert appear automatically?
+  - Is risk level accurate?
+  - Are recommendations helpful?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 5: CHATBOT (if API key added)
+═══════════════════════════════════════════════════════════════
+
+1. Look for chat icon (usually bottom right)
+2. Click to open AuraChat
+3. Ask questions like:
+   - "What are signs of pain in palliative patients?"
+   - "Explain morphine dosing"
+   - "How to manage nausea?"
+
+What to check:
+  - Does chatbot respond?
+  - Are answers relevant?
+  - Is tone compassionate?
+  - Are responses medically sound?
+
+Note: Without API key, you'll get basic fallback responses.
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 6: AI INSIGHTS DASHBOARD
+═══════════════════════════════════════════════════════════════
+
+1. Go to Dashboard (home page after login)
+2. Look for "AI Insights" section
+3. Should see:
+   ✓ High-risk patients list
+   ✓ Risk trends
+   ✓ Predictive alerts
+   ✓ Statistics
+
+What to check:
+  - Are high-risk patients identified?
+  - Do trends make sense?
+  - Are predictions accurate?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 7: SYMPTOM ANALYSIS
+═══════════════════════════════════════════════════════════════
+
+1. Go to patient → Symptoms
+2. Add multiple symptoms:
+   - Severe pain (8/10)
+   - Nausea
+   - Fatigue
+   - Difficulty breathing
+
+3. Save and view AI analysis
+4. Should see:
+   ✓ Symptom pattern recognition
+   ✓ Possible causes
+   ✓ Treatment suggestions
+   ✓ Urgency assessment
+
+What to check:
+  - Does AI recognize patterns?
+  - Are suggestions relevant?
+  - Is urgency appropriate?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 8: MEDICATION INTERACTION CHECK
+═══════════════════════════════════════════════════════════════
+
+1. Go to patient → Medications
+2. Add multiple medications:
+   - Morphine 10mg
+   - Paracetamol 500mg
+   - Metoclopramide 10mg
+
+3. Check for AI warnings
+4. Should see:
+   ✓ Interaction alerts (if any)
+   ✓ Dosage recommendations
+   ✓ Timing suggestions
+
+What to check:
+  - Are interactions detected?
+  - Are warnings clear?
+  - Are alternatives suggested?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 9: CARE PATHWAY OPTIMIZATION
+═══════════════════════════════════════════════════════════════
+
+1. Go to patient → Care Plans
+2. Create or view care plan
+3. Look for AI suggestions
+4. Should see:
+   ✓ Optimal care sequence
+   ✓ Timeline recommendations
+   ✓ Resource allocation
+   ✓ Expected outcomes
+
+What to check:
+  - Is pathway logical?
+  - Are timelines realistic?
+  - Do outcomes align with goals?
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TEST 10: DISEASE PROGRESSION TRACKING
+═══════════════════════════════════════════════════════════════
+
+1. Go to patient → Journey Timeline
+2. View historical data
+3. Look for AI predictions
+4. Should see:
+   ✓ Progression trajectory
+   ✓ Future state predictions
+   ✓ Milestone forecasts
+   ✓ Intervention timing
+
+What to check:
+  - Are predictions reasonable?
+  - Do trends make sense?
+  - Are milestones meaningful?
+
+
+═══════════════════════════════════════════════════════════════
+  📊 EXPECTED AI OUTPUTS
+═══════════════════════════════════════════════════════════════
+
+Risk Scores:
+  - LOW: 0-25% (green)
+  - MODERATE: 25-50% (yellow)
+  - HIGH: 50-75% (orange)
+  - CRITICAL: 75-100% (red)
+
+Confidence Levels:
+  - HIGH: >80% certainty
+  - MEDIUM: 60-80%
+  - LOW: <60%
+
+Recommendations:
+  - Specific actions
+  - Timeframe (urgent, today, this week)
+  - Evidence level (strong, moderate, weak)
+  - Alternative options
+
+
+═══════════════════════════════════════════════════════════════
+  🐛 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+Problem: No AI predictions showing
+Solution:
+  - Check backend logs (minimized window)
+  - Ensure ML models loaded (look for "[OK] ML Models loaded")
+  - Verify patient has enough data
+
+Problem: Predictions seem wrong
+Solution:
+  - AI learns from data patterns
+  - Demo data may not be perfect
+  - Real patient data will improve accuracy
+
+Problem: Chatbot not responding intelligently
+Solution:
+  - Check if API key is set in backend\.env
+  - Without key, uses basic fallback responses
+  - Add ANTHROPIC_API_KEY for full AI
+
+Problem: Slow predictions
+Solution:
+  - First prediction is slower (~2 sec)
+  - Subsequent ones are faster (~100ms)
+  - Normal for ML model initialization
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ SUCCESS CRITERIA
+═══════════════════════════════════════════════════════════════
+
+AI is working correctly if you see:
+
+✓ Risk scores display for patients
+✓ SHAP explanations show feature importance
+✓ Recommendations are specific and actionable
+✓ Alerts generate for abnormal vitals
+✓ Chatbot responds (even if basic mode)
+✓ Dashboard shows AI insights
+✓ Predictions update based on new data
+✓ Explanations are clinically meaningful
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 WHAT TO LOOK FOR
+═══════════════════════════════════════════════════════════════
+
+Signs of Good AI:
+  ✓ Predictions match patient condition
+  ✓ Explanations are understandable
+  ✓ Recommendations are relevant
+  ✓ Alerts are timely and appropriate
+  ✓ Confidence scores are reasonable
+  ✓ Patterns are recognized accurately
+
+Signs AI Needs Tuning:
+  ⚠ Predictions seem random
+  ⚠ Explanations don't match reality
+  ⚠ Too many false alerts
+  ⚠ Recommendations don't make sense
+  ⚠ Confidence is always too high/low
+
+
+═══════════════════════════════════════════════════════════════
+  📝 FEEDBACK
+═══════════════════════════════════════════════════════════════
+
+As you test, note:
+
+1. Which AI features work well?
+2. Which need improvement?
+3. Are predictions helpful?
+4. Are explanations clear?
+5. What's missing?
+
+This feedback helps improve the AI models!
+
+
+═══════════════════════════════════════════════════════════════
+
+Current Status:
+  ✅ Backend: Running with AI
+  ✅ Frontend: Running
+  ✅ Browser: Opened to login page
+  ✅ Ready to test!
+
+Login now and start testing the AI features! 🚀
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,8 @@
+feature,importance,display_name
+phq9_score,4.7800174,Depression Severity (PHQ-9)
+gad7_score,2.6132314,Anxiety Severity (GAD-7)
+esas_anxiety,0.57702845,esas_anxiety
+esas_depression,0.50693804,esas_depression
+social_support_score,0.04669009,social_support_score
+recent_life_events,0.009424799,recent_life_events
+age,0.0067428593,age

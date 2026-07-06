@@ -1,0 +1,35 @@
+{
+  "task": "caregiver_burden",
+  "version": "v1.0.0",
+  "trained_at": "2026-06-20T12:38:28.385626",
+  "n_samples": 8000,
+  "feature_names": [
+    "zarit",
+    "care_hours_per_week",
+    "carer_age",
+    "has_respite",
+    "patient_pps",
+    "social_support",
+    "patient_esas_total"
+  ],
+  "n_features": 7,
+  "metrics": {
+    "auc": 0.9976,
+    "accuracy": 0.9775,
+    "precision": 0.9562,
+    "recall": 0.9748,
+    "f1": 0.9654
+  },
+  "feature_importance": {
+    "zarit": 0.438,
+    "has_respite": 0.1844,
+    "care_hours_per_week": 0.17,
+    "patient_pps": 0.08,
+    "carer_age": 0.0646,
+    "social_support": 0.0501,
+    "patient_esas_total": 0.0129
+  },
+  "shap_available": true,
+  "model_type": "xgboost",
+  "xgb_version": "2.0.3"
+}

@@ -1,0 +1,779 @@
+﻿/**
+ * Accessibility Styles for ProjectAura
+ * WCAG 2.1 AAA Compliant
+ * Supports: Screen readers, keyboard navigation, high contrast, text resizing
+ */
+
+/* ===========================
+   SCREEN READER UTILITIES
+   =========================== */
+
+/* Screen reader only - hidden visually but available to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Screen reader only, but visible when focused */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ===========================
+   FONT SIZE SCALING (REM-BASED)
+   =========================== */
+
+/*
+ * Base font size: 15px - matches the "compact/small" look users prefer as the standard.
+ * This sets the visual baseline. Users can increase via accessibility settings.
+ * All sizes use rem so everything scales proportionally.
+ */
+:root {
+  font-size: 15px;
+}
+
+/* Text size options - selectable in Accessibility settings */
+html.text-small  { font-size: 15px; }   /* same as default = no change */
+html.text-medium { font-size: 17px; }   /* +2px step up */
+html.text-large  { font-size: 19px; }   /* comfortable reading */
+html.text-xlarge { font-size: 21px; }   /* large print */
+html.text-xxlarge{ font-size: 25px; }   /* maximum accessibility */
+
+/* Ensure all text scales with root font size */
+body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Headings - rem-based so they scale with font-size setting */
+h1 { font-size: 1.8rem;  line-height: 1.2; }
+h2 { font-size: 1.5rem;  line-height: 1.25; }
+h3 { font-size: 1.3rem;  line-height: 1.3; }
+h4 { font-size: 1.125rem; line-height: 1.4; }
+h5 { font-size: 1rem;    line-height: 1.4; }
+h6 { font-size: 0.9rem;  line-height: 1.4; }
+
+p, li, td, th, label, input, textarea, select, button {
+  font-size: 1rem;
+}
+
+.text-sm { font-size: 0.867rem; }
+.text-xs { font-size: 0.733rem; }
+.text-lg { font-size: 1.133rem; }
+.text-xl { font-size: 1.267rem; }
+
+/* -- Card & content overflow protection ------------------------------------- */
+/* Prevents cards/containers from bleeding out - scoped to card classes only */
+.card,
+.content-card,
+.card-elevated,
+.page-container {
+  max-width: 100%;
+  overflow-x: hidden;
+  word-break: break-word;
+}
+
+/* Inputs must never overflow their container */
+input, textarea, select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ===========================
+   HIGH CONTRAST MODE
+   =========================== */
+
+html.high-contrast {
+  /* Override all colors with high contrast palette */
+  --color-primary: #003D4D;
+  --color-primary-light: #006B7D;
+  --color-primary-dark: #001F27;
+  
+  --color-text-primary: #000000;
+  --color-text-secondary: #1A1A1A;
+  --color-text-slate-500: #333333;
+  
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F5F5F5;
+  --color-card-bg: #FFFFFF;
+  
+  --color-border-light: #333333;
+  --color-border-medium: #1A1A1A;
+  --color-border-strong: #000000;
+  
+  --color-success: #006400;
+  --color-warning: #B35900;
+  --color-error: #8B0000;
+  --color-info: #003399;
+}
+
+html.high-contrast body {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+html.high-contrast .card,
+html.high-contrast .content-card,
+html.high-contrast .stat-card {
+  border: 3px solid #000000;
+  background: #FFFFFF;
+}
+
+html.high-contrast button,
+html.high-contrast input,
+html.high-contrast textarea,
+html.high-contrast select {
+  border: 2px solid #000000;
+  color: #000000;
+}
+
+html.high-contrast a {
+  color: #0000EE;
+  text-decoration: underline;
+}
+
+html.high-contrast a:visited {
+  color: #551A8B;
+}
+
+html.high-contrast *:focus {
+  outline: 4px solid #000000 !important;
+  outline-offset: 2px !important;
+}
+
+/* ===========================
+   REDUCED MOTION
+   =========================== */
+
+html.reduced-motion *,
+html.reduced-motion *::before,
+html.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===========================
+   LARGE TOUCH TARGETS
+   =========================== */
+
+html.large-touch button,
+html.large-touch a,
+html.large-touch input[type="button"],
+html.large-touch input[type="submit"],
+html.large-touch input[type="reset"],
+html.large-touch [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1.5rem;
+}
+
+html.large-touch input[type="checkbox"],
+html.large-touch input[type="radio"] {
+  width: 24px;
+  height: 24px;
+}
+
+html.large-touch select {
+  min-height: 44px;
+  padding: 0.75rem;
+}
+
+html.large-touch input[type="text"],
+html.large-touch input[type="email"],
+html.large-touch input[type="password"],
+html.large-touch input[type="tel"],
+html.large-touch input[type="number"],
+html.large-touch input[type="date"],
+html.large-touch textarea {
+  min-height: 44px;
+  padding: 0.75rem;
+  font-size: 1.125rem;
+}
+
+/* ===========================
+   KEYBOARD NAVIGATION
+   =========================== */
+
+/* Enhanced focus indicators */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(13, 115, 119, 0.2);
+}
+
+/* Remove focus for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Keyboard-only mode - always show focus */
+html.keyboard-only *:focus {
+  outline: 3px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px rgba(13, 115, 119, 0.2) !important;
+}
+
+/* Focus within containers - removed global rule that caused random borders everywhere */
+
+/* ===========================
+   SCREEN READER MODE
+   =========================== */
+
+html.screen-reader-mode {
+  /* Enhance content for screen readers */
+}
+
+/* Add additional context for screen readers */
+html.screen-reader-mode [aria-label]::before,
+html.screen-reader-mode [aria-describedby]::before {
+  /* Ensure ARIA labels are properly announced */
+}
+
+/* ===========================
+   SIMPLIFIED UI MODE
+   =========================== */
+
+/* Only reduce shadows and add clearer borders - do NOT override colours */
+html.simplified-ui .card,
+html.simplified-ui .stat-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+  border: 2px solid rgba(0,0,0,0.12) !important;
+}
+
+/* Do NOT hide aria-hidden elements - they include icons that are part of the visual design */
+
+/* ===========================
+   ACCESSIBLE FORM ELEMENTS
+   =========================== */
+
+/* Required field indicator */
+.required::after {
+  content: " *";
+  color: var(--color-error);
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* Error states */
+[aria-invalid="true"] {
+  border-color: var(--color-error) !important;
+  border-width: 2px !important;
+}
+
+[aria-invalid="true"]:focus {
+  outline-color: var(--color-error) !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Error messages - only apply inside forms, not globally */
+.form-error[role="alert"] {
+  padding: 0.75rem;
+  border-left: 4px solid var(--color-error);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* Success messages - only apply inside forms, not globally */
+.form-success[role="status"] {
+  padding: 0.75rem;
+  border-left: 4px solid var(--color-success);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+/* ===========================
+   LIVE REGIONS
+   =========================== */
+
+[aria-live] {
+  position: relative;
+}
+
+[aria-live="assertive"] {
+  /* Urgent announcements */
+  font-weight: 700;
+}
+
+[aria-live="polite"] {
+  /* Normal announcements */
+}
+
+/* ===========================
+   ACCESSIBLE TABLES
+   =========================== */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: 700;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-medium);
+  padding: 0.75rem;
+}
+
+td {
+  border: 1px solid var(--color-border-light);
+  padding: 0.75rem;
+}
+
+/* Caption for tables */
+caption {
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+/* ===========================
+   ACCESSIBLE MODALS/DIALOGS
+   =========================== */
+
+[role="dialog"],
+[aria-modal="true"] {
+  /* Ensure dialogs are properly announced */
+  outline: none;
+}
+
+/* Modal backdrop */
+[role="dialog"]::backdrop,
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* ===========================
+   SKIP NAVIGATION
+   =========================== */
+
+.skip-navigation {
+  position: absolute;
+  top: -999px;
+  left: -999px;
+  z-index: 9999;
+  padding: 1rem;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.skip-navigation:focus {
+  top: 10px;
+  left: 10px;
+  outline: 4px solid white;
+}
+
+/* ===========================
+   LANDMARKS
+   =========================== */
+
+/* Ensure all landmark regions are properly identified */
+[role="banner"],
+[role="navigation"],
+[role="main"],
+[role="complementary"],
+[role="contentinfo"],
+[role="search"] {
+  /* Landmarks for screen readers */
+}
+
+/* ===========================
+   TOUCH FRIENDLY
+   =========================== */
+
+/* Prevent accidental zooming */
+@media (hover: none) and (pointer: coarse) {
+  input, textarea, select {
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+}
+
+/* ===========================
+   PRINT ACCESSIBILITY
+   =========================== */
+
+@media print {
+  /* Show URLs for links */
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+  
+  /* Remove navigation and interactive elements */
+  nav, .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure good contrast */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ===========================
+   COLOR BLINDNESS SUPPORT
+   =========================== */
+
+/* Never rely on color alone - always use patterns, icons, or text */
+.status-success::before { content: "✓ "; }
+.status-warning::before { content: "⚠ "; }
+.status-error::before { content: "✗ "; }
+.status-info::before { content: "ℹ "; }
+
+/* Color Blind Modes - Simulating different types of color blindness */
+
+/* Protanopia (Red-Blind) - Cannot see red */
+html.cb-protanopia {
+  filter: url('#protanopia-filter');
+}
+
+html.cb-protanopia body {
+  filter: 
+    saturate(0.8)
+    hue-rotate(5deg)
+    contrast(1.1);
+}
+
+/* Deuteranopia (Green-Blind) - Cannot see green */
+html.cb-deuteranopia {
+  filter: url('#deuteranopia-filter');
+}
+
+html.cb-deuteranopia body {
+  filter:
+    saturate(0.7)
+    hue-rotate(-5deg)
+    contrast(1.05);
+}
+
+/* Tritanopia (Blue-Blind) - Cannot see blue */
+html.cb-tritanopia {
+  filter: url('#tritanopia-filter');
+}
+
+html.cb-tritanopia body {
+  filter:
+    saturate(0.75)
+    hue-rotate(10deg)
+    contrast(1.08);
+}
+
+/* Monochrome (Total Color Blindness) - Grayscale only */
+html.cb-monochrome body {
+  filter: grayscale(100%) contrast(1.2);
+}
+
+/* Enhance patterns and textures for color blind users */
+html[class*="cb-"] .status-indicator,
+html[class*="cb-"] .alert,
+html[class*="cb-"] .badge {
+  /* Add patterns/icons to distinguish */
+  font-weight: 700;
+  border: 2px solid currentColor;
+}
+
+/* Make success/error states distinguishable without color */
+html[class*="cb-"] .bg-red-100,
+html[class*="cb-"] .bg-red-500 {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 0, 0, 0.1) 10px,
+    rgba(0, 0, 0, 0.1) 20px
+  );
+}
+
+html[class*="cb-"] .bg-green-100,
+html[class*="cb-"] .bg-green-500 {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 0, 0, 0.05) 10px,
+    rgba(0, 0, 0, 0.05) 20px
+  );
+}
+
+html[class*="cb-"] .bg-yellow-100,
+html[class*="cb-"] .bg-yellow-500 {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 5px,
+    rgba(0, 0, 0, 0.05) 5px,
+    rgba(0, 0, 0, 0.05) 10px
+  );
+}
+
+/* ===========================
+   ZOOM SUPPORT (up to 400%)
+   =========================== */
+
+/* Ensure content reflows properly at 400% zoom */
+@media (min-width: 1280px) {
+  html {
+    /* Allow text to reflow */
+  }
+}
+
+/* Prevent horizontal scrolling on zoom */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ===========================
+   MAIN HEADER - force all icons/buttons white
+   Overrides component-level teal/red/gray icon colours
+   =========================== */
+
+/* Every icon (svg) inside the sticky header becomes white */
+header[role="banner"] svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Exception: dismiss X and chevron inside notification/alert dropdowns */
+header[role="banner"] .notif-dismiss-btn svg,
+header[role="banner"] .notif-chevron {
+  color: #e11d48 !important;
+  stroke: #e11d48 !important;
+}
+
+/* Dismiss button hover - transparent, no white flash */
+header[role="banner"] .notif-dismiss-btn:hover {
+  background: transparent !important;
+}
+
+/* Hover backgrounds become white/translucent instead of coloured */
+header[role="banner"] button:hover,
+header[role="banner"] a:hover {
+  background: rgba(255,255,255,0.18) !important;
+}
+
+/* Badge counters keep their red/teal so they're visible */
+header[role="banner"] .bg-red-500,
+header[role="banner"] .bg-teal-500,
+header[role="banner"] .bg-red-600 {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* Yellow sun icon for dark-mode toggle - keep it yellow */
+header[role="banner"] .text-yellow-300 svg,
+header[role="banner"] .text-yellow-500 svg {
+  color: #fde047 !important;
+  stroke: #fde047 !important;
+}
+
+/* ===========================
+   ACCESSIBILITY TESTING AIDS
+   =========================== */
+
+/* Show landmarks in development (remove in production) */
+[role="banner"]::before,
+[role="navigation"]::before,
+[role="main"]::before,
+[role="complementary"]::before,
+[role="contentinfo"]::before {
+  /* For development testing only */
+  /* content: "[" attr(role) "]"; */
+  /* font-size: 0.75rem; */
+  /* color: var(--color-info); */
+}
+
+/* ===========================
+   ASSISTED MODE
+   For dementia, cognitive impairment, motor difficulties.
+   RULE: Never strip colours or gradients - only make things BIGGER and CLEARER.
+   =========================== */
+
+/* Slightly larger root font - Tailwind utility classes still win for colours */
+html.assisted-mode {
+  font-size: 20px;
+}
+
+/* -- Buttons: big, easy tap targets, keep their own background colours -- */
+html.assisted-mode button:not([class*="h-1"]):not([class*="h-2"]):not([class*="h-3"]):not([class*="h-4"]):not([class*="h-5"]):not([class*="h-6"]):not([class*="h-7"]):not([class*="h-8"]) {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  border-radius: 14px !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+/* -- Inputs / textareas / selects -- */
+html.assisted-mode input[type="text"],
+html.assisted-mode input[type="email"],
+html.assisted-mode input[type="password"],
+html.assisted-mode input[type="tel"],
+html.assisted-mode input[type="number"],
+html.assisted-mode input[type="date"],
+html.assisted-mode textarea,
+html.assisted-mode select {
+  min-height: 52px !important;
+  font-size: 1rem !important;
+  padding: 0.75rem 1rem !important;
+  border-width: 3px !important;
+  border-radius: 12px !important;
+}
+
+html.assisted-mode input:focus,
+html.assisted-mode textarea:focus,
+html.assisted-mode select:focus {
+  outline: 4px solid #0ea5e9 !important;
+  outline-offset: 3px !important;
+}
+
+/* -- Labels -- */
+html.assisted-mode label {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+/* -- Sidebar nav links -- */
+html.assisted-mode aside a,
+html.assisted-mode aside button {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+/* -- More breathing room in cards -- */
+html.assisted-mode .p-4 { padding: 1.25rem !important; }
+html.assisted-mode .p-6 { padding: 1.75rem !important; }
+
+/* -- Very obvious focus rings -- */
+html.assisted-mode *:focus-visible {
+  outline: 5px solid #7c3aed !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.2) !important;
+}
+
+/* -- Assisted mode banner show/hide -- */
+html.assisted-mode .assisted-mode-banner {
+  display: flex !important;
+}
+.assisted-mode-banner {
+  display: none;
+}
+
+/* -- Sidebar scrollable nav ------------------------------------------------ */
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.sidebar-nav:hover::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.4);
+}
+
+/* -- Sidebar-specific tooltip styling ------------------------------------ */
+/*
+ * Because the sidebar nav has overflow-y:auto, CSS ::after pseudo-elements
+ * get clipped. We use position:fixed on sidebar-tip tooltips so they escape
+ * the overflow context and always appear to the right of the sidebar item.
+ *
+ * However, pure CSS ::after can't use position:fixed (it inherits from the
+ * stacking context). So we hide the default CSS tooltip for sidebar items
+ * and use the title attribute as fallback - the browser native tooltip
+ * is never clipped.
+ *
+ * For a real fix use the Tip.jsx component or a JS-based tooltip on sidebar items.
+ */
+.sidebar-tip[data-tip]::after,
+.sidebar-tip[data-tip]::before {
+  bottom: auto;
+  top: 50%;
+  left: calc(100% + 10px);
+  transform: translateY(-50%) scale(0.92);
+  white-space: nowrap;
+  /* Hide instantly */
+  transition: opacity 0.08s ease 0s, transform 0.08s ease 0s;
+}
+.sidebar-tip[data-tip]:hover::after,
+.sidebar-tip[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  /* Show after 600ms */
+  transition: opacity 0.15s ease 0.6s, transform 0.15s ease 0.6s;
+}
+.sidebar-tip[data-tip]::before {
+  left: calc(100% + 5px);
+  border-top-color: transparent;
+  border-right-color: #1e293b;
+  border-left: none;
+}
+.sidebar-tip[data-tip]:hover::before {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  transition: opacity 0.15s ease 0.6s, transform 0.15s ease 0.6s;
+}
+
+/* Scrollbar on any container that needs it */
+.sidebar-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+.sidebar-scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.sidebar-scroll-container:hover::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.4);
+}

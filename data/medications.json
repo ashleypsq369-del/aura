@@ -1,0 +1,118 @@
+{
+  "medications": [
+    {
+      "name": "Morphine Sulfate",
+      "generic_name": "morphine",
+      "drug_class": "Opioid Analgesic",
+      "common_dosages": ["5mg", "10mg", "15mg", "30mg"],
+      "side_effects": ["Drowsiness", "Constipation", "Nausea", "Respiratory depression", "Confusion"],
+      "interactions": [
+        {"drug": "Lorazepam", "severity": "Major", "description": "Increased sedation and respiratory depression"},
+        {"drug": "Ondansetron", "severity": "Moderate", "description": "May increase constipation"}
+      ],
+      "contraindications": "Severe respiratory depression, acute or severe bronchial asthma",
+      "monitoring": "Monitor respiratory rate every 2 hours, especially in first 24 hours"
+    },
+    {
+      "name": "Lorazepam",
+      "generic_name": "lorazepam",
+      "drug_class": "Benzodiazepine",
+      "common_dosages": ["0.5mg", "1mg", "2mg"],
+      "side_effects": ["Drowsiness", "Dizziness", "Weakness", "Confusion"],
+      "interactions": [
+        {"drug": "Morphine Sulfate", "severity": "Major", "description": "Increased sedation and respiratory depression"},
+        {"drug": "Alcohol", "severity": "Critical", "description": "Severe CNS depression"}
+      ],
+      "contraindications": "Acute narrow-angle glaucoma, severe respiratory insufficiency",
+      "monitoring": "Monitor for excessive sedation, fall risk"
+    },
+    {
+      "name": "Ondansetron",
+      "generic_name": "ondansetron",
+      "drug_class": "Antiemetic",
+      "common_dosages": ["4mg", "8mg"],
+      "side_effects": ["Headache", "Constipation", "Dizziness"],
+      "interactions": [
+        {"drug": "Morphine Sulfate", "severity": "Moderate", "description": "May increase constipation"}
+      ],
+      "contraindications": "Hypersensitivity to ondansetron",
+      "monitoring": "Monitor for QT prolongation if on other QT-prolonging drugs"
+    },
+    {
+      "name": "Fentanyl Patch",
+      "generic_name": "fentanyl",
+      "drug_class": "Opioid Analgesic",
+      "common_dosages": ["12mcg/hr", "25mcg/hr", "50mcg/hr", "75mcg/hr", "100mcg/hr"],
+      "side_effects": ["Drowsiness", "Constipation", "Nausea", "Respiratory depression"],
+      "interactions": [
+        {"drug": "Lorazepam", "severity": "Major", "description": "Increased sedation and respiratory depression"}
+      ],
+      "contraindications": "Opioid non-tolerant patients, acute pain management",
+      "monitoring": "Monitor respiratory rate, check patch placement daily"
+    },
+    {
+      "name": "Haloperidol",
+      "generic_name": "haloperidol",
+      "drug_class": "Antipsychotic",
+      "common_dosages": ["0.5mg", "1mg", "2mg", "5mg"],
+      "side_effects": ["Drowsiness", "Extrapyramidal symptoms", "QT prolongation"],
+      "interactions": [
+        {"drug": "Ondansetron", "severity": "Major", "description": "Increased risk of QT prolongation"}
+      ],
+      "contraindications": "Parkinson's disease, severe CNS depression",
+      "monitoring": "Monitor for extrapyramidal symptoms, QT interval"
+    },
+    {
+      "name": "Atropine Drops",
+      "generic_name": "atropine",
+      "drug_class": "Anticholinergic",
+      "common_dosages": ["1% solution"],
+      "side_effects": ["Dry mouth", "Blurred vision", "Urinary retention"],
+      "interactions": [],
+      "contraindications": "Narrow-angle glaucoma",
+      "monitoring": "Monitor for excessive drying of secretions"
+    },
+    {
+      "name": "Scopolamine Patch",
+      "generic_name": "scopolamine",
+      "drug_class": "Anticholinergic",
+      "common_dosages": ["1.5mg patch"],
+      "side_effects": ["Dry mouth", "Drowsiness", "Blurred vision", "Confusion"],
+      "interactions": [],
+      "contraindications": "Narrow-angle glaucoma, urinary retention",
+      "monitoring": "Monitor for confusion, especially in elderly"
+    },
+    {
+      "name": "Metoclopramide",
+      "generic_name": "metoclopramide",
+      "drug_class": "Prokinetic/Antiemetic",
+      "common_dosages": ["5mg", "10mg"],
+      "side_effects": ["Drowsiness", "Restlessness", "Extrapyramidal symptoms"],
+      "interactions": [
+        {"drug": "Haloperidol", "severity": "Major", "description": "Increased risk of extrapyramidal symptoms"}
+      ],
+      "contraindications": "GI obstruction, Parkinson's disease",
+      "monitoring": "Monitor for extrapyramidal symptoms"
+    },
+    {
+      "name": "Dexamethasone",
+      "generic_name": "dexamethasone",
+      "drug_class": "Corticosteroid",
+      "common_dosages": ["2mg", "4mg", "8mg"],
+      "side_effects": ["Increased appetite", "Insomnia", "Mood changes", "Hyperglycemia"],
+      "interactions": [],
+      "contraindications": "Systemic fungal infections",
+      "monitoring": "Monitor blood glucose, mood changes"
+    },
+    {
+      "name": "Furosemide",
+      "generic_name": "furosemide",
+      "drug_class": "Loop Diuretic",
+      "common_dosages": ["20mg", "40mg", "80mg"],
+      "side_effects": ["Dehydration", "Electrolyte imbalance", "Dizziness"],
+      "interactions": [],
+      "contraindications": "Anuria, severe electrolyte depletion",
+      "monitoring": "Monitor fluid status, electrolytes, blood pressure"
+    }
+  ]
+}

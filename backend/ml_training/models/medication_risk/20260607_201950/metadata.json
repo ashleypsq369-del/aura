@@ -1,0 +1,16 @@
+{
+  "task_name": "medication_risk",
+  "model_type": "xgboost",
+  "features": [
+    "medications_count",
+    "high_risk_medications",
+    "drug_interactions",
+    "mmas8_score",
+    "age",
+    "kidney_function",
+    "liver_function"
+  ],
+  "target": "adverse_drug_event_30day",
+  "version": "20260607_201950",
+  "trained_at": "2026-06-07T20:19:51.295083"
+}

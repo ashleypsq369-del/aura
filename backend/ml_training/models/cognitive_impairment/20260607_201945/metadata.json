@@ -1,0 +1,15 @@
+{
+  "task_name": "cognitive_impairment",
+  "model_type": "xgboost",
+  "features": [
+    "mmse_score",
+    "moca_score",
+    "age",
+    "education_years",
+    "medications_affecting_cognition",
+    "recent_delirium"
+  ],
+  "target": "cognitive_decline_detected",
+  "version": "20260607_201945",
+  "trained_at": "2026-06-07T20:19:45.923257"
+}

@@ -1,0 +1,452 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "last_updated": "2026-01-25",
+    "inspired_by": [
+      "MatrixCare Home Health & Hospice",
+      "Alora Hospice",
+      "nanaBEREAVEMENT (Maxwell TEC)",
+      "Wysa AI Mental Health Companion",
+      "ReelMind.ai Video Storytelling"
+    ]
+  },
+  
+  "clinical_workflows": {
+    "admission_checklist": {
+      "title": "Patient Admission Workflow",
+      "source": "MatrixCare best practices",
+      "steps": [
+        "Verify patient demographics and insurance",
+        "Complete initial assessment (physical, psychosocial, spiritual)",
+        "Establish care goals and advance directives",
+        "Create interdisciplinary care plan",
+        "Set up medication management",
+        "Schedule initial team conference",
+        "Assign primary nurse and backup contacts",
+        "Provide family education materials"
+      ]
+    },
+    "daily_monitoring": {
+      "title": "Daily Patient Monitoring Protocol",
+      "source": "Alora Hospice workflows",
+      "vitals_to_track": [
+        "Blood pressure",
+        "Heart rate",
+        "Respiratory rate",
+        "Temperature",
+        "Oxygen saturation",
+        "Pain level (0-10 scale)",
+        "Consciousness level"
+      ],
+      "symptom_assessment": [
+        "Pain location and character",
+        "Breathing difficulty",
+        "Nausea/vomiting",
+        "Appetite and hydration",
+        "Bowel/bladder function",
+        "Skin integrity",
+        "Emotional state"
+      ]
+    },
+    "crisis_intervention": {
+      "title": "Crisis Response Protocol",
+      "source": "Industry standard hospice care",
+      "triggers": [
+        "Severe pain (>7/10) uncontrolled by current regimen",
+        "Acute respiratory distress",
+        "Severe agitation or delirium",
+        "Uncontrolled bleeding",
+        "Family crisis or breakdown",
+        "Imminent death signs"
+      ],
+      "response_steps": [
+        "Immediate nurse notification",
+        "Assess patient safety",
+        "Implement comfort measures",
+        "Medication adjustment if needed",
+        "Family support and education",
+        "Document and follow up"
+      ]
+    }
+  },
+  
+  "bereavement_support": {
+    "automated_outreach": {
+      "title": "Bereavement Communication Timeline",
+      "source": "nanaBEREAVEMENT automated messaging",
+      "timeline": [
+        {
+          "days_after_death": 3,
+          "message_type": "Initial condolence",
+          "content": "We are thinking of you during this difficult time. Your hospice team is here if you need support."
+        },
+        {
+          "days_after_death": 7,
+          "message_type": "Resource sharing",
+          "content": "Grief is a journey. We've compiled resources that may help: [link to grief support materials]"
+        },
+        {
+          "days_after_death": 30,
+          "message_type": "Check-in",
+          "content": "How are you doing? Remember, there's no timeline for grief. We're here to listen."
+        },
+        {
+          "days_after_death": 90,
+          "message_type": "Support group invitation",
+          "content": "Many families find comfort in connecting with others. Would you like information about our support groups?"
+        },
+        {
+          "days_after_death": 180,
+          "message_type": "Milestone acknowledgment",
+          "content": "Six months have passed. We hope you're finding moments of peace. Our bereavement services remain available."
+        },
+        {
+          "days_after_death": 365,
+          "message_type": "Anniversary support",
+          "content": "Anniversaries can be especially difficult. We're remembering your loved one with you today."
+        }
+      ]
+    },
+    "grief_stages_resources": {
+      "title": "Grief Stage Support Materials",
+      "source": "Kübler-Ross model adapted for hospice",
+      "stages": {
+        "denial": {
+          "description": "Shock and disbelief",
+          "support_strategies": [
+            "Validate feelings without forcing acceptance",
+            "Provide gentle reality checks",
+            "Allow time for processing",
+            "Offer presence without pressure"
+          ],
+          "resources": [
+            "Understanding Shock and Denial in Grief",
+            "When Loss Feels Unreal: A Guide",
+            "Gentle Steps Through Early Grief"
+          ]
+        },
+        "anger": {
+          "description": "Frustration and rage at the loss",
+          "support_strategies": [
+            "Normalize anger as part of grief",
+            "Provide safe outlets for expression",
+            "Avoid taking anger personally",
+            "Encourage physical activity"
+          ],
+          "resources": [
+            "Anger in Grief: It's Normal",
+            "Healthy Ways to Express Grief Anger",
+            "When Grief Makes You Angry"
+          ]
+        },
+        "bargaining": {
+          "description": "What if and if only thoughts",
+          "support_strategies": [
+            "Listen without judgment",
+            "Gently challenge guilt",
+            "Remind of what was done well",
+            "Encourage self-compassion"
+          ],
+          "resources": [
+            "Letting Go of Guilt in Grief",
+            "You Did Your Best: A Caregiver's Reminder",
+            "Moving Past 'What If' in Grief"
+          ]
+        },
+        "depression": {
+          "description": "Deep sadness and withdrawal",
+          "support_strategies": [
+            "Monitor for clinical depression",
+            "Encourage professional help if needed",
+            "Maintain gentle contact",
+            "Validate the depth of loss"
+          ],
+          "resources": [
+            "When Grief Becomes Depression",
+            "Finding Light in Deep Grief",
+            "Depression vs. Grief: Knowing the Difference",
+            "Crisis Hotline: 988 (Suicide & Crisis Lifeline)"
+          ]
+        },
+        "acceptance": {
+          "description": "Finding a new normal",
+          "support_strategies": [
+            "Celebrate progress",
+            "Support new routines",
+            "Honor continuing bonds",
+            "Encourage meaning-making"
+          ],
+          "resources": [
+            "Building a New Normal After Loss",
+            "Honoring Memory While Moving Forward",
+            "Finding Meaning in Loss"
+          ]
+        }
+      }
+    },
+    "memory_preservation": {
+      "title": "Digital Memory Projects",
+      "source": "ReelMind.ai and After Cloud concepts",
+      "project_ideas": [
+        {
+          "name": "Life Story Video",
+          "description": "Create a video montage of photos, videos, and voice recordings",
+          "tools_needed": ["Photos", "Videos", "Audio recordings", "Music"],
+          "estimated_time": "2-4 hours"
+        },
+        {
+          "name": "Memory Book",
+          "description": "Digital or physical scrapbook with stories and photos",
+          "tools_needed": ["Photos", "Written memories", "Quotes", "Mementos"],
+          "estimated_time": "3-6 hours"
+        },
+        {
+          "name": "Recipe Collection",
+          "description": "Preserve loved one's favorite recipes with stories",
+          "tools_needed": ["Recipes", "Photos of dishes", "Family stories"],
+          "estimated_time": "1-2 hours"
+        },
+        {
+          "name": "Voice Archive",
+          "description": "Compile voice messages, voicemails, and recordings",
+          "tools_needed": ["Audio files", "Transcriptions", "Context notes"],
+          "estimated_time": "2-3 hours"
+        },
+        {
+          "name": "Legacy Letter Collection",
+          "description": "Gather letters, emails, and written communications",
+          "tools_needed": ["Letters", "Emails", "Cards", "Notes"],
+          "estimated_time": "1-2 hours"
+        }
+      ]
+    }
+  },
+  
+  "conversational_support": {
+    "wysa_inspired_paths": {
+      "title": "Structured Support Conversations",
+      "source": "Wysa AI companion patterns",
+      "conversation_types": {
+        "symptom_logging": {
+          "entry_point": "I need to report symptoms",
+          "conversation_flow": [
+            "Which symptom are you noticing?",
+            "When did it start?",
+            "How severe is it (mild/moderate/severe)?",
+            "What makes it better or worse?",
+            "Have you tried any interventions?",
+            "Would you like me to alert your care team?"
+          ],
+          "outcomes": ["Symptom logged", "Care team notified if needed", "Comfort measures suggested"]
+        },
+        "emotional_check_in": {
+          "entry_point": "I need emotional support",
+          "conversation_flow": [
+            "How are you feeling right now?",
+            "What's weighing on you most?",
+            "Have you been able to take care of yourself?",
+            "Would you like coping strategies or just to talk?",
+            "Is there someone you can reach out to?"
+          ],
+          "outcomes": ["Emotional state assessed", "Coping strategies offered", "Resources provided"]
+        },
+        "crisis_assessment": {
+          "entry_point": "This is urgent/emergency",
+          "conversation_flow": [
+            "Is this a medical emergency requiring 911?",
+            "Is the patient in immediate danger?",
+            "What symptoms are you seeing?",
+            "Have you contacted the hospice nurse?",
+            "I'm alerting your care team now"
+          ],
+          "outcomes": ["Emergency protocol activated", "Care team notified", "Immediate guidance provided"]
+        }
+      }
+    },
+    "safety_guidelines": {
+      "title": "Conversational AI Safety Rules",
+      "source": "Wysa and industry best practices",
+      "rules": [
+        "Never provide medical diagnoses",
+        "Always defer to healthcare professionals for medical decisions",
+        "Detect and escalate crisis situations immediately",
+        "Use only pre-approved, vetted responses",
+        "Avoid open-ended generative AI for sensitive topics",
+        "Maintain empathetic, non-judgmental tone",
+        "Respect cultural and spiritual diversity",
+        "Protect patient privacy and confidentiality"
+      ],
+      "crisis_keywords": [
+        "suicide",
+        "kill myself",
+        "end it all",
+        "not worth living",
+        "better off dead",
+        "can't go on",
+        "want to die"
+      ],
+      "crisis_response": "I'm concerned about what you're sharing. Please call 988 (Suicide & Crisis Lifeline) immediately or contact your hospice team. You don't have to face this alone."
+    }
+  },
+  
+  "ui_design_patterns": {
+    "matrixcare_dashboard": {
+      "title": "Dashboard Layout Best Practices",
+      "source": "MatrixCare and Alora Hospice interfaces",
+      "layout_principles": [
+        "Role-based views (clinician vs family)",
+        "Card-based modular design",
+        "Color-coded alerts and statuses",
+        "Quick action buttons prominently placed",
+        "Recent activity feed",
+        "At-a-glance KPIs",
+        "Responsive mobile-friendly design"
+      ],
+      "color_scheme": {
+        "primary": "#007bff",
+        "success": "#28a745",
+        "warning": "#ffc107",
+        "danger": "#dc3545",
+        "info": "#17a2b8",
+        "light": "#f8f9fa",
+        "dark": "#343a40"
+      },
+      "typography": {
+        "heading_font": "Inter, system-ui, sans-serif",
+        "body_font": "Inter, system-ui, sans-serif",
+        "heading_sizes": {
+          "h1": "32px",
+          "h2": "24px",
+          "h3": "20px",
+          "h4": "16px"
+        },
+        "body_size": "14px",
+        "line_height": "1.6"
+      }
+    },
+    "accessibility_standards": {
+      "title": "Healthcare UI Accessibility",
+      "source": "WCAG 2.1 AA compliance",
+      "requirements": [
+        "Minimum contrast ratio 4.5:1 for text",
+        "Large touch targets (minimum 44x44px)",
+        "Keyboard navigation support",
+        "Screen reader compatibility",
+        "Clear focus indicators",
+        "Readable fonts (minimum 14px)",
+        "No reliance on color alone for information",
+        "Captions for video content"
+      ]
+    }
+  },
+  
+  "integration_opportunities": {
+    "ehr_systems": {
+      "title": "EHR Integration Patterns",
+      "source": "MatrixCare and Alora integration capabilities",
+      "potential_integrations": [
+        {
+          "system": "Epic",
+          "data_exchange": ["Patient demographics", "Medications", "Allergies", "Care plans"],
+          "method": "HL7 FHIR API"
+        },
+        {
+          "system": "Cerner",
+          "data_exchange": ["Vitals", "Lab results", "Orders", "Documentation"],
+          "method": "HL7 FHIR API"
+        },
+        {
+          "system": "Allscripts",
+          "data_exchange": ["Patient records", "Prescriptions", "Encounters"],
+          "method": "HL7 v2.x"
+        }
+      ]
+    },
+    "communication_platforms": {
+      "title": "Multi-Channel Communication",
+      "source": "nanaBEREAVEMENT multi-channel approach",
+      "channels": [
+        {
+          "channel": "SMS",
+          "use_cases": ["Appointment reminders", "Medication alerts", "Quick check-ins"],
+          "provider": "Twilio"
+        },
+        {
+          "channel": "Email",
+          "use_cases": ["Detailed updates", "Resource sharing", "Care summaries"],
+          "provider": "SendGrid"
+        },
+        {
+          "channel": "Push Notifications",
+          "use_cases": ["Urgent alerts", "Task reminders", "Real-time updates"],
+          "provider": "Firebase Cloud Messaging"
+        },
+        {
+          "channel": "Voice Calls",
+          "use_cases": ["Emergency contact", "Personal check-ins", "Complex discussions"],
+          "provider": "Twilio Voice"
+        }
+      ]
+    }
+  },
+  
+  "training_resources": {
+    "clinician_onboarding": {
+      "title": "Clinician Training Modules",
+      "source": "Alora Hospice training best practices",
+      "modules": [
+        {
+          "module": "Platform Navigation",
+          "duration": "30 minutes",
+          "topics": ["Dashboard overview", "Patient management", "Documentation", "Alerts"]
+        },
+        {
+          "module": "AI Insights Interpretation",
+          "duration": "45 minutes",
+          "topics": ["Understanding SHAP visualizations", "Care pathway recommendations", "Risk scores"]
+        },
+        {
+          "module": "Alert Management",
+          "duration": "30 minutes",
+          "topics": ["Alert types", "Response protocols", "Escalation procedures"]
+        },
+        {
+          "module": "Family Communication",
+          "duration": "45 minutes",
+          "topics": ["Portal access", "Information sharing", "Bereavement support"]
+        }
+      ]
+    },
+    "family_user_guide": {
+      "title": "Family Member Quick Start",
+      "source": "User-friendly onboarding patterns",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Create Your Account",
+          "description": "Set up secure access with your email and password"
+        },
+        {
+          "step": 2,
+          "title": "Complete Your Profile",
+          "description": "Add your relationship to patient and contact preferences"
+        },
+        {
+          "step": 3,
+          "title": "Learn the Dashboard",
+          "description": "Tour the main features: logging, trends, alerts, support"
+        },
+        {
+          "step": 4,
+          "title": "Log Your First Entry",
+          "description": "Practice logging symptoms or vitals"
+        },
+        {
+          "step": 5,
+          "title": "Explore Support Resources",
+          "description": "Find educational materials and support contacts"
+        }
+      ]
+    }
+  }
+}

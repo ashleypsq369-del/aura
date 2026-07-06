@@ -1,0 +1,16 @@
+{
+  "task_name": "admission_risk",
+  "model_type": "xgboost",
+  "features": [
+    "recent_ed_visits",
+    "pps_score",
+    "esas_total",
+    "comorbidities_count",
+    "age",
+    "social_support_score",
+    "medications_count"
+  ],
+  "target": "hospital_admission_7day",
+  "version": "20260607_202004",
+  "trained_at": "2026-06-07T20:20:05.173537"
+}

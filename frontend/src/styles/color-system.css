@@ -1,0 +1,367 @@
+/*
+ * color-system.css - Project Aura Rich Color System
+ * ===================================================
+ * Adds vivid, role-aware color throughout the app.
+ * Works on top of themes.css - does NOT break dark mode.
+ */
+
+/* --------------------------------------------------------------------------
+   1. COLOR TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand palette */
+  --aura-teal:    #0d9488;
+  --aura-teal-lt: #ccfbf1;
+  --aura-violet:  #7c3aed;
+  --aura-violet-lt: #ede9fe;
+  --aura-rose:    #e11d48;
+  --aura-rose-lt: #ffe4e6;
+  --aura-amber:   #d97706;
+  --aura-amber-lt:#fef3c7;
+  --aura-blue:    #1d4ed8;
+  --aura-blue-lt: #dbeafe;
+  --aura-emerald: #059669;
+  --aura-emerald-lt: #d1fae5;
+  --aura-indigo:  #4338ca;
+  --aura-indigo-lt: #e0e7ff;
+  --aura-pink:    #db2777;
+  --aura-pink-lt: #fce7f3;
+  --aura-orange:  #ea580c;
+  --aura-orange-lt:#ffedd5;
+  --aura-cyan:    #0891b2;
+  --aura-cyan-lt: #cffafe;
+
+  /* Page tints per section */
+  --pg-dashboard:  linear-gradient(135deg,#f0fdfa 0%,#eff6ff 50%,#faf5ff 100%);
+  --pg-patients:   linear-gradient(135deg,#eff6ff 0%,#eef2ff 50%,#f0f9ff 100%);
+  --pg-clinical:   linear-gradient(135deg,#faf5ff 0%,#ede9fe 40%,#f0fdfa 100%);
+  --pg-patient:    linear-gradient(135deg,#f0fdf4 0%,#f0fdfa 50%,#ecfdf5 100%);
+  --pg-alerts:     linear-gradient(135deg,#fff1f2 0%,#fff7ed 50%,#fffbeb 100%);
+  --pg-resources:  linear-gradient(135deg,#f0f9ff 0%,#ecfdf5 50%,#f0fdfa 100%);
+  --pg-community:  linear-gradient(135deg,#fdf4ff 0%,#fce7f3 40%,#eff6ff 100%);
+  --pg-journey:    linear-gradient(135deg,#fff7ed 0%,#fef9c3 40%,#f0fdf4 100%);
+}
+
+html.dark {
+  --aura-teal-lt:    rgba(13,148,136,0.18);
+  --aura-violet-lt:  rgba(124,58,237,0.18);
+  --aura-rose-lt:    rgba(225,29,72,0.18);
+  --aura-amber-lt:   rgba(217,119,6,0.18);
+  --aura-blue-lt:    rgba(29,78,216,0.18);
+  --aura-emerald-lt: rgba(5,150,105,0.18);
+  --aura-indigo-lt:  rgba(67,56,202,0.18);
+  --aura-pink-lt:    rgba(219,39,119,0.18);
+  --aura-orange-lt:  rgba(234,88,12,0.18);
+  --aura-cyan-lt:    rgba(8,145,178,0.18);
+
+  --pg-dashboard:  linear-gradient(135deg,#0d1a2e 0%,#0f172a 50%,#150d2e 100%);
+  --pg-patients:   linear-gradient(135deg,#0d1a2e 0%,#0f172a 100%);
+  --pg-clinical:   linear-gradient(135deg,#150d2e 0%,#0f172a 100%);
+  --pg-patient:    linear-gradient(135deg,#0d2014 0%,#0f172a 100%);
+  --pg-alerts:     linear-gradient(135deg,#2e0d0d 0%,#0f172a 100%);
+  --pg-resources:  linear-gradient(135deg,#0d1a2e 0%,#0d2014 100%);
+  --pg-community:  linear-gradient(135deg,#1a0d2e 0%,#0f172a 100%);
+  --pg-journey:    linear-gradient(135deg,#2e1a0d 0%,#0f172a 100%);
+}
+
+/* --------------------------------------------------------------------------
+   2. ANIMATED PAGE BACKGROUND — light mode subtle blue-gray, NOT white
+   -------------------------------------------------------------------------- */
+body {
+  /* Healthcare blue-gray tint — soft, calming, NOT pure white */
+  background: linear-gradient(160deg,
+    #eef2f7 0%,    /* cool blue-gray */
+    #f0f4f9 25%,   /* slightly blue */
+    #edf1f7 50%,   /* medium blue-gray */
+    #f2f5fb 75%,   /* light blue tint */
+    #eef2f7 100%
+  ) fixed !important;
+}
+/* Dark mode body is handled by index.css and themes.css */
+
+/* --------------------------------------------------------------------------
+   3. SIDEBAR - colorful nav items
+   -------------------------------------------------------------------------- */
+
+/* Active nav item - teal glow */
+.nav-item-active {
+  background: linear-gradient(to right, rgba(13,148,136,0.25), rgba(13,148,136,0.08)) !important;
+  border-left: 3px solid #14b8a6 !important;
+  color: #ffffff !important;
+}
+
+/* Nav item hover - subtle lift */
+.nav-item:not(.nav-item-active):hover {
+  background: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+}
+
+/* Sidebar gradient */
+aside,
+.sidebar-root {
+  background: linear-gradient(180deg, #0d3b2e 0%, #134e4a 40%, #0c3547 100%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. STAT CARDS - color per variant
+   -------------------------------------------------------------------------- */
+
+/* Teal / default */
+.stat-card-teal   { background: linear-gradient(135deg, #f0fdfa, #ccfbf1) !important; border-left: 4px solid #0d9488 !important; }
+.stat-card-violet { background: linear-gradient(135deg, #faf5ff, #ede9fe) !important; border-left: 4px solid #7c3aed !important; }
+.stat-card-rose   { background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important; border-left: 4px solid #e11d48 !important; }
+.stat-card-amber  { background: linear-gradient(135deg, #fffbeb, #fef3c7) !important; border-left: 4px solid #d97706 !important; }
+.stat-card-blue   { background: linear-gradient(135deg, #eff6ff, #dbeafe) !important; border-left: 4px solid #1d4ed8 !important; }
+.stat-card-emerald{ background: linear-gradient(135deg, #f0fdf4, #d1fae5) !important; border-left: 4px solid #059669 !important; }
+.stat-card-indigo { background: linear-gradient(135deg, #eef2ff, #e0e7ff) !important; border-left: 4px solid #4338ca !important; }
+.stat-card-pink   { background: linear-gradient(135deg, #fdf2f8, #fce7f3) !important; border-left: 4px solid #db2777 !important; }
+.stat-card-orange { background: linear-gradient(135deg, #fff7ed, #ffedd5) !important; border-left: 4px solid #ea580c !important; }
+.stat-card-cyan   { background: linear-gradient(135deg, #ecfeff, #cffafe) !important; border-left: 4px solid #0891b2 !important; }
+
+html.dark .stat-card-teal    { background: linear-gradient(135deg, #0a1f1d, #0d2420) !important; }
+html.dark .stat-card-violet  { background: linear-gradient(135deg, #120a22, #1a0d2e) !important; }
+html.dark .stat-card-rose    { background: linear-gradient(135deg, #1f0a0a, #2e0d0d) !important; }
+html.dark .stat-card-amber   { background: linear-gradient(135deg, #1c120a, #2e1a0d) !important; }
+html.dark .stat-card-blue    { background: linear-gradient(135deg, #0a1220, #0d1a2e) !important; }
+html.dark .stat-card-emerald { background: linear-gradient(135deg, #0a1810, #0d2014) !important; }
+html.dark .stat-card-indigo  { background: linear-gradient(135deg, #0a0a20, #0d0d2e) !important; }
+html.dark .stat-card-pink    { background: linear-gradient(135deg, #1f0a14, #2e0d1a) !important; }
+html.dark .stat-card-orange  { background: linear-gradient(135deg, #1c1008, #2e1a0d) !important; }
+html.dark .stat-card-cyan    { background: linear-gradient(135deg, #0a1518, #0d2028) !important; }
+
+/* --------------------------------------------------------------------------
+   5. PAGE SECTION HEADERS - colored top strip per page
+   -------------------------------------------------------------------------- */
+.page-header-dashboard { background: linear-gradient(135deg, #0d9488, #0891b2) !important; }
+.page-header-patients  { background: linear-gradient(135deg, #1d4ed8, #4338ca) !important; }
+.page-header-alerts    { background: linear-gradient(135deg, #e11d48, #dc2626) !important; }
+.page-header-ai        { background: linear-gradient(135deg, #7c3aed, #6d28d9) !important; }
+.page-header-meds      { background: linear-gradient(135deg, #be123c, #e11d48) !important; }
+.page-header-appts     { background: linear-gradient(135deg, #1d4ed8, #0891b2) !important; }
+.page-header-caregivers{ background: linear-gradient(135deg, #059669, #0d9488) !important; }
+.page-header-community { background: linear-gradient(135deg, #db2777, #7c3aed) !important; }
+.page-header-resources { background: linear-gradient(135deg, #0d9488, #059669) !important; }
+.page-header-journey   { background: linear-gradient(135deg, #d97706, #ea580c) !important; }
+.page-header-memory    { background: linear-gradient(135deg, #9d174d, #db2777) !important; }
+.page-header-settings  { background: linear-gradient(135deg, #4338ca, #7c3aed) !important; }
+.page-header-profile   { background: linear-gradient(135deg, #0891b2, #0d9488) !important; }
+.page-header-admin     { background: linear-gradient(135deg, #1e293b, #334155) !important; }
+
+/* --------------------------------------------------------------------------
+   6. CARD ACCENT BORDERS - left border color helpers
+   -------------------------------------------------------------------------- */
+.card-accent-teal    { border-left: 3px solid #0d9488 !important; }
+.card-accent-violet  { border-left: 3px solid #7c3aed !important; }
+.card-accent-rose    { border-left: 3px solid #e11d48 !important; }
+.card-accent-amber   { border-left: 3px solid #d97706 !important; }
+.card-accent-blue    { border-left: 3px solid #1d4ed8 !important; }
+.card-accent-emerald { border-left: 3px solid #059669 !important; }
+.card-accent-pink    { border-left: 3px solid #db2777 !important; }
+.card-accent-orange  { border-left: 3px solid #ea580c !important; }
+.card-accent-cyan    { border-left: 3px solid #0891b2 !important; }
+.card-accent-indigo  { border-left: 3px solid #4338ca !important; }
+
+/* --------------------------------------------------------------------------
+   7. SECTION LABEL CHIPS - colored category labels
+   -------------------------------------------------------------------------- */
+.chip-teal    { background: var(--aura-teal-lt);    color: #0d9488;  border: 1px solid #99f6e4; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-violet  { background: var(--aura-violet-lt);  color: #7c3aed;  border: 1px solid #c4b5fd; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-rose    { background: var(--aura-rose-lt);    color: #e11d48;  border: 1px solid #fda4af; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-amber   { background: var(--aura-amber-lt);   color: #b45309;  border: 1px solid #fde68a; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-blue    { background: var(--aura-blue-lt);    color: #1d4ed8;  border: 1px solid #93c5fd; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-emerald { background: var(--aura-emerald-lt); color: #059669;  border: 1px solid #6ee7b7; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-pink    { background: var(--aura-pink-lt);    color: #db2777;  border: 1px solid #f9a8d4; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-orange  { background: var(--aura-orange-lt);  color: #ea580c;  border: 1px solid #fdba74; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-cyan    { background: var(--aura-cyan-lt);    color: #0891b2;  border: 1px solid #67e8f9; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+.chip-indigo  { background: var(--aura-indigo-lt);  color: #4338ca;  border: 1px solid #a5b4fc; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; display:inline-flex; align-items:center; gap:4px; }
+
+/* --------------------------------------------------------------------------
+   8. ICON CIRCLES - colored icon backgrounds
+   -------------------------------------------------------------------------- */
+.icon-circle { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.icon-teal    { background: var(--aura-teal-lt);    color: #0d9488; }
+.icon-violet  { background: var(--aura-violet-lt);  color: #7c3aed; }
+.icon-rose    { background: var(--aura-rose-lt);    color: #e11d48; }
+.icon-amber   { background: var(--aura-amber-lt);   color: #b45309; }
+.icon-blue    { background: var(--aura-blue-lt);    color: #1d4ed8; }
+.icon-emerald { background: var(--aura-emerald-lt); color: #059669; }
+.icon-pink    { background: var(--aura-pink-lt);    color: #db2777; }
+.icon-orange  { background: var(--aura-orange-lt);  color: #ea580c; }
+.icon-cyan    { background: var(--aura-cyan-lt);    color: #0891b2; }
+.icon-indigo  { background: var(--aura-indigo-lt);  color: #4338ca; }
+
+/* --------------------------------------------------------------------------
+   9. GLOBAL TABLE ROW ACCENTS
+   -------------------------------------------------------------------------- */
+table tbody tr:nth-child(even)    { background: rgba(13,148,136,0.03); }
+html.dark table tbody tr:nth-child(even) { background: rgba(13,148,136,0.06); }
+
+/* --------------------------------------------------------------------------
+   10. SEVERITY BADGES - standard across ALL alert / assessment views
+   -------------------------------------------------------------------------- */
+.badge-critical { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+.badge-high     { background:#ffedd5; color:#9a3412; border:1px solid #fdba74; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+.badge-moderate { background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+.badge-low      { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+.badge-stable   { background:#dbeafe; color:#1e40af; border:1px solid #93c5fd; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+.badge-info     { background:#e0e7ff; color:#3730a3; border:1px solid #a5b4fc; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; }
+
+html.dark .badge-critical { background:rgba(220,38,38,0.25);  color:#fca5a5; border-color:#991b1b; }
+html.dark .badge-high     { background:rgba(234,88,12,0.25);  color:#fdba74; border-color:#9a3412; }
+html.dark .badge-moderate { background:rgba(217,119,6,0.25);  color:#fde68a; border-color:#92400e; }
+html.dark .badge-low      { background:rgba(5,150,105,0.25);  color:#6ee7b7; border-color:#064e3b; }
+html.dark .badge-stable   { background:rgba(30,64,175,0.25);  color:#93c5fd; border-color:#1e3a8a; }
+html.dark .badge-info     { background:rgba(67,56,202,0.25);  color:#a5b4fc; border-color:#312e81; }
+
+/* --------------------------------------------------------------------------
+   11. GRADIENT TEXT HELPERS
+   -------------------------------------------------------------------------- */
+.gradient-text-teal {
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-violet {
+  background: linear-gradient(135deg, #7c3aed, #4338ca);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-rose {
+  background: linear-gradient(135deg, #e11d48, #db2777);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-amber {
+  background: linear-gradient(135deg, #d97706, #ea580c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --------------------------------------------------------------------------
+   12. BUTTON COLOR VARIANTS
+   -------------------------------------------------------------------------- */
+.btn-teal    { background: linear-gradient(135deg,#0d9488,#0891b2); color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 16px; font-size:13px; transition: filter 0.15s; }
+.btn-teal:hover    { filter: brightness(1.1); }
+.btn-violet  { background: linear-gradient(135deg,#7c3aed,#4338ca); color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 16px; font-size:13px; transition: filter 0.15s; }
+.btn-violet:hover  { filter: brightness(1.1); }
+.btn-rose    { background: linear-gradient(135deg,#e11d48,#dc2626); color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 16px; font-size:13px; transition: filter 0.15s; }
+.btn-rose:hover    { filter: brightness(1.1); }
+.btn-emerald { background: linear-gradient(135deg,#059669,#0d9488); color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 16px; font-size:13px; transition: filter 0.15s; }
+.btn-emerald:hover { filter: brightness(1.1); }
+.btn-amber   { background: linear-gradient(135deg,#d97706,#ea580c); color:#fff; font-weight:600; border:none; border-radius:8px; padding:8px 16px; font-size:13px; transition: filter 0.15s; }
+.btn-amber:hover   { filter: brightness(1.1); }
+
+/* --------------------------------------------------------------------------
+   13. HEADER GRADIENT - richer than before
+   -------------------------------------------------------------------------- */
+header[role="banner"] {
+  background: linear-gradient(to right, #0d3b2e, #0d6b5e, #0d7399, #1e3a5f) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+/* --------------------------------------------------------------------------
+   14. SIDEBAR RICHER GRADIENT
+   -------------------------------------------------------------------------- */
+nav[aria-label="Sidebar navigation"],
+.sidebar-inner {
+  background: linear-gradient(180deg,#0b3028 0%,#0d3b2e 30%,#0c3040 65%,#0d1f3c 100%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. CARD HOVER GLOW - cards lift with a color tint on hover
+   -------------------------------------------------------------------------- */
+.card-hover-glow:hover {
+  box-shadow: 0 8px 30px rgba(13,148,136,0.15), 0 2px 8px rgba(0,0,0,0.08) !important;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+.card-hover-violet:hover {
+  box-shadow: 0 8px 30px rgba(124,58,237,0.15), 0 2px 8px rgba(0,0,0,0.08) !important;
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   16. DIVIDER ACCENTS
+   -------------------------------------------------------------------------- */
+.divider-teal   { height:3px; background:linear-gradient(to right,#0d9488,transparent); border-radius:2px; margin:12px 0; }
+.divider-violet { height:3px; background:linear-gradient(to right,#7c3aed,transparent); border-radius:2px; margin:12px 0; }
+.divider-rose   { height:3px; background:linear-gradient(to right,#e11d48,transparent); border-radius:2px; margin:12px 0; }
+
+/* --------------------------------------------------------------------------
+   17. PROGRESS BARS - colored
+   -------------------------------------------------------------------------- */
+.progress-teal    { background: linear-gradient(to right, #0d9488, #2dd4bf); height:6px; border-radius:3px; }
+.progress-violet  { background: linear-gradient(to right, #7c3aed, #a78bfa); height:6px; border-radius:3px; }
+.progress-rose    { background: linear-gradient(to right, #e11d48, #fb7185); height:6px; border-radius:3px; }
+.progress-amber   { background: linear-gradient(to right, #d97706, #fcd34d); height:6px; border-radius:3px; }
+.progress-blue    { background: linear-gradient(to right, #1d4ed8, #60a5fa); height:6px; border-radius:3px; }
+.progress-emerald { background: linear-gradient(to right, #059669, #34d399); height:6px; border-radius:3px; }
+
+/* --------------------------------------------------------------------------
+   18. SECTION GROUP HEADINGS
+   -------------------------------------------------------------------------- */
+.section-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  padding: 0 4px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-heading::before {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--aura-teal), var(--aura-cyan));
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   19. FOCUS RING COLORS - per context
+   -------------------------------------------------------------------------- */
+.focus-ring-teal:focus-visible   { outline: 2px solid #0d9488; outline-offset: 2px; }
+.focus-ring-violet:focus-visible { outline: 2px solid #7c3aed; outline-offset: 2px; }
+
+/* --------------------------------------------------------------------------
+   20. SCROLLBAR COLORS - teal tint
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar            { width: 6px; height: 6px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: rgba(13,148,136,0.35); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover{ background: rgba(13,148,136,0.6); }
+html.dark ::-webkit-scrollbar-thumb { background: rgba(45,212,191,0.3); }
+html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(45,212,191,0.5); }
+
+/* --------------------------------------------------------------------------
+   21. PAGE TINT BACKGROUNDS - applied to main content area per route
+   -------------------------------------------------------------------------- */
+.page-tint-dashboard { background: linear-gradient(160deg,#f0fdfa 0%,#eff6ff 40%,#faf5ff 100%) !important; }
+.page-tint-patients  { background: linear-gradient(160deg,#eff6ff 0%,#eef2ff 40%,#f0f9ff 100%) !important; }
+.page-tint-alerts    { background: linear-gradient(160deg,#fff1f2 0%,#fff7ed 40%,#fffbeb 100%) !important; }
+.page-tint-clinical  { background: linear-gradient(160deg,#faf5ff 0%,#ede9fe 30%,#f0fdfa 100%) !important; }
+.page-tint-patient   { background: linear-gradient(160deg,#f0fdf4 0%,#f0fdfa 40%,#ecfdf5 100%) !important; }
+.page-tint-resources { background: linear-gradient(160deg,#f0f9ff 0%,#ecfdf5 40%,#f0fdfa 100%) !important; }
+.page-tint-community { background: linear-gradient(160deg,#fdf4ff 0%,#fce7f3 30%,#eff6ff 100%) !important; }
+.page-tint-journey   { background: linear-gradient(160deg,#fff7ed 0%,#fef9c3 30%,#f0fdf4 100%) !important; }
+
+html.dark .page-tint-dashboard,
+html.dark .page-tint-patients,
+html.dark .page-tint-alerts,
+html.dark .page-tint-clinical,
+html.dark .page-tint-patient,
+html.dark .page-tint-resources,
+html.dark .page-tint-community,
+html.dark .page-tint-journey {
+  background: transparent !important;
+}

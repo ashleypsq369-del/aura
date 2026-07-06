@@ -1,0 +1,35 @@
+{
+  "task": "cognitive_impairment",
+  "version": "v1.0.0",
+  "trained_at": "2026-06-20T12:38:22.193677",
+  "n_samples": 8000,
+  "feature_names": [
+    "mmse",
+    "age",
+    "esas_drowsy",
+    "recent_delirium",
+    "cog_affecting_meds",
+    "comorbidities",
+    "pps"
+  ],
+  "n_features": 7,
+  "metrics": {
+    "auc": 0.9959,
+    "accuracy": 0.9556,
+    "precision": 0.9553,
+    "recall": 0.9399,
+    "f1": 0.9475
+  },
+  "feature_importance": {
+    "recent_delirium": 0.2924,
+    "mmse": 0.2671,
+    "cog_affecting_meds": 0.2645,
+    "age": 0.113,
+    "esas_drowsy": 0.038,
+    "comorbidities": 0.0128,
+    "pps": 0.0123
+  },
+  "shap_available": true,
+  "model_type": "xgboost",
+  "xgb_version": "2.0.3"
+}

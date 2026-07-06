@@ -1,0 +1,106 @@
+{
+  "pain_management": {
+    "mild_pain_1_3": [
+      "Acetaminophen 500-1000mg q6h PRN",
+      "NSAIDs (if no contraindications)",
+      "Topical analgesics",
+      "Non-pharmacological: heat/cold, massage, relaxation"
+    ],
+    "moderate_pain_4_6": [
+      "Continue acetaminophen",
+      "Add weak opioid (tramadol, codeine)",
+      "Consider opioid rotation if already on opioid",
+      "Adjuvant analgesics based on pain type (neuropathic vs nociceptive)",
+      "Physical therapy/occupational therapy assessment"
+    ],
+    "severe_pain_7_10": [
+      "Strong opioid (morphine, oxycodone, hydromorphone)",
+      "Immediate release for breakthrough + sustained release for baseline",
+      "Palliative care consultation",
+      "Assess for interventional options (nerve blocks, etc.)",
+      "Urgent review if pain uncontrolled"
+    ]
+  },
+  "dyspnea_management": {
+    "mild_dyspnea": [
+      "Fan therapy (cool air on face)",
+      "Breathing exercises",
+      "Positioning (upright)",
+      "Supplemental O2 if hypoxemic (SpO2 <90%)"
+    ],
+    "moderate_dyspnea": [
+      "Low-dose opioid (morphine 2.5-5mg PO q4h)",
+      "Benzodiazepine if anxious",
+      "Oxygen therapy",
+      "Pulmonary rehabilitation"
+    ],
+    "severe_dyspnea": [
+      "Opioid titration (morphine 5-10mg PO/SC q4h)",
+      "Consider nebulized morphine",
+      "Anxiolytic (lorazepam 0.5-1mg)",
+      "Palliative care/hospice consultation"
+    ]
+  },
+  "nausea_management": {
+    "assessment": [
+      "Identify cause: opioids, chemotherapy, constipation, bowel obstruction",
+      "Medication review (opioids, antibiotics, etc.)"
+    ],
+    "treatment_by_cause": {
+      "opioid_induced": [
+        "Metoclopramide 10mg TID",
+        "Rotate opioid"
+      ],
+      "chemotherapy": [
+        "Ondansetron 8mg TID",
+        "Dexamethasone"
+      ],
+      "constipation": [
+        "Treat constipation first",
+        "Laxatives"
+      ],
+      "bowel_obstruction": [
+        "NPO",
+        "NG tube",
+        "Octreotide"
+      ]
+    }
+  },
+  "depression_management": {
+    "mild_depression_phq9_5_9": [
+      "Watchful waiting (2 weeks)",
+      "Counseling/psychotherapy",
+      "Behavioral activation",
+      "Support groups",
+      "Reassess in 2 weeks"
+    ],
+    "moderate_depression_phq9_10_14": [
+      "Psychotherapy (CBT preferred)",
+      "Consider antidepressant (SSRI first-line)",
+      "Psychiatry referral if not improving",
+      "Reassess every 2 weeks"
+    ],
+    "severe_depression_phq9_15_plus": [
+      "Immediate psychiatric consultation",
+      "Antidepressant medication",
+      "Intensive psychotherapy",
+      "Safety assessment (suicide risk)",
+      "Consider hospitalization if suicidal"
+    ]
+  },
+  "anxiety_management": {
+    "non_pharmacological": [
+      "Relaxation techniques",
+      "Deep breathing exercises",
+      "Mindfulness meditation",
+      "CBT for anxiety",
+      "Address underlying fears (death anxiety, etc.)"
+    ],
+    "pharmacological_gad7_10_plus": [
+      "SSRI (sertraline, escitalopram) - first-line",
+      "Benzodiazepine (lorazepam, diazepam) - short-term only",
+      "Buspirone - alternative to benzodiazepines",
+      "Mirtazapine - if insomnia present"
+    ]
+  }
+}

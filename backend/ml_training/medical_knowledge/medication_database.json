@@ -1,0 +1,145 @@
+{
+  "opioids": {
+    "morphine": {
+      "class": "strong_opioid",
+      "indications": [
+        "moderate to severe pain"
+      ],
+      "monitoring": [
+        "respiratory_rate",
+        "sedation",
+        "constipation"
+      ],
+      "interactions": [
+        "benzodiazepines",
+        "muscle_relaxants"
+      ],
+      "side_effects": [
+        "nausea",
+        "drowsiness",
+        "constipation",
+        "respiratory_depression"
+      ]
+    },
+    "oxycodone": {
+      "class": "strong_opioid",
+      "indications": [
+        "moderate to severe pain"
+      ],
+      "monitoring": [
+        "respiratory_rate",
+        "sedation",
+        "constipation"
+      ],
+      "interactions": [
+        "benzodiazepines",
+        "alcohol"
+      ],
+      "side_effects": [
+        "nausea",
+        "drowsiness",
+        "constipation"
+      ]
+    },
+    "fentanyl": {
+      "class": "strong_opioid",
+      "indications": [
+        "severe chronic pain"
+      ],
+      "monitoring": [
+        "respiratory_rate",
+        "sedation"
+      ],
+      "interactions": [
+        "CYP3A4 inhibitors"
+      ],
+      "side_effects": [
+        "respiratory_depression",
+        "sedation"
+      ]
+    }
+  },
+  "antidepressants": {
+    "sertraline": {
+      "class": "SSRI",
+      "indications": [
+        "depression",
+        "anxiety"
+      ],
+      "monitoring": [
+        "mood",
+        "suicidal_ideation",
+        "bleeding_risk"
+      ],
+      "interactions": [
+        "tramadol",
+        "warfarin",
+        "NSAIDs"
+      ],
+      "side_effects": [
+        "nausea",
+        "insomnia",
+        "sexual_dysfunction"
+      ]
+    },
+    "mirtazapine": {
+      "class": "atypical_antidepressant",
+      "indications": [
+        "depression",
+        "appetite_stimulation",
+        "sleep"
+      ],
+      "monitoring": [
+        "mood",
+        "weight",
+        "sedation"
+      ],
+      "interactions": [
+        "sedatives",
+        "MAOIs"
+      ],
+      "side_effects": [
+        "sedation",
+        "weight_gain",
+        "increased_appetite"
+      ]
+    }
+  },
+  "antiemetics": {
+    "metoclopramide": {
+      "class": "dopamine_antagonist",
+      "indications": [
+        "nausea",
+        "gastroparesis"
+      ],
+      "monitoring": [
+        "extrapyramidal_symptoms"
+      ],
+      "interactions": [
+        "dopamine_agonists"
+      ],
+      "side_effects": [
+        "dystonia",
+        "tardive_dyskinesia",
+        "drowsiness"
+      ]
+    },
+    "ondansetron": {
+      "class": "5-HT3_antagonist",
+      "indications": [
+        "nausea",
+        "vomiting"
+      ],
+      "monitoring": [
+        "QT_prolongation"
+      ],
+      "interactions": [
+        "QT_prolonging_drugs"
+      ],
+      "side_effects": [
+        "headache",
+        "constipation"
+      ]
+    }
+  }
+}

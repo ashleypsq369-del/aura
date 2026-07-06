@@ -1,0 +1,37 @@
+{
+  "task": "mental_health_risk",
+  "version": "v1.0.0",
+  "trained_at": "2026-06-20T12:38:24.260896",
+  "n_samples": 8000,
+  "feature_names": [
+    "phq9",
+    "gad7",
+    "esas_depress",
+    "esas_anxiety",
+    "age",
+    "social_support",
+    "pps",
+    "esas_total"
+  ],
+  "n_features": 8,
+  "metrics": {
+    "auc": 0.9979,
+    "accuracy": 0.9731,
+    "precision": 0.974,
+    "recall": 0.9728,
+    "f1": 0.9734
+  },
+  "feature_importance": {
+    "phq9": 0.2696,
+    "gad7": 0.1947,
+    "esas_depress": 0.1705,
+    "esas_anxiety": 0.1688,
+    "pps": 0.0974,
+    "social_support": 0.061,
+    "esas_total": 0.0258,
+    "age": 0.0122
+  },
+  "shap_available": true,
+  "model_type": "xgboost",
+  "xgb_version": "2.0.3"
+}

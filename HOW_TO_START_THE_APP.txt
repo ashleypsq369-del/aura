@@ -1,0 +1,180 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║         🚀 HOW TO START PROJECT AURA - SIMPLE GUIDE 🚀       ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════
+  METHOD 1: DOUBLE-CLICK THE BATCH FILE (EASIEST!)
+═══════════════════════════════════════════════════════════════
+
+1. Go to your Desktop
+2. Find: START_PROJECTAURA.bat
+3. Double-click it
+4. Wait ~30 seconds
+5. Browser opens automatically!
+6. Login with: clinician / clinician123
+
+That's it! ✅
+
+
+═══════════════════════════════════════════════════════════════
+  WHAT HAPPENS WHEN YOU START?
+═══════════════════════════════════════════════════════════════
+
+The batch file will:
+  ✅ Start Backend Server (in minimized window)
+  ✅ Start Frontend Server (in minimized window)
+  ✅ Wait for everything to load
+  ✅ Open your browser to http://localhost:5173
+  ✅ Close the startup window
+
+You'll see two MINIMIZED windows in your taskbar:
+  📋 ProjectAura-Backend
+  📋 ProjectAura-Frontend
+
+⚠️ DO NOT CLOSE THESE! They need to keep running.
+
+
+═══════════════════════════════════════════════════════════════
+  HOW TO STOP THE APP
+═══════════════════════════════════════════════════════════════
+
+Option 1 (Recommended):
+  - Double-click STOP_PROJECTAURA.bat on Desktop
+  - It will close both servers automatically
+
+Option 2:
+  - Find the two minimized CMD windows
+  - Close both of them
+
+Option 3:
+  - Press Ctrl+C in both CMD windows
+
+
+═══════════════════════════════════════════════════════════════
+  FILES ON YOUR DESKTOP
+═══════════════════════════════════════════════════════════════
+
+START_PROJECTAURA.bat  - Starts everything automatically
+STOP_PROJECTAURA.bat   - Stops everything automatically
+
+
+═══════════════════════════════════════════════════════════════
+  LOGIN CREDENTIALS
+═══════════════════════════════════════════════════════════════
+
+Clinician Account (Recommended):
+  Username: clinician
+  Password: clinician123
+  
+Admin Account (Full Access):
+  Username: admin
+  Password: admin123
+
+Patient Account (Patient Portal):
+  Username: patient
+  Password: patient123
+
+
+═══════════════════════════════════════════════════════════════
+  WHAT IF IT DOESN'T WORK?
+═══════════════════════════════════════════════════════════════
+
+Problem: Browser shows "Connection Refused"
+Solution: Wait a bit longer (30-40 seconds) for servers to start
+
+Problem: Port 8000 or 5173 already in use
+Solution: 
+  1. Run STOP_PROJECTAURA.bat first
+  2. Wait 5 seconds
+  3. Run START_PROJECTAURA.bat again
+
+Problem: Backend window shows errors
+Solution:
+  1. Check that Python virtual environment exists
+  2. Make sure you're in: c:\xampp\htdocs\ProjectAura_React
+  3. Check that backend\venv folder exists
+
+Problem: Frontend window shows errors
+Solution:
+  1. Make sure Node.js is installed
+  2. Check that frontend\node_modules exists
+  3. If not, run: cd frontend && npm install
+
+
+═══════════════════════════════════════════════════════════════
+  MANUAL STARTUP (IF BATCH FILE DOESN'T WORK)
+═══════════════════════════════════════════════════════════════
+
+Backend (CMD Window 1):
+  cd c:\xampp\htdocs\ProjectAura_React\backend
+  venv\Scripts\activate
+  python -m uvicorn main:app --reload --port 8000
+
+Frontend (CMD Window 2):
+  cd c:\xampp\htdocs\ProjectAura_React\frontend
+  npm run dev
+
+Then open: http://localhost:5173
+
+
+═══════════════════════════════════════════════════════════════
+  URLS TO REMEMBER
+═══════════════════════════════════════════════════════════════
+
+🌐 Main App:       http://localhost:5173
+📡 API Backend:    http://localhost:8000
+📚 API Docs:       http://localhost:8000/docs
+🏥 Health Check:   http://localhost:8000/health
+
+
+═══════════════════════════════════════════════════════════════
+  FEATURES AVAILABLE
+═══════════════════════════════════════════════════════════════
+
+✅ Patient Management
+✅ Vitals & Symptoms Recording
+✅ Medications & Prescriptions
+✅ Appointments
+✅ All 12 Clinical Assessment Tools
+✅ Care Plans
+✅ Alerts & Notifications
+✅ Digital Legacy System
+✅ Memory Vault
+✅ Bereavement Support
+✅ Messaging System
+✅ Community Hub
+✅ Patient Portal
+✅ Journey Timeline
+✅ Caregiver Management
+✅ Admin Controls
+✅ Audit Logs
+✅ File Uploads
+
+❌ AI Chatbot (temporarily disabled)
+❌ AI Risk Prediction (temporarily disabled)
+
+
+═══════════════════════════════════════════════════════════════
+  TIPS FOR BEST EXPERIENCE
+═══════════════════════════════════════════════════════════════
+
+✅ Use Chrome, Edge, or Firefox (latest version)
+✅ Keep the two minimized windows open while using app
+✅ Don't run multiple instances (use STOP first, then START)
+✅ Wait full 30 seconds before trying to login
+✅ Check minimized windows for any error messages
+
+
+═══════════════════════════════════════════════════════════════
+
+Need Help?
+Check: BACKEND_FIXED.txt for technical details
+Check: COMPLETE_SYSTEM_DOCUMENTATION.md for full guide
+
+Created: June 6, 2026
+Status: Working ✅
+
+═══════════════════════════════════════════════════════════════

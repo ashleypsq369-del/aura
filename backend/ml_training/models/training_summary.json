@@ -1,0 +1,66 @@
+{
+  "vital_risk": {
+    "status": "success",
+    "auc": 0.9788,
+    "accuracy": 0.9231,
+    "precision": 0.7715,
+    "recall": 0.9128,
+    "f1": 0.8362
+  },
+  "symptom_burden": {
+    "status": "success",
+    "auc": 0.9911,
+    "accuracy": 0.9606,
+    "precision": 0.7558,
+    "recall": 0.9425,
+    "f1": 0.8389
+  },
+  "functional_decline": {
+    "status": "success",
+    "auc": 0.9932,
+    "accuracy": 0.9525,
+    "precision": 0.8929,
+    "recall": 0.9505,
+    "f1": 0.9208
+  },
+  "cognitive_impairment": {
+    "status": "success",
+    "auc": 0.9959,
+    "accuracy": 0.9556,
+    "precision": 0.9553,
+    "recall": 0.9399,
+    "f1": 0.9475
+  },
+  "mental_health_risk": {
+    "status": "success",
+    "auc": 0.9979,
+    "accuracy": 0.9731,
+    "precision": 0.974,
+    "recall": 0.9728,
+    "f1": 0.9734
+  },
+  "medication_risk": {
+    "status": "success",
+    "auc": 0.9938,
+    "accuracy": 0.9531,
+    "precision": 0.9659,
+    "recall": 0.957,
+    "f1": 0.9614
+  },
+  "caregiver_burden": {
+    "status": "success",
+    "auc": 0.9976,
+    "accuracy": 0.9775,
+    "precision": 0.9562,
+    "recall": 0.9748,
+    "f1": 0.9654
+  },
+  "admission_risk": {
+    "status": "success",
+    "auc": 0.9851,
+    "accuracy": 0.9181,
+    "precision": 0.8125,
+    "recall": 0.9667,
+    "f1": 0.8829
+  }
+}

@@ -1,0 +1,137 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║           PROJECT AURA - ROLE ACCESS QUICK REFERENCE                     ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  🔐 LOGIN CREDENTIALS:                                                   ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  ┌─ ADMIN ──────────────────────────────────────────────────────────┐  ║
+║  │  Username: admin                                                  │  ║
+║  │  Password: admin123                                               │  ║
+║  │  Navigation: 4 items (Overview, Patients, AI Insights, Alerts)   │  ║
+║  │  Dashboard: ✅ FULL (Stats + Patient Table)                       │  ║
+║  └───────────────────────────────────────────────────────────────────┘  ║
+║                                                                          ║
+║  ┌─ CLINICIAN (⭐ RECOMMENDED FOR TESTING) ─────────────────────────┐  ║
+║  │  Username: clinician                                              │  ║
+║  │  Password: clinician123                                           │  ║
+║  │  Navigation: 9 items (ALL FEATURES!)                              │  ║
+║  │    • Dashboard      • Medications                                 │  ║
+║  │    • Patients       • Appointments                                │  ║
+║  │    • AI Insights    • Caregivers                                  │  ║
+║  │    • Alerts         • Care Guide                                  │  ║
+║  │    • Continuity Bridge                                            │  ║
+║  │  Dashboard: ✅ FULL (Stats + Patient Table)                       │  ║
+║  └───────────────────────────────────────────────────────────────────┘  ║
+║                                                                          ║
+║  ┌─ CAREGIVER ──────────────────────────────────────────────────────┐  ║
+║  │  Username: caregiver                                              │  ║
+║  │  Password: caregiver123                                           │  ║
+║  │  Navigation: 4 items (Overview, Patients, Medications, Appts)    │  ║
+║  │  Dashboard: ⚠️  BASIC (Welcome message only)                      │  ║
+║  └───────────────────────────────────────────────────────────────────┘  ║
+║                                                                          ║
+║  ┌─ FAMILY ─────────────────────────────────────────────────────────┐  ║
+║  │  Username: family                                                 │  ║
+║  │  Password: family123                                              │  ║
+║  │  Navigation: 4 items (Overview, Continuity, Memory, Journal)     │  ║
+║  │  Dashboard: ⚠️  BASIC (Welcome message only)                      │  ║
+║  └───────────────────────────────────────────────────────────────────┘  ║
+║                                                                          ║
+║  ┌─ PATIENT ────────────────────────────────────────────────────────┐  ║
+║  │  Username: patient                                                │  ║
+║  │  Password: patient123                                             │  ║
+║  │  Navigation: 2 items (My Health, My Journal)                      │  ║
+║  │  Dashboard: ⚠️  BASIC (Welcome message only)                      │  ║
+║  └───────────────────────────────────────────────────────────────────┘  ║
+║                                                                          ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  📊 FEATURE COMPARISON:                                                  ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  Feature                Admin  Clinician  Caregiver  Family  Patient    ║
+║  ───────────────────    ─────  ─────────  ─────────  ──────  ───────    ║
+║  Dashboard Stats          ✅       ✅         ❌        ❌       ❌        ║
+║  Patient List             ✅       ✅         ✅        ❌       ❌        ║
+║  AI Insights              ✅       ✅         ❌        ❌       ❌        ║
+║  Alerts                   ✅       ✅         ❌        ❌       ❌        ║
+║  Medications              ⚠️        ✅         ✅        ❌       ❌        ║
+║  Appointments             ⚠️        ✅         ✅        ❌       ❌        ║
+║  Caregivers               ⚠️        ✅         ❌        ❌       ❌        ║
+║  Care Guide               ⚠️        ✅         ❌        ❌       ❌        ║
+║  Continuity Bridge        ⚠️        ✅         ❌        ✅       ❌        ║
+║  Memory Vault             ⚠️        ❌         ❌        ✅       ❌        ║
+║  Journal                  ⚠️        ❌         ❌        ✅       ✅        ║
+║  AI Chatbot               ✅       ✅         ✅        ✅       ✅        ║
+║                                                                          ║
+║  ⚠️  = Accessible via URL only, not in sidebar navigation                ║
+║                                                                          ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  ❓ WHY DOES ADMIN SEE LESS THAN CLINICIAN?                              ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  This is INTENTIONAL DESIGN:                                            ║
+║                                                                          ║
+║  👨‍💼 ADMIN ROLE:                                                          ║
+║     • System oversight and monitoring                                   ║
+║     • High-level metrics and alerts                                     ║
+║     • User management (not clinical work)                               ║
+║     • Focus: "Is the system healthy?"                                   ║
+║                                                                          ║
+║  👨‍⚕️ CLINICIAN ROLE:                                                      ║
+║     • Day-to-day patient care operations                                ║
+║     • Direct patient monitoring and treatment                           ║
+║     • Complete clinical workflow tools                                  ║
+║     • Focus: "Are my patients healthy?"                                 ║
+║                                                                          ║
+║  Separation of Concerns = Better Security + Cleaner Workflows           ║
+║                                                                          ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  💡 RECOMMENDATIONS:                                                     ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  🎯 For FULL Feature Testing:                                            ║
+║     Login as: clinician / clinician123                                  ║
+║     Access: ALL 9 navigation items + full dashboard                     ║
+║                                                                          ║
+║  🎯 For System Administration:                                           ║
+║     Login as: admin / admin123                                          ║
+║     Access: System overview + critical monitoring                       ║
+║                                                                          ║
+║  🎯 To Add Features to Admin Sidebar:                                    ║
+║     Edit: frontend/src/components/layout/Sidebar.jsx                    ║
+║     Modify the 'admin' array in 'navigation' object                     ║
+║                                                                          ║
+║  🎯 To Access "Hidden" Admin Features:                                   ║
+║     Type URL directly:                                                  ║
+║     • http://localhost:5173/medications                                 ║
+║     • http://localhost:5173/appointments                                ║
+║     • http://localhost:5173/caregivers                                  ║
+║     • (etc.)                                                            ║
+║                                                                          ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  🌐 ACCESS URLS:                                                         ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  Frontend:  http://localhost:5173                                       ║
+║  Backend:   http://localhost:8000                                       ║
+║  API Docs:  http://localhost:8000/docs                                  ║
+║                                                                          ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  📚 DETAILED DOCUMENTATION:                                              ║
+║  ─────────────────────────────────────────────────────────────────────  ║
+║                                                                          ║
+║  See ROLE_ACCESS_GUIDE.md for:                                          ║
+║    • Complete feature breakdown per role                                ║
+║    • Backend permission details                                         ║
+║    • Customization instructions                                         ║
+║    • Design rationale                                                   ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+QUICK TIP: Use CLINICIAN account for testing - it has EVERYTHING! ⭐

@@ -1,0 +1,61 @@
+/**
+ * Symbol and Icon Alignment Fixes
+ * ================================
+ * Targeted fixes only - no broad overrides that break text layout.
+ */
+
+/* -- Input field icon positioning --------------------------------------- */
+.relative > span.absolute {
+  pointer-events: none;
+  z-index: 10;
+}
+.relative > button.absolute {
+  z-index: 20;
+}
+
+/* -- Lucide icon alignment ----------------------------------------------- */
+svg.lucide {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Icons inside buttons/links shouldn't capture clicks */
+button > svg,
+a > svg {
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* -- Badge/pill spans - scoped so they don't affect text in labels/paragraphs -- */
+.badge,
+:not(label):not(p):not(li):not(span) > span[class*="rounded-full"],
+:not(label):not(p):not(li):not(span) > span[class*="rounded-lg"] {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* -- Emoji display ------------------------------------------------------- */
+.emoji {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* -- Prevent flex children from shrinking ONLY in specifically marked containers -- */
+.no-shrink-children > * {
+  flex-shrink: 0;
+}
+
+/* -- Utility classes ----------------------------------------------------- */
+.no-shrink {
+  flex-shrink: 0 !important;
+}
+
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

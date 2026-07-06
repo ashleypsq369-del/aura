@@ -1,0 +1,21 @@
+{
+  "task_name": "symptom_burden",
+  "model_type": "xgboost",
+  "features": [
+    "esas_pain",
+    "esas_tiredness",
+    "esas_nausea",
+    "esas_depression",
+    "esas_anxiety",
+    "esas_drowsiness",
+    "esas_appetite",
+    "esas_wellbeing",
+    "esas_shortness_of_breath",
+    "age",
+    "primary_diagnosis",
+    "medications_count"
+  ],
+  "target": "high_symptom_burden",
+  "version": "20260607_201940",
+  "trained_at": "2026-06-07T20:19:41.300002"
+}

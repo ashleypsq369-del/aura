@@ -1,0 +1,183 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     ❌ FIX: ERR_CONNECTION_REFUSED ERROR ❌                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════
+  PROBLEM: Backend is NOT Running!
+═══════════════════════════════════════════════════════════════
+
+Error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+URL: http://localhost:8000/api/auth/login
+
+This means the backend server on port 8000 is not running.
+
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION 1: Manual Start (Easiest)
+═══════════════════════════════════════════════════════════════
+
+Do these steps IN ORDER:
+
+STEP 1: Start Backend
+  1. Go to project folder
+  2. Double-click "Start_Backend_MANUAL.bat"
+  3. Wait for: "Uvicorn running on http://127.0.0.1:8000"
+  4. Keep this window OPEN!
+
+STEP 2: Start Frontend
+  1. Double-click "Start_Frontend_MANUAL.bat"
+  2. Wait for: "Local: http://localhost:5173"
+  3. Keep this window OPEN!
+
+STEP 3: Login
+  1. Browser opens automatically
+  2. Login with: clinician / clinician123
+  3. Should work now! ✅
+
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION 2: Check Backend Window
+═══════════════════════════════════════════════════════════════
+
+If you used Start_ProjectAura.bat:
+
+1. Find the window titled "ProjectAura Backend"
+2. Look for errors (red text)
+
+Common errors:
+
+❌ "ModuleNotFoundError" or "No module named..."
+   → Dependencies not installed
+   → FIX: See "Install Dependencies" below
+
+❌ "venv is not recognized"
+   → Virtual environment issue
+   → FIX: See "Recreate Virtual Environment" below
+
+❌ Window closes immediately
+   → Python error or venv issue
+   → FIX: Use Start_Backend_MANUAL.bat to see error
+
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION 3: Install Dependencies (If Missing)
+═══════════════════════════════════════════════════════════════
+
+Open Command Prompt in project folder:
+
+cd c:\xampp\htdocs\ProjectAura_React\backend
+venv\Scripts\activate
+pip install -r requirements.txt
+
+Then try starting again.
+
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION 4: Recreate Virtual Environment
+═══════════════════════════════════════════════════════════════
+
+If virtual environment is corrupted:
+
+cd c:\xampp\htdocs\ProjectAura_React\backend
+rmdir /s /q venv
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+
+Then try starting again.
+
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION 5: Check if Port 8000 is Busy
+═══════════════════════════════════════════════════════════════
+
+Check if something else is using port 8000:
+
+netstat -ano | find "8000"
+
+If you see a result:
+  - Another process is using port 8000
+  - Close it or kill the process
+  - Or change backend port in main.py
+
+
+═══════════════════════════════════════════════════════════════
+  UPDATED FILES CREATED
+═══════════════════════════════════════════════════════════════
+
+✅ Start_Backend_MANUAL.bat  - Start backend manually
+✅ Start_Frontend_MANUAL.bat - Start frontend manually
+✅ Start_ProjectAura.bat     - Updated (better error checking)
+
+All in project folder:
+c:\xampp\htdocs\ProjectAura_React\
+
+
+═══════════════════════════════════════════════════════════════
+  VERIFY BACKEND IS RUNNING
+═══════════════════════════════════════════════════════════════
+
+1. Open browser
+2. Go to: http://localhost:8000/docs
+3. Should see API documentation page
+
+If you see API docs ✅ = Backend is running!
+If you get error ❌ = Backend is not running
+
+
+═══════════════════════════════════════════════════════════════
+  STEP-BY-STEP DEBUGGING
+═══════════════════════════════════════════════════════════════
+
+1. Close ALL terminal windows
+2. Close browser
+3. Double-click Start_Backend_MANUAL.bat
+4. Wait 5 seconds
+5. Does it show "Uvicorn running"?
+   
+   ✅ YES → Continue to step 6
+   ❌ NO → Read error message, see solutions above
+
+6. Open browser: http://localhost:8000/docs
+7. Do you see API documentation?
+   
+   ✅ YES → Backend works! Continue to step 8
+   ❌ NO → Backend failed, check terminal for errors
+
+8. Double-click Start_Frontend_MANUAL.bat
+9. Wait 10 seconds
+10. Browser opens to http://localhost:5173
+11. Try login: clinician / clinician123
+12. Should work! ✅
+
+
+═══════════════════════════════════════════════════════════════
+  STILL NOT WORKING?
+═══════════════════════════════════════════════════════════════
+
+Check these:
+
+□ Python installed? (run: python --version)
+□ Node.js installed? (run: node --version)
+□ In correct folder? (c:\xampp\htdocs\ProjectAura_React)
+□ Backend window open and showing "Uvicorn running"?
+□ http://localhost:8000/docs loads in browser?
+□ No firewall blocking ports 8000 or 5173?
+
+If all checked and still failing:
+  - Copy the EXACT error message from Backend window
+  - Check if antivirus is blocking Python
+  - Try running as Administrator
+
+
+═══════════════════════════════════════════════════════════════
+
+Created: June 6, 2026
+Issue: ERR_CONNECTION_REFUSED
+Cause: Backend not running on port 8000
+Solution: Start backend manually first!
+
+═══════════════════════════════════════════════════════════════

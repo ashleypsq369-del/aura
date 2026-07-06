@@ -1,0 +1,8 @@
+feature,importance,display_name
+pps_score,0.39577568,Palliative Performance (%)
+recent_ed_visits,0.3480598,recent_ed_visits
+esas_total,0.33193198,esas_total
+social_support_score,0.21033458,social_support_score
+comorbidities_count,0.1253874,comorbidities_count
+medications_count,0.09553195,medications_count
+age,0.08519827,age

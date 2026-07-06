@@ -1,0 +1,11 @@
+feature,importance,display_name
+oxygen_saturation,3.0856845,O2 Saturation (%)
+heart_rate,2.0188572,Heart Rate (bpm)
+blood_pressure_sys,1.9511087,Systolic BP (mmHg)
+temperature,1.7547481,Temperature (°C)
+respiratory_rate,0.3024297,respiratory_rate
+age,0.15115684,age
+bmi,0.15000159,bmi
+blood_pressure_dia,0.14977,Diastolic BP (mmHg)
+height,0.10847268,height
+weight,0.107058614,weight
