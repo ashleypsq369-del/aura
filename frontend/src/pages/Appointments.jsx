@@ -9,6 +9,7 @@ import { appointmentsAPI, patientsAPI, preferencesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
+import ReminderBell from '../components/ReminderBell';
 import {
   Calendar, Plus, X, CheckCircle, Search, Clock,
   MapPin, Loader2, CheckSquare, XCircle, Bell, Sparkles,
@@ -49,17 +50,17 @@ function timeUntil(d) {
 function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }) {
   return (
     <button onClick={onClick}
-      className={`relative rounded-xl border-2 px-5 py-4 text-left w-full transition-all duration-150 ${
-        selected ? `${color} border-current shadow-lg scale-[1.02]` : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-md'
+      className={`relative rounded-xl border-2 px-4 py-3 text-left w-full transition-all duration-150 ${
+        selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'
       }`}>
-      {selected && <span className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse" style={{backgroundColor:'currentColor'}}/>}
-      <div className="flex items-center gap-2 mb-2">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selected?'bg-white/30':'bg-slate-100'}`}>
-          <Icon size={16} className={selected?'text-current':'text-slate-500'}/>
+      {selected && <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full animate-pulse" style={{backgroundColor:'currentColor'}}/>}
+      <div className="flex items-center gap-2 mb-1.5">
+        <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${selected?'bg-white/30':'bg-slate-100'}`}>
+          <Icon size={13} className={selected?'text-current':'text-slate-500'}/>
         </div>
-        <span className={`text-xs font-bold uppercase tracking-wider ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
+        <span className={`text-[10px] font-bold uppercase tracking-wider ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
       </div>
-      <p className={`text-4xl font-bold tabular-nums leading-none ${selected?'text-current':'text-slate-800'}`}>{value}</p>
+      <p className={`text-2xl font-bold tabular-nums leading-none ${selected?'text-current':'text-slate-800'}`}>{value}</p>
       {subtitle && <p className={`text-[11px] mt-1 ${selected?'text-current opacity-70':'text-slate-400'}`}>{subtitle}</p>}
     </button>
   );
@@ -210,12 +211,20 @@ function AppointmentCard({ appt, isStaff, onComplete, onCancel }) {
                 </span>
               )}
             </div>
-            <span className="text-xs text-slate-400 flex items-center gap-1 flex-shrink-0">
-              <Clock size={11}/>
-              {new Date(appt.scheduled_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
-              {' '}
-              {new Date(appt.scheduled_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
-            </span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs text-slate-400 flex items-center gap-1 flex-shrink-0">
+                <Clock size={11}/>
+                {new Date(appt.scheduled_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+                {' '}
+                {new Date(appt.scheduled_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
+              </span>
+              <ReminderBell
+                label={`${appt.appointment_type} - ${new Date(appt.scheduled_at).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}`}
+                type="appointment"
+                defaultTime={new Date(appt.scheduled_at).toTimeString().slice(0,5)}
+                size="sm"
+              />
+            </div>
           </div>
 
           <p className="text-slate-600 text-sm mt-1 flex items-center gap-1.5">
@@ -338,7 +347,7 @@ export default function Appointments() {
     <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.2}}
       className="min-h-screen space-y-5 pb-8">
 
-      <PageHeader image="/resources/cards/card-appointments.jpg" title="Appointments"
+      <PageHeader image="/resources/african/african-appointment.jpg" title="Appointments"
         subtitle="Upcoming visits, today's reminders, past appointments and scheduling" icon={Calendar}>
         {isStaff && patientId && (
           <button onClick={() => setShowModal(true)}

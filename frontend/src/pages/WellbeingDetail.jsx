@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Heart, Activity, Brain, Moon, Zap, Wind, Smile, AlertCircle, ArrowLeft } from 'lucide-react';
@@ -66,7 +66,7 @@ export default function WellbeingDetail() {
         </button>
 
         <PageHeader
-          image="/resources/cards/card-checkin.jpg"
+          image="/resources/african/african-wellbeing.jpg"
           title={patient ? `${patient.full_name} — Wellbeing` : 'Wellbeing'}
           subtitle="ESAS assessments and symptom burden tracking"
           icon={Heart}
@@ -108,7 +108,7 @@ export default function WellbeingDetail() {
                   className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-200">
                     <h2 className="text-sm font-bold text-slate-900">Symptom Profile</h2>
-                    <p className="text-xs text-slate-500">Latest assessment overview</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Latest assessment overview</p>
                   </div>
                   <div className="p-4">
                     <ResponsiveContainer width="100%" height={240}>
@@ -127,7 +127,7 @@ export default function WellbeingDetail() {
                     className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="px-5 py-4 border-b border-slate-200">
                       <h2 className="text-sm font-bold text-slate-900">Key Trends</h2>
-                      <p className="text-xs text-slate-500">Pain, anxiety & wellbeing over time</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Pain, anxiety & wellbeing over time</p>
                     </div>
                     <div className="p-4">
                       <ResponsiveContainer width="100%" height={240}>
@@ -158,18 +158,18 @@ export default function WellbeingDetail() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-50 border-b-2 border-slate-200">
+                    <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
                       {['Date', 'Overall', 'Pain', 'Tiredness', 'Anxiety', 'Depression', 'Wellbeing', 'Total'].map(h => (
-                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                     {assessments.map((a) => {
                       const total = ESAS_FIELDS.reduce((s, f) => s + (a[f.key] ?? 0), 0);
                       return (
                         <tr key={a.id} className="hover:bg-slate-50 transition-colors h-[48px]">
-                          <td className="py-3 px-4 text-sm text-slate-700">
+                          <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">
                             {new Date(a.assessed_at || a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </td>
                           <td className="py-3 px-4">

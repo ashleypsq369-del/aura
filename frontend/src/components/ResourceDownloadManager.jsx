@@ -16,6 +16,7 @@ import ResourceDownloadManager, {
   downloadPresets 
 } from '../utils/resourceDownloader';
 import { haptic, playSound } from '../utils/touchSupport';
+import ModalShell from './ui/ModalShell';
 
 export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
   const [downloader] = useState(() => new ResourceDownloadManager());
@@ -136,36 +137,29 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border-2 border-teal-200"
-        >
-          {/* Header */}
-          <div className="p-6 border-b-2 border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-bold text-teal-900 flex items-center space-x-3">
-                <Download className="w-8 h-8" />
-                <span>Offline Resources</span>
-              </h2>
-              <TouchIconButton
-                icon={X}
-                onClick={onClose}
-                variant="ghost"
-                size="medium"
-                ariaLabel="Close"
-              />
-            </div>
-            <p className="text-teal-700 text-sm">
-              Download educational materials for offline access
-            </p>
+    <ModalShell
+      open={isOpen}
+      onClose={onClose}
+      title="Offline Resources"
+      description="Download educational materials for offline access"
+      icon={Download}
+      accent="teal"
+      size="xl"
+      footer={
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            {navigator.onLine ? (
+              <><Wifi size={16} className="text-green-600" /><span>Online</span></>
+            ) : (
+              <><WifiOff size={16} className="text-red-600" /><span>Offline</span></>
+            )}
           </div>
-
-          {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <TouchButton onClick={onClose} variant="primary" size="medium">Done</TouchButton>
+        </div>
+      }
+    >
+      {/* Content */}
+      <div className="space-y-6">
             {/* Storage Info */}
             <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
               <div className="flex items-center justify-between">
@@ -357,35 +351,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
               </div>
             </div>
           </div>
-
-          {/* Footer */}
-          <div className="p-6 border-t-2 border-gray-200 bg-gray-50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                {navigator.onLine ? (
-                  <>
-                    <Wifi size={16} className="text-green-600" />
-                    <span>Online</span>
-                  </>
-                ) : (
-                  <>
-                    <WifiOff size={16} className="text-red-600" />
-                    <span>Offline</span>
-                  </>
-                )}
-              </div>
-              <TouchButton
-                onClick={onClose}
-                variant="primary"
-                size="medium"
-              >
-                Done
-              </TouchButton>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+        </ModalShell>
   );
 }
 

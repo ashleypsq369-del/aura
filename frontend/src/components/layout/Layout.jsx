@@ -4,15 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, ChevronRight, X, Loader2, LogOut, Settings, User, 
   Moon, Sun, Shield, HelpCircle, PanelLeftClose, PanelLeftOpen,
+  MessageCircle, Stethoscope,
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
 import { useAppSettings } from '../../context/AppSettingsContext';
+import useVoiceControl from '../../hooks/useVoiceControl';
 import RealTimeAlerts from '../RealTimeAlerts';
 import NotificationCenter from '../NotificationCenter';
 import OfflineIndicator from '../OfflineIndicator';
 import SignOutModal from '../SignOutModal';
+import VoiceCommandOverlay from '../VoiceCommandOverlay';
+import HintTooltip from '../HintTooltip';
 import DropdownMenu from '../ui/DropdownMenu';
 import AvatarDisplay from '../avatar/AvatarDisplay';
 import AvatarModal from '../avatar/AvatarModal';
@@ -21,9 +25,12 @@ export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const [showAvatarBuilder, setShowAvatarBuilder] = useState(false);
+  const [showCompanion, setShowCompanion] = useState(false);
+  const [showCopilot, setShowCopilot] = useState(false);
   const { isLoggingOut, user, logout } = useAuth();
   const { settings: a11ySettings, disableAssistedMode } = useAccessibility();
   const { theme, updateTheme, sidebarSettings, updateSidebarSetting } = useAppSettings();
+  useVoiceControl(); // Activates voice control globally when the setting is enabled
   const location = useLocation();
   const navigate = useNavigate();
   const isDark = theme === 'dark';
@@ -109,15 +116,16 @@ export default function Layout({ children }) {
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} onOpenAura={() => window.dispatchEvent(new CustomEvent('aura:open'))} />
 
       {/* Main Content Area - scrolls independently */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         
         {/* Professional Top Header Bar */}
         <header 
           role="banner"
-          className="sticky top-0 z-30 px-6 py-2.5 flex items-center justify-between shadow-md h-[60px] border-b border-teal-900/30"
+          className="sticky top-0 z-30 px-4 flex items-center justify-between shadow-md h-[60px] border-b border-teal-900/30 gap-2"
           style={{ background: 'linear-gradient(to right, #0b2d26, #0d6b5e, #0d7399, #1a3a6e)' }}
         >
-          <div className="flex items-center space-x-3">
+          {/* Left: hamburger + breadcrumbs — allowed to shrink */}
+          <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
             {/* Mobile hamburger */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -143,10 +151,13 @@ export default function Layout({ children }) {
               }
             </button>
 
-            {/* Logo text visible only on small screens when sidebar is hidden */}
-            <div className="lg:hidden flex flex-col">
-              <span className="font-serif font-bold text-lg leading-none" style={{ color: '#ffffff' }}>Project Aura</span>
-              <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,0.65)' }}>Healthcare</span>
+            {/* Logo visible on small screens when sidebar is hidden */}
+            <div className="lg:hidden flex items-center gap-2">
+              <img src="/logo.png" alt="Project Aura" className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5" />
+              <div className="flex flex-col">
+                <span className="font-bold text-sm leading-none" style={{ color: '#ffffff' }}>Project Aura</span>
+                <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,0.65)' }}>Healthcare</span>
+              </div>
             </div>
 
             {/* Breadcrumbs for desktop */}
@@ -182,21 +193,38 @@ export default function Layout({ children }) {
             </nav>
           </div>
 
-          {/* User Section - Right Side */}
-          <div className="flex items-center space-x-2">
+          {/* User Section - Right Side — flex with gap-1 so buttons don't overflow */}
+          <div className="flex items-center gap-1 flex-shrink-0">
             {/* Dark mode quick toggle */}
             <button
               onClick={() => updateTheme(isDark ? 'light' : 'dark')}
-              className="w-9 h-9 flex items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all"
-              data-tip={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              data-tip-below=""
+              className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all"
               aria-label="Toggle dark mode"
             >
-              {isDark
-                ? <Sun size={18} className="text-yellow-300" />
-                : <Moon size={18} className="text-white" />
-              }
+              {isDark ? <Sun size={16} className="text-yellow-300" /> : <Moon size={16} className="text-white" />}
             </button>
+
+            {/* Aura Companion button */}
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('aura:open'))}
+              className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all relative"
+              aria-label="Open Aura care companion"
+              title="Aura — Care Companion"
+            >
+              <MessageCircle size={16} className="text-white" strokeWidth={2}/>
+            </button>
+
+            {/* Aura Copilot button — clinical roles only */}
+            {user?.role && ['admin', 'clinician', 'caregiver'].includes(user.role) && (
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('aura:copilot-open'))}
+                className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all relative"
+                aria-label="Open Aura clinical copilot"
+                title="Aura Copilot — Clinical Assistant"
+              >
+                <Stethoscope size={16} className="text-white" strokeWidth={2}/>
+              </button>
+            )}
 
             {/* Notification Center */}
             <NotificationCenter />
@@ -325,8 +353,11 @@ export default function Layout({ children }) {
         )}
       </AnimatePresence>
 
-      {/* Offline Indicator - Shows when offline or pending syncs */}
+      {/* Offline Indicator */}
       <OfflineIndicator />
+
+      {/* Voice Command Overlay — shows mic status + command feedback */}
+      <VoiceCommandOverlay />
 
       {/* Avatar Builder Modal */}
       <AvatarModal

@@ -445,3 +445,72 @@ def create_message_notification(db: Session, recipient_id: int, sender_name: str
         db.rollback()
         print(f"❌ Failed to create message notification: {e}")
         return None
+
+
+def _deliver_to_user(db, user_id: int, title: str, body: str,
+                     alert_type: str, patient_name: str = "", critical: bool = False):
+    """Fire SMS + Web Push delivery for a user alongside the DB notification."""
+    try:
+        from services.delivery_service import deliver_notification
+        from src.db import PushSubscription, User
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            return
+        subs = db.query(PushSubscription).filter(PushSubscription.user_id == user_id).all()
+        push_payloads = [
+            {"endpoint": s.endpoint, "keys": {"p256dh": s.p256dh, "auth": s.auth}}
+            for s in subs
+        ]
+        deliver_notification(
+            user_phone=user.phone,
+            user_email=user.email,
+            push_subscriptions=push_payloads,
+            title=title,
+            body=body,
+            alert_type=alert_type,
+            patient_name=patient_name,
+            critical=critical,
+        )
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Delivery failed for user {user_id}: {e}")
+
+
+def dispatch_critical_alert(db, patient_id: int, alert_type: str,
+                             message: str, patient_name: str = ""):
+    """
+    Create in-app notification AND fire SMS + Push for critical alerts.
+    Call this from check_critical_vitals, ML risk triggers, crisis detection.
+    """
+    from src.db import Patient, PatientFamilyLink, NotificationQueue, User
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if patient and not patient_name:
+        patient_name = patient.full_name or f"Patient #{patient_id}"
+
+    # Recipients: clinicians + family
+    recipient_ids = []
+    if patient and patient.primary_clinician_id:
+        recipient_ids.append(patient.primary_clinician_id)
+    for link in db.query(PatientFamilyLink).filter(
+        PatientFamilyLink.patient_id == patient_id
+    ).all():
+        recipient_ids.append(link.family_user_id)
+
+    title = f"🚨 {alert_type.replace('_', ' ').title()} — {patient_name}"
+
+    for uid in recipient_ids:
+        # In-app notification
+        notif = NotificationQueue(
+            recipient_id=uid,
+            notification_type=alert_type,
+            title=title,
+            body=message,
+            is_sent=True,
+            sent_at=__import__('datetime').datetime.utcnow(),
+            is_read=False,
+        )
+        db.add(notif)
+        # SMS + Push
+        _deliver_to_user(db, uid, title, message, alert_type, patient_name, critical=True)
+
+    db.commit()

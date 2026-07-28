@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -170,13 +170,13 @@ export default function SymptomsDetail() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-50 border-b-2 border-slate-200">
-                      {['Date & Time','Pain Level','Symptoms','Severity','Notes','XAI'].map(h => (
-                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                    <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+                      {['Date & Time','Pain Level','Symptoms','Severity','Notes','AI Explain'].map(h => (
+                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                     {symptoms.map((s) => {
                       const sev = getPainSeverity(s.pain_level ?? 0);
                       const flags = [
@@ -187,7 +187,7 @@ export default function SymptomsDetail() {
                       ].filter(Boolean);
                       return (
                         <tr key={s.id} className="hover:bg-slate-50 transition-colors h-[52px]">
-                          <td className="py-3 px-4 text-sm font-medium text-slate-900">
+                          <td className="py-3 px-4 text-sm font-medium text-slate-900 dark:text-white">
                             {new Date(s.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </td>
                           <td className="py-3 px-4">

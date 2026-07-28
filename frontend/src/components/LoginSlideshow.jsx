@@ -142,11 +142,11 @@ export default function LoginSlideshow() {
       {/* Header branding */}
       <div className="absolute top-0 left-0 right-0 p-6 z-20">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white/15 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/25">
-            <span className="font-serif font-bold text-white text-base">A</span>
+          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
+            <img src="/logo.png" alt="Project Aura" className="w-8 h-8 object-contain" />
           </div>
           <div>
-            <p className="font-serif font-bold text-white text-sm tracking-wide leading-none">Project Aura</p>
+            <p className="font-bold text-white text-sm tracking-wide leading-none">Project Aura</p>
             <p className="text-white/55 text-[10px] uppercase tracking-widest mt-0.5">Palliative Care · Ghana</p>
           </div>
         </div>

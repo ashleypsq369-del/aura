@@ -12,6 +12,7 @@ import { useCareSettingContext } from '../../context/CareSettingContext';
 import { useAppSettings } from '../../context/AppSettingsContext';
 import useAppStore from '../../store/useAppStore';
 import usePersonalisation from '../../hooks/usePersonalisation';
+import { usePersonalisationFlags } from '../../context/PersonalisationContext';
 
 // Icon map for dynamic nav additions from CareSettingContext
 const ICON_MAP = {
@@ -26,6 +27,7 @@ const ICON_MAP = {
 export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
   const { user } = useAuth();
   const { signals } = usePersonalisation();
+  const { hiddenNavPaths, uiFlags } = usePersonalisationFlags();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
   const { careSetting, meta, navAdditions } = useCareSettingContext();
@@ -133,7 +135,9 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'My Profile',     path: '/profile',          icon: User },
     ]};
 
-  const navItems = navigation[user?.role] || [];
+  const navItems = (navigation[user?.role] || []).filter(
+    item => !hiddenNavPaths.has(item.path)
+  );
   const activeItemRef = useRef(null);
 
   // Build personalised "suggested" item paths for patients
@@ -204,14 +208,18 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       >
         {/* Logo/Brand Header */}
         <div className="p-3 flex items-center justify-between border-b border-white/10 flex-shrink-0">
-          <div className="flex flex-col items-center flex-1 min-w-0">
-            {expanded ? (
-              <>
-                <span className="text-lg font-serif text-white font-bold">Project Aura</span>
-                <span className="text-[10px] text-white/70 uppercase tracking-wide font-semibold mt-0.5">Healthcare</span>
-              </>
-            ) : (
-              <span className="text-lg font-serif text-white font-bold">PA</span>
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <img
+              src="/logo.png"
+              alt="Project Aura"
+              className="flex-shrink-0 rounded-lg bg-white/10 object-contain"
+              style={{ width: 30, height: 30, padding: 2 }}
+            />
+            {expanded && (
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-white leading-tight truncate">Project Aura</p>
+                <p className="text-[9px] text-white/60 uppercase tracking-wider">Healthcare</p>
+              </div>
             )}
           </div>
 
@@ -287,47 +295,6 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
           {/* Divider after setting-specific items */}
           {navAdditions.length > 0 && (
             <div className="h-px bg-white/10 my-1" />
-          )}
-
-          {/* Personalised "Suggested" section — patient only, signals-driven */}
-          {user?.role === 'patient' && suggestedPaths.size > 0 && expanded && (
-            <>
-              <div className="px-2 pt-1 pb-0.5">
-                <p className="text-[9px] text-teal-300/60 uppercase tracking-wider font-bold flex items-center gap-1">
-                  <Sparkles size={9} /> Suggested for you
-                </p>
-              </div>
-              {navItems
-                .filter(item => suggestedPaths.has(item.path))
-                .map(item => {
-                  const Icon = item.icon;
-                  const active = isActive(item.path);
-                  return (
-                    <Link
-                      key={'sug-' + item.path}
-                      to={item.path}
-                      onClick={() => setIsOpen(false)}
-                      className={`
-                        sidebar-tip flex items-center px-2 py-2 rounded-lg transition-all duration-150 relative group
-                        ${expanded ? 'justify-start' : 'justify-center'} h-[36px]
-                        ${active
-                          ? 'bg-white/20 text-white font-bold shadow-lg border-l-3 border-teal-300'
-                          : 'text-teal-200/80 hover:bg-white/10 hover:text-white border-l-3 border-teal-400/40'
-                        }
-                      `}
-                    >
-                      <Icon size={16} className={`${active ? 'text-white' : 'text-teal-300'} transition-all flex-shrink-0`} strokeWidth={active ? 2.5 : 2} />
-                      <span className={`text-xs ml-2 truncate ${active ? 'font-bold' : 'font-medium'}`}>{item.name}</span>
-                      {/* Pulsing dot indicator */}
-                      {!active && (
-                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse flex-shrink-0" />
-                      )}
-                    </Link>
-                  );
-                })
-              }
-              <div className="h-px bg-white/10 my-1" />
-            </>
           )}
 
           {/* Base navigation items */}

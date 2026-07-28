@@ -77,9 +77,9 @@ class SoundManager {
     this.audioContext = null;
     this._contextInitialized = false;
     
-    // Check if sounds are enabled in preferences
+    // Sound is OFF by default — only enabled if user explicitly turned it on
     const soundPreference = localStorage.getItem('sound_enabled');
-    this.enabled = soundPreference !== 'false';
+    this.enabled = soundPreference === 'true';
     
     // Do NOT create AudioContext here - browsers block it before a user gesture.
     // It will be created lazily on first generateBeep() call.

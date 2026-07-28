@@ -1,66 +1,44 @@
 /**
- * Caregivers — Premium 2-column layout
- * Design: gradient KPI cards, glass-effect panels, rich color, no infinite scroll
- * LEFT:  Search + Caregiver Directory (paginated 6/page)
- * RIGHT: AI Auto-Assign + Team Analytics + Assignments (sticky)
+ * Caregivers — Full-width tabbed layout
+ * Tabs: Team | Analytics | Assignments
  */
-import { useState, useRef, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Users, HeartHandshake, AlertTriangle, Search, X,
+  UserPlus, Phone, Mail, Zap, Heart, Trash2,
+  Loader2, Brain, ChevronLeft, ChevronRight,
+  TrendingUp, BarChart2, ListChecks, CheckCircle,
+} from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { caregiversAPI, caregiverIntelligenceAPI, advancedMlAPI, patientsAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
-import {
-  Users, HeartHandshake, AlertTriangle, Search, X,
-  UserPlus, Phone, Mail, Zap, Heart, Trash2, ChevronRight,
-  Loader2, Brain, Activity, ChevronLeft, ChevronDown,
-  Star, Shield, TrendingUp,
-} from 'lucide-react';
 
-const AVATARS = [
-  'from-violet-500 to-purple-700',
-  'from-teal-500 to-emerald-600',
-  'from-blue-500 to-indigo-700',
-  'from-rose-500 to-pink-600',
-  'from-amber-500 to-orange-600',
-  'from-cyan-500 to-sky-600',
+/* ── constants ──────────────────────────────────────────────────────────── */
+const GRAD = [
+  'from-violet-500 to-purple-700', 'from-teal-500 to-emerald-600',
+  'from-blue-500 to-indigo-700',   'from-rose-500 to-pink-600',
+  'from-amber-500 to-orange-600',  'from-cyan-500 to-sky-600',
+  'from-fuchsia-500 to-pink-700',  'from-lime-500 to-green-600',
 ];
-const getInitials = n => n ? n.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() : '?';
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 9;
+const getInitials = n => n ? n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase() : '?';
+const wbColor = p => p > 75 ? 'bg-red-500' : p >= 50 ? 'bg-amber-400' : 'bg-emerald-500';
+const wbText  = p => p > 75 ? 'text-red-600' : p >= 50 ? 'text-amber-600' : 'text-emerald-600';
 
-/* ── Gradient KPI stat card ───────────────────────────────────────────────── */
-const STAT_THEMES = {
-  teal:   { bg: 'bg-gradient-to-br from-teal-500 to-cyan-600',     icon: 'bg-white/20', text: 'text-white', glow: 'shadow-teal-500/30' },
-  violet: { bg: 'bg-gradient-to-br from-violet-500 to-purple-700', icon: 'bg-white/20', text: 'text-white', glow: 'shadow-violet-500/30' },
-  blue:   { bg: 'bg-gradient-to-br from-blue-500 to-indigo-600',   icon: 'bg-white/20', text: 'text-white', glow: 'shadow-blue-500/30' },
-  amber:  { bg: 'bg-gradient-to-br from-amber-500 to-orange-600',  icon: 'bg-white/20', text: 'text-white', glow: 'shadow-amber-500/30' },
-  rose:   { bg: 'bg-gradient-to-br from-rose-500 to-pink-600',     icon: 'bg-white/20', text: 'text-white', glow: 'shadow-rose-500/30' },
-  slate:  { bg: 'bg-gradient-to-br from-slate-600 to-slate-800',   icon: 'bg-white/20', text: 'text-white', glow: 'shadow-slate-500/30' },
-};
-
-function StatCard({ label, value, icon: Icon, theme = 'teal', subtitle, pulse }) {
-  const t = STAT_THEMES[theme] || STAT_THEMES.teal;
-  return (
-    <div className={`${t.bg} rounded-xl px-4 py-3.5 shadow-lg ${t.glow} relative overflow-hidden`}>
-      <div className="absolute -top-3 -right-3 w-16 h-16 rounded-full bg-white/10 pointer-events-none"/>
-      {pulse && <span className="w-2 h-2 rounded-full bg-white/70 animate-ping absolute top-2.5 right-2.5"/>}
-      <div className="relative z-10 flex items-center gap-3">
-        <div className={`w-8 h-8 rounded-lg ${t.icon} flex items-center justify-center flex-shrink-0`}>
-          <Icon size={15} className="text-white"/>
-        </div>
-        <div className="min-w-0">
-          <p className="text-2xl font-black text-white tabular-nums leading-none">{value}</p>
-          <p className="text-white/80 font-semibold text-xs mt-0.5 truncate">{label}</p>
-          {subtitle && <p className="text-white/55 text-[10px] truncate">{subtitle}</p>}
-        </div>
-      </div>
-    </div>
-  );
+/* ── BurnoutBadge ───────────────────────────────────────────────────────── */
+function BurnoutBadge({ level }) {
+  const l = String(level || 'low').toLowerCase();
+  if (l === 'critical') return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-red-600 text-white"><span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse"/>Critical</span>;
+  if (l === 'high')     return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-500 text-white"><span className="w-1.5 h-1.5 rounded-full bg-white/70"/>High Risk</span>;
+  if (l === 'moderate') return <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-white">Moderate</span>;
+  return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>Healthy</span>;
 }
 
-/* ── Patient picker ───────────────────────────────────────────────────────── */
+/* ── PatientPicker ──────────────────────────────────────────────────────── */
 function PatientPicker({ list, value, onChange, placeholder = 'Search patient…' }) {
   const [q, setQ] = useState('');
   const [open, setOpen] = useState(false);
@@ -74,12 +52,13 @@ function PatientPicker({ list, value, onChange, placeholder = 'Search patient…
   const hits = list.filter(p => {
     if (!q) return true;
     const s = q.toLowerCase();
-    return (p.full_name || '').toLowerCase().includes(s) || (p.patient_code || '').toLowerCase().includes(s);
+    return (p.full_name||'').toLowerCase().includes(s) || (p.patient_code||'').toLowerCase().includes(s);
   }).slice(0, 6);
   return (
-    <div ref={ref} className="relative flex-1">
-      <div className={`flex items-center gap-2 border-2 rounded-xl px-3 py-2 bg-white transition-all ${open ? 'border-violet-500 shadow-md shadow-violet-100' : 'border-slate-200 hover:border-slate-300'}`}
-        onClick={() => { setQ(''); setOpen(true); }}>
+    <div ref={ref} className="relative">
+      <div onClick={() => { setQ(''); setOpen(true); }}
+        className={`flex items-center gap-2 border-2 rounded-xl px-3 py-2.5 cursor-text transition-all bg-white
+          ${open ? 'border-violet-500 shadow-sm' : 'border-slate-200 hover:border-slate-300'}`}>
         <Search size={13} className="text-slate-400 flex-shrink-0"/>
         <input value={open ? q : sel ? (sel.patient_code || sel.full_name) : ''}
           onChange={e => setQ(e.target.value)} onFocus={() => { setQ(''); setOpen(true); }}
@@ -89,492 +68,616 @@ function PatientPicker({ list, value, onChange, placeholder = 'Search patient…
       </div>
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-            className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden">
+          <motion.ul initial={{opacity:0,y:-4}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-4}}
+            className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 overflow-hidden">
             {hits.length === 0
-              ? <div className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</div>
+              ? <li className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</li>
               : hits.map(p => (
-                <button key={p.id} type="button"
-                  onClick={() => { onChange(String(p.id)); setOpen(false); setQ(''); }}
-                  className="w-full text-left px-4 py-2.5 hover:bg-violet-50 flex items-center gap-3 border-b border-slate-50 last:border-0 transition-colors">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
-                    {getInitials(p.full_name)}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-slate-800 text-sm truncate">{p.full_name}</p>
-                    <p className="text-xs text-slate-400">{p.patient_code} · {p.age}y</p>
-                  </div>
-                </button>
+                <li key={p.id}>
+                  <button type="button" onClick={() => { onChange(String(p.id)); setOpen(false); setQ(''); }}
+                    className="w-full text-left px-4 py-2.5 hover:bg-violet-50 flex items-center gap-3 border-b border-slate-50 last:border-0 transition-colors">
+                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
+                      {getInitials(p.full_name)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-800 text-sm truncate">{p.full_name}</p>
+                      <p className="text-xs text-slate-400">{p.patient_code} · {p.age}y</p>
+                    </div>
+                  </button>
+                </li>
               ))}
-          </motion.div>
+          </motion.ul>
         )}
       </AnimatePresence>
     </div>
   );
 }
 
-/* ── Risk badge helper ────────────────────────────────────────────────────── */
-function RiskBadge({ level }) {
-  if (!level) return null;
-  const l = String(level).toLowerCase();
-  if (l === 'critical' || l === 'burnout')
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700 border border-red-200"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"/>Burnout</span>;
-  if (l === 'high' || l === 'struggling')
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200">High Risk</span>;
-  if (l === 'moderate')
-    return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-100 text-yellow-700 border border-yellow-200">Moderate</span>;
-  return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">Low Risk</span>;
+/* ── CaregiverCard ──────────────────────────────────────────────────────── */
+function CaregiverCard({ cg, workload, burnoutLevel, avatarGrad, onBurnoutClick }) {
+  const activePatients = workload?.active_patients ?? 0;
+  const workloadPct    = Math.min(workload?.workload_score ?? 0, 100);
+  const capStatus      = workload?.capacity_status || 'available';
+  const bl = String(burnoutLevel || 'low').toLowerCase();
+
+  const borderL = bl==='critical' ? 'border-l-red-500' : bl==='high' ? 'border-l-orange-400' : bl==='moderate' ? 'border-l-amber-400' : 'border-l-teal-400';
+  const ringC   = bl==='critical' ? 'ring-red-400'     : bl==='high' ? 'ring-orange-400'     : bl==='moderate' ? 'ring-amber-400'     : 'ring-teal-400';
+
+  return (
+    <motion.div layout initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}}
+      className={`border-l-4 ${borderL} bg-white rounded-r-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200`}>
+      <div className="p-4 space-y-3">
+        {/* Header */}
+        <div className="flex items-start gap-3">
+          <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-white font-black text-sm shadow-md ring-2 ring-offset-1 ${ringC} flex-shrink-0`}>
+            {getInitials(cg.full_name)}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-slate-900 text-sm truncate">{cg.full_name}</p>
+            <p className="text-[11px] text-slate-500">{cg.role || 'Caregiver'}</p>
+            <div className="mt-1.5"><BurnoutBadge level={bl}/></div>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <p className="text-2xl font-black tabular-nums text-violet-700 leading-none">{activePatients}</p>
+            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wide">patients</p>
+          </div>
+        </div>
+        {/* Workload */}
+        <div>
+          <div className="flex justify-between mb-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Workload</span>
+            <span className={`text-[10px] font-black tabular-nums ${wbText(workloadPct)}`}>
+              {workloadPct}% · <span className="font-semibold text-slate-500 capitalize">{capStatus.replace('_',' ')}</span>
+            </span>
+          </div>
+          <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <motion.div className={`h-full rounded-full ${wbColor(workloadPct)}`}
+              initial={{width:0}} animate={{width:`${workloadPct}%`}} transition={{duration:0.7,ease:'easeOut'}}/>
+          </div>
+        </div>
+        {/* Contact */}
+        <div className="space-y-0.5">
+          {cg.email && <p className="flex items-center gap-1.5 text-xs text-slate-500 truncate"><Mail size={11} className="text-slate-400 flex-shrink-0"/>{cg.email}</p>}
+          {cg.phone && <p className="flex items-center gap-1.5 text-xs text-slate-500"><Phone size={11} className="text-slate-400 flex-shrink-0"/>{cg.phone}</p>}
+        </div>
+        {/* AI button */}
+        <button onClick={onBurnoutClick}
+          className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 font-bold text-xs border border-violet-200 transition-all">
+          <Brain size={11}/> AI Burnout Analysis
+        </button>
+      </div>
+    </motion.div>
+  );
 }
 
-/* ── Main page ───────────────────────────────────────────────────────────── */
+/* ── BurnoutModal ───────────────────────────────────────────────────────── */
+function BurnoutModal({ cg, data, loading, onClose }) {
+  if (!cg) return null;
+  const pct   = data ? Math.round((data.burnout_score ?? 0) * 100) : 0;
+  const level = data?.burnout_level || 'low';
+  const ringCls = level==='critical'?'bg-red-500':level==='high'?'bg-orange-500':level==='moderate'?'bg-amber-400':'bg-emerald-500';
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <motion.div initial={{opacity:0,scale:0.94,y:20}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:0.94}}
+        transition={{type:'spring',damping:28,stiffness:380}}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" onClick={e=>e.stopPropagation()}>
+        <div className="bg-gradient-to-r from-violet-600 to-purple-700 px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white font-black text-sm">{getInitials(cg.full_name)}</div>
+            <div>
+              <p className="font-bold text-white">{cg.full_name}</p>
+              <p className="text-violet-200 text-xs">AI Burnout Analysis · {cg.role||'Caregiver'}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/30 flex items-center justify-center text-white transition-colors"><X size={15}/></button>
+        </div>
+        <div className="p-5 space-y-4 max-h-[72vh] overflow-y-auto">
+          {loading && <div className="flex flex-col items-center py-14 gap-3"><Loader2 size={28} className="animate-spin text-violet-500"/><p className="text-sm text-slate-500 font-medium">Analysing burnout risk…</p></div>}
+          {!loading && !data && <div className="flex flex-col items-center py-14 gap-2 text-slate-400"><Brain size={36} className="text-slate-300"/><p className="text-sm font-medium">No burnout data available</p></div>}
+          {!loading && data && (
+            <>
+              <div className="flex items-center gap-4 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                <div className={`w-16 h-16 rounded-2xl ${ringCls} flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                  <p className="text-white font-black text-xl tabular-nums">{pct}%</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="font-bold text-slate-900 text-base capitalize">{level} Risk</p>
+                  <p className="text-xs text-slate-500">ML burnout probability</p>
+                  <BurnoutBadge level={level}/>
+                </div>
+              </div>
+              {data.signals?.length > 0 && (
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Risk Signals</p>
+                  <div className="space-y-2">
+                    {data.signals.map((s,i) => (
+                      <div key={i} className="flex items-start gap-3 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+                        <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0 mt-1.5"/>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-slate-800">{s.signal}</p>
+                          {s.value && <p className="text-[11px] text-slate-500 mt-0.5">{s.value}</p>}
+                        </div>
+                        {s.severity && <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0 ${s.severity==='critical'?'bg-red-600 text-white':s.severity==='warning'?'bg-amber-500 text-white':'bg-slate-200 text-slate-600'}`}>{s.severity}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {(!data.signals||data.signals.length===0) && (
+                <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+                  <CheckCircle size={18} className="text-emerald-600 flex-shrink-0"/>
+                  <p className="text-sm font-semibold text-emerald-800">No burnout signals detected</p>
+                </div>
+              )}
+              {data.recommendations?.filter(Boolean).length > 0 && (
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Recommendations</p>
+                  <div className="space-y-2">
+                    {data.recommendations.filter(Boolean).map((rec,i) => (
+                      <div key={i} className="flex items-start gap-2 text-sm px-3 py-2.5 rounded-xl bg-violet-50 border border-violet-100 text-violet-800">
+                        <TrendingUp size={13} className="flex-shrink-0 mt-0.5 text-violet-600"/>{rec}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Main Component
+══════════════════════════════════════════════════════════════════════════ */
 export default function Caregivers() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { user }    = useAuth();
+  const navigate    = useNavigate();
+  const qc          = useQueryClient();
   const isStaff     = user?.role === 'clinician' || user?.role === 'admin';
   const isCaregiver = user?.role === 'caregiver';
 
-  const [search, setSearch]         = useState('');
-  const [assignMap, setAssignMap]   = useState({});
-  const [optimalPid, setOptimalPid] = useState('');
-  const [page, setPage]             = useState(0);
-  const [selectedCg, setSelectedCg] = useState(null);
+  const [tab,            setTab]            = useState('team');
+  const [search,         setSearch]         = useState('');
+  const [filter,         setFilter]         = useState('all');
+  const [page,           setPage]           = useState(0);
+  const [burnoutCg,      setBurnoutCg]      = useState(null);
+  const [burnoutMap,     setBurnoutMap]     = useState({});
+  const [burnoutLoading, setBurnoutLoading] = useState(false);
+  const [optPid,         setOptPid]         = useState('');
+  const [manualCg,       setManualCg]       = useState('');
+  const [manualPt,       setManualPt]       = useState('');
 
-  /* ── Queries ─────────────────────────────────────────────────────────── */
-  const { data: cgRaw, isLoading } = useQuery({
-    queryKey: ['caregivers-all'],
-    queryFn: () => caregiversAPI.getAll().then(r => r.data),
-    staleTime: 5 * 60 * 1000, retry: false,
-  });
-  const { data: assignmentsRaw } = useQuery({
-    queryKey: ['cg-assignments'],
-    queryFn: () => caregiversAPI.getAssignments().then(r => r.data),
-    enabled: isStaff, staleTime: 3 * 60 * 1000, retry: false,
-  });
-  const { data: myPatientsRaw } = useQuery({
-    queryKey: ['cg-my-patients'],
-    queryFn: () => caregiverIntelligenceAPI.getMyPatients().then(r => r.data),
-    enabled: isCaregiver, staleTime: 3 * 60 * 1000, retry: false,
-  });
-  const { data: teamRaw } = useQuery({
-    queryKey: ['cg-team'],
-    queryFn: () => caregiverIntelligenceAPI.getTeamOverview().then(r => r.data),
-    staleTime: 5 * 60 * 1000, retry: false,
-  });
-  const { data: burnoutRaw } = useQuery({
-    queryKey: ['cg-burnout'],
-    queryFn: () => advancedMlAPI.getAllCaregiverBurnout().then(r => r.data),
-    staleTime: 10 * 60 * 1000, retry: false,
-  });
-  const { data: patientsRaw } = useQuery({
-    queryKey: ['patients-list'],
-    queryFn: () => patientsAPI.getAll().then(r => r.data),
-    enabled: isStaff, staleTime: 5 * 60 * 1000,
-  });
+  useEffect(() => { setPage(0); }, [search, filter]);
 
-  const caregivers  = Array.isArray(cgRaw) ? cgRaw : cgRaw?.caregivers || [];
-  const assignments = Array.isArray(assignmentsRaw) ? assignmentsRaw : assignmentsRaw?.assignments || [];
-  const myPatients  = Array.isArray(myPatientsRaw?.patients) ? myPatientsRaw.patients : [];
-  const burnoutList = Array.isArray(burnoutRaw) ? burnoutRaw : burnoutRaw?.caregivers || [];
-  const patientList = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
+  /* ── queries ── */
+  const { data: cgRaw,   isLoading } = useQuery({ queryKey:['caregivers-all'], queryFn:()=>caregiversAPI.getAll().then(r=>r.data),                          staleTime:5*60*1000, retry:false });
+  const { data: assnRaw }            = useQuery({ queryKey:['cg-assignments'], queryFn:()=>caregiversAPI.getAssignments().then(r=>r.data),                  enabled:isStaff,     staleTime:3*60*1000, retry:false });
+  const { data: myPtsRaw }           = useQuery({ queryKey:['cg-my-patients'], queryFn:()=>caregiverIntelligenceAPI.getMyPatients().then(r=>r.data),         enabled:isCaregiver, staleTime:3*60*1000, retry:false });
+  const { data: teamRaw }            = useQuery({ queryKey:['cg-team'],        queryFn:()=>caregiverIntelligenceAPI.getTeamOverview().then(r=>r.data),                            staleTime:5*60*1000, retry:false });
+  const { data: burnoutRaw }         = useQuery({ queryKey:['cg-burnout'],     queryFn:()=>advancedMlAPI.getAllCaregiverBurnout().then(r=>r.data),                                 staleTime:10*60*1000,retry:false });
+  const { data: patientsRaw }        = useQuery({ queryKey:['patients-list'],  queryFn:()=>patientsAPI.getAll().then(r=>r.data),                            enabled:isStaff,     staleTime:5*60*1000  });
 
-  const burnoutAlerts = burnoutList.filter(b => {
-    const l = String(b.burnout_level || b.risk_level || '').toLowerCase();
-    return l === 'critical' || l === 'high' || l === 'burnout' || l === 'struggling';
-  }).length;
+  /* ── normalise ── */
+  const caregivers  = Array.isArray(cgRaw)             ? cgRaw             : cgRaw?.caregivers   || [];
+  const assignments = Array.isArray(assnRaw)            ? assnRaw           : assnRaw?.assignments || [];
+  const myPatients  = Array.isArray(myPtsRaw?.patients) ? myPtsRaw.patients : [];
+  const burnoutList = Array.isArray(burnoutRaw)          ? burnoutRaw        : burnoutRaw?.caregivers || [];
+  const patientList = Array.isArray(patientsRaw)         ? patientsRaw       : patientsRaw?.patients  || [];
 
-  const filtered = caregivers.filter(cg => {
-    if (!search) return true;
-    const s = search.toLowerCase();
-    return (cg.full_name || '').toLowerCase().includes(s) || (cg.role || '').toLowerCase().includes(s);
-  });
+  /* ── derived ── */
+  const workloadMap = useMemo(() => {
+    const m = {};
+    (teamRaw?.team_metrics || []).forEach(tm => { m[tm.caregiver_id] = tm.workload; });
+    return m;
+  }, [teamRaw]);
+
+  const burnoutLevelMap = useMemo(() => {
+    const m = {};
+    burnoutList.forEach(b => { const id = b.caregiver_id||b.user_id; if(id) m[id] = String(b.burnout_level||b.risk_level||'low').toLowerCase(); });
+    return m;
+  }, [burnoutList]);
+
+  const burnoutAlerts = Object.values(burnoutLevelMap).filter(l => l==='critical'||l==='high').length;
+  const overloaded    = Object.values(workloadMap).filter(w => w?.capacity_status==='overloaded').length;
+
+  const FILTERS = [
+    { id:'all',        label:'All',        count: caregivers.length },
+    { id:'burnout',    label:'Burnout',    count: burnoutAlerts },
+    { id:'overloaded', label:'Overloaded', count: overloaded },
+    { id:'available',  label:'Available',  count: caregivers.length - overloaded },
+  ];
+
+  const filtered = useMemo(() => caregivers.filter(cg => {
+    if (search) {
+      const s = search.toLowerCase();
+      if (!(cg.full_name||'').toLowerCase().includes(s) && !(cg.role||'').toLowerCase().includes(s) && !(cg.email||'').toLowerCase().includes(s)) return false;
+    }
+    const wl = workloadMap[cg.id] || {};
+    const bl = burnoutLevelMap[cg.id] || 'low';
+    if (filter==='burnout')    return ['critical','high','moderate'].includes(bl);
+    if (filter==='overloaded') return wl.capacity_status === 'overloaded';
+    if (filter==='available')  return wl.capacity_status !== 'overloaded';
+    return true;
+  }), [caregivers, search, filter, workloadMap, burnoutLevelMap]);
 
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
-  useEffect(() => { setPage(0); }, [search]);
-
-  /* ── Mutations ───────────────────────────────────────────────────────── */
+  /* ── mutations ── */
   const assignMutation = useMutation({
     mutationFn: d => caregiversAPI.assign(d),
-    onSuccess: (_, d) => {
-      toast.success('Caregiver assigned');
-      setAssignMap(m => ({ ...m, [d.caregiver_id]: '' }));
-      queryClient.invalidateQueries(['cg-assignments']);
-      queryClient.invalidateQueries(['cg-team']);
-    },
+    onSuccess: () => { toast.success('Patient assigned'); setManualCg(''); setManualPt(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
     onError: e => toast.error(e?.response?.data?.detail || 'Assignment failed'),
   });
   const removeMutation = useMutation({
     mutationFn: id => caregiversAPI.removeAssignment(id),
-    onSuccess: () => { toast.success('Assignment removed'); queryClient.invalidateQueries(['cg-assignments']); },
+    onSuccess: () => { toast.success('Assignment removed'); qc.invalidateQueries(['cg-assignments']); },
     onError: () => toast.error('Failed to remove'),
   });
   const optimalMutation = useMutation({
     mutationFn: pid => caregiverIntelligenceAPI.assignOptimal(pid),
-    onSuccess: d => {
-      toast.success(`AI assigned ${d?.data?.caregiver_name || 'caregiver'}`);
-      setOptimalPid('');
-      queryClient.invalidateQueries(['cg-assignments']);
-      queryClient.invalidateQueries(['cg-team']);
-    },
-    onError: e => toast.error(e?.response?.data?.detail || 'AI assign failed'),
+    onSuccess: d => { toast.success(`AI assigned ${d?.data?.caregiver_name||'caregiver'}`); setOptPid(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
+    onError: e => toast.error(e?.response?.data?.detail || 'Auto-assign failed'),
   });
 
+  const openBurnout = useCallback((cg) => {
+    setBurnoutCg(cg);
+    if (!burnoutMap[cg.id]) {
+      setBurnoutLoading(true);
+      advancedMlAPI.getCaregiverBurnout(cg.id)
+        .then(r => { setBurnoutMap(m => ({...m,[cg.id]:r.data})); setBurnoutLoading(false); })
+        .catch(() => setBurnoutLoading(false));
+    }
+  }, [burnoutMap]);
+
+  const filterColor = (id, active) => {
+    if (!active) return 'bg-slate-100 text-slate-600 hover:bg-slate-200';
+    if (id==='burnout')    return 'bg-red-600 text-white';
+    if (id==='overloaded') return 'bg-amber-500 text-white';
+    if (id==='available')  return 'bg-emerald-600 text-white';
+    return 'bg-violet-600 text-white';
+  };
+
+  /* ── tab definitions ── */
+  const TABS = [
+    { id:'team',        label:'Team',        Icon:Users      },
+    { id:'analytics',   label:'Analytics',   Icon:BarChart2  },
+    { id:'assignments', label:'Assignments', Icon:ListChecks },
+    ...(isCaregiver ? [{ id:'mypatients', label:'My Patients', Icon:Heart }] : []),
+  ];
+
   return (
-    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}
-      className="min-h-screen space-y-6 pb-10">
+    <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.2}}
+      className="min-h-screen pb-10 space-y-5">
 
-      <PageHeader image="/resources/cards/card-patients.jpg" title="Care Team"
-        subtitle="AI-powered caregiver management, workload intelligence and team analytics" icon={HeartHandshake}/>
+      <PageHeader image="/resources/african/african-caregiver.jpg" title="Care Team"
+        subtitle="Caregiver management · workload intelligence · AI burnout analysis" icon={HeartHandshake}/>
 
-      {/* ── Gradient KPI cards ── */}
-      <div className="px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Total Caregivers" value={caregivers.length} icon={Users} theme="teal" subtitle="Active team members"/>
-          <StatCard label="Assignments" value={assignments.length} icon={HeartHandshake} theme="blue" subtitle="Patient-caregiver pairs"/>
-          <StatCard label="Burnout Alerts" value={burnoutAlerts} icon={AlertTriangle}
-            theme={burnoutAlerts > 0 ? 'amber' : 'slate'} subtitle={burnoutAlerts > 0 ? 'Need attention' : 'Team healthy'} pulse={burnoutAlerts > 0}/>
-          <StatCard label={isCaregiver ? 'My Patients' : 'Total Patients'}
-            value={isCaregiver ? myPatients.length : (teamRaw?.total_patients_assigned ?? '—')}
-            icon={Heart} theme="violet" subtitle={isCaregiver ? 'Assigned to you' : 'In the system'}/>
-        </div>
-      </div>
-
-      {/* ── Burnout warning ── */}
+      {/* Burnout banner */}
       {burnoutAlerts > 0 && (
         <div className="px-6">
-          <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
-            className="flex items-start gap-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle size={18} className="text-white"/>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-bold text-amber-900 text-sm">{burnoutAlerts} Caregiver Burnout Alert{burnoutAlerts > 1 ? 's' : ''} Detected</p>
-              {burnoutList.filter(b => ['critical','high','burnout','struggling'].includes(String(b.burnout_level || b.risk_level || '').toLowerCase())).map((b, i) => (
-                <p key={i} className="text-xs text-amber-800 mt-0.5">
-                  <strong>{b.caregiver_name || b.name}</strong> — {b.burnout_level || b.risk_level} risk{b.recommendation ? `. ${b.recommendation}` : ''}
-                </p>
+          <div className="border-l-4 border-l-red-500 bg-red-50 border border-red-200 rounded-r-xl p-3.5 flex items-start gap-3">
+            <AlertTriangle size={16} className="text-red-600 flex-shrink-0 mt-0.5"/>
+            <div>
+              <p className="font-bold text-red-900 text-sm">{burnoutAlerts} Caregiver{burnoutAlerts>1?'s':''} at Burnout Risk</p>
+              {burnoutList.filter(b=>['critical','high'].includes(String(b.burnout_level||b.risk_level||'').toLowerCase())).map((b,i)=>(
+                <p key={i} className="text-xs text-red-700 mt-0.5"><strong>{b.caregiver_name||b.name}</strong> — {b.burnout_level||b.risk_level} risk</p>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
 
-      {/* ── TWO-COLUMN LAYOUT ── */}
+      {/* ── Tab bar ── */}
       <div className="px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+        <div className="flex border-b border-slate-200 gap-0">
+          {TABS.map(({id,label,Icon}) => (
+            <button key={id} onClick={() => setTab(id)}
+              className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-all whitespace-nowrap
+                ${tab===id ? 'border-violet-600 text-violet-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}>
+              <Icon size={15}/>{label}
+              {id==='team' && <span className={`text-[10px] font-black px-1.5 rounded-full tabular-nums ${tab===id?'bg-violet-100 text-violet-700':'bg-slate-100 text-slate-500'}`}>{caregivers.length}</span>}
+              {id==='assignments' && assignments.length > 0 && <span className={`text-[10px] font-black px-1.5 rounded-full tabular-nums ${tab===id?'bg-violet-100 text-violet-700':'bg-slate-100 text-slate-500'}`}>{assignments.length}</span>}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          {/* ── LEFT COLUMN: Search + Directory ── */}
-          <div className="flex flex-col gap-4">
+      {/* ══ TAB: TEAM ══ */}
+      {tab === 'team' && (
+        <div className="px-6 space-y-3">
+          {/* Search + filters */}
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by name, role or email…"
+                className="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400 outline-none text-sm shadow-sm"/>
+              {search && <button onClick={()=>setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-md bg-slate-100 hover:bg-red-100 flex items-center justify-center"><X size={11} className="text-slate-500"/></button>}
+            </div>
+            <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
+              {FILTERS.map(f => (
+                <button key={f.id} onClick={()=>setFilter(f.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterColor(f.id, filter===f.id)}`}>
+                  {f.label}
+                  <span className={`text-[10px] font-black px-1 rounded-full tabular-nums ${filter===f.id?'bg-white/25 text-current':'bg-slate-200 text-slate-500'}`}>{f.count}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
-            {/* Search bar */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex-1 relative">
-                  <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
-                  <input value={search} onChange={e => setSearch(e.target.value)}
-                    placeholder="Search caregivers by name or role…"
-                    className="w-full pl-11 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none text-sm font-medium transition-all"/>
-                  {search && (
-                    <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-slate-100 hover:bg-red-100 flex items-center justify-center transition-colors">
-                      <X size={12} className="text-slate-500 hover:text-red-500"/>
-                    </button>
-                  )}
-                </div>
+          {/* Grid */}
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64 gap-3">
+              <Loader2 size={26} className="animate-spin text-violet-400"/>
+              <p className="text-sm text-slate-500 font-medium">Loading care team…</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center bg-white rounded-2xl border border-dashed border-slate-300 h-64 gap-3 shadow-sm">
+              <Users size={36} className="text-slate-300"/>
+              <p className="font-bold text-slate-500">No caregivers match</p>
+              <button onClick={()=>{setSearch('');setFilter('all');}} className="text-xs text-violet-600 hover:underline font-semibold">Clear filters</button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                <AnimatePresence mode="popLayout">
+                  {paginated.map((cg,i) => (
+                    <CaregiverCard key={cg.id||i}
+                      cg={cg} workload={workloadMap[cg.id]} burnoutLevel={burnoutLevelMap[cg.id]}
+                      avatarGrad={GRAD[(page*PAGE_SIZE+i)%GRAD.length]}
+                      onBurnoutClick={()=>openBurnout(cg)}/>
+                  ))}
+                </AnimatePresence>
               </div>
-              <div className="flex items-center justify-between mt-2.5">
-                <p className="text-xs text-slate-400">
-                  {filtered.length === 0 ? 'No results' : `Showing ${Math.min(PAGE_SIZE, filtered.length - page * PAGE_SIZE)} of ${filtered.length} caregivers`}
-                </p>
-                {pageCount > 1 && (
+              {pageCount > 1 && (
+                <div className="flex items-center justify-between pt-1">
+                  <p className="text-xs text-slate-400">{filtered.length} caregivers · page {page+1} of {pageCount}</p>
                   <div className="flex items-center gap-1.5">
-                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                      className="w-7 h-7 rounded-lg border-2 border-slate-200 hover:border-violet-400 hover:text-violet-600 disabled:opacity-40 flex items-center justify-center transition-all text-slate-500">
+                    <button onClick={()=>setPage(p=>Math.max(0,p-1))} disabled={page===0}
+                      className="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:border-violet-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
                       <ChevronLeft size={14}/>
                     </button>
-                    <span className="text-xs font-semibold text-slate-600 min-w-[48px] text-center">{page + 1} / {pageCount}</span>
-                    <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
-                      className="w-7 h-7 rounded-lg border-2 border-slate-200 hover:border-violet-400 hover:text-violet-600 disabled:opacity-40 flex items-center justify-center transition-all text-slate-500">
+                    {Array.from({length:pageCount},(_,idx)=>(
+                      <button key={idx} onClick={()=>setPage(idx)}
+                        className={`h-2 rounded-full transition-all duration-200 ${idx===page?'w-6 bg-violet-600':'w-2 bg-slate-300 hover:bg-violet-400'}`}/>
+                    ))}
+                    <button onClick={()=>setPage(p=>Math.min(pageCount-1,p+1))} disabled={page===pageCount-1}
+                      className="w-8 h-8 rounded-xl border border-slate-200 bg-white hover:border-violet-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
                       <ChevronRight size={14}/>
                     </button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ══ TAB: ANALYTICS ══ */}
+      {tab === 'analytics' && (
+        <div className="px-6 space-y-6">
+          {!teamRaw ? (
+            <div className="flex flex-col items-center py-20 gap-3 text-slate-400">
+              <BarChart2 size={40} className="text-slate-300"/>
+              <p className="font-medium">Team analytics unavailable</p>
             </div>
-
-            {/* Section label */}
-            <div className="flex items-center gap-3">
-              <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                <Users size={16} className="text-violet-600"/>
-                Caregiver Directory
-              </h2>
-              <span className="px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold">{filtered.length}</span>
-            </div>
-
-            {/* Caregiver cards */}
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-200 h-64 gap-3">
-                <Loader2 size={30} className="animate-spin text-violet-500"/>
-                <p className="text-sm text-slate-500 font-medium">Loading team…</p>
-              </div>
-            ) : filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center bg-white rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
-                <Users size={40} className="text-slate-300"/>
-                <p className="font-bold text-slate-500">No caregivers found</p>
-                {search && <button onClick={() => setSearch('')} className="text-xs text-violet-600 hover:underline font-medium">Clear search</button>}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <AnimatePresence mode="popLayout">
-                  {paginated.map((cg, i) => {
-                    const bi = burnoutList.find(b => b.caregiver_id === cg.id || b.user_id === cg.id);
-                    const bLevel = bi ? String(bi.burnout_level || bi.risk_level || '').toLowerCase() : null;
-                    const isSelected = selectedCg?.id === cg.id;
-                    const idx = (page * PAGE_SIZE + i) % AVATARS.length;
-                    return (
-                      <motion.div key={cg.id || i} layout
-                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }}
-                        transition={{ delay: i * 0.04 }}
-                        className={`bg-white rounded-2xl border-2 transition-all duration-200 cursor-pointer overflow-hidden ${
-                          isSelected
-                            ? 'border-violet-400 shadow-lg shadow-violet-100'
-                            : 'border-slate-200 hover:border-violet-300 hover:shadow-md'
-                        }`}
-                        onClick={() => setSelectedCg(isSelected ? null : cg)}>
-                        <div className="p-3 flex items-center gap-3">
-                          {/* Avatar */}
-                          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${AVATARS[idx]} flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0`}>
-                            {getInitials(cg.full_name)}
-                          </div>
-                          {/* Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap mb-1">
-                              <span className="font-bold text-slate-900">{cg.full_name}</span>
-                              <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">{cg.role || 'Caregiver'}</span>
-                              {bLevel && <RiskBadge level={bLevel}/>}
-                            </div>
-                            <div className="flex items-center gap-3 text-xs text-slate-400">
-                              {cg.email && <span className="flex items-center gap-1 truncate"><Mail size={11}/>{cg.email}</span>}
-                              {cg.phone && <span className="flex items-center gap-1"><Phone size={11}/>{cg.phone}</span>}
-                            </div>
-                          </div>
-                          <ChevronDown size={16} className={`flex-shrink-0 text-slate-400 transition-transform duration-200 ${isSelected ? 'rotate-180 text-violet-500' : ''}`}/>
-                        </div>
-
-                        {/* Expandable assign panel */}
-                        <AnimatePresence>
-                          {isSelected && isStaff && (
-                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden">
-                              <div className="px-4 pb-4 pt-1 border-t border-violet-100 bg-violet-50/50">
-                                <p className="text-xs font-semibold text-violet-700 mb-2.5 flex items-center gap-1.5">
-                                  <UserPlus size={12}/> Assign a patient to {cg.full_name?.split(' ')[0]}
-                                </p>
-                                <div className="flex gap-2">
-                                  <PatientPicker list={patientList} value={assignMap[cg.id] || ''} onChange={v => setAssignMap(m => ({ ...m, [cg.id]: v }))}/>
-                                  <button
-                                    onClick={e => { e.stopPropagation(); if (assignMap[cg.id]) assignMutation.mutate({ patient_id: parseInt(assignMap[cg.id]), caregiver_id: cg.id, notes: '' }); }}
-                                    disabled={!assignMap[cg.id] || assignMutation.isPending}
-                                    className="flex items-center gap-1.5 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-bold text-xs disabled:opacity-50 transition shadow-md shadow-violet-200 flex-shrink-0">
-                                    {assignMutation.isPending ? <Loader2 size={12} className="animate-spin"/> : <UserPlus size={12}/>}
-                                    Assign
-                                  </button>
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-            )}
-
-            {/* Page dots */}
-            {pageCount > 1 && (
-              <div className="flex items-center justify-center gap-1.5 py-1">
-                {Array.from({ length: pageCount }, (_, idx) => (
-                  <button key={idx} onClick={() => setPage(idx)}
-                    className={`rounded-full transition-all duration-200 ${idx === page ? 'w-7 h-2.5 bg-violet-600' : 'w-2.5 h-2.5 bg-slate-300 hover:bg-violet-400'}`}/>
+          ) : (
+            <>
+              {/* Summary stats */}
+              {/* Compact stat strip */}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { l:'Team Size',        v: teamRaw.team_size ?? caregivers.length,          icon: Users,         cls:'border-violet-300 text-violet-700 bg-violet-50' },
+                  { l:'Assigned Patients',v: teamRaw.total_patients_assigned ?? '—',          icon: Heart,         cls:'border-teal-300 text-teal-700 bg-teal-50'       },
+                  { l:'Avg per Carer',    v: teamRaw.average_patients_per_caregiver ?? '—',   icon: TrendingUp,    cls:'border-blue-300 text-blue-700 bg-blue-50'       },
+                  { l:'Overloaded',       v: teamRaw.overloaded_caregivers ?? 0,               icon: AlertTriangle, cls:'border-red-300 text-red-700 bg-red-50'          },
+                ].map(({l,v,icon:Icon,cls}) => (
+                  <div key={l} className={`flex items-center gap-2.5 px-4 py-2 rounded-xl border ${cls}`}>
+                    <Icon size={14} className="opacity-70 flex-shrink-0"/>
+                    <span className="text-xl font-black tabular-nums leading-none">{v}</span>
+                    <span className="text-xs font-semibold opacity-80">{l}</span>
+                  </div>
                 ))}
               </div>
-            )}
-          </div>
 
-          {/* ── RIGHT COLUMN: Analytics + AI + Assignments (sticky) ── */}
-          <div className="flex flex-col gap-4 lg:sticky lg:top-4">
-
-            {/* AI Auto-Assign */}
-            {isStaff && patientList.length > 0 && (
-              <div className="bg-gradient-to-br from-violet-600 to-purple-700 rounded-xl p-4 shadow-lg shadow-violet-500/20 relative overflow-hidden">
-                <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full bg-white/10 pointer-events-none"/>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center">
-                      <Zap size={14} className="text-white"/>
-                    </div>
-                    <div>
-                      <p className="font-bold text-white text-sm">AI Auto-Assign</p>
-                      <p className="text-violet-200 text-[10px]">ML-powered optimal matching</p>
-                    </div>
-                    <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white/20 text-white">🧠 AI</span>
+              {/* Workload distribution table */}
+              {teamRaw.team_metrics?.length > 0 && (
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="px-5 py-4 border-b border-slate-100">
+                    <h3 className="font-bold text-slate-800">Workload Distribution</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">Current patient load per caregiver</p>
                   </div>
-                  <div className="flex gap-2">
-                    <PatientPicker list={patientList} value={optimalPid} onChange={setOptimalPid} placeholder="Select patient…"/>
-                    <button onClick={() => optimalPid && optimalMutation.mutate(parseInt(optimalPid))}
-                      disabled={!optimalPid || optimalMutation.isPending}
-                      className="flex items-center gap-1.5 px-4 py-2 bg-white text-violet-700 rounded-xl font-bold text-xs disabled:opacity-50 transition hover:bg-violet-50 shadow-md flex-shrink-0">
-                      {optimalMutation.isPending ? <Loader2 size={12} className="animate-spin"/> : <Zap size={12}/>}
-                      Assign
-                    </button>
-                  </div>
-                  <p className="text-violet-200 text-[10px] mt-2">Matches by workload score, patient complexity &amp; continuity of care.</p>
-                </div>
-              </div>
-            )}
-
-            {/* Team Analytics */}
-            {teamRaw && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2 bg-gradient-to-r from-slate-50 to-white">
-                  <Brain size={15} className="text-violet-600"/>
-                  <h3 className="font-bold text-slate-800 text-sm">Team Analytics</h3>
-                  <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700">🧠 AI</span>
-                </div>
-                <div className="p-4 space-y-4">
-                  {/* Mini stats */}
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {[
-                      { l: 'Team Size',    v: teamRaw.team_size ?? caregivers.length,              c: 'bg-teal-500',   t: 'text-teal-700',   bg: 'bg-teal-50' },
-                      { l: 'Patients',     v: teamRaw.total_patients_assigned ?? '—',              c: 'bg-violet-500', t: 'text-violet-700', bg: 'bg-violet-50' },
-                      { l: 'Avg / Carer',  v: teamRaw.average_patients_per_caregiver ?? '—',      c: 'bg-blue-500',   t: 'text-blue-700',   bg: 'bg-blue-50' },
-                      { l: 'Overloaded',   v: teamRaw.overloaded_caregivers ?? burnoutAlerts,     c: 'bg-rose-500',   t: 'text-rose-700',   bg: 'bg-rose-50' },
-                    ].map(({ l, v, c, t, bg }) => (
-                      <div key={l} className={`${bg} rounded-xl p-3 text-center border border-white`}>
-                        <p className={`text-2xl font-black ${t}`}>{v}</p>
-                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">{l}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Workload bars */}
-                  {teamRaw.team_metrics?.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">Workload Distribution</p>
-                      <div className="space-y-2.5">
-                        {teamRaw.team_metrics.slice(0, 6).map(m => {
-                          const w = m.workload;
-                          const pct = Math.min(100, w.workload_score || 0);
-                          const barColor = w.capacity_status === 'overloaded' ? 'bg-rose-500' : w.capacity_status === 'full' ? 'bg-amber-500' : 'bg-teal-500';
-                          const labelColor = w.capacity_status === 'overloaded' ? 'text-rose-600' : w.capacity_status === 'full' ? 'text-amber-600' : 'text-teal-600';
-                          return (
-                            <div key={m.caregiver_id} className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-[11px] flex-shrink-0 shadow-sm">
-                                {(m.caregiver_name || '?')[0]}
-                              </div>
-                              <p className="text-xs font-semibold text-slate-700 w-24 truncate flex-shrink-0">{m.caregiver_name}</p>
-                              <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <motion.div className={`h-full rounded-full ${barColor}`}
-                                  initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: .7, ease: 'easeOut' }}/>
-                              </div>
-                              <span className={`text-[10px] font-bold w-5 text-right tabular-nums ${labelColor}`}>{pct}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Recommendations */}
-                  {teamRaw.recommendations?.filter(Boolean).slice(0, 3).map((rec, i) => (
-                    <div key={i} className={`flex items-start gap-2 text-xs px-3 py-2.5 rounded-xl border ${
-                      rec.includes('⚠️') || rec.includes('❌')
-                        ? 'bg-amber-50 border-amber-200 text-amber-800'
-                        : 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                    }`}>
-                      <TrendingUp size={11} className="flex-shrink-0 mt-0.5"/>
-                      {rec}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Active Assignments */}
-            {isStaff && assignments.length > 0 && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
-                  <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
-                    <Activity size={14} className="text-blue-500"/>Active Assignments
-                  </h3>
-                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center">{assignments.length}</span>
-                </div>
-                <div className="divide-y divide-slate-100 max-h-56 overflow-y-auto">
-                  {assignments.map((a, i) => (
-                    <motion.div key={a.id || i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50/50 transition-colors group">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        {(a.patient_name || '?')[0]}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-800 text-xs truncate">{a.patient_name || a.patient_code || `Patient #${a.patient_id}`}</p>
-                        <p className="text-[10px] text-slate-400 truncate">{a.caregiver_name || `Caregiver #${a.caregiver_id}`}</p>
-                      </div>
-                      <button onClick={() => removeMutation.mutate(a.id)} disabled={removeMutation.isPending}
-                        className="opacity-0 group-hover:opacity-100 flex items-center gap-1 px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-[10px] font-bold disabled:opacity-50 transition-all">
-                        <Trash2 size={10}/> Remove
-                      </button>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* My Patients (caregiver role) */}
-            {isCaregiver && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="px-5 py-3.5 bg-gradient-to-r from-teal-50 to-emerald-50 border-b border-teal-100 flex items-center justify-between">
-                  <h3 className="font-bold text-teal-900 text-sm flex items-center gap-2">
-                    <Heart size={14} className="text-teal-600"/>My Patients
-                  </h3>
-                  <span className="w-6 h-6 rounded-full bg-teal-200 text-teal-800 text-xs font-bold flex items-center justify-center">{myPatients.length}</span>
-                </div>
-                {myPatients.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-32 gap-2">
-                    <Heart size={28} className="text-slate-300"/>
-                    <p className="text-sm text-slate-400 font-medium">No patients assigned yet</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
-                    {myPatients.map((p, i) => {
-                      const pid = p.id || p.patient_id;
-                      const rl = p.risk_level || 'Stable';
-                      const rColor = rl === 'Crisis' ? 'text-red-700 bg-red-100' : rl === 'High' ? 'text-amber-700 bg-amber-100' : rl === 'Medium' ? 'text-teal-700 bg-teal-100' : 'text-emerald-700 bg-emerald-100';
+                  <div className="divide-y divide-slate-100">
+                    {teamRaw.team_metrics.map((m, i) => {
+                      const pct = Math.min(m.workload?.workload_score ?? 0, 100);
+                      const pts = m.workload?.active_patients ?? 0;
+                      const cap = m.workload?.capacity_status || 'available';
+                      const capBadge = cap==='overloaded' ? 'bg-red-100 text-red-700' : cap==='at_capacity' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700';
                       return (
-                        <motion.div key={pid} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                          onClick={() => navigate(`/patients/${pid}`)}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-teal-50/60 cursor-pointer transition-colors">
-                          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${AVATARS[i % AVATARS.length]} flex items-center justify-center text-white font-bold text-xs shadow-sm flex-shrink-0`}>
-                            {getInitials(p.full_name)}
+                        <div key={m.caregiver_id} className="flex items-center gap-4 px-5 py-3.5">
+                          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${GRAD[i%GRAD.length]} flex items-center justify-center text-white font-bold text-[11px] flex-shrink-0 shadow-sm`}>
+                            {(m.caregiver_name||'?')[0]}
+                          </div>
+                          <div className="w-40 min-w-0 flex-shrink-0">
+                            <p className="font-semibold text-slate-800 text-sm truncate">{m.caregiver_name}</p>
+                            <p className="text-xs text-slate-400">{pts} patient{pts!==1?'s':''}</p>
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-bold text-slate-900 text-xs truncate">{p.full_name}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{p.patient_code} · {p.primary_diagnosis || '—'}</p>
+                            <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                              <motion.div className={`h-full rounded-full ${wbColor(pct)}`}
+                                initial={{width:0}} animate={{width:`${pct}%`}} transition={{duration:0.7,ease:'easeOut',delay:i*0.05}}/>
+                            </div>
                           </div>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${rColor}`}>{rl}</span>
-                        </motion.div>
+                          <span className={`text-xs font-black tabular-nums w-10 text-right flex-shrink-0 ${wbText(pct)}`}>{pct}%</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 capitalize ${capBadge}`}>{cap.replace('_',' ')}</span>
+                        </div>
                       );
                     })}
                   </div>
-                )}
+                </div>
+              )}
+
+              {/* Recommendations */}
+              {teamRaw.recommendations?.filter(Boolean).length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">AI Recommendations</p>
+                  {teamRaw.recommendations.filter(Boolean).map((rec,i) => (
+                    <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-xl border text-sm
+                      ${rec.includes('⚠')||rec.includes('❌') ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
+                      <TrendingUp size={14} className="flex-shrink-0 mt-0.5"/>{rec}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ══ TAB: ASSIGNMENTS ══ */}
+      {tab === 'assignments' && (
+        <div className="px-6 space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+
+            {/* Manual assign form */}
+            {isStaff && (
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
+                  <UserPlus size={16} className="text-violet-500"/>
+                  <h3 className="font-bold text-slate-800">Manual Assignment</h3>
+                </div>
+                <div className="p-5 space-y-3">
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Caregiver</label>
+                    <select value={manualCg} onChange={e=>setManualCg(e.target.value)}
+                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-white text-slate-700 focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 outline-none">
+                      <option value="">Select caregiver…</option>
+                      {caregivers.map(cg => (
+                        <option key={cg.id} value={cg.id}>{cg.full_name} — {cg.role||'Caregiver'}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Patient</label>
+                    <PatientPicker list={patientList} value={manualPt} onChange={setManualPt} placeholder="Search patient…"/>
+                  </div>
+                  <button
+                    onClick={() => { if(manualCg&&manualPt) assignMutation.mutate({caregiver_id:parseInt(manualCg),patient_id:parseInt(manualPt),notes:''}); }}
+                    disabled={!manualCg||!manualPt||assignMutation.isPending}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 transition-all shadow-sm">
+                    {assignMutation.isPending ? <Loader2 size={14} className="animate-spin"/> : <UserPlus size={14}/>}
+                    {assignMutation.isPending ? 'Assigning…' : 'Assign Patient'}
+                  </button>
+                </div>
+
+                {/* AI Auto-Assign */}
+                <div className="border-t border-slate-100 px-5 py-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Zap size={14} className="text-violet-500"/>
+                    <h4 className="font-bold text-slate-700 text-sm">AI Auto-Assign</h4>
+                    <span className="ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">🧠 ML</span>
+                  </div>
+                  <p className="text-xs text-slate-500">ML selects the best available caregiver based on workload and patient complexity.</p>
+                  <PatientPicker list={patientList} value={optPid} onChange={setOptPid} placeholder="Select patient to auto-assign…"/>
+                  <button
+                    onClick={() => optPid && optimalMutation.mutate(parseInt(optPid))}
+                    disabled={!optPid||optimalMutation.isPending}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 transition-all shadow-sm">
+                    {optimalMutation.isPending ? <Loader2 size={14} className="animate-spin"/> : <Zap size={14}/>}
+                    {optimalMutation.isPending ? 'Finding best match…' : 'Auto-Assign'}
+                  </button>
+                </div>
               </div>
             )}
 
-          </div>{/* end right column */}
-        </div>{/* end grid */}
-      </div>
+            {/* Active assignments list */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ListChecks size={16} className="text-violet-500"/>
+                  <h3 className="font-bold text-slate-800">Active Assignments</h3>
+                </div>
+                <span className="text-xs font-bold text-slate-400">{assignments.length} total</span>
+              </div>
+              {assignments.length === 0 ? (
+                <div className="flex flex-col items-center py-16 gap-3 text-slate-400">
+                  <ListChecks size={36} className="text-slate-300"/>
+                  <p className="font-medium text-sm">No active assignments</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 max-h-[480px] overflow-y-auto">
+                  {assignments.map((a,i) => (
+                    <motion.div key={a.id||i} initial={{opacity:0,x:-8}} animate={{opacity:1,x:0}} transition={{delay:i*0.03}}
+                      className="flex items-center gap-3 px-5 py-3.5 group hover:bg-slate-50 transition-colors">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-sm">
+                        {(a.patient_name||'?')[0]}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-slate-800 text-sm truncate">{a.patient_name||a.patient_code||`Patient #${a.patient_id}`}</p>
+                        <p className="text-xs text-slate-400 truncate flex items-center gap-1"><UserPlus size={9}/>{a.caregiver_name||`Caregiver #${a.caregiver_id}`}</p>
+                      </div>
+                      {isStaff && (
+                        <button onClick={()=>removeMutation.mutate(a.id)} disabled={removeMutation.isPending}
+                          className="opacity-0 group-hover:opacity-100 p-1.5 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg transition-all disabled:opacity-50 flex-shrink-0">
+                          <Trash2 size={13}/>
+                        </button>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══ TAB: MY PATIENTS (caregiver) ══ */}
+      {tab === 'mypatients' && (
+        <div className="px-6">
+          {myPatients.length === 0 ? (
+            <div className="flex flex-col items-center py-20 gap-3 text-slate-400">
+              <Heart size={40} className="text-slate-300"/>
+              <p className="font-medium">No patients assigned yet</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {myPatients.map((p,i) => {
+                const pid = p.id||p.patient_id;
+                const rl = p.risk_level||'Stable';
+                const rc = rl==='Crisis'?'text-red-700 bg-red-50 border-red-200':rl==='High'?'text-amber-700 bg-amber-50 border-amber-200':'text-emerald-700 bg-emerald-50 border-emerald-200';
+                return (
+                  <motion.div key={pid} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:i*0.04}}
+                    onClick={()=>navigate(`/patients/${pid}`)}
+                    className="bg-white border border-slate-200 rounded-2xl p-4 cursor-pointer hover:shadow-md hover:border-teal-300 transition-all">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${GRAD[i%GRAD.length]} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                        {getInitials(p.full_name)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-900 text-sm truncate">{p.full_name}</p>
+                        <p className="text-xs text-slate-400 truncate">{p.patient_code}</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 truncate mb-2">{p.primary_diagnosis||'—'}</p>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${rc}`}>{rl}</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Burnout modal */}
+      <AnimatePresence>
+        {burnoutCg && (
+          <BurnoutModal cg={burnoutCg} data={burnoutMap[burnoutCg.id]}
+            loading={burnoutLoading&&!burnoutMap[burnoutCg.id]} onClose={()=>setBurnoutCg(null)}/>
+        )}
+      </AnimatePresence>
 
     </motion.div>
   );

@@ -1,353 +1,402 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+﻿/**
+ * Bereavement Support Dashboard
+ * ─────────────────────────────
+ * WHO: Bereaved family members AFTER a patient has passed away.
+ * PURPOSE: Grief healing — support groups, counseling, grief screening, resources.
+ * NOT the same as Continuity Bridge (which is for building a legacy while alive).
+ */
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
   Heart, Book, Users, Phone, Calendar, FileText,
-  HeartHandshake, MessageCircle, ChevronRight, Loader2
+  HeartHandshake, MessageCircle, ChevronRight, Loader2,
+  Flower2, AlertCircle, ArrowRight, CheckCircle,
+  Globe, Shield, Star, Clock, ExternalLink,
+  Sun, Wind, BarChart3, Smile, Meh, Frown, Quote
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import GriefProgressTracker from '../components/GriefProgressTracker';
 import { bereavementAPI } from '../api/client';
+import { usePersonalisationFlags } from '../context/PersonalisationContext';
 
-/**
- * Bereaved Family Dashboard
- * 
- * Priority 5: Bereavement Support
- * Addresses Finucane et al. (2024) - Bereavement support evidence-based components
- * 
- * Features:
- * - Grief resources library
- * - Peer support groups access
- * - Professional counseling referrals
- * - Legacy content access (Memory Vault)
- * - Post-death support timeline
- * - Grief progress tracking
- */
+const TABS = [
+  { id: 'home',       label: 'Home',          icon: Heart      },
+  { id: 'grief',      label: 'Grief Journey',  icon: BarChart3  },
+  { id: 'support',    label: 'Support Groups', icon: Users      },
+  { id: 'counseling', label: 'Counseling',     icon: Phone      },
+  { id: 'resources',  label: 'Resources',      icon: Book       },
+];
 
-const VALID_TABS = ['overview', 'resources', 'support', 'counseling', 'progress'];
+const CRISIS = [
+  { name: 'Ghana Ambulance',        number: '193',          tag: '24 / 7' },
+  { name: 'Mental Health Authority', number: '0800-900-888', tag: 'Free · 24 / 7' },
+  { name: 'Befrienders Ghana',       number: '0244-846-701', tag: '24 / 7' },
+];
+
+const COUNSELORS = [
+  { name: 'Ghana Bereavement Counselling Services', phone: '0302-681109', desc: 'Professional grief counseling in Accra', hours: 'Mon – Fri  8 am – 5 pm' },
+  { name: 'Mental Health Authority Ghana',           phone: '0800-900-888', desc: 'Toll-free national mental health line',  hours: '24 / 7 Free' },
+  { name: 'Befrienders Ghana',                       phone: '0244-846-701', desc: 'Emotional support & crisis listening',   hours: '24 / 7' },
+  { name: 'KASA Initiative Ghana',                   phone: null,           desc: 'Community grief workshops & groups',     hours: 'Weekly sessions' },
+];
 
 export default function BereavedFamilyDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabFromUrl = searchParams.get('tab');
-  const [selectedTab, setSelectedTab] = useState(
-    VALID_TABS.includes(tabFromUrl) ? tabFromUrl : 'overview'
+  const tabParam = searchParams.get('tab');
+  const { uiFlags } = usePersonalisationFlags();
+
+  // Filter tabs based on personalisation — hide Grief Journey if not bereaved
+  const visibleTabs = TABS.filter(t => {
+    if (t.id === 'grief'   && uiFlags.isBereaved === false) return false;
+    if (t.id === 'support' && uiFlags.showCommunity === false) return false;
+    return true;
+  });
+
+  const [tab, setTab] = useState(
+    visibleTabs.some(t => t.id === tabParam) ? tabParam : (visibleTabs[0]?.id || 'home')
   );
 
   useEffect(() => {
-    if (tabFromUrl && VALID_TABS.includes(tabFromUrl)) {
-      setSelectedTab(tabFromUrl);
-    }
-  }, [tabFromUrl]);
+    if (tabParam && TABS.some(t => t.id === tabParam)) setTab(tabParam);
+  }, [tabParam]);
 
-  const handleTabChange = (tabId) => {
-    setSelectedTab(tabId);
-    setSearchParams({ tab: tabId });
-  };
+  const go = (id) => { setTab(id); setSearchParams({ tab: id }); };
 
-  // Fetch bereavement support data
   const { data: supportData, isLoading } = useQuery({
     queryKey: ['bereavement-support'],
-    queryFn: async () => {
-      try {
-        const response = await bereavementAPI.getSupportData();
-        return response.data;
-      } catch {
-        return { has_upcoming_support: false, screening_completed: false, screening_flagged: false };
-      }
-    },
+    queryFn: async () => { try { return (await bereavementAPI.getSupportData()).data; } catch { return {}; } },
     retry: false,
   });
-
-  // Fetch grief screening status
   const { data: screeningData } = useQuery({
     queryKey: ['grief-screening-status'],
-    queryFn: async () => {
-      try {
-        const response = await bereavementAPI.getScreeningStatus();
-        return response.data;
-      } catch {
-        return { completed_recently: false, flagged: false };
-      }
-    },
+    queryFn: async () => { try { return (await bereavementAPI.getScreeningStatus()).data; } catch { return { completed_recently: false }; } },
     retry: false,
   });
 
-  // Ghana-specific bereavement resources
-  const ghanaResources = [
-    {
-      name: 'Ghana Bereavement Counselling Services',
-      phone: '0302-681109',
-      description: 'Professional grief counseling',
-      type: 'counseling'
-    },
-    {
-      name: 'Mental Health Authority Ghana',
-      phone: '0800-900-888',
-      description: 'Toll-free mental health support',
-      type: 'hotline'
-    },
-    {
-      name: 'Befrienders Ghana',
-      phone: '0244-846-701',
-      description: 'Emotional support helpline',
-      type: 'hotline'
-    },
-    {
-      name: 'KASA Initiative Ghana',
-      description: 'Grief support groups and workshops',
-      type: 'support_group'
-    }
-  ];
-
-  const tabs = [
-    { id: 'overview', label: 'Overview', icon: Heart },
-    { id: 'resources', label: 'Resources', icon: Book },
-    { id: 'support', label: 'Support Groups', icon: Users },
-    { id: 'counseling', label: 'Counseling', icon: Phone },
-    { id: 'progress', label: 'My Journey', icon: Calendar }
-  ];
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-16 h-16 animate-spin text-purple-600 mx-auto mb-4" />
-          <p className="text-slate-600 font-semibold">Loading support resources...</p>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+    </div>
+  );
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-{/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white shadow-lg border-2 border-purple-400"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <HeartHandshake size={36} strokeWidth={2.5} />
-            <div>
-              <h1 className="text-3xl font-bold">Bereavement Support</h1>
-              <p className="text-purple-100 text-sm">You're not alone on this journey</p>
+    <div className="min-h-screen bg-slate-50">
+
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <div className="relative h-56 md:h-64 overflow-hidden">
+        <img src="/resources/african/african-family-support.jpg" alt=""
+          className="w-full h-full object-cover object-center" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 via-purple-900/45 to-transparent" />
+        <div className="absolute inset-0 max-w-6xl mx-auto px-6 flex flex-col justify-end pb-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-full px-3 py-1 mb-3">
+              <Flower2 size={12} className="text-purple-300" />
+              <span className="text-white/85 text-xs font-medium">Bereavement Support</span>
             </div>
-          </div>
-        </motion.div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">You are not alone</h1>
+            <p className="text-purple-200 text-sm max-w-md leading-relaxed">
+              Grief is love with nowhere to go. This space offers healing resources, community, and professional care — rooted in Ghanaian culture.
+            </p>
+          </motion.div>
+        </div>
+      </div>
 
-        {/* Compassionate Message */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-6 bg-purple-50 rounded-xl p-6 border-2 border-purple-200"
-        >
-          <p className="text-slate-700 text-base leading-relaxed mb-3">
-            <strong>We understand this is a difficult time.</strong> Grief is a natural response to loss, and there is no "right" way to grieve. 
-            This space provides resources, support, and tools to help you navigate your journey at your own pace.
-          </p>
-          <p className="text-slate-600 text-sm">
-            Take your time. Seek support when you need it. Honor your loved one's memory in your own way.
-          </p>
-        </motion.div>
-
-        {/* Navigation Tabs */}
-        <div className="mb-6 bg-white rounded-xl shadow-lg border-2 border-slate-200 p-2">
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
-                    selectedTab === tab.id
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  <Icon size={18} />
-                  {tab.label}
-                </button>
-              );
-            })}
+      {/* ── Sticky tab bar ───────────────────────────────────────── */}
+      <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
+            {visibleTabs.map(({ id, label, icon: Icon }) => (
+              <button key={id} onClick={() => go(id)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                  tab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'}`}>
+                <Icon size={14} />{label}
+              </button>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Content Area */}
-        <div className="space-y-6">
-          {selectedTab === 'overview' && (
-            <OverviewTab 
-              supportData={supportData}
-              screeningData={screeningData}
-              ghanaResources={ghanaResources}
-            />
-          )}
-
-          {selectedTab === 'resources' && (
-            <ResourcesTab />
-          )}
-
-          {selectedTab === 'support' && (
-            <SupportGroupsTab />
-          )}
-
-          {selectedTab === 'counseling' && (
-            <CounselingTab ghanaResources={ghanaResources} />
-          )}
-
-          {selectedTab === 'progress' && (
-            <ProgressTab screeningData={screeningData} />
-          )}
-        </div>
+      {/* ── Content ──────────────────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <AnimatePresence mode="wait">
+          <motion.div key={tab}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
+            {tab === 'home'       && <HomeTab screeningData={screeningData} go={go} />}
+            {tab === 'grief'      && <GriefJourneyTab screeningData={screeningData} />}
+            {tab === 'support'    && <SupportGroupsTab />}
+            {tab === 'counseling' && <CounselingTab />}
+            {tab === 'resources'  && <ResourcesTab />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
 }
 
-// Overview Tab
-function OverviewTab({ screeningData }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Quick Access Cards */}
-      <QuickAccessCard
-        icon={MessageCircle}
-        title="Join Support Group"
-        description="Connect with others who understand"
-        linkTo="/community"
-        bgColor="from-teal-500 to-cyan-600"
-      />
-
-      <QuickAccessCard
-        icon={Phone}
-        title="Talk to a Counselor"
-        description="Professional grief counseling"
-        linkTo="/bereavement-support?tab=counseling"
-        bgColor="from-purple-500 to-pink-600"
-      />
-
-      <QuickAccessCard
-        icon={Book}
-        title="Grief Resources"
-        description="Articles, videos, and guides"
-        linkTo="/bereavement-support?tab=resources"
-        bgColor="from-amber-500 to-orange-600"
-      />
-
-      <QuickAccessCard
-        icon={Heart}
-        title="Memory Vault"
-        description="Access cherished memories"
-        linkTo="/memory-vault"
-        bgColor="from-rose-500 to-red-600"
-      />
-
-      {/* Emergency Resources */}
-      <div className="md:col-span-2 bg-red-50 border-2 border-red-300 rounded-xl p-6">
-        <h3 className="font-bold text-red-700 text-lg mb-3 flex items-center gap-2">
-          <Phone size={22} />
-          Crisis Support (Ghana)
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <EmergencyContact
-            name="Ghana Ambulance"
-            number="193"
-            available="24/7"
-          />
-          <EmergencyContact
-            name="Mental Health Authority"
-            number="0800-900-888"
-            available="24/7 Toll-free"
-          />
-          <EmergencyContact
-            name="Befrienders Ghana"
-            number="0244-846-701"
-            available="24/7"
-          />
-        </div>
-      </div>
-
-      {/* Grief Screening Reminder */}
-      {screeningData && !screeningData.completed_recently && (
-        <div className="md:col-span-2 bg-purple-50 border-2 border-purple-300 rounded-xl p-6">
-          <h3 className="font-bold text-purple-700 text-lg mb-2">
-            Grief Check-In
-          </h3>
-          <p className="text-purple-700 text-sm mb-4">
-            We recommend completing a brief grief screening to help us provide better support.
-          </p>
-          <Link
-            to="/bereavement-support?tab=progress"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
-          >
-            <Calendar size={18} />
-            Take Grief Screening
-            <ChevronRight size={18} />
-          </Link>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Resources Tab
-function ResourcesTab() {
-  const resources = [
-    {
-      category: 'Understanding Grief',
-      items: [
-        { title: 'The Five Stages of Grief', type: 'article', url: 'https://www.helpguide.org/articles/grief/coping-with-grief-and-loss.htm' },
-        { title: 'Grief vs Depression: Knowing the Difference', type: 'article', url: 'https://www.mind.org.uk/information-support/types-of-mental-health-problems/grief-and-bereavement/grief-and-loss/' },
-        { title: 'Complicated Grief: What You Need to Know', type: 'article', url: 'https://www.mayoclinic.org/diseases-conditions/complicated-grief/symptoms-causes/syc-20360374' },
-      ]
-    },
-    {
-      category: 'Coping Strategies',
-      items: [
-        { title: 'Self-Care During Grief', type: 'guide', url: 'https://www.cruse.org.uk/understanding-grief/effects-of-grief/self-care-during-grief/' },
-        { title: 'Mindfulness for Bereavement', type: 'video', url: 'https://www.youtube.com/watch?v=ZToicYcHIOU' },
-        { title: 'Journaling Through Loss', type: 'worksheet', nav: '/journal' },
-      ]
-    },
-    {
-      category: 'Cultural & Spiritual',
-      items: [
-        { title: 'Ghanaian Funeral Customs & Grief', type: 'article', url: 'https://www.ghanaweb.com/GhanaHomePage/features/Funeral-rites-in-Ghana-476231' },
-        { title: 'Spiritual Perspectives on Loss', type: 'article', url: 'https://www.helpguide.org/articles/grief/bereavement-grieving-the-loss.htm' },
-        { title: "Honoring Your Loved One's Memory", type: 'guide', nav: '/memory-vault' },
-      ]
-    }
+/* ── Home ─────────────────────────────────────────────────────────────── */
+function HomeTab({ screeningData, go }) {
+  const moodOptions = [
+    { icon: Frown,  label: 'Struggling',   color: 'text-red-500',    bg: 'bg-red-50 border-red-200' },
+    { icon: Meh,    label: 'Getting by',   color: 'text-amber-500',  bg: 'bg-amber-50 border-amber-200' },
+    { icon: Smile,  label: 'Coping well',  color: 'text-green-500',  bg: 'bg-green-50 border-green-200' },
   ];
-
-  const handleItemClick = (item) => {
-    if (item.nav) {
-      window.location.href = item.nav;
-    } else if (item.url) {
-      window.open(item.url, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const [mood, setMood] = useState(null);
 
   return (
     <div className="space-y-6">
-      {resources.map((section, idx) => (
-        <div key={idx} className="bg-white rounded-xl shadow-lg border-2 border-slate-200 p-6">
-          <h3 className="font-bold text-slate-900 text-xl mb-4">{section.category}</h3>
-          <div className="space-y-3">
-            {section.items.map((item, itemIdx) => (
-              <button
-                key={itemIdx}
-                onClick={() => handleItemClick(item)}
-                className="w-full flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-purple-50 transition-all cursor-pointer border-2 border-slate-200 hover:border-purple-300 text-left"
-              >
+
+      {/* Mood check-in */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5">
+        <p className="text-sm font-semibold text-slate-700 mb-3">How are you feeling today?</p>
+        <div className="flex gap-3">
+          {moodOptions.map(({ icon: Icon, label, color, bg }) => (
+            <button key={label} onClick={() => setMood(label)}
+              className={`flex-1 flex flex-col items-center gap-2 py-3 rounded-xl border text-xs font-semibold transition-all ${
+                mood === label ? bg + ' ring-2 ring-offset-1 ring-purple-400' : 'border-slate-200 hover:bg-slate-50'}`}>
+              <Icon size={22} className={color} />
+              <span className="text-slate-700">{label}</span>
+            </button>
+          ))}
+        </div>
+        {mood && (
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="mt-3 text-xs text-slate-500 text-center italic">
+            {mood === 'Struggling' ? "It's okay to not be okay. Consider talking to a counselor today."
+              : mood === 'Getting by' ? 'One day at a time. The support groups are always here for you.'
+              : 'That is wonderful. Grief has no timeline — you are doing great.'}
+          </motion.p>
+        )}
+      </div>
+
+      {/* Quote */}
+      <div className="relative bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl p-6 overflow-hidden">
+        <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
+        <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
+          "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
+        </p>
+        <p className="text-purple-400 text-xs mt-3 font-medium">— Earl Grollman</p>
+      </div>
+
+      {/* Quick access — compact */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { label: 'Track My Grief',   sub: 'Screening & progress',  color: 'from-purple-700 to-violet-800', img: '/resources/african/african-prayer-peace.jpg',    tab: 'grief' },
+          { label: 'Join a Group',     sub: 'Peer support community', color: 'from-teal-600 to-emerald-700',  img: '/resources/african/african-community-group.jpg', tab: 'support' },
+          { label: 'Get Counseling',   sub: 'Professional support',   color: 'from-rose-600 to-pink-700',    img: '/resources/african/african-nurse-patient.jpg',   tab: 'counseling' },
+          { label: 'Learn & Heal',     sub: 'Articles & guides',      color: 'from-amber-600 to-orange-600', img: '/resources/african/journal-writing.jpg',         tab: 'resources' },
+        ].map(({ label, sub, color, img, tab }) => (
+          <motion.div key={label} whileHover={{ y: -3 }} onClick={() => go(tab)}
+            className="relative rounded-xl overflow-hidden cursor-pointer h-32 shadow-sm group">
+            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+            <div className="absolute inset-0 p-3 flex flex-col justify-end">
+              <p className="text-white font-semibold text-sm leading-tight">{label}</p>
+              <p className="text-white/65 text-xs mt-0.5">{sub}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Grief check-in CTA */}
+      {!screeningData?.completed_recently && (
+        <div className="bg-white border border-purple-200 rounded-xl p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+            <Calendar size={17} className="text-purple-600" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-slate-800">Grief Screening Due</p>
+            <p className="text-xs text-slate-500 mt-0.5">Helps us personalise your bereavement support plan</p>
+          </div>
+          <button onClick={() => go('grief')}
+            className="flex-shrink-0 flex items-center gap-1.5 bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors">
+            Start <ArrowRight size={13} />
+          </button>
+        </div>
+      )}
+
+      {/* Emergency strip */}
+      <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+        <p className="text-xs font-semibold text-red-700 mb-2.5 flex items-center gap-1.5">
+          <AlertCircle size={13} /> Crisis Support — Ghana
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {CRISIS.map(({ name, number, tag }) => (
+            <div key={name} className="bg-white border border-red-100 rounded-lg p-2.5 text-center">
+              <p className="text-xs text-slate-500 mb-0.5">{name}</p>
+              <p className="font-bold text-red-600 text-sm">{number}</p>
+              <p className="text-xs text-slate-400">{tag}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Grief Journey ────────────────────────────────────────────────────── */
+function GriefJourneyTab({ screeningData }) {
+  const stages = [
+    { stage: 'Denial',      desc: 'Shock and disbelief — a natural protective response',   color: 'bg-slate-100 border-slate-300' },
+    { stage: 'Anger',       desc: 'Frustration, helplessness and "why" questions arise',   color: 'bg-red-50 border-red-200' },
+    { stage: 'Bargaining',  desc: '"What if" thoughts as the mind searches for control',   color: 'bg-amber-50 border-amber-200' },
+    { stage: 'Depression',  desc: 'Deep sadness as the full weight of the loss is felt',   color: 'bg-blue-50 border-blue-200' },
+    { stage: 'Acceptance',  desc: 'Finding a way to live alongside — not over — the grief', color: 'bg-green-50 border-green-200' },
+  ];
+  return (
+    <div className="space-y-5">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6">
+        <GriefProgressTracker screeningData={screeningData} />
+      </div>
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
+          <h3 className="text-sm font-semibold text-slate-700">Understanding the Grief Journey</h3>
+          <p className="text-xs text-slate-500 mt-0.5">Grief is not linear — you may move between these stages many times</p>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {stages.map(({ stage, desc, color }, i) => (
+            <div key={stage} className="flex items-start gap-4 px-5 py-4">
+              <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0 ${color}`}>{i + 1}</div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">{stage}</p>
+                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-xs text-purple-700 leading-relaxed">
+        <strong>Remember:</strong> There is no right or wrong way to grieve. Cultural and spiritual practices — including Ghanaian mourning traditions — are all valid parts of your healing journey.
+      </div>
+    </div>
+  );
+}
+
+/* ── Support Groups ───────────────────────────────────────────────────── */
+function SupportGroupsTab() {
+  return (
+    <div className="space-y-5">
+      <div className="relative rounded-2xl overflow-hidden">
+        <img src="/resources/african/african-community-group.jpg" alt="" className="w-full h-48 object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-950/70 to-teal-700/25" />
+        <div className="absolute inset-0 p-6 flex flex-col justify-end">
+          <h2 className="text-white font-bold text-xl mb-1">Bereavement Support Groups</h2>
+          <p className="text-teal-100 text-sm mb-4">Connect with others who truly understand what you are going through</p>
+          <Link to="/community" className="inline-flex items-center gap-2 bg-white text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
+            <Users size={14} /> Join Community <ArrowRight size={13} />
+          </Link>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {[
+          [Shield,  'Safe & Moderated',   'Trained facilitators maintain a respectful space'],
+          [Star,    'Anonymous',           'Share under a display name — identity protected'],
+          [Clock,   'Always Available',    'Post and read messages any time, day or night'],
+          [Globe,   'Culturally Grounded', 'Groups that understand Ghanaian grief traditions'],
+        ].map(([Icon, title, desc]) => (
+          <div key={title} className="bg-white border border-slate-200 rounded-xl p-4 flex gap-3">
+            <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0"><Icon size={15} className="text-teal-600" /></div>
+            <div><p className="text-sm font-semibold text-slate-800">{title}</p><p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Counseling ───────────────────────────────────────────────────────── */
+function CounselingTab() {
+  const warnSigns = [
+    'Intense grief not lessening after 6+ months',
+    'Difficulty functioning at work or home',
+    'Thoughts of self-harm or suicide',
+    'Severe depression or anxiety',
+    'Using substances to cope',
+  ];
+  return (
+    <div className="space-y-5">
+      <div className="relative rounded-2xl overflow-hidden">
+        <img src="/resources/african/african-nurse-patient.jpg" alt="" className="w-full h-44 object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 to-purple-700/25" />
+        <div className="absolute inset-0 p-6 flex flex-col justify-center">
+          <h2 className="text-white font-bold text-xl mb-1">Professional Grief Counseling</h2>
+          <p className="text-purple-200 text-sm">Trusted services available across Ghana</p>
+        </div>
+      </div>
+      <div className="space-y-3">
+        {COUNSELORS.map((r, i) => (
+          <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-4">
+            <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Phone size={15} className="text-purple-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-slate-800 text-sm">{r.name}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{r.desc}</p>
+              <p className="text-xs text-slate-400 mt-0.5">{r.hours}</p>
+            </div>
+            {r.phone && <p className="font-bold text-purple-700 text-sm flex-shrink-0">{r.phone}</p>}
+          </div>
+        ))}
+      </div>
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-3"><AlertCircle size={14} className="text-amber-600" />
+          <h3 className="font-semibold text-amber-800 text-sm">When to seek professional help</h3>
+        </div>
+        <div className="space-y-2">
+          {warnSigns.map(s => (
+            <div key={s} className="flex items-start gap-2 text-xs text-amber-800">
+              <CheckCircle size={13} className="text-amber-500 flex-shrink-0 mt-0.5" />{s}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Resources ────────────────────────────────────────────────────────── */
+function ResourcesTab() {
+  const sections = [
+    { label: 'Understanding Grief', dotColor: 'bg-amber-400', items: [
+      { title: 'The Five Stages of Grief',                url: 'https://www.helpguide.org/articles/grief/coping-with-grief-and-loss.htm',        type: 'Article' },
+      { title: 'Grief vs Depression: Knowing the Difference', url: 'https://www.mind.org.uk/information-support/types-of-mental-health-problems/grief-and-bereavement/', type: 'Article' },
+      { title: 'Complicated Grief: What to Know',         url: 'https://www.mayoclinic.org/diseases-conditions/complicated-grief/symptoms-causes/syc-20360374', type: 'Article' },
+    ]},
+    { label: 'Coping Strategies', dotColor: 'bg-teal-500', items: [
+      { title: 'Self-Care During Grief',                  url: 'https://www.cruse.org.uk/understanding-grief/effects-of-grief/self-care-during-grief/', type: 'Guide' },
+      { title: 'Mindfulness for Bereavement',             url: 'https://www.youtube.com/watch?v=ZToicYcHIOU', type: 'Video' },
+      { title: 'Ghanaian Funeral Customs & Grief',        url: 'https://www.ghanaweb.com/GhanaHomePage/features/Funeral-rites-in-Ghana-476231', type: 'Article' },
+    ]},
+    { label: 'Honouring Your Loved One', dotColor: 'bg-purple-500', items: [
+      { title: "Memory Vault — Their Legacy",             nav: '/memory-vault',          type: 'In-App' },
+      { title: "Continuity Bridge — Their Journal",       nav: '/continuity-bridge',     type: 'In-App' },
+      { title: 'Spiritual Perspectives on Loss',          url: 'https://www.helpguide.org/articles/grief/bereavement-grieving-the-loss.htm', type: 'Article' },
+    ]},
+  ];
+  return (
+    <div className="space-y-4">
+      {sections.map(({ label, dotColor, items }) => (
+        <div key={label} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+            <div className={`w-2 h-2 rounded-full ${dotColor}`} />
+            <h3 className="font-semibold text-slate-800 text-sm">{label}</h3>
+          </div>
+          <div className="divide-y divide-slate-100">
+            {items.map((item) => (
+              <button key={item.title}
+                onClick={() => item.nav ? (window.location.href = item.nav) : window.open(item.url, '_blank', 'noopener')}
+                className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-slate-50 transition-colors text-left group">
                 <div className="flex items-center gap-3">
-                  <FileText className="text-purple-600 flex-shrink-0" size={20} />
+                  <FileText size={14} className="text-slate-400 flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-slate-900">{item.title}</p>
-                    <p className="text-xs text-slate-600 uppercase">{item.type}</p>
+                    <p className="text-sm text-slate-800">{item.title}</p>
+                    <p className="text-xs text-slate-400">{item.type}</p>
                   </div>
                 </div>
-                <ChevronRight className="text-slate-400 flex-shrink-0" size={20} />
+                {item.url
+                  ? <ExternalLink size={13} className="text-slate-300 group-hover:text-slate-500 flex-shrink-0" />
+                  : <ChevronRight size={13} className="text-slate-300 group-hover:text-slate-500 flex-shrink-0" />}
               </button>
             ))}
           </div>
@@ -356,149 +405,3 @@ function ResourcesTab() {
     </div>
   );
 }
-
-// Support Groups Tab
-function SupportGroupsTab() {
-  return (
-    <div className="bg-white rounded-xl shadow-lg border-2 border-slate-200 p-6">
-      <h3 className="font-bold text-slate-900 text-xl mb-4">Bereavement Support Groups</h3>
-      <p className="text-slate-700 mb-6">
-        Join a dedicated support group for those who have lost a loved one. Share your story, find understanding, and support others on similar journeys.
-      </p>
-
-      <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border-2 border-teal-200 mb-6">
-        <h4 className="font-bold text-teal-900 text-lg mb-2">Bereavement Community</h4>
-        <p className="text-teal-800 text-sm mb-4">
-          A safe, anonymous space for bereaved families to connect, share experiences, and offer mutual support.
-        </p>
-        <Link
-          to="/community"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
-        >
-          <Users size={18} />
-          Join Community
-          <ChevronRight size={18} />
-        </Link>
-      </div>
-
-      <div className="space-y-4">
-        <InfoCard title="Moderated & Safe" description="All groups are moderated by trained facilitators" />
-        <InfoCard title="Anonymous" description="Your identity is protected - use a display name" />
-        <InfoCard title="24/7 Access" description="Post and read messages anytime you need support" />
-      </div>
-    </div>
-  );
-}
-
-// Counseling Tab
-function CounselingTab({ ghanaResources }) {
-  return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-lg border-2 border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-xl mb-4">Professional Counseling Services</h3>
-        <p className="text-slate-700 mb-6">
-          Speaking with a grief counselor can provide valuable support during bereavement. Below are trusted resources in Ghana.
-        </p>
-
-        <div className="space-y-4">
-          {ghanaResources
-            .filter(r => r.type === 'counseling' || r.type === 'hotline')
-            .map((resource, idx) => (
-              <div
-                key={idx}
-                className="p-5 bg-purple-50 rounded-xl border-2 border-purple-200"
-              >
-                <h4 className="font-bold text-purple-700 text-lg">{resource.name}</h4>
-                {resource.phone && (
-                  <p className="text-purple-800 font-semibold text-xl my-2">
-                    {resource.phone}
-                  </p>
-                )}
-                <p className="text-purple-700 text-sm">{resource.description}</p>
-              </div>
-            ))}
-        </div>
-      </div>
-
-      <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-6">
-        <h4 className="font-bold text-amber-700 text-lg mb-2">
-          When to Seek Professional Help
-        </h4>
-        <ul className="space-y-2 text-amber-700 text-sm">
-          <li className="flex items-start gap-2">
-            <span>-</span>
-            <span>Intense grief that doesn't lessen over time (6+ months)</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span>-</span>
-            <span>Difficulty functioning in daily life</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span>-</span>
-            <span>Thoughts of self-harm or suicide</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span>-</span>
-            <span>Severe depression or anxiety</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span>-</span>
-            <span>Substance abuse as a coping mechanism</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-// Progress Tab
-function ProgressTab({ screeningData }) {
-  return (
-    <div className="space-y-6">
-      <GriefProgressTracker screeningData={screeningData} />
-    </div>
-  );
-}
-
-// Helper Components
-function QuickAccessCard({ icon: Icon, title, description, linkTo, bgColor }) {
-  return (
-    <Link to={linkTo}>
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        className={`bg-gradient-to-r ${bgColor} rounded-xl p-6 text-white shadow-lg border-2 border-white/30 hover:shadow-xl transition-all cursor-pointer`}
-      >
-        <Icon size={32} className="mb-3" strokeWidth={2.5} />
-        <h3 className="font-bold text-lg mb-2">{title}</h3>
-        <p className="text-white/90 text-sm mb-4">{description}</p>
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <span>Access Now</span>
-          <ChevronRight size={16} />
-        </div>
-      </motion.div>
-    </Link>
-  );
-}
-
-function EmergencyContact({ name, number, available }) {
-  return (
-    <div className="bg-white rounded-lg p-4 border-2 border-red-200">
-      <p className="font-bold text-red-700 text-sm mb-1">{name}</p>
-      <p className="font-bold text-red-600 text-xl mb-1">{number}</p>
-      <p className="text-red-700 text-xs">{available}</p>
-    </div>
-  );
-}
-
-function InfoCard({ title, description }) {
-  return (
-    <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
-      <div className="w-2 h-2 bg-teal-600 rounded-full mt-2"></div>
-      <div>
-        <p className="font-bold text-slate-900">{title}</p>
-        <p className="text-slate-600 text-sm">{description}</p>
-      </div>
-    </div>
-  );
-}
-

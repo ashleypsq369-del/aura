@@ -150,7 +150,8 @@ async function offlinePut(endpoint, data, options = {}) {
 export const offlinePatientsAPI = {
   getAll: (status) => offlineGet('/api/patients', { 
     params: { status },
-    cacheStore: CACHE_STORES.patients
+    cacheStore: CACHE_STORES.patients,
+    skipCache: navigator.onLine,  // always fresh when online
   }),
   
   getById: (id) => offlineGet(`/api/patients/${id}`, {
@@ -246,7 +247,8 @@ export const offlineCommunityAPI = {
 
 export const offlineDashboardAPI = {
   getSummary: () => offlineGet('/api/dashboard/summary', {
-    cacheStore: 'dashboard'
+    cacheStore: 'dashboard',
+    skipCache: navigator.onLine,  // always fresh when online
   })
 };
 
@@ -282,7 +284,7 @@ export async function prefetchForOffline(patientId = null) {
       ]);
     }
     
-    toast.success('Offline data ready', { duration: 2500 });
+    toast.success('Offline data ready', { id: 'offline-prefetch', duration: 2500 });
     
     console.log('✅ Prefetch complete');
   } catch (error) {

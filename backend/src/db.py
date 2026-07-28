@@ -9,6 +9,9 @@ from typing import Optional, List, Dict, Any
 import json
 import hashlib
 
+from passlib.context import CryptContext
+_pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, Session
@@ -17,7 +20,32 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///aura.db')
-engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False}, pool_size=5, max_overflow=10)
+
+# Auto-fallback: if PostgreSQL is configured but unreachable, use SQLite
+# This makes the app work on any machine regardless of PostgreSQL availability
+_effective_url = DATABASE_URL
+if DATABASE_URL.startswith('postgresql'):
+    try:
+        import sqlalchemy
+        _test_engine = sqlalchemy.create_engine(
+            DATABASE_URL,
+            pool_pre_ping=True,
+            connect_args={"connect_timeout": 3},
+        )
+        with _test_engine.connect() as _conn:
+            _conn.execute(sqlalchemy.text("SELECT 1"))
+        _test_engine.dispose()
+        print(f"[DB] Connected to PostgreSQL")
+    except Exception as _pg_err:
+        print(f"[DB] PostgreSQL unavailable ({_pg_err.__class__.__name__}) — falling back to SQLite")
+        _effective_url = 'sqlite:///aura.db'
+
+DATABASE_URL = _effective_url
+
+# connect_args is SQLite-specific — PostgreSQL doesn't accept check_same_thread
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+_pool_kwargs   = {} if DATABASE_URL.startswith("sqlite") else {"pool_size": 5, "max_overflow": 10}
+engine = create_engine(DATABASE_URL, echo=False, connect_args=_connect_args, **_pool_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -1030,6 +1058,19 @@ class NotificationQueue(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class PushSubscription(Base):
+    """Stores browser Web Push subscriptions per user device."""
+    __tablename__ = 'push_subscriptions'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    endpoint = Column(Text, nullable=False, unique=True)
+    p256dh = Column(Text, nullable=False)    # auth key
+    auth = Column(Text, nullable=False)      # p256dh key
+    user_agent = Column(String(300))         # browser/device info
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_used = Column(DateTime, default=datetime.utcnow)
+
+
 # ============================================================================
 # TABLES 22-30 + HELPERS (Extension)
 # ============================================================================
@@ -1263,22 +1304,34 @@ def get_db():
 # ============================================================================
 
 def hash_password(password: str) -> str:
-    """Hash password using SHA-256"""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash password using bcrypt via passlib.
+    
+    bcrypt has a hard 72-byte limit — truncate silently to stay compatible
+    with the underlying C library while keeping the passlib wrapper happy.
+    """
+    return _pwd_ctx.hash(password[:72])
+
+
+def verify_password(plain: str, hashed: str) -> bool:
+    """Verify a password against its hash.
+
+    Backward-compatible: old SHA-256 hashes are exactly 64 lowercase hex chars.
+    bcrypt: truncate to 72 bytes to match how we hash.
+    """
+    if len(hashed) == 64 and all(c in '0123456789abcdef' for c in hashed.lower()):
+        return hashlib.sha256(plain.encode()).hexdigest() == hashed
+    return _pwd_ctx.verify(plain[:72], hashed)
 
 
 def authenticate_user(username: str, password: str, db: Session) -> Optional[User]:
-    """Authenticate user"""
-    password_hash = hash_password(password)
-    user = db.query(User).filter(
-        User.username == username,
-        User.hashed_password == password_hash
-    ).first()
-    if user:
+    """Authenticate user — uses verify_password for bcrypt + SHA-256 compat."""
+    user = db.query(User).filter(User.username == username).first()
+    if user and verify_password(password, user.hashed_password):
         user.last_login = datetime.utcnow()
         user.failed_logins = 0
         db.commit()
-    return user
+        return user
+    return None
 
 
 def get_all_patients(db: Session, status: Optional[str] = None) -> List[Patient]:

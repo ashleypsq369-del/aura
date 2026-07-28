@@ -1,4 +1,4 @@
-﻿/**
+/**
  * CommunityGroupPage - full-screen group chat
  * Route: /community/:groupId
  */
@@ -16,7 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import { offlineCommunityAPI } from '../api/offlineClient';
 import ReminderModal from '../components/ReminderModal';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
 // Consistent avatar color from group name

@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 /**
  * SHAP Bar Chart Component
  * Visualizes feature importance from SHAP values
- * Gap Analysis Priority 1: XAI/SHAP Integration
+ * Gap Analysis Priority 1: AI Explain/SHAP Integration
  */
 export default function SHAPBarChart({ shapFeatures, title = "Feature Importance" }) {
   if (!shapFeatures || shapFeatures.length === 0) {
@@ -57,7 +57,7 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
                   <span className={`text-xs font-bold ${
                     isPositive ? 'text-red-600' : 'text-green-600'
                   }`}>
-                    {isPositive ? '+' : ''}{(feature.shap_value * 100).toFixed(1)}%
+                    {isPositive ? '+' : ''}{(feature.pct ?? Math.abs(feature.shap_value) * 100).toFixed(1)}% of impact
                   </span>
                 </div>
               </div>
@@ -81,7 +81,7 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
 
               {/* Impact description */}
               <p className="text-xs text-gray-600 mt-1 pl-2">
-                {isPositive ? 'Increases' : 'Decreases'} risk by {Math.abs(feature.shap_value * 100).toFixed(1)}%
+                {isPositive ? 'Increases' : 'Decreases'} risk — {(feature.pct ?? Math.abs(feature.shap_value) * 100).toFixed(1)}% of total impact
               </p>
             </motion.div>
           );

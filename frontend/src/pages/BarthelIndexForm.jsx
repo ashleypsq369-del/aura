@@ -1,14 +1,22 @@
 ﻿import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Save, UtensilsCrossed, Droplets, Scissors,
-  Shirt, Activity, Droplet, Home, BedDouble, Footprints, StepForward
+  Shirt, Activity, Droplet, Home, BedDouble, Footprints, StepForward,
+  Brain, ArrowRight
 } from 'lucide-react';
-import apiClient from '../api/client';
+import apiClient, { mlAPI } from '../api/client';
 import toast from '../utils/toast';
 import FormFileUpload from '../components/FormFileUpload';
+
+const RISK_LEVEL_CLASSES = {
+  critical: 'text-red-700 bg-red-50 border-red-200',
+  high:     'text-orange-700 bg-orange-50 border-orange-200',
+  moderate: 'text-amber-700 bg-amber-50 border-amber-200',
+  low:      'text-green-700 bg-green-50 border-green-200',
+};
 
 const barthelItems = [
   {
@@ -112,6 +120,7 @@ export default function BarthelIndexForm() {
   });
 
   const [notes, setNotes] = useState('');
+  const [mlResult, setMlResult] = useState(null);
 
   // Fetch patient
   const { data: patient } = useQuery({
@@ -160,8 +169,11 @@ export default function BarthelIndexForm() {
       
       queryClient.invalidateQueries(['barthel', patientId]);
       queryClient.invalidateQueries(['assessment-overview', patientId]);
-      
-      setTimeout(() => navigate(`/assessments/${patientId}`), 1500);
+
+      // Fetch ML functional decline risk before navigating
+      try {
+        mlAPI.getTaskPrediction(patientId, 'functional_decline').then(r => setMlResult(r.data));
+      } catch (_) { /* silent fail */ }
     },
     onError: (error) => {
       toast.error('Failed to save assessment');
@@ -382,21 +394,81 @@ export default function BarthelIndexForm() {
 
           <button
             type="submit"
-            disabled={submitMutation.isLoading || !allScored}
+            disabled={submitMutation.isLoading || !allScored || !!mlResult}
             className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
           >
             <Save className="w-5 h-5" />
             <span>{submitMutation.isLoading ? 'Saving...' : 'Save Assessment'}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
-          >
-            Cancel
-          </button>
+          {!mlResult && (
+            <button
+              type="button"
+              onClick={() => navigate(`/assessments/${patientId}`)}
+              className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            >
+              Cancel
+            </button>
+          )}
         </motion.div>
+
+        {/* ML Functional Independence Results Panel */}
+        <AnimatePresence>
+          {mlResult && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              className="border-l-4 border-cyan-500 bg-cyan-50 rounded-xl p-5 shadow-sm"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-cyan-900 text-sm flex items-center gap-2">
+                  <Brain size={15} className="text-cyan-600" />
+                  Functional Independence Risk
+                </h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-black text-cyan-700 tabular-nums">
+                    {Math.round((mlResult.probability ?? 0) * 100)}%
+                  </span>
+                  {mlResult.risk_level && (
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full border capitalize ${RISK_LEVEL_CLASSES[mlResult.risk_level] || RISK_LEVEL_CLASSES.low}`}>
+                      {mlResult.risk_level}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {mlResult.top_features?.length > 0 && (
+                <div className="mb-4 space-y-2">
+                  <p className="text-[10px] font-bold text-cyan-600 uppercase tracking-wider">Key Drivers</p>
+                  {mlResult.top_features.slice(0, 3).map((feature, i) => (
+                    <div key={i}>
+                      <p className="text-xs text-slate-700 mb-0.5">{feature.display_name}</p>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full">
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: `${Math.min(feature.pct, 100)}%`,
+                            backgroundColor: feature.impact === 'increases_risk' ? '#e11d48' : '#16a34a'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => navigate(`/assessments/${patientId}`)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-sm font-bold transition"
+              >
+                Continue
+                <ArrowRight size={14} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </form>
     </div>
   );

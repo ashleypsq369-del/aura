@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+﻿import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, AlertTriangle, CheckCircle, XCircle,
@@ -9,11 +9,13 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import apiClient, { mlAPI } from '../api/client';
+import { useWS } from '../context/WebSocketContext';
 import toast from '../utils/toast';
 import { clinicalToast } from '../utils/clinicalToast';
 import { ListSkeleton } from '../components/LoadingSkeleton';
 import FocusedAIExplanation from '../components/FocusedAIExplanation';
 import PageHeader from '../components/PageHeader';
+import ReminderBell from '../components/ReminderBell';
 
 // ── Severity config ──────────────────────────────────────────────────────────
 const SEV = {
@@ -58,53 +60,58 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
       initial={{ opacity:0, y:8 }}
       animate={{ opacity:1, y:0 }}
       exit={{ opacity:0, y:-8 }}
-      className={`group border-l-4 ${cfg.borderL} ${cfg.bg} rounded-r-xl border border-slate-200 p-4 transition-shadow hover:shadow-md`}
+      className={`group border-l-4 ${cfg.borderL} ${cfg.bg} rounded-r-xl border border-slate-200 p-3 transition-shadow hover:shadow-md`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2.5">
         {/* Type icon */}
         <div className={`mt-0.5 flex-shrink-0 ${cfg.pulse ? 'animate-pulse' : ''}`}>
-          <TypeIcon className={`w-5 h-5 ${cfg.text}`} />
+          <TypeIcon className={`w-4 h-4 ${cfg.text}`} />
         </div>
 
         {/* Body */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 flex-wrap">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-slate-900 text-sm">{label(alert.alert_type)}</span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-bold text-slate-900 text-xs">{label(alert.alert_type)}</span>
               <span className={cfg.badge}>{cfg.label}</span>
               {mlRisk && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 flex items-center gap-0.5">
-                  <Zap size={9}/> ML {(mlRisk.overall_risk*100).toFixed(0)}%
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 flex items-center gap-0.5">
+                  <Zap size={8}/> ML {(mlRisk.overall_risk*100).toFixed(0)}%
                 </span>
               )}
             </div>
-            <span className="text-xs text-slate-400 flex items-center gap-1 flex-shrink-0">
-              <Clock size={11}/>{timeAgo(alert.created_at)}
+            <span className="text-[10px] text-slate-400 flex items-center gap-1 flex-shrink-0">
+              <Clock size={10}/>{timeAgo(alert.created_at)}
             </span>
           </div>
 
-          <p className="text-slate-700 text-sm leading-relaxed mt-1 mb-2">{alert.message}</p>
+          <p className="text-slate-600 text-xs leading-snug mt-1 mb-2">{alert.message}</p>
 
           <div className="flex items-center justify-between gap-2 flex-wrap">
             {alert.patient_name && (
-              <span className="text-xs font-semibold text-slate-600 bg-white border border-slate-200 rounded-full px-2.5 py-0.5">
+              <span className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-full px-2 py-0.5">
                 {alert.patient_name}
               </span>
             )}
-            <div className="flex gap-2 ml-auto">
+            <div className="flex gap-1.5 ml-auto items-center">
+              <ReminderBell
+                label={`${label(alert.alert_type)}${alert.patient_name ? ` — ${alert.patient_name}` : ''}`}
+                type="custom"
+                size="xs"
+              />
               {alert.patient_id && (
                 <button onClick={() => onNavigate(alert.patient_id)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition">
-                  <ExternalLink size={11}/> Patient
+                  className="flex items-center gap-1 px-2 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[10px] font-bold transition">
+                  <ExternalLink size={10}/> Patient
                 </button>
               )}
               <button onClick={() => onExplain(alert)} disabled={explainLoading}
-                className="flex items-center gap-1 px-2.5 py-1.5 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-xs font-bold transition disabled:opacity-50">
-                <Brain size={11}/> XAI
+                className="flex items-center gap-1 px-2 py-1 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-[10px] font-bold transition disabled:opacity-50">
+                <Brain size={10}/> AI Explain
               </button>
               <button onClick={() => onAck(alert.id)} disabled={ackPending}
-                className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition disabled:opacity-50">
-                <CheckCircle size={11}/> {ackPending ? '...' : 'Resolve'}
+                className="flex items-center gap-1 px-2 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded-lg text-[10px] font-bold transition disabled:opacity-50">
+                <CheckCircle size={10}/> {ackPending ? '...' : 'Resolve'}
               </button>
             </div>
           </div>
@@ -115,35 +122,22 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
 }
 
 // ── KPI card ──────────────────────────────────────────────────────────────────
-function KpiCard({ label, value, icon: Icon, color, dotColor, selected, onClick, subtitle }) {
+// ── Compact stat strip ────────────────────────────────────────────────────────
+function StatStrip({ stats }) {
   return (
-    <button
-      onClick={onClick}
-      className={`relative rounded-xl border-2 px-5 py-4 text-left w-full transition-all duration-150 ${
-        selected
-          ? `${color} border-current shadow-lg scale-[1.02]`
-          : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-md'
-      }`}
-    >
-      {/* Selected indicator */}
-      {selected && (
-        <span className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'currentColor' }} />
-      )}
-      <div className="flex items-center gap-2 mb-2">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selected ? 'bg-white/30' : 'bg-slate-100'}`}>
-          <Icon size={16} className={selected ? 'text-current' : 'text-slate-500'} />
-        </div>
-        <span className={`text-xs font-bold uppercase tracking-wider ${selected ? 'text-current opacity-80' : 'text-slate-500'}`}>
-          {label}
-        </span>
-      </div>
-      <p className={`text-4xl font-bold tabular-nums leading-none ${selected ? 'text-current' : 'text-slate-800'}`}>
-        {value}
-      </p>
-      {subtitle && (
-        <p className={`text-[11px] mt-1 ${selected ? 'text-current opacity-70' : 'text-slate-400'}`}>{subtitle}</p>
-      )}
-    </button>
+    <div className="flex flex-wrap gap-2">
+      {stats.map(({ label, value, icon: Icon, accent, active, onClick }) => (
+        <button key={label} onClick={onClick}
+          className={`flex items-center gap-2.5 px-4 py-2 rounded-xl border transition-all duration-150
+            ${active
+              ? `${accent.activeBg} ${accent.activeBorder} shadow-sm`
+              : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'}`}>
+          <Icon size={14} className={active ? accent.icon : 'text-slate-400'}/>
+          <span className={`text-xl font-black tabular-nums leading-none ${active ? accent.text : 'text-slate-800'}`}>{value}</span>
+          <span className={`text-xs font-semibold ${active ? accent.text : 'text-slate-500'}`}>{label}</span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -151,6 +145,14 @@ function KpiCard({ label, value, icon: Icon, color, dotColor, selected, onClick,
 export default function Alerts() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { subscribe } = useWS();
+
+  // Real-time: invalidate alerts on WS push
+  useEffect(() => {
+    const u1 = subscribe('new_alert',    () => queryClient.invalidateQueries({ queryKey: ['alerts'] }));
+    const u2 = subscribe('alert_update', () => queryClient.invalidateQueries({ queryKey: ['alerts'] }));
+    return () => { u1(); u2(); };
+  }, [subscribe, queryClient]);
 
   const [filterSeverity, setFilterSeverity] = useState('all');
   const [filterStatus,   setFilterStatus]   = useState('active');
@@ -252,52 +254,24 @@ export default function Alerts() {
 
       {/* ── Page Header ── */}
       <PageHeader
-        image="/resources/headers/header-alerts.jpg"
+        image="/resources/african/african-nurse-female.jpg"
         title="Clinical Alerts"
         subtitle="Active patient safety alerts — click a card to filter by severity"
         icon={ShieldAlert}
       />
 
-      {/* ── KPI cards (clickable, with selected state) ── */}
+      {/* Compact stat strip */}
       <div className="px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <KpiCard
-            label="Critical"
-            value={kpi.critical}
-            icon={XCircle}
-            color="bg-red-50 text-red-600 border-red-400"
-            selected={filterSeverity === 'critical' && filterStatus === 'active'}
-            onClick={() => { setFilterSeverity('critical'); setFilterStatus('active'); }}
-            subtitle="Require immediate action"
-          />
-          <KpiCard
-            label="High Priority"
-            value={kpi.high}
-            icon={AlertTriangle}
-            color="bg-amber-50 text-amber-600 border-amber-400"
-            selected={filterSeverity === 'high' && filterStatus === 'active'}
-            onClick={() => { setFilterSeverity('high'); setFilterStatus('active'); }}
-            subtitle="Review within 1 hour"
-          />
-          <KpiCard
-            label="Active"
-            value={kpi.active}
-            icon={Bell}
-            color="bg-teal-50 text-teal-700 border-teal-400"
-            selected={filterSeverity === 'all' && filterStatus === 'active'}
-            onClick={() => { setFilterSeverity('all'); setFilterStatus('active'); }}
-            subtitle="All unresolved alerts"
-          />
-          <KpiCard
-            label="Resolved Today"
-            value={kpi.resolved}
-            icon={CheckCircle}
-            color="bg-emerald-50 text-emerald-700 border-emerald-400"
-            selected={filterStatus === 'acknowledged'}
-            onClick={() => { setFilterSeverity('all'); setFilterStatus('acknowledged'); }}
-            subtitle="Acknowledged today"
-          />
-        </div>
+        <StatStrip stats={[
+          { label:'Critical',      value:kpi.critical, icon:XCircle,      active:filterSeverity==='critical'&&filterStatus==='active',     onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');},
+            accent:{activeBg:'bg-red-50',     activeBorder:'border-red-400',     icon:'text-red-500',     text:'text-red-600'    }},
+          { label:'High Priority', value:kpi.high,     icon:AlertTriangle, active:filterSeverity==='high'&&filterStatus==='active',        onClick:()=>{setFilterSeverity('high');setFilterStatus('active');},
+            accent:{activeBg:'bg-amber-50',   activeBorder:'border-amber-400',   icon:'text-amber-500',   text:'text-amber-600'  }},
+          { label:'Active',        value:kpi.active,   icon:Bell,          active:filterSeverity==='all'&&filterStatus==='active',         onClick:()=>{setFilterSeverity('all');setFilterStatus('active');},
+            accent:{activeBg:'bg-teal-50',    activeBorder:'border-teal-400',    icon:'text-teal-500',    text:'text-teal-700'   }},
+          { label:'Resolved',      value:kpi.resolved, icon:CheckCircle,   active:filterStatus==='acknowledged',                          onClick:()=>{setFilterSeverity('all');setFilterStatus('acknowledged');},
+            accent:{activeBg:'bg-emerald-50', activeBorder:'border-emerald-400', icon:'text-emerald-500', text:'text-emerald-700'}},
+        ]}/>
       </div>
 
       {/* ── Filter bar ── */}
@@ -312,7 +286,7 @@ export default function Alerts() {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Search alerts, patients, types..."
-                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"
+                className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-xs"
               />
             </div>
 
@@ -399,7 +373,7 @@ export default function Alerts() {
             {showActive && (
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <h2 className="text-xs font-bold text-slate-700 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                     Active Alerts
                     <span className="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">
@@ -473,22 +447,22 @@ export default function Alerts() {
                           const cfg = SEV[a.severity] || SEV.low;
                           return (
                             <div key={a.id}
-                              className="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3 opacity-60 hover:opacity-100 transition-opacity">
-                              <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
+                              className="flex items-center gap-2.5 bg-white border border-slate-200 rounded-xl px-3 py-2 opacity-60 hover:opacity-100 transition-opacity">
+                              <CheckCircle size={12} className="text-green-500 flex-shrink-0" />
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold text-xs text-slate-700">{label(a.alert_type)}</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-semibold text-[11px] text-slate-700">{label(a.alert_type)}</span>
                                   <span className={cfg.badge}>{cfg.label}</span>
-                                  {a.patient_name && <span className="text-xs text-slate-500">{a.patient_name}</span>}
+                                  {a.patient_name && <span className="text-[10px] text-slate-500">{a.patient_name}</span>}
                                 </div>
-                                <p className="text-xs text-slate-400 truncate mt-0.5">{a.message}</p>
+                                <p className="text-[10px] text-slate-400 truncate">{a.message}</p>
                               </div>
-                              <span className="text-xs text-slate-400 flex-shrink-0">
+                              <span className="text-[10px] text-slate-400 flex-shrink-0">
                                 {timeAgo(a.acknowledged_at || a.created_at)}
                               </span>
                               {a.patient_id && (
                                 <button onClick={() => navigate(`/patients/${a.patient_id}`)}
-                                  className="flex-shrink-0 text-xs text-teal-600 hover:text-teal-800 font-semibold px-2 py-1 rounded hover:bg-teal-50 transition">
+                                  className="flex-shrink-0 text-[10px] text-teal-600 hover:text-teal-800 font-semibold px-2 py-0.5 rounded hover:bg-teal-50 transition">
                                   View
                                 </button>
                               )}

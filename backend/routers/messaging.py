@@ -311,7 +311,29 @@ async def send_message_endpoint(
         )
         db.add(audit)
         db.commit()
-        
+
+        # Push real-time message notification via WebSocket
+        try:
+            from routers.websocket import manager as ws_manager
+            import asyncio
+            msg_payload = {
+                "conversation_id": conversation_id,
+                "message": {
+                    "id": message.id,
+                    "content": request.content,
+                    "sender_id": current_user.id,
+                    "sender_name": current_user.full_name,
+                    "created_at": message.created_at.isoformat(),
+                    "message_type": request.message_type,
+                }
+            }
+            for p in other_participants:
+                asyncio.create_task(
+                    ws_manager.send_to_user(p.user_id, "new_message", msg_payload)
+                )
+        except Exception:
+            pass  # WS push is best-effort — don't fail the HTTP response
+
         return {
             "message_id": message.id,
             "created_at": message.created_at.isoformat(),
@@ -535,6 +557,15 @@ async def get_my_patients_for_messaging(
             # Get patients assigned to this clinician
             patients = db.query(Patient).filter(
                 Patient.primary_clinician_id == current_user.id,
+                Patient.status == 'active'
+            ).all()
+        elif current_user.role == 'caregiver':
+            # Caregivers only see their assigned patients
+            from src.db import CaregiverAssignment
+            from services.access_control import get_accessible_patient_ids
+            allowed_ids = get_accessible_patient_ids(current_user, db) or []
+            patients = db.query(Patient).filter(
+                Patient.id.in_(allowed_ids),
                 Patient.status == 'active'
             ).all()
         else:

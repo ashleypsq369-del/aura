@@ -1,4 +1,4 @@
-﻿/**
+/**
  * WellnessCheckin.jsx
  * Daily "how are you feeling" form for patients.
  * Submits to POST /api/assessments/esas
@@ -17,8 +17,9 @@ import toast from '../utils/toast';
 import PageHeader from '../components/PageHeader';
 import { fireMilestone } from '../components/MilestoneConfetti';
 import Progress from '../components/ui/Progress';
+import { mlAPI } from '../api/client';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 // Each item maps to an ESAS field
 const ITEMS = [
@@ -80,6 +81,15 @@ export default function WellnessCheckin() {
       axios.get(`${API_URL}/api/assessments/esas/${patientId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
       }).then(r => r.data),
+    enabled: !!patientId,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
+
+  // ML risk query — always enabled so data is ready when success screen shows
+  const { data: mlRisk } = useQuery({
+    queryKey: ['wellness-ml-risk', patientId],
+    queryFn: () => mlAPI.getPatientRisk(patientId).then(r => r.data),
     enabled: !!patientId,
     staleTime: 5 * 60 * 1000,
     retry: false,
@@ -189,6 +199,40 @@ export default function WellnessCheckin() {
             </div>
           )}
 
+          {/* ML feedback card — patient-friendly */}
+          {mlRisk && mlRisk.overall_level !== 'unknown' && (() => {
+            const friendlyLevel = {
+              critical: { label: 'Your health needs attention today', color: 'bg-rose-50 border-rose-200', text: 'text-rose-800', dot: 'bg-rose-500 animate-pulse', emoji: '🔴' },
+              high:     { label: 'Worth keeping an eye on', color: 'bg-amber-50 border-amber-200', text: 'text-amber-800', dot: 'bg-amber-500', emoji: '🟡' },
+              moderate: { label: 'Managing reasonably well', color: 'bg-blue-50 border-blue-200', text: 'text-blue-800', dot: 'bg-blue-400', emoji: '🔵' },
+              low:      { label: 'Feeling quite well today', color: 'bg-emerald-50 border-emerald-200', text: 'text-emerald-800', dot: 'bg-emerald-500', emoji: '🟢' },
+            }[mlRisk.overall_level] || { label: 'Check-in recorded', color: 'bg-slate-50 border-slate-200', text: 'text-slate-700', dot: 'bg-slate-400', emoji: '⚪' };
+
+            const actions = (mlRisk.recommended_actions || []).slice(0, 2);
+
+            return (
+              <div className={`rounded-xl border p-4 mb-4 ${friendlyLevel.color}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${friendlyLevel.dot}`} />
+                  <p className={`text-sm font-bold ${friendlyLevel.text}`}>
+                    {friendlyLevel.emoji} {friendlyLevel.label}
+                  </p>
+                </div>
+                {actions.length > 0 && (
+                  <ul className="space-y-1">
+                    {actions.map((action, i) => (
+                      <li key={i} className={`text-xs flex items-start gap-1.5 ${friendlyLevel.text} opacity-80`}>
+                        <span className="mt-0.5 flex-shrink-0">•</span>
+                        {action}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="text-[10px] text-slate-400 mt-2">🧠 Powered by AI health analysis · shared with your care team</p>
+              </div>
+            );
+          })()}
+
           <div className="flex gap-3">
             <button
               onClick={() => navigate('/my-space')}
@@ -212,7 +256,7 @@ export default function WellnessCheckin() {
   return (
     <div className="min-h-full">
       <PageHeader
-        image="/resources/cards/card-checkin.jpg"
+        image="/resources/african/african-wellbeing.jpg"
         title="Daily Wellness Check-in"
         subtitle="How are you feeling today? Rate each area from 0 (none) to 10 (worst)"
         icon={Heart}

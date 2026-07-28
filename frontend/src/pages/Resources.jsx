@@ -5,15 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Search, Star, ThumbsUp, ThumbsDown, X, Loader2,
   FileText, Video, Link as LinkIcon, Download, Heart, Brain,
-  Pill, MessageCircle, MapPin, ExternalLink
+  Pill, MessageCircle, MapPin, ExternalLink, Sparkles, TrendingUp,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
 import { offlineResourcesAPI } from '../api/offlineClient';
+import { resourcesAPI } from '../api/client';
 import PageHeader from '../components/PageHeader';
 import usePersonalisation from '../hooks/usePersonalisation';
+import ModalShell from '../components/ui/ModalShell';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 function getFormatIcon(format) {
   switch (format) {
@@ -68,6 +70,14 @@ export default function Resources() {
     },
   });
 
+  // ML-powered resource recommendations
+  const { data: mlRecommended } = useQuery({
+    queryKey: ['resources-ml-recommended'],
+    queryFn: () => resourcesAPI.getRecommended().then(r => r.data),
+    staleTime: 15 * 60 * 1000,
+    retry: false,
+  });
+
   const bookmarkMutation = useMutation({
     mutationFn: async (resourceId) => {
       const token = localStorage.getItem('auth_token');
@@ -119,7 +129,7 @@ export default function Resources() {
     <div className="min-h-full">
       <div className="max-w-[1400px] mx-auto px-6 py-0">
         <PageHeader
-          image="/resources/headers/header-education.jpg"
+          image="/resources/african/african-medical-reading.jpg"
           title="Educational Resources"
           subtitle="Guides for patients, families and caregivers"
           icon={BookOpen}
@@ -179,8 +189,49 @@ export default function Resources() {
 
           {/* ── Right: resource grid ── */}
           <div className="flex-1 min-w-0">
-            {/* Personalised recommendations banner */}
-            {signals?.resourceTags?.length > 0 && (
+
+            {/* ML-powered personalised recommendations */}
+            {mlRecommended?.length > 0 && (
+              <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+                className="mb-5 bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b border-violet-100 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+                    <Brain size={14} className="text-white" />
+                  </div>
+                  <h3 className="text-sm font-bold text-violet-900 flex-1">AI-Recommended for You</h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-200 text-violet-700">
+                    {mlRecommended.length} match{mlRecommended.length !== 1 ? 'es' : ''}
+                  </span>
+                </div>
+                <div className="p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {mlRecommended.slice(0, 4).map(rec => {
+                    const r = rec?.resource ?? rec;
+                    return (
+                      <button key={r.id}
+                        onClick={() => handleViewResource(r.id)}
+                        className="text-left flex items-start gap-3 p-3 bg-white/70 hover:bg-white rounded-xl border border-violet-100 hover:border-violet-300 transition-all group">
+                        <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+                          <TrendingUp size={13} className="text-violet-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-slate-900 group-hover:text-violet-700 truncate">{r.title}</p>
+                          <p className="text-[10px] text-slate-500 truncate mt-0.5">{r.summary}</p>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 uppercase tracking-wide">
+                              {r.category?.replace(/_/g, ' ')}
+                            </span>
+                            {r.is_ghana_specific && <span className="text-[9px]">🇬🇭</span>}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Personalisation context banner (fallback when no ML recs) */}
+            {!mlRecommended?.length && signals?.resourceTags?.length > 0 && (
               <div className="mb-4 px-4 py-3 bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 rounded-xl">
                 <h3 className="text-sm font-bold text-teal-800 mb-1 flex items-center gap-2">
                   <Star size={14} className="text-teal-600" />
@@ -435,13 +486,12 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
   const is_bookmarked = resource?.is_bookmarked ?? false;
   const user_feedback = resource?.user_feedback ?? null;
 
-  const [blobUrl,   setBlobUrl]   = useState(null);   // object URL for PDF
-  const [pdfState,  setPdfState]  = useState('idle'); // idle | loading | ready | error
+  const [blobUrl,   setBlobUrl]   = useState(null);
+  const [pdfState,  setPdfState]  = useState('idle');
   const FormatIcon = getFormatIcon(res?.format);
 
   const pdfFilename = res?.pdf_path ? res.pdf_path.replace('/static/pdfs/', '') : null;
 
-  // Fetch PDF as blob so auth header works and CORS is not an issue
   useEffect(() => {
     if (!pdfFilename) return;
     let objectUrl = null;
@@ -470,114 +520,35 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
   const hasPdf = !!pdfFilename;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 md:p-6"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 16 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.18 }}
-        onClick={e => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full flex flex-col overflow-hidden"
-        style={{ maxWidth: hasPdf ? '1000px' : '720px', height: '92vh' }}
-      >
-        {/* -- Header --------------------------------------------------- */}
-        <div className="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4 flex-shrink-0">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 rounded bg-teal-50 flex items-center justify-center flex-shrink-0">
-                <FormatIcon size={13} className="text-teal-600" />
-              </div>
-              {res?.is_ghana_specific && <span>🇬🇭</span>}
-              {res?.source && (
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{res.source}</span>
-              )}
-            </div>
-            <h2 className="text-base font-bold text-slate-900 leading-snug line-clamp-2">{res?.title}</h2>
-            {res?.summary && (
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">{res.summary}</p>
-            )}
-          </div>
-          <button onClick={onClose} data-tip="Close"
-            className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-red-50 hover:border-red-200 text-slate-400 hover:text-red-500 transition-colors flex-shrink-0">
-            <X size={16} />
-          </button>
-        </div>
-
-        {/* -- Body ----------------------------------------------------- */}
-        <div className="flex-1 overflow-hidden flex flex-col min-h-0">
-
-          {/* PDF viewer */}
-          {hasPdf ? (
-            <PdfViewer
-              pdfState={pdfState}
-              blobUrl={blobUrl}
-              pdfFilename={pdfFilename}
-              title={res?.title}
-              externalUrl={res?.external_url}
-            />
-          ) : (
-            /* Article / text content */
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {res?.content ? (
-                <div className="prose prose-sm max-w-none text-slate-800 whitespace-pre-wrap leading-relaxed">
-                  {res.content}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-64 text-center text-slate-400 gap-3">
-                  <FileText size={40} strokeWidth={1.5} className="opacity-30" />
-                  <p className="text-sm font-medium">No preview available.</p>
-                </div>
-              )}
-
-              {res?.external_url && (
-                <div className="mt-4 p-4 bg-teal-50 border border-teal-100 rounded-xl flex items-center gap-3">
-                  <ExternalLink size={16} className="text-teal-600 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-teal-800 mb-0.5">Read the full document</p>
-                    <a href={res.external_url} target="_blank" rel="noopener noreferrer"
-                      className="text-xs text-teal-600 hover:underline truncate block">{res.external_url}</a>
-                  </div>
-                  <a href={res.external_url} target="_blank" rel="noopener noreferrer"
-                    className="px-3 py-1.5 bg-teal-600 text-white text-xs font-semibold rounded-lg hover:bg-teal-700 transition-colors flex-shrink-0">
-                    Open
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* -- Footer --------------------------------------------------- */}
-        <div className="px-5 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3 flex-wrap flex-shrink-0">
+    <ModalShell
+      open={true}
+      onClose={onClose}
+      title={res?.title}
+      description={res?.summary}
+      icon={FormatIcon}
+      accent="teal"
+      size={hasPdf ? 'xl' : 'lg'}
+      footer={
+        <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
-            <button onClick={onBookmark} data-tip={is_bookmarked ? 'Remove bookmark' : 'Bookmark'}
+            <button onClick={onBookmark}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white text-xs font-semibold text-slate-600 transition-colors">
               <Star size={12} className={is_bookmarked ? 'fill-amber-400 text-amber-400' : 'text-slate-400'} />
               {is_bookmarked ? 'Bookmarked' : 'Bookmark'}
             </button>
-
-            {/* Download the fetched blob */}
             {blobUrl && (
-              <a href={blobUrl} download={pdfFilename} data-tip="Download PDF"
+              <a href={blobUrl} download={pdfFilename}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors">
                 <Download size={12} /> Download PDF
               </a>
             )}
-
             {res?.external_url && (
-              <a href={res.external_url} target="_blank" rel="noopener noreferrer" data-tip="Open source"
+              <a href={res.external_url} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors">
                 <ExternalLink size={12} /> Source
               </a>
             )}
           </div>
-
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-slate-400">Helpful?</span>
             <button onClick={() => onFeedback(true)} disabled={user_feedback === 'helpful'}
@@ -594,7 +565,84 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
             </button>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      }
+    >
+      {/* Meta row */}
+      <div className="flex items-center gap-2 mb-3">
+        {res?.is_ghana_specific && <span>🇬🇭</span>}
+        {res?.source && (
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{res.source}</span>
+        )}
+      </div>
+
+      {/* Body */}
+      {hasPdf ? (
+        <div className="min-h-[400px] flex flex-col">
+          <PdfViewer
+            pdfState={pdfState}
+            blobUrl={blobUrl}
+            pdfFilename={pdfFilename}
+            title={res?.title}
+            externalUrl={res?.external_url}
+          />
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {/* Meta strip */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pb-3 border-b border-slate-100">
+            {res?.is_ghana_specific && (
+              <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-700">
+                🇬🇭 Ghana-specific resource
+              </span>
+            )}
+            {res?.source && (
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">{res.source}</span>
+            )}
+            {res?.category && (
+              <span className="text-[11px] italic text-slate-400">{res.category.replace(/_/g, ' ')}</span>
+            )}
+          </div>
+
+          {res?.content ? (
+            /* ── Book-page text layout ──────────────────────────────── */
+            <div>
+              {/* Reading guide line */}
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpen size={12} className="text-teal-500 flex-shrink-0" />
+                <div className="flex-1 h-px bg-slate-100" />
+                <span className="text-[10px] text-slate-300 font-medium select-none">READING</span>
+                <div className="flex-1 h-px bg-slate-100" />
+              </div>
+
+              {/* Content body with good reading typography */}
+              <div className="pl-4 border-l-2 border-slate-200">
+                <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">
+                  {res.content}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 gap-3">
+              <FileText size={40} strokeWidth={1.5} className="opacity-30" />
+              <p className="text-sm font-medium">No preview available.</p>
+            </div>
+          )}
+          {res?.external_url && (
+            <div className="mt-4 p-4 bg-teal-50 border border-teal-100 rounded-xl flex items-center gap-3">
+              <ExternalLink size={16} className="text-teal-600 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-teal-800 mb-0.5">Read the full document</p>
+                <a href={res.external_url} target="_blank" rel="noopener noreferrer"
+                  className="text-xs text-teal-600 hover:underline truncate block">{res.external_url}</a>
+              </div>
+              <a href={res.external_url} target="_blank" rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-teal-600 text-white text-xs font-semibold rounded-lg hover:bg-teal-700 transition-colors flex-shrink-0">
+                Open
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+    </ModalShell>
   );
 }

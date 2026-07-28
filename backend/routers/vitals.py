@@ -46,6 +46,12 @@ async def log_vital(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    from services.access_control import assert_patient_access
+    assert_patient_access(data.patient_id, current_user, db)
+    # Only clinicians, admins, and assigned caregivers may log vitals
+    if current_user.role == "patient":
+        from fastapi import HTTPException
+        raise HTTPException(status_code=403, detail="Patients cannot log vitals directly")
     vital = Vital(**data.dict(), recorded_by=current_user.id)
     db.add(vital)
     db.commit()
@@ -59,5 +65,7 @@ async def get_vitals(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    from services.access_control import assert_patient_access
+    assert_patient_access(patient_id, current_user, db)
     vitals = get_recent_vitals(db, patient_id, limit)
     return [_vital_to_dict(v) for v in vitals]

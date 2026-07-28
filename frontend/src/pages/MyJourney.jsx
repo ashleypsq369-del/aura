@@ -98,7 +98,7 @@ export default function MyJourney() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-0">
 {/* Modern Header with image */}
         <PageHeader
-          image="/resources/cards/card-journey.jpg"
+          image="/resources/african/african-family-care.jpg"
           title="My Journey"
           subtitle="Your care journey timeline with key events and milestones"
           icon={MapPin}

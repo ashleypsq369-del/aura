@@ -1,18 +1,53 @@
-﻿import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
-  MessageCircle, UserPlus, Phone, Video, MoreVertical, Loader2, MessagesSquare, Paperclip, X
+  MessageCircle, UserPlus, Phone, Video, MoreVertical, Loader2, MessagesSquare, Paperclip, X,
+  Zap, AlertTriangle, Clock as ClockIcon,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
 import ContactsTab from '../components/ContactsTab';
 import FileUpload from '../components/FileUpload';
 import Modal, { ModalFooter } from '../components/Modal';
+import { useWS } from '../context/WebSocketContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
+
+/* ── Message urgency classifier (client-side NLP heuristic) ─────────────── */
+const URGENT_KEYWORDS = [
+  'urgent', 'emergency', 'critical', 'immediate', 'asap', 'help', 'pain',
+  'crisis', 'severe', 'dying', 'bleeding', 'fall', 'fell', 'unconscious',
+  'chest', 'breathing', 'breath', 'cannot breathe', "can't breathe",
+  'vomiting', 'seizure', 'confused', 'confusion', 'high fever', 'fever',
+  'not responding', 'unresponsive', 'please', 'doctor', 'nurse', 'call me',
+];
+const HIGH_KEYWORDS = [
+  'worried', 'concerned', 'worse', 'worsening', 'increased pain', 'pain score',
+  'medication', 'missed', 'dose', 'prescription', 'refill', 'nausea', 'vomit',
+  'side effect', 'reaction', 'appointment', 'cancel', 'rescheduled',
+];
+
+function classifyMessageUrgency(text) {
+  if (!text) return 'normal';
+  const lower = text.toLowerCase();
+  if (URGENT_KEYWORDS.some(kw => lower.includes(kw))) return 'urgent';
+  if (HIGH_KEYWORDS.some(kw => lower.includes(kw))) return 'high';
+  return 'normal';
+}
+
+function getConversationUrgency(conv) {
+  const lastMsg = conv.last_message?.content || '';
+  return classifyMessageUrgency(lastMsg);
+}
+
+const URGENCY_CFG = {
+  urgent: { badge: 'bg-red-600 text-white',   dot: 'bg-red-500 animate-pulse', label: 'URGENT', icon: AlertTriangle },
+  high:   { badge: 'bg-amber-500 text-white',  dot: 'bg-amber-500',             label: 'HIGH',   icon: Zap },
+  normal: { badge: null, dot: null, label: null, icon: null },
+};
 
 export default function Messages() {
   const [activeTab, setActiveTab] = useState('chats'); // 'chats' | 'contacts'
@@ -29,7 +64,19 @@ export default function Messages() {
   const [groupListLimit, setGroupListLimit] = useState(10);
   const messagesEndRef = useRef(null);
   const queryClient = useQueryClient();
+  const { subscribe } = useWS();
   const location = useLocation();
+
+  // Real-time: invalidate message queries on WS push
+  useEffect(() => {
+    const unsub1 = subscribe('new_message', (data) => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      if (data.conversation_id && data.conversation_id === selectedConversation) {
+        queryClient.invalidateQueries({ queryKey: ['messages', data.conversation_id] });
+      }
+    });
+    return () => { unsub1(); };
+  }, [subscribe, queryClient, selectedConversation]);
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -43,7 +90,7 @@ export default function Messages() {
       });
       return response.data;
     },
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: 60000, // Fallback poll — WS handles real-time
   });
 
   // Fetch messages for selected conversation
@@ -59,7 +106,7 @@ export default function Messages() {
       return response.data;
     },
     enabled: !!selectedConversation,
-    refetchInterval: 10000, // Refresh every 10 seconds for active conversation
+    refetchInterval: 30000, // Fallback poll — WS handles real-time
   });
 
   // Fetch available physicians
@@ -138,10 +185,14 @@ export default function Messages() {
       setGroupName('');
       setChatListLimit(10);
       setGroupListLimit(10);
-      // Select the new conversation
+      // Select the new conversation — use a small delay to let list refresh
       const convId = response.data.conversation_id;
-      const conv = conversationsData?.conversations?.find(c => c.id === convId);
-      if (conv) setSelectedConversation(conv);
+      setTimeout(() => {
+        queryClient.refetchQueries(['conversations']).then(() => {
+          const conv = queryClient.getQueryData(['conversations'])?.conversations?.find(c => c.id === convId);
+          if (conv) setSelectedConversation(conv);
+        });
+      }, 400);
     },
     onError: (error) => {
       toast.error(error.response?.data?.detail || 'Failed to start conversation');
@@ -162,26 +213,76 @@ export default function Messages() {
     });
   }, [startConversationMutation]);
 
-  // Handle care team chat from Patient Portal
+  // Handle care team chat from Patient Portal (legacy state-based approach)
   useEffect(() => {
-    if (location.state?.openCareTeamChat && location.state?.careTeam && physiciansData?.physicians) {
+    if (location.state?.openCareTeamChat && location.state?.careTeam) {
       const careTeam = location.state.careTeam;
       
-      // Find clinician in physicians list
-      if (careTeam.clinician) {
+      // Prefer direct userId if provided in care_team.clinician.id
+      if (careTeam.clinician?.id) {
+        const targetId = careTeam.clinician.id;
+        // Check existing conversations
+        const existing = conversationsData?.conversations?.find(c =>
+          c.participants?.some(p => String(p.id || p.user_id) === String(targetId)) ||
+          String(c.other_user_id) === String(targetId)
+        );
+        if (existing) {
+          setSelectedConversation(existing);
+        } else {
+          startConversationMutation.mutate({
+            recipientId: Number(targetId),
+            initialMessage: 'Hello! I wanted to reach out to you.',
+            conversationType: 'private'
+          });
+        }
+        window.history.replaceState({}, document.title, '/messages');
+        return;
+      }
+
+      // Fallback: find by name in physicians list
+      if (physiciansData?.physicians && careTeam.clinician) {
         const clinician = physiciansData.physicians.find(
           p => p.name === careTeam.clinician.name
         );
-        
         if (clinician) {
-          // Start chat with clinician
           handleStartChat(clinician.id);
-          // Clear the state to prevent re-triggering
-          window.history.replaceState({}, document.title);
+          window.history.replaceState({}, document.title, '/messages');
         }
       }
     }
-  }, [location.state, physiciansData, startConversationMutation, handleStartChat]);
+  }, [location.state, physiciansData, conversationsData, startConversationMutation, handleStartChat]);
+
+  // Handle ?userId=X query param — auto-open chat with specific user
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const targetUserId = params.get('userId');
+    if (!targetUserId) return;
+    if (!conversationsData) return;
+
+    // Clear the param immediately so it doesn't retrigger
+    window.history.replaceState({}, document.title, '/messages');
+
+    // Check existing conversations for one with this participant
+    const existing = conversationsData?.conversations?.find(c => {
+      // Some conversations include participants array, some just the other user id
+      if (c.participants?.some(p => String(p.id || p.user_id) === String(targetUserId))) return true;
+      if (String(c.other_user_id) === String(targetUserId)) return true;
+      if (String(c.recipient_id) === String(targetUserId)) return true;
+      return false;
+    });
+
+    if (existing) {
+      setSelectedConversation(existing);
+    } else {
+      // Start new conversation — after success, the onSuccess handler selects it
+      startConversationMutation.mutate({
+        recipientId: Number(targetUserId),
+        initialMessage: 'Hello! I wanted to reach out to you.',
+        conversationType: 'private'
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, conversationsData]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -316,9 +417,18 @@ export default function Messages() {
                 <p className="text-xs text-slate-400 mt-1">Start a new chat to begin</p>
               </div>
             ) : (
-              filteredConversations.map((conv) => {
+              filteredConversations
+                // Sort urgent messages to top
+                .sort((a, b) => {
+                  const order = { urgent: 0, high: 1, normal: 2 };
+                  return (order[getConversationUrgency(a)] ?? 2) - (order[getConversationUrgency(b)] ?? 2);
+                })
+                .map((conv) => {
                 const otherParticipant = conv.participants[0];
                 const isSelected = selectedConversation?.id === conv.id;
+                const urgency = getConversationUrgency(conv);
+                const urgCfg  = URGENCY_CFG[urgency];
+                const borderColor = urgency === 'urgent' ? 'border-l-red-500' : urgency === 'high' ? 'border-l-amber-500' : isSelected ? 'border-l-teal-500' : 'border-l-transparent';
                 
                 return (
                   <motion.div
@@ -326,25 +436,35 @@ export default function Messages() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onClick={() => setSelectedConversation(conv)}
-                    className={`p-3 border-b border-slate-100 cursor-pointer transition-all ${
-                      isSelected
-                        ? 'border-l-4 border-l-teal-500 bg-teal-900/30'
-                        : 'border-l-4 border-l-transparent hover:bg-slate-100'
+                    className={`p-3 border-b border-slate-100 cursor-pointer transition-all border-l-4 ${borderColor} ${
+                      isSelected ? 'bg-teal-900/30' : urgency === 'urgent' ? 'bg-red-50/60 hover:bg-red-50' : urgency === 'high' ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-100'
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       {/* Colored avatar */}
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                        style={{ background: ['linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#7c3aed,#4338ca)','linear-gradient(135deg,#db2777,#e11d48)','linear-gradient(135deg,#059669,#0d9488)','linear-gradient(135deg,#1d4ed8,#0891b2)','linear-gradient(135deg,#d97706,#ea580c)'][(conv.id || 0) % 6] }}
-                      >
-                        {(otherParticipant?.name || 'U').split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}
+                      <div className="relative flex-shrink-0">
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                          style={{ background: ['linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#7c3aed,#4338ca)','linear-gradient(135deg,#db2777,#e11d48)','linear-gradient(135deg,#059669,#0d9488)','linear-gradient(135deg,#1d4ed8,#0891b2)','linear-gradient(135deg,#d97706,#ea580c)'][(conv.id || 0) % 6] }}
+                        >
+                          {(otherParticipant?.name || 'U').split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}
+                        </div>
+                        {/* Urgency dot */}
+                        {urgCfg.dot && (
+                          <span className={`absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${urgCfg.dot}`} />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5 mb-0.5">
+                        <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                           <h3 className="font-semibold text-sm text-slate-900 truncate">
                             {otherParticipant?.name || 'Unknown User'}
                           </h3>
+                          {/* Urgency badge */}
+                          {urgCfg.badge && (
+                            <span className={`flex-shrink-0 px-1.5 py-0.5 text-[9px] font-black rounded-full uppercase tracking-wide ${urgCfg.badge}`}>
+                              {urgCfg.label}
+                            </span>
+                          )}
                           {conv.unread_count > 0 && (
                             <span className="flex-shrink-0 px-1.5 py-0.5 text-white text-[10px] font-bold rounded-full"
                               style={{ background: 'linear-gradient(135deg,#0d9488,#0891b2)' }}>
@@ -356,7 +476,7 @@ export default function Messages() {
                           {otherParticipant?.role || 'User'}
                         </p>
                         {conv.last_message && (
-                          <p className="text-xs text-slate-500 truncate">
+                          <p className={`text-xs truncate ${urgency === 'urgent' ? 'text-red-700 font-medium' : urgency === 'high' ? 'text-amber-700' : 'text-slate-500'}`}>
                             {conv.last_message.content}
                           </p>
                         )}

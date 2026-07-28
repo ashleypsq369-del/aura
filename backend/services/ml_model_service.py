@@ -106,45 +106,30 @@ class MLModelService:
             vdir = task_dir / version
 
             try:
-                # ── Model (required) ───────────────────────────────────────
+                # ── Model (required) — load directly, no thread ────────────
                 model_path = vdir / "model.joblib"
                 if not model_path.exists():
                     logger.warning(f"model.joblib missing for {task}")
                     continue
 
-                import threading
-                result, error = [None], [None]
-                def _load():
-                    try:
-                        result[0] = joblib.load(model_path)
-                    except Exception as e:
-                        error[0] = e
-                t = threading.Thread(target=_load, daemon=True)
-                t.start(); t.join(timeout=15)
-                if t.is_alive() or error[0]:
-                    logger.warning(f"Model load timed out/failed for {task}: {error[0]}")
-                    continue
-
-                self.models[task] = result[0]
+                self.models[task] = joblib.load(model_path)
 
                 # ── Scaler (optional) ──────────────────────────────────────
                 scaler_path = vdir / "scaler.joblib"
                 if scaler_path.exists():
                     self.scalers[task] = joblib.load(scaler_path)
 
-                # ── SHAP explainer (optional, but we always try) ──────────
-                explainer_path = vdir / "explainer.joblib"
-                if explainer_path.exists():
-                    try:
-                        self.explainers[task] = joblib.load(explainer_path)
-                        logger.info(f"Loaded SHAP explainer for {task}")
-                    except Exception as e:
-                        logger.warning(f"SHAP load failed for {task}: {e}")
-                        # Try to re-create from model
-                        self._try_rebuild_explainer(task)
-                else:
-                    # Explainer not saved  --  create inline
-                    self._try_rebuild_explainer(task)
+                # ── SHAP explainer — rebuild inline from model (faster than
+                #    loading the large .joblib explainer files) ─────────────
+                self._try_rebuild_explainer(task)
+                if task not in self.explainers:
+                    # Fallback: try loading the saved explainer
+                    explainer_path = vdir / "explainer.joblib"
+                    if explainer_path.exists():
+                        try:
+                            self.explainers[task] = joblib.load(explainer_path)
+                        except Exception as e:
+                            logger.warning(f"SHAP explainer load failed for {task}: {e}")
 
                 # ── Metadata ───────────────────────────────────────────────
                 meta_path = vdir / "metadata.json"
@@ -381,7 +366,7 @@ class MLModelService:
         return info
 
 
-# ── Singleton ──────────────────────────────────────────────────────────────
+# ── Singleton — lazy-loaded on first use ──────────────────────────────────
 _service: Optional[MLModelService] = None
 
 def get_ml_service() -> MLModelService:
@@ -390,5 +375,6 @@ def get_ml_service() -> MLModelService:
         _service = MLModelService()
     return _service
 
-# Eager load on import
+# Lazy: don't eager-load at import time to avoid blocking server startup.
+# First request to /api/ml/* will trigger loading.
 ml_service = get_ml_service()

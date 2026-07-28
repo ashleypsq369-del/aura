@@ -11,10 +11,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Heart, AlertCircle, Users, Utensils, Phone, Brain,
-  Activity, Pill, Star, Search, ArrowRight,
-  Printer, ChevronDown, ChevronUp,
+  Activity, Pill, Star, Search, ChevronDown, ChevronUp, ChevronRight,
 } from 'lucide-react';
-import Modal from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 
 // -- All protocol data (unchanged) -----------------------------------------
@@ -758,7 +756,7 @@ function RichText({ content }) {
 // -- Protocol modal content ------------------------------------------------
 function ProtocolModalContent({ protocol }) {
   const [openSections, setOpenSections] = useState(
-    () => Object.fromEntries(protocol.sections.map((_, i) => [i, true]))
+    () => Object.fromEntries(protocol.sections.map((_, i) => [i, i === 0]))
   );
   const conf = COLORS[protocol.color] || COLORS.blue;
 
@@ -769,61 +767,88 @@ function ProtocolModalContent({ protocol }) {
     setOpenSections(Object.fromEntries(protocol.sections.map((_, i) => [i, next])));
   };
 
+  const ProtocolIcon = protocol.icon;
+
   return (
     <div className="space-y-4">
-      {/* Protocol summary banner */}
-      <div className={`bg-gradient-to-r ${conf.gradient} rounded-xl p-5`}>
-        <p className="text-white/90 text-sm leading-relaxed">{protocol.summary}</p>
-        <span className={`mt-2 inline-block px-2.5 py-0.5 text-xs font-bold rounded-full bg-white/25 text-white`}>
-          {protocol.badge}
-        </span>
+
+      {/* ── Title band — book chapter opener ─────────────────────────── */}
+      <div className={`rounded-lg border ${conf.border} overflow-hidden`}>
+        <div className={`bg-gradient-to-r ${conf.gradient} px-5 py-4`}>
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+              <ProtocolIcon size={18} className="text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="text-white font-bold text-base leading-snug">{protocol.title}</p>
+              <p className="text-white/80 text-xs mt-0.5 leading-relaxed">{protocol.summary}</p>
+            </div>
+            <span className="flex-shrink-0 px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-white/25 text-white uppercase tracking-wide self-start">
+              {protocol.badge}
+            </span>
+          </div>
+        </div>
+        {/* Contents list — like a book's chapter contents page */}
+        <div className="bg-slate-50 border-t border-slate-200 px-5 py-3">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 select-none">Contents</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            {protocol.sections.map((s, i) => (
+              <button key={i} onClick={() => { setOpenSections(p => ({...p, [i]: true})); }}
+                className="text-[11px] text-slate-500 hover:text-teal-700 transition-colors flex items-center gap-1">
+                <span className="text-slate-300">§{i + 1}</span> {s.title}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Expand/collapse all + print */}
-      <div className="flex items-center justify-between">
-        <button
-          onClick={toggleAll}
-          className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-teal-700 transition"
-        >
-          {allOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-          {allOpen ? 'Collapse all' : 'Expand all'}
+      {/* ── Controls ─────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-1">
+        <button onClick={toggleAll}
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-teal-700 transition">
+          {allOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          {allOpen ? 'Collapse all sections' : 'Expand all sections'}
         </button>
-        <button
-          onClick={() => window.print()}
-          className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-teal-700 transition"
-        >
-          <Printer size={13} /> Print / Export
+        <button onClick={() => window.print()}
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-teal-700 transition">
+          Print / Export
         </button>
       </div>
 
-      {/* Sections */}
-      <div className="space-y-3">
+      {/* ── Sections — accordion with numbered chapter headings ──────── */}
+      <div className="space-y-2">
         {protocol.sections.map((section, i) => {
           const isOpen = openSections[i] !== false;
           return (
-            <div key={i} className={`rounded-xl border ${conf.border} overflow-hidden`}>
-              {/* Section header - clickable to toggle */}
+            <div key={i} className="rounded-lg border border-slate-200 overflow-hidden">
+              {/* Section header */}
               <button
                 onClick={() => toggleSection(i)}
-                className={`w-full flex items-center justify-between px-5 py-3.5 ${conf.bg} text-left transition hover:opacity-90`}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
               >
-                <h4 className={`font-semibold text-sm ${conf.text}`}>{section.title}</h4>
+                {/* Chapter number */}
+                <span className="w-6 h-6 rounded flex items-center justify-center bg-white border border-slate-200 text-[11px] font-bold text-slate-500 flex-shrink-0 shadow-sm">
+                  {i + 1}
+                </span>
+                {/* Left accent bar in protocol colour */}
+                <span className={`w-0.5 h-5 rounded-full flex-shrink-0 bg-gradient-to-b ${conf.gradient}`} />
+                <h4 className="flex-1 text-sm font-semibold text-slate-800 leading-snug text-left">{section.title}</h4>
                 {isOpen
-                  ? <ChevronUp size={15} className={`${conf.text} flex-shrink-0`} />
-                  : <ChevronDown size={15} className="text-slate-400 flex-shrink-0" />}
+                  ? <ChevronUp size={14} className="text-slate-400 flex-shrink-0" />
+                  : <ChevronDown size={14} className="text-slate-400 flex-shrink-0" />}
               </button>
 
-              {/* Section content */}
+              {/* Section body */}
               <AnimatePresence initial={false}>
                 {isOpen && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.18 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 py-5 bg-white border-t border-slate-100">
+                    <div className="px-5 py-4 bg-white border-t border-slate-100">
                       <RichText content={section.content} />
                     </div>
                   </motion.div>
@@ -834,18 +859,22 @@ function ProtocolModalContent({ protocol }) {
         })}
       </div>
 
-      <p className="text-[11px] text-slate-400 pt-2 border-t border-slate-100">
-        Evidence-based protocols adapted for the Ghanaian healthcare context.
-        Always consult senior clinicians for complex cases and follow institutional protocols.
-      </p>
+      {/* ── Footnote ─────────────────────────────────────────────────── */}
+      <div className="flex items-start gap-2 px-1 pt-2 border-t border-slate-100">
+        <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
+        <p className="text-[10.5px] text-slate-400 leading-relaxed">
+          Evidence-based protocols adapted for the Ghanaian healthcare context.
+          Always consult senior clinicians for complex cases and follow institutional protocols.
+        </p>
+      </div>
     </div>
   );
 }
 
-// -- Main page -------------------------------------------------------------
+// -- Main page — two-column library layout ---------------------------------
 export default function CareGuide() {
-  const [search, setSearch] = useState('');
-  const [activeProtocol, setActiveProtocol] = useState(null);
+  const [search, setSearch]           = useState('');
+  const [activeId, setActiveId]       = useState(null);
 
   const filtered = search
     ? PROTOCOLS.filter(p =>
@@ -858,126 +887,108 @@ export default function CareGuide() {
       )
     : PROTOCOLS;
 
-  const protocol = PROTOCOLS.find(p => p.id === activeProtocol) || null;
+  const protocol = PROTOCOLS.find(p => p.id === activeId) || null;
 
   return (
-    <div className="min-h-screen">
-
-      {/* -- Page header with image -- */}
+    <div className="min-h-screen bg-slate-50">
       <PageHeader
-        image="/resources/headers/header-care-guide.jpg"
+        image="/resources/african/african-doctor-female.jpg"
         title="Clinical Care Guide"
-        subtitle={`Evidence-based palliative care protocols · 🇬🇭 Ghana · ${PROTOCOLS.length} protocols`}
+        subtitle={`${PROTOCOLS.length} evidence-based protocols · 🇬🇭 Ghana Palliative Care`}
         icon={BookOpen}
-      />
-
-      {/* Search bar below header */}
-      <div className="max-w-[1400px] mx-auto px-6 pt-5 pb-2">
-        <div className="search-wrap max-w-2xl">
-          <span className="search-icon"><Search size={18} /></span>
-          <input
-            type="text"
-            placeholder="Search protocols, symptoms, medications..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full py-3 pr-4 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none shadow-sm"
-          />
-        </div>
-      </div>
-
-      {/* -- Protocol grid ----------------------------------------------- */}
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
-        {filtered.length === 0 ? (
-          <div className="text-center py-20 text-slate-400">
-            <BookOpen size={40} className="mx-auto mb-3 opacity-30" />
-            <p className="font-semibold">No protocols found</p>
-            <p className="text-sm mt-1">Try a different search term</p>
-          </div>
-        ) : (
-          <>
-            <p className="text-sm text-slate-500 mb-5 font-medium">
-              {filtered.length} protocol{filtered.length !== 1 ? 's' : ''}.
-              Click any card to view the full clinical guide.
-            </p>
-            <div className="space-y-2">
-              {filtered.map((protocol, idx) => {
-                const Icon = protocol.icon;
-                const conf = COLORS[protocol.color] || COLORS.blue;
-                return (
-                  <motion.button
-                    key={protocol.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: Math.min(idx * 0.04, 0.4) }}
-                    onClick={() => setActiveProtocol(protocol.id)}
-                    className={`group w-full text-left bg-white rounded-xl border-2 ${conf.border} shadow-sm hover:shadow-md hover:bg-slate-50 transition-all duration-150 flex items-center gap-4 px-5 py-4`}
-                  >
-                    {/* Coloured icon */}
-                    <div className={`w-11 h-11 rounded-lg ${conf.icon} flex items-center justify-center flex-shrink-0`}>
-                      <Icon size={20} className="text-white" />
-                    </div>
-
-                    {/* Protocol info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className={`font-semibold text-base ${conf.text}`}>
-                          {protocol.title}
-                        </p>
-                        <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${conf.badge}`}>
-                          {protocol.badge}
-                        </span>
-                      </div>
-                      <p className="text-sm text-slate-500 mt-0.5 leading-snug">
-                        {protocol.summary}
-                      </p>
-                    </div>
-
-                    {/* Section count + arrow */}
-                    <div className="flex-shrink-0 flex items-center gap-2">
-                      <span className="text-xs text-slate-400 font-medium hidden sm:block">
-                        {protocol.sections.length} sections
-                      </span>
-                      <ArrowRight size={18} className={`${conf.text} opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all`} />
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </>
-        )}
-
-        {/* Advisory note */}
-        <div className="mt-8 bg-white border border-slate-200 rounded-xl px-5 py-4 flex gap-3">
-          <Activity size={16} className="text-teal-600 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-slate-500 leading-relaxed">
-            <strong className="text-slate-700">Clinical Note:</strong> These protocols are adapted for the Ghanaian healthcare context and current evidence.
-            Always consult senior clinicians for complex cases. For patient-specific personalised guidance, generate a care plan from the individual patient record.
-          </p>
-        </div>
-      </div>
-
-      {/* -- Protocol detail modal --------------------------------------- */}
-      <Modal
-        isOpen={!!activeProtocol}
-        onClose={() => setActiveProtocol(null)}
-        title={protocol ? protocol.title : ''}
-        size="xl"
-        footerContent={
-          <div className="flex items-center justify-between w-full">
-            <span className="text-xs text-slate-400">
-              📖 Evidence-based · 🇬🇭 Ghana palliative care context
-            </span>
-            <button
-              onClick={() => setActiveProtocol(null)}
-              className="px-4 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition"
-            >
-              Close
-            </button>
-          </div>
-        }
       >
-        {protocol && <ProtocolModalContent protocol={protocol} />}
-      </Modal>
+        <button onClick={() => window.print()}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg border border-white/30 text-xs font-bold transition">
+          Print / Export
+        </button>
+      </PageHeader>
+
+      {/* ── Two-column layout ────────────────────────────────────────── */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-5 flex gap-5 items-start">
+
+        {/* ── LEFT: Protocol index ──────────────────────────────────── */}
+        <div className="w-72 flex-shrink-0 flex flex-col gap-3 sticky top-4 self-start">
+          {/* Search */}
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Search protocols…"
+              className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+          </div>
+
+          {/* Index */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
+            <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BookOpen size={13} className="text-slate-400"/>
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Protocols</span>
+              </div>
+              <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
+            </div>
+
+            <div className="overflow-y-auto max-h-[60vh]">
+              {filtered.length === 0 ? (
+                <div className="px-4 py-8 text-center text-slate-400">
+                  <p className="text-sm italic">No protocols found</p>
+                </div>
+              ) : (
+                filtered.map((p) => {
+                  const Icon = p.icon;
+                  const conf = COLORS[p.color] || COLORS.blue;
+                  const isActive = activeId === p.id;
+                  return (
+                    <button key={p.id} onClick={() => setActiveId(p.id)}
+                      className={`w-full text-left flex items-center gap-3 px-4 py-3 border-b border-slate-100 last:border-0 transition-colors ${
+                        isActive ? `${conf.bg} border-l-2 ${conf.border}` : 'hover:bg-slate-50'
+                      }`}>
+                      <div className={`w-8 h-8 rounded-lg ${conf.icon} flex items-center justify-center flex-shrink-0`}>
+                        <Icon size={14} className="text-white"/>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-semibold truncate ${isActive ? conf.text : 'text-slate-700'}`}>{p.title}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">{p.sections.length} sections</p>
+                      </div>
+                      {isActive && <ChevronRight size={13} className={conf.text}/>}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Advisory footer */}
+            <div className="border-t border-slate-200 px-4 py-3 bg-slate-50">
+              <div className="flex items-start gap-2">
+                <Activity size={11} className="text-teal-500 flex-shrink-0 mt-0.5"/>
+                <p className="text-[10px] text-slate-400 leading-relaxed">
+                  Evidence-based · adapted for the Ghanaian context. Always consult senior clinicians for complex cases.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT: Reading pane ──────────────────────────────────── */}
+        <div className="flex-1 min-w-0">
+          <AnimatePresence mode="wait">
+            {!protocol ? (
+              <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+                className="h-full flex flex-col items-center justify-center py-24 bg-white rounded-xl border border-slate-200 border-dashed text-slate-400">
+                <BookOpen size={40} className="opacity-20 mb-3"/>
+                <p className="font-semibold text-slate-500">Select a protocol from the index</p>
+                <p className="text-sm mt-1">Click any entry on the left to read the full clinical guide</p>
+              </motion.div>
+            ) : (
+              <motion.div key={protocol.id} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
+                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-5">
+                  <ProtocolModalContent protocol={protocol}/>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
+

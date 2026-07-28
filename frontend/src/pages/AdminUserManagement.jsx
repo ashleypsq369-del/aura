@@ -8,8 +8,9 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
+import ModalShell from '../components/ui/ModalShell';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 function getRoleBadgeColor(role) {
   return {
@@ -21,61 +22,53 @@ function getRoleBadgeColor(role) {
   }[role] || 'badge-info';
 }
 
-function CreateUserModal({ onClose, onSubmit, pending }) {
+function CreateUserModal({ open, onClose, onSubmit, pending }) {
   const [form, setForm] = useState({ username: '', email: '', full_name: '', role: 'clinician', password: '' });
   const f = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.value }));
   return (
-    <>
-      <div className="fixed inset-0 bg-black/50 z-50" onClick={onClose} />
-      <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
-          <div className="px-6 py-4 flex items-center justify-between border-b border-slate-200"
-            style={{ background: 'linear-gradient(135deg,#1e293b,#334155)' }}>
-            <div className="flex items-center gap-3">
-              <Users size={18} className="text-white" />
-              <h3 className="font-bold text-white">Create New User</h3>
-            </div>
-            <button onClick={onClose} className="w-8 h-8 bg-white/10 hover:bg-red-500 rounded-lg flex items-center justify-center transition">
-              <X size={16} className="text-white" />
-            </button>
-          </div>
-          <div className="p-6 space-y-4">
-            {[
-              { label: 'Full Name', key: 'full_name', type: 'text', ph: 'Dr. Kofi Mensah' },
-              { label: 'Username', key: 'username', type: 'text', ph: 'kmensah' },
-              { label: 'Email', key: 'email', type: 'email', ph: 'k.mensah@hospital.gh' },
-              { label: 'Password', key: 'password', type: 'password', ph: 'Min 8 characters' },
-            ].map(({ label, key, type, ph }) => (
-              <div key={key}>
-                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">{label}</label>
-                <input type={type} value={form[key]} onChange={f(key)} placeholder={ph}
-                  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition" />
-              </div>
-            ))}
-            <div>
-              <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Role</label>
-              <select value={form.role} onChange={f('role')}
-                className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none">
-                {['admin','clinician','caregiver','patient','family'].map(r => (
-                  <option key={r} value={r} className="capitalize">{r.charAt(0).toUpperCase() + r.slice(1)}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="px-6 pb-6 flex gap-3">
-            <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition">Cancel</button>
-            <button onClick={() => onSubmit(form)} disabled={pending || !form.username || !form.email || !form.password}
-              className="flex-1 py-2.5 text-sm font-bold text-white rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#1e293b' }}>
-              {pending ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-              Create User
-            </button>
-          </div>
+    <ModalShell
+      open={open}
+      onClose={onClose}
+      title="Create New User"
+      icon={Users}
+      accent="slate"
+      size="md"
+      footer={
+        <div className="flex gap-3">
+          <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition">Cancel</button>
+          <button onClick={() => onSubmit(form)} disabled={pending || !form.username || !form.email || !form.password}
+            className="flex-1 py-2.5 text-sm font-bold text-white rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-2"
+            style={{ backgroundColor: '#1e293b' }}>
+            {pending ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+            Create User
+          </button>
         </div>
-      </motion.div>
-    </>
+      }
+    >
+      <div className="space-y-4">
+        {[
+          { label: 'Full Name', key: 'full_name', type: 'text', ph: 'Dr. Kofi Mensah' },
+          { label: 'Username', key: 'username', type: 'text', ph: 'kmensah' },
+          { label: 'Email', key: 'email', type: 'email', ph: 'k.mensah@hospital.gh' },
+          { label: 'Password', key: 'password', type: 'password', ph: 'Min 8 characters' },
+        ].map(({ label, key, type, ph }) => (
+          <div key={key}>
+            <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">{label}</label>
+            <input type={type} value={form[key]} onChange={f(key)} placeholder={ph}
+              className="w-full px-3 py-2.5 border-2 border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition" />
+          </div>
+        ))}
+        <div>
+          <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">Role</label>
+          <select value={form.role} onChange={f('role')}
+            className="w-full px-3 py-2.5 border-2 border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 rounded-xl text-sm focus:border-teal-500 outline-none">
+            {['admin','clinician','caregiver','patient','family'].map(r => (
+              <option key={r} value={r} className="capitalize">{r.charAt(0).toUpperCase() + r.slice(1)}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </ModalShell>
   );
 }
 
@@ -99,6 +92,8 @@ export default function AdminUserManagement() {
       const r = await axios.get(`${API_URL}/api/admin/users?${params}`, { headers });
       return r.data;
     },
+    staleTime: 0,
+    refetchOnMount: true,
   });
 
   const users = usersData?.users || [];
@@ -181,36 +176,36 @@ export default function AdminUserManagement() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-50 border-b border-slate-200">
+                <thead className="bg-slate-50 border-b-2 border-slate-200">
                   <tr>
                     {['User','Role','Care Setting','Status','Last Login','Actions'].map(h => (
-                      <th key={h} className="px-4 py-2.5 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="px-4 py-2.5 text-left text-[11px] font-bold text-slate-600 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                   {users.map((u) => (
                     <motion.tr key={u.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className="hover:bg-slate-50 transition-colors border-l-4 border-transparent hover:border-l-teal-500">
+                      className="bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-l-4 border-transparent hover:border-l-teal-500">
                       <td className="px-4 py-3">
                         <div>
                           <div className="flex items-center gap-2 mb-0.5">
-                            <p className="text-sm font-semibold text-slate-900">{u.full_name}</p>
+                            <p className="text-sm font-semibold text-slate-900 dark:text-white">{u.full_name}</p>
                             {u.is_professional && <span className="badge-stable">Verified</span>}
                           </div>
-                          <p className="text-sm text-slate-600">{u.email}</p>
-                          <p className="text-xs text-slate-500">@{u.username}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{u.email}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-500">@{u.username}</p>
                         </div>
                       </td>
                       <td className="px-4 py-2.5">
                         <span className={getRoleBadgeColor(u.role)}>{u.role}</span>
                       </td>
-                      <td className="px-4 py-2.5 text-xs text-slate-600">
+                      <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400">
                         {u.care_setting
                           ? <span className="chip-teal">
                               {({ hospital_based:'Hospital', hospice:'Hospice', home_based:'Home', outpatient_clinic:'Clinic', long_term_residential:'Residential' })[u.care_setting] || u.care_setting}
                             </span>
-                          : <span className="text-slate-400">—</span>
+                          : <span className="text-slate-400 dark:text-slate-600">—</span>
                         }
                       </td>
                       <td className="px-4 py-2.5">
@@ -219,19 +214,19 @@ export default function AdminUserManagement() {
                           : <span className="badge-critical flex items-center gap-1 w-fit"><AlertCircle size={12} /> Inactive</span>
                         }
                       </td>
-                      <td className="px-4 py-2.5 text-xs text-slate-600">
+                      <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400">
                         {u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never'}
                       </td>
                       <td className="px-4 py-2.5">
                         <div className="flex items-center gap-1.5">
                           <button onClick={() => toggleMutation.mutate(u.id)} disabled={toggleMutation.isPending}
                             title={u.is_active ? 'Deactivate' : 'Activate'}
-                            className={`p-1.5 rounded-lg transition ${u.is_active ? 'hover:bg-red-50 text-red-500' : 'hover:bg-green-50 text-green-600'}`}>
+                            className={`p-1.5 rounded-lg transition ${u.is_active ? 'hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500' : 'hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600'}`}>
                             {u.is_active ? <UserX size={15} /> : <UserCheck size={15} />}
                           </button>
                           <button onClick={() => resetPasswordMutation.mutate(u.id)} disabled={resetPasswordMutation.isPending}
                             title="Reset Password"
-                            className="p-1.5 rounded-lg hover:bg-amber-50 text-amber-600 transition">
+                            className="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 text-amber-600 transition">
                             <RefreshCw size={15} />
                           </button>
                         </div>
@@ -248,6 +243,7 @@ export default function AdminUserManagement() {
       <AnimatePresence>
         {showCreateModal && (
           <CreateUserModal
+            open={showCreateModal}
             onClose={() => setShowCreateModal(false)}
             onSubmit={createMutation.mutate}
             pending={createMutation.isPending}

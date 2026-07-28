@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -17,7 +17,7 @@ export default function AssessmentDashboard() {
   const [xaiData, setXaiData] = useState(null);
   const [loadingXai, setLoadingXai] = useState(false);
 
-  // XAI Handler
+  // AI Explain Handler
   const handleGetXaiExplanation = async (assessmentType, totalScore, e) => {
     e.stopPropagation(); // Prevent card click
     setLoadingXai(true);
@@ -234,7 +234,7 @@ export default function AssessmentDashboard() {
         ))}
       </div>
 
-      {/* XAI Modal */}
+      {/* AI Explain Modal */}
       {xaiData && (
         <FocusedAIExplanation
           data={xaiData}

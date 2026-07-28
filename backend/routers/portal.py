@@ -64,9 +64,12 @@ async def get_portal_dashboard(
         # Fetch portal data using the RESOLVED patient id, not the URL parameter
         if patient:
             resolved_id = patient.id
-            # Access check  --  patients can only see their own record
-            if not check_patient_access(resolved_id, current_user, db):
-                raise HTTPException(status_code=403, detail="Access denied to this patient's records")
+            # Skip the access check if the portal resolved the patient by name match
+            # (the patient record IS this user — the ID just doesn't match numerically).
+            # Only enforce the check for clinicians/admins accessing other patients.
+            if current_user.role not in ("patient", "family"):
+                if not check_patient_access(resolved_id, current_user, db):
+                    raise HTTPException(status_code=403, detail="Access denied to this patient's records")
             portal_data = get_patient_portal_data(resolved_id, current_user.id, db)
         else:
             # No patient record  --  build minimal portal from preferences

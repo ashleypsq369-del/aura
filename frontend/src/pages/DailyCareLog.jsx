@@ -8,7 +8,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Check, AlertTriangle, Pill, Heart, Send, Plus } from 'lucide-react';
-import { Toaster } from 'react-hot-toast';
 import toast from '../utils/toast';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -100,7 +99,6 @@ export default function DailyCareLog() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto px-4 py-6 space-y-5">
-      <Toaster position="top-right" />
 
       <div className="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl p-5 shadow-lg border-2 border-green-400">
         <div className="flex items-center gap-3">

@@ -4,15 +4,16 @@ Handles routine notifications (medications, appointments, messages, etc.)
 Different from Alerts (medical emergencies)
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_, desc
 
-from src.db import get_db, User, NotificationQueue
+from src.db import get_db, User, NotificationQueue, PushSubscription
 from routers.auth import get_current_user
+from services.delivery_service import VAPID_PUBLIC_KEY
 
 router = APIRouter(prefix="/api/notifications", tags=["Notifications"])
 
@@ -333,7 +334,18 @@ async def create_notification(
     db.add(notification)
     db.commit()
     db.refresh(notification)
-    
+
+    # Push real-time via WebSocket
+    try:
+        from routers.websocket import manager as ws_manager
+        import asyncio
+        asyncio.create_task(ws_manager.send_to_user(
+            data.user_id, "new_notification",
+            {"id": notification.id, "type": data.notification_type, "title": data.title, "message": data.message}
+        ))
+    except Exception:
+        pass
+
     return {
         "message": "Notification created",
         "notification_id": notification.id
@@ -392,4 +404,101 @@ async def create_test_notification(
         "notification_id": notification.id,
         "title": notification.title,
         "body": notification.body
+    }
+
+
+# ============================================================================
+# WEB PUSH SUBSCRIPTION ENDPOINTS
+# ============================================================================
+
+class PushSubscribeRequest(BaseModel):
+    endpoint: str
+    p256dh: str
+    auth: str
+    user_agent: Optional[str] = None
+
+
+@router.get("/vapid-public-key")
+async def get_vapid_public_key():
+    """Return VAPID public key for browser subscription."""
+    return {"public_key": VAPID_PUBLIC_KEY or ""}
+
+
+@router.post("/push-subscribe")
+async def subscribe_push(
+    data: PushSubscribeRequest,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Register a browser push subscription for this user."""
+    # Upsert — update if endpoint exists, create if not
+    existing = db.query(PushSubscription).filter(
+        PushSubscription.endpoint == data.endpoint
+    ).first()
+
+    if existing:
+        existing.user_id = current_user.id
+        existing.p256dh = data.p256dh
+        existing.auth = data.auth
+        existing.last_used = datetime.utcnow()
+        existing.user_agent = data.user_agent or request.headers.get("user-agent", "")
+    else:
+        sub = PushSubscription(
+            user_id=current_user.id,
+            endpoint=data.endpoint,
+            p256dh=data.p256dh,
+            auth=data.auth,
+            user_agent=data.user_agent or request.headers.get("user-agent", ""),
+        )
+        db.add(sub)
+
+    db.commit()
+    return {"message": "Push subscription saved", "user_id": current_user.id}
+
+
+@router.delete("/push-unsubscribe")
+async def unsubscribe_push(
+    endpoint: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Remove a push subscription."""
+    sub = db.query(PushSubscription).filter(
+        PushSubscription.endpoint == endpoint,
+        PushSubscription.user_id == current_user.id,
+    ).first()
+    if sub:
+        db.delete(sub)
+        db.commit()
+    return {"message": "Unsubscribed"}
+
+
+@router.post("/push-test")
+async def test_push(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Send a test push notification to all user's subscribed devices."""
+    from services.delivery_service import send_web_push
+    subs = db.query(PushSubscription).filter(
+        PushSubscription.user_id == current_user.id
+    ).all()
+    if not subs:
+        raise HTTPException(404, "No push subscriptions found for this user. Enable notifications in your browser first.")
+
+    results = []
+    for s in subs:
+        ok = send_web_push(
+            {"endpoint": s.endpoint, "keys": {"p256dh": s.p256dh, "auth": s.auth}},
+            "ProjectAura — Push Enabled ✓",
+            "You'll now receive real-time alerts on this device.",
+            url="/notifications",
+        )
+        results.append(ok)
+
+    return {
+        "sent": sum(1 for r in results if r),
+        "failed": sum(1 for r in results if not r),
+        "devices": len(subs),
     }

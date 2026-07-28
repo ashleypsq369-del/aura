@@ -14,9 +14,9 @@ export function useTouchSupport() {
   useEffect(() => {
     console.log('🎯 Initializing Touch Support...');
 
-    // Load user preferences - Check both possible localStorage keys
-    const hapticEnabled = localStorage.getItem('touch_haptic_enabled') !== 'false';
-    const soundEnabled = localStorage.getItem('touch_sound_enabled') !== 'false';
+    // Load user preferences — sound is OFF by default, only on if user explicitly enabled it
+    const hapticEnabled = localStorage.getItem('touch_haptic_enabled') === 'true';
+    const soundEnabled  = localStorage.getItem('touch_sound_enabled')  === 'true';
 
     console.log('📳 Haptic feedback:', hapticEnabled ? 'enabled' : 'disabled');
     console.log('🔊 Sound effects:', soundEnabled ? 'enabled' : 'disabled');
@@ -35,9 +35,9 @@ export function useTouchSupport() {
 
         // Add touch feedback on tap/click
         const handleInteraction = () => {
-          // Check preferences - use correct keys
-          const hapticEnabled = localStorage.getItem('touch_haptic_enabled') !== 'false';
-          const soundEnabled = localStorage.getItem('touch_sound_enabled') !== 'false';
+          // Check preferences — sound off by default
+          const hapticEnabled = localStorage.getItem('touch_haptic_enabled') === 'true';
+          const soundEnabled  = localStorage.getItem('touch_sound_enabled')  === 'true';
 
           // Determine feedback type based on element
           if (element.type === 'submit' || element.classList.contains('btn-primary')) {
@@ -106,8 +106,8 @@ export function useTouchSupport() {
 
         // Trigger refresh if pulled far enough
         if (pullDistance > 150 && !e.target.closest('.no-pull-refresh')) {
-          const hapticEnabled = localStorage.getItem('haptic_enabled') !== 'false';
-          const soundEnabled = localStorage.getItem('touch_sound_enabled') !== 'false';
+          const hapticEnabled = localStorage.getItem('touch_haptic_enabled') === 'true';
+          const soundEnabled  = localStorage.getItem('touch_sound_enabled')  === 'true';
           
           if (hapticEnabled) haptic.success();
           if (soundEnabled) playSound.notification();

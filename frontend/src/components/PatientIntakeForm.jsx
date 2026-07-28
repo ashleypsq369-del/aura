@@ -1,7 +1,8 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ChevronLeft, ChevronRight, User, MapPin, Heart, Phone } from 'lucide-react';
+import { User, MapPin, Heart, Phone } from 'lucide-react';
 import { patientValidation } from '../utils/formValidation';
+import { Field, FieldGroup, FieldSection, SelectField, TextareaField, ToggleField, StepWizard } from './ui/ModalContent';
 
 const GHANA_REGIONS = [
   'Greater Accra', 'Ashanti', 'Western', 'Central', 'Eastern', 'Northern',
@@ -47,6 +48,8 @@ export default function PatientIntakeForm({ onSubmit, onCancel, isSubmitting }) 
     register,
     handleSubmit,
     trigger,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({ mode: 'onChange', defaultValues });
 
@@ -62,197 +65,112 @@ export default function PatientIntakeForm({ onSubmit, onCancel, isSubmitting }) 
     if (valid) setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
 
-  const inputClass = (field) =>
-    `w-full px-3 py-2 border rounded-lg focus:ring-2 focus:outline-none ${
-      errors[field] ? 'border-red-500 focus:ring-crisis/20' : 'border-gray-200 focus:ring-forest/20'
-    }`;
+  // Helper: register + error binding for Field component
+  const rf = (name, rules) => ({
+    error: errors[name]?.message,
+    ...register(name, rules),
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        {STEPS.map((s, i) => {
-          const Icon = s.icon;
-          return (
-            <div
-              key={s.id}
-              className={`flex-1 text-center p-2 rounded-lg text-xs font-semibold ${
-                i === step ? 'bg-teal-800 text-white' : i < step ? 'bg-teal-800/10 text-teal-800' : 'bg-gray-100 text-gray-500'
-              }`}
-            >
-              <Icon className="w-4 h-4 mx-auto mb-1" />
-              {s.title}
-            </div>
-          );
-        })}
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
+      {/* Step progress */}
+      <StepWizard steps={STEPS} current={step} />
+
+      {/* ── Step 0: Patient Identity ── */}
       {step === 0 && (
-        <div className="space-y-4">
-          <h3 className="font-serif text-lg text-teal-800">Basic Information</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1">Patient Code *</label>
-              <input type="text" {...register('patient_code', patientValidation.patient_code)} placeholder="PAT001" className={inputClass('patient_code')} />
-              {errors.patient_code && <p className="text-red-600 text-sm mt-1">{errors.patient_code.message}</p>}
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1">Full Name *</label>
-              <input type="text" {...register('full_name', patientValidation.full_name)} className={inputClass('full_name')} />
-              {errors.full_name && <p className="text-red-600 text-sm mt-1">{errors.full_name.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Date of Birth *</label>
-              <input type="date" {...register('date_of_birth', patientValidation.date_of_birth)} className={inputClass('date_of_birth')} />
-              {errors.date_of_birth && <p className="text-red-600 text-sm mt-1">{errors.date_of_birth.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Gender *</label>
-              <select {...register('gender', patientValidation.gender)} className={inputClass('gender')}>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-              {errors.gender && <p className="text-red-600 text-sm mt-1">{errors.gender.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Ghana Card</label>
-              <input type="text" {...register('ghana_card_number')} placeholder="GHA-123456789-0" className={inputClass('ghana_card_number')} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">NHIS Number</label>
-              <input type="text" {...register('nhis_number')} placeholder="8 digits" className={inputClass('nhis_number')} />
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1">Phone</label>
-              <input type="tel" {...register('phone')} placeholder="+233..." className={inputClass('phone')} />
-            </div>
-          </div>
-        </div>
+        <FieldSection title="Basic Information" icon={User} accent="teal">
+          <Field label="Patient Code" name="patient_code" required placeholder="PAT001" {...rf('patient_code', patientValidation.patient_code)} />
+          <Field label="Full Name" name="full_name" required {...rf('full_name', patientValidation.full_name)} />
+          <FieldGroup>
+            <Field label="Date of Birth" name="date_of_birth" type="date" required {...rf('date_of_birth', patientValidation.date_of_birth)} />
+            <SelectField label="Gender" name="gender" required
+              options={[{value:'male',label:'Male'},{value:'female',label:'Female'},{value:'other',label:'Other'}]}
+              {...rf('gender', patientValidation.gender)} />
+          </FieldGroup>
+          <FieldGroup>
+            <Field label="Ghana Card" name="ghana_card_number" placeholder="GHA-123456789-0" {...rf('ghana_card_number')} />
+            <Field label="NHIS Number" name="nhis_number" placeholder="8 digits" {...rf('nhis_number')} />
+          </FieldGroup>
+          <Field label="Phone" name="phone" type="tel" placeholder="+233..." {...rf('phone')} />
+        </FieldSection>
       )}
 
+      {/* ── Step 1: Location & Facility ── */}
       {step === 1 && (
-        <div className="space-y-4">
-          <h3 className="font-serif text-lg text-teal-800">Location & Facility</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Region *</label>
-              <select {...register('region', { required: 'Region is required' })} className={inputClass('region')}>
-                {GHANA_REGIONS.map((r) => <option key={r} value={r}>{r}</option>)}
-              </select>
-              {errors.region && <p className="text-red-600 text-sm mt-1">{errors.region.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">District *</label>
-              <input type="text" {...register('district', { required: 'District is required' })} className={inputClass('district')} />
-              {errors.district && <p className="text-red-600 text-sm mt-1">{errors.district.message}</p>}
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1">Facility Name *</label>
-              <input type="text" {...register('facility_name', { required: 'Facility is required' })} className={inputClass('facility_name')} />
-              {errors.facility_name && <p className="text-red-600 text-sm mt-1">{errors.facility_name.message}</p>}
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium mb-1">Home Address</label>
-              <textarea {...register('address')} rows={2} className={inputClass('address')} />
-            </div>
-          </div>
-        </div>
+        <FieldSection title="Location & Facility" icon={MapPin} accent="blue">
+          <FieldGroup>
+            <SelectField label="Region" name="region" required
+              options={GHANA_REGIONS}
+              {...rf('region', { required: 'Region is required' })} />
+            <Field label="District" name="district" required {...rf('district', { required: 'District is required' })} />
+          </FieldGroup>
+          <Field label="Facility Name" name="facility_name" required {...rf('facility_name', { required: 'Facility is required' })} />
+          <TextareaField label="Home Address" name="address" rows={2} {...rf('address')} />
+        </FieldSection>
       )}
 
+      {/* ── Step 2: Clinical Profile ── */}
       {step === 2 && (
-        <div className="space-y-4">
-          <h3 className="font-serif text-lg text-teal-800">Clinical Profile</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Primary Diagnosis *</label>
-              <input type="text" {...register('primary_diagnosis', patientValidation.primary_diagnosis)} className={inputClass('primary_diagnosis')} />
-              {errors.primary_diagnosis && <p className="text-red-600 text-sm mt-1">{errors.primary_diagnosis.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Secondary Diagnoses</label>
-              <input type="text" {...register('secondary_diagnoses')} className={inputClass('secondary_diagnoses')} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Admission Date</label>
-                <input type="date" {...register('admission_date')} className={inputClass('admission_date')} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Care Pathway</label>
-                <select {...register('care_pathway')} className={inputClass('care_pathway')}>
-                  <option value="standard">Standard Palliative</option>
-                  <option value="oncology">Oncology</option>
-                  <option value="dementia">Dementia</option>
-                  <option value="pediatric">Pediatric</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Preferred Language</label>
-                <select {...register('preferred_language')} className={inputClass('preferred_language')}>
-                  <option value="en">English</option>
-                  <option value="twi">Twi</option>
-                  <option value="ga">Ga</option>
-                  <option value="ewe">Ewe</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Religious Preference</label>
-                <input type="text" {...register('religious_preference')} className={inputClass('religious_preference')} />
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" {...register('advance_directive')} className="rounded" />
-                Advance directive on file
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" {...register('dnr_status')} className="rounded" />
-                DNR status
-              </label>
-            </div>
+        <FieldSection title="Clinical Profile" icon={Heart} accent="red">
+          <Field label="Primary Diagnosis" name="primary_diagnosis" required {...rf('primary_diagnosis', patientValidation.primary_diagnosis)} />
+          <Field label="Secondary Diagnoses" name="secondary_diagnoses" helperText="Comma-separated if multiple" {...rf('secondary_diagnoses')} />
+          <FieldGroup>
+            <Field label="Admission Date" name="admission_date" type="date" {...rf('admission_date')} />
+            <SelectField label="Care Pathway" name="care_pathway"
+              options={[{value:'standard',label:'Standard Palliative'},{value:'oncology',label:'Oncology'},{value:'dementia',label:'Dementia'},{value:'pediatric',label:'Pediatric'}]}
+              {...rf('care_pathway')} />
+          </FieldGroup>
+          <FieldGroup>
+            <SelectField label="Preferred Language" name="preferred_language"
+              options={[{value:'en',label:'English'},{value:'twi',label:'Twi'},{value:'ga',label:'Ga'},{value:'ewe',label:'Ewe'}]}
+              {...rf('preferred_language')} />
+            <Field label="Religious Preference" name="religious_preference" placeholder="e.g. Christian" {...rf('religious_preference')} />
+          </FieldGroup>
+          <div className="space-y-2 pt-1">
+            <ToggleField label="Advance directive on file" name="advance_directive"
+              checked={!!watch('advance_directive')}
+              onChange={(e) => setValue('advance_directive', e.target.checked)} />
+            <ToggleField label="DNR (Do Not Resuscitate) status" name="dnr_status"
+              checked={!!watch('dnr_status')}
+              onChange={(e) => setValue('dnr_status', e.target.checked)} />
           </div>
-        </div>
+        </FieldSection>
       )}
 
+      {/* ── Step 3: Emergency Contact ── */}
       {step === 3 && (
-        <div className="space-y-4">
-          <h3 className="font-serif text-lg text-teal-800">Emergency Contact</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Contact Name *</label>
-              <input type="text" {...register('emergency_contact_name', { required: 'Required' })} className={inputClass('emergency_contact_name')} />
-              {errors.emergency_contact_name && <p className="text-red-600 text-sm mt-1">{errors.emergency_contact_name.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Relationship *</label>
-              <input type="text" {...register('emergency_contact_relationship', { required: 'Required' })} placeholder="Spouse, Son, Daughter..." className={inputClass('emergency_contact_relationship')} />
-              {errors.emergency_contact_relationship && <p className="text-red-600 text-sm mt-1">{errors.emergency_contact_relationship.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Contact Phone *</label>
-              <input type="tel" {...register('emergency_contact_phone', { required: 'Required' })} className={inputClass('emergency_contact_phone')} />
-              {errors.emergency_contact_phone && <p className="text-red-600 text-sm mt-1">{errors.emergency_contact_phone.message}</p>}
-            </div>
-          </div>
-        </div>
+        <FieldSection title="Emergency Contact" icon={Phone} accent="amber">
+          <Field label="Contact Name" name="emergency_contact_name" required {...rf('emergency_contact_name', { required: 'Required' })} />
+          <Field label="Relationship" name="emergency_contact_relationship" required placeholder="Spouse, Son, Daughter..."
+            {...rf('emergency_contact_relationship', { required: 'Required' })} />
+          <Field label="Contact Phone" name="emergency_contact_phone" type="tel" required
+            {...rf('emergency_contact_phone', { required: 'Required' })} />
+        </FieldSection>
       )}
 
-      <div className="flex gap-3 pt-2">
-        <button type="button" onClick={onCancel} className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50">
+      {/* Navigation buttons */}
+      <div className="flex gap-3 pt-2 border-t border-slate-100">
+        <button type="button" onClick={onCancel}
+          className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
           Cancel
         </button>
         {step > 0 && (
-          <button type="button" onClick={() => setStep((s) => s - 1)} className="px-4 py-2 border rounded-lg flex items-center gap-1">
-            <ChevronLeft size={16} /> Back
+          <button type="button" onClick={() => setStep((s) => s - 1)}
+            className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1">
+            ← Back
           </button>
         )}
+        <div className="flex-1" />
         {step < STEPS.length - 1 ? (
-          <button type="button" onClick={nextStep} className="flex-1 px-4 py-2 bg-teal-800 text-white rounded-lg flex items-center justify-center gap-1">
-            Next <ChevronRight size={16} />
+          <button type="button" onClick={nextStep}
+            className="px-6 py-2.5 bg-teal-700 text-white rounded-xl text-sm font-bold hover:bg-teal-800 transition-colors flex items-center gap-1 shadow-sm">
+            Next →
           </button>
         ) : (
-          <button type="submit" disabled={isSubmitting} className="flex-1 px-4 py-2 bg-teal-800 text-white rounded-lg disabled:opacity-50">
-            {isSubmitting ? 'Creating...' : 'Create Patient'}
+          <button type="submit" disabled={isSubmitting}
+            className="px-6 py-2.5 bg-teal-700 text-white rounded-xl text-sm font-bold hover:bg-teal-800 disabled:opacity-50 transition-colors shadow-sm">
+            {isSubmitting ? 'Creating…' : 'Create Patient'}
           </button>
         )}
       </div>

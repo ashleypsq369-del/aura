@@ -38,29 +38,28 @@ class AppointmentResponse(BaseModel):
 
 @router.get("/{patient_id}", response_model=List[AppointmentResponse])
 async def get_appointments(patient_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from services.access_control import assert_patient_access
+    assert_patient_access(patient_id, current_user, db)
     return db.query(Appointment).filter(Appointment.patient_id == patient_id).order_by(Appointment.scheduled_at).all()
 
 @router.post("", response_model=AppointmentResponse)
 async def create_appointment(data: AppointmentCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from services.access_control import assert_patient_access
+    from fastapi import HTTPException
+    assert_patient_access(data.patient_id, current_user, db)
+    if current_user.role not in ("admin", "clinician"):
+        raise HTTPException(status_code=403, detail="Only clinicians and admins can create appointments")
     appt = Appointment(**data.dict(), clinician_id=current_user.id, created_by=current_user.id)
     db.add(appt)
     db.commit()
     db.refresh(appt)
-    
-    # Track as journey event
-    track_appointment(
-        db=db,
-        patient_id=data.patient_id,
-        appointment_type=data.appointment_type,
-        appointment_date=data.scheduled_at,
-        location=data.location,
-        created_by=current_user.id
-    )
-    
+    track_appointment(db=db, patient_id=data.patient_id, appointment_type=data.appointment_type, appointment_date=data.scheduled_at, location=data.location, created_by=current_user.id)
     return appt
+
 
 class AppointmentUpdate(BaseModel):
     status: str
+
 
 @router.put("/{appointment_id}")
 async def update_appointment_status(
@@ -71,9 +70,13 @@ async def update_appointment_status(
 ):
     """Update appointment status (complete / cancel)."""
     from fastapi import HTTPException
+    from services.access_control import assert_patient_access
+    if current_user.role not in ("admin", "clinician"):
+        raise HTTPException(status_code=403, detail="Only clinicians and admins can update appointments")
     appt = db.query(Appointment).filter(Appointment.id == appointment_id).first()
     if not appt:
         raise HTTPException(status_code=404, detail="Appointment not found")
+    assert_patient_access(appt.patient_id, current_user, db)
     appt.status = data.status
     db.commit()
     db.refresh(appt)

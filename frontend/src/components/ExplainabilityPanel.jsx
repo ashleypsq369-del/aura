@@ -9,8 +9,8 @@ import SHAPWaterfallChart from './SHAPWaterfallChart';
 
 /**
  * Explainability Panel Component
- * Comprehensive XAI interface combining risk gauge, SHAP visualization, and clinician feedback
- * Gap Analysis Priority 1: XAI/SHAP Integration
+ * Comprehensive AI Explain interface combining risk gauge, SHAP visualization, and clinician feedback
+ * Gap Analysis Priority 1: AI Explain/SHAP Integration
  */
 export default function ExplainabilityPanel({ 
   patientId,

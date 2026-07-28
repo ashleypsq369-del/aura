@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Shield, Search, Activity, User, Eye, Edit2, Trash2, LogIn, LogOut } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 const ACTION_CONFIG = {
   CREATE:  { cls: 'badge-low',      Icon: Activity,  label: 'Create'  },
@@ -31,8 +31,8 @@ export default function AuditLog() {
     queryKey: ['audit-logs', actionFilter],
     queryFn: async () => {
       const params = new URLSearchParams({ limit: 200 });
-      if (actionFilter !== 'all') params.append('action_type', actionFilter);
-      const r = await axios.get(`${API_URL}/api/admin/audit-logs?${params}`, { headers });
+      if (actionFilter !== 'all') params.append('action', actionFilter);
+      const r = await axios.get(`${API_URL}/api/admin/audit-log?${params}`, { headers });
       return r.data;
     },
     retry: 1,
@@ -103,13 +103,13 @@ export default function AuditLog() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-50 border-b-2 border-slate-200">
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
                     {['Timestamp','User','Action','Resource','IP Address','Details'].map(h => (
-                      <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                      <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                   {filtered.map((log, i) => {
                     const cfg = getActionCfg(log.action_type || log.action);
                     const CfgIcon = cfg.Icon;

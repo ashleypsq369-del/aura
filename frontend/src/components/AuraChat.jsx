@@ -1,19 +1,20 @@
 /**
- * AuraChat.jsx - Aura AI Companion
- * ==================================
- * - Persistent chat history (session list + restore)
- * - Medical flag detection †' care team alert badge in UI
- * - Ethical guardrails enforced in system prompt + UI
- * - SSE streaming via /api/llm-chatbot/stream
+ * AuraChat.jsx — Aura Companion v5
+ * Emotional/care support for patients, family, caregivers.
+ * NO navigation tiles — sidebar handles navigation.
+ * Purpose: symptom support, medication Q&A, emotional support, crisis detection.
  */
-
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
-  X, Send, Loader2, ExternalLink, Brain,
-  AlertTriangle, Sparkles, Zap, WifiOff, CheckCheck,
-  History, ChevronLeft, Trash2, MessageSquare, ShieldAlert,
-  Plus,
+  X, Send, Loader2, Brain, AlertTriangle, Sparkles, Zap, WifiOff,
+  CheckCheck, History, ChevronLeft, Trash2, MessageSquare, ShieldAlert,
+  Plus, ChevronDown, MessageCircle, Copy, Check, ThumbsUp, ThumbsDown,
+  RotateCcw, Heart,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -23,768 +24,475 @@ import { chatbotConsentAPI, crisisAPI } from '../api/client';
 import useAppStore from '../store/useAppStore';
 import AuraMascot from './AuraMascot';
 import usePersonalisation from '../hooks/usePersonalisation';
+import { API_URL } from '../api/client';
+import HintTooltip from './HintTooltip';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const MAX_CHARS = 2000;
+const CRISIS_PHRASES = ['kill myself','end my life','want to die','better off dead','suicide','suicidal','self harm','hurt myself','end it all','no reason to live',"can't go on","don't want to live"];
+const isCrisis = t => CRISIS_PHRASES.some(p => t.toLowerCase().includes(p));
 
-// € Crisis keyword detection (client-side fast-path) €€€€€€€€€€€€€€€€€€€€€
-const CRISIS_PHRASES = [
-  'kill myself', 'end my life', 'want to die', 'better off dead',
-  'suicide', 'suicidal', 'self harm', 'hurt myself', 'end it all',
-  'no reason to live', "can't go on", "don't want to live",
-];
-const isCrisis = (text) => {
-  const t = text.toLowerCase();
-  return CRISIS_PHRASES.some(p => t.includes(p));
-};
-
-// € Quick prompts per role €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
 const QUICK_PROMPTS = {
-  clinician: ['Show critical patients', 'AI Insights summary', 'Active alerts today', 'Latest vitals overview'],
-  patient:   ["I'm feeling pain", 'Side effects of my meds', 'I feel anxious', 'What is my care setting?'],
-  family:    ['How can I support my loved one?', 'What is palliative care?', 'What care is my loved one receiving?', 'Memory Vault guide'],
-  caregiver: ['Patient needs attention', 'How to record symptoms', 'What does home-based care involve?', 'Caregiver burnout help'],
-  admin:     ['System overview', 'User management', 'Care settings distribution', 'Compliance status'],
+  clinician: ['Summarise my patient load','Any urgent clinical concerns?','What medications need review?','Draft a handover note'],
+  patient:   ["I'm in pain right now","I'm feeling anxious or scared",'Tell me about my medications','I need emotional support'],
+  family:    ['How can I help my loved one today?','What is palliative care?','How do I cope with grief?','What support is available?'],
+  caregiver: ['My patient seems worse today','How do I manage a patient in pain?','I feel burnt out','What should I document?'],
+  admin:     ['Any system issues to know about?','Summarise user activity','Are there compliance gaps?','What needs attention today?'],
 };
 
-// € Render markdown-style content €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
-function MessageContent({ content, streaming = false }) {
-  if (!content && !streaming) return null;
+const FEEL_SCALE = [
+  { emoji: '😢', label: 'Struggling', msg: "I'm feeling 😢 today — I'm struggling and need support" },
+  { emoji: '😐', label: 'Okay',       msg: "I'm feeling 😐 today — just getting by" },
+  { emoji: '🙂', label: 'Alright',    msg: "I'm feeling 🙂 today — alright" },
+  { emoji: '😊', label: 'Good',       msg: "I'm feeling 😊 today — pretty good!" },
+];
+
+const C = {
+  bg:'#ffffff', bgAlt:'#f1f5f9', surface:'#e2e8f0', border:'#cbd5e1',
+  accent:'#0d9488', accentLight:'#ccfbf1', accentGlow:'rgba(13,148,136,0.2)',
+  userBubble:'linear-gradient(135deg,#0d9488,#0369a1)', userShadow:'0 4px 16px rgba(13,148,136,0.3)',
+  aiBubble:'#ffffff', aiBorder:'1px solid #cbd5e1', aiShadow:'0 2px 8px rgba(0,0,0,0.10)',
+  text:'#0f172a', textMuted:'#475569', textFaint:'#64748b',
+};
+
+function CharRing({ len, max }) {
+  const pct = len / max;
+  const r = 10, circ = 2 * Math.PI * r;
+  const color = pct > 0.9 ? '#ef4444' : pct > 0.7 ? '#f59e0b' : C.accent;
+  if (len === 0) return null;
   return (
-    <div className="space-y-0.5">
-      {(content || '').split('\n').map((line, i) => {
-        if (line.trim() === '') return <div key={i} className="h-1.5" />;
-        const parts = line.split(/(\*\*[^*]+\*\*)/).map((p, j) =>
-          p.startsWith('**') && p.endsWith('**')
-            ? <strong key={j} className="font-semibold">{p.slice(2, -2)}</strong>
-            : <span key={j}>{p}</span>
-        );
-        if (line.trim().startsWith('-')) {
-          return <div key={i} className="flex items-start gap-2"><span className="text-teal-400 font-bold flex-shrink-0 mt-0.5">-</span><span>{parts}</span></div>;
-        }
-        return <div key={i}>{parts}</div>;
-      })}
-      {streaming && (
-        <span className="inline-block w-2 h-4 bg-teal-500 rounded-sm ml-0.5 animate-pulse align-middle" />
-      )}
+    <svg width={24} height={24} className="flex-shrink-0 -rotate-90">
+      <circle cx={12} cy={12} r={r} fill="none" stroke="#e5e7eb" strokeWidth={2}/>
+      <circle cx={12} cy={12} r={r} fill="none" stroke={color} strokeWidth={2}
+        strokeDasharray={circ} strokeDashoffset={circ*(1-pct)} strokeLinecap="round"
+        style={{transition:'stroke-dashoffset 0.2s,stroke 0.2s'}}/>
+    </svg>
+  );
+}
+
+function CopyBtn({ text }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button onClick={() => { navigator.clipboard.writeText(text).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),1800);}); }}
+      className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium transition-all"
+      style={{ background: copied?'#d1fae5':'#f3f4f6', color: copied?'#059669':'#9ca3af', border:'1px solid #e5e7eb' }}>
+      {copied?<Check size={10}/>:<Copy size={10}/>}{copied?'Copied':'Copy'}
+    </button>
+  );
+}
+
+function Feedback() {
+  const [vote, setVote] = useState(null);
+  return (
+    <div className="flex items-center gap-1">
+      <button onClick={()=>setVote(v=>v==='up'?null:'up')} className="p-1 rounded-lg transition-all"
+        style={{ background:vote==='up'?'#d1fae5':'#f3f4f6', color:vote==='up'?'#059669':'#d1d5db' }}><ThumbsUp size={11}/></button>
+      <button onClick={()=>setVote(v=>v==='down'?null:'down')} className="p-1 rounded-lg transition-all"
+        style={{ background:vote==='down'?'#fee2e2':'#f3f4f6', color:vote==='down'?'#dc2626':'#d1d5db' }}><ThumbsDown size={11}/></button>
     </div>
   );
 }
 
-// € LLM status badge €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
 function LLMBadge({ provider, offline }) {
-  if (offline) return (
-    <span className="flex items-center gap-1 text-[10px] text-amber-300 font-medium">
-      <WifiOff size={9} />Offline mode
-    </span>
-  );
-  if (provider === 'openrouter') return (
-    <span className="flex items-center gap-1 text-[10px] text-teal-100 font-medium">
-      <Zap size={9} className="text-green-300" />Nex N2 Pro
-    </span>
-  );
-  if (provider === 'gemini') return (
-    <span className="flex items-center gap-1 text-[10px] text-teal-100 font-medium">
-      <Zap size={9} className="text-yellow-300" />Gemini 2.0 Flash
-    </span>
-  );
-  if (provider === 'groq') return (
-    <span className="flex items-center gap-1 text-[10px] text-teal-100 font-medium">
-      <Zap size={9} className="text-purple-300" />Groq Llama 3
-    </span>
-  );
-  return (
-    <span className="flex items-center gap-1 text-[10px] text-teal-100 font-medium">
-      <Brain size={9} />AI Companion
-    </span>
-  );
+  if (offline) return <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600"><WifiOff size={9}/>Offline</span>;
+  const map = { openrouter:'Nemotron 550B', gemini:'Gemini 2.0', groq:'Groq Llama' };
+  return <span className="flex items-center gap-1 text-[10px] font-semibold" style={{color:C.accent}}><Zap size={9}/>{map[provider]||'AI'}</span>;
 }
 
-// € Flag alert banner €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
-function FlagBanner({ flags }) {
-  if (!flags || flags.length === 0) return null;
-  const isCritical = flags.some(f => f.severity === 'critical');
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`mx-4 mt-2 mb-1 px-3 py-2 rounded-xl flex items-start gap-2 text-xs font-medium ${
-        isCritical
-          ? 'bg-red-50 border border-red-300 text-red-800'
-          : 'bg-amber-50 border border-amber-300 text-amber-800'
-      }`}
-    >
-      <ShieldAlert size={13} className="flex-shrink-0 mt-0.5" />
-      <span>
-        {isCritical
-          ? 'Your care team has been notified immediately. Help is on the way.'
-          : 'Your care team has been notified about what you shared.'}
-      </span>
-    </motion.div>
+function MsgContent({ content, streaming=false, isUser=false }) {
+  if (!content && !streaming) return null;
+  if (isUser) return (
+    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words" style={{color:'rgba(255,255,255,0.95)'}}>
+      {content}{streaming&&<span className="inline-block w-2 h-4 bg-white/60 rounded-sm ml-0.5 animate-pulse align-middle"/>}
+    </p>
   );
-}
-
-// € History list panel €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
-function HistoryPanel({ conversations, onSelect, onDelete, onNewChat, loading }) {
   return (
-    <div className="flex flex-col h-full">
-      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-        <h4 className="font-semibold text-slate-700 text-sm">Chat History</h4>
-        <button
-          onClick={onNewChat}
-          data-tip="Start a new conversation"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 text-white text-xs font-semibold rounded-lg transition"
-        >
-          <Plus size={13} />New Chat
-        </button>
-      </div>
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        {loading && (
-          <div className="flex justify-center py-8">
-            <Loader2 size={20} className="animate-spin text-teal-400" />
-          </div>
-        )}
-        {!loading && conversations.length === 0 && (
-          <div className="text-center py-10 text-slate-400">
-            <MessageSquare size={28} className="mx-auto mb-2 opacity-40" />
-            <p className="text-sm">No previous chats yet.</p>
-          </div>
-        )}
-        {!loading && conversations.map(conv => (
-          <div
-            key={conv.id}
-            className="group relative bg-white border border-slate-200 hover:border-teal-300 rounded-xl p-3 cursor-pointer transition"
-            onClick={() => onSelect(conv.id)}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-slate-700 truncate leading-snug">
-                  {conv.has_crisis && <span className="text-red-500 mr-1 font-bold">[Crisis]</span>}
-                  {conv.title}
-                </p>
-                <p className="text-[11px] text-slate-400 truncate mt-0.5">{conv.last_message}</p>
-                <p className="text-[10px] text-slate-300 mt-1">
-                  {conv.message_count} messages · {new Date(conv.updated_at || conv.created_at).toLocaleDateString()}
-                </p>
-              </div>
-              <button
-                onClick={e => { e.stopPropagation(); onDelete(conv.id); }}
-                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 text-slate-300 hover:text-red-400 rounded-lg transition flex-shrink-0"
-                aria-label="Delete"
-                data-tip="Delete this conversation"
-              >
-                <Trash2 size={13} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-teal-700 dark:prose-headings:text-teal-400 prose-strong:text-slate-900 dark:prose-strong:text-white prose-code:text-teal-700 dark:prose-code:text-teal-400 prose-code:bg-teal-50 dark:prose-code:bg-teal-900/30 prose-code:px-1 prose-code:rounded text-slate-700 dark:text-slate-200">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+        code({node,inline,className,children,...props}){
+          const m=/language-(\w+)/.exec(className||'');
+          return !inline&&m?<SyntaxHighlighter style={oneDark} language={m[1]} PreTag="div" className="!rounded-xl !text-xs !my-2" {...props}>{String(children).replace(/\n$/,'')}</SyntaxHighlighter>:<code className="text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 px-1.5 py-0.5 rounded text-xs" {...props}>{children}</code>;
+        },
+        ul:({children})=><ul className="list-none space-y-1 my-2">{children}</ul>,
+        li:({children})=><li className="flex items-start gap-2 text-slate-700 dark:text-slate-200"><span className="text-teal-500 font-bold flex-shrink-0 text-xs mt-0.5">▸</span><span>{children}</span></li>,
+        a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-600 dark:text-teal-400 underline">{children}</a>,
+        p:({children})=><p className="my-1.5 text-slate-700 dark:text-slate-200">{children}</p>,
+      }}>{content||''}</ReactMarkdown>
+      {streaming&&<span className="inline-block w-2 h-4 rounded-sm ml-0.5 animate-pulse align-middle" style={{background:C.accent}}/>}
     </div>
   );
 }
-
-// € Main component €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
 
 export default function AuraChat() {
-  const [isOpen, setIsOpen]           = useState(false);
-  const [view, setView]               = useState('chat');   // 'chat' | 'history'
-  const [messages, setMessages]       = useState([]);
-  const [input, setInput]             = useState('');
-  const [loading, setLoading]         = useState(false);
-  const [sessionId, setSessionId]     = useState(null);
-  const [thinking, setThinking]       = useState(false);
-  const [thinkingText, setThinkingText] = useState('');
-  const [provider, setProvider]       = useState(null);
-  const [activeFlags, setActiveFlags] = useState([]);
-  const [conversations, setConversations] = useState([]);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [showConsentModal, setShowConsentModal]   = useState(false);
-  const [hasConsent, setHasConsent]               = useState(false);
-  const [showCrisisOverlay, setShowCrisisOverlay] = useState(false);
-  const abortRef = useRef(null);
+  const [isOpen,setIsOpen]=useState(false);
+  const [view,setView]=useState('chat');
+  const [messages,setMessages]=useState([]);
+  const [input,setInput]=useState('');
+  const [loading,setLoading]=useState(false);
+  const [sessionId,setSessionId]=useState(null);
+  const [thinking,setThinking]=useState(false);
+  const [thinkingText,setThinkingText]=useState('');
+  const [provider,setProvider]=useState(null);
+  const [activeFlags,setActiveFlags]=useState([]);
+  const [conversations,setConversations]=useState([]);
+  const [histLoading,setHistLoading]=useState(false);
+  const [showConsent,setShowConsent]=useState(false);
+  const [hasConsent,setHasConsent]=useState(false);
+  const [showCrisis,setShowCrisis]=useState(false);
+  const [atBottom,setAtBottom]=useState(true);
 
-  // Draggable button
-  const [btnPos, setBtnPos]   = useState({ x: window.innerWidth - 80, y: window.innerHeight - 80 });
-  const [dragging, setDragging] = useState(false);
-  const dragRef = useRef({ startX: 0, startY: 0, origX: 0, origY: 0, moved: false });
+  const abortRef=useRef(null);
+  const msgEndRef=useRef(null);
+  const scrollRef=useRef(null);
+  const inputRef=useRef(null);
+  const taRef=useRef(null);
+  const hasWelcomed=useRef(false);
 
-  const messagesEndRef = useRef(null);
-  const inputRef       = useRef(null);
-  const { user }       = useAuth();
-  const { signals }    = usePersonalisation();
-  const navigate       = useNavigate();
-  const hasWelcomed    = useRef(false);
-  const pushCrisis     = useAppStore(s => s.pushCrisis);
-  const token = () => localStorage.getItem('auth_token');
+  const {user}=useAuth();
+  const {signals}=usePersonalisation();
+  const navigate=useNavigate();
+  const pushCrisis=useAppStore(s=>s.pushCrisis);
+  const tok=()=>localStorage.getItem('auth_token');
+  const isPatient=['patient','family'].includes(user?.role);
 
-  // Open via sidebar
-  useEffect(() => {
-    const handler = () => setIsOpen(true);
-    window.addEventListener('aura:open', handler);
-    return () => window.removeEventListener('aura:open', handler);
-  }, []);
+  useEffect(()=>{const h=()=>setIsOpen(true);window.addEventListener('aura:open',h);return()=>window.removeEventListener('aura:open',h);},[]);
+  const handleScroll=useCallback(()=>{const el=scrollRef.current;if(!el)return;setAtBottom(el.scrollHeight-el.scrollTop-el.clientHeight<60);},[]);
+  const scrollToBottom=()=>msgEndRef.current?.scrollIntoView({behavior:'smooth'});
+  useEffect(()=>{if(atBottom)scrollToBottom();},[messages,thinking,atBottom]);
+  useEffect(()=>{if(isOpen&&view==='chat')setTimeout(()=>inputRef.current?.focus(),200);},[isOpen,view]);
+  const resizeTA=()=>{const el=taRef.current;if(!el)return;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';};
 
-  useEffect(() => {
-    const onResize = () => setBtnPos(p => ({
-      x: Math.min(p.x, window.innerWidth - 80),
-      y: Math.min(p.y, window.innerHeight - 80),
-    }));
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+  const showWelcome=useCallback(()=>{
+    const first=user?.full_name?.split(' ')[0]||'there';
+    setMessages([{id:'welcome',role:'assistant',content:`Hello ${first}! 👋 I'm **Aura**, your care companion.\n\nI'm here for emotional support, symptom questions, medication guidance, or just to listen. How are you feeling today?`,created_at:new Date().toISOString()}]);
+  },[user]);
 
-  // Drag handlers
-  const onPointerDown = (e) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    dragRef.current = { startX: e.clientX, startY: e.clientY, origX: btnPos.x, origY: btnPos.y, moved: false };
-    setDragging(true);
-  };
-  const onPointerMove = (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - dragRef.current.startX;
-    const dy = e.clientY - dragRef.current.startY;
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragRef.current.moved = true;
-    setBtnPos({
-      x: Math.max(20, Math.min(window.innerWidth - 60, dragRef.current.origX + dx)),
-      y: Math.max(20, Math.min(window.innerHeight - 60, dragRef.current.origY + dy)),
-    });
-  };
-  const onPointerUp = () => {
-    setDragging(false);
-    if (!dragRef.current.moved) setIsOpen(o => !o);
-  };
+  useEffect(()=>{if(isOpen&&messages.length===0&&!hasWelcomed.current&&view==='chat'){hasWelcomed.current=true;setTimeout(showWelcome,150);}},[isOpen,messages.length,view,showWelcome]);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, thinking]);
-  useEffect(() => { if (isOpen && view === 'chat') setTimeout(() => inputRef.current?.focus(), 250); }, [isOpen, view]);
-
-  // Welcome message — personalised from questionnaire signals
-  const showWelcome = useCallback(() => {
-    const firstName = user?.full_name?.split(' ')[0] || 'there';
-    let context = '';
-    if (signals?.painLevel >= 7) {
-      context = `\n\nI can see pain management is a focus for you. I'm here to help with that, or anything else on your mind.`;
-    } else if (signals?.needsEmotionalSupport) {
-      context = `\n\nI know things can feel overwhelming sometimes. I'm here to listen and support you — no question is too small.`;
-    } else if (signals?.needsSpiritualSupport) {
-      context = `\n\nSpiritual wellbeing is part of your care plan. I'm here for any questions — medical, emotional, or personal.`;
-    } else if (signals?.condition && signals.condition !== 'other') {
-      context = `\n\nI'm aware of your care needs around ${signals.condition.replace(/_/g, ' ')} and can help tailor my answers to your situation.`;
+  useEffect(()=>{
+    if(isOpen&&user&&!hasConsent){
+      chatbotConsentAPI.getConsent(user.id).then(r=>{if(r.data.consent_given)setHasConsent(true);else setShowConsent(true);}).catch(()=>setShowConsent(true));
     }
-    setMessages([{
-      id: 'welcome',
-      role: 'assistant',
-      content: `Hello ${firstName}!  I'm **Aura**, your AI care companion.\n\nI can help with symptoms, medications, emotional support, care navigation, or just a conversation. What's on your mind?${context}`,
-      created_at: new Date().toISOString(),
-    }]);
-  }, [user, signals]);
+  },[isOpen,user,hasConsent]);
 
-  useEffect(() => {
-    if (isOpen && messages.length === 0 && !hasWelcomed.current && view === 'chat') {
-      hasWelcomed.current = true;
-      setTimeout(showWelcome, 200);
+  useEffect(()=>{
+    if(isOpen&&!provider){
+      fetch(`${API_URL}/api/llm-chatbot/status`,{headers:{Authorization:`Bearer ${tok()}`}}).then(r=>r.json()).then(d=>setProvider(d.provider)).catch(()=>setProvider('rule-based'));
     }
-  }, [isOpen, messages.length, view, showWelcome]);
+  },[isOpen,provider]);
 
-  // Consent
-  useEffect(() => {
-    if (isOpen && user && !hasConsent) {
-      chatbotConsentAPI.getConsent(user.id)
-        .then(r => { if (r.data.consent_given) setHasConsent(true); else setShowConsentModal(true); })
-        .catch(() => setShowConsentModal(true));
-    }
-  }, [isOpen, user, hasConsent]);
+  const loadHistory=useCallback(async()=>{
+    setHistLoading(true);
+    try{const r=await fetch(`${API_URL}/api/llm-chatbot/conversations`,{headers:{Authorization:`Bearer ${tok()}`}});const d=await r.json();setConversations(d.conversations||[]);}catch{setConversations([]);}finally{setHistLoading(false);}
+  },[]);
+  useEffect(()=>{if(isOpen&&view==='history')loadHistory();},[isOpen,view,loadHistory]);
 
-  // Provider status
-  useEffect(() => {
-    if (isOpen && !provider) {
-      fetch(`${API_URL}/api/llm-chatbot/status`, { headers: { Authorization: `Bearer ${token()}` } })
-        .then(r => r.json())
-        .then(d => setProvider(d.provider))
-        .catch(() => setProvider('rule-based'));
-    }
-  }, [isOpen, provider]);
+  const loadConv=useCallback(async id=>{
+    try{const r=await fetch(`${API_URL}/api/llm-chatbot/conversations/${id}/messages`,{headers:{Authorization:`Bearer ${tok()}`}});const d=await r.json();
+    setMessages(d.messages.map(m=>({id:`db-${m.id}`,role:m.role,content:m.content,crisis_flagged:m.crisis_flagged,created_at:m.created_at})));setSessionId(id);setView('chat');}catch{setView('chat');}
+  },[]);
 
-  // Load history
-  const loadHistory = useCallback(async () => {
-    setHistoryLoading(true);
-    try {
-      const resp = await fetch(`${API_URL}/api/llm-chatbot/conversations`, {
-        headers: { Authorization: `Bearer ${token()}` },
-      });
-      const data = await resp.json();
-      setConversations(data.conversations || []);
-    } catch {
-      setConversations([]);
-    } finally {
-      setHistoryLoading(false);
-    }
-  }, []);
+  const delConv=useCallback(async id=>{
+    try{await fetch(`${API_URL}/api/llm-chatbot/conversations/${id}`,{method:'DELETE',headers:{Authorization:`Bearer ${tok()}`}});setConversations(p=>p.filter(c=>c.id!==id));}catch{}
+  },[]);
 
-  useEffect(() => {
-    if (isOpen && view === 'history') loadHistory();
-  }, [isOpen, view, loadHistory]);
+  const startNew=useCallback(()=>{setSessionId(null);setMessages([]);setActiveFlags([]);hasWelcomed.current=false;setView('chat');},[]);
+  const clearChat=useCallback(()=>{setMessages([]);setActiveFlags([]);hasWelcomed.current=false;setTimeout(showWelcome,150);},[showWelcome]);
+  const handleConsentAccept=async()=>{try{await chatbotConsentAPI.saveConsent({user_id:user.id,consent_given:true,consent_text:'User consented.',ip_address:null});setHasConsent(true);setShowConsent(false);}catch{alert('Failed to save consent.');}};
 
-  // Load a past conversation
-  const loadConversation = useCallback(async (convId) => {
-    try {
-      const resp = await fetch(`${API_URL}/api/llm-chatbot/conversations/${convId}/messages`, {
-        headers: { Authorization: `Bearer ${token()}` },
-      });
-      const data = await resp.json();
-      setMessages(data.messages.map(m => ({
-        id:           `db-${m.id}`,
-        role:         m.role,
-        content:      m.content,
-        crisis_flagged: m.crisis_flagged,
-        created_at:   m.created_at,
-      })));
-      setSessionId(convId);
-      setView('chat');
-    } catch {
-      // fallback: just open chat
-      setView('chat');
-    }
-  }, []);
-
-  const deleteConversation = useCallback(async (convId) => {
-    try {
-      await fetch(`${API_URL}/api/llm-chatbot/conversations/${convId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token()}` },
-      });
-      setConversations(prev => prev.filter(c => c.id !== convId));
-    } catch { /* non-fatal */ }
-  }, []);
-
-  const startNewChat = useCallback(() => {
-    setSessionId(null);
-    setMessages([]);
-    setActiveFlags([]);
-    hasWelcomed.current = false;
-    setView('chat');
-  }, []);
-
-  const handleConsentAccept = async () => {
-    try {
-      await chatbotConsentAPI.saveConsent({
-        user_id: user.id, consent_given: true,
-        consent_text: 'User consented to AI companion chatbot use.', ip_address: null,
-      });
-      setHasConsent(true);
-      setShowConsentModal(false);
-    } catch { alert('Failed to save consent. Please try again.'); }
-  };
-  const handleConsentDecline = () => { setShowConsentModal(false); setIsOpen(false); navigate('/messages'); };
-
-  const extractNavPath = (content) => content?.match(/`(\/[a-z0-9-/]+)`/)?.[1] ?? null;
-  const handleNavigate = (path) => { navigate(path); setIsOpen(false); };
-
-  // Send message
-  const sendMessage = useCallback(async (text = input) => {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
-
-    if (abortRef.current) abortRef.current.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-
-    const userMsgId = `user-${Date.now()}`;
-    setMessages(prev => [...prev, {
-      id: userMsgId, role: 'user', content: trimmed,
-      created_at: new Date().toISOString(),
-    }]);
-    setInput('');
-    setLoading(true);
-    setThinking(true);
-    setThinkingText('Connecting to Aura AI...');
-    setActiveFlags([]);
-
-    const streamId = `stream-${Date.now()}`;
-    setTimeout(() => {
-      setThinking(false);
-      setMessages(prev => [...prev, {
-        id: streamId, role: 'assistant', content: '', streaming: true,
-        created_at: new Date().toISOString(),
-      }]);
-    }, 400);
-
-    const params = new URLSearchParams({ message: trimmed });
-    if (sessionId) params.set('conversation_id', String(sessionId));
-    // Pass personalisation context to the LLM for richer responses
-    if (signals && user?.role === 'patient') {
-      if (signals.condition) params.set('patient_condition', signals.condition);
-      if (signals.painLevel)  params.set('pain_level', String(signals.painLevel));
-      if (signals.carePriorities?.length) params.set('care_priorities', signals.carePriorities.join(','));
-      if (signals.needsEmotionalSupport) params.set('emotional_support', 'true');
-    }
-
-    let fullText = '';
-    const detectedCrisis = isCrisis(trimmed);
-
-    try {
-      const response = await fetch(
-        `${API_URL}/api/llm-chatbot/stream?${params}`,
-        { headers: { Authorization: `Bearer ${token()}` }, signal: controller.signal }
-      );
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          try {
-            const payload = JSON.parse(line.slice(6));
-            if (payload.type === 'start') {
-              if (payload.model) {
-                if (payload.model.includes('nex') || payload.model.includes('openrouter')) setProvider('openrouter');
-                else if (payload.model.includes('gemini')) setProvider('gemini');
-                else if (payload.model.includes('llama') || payload.model.includes('groq')) setProvider('groq');
-              }
-            } else if (payload.type === 'chunk' && payload.text) {
-              fullText += payload.text;
-              setMessages(prev => prev.map(m =>
-                m.id === streamId ? { ...m, content: fullText } : m
-              ));
-            } else if (payload.type === 'meta') {
-              if (!sessionId && payload.conversation_id) setSessionId(payload.conversation_id);
-              // Show flag banner if backend detected flags
-              if (payload.flags && payload.flags.length > 0) {
-                setActiveFlags(payload.flags);
-              }
-            } else if (payload.type === 'error') {
-              console.warn('[AuraChat] LLM error event:', payload.message);
-            }
-          } catch { /* skip malformed */ }
+  const sendMessage=useCallback(async(text=input)=>{
+    const trimmed=text.trim();
+    if(!trimmed||loading)return;
+    if(abortRef.current)abortRef.current.abort();
+    const ctrl=new AbortController();abortRef.current=ctrl;
+    const uid=`user-${Date.now()}`;
+    setMessages(p=>[...p,{id:uid,role:'user',content:trimmed,created_at:new Date().toISOString()}]);
+    setInput('');resizeTA();setLoading(true);setThinking(true);setThinkingText('Connecting…');setActiveFlags([]);
+    const sid=`stream-${Date.now()}`;
+    setTimeout(()=>{setThinking(false);setMessages(p=>[...p,{id:sid,role:'assistant',content:'',streaming:true,created_at:new Date().toISOString()}]);},350);
+    const params=new URLSearchParams({message:trimmed});
+    if(sessionId)params.set('conversation_id',String(sessionId));
+    if(signals&&user?.role==='patient'){if(signals.condition)params.set('patient_condition',signals.condition);if(signals.painLevel)params.set('pain_level',String(signals.painLevel));}
+    let full='';
+    try{
+      const resp=await fetch(`${API_URL}/api/llm-chatbot/stream?${params}`,{headers:{Authorization:`Bearer ${tok()}`},signal:ctrl.signal});
+      if(!resp.ok)throw new Error(`HTTP ${resp.status}`);
+      const reader=resp.body.getReader();const dec=new TextDecoder();let buf='';
+      while(true){
+        const{done,value}=await reader.read();if(done)break;
+        buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop();
+        for(const line of lines){
+          if(!line.startsWith('data: '))continue;
+          try{const pl=JSON.parse(line.slice(6));
+            if(pl.type==='start'&&pl.model){const m=pl.model.toLowerCase();if(m.includes('nex')||m.includes('nemotron'))setProvider('openrouter');else if(m.includes('gemini'))setProvider('gemini');else if(m.includes('llama')||m.includes('groq'))setProvider('groq');}
+            else if(pl.type==='chunk'&&pl.text){full+=pl.text;setMessages(p=>p.map(m=>m.id===sid?{...m,content:full}:m));}
+            else if(pl.type==='meta'){if(!sessionId&&pl.conversation_id)setSessionId(pl.conversation_id);if(pl.flags?.length)setActiveFlags(pl.flags);}
+          }catch{}
         }
       }
-
-      setMessages(prev => prev.map(m =>
-        m.id === streamId
-          ? { ...m, content: fullText || "I'm here. Could you try rephrasing that? ", streaming: false }
-          : m
-      ));
-
-      if (detectedCrisis) {
-        setShowCrisisOverlay(true);
-        // Push to Zustand crisis queue so clinicians get a banner anywhere in the app
-        pushCrisis({
-          id:           Date.now(),
-          patient_name: user?.full_name || 'Unknown',
-          message:      trimmed.slice(0, 120),
-          created_at:   new Date().toISOString(),
-        });
-        try {
-          await crisisAPI.reportCrisis({
-            user_id: user?.id, patient_id: null,
-            crisis_type: 'chatbot_detected', message_content: trimmed.slice(0, 500),
-            source: 'chatbot', confidence_score: 0.9,
-          });
-        } catch { /* non-fatal */ }
+      setMessages(p=>p.map(m=>m.id===sid?{...m,content:full||"I'm here. Could you rephrase that?",streaming:false}:m));
+      if(isCrisis(trimmed)){
+        setShowCrisis(true);
+        pushCrisis({id:Date.now(),patient_name:user?.full_name||'Unknown',message:trimmed.slice(0,120),created_at:new Date().toISOString()});
+        try{await crisisAPI.reportCrisis({user_id:user?.id,crisis_type:'chatbot_detected',message_content:trimmed.slice(0,500),source:'chatbot',confidence_score:0.9});}catch{}
       }
+    }catch(e){if(e.name==='AbortError')return;setMessages(p=>p.map(m=>m.id===sid?{...m,content:"Connection issue. Please try again.",streaming:false,is_error:true}:m));}
+    finally{setLoading(false);setThinking(false);setTimeout(()=>inputRef.current?.focus(),100);}
+  },[input,loading,sessionId,user,signals,showWelcome]);
 
-    } catch (err) {
-      if (err.name === 'AbortError') return;
-      setMessages(prev => prev.map(m =>
-        m.id === streamId
-          ? { ...m, content: "I'm having trouble connecting right now. Please try again in a moment. ", streaming: false, is_error: true }
-          : m
-      ));
-    } finally {
-      setLoading(false);
-      setThinking(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
-  }, [input, loading, sessionId, user]);
+  useEffect(()=>()=>abortRef.current?.abort(),[]);
 
-  useEffect(() => () => abortRef.current?.abort(), []);
+  const basePrompts=QUICK_PROMPTS[user?.role]||QUICK_PROMPTS.patient;
+  const prompts=useMemo(()=>{
+    if(user?.role!=='patient'||!signals)return basePrompts;
+    const p=[];
+    if(signals.painLevel>=5)p.push("How can I manage my pain better?");
+    if(signals.needsEmotionalSupport)p.push("I'm feeling anxious and overwhelmed");
+    if(signals.needsSpiritualSupport)p.push("Can you suggest spiritual care resources?");
+    return [...new Set([...p,...basePrompts])].slice(0,4);
+  },[user,signals,basePrompts]);
 
-  const handleSubmit = (e) => { e.preventDefault(); sendMessage(); };
-  const basePrompts = QUICK_PROMPTS[user?.role] || QUICK_PROMPTS.patient;
-  // For patients: inject personalised prompts based on their signals
-  const prompts = user?.role === 'patient' && signals ? (() => {
-    const personalised = [];
-    if (signals.painLevel >= 5) personalised.push("How can I manage my pain better?");
-    if (signals.needsEmotionalSupport) personalised.push("I'm feeling anxious and overwhelmed");
-    if (signals.needsSpiritualSupport) personalised.push("Can you suggest spiritual care resources?");
-    if (signals.carePriorities?.includes('Staying at home')) personalised.push("What does home-based palliative care involve?");
-    if (signals.needsCommunity) personalised.push("How do I join a peer support group?");
-    // Fill remaining slots with base prompts (no duplicates)
-    const all = [...new Set([...personalised, ...basePrompts])];
-    return all.slice(0, 4);
-  })() : basePrompts;
-  const isOffline = provider === 'rule-based' || provider === 'offline-fallback';
+  const isOffline=provider==='rule-based'||provider==='offline-fallback';
+  const msgCount=messages.filter(m=>m.role==='user').length;
+  const subLabel=isPatient?'Your personal care companion':'Clinical support';
 
   return (
     <>
-      <ChatbotConsentModal isOpen={showConsentModal} onAccept={handleConsentAccept} onDecline={handleConsentDecline} userName={user?.full_name} />
-      <CrisisInterventionOverlay
-        isOpen={showCrisisOverlay}
-        onClose={() => setShowCrisisOverlay(false)}
-        onTalkToHuman={() => { setShowCrisisOverlay(false); setIsOpen(false); navigate('/messages'); }}
-        patientName={user?.full_name}
-        crisisType="chatbot_detected"
-      />
+      <ChatbotConsentModal isOpen={showConsent} onAccept={handleConsentAccept} onDecline={()=>{setShowConsent(false);setIsOpen(false);navigate('/messages');}} userName={user?.full_name}/>
+      <CrisisInterventionOverlay isOpen={showCrisis} onClose={()=>setShowCrisis(false)} onTalkToHuman={()=>{setShowCrisis(false);setIsOpen(false);navigate('/messages');}} patientName={user?.full_name} crisisType="chatbot_detected"/>
 
-      {/* Floating button */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
-            style={{ position: 'fixed', left: btnPos.x - 60, top: btnPos.y - 24, zIndex: 50, touchAction: 'none', cursor: dragging ? 'grabbing' : 'grab' }}
-            onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2.5 px-4 py-2.5 bg-teal-600 text-white rounded-full shadow-2xl border-2 border-white select-none"
-              title="Aura AI - drag to move, click to open"
-            >
-              <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                <Sparkles size={15} className="text-white" />
-              </div>
-              <div className="text-left pointer-events-none">
-                <p className="text-xs font-bold leading-none">Aura</p>
-                <p className="text-[10px] text-teal-100 leading-none mt-0.5">AI Companion</p>
-              </div>
-              {loading && <div className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse flex-shrink-0" />}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* No floating trigger — opened via header MessageCircle button */}
 
-      {/* Modal */}
+      {/* Drawer */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen&&(
           <>
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 20 }}
-              transition={{ type: 'spring', damping: 24, stiffness: 320, mass: 0.8 }}
-              onClick={e => e.stopPropagation()}
-              className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] sm:w-[580px] h-[90dvh] sm:h-[720px] max-h-[90dvh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border-2 border-teal-400"
-            >
-              {/* Header */}
-              <div className="bg-teal-600 px-4 py-3 flex items-center gap-3 flex-shrink-0">
-                <div className="flex items-center justify-center flex-shrink-0">
-                  <AuraMascot size={32} isThinking={thinking} isStreaming={loading && !thinking} />
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setIsOpen(false)}
+              className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.25)',backdropFilter:'blur(2px)'}}/>
+            <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
+              transition={{type:'spring',damping:28,stiffness:260}}
+              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
+              style={{width:'min(92vw,420px)',background:C.bg,borderLeft:'1px solid #e2e8f0',boxShadow:'-8px 0 40px rgba(0,0,0,0.12)'}}
+              onClick={e=>e.stopPropagation()}>
+
+              {/* Header — teal gradient */}
+              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3"
+                style={{background:'linear-gradient(135deg,#0d9488,#0369a1)',borderBottom:'1px solid rgba(255,255,255,0.15)'}}>
+                <div className="relative flex-shrink-0">
+                  <AuraMascot size={34} isThinking={thinking} isStreaming={loading&&!thinking}/>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-white text-sm">Aura</h3>
-                    <span className="text-[10px] px-2 py-0.5 bg-white/20 text-white rounded-full font-semibold">AI Care Companion</span>
+                    <span className="font-bold text-white text-sm">Aura</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold text-white/80" style={{background:'rgba(255,255,255,0.18)'}}>Companion</span>
+                    {msgCount>0&&<span className="text-[10px] text-white/50">{msgCount} msg{msgCount!==1?'s':''}</span>}
                   </div>
-                  <LLMBadge provider={provider} offline={isOffline} />
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <LLMBadge provider={provider} offline={isOffline}/>
+                    <span className="text-[10px] text-white/50">·</span>
+                    <span className="text-[10px] text-white/60">{subLabel}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {/* History toggle */}
-                  <button
-                    onClick={() => setView(v => v === 'history' ? 'chat' : 'history')}
-                    className={`p-2 rounded-xl transition ${view === 'history' ? 'bg-white/30' : 'hover:bg-white/20'}`}
-                    data-tip={view === 'history' ? 'Back to chat' : 'Chat history'}
-                    aria-label="Chat history"
-                  >
-                    <History size={16} className="text-white" />
+                <div className="flex items-center gap-0.5">
+                  <button onClick={()=>setView(v=>v==='history'?'chat':'history')} title="Chat history"
+                    className="p-1.5 rounded-lg transition-all text-white/60 hover:text-white hover:bg-white/15"
+                    style={{background:view==='history'?'rgba(255,255,255,0.2)':'transparent'}}>
+                    <History size={15}/>
                   </button>
-                  <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/20 rounded-xl transition" aria-label="Close" data-tip="Close chat">
-                    <X size={18} className="text-white" />
+                  <button onClick={startNew} title="New chat" className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all">
+                    <Plus size={15}/>
                   </button>
+                  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all"><RotateCcw size={14}/></button>}
+                  <button onClick={()=>setIsOpen(false)} className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all ml-1"><X size={16}/></button>
                 </div>
               </div>
 
-              {/* Safety notice */}
-              <div className="px-4 py-1.5 bg-amber-50 border-b border-amber-200 flex items-center gap-2 flex-shrink-0">
-                <AlertTriangle size={12} className="text-amber-600 flex-shrink-0" />
-                <p className="text-[11px] text-amber-800 font-medium">Not a substitute for professional medical advice. Emergencies: <strong>193</strong></p>
+              {/* Safety bar */}
+              <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:'#fde68a',background:'#fef3c7'}}>
+                <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
+                <p className="text-[10px] text-amber-800 font-medium">Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
               </div>
 
-              {/* € History view €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€ */}
-              {view === 'history' && (
-                <div className="flex-1 overflow-hidden">
-                  <HistoryPanel
-                    conversations={conversations}
-                    onSelect={loadConversation}
-                    onDelete={deleteConversation}
-                    onNewChat={startNewChat}
-                    loading={historyLoading}
-                  />
+              {/* History panel */}
+              {view==='history'&&(
+                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-slate-100 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
+                  {histLoading&&<div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin" style={{color:C.accent}}/></div>}
+                  {!histLoading&&conversations.length===0&&(
+                    <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-gray-400 mb-2"/><p className="text-sm text-gray-500 font-medium">No previous conversations</p></div>
+                  )}
+                  {!histLoading&&conversations.map(conv=>(
+                    <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30" onClick={()=>loadConv(conv.id)}>
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{background:C.accentLight}}><MessageSquare size={12} style={{color:C.accent}}/></div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold truncate text-slate-900 dark:text-white">{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
+                        <p className="text-[11px] truncate mt-0.5 text-slate-500 dark:text-slate-400">{conv.last_message}</p>
+                        <p className="text-[10px] mt-1 text-slate-400 dark:text-slate-500">{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-red-500 transition-all"><Trash2 size={12}/></button>
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* € Chat view €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€ */}
-              {view === 'chat' && (
+              {/* Chat view */}
+              {view==='chat'&&(
                 <>
-                  {/* Back to history button when viewing past session */}
-                  {sessionId && messages.some(m => m.id?.startsWith('db-')) && (
-                    <div className="px-4 py-2 bg-slate-50 border-b border-slate-100 flex items-center gap-2 flex-shrink-0">
-                      <button
-                        onClick={startNewChat}
-                        className="flex items-center gap-1.5 text-xs text-teal-600 hover:text-teal-700 font-medium"
-                      >
-                        <ChevronLeft size={14} />New chat
-                      </button>
-                      <span className="text-slate-300 text-xs">|</span>
-                      <span className="text-xs text-slate-400">Viewing saved conversation</span>
+                  {/* Restored session bar */}
+                  {sessionId&&messages.some(m=>m.id?.startsWith('db-'))&&(
+                    <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
+                      <button onClick={startNew} className="flex items-center gap-1 text-xs font-semibold transition-colors" style={{color:C.accent}}><ChevronLeft size={13}/>New chat</button>
+                      <span className="text-gray-300">·</span>
+                      <span className="text-xs text-gray-400">Viewing saved conversation</span>
                     </div>
                   )}
-
-                  {/* Flag alert banner */}
-                  <FlagBanner flags={activeFlags} />
+                  {/* Flag banner */}
+                  {activeFlags.length>0&&(
+                    <motion.div initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}}
+                      className="flex-shrink-0 mx-3 mt-2 px-3 py-2 rounded-xl flex items-start gap-2 text-xs font-medium border"
+                      style={activeFlags.some(f=>f.severity==='critical')?{background:'#fef2f2',borderColor:'#fecaca',color:'#ef4444'}:{background:'#fffbeb',borderColor:'#fde68a',color:'#92400e'}}>
+                      <ShieldAlert size={12} className="flex-shrink-0 mt-0.5"/>
+                      <span>{activeFlags.some(f=>f.severity==='critical')?"Care team notified immediately.":"Your care team has been notified."}</span>
+                    </motion.div>
+                  )}
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-gradient-to-b from-slate-50 to-white overscroll-contain">
-                    {/* Quick prompts */}
-                    {messages.length <= 1 && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2">
-                        <p className="text-xs text-slate-400 font-semibold px-1">Suggested questions</p>
-                        <div className="grid grid-cols-2 gap-2">
-                          {prompts.map((prompt, i) => (
-                            <button key={i} onClick={() => sendMessage(prompt)} disabled={loading}
-                              data-tip={`Ask: "${prompt}"`}
-                              className="text-xs text-left px-3 py-2.5 bg-white border-2 border-slate-200 hover:border-teal-400 hover:bg-teal-50 rounded-xl transition font-medium text-slate-700 disabled:opacity-50 leading-snug">
-                              {prompt}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
+                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-slate-100 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
 
-                    {messages.map((msg) => {
-                      const isUser = msg.role === 'user';
-                      const navPath = !isUser ? extractNavPath(msg.content) : null;
-                      return (
-                        <motion.div
-                          key={msg.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.18 }}
-                          className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}
-                        >
-                          {!isUser && (
-                            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center mb-0.5 ${msg.crisis_flagged ? 'bg-red-100' : 'bg-teal-100'}`}>
-                              <Sparkles size={14} className="text-teal-600" />
-                            </div>
-                          )}
-                          <div className="max-w-[78%] flex flex-col gap-1">
-                            <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                              isUser
-                                ? 'bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-br-sm'
-                                : msg.crisis_flagged
-                                  ? 'bg-red-50 border-2 border-red-400 text-red-900 rounded-bl-sm'
-                                  : msg.is_error
-                                    ? 'bg-slate-100 border border-slate-300 text-slate-600 rounded-bl-sm'
-                                    : 'bg-white border border-slate-200 text-slate-800 rounded-bl-sm'
-                            }`}>
-                              {msg.crisis_flagged && !isUser && (
-                                <div className="flex items-center gap-1.5 mb-2 text-red-700 font-bold text-xs">
-                                  <AlertTriangle size={13} />CRISIS SUPPORT
-                                </div>
-                              )}
-                              <MessageContent content={msg.content} streaming={msg.streaming} />
-                              {navPath && !isUser && (
-                                <button
-                                  onClick={() => handleNavigate(navPath)}
-                                  data-tip="Navigate to this page"
-                                  className="mt-3 w-full flex items-center justify-center gap-2 px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-lg transition"
-                                >
-                                  <ExternalLink size={13} />Go there now
+                    {/* Empty state — warm welcome, feel scale for patients */}
+                    {messages.length===0&&(
+                      <div className="flex flex-col items-center pt-6 space-y-5">
+                        <div className="w-16 h-16"><AuraMascot size={64} isThinking={thinking} isStreaming={loading&&!thinking}/></div>
+                        <div className="text-center px-4">
+                          <p className="font-bold text-slate-900 dark:text-white text-base mb-1">I'm here for you</p>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
+                        </div>
+                        {isPatient&&(
+                          <div className="w-full">
+                            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-3">How are you feeling today?</p>
+                            <div className="flex justify-center gap-3">
+                              {FEEL_SCALE.map(f=>(
+                                <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
+                                  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all">
+                                  <span className="text-2xl">{f.emoji}</span>
+                                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{f.label}</span>
                                 </button>
-                              )}
-                            </div>
-                            <div className={`flex items-center gap-1.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                              <span className="text-[10px] text-slate-400">
-                                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                              {isUser && !msg.streaming && <CheckCheck size={10} className="text-teal-400" />}
+                              ))}
                             </div>
                           </div>
-                          {isUser && (
-                            <div className="w-8 h-8 rounded-full flex-shrink-0 bg-teal-600 flex items-center justify-center text-white text-xs font-bold mb-0.5">
-                              {user?.full_name?.[0] || 'U'}
+                        )}
+                        <div className="w-full">
+                          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Or ask about…</p>
+                          <div className="flex flex-wrap gap-2">
+                            {prompts.map((p,i)=>(
+                              <button key={i} onClick={()=>sendMessage(p)} disabled={loading}
+                                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all border disabled:opacity-40"
+                                style={{background:'#d1fae5',borderColor:'#6ee7b7',color:'#065f46'}}
+                                onMouseEnter={e=>{e.currentTarget.style.background='#065f46';e.currentTarget.style.color='#ffffff';}}
+                                onMouseLeave={e=>{e.currentTarget.style.background='#d1fae5';e.currentTarget.style.color='#065f46';}}>
+                                {p}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Message bubbles */}
+                    {messages.map(msg=>{
+                      const isUser=msg.role==='user';
+                      return (
+                        <motion.div key={msg.id} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.15}}
+                          className={`group flex ${isUser?'justify-end':'justify-start'} items-end gap-2`}>
+                          {!isUser&&(
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm" style={{background:C.userBubble}}>
+                              <Sparkles size={13} className="text-white"/>
+                            </div>
+                          )}
+                          <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
+                            <div
+                              className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-sm':'rounded-bl-sm'} ${
+                                isUser ? '' :
+                                msg.crisis_flagged ? 'bg-red-50 border border-red-200' :
+                                msg.is_error ? 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700' :
+                                'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm'
+                              }`}
+                              style={isUser ? {background:C.userBubble, boxShadow:C.userShadow} : undefined}
+                            >
+                              {msg.crisis_flagged&&!isUser&&(<div className="flex items-center gap-1 mb-2 text-[11px] font-bold text-red-500"><AlertTriangle size={11}/>CRISIS SUPPORT</div>)}
+                              <MsgContent content={msg.content} streaming={msg.streaming} isUser={isUser}/>
+                            </div>
+                            <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                              <span className="text-[10px] text-slate-400">{new Date(msg.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                              {isUser&&!msg.streaming&&<CheckCheck size={10} style={{color:C.accent}}/>}
+                              {!isUser&&msg.content&&!msg.streaming&&<CopyBtn text={msg.content}/>}
+                              {!isUser&&msg.content&&!msg.streaming&&<Feedback/>}
+                            </div>
+                          </div>
+                          {isUser&&(
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold" style={{background:C.userBubble}}>
+                              {user?.full_name?.[0]||'U'}
                             </div>
                           )}
                         </motion.div>
                       );
                     })}
 
-                    {/* Thinking */}
+                    {/* Typing indicator */}
                     <AnimatePresence>
-                      {thinking && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-                          className="flex items-end gap-2"
-                        >
-                          <div className="w-8 h-8 rounded-full bg-teal-100 flex-shrink-0 flex items-center justify-center">
-                            <Brain size={14} className="text-teal-600 animate-pulse" />
+                      {thinking&&(
+                        <motion.div initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} className="flex items-end gap-2">
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:C.userBubble}}>
+                            <Brain size={12} className="text-white animate-pulse"/>
                           </div>
-                          <div className="bg-white border border-slate-200 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm">
+                          <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm">
                             <div className="flex items-center gap-2">
-                              <div className="flex gap-1">
-                                {[0, 1, 2].map(i => (
-                                  <motion.div key={i} className="w-2 h-2 bg-teal-400 rounded-full"
-                                    animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                                    transition={{ duration: 0.9, delay: i * 0.18, repeat: Infinity }} />
-                                ))}
-                              </div>
-                              <span className="text-xs text-slate-500">{thinkingText}</span>
+                              {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:C.accent}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
+                              <span className="text-xs text-slate-600 dark:text-slate-300 font-medium ml-1">Aura is typing…</span>
                             </div>
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <div ref={messagesEndRef} />
+                    <div ref={msgEndRef}/>
                   </div>
 
+                  {/* Scroll pill */}
+                  <AnimatePresence>
+                    {!atBottom&&(
+                      <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
+                        className="absolute left-1/2 -translate-x-1/2 bottom-24 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg"
+                        style={{background:C.userBubble,boxShadow:C.userShadow}}>
+                        <ChevronDown size={13}/>New messages
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+
                   {/* Input */}
-                  <form onSubmit={handleSubmit} className="flex-shrink-0 px-4 py-3 border-t-2 border-slate-100 bg-white">
-                    <div className="flex items-end gap-2">
-                      <div className="flex-1 relative">
-                        <textarea
-                          ref={inputRef}
-                          value={input}
-                          onChange={e => {
-                            setInput(e.target.value);
-                            e.target.style.height = 'auto';
-                            e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-                          }}
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-                          }}
-                          placeholder="Type a message... (Enter to send)"
-                          className="w-full resize-none px-4 py-3 text-sm border-2 border-slate-300 rounded-xl focus:outline-none focus:border-teal-500 transition max-h-[120px] overflow-y-auto leading-relaxed pr-14"
-                          rows={1}
-                          maxLength={2000}
-                          disabled={loading}
-                        />
-                        <span className="absolute bottom-2 right-3 text-[10px] text-slate-300 select-none">{input.length}/2000</span>
+                  <div className="flex-shrink-0 px-4 py-3 border-t bg-white" style={{borderColor:'#cbd5e1'}}>
+                    <form onSubmit={e=>{e.preventDefault();sendMessage();}} className="space-y-1.5">
+                      <div className="flex items-end gap-2">
+                        <div className="flex-1 relative">
+                          <textarea ref={el=>{inputRef.current=el;taRef.current=el;}} value={input}
+                            onChange={e=>{setInput(e.target.value);resizeTA();}}
+                            onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}}
+                            placeholder="Message Aura…" rows={1} maxLength={MAX_CHARS} disabled={loading}
+                            className="w-full resize-none text-sm font-medium text-gray-900 rounded-2xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-3 disabled:opacity-50"
+                            style={{background:'#f1f5f9',border:'1px solid #94a3b8',caretColor:C.accent}}
+                            onFocus={e=>{e.target.style.border=`2px solid ${C.accent}`;e.target.style.boxShadow=`0 0 0 3px rgba(13,148,136,0.2)`;e.target.style.background='#ffffff';}}
+                            onBlur={e=>{e.target.style.border='1px solid #94a3b8';e.target.style.boxShadow='none';e.target.style.background='#f1f5f9';}}/>
+                        </div>
+                        <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
+                          <CharRing len={input.length} max={MAX_CHARS}/>
+                          <motion.button type="submit" disabled={!input.trim()||loading}
+                            whileHover={{scale:1.06}} whileTap={{scale:0.94}}
+                            className="w-9 h-9 rounded-full flex items-center justify-center text-white transition-all disabled:cursor-not-allowed"
+                            style={{background:input.trim()&&!loading?C.userBubble:'#94a3b8',boxShadow:input.trim()&&!loading?C.userShadow:'none',opacity:!input.trim()&&!loading?0.55:1}}>
+                            {loading?<Loader2 size={15} className="animate-spin"/>:<Send size={15} strokeWidth={2.5}/>}
+                          </motion.button>
+                        </div>
                       </div>
-                      <button
-                        type="submit"
-                        disabled={!input.trim() || loading}
-                        data-tip={loading ? 'Waiting for response...' : 'Send message (Enter)'}
-                        className="flex-shrink-0 w-11 h-11 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-xl flex items-center justify-center hover:shadow-lg transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                        aria-label="Send"
-                      >
-                        {loading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} strokeWidth={2.5} />}
-                      </button>
-                    </div>
-                    <p className="text-[10px] text-slate-400 mt-1.5 text-center">
-                      {isOffline ? '⚡ Offline mode - full AI available when connected' : '⚡ Powered by AI · Responses are not medical advice'}
-                    </p>
-                  </form>
+                      <p className="text-[10px] text-center text-gray-500 font-medium">{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
+                    </form>
+                  </div>
                 </>
               )}
             </motion.div>
@@ -794,4 +502,3 @@ export default function AuraChat() {
     </>
   );
 }
-

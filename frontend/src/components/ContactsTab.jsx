@@ -6,7 +6,7 @@ import toast from '../utils/toast';
 import ContactCard from './ContactCard';
 import AddContactModal from './AddContactModal';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function ContactsTab({ onContactClick }) {
   const [searchQuery,      setSearchQuery]      = useState('');

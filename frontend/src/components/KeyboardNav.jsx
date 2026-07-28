@@ -2,13 +2,15 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAccessibility } from '../context/AccessibilityContext';
 
+const FONT_SIZES = ['small', 'medium', 'large', 'xlarge', 'xxlarge'];
+
 /**
  * KeyboardNav Component
  * Provides skip navigation links and keyboard shortcuts for accessibility
  */
 export default function KeyboardNav() {
   const navigate = useNavigate();
-  const { settings } = useAccessibility();
+  const { settings, updateSetting } = useAccessibility();
 
   // Focus main content
   const focusMainContent = () => {
@@ -91,6 +93,59 @@ export default function KeyboardNav() {
             navigate('/alerts');
             announceToScreenReader('Navigating to alerts');
             break;
+          case 'd':
+          case 'D':
+            e.preventDefault();
+            navigate('/dashboard');
+            announceToScreenReader('Navigating to dashboard');
+            break;
+          case 'n':
+          case 'N':
+            e.preventDefault();
+            navigate('/notifications');
+            announceToScreenReader('Navigating to notifications');
+            break;
+          case 'c':
+          case 'C':
+            e.preventDefault();
+            navigate('/care-settings');
+            announceToScreenReader('Navigating to care settings');
+            break;
+          case 's':
+          case 'S':
+            e.preventDefault();
+            navigate('/settings');
+            announceToScreenReader('Navigating to settings');
+            break;
+          case 'v':
+          case 'V':
+            e.preventDefault();
+            updateSetting('voiceControl', !settings.voiceControl);
+            announceToScreenReader(settings.voiceControl ? 'Voice control disabled' : 'Voice control enabled');
+            break;
+          case 'f':
+          case 'F':
+            e.preventDefault();
+            updateSetting('focusMode', !settings.focusMode);
+            announceToScreenReader(settings.focusMode ? 'Focus mode disabled' : 'Focus mode enabled');
+            break;
+          case '+':
+          case '=': {
+            e.preventDefault();
+            const currentUp = FONT_SIZES.indexOf(settings.fontSize);
+            const nextUp = Math.min(currentUp + 1, FONT_SIZES.length - 1);
+            updateSetting('fontSize', FONT_SIZES[nextUp]);
+            announceToScreenReader(`Font size increased to ${FONT_SIZES[nextUp]}`);
+            break;
+          }
+          case '-': {
+            e.preventDefault();
+            const currentDown = FONT_SIZES.indexOf(settings.fontSize);
+            const nextDown = Math.max(currentDown - 1, 0);
+            updateSetting('fontSize', FONT_SIZES[nextDown]);
+            announceToScreenReader(`Font size decreased to ${FONT_SIZES[nextDown]}`);
+            break;
+          }
           default:
             break;
         }
@@ -112,7 +167,29 @@ export default function KeyboardNav() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigate, settings.keyboardOnly]);
+  }, [navigate, settings.keyboardOnly, settings.voiceControl, settings.focusMode, settings.fontSize, updateSetting]);
+
+  // Reading Guide effect — injects a div that follows the mouse
+  useEffect(() => {
+    if (!settings.readingGuide) return;
+
+    const line = document.createElement('div');
+    line.className = 'reading-guide-line';
+    document.body.appendChild(line);
+
+    const handleMouseMove = (e) => {
+      line.style.top = `${e.clientY - 16}px`;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (document.body.contains(line)) {
+        document.body.removeChild(line);
+      }
+    };
+  }, [settings.readingGuide]);
 
   return (
     <>

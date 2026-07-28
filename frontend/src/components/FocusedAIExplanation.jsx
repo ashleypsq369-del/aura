@@ -1,359 +1,265 @@
-﻿import { useState } from 'react';
+/**
+ * FocusedAIExplanation — Context-specific clinical AI explanation modal
+ * ======================================================================
+ * Used from Alerts page when a clinician clicks "Explain" on a specific alert.
+ * Shows: what triggered the alert, AI explanation, contributing factors,
+ * drug interactions (if relevant), recommendations, clinician feedback.
+ * Redesigned with ModalContent structured display components.
+ */
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Brain, Minus, ThumbsUp, ThumbsDown } from 'lucide-react';
+import {
+  Brain, TrendingUp, TrendingDown, AlertTriangle,
+  CheckCircle, ThumbsUp, ThumbsDown, Minus, Pill,
+  Activity, MessageSquare
+} from 'lucide-react';
 import axios from 'axios';
+import ModalShell from './ui/ModalShell';
+import {
+  InfoGrid, InfoBadge, InfoAlert, InfoSection,
+  SHAPRow, ListItem, Divider
+} from './ui/ModalContent';
+
+import { API_URL } from '../api/client';
+
+function formatVal(v) {
+  if (v === undefined || v === null) return '—';
+  if (typeof v === 'object' && v.systolic) return `${v.systolic}/${v.diastolic} mmHg`;
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+
+const RISK_MAP = {
+  critical: { variant: 'danger',  label: 'Critical', color: 'red'   },
+  warning:  { variant: 'warning', label: 'Warning',  color: 'amber' },
+  normal:   { variant: 'success', label: 'Normal',   color: 'green' },
+};
 
 export default function FocusedAIExplanation({ data, onClose }) {
-  const [feedbackType, setFeedbackType] = useState(null);
-  const [feedbackNote, setFeedbackNote] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackType, setFeedback]  = useState(null);
+  const [note, setNote]              = useState('');
+  const [submitting, setSubmitting]  = useState(false);
+  const [submitted, setSubmitted]    = useState(false);
 
-  const getRiskColor = (level) => {
-    switch(level) {
-      case 'critical': return 'text-red-600 bg-red-50 border-red-300';
-      case 'warning': return 'text-orange-600 bg-orange-50 border-orange-300';
-      default: return 'text-green-600 bg-green-50 border-green-300';
-    }
-  };
+  const level  = data?.risk_level || 'normal';
+  const rCfg   = RISK_MAP[level] || RISK_MAP.normal;
 
-  const getTrendIcon = (trend) => {
-    switch(trend) {
-      case 'increasing':
-      case 'worsening':
-        return <TrendingUp className="text-red-500" size={20} />;
-      case 'decreasing':
-      case 'improving':
-        return <TrendingDown className="text-green-500" size={20} />;
-      default:
-        return <Minus className="text-slate-400" size={20} />;
-    }
-  };
+  // Derive the "reading name" from whatever type of alert this is
+  const readingLabel = (
+    data?.vital_type?.replace(/_/g,' ') ||
+    data?.symptom_type?.replace(/_/g,' ') ||
+    data?.medication_name ||
+    data?.alert_type?.replace(/_/g,' ') ||
+    'Clinical Finding'
+  ).toUpperCase();
 
-  const formatValue = (value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (value.systolic && value.diastolic) {
-        return `${value.systolic}/${value.diastolic} mmHg`;
-      }
-      return JSON.stringify(value);
-    }
-    return value;
-  };
+  const currentValue = formatVal(
+    data?.current_value ?? data?.current_severity ??
+    data?.triggered_value ?? data?.total_score
+  );
 
-  const handleFeedbackSubmit = async () => {
+  const submitFeedback = async () => {
     if (!feedbackType) return;
-
     setSubmitting(true);
     try {
-      await axios.post('http://localhost:8000/api/comprehensive-ai/focused-explanation-feedback', {
+      await axios.post(`${API_URL}/api/comprehensive-ai/focused-explanation-feedback`, {
         patient_id: data.patient_id,
         focus_type: data.focus_type,
-        focus_identifier: data.vital_type || data.symptom_type || data.medication_name || data.alert_type || data.assessment_type || 'unknown',
-        focus_value: formatValue(data.current_value || data.current_severity || data.triggered_value || data.total_score),
+        focus_identifier: data.vital_type || data.symptom_type || data.medication_name || 'unknown',
+        focus_value: currentValue,
         feedback_type: feedbackType,
-        feedback_note: feedbackNote,
+        feedback_note: note,
         risk_level_shown: data.risk_level,
         explanation_shown: data.explanation,
-        recommendations_shown: data.recommendations
       });
-
-      setFeedbackSubmitted(true);
-      setTimeout(() => {
-        setFeedbackSubmitted(false);
-      }, 3000);
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
-      alert('Failed to submit feedback. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
+      setSubmitted(true);
+    } catch { /* silent */ }
+    finally { setSubmitting(false); }
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold flex items-center gap-2">
-                  <Brain size={24} />
-                  AI Focused Explanation
-                </h2>
-                <p className="text-sm text-purple-100">Understanding this specific concern</p>
-              </div>
-              <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-lg transition">
-                <X size={24} />
-              </button>
+    <ModalShell
+      open={true} onClose={onClose}
+      title="Clinical AI Explanation"
+      description="Context-aware analysis of this specific clinical finding"
+      icon={Brain} accent="violet" size="lg"
+    >
+      <div className="space-y-4">
+
+        {/* ── § 1  Finding summary ledger ────────────────────────── */}
+        <div className="rounded-lg border border-slate-200 overflow-hidden">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+            <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
+            <Activity size={12} className="text-slate-500 flex-shrink-0" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinical Finding</span>
+          </div>
+          <div className="px-4 py-3 bg-white">
+            <InfoGrid cols={2} items={[
+              { label: 'Patient',    value: data?.patient_name || '—' },
+              { label: 'Finding',    value: readingLabel, sub: data?.focus_type?.replace(/_/g,' ') },
+              { label: 'Value',      value: currentValue, accent: rCfg.color },
+              { label: 'Risk Level', value: rCfg.label,   accent: rCfg.color },
+            ]} />
+          </div>
+        </div>
+
+        {/* ── § 2  Trend indicator ────────────────────────────────── */}
+        {data?.trend && (
+          <div className={`rounded-lg border overflow-hidden ${
+            ['increasing','worsening'].includes(data.trend) ? 'border-red-200' :
+            ['decreasing','improving'].includes(data.trend) ? 'border-emerald-200' : 'border-slate-200'
+          }`}>
+            <div className={`flex items-center gap-3 px-4 py-2.5 ${
+              ['increasing','worsening'].includes(data.trend) ? 'bg-red-50' :
+              ['decreasing','improving'].includes(data.trend) ? 'bg-emerald-50' : 'bg-slate-50'
+            }`}>
+              {['increasing','worsening'].includes(data.trend)
+                ? <TrendingUp size={14} className="text-red-500 flex-shrink-0" />
+                : ['decreasing','improving'].includes(data.trend)
+                ? <TrendingDown size={14} className="text-emerald-500 flex-shrink-0" />
+                : <Minus size={14} className="text-slate-400 flex-shrink-0" />}
+              <p className="text-sm font-semibold text-slate-800 capitalize">{data.trend} trend</p>
+              {data.baseline_value && (
+                <p className="text-xs text-slate-500 ml-auto">Baseline: {formatVal(data.baseline_value)}</p>
+              )}
             </div>
           </div>
+        )}
 
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-150px)]">
-            {/* Patient Info */}
-            <div className="mb-4">
-              <p className="text-sm text-slate-600">Patient: <span className="font-bold text-slate-900">{data.patient_name}</span></p>
+        {/* ── § 3  AI Explanation — book-inset style ──────────────── */}
+        <div className="rounded-lg border border-violet-200 overflow-hidden">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 bg-violet-50 border-b border-violet-200">
+            <span className="w-1 h-4 rounded-full bg-violet-400 flex-shrink-0" />
+            <Brain size={12} className="text-violet-600 flex-shrink-0" />
+            <span className="text-[11px] font-bold text-violet-700 uppercase tracking-widest select-none">Why is this clinically concerning?</span>
+          </div>
+          <div className="px-5 py-4 bg-white">
+            <div className="pl-4 border-l-2 border-violet-200">
+              <p className="text-sm text-slate-800 leading-7">{data?.explanation || 'No explanation available.'}</p>
             </div>
+            {data?.confidence && (
+              <p className="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">
+                AI Confidence: <span className="font-bold text-slate-600">{Math.round(data.confidence * 100)}%</span>
+              </p>
+            )}
+          </div>
+        </div>
 
-            {/* Current Reading with Risk Level */}
-            <div className={`p-5 rounded-xl border-3 ${getRiskColor(data.risk_level)} mb-5`}>
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-bold mb-1">
-                    {data.vital_type ? data.vital_type.replace('_', ' ').toUpperCase() : 
-                     data.symptom_type ? data.symptom_type.replace('_', ' ').toUpperCase() :
-                     data.medication_name ? data.medication_name :
-                     data.alert_type ? data.alert_type.replace('_', ' ').toUpperCase() : 'Reading'}
-                  </h3>
-                  <p className="text-2xl font-bold mb-2">
-                    {data.current_value !== undefined ? formatValue(data.current_value) :
-                     data.current_severity !== undefined ? `${data.current_severity}/10` :
-                     data.triggered_value || 'N/A'}
-                  </p>
-                  <p className="text-sm font-semibold uppercase tracking-wide">
-                    {data.risk_level} Risk
-                  </p>
-                </div>
-                
-                {/* Trend & Baseline */}
-                {(data.trend || data.baseline_value) && (
-                  <div className="text-right">
-                    {data.trend && (
-                      <div className="flex items-center gap-2 mb-2 justify-end">
-                        {getTrendIcon(data.trend)}
-                        <span className="text-sm font-semibold capitalize">{data.trend}</span>
-                      </div>
-                    )}
-                    {data.baseline_value && (
-                      <div className="text-xs text-slate-600">
-                        <p className="font-semibold">Baseline:</p>
-                        <p>{formatValue(data.baseline_value)}</p>
-                      </div>
-                    )}
+        {/* ── § 4  Contributing factors (SHAP-like bars) ─────────── */}
+        {data?.relevant_factors?.length > 0 && (
+          <div className="rounded-lg border border-slate-200 overflow-hidden">
+            <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+              <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Contributing Factors</span>
+            </div>
+            <div className="px-4 py-3 bg-white space-y-2">
+              {data.relevant_factors.map((f, i) => (
+                <SHAPRow key={i} rank={i + 1}
+                  feature={f.feature_name}
+                  value={f.display_value}
+                  pct={f.importance ? parseFloat(f.importance) : 50 - i * 8}
+                  impact={f.impact || 'increases_risk'} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── § 5  Drug interactions ──────────────────────────────── */}
+        {data?.interactions?.length > 0 && (
+          <div className="rounded-lg border border-amber-200 overflow-hidden">
+            <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border-b border-amber-200">
+              <span className="w-1 h-4 rounded-full bg-amber-400 flex-shrink-0" />
+              <Pill size={12} className="text-amber-600 flex-shrink-0" />
+              <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest select-none">Drug Interactions Detected</span>
+            </div>
+            <div className="px-4 py-3 bg-white space-y-2">
+              {data.interactions.map((ix, i) => (
+                <div key={i} className="flex items-start gap-3 pl-3 border-l-2 border-amber-300">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-800">{ix.medication}</p>
+                    <p className="text-xs text-slate-600 mt-0.5">{ix.interaction}</p>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* AI Explanation */}
-            <div className="mb-5">
-              <h4 className="font-bold text-base mb-3 flex items-center gap-2">
-                <Brain className="text-purple-600" size={18} />
-                Why is this concerning?
-              </h4>
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                <p className="text-slate-900 leading-relaxed">{data.explanation}</p>
-                {data.confidence && (
-                  <p className="text-xs text-slate-600 mt-3 border-t border-slate-300 pt-2">
-                    AI Confidence: <span className="font-bold">{(data.confidence * 100).toFixed(0)}%</span>
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Relevant Factors (SHAP-like) */}
-            {data.relevant_factors && data.relevant_factors.length > 0 && (
-              <div className="mb-5">
-                <h4 className="font-bold text-base mb-3"> Contributing Factors</h4>
-                <div className="space-y-2">
-                  {data.relevant_factors.map((factor, idx) => (
-                    <div key={idx} className="bg-white border border-slate-200 rounded-lg p-3 hover:border-blue-300 transition">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            {factor.impact === 'increases_risk' ? (
-                              <TrendingUp className="text-red-500" size={14} />
-                            ) : factor.impact === 'decreases_risk' ? (
-                              <TrendingDown className="text-green-500" size={14} />
-                            ) : (
-                              <div className="w-3 h-3" />
-                            )}
-                            <span className="font-bold text-sm text-slate-900">
-                              {factor.feature_name}
-                            </span>
-                          </div>
-                          {factor.explanation && (
-                            <p className="text-xs text-slate-700">{factor.explanation}</p>
-                          )}
-                        </div>
-                        <div className="ml-3 text-right">
-                          <p className="text-base font-bold text-slate-700">{factor.display_value}</p>
-                          {factor.importance && (
-                            <p className="text-xs text-slate-500">Rank #{factor.importance}</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <InfoBadge label={ix.severity}
+                    variant={ix.severity === 'high' ? 'danger' : ix.severity === 'moderate' ? 'warning' : 'info'} size="xs" />
                 </div>
-              </div>
-            )}
-
-            {/* Medication Interactions */}
-            {data.interactions && data.interactions.length > 0 && (
-              <div className="mb-5">
-                <h4 className="font-bold text-base mb-3 flex items-center gap-2">
-                  <AlertTriangle className="text-orange-600" size={18} />
-                  Drug Interactions
-                </h4>
-                <div className="space-y-2">
-                  {data.interactions.map((interaction, idx) => (
-                    <div key={idx} className="bg-orange-50 border-2 border-orange-200 rounded-lg p-3">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-bold text-sm text-orange-900">{interaction.medication}</p>
-                          <p className="text-xs text-orange-800">{interaction.interaction}</p>
-                        </div>
-                        <span className={`text-xs font-bold px-2 py-1 rounded ${
-                          interaction.severity === 'high' ? 'bg-red-200 text-red-800' :
-                          interaction.severity === 'moderate' ? 'bg-orange-200 text-orange-800' :
-                          'bg-yellow-200 text-yellow-800'
-                        }`}>
-                          {interaction.severity}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Recommendations */}
-            <div className="mb-4">
-              <h4 className="font-bold text-base mb-3 flex items-center gap-2">
-                <CheckCircle className="text-blue-600" size={18} />
-                Recommended Actions
-              </h4>
-              <ol className="space-y-2">
-                {data.recommendations.map((rec, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm bg-blue-50 p-3 rounded-lg border border-blue-200">
-                    <span className="font-bold text-blue-600 flex-shrink-0">{idx + 1}.</span>
-                    <span className="text-blue-900">{rec}</span>
-                  </li>
-                ))}
-              </ol>
+              ))}
             </div>
+          </div>
+        )}
 
-            {/* Additional Context */}
-            {data.history_count !== undefined && (
-              <div className="text-xs text-slate-500 text-center mt-4 pt-4 border-t border-slate-200">
-                Based on analysis of {data.history_count} historical readings
-              </div>
-            )}
-
-            {/* ========== CLINICIAN FEEDBACK SECTION (NEW!) ========== */}
-            {!feedbackSubmitted ? (
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6 mt-6">
-                <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
-                  <Brain className="text-purple-600" size={20} />
-                  ­ Was this explanation helpful?
-                </h4>
-                <p className="text-sm text-slate-600 mb-4">
-                  Your feedback helps improve XAI explanations for all clinicians
-                </p>
-                
-                <div className="flex gap-3 mb-4">
-                  <button
-                    onClick={() => setFeedbackType('helpful')}
-                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
-                      feedbackType === 'helpful'
-                        ? 'bg-green-600 text-white shadow-lg'
-                        : 'bg-white border-2 border-green-300 text-green-700 hover:bg-green-50'
-                    }`}
-                  >
-                    <ThumbsUp size={18} />
-                    Helpful
-                  </button>
-                  
-                  <button
-                    onClick={() => setFeedbackType('partially_helpful')}
-                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
-                      feedbackType === 'partially_helpful'
-                        ? 'bg-yellow-600 text-white shadow-lg'
-                        : 'bg-white border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50'
-                    }`}
-                  >
-                    Partially
-                  </button>
-                  
-                  <button
-                    onClick={() => setFeedbackType('not_helpful')}
-                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
-                      feedbackType === 'not_helpful'
-                        ? 'bg-red-600 text-white shadow-lg'
-                        : 'bg-white border-2 border-red-300 text-red-700 hover:bg-red-50'
-                    }`}
-                  >
-                    <ThumbsDown size={18} />
-                    Not Helpful
-                  </button>
+        {/* ── § 6  Recommended actions ────────────────────────────── */}
+        {data?.recommendations?.length > 0 && (
+          <div className="rounded-lg border border-teal-200 overflow-hidden">
+            <div className="flex items-center gap-2.5 px-4 py-2.5 bg-teal-50 border-b border-teal-200">
+              <span className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
+              <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
+              <span className="text-[11px] font-bold text-teal-700 uppercase tracking-widest select-none">Recommended Actions</span>
+            </div>
+            <div className="px-4 py-3 bg-white space-y-2">
+              {data.recommendations.map((r, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+                  <p className="text-sm text-slate-700 leading-relaxed">{r}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                {feedbackType && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="mt-4"
-                  >
-                    <textarea
-                      value={feedbackNote}
-                      onChange={(e) => setFeedbackNote(e.target.value)}
-                      placeholder="What would make this explanation more useful? (optional)"
-                      className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                      rows={3}
-                    />
-                    
-                    <button
-                      onClick={handleFeedbackSubmit}
-                      disabled={submitting}
-                      className="mt-3 w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {submitting ? 'Submitting...' : 'Submit Feedback'}
+        {data?.history_count !== undefined && (
+          <p className="text-xs text-slate-400 text-center">
+            Based on analysis of {data.history_count} historical readings
+          </p>
+        )}
+
+        {/* ── § 7  Clinician feedback ─────────────────────────────── */}
+        <div className="rounded-lg border border-slate-200 overflow-hidden">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+            <span className="w-1 h-4 rounded-full bg-slate-300 flex-shrink-0" />
+            <MessageSquare size={12} className="text-slate-500 flex-shrink-0" />
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Was this explanation helpful?</span>
+          </div>
+          <div className="px-4 py-3 bg-white">
+            {!submitted ? (
+              <div className="space-y-3">
+                <p className="text-xs text-slate-500">Your feedback helps improve AI explanations for all clinicians.</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { type: 'helpful',           label: 'Helpful',     Icon: ThumbsUp,   active: 'bg-emerald-600 text-white', passive: 'border-emerald-300 text-emerald-700' },
+                    { type: 'partially_helpful', label: 'Partial',     Icon: Activity,   active: 'bg-amber-500 text-white',   passive: 'border-amber-300 text-amber-700' },
+                    { type: 'not_helpful',       label: 'Not Helpful', Icon: ThumbsDown, active: 'bg-red-600 text-white',     passive: 'border-red-300 text-red-700' },
+                  ].map(({ type, label, Icon, active, passive }) => (
+                    <button key={type} onClick={() => setFeedback(type)}
+                      className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 text-xs font-semibold transition-all
+                        ${feedbackType === type ? active : `bg-white ${passive} hover:opacity-80`}`}>
+                      <Icon size={16} />{label}
                     </button>
-                  </motion.div>
-                )}
+                  ))}
+                </div>
+                <AnimatePresence>
+                  {feedbackType && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden space-y-2">
+                      <textarea value={note} onChange={e => setNote(e.target.value)} rows={2}
+                        placeholder="What would make this explanation more useful? (optional)"
+                        className="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100 resize-none transition-all" />
+                      <button onClick={submitFeedback} disabled={submitting}
+                        className="w-full py-2.5 bg-violet-700 hover:bg-violet-800 text-white font-bold rounded-xl disabled:opacity-50 transition-colors text-sm shadow-sm">
+                        {submitting ? 'Submitting…' : 'Submit Feedback'}
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="bg-green-50 border-2 border-green-300 rounded-xl p-6 mt-6 text-center"
-              >
-                <div className="text-5xl mb-3">...</div>
-                <h4 className="font-bold text-lg text-green-800 mb-2">
-                  Thank you for your feedback!
-                </h4>
-                <p className="text-sm text-green-700">
-                  Your input helps us improve XAI explanations for everyone
-                </p>
-              </motion.div>
+              <InfoAlert type="success" title="Thank you!">
+                Your feedback helps us improve AI explanations for all clinical users.
+              </InfoAlert>
             )}
           </div>
+        </div>
 
-          {/* Footer */}
-          <div className="bg-slate-50 px-6 py-3 border-t-2 border-slate-200">
-            <button
-              onClick={onClose}
-              className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg hover:shadow-lg transition"
-            >
-              Close
-            </button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+      </div>
+    </ModalShell>
   );
 }
-

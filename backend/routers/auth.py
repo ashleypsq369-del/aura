@@ -3,7 +3,7 @@ Authentication Router  --  Project Aura
 JWT auth + registration + password reset + change password
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -14,15 +14,17 @@ import os
 import secrets
 import re
 
+from services.rate_limiter import limiter
 from src.db import (
     get_db, User, AuditLog, UserProfile, PatientPreferences,
-    PasswordResetToken, authenticate_user, hash_password
+    PasswordResetToken, authenticate_user, hash_password, verify_password,
+    Patient,
 )
 
 router = APIRouter()
 
 # JWT Configuration
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production-minimum-32-chars")
+SECRET_KEY = os.getenv("SECRET_KEY", os.getenv("JWT_SECRET_KEY", "a3f8e2d1c4b7a0f9e6d3c8b5a2f7e4d1c9b6a3f0e7d4c1b8a5f2e9d6c3b0a7"))
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 8
 
@@ -144,12 +146,13 @@ def require_role(*roles):
 # ─── Endpoints ────────────────────────────────────────────────────────────────
 
 @router.post("/login", response_model=Token)
-async def login(request: LoginRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+async def login(request: Request, data: LoginRequest, db: Session = Depends(get_db)):
     """Login  --  returns JWT token and user object."""
-    user = authenticate_user(request.username, request.password, db)
+    user = authenticate_user(data.username, data.password, db)
 
     if not user:
-        user_check = db.query(User).filter(User.username == request.username).first()
+        user_check = db.query(User).filter(User.username == data.username).first()
         if user_check:
             user_check.failed_logins = (user_check.failed_logins or 0) + 1
             if user_check.failed_logins >= 5:
@@ -157,7 +160,7 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
             db.commit()
 
         audit = AuditLog(user_id=None, action="login_failed", resource_type="user",
-                         success=False, details=f'{{"username": "{request.username}"}}')
+                         success=False, details=f'{{"username": "{data.username}"}}')
         db.add(audit)
         db.commit()
 
@@ -237,14 +240,54 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
     db.add(new_user)
     db.flush()  # get new_user.id
 
+    # ── Auto-create a Patient record for patient-role registrations ──────────
+    auto_patient_id = request.linked_patient_id
+    if request.role == "patient" and not auto_patient_id:
+        try:
+            new_patient = Patient(
+                full_name=request.full_name,
+                patient_code=f"PA{new_user.id:04d}",
+                date_of_birth=datetime(1970, 1, 1),  # placeholder — updated after onboarding
+                gender=None,
+                primary_diagnosis="To be assessed",
+                status="active",
+                phone=request.phone,
+                created_at=datetime.utcnow(),
+            )
+            db.add(new_patient)
+            db.flush()
+            auto_patient_id = new_patient.id
+
+            # Auto-assign the first available clinician as primary care provider
+            from src.db import CaregiverAssignment
+            first_clinician = db.query(User).filter(
+                User.role.in_(["clinician", "admin"]),
+                User.is_active == True,
+            ).order_by(User.id.asc()).first()
+            if first_clinician:
+                assignment = CaregiverAssignment(
+                    patient_id=new_patient.id,
+                    caregiver_id=first_clinician.id,
+                    active=True,
+                    assigned_at=datetime.utcnow(),
+                )
+                db.add(assignment)
+                db.flush()
+        except Exception as patient_err:
+            import logging
+            logging.getLogger(__name__).warning(
+                f"Patient auto-creation failed for {request.username}: {patient_err}"
+            )
+            auto_patient_id = None
+
     # Create UserProfile
     profile = UserProfile(user_id=new_user.id, language_pref="en")
     db.add(profile)
 
-    # Initialise empty preferences record so we know questionnaire is pending
+    # Initialise preferences and link to patient record
     prefs = PatientPreferences(
         user_id=new_user.id,
-        patient_id=request.linked_patient_id,
+        patient_id=auto_patient_id,
         questionnaire_complete=False,
     )
     db.add(prefs)
@@ -273,6 +316,7 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
             "is_verified": False,
             "is_professional": False,
             "professional_title": None,
+            "patient_id": auto_patient_id,
         }
     }
 
@@ -421,7 +465,7 @@ async def change_password(
     db: Session = Depends(get_db)
 ):
     """Change own password (authenticated users only)."""
-    if current_user.hashed_password != hash_password(request.current_password):
+    if not verify_password(request.current_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
 
     valid, error = validate_password_strength(request.new_password)

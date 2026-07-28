@@ -85,6 +85,13 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* ── Global link reset — prevent browser default blue/purple colours ── */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* Links that DO want underlines can opt in with class="underline" */
+
   /* ── Dark mode CSS variable overrides ──────────────────────────────── */
   html.dark {
     --color-text-primary:   #f8fafc;   /* near white — max readability */

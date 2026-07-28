@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import toast from '../utils/toast';
 import { bereavementAPI } from '../api/client';
+import ModalShell from './ui/ModalShell';
 
 /**
  * Grief Screening Form (PG-13 Questionnaire)
@@ -144,40 +145,16 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
   const currentQ = pg13Questions[currentQuestion];
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-4 border-purple-200"
-        >
-          {!showResults ? (
-            <div className="p-8">
-              {/* Header */}
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-2">
-                    Grief Check-In
-                  </h2>
-                  <p className="text-slate-600 text-sm">
-                    This helps us understand your grief experience
-                  </p>
-                </div>
-                <button
-                  onClick={onClose}
-                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+    <ModalShell
+      open={true}
+      onClose={onClose}
+      title={showResults ? 'Screening Complete' : 'Grief Check-In'}
+      description={showResults ? 'Thank you for sharing your experience' : 'This helps us understand your grief experience'}
+      accent="violet"
+      size="md"
+    >
+      {!showResults ? (
+        <div className="space-y-6">
 
               {/* Progress Bar */}
               <div className="mb-8">
@@ -264,109 +241,70 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                   Select an answer to continue
                 </p>
               </div>
-            </div>
-          ) : (
-            /* Results Screen */
-            <div className="p-8">
-              <div className="text-center mb-8">
-                {results.flagged ? (
-                  <AlertTriangle size={64} className="text-amber-600 mx-auto mb-4" />
-                ) : (
-                  <CheckCircle size={64} className="text-green-600 mx-auto mb-4" />
-                )}
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">
-                  Screening Complete
-                </h2>
-                <p className="text-slate-600">
-                  Thank you for sharing about your grief experience
-                </p>
-              </div>
+        </div>
+      ) : (
+        /* Results Screen */
+        <div className="space-y-6">
+          <div className="text-center mb-4">
+            {results.flagged ? (
+              <AlertTriangle size={64} className="text-amber-600 mx-auto mb-4" />
+            ) : (
+              <CheckCircle size={64} className="text-green-600 mx-auto mb-4" />
+            )}
+          </div>
 
-              {/* Score Interpretation */}
-              <div className={`p-6 rounded-xl border-2 mb-6 ${
-                results.flagged
-                  ? 'bg-amber-50 border-amber-300'
-                  : 'bg-green-50 border-green-300'
-              }`}>
-                <p className={`font-bold text-lg mb-3 ${
-                  results.flagged ? 'text-amber-900' : 'text-green-900'
-                }`}>
-                  {results.interpretation}
-                </p>
-                <p className={`text-sm ${
-                  results.flagged ? 'text-amber-800' : 'text-green-800'
-                }`}>
-                  {results.recommendation}
-                </p>
-              </div>
+          {/* Score Interpretation */}
+          <div className={`p-6 rounded-xl border-2 ${
+            results.flagged ? 'bg-amber-50 border-amber-300' : 'bg-green-50 border-green-300'
+          }`}>
+            <p className={`font-bold text-lg mb-3 ${results.flagged ? 'text-amber-900' : 'text-green-900'}`}>
+              {results.interpretation}
+            </p>
+            <p className={`text-sm ${results.flagged ? 'text-amber-800' : 'text-green-800'}`}>
+              {results.recommendation}
+            </p>
+          </div>
 
-              {/* Professional Support Recommendation */}
-              {results.flagged && (
-                <div className="p-6 bg-purple-50 rounded-xl border-2 border-purple-300 mb-6">
-                  <h3 className="font-bold text-purple-900 text-lg mb-3">
-                    Recommended Next Steps
-                  </h3>
-                  <ul className="space-y-2 text-purple-800 text-sm mb-4">
-                    <li className="flex items-start gap-2">
-                      <span>-</span>
-                      <span>Consider speaking with a grief counselor or therapist</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span>-</span>
-                      <span>Join a bereavement support group</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span>-</span>
-                      <span>Continue using self-care strategies</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span>-</span>
-                      <span>Retake this screening in 1-3 months</span>
-                    </li>
-                  </ul>
-                  <p className="text-purple-900 font-semibold text-sm">
-                    📞 Ghana Mental Health Authority: <span className="text-lg">0800-900-888</span> (Toll-free)
-                  </p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => {
-                    onComplete();
-                    onClose();
-                  }}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:shadow-lg transition-all"
-                >
-                  Continue
-                </button>
-                <button
-                  onClick={onClose}
-                  className="px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all"
-                >
-                  Close
-                </button>
-              </div>
-
-              {/* Confidentiality Note */}
-              <p className="text-xs text-slate-500 text-center mt-4">
-                🔒 Your responses are confidential and stored securely
+          {/* Professional Support Recommendation */}
+          {results.flagged && (
+            <div className="p-6 bg-purple-50 rounded-xl border-2 border-purple-300">
+              <h3 className="font-bold text-purple-900 text-lg mb-3">Recommended Next Steps</h3>
+              <ul className="space-y-2 text-purple-800 text-sm mb-4">
+                {['Consider speaking with a grief counselor or therapist','Join a bereavement support group','Continue using self-care strategies','Retake this screening in 1-3 months'].map(s => (
+                  <li key={s} className="flex items-start gap-2"><span>–</span><span>{s}</span></li>
+                ))}
+              </ul>
+              <p className="text-purple-900 font-semibold text-sm">
+                📞 Ghana Mental Health Authority: <span className="text-lg">0800-900-888</span> (Toll-free)
               </p>
             </div>
           )}
 
-          {/* Loading Overlay */}
-          {submitScreeningMutation.isPending && (
-            <div className="absolute inset-0 bg-white/90 flex items-center justify-center rounded-2xl">
-              <div className="text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-3" />
-                <p className="text-slate-700 font-semibold">Processing your responses...</p>
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button onClick={() => { onComplete(); onClose(); }}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:shadow-lg transition-all">
+              Continue
+            </button>
+            <button onClick={onClose}
+              className="px-6 py-3 border-2 border-slate-300 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
+              Close
+            </button>
+          </div>
+
+          <p className="text-xs text-slate-500 text-center">
+            🔒 Your responses are confidential and stored securely
+          </p>
+        </div>
+      )}
+
+      {/* Loading Overlay */}
+      {submitScreeningMutation.isPending && (
+        <div className="flex flex-col items-center justify-center py-8">
+          <Loader2 className="w-12 h-12 animate-spin text-purple-600 mb-3" />
+          <p className="text-slate-700 font-semibold">Processing your responses...</p>
+        </div>
+      )}
+    </ModalShell>
   );
 }

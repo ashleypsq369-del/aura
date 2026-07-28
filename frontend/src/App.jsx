@@ -1,21 +1,22 @@
 ﻿import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
 import { Toaster as SonnerToaster } from 'sonner';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import { AppSettingsProvider, useAppSettings } from './context/AppSettingsContext';
 import { CareSettingProvider } from './context/CareSettingContext';
+import { PersonalisationProvider, usePersonalisationFlags } from './context/PersonalisationContext';
+import { WebSocketProvider } from './context/WebSocketContext';
 import KeyboardNav from './components/KeyboardNav';
 import NProgressBar from './components/NProgressBar';
 import { TooltipProvider } from './components/ui/Tooltip';
 import useVoiceControl from './hooks/useVoiceControl';
 import useTouchSupport from './hooks/useTouchSupport';
 import useIdleTimer from './hooks/useIdleTimer';
-import { useEffect } from 'react';
-import { initAOS } from './utils/animations';
 import AutoLogoffWarning from './components/AutoLogoffWarning';
+import SplashScreen from './components/SplashScreen';
 import 'nprogress/nprogress.css';
 import './styles/nprogress-override.css';
 import './styles/accessibility.css';
@@ -24,6 +25,7 @@ import './styles/touch.css';
 import './styles/symbol-fixes.css';
 import './styles/animations.css';
 import './styles/color-system.css';
+import './styles/sonner-overrides.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -63,6 +65,7 @@ import MyLegacyAccess from './pages/MyLegacyAccess';
 import AnimationDemoSimple from './pages/AnimationDemoSimple';
 import Journal from './pages/Journal';
 import PersonalisationQuest from './pages/PersonalisationQuest';
+import MLRiskDetail from './pages/MLRiskDetail';
 import PatientPortal from './pages/PatientPortal';
 import WellnessCheckin from './pages/WellnessCheckin';
 import AdminUserManagement from './pages/AdminUserManagement';
@@ -81,6 +84,7 @@ import TouchDemo from './pages/TouchDemo';
 import Layout from './components/layout/Layout';
 import AuraChat from './components/AuraChat';
 import AIAssistant from './components/AIAssistant';
+import AuraOnboarding from './components/AuraOnboarding';
 
 // One-time: migrate old dismiss keys so avatar shows for returning users
 if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('aura_v2_dismissed') === 'true') {
@@ -129,7 +133,8 @@ function ProtectedRoute({ children }) {
 
 function AppRoutes() {
   const { isAuthenticated, logout } = useAuth();
-  const { showAiWidgets } = useAppSettings();
+  const { showAiWidgets, featureSettings } = useAppSettings();
+  const { uiFlags } = usePersonalisationFlags();
   const location = useLocation();
   
   // Initialize voice control hook
@@ -137,6 +142,130 @@ function AppRoutes() {
   
   // Initialize touch support (haptics + sounds)
   useTouchSupport();
+
+  // ── Global personalisation applier ────────────────────────────────────
+  // Runs once per login session. Fetches questionnaire prefs from the backend
+  // and applies them to theme, a11y, sidebar, and notifications — so returning
+  // users always get their chosen settings without re-doing the questionnaire.
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id) return;
+    // Only run once per session
+    const sessionKey = `prefs_applied_${user.id}`;
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/preferences/${user.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(prefs => {
+        if (!prefs) return;
+
+        // Language
+        if (prefs.language_pref && prefs.language_pref !== 'en') {
+          const stored = localStorage.getItem('app_language');
+          if (!stored || stored === 'en') {
+            localStorage.setItem('app_language', prefs.language_pref);
+            document.documentElement.lang = prefs.language_pref;
+          }
+        }
+
+        // Theme
+        if (prefs.theme_pref) {
+          const stored = localStorage.getItem('app_theme');
+          if (!stored || stored === 'light') {
+            localStorage.setItem('app_theme', prefs.theme_pref);
+            const root = document.documentElement;
+            root.classList.remove('light-theme', 'dark-theme', 'dark');
+            if (prefs.theme_pref === 'dark') {
+              root.classList.add('dark-theme', 'dark');
+            } else if (prefs.theme_pref === 'auto') {
+              if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                root.classList.add('dark-theme', 'dark');
+              } else {
+                root.classList.add('light-theme');
+              }
+            } else {
+              root.classList.add('light-theme');
+            }
+          }
+        }
+
+        // Notifications
+        if (prefs.notification_pref === 'none') {
+          const stored = localStorage.getItem('app_notifications');
+          if (stored === null) localStorage.setItem('app_notifications', 'false');
+        }
+
+        // Font size from tech comfort
+        const techToFont = { low: 'large', basic: 'xlarge' };
+        const fontSz = techToFont[prefs.tech_comfort];
+        if (fontSz) {
+          try {
+            const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+            if (!a11y.fontSize || a11y.fontSize === 'medium') {
+              const updated = { ...a11y, fontSize: fontSz };
+              localStorage.setItem('accessibility_settings', JSON.stringify(updated));
+              document.documentElement.classList.remove('text-small','text-medium','text-large','text-xlarge','text-xxlarge');
+              document.documentElement.classList.add(`text-${fontSz}`);
+              // Large touch for basic users
+              if (prefs.tech_comfort === 'basic') {
+                updated.largeTouch = true;
+                localStorage.setItem('accessibility_settings', JSON.stringify(updated));
+                document.documentElement.classList.add('large-touch');
+              }
+            }
+          } catch { /* non-fatal */ }
+        }
+
+        // Sidebar mode for low-tech users
+        if (prefs.tech_comfort === 'basic' || prefs.tech_comfort === 'low') {
+          const stored = localStorage.getItem('sidebar_default_state');
+          if (!stored) localStorage.setItem('sidebar_default_state', 'icons');
+        }
+
+        // Activity level → reduced motion
+        if (prefs.activity_level === 'bedbound' || prefs.activity_level === 'very_low') {
+          try {
+            const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+            if (!a11y.reducedMotion) {
+              localStorage.setItem('accessibility_settings', JSON.stringify({ ...a11y, reducedMotion: true, largeTouch: true }));
+            }
+          } catch { /* non-fatal */ }
+        }
+
+        // AI consent
+        if (prefs.ai_analysis_consent === 'no') {
+          const stored = localStorage.getItem('show_ai_widgets');
+          if (stored === null) localStorage.setItem('show_ai_widgets', 'false');
+        }
+
+        sessionStorage.setItem(sessionKey, '1');
+      })
+      .catch(() => { /* network failure is non-fatal */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user?.id]);
+  // ──────────────────────────────────────────────────────────────────────
+
+  // Reinitialise AOS when smoothScrollReveal changes
+  useEffect(() => {
+    import('aos').then((AOS) => {
+      if (featureSettings.smoothScrollReveal) {
+        AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 80, disable: false });
+      } else {
+        AOS.init({ disable: true });
+        // Remove all existing AOS classes so nothing is hidden
+        document.querySelectorAll('[data-aos]').forEach(el => {
+          el.removeAttribute('data-aos');
+          el.style.opacity = '';
+          el.style.transform = '';
+        });
+      }
+    });
+  }, [featureSettings.smoothScrollReveal]);
 
   // HIPAA Compliance: 15-minute auto-logoff
   const {
@@ -184,6 +313,8 @@ function AppRoutes() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Chatbot redirect — public (catches pre-login visits), preserves ?userId= params */}
+          <Route path="/chatbot" element={<RedirectWithSearch to="/messages" />} />
           
           {/* Personalisation Questionnaire - No Layout */}
           <Route 
@@ -215,6 +346,7 @@ function AppRoutes() {
                     <Route path="/patients/:patientId/care-plan" element={<CarePlanDetail />} />
                     <Route path="/patients/:patientId/appointments" element={<Appointments />} />
                     <Route path="/patients/:patientId/wellbeing" element={<WellbeingDetail />} />
+                    <Route path="/patients/:patientId/ml-risk" element={<MLRiskDetail />} />
                     <Route path="/ai-insights" element={<AIInsights />} />
                     <Route path="/alerts" element={<Alerts />} />
                     <Route path="/medications" element={<Medications />} />
@@ -246,6 +378,8 @@ function AppRoutes() {
                     <Route path="/resources" element={<Resources />} />
                     <Route path="/my-journey" element={<MyJourney />} />
                     <Route path="/messages" element={<Messages />} />
+                    {/* Chatbot redirect — inside Layout (logged-in users), preserves ?userId= params */}
+                    <Route path="/chatbot" element={<RedirectWithSearch to="/messages" />} />
                     <Route path="/notifications" element={<Notifications />} />
                     <Route path="/notification-tester" element={<NotificationTester />} />
                     <Route path="/settings" element={<Settings />} />
@@ -262,16 +396,15 @@ function AppRoutes() {
                     <Route path="/residential-log" element={<ResidentialLog />} />
                     <Route path="/bereavement-support" element={<BereavedFamilyDashboard />} />
                     {/* Dev-only pages  --  hidden from nav but reachable if needed */}
-                    <Route path="/notification-tester" element={<NotificationTester />} />
-                    <Route path="/touch-demo" element={<TouchDemo />} />
                     <Route path="/animation-demo" element={<AnimationDemoSimple />} />
                   </Routes>
                 </Layout>
-                {/* AI widgets - draggable, visible on every page unless disabled in Settings → AI Tools */}
-                {showAiWidgets && (
+                {/* AI widgets — hidden if user declined AI consent in questionnaire OR turned off in Settings */}
+                {showAiWidgets && uiFlags.showAI !== false && (
                   <>
                     <AuraChat />
                     <AIAssistant />
+                    <AuraOnboarding />
                   </>
                 )}
               </ProtectedRoute>
@@ -280,53 +413,37 @@ function AppRoutes() {
         </Routes>
       </AnimatePresence>
       
-      {/* React Hot Toast - patient-facing notifications */}
-      <Toaster
-        position="top-right"
-        gutter={6}
-        containerStyle={{ top: 72, right: 16 }}
-        toastOptions={{
-          duration: 4000,
-          style: {
-            padding: 0,
-            background: 'transparent',
-            boxShadow: 'none',
-            border: 'none',
-            maxWidth: '320px',
-          },
-        }}
-      />
-      {/* Sonner - clinical stacking alerts (never shows PHI) */}
+      {/* Single Sonner toaster — below header, right-aligned, 6s duration */}
       <SonnerToaster
         position="top-right"
+        richColors
+        expand={false}
+        visibleToasts={3}
+        gap={6}
         toastOptions={{
+          duration: 6000,
           style: {
-            background:   '#ffffff',
-            border:       '1px solid rgba(0,0,0,0.08)',
-            borderRadius: '10px',
-            boxShadow:    '0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)',
-            padding:      '11px 14px',
-            fontSize:     '13px',
-            fontWeight:   '500',
-            color:        '#1e293b',
-            maxWidth:     '360px',
+            fontFamily: 'inherit',
+            fontSize:   '13px',
           },
         }}
-        richColors
-        closeButton
-        expand={false}
-        visibleToasts={5}
-        gap={8}
+        theme="system"
       />
     </>
   );
 }
 
 export default function App() {
-  // Initialize AOS (Animate On Scroll) for scroll animations
-  useEffect(() => {
-    initAOS();
-  }, []);
+  // Show splash screen once per browser session
+  const SPLASH_KEY = 'aura_splash_v4';
+  const [showSplash, setShowSplash] = React.useState(() => {
+    return !sessionStorage.getItem(SPLASH_KEY);
+  });
+
+  const handleSplashDone = () => {
+    sessionStorage.setItem(SPLASH_KEY, '1');
+    setShowSplash(false);
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -334,11 +451,19 @@ export default function App() {
         <AccessibilityProvider>
           <AppSettingsProvider>
             <CareSettingProvider>
-              <BrowserRouter>
+              <WebSocketProvider>
+                <PersonalisationProvider>
+                <BrowserRouter>
                 <TooltipProvider>
+                  {/* Intro splash — shown once per session */}
+                  {showSplash && (
+                    <SplashScreen onDone={handleSplashDone} />
+                  )}
                   <AppRoutes />
                 </TooltipProvider>
               </BrowserRouter>
+              </PersonalisationProvider>
+              </WebSocketProvider>
             </CareSettingProvider>
           </AppSettingsProvider>
         </AccessibilityProvider>

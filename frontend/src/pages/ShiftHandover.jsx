@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ClipboardList, Plus, Check, AlertTriangle, Users, Clock, Send } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
 import toast from '../utils/toast';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -91,7 +90,6 @@ export default function ShiftHandover() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto px-4 py-6 space-y-6">
-      <Toaster position="top-right" />
 
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-5 shadow-lg border-2 border-blue-400">

@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -13,7 +13,7 @@ import PasswordStrength from '../components/PasswordStrength';
 import { useAuth } from '../context/AuthContext';
 import LoginSlideshow from '../components/LoginSlideshow';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 // ── Country phone codes (comprehensive list) ─────────────────────────────
 const COUNTRIES = [
@@ -298,8 +298,8 @@ export default function Register() {
             {/* Header */}
             <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-8 py-6 text-white">
               <div className="flex items-center gap-3 mb-1">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                  <UserPlus size={20} className="text-white" />
+                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden">
+                  <img src="/logo.png" alt="Project Aura" className="w-9 h-9 object-contain" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold">Create Account</h1>

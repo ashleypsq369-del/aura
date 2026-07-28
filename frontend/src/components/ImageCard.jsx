@@ -55,7 +55,7 @@ function _Inner({ image, icon: Icon, title, description, onClick, linkTo, color,
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.65), rgba(0,0,0,0.45), rgba(0,0,0,0.20))',
+          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.48), rgba(0,0,0,0.28), rgba(0,0,0,0.08))',
           zIndex: 2,
           pointerEvents: 'none',
         }}
@@ -91,16 +91,16 @@ function _Inner({ image, icon: Icon, title, description, onClick, linkTo, color,
             </span>
           )}
           <h3
-            className="img-heading font-bold text-lg leading-tight mb-1"
-            style={{ color: '#fef08a', WebkitTextFillColor: '#fef08a', textShadow: '0 2px 8px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9)' }}
+            className="img-heading font-bold text-lg leading-tight mb-1 text-white"
+            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
           >
             {title}
           </h3>
-          <p style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.9)', fontSize: '0.875rem', lineHeight: '1.5' }}>
+          <p style={{ color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 3px rgba(0,0,0,0.5)', fontSize: '0.875rem', lineHeight: '1.5' }}>
             {description}
           </p>
         </div>
-        <div className="flex items-center gap-1 text-sm font-semibold mt-3 self-start" style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>
+        <div className="flex items-center gap-1 text-sm font-semibold mt-3 self-start text-white/90">
           Open <ChevronRight size={14} />
         </div>
       </div>

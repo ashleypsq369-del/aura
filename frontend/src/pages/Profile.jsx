@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
@@ -13,7 +13,7 @@ import FormFileUpload from '../components/FormFileUpload';
 import AvatarDisplay from '../components/avatar/AvatarDisplay';
 import AvatarModal from '../components/avatar/AvatarModal';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function Profile() {
   const [editMode, setEditMode] = useState(false);

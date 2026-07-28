@@ -1,356 +1,322 @@
 /**
- * Voice Control Service for ProjectAura
- * Enables hands-free navigation and control for users with motor impairments
- * Supports voice commands for navigation, form control, and common actions
+ * VoiceControlService.js — Project Aura
+ * =======================================
+ * Hands-free navigation via Web Speech API SpeechRecognition.
+ * Designed for patients with motor impairments or dementia.
+ *
+ * Works on: Chrome, Edge (requires HTTPS or localhost)
+ * Does NOT work on: Firefox (no SpeechRecognition support)
  */
 
 class VoiceControlService {
   constructor() {
-    // Check browser support
-    this.isSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-    
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    this.isSupported = !!SR;
+    this.recognition  = null;
+    this.synthesis    = window.speechSynthesis || null;
+    this.isListening  = false;
+    this.callbacks    = [];
+    this.navigate     = null;
+    this._permissionDenied = false;
+    this._lastCommand = '';
+    this._onCommandListeners = []; // for UI feedback
+
     if (this.isSupported) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      this.recognition = new SpeechRecognition();
-      this.synthesis = window.speechSynthesis;
-      
-      // Configure recognition
-      this.recognition.continuous = true;
-      this.recognition.interimResults = false;
-      this.recognition.lang = 'en-US';
-      this.recognition.maxAlternatives = 1;
+      this.recognition = new SR();
+      this.recognition.continuous     = true;
+      this.recognition.interimResults  = false;
+      this.recognition.lang            = 'en-US';
+      this.recognition.maxAlternatives = 3;
     }
-    
-    this.isListening = false;
-    this.callbacks = [];
-    this.navigate = null; // Will be set by the component using this service
   }
 
-  /**
-   * Initialize voice control with navigation function
-   */
+  /** Wire up the React Router navigate function and event handlers */
   initialize(navigateFunction) {
-    if (!this.isSupported) {
-      console.warn('Voice control is not supported in this browser');
-      return false;
-    }
-    
+    if (!this.isSupported) return false;
+
+    // Always update navigate — avoids stale closure on re-renders
     this.navigate = navigateFunction;
-    
-    // Set up event handlers
-    this.recognition.onresult = (event) => {
-      const last = event.results.length - 1;
-      const command = event.results[last][0].transcript.toLowerCase().trim();
-      console.log('Voice command received:', command);
-      this.processCommand(command);
+
+    // Only set up handlers once
+    if (this._handlersAttached) return true;
+    this._handlersAttached = true;
+
+    this.recognition.onresult = (e) => {
+      // Try all alternatives, pick the first matching command
+      const last = e.results.length - 1;
+      const transcripts = [];
+      for (let i = 0; i < e.results[last].length; i++) {
+        transcripts.push(e.results[last][i].transcript.toLowerCase().trim());
+      }
+      console.log('[Voice] Heard:', transcripts);
+      // Try each alternative until one matches
+      for (const t of transcripts) {
+        if (this._processCommand(t)) return;
+      }
+      // Nothing matched
+      this._notifyListeners(transcripts[0], false);
+      this._speak('Command not recognised. Say help for available commands.');
     };
 
-    this.recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
-      if (event.error === 'no-speech') {
-        this.speak('No speech detected. Please try again.');
-      } else if (event.error === 'not-allowed') {
-        this.speak('Microphone access denied. Please enable microphone permissions.');
+    this.recognition.onerror = (e) => {
+      if (e.error === 'not-allowed') {
+        console.warn('[Voice] Microphone permission denied');
+        this._permissionDenied = true;
+        this.isListening = false;
+      } else if (e.error === 'no-speech') {
+        // Normal — user just paused
+      } else if (e.error === 'aborted') {
+        // Manually stopped — expected
+      } else {
+        console.warn('[Voice] Error:', e.error);
       }
     };
 
     this.recognition.onend = () => {
-      // Restart if we're supposed to be listening
-      if (this.isListening) {
-        try {
-          this.recognition.start();
-        } catch (e) {
-          console.error('Failed to restart recognition:', e);
-        }
+      if (this.isListening && !this._permissionDenied) {
+        // Auto-restart to keep continuous listening
+        try { this.recognition.start(); } catch (_) {}
       }
     };
 
     return true;
   }
 
-  /**
-   * Start listening for voice commands
-   */
   startListening() {
-    if (!this.isSupported || this.isListening) {
-      console.log('Voice control already listening or not supported');
-      return this.isListening;
+    if (!this.isSupported) {
+      alert('Voice control is not supported in this browser. Please use Chrome or Edge.');
+      return false;
     }
-    
+    if (this._permissionDenied) {
+      alert('Microphone permission was denied. Please allow microphone access in your browser settings.');
+      return false;
+    }
+    if (this.isListening) return true;
+
     try {
       this.recognition.start();
       this.isListening = true;
-      this.speak('Voice control activated. Say "help" for available commands.');
-      console.log('✅ Voice control started listening');
+      document.documentElement.classList.add('voice-control-active');
+      this._speak('Voice control on. Say help for commands.');
       return true;
-    } catch (error) {
-      console.error('Failed to start voice recognition:', error);
+    } catch (e) {
+      console.error('[Voice] Start error:', e);
       return false;
     }
   }
 
-  /**
-   * Stop listening for voice commands
-   */
   stopListening() {
     if (!this.isSupported || !this.isListening) return;
-    
     try {
-      this.recognition.stop();
       this.isListening = false;
-      this.speak('Voice control deactivated');
-      return true;
-    } catch (error) {
-      console.error('Failed to stop voice recognition:', error);
-      return false;
-    }
+      this.recognition.stop();
+      document.documentElement.classList.remove('voice-control-active');
+      this._speak('Voice control off.');
+    } catch (_) {}
   }
 
-  /**
-   * Process voice commands
-   */
-  processCommand(command) {
-    // Notify all callbacks
-    this.callbacks.forEach(callback => callback(command));
+  getIsListening() { return this.isListening; }
 
-    // Check if we're on Settings page - ignore navigation commands to prevent interruption
-    const currentPath = window.location.pathname;
-    const isOnSettingsPage = currentPath.includes('/settings');
+  // Register a callback when commands come in (for UI feedback)
+  onCommand(cb) {
+    this.callbacks.push(cb);
+    return () => { this.callbacks = this.callbacks.filter(c => c !== cb); };
+  }
 
-    // Navigation commands
-    const navigationCommands = {
-      'go home': '/',
-      'go to home': '/',
-      'home': '/',
-      'dashboard': '/dashboard',
-      'go to dashboard': '/dashboard',
-      'patients': '/patients',
-      'go to patients': '/patients',
-      'show patients': '/patients',
-      'alerts': '/alerts',
-      'go to alerts': '/alerts',
-      'show alerts': '/alerts',
-      'medications': '/medications',
-      'go to medications': '/medications',
-      'appointments': '/appointments',
-      'go to appointments': '/appointments',
-      'caregivers': '/caregivers',
-      'go to caregivers': '/caregivers',
-      'care guide': '/care-guide',
-      'go to care guide': '/care-guide',
-      'assessments': '/assessments',
-      'go to assessments': '/assessments',
-      'memory vault': '/memory-vault',
-      'go to memory vault': '/memory-vault',
-      'journal': '/journal',
-      'go to journal': '/journal',
-      'my journal': '/journal',
-      'community': '/community',
-      'go to community': '/community',
-      'messages': '/messages',
-      'go to messages': '/messages',
-      'my messages': '/messages',
-      'profile': '/profile',
-      'go to profile': '/profile',
-      'my profile': '/profile',
-      'resources': '/resources',
-      'go to resources': '/resources',
-      'my journey': '/my-journey',
-      'go to my journey': '/my-journey',
-      'settings': '/settings',
-      'go to settings': '/settings',
+  // Register UI listener for showing last command + match status
+  onCommandFeedback(cb) {
+    this._onCommandListeners.push(cb);
+    return () => { this._onCommandListeners = this._onCommandListeners.filter(c => c !== cb); };
+  }
+
+  _notifyListeners(command, matched) {
+    this._lastCommand = command;
+    this.callbacks.forEach(cb => cb(command));
+    this._onCommandListeners.forEach(cb => cb({ command, matched }));
+  }
+
+  /** Returns true if command matched */
+  _processCommand(cmd) {
+    this._notifyListeners(cmd, true); // optimistic — corrected to false if no match
+
+    // ── Navigation ────────────────────────────────────────────────────
+    const NAV = {
+      'go home':         '/',        'home':             '/',
+      'dashboard':       '/dashboard','go to dashboard':  '/dashboard',
+      'patients':        '/patients', 'go to patients':   '/patients', 'show patients': '/patients',
+      'alerts':          '/alerts',   'go to alerts':     '/alerts',
+      'medications':     '/medications','go to medications':'/medications',
+      'appointments':    '/appointments','go to appointments':'/appointments',
+      'caregivers':      '/caregivers','go to caregivers': '/caregivers',
+      'assessments':     '/assessments','go to assessments':'/assessments',
+      'memory vault':    '/memory-vault','go to memory vault':'/memory-vault',
+      'journal':         '/journal',  'my journal':        '/journal',
+      'community':       '/community','go to community':   '/community',
+      'messages':        '/messages', 'go to messages':    '/messages',
+      'profile':         '/profile',  'my profile':        '/profile',
+      'resources':       '/resources','go to resources':   '/resources',
+      'my journey':      '/my-journey',
+      'settings':        '/settings', 'go to settings':    '/settings',
+      'notifications':   '/notifications','go to notifications':'/notifications',
+      'care settings':   '/care-settings',
+      'my space':        '/my-space',
     };
 
-    // Check for navigation commands (but warn if on settings page)
-    for (const [trigger, path] of Object.entries(navigationCommands)) {
-      if (command === trigger || command.includes(trigger)) {
+    for (const [trigger, path] of Object.entries(NAV)) {
+      if (cmd === trigger || cmd.includes(trigger)) {
         if (this.navigate) {
-          // If on settings and trying to navigate elsewhere, ask for confirmation
-          if (isOnSettingsPage && path !== '/settings') {
-            this.speak(`Navigating away from settings to ${trigger.replace('go to ', '')}`);
-          } else {
-            this.speak(`Navigating to ${trigger.replace('go to ', '')}`);
-          }
           this.navigate(path);
+          this._speak(`Going to ${trigger.replace('go to ', '').replace('go ', '')}`);
+          return true;
         }
-        return;
       }
     }
 
-    // Action commands
-    if (command.includes('save') || command === 'save form') {
-      const saveButton = document.querySelector('button[type="submit"]');
-      if (saveButton) {
-        saveButton.click();
-        this.speak('Saving');
-      } else {
-        this.speak('No save button found');
-      }
-      return;
+    // ── Scroll ────────────────────────────────────────────────────────
+    if (cmd.includes('scroll down') || cmd === 'down') {
+      window.scrollBy({ top: 400, behavior: 'smooth' });
+      this._speak('Scrolling down'); return true;
     }
-
-    if (command.includes('cancel') || command === 'cancel') {
-      const cancelButton = document.querySelector('[aria-label*="cancel" i], [aria-label*="close" i]');
-      if (cancelButton) {
-        cancelButton.click();
-        this.speak('Cancelled');
-      } else {
-        // Try to go back
-        window.history.back();
-        this.speak('Going back');
-      }
-      return;
+    if (cmd.includes('scroll up') || cmd === 'up') {
+      window.scrollBy({ top: -400, behavior: 'smooth' });
+      this._speak('Scrolling up'); return true;
     }
-
-    if (command.includes('go back') || command === 'back') {
-      window.history.back();
-      this.speak('Going back');
-      return;
-    }
-
-    if (command.includes('refresh') || command === 'reload') {
-      window.location.reload();
-      this.speak('Refreshing page');
-      return;
-    }
-
-    if (command.includes('scroll down')) {
-      window.scrollBy({ top: 300, behavior: 'smooth' });
-      this.speak('Scrolling down');
-      return;
-    }
-
-    if (command.includes('scroll up')) {
-      window.scrollBy({ top: -300, behavior: 'smooth' });
-      this.speak('Scrolling up');
-      return;
-    }
-
-    if (command.includes('scroll to top') || command === 'top') {
+    if (cmd.includes('top') || cmd.includes('go to top')) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      this.speak('Scrolling to top');
-      return;
+      this._speak('Top of page'); return true;
     }
-
-    if (command.includes('scroll to bottom') || command === 'bottom') {
+    if (cmd.includes('bottom') || cmd.includes('go to bottom')) {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      this.speak('Scrolling to bottom');
-      return;
+      this._speak('Bottom of page'); return true;
     }
 
-    // Help command
-    if (command.includes('help') || command === 'what can you do') {
-      this.speak('Available commands: go home, go to patients, go to dashboard, go to messages, save, cancel, go back, scroll up, scroll down, refresh, turn sound on, turn sound off. Say "list pages" for more navigation options.');
-      return;
+    // ── Actions ───────────────────────────────────────────────────────
+    if (cmd.includes('go back') || cmd === 'back') {
+      window.history.back(); this._speak('Going back'); return true;
+    }
+    if (cmd.includes('refresh') || cmd === 'reload') {
+      window.location.reload(); return true;
+    }
+    if (cmd.includes('save') || cmd === 'submit') {
+      const btn = document.querySelector('button[type="submit"], button.btn-primary, [data-action="save"]');
+      if (btn) { btn.click(); this._speak('Saved'); } else { this._speak('No save button found'); }
+      return true;
+    }
+    if (cmd === 'cancel' || cmd.includes('close modal') || cmd.includes('close dialog')) {
+      const close = document.querySelector('[aria-label*="close" i], [aria-label*="cancel" i], [data-dismiss]');
+      if (close) { close.click(); this._speak('Closed'); } else { window.history.back(); this._speak('Going back'); }
+      return true;
     }
 
-    if (command.includes('list pages')) {
-      this.speak('You can navigate to: home, dashboard, patients, alerts, medications, appointments, caregivers, care guide, assessments, memory vault, journal, community, messages, profile, resources, my journey, or settings');
-      return;
+    // ── Click by label ────────────────────────────────────────────────
+    if (cmd.startsWith('click ') || cmd.startsWith('press ') || cmd.startsWith('tap ')) {
+      const label = cmd.replace(/^(click|press|tap)\s+/i, '').trim();
+      const found = this._findElementByLabel(label);
+      if (found) { found.click(); this._speak(`Clicked ${label}`); return true; }
+      this._speak(`Could not find ${label}`); return true;
     }
 
-    // Settings control commands
-    if (command.includes('turn sound on') || command.includes('enable sound') || command.includes('sound on')) {
-      localStorage.setItem('touch_sound_enabled', 'true');
-      this.speak('Sound feedback enabled');
-      return;
+    // ── Focus by label ────────────────────────────────────────────────
+    if (cmd.startsWith('focus ') || cmd.startsWith('go to field ')) {
+      const label = cmd.replace(/^(focus|go to field)\s+/i, '').trim();
+      const found = this._findInputByLabel(label);
+      if (found) { found.focus(); this._speak(`Focused ${label}`); return true; }
+      this._speak(`Field ${label} not found`); return true;
     }
 
-    if (command.includes('turn sound off') || command.includes('disable sound') || command.includes('sound off')) {
-      localStorage.setItem('touch_sound_enabled', 'false');
-      this.speak('Sound feedback disabled');
-      return;
+    // ── Type text ─────────────────────────────────────────────────────
+    if (cmd.startsWith('type ') || cmd.startsWith('enter ')) {
+      const text = cmd.replace(/^(type|enter)\s+/i, '').trim();
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+        active.value += text;
+        active.dispatchEvent(new Event('input', { bubbles: true }));
+        this._speak(`Typed ${text}`);
+      } else {
+        this._speak('No text field is focused. Say focus followed by the field name first.');
+      }
+      return true;
     }
 
-    if (command.includes('turn haptic on') || command.includes('enable haptic') || command.includes('haptic on')) {
-      localStorage.setItem('touch_haptic_enabled', 'true');
-      this.speak('Haptic feedback enabled');
-      return;
+    // ── Stop voice ────────────────────────────────────────────────────
+    if (cmd.includes('stop listening') || cmd.includes('stop voice') || cmd === 'voice off') {
+      this.stopListening(); return true;
     }
 
-    if (command.includes('turn haptic off') || command.includes('disable haptic') || command.includes('haptic off')) {
-      localStorage.setItem('touch_haptic_enabled', 'false');
-      this.speak('Haptic feedback disabled');
-      return;
+    // ── Help ──────────────────────────────────────────────────────────
+    if (cmd.includes('help') || cmd === 'what can you do') {
+      this._speak(
+        'Navigation: say home, dashboard, patients, medications, appointments, messages, settings. ' +
+        'Actions: say save, cancel, go back, scroll down, scroll up, refresh. ' +
+        'To click a button say click followed by its name. ' +
+        'To type say type followed by your text. ' +
+        'Say stop listening to turn off voice control.'
+      );
+      return true;
     }
 
-    // Stop listening command
-    if (command.includes('stop listening') || command === 'stop voice control') {
-      this.stopListening();
-      return;
-    }
-
-    // Command not recognized
-    this.speak('Command not recognized. Say "help" for available commands.');
+    // Not matched
+    this._onCommandListeners.forEach(cb => cb({ command: cmd, matched: false }));
+    return false;
   }
 
-  /**
-   * Text-to-speech output
-   */
-  speak(text, options = {}) {
+  /** Find a clickable element by its visible text/aria-label */
+  _findElementByLabel(label) {
+    const lower = label.toLowerCase();
+    const candidates = document.querySelectorAll(
+      'button, a, [role="button"], [role="link"], [role="tab"], [role="menuitem"]'
+    );
+    for (const el of candidates) {
+      const text = (el.textContent || el.getAttribute('aria-label') || el.getAttribute('title') || '').toLowerCase().trim();
+      if (text === lower || text.includes(lower)) return el;
+    }
+    return null;
+  }
+
+  /** Find an input by its associated label text */
+  _findInputByLabel(label) {
+    const lower = label.toLowerCase();
+    const labels = document.querySelectorAll('label');
+    for (const lbl of labels) {
+      if ((lbl.textContent || '').toLowerCase().includes(lower)) {
+        const forId = lbl.getAttribute('for');
+        if (forId) return document.getElementById(forId);
+        return lbl.querySelector('input, textarea, select');
+      }
+    }
+    const inputs = document.querySelectorAll('input, textarea, select');
+    for (const inp of inputs) {
+      const ph = (inp.placeholder || inp.name || inp.id || '').toLowerCase();
+      if (ph.includes(lower)) return inp;
+    }
+    return null;
+  }
+
+  _speak(text, opts = {}) {
     if (!this.synthesis) return;
-    
-    // Cancel any ongoing speech
     this.synthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = options.rate || 1.0;
-    utterance.pitch = options.pitch || 1.0;
-    utterance.volume = options.volume || 1.0;
-    utterance.lang = options.lang || 'en-US';
-    
-    this.synthesis.speak(utterance);
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate   = opts.rate   ?? 1.0;
+    u.pitch  = opts.pitch  ?? 1.0;
+    u.volume = opts.volume ?? 0.9;
+    u.lang   = 'en-US';
+    this.synthesis.speak(u);
   }
 
-  /**
-   * Register callback for commands
-   */
-  onCommand(callback) {
-    this.callbacks.push(callback);
-    return () => {
-      this.callbacks = this.callbacks.filter(cb => cb !== callback);
-    };
-  }
+  speak(text, opts) { this._speak(text, opts); }
 
-  /**
-   * Check if browser supports voice control
-   */
-  static isSupported() {
-    return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-  }
-
-  /**
-   * Get current listening state
-   */
-  getIsListening() {
-    return this.isListening;
-  }
-
-  /**
-   * Announce to screen reader and speak
-   */
   announce(message) {
-    // Create announcement element for screen readers
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    
-    document.body.appendChild(announcement);
-    
-    // Also speak it out
-    this.speak(message);
-    
-    // Remove after announcement
-    setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
+    const el = document.createElement('div');
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    el.setAttribute('aria-atomic', 'true');
+    el.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)';
+    el.textContent = message;
+    document.body.appendChild(el);
+    this._speak(message);
+    setTimeout(() => el.remove(), 2000);
   }
 }
 
-// Create singleton instance
 const voiceControlService = new VoiceControlService();
-
 export default voiceControlService;

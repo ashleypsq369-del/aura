@@ -7,14 +7,19 @@ import {
   Hand, Activity, Heart, RotateCcw, Info, Smile,
   PanelLeft, PanelLeftClose, PanelLeftOpen, AlignJustify,
   Sparkles, LayoutGrid, Stethoscope, Briefcase, Users,
+  Smartphone, Loader2, Keyboard, BookOpen,
 } from 'lucide-react';
 import Switch from '../components/ui/Switch';
 import { useAuth } from '../context/AuthContext';
+import usePushNotifications from '../hooks/usePushNotifications';
+import useInstallPrompt from '../hooks/useInstallPrompt';
+import toast from '../utils/toast';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useAppSettings } from '../context/AppSettingsContext';
 import AvatarDisplay from '../components/avatar/AvatarDisplay';
 import AvatarModal from '../components/avatar/AvatarModal';
 import { ROLE_PRESETS } from '../components/avatar/avatarParts';
+import { useRestartTour } from '../components/AuraOnboarding';
 
 // Toggle is now the Radix Switch component imported above
 function Toggle({ on, onToggle, color = '#0d9488' }) {
@@ -57,9 +62,12 @@ function Section({ title, children }) {
 // -- Main Settings page -------------------------------------------------------
 export default function Settings() {
   const { user } = useAuth();
+  const push = usePushNotifications();
+  const pwa  = useInstallPrompt();
+  const restartTour = useRestartTour();
   const {
     settings: a11y, updateSetting, resetSettings,
-    enableAssistedMode, disableAssistedMode,
+    enableAssistedMode, disableAssistedMode, applyPreset,
   } = useAccessibility();
   const {
     theme, language, notifications, chatbotSettings,
@@ -97,10 +105,17 @@ export default function Settings() {
 
   const handleClear = () => {
     if (window.confirm('Clear all app data? This cannot be undone.')) {
-      ['chatbot_conversations','chatbot_notifications','chatbot_sound',
-       'assistant_notifications','assistant_sound','assistant_thinking_process',
-       'assistant_auto_navigate'].forEach(k => localStorage.removeItem(k));
-      window.location.reload();
+      [
+        'chatbot_conversations','chatbot_notifications','chatbot_sound',
+        'assistant_notifications','assistant_sound','assistant_thinking_process',
+        'assistant_auto_navigate','feature_settings','accessibility_settings',
+        'app_theme','app_language','app_notifications','show_ai_widgets',
+        'sidebar_desktop_visible','sidebar_default_state','sidebar_show_labels',
+        'user_avatar','aura_tour_done_clinician_v3','aura_tour_done_patient_v3',
+        'aura_tour_done_caregiver_v3','aura_tour_done_admin_v3',
+      ].forEach(k => localStorage.removeItem(k));
+      toast.success('All app data cleared');
+      setTimeout(() => window.location.reload(), 800);
     }
   };
 
@@ -204,6 +219,12 @@ export default function Settings() {
                     </div>
                   ))}
                   </div>
+                  <div className="px-5 py-3 border-t border-gray-100 bg-gray-50">
+                    <a href="/profile"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold transition-colors shadow-sm">
+                      <User size={15} /> Edit Profile &amp; Change Password
+                    </a>
+                  </div>
                 </Section>
                 <Section title="Data">
                   <button onClick={handleExport}
@@ -242,6 +263,36 @@ export default function Settings() {
                       <p className="text-sm font-medium text-gray-900">{value}</p>
                     </div>
                   ))}
+                  {/* Restart App Tour */}
+                  <div className="border-t border-gray-100">
+                    <button onClick={() => { restartTour(); toast.success('Tour restarted — follow Aura\'s guide!'); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 transition-colors text-left">
+                      <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                        <RotateCcw size={16} className="text-teal-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-teal-700">Restart App Tour</p>
+                        <p className="text-xs text-gray-500">Walk through all pages with Aura's guided tour again</p>
+                      </div>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </button>
+                  </div>
+                  {/* PWA Install */}
+                  {pwa.canInstall && (
+                    <div className="border-t border-gray-100">
+                      <button onClick={() => { pwa.install(); toast.success('Opening install prompt…'); }}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors text-left">
+                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                          <Smartphone size={16} className="text-indigo-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-indigo-700">Install App</p>
+                          <p className="text-xs text-gray-500">Add Project Aura to your home screen for offline use</p>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400" />
+                      </button>
+                    </div>
+                  )}
                 </Section>
               </>
             )}
@@ -347,13 +398,13 @@ export default function Settings() {
                 </Section>
                 <Section title="Language">
                   <Row icon={Globe} iconColor="#6b7280" iconBg="#f3f4f6"
-                    label="Language" desc="App display language" border={false}
+                    label="Language" desc="Sets the app's language attribute and text direction" border={false}
                     right={
-                      <select value={language} onChange={e => updateLanguage(e.target.value)}
+                      <select value={language} onChange={e => { updateLanguage(e.target.value); toast.success('Language updated'); }}
                         className="text-sm text-gray-700 bg-transparent border-none outline-none cursor-pointer font-medium">
                         <option value="en">English</option>
-                        <option value="es">Espanol</option>
-                        <option value="fr">Francais</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
                         <option value="tw">Twi</option>
                       </select>
                     }
@@ -422,6 +473,77 @@ export default function Settings() {
                     label="All Notifications" desc="Master switch for all in-app notifications" border={false}
                     right={<Toggle on={notifications} onToggle={() => updateNotifications(!notifications)} />} />
                 </Section>
+
+                {/* ── Push Notifications ── */}
+                <Section title="Device Push Notifications">
+                  {!push.supported ? (
+                    <div className="px-4 py-3 text-sm text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+                      Your browser does not support push notifications. Try Chrome, Edge, or Firefox.
+                    </div>
+                  ) : push.permission === 'denied' ? (
+                    <div className="px-4 py-3 text-sm text-red-700 bg-red-50 rounded-xl border border-red-200">
+                      Notifications blocked. Go to your browser settings → Site Settings → Notifications and allow this site.
+                    </div>
+                  ) : (
+                    <>
+                      <Row
+                        icon={Smartphone} iconColor="#7c3aed" iconBg="#f5f3ff"
+                        label="Push Notifications"
+                        desc={push.subscribed
+                          ? "✓ Enabled — you'll receive alerts on this device even when the app is closed"
+                          : "Get real-time alerts for critical vitals, medication reminders, and messages on this device"}
+                        right={
+                          <button
+                            onClick={async () => {
+                              if (push.subscribed) {
+                                await push.unsubscribe();
+                                toast.info('Push notifications disabled for this device');
+                              } else {
+                                const ok = await push.subscribe();
+                                if (ok) toast.success('Push notifications enabled!');
+                                else toast.error('Could not enable notifications — check browser permissions');
+                              }
+                            }}
+                            disabled={push.loading}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+                              push.subscribed
+                                ? 'bg-violet-100 text-violet-700 hover:bg-red-100 hover:text-red-700 border border-violet-200 hover:border-red-200'
+                                : 'bg-violet-600 hover:bg-violet-700 text-white shadow-sm'
+                            }`}
+                          >
+                            {push.loading
+                              ? <Loader2 size={14} className="animate-spin" />
+                              : push.subscribed ? <Check size={14} /> : <Bell size={14} />}
+                            {push.loading ? 'Please wait…' : push.subscribed ? 'Enabled' : 'Enable'}
+                          </button>
+                        }
+                      />
+                      {push.subscribed && (
+                        <Row
+                          icon={Zap} iconColor="#0891b2" iconBg="#ecfeff"
+                          label="Send Test Notification"
+                          desc="Verify push is working by sending a test alert to this device"
+                          border={false}
+                          right={
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const r = await push.sendTest();
+                                  toast.success(`Test sent to ${r.devices} device${r.devices !== 1 ? 's' : ''}`);
+                                } catch (e) {
+                                  toast.error(e.message);
+                                }
+                              }}
+                              className="px-4 py-2 rounded-xl text-sm font-bold bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 transition-all"
+                            >
+                              Send Test
+                            </button>
+                          }
+                        />
+                      )}
+                    </>
+                  )}
+                </Section>
                 <Section title="Optional Features">
                   <Row icon={Sparkles} iconColor="#7c3aed" iconBg="#f5f3ff"
                     label="Milestone Celebrations" desc="Confetti on completed assessments and goals"
@@ -483,7 +605,9 @@ export default function Settings() {
                           <button
                             key={id}
                             onClick={() => {
-                              Object.entries({ ...a11y, assistedMode:true, activePreset:id, ...s }).forEach(([k,v]) => updateSetting(k,v));
+                              // applyPreset atomically resets all settings then applies
+                              // only this preset's overrides — no lingering values
+                              applyPreset(id, s);
                               if (window.speechSynthesis) {
                                 const u = new SpeechSynthesisUtterance(`${label} mode activated`);
                                 u.rate = 0.9; window.speechSynthesis.speak(u);
@@ -570,7 +694,46 @@ export default function Settings() {
                   ))}
                 </Section>
 
-                <button onClick={resetSettings}
+                {/* Interface & Navigation */}
+                <Section title="Interface & Navigation">
+                  <Row icon={Brain} iconColor="#7c3aed" iconBg="#f5f3ff"
+                    label="Simplified Interface" desc="Cleaner layout with fewer distractions"
+                    right={<Toggle on={a11y.simplifiedUI} onToggle={() => updateSetting('simplifiedUI', !a11y.simplifiedUI)} color="#7c3aed" />} />
+                  <Row icon={Keyboard} iconColor="#0891b2" iconBg="#ecfeff"
+                    label="Keyboard Navigation Mode" desc="Enhanced shortcuts and focus indicators"
+                    right={<Toggle on={a11y.keyboardOnly} onToggle={() => updateSetting('keyboardOnly', !a11y.keyboardOnly)} color="#0891b2" />} />
+                  <Row icon={Eye} iconColor="#b45309" iconBg="#fffbeb"
+                    label="Focus Mode" desc="Dims everything except the focused element"
+                    right={<Toggle on={a11y.focusMode} onToggle={() => updateSetting('focusMode', !a11y.focusMode)} color="#b45309" />} />
+                  <Row icon={BookOpen} iconColor="#059669" iconBg="#f0fdf4"
+                    label="Reading Guide" desc="Horizontal line follows cursor to guide reading"
+                    right={<Toggle on={a11y.readingGuide} onToggle={() => updateSetting('readingGuide', !a11y.readingGuide)} color="#059669" />} />
+                  <Row icon={Type} iconColor="#c2410c" iconBg="#fff7ed"
+                    label="Dyslexia-Friendly Font" desc="Rounded spaced font to aid reading with dyslexia"
+                    border={false}
+                    right={<Toggle on={a11y.dyslexiaFont} onToggle={() => updateSetting('dyslexiaFont', !a11y.dyslexiaFont)} color="#c2410c" />} />
+                </Section>
+
+                {/* Text Spacing */}
+                <Section title="Text Spacing">
+                  <div className="px-4 py-3">
+                    <p className="text-xs text-gray-500 mb-3">Extra space between lines and letters to improve readability.</p>
+                    <div className="flex gap-2">
+                      {[['normal','Normal'],['relaxed','Relaxed'],['wide','Wide']].map(([v, lbl]) => (
+                        <button key={v} onClick={() => updateSetting('textSpacing', v)}
+                          className={`flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-all ${
+                            a11y.textSpacing === v
+                              ? 'bg-teal-600 text-white border-teal-600'
+                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                          }`}>
+                          {lbl}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </Section>
+
+                <button onClick={() => { resetSettings(); toast.success('Accessibility settings reset to defaults'); }}
                   data-tip="Reset all accessibility settings to their defaults"
                   className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition-all">
                   <RotateCcw size={14} /> Reset Accessibility Defaults

@@ -109,7 +109,7 @@ export default function PageHeader({ image, title, subtitle, icon: Icon, childre
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.20) 100%)',
+          background: 'linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.10) 100%)',
           zIndex: 2,
           pointerEvents: 'none',
         }}
@@ -136,11 +136,8 @@ export default function PageHeader({ image, title, subtitle, icon: Icon, childre
             )}
             <div>
               <h1
-                className="img-heading text-xl md:text-2xl font-bold leading-tight"
-                style={{
-                  color: '#ffffff',
-                  textShadow: '0 2px 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7)',
-                }}
+                className="img-heading text-xl md:text-2xl font-bold leading-tight text-white"
+                style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}
               >
                 {title}
               </h1>
@@ -148,8 +145,8 @@ export default function PageHeader({ image, title, subtitle, icon: Icon, childre
                 <p
                   className="text-xs md:text-sm mt-0.5 font-medium"
                   style={{
-                    color: 'rgba(255,255,255,0.82)',
-                    textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+                    color: 'rgba(255,255,255,0.9)',
+                    textShadow: '0 1px 3px rgba(0,0,0,0.4)',
                   }}
                 >
                   {subtitle}
@@ -184,7 +181,7 @@ export default function PageHeader({ image, title, subtitle, icon: Icon, childre
                 className="text-[11px] font-medium italic truncate cursor-pointer select-none transition-colors"
                 style={{
                   color: 'rgba(255,255,255,0.55)',
-                  textShadow: '0 1px 4px rgba(0,0,0,0.9)',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.4)',
                 }}
                 onClick={advance}
                 title={`${currentMsg}  --  Click for next`}

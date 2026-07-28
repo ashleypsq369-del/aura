@@ -1,6 +1,7 @@
-﻿import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import usePersonalisation from '../hooks/usePersonalisation';
+import { usePersonalisationFlags } from '../context/PersonalisationContext';
 import {
   Heart, Calendar, Users, BookOpen, MessageCircle, Activity,
   Clock, Stethoscope, TrendingUp, ArrowRight, MapPin,
@@ -14,9 +15,9 @@ import PageHeader from '../components/PageHeader';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import Progress from '../components/ui/Progress';
-import { clinicalAssessmentsAPI } from '../api/client';
+import { clinicalAssessmentsAPI, mlAPI } from '../api/client';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 function getTimeOfDay() {
   const h = new Date().getHours();
@@ -50,6 +51,7 @@ function Section({ icon: Icon, iconColor = 'text-teal-600', iconBg = 'bg-teal-50
 export default function PatientPortal() {
   const { user } = useAuth();
   const { signals, prefs } = usePersonalisation();
+  const { uiFlags, hiddenSections } = usePersonalisationFlags();
   const navigate = useNavigate();
   const token = localStorage.getItem('auth_token');
 
@@ -72,6 +74,14 @@ export default function PatientPortal() {
     queryFn: () => clinicalAssessmentsAPI.getESASTrends(patientId, 14).then(r => r.data),
     enabled: !!patientId && !isLoading && !!portalData && !portalData?.error,
     staleTime: 10 * 60 * 1000,
+    retry: false,
+  });
+
+  const { data: mlRisk } = useQuery({
+    queryKey: ['patient-ml-risk', patientId],
+    queryFn: () => mlAPI.getPatientRisk(patientId).then(r => r.data),
+    enabled: !!patientId && !isLoading && !!portalData && !portalData?.error,
+    staleTime: 15 * 60 * 1000,
     retry: false,
   });
 
@@ -136,27 +146,35 @@ export default function PatientPortal() {
 
   // Quick-action cards definition
   const quickActions = [
-    { image: '/resources/cards/card-checkin.jpg',      icon: Heart,         title: 'Log Feeling',     description: 'Daily wellness check-in',   onClick: () => navigate('/wellness-checkin'),                           color: '#be123c', priority: 'wellness-checkin' },
+    { image: '/resources/african/african-wellbeing.jpg',      icon: Heart,         title: 'Log Feeling',     description: 'Daily wellness check-in',   onClick: () => navigate('/wellness-checkin'),                           color: '#be123c', priority: 'wellness-checkin' },
     { image: '/resources/cards/card-symptoms.jpg',     icon: Activity,      title: 'My Symptoms',     description: 'Track pain & symptoms',      onClick: () => patientId ? navigate(`/patients/${patientId}/symptoms`) : navigate('/my-space'),    color: '#0f766e', priority: 'wellness-checkin' },
-    { image: '/resources/cards/card-appointments.jpg', icon: Calendar,      title: 'Appointments',    description: 'Upcoming care visits',       onClick: () => navigate('/appointments'),                               color: '#1d4ed8', priority: null },
-    { image: '/resources/cards/card-medications.jpg',  icon: Pill,          title: 'Medications',     description: 'My prescription schedule',  onClick: () => navigate('/medications'),                                color: '#7c3aed', priority: null },
-    { image: '/resources/cards/card-messages.jpg',     icon: MessageCircle, title: 'Message Team',    description: 'Contact care team',          onClick: () => navigate('/messages'),                                   color: '#0369a1', priority: 'messages' },
-    { image: '/resources/cards/card-resources.jpg',    icon: BookOpen,      title: 'Resources',       description: 'Health guides & support',   onClick: () => navigate('/resources'),                                  color: '#b45309', priority: null },
-    { image: '/resources/cards/card-community.jpg',    icon: Globe,         title: 'Community',       description: 'Peer support groups',       onClick: () => navigate('/community'),                                  color: '#166534', priority: 'community' },
-    { image: '/resources/cards/card-memory-vault.jpg', icon: Heart,         title: 'Memory Vault',    description: 'Preserve precious memories', onClick: () => navigate('/memory-vault'),                               color: '#4c1d95', priority: null },
-    { image: '/resources/cards/card-journey.jpg',      icon: MapPin,        title: 'My Journey',      description: 'Care timeline',              onClick: () => navigate('/my-journey'),                                 color: '#166534', priority: 'journey' },
-    { image: '/resources/cards/card-care-plan.jpg',    icon: FileText,      title: 'Care Plan',       description: 'Your care pathway',          onClick: () => patientId ? navigate(`/patients/${patientId}/care-plan`) : navigate('/my-space'),  color: '#0369a1', priority: null },
-    { image: '/resources/cards/card-ai-insights.jpg',  icon: Brain,         title: 'AI Companion',    description: 'Ask Aura AI',                onClick: () => window.dispatchEvent(new CustomEvent('aura:open')),                                                                   color: '#7c3aed', priority: null },
-    { image: '/resources/cards/card-vitals.jpg',       icon: TrendingUp,    title: 'My Records',      description: 'Full health data',           onClick: () => patientId ? navigate(`/patients/${patientId}`) : navigate('/my-space'),                  color: '#1d4ed8', priority: null },
+    { image: '/resources/african/african-appointment.jpg', icon: Calendar,      title: 'Appointments',    description: 'Upcoming care visits',       onClick: () => navigate('/appointments'),                               color: '#1d4ed8', priority: null },
+    { image: '/resources/african/african-medications.jpg',  icon: Pill,          title: 'Medications',     description: 'My prescription schedule',  onClick: () => navigate('/medications'),                                color: '#7c3aed', priority: null },
+    { image: '/resources/african/african-clinical-team.jpg',     icon: MessageCircle, title: 'Message Team',    description: 'Contact care team',          onClick: () => navigate(care_team?.clinician?.id ? `/messages?userId=${care_team.clinician.id}` : '/messages', { state: { openCareTeamChat: true, careTeam: care_team } }),                                   color: '#0369a1', priority: 'messages' },
+    { image: '/resources/african/african-medical-reading.jpg',    icon: BookOpen,      title: 'Resources',       description: 'Health guides & support',   onClick: () => navigate('/resources'),                                  color: '#b45309', priority: null },
+    { image: '/resources/african/african-community.jpg',    icon: Globe,         title: 'Community',       description: 'Peer support groups',       onClick: () => navigate('/community'),                                  color: '#166534', priority: 'community' },
+    { image: '/resources/african/african-memory.jpg', icon: Heart,         title: 'Memory Vault',    description: 'Preserve precious memories', onClick: () => navigate('/memory-vault'),                               color: '#4c1d95', priority: null },
+    { image: '/resources/african/african-family-care.jpg',      icon: MapPin,        title: 'My Journey',      description: 'Care timeline',              onClick: () => navigate('/my-journey'),                                 color: '#166534', priority: 'journey' },
+    { image: '/resources/african/african-clinical-team.jpg',    icon: FileText,      title: 'Care Plan',       description: 'Your care pathway',          onClick: () => patientId ? navigate(`/patients/${patientId}/care-plan`) : navigate('/my-space'),  color: '#0369a1', priority: null },
+    { image: '/resources/african/african-health-tech.jpg',  icon: Brain,         title: 'AI Companion',    description: 'Ask Aura AI',                onClick: () => window.dispatchEvent(new CustomEvent('aura:open')),                                                                   color: '#7c3aed', priority: null },
+    { image: '/resources/african/african-vitals.jpg',       icon: TrendingUp,    title: 'My Records',      description: 'Full health data',           onClick: () => patientId ? navigate(`/patients/${patientId}`) : navigate('/my-space'),                  color: '#1d4ed8', priority: null },
   ];
 
   // ⚡ Reorder quick actions based on personalisation signals
+  // Also filter out items the user opted out of in questionnaire
+  const filteredActions = quickActions.filter(a => {
+    if (a.title === 'Community'    && !uiFlags.showCommunity)  return false;
+    if (a.title === 'Memory Vault' && !uiFlags.showLegacy)     return false;
+    if (a.title === 'AI Companion' && !uiFlags.showAI)         return false;
+    return true;
+  });
+
   const orderedActions = signals?.prioritisedActions?.length
     ? [
-        ...quickActions.filter(a => signals.prioritisedActions.includes(a.priority)),
-        ...quickActions.filter(a => !signals.prioritisedActions.includes(a.priority)),
+        ...filteredActions.filter(a => signals.prioritisedActions.includes(a.priority)),
+        ...filteredActions.filter(a => !signals.prioritisedActions.includes(a.priority)),
       ]
-    : quickActions;
+    : filteredActions;
 
   return (
     <div className="min-h-full">
@@ -310,8 +328,8 @@ export default function PatientPortal() {
               </Section>
             )}
 
-            {/* Community Groups */}
-            {community_groups?.length > 0 && (
+            {/* Community Groups — only if user opted in */}
+            {community_groups?.length > 0 && uiFlags.showCommunity !== false && (
               <Section icon={Users} title="Connect with Others" accentColor="#1d4ed8">
                 <div className="space-y-2.5">
                   {community_groups.slice(0, 3).map(group => (
@@ -381,7 +399,12 @@ export default function PatientPortal() {
                   </div>
                 )}
 
-                <button onClick={() => navigate('/messages')}
+                <button onClick={() => navigate(
+                    care_team?.clinician?.id
+                      ? `/messages?userId=${care_team.clinician.id}`
+                      : '/messages',
+                    { state: { openCareTeamChat: true, careTeam: care_team } }
+                  )}
                   data-tip="Message your care team"
                   className="w-full py-2.5 rounded-xl border border-teal-300 text-teal-700 font-semibold text-sm hover:bg-teal-50 transition-all duration-150 flex items-center justify-center gap-2">
                   <MessageCircle size={15} /> Message Care Team
@@ -452,6 +475,40 @@ export default function PatientPortal() {
                 </div>
               )}
               <div className="space-y-2.5">
+                {/* ML AI Health Check card */}
+                <AnimatePresence>
+                  {mlRisk && mlRisk.overall_level !== 'unknown' && (() => {
+                    const levelMap = { critical: 'Needs Attention', high: 'Monitor Closely', moderate: 'Doing OK', low: 'Feeling Good' };
+                    const colorMap = {
+                      critical: 'border-red-300 bg-red-50 text-red-700',
+                      high:     'border-orange-300 bg-orange-50 text-orange-700',
+                      moderate: 'border-amber-300 bg-amber-50 text-amber-700',
+                      low:      'border-teal-300 bg-teal-50 text-teal-700',
+                    };
+                    const dotMap = { critical: 'bg-red-500', high: 'bg-orange-500', moderate: 'bg-amber-500', low: 'bg-teal-500' };
+                    const level = mlRisk.overall_level || 'low';
+                    return (
+                      <motion.div key="ml-health-card"
+                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                        className={`rounded-xl border-2 p-3.5 ${colorMap[level] || colorMap.low}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Brain size={15} className="text-teal-600 flex-shrink-0" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700">AI Health Check</span>
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotMap[level] || dotMap.low}`} />
+                          <span className="font-bold text-sm text-slate-800">Your Health Status: {levelMap[level] || 'Feeling Good'}</span>
+                        </div>
+                        {mlRisk.recommended_actions?.slice(0, 2).map((action, i) => (
+                          <div key={i} className="flex items-start gap-1.5 mt-1">
+                            <span className="text-teal-600 font-bold text-xs flex-shrink-0 mt-0.5">•</span>
+                            <p className="text-xs text-slate-700">{action}</p>
+                          </div>
+                        ))}
+                      </motion.div>
+                    );
+                  })()}
+                </AnimatePresence>
                 {[
                   { label: 'Log how I feel today', icon: Heart, color: 'bg-rose-500', nav: '/wellness-checkin', action: null },
                   { label: 'View my pain scores', icon: Activity, color: 'bg-orange-500', nav: patientId ? `/patients/${patientId}` : '/my-space', action: null },

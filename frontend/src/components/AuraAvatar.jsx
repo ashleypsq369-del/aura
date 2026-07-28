@@ -15,6 +15,7 @@ import {
   ClipboardList, Settings, BarChart2, Building2,
 } from 'lucide-react';
 import AuraMascot from './AuraMascot';
+import { useRestartTour } from './AuraOnboarding';
 
 // -- Content data --------------------------------------------------------------
 const TIPS = {
@@ -140,6 +141,7 @@ export default function AuraAvatar() {
   const location  = useLocation();
   const navigate  = useNavigate();
   const dragControls = useDragControls();
+  const restartTour = useRestartTour();
 
   // State
   const [mood,       setMood]       = useState('happy');
@@ -454,6 +456,24 @@ export default function AuraAvatar() {
                 {/* -- TOOLS panel -- */}
                 {panel === 'tools' && (
                   <div className="p-3 space-y-2">
+                    {/* Restart tour CTA — always first */}
+                    <motion.button
+                      whileHover={{ x: 3 }} whileTap={{ scale: 0.97 }}
+                      onClick={() => { restartTour(); setPanel(null); }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left"
+                      style={{ background: 'linear-gradient(135deg,#0d9488,#0369a1)', marginBottom: 4 }}
+                    >
+                      <Sparkles size={15} className="text-white flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-white">Take the tour again</p>
+                        <p className="text-[10px] text-white/70">Aura will guide you through everything</p>
+                      </div>
+                      <ChevronRight size={12} className="ml-auto text-white/60" />
+                    </motion.button>
+
+                    {/* Divider */}
+                    <div className="h-px bg-amber-100 my-1"/>
+
                     {[
                       { Icon: ClipboardList, label: 'Assessments',   desc: 'Patient clinical assessments', nav: '/assessments' },
                       { Icon: Building2,     label: 'Care Settings', desc: '5 palliative care settings',   nav: '/care-settings' },

@@ -12,11 +12,16 @@ warnings.filterwarnings("ignore", message=".*InconsistentVersionWarning.*")
 warnings.filterwarnings("ignore", message=".*unpickle estimator.*")
 warnings.filterwarnings("ignore", message=".*If you are loading a serialized model.*")
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import asyncio
+
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from services.rate_limiter import limiter
 
 # Import all routers
 from routers import (
@@ -63,6 +68,8 @@ from routers import (
 from routers import ml_predictions
 # Advanced ML router (P6-P11)
 from routers import advanced_ml
+# WebSocket real-time router
+from routers import websocket as ws_router
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -71,14 +78,33 @@ app = FastAPI(
     description="AI-Powered Palliative Care Support Platform for Ghana"
 )
 
-# CORS Configuration - allow all localhost ports
+# Rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
+# CORS Configuration — locked to known origins; set ALLOWED_ORIGINS env var to extend
+_ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173"
+).split(",")
+
+# Always include the standalone app origin (pywebview loads from 127.0.0.1:8000)
+_standalone_origins = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "null",   # pywebview on some platforms sends Origin: null
+]
+for _o in _standalone_origins:
+    if _o not in _ALLOWED_ORIGINS:
+        _ALLOWED_ORIGINS.append(_o)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000"],
+    allow_origins=_ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept", "X-Requested-With"],
 )
 
 # Serve static files (PDFs, uploads)
@@ -86,20 +112,41 @@ _static_dir = Path(__file__).parent / "static"
 _static_dir.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
-# Global exception handler â€" ensures CORS headers even on 500 errors
+# NOTE: Full dist static file mounting is done at the BOTTOM of this file
+# (after all API routers) via dedicated sub-directory mounts + SPA fallback.
+# Do NOT add partial /assets or /icons mounts here — they are handled below.
+
+# Global exception handler — ensures CORS headers even on 500 errors
 from fastapi.responses import JSONResponse
 from fastapi import Request
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
+    origin = request.headers.get("origin", "")
+    cors_origin = origin if origin in _ALLOWED_ORIGINS else (_ALLOWED_ORIGINS[0] if _ALLOWED_ORIGINS else "")
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc)},
         headers={
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": cors_origin,
             "Access-Control-Allow-Credentials": "true",
         }
     )
+
+
+# Security headers middleware
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    # Skip for WebSocket upgrade requests — middleware breaks WS handshake
+    if request.headers.get("upgrade", "").lower() == "websocket":
+        return await call_next(request)
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    return response
 
 # Include all routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
@@ -129,8 +176,8 @@ app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
 app.include_router(resources.router, prefix="/api/resources", tags=["resources"])
 app.include_router(community.router, prefix="/api/community", tags=["community"])
-app.include_router(portal.router, prefix="/api", tags=["portal"])
 app.include_router(journey.router, prefix="/api/journey", tags=["journey"])
+app.include_router(portal.router, prefix="/api", tags=["portal"])
 app.include_router(messaging.router, prefix="/api/messaging", tags=["messaging"])
 app.include_router(contacts.router, prefix="/api/contacts", tags=["contacts"])
 app.include_router(uploads.router, prefix="/api/uploads", tags=["uploads"])
@@ -141,6 +188,8 @@ app.include_router(medical_knowledge.router, prefix="/api/medical", tags=["medic
 app.include_router(care_settings.router, prefix="/api/care-settings", tags=["care-settings"])
 app.include_router(ml_predictions.router, prefix="/api/ml", tags=["ml-predictions"])
 app.include_router(advanced_ml.router, prefix="/api/advanced-ml", tags=["advanced-ml"])
+# WebSocket — no prefix, handles its own /ws/{user_id} path
+app.include_router(ws_router.router, tags=["websocket"])
 
 
 @app.on_event("startup")
@@ -394,9 +443,9 @@ async def notification_monitoring_loop():
             await asyncio.sleep(60)  # Wait 1 minute before retry
 
 
-@app.get("/")
+@app.get("/api")
 async def root():
-    """Root endpoint"""
+    """API info endpoint (moved from / so SPA can own the root)"""
     return {
         "message": "Project Aura API",
         "version": "1.0.0",
@@ -411,8 +460,70 @@ async def health_check():
     return {"status": "healthy", "service": "Project Aura API"}
 
 
+@app.get("/")
+async def serve_root():
+    """Root — serve React SPA if built, otherwise API info"""
+    _idx = Path(__file__).parent.parent / "frontend" / "dist" / "index.html"
+    if _idx.exists():
+        from fastapi.responses import FileResponse as _FR
+        return _FR(str(_idx))
+    return {
+        "message": "Project Aura API",
+        "version": "1.0.0",
+        "status": "operational",
+        "docs": "/docs"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+
+
+# ── SPA Fallback (must be LAST — after all API routers) ──────────────────────
+# Mount the entire dist folder as static files so ALL public assets
+# (images, fonts, resources/, icons/, sw.js, manifest.json, etc.)
+# are served correctly with proper MIME types.
+# The SPA catchall only fires for routes not matched by a real file.
+_dist_dir_spa = Path(__file__).parent.parent / "frontend" / "dist"
+_dist_index = _dist_dir_spa / "index.html"
+
+if _dist_index.exists():
+    from fastapi.responses import FileResponse as _FileResponse
+    from fastapi.staticfiles import StaticFiles as _SFSpa
+
+    # Dedicated mounts for sub-directories in dist (resources, icons, assets)
+    # These must be mounted BEFORE the catchall so they take priority.
+    for _subdir in ("resources", "icons", "assets"):
+        _subpath = _dist_dir_spa / _subdir
+        if _subpath.exists():
+            app.mount(f"/{_subdir}", _SFSpa(directory=str(_subpath)), name=f"dist-{_subdir}")
+
+    @app.get("/manifest.json", include_in_schema=False)
+    async def _manifest():
+        return _FileResponse(str(_dist_dir_spa / "manifest.json"))
+
+    @app.get("/sw.js", include_in_schema=False)
+    async def _sw():
+        return _FileResponse(str(_dist_dir_spa / "sw.js"))
+
+    @app.get("/favicon.svg", include_in_schema=False)
+    async def _fav():
+        return _FileResponse(str(_dist_dir_spa / "favicon.svg"))
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def _spa_fallback(full_path: str):
+        # Never intercept API or WebSocket paths
+        if (full_path.startswith("api/") or full_path.startswith("ws/")
+                or full_path.startswith("static/") or full_path.startswith("assets/")
+                or full_path.startswith("icons/") or full_path.startswith("resources/")):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="Not found")
+        # Try to serve a real file from dist first (e.g. favicon.ico, robots.txt)
+        _candidate = _dist_dir_spa / full_path
+        if _candidate.exists() and _candidate.is_file():
+            return _FileResponse(str(_candidate))
+        # Fall back to index.html so React Router handles the route
+        return _FileResponse(str(_dist_index))
  
 

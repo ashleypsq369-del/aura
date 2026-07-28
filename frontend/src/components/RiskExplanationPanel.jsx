@@ -1,275 +1,284 @@
-﻿import { useState } from 'react';
+﻿/**
+ * RiskExplanationPanel — Full XAI / SHAP explanation modal
+ * =========================================================
+ * Redesigned with ModalContent structured display components.
+ * Shows: overall risk summary, component risk breakdown, SHAP feature
+ * contributions, key clinical concerns, recommendations, clinician feedback.
+ */
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, ThumbsUp, ThumbsDown, Brain, Activity, Shield, Pill, Heart, User } from 'lucide-react';
+import {
+  TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
+  ThumbsUp, ThumbsDown, Brain, Activity, Shield, Pill,
+  Heart, User, Zap, Target, MessageSquare, Stethoscope
+} from 'lucide-react';
 import apiClient from '../api/client';
+import ModalShell from './ui/ModalShell';
+import {
+  InfoGrid, InfoBadge, InfoAlert, InfoSection,
+  ProgressRow, SHAPRow, Divider, ListItem
+} from './ui/ModalContent';
+
+/* Risk level configs */
+const RISK_CFG = {
+  Critical: { variant: 'danger',  ring: 'ring-red-400',    bar: 'bg-red-500',     bg: 'bg-red-600'    },
+  High:     { variant: 'warning', ring: 'ring-amber-400',  bar: 'bg-amber-500',   bg: 'bg-amber-600'  },
+  Moderate: { variant: 'info',    ring: 'ring-blue-400',   bar: 'bg-blue-500',    bg: 'bg-blue-600'   },
+  Low:      { variant: 'success', ring: 'ring-emerald-400',bar: 'bg-emerald-500', bg: 'bg-emerald-600'},
+};
+
+const TABS = [
+  { id: 'shap',       label: 'SHAP Drivers',  icon: Zap            },
+  { id: 'breakdown',  label: 'Components',    icon: Target         },
+  { id: 'action',     label: 'Concerns',      icon: AlertTriangle  },
+  { id: 'feedback',   label: 'Feedback',      icon: MessageSquare  },
+];
 
 export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitted }) {
-  const [feedbackType, setFeedbackType] = useState(null);
-  const [feedbackNote, setFeedbackNote] = useState('');
+  const [tab, setTab]               = useState('shap');
+  const [feedbackType, setFeedback] = useState(null);
+  const [note, setNote]             = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const getRiskColor = (level) => {
-    switch(level) {
-      case 'Critical': return 'text-red-600 bg-red-50 border-red-300';
-      case 'High': return 'text-orange-600 bg-orange-50 border-orange-300';
-      case 'Moderate': return 'text-yellow-600 bg-yellow-50 border-yellow-300';
-      default: return 'text-green-600 bg-green-50 border-green-300';
-    }
-  };
+  const level  = data?.risk_level || 'Low';
+  const cfg    = RISK_CFG[level] || RISK_CFG.Low;
+  const pct    = Math.round((data?.overall_risk_score || 0) * 100);
+  const conf   = Math.round((data?.confidence || 0) * 100);
 
-  const handleFeedbackSubmit = async () => {
+  const submitFeedback = async () => {
     if (!feedbackType) return;
-    
     setSubmitting(true);
     try {
       await apiClient.post('/api/comprehensive-ai/clinician-feedback', {
         prediction_id: data.prediction_id,
         feedback_type: feedbackType,
-        note: feedbackNote
+        note,
       });
-      
-      if (onFeedbackSubmitted) onFeedbackSubmitted();
-      
-      // Show success message
-      alert('... Thank you! Your feedback helps improve the AI model.');
+      onFeedbackSubmitted?.();
       onClose();
-    } catch (error) {
-      console.error('Feedback error:', error);
-      alert(' Failed to submit feedback. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
+    } catch { /* silent */ }
+    finally { setSubmitting(false); }
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4">
-            <div className="flex items-center justify-between">
+    <ModalShell
+      open={true} onClose={onClose}
+      title="AI Risk Explanation"
+      description="XGBoost ML Analysis · SHAP Explainability"
+      icon={Brain} accent="violet" size="xl"
+    >
+      <div className="space-y-4">
+
+        {/* ── § 1  Risk summary — ledger-style header ───────────────── */}
+        <div className={`rounded-lg border overflow-hidden ${
+          level === 'Critical' ? 'border-red-200' :
+          level === 'High'     ? 'border-amber-200' :
+          level === 'Moderate' ? 'border-blue-200' : 'border-emerald-200'
+        }`}>
+          {/* Coloured header bar */}
+          <div className={`flex items-center justify-between gap-4 px-4 py-3 ${
+            level === 'Critical' ? 'bg-red-50'     :
+            level === 'High'     ? 'bg-amber-50'   :
+            level === 'Moderate' ? 'bg-blue-50'    : 'bg-emerald-50'
+          }`}>
+            <div className="flex items-center gap-3">
+              <span className={`w-1 h-8 rounded-full flex-shrink-0 ${cfg.bar}`} />
               <div>
-                <h2 className="text-2xl font-bold flex items-center gap-2">
-                  <Brain size={28} />
-                  AI Risk Explanation
-                </h2>
-                <p className="text-sm text-blue-100">Understanding the comprehensive risk assessment</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <InfoBadge label={`${level} Risk`} variant={cfg.variant} size="sm" />
+                  <InfoBadge label={`${conf}% confidence`} variant="default" size="xs" />
+                </div>
+                {data?.summary && (
+                  <p className="text-xs text-slate-600 mt-1 leading-snug max-w-xs">{data.summary}</p>
+                )}
               </div>
-              <button onClick={onClose} className="hover:bg-white/20 p-2 rounded-lg transition">
-                <X size={24} />
-              </button>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <p className="text-3xl font-black tabular-nums leading-none text-slate-900">{pct}<span className="text-base font-semibold text-slate-400">%</span></p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide mt-0.5">overall risk</p>
             </div>
           </div>
+          {/* Animated bar — reading gauge */}
+          <div className="h-1.5 bg-slate-100">
+            <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(pct, 1)}%` }}
+              transition={{ duration: 0.9, ease: 'easeOut' }}
+              className={`h-full ${cfg.bar}`} />
+          </div>
+        </div>
 
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-            {/* Overall Risk */}
-            <div className={`p-6 rounded-xl border-3 ${getRiskColor(data.risk_level)} mb-6`}>
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h3 className="text-2xl font-bold">{data.risk_level} Risk</h3>
-                  <p className="text-sm opacity-80">
-                    Overall Risk Score: {(data.overall_risk_score * 100).toFixed(0)}%
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold">Confidence</p>
-                  <p className="text-2xl font-bold">{(data.confidence * 100).toFixed(0)}%</p>
-                </div>
-              </div>
-              <p className="text-sm">{data.summary}</p>
-            </div>
+        {/* ── § 2  Chapter tabs — book divider style ────────────────── */}
+        <div className="flex border border-slate-200 rounded-t-lg overflow-hidden bg-slate-50">
+          {TABS.map(({ id, label, icon: Icon }, idx) => (
+            <button key={id} onClick={() => setTab(id)}
+              className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
+                tab === id
+                  ? 'bg-white text-violet-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
+                  : 'text-slate-400 hover:bg-white/70 hover:text-slate-600'
+              }`}>
+              <Icon size={11} className={tab === id ? 'text-violet-600' : ''} />
+              <span className="hidden sm:inline">{label}</span>
+              <span className={`ml-auto hidden md:inline text-[9px] font-normal ${tab === id ? 'text-slate-300' : 'text-slate-200'}`}>
+                §{idx + 2}
+              </span>
+            </button>
+          ))}
+        </div>
 
-            {/* Component Risks */}
-            <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3 flex items-center gap-2"><Shield size={16} /> Risk Component Breakdown</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {[
-                  { label: 'Vital Signs',       value: data.vital_signs_risk,     Icon: Activity },
-                  { label: 'Symptom Burden',    value: data.symptom_burden_risk,  Icon: AlertTriangle },
-                  { label: 'Medication Safety', value: data.medication_risk,      Icon: Pill },
-                  { label: 'Psychosocial',      value: data.psychosocial_risk,    Icon: Heart },
-                  { label: 'Functional Status', value: data.functional_status_risk, Icon: User },
-                ].map((component, idx) => (
-                  <div key={idx} className="bg-slate-50 p-3 rounded-lg border-2 border-slate-200">
-                    <p className="text-xs font-semibold text-slate-600 flex items-center gap-1.5">
-                      <component.Icon size={12} className="flex-shrink-0" /> {component.label}
-                    </p>
-                    <p className="text-2xl font-bold text-slate-900">
-                      {(component.value * 100).toFixed(0)}%
-                    </p>
-                    <div className="mt-2 h-2 bg-slate-200 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full transition-all ${
-                          component.value > 0.7 ? 'bg-red-500' : 
-                          component.value > 0.4 ? 'bg-orange-500' : 'bg-green-500'
-                        }`}
-                        style={{ width: `${component.value * 100}%` }}
-                      />
-                    </div>
+        {/* ── § 3  Tab panel ────────────────────────────────────────── */}
+        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-white overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.14 }}>
+
+              {/* SHAP Drivers */}
+              {tab === 'shap' && (
+                <div className="p-4 space-y-3">
+                  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
+                    <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-violet-600">§</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">SHAP Feature Drivers</p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* SHAP Explanations */}
-            <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3"> What's Contributing to This Risk?</h4>
-              <p className="text-sm text-slate-600 mb-4">
-                These are the top factors influencing the AI's prediction, ranked by importance:
-              </p>
-              
-              <div className="space-y-3">
-                {data.shap_explanations.slice(0, 10).map((exp, idx) => (
-                  <div key={idx} className="bg-white border border-slate-200 rounded-lg p-4 hover:border-blue-300 transition">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          {exp.impact === 'increases_risk' ? (
-                            <TrendingUp className="text-red-500" size={16} />
-                          ) : exp.impact === 'decreases_risk' ? (
-                            <TrendingDown className="text-green-500" size={16} />
-                          ) : (
-                            <div className="w-4 h-4" />
-                          )}
-                          <span className="font-bold text-slate-900">
-                            #{exp.importance_rank}. {exp.feature_name}
-                          </span>
-                        </div>
-                        <p className="text-sm text-slate-700">{exp.explanation}</p>
-                      </div>
-                      <div className="ml-4 text-right">
-                        <p className="text-lg font-bold text-slate-700">{exp.display_value}</p>
-                        <p className={`text-xs font-semibold ${
-                          exp.impact === 'increases_risk' ? 'text-red-600' : 
-                          exp.impact === 'decreases_risk' ? 'text-green-600' : 'text-slate-500'
-                        }`}>
-                          {exp.shap_value > 0 ? '+' : ''}{(exp.shap_value * 100).toFixed(1)}%
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Key Concerns */}
-            {data.key_concerns.length > 0 && (
-              <div className="mb-6">
-                <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
-                  <AlertTriangle className="text-orange-600" size={20} />
-                  Key Concerns
-                </h4>
-                <ul className="space-y-2">
-                  {data.key_concerns.map((concern, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm bg-orange-50 p-3 rounded-lg border border-orange-200">
-                      <span className="text-orange-600 font-bold">-</span>
-                      <span className="text-orange-900">{concern}</span>
-                    </li>
+                  <InfoAlert type="info" compact>
+                    {data?.shap_explanations?.some(e => e.shap_value !== 0)
+                      ? 'Real SHAP values — each bar shows that feature\'s share of total prediction impact (0–100%). Higher % = stronger influence on this risk score.'
+                      : 'XGBoost feature importance — shows which clinical measurements matter most for this prediction.'}
+                  </InfoAlert>
+                  {(data?.shap_explanations || []).slice(0, 10).map((exp, i) => (
+                    <SHAPRow key={i} rank={i + 1}
+                      feature={exp.feature_name || exp.display_name}
+                      value={exp.display_value || exp.value}
+                      pct={exp.pct ? parseFloat(exp.pct.toFixed(1)) : Math.min(100, Math.abs(exp.shap_value) * 10)}
+                      impact={exp.impact || (exp.shap_value > 0 ? 'increases_risk' : 'decreases_risk')} />
                   ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Recommendations */}
-            <div className="mb-6">
-              <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
-                <CheckCircle className="text-blue-600" size={20} />
-                Recommended Actions
-              </h4>
-              <ol className="space-y-2">
-                {data.recommendations.map((rec, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm bg-blue-50 p-3 rounded-lg border border-blue-200">
-                    <span className="font-bold text-blue-600">{idx + 1}.</span>
-                    <span className="text-blue-900">{rec}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            {/* Clinician Feedback */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-6">
-              <h4 className="font-bold text-lg mb-3">­ Do you agree with this assessment?</h4>
-              <p className="text-sm text-slate-600 mb-4">
-                Your feedback helps improve the AI model for future predictions
-              </p>
-              
-              <div className="flex gap-3 mb-4">
-                <button
-                  onClick={() => setFeedbackType('agree')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
-                    feedbackType === 'agree'
-                      ? 'bg-green-600 text-white shadow-lg'
-                      : 'bg-white border-2 border-green-300 text-green-700 hover:bg-green-50'
-                  }`}
-                >
-                  <ThumbsUp size={18} />
-                  Agree
-                </button>
-                
-                <button
-                  onClick={() => setFeedbackType('partially_agree')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
-                    feedbackType === 'partially_agree'
-                      ? 'bg-yellow-600 text-white shadow-lg'
-                      : 'bg-white border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50'
-                  }`}
-                >
-                  Partially
-                </button>
-                
-                <button
-                  onClick={() => setFeedbackType('disagree')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
-                    feedbackType === 'disagree'
-                      ? 'bg-red-600 text-white shadow-lg'
-                      : 'bg-white border-2 border-red-300 text-red-700 hover:bg-red-50'
-                  }`}
-                >
-                  <ThumbsDown size={18} />
-                  Disagree
-                </button>
-              </div>
-
-              {feedbackType && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="overflow-hidden"
-                >
-                  <textarea
-                    value={feedbackNote}
-                    onChange={(e) => setFeedbackNote(e.target.value)}
-                    placeholder="Add a note (optional) to help us understand your assessment..."
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    rows={3}
-                  />
-                  
-                  <button
-                    onClick={handleFeedbackSubmit}
-                    disabled={submitting}
-                    className="mt-3 w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {submitting ? 'Submitting...' : 'Submit Feedback'}
-                  </button>
-                </motion.div>
+                  {(!data?.shap_explanations?.length) && (
+                    <div className="text-center py-8 text-slate-400 italic text-sm">No SHAP data available for this prediction.</div>
+                  )}
+                </div>
               )}
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+
+              {/* Component Breakdown */}
+              {tab === 'breakdown' && (
+                <div className="p-4 space-y-4">
+                  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
+                    <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-violet-600">§</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Risk Component Breakdown</p>
+                  </div>
+                  <InfoGrid cols={2} items={[
+                    ...(data?.component_scores || []).slice(0, 5).map(c => ({
+                      label: c.name, value: `${Math.round(c.score)}%`,
+                      accent: c.score > 65 ? 'red' : c.score > 40 ? 'amber' : 'teal', sub: c.risk_level,
+                    })),
+                    { label: 'Overall Risk', value: `${pct}%`, accent: level === 'Critical' ? 'red' : level === 'High' ? 'amber' : 'teal', sub: level },
+                  ]} />
+                  <Divider label="Domain Progress" />
+                  {(data?.component_scores || []).map(({ name, score }) => (
+                    <ProgressRow key={name} label={name} value={Math.round(score)} max={100}
+                      color={score > 70 ? 'red' : score > 40 ? 'amber' : 'green'}
+                      valueLabel={`${Math.round(score)}%`} />
+                  ))}
+                  {!(data?.component_scores?.length) && (
+                    <InfoAlert type="info">No component breakdown available — run the risk assessment again.</InfoAlert>
+                  )}
+                </div>
+              )}
+
+              {/* Concerns & Recommendations */}
+              {tab === 'action' && (
+                <div className="p-4 space-y-4">
+                  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
+                    <span className="w-4 h-4 rounded bg-amber-100 flex items-center justify-center text-[9px] font-bold text-amber-600">§</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinical Concerns & Actions</p>
+                  </div>
+                  {(data?.key_concerns?.length > 0) ? (
+                    <div className="rounded-lg border border-amber-200 overflow-hidden">
+                      <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border-b border-amber-200">
+                        <span className="w-1 h-4 rounded-full bg-amber-400 flex-shrink-0" />
+                        <AlertTriangle size={12} className="text-amber-600 flex-shrink-0" />
+                        <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest select-none">Key Clinical Concerns</span>
+                      </div>
+                      <div className="px-5 py-3 bg-white space-y-2">
+                        {data.key_concerns.map((c, i) => (
+                          <div key={i} className="flex items-start gap-3">
+                            <span className="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+                            <p className="text-sm text-slate-700 leading-relaxed">{c}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <InfoAlert type="success">No critical concerns flagged for this patient at this time.</InfoAlert>
+                  )}
+                  <Divider />
+                  <div className="rounded-lg border border-teal-200 overflow-hidden">
+                    <div className="flex items-center gap-2.5 px-4 py-2.5 bg-teal-50 border-b border-teal-200">
+                      <span className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
+                      <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
+                      <span className="text-[11px] font-bold text-teal-700 uppercase tracking-widest select-none">Recommended Actions</span>
+                    </div>
+                    <div className="px-5 py-3 bg-white space-y-2">
+                      {(data?.recommended_actions || data?.recommendations || []).map((r, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+                          <p className="text-sm text-slate-700 leading-relaxed">{r}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Clinician Feedback */}
+              {tab === 'feedback' && (
+                <div className="p-4 space-y-4">
+                  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
+                    <span className="w-4 h-4 rounded bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">§</span>
+                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinician Feedback</p>
+                  </div>
+                  <InfoAlert type="info">
+                    Your feedback improves the AI model for future predictions. Do you agree with this risk assessment?
+                  </InfoAlert>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { type: 'agree',           label: 'Agree',    icon: ThumbsUp,    cls: 'border-emerald-300 text-emerald-700 data-[sel]:bg-emerald-600 data-[sel]:text-white' },
+                      { type: 'partially_agree', label: 'Partial',  icon: Stethoscope, cls: 'border-amber-300 text-amber-700 data-[sel]:bg-amber-500 data-[sel]:text-white' },
+                      { type: 'disagree',        label: 'Disagree', icon: ThumbsDown,  cls: 'border-red-300 text-red-700 data-[sel]:bg-red-600 data-[sel]:text-white' },
+                    ].map(({ type, label, icon: Icon, cls }) => (
+                      <button key={type} onClick={() => setFeedback(type)}
+                        data-sel={feedbackType === type ? '' : undefined}
+                        className={`flex flex-col items-center gap-2 py-4 rounded-xl border-2 font-semibold text-sm transition-all ${cls} ${feedbackType === type ? '' : 'hover:bg-slate-50'}`}>
+                        <Icon size={20} />{label}
+                      </button>
+                    ))}
+                  </div>
+                  <AnimatePresence>
+                    {feedbackType && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden space-y-3">
+                        <textarea value={note} onChange={e => setNote(e.target.value)} rows={3}
+                          placeholder="Add a clinical note to explain your assessment (optional)..."
+                          className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100 resize-none transition-all" />
+                        <button onClick={submitFeedback} disabled={submitting}
+                          className="w-full py-3 bg-violet-700 hover:bg-violet-800 text-white font-bold rounded-xl disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2">
+                          {submitting ? 'Submitting…' : 'Submit Feedback'}
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ── Model footnote ────────────────────────────────────────── */}
+        <div className="flex items-start gap-2 px-1 border-t border-slate-100 pt-3">
+          <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
+          <p className="text-[10px] text-slate-400 leading-relaxed">
+            <span className="font-semibold text-slate-500">XGBoost v1.0 · SHAP TreeExplainer</span> ·
+            Trained on clinically-parameterised synthetic data · Results should be reviewed by a qualified clinician
+          </p>
+        </div>
+
+      </div>
+    </ModalShell>
   );
 }
-

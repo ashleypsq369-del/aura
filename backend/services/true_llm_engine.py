@@ -18,12 +18,9 @@ import re
 from typing import Any, Dict, Generator, List, Optional
 
 # ─── API keys ────────────────────────────────────────────────────────────────
-OPENROUTER_API_KEY: str = os.getenv(
-    "OPENROUTER_API_KEY",
-    "REDACTED_OPENROUTER_KEY",
-).strip()
+OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "").strip()
 OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
-OPENROUTER_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
+OPENROUTER_MODEL: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
 
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "").strip()
 GROQ_API_KEY:   str = os.getenv("GROQ_API_KEY",   "").strip()
@@ -39,7 +36,7 @@ if OPENROUTER_API_KEY:
     try:
         import httpx as _httpx_check  # noqa: F401
         OPENROUTER_AVAILABLE = True
-        print(f"[LLM] OpenRouter ({OPENROUTER_MODEL}): ACTIVE (primary LLM)")
+        print(f"[LLM] OpenRouter ({OPENROUTER_MODEL}): ACTIVE (primary LLM — Nemotron 550B)")
     except ImportError:
         print("[LLM] WARNING: httpx not installed -> run: pip install httpx")
 else:

@@ -368,6 +368,7 @@ def get_patient_portal_data(patient_id: int, user_id: int, db: Session) -> Dict[
             "journey_phase": phase,
             "care_team": {
                 "clinician": {
+                    "id": clinician.id,
                     "name": clinician.full_name,
                     "role": "Clinician"
                 } if clinician else None,

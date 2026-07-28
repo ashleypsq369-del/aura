@@ -26,6 +26,62 @@ class JourneyEventCreate(BaseModel):
 
 # ─── Endpoints ────────────────────────────────────────────────────────────────
 
+@router.get("/my-journey")
+async def get_my_journey(
+    event_type: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Get journey events for the logged-in patient/family member.
+    If patient role, show their own journey.
+    If family role, show linked patient's journey.
+    """
+    patient_id = None
+    
+    if current_user.role == 'patient':
+        # Find patient record linked to this user
+        patient = db.query(Patient).filter(Patient.patient_code == current_user.username).first()
+        if patient:
+            patient_id = patient.id
+    elif current_user.role == 'family':
+        # Find linked patient
+        from src.db import PatientFamilyLink
+        link = db.query(PatientFamilyLink).filter(
+            PatientFamilyLink.family_user_id == current_user.id
+        ).first()
+        if link:
+            patient_id = link.patient_id
+    
+    if not patient_id:
+        return []
+    
+    # Get events
+    query = db.query(PatientJourneyEvent).filter(
+        PatientJourneyEvent.patient_id == patient_id
+    )
+    
+    if event_type:
+        query = query.filter(PatientJourneyEvent.event_type == event_type)
+    
+    events = query.order_by(PatientJourneyEvent.created_at.desc()).all()
+    
+    # Format response (hide clinical notes for non-clinicians)
+    result = []
+    for event in events:
+        result.append({
+            'id': event.id,
+            'patient_id': event.patient_id,
+            'event_type': event.event_type,
+            'event_title': event.event_title,
+            'event_detail': event.event_detail,
+            'is_milestone': event.is_milestone,
+            'created_at': event.created_at.isoformat() if event.created_at else None
+        })
+    
+    return result
+
+
 @router.get("/patients/{patient_id}")
 async def get_patient_journey(
     patient_id: int,
@@ -115,61 +171,6 @@ async def get_patient_journey(
     
     return result
 
-
-@router.get("/my-journey")
-async def get_my_journey(
-    event_type: Optional[str] = None,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Get journey events for the logged-in patient/family member.
-    If patient role, show their own journey.
-    If family role, show linked patient's journey.
-    """
-    patient_id = None
-    
-    if current_user.role == 'patient':
-        # Find patient record linked to this user
-        patient = db.query(Patient).filter(Patient.patient_code == current_user.username).first()
-        if patient:
-            patient_id = patient.id
-    elif current_user.role == 'family':
-        # Find linked patient
-        from src.db import PatientFamilyLink
-        link = db.query(PatientFamilyLink).filter(
-            PatientFamilyLink.family_user_id == current_user.id
-        ).first()
-        if link:
-            patient_id = link.patient_id
-    
-    if not patient_id:
-        return []
-    
-    # Get events
-    query = db.query(PatientJourneyEvent).filter(
-        PatientJourneyEvent.patient_id == patient_id
-    )
-    
-    if event_type:
-        query = query.filter(PatientJourneyEvent.event_type == event_type)
-    
-    events = query.order_by(PatientJourneyEvent.created_at.desc()).all()
-    
-    # Format response (hide clinical notes for non-clinicians)
-    result = []
-    for event in events:
-        result.append({
-            'id': event.id,
-            'patient_id': event.patient_id,
-            'event_type': event.event_type,
-            'event_title': event.event_title,
-            'event_detail': event.event_detail,
-            'is_milestone': event.is_milestone,
-            'created_at': event.created_at.isoformat() if event.created_at else None
-        })
-    
-    return result
 
 
 @router.post("")

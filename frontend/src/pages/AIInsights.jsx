@@ -1,821 +1,1252 @@
 ﻿/**
- * AIInsights -- Premium 2-column layout
- * LEFT:  Paginated patient cards (6/page) -- no infinite scroll
- * RIGHT: Deep-dive panel (sticky) -- XGBoost + SHAP
- * System-wide proactive analysis -- /api/ai-analysis/system-insights
+ * AIInsights — Clinical Intelligence Hub v3
+ * ==========================================
+ * Design: Premium medical dark-header + card-based layout
+ * Inspired by: Dribbble Netra (deep-slate + glow), Behance patient management
+ * (dense cards, avatar rings, real-time indicators), fuselabcreative (surface
+ * critical first, single-action deep-dive, coherent color system).
+ *
+ * Layout:
+ *   [Gradient dark hero header with KPI pills]
+ *   [3 main tabs: Risk | Drugs | System]
+ *   [LEFT: patient card list 55%  |  RIGHT: deep-dive panel 45% (sticky)]
  */
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Brain, AlertTriangle, CheckCircle, TrendingDown, Search,
+  RefreshCw, Activity, AlertCircle, Zap, Pill, Clock,
+  Users, TrendingUp, ExternalLink, Loader2, BarChart2,
+  Shield, X, Cpu, Beaker, ChevronRight, ListFilter,
+  Heart, Target, Stethoscope,
+} from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { aiAPI, advancedMlAPI, mlAPI, ethicsAPI } from '../api/client';
-import { useAuth } from '../context/AuthContext';
+import { aiAPI, advancedMlAPI, mlAPI, patientsAPI } from '../api/client';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
-import { ResponsiveContainer, RadialBarChart, RadialBar } from 'recharts';
 import {
-  Brain, AlertTriangle, TrendingDown, CheckCircle,
-  Users, RefreshCw, Loader2, ChevronRight, Activity,
-  AlertCircle, Zap, ShieldAlert, Pill, X, Clock, Sparkles,
-} from 'lucide-react';
+  ResponsiveContainer, RadialBarChart, RadialBar,
+  BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid,
+} from 'recharts';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const PAGE_SIZE = 6;
-
-/* -- Priority visual config ------------------------------------------------ */
-const P = {
-  CRITICAL: {
-    border: 'border-l-red-500',
-    bg: 'bg-gradient-to-r from-red-50 to-rose-50/40',
-    badge: 'bg-red-100 text-red-700 border-red-200',
-    icon: 'text-red-600',
-    dot: 'bg-red-500',
-    Icon: AlertTriangle,
-    pulse: true,
+/* ─── Design tokens ─────────────────────────────────────────────────────────── */
+const RISK = {
+  critical: {
+    border: 'border-l-red-500',    glow: 'shadow-red-500/20',
+    ring: 'ring-2 ring-red-500/40', bg: 'bg-white',
+    badge: 'bg-red-600 text-white', text: 'text-red-600',
+    barColor: '#e11d48',            gradFrom: 'from-red-600',  gradTo: 'to-rose-700',
+    dot: 'bg-red-500 animate-pulse',label: 'Critical',         Icon: AlertTriangle,
+    avatarGrad: 'from-red-600 to-rose-700',
+    topStripe: true,
   },
-  HIGH: {
-    border: 'border-l-amber-500',
-    bg: 'bg-gradient-to-r from-amber-50 to-orange-50/30',
-    badge: 'bg-amber-100 text-amber-700 border-amber-200',
-    icon: 'text-amber-600',
-    dot: 'bg-amber-500',
-    Icon: AlertCircle,
-    pulse: false,
+  high: {
+    border: 'border-l-orange-500', glow: 'shadow-orange-500/20',
+    ring: 'ring-2 ring-orange-400/40', bg: 'bg-white',
+    badge: 'bg-orange-500 text-white', text: 'text-orange-600',
+    barColor: '#f97316',            gradFrom: 'from-orange-500', gradTo: 'to-amber-600',
+    dot: 'bg-orange-500',           label: 'High Risk',         Icon: AlertCircle,
+    avatarGrad: 'from-orange-500 to-amber-600',
+    topStripe: false,
   },
-  MODERATE: {
-    border: 'border-l-blue-400',
-    bg: 'bg-gradient-to-r from-blue-50/60 to-indigo-50/20',
-    badge: 'bg-blue-100 text-blue-700 border-blue-200',
-    icon: 'text-blue-600',
-    dot: 'bg-blue-400',
-    Icon: Activity,
-    pulse: false,
+  moderate: {
+    border: 'border-l-amber-500',  glow: 'shadow-amber-400/15',
+    ring: 'ring-2 ring-amber-400/30', bg: 'bg-white',
+    badge: 'bg-amber-500 text-white', text: 'text-amber-600',
+    barColor: '#d97706',            gradFrom: 'from-amber-500', gradTo: 'to-orange-500',
+    dot: 'bg-amber-500',            label: 'Moderate',          Icon: Activity,
+    avatarGrad: 'from-amber-500 to-orange-500',
+    topStripe: false,
   },
-  LOW: {
-    border: 'border-l-emerald-400',
-    bg: 'bg-white',
-    badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    icon: 'text-emerald-600',
-    dot: 'bg-emerald-400',
-    Icon: CheckCircle,
-    pulse: false,
+  low: {
+    border: 'border-l-teal-500',   glow: 'shadow-teal-500/10',
+    ring: '',                       bg: 'bg-white',
+    badge: 'bg-teal-600 text-white',text: 'text-teal-600',
+    barColor: '#0d9488',            gradFrom: 'from-teal-600',  gradTo: 'to-emerald-600',
+    dot: 'bg-teal-500',             label: 'Stable',            Icon: CheckCircle,
+    avatarGrad: 'from-teal-500 to-emerald-600',
+    topStripe: false,
+  },
+  unknown: {
+    border: 'border-l-slate-400',  glow: '',
+    ring: '',                       bg: 'bg-white',
+    badge: 'bg-slate-500 text-white',text: 'text-slate-500',
+    barColor: '#94a3b8',            gradFrom: 'from-slate-500', gradTo: 'to-slate-600',
+    dot: 'bg-slate-400',            label: 'Unknown',           Icon: Shield,
+    avatarGrad: 'from-slate-500 to-slate-600',
+    topStripe: false,
   },
 };
 
-/* -- Patient insight card -------------------------------------------------- */
-function PatientCard({ insight, isSelected, onDeepDive }) {
-  const priority = insight.priority || 'LOW';
-  const cfg = P[priority] || P.LOW;
-  const { Icon } = cfg;
+function riskToken(level) {
+  const l = (level || '').toLowerCase();
+  if (l === 'crisis' || l === 'critical') return RISK.critical;
+  if (l === 'high')                       return RISK.high;
+  if (l === 'moderate' || l === 'medium') return RISK.moderate;
+  if (l === 'low' || l === 'normal' || l === 'stable') return RISK.low;
+  return RISK.unknown;
+}
 
-  const concerns = Array.isArray(insight.key_concerns)
-    ? insight.key_concerns
-    : (insight.key_concerns || '').split('. ').map(s => s.trim()).filter(Boolean);
+const TASK_SHORT = {
+  vital_risk: 'Vitals',      symptom_burden: 'Symptoms',
+  functional_decline: 'ADL', cognitive_impairment: 'Cognition',
+  mental_health_risk: 'Mental', medication_risk: 'Meds',
+  caregiver_burden: 'Caregiver', admission_risk: 'Admission',
+};
 
+function getInitials(name = '') {
+  return name.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+}
+
+/* ─── Mini radial risk gauge ────────────────────────────────────────────────── */
+function RiskGauge({ score = 0, size = 52 }) {
+  const pct   = Math.round(score * 100);
+  const color = score > 0.7 ? '#e11d48' : score > 0.4 ? '#f97316' : '#16a34a';
   return (
-    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }}
-      className={`border-l-4 ${cfg.border} ${isSelected ? 'bg-violet-50 ring-2 ring-inset ring-violet-200' : cfg.bg} rounded-r-2xl transition-all duration-200 cursor-pointer group overflow-hidden`}
-      onClick={() => onDeepDive(insight.patient_id)}>
-      <div className="p-3">
-        <div className="flex items-start gap-3">
-          {/* Priority icon */}
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
-            priority === 'CRITICAL' ? 'bg-red-100' : priority === 'HIGH' ? 'bg-amber-100' : priority === 'MODERATE' ? 'bg-blue-100' : 'bg-emerald-100'
-          } ${cfg.pulse ? 'animate-pulse' : ''}`}>
-            <Icon size={14} className={cfg.icon}/>
-          </div>
-
-          <div className="flex-1 min-w-0">
-            {/* Header row */}
-            <div className="flex items-start justify-between gap-2 mb-1.5">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-bold text-slate-900">{insight.patient_name || `Patient #${insight.patient_id}`}</span>
-                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${cfg.badge}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} ${cfg.pulse ? 'animate-pulse' : ''}`}/>
-                  {priority}
-                </span>
-                {(insight.trend === 'deteriorating' || insight.trend === 'worsening') && (
-                  <span className="flex items-center gap-1 text-[10px] font-bold text-red-600"><TrendingDown size={11}/> Deteriorating</span>
-                )}
-              </div>
-              <span className="flex items-center gap-1 text-[10px] text-slate-400 flex-shrink-0">
-                <Clock size={10}/> Live
-              </span>
-            </div>
-
-            {/* Clinical notes */}
-            {insight.clinical_notes && (
-              <p className="text-sm text-slate-600 leading-relaxed mb-2 line-clamp-2">{insight.clinical_notes}</p>
-            )}
-
-            {/* Key concerns */}
-            {concerns.slice(0, 2).map((c, i) => (
-              <div key={i} className="flex items-start gap-2 mb-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot} flex-shrink-0 mt-1.5`}/>
-                <span className="text-xs text-slate-600">{c}</span>
-              </div>
-            ))}
-
-            {/* Action */}
-            <div className="flex items-center gap-2 mt-2.5">
-              <button onClick={e => { e.stopPropagation(); onDeepDive(insight.patient_id); }}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-violet-200">
-                <Brain size={11}/> XAI Deep-Dive
-              </button>
-              {isSelected && (
-                <span className="flex items-center gap-1 text-xs text-violet-600 font-bold">
-                  <ChevronRight size={12}/> Analysis open
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+    <div className="flex flex-col items-center" style={{ width: size }}>
+      <ResponsiveContainer width={size} height={Math.round(size * 0.72)}>
+        <RadialBarChart cx="50%" cy="82%" innerRadius="56%" outerRadius="88%"
+          barSize={6} data={[{ value: pct, fill: color }]} startAngle={180} endAngle={0}>
+          <RadialBar minAngle={4} background={{ fill: '#f1f5f9' }} clockWise dataKey="value" cornerRadius={4} />
+        </RadialBarChart>
+      </ResponsiveContainer>
+      <span className="font-black tabular-nums leading-none" style={{ fontSize: size < 50 ? 10 : 12, color }}>{pct}%</span>
+    </div>
   );
 }
 
-/* -- SHAP chart ------------------------------------------------------------ */
-function ShapChart({ features }) {
-  if (!features || features.length === 0)
-    return (
-      <div className="flex flex-col items-center justify-center h-24 gap-2 text-slate-400">
-        <Brain size={20} className="opacity-40"/>
-        <p className="text-xs">No SHAP data available</p>
-      </div>
-    );
+/* ─── 8-task compact pill grid — solid colors, white text, skip zeros ────────── */
+function TaskGrid({ tasks }) {
+  if (!tasks || !Object.keys(tasks).length) return null;
+  const entries = Object.entries(tasks)
+    .map(([key, t]) => [key, t, Math.round((t.probability || 0) * 100)])
+    .filter(([, , pct]) => pct > 0)                        // skip 0% tasks
+    .sort(([, , a], [, , b]) => b - a);                    // highest first
 
-  // Normalise to 0-100 scale based on max absolute value
-  const maxAbs = Math.max(...features.map(f => Math.abs(f.value)), 1);
+  if (!entries.length) return null;                        // all zeros — show nothing
+
+  return (
+    <div className="flex flex-wrap gap-1 mt-2">
+      {entries.slice(0, 6).map(([key, , pct]) => {
+        const [bg, txt] = pct > 70
+          ? ['bg-red-600', 'text-white']
+          : pct > 40
+          ? ['bg-orange-500', 'text-white']
+          : pct > 15
+          ? ['bg-amber-400', 'text-white']
+          : ['bg-slate-400', 'text-white'];
+        return (
+          <span key={key}
+            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black ${bg} ${txt} shadow-sm`}>
+            {TASK_SHORT[key] || key}
+            <span className="bg-white/25 rounded-full px-1 ml-0.5">{pct}%</span>
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── SHAP / Feature Importance display ─────────────────────────────────────── */
+function ShapBars({ features, shapAvailable }) {
+  if (!features?.length) return (
+    <div className="flex flex-col items-center justify-center py-6 gap-3 text-center">
+      <div className="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center">
+        <CheckCircle size={22} className="text-teal-600" />
+      </div>
+      <p className="text-sm font-bold text-slate-700">Low Risk Profile</p>
+      <p className="text-xs text-slate-400 max-w-[200px]">
+        No significant risk drivers detected. This patient appears to have a stable health profile.
+      </p>
+    </div>
+  );
+
+  const maxPct = Math.max(...features.map(f => f.pct || 0), 1);
 
   return (
     <div className="space-y-2.5">
-      {features.slice(0, 8).map((f, i) => {
-        const isRisk    = f.impact === 'increases_risk' || f.value > 0;
-        const barWidth  = Math.round((Math.abs(f.value) / maxAbs) * 100);
-        const barColor  = isRisk ? 'bg-red-500'     : 'bg-emerald-500';
-        const chipColor = isRisk
-          ? 'bg-red-50 text-red-700 border-red-200'
-          : 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      {/* Mode indicator */}
+      <div className="flex items-center gap-2 pb-1">
+        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
+          shapAvailable
+            ? 'bg-violet-600 text-white'
+            : 'bg-amber-500 text-white'
+        }`}>
+          {shapAvailable ? 'XGBoost SHAP' : 'Feature Importance'}
+        </span>
+        <span className="text-[10px] text-slate-500">
+          {shapAvailable
+            ? 'Real SHAP values — mathematically precise feature contributions'
+            : 'Fallback: XGBoost feature importance (SHAP computation unavailable)'
+          }
+        </span>
+      </div>
+
+      {features.map((f, i) => {
+        const risk     = f.impact === 'increases_risk' || f.shap_value > 0;
+        const neutral  = f.impact === 'neutral';
+        // Bar width relative to max pct in this set
+        const barW     = Math.round((f.pct / maxPct) * 100);
+
+        const rowCls   = neutral
+          ? 'bg-slate-50 border-slate-200'
+          : risk
+          ? 'bg-red-50 border-red-100'
+          : 'bg-emerald-50 border-emerald-100';
+
+        const barCls   = neutral
+          ? 'bg-slate-400'
+          : risk
+          ? 'bg-gradient-to-r from-red-500 to-rose-600'
+          : 'bg-gradient-to-r from-emerald-500 to-teal-600';
+
+        const iconCls  = neutral
+          ? 'bg-slate-400'
+          : risk ? 'bg-red-500' : 'bg-emerald-500';
 
         return (
-          <div key={i} className="group">
-            {/* Feature name row */}
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-semibold text-slate-700 truncate max-w-[60%]">{f.name}</span>
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                {f.displayValue && (
-                  <span className="text-[10px] text-slate-400 tabular-nums">{f.displayValue}</span>
+          <motion.div key={i}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.04 }}
+            className={`rounded-xl border p-3 ${rowCls}`}
+          >
+            {/* Row top: icon + name + value badges */}
+            <div className="flex items-start gap-2.5 mb-2">
+              {/* Direction dot */}
+              <span className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5 ${iconCls}`}>
+                {neutral ? (
+                  <span className="w-2 h-2 rounded-full bg-white" />
+                ) : risk ? (
+                  <TrendingUp size={11} className="text-white" />
+                ) : (
+                  <TrendingDown size={11} className="text-white" />
                 )}
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border tabular-nums ${chipColor}`}>
-                  {f.value > 0 ? '+' : ''}{f.value.toFixed(1)}%
+              </span>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-slate-800 leading-tight truncate">
+                  {f.name}
+                </p>
+                {/* Clinical measurement value */}
+                {f.feature_value !== undefined && f.feature_value !== 0 && (
+                  <p className="text-[10px] text-slate-500 mt-0.5">
+                    Value: <span className="font-bold text-slate-700">{
+                      typeof f.feature_value === 'number'
+                        ? f.feature_value % 1 === 0
+                          ? f.feature_value
+                          : f.feature_value.toFixed(1)
+                        : f.feature_value
+                    }</span>
+                  </p>
+                )}
+              </div>
+
+              {/* SHAP / importance badges */}
+              <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                {/* Importance % badge */}
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                  neutral
+                    ? 'bg-slate-100 text-slate-600'
+                    : risk
+                    ? 'bg-red-600 text-white'
+                    : 'bg-emerald-600 text-white'
+                }`}>
+                  {f.pct.toFixed(1)}% importance
                 </span>
+                {/* SHAP value (only if real SHAP, not zero) */}
+                {shapAvailable && f.shap_value !== 0 && (
+                  <span className="text-[9px] text-slate-400 font-mono">
+                    SHAP: {f.shap_value > 0 ? '+' : ''}{f.shap_value.toFixed(4)}
+                  </span>
+                )}
               </div>
             </div>
-            {/* Bar */}
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+
+            {/* Relative importance bar */}
+            <div className="h-1.5 rounded-full bg-white/80 overflow-hidden">
               <motion.div
-                className={`h-full rounded-full ${barColor}`}
+                className={`h-full rounded-full ${barCls}`}
                 initial={{ width: 0 }}
-                animate={{ width: `${barWidth}%` }}
-                transition={{ duration: 0.5, delay: i * 0.04, ease: 'easeOut' }}
+                animate={{ width: `${barW}%` }}
+                transition={{ duration: 0.5, delay: i * 0.04 }}
               />
             </div>
-          </div>
+          </motion.div>
         );
       })}
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 pt-1 border-t border-slate-100">
-        <span className="flex items-center gap-1.5 text-[10px] text-slate-500">
-          <span className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"/>Increases risk
+      <div className="flex gap-4 pt-1 border-t border-slate-100">
+        <span className="flex items-center gap-1.5 text-[10px] text-slate-400">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500" />Increases risk
         </span>
-        <span className="flex items-center gap-1.5 text-[10px] text-slate-500">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0"/>Decreases risk
+        <span className="flex items-center gap-1.5 text-[10px] text-slate-400">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />Decreases risk
+        </span>
+        <span className="flex items-center gap-1.5 text-[10px] text-slate-400 ml-auto">
+          Bar width = relative importance
         </span>
       </div>
     </div>
   );
 }
 
-/* -- Risk gauge ------------------------------------------------------------ */
-function RiskGauge({ score = 0 }) {
-  const pct = Math.round(score * 100);
-  const color = score > 0.7 ? '#ef4444' : score > 0.4 ? '#f59e0b' : '#10b981';
-  const label = score > 0.7 ? 'High Risk' : score > 0.4 ? 'Moderate' : 'Stable';
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-full">
-        <ResponsiveContainer width="100%" height={100}>
-          <RadialBarChart cx="50%" cy="80%" innerRadius="60%" outerRadius="90%"
-            barSize={10} data={[{ name: 'Risk', value: pct, fill: color }]} startAngle={180} endAngle={0}>
-            <RadialBar minAngle={5} background clockWise dataKey="value" cornerRadius={8}/>
-          </RadialBarChart>
-        </ResponsiveContainer>
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-0.5">
-          <span className="text-2xl font-black tabular-nums" style={{ color }}>{pct}%</span>
-        </div>
-      </div>
-      <span className={`text-xs font-bold px-3 py-1 rounded-full ${score > 0.7 ? 'bg-red-100 text-red-700' : score > 0.4 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
-        {label}
-      </span>
-    </div>
-  );
-}
+/* ─── Premium patient card ────────────────────────────────────────────────────
+   Design: Avatar ring with risk color glow, compact data density, two CTA buttons
+   ─────────────────────────────────────────────────────────────────────────────── */
+function PatientCard({ p, isSelected, onSelect, onNavigate }) {
+  const tok = riskToken(p.risk_level);
+  const pct = Math.round((p.overall_risk || 0) * 100);
+  const name = p.full_name || p.patient_name || 'Unknown Patient';
 
-/* -- Clinical Override Modal ----------------------------------------------- */
-function OverrideModal({ patientId, onClose, onSubmit, pending }) {
-  const [reason, setReason] = useState('');
-  const [type, setType] = useState('risk_level_override');
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <motion.div initial={{ scale: .95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: .95, y: 20 }}
-        onClick={e => e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center"><ShieldAlert size={16} className="text-amber-600"/></div>
-            <h2 className="font-bold text-slate-800">Clinical Override</h2>
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      whileHover={{ y: -1 }}
+      transition={{ type: 'spring', damping: 28, stiffness: 400 }}
+      className={`
+        relative rounded-2xl border border-slate-200 overflow-hidden cursor-pointer
+        bg-white shadow-sm transition-all duration-150
+        border-l-4 ${tok.border}
+        ${isSelected
+          ? `${tok.ring} shadow-lg`
+          : `hover:shadow-md hover:border-slate-300`
+        }
+      `}
+      onClick={() => onSelect(p.id)}
+    >
+      {/* Critical pulsing top border */}
+      {(p.risk_level?.toLowerCase() === 'critical' || p.risk_level?.toLowerCase() === 'crisis') && (
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-600 via-rose-400 to-red-600 animate-pulse" />
+      )}
+
+      <div className="p-4">
+        {/* Top row: Avatar + name + risk badge + gauge */}
+        <div className="flex items-start gap-3 mb-3">
+          {/* Avatar with risk-colored ring */}
+          <div className="relative flex-shrink-0">
+            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tok.avatarGrad} flex items-center justify-center text-white font-black text-sm shadow-md`}>
+              {getInitials(name)}
+            </div>
+            {/* Live status dot */}
+            <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${tok.dot}`} />
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center"><X size={15} className="text-slate-400"/></button>
+
+          {/* Patient info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+              <span className="font-bold text-slate-900 dark:text-white text-sm leading-tight truncate">{name}</span>
+              <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${tok.badge}`}>
+                {tok.label}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500">
+              {p.patient_code && <span className="font-semibold">{p.patient_code}</span>}
+              {p.age && <><span>·</span><span>{p.age}y</span></>}
+              {p.gender && <><span>·</span><span>{p.gender}</span></>}
+            </div>
+          </div>
+
+          {/* Risk gauge */}
+          <div className="flex-shrink-0">
+            <RiskGauge score={p.overall_risk || 0} size={48} />
+          </div>
         </div>
-        <div className="p-6 space-y-4">
-          <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-            <AlertTriangle size={14} className="text-amber-600 flex-shrink-0 mt-0.5"/>
-            <p className="text-xs text-amber-800">This override is logged in the ethics audit trail. Provide clear clinical justification.</p>
+
+        {/* Diagnosis / top concern */}
+        {(p.top_concern || p.primary_diagnosis) && (
+          <div className="flex items-start gap-1.5 mb-2.5">
+            <Target size={11} className="text-amber-400 flex-shrink-0 mt-0.5" />
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug line-clamp-1 font-medium">
+              {p.top_concern || p.primary_diagnosis}
+            </p>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Override Type</label>
-            <select value={type} onChange={e => setType(e.target.value)}
-              className="w-full border-2 border-slate-200 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white">
-              <option value="risk_level_override">Risk Level Override</option>
-              <option value="care_pathway_override">Care Pathway Override</option>
-              <option value="prediction_disagreement">Clinical Disagreement</option>
-            </select>
+        )}
+
+        {/* First key concern */}
+        {p.key_concerns?.[0] && (
+          <div className="flex items-start gap-1.5 mb-2.5 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
+            <AlertTriangle size={10} className="text-amber-500 flex-shrink-0 mt-0.5" />
+            <p className="text-[10px] text-amber-800 dark:text-amber-300 leading-snug line-clamp-1">{p.key_concerns[0]}</p>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Clinical Justification *</label>
-            <textarea value={reason} onChange={e => setReason(e.target.value)} rows={4}
-              placeholder="Describe the clinical reasoning..."
-              className="w-full border-2 border-slate-200 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"/>
+        )}
+
+        {/* Task mini-bars grid */}
+        {p.tasks && Object.keys(p.tasks).length > 0 && (
+          <div className="mb-3">
+            <TaskGrid tasks={p.tasks} />
           </div>
-        </div>
-        <div className="px-6 py-4 bg-slate-50 border-t flex gap-3">
-          <button onClick={onClose} className="flex-1 py-2.5 border-2 border-slate-200 text-slate-600 rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
-          <button onClick={() => onSubmit({ patient_id: patientId, override_type: type, reason, override_value: 'clinician_reviewed' })}
-            disabled={!reason.trim() || pending}
-            className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
-            {pending ? <Loader2 size={13} className="animate-spin"/> : <CheckCircle size={13}/>}
-            Submit Override
+        )}
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100 dark:border-slate-700/50">
+          <button
+            onClick={e => { e.stopPropagation(); onNavigate(p.id || p.patient_id); }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition"
+          >
+            <ExternalLink size={11} /> View Patient
+          </button>
+          <button
+            onClick={e => { e.stopPropagation(); onSelect(p.id); }}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ml-auto ${
+              isSelected
+                ? 'bg-violet-700 text-white'
+                : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-sm'
+            }`}
+          >
+            <Brain size={11} /> {isSelected ? 'Close' : 'Deep-Dive'}
           </button>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
 
-/* -- Main page -------------------------------------------------------------- */
-export default function AIInsights() {
-  const { user }    = useAuth();
-  const navigate    = useNavigate();
-  const queryClient = useQueryClient();
+/* ─── Deep-Dive right panel — redesigned ──────────────────────────────────── */
+function DeepDivePanel({ patient, navigate, onClose }) {
+  const pid = String(patient.id || patient.patient_id);
+  const [innerTab, setInnerTab] = useState('overview');
+  const tok = riskToken(patient.risk_level);
 
-  const [activeTab,         setActiveTab]         = useState('all');
-  const [deepDivePatientId, setDeepDivePatientId] = useState(null);
-  const [showOverride,      setShowOverride]      = useState(false);
-  const [page,              setPage]              = useState(0);
-
-  /* -- Queries ------------------------------------------------------------- */
-  const { data: sysData, isLoading: sysLoading, dataUpdatedAt } = useQuery({
-    queryKey: ['system-insights'],
-    queryFn: async () => {
-      const token = localStorage.getItem('auth_token');
-      const r = await fetch(`${API_URL}/api/ai-analysis/system-insights`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!r.ok) throw new Error('Failed');
-      return r.json();
-    },
-    refetchInterval: 30000, staleTime: 25000, retry: false,
-  });
-  // Use the richer ML risk endpoint (XGBoost + per-task SHAP)
-  const { data: mlRisk, isLoading: predLoading } = useQuery({
-    queryKey: ['ml-risk', deepDivePatientId],
-    queryFn: () => mlAPI.getPatientRisk(deepDivePatientId).then(r => r.data),
-    enabled: !!deepDivePatientId, staleTime: 5*60*1000, retry: false,
-  });
-  // Also fetch legacy predict for plain_english_explanation
-  const { data: prediction } = useQuery({
-    queryKey: ['ai-pred', deepDivePatientId],
-    queryFn: () => aiAPI.predict(deepDivePatientId).then(r => r.data),
-    enabled: !!deepDivePatientId, staleTime: 5*60*1000, retry: false,
+  const { data: mlRisk, isLoading: mlLoad } = useQuery({
+    queryKey: ['ml-risk', pid],
+    queryFn: () => mlAPI.getPatientRisk(pid).then(r => r.data),
+    enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
   });
   const { data: deterioration } = useQuery({
-    queryKey: ['deterioration', deepDivePatientId],
-    queryFn: () => advancedMlAPI.getDeterioration(deepDivePatientId).then(r => r.data),
-    enabled: !!deepDivePatientId, staleTime: 5*60*1000, retry: false,
+    queryKey: ['deterioration', pid],
+    queryFn: () => advancedMlAPI.getDeterioration(pid).then(r => r.data),
+    enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
   });
   const { data: drugData } = useQuery({
-    queryKey: ['drug-ints', deepDivePatientId],
-    queryFn: () => advancedMlAPI.getDrugInteractions(deepDivePatientId).then(r => r.data),
-    enabled: !!deepDivePatientId, staleTime: 5*60*1000, retry: false,
-  });
-  const { data: mlStatus } = useQuery({
-    queryKey: ['ml-status'],
-    queryFn: () => mlAPI.getStatus().then(r => r.data),
-    staleTime: 5*60*1000, retry: false,
+    queryKey: ['drug-ints', pid],
+    queryFn: () => advancedMlAPI.getDrugInteractions(pid).then(r => r.data),
+    enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
   });
 
-  /* -- Mutations ----------------------------------------------------------- */
-  const scanMutation = useMutation({
-    mutationFn: () => mlAPI.triggerScan(),
-    onSuccess: () => { toast.success('AI scan triggered'); queryClient.invalidateQueries(['system-insights']); },
-    onError: () => toast.error('Scan failed'),
-  });
-  const overrideMutation = useMutation({
-    mutationFn: d => ethicsAPI.createClinicalOverride(d),
-    onSuccess: () => { toast.success('Override logged'); setShowOverride(false); },
-    onError: () => toast.error('Override failed'),
-  });
+  const riskScore = mlRisk?.overall_risk ?? (patient.overall_risk || 0);
+  const severeInts = (drugData?.interactions || []).filter(i => ['severe','SEVERE','major'].includes(i.severity));
 
-  /* -- Derived ------------------------------------------------------------- */
-  const criticalList      = sysData?.critical_patients      || [];
-  const deterioratingList = sysData?.deteriorating_patients || [];
-  const stableList        = sysData?.stable_patients        || [];
-  const allInsights       = [...criticalList, ...deterioratingList, ...stableList];
-  const immediateActions  = sysData?.immediate_actions      || [];
+  const shapFeatures = useMemo(() => {
+    if (!mlRisk?.tasks) return null;
 
-  const tabInsights = {
-    all:          allInsights,
-    critical:     criticalList,
-    deteriorating:[...criticalList, ...deterioratingList],
-    stable:       stableList,
-  };
-  const displayed = tabInsights[activeTab] || allInsights;
-
-  const normalizeInsight = i => ({
-    ...i,
-    priority: i.priority || (criticalList.includes(i) ? 'CRITICAL' : deterioratingList.includes(i) ? 'HIGH' : 'LOW'),
-    key_concerns: typeof i.key_concerns === 'string' ? i.key_concerns.split('. ').filter(Boolean) : (i.key_concerns || []),
-    recommendations: typeof i.recommended_actions === 'string' ? i.recommended_actions.split('. ').filter(Boolean) : (i.recommendations || []),
-  });
-
-  const riskScore  = mlRisk?.overall_risk ?? prediction?.risk_score ?? 0;
-  // Build SHAP data from the richest available source:
-  // mlRisk.tasks has per-task top_features [{feature, display_name, value, shap_value, impact, pct}]
-  // prediction.shap_features has [{feature_name, shap_value, feature_value, display_value}]
-  const shapFeatures = (() => {
-    // Collect all top_features across tasks from mlRisk
-    if (mlRisk?.tasks) {
-      const all = Object.values(mlRisk.tasks)
-        .flatMap(t => (t.top_features || []).map(f => ({ ...f, task: t.task })));
-      // Deduplicate by display_name, keep highest abs shap_value
-      const map = {};
-      all.forEach(f => {
-        const key = f.display_name || f.feature;
-        if (!map[key] || Math.abs(f.shap_value) > Math.abs(map[key].shap_value)) map[key] = f;
+    // Collect top features from all tasks, deduplicate by display_name,
+    // keep whichever task gives the highest pct (importance %)
+    const map = {};
+    Object.values(mlRisk.tasks).forEach(t => {
+      (t.top_features || []).forEach(f => {
+        const k = f.display_name || f.feature;
+        if (!map[k] || (f.pct || 0) > (map[k].pct || 0)) {
+          map[k] = f;
+        }
       });
-      const arr = Object.values(map).sort((a, b) => Math.abs(b.shap_value) - Math.abs(a.shap_value)).slice(0, 8);
-      if (arr.length) return arr.map(f => ({
-        name: f.display_name || f.feature,
-        value: parseFloat((f.shap_value * 100).toFixed(1)),
-        pct: f.pct,
-        displayValue: f.value != null ? String(f.value) : '',
-        impact: f.impact,
-      }));
-    }
-    // Fallback to legacy predict shap_features
-    if (prediction?.shap_features) {
-      return prediction.shap_features.slice(0, 8).map(f => ({
-        name: f.feature_name,
-        value: parseFloat((f.shap_value * 100).toFixed(1)),
-        displayValue: f.display_value || String(f.feature_value),
-        impact: f.shap_value > 0 ? 'increases_risk' : 'decreases_risk',
-      }));
-    }
-    return null;
-  })();
-  const severeInts = (drugData?.interactions || []).filter(i => i.severity === 'severe' || i.severity === 'major');
+    });
 
-  const handleTab = v => { setActiveTab(v); setPage(0); };
+    const arr = Object.values(map)
+      .filter(f => (f.pct || f.importance || 0) > 0)   // only features with non-zero importance
+      .sort((a, b) => (b.pct || b.importance || 0) - (a.pct || a.importance || 0))
+      .slice(0, 10);
 
-  const pageCount = Math.ceil(displayed.length / PAGE_SIZE);
-  const paginated = displayed.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    if (!arr.length) return null;
+
+    return arr.map(f => ({
+      name:       f.display_name || f.feature,
+      shap_value: f.shap_value,        // raw SHAP value (may be 0 for fallback)
+      pct:        f.pct || 0,          // importance % — always meaningful
+      impact:     f.impact,
+      feature_value: f.value,          // actual clinical measurement
+      shap_available: mlRisk.tasks[Object.keys(mlRisk.tasks)[0]]?.shap_available ?? false,
+    }));
+  }, [mlRisk]);
+
+  const sortedTasks = Object.entries(mlRisk?.tasks || {}).sort(([, a], [, b]) => (b.probability || 0) - (a.probability || 0));
+
+  const TABS = [
+    { id: 'overview', label: 'Overview',   Icon: Stethoscope  },
+    { id: 'shap',     label: 'AI Explain', Icon: Zap          },
+    { id: 'domains',  label: 'Domains',    Icon: BarChart2    },
+    { id: 'timeline', label: 'Timeline',   Icon: TrendingDown },
+  ];
+
+  /* avatar initials */
+  const initials = (patient.full_name || patient.patient_name || 'P')
+    .split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const riskPct = Math.round(riskScore * 100);
+  const hdrBg = tok.label === 'Critical' ? 'linear-gradient(135deg,#991b1b,#b91c1c)'
+    : tok.label === 'High'               ? 'linear-gradient(135deg,#9a3412,#c2410c)'
+    : (tok.label === 'Moderate' || tok.label === 'Medium') ? 'linear-gradient(135deg,#92400e,#b45309)'
+    :                                      'linear-gradient(135deg,#065f46,#0f766e)';
 
   return (
-    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}
-      className="min-h-screen space-y-6 pb-10">
-
-      <PageHeader image="/resources/cards/card-ai-insights.jpg" title="AI Clinical Insights"
-        subtitle="Machine learning · Proactive system-wide monitoring · Auto-refreshes every 30s" icon={Brain}>
-        <button onClick={() => queryClient.invalidateQueries(['system-insights'])}
-          className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all">
-          <RefreshCw size={14}/> Refresh
-        </button>
-        <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
-          className="flex items-center gap-2 px-4 py-2 bg-violet-600/80 hover:bg-violet-700 backdrop-blur-sm text-white rounded-xl border border-violet-400/40 text-sm font-bold disabled:opacity-60 transition-all">
-          {scanMutation.isPending ? <Loader2 size={14} className="animate-spin"/> : <Zap size={14}/>}
-          Run AI Scan
-        </button>
-      </PageHeader>
-
-      {/* AI Summary banner */}
-      {(sysData?.clinical_summary || sysData?.summary) && (
-        <div className="px-6">
-          <div className="bg-gradient-to-r from-violet-600 to-indigo-700 rounded-xl p-4 shadow-lg shadow-violet-500/20 relative overflow-hidden">
-            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
-            <div className="relative z-10 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                <Sparkles size={15} className="text-white"/>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <p className="font-bold text-white text-sm">AI Clinical Summary</p>
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">🧠 AI-POWERED</span>
-                  {dataUpdatedAt && (
-                    <span className="text-white/50 text-[10px]">
-                      {new Date(dataUpdatedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  )}
-                </div>
-                <p className="text-violet-100 text-sm leading-relaxed">{sysData.clinical_summary || sysData.summary}</p>
+    <motion.div key={pid}
+      initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }}
+      transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+      className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+      style={{ height: 'calc(100vh - 200px)', minHeight: 520 }}
+    >
+      {/* ── Header ── */}
+      <div className="flex-shrink-0 relative overflow-hidden" style={{ background: hdrBg }}>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white, transparent 60%)' }} />
+        <div className="relative px-5 py-4">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-base flex-shrink-0 shadow-lg"
+              style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-white text-base leading-tight truncate">{patient.full_name || patient.patient_name}</p>
+              <p className="text-white/60 text-xs mt-0.5 truncate">{patient.patient_code} · {patient.primary_diagnosis?.split('(')[0]?.trim() || '—'}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">{tok.label}</span>
+                {patient.age && <span className="text-[10px] text-white/50">{patient.age}y</span>}
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Immediate actions */}
-      {immediateActions.length > 0 && (
-        <div className="px-6">
-          <div className="bg-white rounded-2xl border-2 border-red-200 shadow-sm overflow-hidden">
-            <div className="px-5 py-3 bg-gradient-to-r from-red-600 to-rose-600 flex items-center gap-2">
-              <AlertTriangle size={15} className="text-white animate-pulse"/>
-              <p className="font-bold text-white text-sm">Immediate Actions Required</p>
-              <span className="ml-auto w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-black">{immediateActions.length}</span>
+            <div className="flex flex-col items-center flex-shrink-0">
+              <span className="text-3xl font-black text-white tabular-nums leading-none">{riskPct}%</span>
+              <span className="text-[9px] text-white/50 font-bold uppercase mt-0.5">risk</span>
             </div>
-            <div className="p-3 space-y-1.5">
-              {immediateActions.slice(0, 4).map((a, i) => {
-                const name = a?.patient_name || a?.patient || (typeof a === 'string' ? a : `Patient #${a.patient_id}`);
-                const act  = a?.action || a?.recommendations?.[0] || 'Requires immediate attention';
-                const urg  = a?.urgency || a?.priority || 'HIGH';
-                return (
-                  <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * .05 }}
-                    className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-xl px-4 py-2.5 hover:bg-red-100 transition-colors">
-                    <span className={`text-[9px] font-black px-2 py-1 rounded-full flex-shrink-0 ${urg === 'CRITICAL' ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}`}>{urg}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-slate-900 text-xs truncate">{name}</p>
-                      <p className="text-[10px] text-slate-500 truncate">{act}</p>
-                    </div>
-                    {a?.patient_id && (
-                      <button onClick={() => navigate(`/patients/${a.patient_id}`)}
-                        className="flex items-center gap-0.5 text-[10px] font-bold text-red-700 hover:text-red-900 flex-shrink-0 hover:underline">
-                        View <ChevronRight size={10}/>
-                      </button>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Filter tabs — the only filter mechanism */}
-      <div className="px-6">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
-              {[
-                { v: 'all',           l: 'All',           n: allInsights.length,                          active: 'bg-violet-600 text-white' },
-                { v: 'critical',      l: 'Critical',      n: criticalList.length,                         active: 'bg-red-600 text-white' },
-                { v: 'deteriorating', l: 'Deteriorating', n: criticalList.length + deterioratingList.length, active: 'bg-amber-500 text-white' },
-                { v: 'stable',        l: 'Stable',        n: stableList.length,                           active: 'bg-emerald-600 text-white' },
-              ].map(({ v, l, n, active }) => (
-                <button key={v} onClick={() => handleTab(v)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    activeTab === v ? active + ' shadow-sm' : 'text-slate-500 hover:text-slate-800 hover:bg-white'
-                  }`}>
-                  {l} <span className={`ml-1 ${activeTab === v ? 'opacity-80' : 'text-slate-400'}`}>({n})</span>
-                </button>
-              ))}
-            </div>
-            <div className="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"/>
-              Auto-refresh 30s
-            </div>
+            <button onClick={onClose}
+              className="w-8 h-8 rounded-xl flex items-center justify-center text-white transition flex-shrink-0 self-start"
+              style={{ background: 'rgba(255,255,255,0.15)' }}
+              onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.3)'}
+              onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.15)'}>
+              <X size={14} />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* -- TWO-COLUMN LAYOUT -------------------------------------------- */}
-      <div className="px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px] items-start">
+      {/* Drug interaction alert bar */}
+      {severeInts.length > 0 && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-red-600 flex-shrink-0">
+          <Pill size={11} className="text-white flex-shrink-0" />
+          <p className="text-xs font-bold text-white">
+            {severeInts.length} severe drug interaction{severeInts.length > 1 ? 's' : ''} — review before administering
+          </p>
+        </div>
+      )}
 
-          {/* LEFT: Patient list -- paginated, no infinite scroll */}
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-slate-800 flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${
-                  activeTab === 'critical' ? 'bg-red-500 animate-pulse' :
-                  activeTab === 'deteriorating' ? 'bg-amber-500' :
-                  activeTab === 'stable' ? 'bg-emerald-500' : 'bg-violet-500'
-                }`}/>
-                Patient Insights
-                <span className="text-sm font-normal text-slate-400">({displayed.length} total)</span>
-              </h2>
-              {pageCount > 1 && (
-                <div className="flex items-center gap-1.5">
-                  <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                    className="w-8 h-8 rounded-xl border-2 border-slate-200 hover:border-violet-400 hover:text-violet-600 disabled:opacity-40 flex items-center justify-center text-slate-500 transition-all text-sm font-bold">&#8249;</button>
-                  <span className="text-sm text-slate-500 font-semibold min-w-[48px] text-center">{page + 1} / {pageCount}</span>
-                  <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
-                    className="w-8 h-8 rounded-xl border-2 border-slate-200 hover:border-violet-400 hover:text-violet-600 disabled:opacity-40 flex items-center justify-center text-slate-500 transition-all text-sm font-bold">&#8250;</button>
+      {/* ── Pill tab bar ── */}
+      <div className="flex-shrink-0 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
+        <div className="flex gap-1 bg-white dark:bg-slate-700 rounded-xl p-1 shadow-sm border border-slate-100 dark:border-slate-600">
+          {TABS.map(({ id, label, Icon: Ic }) => (
+            <button key={id} onClick={() => setInnerTab(id)}
+              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+              style={innerTab === id
+                ? { background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.3)' }
+                : { color: '#94a3b8' }}
+              onMouseEnter={e => { if (innerTab !== id) e.currentTarget.style.color = '#475569'; }}
+              onMouseLeave={e => { if (innerTab !== id) e.currentTarget.style.color = '#94a3b8'; }}>
+              <Ic size={11} className="flex-shrink-0" />{label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Tab body ── */}
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        {mlLoad ? (
+          <div className="flex flex-col items-center justify-center h-full gap-3">
+            <div className="w-10 h-10 rounded-full border-2 border-violet-200 border-t-violet-600 animate-spin" />
+            <p className="text-xs text-slate-400">Analysing with XGBoost…</p>
+          </div>
+        ) : (
+          <div className="p-4 space-y-3">
+            {/* ── OVERVIEW ── */}
+            {innerTab === 'overview' && <>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label:'Overall Risk', value:`${riskPct}%`, sub: tok.label,
+                    color: tok.label==='Critical'?'#ef4444':tok.label==='High'?'#f97316':tok.label==='Moderate'?'#f59e0b':'#10b981' },
+                  { label:'Domains', value: sortedTasks.filter(([,t])=>(t.probability||0)>0).length, sub:'elevated', color:'#818cf8' },
+                  { label:'Drug Flags', value: severeInts.length||(drugData?.interactions?.length??0), sub:'interactions',
+                    color: severeInts.length>0?'#ef4444':'#10b981' },
+                ].map(s => (
+                  <div key={s.label} className="rounded-xl p-3 text-center bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                    <p className="text-xl font-black tabular-nums leading-none" style={{ color: s.color }}>{s.value}</p>
+                    <p className="text-[9px] text-slate-400 uppercase tracking-wide mt-0.5">{s.sub}</p>
+                    <p className="text-[10px] text-slate-500 font-semibold mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+              {/* Key concerns */}
+              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700">
+                  <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Key Concerns</p>
+                  {mlRisk?.key_concerns?.length > 0 && <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{mlRisk.key_concerns.length}</span>}
+                </div>
+                <div className="p-3 space-y-2">
+                  {mlRisk?.key_concerns?.length ? mlRisk.key_concerns.slice(0,5).map((c,i) => (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-black">{i+1}</span>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{c}</p>
+                    </div>
+                  )) : (
+                    <div className="flex items-center gap-2 py-1 text-slate-400">
+                      <CheckCircle size={13} className="text-emerald-500 flex-shrink-0" />
+                      <p className="text-xs">No critical concerns flagged</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Recommended actions */}
+              <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700">
+                  <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Recommended Actions</p>
+                </div>
+                <div className="p-3 space-y-2">
+                  {mlRisk?.recommended_actions?.length ? mlRisk.recommended_actions.slice(0,4).map((a,i) => (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <span className="w-4 h-4 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5"><span className="w-1.5 h-1.5 rounded-full bg-teal-500"/></span>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{a}</p>
+                    </div>
+                  )) : <p className="text-xs text-slate-400 py-1">Continue current care plan and monitoring schedule.</p>}
+                </div>
+              </div>
+
+              {/* Drug interactions */}
+              {drugData?.interactions?.length > 0 && (
+                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden">
+                  <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700">
+                    <Pill size={13} className="text-red-500 flex-shrink-0" />
+                    <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Drug Interactions</p>
+                    <span className="ml-auto text-[10px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700">{drugData.interactions.length}</span>
+                  </div>
+                  <div className="divide-y divide-slate-100 dark:divide-slate-700">
+                    {drugData.interactions.slice(0,4).map((it,i) => {
+                      const sev=['severe','SEVERE','major'].includes(it.severity);
+                      return (
+                        <div key={i} className="px-4 py-2.5 flex items-center gap-3">
+                          <span className={`text-[9px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${sev?'bg-red-600 text-white':'bg-amber-500 text-white'}`}>{it.severity}</span>
+                          <p className="text-xs font-semibold flex-1 min-w-0 truncate text-slate-800 dark:text-slate-200">{it.drug1} + {it.drug2}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
-            </div>
+              {drugData && !drugData.interactions?.length && (
+                <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-3 flex items-center gap-2">
+                  <CheckCircle size={14} className="text-emerald-600 flex-shrink-0"/>
+                  <p className="text-xs font-semibold text-emerald-800">No drug interactions — medication profile is clear</p>
+                </div>
+              )}
+            </>}
 
-            {sysLoading ? (
-              <div className="bg-white rounded-2xl border border-slate-200 flex flex-col items-center justify-center h-64 gap-3 shadow-sm">
-                <Loader2 size={32} className="animate-spin text-violet-600"/>
-                <p className="text-sm text-slate-500 font-medium">Analysing all patients...</p>
+            {/* ── AI EXPLANATION ── */}
+            {innerTab === 'shap' && (<>
+              <div className="flex items-center gap-2 px-1">
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-violet-600 text-white':'bg-amber-500 text-white'}`}>
+                  {sortedTasks.some(([,t])=>t.shap_available)?'XGBoost SHAP':'Feature Importance'}
+                </span>
+                <p className="text-[10px] text-slate-400">Factors driving this risk prediction</p>
               </div>
-            ) : displayed.length === 0 ? (
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 flex flex-col items-center justify-center h-64 gap-3 shadow-sm">
-                <CheckCircle className="w-14 h-14 text-emerald-500 opacity-80"/>
-                <p className="text-emerald-800 font-bold text-base">All clear</p>
-                <p className="text-emerald-600 text-sm">No patients in this category right now.</p>
-              </div>
-            ) : (
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm divide-y divide-slate-100">
-                <AnimatePresence mode="popLayout">
-                  {paginated.map((insight, i) => (
-                    <PatientCard
-                      key={insight.patient_id || i}
-                      insight={normalizeInsight(insight)}
-                      isSelected={deepDivePatientId === insight.patient_id}
-                      onDeepDive={id => { setDeepDivePatientId(prev => prev === id ? null : id); setShowOverride(false); }}
-                    />
-                  ))}
-                </AnimatePresence>
-              </div>
+              <ShapBars features={shapFeatures} shapAvailable={sortedTasks.some(([,t])=>t.shap_available)} />
+            </>)}
+
+            {/* ── DOMAINS ── */}
+            {innerTab === 'domains' && (() => {
+              const nonZero = sortedTasks.filter(([,t])=>(t.probability||0)>0);
+              const display = nonZero.length>0?nonZero:sortedTasks;
+              return (
+                <div className="space-y-2">
+                  <p className="text-[10px] text-slate-400 px-1">Risk probability across XGBoost clinical domains</p>
+                  {display.slice(0,8).map(([key,task]) => {
+                    const pct = Math.round((task.probability||0)*100);
+                    const barC = pct>70?'#ef4444':pct>40?'#f97316':pct>15?'#f59e0b':'#10b981';
+                    const valC = pct>70?'text-red-600 dark:text-red-400':pct>40?'text-orange-600 dark:text-orange-400':pct>15?'text-amber-600 dark:text-amber-400':'text-emerald-600 dark:text-emerald-400';
+                    return (
+                      <div key={key} className="rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 px-4 py-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{TASK_SHORT[key]||key}</p>
+                          <span className={`text-xs font-black tabular-nums ${valC}`}>{pct}%</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                          <motion.div className="h-full rounded-full" style={{ background: barC }}
+                            initial={{ width: 0 }} animate={{ width: `${pct}%` }}
+                            transition={{ duration: 0.5, ease: 'easeOut' }} />
+                        </div>
+                        {task.top_features?.[0] && (
+                          <p className="text-[10px] text-slate-400 mt-1.5 truncate">Top factor: {task.top_features[0].display_name}</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+            {/* ── TIMELINE ── */}
+            {innerTab === 'timeline' && (
+              !deterioration ? (
+                <div className="flex flex-col items-center justify-center gap-3 py-10">
+                  <Loader2 size={20} className="animate-spin text-violet-400" />
+                  <p className="text-sm text-slate-400">Loading deterioration analysis…</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    {(() => {
+                      const dr = deterioration.deterioration_risk||0;
+                      const drPct = Math.round(dr*100);
+                      const drC = dr>0.5?'#ef4444':dr>0.25?'#f59e0b':'#10b981';
+                      const trend = deterioration.trend_direction||'stable';
+                      const tC = trend==='worsening'?'#ef4444':trend==='improving'?'#10b981':'#94a3b8';
+                      return (<>
+                        <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-center">
+                          <p className="text-3xl font-black tabular-nums leading-none" style={{color:drC}}>{drPct}%</p>
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wide mt-1.5">Deterioration Risk</p>
+                        </div>
+                        <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 text-center">
+                          <p className="text-xl font-black capitalize leading-none mt-1" style={{color:tC}}>{trend}</p>
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wide mt-1.5">30-Day Trend</p>
+                        </div>
+                      </>);
+                    })()}
+                  </div>
+                  {deterioration.top_drivers?.length > 0 && (
+                    <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden">
+                      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700">
+                        <TrendingDown size={13} className="text-amber-500 flex-shrink-0" />
+                        <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Top Deterioration Drivers</p>
+                      </div>
+                      <div className="p-3 space-y-2">
+                        {deterioration.top_drivers.slice(0,4).map((d,i) => (
+                          <div key={i} className="flex items-start gap-2.5">
+                            <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-black">{i+1}</span>
+                            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{d.reason||d}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {(!deterioration.top_drivers||deterioration.top_drivers.length===0) && (
+                    <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4 flex items-center gap-3">
+                      <CheckCircle size={18} className="text-emerald-600 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-bold text-emerald-800">Stable Trajectory</p>
+                        <p className="text-xs text-emerald-700 mt-0.5">No significant deterioration drivers over 30 days.</p>
+                      </div>
+                    </div>
+                  )}
+                  {deterioration.recommendations?.length > 0 && (
+                    <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden">
+                      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-slate-100 dark:border-slate-700">
+                        <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
+                        <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Recommendations</p>
+                      </div>
+                      <div className="p-3 space-y-2">
+                        {deterioration.recommendations.slice(0,3).map((r,i) => (
+                          <div key={i} className="flex items-start gap-2.5">
+                            <span className="w-4 h-4 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5"><span className="w-1.5 h-1.5 rounded-full bg-teal-500"/></span>
+                            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">{r}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
             )}
 
-            {/* Pagination dots */}
-            {pageCount > 1 && (
-              <div className="flex items-center justify-center gap-2">
-                {Array.from({ length: pageCount }, (_, idx) => (
-                  <button key={idx} onClick={() => setPage(idx)}
-                    className={`rounded-full transition-all duration-200 ${idx === page ? 'w-8 h-2.5 bg-violet-600' : 'w-2.5 h-2.5 bg-slate-300 hover:bg-violet-400'}`}/>
+            {/* Open full record */}
+            <button onClick={() => navigate(`/patients/${pid}`)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm text-white transition shadow-sm"
+              style={{ background: 'linear-gradient(135deg,#0d9488,#0891b2)' }}
+              onMouseEnter={e => e.currentTarget.style.opacity='.88'}
+              onMouseLeave={e => e.currentTarget.style.opacity='1'}>
+              <ExternalLink size={13} /> Open Full Patient Record
+            </button>
+
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Drug Interactions Tab ────────────────────────────────────────────────── */
+function DrugInteractionsTab() {
+  const { data: drugAll, isLoading } = useQuery({
+    queryKey: ['all-drug-ints'],
+    queryFn:  () => advancedMlAPI.getAllDrugInteractions().then(r => r.data),
+    staleTime: 10 * 60 * 1000, retry: false,
+  });
+  const patients    = drugAll?.patients || [];
+  const severeCount = patients.filter(p => p.severe > 0).length;
+  const totalInts   = patients.reduce((s, p) => s + (p.total || p.interactions?.length || 0), 0);
+  const allInts     = patients
+    .flatMap(p => (p.interactions || []).map(i => ({ ...i, patient_name: p.patient_name })))
+    .sort((a, b) => { const o = { severe:0, SEVERE:0, major:1, moderate:2, minor:3 }; return (o[a.severity]??4)-(o[b.severity]??4); });
+
+  if (isLoading) return (
+    <div className="flex flex-col items-center justify-center py-20 gap-3">
+      <Loader2 size={24} className="animate-spin text-violet-500" />
+      <p className="text-sm text-slate-400">Scanning all patient medications…</p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: 'Patients Affected', value: patients.length, cls: 'from-amber-500 to-orange-600' },
+          { label: 'Severe / Major',    value: severeCount,     cls: 'from-red-600 to-rose-700'     },
+          { label: 'Total Detected',    value: totalInts,       cls: 'from-slate-600 to-slate-700'  },
+        ].map(({ label, value, cls }) => (
+          <div key={label} className={`rounded-2xl bg-gradient-to-br ${cls} p-4 text-white`}>
+            <p className="text-3xl font-black tabular-nums">{value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider mt-1 text-white/70">{label}</p>
+          </div>
+        ))}
+      </div>
+      {allInts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-400">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center">
+            <CheckCircle size={28} className="text-emerald-500" />
+          </div>
+          <p className="font-bold text-emerald-700 text-base">No drug interactions detected</p>
+          <p className="text-xs text-slate-400">All patient medications are currently clear.</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {allInts.map((it, i) => {
+            const sev = ['severe','SEVERE','major'].includes(it.severity);
+            return (
+              <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+                className={`rounded-xl border p-3.5 ${sev ? 'bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-950/10 dark:border-amber-800'}`}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase ${sev ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}`}>{it.severity}</span>
+                      <span className="text-xs font-bold text-slate-800 dark:text-white">{it.drug1} + {it.drug2}</span>
+                    </div>
+                    {it.description && <p className="text-[11px] text-slate-600 dark:text-slate-400">{it.description}</p>}
+                  </div>
+                  {it.patient_name && <span className="text-[10px] text-slate-400 flex-shrink-0">{it.patient_name}</span>}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── System Overview Tab ───────────────────────────────────────────────────── */
+function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
+  const { data: mlStatus } = useQuery({
+    queryKey: ['ml-status'],
+    queryFn: () => mlAPI.getStatus().then(r => r.data),
+    staleTime: 5 * 60 * 1000, retry: false,
+  });
+  const patients = batchRisk?.patients || [];
+  const distData = [
+    { name: 'Critical', count: patients.filter(p => p.risk_level === 'critical').length, fill: '#e11d48' },
+    { name: 'High',     count: patients.filter(p => p.risk_level === 'high').length,     fill: '#f97316' },
+    { name: 'Moderate', count: patients.filter(p => p.risk_level === 'moderate').length, fill: '#d97706' },
+    { name: 'Low',      count: patients.filter(p => ['low','normal'].includes(p.risk_level)).length, fill: '#16a34a' },
+  ].filter(d => d.count > 0);
+
+  const stats = [
+    { l: 'Total Monitored',  v: patients.length,                                                     grad: 'from-teal-600 to-cyan-600' },
+    { l: 'Critical',         v: patients.filter(p => p.risk_level === 'critical').length,            grad: 'from-red-600 to-rose-700'  },
+    { l: 'Deteriorating',    v: (sysData?.deteriorating_patients || []).length,                     grad: 'from-amber-500 to-orange-600' },
+    { l: 'Stable',           v: (sysData?.stable_patients || []).length,                            grad: 'from-emerald-600 to-teal-600' },
+    { l: 'ML Tasks Loaded',  v: (mlStatus?.total_tasks || 8) + 4,                                    grad: 'from-violet-600 to-indigo-600' },
+    { l: 'SHAP Active',      v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : '—'),           grad: 'from-slate-600 to-slate-700'   },
+  ];
+
+  return (
+    <div className="space-y-5">
+      <div className="grid grid-cols-3 gap-3">
+        {stats.map(({ l, v, grad }) => (
+          <div key={l} className={`rounded-2xl bg-gradient-to-br ${grad} p-4 text-white relative overflow-hidden`}>
+            <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-white/10 pointer-events-none" />
+            <p className="text-2xl font-black tabular-nums relative z-10">{v}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider mt-1 text-white/70 relative z-10">{l}</p>
+          </div>
+        ))}
+      </div>
+
+      {distData.length > 0 && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1">
+            <BarChart2 size={12} className="text-violet-500" /> Patient Risk Distribution
+          </p>
+          <ResponsiveContainer width="100%" height={130}>
+            <BarChart data={distData} barCategoryGap="30%">
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={24} />
+              <Tooltip contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 12 }} cursor={{ fill: '#f8fafc' }} />
+              <Bar dataKey="count" name="Patients" radius={[5, 5, 0, 0]}>
+                {distData.map((d, i) => <Cell key={i} fill={d.fill} />)}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {mlStatus && (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1">
+            <Cpu size={12} className="text-violet-500" /> Model Health
+          </p>
+          <div className="space-y-2.5">
+            {[
+              { label: 'Status', value: mlStatus.available ? '🟢 Online' : '🔴 Offline' },
+              { label: 'Loaded Tasks', value: `${(mlStatus.loaded_tasks?.length || 0) + 4} / ${(mlStatus.total_tasks || 8) + 4} (8 XGBoost + 4 Advanced)` },
+              { label: 'SHAP Explanations', value: mlStatus.shap_enabled ? '✓ Active' : '✗ Disabled' },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-700 last:border-0">
+                <span className="text-xs text-slate-500">{label}</span>
+                <span className="text-xs font-bold text-slate-800 dark:text-white">{value}</span>
+              </div>
+            ))}
+            {mlStatus.loaded_tasks?.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-1">
+                {mlStatus.loaded_tasks.map(t => (
+                  <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-100">
+                    {TASK_SHORT[t] || t}
+                  </span>
                 ))}
               </div>
             )}
           </div>
+        </div>
+      )}
 
-          {/* RIGHT: Deep-dive panel (sticky) */}
-          <div className="lg:sticky lg:top-4">
-            <AnimatePresence mode="wait">
-              {deepDivePatientId ? (
-                <motion.div key={deepDivePatientId}
-                  initial={{ opacity: 0, x: 20, scale: 0.98 }} animate={{ opacity: 1, x: 0, scale: 1 }} exit={{ opacity: 0, x: 20, scale: 0.98 }}
-                  className="bg-white rounded-2xl border-2 border-violet-200 overflow-hidden shadow-xl shadow-violet-100">
-                  {/* Header */}
-                  <div className="bg-gradient-to-r from-violet-600 to-indigo-700 px-5 py-3.5 flex items-center justify-between">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                        <Brain size={15} className="text-white"/>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-bold text-white text-sm">XGBoost Deep-Dive</p>
-                        <p className="text-violet-200 text-[10px]">Patient #{deepDivePatientId} · SHAP analysis</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
-                      {(user?.role === 'clinician' || user?.role === 'admin') && (
-                        <button onClick={() => setShowOverride(true)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 bg-amber-400/20 hover:bg-amber-400/40 border border-amber-300/30 text-white rounded-xl text-[10px] font-bold transition">
-                          <ShieldAlert size={10}/> Override
-                        </button>
-                      )}
-                      <button onClick={() => setDeepDivePatientId(null)}
-                        className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-                        <X size={13} className="text-white"/>
-                      </button>
-                    </div>
-                  </div>
+      <div className="bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/20 dark:to-indigo-950/20 rounded-2xl border border-violet-200 dark:border-violet-800 p-4">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
+            <Beaker size={18} className="text-white" />
+          </div>
+          <div>
+            <p className="font-bold text-violet-900 dark:text-violet-300">Proactive Risk Scan</p>
+            <p className="text-[11px] text-violet-600 dark:text-violet-400">XGBoost across all active patients</p>
+          </div>
+        </div>
+        <button onClick={onScan} disabled={scanning}
+          className="w-full py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition shadow-md flex items-center justify-center gap-2">
+          {scanning ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} />}
+          {scanning ? 'Scanning patients…' : 'Run Proactive Scan'}
+        </button>
+      </div>
+    </div>
+  );
+}
 
-                  {predLoading ? (
-                    <div className="flex items-center justify-center h-48">
-                      <Loader2 size={24} className="animate-spin text-violet-600"/>
-                    </div>
-                  ) : (
-                    <div className="p-4 space-y-3 max-h-[calc(100vh-14rem)] overflow-y-auto">
+/* ─── Main component ────────────────────────────────────────────────────────── */
+export default function AIInsights() {
+  const navigate    = useNavigate();
+  const queryClient = useQueryClient();
 
-                      {/* Drug interactions */}
-                      {severeInts.length > 0 && (
-                        <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-3">
-                          <Pill size={14} className="text-red-600 flex-shrink-0 mt-0.5"/>
-                          <div>
-                            <p className="font-bold text-red-900 text-xs mb-0.5">
-                              {severeInts.length} Severe Drug Interaction{severeInts.length > 1 ? 's' : ''}
-                            </p>
-                            {severeInts.map((it, j) => (
-                              <p key={j} className="text-[11px] text-red-700">
-                                <strong>{it.drug1}</strong> + <strong>{it.drug2}</strong>
-                                {it.description ? `: ${it.description}` : ''}
-                              </p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+  const [activeTab,  setActiveTab]  = useState('risk');
+  const [filterRisk, setFilterRisk] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [deepDiveId, setDeepDiveId] = useState(null);
 
-                      {/* Risk overview */}
-                      <div className="bg-slate-50 rounded-xl border border-slate-100 p-3">
-                        <RiskGauge score={riskScore}/>
-                        <div className="grid grid-cols-3 gap-2 mt-3">
-                          <div className="bg-white rounded-xl border border-slate-100 p-2 text-center">
-                            <p className="text-[9px] text-slate-400 uppercase tracking-wider mb-0.5">Risk Level</p>
-                            <p className="text-xs font-black text-slate-800 capitalize">{mlRisk?.overall_level || prediction?.risk_level || 'N/A'}</p>
-                          </div>
-                          <div className="bg-white rounded-xl border border-slate-100 p-2 text-center">
-                            <p className="text-[9px] text-slate-400 uppercase tracking-wider mb-0.5">Pathway</p>
-                            <p className="text-[10px] font-bold text-slate-700 capitalize leading-tight">
-                              {(mlRisk?.highest_task || prediction?.predicted_pathway || 'Unknown').replace(/_/g, ' ')}
-                            </p>
-                          </div>
-                          <div className="bg-white rounded-xl border border-slate-100 p-2 text-center">
-                            <p className="text-[9px] text-slate-400 uppercase tracking-wider mb-0.5">Confidence</p>
-                            <p className="text-xs font-black text-slate-800">
-                              {prediction?.confidence ? `${Math.round(prediction.confidence * 100)}%` : (mlRisk ? '—' : 'N/A')}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
+  /* ── Fetches ─────────────────────────────────────────────────────────────── */
+  const { data: sysData, isLoading: sysLoad, refetch: refetchSys } = useQuery({
+    queryKey: ['system-insights'],
+    queryFn:  () => aiAPI.getSystemInsights().then(r => r.data),
+    refetchInterval: 30000, staleTime: 25000, retry: false,
+  });
+  const { data: batchRisk, isLoading: batchLoad } = useQuery({
+    queryKey: ['batch-risk'],
+    queryFn:  () => mlAPI.getAllPatientsRisk().then(r => r.data),
+    staleTime: 5 * 60 * 1000, retry: false,
+  });
+  const { data: patientsRaw } = useQuery({
+    queryKey: ['patients-list'],
+    queryFn:  () => patientsAPI.getAll().then(r => r.data),
+    staleTime: 5 * 60 * 1000,
+  });
+  const patientsMap = useMemo(() => {
+    const arr = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
+    return Object.fromEntries(arr.map(p => [String(p.id), p]));
+  }, [patientsRaw]);
 
-                      {/* Key concerns from ML risk */}
-                      {mlRisk?.key_concerns?.length > 0 && (
-                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
-                          <p className="text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <AlertTriangle size={11}/> Key Concerns
-                          </p>
-                          <ul className="space-y-1">
-                            {mlRisk.key_concerns.slice(0, 4).map((c, i) => (
-                              <li key={i} className="flex items-start gap-2 text-xs text-amber-900">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0 mt-1.5"/>
-                                {c}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+  const scanMutation = useMutation({
+    mutationFn: () => mlAPI.triggerScan(),
+    onSuccess: () => {
+      toast.success('Proactive scan started');
+      setTimeout(() => { queryClient.invalidateQueries(['system-insights']); queryClient.invalidateQueries(['batch-risk']); }, 5000);
+    },
+    onError: () => toast.error('Scan failed'),
+  });
 
-                      {/* SHAP feature bars */}
-                      <div className="bg-slate-50 rounded-xl border border-slate-100 p-3">
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                          <Zap size={10}/> SHAP Feature Impact
-                        </p>
-                        <ShapChart features={shapFeatures}/>
-                      </div>
+  /* ── Build unified patient list ──────────────────────────────────────────── */
+  const allPatients = useMemo(() => {
+    const batchArr = batchRisk?.patients || [];
+    const sysLists = [
+      ...(sysData?.critical_patients || []),
+      ...(sysData?.deteriorating_patients || []),
+      ...(sysData?.stable_patients || []),
+    ];
+    const merged = {};
+    [...sysLists, ...batchArr].forEach(p => {
+      const pid = String(p.id || p.patient_id || '');
+      if (!pid) return;
+      const meta = patientsMap[pid] || {};
+      const prev = merged[pid] || {};
+      merged[pid] = {
+        ...meta, ...prev, ...p, id: pid,
+        full_name: p.full_name || p.patient_name || meta.full_name || prev.full_name || 'Unknown',
+        risk_level: p.risk_level || p.overall_level || prev.risk_level || 'unknown',
+        overall_risk: p.overall_risk || p.risk_score || prev.overall_risk || 0,
+      };
+    });
+    const order = { critical:0, high:1, moderate:2, low:3, normal:3, stable:3, unknown:4 };
+    return Object.values(merged).sort((a, b) => {
+      const oa = order[(a.risk_level||'').toLowerCase()] ?? 4;
+      const ob = order[(b.risk_level||'').toLowerCase()] ?? 4;
+      return oa !== ob ? oa - ob : (b.overall_risk||0) - (a.overall_risk||0);
+    });
+  }, [batchRisk, sysData, patientsMap]);
 
-                      {/* Task breakdown (top 5 tasks) */}
-                      {mlRisk?.tasks && Object.keys(mlRisk.tasks).length > 0 && (
-                        <div className="bg-slate-50 rounded-xl border border-slate-100 p-3">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Risk by Clinical Domain</p>
-                          <div className="space-y-3">
-                            {Object.entries(mlRisk.tasks)
-                              .sort((a, b) => (b[1].probability || 0) - (a[1].probability || 0))
-                              .slice(0, 5)
-                              .map(([key, task]) => {
-                                const pct = Math.round((task.probability || 0) * 100);
-                                const isHigh = pct > 60;
-                                const isMid  = pct > 30;
-                                const barColor  = isHigh ? 'bg-red-500'     : isMid ? 'bg-amber-500'   : 'bg-emerald-500';
-                                const chipColor = isHigh
-                                  ? 'bg-red-50 text-red-700 border-red-200'
-                                  : isMid
-                                  ? 'bg-amber-50 text-amber-700 border-amber-200'
-                                  : 'bg-emerald-50 text-emerald-700 border-emerald-200';
-                                const levelLabel = task.risk_level
-                                  ? task.risk_level.charAt(0).toUpperCase() + task.risk_level.slice(1)
-                                  : (isHigh ? 'High' : isMid ? 'Moderate' : 'Normal');
-                                return (
-                                  <div key={key}>
-                                    <div className="flex items-center justify-between mb-1">
-                                      <span className="text-xs font-semibold text-slate-700 capitalize">
-                                        {key.replace(/_/g, ' ')}
-                                      </span>
-                                      <div className="flex items-center gap-1.5">
-                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${chipColor}`}>
-                                          {levelLabel}
-                                        </span>
-                                        <span className="text-[10px] font-bold text-slate-500 tabular-nums w-7 text-right">
-                                          {pct}%
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-                                      <motion.div className={`h-full rounded-full ${barColor}`}
-                                        initial={{ width: 0 }} animate={{ width: `${pct}%` }}
-                                        transition={{ duration: 0.5, ease: 'easeOut' }}/>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                          </div>
-                        </div>
-                      )}
+  /* ── Filter ──────────────────────────────────────────────────────────────── */
+  const visiblePatients = useMemo(() => {
+    let base = allPatients;
+    if (filterRisk === 'critical') base = base.filter(p => ['critical','crisis'].includes((p.risk_level||'').toLowerCase()));
+    else if (filterRisk === 'high') base = base.filter(p => (p.risk_level||'').toLowerCase() === 'high');
+    else if (filterRisk === 'moderate') base = base.filter(p => ['moderate','medium'].includes((p.risk_level||'').toLowerCase()));
+    else if (filterRisk === 'stable') base = base.filter(p => ['low','normal','stable'].includes((p.risk_level||'').toLowerCase()));
+    if (!searchTerm.trim()) return base;
+    const q = searchTerm.toLowerCase();
+    return base.filter(p =>
+      p.full_name?.toLowerCase().includes(q) ||
+      p.patient_code?.toLowerCase().includes(q) ||
+      p.primary_diagnosis?.toLowerCase().includes(q) ||
+      p.top_concern?.toLowerCase().includes(q)
+    );
+  }, [allPatients, filterRisk, searchTerm]);
 
-                      {/* Plain-English explanation */}
-                      {prediction?.plain_english_explanation && (
-                        <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-200 rounded-xl p-3">
-                          <Brain size={13} className="text-blue-600 flex-shrink-0 mt-0.5"/>
-                          <div>
-                            <p className="text-[10px] font-bold text-blue-700 mb-1">AI Explanation</p>
-                            <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line">
-                              {prediction.plain_english_explanation}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+  const kpi = useMemo(() => ({
+    total:    allPatients.length,
+    critical: allPatients.filter(p => ['critical','crisis'].includes((p.risk_level||'').toLowerCase())).length,
+    high:     allPatients.filter(p => (p.risk_level||'').toLowerCase() === 'high').length,
+    stable:   allPatients.filter(p => ['low','normal','stable'].includes((p.risk_level||'').toLowerCase())).length,
+  }), [allPatients]);
 
-                      {/* Recommended actions */}
-                      {mlRisk?.recommended_actions?.length > 0 && (
-                        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-                          <p className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <CheckCircle size={11}/> Recommended Actions
-                          </p>
-                          <ul className="space-y-1">
-                            {mlRisk.recommended_actions.slice(0, 4).map((r, i) => (
-                              <li key={i} className="flex items-start gap-2 text-xs text-emerald-900">
-                                <ChevronRight size={11} className="flex-shrink-0 mt-0.5 text-emerald-600"/>
-                                {r}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+  const deepDivePatient = useMemo(() =>
+    deepDiveId
+      ? visiblePatients.find(p => p.id === deepDiveId) || allPatients.find(p => p.id === deepDiveId) || null
+      : null
+  , [deepDiveId, visiblePatients, allPatients]);
 
-                      {/* Deterioration */}
-                      {deterioration && (
-                        <div className="bg-slate-50 rounded-xl border border-slate-100 p-3">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Deterioration Risk (30d)</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {[
-                              { l: 'Risk',  v: deterioration.deterioration_risk != null ? `${Math.round(deterioration.deterioration_risk * 100)}%` : 'N/A', c: 'text-rose-600' },
-                              { l: 'Trend', v: deterioration.trend_direction || 'Stable', c: 'text-violet-600' },
-                            ].map(({ l, v, c }) => (
-                              <div key={l} className="bg-white rounded-xl border border-slate-100 p-2.5 text-center">
-                                <p className="text-[9px] text-slate-400 uppercase tracking-wider mb-0.5">{l}</p>
-                                <p className={`text-sm font-black capitalize ${c}`}>{v}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+  const isLoading = sysLoad || batchLoad;
 
-                      {/* View patient */}
-                      <button onClick={() => navigate(`/patients/${deepDivePatientId}`)}
-                        className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-xl font-bold text-sm transition shadow-md shadow-teal-500/25">
-                        View Full Patient Record <ChevronRight size={14}/>
-                      </button>
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div key="placeholder" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="bg-gradient-to-br from-violet-50 to-indigo-50 border-2 border-dashed border-violet-200 rounded-2xl p-10 text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center mx-auto mb-4">
-                    <Brain size={28} className="text-violet-500"/>
-                  </div>
-                  <p className="font-bold text-violet-800 text-base mb-1">Select a patient</p>
-                  <p className="text-violet-500 text-sm leading-relaxed">Click "XAI Deep-Dive" on any patient card to view detailed ML analysis, SHAP feature impact, and risk breakdown here.</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+  /* ── KPI pills config ────────────────────────────────────────────────────── */
+  const KPI_PILLS = [
+    { v: 'all',      label: 'All Patients', count: kpi.total,    grad: 'from-teal-600 to-cyan-600',       icon: Users },
+    { v: 'critical', label: 'Critical',     count: kpi.critical,  grad: 'from-red-600 to-rose-700',        icon: AlertTriangle },
+    { v: 'high',     label: 'High Risk',    count: kpi.high,      grad: 'from-orange-500 to-amber-600',    icon: TrendingUp },
+    { v: 'stable',   label: 'Stable',       count: kpi.stable,    grad: 'from-emerald-600 to-teal-600',    icon: Heart },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
+      className="min-h-screen space-y-0 pb-8">
+
+      {/* ── Dark gradient hero header ── */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-violet-950 pt-0">
+        {/* Subtle background grid */}
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
+        {/* Glow orbs */}
+        <div className="absolute top-0 right-1/4 w-64 h-64 rounded-full bg-violet-600/20 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full bg-red-600/15 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 px-6 pt-6 pb-5">
+          {/* Title row */}
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-violet-900/40">
+                <Brain size={22} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-black text-white tracking-tight">AI Clinical Intelligence</h1>
+                <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                  XGBoost · 8 Models · Real SHAP · Auto-refresh 30s
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <button onClick={() => { refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 rounded-xl text-xs font-bold transition border border-white/10">
+                <RefreshCw size={12} /> Refresh
+              </button>
+              <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold transition disabled:opacity-60 shadow-lg shadow-violet-900/30">
+                {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+                {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
+              </button>
+            </div>
           </div>
 
+          {/* KPI gradient pills */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
+              <button key={v} onClick={() => { setActiveTab('risk'); setFilterRisk(v); }}
+                className={`group relative rounded-2xl p-3.5 text-left transition-all duration-200 overflow-hidden ${
+                  filterRisk === v && activeTab === 'risk'
+                    ? `bg-gradient-to-br ${grad} shadow-xl scale-[1.03]`
+                    : 'bg-white/8 hover:bg-white/15 border border-white/10 backdrop-blur-sm'
+                }`}>
+                {filterRisk === v && activeTab === 'risk' && (
+                  <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white/20 pointer-events-none" />
+                )}
+                <div className="flex items-center justify-between mb-1 relative z-10">
+                  <Ico size={14} className="text-white/70" />
+                  {v === 'critical' && count > 0 && filterRisk !== 'critical' && (
+                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                  )}
+                </div>
+                <p className="text-2xl font-black text-white tabular-nums relative z-10">{count}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/60 mt-0.5 relative z-10">{label}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab bar — flush with header bottom */}
+        <div className="relative z-10 px-6 flex gap-1 border-t border-white/10">
+          {[
+            { id: 'risk',   label: '🧠 Risk Stratification' },
+            { id: 'drugs',  label: '💊 Drug Interactions'   },
+            { id: 'system', label: '📊 System Overview'     },
+          ].map(({ id, label }) => (
+            <button key={id} onClick={() => { setActiveTab(id); setDeepDiveId(null); }}
+              className={`px-4 py-3 text-xs font-bold transition-all border-b-2 ${
+                activeTab === id
+                  ? 'border-violet-400 text-white'
+                  : 'border-transparent text-slate-400 hover:text-white'
+              }`}>
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="px-6">
-        <div className="flex items-center justify-between text-xs text-slate-400 flex-wrap gap-2">
-          <span className="flex items-center gap-1.5">
-            <Activity size={11}/>
-            Model: XGBoost v{mlStatus?.model_version || '1.0'} ·
-            <span className={mlStatus?.status === 'active' ? 'text-teal-600 font-bold' : ''}>{mlStatus?.status || 'Unknown'}</span>
-          </span>
-          <span>Proactive monitoring · SHAP explainability · Auto-refresh 30s</span>
-        </div>
-      </div>
+      {/* ── Content ── */}
+      <div className="px-6 pt-5">
 
-      <AnimatePresence>
-        {showOverride && deepDivePatientId && (
-          <OverrideModal patientId={deepDivePatientId} onClose={() => setShowOverride(false)}
-            onSubmit={d => overrideMutation.mutate(d)} pending={overrideMutation.isPending}/>
+        {/* Risk tab — search + filter bar */}
+        {activeTab === 'risk' && (
+          <div className="flex flex-col sm:flex-row gap-3 mb-5 items-center">
+            <div className="flex-1 relative w-full">
+              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+                placeholder="Search patients, diagnoses, concerns…"
+                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 outline-none text-sm shadow-sm" />
+            </div>
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 flex-shrink-0">
+              <ListFilter size={12} className="text-slate-400 ml-1" />
+              {[
+                { v: 'all',      l: 'All'    },
+                { v: 'critical', l: 'Crisis' },
+                { v: 'high',     l: 'High'   },
+                { v: 'moderate', l: 'Medium' },
+                { v: 'stable',   l: 'Stable' },
+              ].map(({ v, l }) => {
+                const ac = v === 'all' ? 'bg-slate-700 text-white' : v === 'critical' ? 'bg-red-600 text-white' :
+                           v === 'high' ? 'bg-orange-500 text-white' : v === 'moderate' ? 'bg-amber-500 text-white' : 'bg-emerald-600 text-white';
+                return (
+                  <button key={v} onClick={() => setFilterRisk(v)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterRisk === v ? ac : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}`}>
+                    {l}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+
+        {/* Risk tab content */}
+        {activeTab === 'risk' && (
+          isLoading ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-24">
+              <div className="relative w-20 h-20">
+                <div className="w-20 h-20 rounded-full border-4 border-violet-100 border-t-violet-600 animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Brain size={24} className="text-violet-600" />
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="font-bold text-slate-700 dark:text-slate-300">Running ML analysis…</p>
+                <p className="text-xs text-slate-400 mt-1">XGBoost · 8 models · Real SHAP</p>
+              </div>
+            </div>
+          ) : (
+            <div className={deepDivePatient ? 'grid gap-5 lg:grid-cols-[1fr_420px]' : ''}>
+              {/* Patient card list */}
+              <div className="space-y-3">
+                {/* Heading row */}
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+                    {filterRisk === 'all' ? 'All Patients' : `${filterRisk.charAt(0).toUpperCase() + filterRisk.slice(1)} Risk`}
+                    <span className="px-2 py-0.5 bg-violet-100 text-violet-700 rounded-full text-xs font-bold">{visiblePatients.length}</span>
+                  </h2>
+                  {batchRisk?.ml_available === false && (
+                    <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
+                      ⚠ ML offline — rule-based fallback
+                    </span>
+                  )}
+                </div>
+
+                {visiblePatients.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 py-20 gap-4">
+                    <CheckCircle className="w-14 h-14 text-emerald-400 opacity-50" />
+                    <p className="font-bold text-slate-600 dark:text-slate-400">No patients match current filters</p>
+                    <button onClick={() => { setFilterRisk('all'); setSearchTerm(''); }}
+                      className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-bold transition">
+                      Show All Patients
+                    </button>
+                  </div>
+                ) : (
+                  <AnimatePresence mode="popLayout">
+                    <div className="grid gap-3 sm:grid-cols-1">
+                      {visiblePatients.map((p, idx) => (
+                        <PatientCard
+                          key={p.id || `p-${idx}`}
+                          p={p}
+                          isSelected={deepDiveId === p.id}
+                          onSelect={id => setDeepDiveId(prev => prev === id ? null : id)}
+                          onNavigate={id => navigate(`/patients/${id}`)}
+                        />
+                      ))}
+                    </div>
+                  </AnimatePresence>
+                )}
+              </div>
+
+              {/* Deep-dive panel */}
+              <AnimatePresence>
+                {deepDivePatient && (
+                  <div className="lg:sticky lg:top-4 self-start">
+                    <DeepDivePanel patient={deepDivePatient} navigate={navigate} onClose={() => setDeepDiveId(null)} />
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          )
+        )}
+
+        {activeTab === 'drugs'  && <DrugInteractionsTab />}
+        {activeTab === 'system' && <SystemOverviewTab batchRisk={batchRisk} sysData={sysData} onScan={() => scanMutation.mutate()} scanning={scanMutation.isPending} />}
+      </div>
     </motion.div>
   );
 }

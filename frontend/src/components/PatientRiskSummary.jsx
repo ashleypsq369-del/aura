@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { Heart, Activity, AlertCircle, CheckCircle } from 'lucide-react';
 
 /**
  * Patient Risk Summary Component
  * Simplified, patient-friendly explanation of AI prediction
  * No technical jargon - plain language only
- * Gap Analysis Priority 1: Patient-facing XAI
+ * Gap Analysis Priority 1: Patient-facing AI Explain
  */
 export default function PatientRiskSummary({ prediction }) {
   if (!prediction) {

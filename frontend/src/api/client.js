@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+// In standalone/desktop mode the frontend is served by the same FastAPI backend
+// (both at http://127.0.0.1:8000). Using a relative base means all API calls
+// go to the same origin — no CORS issues regardless of host/port.
+// In dev mode (Vite on :5173) the vite proxy forwards /api → localhost:8000.
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||          // explicit override if needed
+  (import.meta.env.DEV ? 'http://localhost:8000' : '');  // dev=absolute, prod=relative
+
+// Shared API_URL for pages that use raw axios directly.
+// In production this is '' (empty string = relative, works on any host/port).
+// In dev this is 'http://localhost:8000'.
+export const API_URL = API_BASE_URL;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -126,8 +137,10 @@ export const llmChatbotAPI = {
     const params = new URLSearchParams({ message });
     if (conversationId) params.append('conversation_id', conversationId);
 
+    // Use absolute URL in dev, relative path in production/standalone
+    const streamBase = import.meta.env.DEV ? 'http://localhost:8000' : '';
     const res = await fetch(
-      `${API_BASE_URL}/api/llm-chatbot/stream?${params.toString()}`,
+      `${streamBase}/api/llm-chatbot/stream?${params.toString()}`,
       {
         method: 'GET',
         headers: {
@@ -227,14 +240,18 @@ export const carePlanAPI = {
 };
 
 export const medicalKnowledgeAPI = {
-  listConditions:  ()            => apiClient.get('/api/medical/conditions'),
-  searchConditions:(q)           => apiClient.get('/api/medical/conditions/search', { params: { q } }),
-  matchCondition:  (diagnosis)   => apiClient.get('/api/medical/conditions/match', { params: { diagnosis } }),
-  getCondition:    (name)        => apiClient.get(`/api/medical/conditions/${encodeURIComponent(name)}`),
-  getQuestionnaireConditions: () => apiClient.get('/api/medical/questionnaire-conditions'),
-  getChatbotContext: (name)      => apiClient.get(`/api/medical/chatbot-context/${encodeURIComponent(name)}`),
-  getRedFlags:     (name)        => apiClient.get(`/api/medical/red-flags/${encodeURIComponent(name)}`),
-  getPatientContext: (patientId) => apiClient.get(`/api/medical/patient-context/${patientId}`),
+  listConditions:    ()            => apiClient.get('/api/medical/conditions'),
+  searchConditions:  (q)           => apiClient.get('/api/medical/conditions/search', { params: { q } }),
+  getCondition:      (name)        => apiClient.get(`/api/medical/conditions/${encodeURIComponent(name)}`),
+  matchCondition:    (diagnosis)   => apiClient.get('/api/medical/conditions/match', { params: { diagnosis } }),
+  getQuestionnaireConditions: ()   => apiClient.get('/api/medical/questionnaire-conditions'),
+  getChatbotContext: (name)        => apiClient.get(`/api/medical/chatbot-context/${encodeURIComponent(name)}`),
+  getRedFlags:       (name)        => apiClient.get(`/api/medical/red-flags/${encodeURIComponent(name)}`),
+  getPatientContext: (patientId)   => apiClient.get(`/api/medical/patient-context/${patientId}`),
+  // Authorized write operations (clinician / admin)
+  createCondition:   (data)        => apiClient.post('/api/medical/conditions', data),
+  updateCondition:   (name, data)  => apiClient.put(`/api/medical/conditions/${encodeURIComponent(name)}`, data),
+  deleteCondition:   (name)        => apiClient.delete(`/api/medical/conditions/${encodeURIComponent(name)}`),
 };
 
 export const adminAPI = {

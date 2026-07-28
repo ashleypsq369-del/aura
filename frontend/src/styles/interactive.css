@@ -359,3 +359,29 @@ table tbody tr {
 
 /* Remove emoji from page section headers - use a ::before instead */
 /* (Emojis in UI look unprofessional; CSS can't remove them but we can shrink them) */
+
+
+/* ---------------------------------------------------------------------------
+   LINK RESET — prevent browser default blue/purple/underline on all <a> tags.
+   Tailwind v4 preflight should do this, but this ensures it across all
+   import orders and any browser quirks.
+   Components that want underlined links use class="underline".
+   --------------------------------------------------------------------------- */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Sidebar links specifically — force white text regardless of visited state */
+aside a,
+aside a:link,
+aside a:visited,
+aside a:hover,
+aside a:active {
+  color: inherit !important;
+  text-decoration: none !important;
+}

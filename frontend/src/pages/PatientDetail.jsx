@@ -11,15 +11,16 @@ import {
   ClipboardList, Edit2, Brain, HeartHandshake,
   Stethoscope, BedDouble, ArrowRight
 } from 'lucide-react';
-import { caregiverIntelligenceAPI, careSettingsAPI } from '../api/client';
+import { caregiverIntelligenceAPI, careSettingsAPI, mlAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import PageTransition from '../components/PageTransition';
 import RiskExplanationPanel from '../components/RiskExplanationPanel';
-import MLRiskPanel from '../components/MLRiskPanel';
+import MLRiskSummaryCard from '../components/MLRiskSummaryCard';
+import ModalShell from '../components/ui/ModalShell';
 import PageHeader from '../components/PageHeader';
 import ImageCard from '../components/ImageCard';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function PatientDetail() {
   const { patientId } = useParams();
@@ -117,12 +118,76 @@ export default function PatientDetail() {
   const explainRisk = async () => {
     setLoadingRisk(true);
     try {
-      const r = await axios.post(
-        `${API_URL}/api/comprehensive-ai/comprehensive-risk/${patientId}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setRiskData(r.data);
+      const r = await mlAPI.getPatientRisk(patientId);
+      const raw = r.data;
+
+      // Transform PatientRiskProfile → RiskExplanationPanel expected shape
+      const levelMap = { low: 'Low', moderate: 'Moderate', high: 'High', critical: 'Critical' };
+      const level = levelMap[raw.overall_level] || 'Low';
+
+      // Aggregate SHAP features across all tasks (deduplicate by feature name, sum importance)
+      const featureMap = {};
+      Object.values(raw.tasks || {}).forEach(task => {
+        (task.top_features || []).forEach(f => {
+          const key = f.feature;
+          if (!featureMap[key]) {
+            featureMap[key] = { ...f, importance: 0, pct: 0 };
+          }
+          featureMap[key].importance += f.importance;
+          featureMap[key].pct += f.pct;
+        });
+      });
+      const allFeatures = Object.values(featureMap)
+        .sort((a, b) => b.importance - a.importance)
+        .slice(0, 10);
+      // Re-normalise pct to 100%
+      const totalPct = allFeatures.reduce((s, f) => s + f.pct, 0) || 1;
+      allFeatures.forEach(f => { f.pct = parseFloat((f.pct / totalPct * 100).toFixed(1)); });
+
+      // Build component breakdown from tasks
+      const components = Object.entries(raw.tasks || {}).map(([key, t]) => ({
+        name: key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+        score: parseFloat((t.probability * 100).toFixed(1)),
+        risk_level: t.risk_level,
+        shap_available: t.shap_available,
+      }));
+
+      const adapted = {
+        // RiskExplanationPanel hero fields
+        overall_risk_score: raw.overall_risk,
+        confidence:         raw.models_available / 8,   // proportion of models that ran
+        risk_level:         level,
+        summary:            raw.key_concerns?.[0] || `${level} overall risk — ${raw.models_available} models assessed`,
+        prediction_id:      null,
+
+        // SHAP tab
+        shap_explanations: allFeatures.map(f => ({
+          feature_name:   f.display_name || f.feature,
+          display_name:   f.display_name,
+          display_value:  String(f.value ?? ''),
+          value:          f.value,
+          shap_value:     f.shap_value,
+          impact:         f.impact,
+          pct:            f.pct,
+          importance:     f.importance,
+        })),
+
+        // Components tab
+        component_scores: components,
+
+        // Concerns + actions tabs
+        key_concerns:        raw.key_concerns || [],
+        recommended_actions: raw.recommended_actions || [],
+
+        // Metadata
+        patient_id:   raw.patient_id,
+        patient_name: raw.patient_name,
+        assessed_at:  raw.assessed_at,
+        models_available: raw.models_available,
+        tasks: raw.tasks,
+      };
+
+      setRiskData(adapted);
       setShowRiskExplanation(true);
       toast.success('Risk assessment generated');
     } catch (e) {
@@ -173,14 +238,14 @@ export default function PatientDetail() {
   const activeMeds = medications?.medications?.filter(m => m.is_active)?.length || 0;
 
   const quickActions = [
-    { image: '/resources/cards/pd-vitals.jpg',      icon: Activity,      title: 'Vitals',       description: 'Vital signs history',        onClick: () => navigate(`/patients/${patientId}/vitals`),      color: '#0d9488' },
+    { image: '/resources/african/african-vitals.jpg',      icon: Activity,      title: 'Vitals',       description: 'Vital signs history',        onClick: () => navigate(`/patients/${patientId}/vitals`),      color: '#0d9488' },
     { image: '/resources/cards/card-symptoms.jpg',  icon: AlertCircle,   title: 'Symptoms',     description: 'Symptom log',                onClick: () => navigate(`/patients/${patientId}/symptoms`),    color: '#e11d48' },
-    { image: '/resources/cards/card-medications.jpg',icon: Pill,         title: 'Medications',  description: `${activeMeds} active`,        onClick: () => navigate(`/patients/${patientId}/medications`), color: '#be123c' },
-    { image: '/resources/cards/card-ai-insights.jpg',icon: ClipboardList,title: 'Assessments',  description: 'Clinical assessments',       onClick: () => navigate(`/assessments/${patientId}`),         color: '#7c3aed' },
-    { image: '/resources/cards/card-care-plan.jpg', icon: FileText,      title: 'Care Plan',    description: 'Goals & interventions',      onClick: () => navigate(`/patients/${patientId}/care-plan`),  color: '#0369a1' },
-    { image: '/resources/cards/card-checkin.jpg',   icon: Heart,         title: 'Wellbeing',    description: 'ESAS assessments',           onClick: () => navigate(`/patients/${patientId}/wellbeing`),   color: '#9d174d' },
-    { image: '/resources/cards/card-appointments.jpg',icon: Calendar,    title: 'Appointments', description: 'Scheduled visits',           onClick: () => navigate(`/patients/${patientId}/appointments`),color: '#1d4ed8' },
-    { image: '/resources/cards/card-messages.jpg',  icon: MessageCircle, title: 'Message',      description: 'Contact patient',            onClick: () => navigate(`/messages?patient=${patientId}`),    color: '#0f766e' },
+    { image: '/resources/african/african-medications.jpg',icon: Pill,         title: 'Medications',  description: `${activeMeds} active`,        onClick: () => navigate(`/patients/${patientId}/medications`), color: '#be123c' },
+    { image: '/resources/african/african-nurse-female.jpg',icon: ClipboardList,title: 'Assessments',  description: 'Clinical assessments',       onClick: () => navigate(`/assessments/${patientId}`),         color: '#7c3aed' },
+    { image: '/resources/african/african-clinical-team.jpg', icon: FileText,      title: 'Care Plan',    description: 'Goals & interventions',      onClick: () => navigate(`/patients/${patientId}/care-plan`),  color: '#0369a1' },
+    { image: '/resources/african/african-wellbeing.jpg',   icon: Heart,         title: 'Wellbeing',    description: 'ESAS assessments',           onClick: () => navigate(`/patients/${patientId}/wellbeing`),   color: '#9d174d' },
+    { image: '/resources/african/african-appointment.jpg',icon: Calendar,    title: 'Appointments', description: 'Scheduled visits',           onClick: () => navigate(`/patients/${patientId}/appointments`),color: '#1d4ed8' },
+    { image: '/resources/african/african-clinical-team.jpg',  icon: MessageCircle, title: 'Message',      description: 'Contact patient',            onClick: () => navigate(patient?.primary_clinician_id ? `/messages?userId=${patient.primary_clinician_id}` : '/messages'),    color: '#0f766e' },
   ];
 
   return (
@@ -206,119 +271,131 @@ export default function PatientDetail() {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50">
               <Brain size={13} /> {loadingRisk ? 'Analyzing...' : 'AI Risk'}
             </button>
-            <button onClick={() => navigate(`/messages?patient=${patientId}`)}
+            <button onClick={() => navigate(patient?.primary_clinician_id ? `/messages?userId=${patient.primary_clinician_id}` : '/messages')}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition">
               <MessageCircle size={13} /> Message
             </button>
           </div>
         </PageHeader>
 
-        {/* Patient info strip */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-white mb-4">
-          <div className="flex items-center gap-2 text-slate-700">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
-              <User size={13} className="text-blue-600" />
-            </div>
-            <span className="font-semibold">{patient.age || 'N/A'} yrs · {patient.gender || 'N/A'}</span>
-          </div>
-          {patient.location && (
-            <div className="flex items-center gap-2 text-slate-600">
-              <MapPin size={15} className="text-teal-600" />
-              <span>{patient.location}</span>
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <span className={`${
-              patient.risk_level === 'Crisis' ? 'badge-critical' :
-              patient.risk_level === 'High'   ? 'badge-high' :
-              patient.risk_level === 'Medium' ? 'badge-moderate' : 'badge-low'
-            }`}>{patient.risk_level || 'Low'} Risk</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-600">
-            <FileText size={15} className="text-teal-600" />
-            <span className="font-medium">{patient.primary_diagnosis}</span>
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => navigate(`/assessments/${patientId}`)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">
-              <ClipboardList size={13} /> Assessments
-            </button>
-            <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Call">
-              <Phone size={15} className="text-slate-600" />
-            </button>
-            <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Email">
-              <Mail size={15} className="text-slate-600" />
-            </button>
-          </div>
-        </motion.div>
+        {/* Patient content */}
+        <div className="flex flex-col gap-4">
 
-        {/* Vitals ribbon */}
-        {lastVital && (
-          <div className="flex items-center gap-2 flex-wrap bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm mb-4">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Latest Vitals</span>
-            {[
-              { label: 'HR',   value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--',    ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
-              { label: 'SpO₂', value: lastVital.oxygen_saturation ? `${lastVital.oxygen_saturation.toFixed(1)}%` : '--', ok: !lastVital.oxygen_saturation || lastVital.oxygen_saturation >= 95 },
-              { label: 'BP',   value: lastVital.blood_pressure_sys ? `${Math.round(lastVital.blood_pressure_sys)}/${Math.round(lastVital.blood_pressure_dia || 0)}` : '--', ok: true },
-              { label: 'Temp', value: lastVital.temperature ? `${lastVital.temperature.toFixed(1)}°C` : '--',     ok: !lastVital.temperature || (lastVital.temperature >= 36 && lastVital.temperature <= 38) },
-            ].map(({ label, value, ok }) => (
-              <div key={label} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold ${
-                ok ? 'bg-teal-50 border-teal-200 text-teal-700' : 'bg-red-50 border-red-200 text-red-700 animate-pulse'
-              }`}>
-                <span>{label}</span>
-                <span className="tabular-nums">{value}</span>
-                {!ok && <span>!</span>}
-              </div>
-            ))}
-            <span className="text-[10px] text-slate-400 ml-auto">
-              {new Date(lastVital.recorded_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
-        )}
-
-        {/* Caregiver Assignment */}
-        {canAssignCaregiver && caregiverMatches?.recommendations?.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="mb-4 bg-white rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <HeartHandshake size={15} className="text-purple-600" />
-                Caregiver Assignment
-              </h3>
-              <button onClick={() => assignOptimalMutation.mutate()} disabled={assignOptimalMutation.isPending}
-                className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50">
-                AI Auto-Assign
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {caregiverMatches.recommendations.slice(0, 3).map((rec) => (
-                <div key={rec.caregiver_id}
-                  className={`bg-white rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
-                  <p className="font-bold text-slate-900 text-sm">{rec.caregiver_name}</p>
-                  <p className="text-xs text-slate-600 mb-2">Match: {rec.match_score}% · {rec.workload?.capacity_status}</p>
-                  {rec.already_assigned
-                    ? <span className="text-xs font-bold text-green-700">Currently Assigned</span>
-                    : <button onClick={() => caregiverIntelligenceAPI.assign(patientId, { caregiver_id: rec.caregiver_id }).then(() => { toast.success('Caregiver assigned'); queryClient.invalidateQueries(['caregiver-matches', patientId]); })}
-                        className="text-xs px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">Assign</button>
-                  }
+            {/* Patient info strip */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-white">
+              <div className="flex items-center gap-2 text-slate-700">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <User size={13} className="text-blue-600" />
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          {quickActions.map((c, i) => (
-            <motion.div key={c.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
-              <ImageCard {...c} />
+                <span className="font-semibold">{patient.age || 'N/A'} yrs · {patient.gender || 'N/A'}</span>
+              </div>
+              {patient.location && (
+                <div className="flex items-center gap-2 text-slate-600">
+                  <MapPin size={15} className="text-teal-600" />
+                  <span>{patient.location}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <span className={`${
+                  patient.risk_level === 'Crisis' ? 'badge-critical' :
+                  patient.risk_level === 'High'   ? 'badge-high' :
+                  patient.risk_level === 'Medium' ? 'badge-moderate' : 'badge-low'
+                }`}>{patient.risk_level || 'Low'} Risk</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-600">
+                <FileText size={15} className="text-teal-600" />
+                <span className="font-medium">{patient.primary_diagnosis}</span>
+              </div>
+              <div className="ml-auto flex items-center gap-2">
+                <button onClick={() => navigate(`/assessments/${patientId}`)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">
+                  <ClipboardList size={13} /> Assessments
+                </button>
+                <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Call">
+                  <Phone size={15} className="text-slate-600" />
+                </button>
+                <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Email">
+                  <Mail size={15} className="text-slate-600" />
+                </button>
+              </div>
             </motion.div>
-          ))}
-        </div>
 
-        {/* ML Risk Panel */}
-        <MLRiskPanel patientId={patientId} />
+            {/* Vitals ribbon */}
+            {lastVital && (
+              <div className="flex items-center gap-2 flex-wrap bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Latest Vitals</span>
+                {[
+                  { label: 'HR',   value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--',    ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
+                  { label: 'SpO2', value: lastVital.oxygen_saturation ? `${lastVital.oxygen_saturation.toFixed(1)}%` : '--', ok: !lastVital.oxygen_saturation || lastVital.oxygen_saturation >= 95 },
+                  { label: 'BP',   value: (lastVital.blood_pressure_sys || lastVital.blood_pressure_systolic)
+                      ? `${Math.round(lastVital.blood_pressure_sys || lastVital.blood_pressure_systolic)}/${Math.round(lastVital.blood_pressure_dia || lastVital.blood_pressure_diastolic || 0)} mmHg`
+                      : '--', ok: true },
+                  { label: 'Temp', value: lastVital.temperature ? `${lastVital.temperature.toFixed(1)} C` : '--',     ok: !lastVital.temperature || (lastVital.temperature >= 36 && lastVital.temperature <= 38) },
+                  { label: 'RR',   value: lastVital.respiratory_rate ? `${Math.round(lastVital.respiratory_rate)}/min` : '--', ok: !lastVital.respiratory_rate || (lastVital.respiratory_rate >= 12 && lastVital.respiratory_rate <= 20) },
+                ].map(({ label, value, ok }) => (
+                  <div key={label} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold ${
+                    ok ? 'bg-teal-50 border-teal-200 text-teal-700' : 'bg-red-50 border-red-200 text-red-700 animate-pulse'
+                  }`}>
+                    <span className="text-slate-500 font-semibold">{label}</span>
+                    <span className="tabular-nums font-black">{value}</span>
+                    {!ok && <span className="ml-0.5 text-red-600 font-black">!</span>}
+                  </div>
+                ))}
+                <span className="text-[10px] text-slate-400 ml-auto">
+                  {new Date(lastVital.recorded_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            )}
+
+            {/* ML Risk Summary Card — teaser widget */}
+            <MLRiskSummaryCard patientId={patientId} />
+
+            {/* Caregiver Assignment */}
+            {canAssignCaregiver && caregiverMatches?.recommendations?.length > 0 && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <HeartHandshake size={15} className="text-purple-600" />
+                    Caregiver Assignment
+                  </h3>
+                  <button onClick={() => assignOptimalMutation.mutate()} disabled={assignOptimalMutation.isPending}
+                    className="px-3 py-1.5 bg-purple-600 text-white text-sm rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50">
+                    AI Auto-Assign
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {caregiverMatches.recommendations.slice(0, 3).map((rec) => (
+                    <div key={rec.caregiver_id}
+                      className={`bg-white rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
+                      <p className="font-bold text-slate-900 text-sm">{rec.caregiver_name}</p>
+                      <p className="text-xs text-slate-600 mb-2">Match: {rec.match_score}% · {rec.workload?.capacity_status}</p>
+                      {rec.already_assigned
+                        ? <span className="text-xs font-bold text-green-700">Currently Assigned</span>
+                        : <button onClick={() => caregiverIntelligenceAPI.assign(patientId, { caregiver_id: rec.caregiver_id }).then(() => { toast.success('Caregiver assigned'); queryClient.invalidateQueries(['caregiver-matches', patientId]); })}
+                            className="text-xs px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">Assign</button>
+                      }
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Quick Actions grid */}
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                <Stethoscope size={10}/> Clinical Tools
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {quickActions.map((c, i) => (
+                  <motion.div key={c.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+                    <ImageCard {...c} />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
 
         {/* Risk Explanation Panel */}
         {showRiskExplanation && riskData && (
@@ -330,23 +407,12 @@ export default function PatientDetail() {
 
         {/* Status Update Modal */}
         {showStatusModal && (
-          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-              <h3 className="text-base font-bold text-slate-900 mb-4">Update Patient Status</h3>
-              <div className="space-y-2 mb-6">
-                {['active','stable','deteriorating','critical','deceased','discharged'].map(s => (
-                  <button key={s} onClick={() => setSelectedStatus(s)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition capitalize ${
-                      selectedStatus === s ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-teal-300'
-                    }`}>
-                    <span className={getStatusBadgeColor(s)}>{s}</span>
-                  </button>
-                ))}
-              </div>
+          <ModalShell open={showStatusModal} onClose={() => setShowStatusModal(false)}
+            title="Update Patient Status" accent="teal" size="sm"
+            footer={
               <div className="flex gap-3">
                 <button onClick={() => setShowStatusModal(false)}
-                  className="flex-1 py-2.5 border border-slate-300 text-slate-700 rounded-xl font-semibold text-sm hover:bg-slate-50">
+                  className="flex-1 py-2.5 border border-slate-300 text-slate-700 dark:text-slate-300 rounded-xl font-semibold text-sm hover:bg-slate-50">
                   Cancel
                 </button>
                 <button onClick={() => statusMutation.mutate(selectedStatus)} disabled={statusMutation.isPending}
@@ -354,10 +420,23 @@ export default function PatientDetail() {
                   {statusMutation.isPending ? 'Saving...' : 'Update'}
                 </button>
               </div>
-            </motion.div>
-          </div>
+            }>
+            <div className="space-y-2">
+              {['active','stable','deteriorating','critical','deceased','discharged'].map(s => (
+                <button key={s} onClick={() => setSelectedStatus(s)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition capitalize ${
+                    selectedStatus === s ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-teal-300'
+                  }`}>
+                  <span className={getStatusBadgeColor(s)}>{s}</span>
+                </button>
+              ))}
+            </div>
+          </ModalShell>
         )}
       </div>
     </PageTransition>
   );
 }
+
+
+

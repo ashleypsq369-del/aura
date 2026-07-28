@@ -4,8 +4,9 @@ import { X, Search, UserPlus, Loader2, CheckCircle, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from '../utils/toast';
+import ModalShell from './ui/ModalShell';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 const ROLE_COLORS = {
   clinician: 'bg-teal-100 text-teal-700',
@@ -60,31 +61,15 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="fixed inset-0 bg-slate-900/50 z-50 backdrop-blur-sm" onClick={handleClose} />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 12 }}
-        transition={{ type: 'spring', damping: 26 }}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-50 border border-slate-200 overflow-hidden max-h-[85vh] flex flex-col"
-      >
-        {/* Header */}
-        <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-teal-50 border border-teal-200 rounded-xl flex items-center justify-center">
-              <UserPlus size={17} className="text-teal-700" />
-            </div>
-            <div>
-              <h2 className="font-bold text-slate-900 text-base">Add Contact</h2>
-              <p className="text-xs text-slate-400">Search by name, username, or email</p>
-            </div>
-          </div>
-          <button onClick={handleClose}
-            className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition">
-            <X size={15} className="text-slate-600" />
-          </button>
-        </div>
+    <ModalShell
+      open={isOpen}
+      onClose={handleClose}
+      title="Add Contact"
+      description="Search by name, username, or email"
+      icon={UserPlus}
+      accent="teal"
+      size="md"
+    >
 
         {/* Search */}
         <div className="px-6 py-4 border-b border-slate-100 flex-shrink-0">
@@ -189,13 +174,13 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
 
         {/* Footer */}
         <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
-          <p className="text-xs text-slate-400">💡 Added contacts appear in your message sidebar</p>
+          <p className="text-xs text-slate-400">ðŸ’¡ Added contacts appear in your message sidebar</p>
           <button onClick={handleClose}
             className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
             Close
           </button>
         </div>
-      </motion.div>
-    </>
+      </ModalShell>
   );
 }
+

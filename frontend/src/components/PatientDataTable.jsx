@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PatientDataTable.jsx - Enterprise patient list using TanStack Table
  * ====================================================================
  * - Multi-column sorting (click header to sort)
@@ -25,6 +25,7 @@ import { motion } from 'framer-motion';
 import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import Progress from './ui/Progress';
 import useAppStore from '../store/useAppStore';
+import ReminderBell from './ReminderBell';
 
 // -- Risk level badge ------------------------------------------------------
 function RiskBadge({ level }) {
@@ -66,8 +67,8 @@ const columns = [
             {row.original.full_name?.split(' ').map(n => n[0]).slice(0, 2).join('')}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-slate-900 truncate">{row.original.full_name}</p>
-            <p className="text-xs text-slate-400">{row.original.patient_code}</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{row.original.full_name}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{row.original.patient_code}</p>
           </div>
         </div>
       );
@@ -77,13 +78,13 @@ const columns = [
     accessorFn: (row) => row.age ?? '',
     id: 'age',
     header: 'Age',
-    cell: ({ getValue }) => <span className="text-sm text-slate-700">{getValue()}</span>,
+    cell: ({ getValue }) => <span className="text-sm font-medium text-slate-800 dark:text-slate-200">{getValue()}</span>,
   },
   {
     accessorKey: 'primary_diagnosis',
     header: 'Diagnosis',
     cell: ({ getValue }) => (
-      <span className="text-sm text-slate-700 max-w-[180px] truncate block">{getValue() || '-'}</span>
+      <span className="text-sm text-slate-700 dark:text-slate-300 max-w-[180px] truncate block">{getValue() || '—'}</span>
     ),
   },
   {
@@ -100,19 +101,15 @@ const columns = [
     header: 'Risk Score',
     cell: ({ getValue }) => {
       const score = getValue();
-      if (score == null) return <span className="text-slate-400 text-xs">N/A</span>;
+      if (score == null) return <span className="text-slate-400 dark:text-slate-500 text-xs font-medium">N/A</span>;
+      const pct = Math.round(score * 100);
+      const color = score >= 0.75 ? '#e11d48' : score >= 0.5 ? '#f97316' : '#0d9488';
       return (
-        <div className="w-24">
-          <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full rounded-full transition-all"
-              style={{
-                width: `${Math.round(score * 100)}%`,
-                background: score >= 0.75 ? 'linear-gradient(to right,#e11d48,#dc2626)' :
-                            score >= 0.5  ? 'linear-gradient(to right,#d97706,#ea580c)' :
-                                            'linear-gradient(to right,#059669,#0d9488)',
-              }} />
+        <div className="flex items-center gap-2 min-w-[80px]">
+          <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
           </div>
-          <p className="text-[10px] text-slate-500 mt-0.5 tabular-nums">{Math.round(score * 100)}%</p>
+          <span className="text-xs font-black tabular-nums w-8 text-right" style={{ color }}>{pct}%</span>
         </div>
       );
     },
@@ -126,13 +123,38 @@ const columns = [
       return <span className={cls[v] || cls.active}>{v || 'active'}</span>;
     },
   },
+  {
+    id: 'reminder',
+    header: '',
+    enableSorting: false,
+    cell: ({ row }) => (
+      <div onClick={e => e.stopPropagation()}>
+        <ReminderBell
+          label={`Review ${row.original.full_name}`}
+          type="patient"
+          size="xs"
+        />
+      </div>
+    ),
+    size: 36,
+  },
 ];
 
 // -- Main component --------------------------------------------------------
 export default function PatientDataTable({ patients = [], onViewPatient, loading = false }) {
   const [sorting, setSorting]           = useState([{ id: 'risk_level', desc: false }]);
   const [globalFilter, setGlobalFilter] = useState('');
-  const [pagination, setPagination]     = useState({ pageIndex: 0, pageSize: 25 });
+
+  // Read virtualizedLists setting — when OFF, show all rows per page (no pagination limit)
+  // When ON, use 25 per page for performance with large lists
+  let featureSettings = { virtualizedLists: true };
+  try {
+    const saved = localStorage.getItem('feature_settings');
+    if (saved) featureSettings = { ...featureSettings, ...JSON.parse(saved) };
+  } catch { /* use default */ }
+
+  const defaultPageSize = featureSettings.virtualizedLists ? 25 : Math.max(patients.length, 25);
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: defaultPageSize });
 
   // Write active patient to Zustand when row is opened
   const setActivePatient = useAppStore(s => s.setActivePatient);
@@ -166,10 +188,10 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
   const totalFiltered = table.getFilteredRowModel().rows.length;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       {/* Toolbar */}
-      <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
-        <p className="text-sm text-slate-500" aria-live="polite" aria-atomic="true">
+      <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 flex-wrap bg-white dark:bg-slate-900">
+        <p className="text-sm text-slate-600 dark:text-slate-300 font-medium" aria-live="polite" aria-atomic="true">
           {loading ? 'Loading patients...' : `${totalFiltered} patient${totalFiltered !== 1 ? 's' : ''}`}
         </p>
         <input
@@ -178,14 +200,14 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
           onChange={e => setGlobalFilter(e.target.value)}
           placeholder="Search patients..."
           aria-label="Search patients by name, diagnosis or code"
-          className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-56"
+          className="px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-56"
         />
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm" role="grid" aria-label="Patient list">
-          <thead className="bg-slate-100 border-b-2 border-slate-300">
+          <thead className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
             {table.getHeaderGroups().map(hg => (
               <tr key={hg.id}>
                 {hg.headers.map(header => (
@@ -197,8 +219,8 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                       header.column.getIsSorted() === 'asc' ? 'ascending' :
                       header.column.getIsSorted() === 'desc' ? 'descending' : 'none'
                     }
-                    className={`px-4 py-3 text-left text-xs font-bold text-slate-700 uppercase tracking-wide whitespace-nowrap ${
-                      header.column.getCanSort() ? 'cursor-pointer hover:text-teal-700 select-none' : ''
+                    className={`px-4 py-3 text-left text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap ${
+                      header.column.getCanSort() ? 'cursor-pointer hover:text-teal-300 select-none' : ''
                     }`}
                   >
                     <span className="flex items-center gap-1">
@@ -207,27 +229,27 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                     </span>
                   </th>
                 ))}
-                <th scope="col" className="px-4 py-3 text-right text-xs font-bold text-slate-700 uppercase tracking-wide">
+                <th scope="col" className="px-4 py-3 text-right text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                   Action
                 </th>
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60">
             {loading ? (
               [...Array(5)].map((_, i) => (
-                <tr key={i}>
+                <tr key={i} className="bg-white dark:bg-slate-900">
                   {columns.map((_, j) => (
                     <td key={j} className="px-4 py-3">
-                      <div className="h-4 bg-slate-200 rounded skeleton" />
+                      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded skeleton" />
                     </td>
                   ))}
-                  <td className="px-4 py-3"><div className="h-4 w-16 bg-slate-200 rounded skeleton ml-auto" /></td>
+                  <td className="px-4 py-3"><div className="h-4 w-16 bg-slate-200 dark:bg-slate-700 rounded skeleton ml-auto" /></td>
                 </tr>
               ))
             ) : rows.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="py-12 text-center text-slate-400 text-sm">
+                <td colSpan={columns.length + 1} className="py-12 text-center text-slate-500 dark:text-slate-400 text-sm">
                   No patients match your search.
                 </td>
               </tr>
@@ -238,7 +260,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.02 }}
-                  className="hover:bg-teal-50/50 transition-colors cursor-pointer group"
+                  className="bg-white dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group border-l-2 border-l-transparent hover:border-l-teal-500"
                   onClick={() => handleViewPatient(row.original)}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleViewPatient(row.original)}
                   tabIndex={0}
@@ -254,7 +276,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                     <button
                       onClick={e => { e.stopPropagation(); handleViewPatient(row.original); }}
                       data-tip="Open patient record"
-                      className="px-3 py-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
+                      className="px-3 py-1.5 text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 rounded-lg hover:bg-teal-600 hover:text-white hover:border-teal-600 dark:hover:bg-teal-600 dark:hover:text-white transition-colors"
                     >
                       View
                     </button>
@@ -267,19 +289,19 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
       </div>
 
       {/* Pagination */}
-      <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-between gap-3 flex-wrap bg-slate-100">
-        <div className="flex items-center gap-2 text-xs text-slate-500">
+      <div className="px-5 py-3 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 flex-wrap bg-slate-50 dark:bg-slate-800">
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
           <span>Rows per page:</span>
           <select
             value={pagination.pageSize}
             onChange={e => table.setPageSize(Number(e.target.value))}
-            className="border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-teal-500"
+            className="border border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-teal-500"
             aria-label="Rows per page"
           >
             {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
           </select>
         </div>
-        <div className="flex items-center gap-1 text-xs text-slate-500">
+        <div className="flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
           <span>
             {pagination.pageIndex * pagination.pageSize + 1}-
             {Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalFiltered)} of {totalFiltered}
@@ -288,12 +310,12 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
         <div className="flex items-center gap-1">
           <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}
             aria-label="Previous page"
-            className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
             <ChevronLeft size={16} />
           </button>
           <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}
             aria-label="Next page"
-            className="p-1.5 rounded-lg hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
             <ChevronRight size={16} />
           </button>
         </div>

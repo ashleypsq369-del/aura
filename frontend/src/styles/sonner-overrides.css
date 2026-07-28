@@ -1,0 +1,482 @@
+/**
+ * Sonner toast overrides — Project Aura clinical design
+ * ======================================================
+ * Sonner applies position via CSS vars --offset, --width, --right, --left.
+ * We override those here. The toaster is position:fixed by Sonner itself.
+ */
+
+/* ── Position: top-right, well below the 60px header ────────────────── */
+[data-sonner-toaster] {
+  --offset: 80px !important;
+  top: 80px !important;
+  right: 16px !important;
+  left: auto !important;
+}
+
+/* ── Toast card ──────────────────────────────────────────────────────── */
+[data-sonner-toast] {
+  border-radius: 10px !important;
+  padding: 11px 14px !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.10),
+    0 1px 3px rgba(0, 0, 0, 0.06) !important;
+  max-width: 300px !important;
+  min-width: 200px !important;
+  width: auto !important;
+}
+
+/* ── Light mode — default (no type) ─────────────────────────────────── */
+:root [data-sonner-toast]:not([data-type]) {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+  color: #0f172a !important;
+}
+
+/* ── Toast title ─────────────────────────────────────────────────────── */
+[data-sonner-toast] [data-title] {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+/* ── Toast description ───────────────────────────────────────────────── */
+[data-sonner-toast] [data-description] {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  opacity: 0.72 !important;
+  margin-top: 2px !important;
+}
+
+/* ── Icon ────────────────────────────────────────────────────────────── */
+[data-sonner-toast] [data-icon] {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Action button ───────────────────────────────────────────────────── */
+[data-sonner-toast] [data-button] {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 3px 9px !important;
+  height: auto !important;
+}
+
+/* ── No left border decoration ───────────────────────────────────────── */
+[data-sonner-toast]::before { display: none !important; }
+
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+.dark [data-sonner-toast],
+[data-theme='dark'] [data-sonner-toast] {
+  background: #1e293b !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+/* ── Typed colours ───────────────────────────────────────────────────── */
+[data-sonner-toast][data-type='success'] {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #166534 !important;
+}
+[data-sonner-toast][data-type='error'] {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #991b1b !important;
+}
+[data-sonner-toast][data-type='warning'] {
+  background: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #92400e !important;
+}
+[data-sonner-toast][data-type='info'] {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1e40af !important;
+}
+[data-sonner-toast][data-type='loading'] {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.dark [data-sonner-toast][data-type='success'] {
+  background: #052e16 !important; border-color: #166534 !important; color: #bbf7d0 !important;
+}
+.dark [data-sonner-toast][data-type='error'] {
+  background: #2d0a0a !important; border-color: #991b1b !important; color: #fecaca !important;
+}
+.dark [data-sonner-toast][data-type='warning'] {
+  background: #1c1200 !important; border-color: #92400e !important; color: #fde68a !important;
+}
+.dark [data-sonner-toast][data-type='info'] {
+  background: #0a1628 !important; border-color: #1d4ed8 !important; color: #bfdbfe !important;
+}
+
+
+/* ── Light mode — default (no type) ─────────────────────────────────── */
+:root [data-sonner-toast]:not([data-type]) {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.09) !important;
+  color: #0f172a !important;
+}
+
+/* ── Toast title ─────────────────────────────────────────────────────── */
+[data-sonner-toast] [data-title] {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ── Toast description ───────────────────────────────────────────────── */
+[data-sonner-toast] [data-description] {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  opacity: 0.72 !important;
+  margin-top: 2px !important;
+}
+
+/* ── Close button — absolute top-right of the toast card ────────────── */
+/* The <li data-sonner-toast> is position:relative, so we can abs-position */
+[data-sonner-toast] [data-close-button],
+[data-sonner-toaster] [data-close-button],
+button[data-close-button] {
+  position: absolute !important;
+  top: 7px !important;
+  right: 7px !important;
+  left: auto !important;
+  bottom: auto !important;
+  inset: auto !important;
+  inset-inline-start: unset !important;
+  inset-inline-end: unset !important;
+  transform: none !important;
+  translate: none !important;
+  /* Reset any flex ordering from previous attempts */
+  order: unset !important;
+  margin: 0 !important;
+  align-self: auto !important;
+  /* Appearance */
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  border-radius: 5px !important;
+  background: rgba(0, 0, 0, 0.07) !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  transition: background 0.12s !important;
+  z-index: 1 !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover,
+button[data-close-button]:hover {
+  background: rgba(0, 0, 0, 0.13) !important;
+  color: #0f172a !important;
+}
+
+[data-sonner-toast] [data-close-button] svg,
+button[data-close-button] svg {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+/* ── Icon ────────────────────────────────────────────────────────────── */
+[data-sonner-toast] [data-icon] {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  margin-top: 1px !important;
+}
+
+/* ── Action button ───────────────────────────────────────────────────── */
+[data-sonner-toast] [data-button] {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 3px 9px !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+
+/* ── No left border decoration ───────────────────────────────────────── */
+[data-sonner-toast]::before { display: none !important; }
+
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+.dark [data-sonner-toast],
+[data-theme='dark'] [data-sonner-toast] {
+  background: #1e293b !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: #f1f5f9 !important;
+}
+
+.dark [data-sonner-toast] [data-close-button],
+[data-theme='dark'] button[data-close-button] {
+  background: rgba(255,255,255,0.09) !important;
+  color: #94a3b8 !important;
+}
+
+/* ── Typed colours (richColors) — keep them but refine ──────────────── */
+[data-sonner-toast][data-type='success'] {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #166534 !important;
+}
+[data-sonner-toast][data-type='error'] {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #991b1b !important;
+}
+[data-sonner-toast][data-type='warning'] {
+  background: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #92400e !important;
+}
+[data-sonner-toast][data-type='info'] {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1e40af !important;
+}
+[data-sonner-toast][data-type='loading'] {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.dark [data-sonner-toast][data-type='success'] {
+  background: #052e16 !important;
+  border-color: #166534 !important;
+  color: #bbf7d0 !important;
+}
+.dark [data-sonner-toast][data-type='error'] {
+  background: #2d0a0a !important;
+  border-color: #991b1b !important;
+  color: #fecaca !important;
+}
+.dark [data-sonner-toast][data-type='warning'] {
+  background: #1c1200 !important;
+  border-color: #92400e !important;
+  color: #fde68a !important;
+}
+.dark [data-sonner-toast][data-type='info'] {
+  background: #0a1628 !important;
+  border-color: #1d4ed8 !important;
+  color: #bfdbfe !important;
+}
+
+
+/* ── Toast card — compact, not full-width ────────────────────────────── */
+[data-sonner-toast] {
+  position: relative !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  min-width: 220px !important;
+  max-width: 300px !important;
+  width: 280px !important;
+  gap: 8px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  flex-wrap: nowrap !important;
+}
+
+/* ── Light mode card ─────────────────────────────────────────────────── */
+:root [data-sonner-toast]:not([data-type]) {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.07) !important;
+  color: #0f172a !important;
+}
+
+/* ── Toast title ─────────────────────────────────────────────────────── */
+[data-sonner-toast] [data-title] {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ── Toast description ───────────────────────────────────────────────── */
+[data-sonner-toast] [data-description] {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  opacity: 0.75 !important;
+  margin-top: 2px !important;
+}
+
+/* ── Close button — pushed to far right as a flex sibling ────────────── */
+/* Sonner renders [data-close-button] as a sibling inside the li flex container,
+   NOT as a child of the content. Use order + margin-left:auto, NOT position:absolute. */
+[data-sonner-toast] [data-close-button],
+[data-sonner-toaster] [data-close-button],
+button[data-close-button] {
+  order: 99 !important;             /* always last flex item */
+  margin-left: auto !important;     /* push to far right */
+  align-self: flex-start !important;
+  flex-shrink: 0 !important;
+  /* reset all position overrides */
+  position: static !important;
+  top: unset !important;
+  right: unset !important;
+  left: unset !important;
+  bottom: unset !important;
+  inset: unset !important;
+  inset-inline-start: unset !important;
+  inset-inline-end: unset !important;
+  transform: none !important;
+  translate: none !important;
+  /* appearance */
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  border-radius: 6px !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #64748b !important;
+  transition: background 0.15s, color 0.15s !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  margin-top: 1px !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover,
+[data-sonner-toaster] [data-close-button]:hover,
+button[data-close-button]:hover {
+  background: rgba(0, 0, 0, 0.12) !important;
+  color: #0f172a !important;
+}
+
+[data-sonner-toast] [data-close-button] svg,
+[data-sonner-toaster] [data-close-button] svg,
+button[data-close-button] svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* ── Action button ───────────────────────────────────────────────────── */
+[data-sonner-toast] [data-button] {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+
+/* ── Icon container — no background box ─────────────────────────────── */
+[data-sonner-toast] [data-icon] {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* ── Dark mode ───────────────────────────────────────────────────────── */
+.dark [data-sonner-toast],
+[data-theme='dark'] [data-sonner-toast] {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f1f5f9 !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+
+.dark [data-sonner-toast] [data-close-button],
+.dark [data-sonner-toaster] [data-close-button],
+.dark button[data-close-button],
+[data-theme='dark'] [data-sonner-toast] [data-close-button],
+[data-theme='dark'] button[data-close-button] {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+}
+
+.dark [data-sonner-toast] [data-close-button]:hover,
+.dark [data-sonner-toaster] [data-close-button]:hover,
+.dark button[data-close-button]:hover,
+[data-theme='dark'] [data-sonner-toast] [data-close-button]:hover,
+[data-theme='dark'] button[data-close-button]:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
+  color: #f1f5f9 !important;
+}
+
+/* ── Rich color overrides — keep Sonner's richColors but refine ──────── */
+/* Success */
+[data-sonner-toast][data-type='success'] {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #14532d !important;
+}
+.dark [data-sonner-toast][data-type='success'] {
+  background: #052e16 !important;
+  border-color: #166534 !important;
+  color: #bbf7d0 !important;
+}
+
+/* Error */
+[data-sonner-toast][data-type='error'] {
+  background: #fef2f2 !important;
+  border-color: #fecaca !important;
+  color: #7f1d1d !important;
+}
+.dark [data-sonner-toast][data-type='error'] {
+  background: #2d0a0a !important;
+  border-color: #991b1b !important;
+  color: #fecaca !important;
+}
+
+/* Warning */
+[data-sonner-toast][data-type='warning'] {
+  background: #fffbeb !important;
+  border-color: #fde68a !important;
+  color: #78350f !important;
+}
+.dark [data-sonner-toast][data-type='warning'] {
+  background: #1c1200 !important;
+  border-color: #92400e !important;
+  color: #fde68a !important;
+}
+
+/* Info */
+[data-sonner-toast][data-type='info'] {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1e3a5f !important;
+}
+.dark [data-sonner-toast][data-type='info'] {
+  background: #0a1628 !important;
+  border-color: #1d4ed8 !important;
+  color: #bfdbfe !important;
+}
+
+/* Loading */
+[data-sonner-toast][data-type='loading'] {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* ── No vertical left border — Sonner doesn't have one by default ─────── */
+/* (this ensures no theme adds one via box-shadow tricks) */
+[data-sonner-toast]::before {
+  display: none !important;
+}

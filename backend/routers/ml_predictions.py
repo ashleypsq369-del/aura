@@ -536,7 +536,6 @@ async def _proactive_scan(db: Session):
                     f"Highest: {top_task.replace('_',' ')} ({top_prob:.0%})"
                 ),
                 is_acknowledged=False,
-                source="ml_proactive",
                 created_at=datetime.utcnow(),
             )
             db.add(alert)

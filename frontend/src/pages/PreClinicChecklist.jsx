@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, Check, ClipboardList, AlertCircle, ChevronRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
 import toast from '../utils/toast';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
@@ -47,10 +46,23 @@ export default function PreClinicChecklist() {
   const toggle = (id) => setChecked(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   const allChecked = checked.length === CHECKLIST_ITEMS.length;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('Pre-clinic checklist completed! You\'re ready for your appointment.');
-    setSubmitted(true);
+    // Save pre-clinic data as a symptom log / wellness entry
+    try {
+      if (painToday > 0 || topConcern || newSymptoms) {
+        await apiClient.post('/api/symptoms', {
+          patient_id: null,  // server resolves from token
+          pain_level: painToday,
+          notes: [topConcern && `Main concern: ${topConcern}`, newSymptoms && `New symptoms: ${newSymptoms}`].filter(Boolean).join('\n'),
+        }).catch(() => {});  // non-blocking — checklist still completes
+      }
+      toast.success('Pre-clinic checklist completed! You\'re ready for your appointment.');
+      setSubmitted(true);
+    } catch {
+      toast.success('Checklist saved locally.');
+      setSubmitted(true);
+    }
   };
 
   if (submitted) {
@@ -80,7 +92,6 @@ export default function PreClinicChecklist() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl mx-auto px-4 py-6 space-y-5">
-      <Toaster position="top-right" />
 
       {/* Header */}
       <div className="bg-white rounded-lg border border-slate-200 p-4">

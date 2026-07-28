@@ -9,6 +9,40 @@ import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import FormFileUpload from '../components/FormFileUpload';
 import PageHeader from '../components/PageHeader';
+import ModalShell from '../components/ui/ModalShell';
+
+/* ── Client-side emotional tone classifier ────────────────────────────── */
+const TONE_WORDS = {
+  grief:     ['miss', 'lost', 'gone', 'grief', 'grieve', 'death', 'died', 'passed', 'mourning', 'mourn', 'empty', 'void'],
+  hope:      ['hope', 'hopeful', 'better', 'improve', 'healing', 'peace', 'grateful', 'thankful', 'strength', 'comfort', 'joy', 'happy'],
+  fear:      ['afraid', 'scared', 'fear', 'worry', 'anxious', 'anxiety', 'dread', 'terrified', 'panic', 'uncertain'],
+  anger:     ['angry', 'anger', 'frustrated', 'unfair', 'bitter', 'rage', 'furious', 'resentment', 'mad'],
+  love:      ['love', 'cherish', 'care', 'dear', 'precious', 'beautiful', 'heart', 'together', 'family', 'remember'],
+  sadness:   ['sad', 'cry', 'tears', 'hurt', 'pain', 'lonely', 'alone', 'broken', 'difficult', 'hard', 'heavy'],
+  acceptance:['accept', 'peace', 'okay', 'alright', 'understand', 'letting go', 'release', 'surrender', 'journey'],
+};
+
+const TONE_CONFIG = {
+  grief:      { emoji: '💔', label: 'Grief',      color: 'bg-slate-100 text-slate-600',      border: 'border-slate-200' },
+  hope:       { emoji: '🌱', label: 'Hope',       color: 'bg-emerald-50 text-emerald-700',    border: 'border-emerald-200' },
+  fear:       { emoji: '😰', label: 'Anxiety',    color: 'bg-amber-50 text-amber-700',        border: 'border-amber-200' },
+  anger:      { emoji: '🔥', label: 'Frustration',color: 'bg-orange-50 text-orange-700',      border: 'border-orange-200' },
+  love:       { emoji: '💜', label: 'Love',       color: 'bg-purple-50 text-purple-700',      border: 'border-purple-200' },
+  sadness:    { emoji: '🌧️', label: 'Sadness',    color: 'bg-blue-50 text-blue-700',          border: 'border-blue-200' },
+  acceptance: { emoji: '🕊️', label: 'Acceptance', color: 'bg-teal-50 text-teal-700',          border: 'border-teal-200' },
+  neutral:    { emoji: '📝', label: 'Reflection', color: 'bg-slate-50 text-slate-500',        border: 'border-slate-100' },
+};
+
+function analyseJournalTone(text) {
+  if (!text || text.length < 10) return 'neutral';
+  const lower = text.toLowerCase();
+  const scores = {};
+  for (const [tone, words] of Object.entries(TONE_WORDS)) {
+    scores[tone] = words.filter(w => lower.includes(w)).length;
+  }
+  const top = Object.entries(scores).sort(([,a],[,b]) => b - a)[0];
+  return top && top[1] > 0 ? top[0] : 'neutral';
+}
 
 const compassionatePrompts = [
   "What do you want to remember about today?",
@@ -174,7 +208,7 @@ export default function Journal() {
 
         {/* Header */}
         <PageHeader
-          image="/resources/cards/card-journal.jpg"
+          image="/resources/african/journal-writing.jpg"
           title={scopeLabel}
           subtitle="A private space for your thoughts and feelings"
           icon={BookOpen}
@@ -292,6 +326,21 @@ export default function Journal() {
                     {entry.content}
                   </p>
                 </div>
+
+                {/* Emotional tone indicator */}
+                {(() => {
+                  const tone = analyseJournalTone(entry.content);
+                  const cfg = TONE_CONFIG[tone];
+                  return (
+                    <div className={`mt-3 pt-3 border-t flex items-center gap-2`} style={{ borderColor: '#6B4F7A10' }}>
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${cfg.color} ${cfg.border}`}>
+                        <span>{cfg.emoji}</span>
+                        {cfg.label}
+                      </span>
+                      <span className="text-[10px] text-slate-400">Detected tone</span>
+                    </div>
+                  );
+                })()}
                 </div> {/* close p-5 wrapper */}
               </motion.article>
             ))}
@@ -323,112 +372,48 @@ export default function Journal() {
         )}
 
         {/* Modal */}
-        <AnimatePresence>
-          {showModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-              onClick={() => setShowModal(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: 'spring', damping: 20 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-2xl p-8 w-full max-w-3xl shadow-2xl max-h-[90vh] overflow-y-auto"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-base font-semibold" style={{ color: '#6B4F7A' }}>
-                      New Journal Entry
-                    </h2>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {new Date().toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                {/* Prompt */}
-                <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: '#6B4F7A10' }}>
-                  <p className="text-sm italic text-gray-700">
-                    "{selectedPrompt}"
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Your Reflection
-                    </label>
-                    <textarea
-                      value={newEntry}
-                      onChange={(e) => setNewEntry(e.target.value)}
-                      rows={12}
-                      placeholder="Let your thoughts flow... This is your private space."
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:border-opacity-50 resize-none"
-                      style={{ borderColor: '#6B4F7A20', focusBorderColor: '#6B4F7A' }}
-                      required
-                      autoFocus
-                    />
-                  </div>
-
-                  {/* Privacy Notice */}
-                  <div className="bg-gray-50 rounded-xl p-4 flex items-center space-x-3">
-                    <Lock className="w-5 h-5 text-gray-600" />
-                    <p className="text-sm text-gray-600">
-                      This entry will be kept completely private. Only you can see it.
-                    </p>
-                  </div>
-
-                  <FormFileUpload
-                    category="memories"
-                    label="Journal Attachments"
-                    description="Attach photos or documents to your journal entry"
-                    accept="image/*,video/*,.pdf"
-                    multiple={true}
-                    maxSizeMB={50}
-                  />
-
-                  <div className="flex space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowModal(false);
-                        setNewEntry('');
-                      }}
-                      className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
-                      style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={createMutation.isPending}
-                      className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
-                      style={{ backgroundColor: '#6B4F7A', color: 'white' }}
-                    >
-                      {createMutation.isPending ? 'Saving...' : 'Save Entry'}
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <ModalShell
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          title="New Journal Entry"
+          description={new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}
+          accent="violet"
+          size="lg"
+          footer={
+            <div className="flex gap-3">
+              <button type="button" onClick={() => { setShowModal(false); setNewEntry(''); }}
+                className="flex-1 py-2.5 border-2 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-xl font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                Cancel
+              </button>
+              <button type="submit" form="journal-form" disabled={createMutation.isPending}
+                className="flex-1 py-2.5 rounded-xl font-bold text-sm text-white shadow-md transition disabled:opacity-50"
+                style={{ backgroundColor:'#6B4F7A' }}>
+                {createMutation.isPending ? 'Saving...' : 'Save Entry'}
+              </button>
+            </div>
+          }
+        >
+          {/* Prompt */}
+          <div className="mb-5 p-4 rounded-xl" style={{ backgroundColor:'#6B4F7A15' }}>
+            <p className="text-sm italic text-slate-700 dark:text-slate-300">"{selectedPrompt}"</p>
+          </div>
+          <form id="journal-form" onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Reflection</label>
+              <textarea value={newEntry} onChange={e => setNewEntry(e.target.value)}
+                rows={10} required autoFocus
+                placeholder="Let your thoughts flow... This is your private space."
+                className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-xl focus:outline-none resize-none text-sm"
+              />
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3.5 flex items-center gap-3">
+              <Lock className="w-4 h-4 text-slate-500 flex-shrink-0"/>
+              <p className="text-xs text-slate-500">This entry will be kept completely private. Only you can see it.</p>
+            </div>
+            <FormFileUpload category="memories" label="Journal Attachments"
+              description="Attach photos or documents" accept="image/*,video/*,.pdf" multiple={true} maxSizeMB={50}/>
+          </form>
+        </ModalShell>
 
         {/* Footer Note */}
         <motion.div
@@ -445,4 +430,5 @@ export default function Journal() {
     </div>
   );
 }
+
 

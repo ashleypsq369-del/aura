@@ -15,30 +15,31 @@
  *   caregiver        → Settings of assigned patients + their role interactions
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building2, Heart, Home, Stethoscope, BedDouble,
   Users, ChevronRight, ChevronDown, Info, CheckCircle2,
-  Clock, UserCheck, ArrowRight, BookOpen,
+  Clock, UserCheck, ArrowRight, BookOpen, Navigation,
   ClipboardList, BarChart3, AlertCircle, Plus, Search,
+  Calendar, Pill, Bell, CheckCircle, XCircle, Loader2,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import toast from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
-import { careSettingsAPI, patientsAPI } from '../api/client';
+import apiClient, { careSettingsAPI, patientsAPI } from '../api/client';
 import { ProStatCard } from '../components/ModernCard';
 import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 
 // -- Care setting background images -------------------------------------------
 const SETTING_IMAGES = {
-  hospital_based:        '/resources/cards/care-hospital.jpg',
-  hospice:               '/resources/cards/care-hospice.jpg',
-  home_based:            '/resources/cards/care-home.jpg',
-  outpatient_clinic:     '/resources/cards/care-outpatient.jpg',
-  long_term_residential: '/resources/cards/care-residential.jpg',
+  hospital_based:        '/resources/african/african-hospital-ward.jpg',
+  hospice:               '/resources/african/african-elder-comfort.jpg',
+  home_based:            '/resources/african/african-caregiver.jpg',
+  outpatient_clinic:     '/resources/african/african-appointment.jpg',
+  long_term_residential: '/resources/african/african-elder-care.jpg',
 };
 
 // -- Icon map (string key → Lucide component) --------------------------------
@@ -81,10 +82,10 @@ const ROLE_LABELS = {
 export default function CareSettings() {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const [activeTab, setActiveTab] = useState('overview');      // overview | matrix | assign | my-setting
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [expandedRole, setExpandedRole] = useState(null);
-  const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignPatientId, setAssignPatientId] = useState('');
   const [assignForm, setAssignForm] = useState({
     setting_key: '', facility_name: '', visit_frequency: '',
@@ -154,7 +155,6 @@ export default function CareSettings() {
     onSuccess: () => {
       toast.success('Patient assigned to care setting');
       qc.invalidateQueries(['care-settings-dashboard']);
-      setShowAssignModal(false);
       setAssignPatientId('');
       setAssignForm({ setting_key: '', facility_name: '', visit_frequency: '', primary_contact: '', transition_reason: '', notes: '' });
     },
@@ -164,26 +164,36 @@ export default function CareSettings() {
   const templates = templatesData?.templates || [];
   const distribution = dashboardData?.distribution || [];
 
-  // -- Tabs config --------------------------------------------------------------
+  // Merge patient_count from dashboard into templates for cards
+  const templatesWithCounts = templates.map(t => {
+    const dist = distribution.find(d => d.setting_key === t.setting_key);
+    return { ...t, patient_count: dist?.patient_count ?? undefined };
+  });
+
+  // -- Tabs config (use useEffect to avoid setState-in-render) ------------------
   const tabs = isStaff
     ? [
-        { id: 'overview',   label: 'Overview',        icon: BarChart3 },
-        { id: 'settings',   label: 'Care Settings',   icon: BookOpen },
-        { id: 'matrix',     label: 'User Interactions', icon: Users },
-        { id: 'assign',     label: 'Assign Patient',  icon: UserCheck },
+        { id: 'overview',    label: 'Overview',          icon: BarChart3    },
+        { id: 'settings',    label: 'Care Settings',     icon: BookOpen     },
+        { id: 'matrix',      label: 'User Interactions', icon: Users        },
+        { id: 'assign',      label: 'Assign Patient',    icon: UserCheck    },
+        { id: 'requests',    label: 'Change Requests',   icon: Bell         },
       ]
     : isPatient || isFamily
     ? [
-        { id: 'my-setting', label: 'My Care Setting', icon: Heart },
-        { id: 'settings',   label: 'All Settings',    icon: BookOpen },
+        { id: 'my-setting',  label: 'My Care Setting',   icon: Heart        },
+        { id: 'settings',    label: 'All Settings',      icon: BookOpen     },
       ]
     : [
-        { id: 'settings',   label: 'Care Settings',   icon: BookOpen },
-        { id: 'matrix',     label: 'My Interactions', icon: ClipboardList },
+        { id: 'settings',    label: 'Care Settings',     icon: BookOpen     },
+        { id: 'matrix',      label: 'My Interactions',   icon: ClipboardList },
       ];
 
-  // Default tab
-  if (!tabs.find(t => t.id === activeTab)) setActiveTab(tabs[0].id);
+  useEffect(() => {
+    if (!tabs.find(t => t.id === activeTab)) {
+      setActiveTab(tabs[0]?.id || 'overview');
+    }
+  }, [user?.role]);
 
   return (
     <motion.div
@@ -192,24 +202,14 @@ export default function CareSettings() {
       transition={{ duration: 0.2 }}
       className="space-y-6"
     >
-      <Toaster position="top-right" />
 
       {/* -- Page Header -------------------------------------------------------- */}
       <PageHeader
-        image="/resources/cards/care-settings-header.jpg"
+        image="/resources/african/african-hospital-ward.jpg"
         title="Palliative Care Settings"
         subtitle="5 evidence-based care delivery models - hospital, hospice, home, clinic & residential"
         icon={Stethoscope}
-      >
-        {isStaff && (
-          <button
-            onClick={() => { setShowAssignModal(true); setActiveTab('assign'); }}
-            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all"
-          >
-            <Plus size={16} /> Assign Patient
-          </button>
-        )}
-      </PageHeader>
+      />
 
       {/* -- Tab Bar ------------------------------------------------------------ */}
       <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
@@ -299,7 +299,7 @@ export default function CareSettings() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {templates.map((t, i) => (
+              {templatesWithCounts.map((t, i) => (
                 <SettingCard
                   key={t.setting_key}
                   template={t}
@@ -321,23 +321,23 @@ export default function CareSettings() {
             size="xl"
             footerContent={
               <ModalFooter>
-                {/* Reminder button for appointment/medication-relevant settings */}
+                {/* Navigate to relevant page — real actions, not fake toasts */}
                 {detailData && ['hospital_based','outpatient_clinic'].includes(detailData.setting_key) && (
                   <button
                     type="button"
-                    onClick={() => { setSelectedTemplate(null); toast.success('Reminder set for next appointment check-in'); }}
+                    onClick={() => { setSelectedTemplate(null); navigate('/appointments'); }}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl border-2 border-amber-500 transition"
                   >
-                    <Clock size={15} /> Set Appointment Reminder
+                    <Calendar size={15} /> View Appointments
                   </button>
                 )}
                 {detailData && ['home_based','hospice','long_term_residential'].includes(detailData.setting_key) && (
                   <button
                     type="button"
-                    onClick={() => { setSelectedTemplate(null); toast.success('Medication reminder set for today'); }}
+                    onClick={() => { setSelectedTemplate(null); navigate('/medications'); }}
                     className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white rounded-xl border-2 border-teal-600 transition"
                   >
-                    <Clock size={15} /> Set Medication Reminder
+                    <Pill size={15} /> View Medications
                   </button>
                 )}
                 <button
@@ -464,16 +464,20 @@ export default function CareSettings() {
         <div className="space-y-5">
           {mySettingData?.current_setting ? (
             <>
-              <CurrentSettingBanner setting={mySettingData.current_setting} />
+              <CurrentSettingBanner
+                setting={mySettingData.current_setting}
+                onRequestChange={() => setShowRequestModal(true)}
+                navigate={navigate}
+              />
 
-              {/* Request change button */}
-              <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-amber-900">Need a different care setting?</p>
-                  <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, you can request a change. An admin will review and approve it.</p>
+              {/* Request change CTA */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-amber-900">Need a different care setting?</p>
+                  <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request — an admin will review and approve it.</p>
                 </div>
                 <button onClick={() => setShowRequestModal(true)}
-                  className="flex-shrink-0 ml-4 px-4 py-2 bg-amber-600 text-white text-sm font-bold rounded-xl hover:bg-amber-700 transition">
+                  className="flex-shrink-0 px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition">
                   Request Change
                 </button>
               </div>
@@ -483,20 +487,28 @@ export default function CareSettings() {
               )}
             </>
           ) : (
-            <div className="bg-white rounded-2xl p-10 border-2 border-slate-200 text-center">
-              <Stethoscope className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-slate-700 mb-2">No Care Setting Assigned Yet</h3>
-              <p className="text-slate-500 text-sm max-w-md mx-auto mb-5">
-                Your clinical team will assign you to the most appropriate care setting based on your needs.
-                You can browse all 5 settings below or contact your care team.
+            <div className="bg-white rounded-2xl p-12 border border-slate-200 text-center">
+              <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                <Stethoscope size={28} className="text-slate-400" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-700 mb-2">No Care Setting Assigned Yet</h3>
+              <p className="text-slate-500 text-sm max-w-sm mx-auto mb-5 leading-relaxed">
+                Your clinical team will assign you to the most appropriate care setting. Browse all 5 settings to understand what each involves.
               </p>
               <button onClick={() => setActiveTab('settings')}
-                className="px-5 py-2.5 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition text-sm">
-                Browse All Settings →
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition text-sm">
+                Browse All Settings <ArrowRight size={15} />
               </button>
             </div>
           )}
         </div>
+      )}
+
+      {/* ----------------------------------------------------------------------
+          TAB: CHANGE REQUESTS (admin/clinician) — approve/deny pending requests
+      ---------------------------------------------------------------------- */}
+      {activeTab === 'requests' && isStaff && (
+        <ChangeRequestsPanel templates={templatesWithCounts} />
       )}
 
       {/* Request Change Modal */}
@@ -575,47 +587,6 @@ export default function CareSettings() {
         />
       )}
 
-      {/* -- Assign Modal (triggered from header button) ---------------------- */}
-      <Modal
-        isOpen={showAssignModal}
-        onClose={() => setShowAssignModal(false)}
-        title="Assign Patient to Care Setting"
-        size="lg"
-        footerContent={
-          <ModalFooter>
-            <button
-              type="button"
-              onClick={() => setShowAssignModal(false)}
-              className="px-4 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (!assignPatientId || !assignForm.setting_key) {
-                  toast.error('Select a patient and a care setting');
-                  return;
-                }
-                assignMutation.mutate({ patientId: assignPatientId, data: assignForm });
-              }}
-              disabled={assignMutation.isPending}
-              className="px-5 py-2 text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white rounded-xl border-2 border-teal-600 transition disabled:opacity-50"
-            >
-              {assignMutation.isPending ? 'Assigning...' : 'Assign Patient'}
-            </button>
-          </ModalFooter>
-        }
-      >
-        <AssignFormFields
-          patients={patientsData || []}
-          templates={templates}
-          assignForm={assignForm}
-          setAssignForm={setAssignForm}
-          assignPatientId={assignPatientId}
-          setAssignPatientId={setAssignPatientId}
-        />
-      </Modal>
     </motion.div>
   );
 }
@@ -640,10 +611,10 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
         isSelected ? `ring-2 ring-offset-2 ring-teal-400 shadow-xl border-teal-400` : `${c.border} hover:shadow-lg`
       }`}
     >
-      {/* Fallback bg  --  transparent in dark so img shows */}
+      {/* Fallback bg only shown if image fails to load */}
       <div
         className="img-card-bg absolute inset-0"
-        style={{ backgroundColor: c.fallback || '#0f766e', zIndex: 0 }}
+        style={{ backgroundColor: c.fallback || '#0f766e', zIndex: 0, opacity: 0 }}
       />
       {/* Real <img>  --  always shows regardless of dark mode CSS */}
       {img && (
@@ -657,11 +628,11 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
       )}
-      {/* Dark overlay above photo */}
+      {/* Single overlay — just enough for text legibility */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.68), rgba(0,0,0,0.42), rgba(0,0,0,0.22))',
+          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.52), rgba(0,0,0,0.28), rgba(0,0,0,0.10))',
           zIndex: 2, pointerEvents: 'none',
         }}
       />
@@ -678,11 +649,10 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
             <ChevronRight size={18} className={`text-white/80 mt-1 transition-transform ${isSelected ? 'rotate-90' : ''}`} />
           </div>
 
-          <h3 className="font-bold text-base leading-tight mb-1.5"
-            style={{ color: '#fef08a !important', textShadow: '0 2px 8px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9)', WebkitTextFillColor: '#fef08a' }}>
+          <h3 className="font-bold text-base leading-tight mb-1.5 text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]">
             {t.label}
           </h3>
-          <p className="text-xs text-white/85 leading-relaxed line-clamp-2 [text-shadow:0_1px_3px_rgba(0,0,0,0.9)]">
+          <p className="text-xs text-white/90 leading-relaxed line-clamp-2 [text-shadow:0_1px_2px_rgba(0,0,0,0.6)]">
             {t.focus}
           </p>
         </div>
@@ -859,50 +829,129 @@ function InteractionRow({ ix }) {
   );
 }
 
-function CurrentSettingBanner({ setting }) {
-  const c = COLOR[setting.setting_color] || COLOR.gray;
-  const Icon = ICON_MAP[setting.setting_icon] || Stethoscope;
+function CurrentSettingBanner({ setting, onRequestChange, navigate }) {
+  const c        = COLOR[setting.setting_color] || COLOR.gray;
+  const Icon     = ICON_MAP[setting.setting_icon] || Stethoscope;
+  const img      = SETTING_IMAGES[setting.setting_key];
+  const assignedDate = setting.assigned_at
+    ? new Date(setting.assigned_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+
+  // What-to-expect bullet points per setting key
+  const EXPECT = {
+    hospital_based:        ['Daily clinical rounds by your care team','Specialist consultations available on-site','24/7 nursing support and vital monitoring','Family meetings to discuss your goals of care'],
+    hospice:               ['Comfort-focused care — no curative treatment','Spiritual and emotional support available','Family caregivers supported and trained','Bereavement support for loved ones after you pass'],
+    home_based:            ['Regular home visits from nurse or clinician','You manage daily care in your own environment','Remote symptom monitoring via this portal','Community caregiver provides daily assistance'],
+    outpatient_clinic:     ['Scheduled clinic appointments (not admitted)','Assessments and medication reviews each visit','Between visits: submit symptoms via My Journey','Contact your care team via Messages anytime'],
+    long_term_residential: ['24/7 personal care and nursing support on-site','Monthly care plan reviews with your team','Social activities and community engagement','Family visits encouraged and supported'],
+  };
+  const bullets = EXPECT[setting.setting_key] || [];
+
+  // Quick actions per setting
+  const ACTIONS = {
+    hospital_based:        [{ label: 'Appointments', icon: Calendar, path: '/appointments' }, { label: 'Medications', icon: Pill, path: '/medications' }],
+    hospice:               [{ label: 'My Journey', icon: Heart, path: '/my-journey' }, { label: 'Memory Vault', icon: BookOpen, path: '/memory-vault' }],
+    home_based:            [{ label: 'Log Symptoms', icon: ClipboardList, path: '/wellness-checkin' }, { label: 'Medications', icon: Pill, path: '/medications' }],
+    outpatient_clinic:     [{ label: 'Appointments', icon: Calendar, path: '/appointments' }, { label: 'Assessments', icon: ClipboardList, path: '/my-space' }],
+    long_term_residential: [{ label: 'Wellbeing', icon: Heart, path: '/my-space' }, { label: 'Community', icon: Users, path: '/community' }],
+  };
+  const actions = ACTIONS[setting.setting_key] || [];
+
   return (
-    <div className={`rounded-2xl border-2 ${c.border} ${c.bg} p-6`}>
-      <div className="flex items-center gap-4 mb-4">
-        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.header} flex items-center justify-center shadow-md`}>
-          <Icon size={28} className="text-white" />
-        </div>
-        <div>
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">Your Current Care Setting</p>
-          <h2 className={`text-xl font-serif font-bold ${c.text}`}>{setting.setting_label}</h2>
+    <div className="space-y-4">
+      {/* Hero card with image */}
+      <div className="relative rounded-2xl overflow-hidden shadow-md">
+        {/* Background */}
+        {img && (
+          <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80"
+            onError={e => { e.currentTarget.style.display = 'none'; }} />
+        )}
+        {/* Single subtle dark gradient for text legibility — no double overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/10" />
+
+        {/* Content */}
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 border border-white/30">
+              <Icon size={26} className="text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Your Care Setting</p>
+              <h2 className="text-2xl font-bold text-white leading-tight">{setting.setting_label}</h2>
+              {assignedDate && (
+                <p className="text-white/60 text-xs mt-1 flex items-center gap-1">
+                  <Clock size={11} /> Assigned {assignedDate}
+                </p>
+              )}
+            </div>
+            <span className="flex-shrink-0 bg-white/20 backdrop-blur border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+              <CheckCircle2 size={12} /> Active
+            </span>
+          </div>
+
+          {/* Details row */}
+          {(setting.facility_name || setting.visit_frequency || setting.primary_contact) && (
+            <div className="flex flex-wrap gap-3 mt-5 pt-5 border-t border-white/20">
+              {setting.facility_name && (
+                <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
+                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Facility</p>
+                  <p className="text-white font-semibold text-sm">{setting.facility_name}</p>
+                </div>
+              )}
+              {setting.visit_frequency && (
+                <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
+                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Visit Frequency</p>
+                  <p className="text-white font-semibold text-sm">{setting.visit_frequency}</p>
+                </div>
+              )}
+              {setting.primary_contact && (
+                <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
+                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Care Contact</p>
+                  <p className="text-white font-semibold text-sm">{setting.primary_contact}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Notes */}
+          {setting.notes && (
+            <div className="mt-4 bg-white/10 backdrop-blur rounded-xl p-3 border border-white/20">
+              <p className="text-white/80 text-sm leading-relaxed">{setting.notes}</p>
+            </div>
+          )}
+
+          {/* Quick action buttons */}
+          {actions.length > 0 && (
+            <div className="flex gap-2 mt-5">
+              {actions.map(({ label, icon: AIcon, path }) => (
+                <button key={path} onClick={() => navigate(path)}
+                  className="flex items-center gap-1.5 bg-white text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                  <AIcon size={13} />{label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {setting.facility_name && (
-          <Detail label="Facility" value={setting.facility_name} />
-        )}
-        {setting.visit_frequency && (
-          <Detail label="Visit Frequency" value={setting.visit_frequency} />
-        )}
-        {setting.primary_contact && (
-          <Detail label="Contact" value={setting.primary_contact} />
-        )}
-        {setting.assigned_at && (
-          <Detail label="Assigned" value={new Date(setting.assigned_at).toLocaleDateString()} />
-        )}
-      </div>
-
-      {setting.notes && (
-        <p className="mt-4 text-sm text-slate-600 bg-white/70 rounded-xl p-3 border border-white/50">
-          {setting.notes}
-        </p>
+      {/* What to expect */}
+      {bullets.length > 0 && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-5">
+          <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <Info size={15} className="text-teal-500" /> What to expect in this setting
+          </h3>
+          <div className="space-y-2">
+            {bullets.map((b, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${c.header} flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm`}>
+                  <CheckCircle2 size={11} className="text-white" />
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed">{b}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
-    </div>
-  );
-}
-
-function Detail({ label, value }) {
-  return (
-    <div className="bg-white/70 rounded-xl p-3 border border-white/50">
-      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</p>
-      <p className="font-semibold text-slate-900 text-sm mt-0.5">{value}</p>
     </div>
   );
 }
@@ -1088,6 +1137,116 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
           className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition resize-none"
         />
       </div>
+    </div>
+  );
+}
+
+/* ── Change Requests Panel ────────────────────────────────────────────────────
+ * Shows users who submitted a care setting change request.
+ * Admins can approve (triggers the assign flow) or dismiss.
+ * The data comes from User.care_setting_change_request field.
+ * ─────────────────────────────────────────────────────────────────────────── */
+function ChangeRequestsPanel({ templates }) {
+  const qc = useQueryClient();
+
+  // Fetch users who have a pending change request
+  const { data: usersData, isLoading } = useQuery({
+    queryKey: ['users-with-change-requests'],
+    queryFn: () => apiClient.get('/api/admin/users?per_page=100').then(r => r.data),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: ({ userId, patientId, settingKey }) =>
+      Promise.all([
+        apiClient.put(`/api/admin/users/${userId}`, { care_setting: settingKey, care_setting_change_request: null }),
+        ...(patientId ? [careSettingsAPI.assignPatient(patientId, { setting_key: settingKey, transition_reason: 'Approved patient request' })] : []),
+      ]),
+    onSuccess: () => {
+      toast.success('Request approved and care setting updated');
+      qc.invalidateQueries(['users-with-change-requests']);
+      qc.invalidateQueries(['care-settings-dashboard']);
+    },
+    onError: (e) => toast.error(e.response?.data?.detail || 'Approval failed'),
+  });
+
+  const dismissMutation = useMutation({
+    mutationFn: (userId) =>
+      apiClient.put(`/api/admin/users/${userId}`, { care_setting_change_request: null, care_setting_change_reason: null }),
+    onSuccess: () => {
+      toast.success('Request dismissed');
+      qc.invalidateQueries(['users-with-change-requests']);
+    },
+    onError: () => toast.error('Failed to dismiss request'),
+  });
+
+  const pending = (usersData?.users || []).filter(u => u.care_setting_change_request);
+
+  const settingLabel = (key) => {
+    const t = templates.find(t => t.setting_key === key);
+    return t?.label || key;
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-sm p-6">
+      <div className="flex items-center gap-2 mb-5">
+        <Bell size={20} className="text-amber-500" />
+        <h2 className="text-lg font-bold text-slate-900">Care Setting Change Requests</h2>
+        {pending.length > 0 && (
+          <span className="ml-auto bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">
+            {pending.length} pending
+          </span>
+        )}
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-slate-400" /></div>
+      ) : pending.length === 0 ? (
+        <div className="text-center py-12 text-slate-400">
+          <CheckCircle size={28} className="mx-auto mb-2 opacity-40" />
+          <p className="text-sm">No pending change requests</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {pending.map(u => (
+            <div key={u.id} className="border border-amber-200 bg-amber-50 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center text-amber-800 font-bold text-sm flex-shrink-0">
+                    {(u.full_name || 'U')[0].toUpperCase()}
+                  </span>
+                  <div>
+                    <p className="font-semibold text-slate-800 text-sm">{u.full_name}</p>
+                    <p className="text-xs text-slate-500">{u.role} · @{u.username}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mt-2 ml-10">
+                  <span className="text-xs text-slate-500">Requesting:</span>
+                  <span className="text-xs font-semibold text-amber-700 bg-white border border-amber-200 px-2 py-0.5 rounded-lg">
+                    {settingLabel(u.care_setting_change_request)}
+                  </span>
+                </div>
+                {u.care_setting_change_reason && (
+                  <p className="text-xs text-slate-500 italic mt-1.5 ml-10">"{u.care_setting_change_reason}"</p>
+                )}
+              </div>
+              <div className="flex gap-2 flex-shrink-0">
+                <button
+                  onClick={() => approveMutation.mutate({ userId: u.id, patientId: null, settingKey: u.care_setting_change_request })}
+                  disabled={approveMutation.isPending || dismissMutation.isPending}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white text-xs font-semibold rounded-lg hover:bg-green-700 transition disabled:opacity-50">
+                  <CheckCircle size={13} /> Approve
+                </button>
+                <button
+                  onClick={() => dismissMutation.mutate(u.id)}
+                  disabled={approveMutation.isPending || dismissMutation.isPending}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-300 transition disabled:opacity-50">
+                  <XCircle size={13} /> Dismiss
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

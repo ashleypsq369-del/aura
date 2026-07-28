@@ -8,6 +8,7 @@ import toast from '../utils/toast';
 import { Link } from 'react-router-dom';
 import FormFileUpload from '../components/FormFileUpload';
 import PageHeader from '../components/PageHeader';
+import ModalShell from '../components/ui/ModalShell';
 
 const CONTENT_TYPES = [
   { value: 'final_message', label: 'Final Message', icon: Mail, description: 'A heartfelt final message to loved ones' },
@@ -374,269 +375,177 @@ export default function LegacyContentCreator() {
         )}
 
         {/* Create Content Modal */}
-        <AnimatePresence>
-          {showModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-              onClick={() => setShowModal(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: 'spring', damping: 20 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-2xl p-8 w-full max-w-4xl shadow-2xl max-h-[90vh] overflow-y-auto"
+        <ModalShell
+          open={showModal}
+          onClose={() => { setShowModal(false); resetForm(); }}
+          title="Create Legacy Content"
+          icon={Icon}
+          accent="violet"
+          size="xl"
+          footer={
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => { setShowModal(false); resetForm(); }}
+                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
+                style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
               >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <Icon className="w-8 h-8" className="text-purple-700" />
-                    <h2 className="text-base font-semibold" className="text-purple-700">
-                      Create Legacy Content
-                    </h2>
-                  </div>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Content Type */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Content Type
-                    </label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {CONTENT_TYPES.map((type) => {
-                        const TypeIcon = type.icon;
-                        const isDisabled = type.value === 'audio' || type.value === 'video';
-                        
-                        return (
-                          <button
-                            key={type.value}
-                            type="button"
-                            onClick={() => !isDisabled && setContentType(type.value)}
-                            disabled={isDisabled}
-                            className={`p-4 rounded-xl border-2 text-left transition ${
-                              contentType === type.value
-                                ? 'border-purple-500 bg-purple-50'
-                                : 'border-gray-200 hover:border-purple-300'
-                            } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                          >
-                            <TypeIcon className="w-6 h-6 mb-2" className="text-purple-700" />
-                            <p className="font-medium text-sm text-gray-900">{type.label}</p>
-                            <p className="text-xs text-gray-500">{type.description}</p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g., To My Dearest Daughter, Thank You Letter, Final Words..."
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                      style={{ borderColor: '#6B4F7A40' }}
-                      required
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Content *
-                    </label>
-                    <textarea
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      rows={12}
-                      placeholder="Write your message here..."
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none"
-                      style={{ borderColor: '#6B4F7A40' }}
-                      required
-                    />
-                  </div>
-
-                  {/* Recipient */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Who should receive this?
-                    </label>
-                    <div className="space-y-3">
-                      <label className="flex items-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                        <input
-                          type="radio"
-                          name="recipient"
-                          value="all_heirs"
-                          checked={recipientType === 'all_heirs'}
-                          onChange={(e) => setRecipientType(e.target.value)}
-                          className="w-4 h-4"
-                          style={{ accentColor: '#6B4F7A' }}
-                        />
-                        <div className="ml-3">
-                          <p className="font-medium text-gray-900">All Heirs</p>
-                          <p className="text-sm text-gray-600">Everyone you've designated as an heir</p>
-                        </div>
-                      </label>
-
-                      <label className="flex items-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                        <input
-                          type="radio"
-                          name="recipient"
-                          value="specific_heir"
-                          checked={recipientType === 'specific_heir'}
-                          onChange={(e) => setRecipientType(e.target.value)}
-                          className="w-4 h-4"
-                          style={{ accentColor: '#6B4F7A' }}
-                        />
-                        <div className="ml-3 flex-1">
-                          <p className="font-medium text-gray-900 mb-2">Specific Heir</p>
-                          {recipientType === 'specific_heir' && (
-                            <select
-                              value={recipientHeirId}
-                              onChange={(e) => setRecipientHeirId(e.target.value)}
-                              className="w-full px-3 py-2 border rounded-lg focus:outline-none"
-                              style={{ borderColor: '#6B4F7A40' }}
-                            >
-                              <option value="">Search an heir...</option>
-                              {heirs.map((heir) => (
-                                <option key={heir.id} value={heir.id}>
-                                  {heir.heir_name} ({heir.relationship})
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </div>
-                      </label>
-
-                      <label className="flex items-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
-                        <input
-                          type="radio"
-                          name="recipient"
-                          value="specific_person"
-                          checked={recipientType === 'specific_person'}
-                          onChange={(e) => setRecipientType(e.target.value)}
-                          className="w-4 h-4"
-                          style={{ accentColor: '#6B4F7A' }}
-                        />
-                        <div className="ml-3 flex-1">
-                          <p className="font-medium text-gray-900 mb-2">Specific Person</p>
-                          {recipientType === 'specific_person' && (
-                            <select
-                              value={recipientUserId}
-                              onChange={(e) => setRecipientUserId(e.target.value)}
-                              className="w-full px-3 py-2 border rounded-lg focus:outline-none"
-                              style={{ borderColor: '#6B4F7A40' }}
-                            >
-                              <option value="">Search a person...</option>
-                              {users.map((u) => (
-                                <option key={u.id} value={u.id}>
-                                  {u.full_name} ({u.role})
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Delivery Trigger */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      When should this be delivered?
-                    </label>
-                    <div className="space-y-3">
-                      {DELIVERY_TRIGGERS.map((trigger) => (
-                        <label
-                          key={trigger.value}
-                          className="flex items-center p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
-                        >
-                          <input
-                            type="radio"
-                            name="delivery"
-                            value={trigger.value}
-                            checked={deliveryTrigger === trigger.value}
-                            onChange={(e) => setDeliveryTrigger(e.target.value)}
-                            className="w-4 h-4"
-                            style={{ accentColor: '#6B4F7A' }}
-                          />
-                          <div className="ml-3 flex-1">
-                            <div className="flex items-center space-x-2">
-                              <p className="font-medium text-gray-900">{trigger.label}</p>
-                              {trigger.value === 'after_death' && (
-                                <span className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">
-                                  Recommended
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-600">{trigger.description}</p>
-                            
-                            {trigger.value === 'specific_date' && deliveryTrigger === 'specific_date' && (
-                              <input
-                                type="date"
-                                value={deliveryDate}
-                                onChange={(e) => setDeliveryDate(e.target.value)}
-                                min={new Date().toISOString().split('T')[0]}
-                                className="mt-2 px-3 py-2 border rounded-lg focus:outline-none"
-                                style={{ borderColor: '#6B4F7A40' }}
-                              />
-                            )}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <FormFileUpload
-                    category="legacy"
-                    label="Media Message"
-                    description="Upload audio or video messages for your loved ones"
-                    accept="audio/*,video/*"
-                    multiple={true}
-                    maxSizeMB={50}
-                  />
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-4 pt-4 border-t">
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={createContentMutation.isPending}
+                className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
+                style={{ backgroundColor: '#6B4F7A', color: 'white' }}
+              >
+                {createContentMutation.isPending ? 'Creating...' : 'Create Content'}
+              </button>
+            </div>
+          }
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Content Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">
+                Content Type
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {CONTENT_TYPES.map((type) => {
+                  const TypeIcon = type.icon;
+                  const isDisabled = type.value === 'audio' || type.value === 'video';
+                  return (
                     <button
+                      key={type.value}
                       type="button"
-                      onClick={() => {
-                        setShowModal(false);
-                        resetForm();
-                      }}
-                      className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
-                      style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
+                      onClick={() => !isDisabled && setContentType(type.value)}
+                      disabled={isDisabled}
+                      className={`p-4 rounded-xl border-2 text-left transition ${
+                        contentType === type.value
+                          ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30'
+                          : 'border-gray-200 dark:border-slate-600 hover:border-purple-300'
+                      } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
-                      Cancel
+                      <TypeIcon className="w-6 h-6 mb-2 text-purple-700 dark:text-purple-400" />
+                      <p className="font-medium text-sm text-gray-900 dark:text-white">{type.label}</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400">{type.description}</p>
                     </button>
-                    <button
-                      type="submit"
-                      disabled={createContentMutation.isPending}
-                      className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
-                      style={{ backgroundColor: '#6B4F7A', color: 'white' }}
-                    >
-                      {createContentMutation.isPending ? 'Creating...' : 'Create Content'}
-                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Title *</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g., To My Dearest Daughter, Thank You Letter, Final Words..."
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+                required
+              />
+            </div>
+
+            {/* Content */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Content *</label>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={10}
+                placeholder="Write your message here..."
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+                required
+              />
+            </div>
+
+            {/* Recipient */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Who should receive this?</label>
+              <div className="space-y-3">
+                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <input type="radio" name="recipient" value="all_heirs" checked={recipientType === 'all_heirs'}
+                    onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
+                  <div className="ml-3">
+                    <p className="font-medium text-gray-900 dark:text-white">All Heirs</p>
+                    <p className="text-sm text-gray-600 dark:text-slate-400">Everyone you've designated as an heir</p>
                   </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </label>
+                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <input type="radio" name="recipient" value="specific_heir" checked={recipientType === 'specific_heir'}
+                    onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
+                  <div className="ml-3 flex-1">
+                    <p className="font-medium text-gray-900 dark:text-white mb-2">Specific Heir</p>
+                    {recipientType === 'specific_heir' && (
+                      <select value={recipientHeirId} onChange={(e) => setRecipientHeirId(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                        style={{ borderColor: '#6B4F7A40' }}>
+                        <option value="">Search an heir...</option>
+                        {heirs.map((heir) => <option key={heir.id} value={heir.id}>{heir.heir_name} ({heir.relationship})</option>)}
+                      </select>
+                    )}
+                  </div>
+                </label>
+                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <input type="radio" name="recipient" value="specific_person" checked={recipientType === 'specific_person'}
+                    onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
+                  <div className="ml-3 flex-1">
+                    <p className="font-medium text-gray-900 dark:text-white mb-2">Specific Person</p>
+                    {recipientType === 'specific_person' && (
+                      <select value={recipientUserId} onChange={(e) => setRecipientUserId(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                        style={{ borderColor: '#6B4F7A40' }}>
+                        <option value="">Search a person...</option>
+                        {users.map((u) => <option key={u.id} value={u.id}>{u.full_name} ({u.role})</option>)}
+                      </select>
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Delivery Trigger */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">When should this be delivered?</label>
+              <div className="space-y-3">
+                {DELIVERY_TRIGGERS.map((trigger) => (
+                  <label key={trigger.value} className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <input type="radio" name="delivery" value={trigger.value} checked={deliveryTrigger === trigger.value}
+                      onChange={(e) => setDeliveryTrigger(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
+                    <div className="ml-3 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-gray-900 dark:text-white">{trigger.label}</p>
+                        {trigger.value === 'after_death' && (
+                          <span className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Recommended</span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-slate-400">{trigger.description}</p>
+                      {trigger.value === 'specific_date' && deliveryTrigger === 'specific_date' && (
+                        <input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="mt-2 px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                          style={{ borderColor: '#6B4F7A40' }} />
+                      )}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <FormFileUpload
+              category="legacy"
+              label="Media Message"
+              description="Upload audio or video messages for your loved ones"
+              accept="audio/*,video/*"
+              multiple={true}
+              maxSizeMB={50}
+            />
+          </form>
+        </ModalShell>
 
         {/* Footer Note */}
         <motion.div

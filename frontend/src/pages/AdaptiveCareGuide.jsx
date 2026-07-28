@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 import { PageSkeleton } from '../components/LoadingSkeleton';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
 const PRIORITY_STYLE = {

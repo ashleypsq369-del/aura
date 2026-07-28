@@ -6,7 +6,7 @@ import {
   Activity, Heart, Thermometer, Droplets, Wind,
   Plus, Brain, ArrowLeft
 } from 'lucide-react';
-import apiClient from '../api/client';
+import apiClient, { mlAPI } from '../api/client';
 import { offlineVitalsAPI } from '../api/offlineClient';
 import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
@@ -16,7 +16,7 @@ import {
   Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 function VitalCard({ label, value, unit, icon: Icon, color, status }) {
   const statusCls = status === 'warning'
@@ -68,6 +68,14 @@ export default function VitalsDetail() {
     : Array.isArray(vitalsData?.vitals) ? vitalsData.vitals : [];
   const latest = vitals[0];
 
+  const { data: mlRisk, isLoading: mlLoading } = useQuery({
+    queryKey: ['vitals-ml-risk', patientId],
+    queryFn: () => mlAPI.getTaskPrediction(patientId, 'vital_risk').then(r => r.data),
+    enabled: !!patientId && vitals.length > 0,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
+
   const getStatus = (type, value) => {
     if (!value) return 'normal';
     if (type === 'bp_sys' && (value > 140 || value < 90)) return 'warning';
@@ -114,7 +122,7 @@ export default function VitalsDetail() {
         </button>
 
         <PageHeader
-          image="/resources/cards/pd-vitals.jpg"
+          image="/resources/african/african-vitals.jpg"
           title={patient ? `${patient.full_name} — Vitals` : 'Vitals'}
           subtitle="Complete vital sign history and trends"
           icon={Activity}
@@ -146,6 +154,38 @@ export default function VitalsDetail() {
                   value={latest.respiratory_rate ? Math.round(latest.respiratory_rate) : null}
                   unit="breaths/min" status="normal" />
               </div>
+            )}
+
+            {/* ML Vital Risk Anomaly card */}
+            {mlRisk && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                className={`border-l-4 rounded-r-xl p-4 flex items-start gap-3 mt-6 ${
+                  mlRisk.risk_level === 'critical' ? 'border-red-500 bg-red-50' :
+                  mlRisk.risk_level === 'high'     ? 'border-orange-500 bg-orange-50' :
+                  mlRisk.risk_level === 'warning'  ? 'border-amber-500 bg-amber-50' :
+                                                     'border-teal-500 bg-teal-50'
+                }`}>
+                <Brain size={16} className="flex-shrink-0 mt-0.5 text-violet-600" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    ML Vital Risk Assessment
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold capitalize border ${
+                      mlRisk.risk_level === 'critical' ? 'text-red-700 bg-red-50 border-red-200' :
+                      mlRisk.risk_level === 'high'     ? 'text-orange-700 bg-orange-50 border-orange-200' :
+                      mlRisk.risk_level === 'warning'  ? 'text-amber-700 bg-amber-50 border-amber-200' :
+                                                         'text-teal-700 bg-teal-50 border-teal-200'
+                    }`}>{mlRisk.risk_level} · {Math.round((mlRisk.probability ?? 0) * 100)}%</span>
+                  </p>
+                  {mlRisk.top_features?.slice(0, 3).map((f, i) => (
+                    <div key={i} className="mt-1.5">
+                      <p className="text-xs text-slate-600">{f.display_name}</p>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full mt-0.5">
+                        <div className="h-full rounded-full" style={{ width: `${Math.min(f.pct, 100)}%`, backgroundColor: f.impact === 'increases_risk' ? '#e11d48' : '#16a34a' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             )}
 
             {/* Chart */}
@@ -184,26 +224,26 @@ export default function VitalsDetail() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-50 border-b-2 border-slate-200">
+                    <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
                       {['Date & Time','BP (mmHg)','HR (bpm)','Temp (°C)','O₂ Sat (%)','Resp. Rate','Recorded By'].map(h => (
-                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                       ))}
                       <th className="text-right py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">AI</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                     {vitals.map((v) => (
                       <tr key={v.id} className="hover:bg-slate-50 transition-colors h-[52px]">
-                        <td className="py-3 px-4 text-sm font-medium text-slate-900">
+                        <td className="py-3 px-4 text-sm font-medium text-slate-900 dark:text-white">
                           {new Date(v.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </td>
-                        <td className="py-3 px-4 text-sm text-slate-700">
+                        <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">
                           {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia ?? 0)}` : '--'}
                         </td>
-                        <td className="py-3 px-4 text-sm text-slate-700">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
-                        <td className="py-3 px-4 text-sm text-slate-700">{v.temperature?.toFixed(1) ?? '--'}</td>
-                        <td className="py-3 px-4 text-sm text-slate-700">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
-                        <td className="py-3 px-4 text-sm text-slate-700">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
+                        <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
+                        <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.temperature?.toFixed(1) ?? '--'}</td>
+                        <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
+                        <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
                         <td className="py-3 px-4 text-sm text-slate-500">{v.recorded_by || 'System'}</td>
                         <td className="py-3 px-4 text-right">
                           {v.heart_rate >= 100 || v.oxygen_saturation < 95 ? (

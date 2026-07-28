@@ -174,7 +174,7 @@ export default function LegacySetup() {
       >
         {/* Header with image */}
         <PageHeader
-          image="/resources/headers/header-legacy.jpg"
+          image="/resources/african/african-memory.jpg"
           title="Digital Legacy Setup"
           subtitle="Plan your digital legacy and control who can access your memories"
           icon={Shield}

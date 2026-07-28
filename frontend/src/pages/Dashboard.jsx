@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { caregiverIntelligenceAPI, advancedMlAPI } from '../api/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { caregiverIntelligenceAPI, advancedMlAPI, mlAPI } from '../api/client';
 import apiClient from '../api/client';
 import { offlineDashboardAPI, prefetchForOffline } from '../api/offlineClient';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import toast from '../utils/toast';
 import {
   Users, AlertTriangle, Bell, Activity, Pill, Calendar,
   MessageSquare, Heart, BookOpen, Globe, Stethoscope,
@@ -20,7 +21,7 @@ import ScrollReveal from '../components/ScrollReveal';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import { StatCard } from '../components/ui/Card';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -71,6 +72,21 @@ export default function Dashboard() {
     enabled: !!(user && (user.role === 'clinician' || user.role === 'admin')),
   });
 
+  const { data: batchRisk } = useQuery({
+    queryKey: ['batch-risk-dashboard'],
+    queryFn: () => mlAPI.getAllPatientsRisk().then(r => r.data),
+    staleTime: 10 * 60 * 1000,
+    retry: false,
+    enabled: !!(user && (user.role === 'clinician' || user.role === 'admin')),
+  });
+
+  const queryClient = useQueryClient();
+  const triggerScanMutation = useMutation({
+    mutationFn: () => mlAPI.triggerScan(),
+    onSuccess: () => { toast.success('Proactive scan started'); queryClient.invalidateQueries(['batch-risk-dashboard']); },
+    onError: () => toast.error('Scan failed'),
+  });
+
   useEffect(() => {
     if (user && prefsData) {
       if (!prefsData.questionnaire_complete) {
@@ -104,18 +120,20 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user && navigator.onLine) prefetchForOffline();
-  }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // use user.id so it only re-runs on actual user change, not re-renders
 
   useEffect(() => {
     const load = async () => {
       try {
+        // skipCache: true ensures fresh data every time (not stale 24h offline cache)
         const r = await offlineDashboardAPI.getSummary();
         setSummary(r.data);
       } catch { /* offline fallback */ }
       finally { setLoading(false); }
     };
     load();
-  }, []);
+  }, [user?.id]);  // re-fetch when user changes (e.g. new login)
 
   if (loading) {
     return (
@@ -141,23 +159,15 @@ export default function Dashboard() {
               icon={Stethoscope}
             />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <ImageCard image="/resources/cards/card-patients.jpg"    icon={Users}         title="Patients"        description="View all patients"           onClick={() => navigate('/patients')}      color="#0f766e" />
-              <ImageCard image="/resources/cards/card-alerts.jpg"      icon={AlertTriangle} title="Alerts"          description="Active clinical alerts"      onClick={() => navigate('/alerts')}        color="#b45309" />
-              <ImageCard image="/resources/cards/card-ai-insights.jpg" icon={Brain}         title="AI Insights"     description="Risk predictions"            onClick={() => navigate('/ai-insights')}  color="#7c3aed" />
-              <ImageCard image="/resources/cards/card-vitals.jpg"      icon={Activity}      title="Patient Monitor" description="Real-time monitoring"         onClick={() => navigate('/patients')}     color="#0369a1" />
-              <ImageCard image="/resources/cards/card-medications.jpg" icon={Pill}          title="Medications"     description="Prescriptions"               onClick={() => navigate('/medications')}  color="#be123c" />
-              <ImageCard image="/resources/cards/card-appointments.jpg"icon={Calendar}      title="Appointments"    description="Scheduled visits"            onClick={() => navigate('/appointments')} color="#1d4ed8" />
-              <ImageCard image="/resources/cards/card-messages.jpg"    icon={MessageSquare} title="Messages"        description="Team communications"          onClick={() => navigate('/messages')}     color="#0f766e" />
-              <ImageCard image="/resources/cards/card-care-plan.jpg"   icon={FileText}      title="Care Plans"      description="Personalised pathways"       onClick={() => navigate('/care-settings')} color="#166534" />
+              <ImageCard image="/resources/african/african-nurse-patient.jpg"    icon={Users}         title="Patients"        description="View all patients"           onClick={() => navigate('/patients')}      color="#0f766e" />
+              <ImageCard image="/resources/african/african-nurse-female.jpg"      icon={AlertTriangle} title="Alerts"          description="Active clinical alerts"      onClick={() => navigate('/alerts')}        color="#b45309" />
+              <ImageCard image="/resources/african/african-health-tech.jpg" icon={Brain}         title="AI Insights"     description="Risk predictions"            onClick={() => navigate('/ai-insights')}  color="#7c3aed" />
+              <ImageCard image="/resources/african/african-patient-care.jpg"      icon={Activity}      title="Patient Monitor" description="Real-time monitoring"         onClick={() => navigate('/patients')}     color="#0369a1" />
+              <ImageCard image="/resources/african/african-medications.jpg" icon={Pill}          title="Medications"     description="Prescriptions"               onClick={() => navigate('/medications')}  color="#be123c" />
+              <ImageCard image="/resources/african/african-appointment.jpg"icon={Calendar}      title="Appointments"    description="Scheduled visits"            onClick={() => navigate('/appointments')} color="#1d4ed8" />
+              <ImageCard image="/resources/african/african-nurse-male.jpg"    icon={MessageSquare} title="Messages"        description="Team communications"          onClick={() => navigate('/messages')}     color="#0f766e" />
+              <ImageCard image="/resources/african/african-doctor-female.jpg"   icon={FileText}      title="Care Plans"      description="Personalised pathways"       onClick={() => navigate('/care-settings')} color="#166534" />
             </div>
-            <ScrollReveal delay={100}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <StatCard label="Total Patients"  value={summary?.stats?.total_patients || 0}                  icon={Users}         variant="teal"  onClick={() => navigate('/patients')} />
-                <StatCard label="High Risk"        value={summary?.stats?.high_risk_patients || 0}              icon={AlertTriangle} variant="red"   onClick={() => navigate('/ai-insights')} />
-                <StatCard label="Active Alerts"    value={summary?.stats?.active_alerts || 0}                  icon={Bell}          variant="amber" onClick={() => navigate('/alerts')} />
-                <StatCard label="Avg Pain Score"   value={summary?.stats?.avg_pain_score?.toFixed(1) || '0.0'} icon={Activity}      variant="green" onClick={() => navigate('/ai-insights')} />
-              </div>
-            </ScrollReveal>
             {drugWarnings?.with_severe_interactions > 0 && (
               <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-red-100 transition-colors mb-4"
                 onClick={() => navigate('/ai-insights')}>
@@ -175,6 +185,27 @@ export default function Dashboard() {
                 <span className="text-xs font-bold text-red-600 flex-shrink-0">View</span>
               </div>
             )}
+            {/* ML Proactive Scan Widget */}
+            {(user.role === 'clinician' || user.role === 'admin') && (
+              <div className="border-l-4 border-violet-500 bg-violet-50 rounded-r-xl p-4 flex items-center gap-4 mb-4">
+                <Brain size={20} className="text-violet-600 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-violet-900 text-sm">ML Risk Overview</p>
+                  <p className="text-xs text-violet-700">
+                    {batchRisk
+                      ? `${batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0} patient${(batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0) !== 1 ? 's' : ''} at high/critical risk`
+                      : 'Run a scan to see patient risk levels'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => triggerScanMutation.mutate()}
+                  disabled={triggerScanMutation.isPending}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-all flex-shrink-0">
+                  <RefreshCw size={12} className={triggerScanMutation.isPending ? 'animate-spin' : ''} />
+                  {triggerScanMutation.isPending ? 'Scanning…' : 'Scan Now'}
+                </button>
+              </div>
+            )}
             <SectionErrorBoundary name="Patient Table">
               <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
@@ -187,20 +218,20 @@ export default function Dashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-slate-50 border-b border-slate-200">
-                        <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Patient</th>
-                        <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Age</th>
-                        <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Risk Level</th>
-                        <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Last Contact</th>
-                        <th className="text-right py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Action</th>
+                      <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+                        <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Patient</th>
+                        <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Age</th>
+                        <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Risk Level</th>
+                        <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Last Contact</th>
+                        <th className="text-right py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                       {summary?.patients?.map((patient, index) => (
                         <motion.tr key={patient.id}
                           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
                           onClick={() => navigate(`/patients/${patient.patient_id || patient.id}`)}
-                          className="hover:bg-teal-50 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
+                          className="bg-white dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
                           <td className="py-3 px-6">
                             <div className="flex items-center space-x-2.5">
                               <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -208,18 +239,18 @@ export default function Dashboard() {
                                 {patient.full_name?.charAt(0)}
                               </div>
                               <div>
-                                <div className="text-sm font-bold text-slate-900">{patient.full_name}</div>
-                                <div className="text-xs text-slate-600">{patient.patient_code}</div>
+                                <div className="text-sm font-bold text-slate-900 dark:text-white">{patient.full_name}</div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400">{patient.patient_code}</div>
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-6 text-sm text-slate-700 font-medium">{patient.age}</td>
+                          <td className="py-3 px-6 text-sm text-slate-700 dark:text-slate-300 font-medium">{patient.age}</td>
                           <td className="py-3 px-6">
                             <span className={patient.risk_level === 'Crisis' ? 'badge-critical' : patient.risk_level === 'High' ? 'badge-high' : patient.risk_level === 'Medium' ? 'badge-moderate' : 'badge-low'}>
                               {patient.risk_level || 'Low'}
                             </span>
                           </td>
-                          <td className="py-3 px-6 text-sm text-slate-600">
+                          <td className="py-3 px-6 text-sm text-slate-600 dark:text-slate-400">
                             {patient.last_contact ? new Date(patient.last_contact).toLocaleDateString() : 'N/A'}
                           </td>
                           <td className="py-3 px-6 text-right">
@@ -232,9 +263,9 @@ export default function Dashboard() {
                       ))}
                     </tbody>
                   </table>
-                  <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 text-center">
+                  <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                     <button onClick={() => navigate('/patients')}
-                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white border-2 border-teal-600 text-teal-700 rounded-lg font-bold hover:bg-teal-50 transition-all shadow-md text-sm">
+                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                       <span>View All Patients</span>
                     </button>
                   </div>
@@ -260,20 +291,14 @@ export default function Dashboard() {
             icon={Heart}
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <ImageCard image="/resources/cards/card-patients.jpg"     icon={Users}         title="My Patients"    description="Assigned patients"        onClick={() => navigate('/patients')}       color="#7c3aed" />
-            <ImageCard image="/resources/cards/card-medications.jpg"  icon={Pill}          title="Med Rounds"     description="Administer medications"   onClick={() => navigate('/medications')}    color="#be123c" />
-            <ImageCard image="/resources/cards/card-appointments.jpg" icon={Calendar}      title="Appointments"   description="Today's visits"           onClick={() => navigate('/appointments')}  color="#1d4ed8" />
-            <ImageCard image="/resources/cards/card-messages.jpg"     icon={MessageSquare} title="Messages"       description="Communicate with team"    onClick={() => navigate('/messages')}       color="#0f766e" />
-            <ImageCard image="/resources/cards/card-vitals.jpg"       icon={Activity}      title="Log Vitals"     description="Record vital signs"       onClick={() => navigate('/patients')}       color="#0369a1" />
-            <ImageCard image="/resources/cards/card-care-plan.jpg"    icon={FileText}      title="Care Plans"     description="View care plans"          onClick={() => navigate('/care-settings')}  color="#166534" />
-            <ImageCard image="/resources/cards/card-alerts.jpg"       icon={Bell}          title="Alerts"         description="Pending task alerts"      onClick={() => navigate('/alerts')}         color="#b45309" />
-            <ImageCard image="/resources/cards/card-resources.jpg"    icon={BookOpen}      title="Resources"      description="Caregiver guides"         onClick={() => navigate('/resources')}      color="#0f766e" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            <StatCard label="My Patients"   value={assignedPatients.length || summary?.stats?.total_patients || 0} icon={Users}    variant="purple" onClick={() => navigate('/patients')} />
-            <StatCard label="Med Rounds"    value={summary?.stats?.active_alerts || 0}                             icon={Pill}     variant="blue"   onClick={() => navigate('/medications')} />
-            <StatCard label="Pending Tasks" value={summary?.stats?.high_risk_patients || 0}                        icon={Bell}     variant="amber"  onClick={() => navigate('/alerts')} />
-            <StatCard label="Today Appts"   value={summary?.stats?.today_appointments || 0}                        icon={Calendar} variant="teal"   onClick={() => navigate('/appointments')} />
+            <ImageCard image="/resources/african/african-nurse-patient.jpg"     icon={Users}         title="My Patients"    description="Assigned patients"        onClick={() => navigate('/patients')}       color="#7c3aed" />
+            <ImageCard image="/resources/african/african-medications.jpg"  icon={Pill}          title="Med Rounds"     description="Administer medications"   onClick={() => navigate('/medications')}    color="#be123c" />
+            <ImageCard image="/resources/african/african-appointment.jpg" icon={Calendar}      title="Appointments"   description="Today's visits"           onClick={() => navigate('/appointments')}  color="#1d4ed8" />
+            <ImageCard image="/resources/african/african-nurse-male.jpg"     icon={MessageSquare} title="Messages"       description="Communicate with team"    onClick={() => navigate('/messages')}       color="#0f766e" />
+            <ImageCard image="/resources/african/african-vitals.jpg"       icon={Activity}      title="Log Vitals"     description="Record vital signs"       onClick={() => navigate('/patients')}       color="#0369a1" />
+            <ImageCard image="/resources/african/african-doctor-female.jpg"    icon={FileText}      title="Care Plans"     description="View care plans"          onClick={() => navigate('/care-settings')}  color="#166534" />
+            <ImageCard image="/resources/african/african-nurse-female.jpg"       icon={Bell}          title="Alerts"         description="Pending task alerts"      onClick={() => navigate('/alerts')}         color="#b45309" />
+            <ImageCard image="/resources/african/african-medical-reading.jpg"    icon={BookOpen}      title="Resources"      description="Caregiver guides"         onClick={() => navigate('/resources')}      color="#0f766e" />
           </div>
           <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
@@ -286,22 +311,22 @@ export default function Dashboard() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Patient</th>
-                    <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Age</th>
-                    <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Status</th>
-                    <th className="text-left py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Next Task</th>
-                    <th className="text-right py-3 px-6 text-sm font-bold text-slate-700 uppercase tracking-wide">Action</th>
+                  <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+                    <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Patient</th>
+                    <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Age</th>
+                    <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Status</th>
+                    <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Next Task</th>
+                    <th className="text-right py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                   {assignedPatients.map((patient, index) => {
                     const pid = patient.patient_id || patient.id;
                     return (
                       <motion.tr key={pid}
                         initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
                         onClick={() => navigate(`/patients/${pid}`)}
-                        className="hover:bg-purple-50 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
+                        className="bg-white dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
                         <td className="py-3 px-6">
                           <div className="flex items-center space-x-2.5">
                             <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -309,14 +334,14 @@ export default function Dashboard() {
                               {patient.full_name?.charAt(0)}
                             </div>
                             <div>
-                              <div className="text-sm font-bold text-slate-900">{patient.full_name}</div>
-                              <div className="text-xs text-slate-600">{patient.primary_diagnosis || patient.patient_code}</div>
+                              <div className="text-sm font-bold text-slate-900 dark:text-white">{patient.full_name}</div>
+                              <div className="text-xs text-slate-500 dark:text-slate-400">{patient.primary_diagnosis || patient.patient_code}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 px-6 text-sm text-slate-700 font-medium">{patient.age}</td>
+                        <td className="py-3 px-6 text-sm text-slate-700 dark:text-slate-300 font-medium">{patient.age}</td>
                         <td className="py-3 px-6"><span className="badge-low">{patient.status || 'Active'}</span></td>
-                        <td className="py-3 px-6 text-sm text-slate-600">
+                        <td className="py-3 px-6 text-sm text-slate-600 dark:text-slate-400">
                           {patient.active_alerts > 0 ? `${patient.active_alerts} active alert(s)` : 'No pending alerts'}
                         </td>
                         <td className="py-3 px-6 text-right">
@@ -330,9 +355,9 @@ export default function Dashboard() {
                   })}
                 </tbody>
               </table>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 text-center">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                 <button onClick={() => navigate('/patients')}
-                  className="inline-flex items-center px-5 py-2.5 bg-white border-2 border-purple-600 text-purple-700 rounded-lg font-bold hover:bg-purple-50 transition-all shadow-md text-sm">
+                  className="inline-flex items-center px-5 py-2.5 bg-white dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                   View All Patients
                 </button>
               </div>
@@ -363,6 +388,7 @@ function FamilyDashboard({ user, summary, navigate }) {
   const { data: journeyEvents } = useQuery({
     queryKey: ['family-journey'],
     queryFn: () => apiClient.get('/api/journey/my-journey').then(r => r.data),
+    enabled: user?.role === 'family' || user?.role === 'patient',
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
@@ -401,14 +427,14 @@ function FamilyDashboard({ user, summary, navigate }) {
           icon={Heart}
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <ImageCard image="/resources/cards/card-messages.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => navigate('/messages')}           color="#be123c" />
-          <ImageCard image="/resources/cards/card-memory-vault.jpg"  icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#7c3aed" />
-          <ImageCard image="/resources/cards/card-resources.jpg"     icon={BookOpen}      title="Resources"      description="Caregiver support guides" onClick={() => navigate('/resources')}          color="#1d4ed8" />
-          <ImageCard image="/resources/cards/card-community.jpg"     icon={Globe}         title="Community"      description="Connect with others"      onClick={() => navigate('/community')}          color="#0f766e" />
-          <ImageCard image="/resources/cards/card-appointments.jpg"  icon={Calendar}      title="Appointments"   description="Upcoming care visits"     onClick={() => navigate('/appointments')}       color="#0369a1" />
-          <ImageCard image="/resources/cards/card-journey.jpg"       icon={MapPin}        title="Care Journey"   description="Track their journey"      onClick={() => navigate('/continuity-bridge')}  color="#166534" />
-          <ImageCard image="/resources/cards/card-journal.jpg"       icon={FileText}      title="Grief Journal"  description="Your private journal"     onClick={() => navigate('/journal')}            color="#4c1d95" />
-          <ImageCard image="/resources/cards/card-wellbeing.jpg"     icon={Activity}      title="Bereavement"    description="Support resources"        onClick={() => navigate('/bereavement-support')} color="#9f1239" />
+          <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => navigate('/messages')}           color="#be123c" />
+          <ImageCard image="/resources/african/african-memory.jpg"  icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#7c3aed" />
+          <ImageCard image="/resources/african/african-medical-reading.jpg"     icon={BookOpen}      title="Resources"      description="Caregiver support guides" onClick={() => navigate('/resources')}          color="#1d4ed8" />
+          <ImageCard image="/resources/african/african-community.jpg"     icon={Globe}         title="Community"      description="Connect with others"      onClick={() => navigate('/community')}          color="#0f766e" />
+          <ImageCard image="/resources/african/african-appointment.jpg"  icon={Calendar}      title="Appointments"   description="Upcoming care visits"     onClick={() => navigate('/appointments')}       color="#0369a1" />
+          <ImageCard image="/resources/african/african-family-care.jpg"       icon={MapPin}        title="Care Journey"   description="Track their journey"      onClick={() => navigate('/continuity-bridge')}  color="#166534" />
+          <ImageCard image="/resources/african/journal-writing.jpg"       icon={FileText}      title="Grief Journal"  description="Your private journal"     onClick={() => navigate('/journal')}            color="#4c1d95" />
+          <ImageCard image="/resources/african/african-grief-support.jpg"     icon={Activity}      title="Bereavement"    description="Support resources"        onClick={() => navigate('/bereavement-support')} color="#9f1239" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard label="Care Updates"  value={events.length || summary?.stats?.recent_updates || 0}  icon={Heart}         variant="red"    onClick={() => navigate('/continuity-bridge')} />

@@ -189,8 +189,15 @@ async def save_preferences(
     db.add(audit)
     
     db.commit()
-    
-    return {"message": "Preferences saved successfully", "user_id": user_id}
+
+    # Fetch the saved record to return patient_id
+    saved = db.query(PatientPreferences).filter(PatientPreferences.user_id == user_id).first()
+    return {
+        "message": "Preferences saved successfully",
+        "user_id": user_id,
+        "patient_id": saved.patient_id if saved else None,
+        "questionnaire_complete": saved.questionnaire_complete if saved else False,
+    }
 
 
 @router.get("/{user_id}")

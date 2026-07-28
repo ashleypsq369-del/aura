@@ -12,18 +12,17 @@ frontend/dist/
 frontend/build/
 frontend/.vite/
 
-# Database & sensitive files
-backend/aura.db
-backend/*.db
-*.db
-*.sqlite
-*.sqlite3
+# Database — include aura.db so recipients have demo data immediately
+# (no PostgreSQL setup needed)
+# Uncomment below only if you want to exclude it:
+# backend/aura.db
+# backend/*.db
 
-# Environment files
-.env
+# Environment files — .env is safe to share (no secrets, SQLite only)
+# Only ignore local overrides
 .env.local
 .env.*.local
-backend/.env
+# backend/.env is intentionally tracked — pre-configured for standalone use
 
 # Compiled executables & binaries
 ace.exe
@@ -31,10 +30,11 @@ ace.spec
 dist/
 build/
 
-# ML model files (large binaries)
+# ML model files — kept in .gitignore as they're large (>50MB total)
+# Recipient can retrain with: cd backend/ml_training && python train_models_now.py
 backend/ml_models/*.pkl
 backend/ml_models/*.joblib
-backend/ml_training/__pycache__/
+# The actual trained models in ml_training/models/ are tracked (needed for predictions)
 
 # Logs
 *.log

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Brain, Shield, MessageCircle, Scale, Heart, 
@@ -19,7 +19,7 @@ export default function GapAnalysisDemo() {
   const priorities = [
     {
       id: 1,
-      name: 'XAI/SHAP Integration',
+      name: 'AI Explain/SHAP Integration',
       description: 'Explainable AI with SHAP visualizations for clinical decision-making',
       color: 'from-purple-600 to-indigo-600',
       icon: Brain,

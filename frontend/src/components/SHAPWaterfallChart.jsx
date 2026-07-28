@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 /**
  * SHAP Waterfall Chart Component
  * Shows how features contribute cumulatively to the final prediction
- * Gap Analysis Priority 1: XAI/SHAP Integration
+ * Gap Analysis Priority 1: AI Explain/SHAP Integration
  */
 export default function SHAPWaterfallChart({ 
   shapFeatures, 

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
 import toast from '../utils/toast';
 import { useForm } from 'react-hook-form';
 import apiClient from '../api/client';
@@ -64,7 +63,10 @@ export default function Patients() {
     queryFn: async () => {
       const response = await offlinePatientsAPI.getAll();
       return response.data;
-    }});
+    },
+    staleTime: 0,        // always refetch — patient list changes frequently
+    refetchOnMount: true, // refresh every time the page is visited
+  });
 
   // Create patient mutation with offline support
   const createMutation = useMutation({
@@ -150,7 +152,7 @@ export default function Patients() {
     >
       {/* Header */}
       <PageHeader
-        image="/resources/cards/card-patients.jpg"
+        image="/resources/african/african-nurse-patient.jpg"
         title="Patients"
         subtitle="Manage patient records and care"
         icon={Users}
@@ -166,7 +168,7 @@ export default function Patients() {
       </PageHeader>
 
       {/* Search and Filter Bar */}
-      <div className="max-w-5xl">
+      <div>
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
         {/* Active filter banner */}
         {location.state?.filterStatus && filterStatus !== 'all' && (
@@ -218,7 +220,7 @@ export default function Patients() {
       </div>
 
       {/* Patient Count + quick stats */}
-      <div className="flex items-center justify-between max-w-5xl">
+      <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500 font-medium">
           Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
           {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">� {filterStatus}</span>}
@@ -356,7 +358,6 @@ export default function Patients() {
       </Modal>
 
       {/* Toaster for notifications */}
-      <Toaster position="top-right" />
     </motion.div>
   );
 }

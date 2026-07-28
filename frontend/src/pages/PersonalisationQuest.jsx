@@ -6,7 +6,7 @@ import axios from 'axios';
 import { CheckCircle, ArrowLeft, ArrowRight, Loader2, Search } from 'lucide-react';
 import { fireMilestone } from '../components/MilestoneConfetti';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 // All slideshow images for background cycling
 const BG_IMAGES = [
@@ -499,6 +499,28 @@ const PATIENT_STEPS = [
         options: [
           { value: "yes", label: "Yes - connect me with people who understand" },
           { value: "no", label: "Not right now" }
+        ]
+      },
+      {
+        name: "theme_pref",
+        label: "Which screen appearance do you prefer?",
+        type: "radio",
+        required: false,
+        options: [
+          { value: "light", label: "Light — bright, clean screen" },
+          { value: "dark",  label: "Dark — easier on the eyes, especially at night" },
+          { value: "auto",  label: "Automatic — follows my device setting" }
+        ]
+      },
+      {
+        name: "notification_pref",
+        label: "How would you like the app to notify you?",
+        type: "radio",
+        required: false,
+        options: [
+          { value: "all",      label: "All notifications — keep me fully updated" },
+          { value: "important", label: "Important ones only — medications, urgent alerts" },
+          { value: "none",     label: "No notifications — I'll check when I choose" }
         ]
       }
     ]
@@ -1024,19 +1046,158 @@ export default function PersonalisationQuest() {
     mutationFn: async (data) => {
       const token = localStorage.getItem('auth_token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      return axios.post(`${API_URL}/api/preferences`, {
+
+      // 1. Save preferences (questionnaire data)
+      const prefsResp = await axios.post(`${API_URL}/api/preferences`, {
         ...data,
         user_id: user.id,
         questionnaire_complete: true
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      // 2. If the user is a patient, update their Patient record with onboarding data
+      if (user.role === 'patient') {
+        try {
+          // Get patient_id from prefs response or stored user data
+          const patientId = prefsResp.data?.patient_id || user.patient_id;
+          if (patientId) {
+            // Build patient update payload from questionnaire answers
+            const patientUpdate = {};
+            if (data.date_of_birth) patientUpdate.date_of_birth = data.date_of_birth;
+            if (data.gender) patientUpdate.gender = data.gender;
+            if (data.primary_diagnosis) patientUpdate.primary_diagnosis = data.primary_diagnosis;
+            if (data.care_setting) patientUpdate.care_setting = data.care_setting;
+            if (data.religious_preference) patientUpdate.religious_preference = data.religious_preference;
+            if (data.preferred_language) patientUpdate.preferred_language = data.preferred_language;
+            if (Object.keys(patientUpdate).length > 0) {
+              await axios.patch(`${API_URL}/api/patients/${patientId}`, patientUpdate, {
+                headers: { Authorization: `Bearer ${token}` }
+              }).catch(() => {}); // Don't block if patch fails
+            }
+
+            // 3. Also submit initial ESAS assessment if symptom data was collected
+            const esasFields = ['esas_pain','esas_tiredness','esas_nausea','esas_shortness_of_breath','esas_depression','esas_anxiety','esas_wellbeing'];
+            const hasEsas = esasFields.some(f => data[f] !== undefined);
+            if (hasEsas) {
+              const esasPayload = {
+                patient_id: patientId,
+                pain: data.esas_pain || 0,
+                tiredness: data.esas_tiredness || 0,
+                nausea: data.esas_nausea || 0,
+                shortness_of_breath: data.esas_shortness_of_breath || 0,
+                depression: data.esas_depression || 0,
+                anxiety: data.esas_anxiety || 0,
+                wellbeing: data.esas_wellbeing || 0,
+                drowsiness: 0, appetite: 0,
+                source: 'onboarding_questionnaire',
+              };
+              await axios.post(`${API_URL}/api/clinical-assessments/esas`, esasPayload, {
+                headers: { Authorization: `Bearer ${token}` }
+              }).catch(() => {}); // Don't block
+            }
+          }
+        } catch (e) {
+          // Patient update is best-effort — don't block onboarding completion
+          console.warn('Patient record update failed during onboarding:', e);
+        }
+      }
+
+      return prefsResp;
     },
-    onSuccess: () => {
+    onSuccess: (_, submittedData) => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       const updated = { ...user, needs_questionnaire: false };
       localStorage.setItem('user', JSON.stringify(updated));
-      fireMilestone('stars'); // Celebrate completing the onboarding questionnaire
+
+      // ── Immediately apply questionnaire answers to app settings ──────────
+      // Language
+      if (submittedData.language_pref && submittedData.language_pref !== 'en') {
+        localStorage.setItem('app_language', submittedData.language_pref);
+        document.documentElement.lang = submittedData.language_pref;
+      }
+
+      // Tech comfort → font size and sidebar mode
+      const techToFont = { high: 'medium', medium: 'medium', low: 'large', basic: 'xlarge' };
+      const fontSz = techToFont[submittedData.tech_comfort] || 'medium';
+      if (fontSz !== 'medium') {
+        const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+        localStorage.setItem('accessibility_settings', JSON.stringify({ ...a11y, fontSize: fontSz }));
+        document.documentElement.classList.remove('text-small','text-medium','text-large','text-xlarge','text-xxlarge');
+        document.documentElement.classList.add(`text-${fontSz}`);
+      }
+
+      // Basic tech comfort → simplified sidebar (icons only, keep it clean)
+      if (submittedData.tech_comfort === 'basic' || submittedData.tech_comfort === 'low') {
+        const sidebar = JSON.parse(localStorage.getItem('sidebar_settings') || '{}');
+        localStorage.setItem('sidebar_default_state', 'icons');
+        // Also enable large touch targets
+        const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+        localStorage.setItem('accessibility_settings', JSON.stringify({
+          ...a11y, largeTouch: true, fontSize: fontSz
+        }));
+      }
+
+      // Info style → notifications frequency preference
+      if (submittedData.info_frequency) {
+        localStorage.setItem('info_frequency_pref', submittedData.info_frequency);
+      }
+
+      // Activity level → if bedbound/very_low, enable reduced motion + large touch
+      if (submittedData.activity_level === 'bedbound' || submittedData.activity_level === 'very_low') {
+        const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+        localStorage.setItem('accessibility_settings', JSON.stringify({
+          ...a11y, reducedMotion: true, largeTouch: true
+        }));
+      }
+
+      // High burnout or caregiver struggle → show AI widgets prominently
+      if (submittedData.caregiver_burnout_risk === 'burnout' || submittedData.caregiver_burnout_risk === 'struggling') {
+        localStorage.setItem('show_ai_widgets', 'true');
+      }
+
+      // AI consent → control AI widgets visibility
+      if (submittedData.ai_analysis_consent === 'no') {
+        localStorage.setItem('show_ai_widgets', 'false');
+      }
+
+      // Theme preference
+      if (submittedData.theme_pref) {
+        localStorage.setItem('app_theme', submittedData.theme_pref);
+        const root = document.documentElement;
+        root.classList.remove('light-theme', 'dark-theme', 'dark');
+        if (submittedData.theme_pref === 'dark') {
+          root.classList.add('dark-theme', 'dark');
+        } else if (submittedData.theme_pref === 'auto') {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            root.classList.add('dark-theme', 'dark');
+          } else {
+            root.classList.add('light-theme');
+          }
+        } else {
+          root.classList.add('light-theme');
+        }
+      }
+
+      // Notification preference
+      if (submittedData.notification_pref === 'none') {
+        localStorage.setItem('app_notifications', 'false');
+      } else {
+        localStorage.setItem('app_notifications', 'true');
+      }
+
+      // Wants community → persist for sidebar quick-link priority
+      if (submittedData.wants_community === 'yes') {
+        localStorage.setItem('wants_community', 'true');
+      }
+
+      // Legacy interest → unlock Memory Vault prompt
+      if (submittedData.legacy_interest === 'yes') {
+        localStorage.setItem('legacy_interest', 'true');
+      }
+
+      // ─────────────────────────────────────────────────────────────────────
+      fireMilestone('stars');
       setIsComplete(true);
       const dest = user.role === 'patient' ? '/my-space' :
                    user.role === 'family'  ? '/dashboard' : '/dashboard';

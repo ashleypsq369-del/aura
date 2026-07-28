@@ -6,7 +6,7 @@ import axios from 'axios';
 import toast from '../utils/toast';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function NotificationBell() {
   const [showDropdown, setShowDropdown] = useState(false);

@@ -31,10 +31,13 @@ async def get_alerts(
     patient_id: int = None, 
     severity: str = None,
     acknowledged: bool = None,
+    limit: int = 200,
     current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
-    """Get alerts, optionally filtered by patient_id, severity, and acknowledgment status"""
+    """Get alerts, optionally filtered by patient_id, severity, and acknowledgment status.
+    RBAC: caregivers see only assigned patients, patients see only their own, family see linked."""
+    from services.access_control import get_accessible_patient_ids
     
     # Build query with join to get patient names
     query = db.query(
@@ -44,7 +47,12 @@ async def get_alerts(
         Patient, Alert.patient_id == Patient.id
     )
     
-    # Apply filters  --  exclude dismissed alerts by default
+    # Apply access control filter FIRST
+    allowed_patient_ids = get_accessible_patient_ids(current_user, db)
+    if allowed_patient_ids is not None:  # None = unrestricted (admin/clinician)
+        query = query.filter(Alert.patient_id.in_(allowed_patient_ids))
+    
+    # Apply other filters  --  exclude dismissed alerts by default
     filters = [Alert.is_dismissed == False]
     
     if patient_id is not None:
@@ -58,8 +66,8 @@ async def get_alerts(
     
     query = query.filter(and_(*filters))
     
-    # Order by most recent first
-    query = query.order_by(Alert.created_at.desc())
+    # Order by most recent first, apply limit
+    query = query.order_by(Alert.created_at.desc()).limit(limit)
     
     results = query.all()
     
@@ -123,19 +131,32 @@ async def get_unread_alerts_count(current_user: User = Depends(get_current_user)
 
 @router.put("/{alert_id}/acknowledge")
 async def acknowledge_alert(alert_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from services.access_control import assert_patient_access
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if alert:
+        assert_patient_access(alert.patient_id, current_user, db)
         alert.is_acknowledged = True
         alert.acknowledged_by = current_user.id
         alert.acknowledged_at = datetime.utcnow()
         db.commit()
+        try:
+            from routers.websocket import manager as ws_manager
+            import asyncio
+            asyncio.create_task(ws_manager.broadcast_to_room(
+                "clinicians", "alert_update",
+                {"alert_id": alert_id, "status": "acknowledged", "acknowledged_by": current_user.id}
+            ))
+        except Exception:
+            pass
     return {"message": "Alert acknowledged"}
 
 @router.delete("/{alert_id}")
 async def dismiss_alert(alert_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Dismiss (soft delete) an alert"""
+    from services.access_control import assert_patient_access
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if alert:
+        assert_patient_access(alert.patient_id, current_user, db)
         alert.is_dismissed = True
         alert.acknowledged_by = current_user.id
         alert.acknowledged_at = datetime.utcnow()

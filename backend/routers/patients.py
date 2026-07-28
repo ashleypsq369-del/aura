@@ -400,6 +400,51 @@ async def update_patient(
     return patient
 
 
+@router.patch("/{patient_id}")
+async def patch_patient(
+    patient_id: int,
+    update_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Partial update of patient record — used by onboarding questionnaire and self-service.
+    Patients can update their own record; clinicians/admins can update any."""
+    from services.access_control import assert_patient_access
+    assert_patient_access(patient_id, current_user, db)
+
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    # Allowed fields for partial update
+    PATCHABLE = {
+        "date_of_birth", "gender", "primary_diagnosis", "secondary_diagnoses",
+        "preferred_language", "religious_preference", "phone", "address",
+        "region", "district", "advance_directive", "dnr_status",
+        "emergency_contact_name", "emergency_contact_phone",
+        "emergency_contact_relationship", "care_pathway",
+    }
+
+    updated = []
+    for field, value in update_data.items():
+        if field in PATCHABLE and hasattr(patient, field):
+            # Parse date string if needed
+            if field == "date_of_birth" and isinstance(value, str):
+                try:
+                    from datetime import datetime as dt
+                    value = dt.strptime(value[:10], "%Y-%m-%d")
+                except Exception:
+                    continue
+            setattr(patient, field, value)
+            updated.append(field)
+
+    if updated:
+        db.commit()
+        db.refresh(patient)
+
+    return {"message": "Patient updated", "updated_fields": updated, "patient_id": patient_id}
+
+
 @router.put("/{patient_id}/status")
 async def update_patient_status(
     patient_id: int,
@@ -482,7 +527,10 @@ async def get_patient_vitals(
             "patient_id": vital.patient_id,
             "recorded_at": vital.recorded_at.isoformat() if vital.recorded_at else None,
             "heart_rate": vital.heart_rate,
-            "blood_pressure_systolic": vital.blood_pressure_sys,
+            # Both naming variants — PatientDetail uses _sys/_dia, other pages use _systolic/_diastolic
+            "blood_pressure_sys":       vital.blood_pressure_sys,
+            "blood_pressure_dia":       vital.blood_pressure_dia,
+            "blood_pressure_systolic":  vital.blood_pressure_sys,
             "blood_pressure_diastolic": vital.blood_pressure_dia,
             "oxygen_saturation": vital.oxygen_saturation,
             "temperature": vital.temperature,

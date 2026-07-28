@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import ModalShell from '../components/ui/ModalShell';
 
 export default function HeirManagement() {
   const { user } = useAuth();
@@ -192,7 +193,7 @@ export default function HeirManagement() {
       >
         {/* Header */}
         <PageHeader
-          image="/resources/cards/card-heir.jpg"
+          image="/resources/african/african-family-support.jpg"
           title="Heir Management"
           subtitle="Designate who can access your digital legacy"
           icon={Users}
@@ -312,151 +313,125 @@ export default function HeirManagement() {
         )}
 
         {/* Add Heir Modal */}
-        <AnimatePresence>
-          {showModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-              onClick={() => setShowModal(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ type: 'spring', damping: 20 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-2xl p-8 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
+        <ModalShell
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          title="Designate an Heir"
+          icon={Users}
+          accent="violet"
+          size="lg"
+          footer={
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => { setShowModal(false); resetForm(); }}
+                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
+                style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
               >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-base font-semibold" className="text-purple-700">
-                    Designate an Heir
-                  </h2>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-full transition"
-                  >
-                    <X size={20} />
-                  </button>
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={designateHeirMutation.isPending}
+                className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
+                style={{ backgroundColor: '#6B4F7A', color: 'white' }}
+              >
+                {designateHeirMutation.isPending ? 'Designating...' : 'Designate Heir'}
+              </button>
+            </div>
+          }
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Search User */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Search Person *
+              </label>
+              <select
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(e.target.value)}
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+                required
+              >
+                <option value="">Choose someone from the system...</option>
+                {availableUsers.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.full_name} ({u.role})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Relationship */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Relationship *
+              </label>
+              <input
+                type="text"
+                value={relationship}
+                onChange={(e) => setRelationship(e.target.value)}
+                placeholder="e.g., daughter, son, spouse, best friend, sister..."
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+                required
+              />
+            </div>
+
+            {/* Access Level */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Access Level
+              </label>
+              <select
+                value={accessLevel}
+                onChange={(e) => setAccessLevel(e.target.value)}
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+              >
+                <option value="full">Full Access - All content and memories</option>
+                <option value="memories_only">Memories Only - Just Memory Vault</option>
+                <option value="messages_only">Messages Only - Just messages and notes</option>
+              </select>
+            </div>
+
+            {/* Can Access Private */}
+            <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={canAccessPrivate}
+                  onChange={(e) => setCanAccessPrivate(e.target.checked)}
+                  className="w-5 h-5 mt-0.5 rounded"
+                  style={{ accentColor: '#6B4F7A' }}
+                />
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">Allow access to private content</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    They can see entries you marked as "private". Uncheck to only show shared content.
+                  </p>
                 </div>
+              </label>
+            </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Search User */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                      Search Person *
-                    </label>
-                    <select
-                      value={selectedUserId}
-                      onChange={(e) => setSelectedUserId(e.target.value)}
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                      
-                      required
-                    >
-                      <option value="">Choose someone from the system...</option>
-                      {availableUsers.map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.full_name} ({u.role})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Relationship */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Relationship *
-                    </label>
-                    <input
-                      type="text"
-                      value={relationship}
-                      onChange={(e) => setRelationship(e.target.value)}
-                      placeholder="e.g., daughter, son, spouse, best friend, sister..."
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                      
-                      required
-                    />
-                  </div>
-
-                  {/* Access Level */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Access Level
-                    </label>
-                    <select
-                      value={accessLevel}
-                      onChange={(e) => setAccessLevel(e.target.value)}
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                      
-                    >
-                      <option value="full">Full Access - All content and memories</option>
-                      <option value="memories_only">Memories Only - Just Memory Vault</option>
-                      <option value="messages_only">Messages Only - Just messages and notes</option>
-                    </select>
-                  </div>
-
-                  {/* Can Access Private */}
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <label className="flex items-start space-x-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={canAccessPrivate}
-                        onChange={(e) => setCanAccessPrivate(e.target.checked)}
-                        className="w-5 h-5 mt-0.5 rounded"
-                        style={{ accentColor: '#6B4F7A' }}
-                      />
-                      <div>
-                        <p className="font-medium text-gray-900">Allow access to private content</p>
-                        <p className="text-sm text-gray-600">
-                          They can see entries you marked as "private". Uncheck to only show shared content.
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-
-                  {/* Personal Note */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Personal Message (Optional)
-                    </label>
-                    <textarea
-                      value={personalNote}
-                      onChange={(e) => setPersonalNote(e.target.value)}
-                      rows={4}
-                      placeholder="A personal message for this person that they'll see when they access your legacy..."
-                      className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none"
-                      
-                    />
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-4 pt-4 border-t">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowModal(false);
-                        resetForm();
-                      }}
-                      className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
-                      style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={designateHeirMutation.isPending}
-                      className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
-                      className="bg-purple-700 text-white"
-                    >
-                      {designateHeirMutation.isPending ? 'Designating...' : 'Designate Heir'}
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            {/* Personal Note */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                Personal Message (Optional)
+              </label>
+              <textarea
+                value={personalNote}
+                onChange={(e) => setPersonalNote(e.target.value)}
+                rows={4}
+                placeholder="A personal message for this person that they'll see when they access your legacy..."
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                style={{ borderColor: '#6B4F7A40' }}
+              />
+            </div>
+          </form>
+        </ModalShell>
 
         {/* Footer Note */}
         <motion.div

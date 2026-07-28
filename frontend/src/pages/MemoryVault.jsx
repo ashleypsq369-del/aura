@@ -1,5 +1,5 @@
 ﻿/* eslint-disable react-hooks/set-state-in-effect */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Plus, Users, Lock, Globe, Trash2, ArrowLeft } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
@@ -10,6 +10,32 @@ import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import FormFileUpload from '../components/FormFileUpload';
 import Modal, { ModalFooter } from '../components/Modal';
+
+/* ── Memory theme clustering ─────────────────────────────────────────── */
+const THEME_PATTERNS = {
+  joy:         { words: ['laugh', 'happy', 'fun', 'smile', 'joy', 'celebrate', 'wonderful', 'amazing', 'beautiful', 'loved', 'bright', 'sunshine'], label: 'Moments of Joy',   emoji: '✨', color: 'from-amber-50 to-yellow-50', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-800' },
+  family:      { words: ['family', 'mother', 'father', 'son', 'daughter', 'sister', 'brother', 'children', 'grandchild', 'together', 'home', 'husband', 'wife'], label: 'Family',  emoji: '👨‍👩‍👧', color: 'from-rose-50 to-pink-50', border: 'border-rose-200', badge: 'bg-rose-100 text-rose-800' },
+  gratitude:   { words: ['thank', 'grateful', 'gratitude', 'blessed', 'appreciate', 'gift', 'kindness', 'generous', 'care'], label: 'Gratitude',  emoji: '🙏', color: 'from-teal-50 to-cyan-50', border: 'border-teal-200', badge: 'bg-teal-100 text-teal-800' },
+  adventure:   { words: ['travel', 'trip', 'journey', 'adventure', 'explore', 'holiday', 'vacation', 'visit', 'place', 'city', 'country'], label: 'Adventures', emoji: '🌍', color: 'from-blue-50 to-indigo-50', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-800' },
+  reflection:  { words: ['remember', 'memory', 'think', 'feel', 'thought', 'wonder', 'dream', 'hope', 'believe', 'heart', 'soul', 'spirit'], label: 'Reflections', emoji: '💭', color: 'from-violet-50 to-purple-50', border: 'border-violet-200', badge: 'bg-violet-100 text-violet-800' },
+};
+
+function clusterMemories(memories) {
+  const themed = { joy: [], family: [], gratitude: [], adventure: [], reflection: [], other: [] };
+  memories.forEach(m => {
+    const lower = (m.content || '').toLowerCase();
+    let matched = false;
+    for (const [theme, config] of Object.entries(THEME_PATTERNS)) {
+      if (config.words.some(w => lower.includes(w))) {
+        themed[theme].push(m);
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) themed.other.push(m);
+  });
+  return themed;
+}
 
 export default function MemoryVault() {
   const { user } = useAuth();
@@ -123,6 +149,9 @@ export default function MemoryVault() {
   };
 
   const memories = memoriesData?.entries || [];
+  const [showClustered, setShowClustered] = useState(false);
+  const clustered = useMemo(() => clusterMemories(memories), [memories]);
+  const hasThemes = Object.entries(clustered).some(([k, v]) => k !== 'other' && v.length > 0);
   const legacyMatch = legacyData?.legacy_access?.find((a) => a.patient_id === patientId);
   const patientName = contextName ?? patientData?.patient_name ?? patientData?.patient?.full_name ?? legacyMatch?.patient_name;
   const patientStatus = scope === 'legacy' ? 'deceased' : (patientData?.status ?? patientData?.patient?.status);
@@ -200,64 +229,178 @@ export default function MemoryVault() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#6B4F7A' }}></div>
           </div>
         ) : memories && memories.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {memories.map((memory, index) => (
-              <motion.div
-                key={memory.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.04, duration: 0.2 }}
-                className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
-                style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
-              >
-                {/* Top accent - cycles through memory colors */}
-                <div className="h-1 w-full" style={{
-                  background: [
-                    'linear-gradient(to right,#7c3aed,#9d174d)',
-                    'linear-gradient(to right,#db2777,#7c3aed)',
-                    'linear-gradient(to right,#1d4ed8,#7c3aed)',
-                    'linear-gradient(to right,#059669,#0d9488)',
-                    'linear-gradient(to right,#d97706,#ea580c)',
-                    'linear-gradient(to right,#e11d48,#db2777)',
-                  ][index % 6]
-                }} />
+          <>
+            {/* Theme clustering toggle */}
+            {memories.length > 3 && hasThemes && (
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-slate-400 font-semibold">{memories.length} memories</p>
+                <button
+                  onClick={() => setShowClustered(v => !v)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition-all ${
+                    showClustered
+                      ? 'bg-purple-600 text-white border-purple-600'
+                      : 'bg-white text-purple-700 border-purple-300 hover:bg-purple-50'
+                  }`}
+                >
+                  {showClustered ? '📋 Grid View' : '🗂️ Group by Theme'}
+                </button>
+              </div>
+            )}
 
-                <div className="p-4">
-                  {/* Header row */}
-                  <div className="flex items-center justify-between mb-3">
-                    <Heart className="w-4 h-4 flex-shrink-0 text-purple-700" />
-                    <div className="flex items-center gap-1">
-                      {memory.is_private ? (
-                        <div className="p-1 bg-slate-100 rounded-md" title="Private">
-                          <Lock className="w-3 h-3 text-slate-500" />
-                        </div>
-                      ) : (
-                        <div className="p-1 bg-purple-50 rounded-md" title="Shared">
-                          <Globe className="w-3 h-3 text-purple-700" />
-                        </div>
-                      )}
-                      {memory.user_id === user?.id && (
-                        <button
-                          onClick={() => handleDelete(memory.id)}
-                          data-tip="Delete this memory"
-                          className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
-                        >
-                          <Trash2 className="w-3 h-3 text-red-500" />
-                        </button>
-                      )}
+            {showClustered && hasThemes ? (
+              <div className="space-y-8">
+                {Object.entries(THEME_PATTERNS).map(([themeKey, themeConfig]) => {
+                  const group = clustered[themeKey] || [];
+                  if (!group.length) return null;
+                  return (
+                    <div key={themeKey}>
+                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border mb-3 bg-gradient-to-r ${themeConfig.color} ${themeConfig.border}`}>
+                        <span className="text-lg">{themeConfig.emoji}</span>
+                        <h3 className="font-bold text-slate-800 text-sm">{themeConfig.label}</h3>
+                        <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold ${themeConfig.badge}`}>{group.length}</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {group.map((memory, index) => (
+                          <motion.div
+                            key={memory.id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.04, duration: 0.2 }}
+                            className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                            style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
+                          >
+                            <div className="h-1 w-full" style={{
+                              background: [
+                                'linear-gradient(to right,#7c3aed,#9d174d)',
+                                'linear-gradient(to right,#db2777,#7c3aed)',
+                                'linear-gradient(to right,#1d4ed8,#7c3aed)',
+                                'linear-gradient(to right,#059669,#0d9488)',
+                                'linear-gradient(to right,#d97706,#ea580c)',
+                                'linear-gradient(to right,#e11d48,#db2777)',
+                              ][index % 6]
+                            }} />
+                            <div className="p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <Heart className="w-4 h-4 flex-shrink-0 text-purple-700" />
+                                <div className="flex items-center gap-1">
+                                  {memory.is_private ? (
+                                    <div className="p-1 bg-slate-100 rounded-md"><Lock className="w-3 h-3 text-slate-500" /></div>
+                                  ) : (
+                                    <div className="p-1 bg-purple-50 rounded-md"><Globe className="w-3 h-3 text-purple-700" /></div>
+                                  )}
+                                  {memory.user_id === user?.id && (
+                                    <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100">
+                                      <Trash2 className="w-3 h-3 text-red-500" />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed mb-3">{memory.content}</p>
+                              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                <span>{memory.author_name}</span>
+                                <span>{new Date(memory.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                {(clustered.other || []).length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border mb-3 bg-slate-50 border-slate-200">
+                      <span className="text-lg">📦</span>
+                      <h3 className="font-bold text-slate-700 text-sm">Other Memories</h3>
+                      <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">{clustered.other.length}</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {clustered.other.map((memory, index) => (
+                        <motion.div key={memory.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.04 }}
+                          className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                          style={{ borderColor: '#e9d5ff' }}>
+                          <div className="h-1 w-full" style={{ background: 'linear-gradient(to right,#7c3aed,#9d174d)' }} />
+                          <div className="p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <Heart className="w-4 h-4 text-purple-700" />
+                              <div className="flex items-center gap-1">
+                                {memory.is_private ? <div className="p-1 bg-slate-100 rounded-md"><Lock className="w-3 h-3 text-slate-500" /></div> : <div className="p-1 bg-purple-50 rounded-md"><Globe className="w-3 h-3 text-purple-700" /></div>}
+                                {memory.user_id === user?.id && <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"><Trash2 className="w-3 h-3 text-red-500" /></button>}
+                              </div>
+                            </div>
+                            <p className="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed mb-3">{memory.content}</p>
+                            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                              <span>{memory.author_name}</span>
+                              <span>{new Date(memory.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {memories.map((memory, index) => (
+                  <motion.div
+                    key={memory.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.04, duration: 0.2 }}
+                    className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                    style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
+                  >
+                    {/* Top accent - cycles through memory colors */}
+                    <div className="h-1 w-full" style={{
+                      background: [
+                        'linear-gradient(to right,#7c3aed,#9d174d)',
+                        'linear-gradient(to right,#db2777,#7c3aed)',
+                        'linear-gradient(to right,#1d4ed8,#7c3aed)',
+                        'linear-gradient(to right,#059669,#0d9488)',
+                        'linear-gradient(to right,#d97706,#ea580c)',
+                        'linear-gradient(to right,#e11d48,#db2777)',
+                      ][index % 6]
+                    }} />
 
-                  <p className="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed mb-3">{memory.content}</p>
+                    <div className="p-4">
+                      {/* Header row */}
+                      <div className="flex items-center justify-between mb-3">
+                        <Heart className="w-4 h-4 flex-shrink-0 text-purple-700" />
+                        <div className="flex items-center gap-1">
+                          {memory.is_private ? (
+                            <div className="p-1 bg-slate-100 rounded-md" title="Private">
+                              <Lock className="w-3 h-3 text-slate-500" />
+                            </div>
+                          ) : (
+                            <div className="p-1 bg-purple-50 rounded-md" title="Shared">
+                              <Globe className="w-3 h-3 text-purple-700" />
+                            </div>
+                          )}
+                          {memory.user_id === user?.id && (
+                            <button
+                              onClick={() => handleDelete(memory.id)}
+                              data-tip="Delete this memory"
+                              className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
+                            >
+                              <Trash2 className="w-3 h-3 text-red-500" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
 
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                    <span>{memory.author_name}</span>
-                    <span>{new Date(memory.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                      <p className="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed mb-3">{memory.content}</p>
+
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                        <span>{memory.author_name}</span>
+                        <span>{new Date(memory.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             className="bg-white rounded-xl border border-purple-100 p-10 text-center">

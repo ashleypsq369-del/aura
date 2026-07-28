@@ -1,10 +1,10 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, Calendar, Pill, AlertTriangle, MessageSquare, FileText, Zap } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { API_URL } from '../api/client';
 
 export default function NotificationTester() {
   const [loading, setLoading] = useState(false);

@@ -45,7 +45,6 @@ export function usePersonalisation({ applySettings } = {}) {
   useEffect(() => {
     if (!prefs?.language_pref) return;
     const stored = localStorage.getItem('app_language');
-    // Only set if user hasn't manually overridden it
     if (!stored || stored === 'en') {
       localStorage.setItem('app_language', prefs.language_pref);
       document.documentElement.lang = prefs.language_pref;
@@ -56,7 +55,6 @@ export function usePersonalisation({ applySettings } = {}) {
   useEffect(() => {
     if (!prefs?.tech_comfort) return;
     const currentSize = localStorage.getItem('a11y_fontSize');
-    // Only apply if not already customised
     if (!currentSize || currentSize === 'normal') {
       const recommendedSize = TECH_COMFORT_TO_FONT[prefs.tech_comfort] || 'normal';
       if (recommendedSize !== 'normal') {
@@ -65,6 +63,53 @@ export function usePersonalisation({ applySettings } = {}) {
       }
     }
   }, [prefs?.tech_comfort, applySettings]);
+
+  // Apply theme preference (only if user hasn't manually changed it since questionnaire)
+  useEffect(() => {
+    if (!prefs?.theme_pref) return;
+    const stored = localStorage.getItem('app_theme');
+    // Only apply if still at default 'light' — respect manual overrides
+    if (!stored || stored === 'light') {
+      localStorage.setItem('app_theme', prefs.theme_pref);
+      const root = document.documentElement;
+      root.classList.remove('light-theme', 'dark-theme', 'dark');
+      if (prefs.theme_pref === 'dark') {
+        root.classList.add('dark-theme', 'dark');
+      } else if (prefs.theme_pref === 'auto') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          root.classList.add('dark-theme', 'dark');
+        } else {
+          root.classList.add('light-theme');
+        }
+      } else {
+        root.classList.add('light-theme');
+      }
+    }
+  }, [prefs?.theme_pref]);
+
+  // Apply notification preference
+  useEffect(() => {
+    if (!prefs?.notification_pref) return;
+    const stored = localStorage.getItem('app_notifications');
+    if (stored === null) {
+      localStorage.setItem('app_notifications', prefs.notification_pref === 'none' ? 'false' : 'true');
+    }
+  }, [prefs?.notification_pref]);
+
+  // Apply activity_level → reduced motion + large touch for low-mobility users
+  useEffect(() => {
+    if (!prefs?.activity_level) return;
+    if (prefs.activity_level === 'bedbound' || prefs.activity_level === 'very_low') {
+      try {
+        const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
+        if (!a11y.reducedMotion) {
+          localStorage.setItem('accessibility_settings', JSON.stringify({
+            ...a11y, reducedMotion: true, largeTouch: true
+          }));
+        }
+      } catch { /* non-fatal */ }
+    }
+  }, [prefs?.activity_level]);
 
   // Compute derived personalisation signals
   const signals = prefs ? computeSignals(prefs) : null;
@@ -82,7 +127,17 @@ function computeSignals(prefs) {
 
   // ── FAMILY SIGNALS ──────────────────────────────────────────────────────
   if (role === 'family') {
-    const familyEmotions = prefs.family_emotional_state || [];
+    // Safely coerce to array
+    const toArr = (val) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string') {
+        try { const p = JSON.parse(val); return Array.isArray(p) ? p : [p]; } catch {}
+        return val.split(',').map(s => s.trim()).filter(Boolean);
+      }
+      return [];
+    };
+    const familyEmotions = toArr(prefs.family_emotional_state);
     const needsEmotionalSupport = prefs.needs_counselling === 'yes' ||
       prefs.caregiver_burnout_risk === 'struggling' || prefs.caregiver_burnout_risk === 'burnout' ||
       familyEmotions.some(e => ['Overwhelmed', 'Exhausted', 'Scared', 'Grief', 'Lonely', 'Numb'].includes(e));
@@ -159,7 +214,7 @@ function computeSignals(prefs) {
       communityTags: ['family', ...(isBereaved ? ['bereavement'] : [])],
       familyRelation: prefs.family_relation,
       caregiverLevel: prefs.caregiver_level,
-      emotionalStates: prefs.family_emotional_state || [],
+      emotionalStates: toArr(prefs.family_emotional_state),
       religiousBackground: prefs.religious_background,
     };
   }
@@ -167,8 +222,20 @@ function computeSignals(prefs) {
   // ── PATIENT SIGNALS (original logic) ────────────────────────────────────
   const condition = prefs.primary_condition || '';
   const infoStyle = prefs.info_style || 'mixed';
-  const emotionalStates = prefs.emotional_states || [];
-  const carePriorities = prefs.care_priorities || [];
+
+  // Safely coerce to array — prefs may store as JSON string, CSV, or actual array
+  const toArray = (val) => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string') {
+      try { const p = JSON.parse(val); return Array.isArray(p) ? p : [p]; } catch {}
+      return val.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const emotionalStates = toArray(prefs.emotional_states);
+  const carePriorities = toArray(prefs.care_priorities);
 
   // Pain severity bucket (from initial ESAS)
   const painLevel = prefs.esas_pain ?? 0;
@@ -214,7 +281,8 @@ function computeSignals(prefs) {
   if (prefs.religious_background && prefs.religious_background !== 'none') {
     resourceTags.push(prefs.religious_background);
   }
-  if (prefs.cultural_practices?.includes('Traditional herbal remedies')) {
+  const culturalPractices = toArray(prefs.cultural_practices);
+  if (culturalPractices.includes('Traditional herbal remedies')) {
     resourceTags.push('traditional');
   }
 
@@ -326,6 +394,16 @@ function computeSignals(prefs) {
     wantsSpiritualCare: needsSpiritualSupport,
     activityLevel: prefs.activity_level,
     techComfort: prefs.tech_comfort,
+    themePref: prefs.theme_pref || 'light',
+    notificationPref: prefs.notification_pref || 'all',
+    topicInterests: toArray(prefs.topic_interests),
+    copingStrategies: toArray(prefs.coping_strategies),
+    infoFrequency: prefs.info_frequency || 'weekly',
+    hasYoungDependants: prefs.has_dependants === 'yes_children',
+    mainSupportPerson: prefs.main_support_person,
+    socialConnectedness: prefs.social_connectedness,
+    wantsLegacy: prefs.legacy_interest === 'yes',
+    aiConsent: prefs.ai_analysis_consent !== 'no',
     role: 'patient',
   };
 }

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -72,7 +72,7 @@ export default function MedicationsDetail() {
         </button>
 
         <PageHeader
-          image="/resources/cards/card-medications.jpg"
+          image="/resources/african/african-medications.jpg"
           title={patient ? `${patient.full_name} — Medications` : 'Medications'}
           subtitle="Complete medication history and prescriptions"
           icon={Pill}
@@ -119,13 +119,13 @@ export default function MedicationsDetail() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-50 border-b-2 border-slate-200">
+                    <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
                       {['Medication','Dosage','Frequency','Start Date','Route','AI'].map(h => (
-                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                        <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                     {activeMeds.map((med) => (
                       <tr key={med.id} className="hover:bg-slate-50 transition-colors h-[52px]">
                         <td className="py-3 px-4">
@@ -135,7 +135,7 @@ export default function MedicationsDetail() {
                             </div>
                             <div>
                               <p className="text-sm font-bold text-slate-900">{med.name}</p>
-                              {med.generic_name && <p className="text-xs text-slate-500">{med.generic_name}</p>}
+                              {med.generic_name && <p className="text-xs text-slate-500 dark:text-slate-400">{med.generic_name}</p>}
                             </div>
                           </div>
                         </td>
@@ -175,13 +175,13 @@ export default function MedicationsDetail() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-slate-50 border-b-2 border-slate-200">
+                      <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
                         {['Medication','Dosage','Frequency','Start Date','End Date','Reason'].map(h => (
-                          <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">{h}</th>
+                          <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                       {inactiveMeds.map((med) => (
                         <tr key={med.id} className="hover:bg-slate-50 transition-colors opacity-70 h-[52px]">
                           <td className="py-3 px-4 text-sm font-semibold text-slate-700">{med.name}</td>

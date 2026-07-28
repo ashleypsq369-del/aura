@@ -1,521 +1,520 @@
-﻿import { useState } from 'react';
-import { motion } from 'framer-motion';
+﻿/**
+ * Continuity Bridge
+ * ──────────────────
+ * WHO: The PATIENT (while alive) and their designated Heirs (after death).
+ * PURPOSE: Build a living legacy — memories, messages, final wishes.
+ *          Personal grief journal (patient's own reflections during illness).
+ *          Bridge between life and legacy — NOT a grief-counseling page.
+ * DISTINCT FROM BereavedFamilyDashboard (which is for bereaved family healing).
+ */
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Heart, BookOpen, Phone, Calendar, Book, Users, MessageCircle,
-  ChevronRight, Loader2, HeartHandshake, FileText, Infinity as InfinityIcon, Plus
+  Heart, BookOpen, HeartHandshake, Infinity as InfinityIcon,
+  Plus, Loader2, ChevronRight, ArrowRight, Link2,
+  Lock, Feather, Quote, Star, Sparkles, Users,
+  Gift, MessageSquareHeart, Video, Music, Image,
+  Key, UserCheck, Clock, CheckCircle, Edit3, Trash2
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import apiClient, { bereavementAPI } from '../api/client';
-import GriefProgressTracker from '../components/GriefProgressTracker';
 import toast from '../utils/toast';
-import PageHeader from '../components/PageHeader';
 
-const VALID_TABS = ['overview', 'legacy', 'my-journal', 'resources', 'support', 'counseling', 'progress'];
-
-const ghanaResources = [
-  { name: 'Ghana Bereavement Counselling Services', phone: '0302-681109', description: 'Professional grief counseling', type: 'counseling' },
-  { name: 'Mental Health Authority Ghana', phone: '0800-900-888', description: 'Toll-free mental health support', type: 'hotline' },
-  { name: 'Befrienders Ghana', phone: '0244-846-701', description: 'Emotional support helpline', type: 'hotline' },
-  { name: 'KASA Initiative Ghana', description: 'Grief support groups and workshops', type: 'support_group' },
-];
-
-const tabs = [
-  { id: 'overview', label: 'Overview', icon: Heart },
-  { id: 'legacy', label: "Loved One's Legacy", icon: HeartHandshake },
-  { id: 'my-journal', label: 'My Grief Journal', icon: BookOpen },
-  { id: 'resources', label: 'Resources', icon: Book },
-  { id: 'support', label: 'Support Groups', icon: Users },
-  { id: 'counseling', label: 'Counseling', icon: Phone },
-  { id: 'progress', label: 'My Journey', icon: Calendar },
+const TABS = [
+  { id: 'overview',    label: 'Overview',        icon: Heart            },
+  { id: 'legacy',      label: 'Memory Vault',    icon: HeartHandshake   },
+  { id: 'messages',    label: 'Final Messages',  icon: MessageSquareHeart },
+  { id: 'my-journal',  label: 'My Journal',      icon: BookOpen         },
+  { id: 'heirs',       label: 'My Heirs',        icon: UserCheck        },
 ];
 
 export default function ContinuityBridge() {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const selectedTab = VALID_TABS.includes(tabParam) ? tabParam : 'overview';
+  const selectedTab = TABS.some(t => t.id === tabParam) ? tabParam : 'overview';
+  const setTab = (id) => setSearchParams({ tab: id }, { replace: true });
 
-  const setSelectedTab = (tabId) => {
-    setSearchParams({ tab: tabId }, { replace: true });
-  };
-
-  const { data: patientData, isLoading: patientLoading } = useQuery({
+  const { data: patientData, isLoading } = useQuery({
     queryKey: ['my-patient'],
-    queryFn: async () => {
-      const response = await apiClient.get('/api/bereavement/my-patient');
-      return response.data;
-    },
+    queryFn: async () => { try { return (await apiClient.get('/api/bereavement/my-patient')).data; } catch { return null; } },
   });
-
-  const { data: supportData } = useQuery({
-    queryKey: ['bereavement-support'],
-    queryFn: async () => {
-      try {
-        const response = await bereavementAPI.getSupportData();
-        return response.data;
-      } catch {
-        return { has_upcoming_support: false, screening_completed: false, screening_flagged: false };
-      }
-    },
-    retry: false,
-  });
-
   const { data: screeningData } = useQuery({
     queryKey: ['grief-screening-status'],
-    queryFn: async () => {
-      try {
-        const response = await bereavementAPI.getScreeningStatus();
-        return response.data;
-      } catch {
-        return { completed_recently: false, flagged: false };
-      }
-    },
+    queryFn: async () => { try { return (await bereavementAPI.getScreeningStatus()).data; } catch { return {}; } },
     retry: false,
   });
 
-  const patientId = patientData?.patient_id ?? null;
+  const patientId  = patientData?.patient_id ?? null;
   const isDeceased = patientData?.deceased || patientData?.status === 'deceased';
-  const isHeir = patientData?.is_heir;
+  const isHeir     = patientData?.is_heir;
+  const name       = patientData?.patient_name;
 
-  if (patientLoading) {
-    return (
-      <div className="min-h-full flex items-center justify-center" >
-        <Loader2 className="w-12 h-12 animate-spin text-purple-700" />
-      </div>
-    );
-  }
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+    </div>
+  );
 
   return (
-    <div className="min-h-full" >
-      <PageHeader
-        image="/resources/headers/header-continuity.jpg"
-        title="The Continuity Bridge"
-        subtitle="A sacred space where memories live on and love transcends time"
-        icon={InfinityIcon}
-      />
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
-        {/* Header with image */}
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full" className="bg-purple-700">
-            <InfinityIcon className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-serif" className="text-purple-700">The Continuity Bridge</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            A sacred space where memories live on, grief finds expression, and love transcends time
-          </p>
-          {patientData?.patient_name && (
-            <p className="text-sm font-semibold text-purple-600 bg-purple-100 inline-block px-4 py-1.5 rounded-full">
-              {isDeceased ? 'In memory of' : 'Connected to'}: {patientData.patient_name}
-              {isHeir && patientData.heir_relationship && ` · Your role: ${patientData.heir_relationship}`}
+    <div className="min-h-screen bg-slate-50">
+
+      {/* ── Hero ──────────────────────────────────────────────────── */}
+      <div className="relative h-56 md:h-64 overflow-hidden">
+        <img src="/resources/african/african-elder-care.jpg" alt=""
+          className="w-full h-full object-cover object-top" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 via-indigo-900/45 to-purple-800/15" />
+        <div className="absolute inset-0 max-w-6xl mx-auto px-6 flex flex-col justify-end pb-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-full px-3 py-1 mb-3">
+              <InfinityIcon size={12} className="text-purple-300" />
+              <span className="text-white/85 text-xs font-medium">The Continuity Bridge</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Love that outlasts time</h1>
+            <p className="text-purple-200 text-sm max-w-md leading-relaxed">
+              Preserve memories, write final messages and designate heirs — so your legacy lives on exactly as you intend.
             </p>
-          )}
-        </motion.div>
+            {name && (
+              <div className="mt-3 inline-flex items-center gap-2 bg-purple-700/55 backdrop-blur border border-purple-400/40 rounded-full px-3 py-1">
+                <Heart size={11} className="text-pink-300" />
+                <span className="text-white text-xs font-medium">
+                  {isDeceased ? 'In memory of' : isHeir ? 'Legacy of' : 'Your legacy'}: {name}
+                </span>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </div>
 
-        {/* Compassionate intro */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border-2 border-purple-200 text-center"
-        >
-          <p className="text-slate-700 leading-relaxed">
-            <strong>Your loved one's legacy</strong> (memories and journal they left behind) is kept separate from
-            <strong> your own grief journal</strong> - a private space for your personal reflections.
+      {/* ── Context banner ────────────────────────────────────────── */}
+      <div className="bg-indigo-50 border-b border-indigo-100">
+        <div className="max-w-6xl mx-auto px-6 py-2.5 flex items-start gap-2">
+          <Sparkles size={14} className="text-indigo-500 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-indigo-700 leading-relaxed">
+            <strong>Your personal legacy space.</strong> Create memories, write messages for loved ones, and keep a private reflective journal — separate from bereavement support for family.
           </p>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Tab navigation */}
-        <div className="bg-white/90 rounded-xl shadow-lg border-2 border-purple-200 p-2">
-          <div className="flex flex-wrap gap-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedTab(tab.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${
-                    selectedTab === tab.id
-                      ? 'text-white shadow-md'
-                      : 'bg-purple-50 text-purple-600 hover:bg-purple-100'
-                  }`}
-                  style={selectedTab === tab.id ? { backgroundColor: "#7c3aed" } : {}}
-                >
-                  <Icon size={16} />
-                  {tab.label}
-                </button>
-              );
-            })}
+      {/* ── Sticky tabs ───────────────────────────────────────────── */}
+      <div className="sticky top-0 z-20 bg-white/96 backdrop-blur border-b border-slate-200 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
+            {TABS.map(({ id, label, icon: Icon }) => (
+              <button key={id} onClick={() => setTab(id)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                  selectedTab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
+                <Icon size={14} />{label}
+              </button>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Tab content */}
-        <div className="space-y-6">
-          {selectedTab === 'overview' && (
-            <OverviewTab
-              patientData={patientData}
-              screeningData={screeningData}
-              supportData={supportData}
-              isDeceased={isDeceased}
-              isHeir={isHeir}
-              onSelectTab={setSelectedTab}
-            />
-          )}
-          {selectedTab === 'legacy' && (
-            <LegacyTab patientId={patientId} patientName={patientData?.patient_name} isDeceased={isDeceased} isHeir={isHeir} />
-          )}
-          {selectedTab === 'my-journal' && (
-            <MyJournalTab patientId={patientId} />
-          )}
-          {selectedTab === 'resources' && <ResourcesTab />}
-          {selectedTab === 'support' && <SupportGroupsTab />}
-          {selectedTab === 'counseling' && <CounselingTab />}
-          {selectedTab === 'progress' && <ProgressTab screeningData={screeningData} />}
-        </div>
+      {/* ── Content ───────────────────────────────────────────────── */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <AnimatePresence mode="wait">
+          <motion.div key={selectedTab}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
+            {selectedTab === 'overview'   && <OverviewTab patientData={patientData} onTab={setTab} isDeceased={isDeceased} isHeir={isHeir} />}
+            {selectedTab === 'legacy'     && <LegacyTab patientId={patientId} name={name} isHeir={isHeir} />}
+            {selectedTab === 'messages'   && <FinalMessagesTab patientId={patientId} isHeir={isHeir} isDeceased={isDeceased} />}
+            {selectedTab === 'my-journal' && <MyJournalTab patientId={patientId} />}
+            {selectedTab === 'heirs'      && <HeirsTab patientId={patientId} isHeir={isHeir} />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
 }
 
-function OverviewTab({ screeningData, isDeceased, isHeir, onSelectTab }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <QuickCard
-        icon={HeartHandshake}
-        title={isHeir || isDeceased ? "Loved One's Memory Vault" : "Building Memories"}
-        description={isDeceased ? 'Cherished memories they left for you' : 'Preserve precious moments together'}
-        onClick={() => onSelectTab('legacy')}
-        color="#6B4F7A"
-        image="/resources/cards/card-memory-vault.jpg"
-      />
-      <QuickCard
-        icon={BookOpen}
-        title="My Grief Journal"
-        description="Your private space for reflection"
-        onClick={() => onSelectTab('my-journal')}
-        color="#8B5A9B"
-        image="/resources/cards/card-journal.jpg"
-      />
-      <QuickCard
-        icon={MessageCircle}
-        title="Join Support Group"
-        description="Connect with others who understand"
-        linkTo="/community"
-        color="#0d9488"
-        image="/resources/cards/card-community.jpg"
-      />
-      <QuickCard
-        icon={Phone}
-        title="Talk to a Counselor"
-        description="Professional grief counseling"
-        onClick={() => onSelectTab('counseling')}
-        color="#7c3aed"
-        image="/resources/cards/card-counseling.jpg"
-      />
-      {!screeningData?.completed_recently && (
-        <div className="md:col-span-2 bg-purple-50 border-2 border-purple-300 rounded-xl p-5">
-          <h3 className="font-bold text-purple-700 mb-2">Grief Check-In</h3>
-          <p className="text-purple-600 text-sm mb-3">Complete a brief grief screening to help us provide better support.</p>
-          <button
-            onClick={() => onSelectTab('progress')}
-            className="inline-flex items-center gap-2 px-4 py-2 text-white rounded-lg font-semibold"
-            className="bg-purple-700"
-          >
-            <Calendar size={18} /> Take Grief Screening <ChevronRight size={18} />
-          </button>
-        </div>
-      )}
-      <div className="md:col-span-2 bg-red-50 border-2 border-red-300 rounded-xl p-5">
-        <h3 className="font-bold text-red-900 mb-3 flex items-center gap-2"><Phone size={20} /> Crisis Support (Ghana)</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-          <div className="bg-white rounded-lg p-3 border border-red-200"><strong>Ghana Ambulance:</strong> 193</div>
-          <div className="bg-white rounded-lg p-3 border border-red-200"><strong>Mental Health Authority:</strong> 0800-900-888</div>
-          <div className="bg-white rounded-lg p-3 border border-red-200"><strong>Befrienders Ghana:</strong> 0244-846-701</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function LegacyTab({ patientId, patientName, isHeir }) {
-  const { data: memoriesData, isLoading } = useQuery({
-    queryKey: ['legacy-memories', patientId],
-    queryFn: async () => {
-      if (!patientId) return { entries: [] };
-      const response = await apiClient.get(
-        `/api/bereavement/entries/${patientId}?entry_type=memory&author_filter=patient`
-      );
-      return response.data;
-    },
-    enabled: !!patientId,
-  });
-
-  const { data: journalData } = useQuery({
-    queryKey: ['legacy-journal', patientId],
-    queryFn: async () => {
-      if (!patientId) return { entries: [] };
-      const response = await apiClient.get(
-        `/api/bereavement/entries/${patientId}?entry_type=journal&author_filter=patient`
-      );
-      return response.data;
-    },
-    enabled: !!patientId,
-  });
-
-  const memories = memoriesData?.entries || [];
-  const journalEntries = journalData?.entries || [];
-
-  if (!patientId) {
-    return (
-      <div className="bg-white rounded-2xl p-10 text-center shadow-lg">
-        <Heart className="w-12 h-12 mx-auto mb-4 text-purple-400" />
-        <p className="text-gray-700">No linked patient found. Contact your care team to access legacy content.</p>
-      </div>
-    );
-  }
+/* ── Overview ──────────────────────────────────────────────────────────── */
+function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
+  const stats = [
+    { label: 'Memories saved',    value: patientData?.memory_count   ?? '—' },
+    { label: 'Messages prepared', value: patientData?.message_count  ?? '—' },
+    { label: 'Heirs designated',  value: patientData?.heir_count     ?? '—' },
+  ];
+  const actions = [
+    { icon: HeartHandshake,    label: 'Memory Vault',    sub: 'Preserve cherished moments',   tab: 'legacy',      color: 'from-purple-700 to-violet-800', img: '/resources/african/african-hands-comfort.jpg' },
+    { icon: MessageSquareHeart,label: 'Final Messages',  sub: 'Words for those you love',      tab: 'messages',    color: 'from-rose-600 to-pink-700',     img: '/resources/african/african-prayer-peace.jpg' },
+    { icon: BookOpen,          label: 'My Journal',     sub: 'Private — only you can see',    tab: 'my-journal',  color: 'from-indigo-700 to-blue-800',   img: '/resources/african/journal-writing.jpg' },
+    { icon: UserCheck,         label: 'My Heirs',       sub: 'Who receives your legacy',      tab: 'heirs',       color: 'from-teal-600 to-emerald-700',  img: '/resources/african/african-family-support.jpg' },
+  ];
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-200">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold" className="text-purple-700">
-            {patientName}'s Memory Vault
-          </h2>
-          <Link to="/memory-vault" className="text-sm font-semibold text-purple-700 hover:underline flex items-center gap-1">
-            View full vault <ChevronRight size={14} />
-          </Link>
-        </div>
-        <p className="text-sm text-gray-600 mb-4">
-          Memories created by {patientName} - preserved for {isHeir ? 'you as their designated heir' : 'the family'}.
-        </p>
-        {isLoading ? (
-          <Loader2 className="w-8 h-8 animate-spin text-purple-600 mx-auto" />
-        ) : memories.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {memories.slice(0, 6).map((m) => (
-              <div key={m.id} className="bg-white rounded-xl p-4 border border-purple-100 shadow-sm">
-                <p className="text-xs text-gray-500 mb-1">{new Date(m.created_at).toLocaleDateString()}</p>
-                <p className="text-gray-800 line-clamp-4 text-sm">{m.content}</p>
-              </div>
-            ))}
+      {/* Stat strip */}
+      <div className="grid grid-cols-3 gap-3">
+        {stats.map(({ label, value }) => (
+          <div key={label} className="bg-white border border-slate-200 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-purple-700">{value}</p>
+            <p className="text-xs text-slate-500 mt-1">{label}</p>
           </div>
-        ) : (
-          <p className="text-gray-500 text-center py-6">No memories from {patientName} yet.</p>
-        )}
+        ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-200">
-        <h2 className="text-lg font-semibold mb-4" className="text-purple-700">
-          {patientName}'s Journal
-        </h2>
-        <p className="text-sm text-gray-600 mb-4">Reflections written by {patientName} during their journey.</p>
-        {journalEntries.length > 0 ? (
-          <div className="space-y-3">
-            {journalEntries.slice(0, 4).map((e) => (
-              <div key={e.id} className="bg-white rounded-xl p-4 border border-purple-100">
-                <p className="text-xs text-gray-500 mb-1">{new Date(e.created_at).toLocaleDateString()}</p>
-                <p className="text-gray-800 line-clamp-3 text-sm">{e.content}</p>
+      {/* Inspirational quote */}
+      <div className="relative bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl p-6 overflow-hidden">
+        <div className="absolute top-3 right-5 opacity-10"><Quote size={52} className="text-white" /></div>
+        <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
+          "What we have once enjoyed we can never lose. All that we love deeply becomes a part of us."
+        </p>
+        <p className="text-purple-400 text-xs mt-3 font-medium">— Helen Keller</p>
+      </div>
+
+      {/* Action cards */}
+      <div>
+        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Your Legacy Tools</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {actions.map(({ icon: Icon, label, sub, tab, color, img }) => (
+            <motion.div key={tab} whileHover={{ y: -3 }} onClick={() => onTab(tab)}
+              className="relative rounded-xl overflow-hidden cursor-pointer h-36 shadow-sm group">
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+              <div className="absolute inset-0 p-3.5 flex flex-col justify-end">
+                <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center mb-2">
+                  <Icon size={14} className="text-white" />
+                </div>
+                <p className="text-white font-semibold text-sm leading-tight">{label}</p>
+                <p className="text-white/65 text-xs mt-0.5 line-clamp-1">{sub}</p>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center py-6">No journal entries from {patientName} yet.</p>
-        )}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Timeline */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-5">
+        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2"><Clock size={14} className="text-purple-500" /> How the Continuity Bridge Works</h3>
+        <div className="space-y-4">
+          {[
+            { step: '1', title: 'While you are alive', desc: 'Create memories, write final messages, and designate heirs who will receive your legacy.', color: 'bg-purple-100 text-purple-700' },
+            { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet — only you can edit or delete entries.', color: 'bg-indigo-100 text-indigo-700' },
+            { step: '3', title: 'After you pass', desc: 'Designated heirs receive access to the memories and messages you left for them — exactly as you intended.', color: 'bg-teal-100 text-teal-700' },
+          ].map(({ step, title, desc, color }) => (
+            <div key={step} className="flex gap-4">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>{step}</div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">{title}</p>
+                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-function MyJournalTab({ patientId }) {
-  const [newEntry, setNewEntry] = useState('');
-  const queryClient = useQueryClient();
-
-  const { data: griefEntries } = useQuery({
-    queryKey: ['my-grief-journal'],
-    queryFn: async () => {
-      const response = await bereavementAPI.getJournalEntries();
-      return response.data;
-    },
-  });
-
-  const { data: personalEntries } = useQuery({
-    queryKey: ['my-personal-entries', patientId],
+/* ── Memory Vault ──────────────────────────────────────────────────────── */
+function LegacyTab({ patientId, name, isHeir }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['legacy-memories', patientId],
     queryFn: async () => {
       if (!patientId) return { entries: [] };
-      const response = await apiClient.get(
-        `/api/bereavement/entries/${patientId}?entry_type=journal&author_filter=me&include_private=true`
-      );
-      return response.data;
+      return (await apiClient.get(`/api/bereavement/entries/${patientId}?entry_type=memory&author_filter=patient`)).data;
     },
     enabled: !!patientId,
   });
-
-  const saveMutation = useMutation({
-    mutationFn: (content) => bereavementAPI.saveJournalEntry(content),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['my-grief-journal']);
-      setNewEntry('');
-      toast.success('Journal entry saved');
-    },
-    onError: (err) => toast.error(err.response?.data?.detail || 'Failed to save'),
-  });
-
-  const entries = griefEntries?.entries || personalEntries?.entries || [];
+  const entries = data?.entries || [];
+  const mediaTypes = [
+    { icon: Image,  label: 'Photo Memory',  type: 'photo' },
+    { icon: Video,  label: 'Video Message', type: 'video' },
+    { icon: Music,  label: 'Voice Note',    type: 'audio' },
+    { icon: Edit3,  label: 'Written Story', type: 'story' },
+  ];
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-200 space-y-5">
-      <div>
-        <h2 className="text-lg font-semibold mb-2" className="text-purple-700">My Grief Journal</h2>
-        <p className="text-sm text-gray-600">
-          This is <strong>your private journal</strong> - separate from your loved one's legacy. Only you can see these entries.
-        </p>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-slate-800">{name ? `${name}'s Memory Vault` : 'Memory Vault'}</h2>
+          <p className="text-xs text-slate-500 mt-0.5">{entries.length} memories preserved</p>
+        </div>
+        <Link to="/memory-vault" className="flex items-center gap-1 text-xs font-semibold text-purple-600 hover:text-purple-800">
+          Full vault <ChevronRight size={13} />
+        </Link>
       </div>
 
-      <div className="flex gap-2">
-        <textarea
-          value={newEntry}
-          onChange={(e) => setNewEntry(e.target.value)}
-          placeholder="What are you feeling today? Write freely..."
-          className="flex-1 border-2 border-purple-200 rounded-xl p-3 text-sm min-h-[80px] focus:border-purple-400 outline-none"
-        />
-        <button
-          onClick={() => newEntry.trim() && saveMutation.mutate(newEntry.trim())}
-          disabled={!newEntry.trim() || saveMutation.isPending}
-          className="px-4 py-2 text-white rounded-xl font-semibold self-end disabled:opacity-50 flex items-center gap-2"
-          className="bg-purple-700"
-        >
-          <Plus size={16} /> Save
-        </button>
-      </div>
+      {/* Add memory types */}
+      {!isHeir && (
+        <div className="grid grid-cols-4 gap-2">
+          {mediaTypes.map(({ icon: Icon, label, type }) => (
+            <Link key={type} to="/memory-vault"
+              className="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
+              <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                <Icon size={16} className="text-purple-600" />
+              </div>
+              <p className="text-xs font-medium text-slate-700 text-center leading-tight">{label}</p>
+            </Link>
+          ))}
+        </div>
+      )}
 
-      {entries.length > 0 ? (
-        <div className="space-y-3">
-          {entries.map((e) => (
-            <div key={e.id} className="bg-white rounded-xl p-4 border border-purple-100">
-              <p className="text-xs text-gray-500 mb-1">{new Date(e.created_at).toLocaleDateString()}</p>
-              <p className="text-gray-800 text-sm">{e.content}</p>
+      {/* Memories grid */}
+      {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto" /> :
+       entries.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {entries.slice(0, 9).map((m) => (
+            <div key={m.id} className="bg-white border border-slate-200 rounded-xl p-4">
+              <p className="text-xs text-slate-400 mb-1.5">{new Date(m.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</p>
+              <p className="text-slate-700 text-sm line-clamp-4 leading-relaxed">{m.content}</p>
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 text-center py-8 italic">"What do you want to remember about today?"</p>
+        <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-12 text-center">
+          <Star size={28} className="mx-auto mb-3 text-slate-300" />
+          <p className="text-sm font-medium text-slate-600 mb-1">No memories yet</p>
+          <p className="text-xs text-slate-400">Start preserving moments that matter</p>
+          <Link to="/memory-vault" className="inline-flex items-center gap-1.5 mt-4 text-sm font-semibold text-purple-600 hover:text-purple-800">
+            <Plus size={14} /> Add first memory
+          </Link>
+        </div>
       )}
     </div>
   );
 }
 
-function ResourcesTab() {
-  const sections = [
-    { category: 'Understanding Grief', items: ['The Five Stages of Grief', 'Grief vs Depression', 'Complicated Grief'] },
-    { category: 'Coping Strategies', items: ['Self-Care During Grief', 'Mindfulness for Bereavement', 'Journaling Through Loss'] },
-    { category: 'Cultural & Spiritual', items: ['Ghanaian Funeral Customs & Grief', 'Spiritual Perspectives on Loss', 'Honoring Memory'] },
+/* ── Final Messages ────────────────────────────────────────────────────── */
+function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
+  const { data: legacyData } = useQuery({
+    queryKey: ['legacy-content', patientId],
+    queryFn: async () => {
+      if (!patientId) return { content: [] };
+      try { return (await apiClient.get(`/api/legacy/content/${patientId}`)).data; }
+      catch { return { content: [] }; }
+    },
+    enabled: !!patientId,
+  });
+  const messages = legacyData?.content || [];
+
+  const messageTypes = [
+    { icon: Heart,            label: 'To My Family',    sub: 'A letter to those closest to you' },
+    { icon: Gift,             label: 'A Gift of Words', sub: 'Something special for one person' },
+    { icon: MessageSquareHeart, label: 'For the Future', sub: "For when you're not there" },
   ];
+
   return (
-    <div className="space-y-4">
-      {sections.map((s) => (
-        <div key={s.category} className="bg-white rounded-xl p-5 shadow border-2 border-purple-100">
-          <h3 className="font-bold text-lg mb-3" className="text-purple-700">{s.category}</h3>
-          <div className="space-y-2">
-            {s.items.map((item) => (
-              <div key={item} className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg text-sm">
-                <FileText size={16} className="text-purple-600" /> {item}
+    <div className="space-y-5">
+      <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex items-start gap-3">
+        <Key size={15} className="text-indigo-600 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-indigo-700 leading-relaxed">
+          {isHeir || isDeceased
+            ? 'These are the messages your loved one prepared for you. They are delivered exactly as intended.'
+            : 'These messages are sealed and private. Your heirs will only receive them after you pass. You can edit or delete them any time.'}
+        </p>
+      </div>
+
+      {!isHeir && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {messageTypes.map(({ icon: Icon, label, sub }) => (
+            <Link key={label} to="/legacy-content"
+              className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:border-purple-300 hover:bg-purple-50 transition-all group">
+              <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                <Icon size={18} className="text-purple-600" />
               </div>
-            ))}
-          </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">{label}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{sub}</p>
+              </div>
+              <span className="flex items-center gap-1 text-xs text-purple-600 font-semibold">
+                Create <ArrowRight size={11} />
+              </span>
+            </Link>
+          ))}
         </div>
-      ))}
+      )}
+
+      {messages.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-slate-600">
+            {isHeir ? 'Messages left for you' : 'Your prepared messages'}
+          </h3>
+          {messages.map((m) => (
+            <div key={m.id} className="bg-white border border-slate-200 rounded-xl p-5">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div>
+                  <p className="text-sm font-semibold text-slate-800">{m.title || 'Untitled message'}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {m.recipient_type === 'all_heirs' ? 'To all heirs' : 'To specific person'} ·{' '}
+                    {new Date(m.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}
+                  </p>
+                </div>
+                {!isHeir && (
+                  <div className="flex gap-1 flex-shrink-0">
+                    <Link to="/legacy-content" className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-purple-100 flex items-center justify-center transition-colors">
+                      <Edit3 size={13} className="text-slate-500" />
+                    </Link>
+                  </div>
+                )}
+              </div>
+              {isHeir || isDeceased ? (
+                <p className="text-slate-700 text-sm leading-relaxed">{m.content}</p>
+              ) : (
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <Lock size={12} /><span>Sealed — visible to heirs after you pass</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : !isHeir ? (
+        <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-10 text-center">
+          <MessageSquareHeart size={28} className="mx-auto mb-3 text-slate-300" />
+          <p className="text-sm font-medium text-slate-600 mb-1">No messages yet</p>
+          <p className="text-xs text-slate-400 mb-4">The words you leave behind are the greatest gift of all</p>
+          <Link to="/legacy-content"
+            className="inline-flex items-center gap-1.5 bg-purple-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors">
+            <Plus size={14} /> Write your first message
+          </Link>
+        </div>
+      ) : (
+        <div className="text-center py-10 text-slate-400">
+          <MessageSquareHeart size={28} className="mx-auto mb-2 opacity-40" />
+          <p className="text-sm">No messages have been prepared yet.</p>
+        </div>
+      )}
     </div>
   );
 }
 
-function SupportGroupsTab() {
+/* ── My Journal ────────────────────────────────────────────────────────── */
+function MyJournalTab({ patientId }) {
+  const [newEntry, setNewEntry] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ['my-grief-journal'],
+    queryFn: async () => { try { return (await bereavementAPI.getJournalEntries()).data; } catch { return { entries: [] }; } },
+  });
+  const saveMutation = useMutation({
+    mutationFn: (content) => bereavementAPI.saveJournalEntry(content),
+    onSuccess: () => { queryClient.invalidateQueries(['my-grief-journal']); setNewEntry(''); toast.success('Entry saved'); },
+    onError: (err) => toast.error(err.response?.data?.detail || 'Failed to save'),
+  });
+
+  const entries = data?.entries || [];
+  const words = newEntry.trim().split(/\s+/).filter(Boolean).length;
+
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-teal-200">
-      <h3 className="font-bold text-xl mb-3 text-teal-900">Bereavement Support Groups</h3>
-      <p className="text-gray-700 mb-4 text-sm">A safe space for bereaved families to connect and offer mutual support.</p>
-      <Link
-        to="/community"
-        className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-semibold"
-      >
-        <Users size={18} /> Join Community <ChevronRight size={18} />
+    <div className="space-y-5">
+      <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
+        <Lock size={13} className="text-indigo-500 flex-shrink-0" />
+        <p className="text-xs text-indigo-700"><strong>Completely private.</strong> These entries are yours alone — separate from your legacy vault and not visible to heirs.</p>
+      </div>
+
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div className="flex items-center gap-2 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+          <Feather size={14} className="text-slate-500" />
+          <span className="text-sm font-semibold text-slate-700">New Entry</span>
+        </div>
+        <div className="p-5">
+          <textarea value={newEntry} onChange={(e) => setNewEntry(e.target.value)}
+            placeholder="What are you feeling today? Write freely…"
+            className="w-full border border-slate-200 rounded-xl p-4 text-sm text-slate-800 min-h-[110px] focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none resize-none leading-relaxed transition-all" />
+          <div className="flex items-center justify-between mt-3">
+            <span className="text-xs text-slate-400">{words} word{words !== 1 ? 's' : ''}</span>
+            <button onClick={() => newEntry.trim() && saveMutation.mutate(newEntry.trim())}
+              disabled={!newEntry.trim() || saveMutation.isPending}
+              className="flex items-center gap-2 px-5 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-purple-800 transition-colors">
+              {saveMutation.isPending ? <Loader2 size={13} className="animate-spin" /> : <Plus size={13} />} Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {entries.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your entries</h3>
+          {entries.map((e) => (
+            <motion.div key={e.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-slate-200 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                <p className="text-xs text-slate-400">
+                  {new Date(e.created_at).toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}
+                </p>
+              </div>
+              <p className="text-slate-700 text-sm leading-relaxed">{e.content}</p>
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-10 text-slate-400">
+          <Quote size={26} className="mx-auto mb-3 opacity-35" />
+          <p className="text-sm italic">"What do you want to remember about today?"</p>
+          <p className="text-xs mt-1 text-slate-300">Your entries appear here</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Heirs ─────────────────────────────────────────────────────────────── */
+function HeirsTab({ patientId, isHeir }) {
+  const { data } = useQuery({
+    queryKey: ['legacy-heirs', patientId],
+    queryFn: async () => {
+      if (!patientId) return { heirs: [] };
+      try { return (await apiClient.get(`/api/legacy/heirs/${patientId}`)).data; }
+      catch { return { heirs: [] }; }
+    },
+    enabled: !!patientId,
+  });
+  const heirs = data?.heirs || [];
+
+  if (isHeir) return (
+    <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center">
+      <Key size={28} className="mx-auto mb-3 text-purple-400" />
+      <p className="text-sm font-semibold text-slate-700 mb-1">You are a designated heir</p>
+      <p className="text-xs text-slate-500">You have been granted access to this legacy by the patient or their care team.</p>
+    </div>
+  );
+
+  return (
+    <div className="space-y-5">
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <Users size={14} className="text-amber-600 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-800 leading-relaxed">
+          <strong>Heirs</strong> are the people you designate to receive access to your memories and messages after you pass. They cannot see anything until that time.
+        </p>
+      </div>
+
+      {heirs.length > 0 ? (
+        <div className="space-y-3">
+          {heirs.map((h) => (
+            <div key={h.id} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                <span className="text-sm font-bold text-purple-700">{(h.heir_name || 'H')[0].toUpperCase()}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-slate-800 text-sm">{h.heir_name || 'Unnamed heir'}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{h.relationship} · {h.access_level === 'full' ? 'Full access' : 'Limited access'}</p>
+              </div>
+              <div className="flex-shrink-0">
+                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${h.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
+                  {h.is_active ? <CheckCircle size={11} /> : <Lock size={11} />}
+                  {h.is_active ? 'Active' : 'Pending'}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-10 text-center">
+          <UserCheck size={28} className="mx-auto mb-3 text-slate-300" />
+          <p className="text-sm font-medium text-slate-600 mb-1">No heirs designated yet</p>
+          <p className="text-xs text-slate-400 mb-4">Choose who will receive your legacy</p>
+        </div>
+      )}
+
+      <Link to="/heir-management"
+        className="flex items-center justify-center gap-2 w-full py-3 bg-purple-700 text-white rounded-xl text-sm font-semibold hover:bg-purple-800 transition-colors">
+        <UserCheck size={15} /> Manage Heirs <ArrowRight size={13} />
       </Link>
     </div>
   );
 }
-
-function CounselingTab() {
-  return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-200">
-        <h3 className="font-bold text-xl mb-4" className="text-purple-700">Professional Counseling Services</h3>
-        <div className="space-y-3">
-          {ghanaResources.filter((r) => r.type === 'counseling' || r.type === 'hotline').map((r, i) => (
-            <div key={i} className="p-4 bg-purple-50 rounded-xl border border-purple-200">
-              <h4 className="font-bold text-purple-700">{r.name}</h4>
-              {r.phone && <p className="text-purple-600 font-semibold text-lg my-1">{r.phone}</p>}
-              <p className="text-purple-700 text-sm">{r.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProgressTab({ screeningData }) {
-  return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-purple-200">
-      <GriefProgressTracker screeningData={screeningData} />
-    </div>
-  );
-}
-
-function QuickCard({ icon: Icon, title, description, onClick, linkTo, color, image }) {
-  const inner = (
-    <motion.div
-      whileHover={{ scale: 1.02, y: -2 }}
-      className="rounded-xl overflow-hidden shadow-lg cursor-pointer h-full min-h-[160px] relative"
-      style={{ '--img-card-color': color || '#0f766e' }}
-      onClick={onClick}
-    >
-      {/* Fallback bg */}
-      <div className="img-card-bg absolute inset-0" style={{ backgroundColor: color || '#0f766e', zIndex: 0 }} />
-      {/* Real <img> tag  --  CSS-immune */}
-      {image && (
-        <img
-          src={image}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ zIndex: 1 }}
-          loading="lazy"
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
-        />
-      )}
-      {/* Overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.62), rgba(0,0,0,0.42), rgba(0,0,0,0.22))',
-          zIndex: 2, pointerEvents: 'none',
-        }}
-      />
-      {/* Teal-green border */}
-      <div className="absolute inset-0 rounded-xl border-2 border-teal-400/60 pointer-events-none" style={{ zIndex: 3 }} />
-      {/* Content */}
-      <div className="relative p-5 flex flex-col h-full justify-between" style={{ zIndex: 4 }}>
-        <div>
-          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 border border-white/25">
-            <Icon size={20} className="text-white" strokeWidth={2} />
-          </div>
-          <h3 className="img-heading font-bold text-lg mb-1 [text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_12px_rgba(0,0,0,0.8)]">{title}</h3>
-          <p className="text-white/90 text-sm drop-shadow leading-relaxed [text-shadow:0_1px_2px_rgba(0,0,0,0.7)]">{description}</p>
-        </div>
-        <div className="flex items-center gap-1 text-white/90 text-sm font-semibold mt-3">
-          Access Now <ChevronRight size={14} />
-        </div>
-      </div>
-    </motion.div>
-  );
-  return linkTo ? <Link to={linkTo} className="block h-full">{inner}</Link> : inner;
-}
-
-

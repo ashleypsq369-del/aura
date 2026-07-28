@@ -12,6 +12,7 @@ import toast from '../utils/toast';
 import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
 import FocusedAIExplanation from '../components/FocusedAIExplanation';
+import { usePersonalisationFlags } from '../context/PersonalisationContext';
 
 const CATEGORY_CONFIG = {
   symptom:       { label: 'Symptom',       color: 'text-rose-600',    bg: 'bg-rose-50',    border: 'border-rose-200',    Icon: AlertCircle },
@@ -152,6 +153,7 @@ export default function CarePlanDetail() {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { hiddenSections, uiFlags } = usePersonalisationFlags();
   const [showAIExplanation, setShowAIExplanation] = useState(false);
   const [aiData, setAiData] = useState(null);
   const [editingSection, setEditingSection] = useState(null);
@@ -265,7 +267,9 @@ export default function CarePlanDetail() {
     { key: 'goals_of_care',        label: 'Goals of Care',         icon: Target,  color: 'text-teal-600',   bg: 'bg-teal-50' },
     { key: 'pain_management_plan', label: 'Pain Management',        icon: Heart,   color: 'text-rose-600',   bg: 'bg-rose-50' },
     { key: 'psychological_support',label: 'Psychological Support',  icon: Brain,   color: 'text-purple-600', bg: 'bg-purple-50' },
-    { key: 'spiritual_care',       label: 'Spiritual Care',         icon: Shield,  color: 'text-amber-600',  bg: 'bg-amber-50' },
+    ...(hiddenSections.has('spiritual') || hiddenSections.has('spiritual_care') ? [] : [
+      { key: 'spiritual_care',     label: 'Spiritual Care',         icon: Shield,  color: 'text-amber-600',  bg: 'bg-amber-50' },
+    ]),
     { key: 'family_support_plan',  label: 'Family Support',         icon: Users,   color: 'text-blue-600',   bg: 'bg-blue-50' },
     { key: 'overall_notes',        label: 'Overall Notes',          icon: FileText,color: 'text-slate-600',  bg: 'bg-slate-50' },
   ];
@@ -274,7 +278,7 @@ export default function CarePlanDetail() {
     <PageTransition>
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
         <PageHeader
-          image="/resources/cards/card-care-plan.jpg"
+          image="/resources/african/african-doctor-female.jpg"
           title={patient ? `${patient.full_name} — Care Plan` : 'Care Plan'}
           subtitle={`Phase: ${carePlan.care_phase || 'Active'} · Last updated: ${carePlan.updated_at ? new Date(carePlan.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not recorded'}`}
           icon={FileText}
