@@ -8,8 +8,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { appointmentsAPI, patientsAPI, preferencesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { usePatientId } from '../hooks/usePatientId';
+import { useCareSettingContext } from '../context/CareSettingContext';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
+import InlineTaskReminder from '../components/InlineTaskReminder';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
 import {
@@ -188,7 +190,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
 }
 
 /* ── Appointment card (AlertCard style) ─────────────────────────────────── */
-function AppointmentCard({ appt, isStaff, onComplete, onCancel }) {
+function AppointmentCard({ appt, canSchedule, onComplete, onCancel }) {
   const today   = isToday(appt.scheduled_at);
   const past    = isPast(appt.scheduled_at);
   const status  = today && appt.status === 'scheduled' ? 'today' : (appt.status || 'scheduled');
@@ -236,7 +238,7 @@ function AppointmentCard({ appt, isStaff, onComplete, onCancel }) {
           </p>
           {appt.notes && <p className="text-xs text-slate-500 mt-1.5 line-clamp-2">{appt.notes}</p>}
 
-          {isStaff && appt.status === 'scheduled' && (
+          {canSchedule && appt.status === 'scheduled' && (
             <div className="flex gap-2 mt-3">
               <button onClick={() => onComplete(appt.id)}
                 className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold transition">
@@ -258,11 +260,17 @@ function AppointmentCard({ appt, isStaff, onComplete, onCancel }) {
 export default function Appointments() {
   const { user }       = useAuth();
   const queryClient    = useQueryClient();
-  const isStaff  = ['clinician','admin','caregiver'].includes(user?.role);
-  const isPatient = user?.role === 'patient';
+  const isStaff    = ['clinician','admin','caregiver'].includes(user?.role);
+  const isPatient  = user?.role === 'patient';
+  const isFamily   = user?.role === 'family';
+  const canSchedule = ['clinician','admin'].includes(user?.role); // only clinical staff can create
 
   // For patients/family: resolve linked patient record via hook
   const { patientId: ownPatientId } = usePatientId();
+
+  // Care setting gate — hospice patients don't visit clinics
+  const { careSetting, isHidden } = useCareSettingContext();
+  const appointmentsHidden = (isPatient || isFamily) && isHidden('/appointments');
 
   const [staffPatientId, setStaffPatientId] = useState(null);
   const patientId  = isStaff ? staffPatientId : ownPatientId;
@@ -360,9 +368,15 @@ export default function Appointments() {
     <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.2}}
       className="min-h-screen space-y-5 pb-8">
 
-      <PageHeader image="/resources/african/african-appointment.jpg" title="Appointments"
-        subtitle="Upcoming visits, today's reminders, past appointments and scheduling" icon={Calendar}>
-        {isStaff && patientId && (
+      <PageHeader image="/resources/african/african-appointment.jpg"
+        title={isPatient ? "My Appointments" : isFamily ? "Appointments" : "Appointments"}
+        subtitle={
+          isPatient ? "Your upcoming visits, today's schedule and past appointments" :
+          isFamily  ? "Your loved one's appointment schedule" :
+          "Patient appointments — schedule, complete, cancel and track visits"
+        }
+        icon={Calendar}>
+        {canSchedule && patientId && (
           <button onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold">
             <Plus size={15}/> Schedule
@@ -370,8 +384,39 @@ export default function Appointments() {
         )}
       </PageHeader>
 
+      {/* Care setting gate — hospice patients: appointments are hidden */}
+      {appointmentsHidden && (
+        <div className="px-6">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
+            <Calendar size={36} className="mx-auto text-slate-300 mb-3"/>
+            <p className="font-bold text-slate-600 text-base mb-1">No clinic appointments needed</p>
+            <p className="text-slate-400 text-sm max-w-sm mx-auto">
+              Your care setting ({careSetting?.replace(/_/g,' ')}) focuses on comfort care at home or in the hospice.
+              Your care team visits you directly — no clinic appointments required.
+            </p>
+            <p className="text-xs text-slate-400 mt-3">
+              If you have questions about your care schedule, use{' '}
+              <a href="/messages" className="text-teal-600 font-semibold hover:underline">Messages</a>{' '}
+              to contact your care team.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Inline reminder — upcoming appointment today */}
+      {!appointmentsHidden && (isPatient || isFamily) && kpi.today > 0 && (
+        <div className="px-6">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-teal-50 border border-teal-200">
+            <Bell size={15} className="text-teal-600 animate-pulse flex-shrink-0"/>
+            <p className="text-xs font-semibold text-teal-800">
+              You have {kpi.today} appointment{kpi.today > 1 ? 's' : ''} today — check the schedule below.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* KPI cards */}
-      <div className="px-6">
+      <div className={`px-6 ${appointmentsHidden ? 'opacity-30 pointer-events-none' : ''}`}>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard label="Upcoming" value={kpi.upcoming} icon={Calendar}
             color="bg-teal-50 text-teal-700 border-teal-400"
@@ -422,7 +467,8 @@ export default function Appointments() {
         </div>
       )}
 
-      {/* Filter bar */}
+      {/* Filter bar + Content — hidden for care settings that gate appointments */}
+      {!appointmentsHidden && (<>
       <div className="px-6">
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3 items-center">
@@ -491,8 +537,12 @@ export default function Appointments() {
                   <div className="bg-white rounded-xl border border-slate-200 p-10 text-center">
                     <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3"/>
                     <p className="text-slate-600 font-bold mb-1">No upcoming appointments</p>
-                    <p className="text-slate-400 text-sm mb-4">No appointments currently scheduled.</p>
-                    {isStaff && (
+                    <p className="text-slate-400 text-sm mb-4">
+                      {appointmentsHidden
+                        ? 'Your care team visits you directly — no clinic appointments needed.'
+                        : 'No appointments currently scheduled.'}
+                    </p>
+                    {canSchedule && !appointmentsHidden && (
                       <button onClick={() => setShowModal(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold">
                         <Plus size={14}/> Schedule First Appointment
@@ -503,7 +553,7 @@ export default function Appointments() {
                   <AnimatePresence>
                     <div className="space-y-2.5">
                       {upcomingAppts.map(a => (
-                        <AppointmentCard key={a.id} appt={a} isStaff={isStaff}
+                        <AppointmentCard key={a.id} appt={a} canSchedule={canSchedule}
                           onComplete={id => updateMutation.mutate({ id, status:'completed' })}
                           onCancel={id => updateMutation.mutate({ id, status:'cancelled' })}/>
                       ))}
@@ -534,7 +584,7 @@ export default function Appointments() {
                     <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} className="overflow-hidden mt-2">
                       <div className="space-y-2.5">
                         {pastAppts.slice(0, 20).map(a => (
-                          <AppointmentCard key={a.id} appt={a} isStaff={false}
+                          <AppointmentCard key={a.id} appt={a} canSchedule={false}
                             onComplete={() => {}} onCancel={() => {}}/>
                         ))}
                       </div>
@@ -546,6 +596,7 @@ export default function Appointments() {
           </>
         )}
       </div>
+      </>) } {/* end !appointmentsHidden */}
 
       <AnimatePresence>
         {showModal && (

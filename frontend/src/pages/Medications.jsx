@@ -231,7 +231,7 @@ function StopModal({ med, onClose, onConfirm, pending }) {
 }
 
 /* ── Medication row (same feel as AlertCard) ─────────────────────────────── */
-function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
+function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTaken, todayTaken, isTakingLoading }) {
   const isActive = med.is_active;
   const dose     = nextDose(med);
   return (
@@ -251,7 +251,7 @@ function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
               {med.frequency === 'prn' && (
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">PRN</span>
               )}
-              {/* Today's taken/due status */}
+              {/* Today's taken/due status — shown for patients, family, caregivers */}
               {isActive && todayTaken === true && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
                   <CheckCircle size={9}/> Taken today
@@ -259,7 +259,7 @@ function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
               )}
               {isActive && todayTaken === false && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 flex items-center gap-1">
-                  <AlertTriangle size={9}/> Not taken today
+                  <AlertTriangle size={9}/> Not confirmed
                 </span>
               )}
               {dose && (
@@ -290,16 +290,41 @@ function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
           </p>
           {med.indication && <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1"><Info size={11}/>{med.indication}</p>}
 
-          {isStaff && isActive && (
-            <div className="flex gap-2 mt-3">
-              <button onClick={() => onEdit(med)}
-                className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition">
-                <Edit2 size={11}/> Edit
-              </button>
-              <button onClick={() => onStop(med)}
-                className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold transition">
-                <Ban size={11}/> Discontinue
-              </button>
+          {/* Action row — differs by role */}
+          {isActive && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {/* Patient / Caregiver: Mark as Taken */}
+              {canLogAdherence && todayTaken !== true && (
+                <button
+                  onClick={() => onMarkTaken(med.id)}
+                  disabled={isTakingLoading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition disabled:opacity-50"
+                >
+                  {isTakingLoading
+                    ? <Loader2 size={11} className="animate-spin"/>
+                    : <CheckCircle size={11}/>
+                  }
+                  Mark as Taken
+                </button>
+              )}
+              {canLogAdherence && todayTaken === true && (
+                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-xs font-bold">
+                  <CheckCircle size={11}/> Confirmed taken
+                </span>
+              )}
+              {/* Clinician / Admin: Edit + Discontinue */}
+              {canEdit && (
+                <>
+                  <button onClick={() => onEdit(med)}
+                    className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition">
+                    <Edit2 size={11}/> Edit
+                  </button>
+                  <button onClick={() => onStop(med)}
+                    className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold transition">
+                    <Ban size={11}/> Discontinue
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -312,14 +337,22 @@ function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
 export default function Medications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const isStaff   = ['clinician','admin','caregiver'].includes(user?.role);
+
   const isPatient  = user?.role === 'patient';
+  const isFamily   = user?.role === 'family';
+  const isCaregiver= user?.role === 'caregiver';
+  const isClinical = ['clinician','admin'].includes(user?.role);
+  // Staff = can pick patients; patients/family see their own
+  const isStaff    = ['clinician','admin','caregiver'].includes(user?.role);
+  // Read-only: patients and family cannot prescribe/edit/discontinue
+  const canEdit    = isClinical;
+  // Can log adherence (mark as taken): patients and caregivers
+  const canLogAdherence = isPatient || isCaregiver;
 
   // For patients/family: resolve their linked patient record ID via the hook
   const { patientId: ownPatientId } = usePatientId();
-
   const [staffPatientId, setStaffPatientId] = useState(null);
-  // patients see their own data; staff pick from a list
+  // patients/family see their own; staff pick from a list
   const patientId  = isStaff ? staffPatientId : ownPatientId;
   const setPatientId = isStaff ? setStaffPatientId : () => {};
 
@@ -419,15 +452,37 @@ export default function Medications() {
     onError: () => toast.error('Failed'),
   });
 
+  // Mark as taken — logs adherence for patient/caregiver
+  const markTakenMutation = useMutation({
+    mutationFn: (medId) => axios.post(
+      `${API_URL}/api/compliance/acknowledge`,
+      { task_id: 'medication_acknowledge', notes: `Medication ID ${medId} taken` },
+      { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } }
+    ),
+    onSuccess: () => {
+      toast.success('Medication marked as taken');
+      queryClient.invalidateQueries(['task-status']);
+      queryClient.invalidateQueries(['compliance-tasks']);
+    },
+    onError: () => toast.error('Could not log medication'),
+  });
+
   const painLevel = prefsData?.esas_pain || prefsData?.pain_level || 0;
 
   return (
     <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.2}}
       className="min-h-screen space-y-5 pb-8">
 
-      <PageHeader image="/resources/african/african-medications.jpg" title="Medications"
-        subtitle="Prescriptions, dosage schedules, reminders and interaction monitoring" icon={Pill}>
-        {isStaff && patientId && (
+      <PageHeader image="/resources/african/african-medications.jpg"
+        title={isPatient ? "My Medications" : isFamily ? "Medications" : "Medications"}
+        subtitle={
+          isPatient ? "Your prescribed medications, dose schedule and daily confirmation" :
+          isFamily  ? "Your loved one's current medications" :
+          isCaregiver ? "Patient medications — record doses and flag missed administrations" :
+          "Prescriptions, dosage schedules, reminders and interaction monitoring"
+        }
+        icon={Pill}>
+        {canEdit && patientId && (
           <button onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all">
             <Plus size={15}/> Add Medication
@@ -588,9 +643,15 @@ export default function Medications() {
         ) : (
           <AnimatePresence>
             {filtered.map((med, i) => (
-              <MedRow key={med.id} med={med} index={i} isStaff={isStaff}
-                todayTaken={isPatient && med.is_active ? medAckDone : undefined}
-                onEdit={setEditingMed} onStop={setStopTarget}/>
+              <MedRow key={med.id} med={med} index={i}
+                canEdit={canEdit}
+                canLogAdherence={canLogAdherence}
+                todayTaken={canLogAdherence && med.is_active ? medAckDone : undefined}
+                onEdit={setEditingMed}
+                onStop={setStopTarget}
+                onMarkTaken={(medId) => markTakenMutation.mutate(medId)}
+                isTakingLoading={markTakenMutation.isPending}
+              />
             ))}
           </AnimatePresence>
         )}
