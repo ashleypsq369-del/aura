@@ -101,6 +101,8 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
     patient: [
       { name: 'My Space',        path: '/my-space',          icon: LayoutDashboard },
       { name: 'Wellness Check',  path: '/wellness-checkin',  icon: Activity },
+      { name: 'My Medications',  path: '/medications',       icon: Pill },
+      { name: 'Appointments',    path: '/appointments',      icon: Calendar },
       { name: 'Messages',        path: '/messages',          icon: MessageCircle },
       { name: 'My Journey',      path: '/my-journey',        icon: Map },
       { name: 'Care Setting',    path: '/care-settings',     icon: Target },
@@ -116,6 +118,8 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
     family: [
       { name: 'Overview',           path: '/dashboard',             icon: LayoutDashboard },
       { name: 'Messages',           path: '/messages',              icon: MessageCircle },
+      { name: 'Appointments',       path: '/appointments',          icon: Calendar },
+      { name: 'Medications',        path: '/medications',           icon: Pill },
       { name: 'Continuity Bridge',  path: '/continuity-bridge',     icon: InfinityIcon },
       { name: 'Bereavement Support',path: '/bereavement-support',   icon: Heart },
       { name: 'Care Setting',       path: '/care-settings',         icon: Target },

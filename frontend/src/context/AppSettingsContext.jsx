@@ -39,14 +39,32 @@ export function AppSettingsProvider({ children }) {
   );
 
   // Sidebar settings
-  const [sidebarSettings, setSidebarSettings] = useState(() => ({
-    // 'visible' | 'hidden' - desktop visibility
-    desktopVisible: JSON.parse(localStorage.getItem('sidebar_desktop_visible') ?? 'true'),
-    // 'icons' | 'expanded' - default collapsed state on desktop
-    defaultState: localStorage.getItem('sidebar_default_state') || 'icons',
-    // Show text labels when hovered (always true, but can be disabled)
-    showLabels: JSON.parse(localStorage.getItem('sidebar_show_labels') ?? 'true'),
-  }));
+  const [sidebarSettings, setSidebarSettings] = useState(() => {
+    // Patients/family get expanded sidebar by default so they can see their nav
+    // (clinicians/caregivers get icon-only by default for more screen space)
+    const storedState = localStorage.getItem('sidebar_default_state');
+    let defaultState = storedState || 'icons';
+    // If never set, try to detect role from stored auth
+    if (!storedState) {
+      try {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          if (['patient','family'].includes(payload.role)) {
+            defaultState = 'expanded';
+          }
+        }
+      } catch { /* non-fatal */ }
+    }
+    return {
+      // 'visible' | 'hidden' - desktop visibility
+      desktopVisible: JSON.parse(localStorage.getItem('sidebar_desktop_visible') ?? 'true'),
+      // 'icons' | 'expanded' - default collapsed state on desktop
+      defaultState,
+      // Show text labels when hovered (always true, but can be disabled)
+      showLabels: JSON.parse(localStorage.getItem('sidebar_show_labels') ?? 'true'),
+    };
+  });
 
   // Apply theme to document
   useEffect(() => {

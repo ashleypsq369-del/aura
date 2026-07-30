@@ -288,8 +288,14 @@ function AppRoutes() {
           } catch { /* non-fatal */ }
         }
 
-        // Sidebar mode for low-tech users
-        if (prefs.tech_comfort === 'basic' || prefs.tech_comfort === 'low') {
+        // Sidebar mode: patients always get expanded sidebar so they can see nav labels
+        // Low-tech staff get icon mode only
+        if (['patient', 'family'].includes(user.role)) {
+          const stored = localStorage.getItem('sidebar_default_state');
+          if (!stored || stored === 'icons') {
+            localStorage.setItem('sidebar_default_state', 'expanded');
+          }
+        } else if (prefs.tech_comfort === 'basic' || prefs.tech_comfort === 'low') {
           const stored = localStorage.getItem('sidebar_default_state');
           if (!stored) localStorage.setItem('sidebar_default_state', 'icons');
         }

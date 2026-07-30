@@ -256,7 +256,7 @@ function StopModal({ med, onClose, onConfirm, pending }) {
 /* ── Medication row (same feel as AlertCard) ─────────────────────────────── */
 function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTaken, todayTaken, isTakingLoading }) {
   const isActive = med.is_active;
-  const dose     = nextDose(med);
+  const dose     = nextDose(med);   // dose-time object, NOT the dose string
   return (
     <motion.div layout initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
       className={`group border-l-4 ${isActive?'border-l-teal-500 bg-white':'border-l-slate-300 bg-slate-50'} rounded-r-xl border border-slate-200 p-4 transition-shadow hover:shadow-md`}>
@@ -445,9 +445,9 @@ export default function Medications() {
   });
   const severeInts = (drugData?.interactions || []).filter(i => i.severity === 'severe' || i.severity === 'major');
 
-  // Dose reminders
+  // Dose reminders — use 'doseTime' to avoid clobbering med.dose string
   const reminders = useMemo(() =>
-    active.map(m => ({ ...m, dose: nextDose(m) })).filter(m => m.dose).sort((a,b) => a.dose.next - b.dose.next),
+    active.map(m => ({ ...m, doseTime: nextDose(m) })).filter(m => m.doseTime).sort((a,b) => a.doseTime.next - b.doseTime.next),
     [active]
   );
 
@@ -582,7 +582,7 @@ export default function Medications() {
             </div>
             <div className="space-y-2">
               {reminders.map(m => {
-                const { hoursUntil, next } = m.dose;
+                const { hoursUntil, next } = m.doseTime;
                 const urgency = hoursUntil < 1 ? 'bg-red-100 text-red-800 border-red-200' : hoursUntil < 4 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-blue-50 text-blue-800 border-blue-200';
                 const badge = hoursUntil < 1 ? 'NOW' : hoursUntil < 4 ? 'SOON' : next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
                 return (
