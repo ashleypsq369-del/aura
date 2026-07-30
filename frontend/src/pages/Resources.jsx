@@ -127,7 +127,7 @@ export default function Resources() {
 
   return (
     <div className="min-h-full">
-      <div className="max-w-[1400px] mx-auto px-6 py-0">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-0">
         <PageHeader
           image="/resources/african/african-medical-reading.jpg"
           title="Educational Resources"

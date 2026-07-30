@@ -3,7 +3,7 @@ Clinical Assessments API - Phase 1: Core Assessments
 ESAS, PPS, PHQ-9, GAD-7 - Most essential validated tools
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 from pydantic import BaseModel
@@ -17,6 +17,7 @@ from src.db import (get_db, User, Patient, Alert,
                     QualityOfLifeAssessment, CaregiverBurdenAssessment, MotorSkillsAssessment)
 from routers.auth import get_current_user
 from services.journey_tracker import track_critical_alert, track_assessment
+from services.audit_service import log_action
 
 router = APIRouter(prefix="/api/assessments", tags=["Clinical Assessments"])
 
@@ -140,12 +141,11 @@ def create_assessment_alert(db: Session, patient_id: int, alert_type: str,
 @router.post("/esas")
 async def create_esas_assessment(
     data: ESASCreate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Create new ESAS assessment and generate alerts"""
-    
-    # Create assessment
     assessment = ESASAssessment(
         patient_id=data.patient_id,
         assessed_by=current_user.id,
@@ -164,8 +164,13 @@ async def create_esas_assessment(
         proxy_relationship=data.proxy_relationship,
         notes=data.notes
     )
-    
     db.add(assessment)
+    log_action(db, user=current_user, action="CREATE_ESAS_ASSESSMENT",
+               resource_type="esas_assessment", patient_id=data.patient_id,
+               request=request,
+               details={"pain": data.pain, "depression": data.depression,
+                        "anxiety": data.anxiety, "wellbeing": data.wellbeing,
+                        "proxy": data.completed_by_proxy})
     db.commit()
     db.refresh(assessment)
     

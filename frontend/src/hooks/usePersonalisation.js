@@ -33,11 +33,11 @@ export function usePersonalisation({ applySettings } = {}) {
   const { data: prefs, isLoading } = useQuery({
     queryKey: ['user-preferences', user?.id],
     queryFn: async () => {
-      const r = await apiClient.get(`/api/preferences/${user.id}`);
+      const r = await apiClient.get(`/api/preferences/my`);
       return r.data;
     },
-    enabled: !!(isAuthenticated && user?.id),
-    staleTime: 10 * 60 * 1000,   // 10 min cache
+    enabled: !!(isAuthenticated && user?.id && ['patient','family','caregiver'].includes(user?.role)),
+    staleTime: 10 * 60 * 1000,
     retry: false,
   });
 

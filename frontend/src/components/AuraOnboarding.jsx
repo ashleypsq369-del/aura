@@ -278,12 +278,8 @@ export default function AuraOnboarding() {
               pointerEvents: 'auto',
             }}
           >
-            <div className="rounded-2xl overflow-hidden"
-              style={{
-                background: '#ffffff',
-                border: '1.5px solid #e2e8f0',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08)',
-              }}>
+            <div className="rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+              style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)' }}>
 
               {/* Progress bar */}
               <div className="h-1 w-full" style={{ background: '#f1f5f9' }}>

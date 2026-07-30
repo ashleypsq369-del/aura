@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Users, Brain, Bell, Pill, Calendar, 
@@ -13,6 +13,7 @@ import { useAppSettings } from '../../context/AppSettingsContext';
 import useAppStore from '../../store/useAppStore';
 import usePersonalisation from '../../hooks/usePersonalisation';
 import { usePersonalisationFlags } from '../../context/PersonalisationContext';
+import { useUIProfile } from '../../context/UIProfileContext';
 
 // Icon map for dynamic nav additions from CareSettingContext
 const ICON_MAP = {
@@ -30,8 +31,9 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
   const { hiddenNavPaths, uiFlags } = usePersonalisationFlags();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
-  const { careSetting, meta, navAdditions } = useCareSettingContext();
+  const { careSetting, meta, navAdditions, isHidden } = useCareSettingContext();
   const { sidebarSettings, updateSidebarSetting } = useAppSettings();
+  const { profileKey, profile: uiProfile } = useUIProfile();
 
   // Use Zustand for unread count - shared with NotificationCenter
   const unreadCount = useAppStore(s => s.unreadAlerts);
@@ -75,6 +77,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'HIPAA Compliance', path: '/admin/hipaa-compliance',   icon: Shield },
       { name: 'Model Bias Report',path: '/admin/model-bias-report',  icon: Brain },
       { name: 'Audit Log',        path: '/admin/audit',              icon: Shield },
+      { name: 'Reports',          path: '/reports',                  icon: FileText },
       { name: 'My Profile',       path: '/profile',                  icon: User },
     ],
     clinician: [
@@ -92,6 +95,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'Shift Handover',  path: '/shift-handover',    icon: ClipboardList },
       { name: 'Pre-Clinic',      path: '/pre-clinic',        icon: ClipboardList },
       { name: 'Medical KB',      path: '/medical-knowledge', icon: BookOpen },
+      { name: 'Reports',         path: '/reports',           icon: FileText },
       { name: 'My Profile',      path: '/profile',           icon: User },
     ],
     patient: [
@@ -135,9 +139,13 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'My Profile',     path: '/profile',          icon: User },
     ]};
 
-  const navItems = (navigation[user?.role] || []).filter(
-    item => !hiddenNavPaths.has(item.path)
-  );
+  const navItems = (navigation[user?.role] || []).filter(item => {
+    // Personalisation: hide paths blocked by questionnaire responses
+    if (hiddenNavPaths.has(item.path)) return false;
+    // Care setting: hide features not relevant to this care context
+    if (isHidden(item.path)) return false;
+    return true;
+  });
   const activeItemRef = useRef(null);
 
   // Build personalised "suggested" item paths for patients
@@ -177,6 +185,8 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
   const desktopWidth = expanded ? 'md:w-[200px]' : 'md:w-[60px]';
   // Desktop visibility
   const desktopVisible = sidebarSettings.desktopVisible;
+  // Show labels: always on mobile drawer, or when desktop is expanded
+  const showLabels = isOpen || expanded;
 
   return (
     <>
@@ -215,7 +225,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
               className="flex-shrink-0 rounded-lg bg-white/10 object-contain"
               style={{ width: 30, height: 30, padding: 2 }}
             />
-            {expanded && (
+            {showLabels && (
               <div className="min-w-0">
                 <p className="text-sm font-bold text-white leading-tight truncate">Project Aura</p>
                 <p className="text-[9px] text-white/60 uppercase tracking-wider">Healthcare</p>
@@ -247,8 +257,8 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
         {/* Navigation Items */}
         {/* overflow-y: auto on the nav for scrolling; tooltips use position:fixed via sidebar-tip class */}
         <nav className="flex-1 min-h-0 px-2 py-3 space-y-1 overflow-y-auto sidebar-nav sidebar-scroll-container">
-          {/* Care Setting badge - shown when expanded */}
-          {careSetting && expanded && meta && (
+          {/* Care Setting badge - shown when showLabels */}
+          {careSetting && showLabels && meta && (
             <div className="mb-2 px-2 py-2 bg-white/10 rounded-lg border border-white/20">
               <p className="text-[9px] text-white/50 uppercase tracking-wider font-bold mb-0.5">Care Setting</p>
               <p className="text-[11px] text-teal-200 font-semibold leading-tight flex items-center gap-1">
@@ -257,7 +267,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
               </p>
             </div>
           )}
-          {careSetting && !expanded && meta && (
+          {careSetting && !showLabels && meta && (
             <div className="mb-1 flex justify-center" title={meta.label}>
               {meta.icon && <meta.icon size={16} className="text-teal-300" />}
             </div>
@@ -272,10 +282,10 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                 key={item.path + item.name}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                data-tip={!expanded && sidebarSettings.showLabels ? `⭐ ${item.name}` : undefined}
+                data-tip={!showLabels && sidebarSettings.showLabels ? `⭐ ${item.name}` : undefined}
                 className={`
                   sidebar-tip flex items-center px-2 py-2 rounded-lg transition-all duration-150 relative group
-                  ${expanded ? 'justify-start' : 'justify-center'} h-[36px]
+                  ${showLabels ? 'justify-start' : 'justify-center'} h-[36px]
                   ${active
                     ? 'bg-white/20 text-white font-bold shadow-lg border-l-3 border-yellow-300'
                     : 'text-yellow-200/80 hover:bg-white/10 hover:text-white border-l-3 border-yellow-400/50'
@@ -283,7 +293,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                 `}
               >
                 <Icon size={18} className={`${active ? 'scale-110 text-white' : 'text-yellow-200/70 group-hover:text-white'} transition-all flex-shrink-0`} strokeWidth={active ? 2.5 : 2} />
-                {expanded && (
+                {showLabels && (
                   <span className={`text-sm ml-2 truncate ${active ? 'font-bold' : 'font-medium'}`}>
                     {item.name}
                   </span>
@@ -308,10 +318,10 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                 to={item.path}
                 onClick={() => setIsOpen(false)}
                 ref={active ? activeItemRef : null}
-                data-tip={!expanded && sidebarSettings.showLabels ? item.name + (item.badge && unreadCount > 0 ? ` (${unreadCount})` : '') : undefined}
+                data-tip={!showLabels && sidebarSettings.showLabels ? item.name + (item.badge && unreadCount > 0 ? ` (${unreadCount})` : '') : undefined}
                 className={`
                   sidebar-tip flex items-center px-2 py-2 rounded-lg transition-all duration-150 relative group
-                  ${expanded ? 'justify-start' : 'justify-center'} h-[36px]
+                  ${showLabels ? 'justify-start' : 'justify-center'} h-[36px]
                   ${active
                     ? 'bg-white/20 text-white font-bold shadow-lg border-l-3 border-teal-300'
                     : 'text-white/75 hover:bg-white/10 hover:text-white border-l-3 border-transparent'
@@ -319,7 +329,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
               >
                 <Icon size={18} className={`${active ? 'scale-110 text-white' : 'text-white/70 group-hover:text-white'} transition-all flex-shrink-0`} strokeWidth={active ? 2.5 : 2} />
 
-                {expanded && (
+                {showLabels && (
                   <span className={`text-sm ml-2 truncate ${active ? 'font-bold' : 'font-medium'}`}>
                     {item.name}
                   </span>
@@ -328,14 +338,14 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                 {item.badge && unreadCount > 0 && (
                   <span className={`
                     bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg min-w-[16px] text-center
-                    ${expanded ? 'ml-auto' : 'absolute -top-0.5 -right-0.5'}
+                    ${showLabels ? 'ml-auto' : 'absolute -top-0.5 -right-0.5'}
                   `}>
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
 
                 {/* Personalisation suggested dot — icon-only mode */}
-                {!active && !item.badge && isSuggested && !expanded && (
+                {!active && !item.badge && isSuggested && !showLabels && (
                   <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                 )}
               </Link>
@@ -343,20 +353,33 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
           })}
         </nav>
 
+        {/* -- UI Profile badge (shown when expanded) -- */}
+        {showLabels && profileKey && profileKey !== 'standard' && (
+          <div className="px-3 pb-2 flex-shrink-0">
+            <Link to="/settings" onClick={() => setIsOpen(false)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors">
+              <span className="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0" />
+              <span className="text-[10px] text-teal-200 font-medium truncate">
+                {uiProfile?.label || profileKey} mode
+              </span>
+            </Link>
+          </div>
+        )}
+
         {/* -- Aura AI button -- */}
         <div className="px-2 py-3 border-t border-white/10 flex-shrink-0">
           <button
             onClick={() => { setIsOpen(false); onOpenAura?.(); }}
-            data-tip={!expanded && sidebarSettings.showLabels ? 'Open Aura AI Companion ✨' : undefined}
+            data-tip={!showLabels && sidebarSettings.showLabels ? 'Open Aura AI Companion ✨' : undefined}
             className={`
               sidebar-tip w-full flex items-center px-2 py-2.5 rounded-lg transition-all duration-150 relative group
-              ${expanded ? 'justify-start' : 'justify-center'}
+              ${showLabels ? 'justify-start' : 'justify-center'}
               bg-gradient-to-r from-teal-500/30 to-cyan-500/30 hover:from-teal-500/50 hover:to-cyan-500/50
               border border-teal-400/40 hover:border-teal-300/70
             `}
           >
             <Sparkles size={18} className="text-teal-300 group-hover:text-white transition-all flex-shrink-0" strokeWidth={2} />
-            {expanded && (
+            {showLabels && (
               <span className="text-sm ml-2 font-bold text-teal-200 group-hover:text-white truncate">
                 Aura AI
               </span>

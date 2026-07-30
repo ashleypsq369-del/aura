@@ -119,7 +119,7 @@ export default function PageHeader({ image, title, subtitle, icon: Icon, childre
       <div className="absolute inset-0 border-b-2 pointer-events-none" style={{ borderColor: 'rgba(45,212,191,0.65)', zIndex: 3 }} />
 
       {/* Main content  --  above photo + overlay */}
-      <div className="relative h-full flex flex-col justify-center px-6 md:px-8" style={{ zIndex: 4 }}>
+      <div className="relative h-full flex flex-col justify-center px-3 sm:px-6 md:px-8" style={{ zIndex: 4 }}>
 
         {/* Title row */}
         <div className="flex items-center justify-between">

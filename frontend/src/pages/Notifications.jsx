@@ -62,7 +62,7 @@ function NotifRow({ n, onRead, onDelete }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
       transition={{ duration: 0.15 }}
-      className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+      className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
     >
       {/* Unread left bar */}
       {unread && (
@@ -88,8 +88,8 @@ function NotifRow({ n, onRead, onDelete }) {
           )}
           {unread && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: cfg.bar }} />}
         </div>
-        <p className="text-xs font-semibold text-gray-900 leading-tight truncate">{n.title}</p>
-        {n.body && <p className="text-[11px] text-gray-500 mt-0.5 leading-snug truncate">{n.body}</p>}
+        <p className="text-xs font-semibold text-gray-900 dark:text-white leading-tight truncate">{n.title}</p>
+        {n.body && <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5 leading-snug truncate">{n.body}</p>}
       </div>
 
       {/* Right — time + actions */}
@@ -192,7 +192,7 @@ export default function Notifications() {
   const critCount   = visibleNotifications.filter(n => !n.is_read && CRITICAL_TYPES.includes(n.notification_type)).length;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 p-4 md:p-6">
       <div className="max-w-2xl mx-auto">
 
         {/* ── Header — matches Settings header style ── */}
@@ -203,7 +203,7 @@ export default function Notifications() {
                 <Bell size={17} color="#0d9488" />
               </div>
               <div>
-                <h1 className="text-base font-bold text-gray-900 leading-tight flex items-center gap-2">
+                <h1 className="text-base font-bold text-gray-900 dark:text-white leading-tight flex items-center gap-2">
                   Notifications
                   {unreadCount > 0 && (
                     <span className="px-2 py-0.5 bg-teal-600 text-white text-[11px] font-bold rounded-full">
@@ -216,26 +216,26 @@ export default function Notifications() {
                     </span>
                   )}
                 </h1>
-                <p className="text-xs text-gray-500">{filtered.length} notification{filtered.length !== 1 ? 's' : ''}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400">{filtered.length} notification{filtered.length !== 1 ? 's' : ''}</p>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             {unreadCount > 0 && (
               <button onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}
-                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-white hover:bg-teal-50 rounded-xl border border-gray-200 transition shadow-sm disabled:opacity-50">
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm disabled:opacity-50">
                 <CheckCheck size={13} /> Mark all read
               </button>
             )}
             <button onClick={() => clearRead.mutate()}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 bg-white hover:bg-red-50 hover:text-red-600 rounded-xl border border-gray-200 transition shadow-sm">
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm">
               <BellOff size={13} /> Clear read
             </button>
           </div>
         </div>
 
         {/* ── Filters ── */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 mb-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-4 mb-4">
           <div className="flex items-center gap-2 flex-wrap">
             {/* Search */}
             <div className="relative flex-1 min-w-[160px]">
@@ -295,7 +295,7 @@ export default function Notifications() {
             {todayItems.length > 0 && (
               <>
                 <SectionLabel label="Today" count={todayItems.length} />
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {todayItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>
@@ -305,7 +305,7 @@ export default function Notifications() {
             {weekItems.length > 0 && (
               <>
                 <SectionLabel label="Earlier this week" count={weekItems.length} />
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {weekItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>
@@ -315,14 +315,14 @@ export default function Notifications() {
             {olderItems.length > 0 && (
               <>
                 <SectionLabel label="Older" count={olderItems.length} />
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {olderItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>
                 </div>
               </>
             )}
-            <div className="flex items-center justify-between px-1 mt-3 text-xs text-gray-400">
+            <div className="flex items-center justify-between px-1 mt-3 text-xs text-gray-400 dark:text-slate-500">
               <span>{unreadCount} unread · {visibleNotifications.length} total</span>
               <button onClick={() => clearRead.mutate()}
                 className="flex items-center gap-1 hover:text-red-500 font-medium transition">

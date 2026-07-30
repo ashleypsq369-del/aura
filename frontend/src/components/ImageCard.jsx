@@ -27,7 +27,7 @@ function _Inner({ image, icon: Icon, title, description, onClick, linkTo, color,
     <motion.div
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
-      className={`img-card relative rounded-2xl overflow-hidden shadow-lg cursor-pointer h-full min-h-[160px] ${className}`}
+      className={`img-card relative rounded-2xl overflow-hidden shadow-md cursor-pointer h-full min-h-[140px] ${className}`}
       /* NO backgroundColor in style  --  CSS handles fallback via data-color */
       style={{ '--img-card-color': color }}
       onClick={onClick}

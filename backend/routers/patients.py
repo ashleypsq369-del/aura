@@ -3,7 +3,7 @@ Patients Router  --  Project Aura
 CRUD operations for patient records with full intake validation and RBAC.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
@@ -15,6 +15,7 @@ from src.db import (
     get_all_patients, get_patient, Vital, Medication
 )
 from routers.auth import get_current_user
+from services.audit_service import log_action
 
 router = APIRouter()
 
@@ -243,6 +244,7 @@ async def get_patient_by_id(
 @router.post("", response_model=PatientResponse, status_code=status.HTTP_201_CREATED)
 async def create_patient(
     patient_data: PatientCreate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -296,18 +298,13 @@ async def create_patient(
     
     db.add(patient)
     db.flush() # get ID
-    
-    # Log creation
-    audit = AuditLog(
-        user_id=current_user.id,
-        user_role=current_user.role,
-        action="patient_created",
-        resource_type="patient",
-        resource_id=patient.id,
-        patient_id=patient.id,
-        success=True
-    )
-    db.add(audit)
+
+    # Log creation (with IP + user-agent)
+    log_action(db, user=current_user, action="CREATE_PATIENT",
+               resource_type="patient", resource_id=patient.id,
+               patient_id=patient.id, request=request,
+               details={"patient_code": patient_data.patient_code,
+                        "diagnosis": patient_data.primary_diagnosis})
     db.commit()
     db.refresh(patient)
     
@@ -328,6 +325,7 @@ async def create_patient(
 async def update_patient(
     patient_id: int,
     patient_data: PatientCreate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -383,17 +381,12 @@ async def update_patient(
     if patient_data.primary_clinician_id:
         patient.primary_clinician_id = patient_data.primary_clinician_id
 
-    # Log update
-    audit = AuditLog(
-        user_id=current_user.id,
-        user_role=current_user.role,
-        action="patient_updated",
-        resource_type="patient",
-        resource_id=patient.id,
-        patient_id=patient.id,
-        success=True
-    )
-    db.add(audit)
+    # Log update (with IP + user-agent)
+    log_action(db, user=current_user, action="UPDATE_PATIENT",
+               resource_type="patient", resource_id=patient.id,
+               patient_id=patient.id, request=request,
+               details={"diagnosis": patient_data.primary_diagnosis,
+                        "care_pathway": patient_data.care_pathway})
     db.commit()
     db.refresh(patient)
 

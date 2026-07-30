@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { caregiverIntelligenceAPI, careSettingsAPI, mlAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useCareTeamChat } from '../hooks/useCareTeamChat';
 import PageTransition from '../components/PageTransition';
 import RiskExplanationPanel from '../components/RiskExplanationPanel';
 import MLRiskSummaryCard from '../components/MLRiskSummaryCard';
@@ -26,6 +27,7 @@ export default function PatientDetail() {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { chatWith } = useCareTeamChat();
   const queryClient = useQueryClient();
   const token = localStorage.getItem('auth_token');
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -77,6 +79,19 @@ export default function PatientDetail() {
     queryKey: ['patient-care-setting', patientId],
     queryFn: () => careSettingsAPI.getPatientSettings(patientId).then(r => r.data),
     enabled: !!patientId && patientId !== 'undefined' && !!token,
+    retry: false,
+  });
+
+  // Must be here (not after early returns) — Rules of Hooks
+  const { data: patientUserData } = useQuery({
+    queryKey: ['patient-user-id', patientId],
+    queryFn: async () => {
+      const r = await axios.get(`${API_URL}/api/messaging/patient-user/${patientId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return r.data;
+    },
+    enabled: !!patientId && !!token && ['admin','clinician','caregiver'].includes(user?.role),
     retry: false,
   });
 
@@ -245,7 +260,16 @@ export default function PatientDetail() {
     { image: '/resources/african/african-clinical-team.jpg', icon: FileText,      title: 'Care Plan',    description: 'Goals & interventions',      onClick: () => navigate(`/patients/${patientId}/care-plan`),  color: '#0369a1' },
     { image: '/resources/african/african-wellbeing.jpg',   icon: Heart,         title: 'Wellbeing',    description: 'ESAS assessments',           onClick: () => navigate(`/patients/${patientId}/wellbeing`),   color: '#9d174d' },
     { image: '/resources/african/african-appointment.jpg',icon: Calendar,    title: 'Appointments', description: 'Scheduled visits',           onClick: () => navigate(`/patients/${patientId}/appointments`),color: '#1d4ed8' },
-    { image: '/resources/african/african-clinical-team.jpg',  icon: MessageCircle, title: 'Message',      description: 'Contact patient',            onClick: () => navigate(patient?.primary_clinician_id ? `/messages?userId=${patient.primary_clinician_id}` : '/messages'),    color: '#0f766e' },
+    {
+      image: '/resources/african/african-clinical-team.jpg',
+      icon: MessageCircle,
+      title: 'Message',
+      description: patientUserData?.found ? `Chat with ${patient?.full_name?.split(' ')[0]}` : 'Contact patient',
+      onClick: () => patientUserData?.user_id
+        ? chatWith(patientUserData.user_id, `Hi ${patient?.full_name?.split(' ')[0]}, this is ${user?.full_name} from the care team.`)
+        : navigate('/messages'),
+      color: '#0f766e',
+    },
   ];
 
   return (
@@ -271,7 +295,9 @@ export default function PatientDetail() {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50">
               <Brain size={13} /> {loadingRisk ? 'Analyzing...' : 'AI Risk'}
             </button>
-            <button onClick={() => navigate(patient?.primary_clinician_id ? `/messages?userId=${patient.primary_clinician_id}` : '/messages')}
+            <button onClick={() => patientUserData?.user_id
+                ? chatWith(patientUserData.user_id, `Hi ${patient?.full_name?.split(' ')[0]}, this is ${user?.full_name} from the care team.`)
+                : navigate('/messages')}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition">
               <MessageCircle size={13} /> Message
             </button>

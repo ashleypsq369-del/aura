@@ -19,13 +19,16 @@ import ImageCard from '../components/ImageCard';
 import PageHeader from '../components/PageHeader';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
+import DailyTaskChecklist from '../components/DailyTaskChecklist';
 import { StatCard } from '../components/ui/Card';
+import { useCareTeamChat } from '../hooks/useCareTeamChat';
 
 import { API_URL } from '../api/client';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { chatWithCareTeam } = useCareTeamChat();
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [criticalAlert, setCriticalAlert] = useState(null);
@@ -34,12 +37,14 @@ export default function Dashboard() {
   const { data: prefsData } = useQuery({
     queryKey: ['preferences', user?.id],
     queryFn: async () => {
-      const r = await axios.get(`${API_URL}/api/preferences/${user.id}`, {
+      const r = await axios.get(`${API_URL}/api/preferences/my`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return r.data;
     },
-    enabled: !!(user && (user.role === 'patient' || user.role === 'family'))
+    enabled: !!(user?.id && (user.role === 'patient' || user.role === 'family' || user.role === 'caregiver')),
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 
   const { data: myPatientsData } = useQuery({
@@ -151,7 +156,7 @@ export default function Dashboard() {
           <CriticalAlertModal alert={criticalAlert} onClose={() => setCriticalAlert(null)} />
         )}
         <div className="min-h-screen">
-          <div className="max-w-[1400px] mx-auto px-8 py-8">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8">
             <PageHeader
               image="/resources/cards/header-clinician.jpg"
               title="Dashboard Overview"
@@ -283,7 +288,7 @@ export default function Dashboard() {
     const assignedPatients = myPatientsData?.patients || summary?.patients || [];
     return (
       <div className="min-h-screen">
-        <div className="max-w-[1400px] mx-auto px-8 py-8">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8">
           <PageHeader
             image="/resources/cards/header-caregiver-dash.jpg"
             title="Caregiver Dashboard"
@@ -299,6 +304,11 @@ export default function Dashboard() {
             <ImageCard image="/resources/african/african-doctor-female.jpg"    icon={FileText}      title="Care Plans"     description="View care plans"          onClick={() => navigate('/care-settings')}  color="#166534" />
             <ImageCard image="/resources/african/african-nurse-female.jpg"       icon={Bell}          title="Alerts"         description="Pending task alerts"      onClick={() => navigate('/alerts')}         color="#b45309" />
             <ImageCard image="/resources/african/african-medical-reading.jpg"    icon={BookOpen}      title="Resources"      description="Caregiver guides"         onClick={() => navigate('/resources')}      color="#0f766e" />
+          </div>
+
+          {/* Caregiver task compliance — compact checklist for their own tasks */}
+          <div className="mb-6">
+            <DailyTaskChecklist compact />
           </div>
           <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
@@ -419,7 +429,7 @@ function FamilyDashboard({ user, summary, navigate }) {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-8 py-8 space-y-6">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 space-y-6">
         <PageHeader
           image="/resources/cards/header-family-dash.jpg"
           title="Family Dashboard"
@@ -427,7 +437,7 @@ function FamilyDashboard({ user, summary, navigate }) {
           icon={Heart}
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => navigate('/messages')}           color="#be123c" />
+          <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => chatWithCareTeam()}              color="#be123c" />
           <ImageCard image="/resources/african/african-memory.jpg"  icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#7c3aed" />
           <ImageCard image="/resources/african/african-medical-reading.jpg"     icon={BookOpen}      title="Resources"      description="Caregiver support guides" onClick={() => navigate('/resources')}          color="#1d4ed8" />
           <ImageCard image="/resources/african/african-community.jpg"     icon={Globe}         title="Community"      description="Connect with others"      onClick={() => navigate('/community')}          color="#0f766e" />
@@ -442,11 +452,14 @@ function FamilyDashboard({ user, summary, navigate }) {
           <StatCard label="Appointments"  value={summary?.stats?.upcoming_appointments ?? 0}             icon={Calendar}      variant="purple" onClick={() => navigate('/appointments')} />
           <StatCard label="Memories"      value={summary?.stats?.memory_count ?? 0}                     icon={Activity}      variant="teal"   onClick={() => navigate('/memory-vault')} />
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+
+        {/* Daily task checklist for family — shows appointments + optional tasks */}
+        <DailyTaskChecklist compact />
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-slate-800">Recent Care Updates</h2>
-              <p className="text-xs text-slate-500">Live events from your loved one's care journey</p>
+              <h2 className="text-base font-bold text-slate-800 dark:text-white">Recent Care Updates</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Live events from your loved one's care journey</p>
             </div>
             <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700">
               Full timeline →
@@ -480,7 +493,7 @@ function FamilyDashboard({ user, summary, navigate }) {
             )}
           </div>
           {events.length > 8 && (
-            <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 text-center">
+            <div className="px-5 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 text-center">
               <button onClick={() => navigate('/continuity-bridge')} className="text-sm font-semibold text-rose-600 hover:text-rose-700">
                 View all {events.length} updates →
               </button>

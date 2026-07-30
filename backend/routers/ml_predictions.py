@@ -30,6 +30,10 @@ from src.db import (
 )
 from routers.auth import get_current_user
 from services.ml_model_service import ml_service, get_ml_service
+from services.evidence_based_scoring import (
+    composite_palliative_risk, score_esas, score_ppi,
+    score_pap, score_pps, score_phq9, score_gad7, score_barthel,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -580,3 +584,246 @@ async def trigger_proactive_scan(
     background_tasks.add_task(_proactive_scan, db)
     return {"message": "Proactive risk scan started", "status": "running"}
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# EVIDENCE-BASED SCORING ENDPOINTS
+# These use validated published clinical models — NOT synthetic XGBoost.
+# All scores derived from peer-reviewed literature with real patient data.
+# ══════════════════════════════════════════════════════════════════════════════
+
+class EvidenceRiskRequest(BaseModel):
+    """Input for evidence-based composite risk scoring."""
+    # ESAS items (0-10 each)
+    esas_pain: int = 0
+    esas_tiredness: int = 0
+    esas_nausea: int = 0
+    esas_depression: int = 0
+    esas_anxiety: int = 0
+    esas_drowsiness: int = 0
+    esas_appetite: int = 0
+    esas_breath: int = 0
+    esas_wellbeing: int = 0
+    # PPS / PPI inputs
+    pps_score: Optional[int] = None       # 0-100 in 10% steps
+    oral_intake: str = "normal"           # normal | reduced | minimal
+    has_oedema: bool = False
+    dyspnoea_at_rest: bool = False
+    has_delirium: bool = False
+    has_anorexia: bool = False
+    kps_score: int = 50
+    clinician_survival_estimate: str = ">12 weeks"
+    wbc: Optional[float] = None           # 10^9/L
+    lymph_pct: Optional[float] = None     # %
+    # Assessment totals
+    phq9_total: Optional[int] = None
+    phq9_suicidal: int = 0
+    gad7_total: Optional[int] = None
+    barthel_total: Optional[int] = None
+
+
+@router.post("/evidence-based/composite")
+async def evidence_based_composite(
+    body: EvidenceRiskRequest,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Composite evidence-based palliative risk assessment.
+    Uses PPI (Morita 1999), PaP (Maltoni 1999), ESAS-Risk (Seow 2011),
+    PPS (Bischoff 2024), PHQ-9 (Kroenke 2002), GAD-7 (Spitzer 2006),
+    Barthel (Mahoney 1965).
+    Returns overall risk level, survival estimates, and clinical actions.
+    No synthetic data — all models derived from real published patient cohorts.
+    """
+    result = composite_palliative_risk(
+        esas_pain=body.esas_pain, esas_tiredness=body.esas_tiredness,
+        esas_nausea=body.esas_nausea, esas_depression=body.esas_depression,
+        esas_anxiety=body.esas_anxiety, esas_drowsiness=body.esas_drowsiness,
+        esas_appetite=body.esas_appetite, esas_breath=body.esas_breath,
+        esas_wellbeing=body.esas_wellbeing,
+        pps_score=body.pps_score, oral_intake=body.oral_intake,
+        has_oedema=body.has_oedema, dyspnoea_at_rest=body.dyspnoea_at_rest,
+        has_delirium=body.has_delirium, has_anorexia=body.has_anorexia,
+        kps_score=body.kps_score, clinician_survival_estimate=body.clinician_survival_estimate,
+        wbc=body.wbc, lymph_pct=body.lymph_pct,
+        phq9_total=body.phq9_total, phq9_suicidal=body.phq9_suicidal,
+        gad7_total=body.gad7_total, barthel_total=body.barthel_total,
+    )
+    return result
+
+
+@router.get("/evidence-based/patient/{patient_id}")
+async def evidence_based_for_patient(
+    patient_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Run evidence-based composite scoring for a specific patient
+    by pulling their latest ESAS, PPS, PHQ-9, GAD-7 and Barthel data from the DB.
+    """
+    from src.db import (
+        ESASAssessment, PPSAssessment, PHQ9Assessment,
+        GAD7Assessment, BarthelIndexAssessment,
+    )
+    from services.access_control import assert_patient_access
+    assert_patient_access(patient_id, current_user, db)
+
+    # Fetch latest assessments
+    esas = (db.query(ESASAssessment)
+            .filter(ESASAssessment.patient_id == patient_id)
+            .order_by(ESASAssessment.assessed_at.desc()).first())
+
+    pps  = (db.query(PPSAssessment)
+            .filter(PPSAssessment.patient_id == patient_id)
+            .order_by(PPSAssessment.assessed_at.desc()).first())
+
+    phq9 = (db.query(PHQ9Assessment)
+            .filter(PHQ9Assessment.patient_id == patient_id)
+            .order_by(PHQ9Assessment.assessed_at.desc()).first())
+
+    gad7 = (db.query(GAD7Assessment)
+            .filter(GAD7Assessment.patient_id == patient_id)
+            .order_by(GAD7Assessment.assessed_at.desc()).first())
+
+    barthel = (db.query(BarthelIndexAssessment)
+               .filter(BarthelIndexAssessment.patient_id == patient_id)
+               .order_by(BarthelIndexAssessment.assessed_at.desc()).first())
+
+    # Build kwargs from latest records
+    kwargs: dict = {}
+
+    if esas:
+        kwargs.update(
+            esas_pain       =getattr(esas, "pain",               0),
+            esas_tiredness  =getattr(esas, "tiredness",          0),
+            esas_nausea     =getattr(esas, "nausea",             0),
+            esas_depression =getattr(esas, "depression",         0),
+            esas_anxiety    =getattr(esas, "anxiety",            0),
+            esas_drowsiness =getattr(esas, "drowsiness",         0),
+            esas_appetite   =getattr(esas, "lack_of_appetite",   0),
+            esas_breath     =getattr(esas, "shortness_of_breath",0),
+            esas_wellbeing  =getattr(esas, "wellbeing",          0),
+        )
+
+    if pps:
+        kwargs["pps_score"]  = getattr(pps, "pps_score", None)
+        # Map PPS oral intake field if present
+        oral = getattr(pps, "oral_intake", "normal")
+        kwargs["oral_intake"] = oral if oral in ("normal","reduced","minimal") else "reduced"
+
+    if phq9:
+        # PHQ-9 total = sum of 9 items (each 0-3)
+        items = [
+            "little_interest","feeling_down","sleep_trouble","feeling_tired",
+            "appetite_change","feeling_bad_about_self","trouble_concentrating",
+            "moving_slowly_or_fidgety","thoughts_of_harm",
+        ]
+        total = sum(getattr(phq9, k, 0) for k in items)
+        kwargs["phq9_total"]    = total
+        kwargs["phq9_suicidal"] = getattr(phq9, "thoughts_of_harm", 0)
+
+    if gad7:
+        items_g = [
+            "feeling_nervous","not_stop_worrying","worrying_too_much",
+            "trouble_relaxing","being_restless","easily_annoyed","feeling_afraid",
+        ]
+        kwargs["gad7_total"] = sum(getattr(gad7, k, 0) for k in items_g)
+
+    if barthel:
+        kwargs["barthel_total"] = getattr(barthel, "total_score",
+                                   getattr(barthel, "barthel_score", None))
+
+    result = composite_palliative_risk(**kwargs)
+
+    # Attach metadata
+    result["patient_id"]       = patient_id
+    result["data_sources"]     = {
+        "esas":    esas.assessed_at.isoformat() if esas else None,
+        "pps":     pps.assessed_at.isoformat()  if pps  else None,
+        "phq9":    phq9.assessed_at.isoformat()  if phq9 else None,
+        "gad7":    gad7.assessed_at.isoformat()  if gad7 else None,
+        "barthel": barthel.assessed_at.isoformat() if barthel else None,
+    }
+    result["assessment_completeness"] = sum([
+        bool(esas), bool(pps), bool(phq9), bool(gad7), bool(barthel)
+    ])
+
+    return result
+
+
+@router.get("/evidence-based/models")
+async def list_evidence_models(current_user: User = Depends(get_current_user)):
+    """List all implemented evidence-based clinical scoring models with references."""
+    return {
+        "models": [
+            {
+                "id":         "ppi",
+                "name":       "Palliative Prognostic Index (PPI)",
+                "predicts":   "Survival <3 weeks / <6 weeks / >6 weeks",
+                "inputs":     ["PPS score", "oral intake", "oedema", "dyspnoea", "delirium"],
+                "validated":  "245 terminally ill cancer patients (Japan, multi-centre)",
+                "accuracy":   "Sensitivity 80%, specificity 85% for <3 weeks",
+                "reference":  "Morita T et al. Support Care Cancer 1999;7(2):128-133",
+            },
+            {
+                "id":         "pap",
+                "name":       "Palliative Prognostic Score (PaP)",
+                "predicts":   "30-day survival probability (Groups A/B/C)",
+                "inputs":     ["dyspnoea", "anorexia", "KPS", "clinician estimate", "WBC", "lymphocyte %", "delirium"],
+                "validated":  "518 terminally ill cancer patients (5 European centres)",
+                "accuracy":   "AUC 0.79 for 30-day mortality",
+                "reference":  "Maltoni M et al. J Clin Oncol 1999;17(9):2823-2830",
+            },
+            {
+                "id":         "esas_risk",
+                "name":       "ESAS Symptom Risk (TSDS model)",
+                "predicts":   "Symptom burden severity + 30-day mortality signal",
+                "inputs":     ["9 ESAS symptom scores (0-10 each)"],
+                "validated":  "16,000+ palliative patients (Ontario Cancer Registry, Canada)",
+                "accuracy":   "TSDS ≥40: 72% 30-day mortality sensitivity",
+                "reference":  "Seow H et al. J Oncol Pract 2011; Watanabe SM et al. JPSM 2011",
+            },
+            {
+                "id":         "pps_survival",
+                "name":       "PPS Actuarial Survival Model",
+                "predicts":   "1-month and 6-month mortality by PPS decile",
+                "inputs":     ["PPS score (0-100, 10% steps)"],
+                "validated":  "Real palliative inpatient + outpatient cohort, UCSF",
+                "accuracy":   "Distinct Kaplan-Meier curves at each decile",
+                "reference":  "Bischoff KE et al. JAMA Netw Open 2024. doi:10.1001/jamanetworkopen.2024.20472",
+            },
+            {
+                "id":         "phq9",
+                "name":       "PHQ-9 Depression Severity",
+                "predicts":   "Depression severity and clinical action threshold",
+                "inputs":     ["9 DSM-IV criteria scored 0-3 each"],
+                "validated":  "6,000 primary care + OB/GYN patients",
+                "accuracy":   "Sensitivity 88%, specificity 88% at score ≥10",
+                "reference":  "Kroenke K, Spitzer RL. J Gen Intern Med 2002;16:606-613",
+            },
+            {
+                "id":         "gad7",
+                "name":       "GAD-7 Anxiety Severity",
+                "predicts":   "Generalised anxiety severity and referral threshold",
+                "inputs":     ["7 anxiety items scored 0-3 each"],
+                "validated":  "2,740 primary care patients",
+                "accuracy":   "Sensitivity 89%, specificity 82% at score ≥10",
+                "reference":  "Spitzer RL et al. Arch Intern Med 2006;166(10):1092-7",
+            },
+            {
+                "id":         "barthel",
+                "name":       "Barthel Index Functional Risk",
+                "predicts":   "Functional dependence level + mortality risk",
+                "inputs":     ["ADL total score 0-100"],
+                "validated":  "Post-stroke patients (Mahoney 1965); 5,000+ patients (Frontiers 2024)",
+                "accuracy":   "High sensitivity/specificity for mortality at 60% score threshold",
+                "reference":  "Mahoney FI, Barthel DW. MD State Med J 1965;14:61-65",
+            },
+        ],
+        "note": (
+            "All models use published coefficients and thresholds from peer-reviewed "
+            "literature. No synthetic training data. "
+            "These clinical decision support tools are validated on real patient cohorts. "
+            "For clinical use, results should be interpreted by a qualified clinician."
+        ),
+    }

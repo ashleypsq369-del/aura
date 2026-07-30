@@ -15,9 +15,10 @@ import {
   Globe, Shield, Star, Clock, ExternalLink,
   Sun, Wind, BarChart3, Smile, Meh, Frown, Quote
 } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import GriefProgressTracker from '../components/GriefProgressTracker';
 import { bereavementAPI } from '../api/client';
+import { useCareTeamChat } from '../hooks/useCareTeamChat';
 import { usePersonalisationFlags } from '../context/PersonalisationContext';
 
 const TABS = [
@@ -43,6 +44,8 @@ const COUNSELORS = [
 
 export default function BereavedFamilyDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { chatWithCareTeam } = useCareTeamChat();
   const tabParam = searchParams.get('tab');
   const { uiFlags } = usePersonalisationFlags();
 
@@ -123,7 +126,7 @@ export default function BereavedFamilyDashboard() {
           <motion.div key={tab}
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
-            {tab === 'home'       && <HomeTab screeningData={screeningData} go={go} />}
+            {tab === 'home'       && <HomeTab screeningData={screeningData} go={go} chatWithCareTeam={chatWithCareTeam} />}
             {tab === 'grief'      && <GriefJourneyTab screeningData={screeningData} />}
             {tab === 'support'    && <SupportGroupsTab />}
             {tab === 'counseling' && <CounselingTab />}
@@ -136,7 +139,7 @@ export default function BereavedFamilyDashboard() {
 }
 
 /* ── Home ─────────────────────────────────────────────────────────────── */
-function HomeTab({ screeningData, go }) {
+function HomeTab({ screeningData, go, chatWithCareTeam }) {
   const moodOptions = [
     { icon: Frown,  label: 'Struggling',   color: 'text-red-500',    bg: 'bg-red-50 border-red-200' },
     { icon: Meh,    label: 'Getting by',   color: 'text-amber-500',  bg: 'bg-amber-50 border-amber-200' },
@@ -215,6 +218,21 @@ function HomeTab({ screeningData, go }) {
           </button>
         </div>
       )}
+
+      {/* Message care team button */}
+      <button
+        onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
+        className="w-full flex items-center gap-3 bg-white border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
+      >
+        <div className="w-9 h-9 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
+          <MessageCircle size={16} className="text-teal-600" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-slate-800 text-sm">Message Your Care Team</p>
+          <p className="text-xs text-slate-500 mt-0.5">Ask questions or share how you're doing</p>
+        </div>
+        <ChevronRight size={16} className="text-teal-500 flex-shrink-0" />
+      </button>
 
       {/* Emergency strip */}
       <div className="bg-red-50 border border-red-200 rounded-xl p-4">

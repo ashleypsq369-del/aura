@@ -9,9 +9,11 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { Building2, Heart, Home, Stethoscope, BedDouble } from 'lucide-react';
+import axios from 'axios';
+import { API_URL } from '../api/client';
 
 // -- Setting metadata ----------------------------------------------------------
 export const CARE_SETTING_META = {
@@ -187,36 +189,144 @@ export const SETTING_QUICK_ACTIONS = {
   },
 };
 
-// -- Context -------------------------------------------------------------------
+// -- Care-setting feature gates -----------------------------------------------
+// Maps each care setting to which features are HIDDEN or DE-EMPHASISED for patients/family.
+// 'hidden'    → completely removed from sidebar/quick-actions/UI
+// 'reduced'   → shown but with a softer label or lower priority
+// Staff (clinician/admin) always see everything.
+
+export const SETTING_FEATURE_GATES = {
+  hospital_based: {
+    hidden:  [],                                       // everything available
+    reduced: ['legacy-setup', 'memory-vault', 'bereavement-support'],
+    emphasis: ['care-plan', 'medications', 'wellness-checkin', 'messages'],
+  },
+  hospice: {
+    hidden:  ['pre-clinic', 'appointments'],           // no clinic visits
+    reduced: ['community'],
+    emphasis: ['memory-vault', 'legacy-setup', 'journal', 'messages', 'bereavement-support'],
+  },
+  home_based: {
+    hidden:  ['pre-clinic', 'shift-handover'],
+    reduced: ['bereavement-support'],
+    emphasis: ['medications', 'wellness-checkin', 'messages', 'my-journey'],
+  },
+  outpatient_clinic: {
+    hidden:  ['legacy-setup', 'legacy-content', 'bereavement-support', 'memory-vault', 'journal', 'shift-handover'],
+    reduced: ['community'],
+    emphasis: ['appointments', 'medications', 'wellness-checkin'],
+  },
+  long_term_residential: {
+    hidden:  ['pre-clinic'],
+    reduced: ['bereavement-support'],
+    emphasis: ['wellness-checkin', 'community', 'journal', 'memory-vault', 'messages'],
+  },
+};
+
+// Helper: given a care setting and a path segment, is the feature hidden?
+export function isFeatureHidden(careSetting, featurePathSegment, role = 'patient') {
+  if (!careSetting) return false;
+  // Staff always see everything
+  if (['clinician', 'admin'].includes(role)) return false;
+  const gates = SETTING_FEATURE_GATES[careSetting];
+  if (!gates) return false;
+  return gates.hidden.some(h => featurePathSegment.includes(h));
+}
+
+// Helper: returns the emphasis level for a feature ('high' | 'normal' | 'reduced' | 'hidden')
+export function featureEmphasis(careSetting, featurePathSegment, role = 'patient') {
+  if (!careSetting || ['clinician', 'admin'].includes(role)) return 'normal';
+  const gates = SETTING_FEATURE_GATES[careSetting];
+  if (!gates) return 'normal';
+  if (gates.hidden.some(h => featurePathSegment.includes(h)))    return 'hidden';
+  if (gates.reduced.some(h => featurePathSegment.includes(h)))   return 'reduced';
+  if (gates.emphasis.some(h => featurePathSegment.includes(h)))  return 'high';
+  return 'normal';
+}
+
+// -- Context ------------------------------------------------------------------
 const CareSettingContext = createContext(null);
 
 export function CareSettingProvider({ children }) {
-  // Use a try-catch so that if this renders before AuthProvider
-  // during HMR or SSR, it degrades gracefully instead of crashing
   let user = null;
   try {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const auth = useAuth();
     user = auth?.user ?? null;
   } catch {
-    // AuthProvider not yet mounted (HMR race) - use null user
     user = null;
   }
+
+  // Fetch per-user feature overrides from backend (patient/family/caregiver)
+  const [userOverrides, setUserOverrides] = useState({});
+  useEffect(() => {
+    if (!user?.id || ['clinician','admin'].includes(user?.role)) return;
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+    axios.get(`${API_URL}/api/features/my-overrides`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(r => {
+      // Build map: feature_path → state
+      const map = {};
+      for (const o of (r.data?.overrides || [])) {
+        map[o.feature_path] = o.state;   // 'enabled' | 'disabled' | 'locked'
+      }
+      setUserOverrides(map);
+    }).catch(() => {});
+  }, [user?.id, user?.role]);
 
   const value = useMemo(() => {
     const setting = user?.care_setting || null;
     const meta    = setting ? CARE_SETTING_META[setting] : null;
     const role    = user?.role || 'patient';
+    const gates   = (setting && SETTING_FEATURE_GATES[setting]) || { hidden: [], reduced: [], emphasis: [] };
+
+    /**
+     * isHidden(pathSegment) — true if feature should be removed.
+     * Priority order:
+     *  1. Admin override 'locked'   → always hidden (cannot be overridden by user)
+     *  2. Admin override 'enabled'  → always shown (overrides care setting)
+     *  3. Admin override 'disabled' → always hidden
+     *  4. Care setting gate default
+     */
+    const isHidden = (pathSegment) => {
+      if (['clinician','admin'].includes(role)) return false;
+      const override = userOverrides[pathSegment];
+      if (override === 'locked')   return true;
+      if (override === 'enabled')  return false;
+      if (override === 'disabled') return true;
+      return isFeatureHidden(setting, pathSegment, role);
+    };
+
+    /** isLocked(pathSegment) — admin has explicitly locked this feature */
+    const isLocked = (pathSegment) => userOverrides[pathSegment] === 'locked';
+
+    /** isAdminEnabled(pathSegment) — admin explicitly enabled despite care setting */
+    const isAdminEnabled = (pathSegment) => userOverrides[pathSegment] === 'enabled';
+
+    const emphasis = (pathSegment) => {
+      if (isHidden(pathSegment)) return 'hidden';
+      return featureEmphasis(setting, pathSegment, role);
+    };
 
     return {
-      careSetting:   setting,
+      careSetting:        setting,
       meta,
-      isKnown:       !!setting,
-      navAdditions:  (setting && SETTING_NAV_ADDITIONS[role]?.[setting]) || [],
-      quickActions:  (setting && SETTING_QUICK_ACTIONS[role]?.[setting]) || [],
-      allSettings:   CARE_SETTING_META,
+      isKnown:            !!setting,
+      navAdditions:       (setting && SETTING_NAV_ADDITIONS[role]?.[setting]) || [],
+      quickActions:       (setting && SETTING_QUICK_ACTIONS[role]?.[setting]) || [],
+      allSettings:        CARE_SETTING_META,
+      // Feature gates
+      hiddenFeatures:     gates.hidden,
+      reducedFeatures:    gates.reduced,
+      emphasizedFeatures: gates.emphasis,
+      userOverrides,      // raw override map for the feature request UI
+      isHidden,
+      isLocked,
+      isAdminEnabled,
+      emphasis,
     };
-  }, [user?.care_setting, user?.role]);
+  }, [user?.care_setting, user?.role, userOverrides]);
 
   return (
     <CareSettingContext.Provider value={value}>

@@ -175,7 +175,7 @@ function ListView({ legacyAccess, onSelect }) {
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07 }}
               onClick={() => onSelect(item.patient_id)}
-              className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 transition-all cursor-pointer overflow-hidden group">
+            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
 
               {/* Colour strip */}
               <div className={`h-1.5 w-full ${isPending ? 'bg-gradient-to-r from-amber-400 to-orange-400' : 'bg-gradient-to-r from-purple-600 to-violet-600'}`} />
@@ -190,9 +190,9 @@ function ListView({ legacyAccess, onSelect }) {
                   {/* Name + badges */}
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                     <div>
-                      <h2 className="text-lg font-bold text-slate-900">{item.patient_name}</h2>
-                      <p className="text-sm text-slate-500 mt-0.5">
-                        Your <span className="font-medium text-slate-700">{item.relationship}</span>
+                      <h2 className="text-lg font-bold text-slate-900 dark:text-white">{item.patient_name}</h2>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        Your <span className="font-medium text-slate-700 dark:text-slate-300">{item.relationship}</span>
                       </p>
                       {item.deceased_at && (
                         <p className="text-xs text-slate-400 flex items-center gap-1 mt-1">
@@ -310,7 +310,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
   });
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div className="min-h-full bg-slate-50 dark:bg-slate-900">
       {/* Hero */}
       <div className="relative h-44 overflow-hidden">
         <img src="/resources/african/african-family-support.jpg" alt=""
@@ -327,13 +327,13 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
       </div>
 
       {/* Sticky tabs */}
-      <div className="sticky top-0 z-20 bg-white/96 backdrop-blur border-b border-slate-200 shadow-sm">
+      <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {tabs.map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => onTabChange(id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
-                  activeTab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}>
+                  activeTab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
                 <Icon size={14} />{label}
               </button>
             ))}
@@ -351,15 +351,15 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                 <p className="text-sm text-slate-500">Letters and messages left especially for you.</p>
                 {loadingContent ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
                  contentItems.length > 0 ? contentItems.map(item => (
-                  <div key={item.id} className="bg-white border border-slate-200 rounded-xl p-5">
+                  <div key={item.id} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
-                        <h3 className="font-semibold text-slate-800">{item.title || 'Untitled'}</h3>
-                        <p className="text-xs text-slate-400 mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
+                        <h3 className="font-semibold text-slate-800 dark:text-white">{item.title || 'Untitled'}</h3>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
                       </div>
                       <FileText size={16} className="text-slate-300 flex-shrink-0 mt-1" />
                     </div>
-                    <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
+                    <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
                   </div>
                  )) : (
                   <div className="text-center py-12 text-slate-400">
@@ -378,9 +378,9 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                  memories.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {memories.map(m => (
-                      <div key={m.id} className="bg-white border border-slate-200 rounded-xl p-4">
-                        <p className="text-xs text-slate-400 mb-1.5">{fmtShort(m.created_at)}</p>
-                        <p className="text-slate-700 text-sm line-clamp-5 leading-relaxed">{m.content}</p>
+                      <div key={m.id} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mb-1.5">{fmtShort(m.created_at)}</p>
+                        <p className="text-slate-700 dark:text-slate-300 text-sm line-clamp-5 leading-relaxed">{m.content}</p>
                       </div>
                     ))}
                   </div>

@@ -79,6 +79,10 @@ class User(Base):
     # Care setting change request fields (pending admin approval)
     care_setting_change_request = Column(String(50), nullable=True)
     care_setting_change_reason = Column(Text, nullable=True)
+
+    # Feature gate relationships
+    feature_overrides = relationship('UserFeatureOverride', foreign_keys='UserFeatureOverride.user_id', back_populates='user', lazy='dynamic')
+    feature_requests  = relationship('FeatureRequest',      foreign_keys='FeatureRequest.user_id',      back_populates='user', lazy='dynamic')
     
     @property
     def password(self):
@@ -1143,10 +1147,61 @@ class PatientPreferences(Base):
     ai_analysis_consent = Column(String(20), default='yes')
     ai_data_sharing_consent = Column(String(20), default='no')
     care_team_sharing = Column(String(20), default='yes')
+    # UI Adaptation — stored in localStorage on the client; DB columns
+    # added via migration when DB owner permissions are available.
+    # age_group = Column(String(20))   # pending migration
+    # ui_needs  = Column(Text)          # pending migration
     # Meta
     questionnaire_complete = Column(Boolean, default=False)
     completed_at = Column(DateTime)
     last_updated = Column(DateTime, default=datetime.utcnow)
+
+
+class UserFeatureOverride(Base):
+    """
+    Admin-controlled per-user feature gates.
+    Overrides the care-setting defaults from SETTING_FEATURE_GATES.
+    state: 'enabled' | 'disabled' | 'locked'
+      enabled  → force-show this feature even if care setting hides it
+      disabled → force-hide this feature regardless of care setting
+      locked   → hidden AND the user cannot request access
+    source: 'admin' | 'questionnaire' | 'request_approved'
+    """
+    __tablename__ = 'user_feature_overrides'
+    id           = Column(Integer, primary_key=True)
+    user_id      = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    feature_path = Column(String(100), nullable=False)   # e.g. '/memory-vault'
+    state        = Column(String(20), nullable=False, default='disabled')
+    source       = Column(String(30), default='admin')   # admin/questionnaire/request_approved
+    note         = Column(String(500))                   # admin note/reason
+    created_at   = Column(DateTime, default=datetime.utcnow)
+    updated_at   = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_by   = Column(Integer, ForeignKey('users.id'), nullable=True)
+
+    user         = relationship('User', foreign_keys=[user_id],      back_populates='feature_overrides')
+    admin        = relationship('User', foreign_keys=[created_by])
+
+
+class FeatureRequest(Base):
+    """
+    Users can request access to a feature that is hidden for their care setting.
+    Admin approves/denies, which creates/updates a UserFeatureOverride.
+    status: 'pending' | 'approved' | 'denied'
+    """
+    __tablename__ = 'feature_requests'
+    id           = Column(Integer, primary_key=True)
+    user_id      = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    feature_path = Column(String(100), nullable=False)
+    feature_name = Column(String(100))                   # human label, e.g. 'Memory Vault'
+    reason       = Column(String(1000))                  # user's stated reason
+    status       = Column(String(20), default='pending', index=True)
+    admin_note   = Column(String(500))
+    reviewed_by  = Column(Integer, ForeignKey('users.id'), nullable=True)
+    reviewed_at  = Column(DateTime)
+    created_at   = Column(DateTime, default=datetime.utcnow)
+
+    user         = relationship('User', foreign_keys=[user_id],    back_populates='feature_requests')
+    reviewer     = relationship('User', foreign_keys=[reviewed_by])
 
 
 class Resource(Base):

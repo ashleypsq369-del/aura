@@ -10,6 +10,10 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCareTeamChat } from '../hooks/useCareTeamChat';
+import { usePatientId } from '../hooks/usePatientId';
+import { useCareSettingContext } from '../context/CareSettingContext';
+import DailyTaskChecklist from '../components/DailyTaskChecklist';
 import ImageCard from '../components/ImageCard';
 import PageHeader from '../components/PageHeader';
 import ScrollReveal from '../components/ScrollReveal';
@@ -30,16 +34,16 @@ function Section({ icon: Icon, iconColor = 'text-teal-600', iconBg = 'bg-teal-50
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+      className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
     >
-      <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between"
+      <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
         style={{ background: `linear-gradient(to right, ${accentColor}12, transparent)` }}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: `${accentColor}20`, color: accentColor }}>
             <Icon size={16} strokeWidth={2.5} />
           </div>
-          <h2 className="font-bold text-slate-800 text-sm">{title}</h2>
+          <h2 className="font-bold text-slate-800 dark:text-white text-sm">{title}</h2>
         </div>
         {action}
       </div>
@@ -53,22 +57,22 @@ export default function PatientPortal() {
   const { signals, prefs } = usePersonalisation();
   const { uiFlags, hiddenSections } = usePersonalisationFlags();
   const navigate = useNavigate();
+  const { chatWithCareTeam } = useCareTeamChat();
+  const { patientId } = usePatientId();
+  const { isHidden: careSettingHidden, emphasis: careEmphasis } = useCareSettingContext();   // ← resolves linked patient record ID
   const token = localStorage.getItem('auth_token');
 
   const { data: portalData, isLoading } = useQuery({
-    queryKey: ['patient-portal', user?.patient_id],
+    queryKey: ['patient-portal', patientId],
     queryFn: async () => {
-      const patientId = user?.patient_id || user?.id;
       const response = await axios.get(`${API_URL}/api/patient-portal/${patientId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data;
     },
-    enabled: !!user
+    enabled: !!user && !!patientId
   });
 
-  // MUST be before any conditional return  --  Rules of Hooks
-  const patientId = user?.patient_id || user?.id;
   const { data: esasTrends } = useQuery({
     queryKey: ['esas-trends-portal', patientId],
     queryFn: () => clinicalAssessmentsAPI.getESASTrends(patientId, 14).then(r => r.data),
@@ -116,7 +120,7 @@ export default function PatientPortal() {
               className="px-5 py-2.5 bg-teal-700 text-white rounded-xl font-semibold text-sm hover:bg-teal-800 transition-all duration-150">
               Refresh
             </button>
-            <button onClick={() => navigate('/messages')}
+            <button onClick={() => chatWithCareTeam()}
               data-tip="Message your care team"
               className="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-semibold text-sm hover:bg-slate-200 transition-all duration-150">
               Message Care Team
@@ -150,7 +154,7 @@ export default function PatientPortal() {
     { image: '/resources/cards/card-symptoms.jpg',     icon: Activity,      title: 'My Symptoms',     description: 'Track pain & symptoms',      onClick: () => patientId ? navigate(`/patients/${patientId}/symptoms`) : navigate('/my-space'),    color: '#0f766e', priority: 'wellness-checkin' },
     { image: '/resources/african/african-appointment.jpg', icon: Calendar,      title: 'Appointments',    description: 'Upcoming care visits',       onClick: () => navigate('/appointments'),                               color: '#1d4ed8', priority: null },
     { image: '/resources/african/african-medications.jpg',  icon: Pill,          title: 'Medications',     description: 'My prescription schedule',  onClick: () => navigate('/medications'),                                color: '#7c3aed', priority: null },
-    { image: '/resources/african/african-clinical-team.jpg',     icon: MessageCircle, title: 'Message Team',    description: 'Contact care team',          onClick: () => navigate(care_team?.clinician?.id ? `/messages?userId=${care_team.clinician.id}` : '/messages', { state: { openCareTeamChat: true, careTeam: care_team } }),                                   color: '#0369a1', priority: 'messages' },
+    { image: '/resources/african/african-clinical-team.jpg', icon: MessageCircle, title: 'Message Team', description: 'Contact care team', onClick: () => chatWithCareTeam(), color: '#0369a1', priority: 'messages' },
     { image: '/resources/african/african-medical-reading.jpg',    icon: BookOpen,      title: 'Resources',       description: 'Health guides & support',   onClick: () => navigate('/resources'),                                  color: '#b45309', priority: null },
     { image: '/resources/african/african-community.jpg',    icon: Globe,         title: 'Community',       description: 'Peer support groups',       onClick: () => navigate('/community'),                                  color: '#166534', priority: 'community' },
     { image: '/resources/african/african-memory.jpg', icon: Heart,         title: 'Memory Vault',    description: 'Preserve precious memories', onClick: () => navigate('/memory-vault'),                               color: '#4c1d95', priority: null },
@@ -161,11 +165,14 @@ export default function PatientPortal() {
   ];
 
   // ⚡ Reorder quick actions based on personalisation signals
-  // Also filter out items the user opted out of in questionnaire
+  // Filter: questionnaire opt-outs + care setting gates
   const filteredActions = quickActions.filter(a => {
     if (a.title === 'Community'    && !uiFlags.showCommunity)  return false;
     if (a.title === 'Memory Vault' && !uiFlags.showLegacy)     return false;
     if (a.title === 'AI Companion' && !uiFlags.showAI)         return false;
+    // Care setting: hide irrelevant features
+    const routeSegment = a.onClick?.toString().match(/navigate\(['"`]([^'"`]+)['"`]\)/)?.[1] || '';
+    if (careSettingHidden(routeSegment)) return false;
     return true;
   });
 
@@ -188,11 +195,16 @@ export default function PatientPortal() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8">
 
+        {/* § Daily Task Checklist — compulsory + optional care tasks */}
+        <SectionErrorBoundary name="Daily Tasks">
+          <DailyTaskChecklist />
+        </SectionErrorBoundary>
+
         {/* € Section 1: Quick Actions (all 12 features) € */}
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">Your Features</h3>
           <SectionErrorBoundary name="Quick Actions">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {orderedActions.map((c, i) => (
               <ScrollReveal key={c.title} delay={i * 40} direction="up">
                 <ImageCard {...c} className="min-h-[120px]" />
@@ -399,12 +411,7 @@ export default function PatientPortal() {
                   </div>
                 )}
 
-                <button onClick={() => navigate(
-                    care_team?.clinician?.id
-                      ? `/messages?userId=${care_team.clinician.id}`
-                      : '/messages',
-                    { state: { openCareTeamChat: true, careTeam: care_team } }
-                  )}
+                <button onClick={() => chatWithCareTeam()}
                   data-tip="Message your care team"
                   className="w-full py-2.5 rounded-xl border border-teal-300 text-teal-700 font-semibold text-sm hover:bg-teal-50 transition-all duration-150 flex items-center justify-center gap-2">
                   <MessageCircle size={15} /> Message Care Team

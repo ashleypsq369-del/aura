@@ -5,8 +5,11 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { medicationsAPI, patientsAPI, advancedMlAPI, preferencesAPI } from '../api/client';
+import { medicationsAPI, patientsAPI, advancedMlAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { usePatientId } from '../hooks/usePatientId';
+import axios from 'axios';
+import { API_URL } from '../api/client';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
@@ -297,10 +300,17 @@ function MedRow({ med, index, isStaff, onEdit, onStop }) {
 export default function Medications() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const isStaff  = ['clinician','admin','caregiver'].includes(user?.role);
-  const isPatient = user?.role === 'patient';
+  const isStaff   = ['clinician','admin','caregiver'].includes(user?.role);
+  const isPatient  = user?.role === 'patient';
 
-  const [patientId, setPatientId]           = useState(isPatient ? user?.linked_patient_id || user?.patient_id || null : null);
+  // For patients/family: resolve their linked patient record ID via the hook
+  const { patientId: ownPatientId } = usePatientId();
+
+  const [staffPatientId, setStaffPatientId] = useState(null);
+  // patients see their own data; staff pick from a list
+  const patientId  = isStaff ? staffPatientId : ownPatientId;
+  const setPatientId = isStaff ? setStaffPatientId : () => {};
+
   const [filterTab, setFilterTab]           = useState('active');
   const [search, setSearch]                 = useState('');
   const [showAddModal, setShowAddModal]     = useState(false);
@@ -318,15 +328,20 @@ export default function Medications() {
 
   // Auto-select first patient for staff so data shows immediately
   useEffect(() => {
-    if (isStaff && !patientId && patientList.length > 0) {
-      setPatientId(patientList[0].id);
+    if (isStaff && !staffPatientId && patientList.length > 0) {
+      setStaffPatientId(patientList[0].id);
     }
-  }, [patientList, isStaff, patientId]);
+  }, [patientList, isStaff, staffPatientId]);
 
+  // Patient preferences for pain-level personalisation
   const { data: prefsData } = useQuery({
-    queryKey: ['prefs', user?.id],
-    queryFn: () => preferencesAPI.getByUserId(user.id).then(r => r.data),
+    queryKey: ['prefs-my', user?.id],
+    queryFn: () => axios.get(`${API_URL}/api/preferences/my`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
+    }).then(r => r.data).catch(() => null),
     enabled: isPatient && !!user?.id,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 
   const { data: medsRaw, isLoading } = useQuery({

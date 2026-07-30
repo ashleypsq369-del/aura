@@ -20,6 +20,8 @@ import AvatarDisplay from '../components/avatar/AvatarDisplay';
 import AvatarModal from '../components/avatar/AvatarModal';
 import { ROLE_PRESETS } from '../components/avatar/avatarParts';
 import { useRestartTour } from '../components/AuraOnboarding';
+import FeatureRequestPanel from '../components/FeatureRequestPanel';
+import { useUIProfile, UI_PROFILE_META } from '../context/UIProfileContext';
 
 // Toggle is now the Radix Switch component imported above
 function Toggle({ on, onToggle, color = '#0d9488' }) {
@@ -52,7 +54,7 @@ function Section({ title, children }) {
       {title && (
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2">{title}</p>
       )}
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
         {children}
       </div>
     </div>
@@ -65,6 +67,7 @@ export default function Settings() {
   const push = usePushNotifications();
   const pwa  = useInstallPrompt();
   const restartTour = useRestartTour();
+  const { profileKey, profile: uiProfile } = useUIProfile();
   const {
     settings: a11y, updateSetting, resetSettings,
     enableAssistedMode, disableAssistedMode, applyPreset,
@@ -129,7 +132,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen px-3 sm:p-6 py-4">
       <div className="max-w-5xl mx-auto">
 
       {/* -- Page header - same compact style as Resources page ------- */}
@@ -149,7 +152,7 @@ export default function Settings() {
       </motion.div>
 
         {/* -- Tab bar ---------------------------------------------------- */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm mb-6 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm mb-6 overflow-hidden">
           <div className="flex overflow-x-auto">
             {tabs.map(({ id, label, icon: Icon, tip }, i) => {
               const tabColors = [
@@ -164,7 +167,7 @@ export default function Settings() {
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-all min-w-[80px] ${
                     tab === id
                       ? 'border-b-[3px] bg-opacity-5'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700'
                   }`}
                   style={tab === id
                     ? { borderBottomColor: c, color: c, backgroundColor: `${c}0f` }
@@ -395,6 +398,55 @@ export default function Settings() {
                       {theme === id && <Check size={16} className="text-teal-600 flex-shrink-0" />}
                     </button>
                   ))}
+                </Section>
+                {/* ── UI Adaptation Profile ── */}
+                <Section title="Interface Adaptation Profile">
+                  <div className="px-5 py-4 space-y-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="ui-profile-badge">
+                        Active: {uiProfile?.label || 'Standard'}
+                      </span>
+                      <span className="text-xs text-gray-400">{uiProfile?.description}</span>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Your interface adapts automatically based on your questionnaire answers — age group, vision, cognitive needs, and activity level. You can also override it manually here.
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {Object.entries(UI_PROFILE_META).map(([key, meta]) => (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            localStorage.setItem('ui_profile', key);
+                            const html = document.documentElement;
+                            html.setAttribute('data-ui-profile', meta.htmlAttr);
+                            Object.values(UI_PROFILE_META).forEach(p => { if (p.bodyClass) html.classList.remove(p.bodyClass); });
+                            if (meta.bodyClass) html.classList.add(meta.bodyClass);
+                            if (meta.reducedMotion) html.classList.add('reduce-motion');
+                            if (meta.highContrast) html.classList.add('high-contrast');
+                            toast.success(`Interface switched to ${meta.label}`);
+                            window.location.reload();
+                          }}
+                          className={`p-3 rounded-xl border-2 text-left transition-all ${
+                            profileKey === key
+                              ? 'border-teal-500 bg-teal-50 text-teal-800'
+                              : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
+                          }`}
+                        >
+                          <p className={`text-xs font-bold ${profileKey === key ? 'text-teal-700' : 'text-slate-700'}`}>
+                            {meta.label}
+                          </p>
+                          <p className="text-[10px] text-slate-400 mt-0.5 leading-tight">{meta.description}</p>
+                          {profileKey === key && (
+                            <span className="mt-1 inline-block text-[9px] font-bold text-teal-600 uppercase tracking-wide">Active</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-slate-400 flex items-start gap-1">
+                      <Info size={11} className="flex-shrink-0 mt-0.5" />
+                      Switching profile applies larger text, adjusted touch targets, and layout changes immediately. Based on W3C WCAG 2.2 and COGA guidelines.
+                    </p>
+                  </div>
                 </Section>
                 <Section title="Language">
                   <Row icon={Globe} iconColor="#6b7280" iconBg="#f3f4f6"

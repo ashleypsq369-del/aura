@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   Heart, Activity, Moon, Zap, Wind,
-  Brain, AlertCircle, Smile, CheckCircle2, ChevronLeft, TrendingDown, TrendingUp, Minus
+  Brain, AlertCircle, Smile, CheckCircle2, ChevronLeft, TrendingDown, TrendingUp, Minus, MessageCircle
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -18,6 +18,8 @@ import PageHeader from '../components/PageHeader';
 import { fireMilestone } from '../components/MilestoneConfetti';
 import Progress from '../components/ui/Progress';
 import { mlAPI } from '../api/client';
+import { useCareTeamChat } from '../hooks/useCareTeamChat';
+import { usePatientId } from '../hooks/usePatientId';
 
 import { API_URL } from '../api/client';
 
@@ -52,10 +54,11 @@ function ScoreButton({ value, selected, color, onClick }) {
     <button
       type="button"
       onClick={() => onClick(value)}
-      className={`w-9 h-9 rounded-full text-sm font-bold border-2 transition-all ${
+      aria-label={`Score ${value}`}
+      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-bold border-2 transition-all flex-shrink-0 ${
         selected
           ? `${c.bg} text-white border-transparent shadow-md scale-110`
-          : `bg-white border-slate-200 text-slate-500 hover:border-slate-400`
+          : `bg-white ${c.text} ${c.border} hover:opacity-80`
       }`}
     >
       {value}
@@ -65,8 +68,9 @@ function ScoreButton({ value, selected, color, onClick }) {
 
 export default function WellnessCheckin() {
   const navigate = useNavigate();
+  const { chatWithCareTeam } = useCareTeamChat();
   const { user } = useAuth();
-  const patientId = user?.patient_id || user?.id;
+  const { patientId } = usePatientId();
 
   const [scores, setScores] = useState(
     Object.fromEntries(ITEMS.map(i => [i.key, null]))
@@ -233,19 +237,36 @@ export default function WellnessCheckin() {
             );
           })()}
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => navigate('/my-space')}
-              className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition"
-            >
-              Back to My Space
-            </button>
-            <button
-              onClick={() => { setSubmitted(false); setScores(Object.fromEntries(ITEMS.map(i => [i.key, null]))); setNotes(''); }}
-              className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition"
-            >
-              Log Again
-            </button>
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate('/my-space')}
+                className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition"
+              >
+                Back to My Space
+              </button>
+              <button
+                onClick={() => { setSubmitted(false); setScores(Object.fromEntries(ITEMS.map(i => [i.key, null]))); setNotes(''); }}
+                className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition"
+              >
+                Log Again
+              </button>
+            </div>
+            {/* Message care team with pre-filled context */}
+            {(() => {
+              const avg = (Object.values(scores).reduce((a, b) => a + b, 0) / ITEMS.length).toFixed(1);
+              const feeling = avg <= 3 ? 'good' : avg <= 6 ? 'moderate' : 'difficult';
+              return feeling !== 'good' ? (
+                <button
+                  onClick={() => chatWithCareTeam(
+                    `Hi, I just completed my wellness check-in. My average symptom score was ${avg}/10. I wanted to flag this to my care team.`
+                  )}
+                  className="w-full px-4 py-3 border-2 border-teal-400 text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={16} /> Message My Care Team
+                </button>
+              ) : null;
+            })()}
           </div>
         </motion.div>
       </div>
@@ -269,7 +290,7 @@ export default function WellnessCheckin() {
         </button>
       </PageHeader>
 
-      <div className="p-6 max-w-2xl mx-auto">
+      <div className="px-3 sm:p-6 max-w-2xl mx-auto py-4">
         <div className="space-y-4">
           {ITEMS.map((item, idx) => {
             const c = COLORS[item.color];
@@ -281,7 +302,7 @@ export default function WellnessCheckin() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.04 }}
-                className={`bg-white rounded-2xl border-2 p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
+                className={`bg-white rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
@@ -296,7 +317,7 @@ export default function WellnessCheckin() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between gap-1">
+                <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2 pt-1">
                   {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
                     <ScoreButton
                       key={n}

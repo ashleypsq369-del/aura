@@ -80,12 +80,12 @@ export function ProStatCard({
       {/* Subtle top gradient strip */}
       <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl" style={{ background: `linear-gradient(to right, ${iconColor}66, ${iconColor}22)` }} />
 
-      <div className="p-3.5">
+      <div className="p-4">
         {/* Top row: icon + trend */}
         <div className="flex items-start justify-between mb-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm"
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm"
             style={{ backgroundColor: `${iconColor}18`, border: `1.5px solid ${iconColor}30` }}>
-            <Icon size={15} strokeWidth={2} style={{ color: iconColor }} />
+            <Icon size={17} strokeWidth={2} style={{ color: iconColor }} />
           </div>
           {trend !== undefined && trend !== null && (
             <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
@@ -102,16 +102,16 @@ export function ProStatCard({
         </div>
 
         {/* Value */}
-        <p className="text-2xl font-bold text-slate-900 leading-none tracking-tight mb-0.5">
+        <p className="text-2xl font-bold text-slate-900 leading-none tracking-tight mb-1">
           {value}
         </p>
 
         {/* Label */}
-        <p className="text-xs font-semibold text-slate-500">{label}</p>
+        <p className="text-sm font-semibold text-slate-500">{label}</p>
 
         {/* Subtitle or trend label */}
         {(subtitle || (trend !== undefined && trend !== null)) && (
-          <p className="text-[11px] text-slate-400 mt-1.5 font-medium">
+          <p className="text-xs text-slate-400 mt-1.5 font-medium">
             {subtitle || trendLabel}
           </p>
         )}
@@ -134,7 +134,7 @@ export function ProStatCard({
 export function ProStatCardGrid({ cards, cols = 4 }) {
   const colClass = cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-4';
   return (
-    <div className={`grid ${colClass} gap-3 mb-5`}>
+    <div className={`grid ${colClass} gap-4 mb-6`}>
       {cards.map((c, i) => (
         <ProStatCard key={c.label} {...c} index={i} />
       ))}

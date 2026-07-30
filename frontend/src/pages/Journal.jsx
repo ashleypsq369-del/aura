@@ -198,7 +198,7 @@ export default function Journal() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-4xl mx-auto px-6 py-8 space-y-8"
+        className="max-w-4xl mx-auto px-3 sm:px-6 py-8 space-y-8"
       >
         {paramPatientId && (
           <Link to="/continuity-bridge" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm">
@@ -225,14 +225,14 @@ export default function Journal() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/60 backdrop-blur-sm rounded-xl p-4 flex items-center space-x-3"
+          className="bg-white/60 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 flex items-center space-x-3"
         >
           <Lock className="w-5 h-5" style={{ color: '#6B4F7A' }} />
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-700">
+            <p className="text-sm font-medium text-gray-700 dark:text-slate-200">
               Your journal entries are completely private
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               Only you can see what you write here. Write freely, without judgment.
             </p>
           </div>
@@ -243,10 +243,10 @@ export default function Journal() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg border border-slate-200 p-8 shadow-md text-center"
+          className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 shadow-md text-center"
         >
           <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.7 }} />
-          <p className="text-xl italic text-gray-700">
+          <p className="text-xl italic text-gray-700 dark:text-slate-200">
             "{selectedPrompt}"
           </p>
           <button
@@ -274,7 +274,7 @@ export default function Journal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border"
+                className="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
                 style={{ borderColor: ['#e9d5ff','#dbeafe','#d1fae5','#fce7f3','#fef3c7','#cffafe'][index % 6] }}
               >
                 {/* Top accent */}
@@ -300,9 +300,9 @@ export default function Journal() {
                 )}
 
                 <div className="p-5">
-                <div className="flex items-center space-x-3 mb-4 pb-4 border-b-2" style={{ borderColor: '#6B4F7A20' }}>
+                <div className="flex items-center space-x-3 mb-4 pb-4 border-b-2 dark:border-slate-700" style={{ borderColor: '#6B4F7A20' }}>
                   <Calendar className="w-5 h-5" style={{ color: '#6B4F7A' }} />
-                  <time className="text-sm font-medium text-gray-600">
+                  <time className="text-sm font-medium text-gray-600 dark:text-slate-300">
                     {new Date(entry.created_at).toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',

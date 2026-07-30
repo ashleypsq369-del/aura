@@ -67,6 +67,33 @@ const PATIENT_STEPS = [
           { value: "low", label: "I prefer simple screens" },
           { value: "basic", label: "I need step-by-step help" }
         ]
+      },
+      {
+        name: "age_group",
+        label: "Which age group are you in?",
+        type: "radio",
+        required: false,
+        options: [
+          { value: "child", label: "Under 18" },
+          { value: "young_adult", label: "18 – 40" },
+          { value: "adult", label: "41 – 64" },
+          { value: "older_adult", label: "65 – 79" },
+          { value: "elderly", label: "80 and over" }
+        ]
+      },
+      {
+        name: "ui_needs",
+        label: "Do you have any of the following? (Select all that apply)",
+        type: "multi-select",
+        required: false,
+        options: [
+          "Visual impairment or low vision",
+          "Hearing impairment",
+          "Memory difficulties or dementia",
+          "Physical difficulty using a touchscreen",
+          "Reading or learning difficulty",
+          "None of these"
+        ]
       }
     ]
   },
@@ -1195,6 +1222,39 @@ export default function PersonalisationQuest() {
       if (submittedData.legacy_interest === 'yes') {
         localStorage.setItem('legacy_interest', 'true');
       }
+
+      // ── Save care-setting feature overrides derived from questionnaire answers ──
+      if (submittedData.care_setting) {
+        const GATES = {
+          hospital_based:        { hidden: [] },
+          hospice:               { hidden: ['/pre-clinic', '/appointments'] },
+          home_based:            { hidden: ['/pre-clinic', '/shift-handover'] },
+          outpatient_clinic:     { hidden: ['/legacy-setup', '/legacy-content', '/bereavement-support', '/memory-vault', '/journal', '/shift-handover'] },
+          long_term_residential: { hidden: ['/pre-clinic'] },
+        };
+        const gates = GATES[submittedData.care_setting] || { hidden: [] };
+        const token2 = localStorage.getItem('auth_token');
+        // Fire-and-forget — non-blocking, no await needed in sync onSuccess
+        axios.post(`${API_URL}/api/features/questionnaire-gates`, {
+          care_setting: submittedData.care_setting,
+          hidden_features: gates.hidden,
+          enabled_features: submittedData.legacy_interest === 'yes'   ? ['/memory-vault', '/legacy-setup'] :
+                            submittedData.wants_community   === 'yes'  ? ['/community'] : [],
+        }, { headers: { Authorization: `Bearer ${token2}` } }).catch(() => {});
+      }
+
+      // ── Derive and save UI profile from questionnaire answers ─────────────
+      // Dynamic import is async — use .then() since onSuccess is sync
+      import('../context/UIProfileContext').then(({ deriveUIProfile }) => {
+        const profileKey = deriveUIProfile(submittedData, user);
+        localStorage.setItem('ui_profile', profileKey);
+        const html = document.documentElement;
+        html.setAttribute('data-ui-profile', profileKey);
+        const PROFILE_CLASSES = { elderly:'ui-profile-elderly', cognitive:'ui-profile-cognitive', visual:'ui-profile-visual', paediatric:'ui-profile-paediatric', distressed:'ui-profile-distressed' };
+        Object.values(PROFILE_CLASSES).forEach(cls => html.classList.remove(cls));
+        if (PROFILE_CLASSES[profileKey]) html.classList.add(PROFILE_CLASSES[profileKey]);
+        if (['cognitive','distressed','elderly'].includes(profileKey)) html.classList.add('reduce-motion');
+      }).catch(() => {});
 
       // ─────────────────────────────────────────────────────────────────────
       fireMilestone('stars');

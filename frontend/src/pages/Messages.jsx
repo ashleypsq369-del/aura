@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
-  MessageCircle, UserPlus, Phone, Video, MoreVertical, Loader2, MessagesSquare, Paperclip, X,
-  Zap, AlertTriangle, Clock as ClockIcon,
+  MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
+  Zap, AlertTriangle, Stethoscope, Heart,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -79,6 +79,18 @@ export default function Messages() {
   }, [subscribe, queryClient, selectedConversation]);
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const authHeaders = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
+
+  // ── Fetch care team (assigned clinician + caregivers for this user) ──────
+  const { data: careTeamData } = useQuery({
+    queryKey: ['my-care-team'],
+    queryFn: async () => {
+      const r = await axios.get(`${API_URL}/api/messaging/my-care-team`, { headers: authHeaders });
+      return r.data;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+  const careTeam = careTeamData?.care_team || [];
 
   // Fetch conversations
   const { data: conversationsData, isLoading: loadingConversations } = useQuery({
@@ -252,19 +264,20 @@ export default function Messages() {
     }
   }, [location.state, physiciansData, conversationsData, startConversationMutation, handleStartChat]);
 
-  // Handle ?userId=X query param — auto-open chat with specific user
+  // Handle ?userId=X&msg=Y query params — auto-open chat + pre-fill message
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const targetUserId = params.get('userId');
+    const preMsg = params.get('msg');
     if (!targetUserId) return;
     if (!conversationsData) return;
 
-    // Clear the param immediately so it doesn't retrigger
+    // Clear the params immediately so it doesn't retrigger
     window.history.replaceState({}, document.title, '/messages');
 
-    // Check existing conversations for one with this participant
+    if (preMsg) setNewMessage(decodeURIComponent(preMsg));
+
     const existing = conversationsData?.conversations?.find(c => {
-      // Some conversations include participants array, some just the other user id
       if (c.participants?.some(p => String(p.id || p.user_id) === String(targetUserId))) return true;
       if (String(c.other_user_id) === String(targetUserId)) return true;
       if (String(c.recipient_id) === String(targetUserId)) return true;
@@ -274,10 +287,9 @@ export default function Messages() {
     if (existing) {
       setSelectedConversation(existing);
     } else {
-      // Start new conversation — after success, the onSuccess handler selects it
       startConversationMutation.mutate({
         recipientId: Number(targetUserId),
-        initialMessage: 'Hello! I wanted to reach out to you.',
+        initialMessage: preMsg ? decodeURIComponent(preMsg) : 'Hello! I wanted to reach out to you.',
         conversationType: 'private'
       });
     }
@@ -405,6 +417,46 @@ export default function Messages() {
         {activeTab === 'chats' ? (
           /* Conversations List */
           <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-teal-500 scrollbar-track-slate-100" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+
+            {/* ── Pinned Care Team section ───────────────────────── */}
+            {careTeam.length > 0 && (
+              <div className="px-3 pt-3 pb-1">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                  <Stethoscope size={11} /> Your Care Team
+                </p>
+                <div className="flex flex-col gap-1">
+                  {careTeam.map((member) => (
+                    <button
+                      key={member.user_id}
+                      onClick={() => {
+                        if (member.existing_conversation_id) {
+                          // Find the conversation object and select it
+                          const conv = conversations.find(c => c.id === member.existing_conversation_id);
+                          if (conv) { setSelectedConversation(conv); return; }
+                        }
+                        startConversationMutation.mutate({
+                          recipientId: member.user_id,
+                          initialMessage: 'Hello! I wanted to reach out to you.',
+                          conversationType: 'private',
+                        });
+                      }}
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 border border-teal-100 transition-all text-left"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                        {member.avatar_initials}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-slate-800 truncate">{member.name}</p>
+                        <p className="text-[10px] text-teal-600 font-medium">{member.relation}</p>
+                      </div>
+                      <MessageCircle size={14} className="text-teal-500 flex-shrink-0" />
+                    </button>
+                  ))}
+                </div>
+                <div className="border-b border-slate-100 mt-3 mb-1" />
+              </div>
+            )}
+
             {loadingConversations ? (
               <div className="p-8 text-center text-slate-500">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-2"></div>

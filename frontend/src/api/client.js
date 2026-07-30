@@ -187,7 +187,7 @@ export const profileAPI = {
 };
 
 export const preferencesAPI = {
-  getMine: () => apiClient.get('/api/preferences/mine'),
+  getMine: () => apiClient.get('/api/preferences/my'),
   save: (data) => apiClient.post('/api/preferences', data),
   getByUserId: (userId) => apiClient.get(`/api/preferences/${userId}`),
   updateByUserId: (userId, data) => apiClient.put(`/api/preferences/${userId}`, data),

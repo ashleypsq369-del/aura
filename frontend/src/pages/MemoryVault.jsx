@@ -198,7 +198,7 @@ export default function MemoryVault() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-6xl mx-auto px-6 py-6 space-y-6"
+        className="max-w-6xl mx-auto px-3 sm:px-6 py-6 space-y-6"
       >
         {paramPatientId && (
           <Link to="/continuity-bridge" data-tip="Go back to Continuity Bridge" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm">
@@ -266,7 +266,7 @@ export default function MemoryVault() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.04, duration: 0.2 }}
-                            className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                            className="bg-white dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                             style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                           >
                             <div className="h-1 w-full" style={{
@@ -348,7 +348,7 @@ export default function MemoryVault() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.04, duration: 0.2 }}
-                    className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                    className="bg-white dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                     style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                   >
                     {/* Top accent - cycles through memory colors */}
@@ -403,10 +403,10 @@ export default function MemoryVault() {
           </>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-white rounded-xl border border-purple-100 p-10 text-center">
+            className="bg-white dark:bg-slate-800 rounded-xl border border-purple-100 dark:border-slate-700 p-10 text-center">
             <Heart className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.3 }} />
             <h3 className="text-lg font-semibold mb-2 text-purple-700">Your Memory Vault is Empty</h3>
-            <p className="text-slate-500 text-sm mb-5">Start preserving the precious moments, stories, and reflections you want to keep forever.</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-5">Start preserving the precious moments, stories, and reflections you want to keep forever.</p>
             <button onClick={() => setShowModal(true)} data-tip="Add your first memory"
               className="px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-all"
               style={{ backgroundColor: '#6B4F7A', color: 'white' }}>

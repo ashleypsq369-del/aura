@@ -188,6 +188,19 @@ app.include_router(medical_knowledge.router, prefix="/api/medical", tags=["medic
 app.include_router(care_settings.router, prefix="/api/care-settings", tags=["care-settings"])
 app.include_router(ml_predictions.router, prefix="/api/ml", tags=["ml-predictions"])
 app.include_router(advanced_ml.router, prefix="/api/advanced-ml", tags=["advanced-ml"])
+
+# Feature gates: per-user feature overrides + user access requests + admin control
+from routers import feature_gates
+app.include_router(feature_gates.router, prefix="/api/features", tags=["feature-gates"])
+
+# Clinical & operational reporting system
+from routers import reports
+app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
+
+# Care task compliance tracking & reminders
+from routers import compliance
+app.include_router(compliance.router, prefix="/api/compliance", tags=["compliance"])
+
 # WebSocket — no prefix, handles its own /ws/{user_id} path
 app.include_router(ws_router.router, tags=["websocket"])
 
@@ -245,6 +258,10 @@ async def startup_event():
     # Start notification monitoring
     print("Starting notification monitoring system...")
     asyncio.create_task(notification_monitoring_loop())
+
+    # Start compliance scan loop (runs every 4 hours)
+    print("Starting care task compliance scanner...")
+    asyncio.create_task(compliance_scan_loop())
     
     print("\nProject Aura API Ready")
     print(f"API Docs: http://localhost:8000/docs")
@@ -441,6 +458,42 @@ async def notification_monitoring_loop():
         except Exception as e:
             print(f"Error in notification monitoring loop: {e}")
             await asyncio.sleep(60)  # Wait 1 minute before retry
+
+
+async def compliance_scan_loop():
+    """
+    Background task — runs the care task compliance scan every 4 hours.
+    Checks whether compulsory daily tasks (ESAS, medication acknowledgement, vitals)
+    have been completed and creates reminder notifications for overdue ones.
+    Fires appointment reminders at 24h and 1h before each appointment.
+    """
+    from src.db import SessionLocal
+    from services.compliance_engine import run_compliance_scan
+
+    print("Compliance scan loop started (every 4 hours)")
+
+    # Run immediately on startup so there's no 4-hour wait on first boot
+    await asyncio.sleep(30)   # brief delay to let DB initialise
+    try:
+        db = SessionLocal()
+        result = run_compliance_scan(db)
+        db.close()
+        print(f"[Compliance] Initial scan: {result}")
+    except Exception as e:
+        print(f"[Compliance] Initial scan error: {e}")
+
+    while True:
+        try:
+            await asyncio.sleep(4 * 3600)   # every 4 hours
+            db = SessionLocal()
+            try:
+                result = run_compliance_scan(db)
+                print(f"[Compliance] Periodic scan: {result}")
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"[Compliance] Scan loop error: {e}")
+            await asyncio.sleep(300)   # retry in 5 min on error
 
 
 @app.get("/api")

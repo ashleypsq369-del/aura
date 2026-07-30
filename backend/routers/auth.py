@@ -20,6 +20,7 @@ from src.db import (
     PasswordResetToken, authenticate_user, hash_password, verify_password,
     Patient,
 )
+from services.audit_service import log_action
 
 router = APIRouter()
 
@@ -159,7 +160,10 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
                 user_check.locked_until = datetime.utcnow() + timedelta(minutes=30)
             db.commit()
 
-        audit = AuditLog(user_id=None, action="login_failed", resource_type="user",
+        audit = AuditLog(user_id=None, action="LOGIN_FAILED", resource_type="user",
+                         user_role=None,
+                         ip_address=(request.headers.get("x-forwarded-for") or "").split(",")[0].strip() or getattr(request.client, "host", None),
+                         user_agent=request.headers.get("user-agent"),
                          success=False, details=f'{{"username": "{data.username}"}}')
         db.add(audit)
         db.commit()
@@ -175,9 +179,9 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
 
     access_token = create_access_token(data={"sub": str(user.id), "role": user.role})
 
-    audit = AuditLog(user_id=user.id, user_role=user.role, action="login_success",
-                     resource_type="user", resource_id=user.id, success=True)
-    db.add(audit)
+    log_action(db, user=user, action="LOGIN_SUCCESS",
+               resource_type="user", resource_id=user.id,
+               request=request)
     db.commit()
 
     return {
@@ -201,7 +205,7 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
 
 
 @router.post("/register")
-async def register(request: RegisterRequest, db: Session = Depends(get_db)):
+async def register(http_request: Request, request: RegisterRequest, db: Session = Depends(get_db)):
     """Create a new user account (public endpoint for self-registration)."""
     # Validate password strength
     valid, error = validate_password_strength(request.password)
@@ -292,10 +296,10 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
     )
     db.add(prefs)
 
-    audit = AuditLog(user_id=new_user.id, user_role=new_user.role,
-                     action="user_registered", resource_type="user",
-                     resource_id=new_user.id, success=True)
-    db.add(audit)
+    log_action(db, user=new_user, action="USER_REGISTERED",
+               resource_type="user", resource_id=new_user.id,
+               request=http_request,
+               details={"role": new_user.role})
     db.commit()
 
     access_token = create_access_token(data={"sub": str(new_user.id), "role": new_user.role})
@@ -426,7 +430,7 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
 
 
 @router.post("/reset-password")
-async def reset_password(request: ResetPasswordRequest, db: Session = Depends(get_db)):
+async def reset_password(http_request: Request, request: ResetPasswordRequest, db: Session = Depends(get_db)):
     """Complete password reset using token from forgot-password flow."""
     reset_token = db.query(PasswordResetToken).filter(
         PasswordResetToken.token == request.token,
@@ -450,9 +454,8 @@ async def reset_password(request: ResetPasswordRequest, db: Session = Depends(ge
     user.locked_until = None
     reset_token.used = True
 
-    audit = AuditLog(user_id=user.id, user_role=user.role, action="password_reset",
-                     resource_type="user", resource_id=user.id, success=True)
-    db.add(audit)
+    log_action(db, user=user, action="PASSWORD_RESET",
+               resource_type="user", resource_id=user.id, request=http_request)
     db.commit()
 
     return {"message": "Password reset successfully. Please log in with your new password."}
@@ -460,6 +463,7 @@ async def reset_password(request: ResetPasswordRequest, db: Session = Depends(ge
 
 @router.put("/change-password")
 async def change_password(
+    http_request: Request,
     request: ChangePasswordRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -474,10 +478,8 @@ async def change_password(
 
     current_user.hashed_password = hash_password(request.new_password)
 
-    audit = AuditLog(user_id=current_user.id, user_role=current_user.role,
-                     action="password_changed", resource_type="user",
-                     resource_id=current_user.id, success=True)
-    db.add(audit)
+    log_action(db, user=current_user, action="PASSWORD_CHANGED",
+               resource_type="user", resource_id=current_user.id, request=http_request)
     db.commit()
 
     return {"message": "Password changed successfully"}
@@ -504,6 +506,7 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
 
 @router.post("/consent")
 async def give_consent(
+    http_request: Request,
     request: ConsentRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -512,10 +515,10 @@ async def give_consent(
     current_user.consent_given = request.consent_given
     current_user.consent_at = datetime.utcnow()
 
-    audit = AuditLog(user_id=current_user.id, user_role=current_user.role,
-                     action="consent_given", resource_type="user",
-                     resource_id=current_user.id, success=True)
-    db.add(audit)
+    log_action(db, user=current_user, action="CONSENT_GIVEN",
+               resource_type="user", resource_id=current_user.id,
+               request=http_request,
+               details={"consent_given": request.consent_given})
     db.commit()
 
     return {"message": "Consent recorded", "consent_given": request.consent_given}
@@ -523,14 +526,14 @@ async def give_consent(
 
 @router.post("/logout")
 async def logout(
+    http_request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Logout  --  client should delete token."""
-    audit = AuditLog(user_id=current_user.id, user_role=current_user.role,
-                     action="logout", resource_type="user",
-                     resource_id=current_user.id, success=True)
-    db.add(audit)
+    log_action(db, user=current_user, action="LOGOUT",
+               resource_type="user", resource_id=current_user.id,
+               request=http_request)
     db.commit()
     return {"message": "Logged out successfully"}
 

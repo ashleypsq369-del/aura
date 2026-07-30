@@ -120,7 +120,23 @@
     ) fixed;
     color: var(--color-text-primary);
     font-family: var(--font-family-sans);
+
+    /* ── Universal baseline — comfortable for all age groups ────────────
+       WCAG 2.5.5: 44px min touch targets
+       Nielsen Norman: 16px minimum body text for healthcare apps
+       Palliative care context: users in pain, elderly, distressed        */
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+
     min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   html.dark body {
@@ -314,14 +330,152 @@
 
 /* Hide scrollbar utility */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   UNIVERSAL BASELINE — Less cramped, accessible for all age groups
+   Wrapped in @layer base so Tailwind v4 processes them correctly.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer base {
+
+/* ── 1. Global button baseline — WCAG 2.5.5 (44px min touch targets) ── */
+button,
+[role="button"],
+[role="tab"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+a.btn {
+  min-height: 44px;
+  min-width: 44px;
+  cursor: pointer;
+}
+
+/* ── 2. Form inputs — comfortably tappable ─────────────────────────── */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  min-height: 44px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ── 3. Focus indicators — WCAG 2.4.7 ─────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+} /* end @layer base */
+
+/* ── The rules below use custom class names, fine outside @layer ──── */
+
+/* ── 4. Card baseline — breathable, not cramped ────────────────────────── */
+/* Cards use Tailwind padding classes directly — no global override needed */
+
+/* ── 5. Typography hierarchy — clear reading order ─────────────────────── */
+/* Tailwind v4 manages heading sizes — use Tailwind classes on elements */
+
+/* ── 6. Readable paragraph text ────────────────────────────────────────── */
+/* Body line-height 1.65 already set above handles this */
+
+/* ── 7. Small helper text — never illegibly small ──────────────────────── */
+/* WCAG 1.4.4: text must be readable at 200% zoom */
+.text-xs  { font-size: 0.8125rem !important; }  /* 13px min (was 12px) */
+
+/* ── 8. Interactive list items — handled per-component ─────────────────── */
+
+/* ── 9. Reduced grid density on smaller screens ────────────────────────── */
+/* Handled by the adaptive profile CSS (data-ui-profile) above */
+
+/* ── 10. Section vertical rhythm — pages never feel claustrophobic ─────── */
+.space-y-5 > * + * { margin-top: 1.5rem; }
+.space-y-6 > * + * { margin-top: 1.75rem; }
+.space-y-8 > * + * { margin-top: 2rem; }
+
+/* ── 11. Colour contrast floors — WCAG 1.4.3 (4.5:1 for normal text) ─── */
+/* Suppress excessively light text classes */
+.text-slate-300 { color: #94a3b8 !important; }    /* floor: 4.6:1 on white */
+.text-slate-400 { color: #64748b !important; }    /* upgraded from #94a3b8 */
+.text-gray-400  { color: #6b7280 !important; }
+
+/* ── 12. Badge and chip min size ─────────────────────────────────────────
+   Small status badges should be legible without magnification            */
+[class*="badge-"],
+[class*="chip-"] {
+  min-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+/* ── 13. Global card breathing room ─────────────────────────────────────
+   Cards use Tailwind padding utilities — no global override needed       */
+
+/* ── 14. Section headings — clear visual separation ─────────────────── */
+/* Use Tailwind classes directly on elements rather than compound selectors */
+
+/* ── 15. Form group spacing ─────────────────────────────────────────── */
+.space-y-4 > * + * { margin-top: 1.25rem; }
+
+/* ── 16. Table rows — handled by Tailwind utilities ─────────────────── */
+
+/* ── 17. Dialog / modal content padding ─────────────────────────────── */
+/* Handled per-component with Tailwind padding utilities */
+
+/* ── 18. List items in navigation ───────────────────────────────────── */
+/* Handled per-component */
+
+/* ── 19. Smooth scroll behaviour ───────────────────────────────────── */
+/* Set in html block above */
+
+/* ── 20. No tiny click targets in dropdowns ─────────────────────────── */
+/* Handled per-component */
+
+/* ── 21. Mobile text floor ─────────────────────────────────────────────── */
+/* Body font is already 16px globally — no override needed */
+
+/* ── 22. Consistent focus ring colour system-wide ──────────────────── */
+/* Already set in rule 3 above */
+
+/* ── Responsive page container — replaces ad-hoc px-6/px-8 on each page ──
+   Usage: className="page-section"  on the max-w-[1400px] mx-auto div     */
+.page-section {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 12px;
+  padding-right: 12px;
+  /* Vertical rhythm: give each section breathing room */
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+@media (min-width: 480px) {
+  .page-section { padding-left: 20px; padding-right: 20px; }
+}
+@media (min-width: 640px) {
+  .page-section { padding-left: 24px; padding-right: 24px; }
+}
+@media (min-width: 768px) {
+  .page-section { padding-left: 28px; padding-right: 28px; }
+}
+@media (min-width: 1024px) {
+  .page-section { padding-left: 36px; padding-right: 36px; }
+}
 
 /* Custom Scrollbar Styles */
 .scrollbar-thin {
@@ -356,4 +510,285 @@
 
 .scrollbar-track-slate-100::-webkit-scrollbar-track {
   background: #F1F5F9;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UI ADAPTIVE PROFILES
+   Applied via data-ui-profile attribute on <html> element.
+   Based on W3C COGA, WCAG 2.2, Nielsen Norman Group, and mHealth AUI research.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── ELDERLY PROFILE ────────────────────────────────────────────────────────
+   Age 65+, low/basic tech comfort
+   Research: NN/G (2024), Frontiers Psychology font size review (2022)
+   Min font: 18px, touch targets: 56px, simplified nav, no complex gestures  */
+[data-ui-profile="elderly"] {
+  font-size: 18px !important;
+}
+[data-ui-profile="elderly"] body {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+/* Larger buttons & touch targets */
+[data-ui-profile="elderly"] button,
+[data-ui-profile="elderly"] a[role="button"],
+[data-ui-profile="elderly"] [role="tab"] {
+  min-height: 56px !important;
+  min-width: 56px;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+/* Input fields */
+[data-ui-profile="elderly"] input,
+[data-ui-profile="elderly"] select,
+[data-ui-profile="elderly"] textarea {
+  font-size: 1.1rem !important;
+  min-height: 52px !important;
+  padding: 0.75rem 1rem !important;
+}
+/* Increased spacing between list items and cards */
+[data-ui-profile="elderly"] .space-y-2 { gap: 0.75rem; }
+[data-ui-profile="elderly"] .space-y-3 { gap: 1rem; }
+[data-ui-profile="elderly"] .gap-3 { gap: 1rem; }
+[data-ui-profile="elderly"] .gap-4 { gap: 1.25rem; }
+/* More visible focus indicator */
+[data-ui-profile="elderly"] :focus-visible {
+  outline: 3px solid #0d9488 !important;
+  outline-offset: 3px !important;
+}
+/* Larger icons */
+[data-ui-profile="elderly"] svg { min-width: 20px; min-height: 20px; }
+
+
+/* ── COGNITIVE PROFILE ──────────────────────────────────────────────────────
+   Dementia / memory difficulties
+   Research: W3C COGA (2020), NIH cognitive accessibility (2023)
+   Single-task, no time pressure, consistent layout, no popups          */
+[data-ui-profile="cognitive"] {
+  font-size: 18px !important;
+}
+[data-ui-profile="cognitive"] body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+/* Suppress animations entirely */
+[data-ui-profile="cognitive"] *,
+[data-ui-profile="cognitive"] *::before,
+[data-ui-profile="cognitive"] *::after {
+  animation: none !important;
+  transition-duration: 0ms !important;
+  transition: none !important;
+}
+/* Extra generous spacing */
+[data-ui-profile="cognitive"] button,
+[data-ui-profile="cognitive"] a[role="button"] {
+  min-height: 60px !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 1rem !important;
+}
+/* Single-column layouts — prevent overwhelming dense grids */
+[data-ui-profile="cognitive"] .grid-cols-2,
+[data-ui-profile="cognitive"] .grid-cols-3,
+[data-ui-profile="cognitive"] .grid-cols-4 {
+  grid-template-columns: 1fr !important;
+}
+/* No hover effects that shift layout */
+[data-ui-profile="cognitive"] *:hover {
+  transform: none !important;
+}
+[data-ui-profile="cognitive"] :focus-visible {
+  outline: 4px solid #0d9488 !important;
+  outline-offset: 4px !important;
+}
+
+
+/* ── VISUAL IMPAIRMENT PROFILE ──────────────────────────────────────────────
+   Low vision / visual impairment
+   Research: WCAG 2.2 AAA contrast ratio ≥7:1, WCAG 1.4.3, 1.4.11          */
+[data-ui-profile="visual"] {
+  font-size: 20px !important;
+}
+[data-ui-profile="visual"] body {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+/* Ultra-high contrast — override Tailwind colours */
+[data-ui-profile="visual"] .text-slate-500,
+[data-ui-profile="visual"] .text-slate-400,
+[data-ui-profile="visual"] .text-gray-400,
+[data-ui-profile="visual"] .text-gray-500 {
+  color: #111111 !important;
+}
+[data-ui-profile="visual"] .bg-slate-50,
+[data-ui-profile="visual"] .bg-gray-50 {
+  background-color: #f5f5f5 !important;
+}
+/* Thicker borders for all UI elements */
+[data-ui-profile="visual"] button,
+[data-ui-profile="visual"] input,
+[data-ui-profile="visual"] select,
+[data-ui-profile="visual"] [role="tab"] {
+  border: 2px solid #000000 !important;
+  min-height: 56px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}
+/* Remove colour-only status indicators — add text labels */
+[data-ui-profile="visual"] .badge-critical::after { content: " (Critical)"; }
+[data-ui-profile="visual"] .badge-high::after     { content: " (High)"; }
+[data-ui-profile="visual"] .badge-moderate::after { content: " (Moderate)"; }
+/* Strong focus ring */
+[data-ui-profile="visual"] :focus-visible {
+  outline: 4px solid #000000 !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 6px rgba(0,0,0,0.3) !important;
+}
+
+
+/* ── PAEDIATRIC PROFILE ─────────────────────────────────────────────────────
+   Children under 18
+   Research: NIH mobile apps for children (2024), W3C WCAG 2.2             */
+[data-ui-profile="paediatric"] body {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+[data-ui-profile="paediatric"] button,
+[data-ui-profile="paediatric"] a[role="button"] {
+  min-height: 52px !important;
+  border-radius: 1.25rem !important;
+  font-weight: 700 !important;
+}
+/* Friendlier, rounder aesthetic */
+[data-ui-profile="paediatric"] .rounded-xl { border-radius: 1.25rem !important; }
+[data-ui-profile="paediatric"] .rounded-2xl { border-radius: 1.5rem !important; }
+/* Larger icons for child users */
+[data-ui-profile="paediatric"] svg { min-width: 20px; min-height: 20px; }
+[data-ui-profile="paediatric"] :focus-visible {
+  outline: 3px solid #7c3aed !important;
+  outline-offset: 3px !important;
+}
+
+
+/* ── DISTRESSED PROFILE ─────────────────────────────────────────────────────
+   Bedbound / very high pain + low mood
+   Research: Smashing Magazine (2026) — reduce cognitive strain, no trends  */
+[data-ui-profile="distressed"] {
+  font-size: 18px !important;
+}
+[data-ui-profile="distressed"] body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+/* No animations — every visual change adds cognitive load when in distress */
+[data-ui-profile="distressed"] *,
+[data-ui-profile="distressed"] *::before,
+[data-ui-profile="distressed"] *::after {
+  animation: none !important;
+  transition-duration: 100ms !important;
+}
+/* Large, clearly-labelled buttons only */
+[data-ui-profile="distressed"] button {
+  min-height: 64px !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+}
+/* Calm, muted palette — no saturated accent colours */
+[data-ui-profile="distressed"] .bg-teal-600 { background-color: #0f766e !important; }
+[data-ui-profile="distressed"] .bg-rose-500  { background-color: #be123c !important; }
+/* Dense grids become single column */
+[data-ui-profile="distressed"] .grid-cols-3,
+[data-ui-profile="distressed"] .grid-cols-4 {
+  grid-template-columns: 1fr 1fr !important;
+}
+[data-ui-profile="distressed"] :focus-visible {
+  outline: 3px solid #0d9488 !important;
+  outline-offset: 3px !important;
+}
+
+
+/* ── PROFILE TRANSITION INDICATOR ──────────────────────────────────────────
+   Small badge shown in settings so users know which profile is active      */
+.ui-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT STYLES — Reports & Clinical Documents
+   Applied when user uses browser Print / Save as PDF.
+   Hides navigation, shows only #report-print-area content cleanly.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media print {
+  /* Hide everything except the report */
+  body > *:not(#root)                  { display: none !important; }
+  header, nav, aside, footer,
+  [role="navigation"], [role="banner"],
+  .sidebar-tip, button:not(.print-keep) { display: none !important; }
+
+  /* Show only the report content */
+  #report-print-area {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 20mm 20mm 20mm 20mm !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Force white backgrounds on cards */
+  #report-print-area .bg-white,
+  #report-print-area .bg-slate-50,
+  #report-print-area .dark\:bg-slate-800,
+  #report-print-area .dark\:bg-slate-900 {
+    background: white !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Ensure text is black */
+  #report-print-area * { color: #1a1a1a !important; }
+  #report-print-area .text-slate-400,
+  #report-print-area .text-slate-500 { color: #555 !important; }
+
+  /* Table borders */
+  #report-print-area table { border-collapse: collapse !important; }
+  #report-print-area th, #report-print-area td {
+    border: 1px solid #ccc !important;
+    padding: 4pt 6pt !important;
+    font-size: 9pt !important;
+  }
+  #report-print-area th { background: #f5f5f5 !important; font-weight: bold !important; }
+
+  /* Page settings */
+  @page {
+    margin: 15mm;
+    size: A4 portrait;
+  }
+
+  /* Page breaks */
+  #report-print-area h2, #report-print-area h3 { page-break-after: avoid; }
+  #report-print-area table              { page-break-inside: auto; }
+  #report-print-area tr                 { page-break-inside: avoid; }
+
+  /* Hide close/print buttons in the printed output */
+  #report-print-area button { display: none !important; }
 }

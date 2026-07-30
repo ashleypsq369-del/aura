@@ -1,11 +1,12 @@
 """Vitals Router"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 from sqlalchemy.orm import Session
 from src.db import get_db, Vital, User, get_recent_vitals
 from routers.auth import get_current_user
+from services.audit_service import log_action
 
 router = APIRouter()
 
@@ -43,17 +44,23 @@ def _vital_to_dict(v: Vital) -> dict:
 @router.post("")
 async def log_vital(
     data: VitalCreate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     from services.access_control import assert_patient_access
     assert_patient_access(data.patient_id, current_user, db)
-    # Only clinicians, admins, and assigned caregivers may log vitals
     if current_user.role == "patient":
         from fastapi import HTTPException
         raise HTTPException(status_code=403, detail="Patients cannot log vitals directly")
     vital = Vital(**data.dict(), recorded_by=current_user.id)
     db.add(vital)
+    log_action(db, user=current_user, action="CREATE_VITAL",
+               resource_type="vital", patient_id=data.patient_id,
+               request=request,
+               details={"heart_rate": data.heart_rate,
+                        "oxygen_saturation": data.oxygen_saturation,
+                        "temperature": data.temperature})
     db.commit()
     db.refresh(vital)
     return _vital_to_dict(vital)
@@ -61,11 +68,16 @@ async def log_vital(
 @router.get("/{patient_id}")
 async def get_vitals(
     patient_id: int,
+    request: Request,
     limit: int = 50,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     from services.access_control import assert_patient_access
     assert_patient_access(patient_id, current_user, db)
+    log_action(db, user=current_user, action="VIEW_VITALS",
+               resource_type="vital", patient_id=patient_id,
+               request=request)
+    db.commit()
     vitals = get_recent_vitals(db, patient_id, limit)
     return [_vital_to_dict(v) for v in vitals]

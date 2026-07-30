@@ -460,6 +460,159 @@ async def send_alert_message(
         raise HTTPException(status_code=500, detail=f"Failed to send alert message: {str(e)}")
 
 
+@router.get("/my-care-team")
+async def get_my_care_team(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Returns the assigned care team for the current user.
+    - Patient  → their primary clinician + assigned caregivers
+    - Family   → linked patient's clinician + caregivers
+    - Caregiver → clinicians overseeing their patients
+    - Clinician → their assigned patients
+    Each entry includes a ready-to-message flag and existing conversation_id if one exists.
+    """
+    from src.db import PatientPreferences, PatientFamilyLink, CaregiverAssignment
+
+    care_team = []
+
+    def _conv_id(user_a: int, user_b: int):
+        """Return existing conversation id between two users, or None."""
+        row = (
+            db.query(Conversation.id)
+            .join(ConversationParticipant, ConversationParticipant.conversation_id == Conversation.id)
+            .filter(
+                ConversationParticipant.user_id == user_a,
+                Conversation.conversation_type == "private"
+            )
+            .filter(
+                db.query(ConversationParticipant.conversation_id)
+                .filter(
+                    ConversationParticipant.conversation_id == Conversation.id,
+                    ConversationParticipant.user_id == user_b
+                )
+                .correlate(Conversation)
+                .exists()
+            )
+            .first()
+        )
+        return row[0] if row else None
+
+    def _user_entry(u: User, relation: str, conv_id=None):
+        initials = "".join(p[0].upper() for p in (u.full_name or u.username or "?").split()[:2])
+        return {
+            "user_id": u.id,
+            "name": u.full_name or u.username,
+            "role": u.role,
+            "relation": relation,          # e.g. "Primary Clinician", "Caregiver", "Patient"
+            "phone": u.phone,
+            "is_online": False,            # extend later with last_seen
+            "avatar_initials": initials,
+            "existing_conversation_id": conv_id or _conv_id(current_user.id, u.id),
+        }
+
+    try:
+        if current_user.role == "patient":
+            # Find patient record
+            prefs = db.query(PatientPreferences).filter(
+                PatientPreferences.user_id == current_user.id
+            ).first()
+            patient = None
+            if prefs and prefs.patient_id:
+                from src.db import Patient as PatientModel
+                patient = db.query(PatientModel).filter(PatientModel.id == prefs.patient_id).first()
+            if not patient:
+                from src.db import Patient as PatientModel
+                patient = db.query(PatientModel).filter(
+                    PatientModel.full_name == current_user.full_name
+                ).first()
+
+            if patient:
+                # Primary clinician
+                if patient.primary_clinician_id:
+                    clinician = db.query(User).filter(User.id == patient.primary_clinician_id).first()
+                    if clinician:
+                        care_team.append(_user_entry(clinician, "Primary Clinician"))
+
+                # Assigned caregivers
+                assignments = db.query(CaregiverAssignment).filter(
+                    CaregiverAssignment.patient_id == patient.id,
+                    CaregiverAssignment.active == True
+                ).all()
+                for a in assignments:
+                    cg = db.query(User).filter(User.id == a.caregiver_id).first()
+                    if cg and cg.id != (patient.primary_clinician_id or -1):
+                        care_team.append(_user_entry(cg, "Caregiver"))
+
+            # Fallback: any active clinician if no assignment
+            if not care_team:
+                fallback = db.query(User).filter(
+                    User.role.in_(["clinician", "admin"]),
+                    User.is_active == True
+                ).order_by(User.id.asc()).limit(3).all()
+                for u in fallback:
+                    care_team.append(_user_entry(u, "Clinician"))
+
+        elif current_user.role == "family":
+            link = db.query(PatientFamilyLink).filter(
+                PatientFamilyLink.family_user_id == current_user.id
+            ).first()
+            if link:
+                from src.db import Patient as PatientModel
+                patient = db.query(PatientModel).filter(PatientModel.id == link.patient_id).first()
+                if patient:
+                    if patient.primary_clinician_id:
+                        clinician = db.query(User).filter(User.id == patient.primary_clinician_id).first()
+                        if clinician:
+                            care_team.append(_user_entry(clinician, "Patient's Clinician"))
+                    assignments = db.query(CaregiverAssignment).filter(
+                        CaregiverAssignment.patient_id == patient.id,
+                        CaregiverAssignment.active == True
+                    ).all()
+                    for a in assignments:
+                        cg = db.query(User).filter(User.id == a.caregiver_id).first()
+                        if cg:
+                            care_team.append(_user_entry(cg, "Patient's Caregiver"))
+                    # Also add the patient themselves
+                    patient_user = db.query(User).filter(User.full_name == patient.full_name).first()
+                    if patient_user and patient_user.id != current_user.id:
+                        care_team.append(_user_entry(patient_user, "Patient"))
+
+        elif current_user.role == "caregiver":
+            # Get patients they're assigned to and those patients' clinicians
+            assignments = db.query(CaregiverAssignment).filter(
+                CaregiverAssignment.caregiver_id == current_user.id,
+                CaregiverAssignment.active == True
+            ).all()
+            seen = set()
+            for a in assignments:
+                from src.db import Patient as PatientModel
+                patient = db.query(PatientModel).filter(PatientModel.id == a.patient_id).first()
+                if patient and patient.primary_clinician_id and patient.primary_clinician_id not in seen:
+                    clinician = db.query(User).filter(User.id == patient.primary_clinician_id).first()
+                    if clinician:
+                        seen.add(clinician.id)
+                        care_team.append(_user_entry(clinician, "Supervising Clinician"))
+
+        elif current_user.role in ("clinician", "admin"):
+            # Clinicians see their active patients
+            from src.db import Patient as PatientModel
+            patients = db.query(PatientModel).filter(
+                PatientModel.primary_clinician_id == current_user.id,
+                PatientModel.status == "active"
+            ).limit(20).all()
+            for p in patients:
+                patient_user = db.query(User).filter(User.full_name == p.full_name).first()
+                if patient_user:
+                    care_team.append(_user_entry(patient_user, "Patient"))
+
+        return {"care_team": care_team, "count": len(care_team)}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch care team: {str(e)}")
+
+
 @router.get("/physicians")
 async def get_available_physicians(
     current_user: User = Depends(get_current_user),
@@ -595,6 +748,56 @@ async def get_my_patients_for_messaging(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch patients: {str(e)}")
+
+
+@router.get("/patient-user/{patient_id}")
+async def get_patient_user_id(
+    patient_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Given a patient record ID, return the linked User account ID.
+    Used by clinicians to start a direct message to a patient.
+    Only accessible by clinicians, caregivers, and admins.
+    """
+    if current_user.role not in ("admin", "clinician", "caregiver"):
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    from src.db import Patient as PatientModel, PatientPreferences
+    patient = db.query(PatientModel).filter(PatientModel.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    # First try: PatientPreferences links a user_id to a patient_id
+    prefs = db.query(PatientPreferences).filter(
+        PatientPreferences.patient_id == patient_id
+    ).first()
+    if prefs and prefs.user_id:
+        user = db.query(User).filter(User.id == prefs.user_id).first()
+        if user:
+            return {
+                "patient_id": patient_id,
+                "user_id": user.id,
+                "name": user.full_name or user.username,
+                "found": True,
+            }
+
+    # Fallback: match by full_name
+    user = db.query(User).filter(
+        User.full_name == patient.full_name,
+        User.role == "patient",
+        User.is_active == True,
+    ).first()
+    if user:
+        return {
+            "patient_id": patient_id,
+            "user_id": user.id,
+            "name": user.full_name,
+            "found": True,
+        }
+
+    return {"patient_id": patient_id, "user_id": None, "found": False}
 
 
 @router.get("/community-groups")

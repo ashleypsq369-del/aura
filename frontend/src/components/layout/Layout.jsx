@@ -300,6 +300,7 @@ export default function Layout({ children }) {
           id="main-content"
           aria-label="Main content"
           className={`flex-1 overflow-y-auto relative flex flex-col ${getPageClass()}`}
+          style={{ scrollbarWidth: 'thin' }}
         >          {/* Assisted Mode Banner - shown when assisted mode is active */}
           {a11ySettings.assistedMode && (
             <div className="assisted-mode-banner sticky top-0 z-20 bg-gradient-to-r from-violet-600 to-purple-700 text-white px-6 py-2.5 flex items-center justify-between shadow-md">

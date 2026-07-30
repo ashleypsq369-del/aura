@@ -7,6 +7,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import { AppSettingsProvider, useAppSettings } from './context/AppSettingsContext';
 import { CareSettingProvider } from './context/CareSettingContext';
+import { useCareSettingContext } from './context/CareSettingContext';
+import { UIProfileProvider } from './context/UIProfileContext';
 import { PersonalisationProvider, usePersonalisationFlags } from './context/PersonalisationContext';
 import { WebSocketProvider } from './context/WebSocketContext';
 import KeyboardNav from './components/KeyboardNav';
@@ -71,6 +73,7 @@ import WellnessCheckin from './pages/WellnessCheckin';
 import AdminUserManagement from './pages/AdminUserManagement';
 import AuditLog from './pages/AuditLog';
 import HIPAACompliance from './pages/HIPAACompliance';
+import Reports from './pages/Reports';
 import CommunityHub from './pages/CommunityHub';
 import CommunityGroupPage from './pages/CommunityGroupPage';
 import Profile from './pages/Profile';
@@ -92,6 +95,26 @@ if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('a
   localStorage.removeItem('aura_v2_dismissed');
   // Don't set v3 - let avatar show fresh
 }
+
+// ── Restore UI adaptation profile on every page load ─────────────────────────
+// This runs before React mounts so the correct CSS class is on <html> immediately,
+// preventing any flash of unstyled content for users with non-standard profiles.
+;(function restoreUIProfile() {
+  const stored = localStorage.getItem('ui_profile');
+  if (!stored || stored === 'standard') return;
+  const PROFILE_CLASSES = {
+    elderly:    'ui-profile-elderly',
+    cognitive:  'ui-profile-cognitive',
+    visual:     'ui-profile-visual',
+    paediatric: 'ui-profile-paediatric',
+    distressed: 'ui-profile-distressed',
+  };
+  const html = document.documentElement;
+  html.setAttribute('data-ui-profile', stored);
+  if (PROFILE_CLASSES[stored]) html.classList.add(PROFILE_CLASSES[stored]);
+  if (['cognitive', 'distressed', 'elderly'].includes(stored)) html.classList.add('reduce-motion');
+  if (stored === 'visual') html.classList.add('high-contrast');
+})();
 
 // Gap Analysis Priority Pages
 import MedicalKnowledge from './pages/MedicalKnowledge';
@@ -131,6 +154,21 @@ function ProtectedRoute({ children }) {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
+/**
+ * CareSettingRouteGuard
+ * Wraps individual routes that may be hidden for certain care settings.
+ * If the feature is hidden for this user's care setting, redirect to /my-space.
+ * Staff (clinician/admin) always pass through.
+ */
+function CareSettingRouteGuard({ children, featurePath }) {
+  const { isHidden } = useCareSettingContext();
+  if (isHidden(featurePath)) {
+    return <Navigate to="/my-space" replace />;
+  }
+  return children;
+}
+
+
 function AppRoutes() {
   const { isAuthenticated, logout } = useAuth();
   const { showAiWidgets, featureSettings } = useAppSettings();
@@ -157,7 +195,15 @@ function AppRoutes() {
     const token = localStorage.getItem('auth_token');
     if (!token) return;
 
-    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/preferences/${user.id}`, {
+    // Only apply prefs for patient/family/caregiver — clinicians/admins have no questionnaire
+    if (!['patient','family','caregiver'].includes(user.role)) {
+      sessionStorage.setItem(sessionKey, '1');
+      return;
+    }
+
+    // Use /mine endpoint — always correct, works for all roles, uses the API_URL from env
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    fetch(`${baseUrl}/api/preferences/my`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(r => r.ok ? r.json() : null)
@@ -365,13 +411,37 @@ function AppRoutes() {
                     <Route path="/assessments/:patientId/caregiver-burden" element={<CaregiverBurdenForm />} />
                     <Route path="/assessments/:patientId/motor-skills" element={<MotorSkillsForm />} />
                     <Route path="/continuity-bridge" element={<ContinuityBridge />} />
-                    <Route path="/memory-vault" element={<MemoryVault />} />
-                    <Route path="/legacy-setup" element={<LegacySetup />} />
-                    <Route path="/heir-management" element={<HeirManagement />} />
-                    <Route path="/legacy-content" element={<LegacyContentCreator />} />
+                    <Route path="/memory-vault" element={
+                      <CareSettingRouteGuard featurePath="/memory-vault">
+                        <MemoryVault />
+                      </CareSettingRouteGuard>
+                    } />
+                    <Route path="/legacy-setup" element={
+                      <CareSettingRouteGuard featurePath="/legacy-setup">
+                        <LegacySetup />
+                      </CareSettingRouteGuard>
+                    } />
+                    <Route path="/heir-management" element={
+                      <CareSettingRouteGuard featurePath="/legacy-setup">
+                        <HeirManagement />
+                      </CareSettingRouteGuard>
+                    } />
+                    <Route path="/legacy-content" element={
+                      <CareSettingRouteGuard featurePath="/legacy-content">
+                        <LegacyContentCreator />
+                      </CareSettingRouteGuard>
+                    } />
                     <Route path="/my-legacy-access" element={<MyLegacyAccess />} />
-                    <Route path="/journal" element={<Journal />} />
-                    <Route path="/community" element={<CommunityHub />} />
+                    <Route path="/journal" element={
+                      <CareSettingRouteGuard featurePath="/journal">
+                        <Journal />
+                      </CareSettingRouteGuard>
+                    } />
+                    <Route path="/community" element={
+                      <CareSettingRouteGuard featurePath="/community">
+                        <CommunityHub />
+                      </CareSettingRouteGuard>
+                    } />
                     <Route path="/community/:groupId" element={<CommunityGroupPage />} />
                     <Route path="/community-hub" element={<CommunityHub />} />
                     <Route path="/profile" element={<Profile />} />
@@ -388,13 +458,22 @@ function AppRoutes() {
                     <Route path="/admin/audit" element={<AuditLog />} />
                     <Route path="/admin/hipaa-compliance" element={<HIPAACompliance />} />
                     <Route path="/admin/model-bias-report" element={<ModelBiasReportPage />} />
+                    <Route path="/reports" element={<Reports />} />
                     <Route path="/medical-knowledge" element={<MedicalKnowledge />} />
                     <Route path="/care-settings" element={<CareSettings />} />
                     <Route path="/shift-handover" element={<ShiftHandover />} />
                     <Route path="/daily-care-log" element={<DailyCareLog />} />
-                    <Route path="/pre-clinic" element={<PreClinicChecklist />} />
+                    <Route path="/pre-clinic" element={
+                      <CareSettingRouteGuard featurePath="/pre-clinic">
+                        <PreClinicChecklist />
+                      </CareSettingRouteGuard>
+                    } />
                     <Route path="/residential-log" element={<ResidentialLog />} />
-                    <Route path="/bereavement-support" element={<BereavedFamilyDashboard />} />
+                    <Route path="/bereavement-support" element={
+                      <CareSettingRouteGuard featurePath="/bereavement-support">
+                        <BereavedFamilyDashboard />
+                      </CareSettingRouteGuard>
+                    } />
                     {/* Dev-only pages  --  hidden from nav but reachable if needed */}
                     <Route path="/animation-demo" element={<AnimationDemoSimple />} />
                   </Routes>
@@ -453,6 +532,7 @@ export default function App() {
             <CareSettingProvider>
               <WebSocketProvider>
                 <PersonalisationProvider>
+                <UIProfileProvider>
                 <BrowserRouter>
                 <TooltipProvider>
                   {/* Intro splash — shown once per session */}
@@ -462,6 +542,7 @@ export default function App() {
                   <AppRoutes />
                 </TooltipProvider>
               </BrowserRouter>
+              </UIProfileProvider>
               </PersonalisationProvider>
               </WebSocketProvider>
             </CareSettingProvider>

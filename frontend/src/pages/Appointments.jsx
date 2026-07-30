@@ -7,6 +7,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { appointmentsAPI, patientsAPI, preferencesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { usePatientId } from '../hooks/usePatientId';
+import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
@@ -259,7 +261,13 @@ export default function Appointments() {
   const isStaff  = ['clinician','admin','caregiver'].includes(user?.role);
   const isPatient = user?.role === 'patient';
 
-  const [patientId, setPatientId] = useState(isPatient ? user?.linked_patient_id || user?.patient_id || null : null);
+  // For patients/family: resolve linked patient record via hook
+  const { patientId: ownPatientId } = usePatientId();
+
+  const [staffPatientId, setStaffPatientId] = useState(null);
+  const patientId  = isStaff ? staffPatientId : ownPatientId;
+  const setPatientId = isStaff ? setStaffPatientId : () => {};
+
   const [filterStatus, setFilterStatus] = useState('active');
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -275,16 +283,10 @@ export default function Appointments() {
 
   // Auto-select first patient for staff so data shows immediately
   useEffect(() => {
-    if (isStaff && !patientId && patientList.length > 0) {
-      setPatientId(patientList[0].id);
+    if (isStaff && !staffPatientId && patientList.length > 0) {
+      setStaffPatientId(patientList[0].id);
     }
-  }, [patientList, isStaff, patientId]);
-
-  const { data: prefsData } = useQuery({
-    queryKey: ['prefs', user?.id],
-    queryFn: () => preferencesAPI.getByUserId(user.id).then(r => r.data),
-    enabled: isPatient && !!user?.id,
-  });
+  }, [patientList, isStaff, staffPatientId]);
 
   const { data: apptsRaw, isLoading } = useQuery({
     queryKey: ['appointments', patientId],
@@ -294,6 +296,17 @@ export default function Appointments() {
     refetchInterval: 60000,
   });
   const appts = Array.isArray(apptsRaw) ? apptsRaw : [];
+
+  // Preferences for patient-facing priority display
+  const { data: prefsData } = useQuery({
+    queryKey: ['prefs-mine', user?.id],
+    queryFn: () => axios.get(`${API_URL}/api/preferences/my`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` }
+    }).then(r => r.data),
+    enabled: isPatient && !!user?.id,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());

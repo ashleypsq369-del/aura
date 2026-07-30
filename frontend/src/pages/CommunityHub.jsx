@@ -219,24 +219,24 @@ export default function CommunityHub() {
             {/* ML/signal-driven smart recommendations */}
             {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 rounded-xl overflow-hidden">
-                <div className="px-4 py-3 border-b border-violet-100 flex items-center gap-2">
+                className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/40 border border-violet-200 dark:border-violet-800 rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b border-violet-100 dark:border-violet-800 flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-white" />
                   </div>
-                  <h3 className="text-sm font-bold text-violet-900 flex-1">Smart Group Recommendations</h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-200 text-violet-700">
+                  <h3 className="text-sm font-bold text-violet-900 dark:text-violet-200 flex-1">Smart Group Recommendations</h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-200 dark:bg-violet-800 text-violet-700 dark:text-violet-300">
                     {mlRecommendedGroups.length} for you
                   </span>
                 </div>
                 {(signals?.communityTags?.length > 0 || signals?.condition) && (
                   <div className="px-4 pt-2 pb-1">
-                    <p className="text-[11px] text-violet-700 flex items-center gap-1.5">
+                    <p className="text-[11px] text-violet-700 dark:text-violet-300 flex items-center gap-1.5">
                       <Sparkles size={11} className="text-violet-500" />
                       Matched to your profile:
                       {signals.condition && <span className="font-semibold"> {signals.condition}</span>}
                       {signals.communityTags?.slice(0,3).map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-violet-100 text-violet-700 rounded-full text-[10px] font-bold">{t}</span>
+                        <span key={t} className="px-1.5 py-0.5 bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-300 rounded-full text-[10px] font-bold">{t}</span>
                       ))}
                     </p>
                   </div>
@@ -247,20 +247,20 @@ export default function CommunityHub() {
                     return (
                       <button key={g.id}
                         onClick={() => navigate(`/community/${g.id}`)}
-                        className="text-left flex items-start gap-3 p-3 bg-white/70 hover:bg-white rounded-xl border border-violet-100 hover:border-violet-300 transition-all group">
+                        className="text-left flex items-start gap-3 p-3 bg-white dark:bg-slate-700 hover:bg-violet-50 dark:hover:bg-slate-600 rounded-xl border border-violet-100 dark:border-slate-600 hover:border-violet-300 dark:hover:border-violet-500 transition-all group">
                         <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
                           style={{ backgroundColor: color }}>
                           {groupInitials(g.name)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-slate-900 group-hover:text-violet-700 truncate">{g.name}</p>
-                          <p className="text-[10px] text-slate-500 truncate mt-0.5">{g.description || 'Supportive community group'}</p>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{g.description || 'Supportive community group'}</p>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[9px] text-slate-400 flex items-center gap-0.5">
+                            <span className="text-[9px] text-slate-400 dark:text-slate-500 flex items-center gap-0.5">
                               <Users size={9} /> {g.member_count ?? 0}
                             </span>
                             {g.condition_tags?.slice(0,2).map(t => (
-                              <span key={t} className="text-[9px] font-bold px-1 py-0.5 rounded bg-violet-50 text-violet-600">{t}</span>
+                              <span key={t} className="text-[9px] font-bold px-1 py-0.5 rounded bg-violet-50 dark:bg-violet-900/40 text-violet-600 dark:text-violet-300">{t}</span>
                             ))}
                           </div>
                         </div>
