@@ -21,7 +21,19 @@ import {
 } from 'lucide-react';
 
 /* ── Constants ───────────────────────────────────────────────────────────── */
-const FREQ_HOURS = { once_daily:24, twice_daily:12, three_daily:8, every_4h:4, every_6h:6, every_8h:8, every_12h:12, prn:null };
+// Maps both DB-stored plain English AND frontend code keys to hours
+const FREQ_HOURS = {
+  // Code keys (from frontend form)
+  once_daily:  24, twice_daily: 12, three_daily: 8,
+  every_4h: 4, every_6h: 6, every_8h: 8, every_12h: 12,
+  // Plain English (from seeded/imported data)
+  'once daily': 24, 'twice daily': 12, 'three times daily': 8,
+  'four times daily': 6, 'every 4 hours': 4, 'every 6 hours': 6,
+  'every 8 hours': 8, 'every 12 hours': 12,
+  'every 4h': 4, 'every 6h': 6, 'every 8h': 8, 'every 12h': 12,
+  prn: null, 'as needed': null, 'when required': null,
+};
+
 const FREQ_OPTS = [
   { v:'once_daily',  l:'Once Daily'         },
   { v:'twice_daily', l:'Twice Daily'        },
@@ -32,12 +44,23 @@ const FREQ_OPTS = [
   { v:'every_12h',   l:'Every 12 Hours'     },
   { v:'prn',         l:'PRN (As Needed)'    },
 ];
+
 const ROUTE_OPTS = ['Oral','IV','IM','SC','Sublingual','Transdermal','Rectal','Inhaled'];
-const freqLabel = v => FREQ_OPTS.find(o => o.v === v)?.l || v || '—';
+
+// Normalize a frequency string to a displayable label
+const freqLabel = (v) => {
+  if (!v) return '—';
+  const opt = FREQ_OPTS.find(o => o.v === v);
+  if (opt) return opt.l;
+  // Already plain English — capitalize first letter
+  return v.charAt(0).toUpperCase() + v.slice(1);
+};
 
 function nextDose(med) {
-  const h = FREQ_HOURS[med.frequency];
-  if (!h || !med.start_date) return null;
+  if (!med.start_date) return null;
+  const freqKey = (med.frequency || '').toLowerCase().trim();
+  const h = FREQ_HOURS[freqKey] ?? FREQ_HOURS[med.frequency];
+  if (!h) return null;
   const start = new Date(med.start_date);
   const now   = new Date();
   const elapsed    = (now - start) / 3600000;

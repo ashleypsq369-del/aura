@@ -12,10 +12,27 @@ from sqlalchemy.orm import Session
 
 from src.db import (
     get_db, Patient, User, PatientFamilyLink, AuditLog,
-    get_all_patients, get_patient, Vital, Medication
+    get_all_patients, get_patient, Vital, Medication,
+    PatientCareSetting,
 )
 from routers.auth import get_current_user
 from services.audit_service import log_action
+
+
+def _inject_care_setting(patient: Patient, db) -> dict:
+    """
+    Convert a Patient ORM object to a dict and inject care_setting
+    from the PatientCareSetting table.
+    """
+    pcs = db.query(PatientCareSetting).filter(
+        PatientCareSetting.patient_id == patient.id
+    ).order_by(PatientCareSetting.id.desc()).first()
+
+    data = {c.name: getattr(patient, c.name) for c in patient.__table__.columns}
+    data['care_setting'] = pcs.setting_key if pcs else None
+    # Computed property
+    data['age'] = patient.age
+    return data
 
 router = APIRouter()
 
@@ -33,6 +50,7 @@ class PatientResponse(BaseModel):
     admission_date: Optional[datetime]
     status: str
     care_pathway: Optional[str]
+    care_setting: Optional[str] = None   # resolved from PatientCareSetting table
     risk_score: float
     risk_level: Optional[str]
     last_assessment: Optional[datetime]
@@ -53,7 +71,7 @@ class PatientResponse(BaseModel):
     primary_clinician_id: Optional[int]
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -179,11 +197,14 @@ async def list_patients(
     db: Session = Depends(get_db)
 ):
     """List all patients (filtered by role)."""
+    def _build(patients):
+        return [_inject_care_setting(p, db) for p in patients if p]
+
     # Admin and clinician see all
     if current_user.role in ['admin', 'clinician']:
         patients = get_all_patients(db, status)
-        return patients
-    
+        return _build(patients)
+
     # Caregiver: only assigned patients
     if current_user.role == 'caregiver':
         from src.db import CaregiverAssignment
@@ -195,15 +216,22 @@ async def list_patients(
         query = db.query(Patient).filter(Patient.id.in_(patient_ids))
         if status:
             query = query.filter(Patient.status == status)
-        return query.all()
-    
-    # Patient: only own record
+        return _build(query.all())
+
+    # Patient: only own record — resolve via PatientPreferences first
     if current_user.role == 'patient':
-        patient = db.query(Patient).filter(
-            Patient.full_name == current_user.full_name
+        from src.db import PatientPreferences
+        pref = db.query(PatientPreferences).filter(
+            PatientPreferences.user_id == current_user.id
         ).first()
-        return [patient] if patient else []
-    
+        if pref:
+            patient = db.query(Patient).filter(Patient.id == pref.patient_id).first()
+        else:
+            patient = db.query(Patient).filter(
+                Patient.full_name == current_user.full_name
+            ).first()
+        return _build([patient]) if patient else []
+
     # Family: linked patients
     if current_user.role == 'family':
         links = db.query(PatientFamilyLink).filter(
@@ -213,8 +241,8 @@ async def list_patients(
         query = db.query(Patient).filter(Patient.id.in_(patient_ids))
         if status:
             query = query.filter(Patient.status == status)
-        return query.all()
-    
+        return _build(query.all())
+
     return []
 
 
@@ -237,8 +265,8 @@ async def get_patient_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Patient not found"
         )
-    
-    return patient
+
+    return _inject_care_setting(patient, db)
 
 
 @router.post("", response_model=PatientResponse, status_code=status.HTTP_201_CREATED)

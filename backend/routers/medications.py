@@ -23,20 +23,39 @@ class MedicationResponse(BaseModel):
     id: int
     patient_id: int
     name: str
+    generic_name: Optional[str] = None
     dose: str
+    unit: Optional[str] = None
     frequency: str
     route: str
-    indication: str
+    indication: Optional[str] = None
     is_active: bool
-    start_date: Optional[datetime]
+    is_prn: Optional[bool] = False
+    prn_max_dose: Optional[str] = None
+    special_instructions: Optional[str] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    discontinued_at: Optional[datetime] = None
+    discontinued_by: Optional[int] = None
+    discontinue_reason: Optional[str] = None
+    prescribed_by: Optional[int] = None
+    created_at: Optional[datetime] = None
     class Config:
         from_attributes = True
 
 @router.get("/{patient_id}", response_model=List[MedicationResponse])
-async def get_medications(patient_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_medications(
+    patient_id: int,
+    active_only: bool = False,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
     from services.access_control import assert_patient_access
     assert_patient_access(patient_id, current_user, db)
-    return db.query(Medication).filter(Medication.patient_id == patient_id, Medication.is_active == True).all()
+    q = db.query(Medication).filter(Medication.patient_id == patient_id)
+    if active_only:
+        q = q.filter(Medication.is_active == True)
+    return q.order_by(Medication.is_active.desc(), Medication.created_at.desc()).all()
 
 @router.post("", response_model=MedicationResponse)
 async def create_medication(data: MedicationCreate, request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
