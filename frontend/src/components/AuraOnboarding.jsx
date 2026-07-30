@@ -136,14 +136,16 @@ export default function AuraOnboarding() {
   const { user }    = useAuth();
   const navigate    = useNavigate();
   const location    = useLocation();
-  const role        = user?.role || 'patient';
-  const steps       = TOURS[role] || TOURS.patient;
+
+  // Use the ACTUAL role from user object — never fallback to 'patient' until we
+  // know the real role. If user isn't loaded yet, defer everything.
+  const role = user?.role;   // undefined until auth resolves
+
+  // Steps are empty until role is known — prevents wrong tour from flashing
+  const steps = role ? (TOURS[role] || TOURS.patient) : [];
 
   /* Step state — sessionStorage survives navigation, cleared when done */
-  const [step, setStepState] = useState(() => {
-    const s = sessionStorage.getItem(TOUR_STEP_KEY(role));
-    return s !== null ? parseInt(s, 10) : 0;
-  });
+  const [step, setStepState] = useState(0);
   const [showTour,  setShowTour]  = useState(false);
   const [showHint,  setShowHint]  = useState(false);
   const [hintShown, setHintShown] = useState(false);
@@ -151,40 +153,63 @@ export default function AuraOnboarding() {
   const [skipConfirm,setSkipConfirm] = useState(false); // show "are you sure?" before skipping
 
   const saveStep = useCallback((n) => {
+    if (!role) return;
     sessionStorage.setItem(TOUR_STEP_KEY(role), String(n));
     setStepState(n);
   }, [role]);
 
-  /* Start tour once per login — keyed on user.id so route changes don't retrigger */
+  /* Start tour once per login — fires when BOTH user.id AND role are known */
   useEffect(() => {
-    if (!user?.id) return;
-    const done = localStorage.getItem(TOUR_KEY(role));
-    if (!done) {
-      const saved = sessionStorage.getItem(TOUR_STEP_KEY(role));
-      if (saved === null) saveStep(0);
-      // Navigate to step's page if we're not already there
-      const s = saved !== null ? parseInt(saved, 10) : 0;
-      const target = steps[s]?.path;
-      if (target && location.pathname !== target) {
-        navigate(target, { replace: true });
-      }
-      setTimeout(() => setShowTour(true), 600);
+    // Wait until auth is fully resolved (both id and role populated)
+    if (!user?.id || !user?.role) return;
+
+    const currentRole = user.role;
+    const currentSteps = TOURS[currentRole] || TOURS.patient;
+
+    // Already done? Never show again.
+    const done = localStorage.getItem(TOUR_KEY(currentRole));
+    if (done) return;
+
+    // Resume from saved step if user navigated away mid-tour
+    const saved = sessionStorage.getItem(TOUR_STEP_KEY(currentRole));
+    const resumeStep = saved !== null ? parseInt(saved, 10) : 0;
+
+    // Clamp to valid range (guard against stale values for a different tour length)
+    const safeStep = Math.min(resumeStep, currentSteps.length - 1);
+    setStepState(safeStep);
+    if (saved === null) {
+      sessionStorage.setItem(TOUR_STEP_KEY(currentRole), '0');
     }
-  }, [user?.id]); // ONLY fire when user id changes — never on route change
+
+    // Navigate to the step's page if not already there
+    const target = currentSteps[safeStep]?.path;
+    if (target && location.pathname !== target) {
+      navigate(target, { replace: true });
+    }
+
+    setTimeout(() => setShowTour(true), 600);
+
+  // Depend on BOTH id AND role — this fires once when the real user object arrives,
+  // and never re-fires just because the route changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, user?.role]);
 
   /* Listen for restart event */
   useEffect(() => {
     const restart = () => {
-      localStorage.removeItem(TOUR_KEY(role));
-      sessionStorage.removeItem(TOUR_STEP_KEY(role));
+      const currentRole = user?.role;
+      if (!currentRole) return;
+      localStorage.removeItem(TOUR_KEY(currentRole));
+      sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
       saveStep(0);
-      const firstPath = steps[0]?.path;
+      const currentSteps = TOURS[currentRole] || TOURS.patient;
+      const firstPath = currentSteps[0]?.path;
       if (firstPath) navigate(firstPath);
       setTimeout(() => setShowTour(true), 400);
     };
     window.addEventListener('aura:restart-tour', restart);
     return () => window.removeEventListener('aura:restart-tour', restart);
-  }, [role, steps, navigate, saveStep]);
+  }, [user?.role, navigate, saveStep]);
 
   /* Page hints — only when NOT in tour */
   useEffect(() => {
@@ -207,18 +232,21 @@ export default function AuraOnboarding() {
 
   useEffect(() => { setHintShown(false); }, [location.pathname]);
 
-  const current = steps[Math.min(step, steps.length - 1)];
-  const isLast  = step >= steps.length - 1;
+  // Derived from step — safe because steps always has at least 1 entry once role is known
+  const current = steps.length > 0 ? steps[Math.min(step, steps.length - 1)] : null;
+  const isLast  = steps.length > 0 && step >= steps.length - 1;
 
   const advance = useCallback(() => {
+    const currentRole = user?.role;
+    if (!currentRole) return;
     if (isLast) {
       // Done — mark permanent, clean up session
-      localStorage.setItem(TOUR_KEY(role), '1');
-      sessionStorage.removeItem(TOUR_STEP_KEY(role));
+      localStorage.setItem(TOUR_KEY(currentRole), '1');
+      sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
       setShowTour(false);
       return;
     }
-    const next    = step + 1;
+    const next     = step + 1;
     const nextStep = steps[next];
     saveStep(next);
 
@@ -228,7 +256,7 @@ export default function AuraOnboarding() {
       navigate(nextStep.path);
       setTimeout(() => setNavigating(false), 500);
     }
-  }, [step, isLast, steps, role, navigate, saveStep]);
+  }, [step, isLast, steps, user?.role, navigate, saveStep]);
 
   const goBack = useCallback(() => {
     if (step <= 0) return;
@@ -243,11 +271,13 @@ export default function AuraOnboarding() {
   }, [step, steps, navigate, saveStep]);
 
   const skip = useCallback(() => {
-    localStorage.setItem(TOUR_KEY(role), '1');
-    sessionStorage.removeItem(TOUR_STEP_KEY(role));
+    const currentRole = user?.role;
+    if (!currentRole) return;
+    localStorage.setItem(TOUR_KEY(currentRole), '1');
+    sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
     setShowTour(false);
     setSkipConfirm(false);
-  }, [role]);
+  }, [user?.role]);
 
   const requestSkip = useCallback(() => {
     // Don't confirm on last step — just finish
@@ -258,6 +288,10 @@ export default function AuraOnboarding() {
   }, [isLast, skip]);
 
   const hint = PAGE_HINTS[location.pathname];
+
+  // Don't render anything until role + user are fully resolved
+  // Prevents wrong-role tour from flashing before auth completes
+  if (!role || !current) return null;
 
   return (
     <>
@@ -396,9 +430,10 @@ export default function AuraOnboarding() {
 export function useRestartTour() {
   const { user } = useAuth();
   return useCallback(() => {
-    const role = user?.role || 'patient';
-    localStorage.removeItem(TOUR_KEY(role));
-    sessionStorage.removeItem(TOUR_STEP_KEY(role));
+    const currentRole = user?.role;
+    if (!currentRole) return;
+    localStorage.removeItem(TOUR_KEY(currentRole));
+    sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
     window.dispatchEvent(new CustomEvent('aura:restart-tour'));
-  }, [user]);
+  }, [user?.role]);
 }

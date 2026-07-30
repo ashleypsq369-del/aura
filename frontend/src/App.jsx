@@ -96,6 +96,26 @@ if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('a
   // Don't set v3 - let avatar show fresh
 }
 
+// One-time: clear any tour_done keys that were saved under 'patient' as fallback
+// while the real role was still loading. This ensures users who got stuck
+// (tour marked done under wrong role) will see it fresh under their real role.
+;(function clearStaleTourKeys() {
+  // If 'patient' key is set but user is NOT actually a patient, clear it
+  // We can't know role here (no auth context yet), so we rely on a migration flag
+  if (!localStorage.getItem('aura_tour_migration_v1')) {
+    // Clear ALL v3 tour keys — they'll be recreated correctly once role is known
+    ['patient','clinician','admin','caregiver','family'].forEach(r => {
+      const key = `aura_tour_done_${r}_v3`;
+      // Only clear if it was POSSIBLY set by the stale-role bug
+      // Heuristic: if 'aura_tour_done_patient_v3' exists but we have a session
+      // for a non-patient role, it's likely a stale key. We clear all to be safe.
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(`aura_tour_step_${r}`);
+    });
+    localStorage.setItem('aura_tour_migration_v1', '1');
+  }
+})();
+
 // ── Restore UI adaptation profile on every page load ─────────────────────────
 // This runs before React mounts so the correct CSS class is on <html> immediately,
 // preventing any flash of unstyled content for users with non-standard profiles.
