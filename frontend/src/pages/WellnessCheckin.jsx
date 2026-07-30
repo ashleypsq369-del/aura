@@ -20,6 +20,7 @@ import Progress from '../components/ui/Progress';
 import { mlAPI } from '../api/client';
 import { useCareTeamChat } from '../hooks/useCareTeamChat';
 import { usePatientId } from '../hooks/usePatientId';
+import InlineTaskReminder from '../components/InlineTaskReminder';
 
 import { API_URL } from '../api/client';
 
@@ -289,6 +290,13 @@ export default function WellnessCheckin() {
           <ChevronLeft size={16} /> My Space
         </button>
       </PageHeader>
+
+      {/* Inline reminder — only if ESAS not yet done today */}
+      <InlineTaskReminder
+        taskId="esas_daily"
+        message="Your daily wellness check-in is required today. Complete it below and your care team will be updated."
+        doneMsg="✓ Daily wellness check-in already completed today — thank you!"
+      />
 
       <div className="px-3 sm:p-6 max-w-2xl mx-auto py-4">
         <div className="space-y-4">

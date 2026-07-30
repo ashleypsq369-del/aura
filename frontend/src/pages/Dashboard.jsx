@@ -20,6 +20,7 @@ import PageHeader from '../components/PageHeader';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import DailyTaskChecklist from '../components/DailyTaskChecklist';
+import TaskStatusBar from '../components/TaskStatusBar';
 import { StatCard } from '../components/ui/Card';
 import { useCareTeamChat } from '../hooks/useCareTeamChat';
 
@@ -306,9 +307,9 @@ export default function Dashboard() {
             <ImageCard image="/resources/african/african-medical-reading.jpg"    icon={BookOpen}      title="Resources"      description="Caregiver guides"         onClick={() => navigate('/resources')}      color="#0f766e" />
           </div>
 
-          {/* Caregiver task compliance — compact checklist for their own tasks */}
+          {/* Caregiver task compliance — full checklist showing all assigned patient tasks */}
           <div className="mb-6">
-            <DailyTaskChecklist compact />
+            <TaskStatusBar />
           </div>
           <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
@@ -454,7 +455,7 @@ function FamilyDashboard({ user, summary, navigate }) {
         </div>
 
         {/* Daily task checklist for family — shows appointments + optional tasks */}
-        <DailyTaskChecklist compact />
+        <TaskStatusBar />
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <div>

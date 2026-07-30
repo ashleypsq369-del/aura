@@ -88,6 +88,7 @@ import Layout from './components/layout/Layout';
 import AuraChat from './components/AuraChat';
 import AIAssistant from './components/AIAssistant';
 import AuraOnboarding from './components/AuraOnboarding';
+import TaskNudge from './components/TaskNudge';
 
 // One-time: migrate old dismiss keys so avatar shows for returning users
 if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('aura_v2_dismissed') === 'true') {
@@ -506,6 +507,8 @@ function AppRoutes() {
                     <AuraOnboarding />
                   </>
                 )}
+                {/* Task nudge — fires once per session when pending tasks exist */}
+                <TaskNudge />
               </ProtectedRoute>
             }
           />

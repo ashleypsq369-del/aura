@@ -11,6 +11,7 @@ import { usePatientId } from '../hooks/usePatientId';
 import axios from 'axios';
 import { API_URL } from '../api/client';
 import PageHeader from '../components/PageHeader';
+import InlineTaskReminder from '../components/InlineTaskReminder';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
 import {
@@ -433,6 +434,15 @@ export default function Medications() {
           </button>
         )}
       </PageHeader>
+
+      {/* Inline reminder for patients — medication acknowledgement */}
+      {isPatient && (
+        <InlineTaskReminder
+          taskId="medication_acknowledge"
+          message="Please confirm you have taken your scheduled medications today using the 'Mark as Taken' option below."
+          doneMsg="✓ Medication acknowledgement recorded for today."
+        />
+      )}
 
       {/* KPI cards */}
       <div className="px-6">

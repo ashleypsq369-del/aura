@@ -36,20 +36,25 @@ async def get_my_tasks(
     db: Session = Depends(get_db),
 ):
     """
-    Returns today's care task checklist for the logged-in patient/family.
-    Shows which compulsory tasks are done, which are pending, and upcoming appointments.
+    Returns today's care task checklist for the logged-in user.
+    - patient/family  → their own daily wellness + medication tasks
+    - caregiver       → vitals due, meds logging, shift handover for assigned patients
+    - clinician/admin → returns empty (they use patient/{id} endpoint instead)
     """
     if current_user.role not in ("patient", "family", "caregiver"):
         return {"tasks": [], "message": "Task tracking is for patients, family and caregivers."}
 
-    # Resolve patient ID
+    # ── Caregiver: show tasks across their assigned patients ──────────────
+    if current_user.role == "caregiver":
+        return _get_caregiver_tasks(db, current_user)
+
+    # ── Patient / Family: resolve patient ID ─────────────────────────────
     prefs = db.query(PatientPreferences).filter(
         PatientPreferences.user_id == current_user.id
     ).first()
     patient_id = prefs.patient_id if prefs else None
 
     if not patient_id:
-        # Fallback: find patient by name
         p = db.query(Patient).filter(Patient.full_name == current_user.full_name).first()
         patient_id = p.id if p else None
 
@@ -67,6 +72,109 @@ async def get_my_tasks(
     care_setting = getattr(patient, "care_setting", None) if patient else None
 
     return get_patient_compliance_status(db, patient_id, care_setting)
+
+
+def _get_caregiver_tasks(db, current_user) -> dict:
+    """Build a task list for caregivers based on their assigned patients."""
+    from src.db import CaregiverAssignment, Vital, ESASAssessment, PPSAssessment, Appointment
+    from services.compliance_engine import (
+        has_vitals_within_hours, has_esas_today, has_pps_within_days,
+        get_upcoming_appointments,
+    )
+    from datetime import datetime, timedelta
+
+    assignments = db.query(CaregiverAssignment).filter(
+        CaregiverAssignment.caregiver_id == current_user.id,
+        CaregiverAssignment.active == True,
+    ).all()
+
+    tasks = []
+    required_total = 0
+    required_completed = 0
+
+    for assign in assignments:
+        patient = db.query(Patient).filter(Patient.id == assign.patient_id).first()
+        if not patient:
+            continue
+
+        pname = patient.full_name
+        pid   = patient.id
+        care_setting = getattr(patient, "care_setting", None)
+        interval_h   = 8 if care_setting == "hospital_based" else 24
+
+        # ── Vitals task ───────────────────────────────────────────────────
+        vitals_done = has_vitals_within_hours(db, pid, interval_h)
+        required_total += 1
+        if vitals_done:
+            required_completed += 1
+        tasks.append({
+            "id":          f"vitals_{pid}",
+            "name":        f"Vitals — {pname}",
+            "description": f"Record heart rate, BP, SpO2 (every {interval_h}h).",
+            "type":        "compulsory_periodic",
+            "icon":        "activity",
+            "link":        f"/patients/{pid}/vitals",
+            "done":        vitals_done,
+            "required":    True,
+        })
+
+        # ── ESAS task (if caregiver can submit on behalf) ─────────────────
+        esas_done = has_esas_today(db, pid)
+        required_total += 1
+        if esas_done:
+            required_completed += 1
+        tasks.append({
+            "id":          f"esas_{pid}",
+            "name":        f"ESAS Check-In — {pname}",
+            "description": "Daily symptom check-in for this patient.",
+            "type":        "compulsory_daily",
+            "icon":        "heart",
+            "link":        f"/wellness-checkin",
+            "done":        esas_done,
+            "required":    True,
+        })
+
+        # ── PPS task (monthly) ────────────────────────────────────────────
+        pps_done = has_pps_within_days(db, pid, 30)
+        tasks.append({
+            "id":          f"pps_{pid}",
+            "name":        f"PPS Assessment — {pname}",
+            "description": "Monthly functional status assessment.",
+            "type":        "compulsory_periodic",
+            "icon":        "clipboard",
+            "link":        f"/assessments/{pid}/pps",
+            "done":        pps_done,
+            "required":    False,   # monthly — optional reminder only
+        })
+
+        # ── Upcoming appointments ─────────────────────────────────────────
+        appts = get_upcoming_appointments(db, pid)
+        for appt in appts:
+            hours_until = (appt.scheduled_at - datetime.utcnow()).total_seconds() / 3600
+            tasks.append({
+                "id":          f"appt_{appt.id}",
+                "name":        f"Appointment: {appt.appointment_type} — {pname}",
+                "description": f"{appt.location} in {int(hours_until)}h",
+                "type":        "appointment",
+                "icon":        "calendar",
+                "link":        "/appointments",
+                "done":        False,
+                "required":    True,
+            })
+            required_total += 1
+
+    pct = round(required_completed / max(required_total, 1) * 100)
+
+    return {
+        "date":               datetime.utcnow().date().isoformat(),
+        "tasks":              tasks,
+        "required_total":     required_total,
+        "required_completed": required_completed,
+        "completion_pct":     pct,
+        "all_required_done":  required_completed >= required_total,
+        "role":               "caregiver",
+        "assigned_patients":  len(assignments),
+    }
 
 
 @router.get("/patient/{patient_id}")

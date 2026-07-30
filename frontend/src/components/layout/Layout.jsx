@@ -334,12 +334,6 @@ export default function Layout({ children }) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="w-full min-h-full"
           >
-            {/* Global task status — shown for all users who have tasks */}
-            {user && (
-              <div className="px-4 sm:px-6 pt-4 pb-0">
-                <TaskStatusBar />
-              </div>
-            )}
             {children}
           </motion.div>
         </main>
