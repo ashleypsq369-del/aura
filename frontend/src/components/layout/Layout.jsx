@@ -229,8 +229,8 @@ export default function Layout({ children }) {
 
             {/* Notification Center */}
             <NotificationCenter />
-            
-            {/* Compact task status dots — visible to everyone */}
+
+            {/* Task status pill — sits neatly between notifications and alerts */}
             {user && (
               <div className="hidden sm:flex items-center">
                 <TaskStatusBar compact />
@@ -336,7 +336,7 @@ export default function Layout({ children }) {
           >
             {/* Global task status — shown for all users who have tasks */}
             {user && (
-              <div className="px-4 sm:px-6 pt-4">
+              <div className="px-4 sm:px-6 pt-4 pb-0">
                 <TaskStatusBar />
               </div>
             )}
