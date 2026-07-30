@@ -11,7 +11,8 @@ import {
   FileText, Download, Shield, Users, AlertTriangle,
   Activity, Clock, BarChart3, Search, Lock,
   Loader2, ChevronDown, ChevronUp, Printer, User,
-  Calendar, Filter, CheckCircle, XCircle,
+  Calendar, Filter, CheckCircle, XCircle, TrendingDown,
+  AlertCircle, Target,
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -23,12 +24,15 @@ import { API_URL } from '../api/client';
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
 const REPORT_META = {
-  patient_summary:      { icon: FileText,      color: '#0891b2', needsPatient: true },
-  user_activity:        { icon: Clock,         color: '#7c3aed', needsUser: true },
-  audit_trail:          { icon: Shield,        color: '#dc2626' },
-  population:           { icon: BarChart3,     color: '#059669' },
-  incidents:            { icon: AlertTriangle, color: '#d97706' },
-  caregiver_performance:{ icon: Users,         color: '#1d4ed8', needsCaregiver: true },
+  patient_summary:       { icon: FileText,      color: '#0891b2', needsPatient: true },
+  user_activity:         { icon: Clock,         color: '#7c3aed', needsUser: true },
+  audit_trail:           { icon: Shield,        color: '#dc2626' },
+  population:            { icon: BarChart3,     color: '#059669' },
+  incidents:             { icon: AlertTriangle, color: '#d97706' },
+  caregiver_performance: { icon: Users,         color: '#1d4ed8', needsCaregiver: true },
+  medication_adherence:  { icon: Activity,      color: '#be123c', needsPatient: true },
+  assessment_completion: { icon: CheckCircle,   color: '#0891b2' },
+  care_plan_progress:    { icon: BarChart3,     color: '#059669', needsPatient: true },
 };
 
 function fmt(iso) {
@@ -468,6 +472,277 @@ function CaregiverBody({ data }) {
   );
 }
 
+/* ── New Report Body Renderers ───────────────────────────────────────── */
+
+function MedicationAdherenceBody({ data }) {
+  const s = data.summary || {};
+  const adherenceColor = s.adherence_status === 'good' ? '#059669'
+    : s.adherence_status === 'warning' ? '#d97706'
+    : s.adherence_status === 'critical' ? '#dc2626' : '#94a3b8';
+
+  return (
+    <div className="space-y-5">
+      <Section title="Overall Adherence" icon={Activity} color={adherenceColor}>
+        <KpiGrid items={[
+          { label: 'Active Medications', value: s.total_active_medications },
+          { label: 'Doses Scheduled',    value: s.total_scheduled_doses },
+          { label: 'Doses Taken',        value: s.total_taken_doses,   color: '#059669' },
+          { label: 'Doses Missed',       value: s.total_missed_doses,  warn: s.total_missed_doses > 0 },
+        ]} />
+        <div className="flex items-center gap-4 p-4 rounded-xl mt-2"
+          style={{ backgroundColor: adherenceColor + '14', border: `1.5px solid ${adherenceColor}30` }}>
+          <div className="text-4xl font-bold" style={{ color: adherenceColor }}>
+            {s.overall_adherence_pct != null ? s.overall_adherence_pct + '%' : 'No data'}
+          </div>
+          <div>
+            <p className="font-bold text-slate-700 dark:text-slate-200 text-sm">Overall Adherence Rate</p>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {s.adherence_status === 'good' && '≥80% — Meeting clinical threshold (NHS Medicines Management)'}
+              {s.adherence_status === 'warning' && '60–79% — Below threshold. Review with prescriber.'}
+              {s.adherence_status === 'critical' && '<60% — Critical. Immediate clinical review required.'}
+              {s.adherence_status === 'no_data' && 'No adherence logs found for this period.'}
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {(data.at_risk_medications || []).length > 0 && (
+        <Section title="⚠️ Medications Needing Attention (<80%)" icon={AlertTriangle} color="#dc2626">
+          <Table
+            headers={['Medication', 'Dose', 'Frequency', 'Scheduled', 'Taken', 'Missed', 'Adherence', 'Status']}
+            rows={(data.at_risk_medications || []).map(m => [
+              m.name, m.dose || '—', m.frequency || '—',
+              m.scheduled, m.taken, m.missed,
+              m.adherence_pct != null ? m.adherence_pct + '%' : '—',
+              <SevBadge sev={m.status === 'critical' ? 'critical' : m.status === 'warning' ? 'high' : 'normal'} />,
+            ])}
+          />
+        </Section>
+      )}
+
+      <Section title="All Medications" icon={FileText} color="#be123c">
+        {(data.medications || []).map(m => (
+          <div key={m.medication_id} className="mb-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{m.name}</p>
+                <p className="text-xs text-slate-500">{m.dose} · {m.frequency} · {m.route}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold" style={{ color: m.status === 'good' ? '#059669' : m.status === 'warning' ? '#d97706' : m.status === 'critical' ? '#dc2626' : '#94a3b8' }}>
+                  {m.adherence_pct != null ? m.adherence_pct + '%' : 'No data'}
+                </p>
+                <SevBadge sev={m.status === 'good' ? 'normal' : m.status === 'warning' ? 'high' : m.status === 'critical' ? 'critical' : 'info'} />
+              </div>
+            </div>
+            {m.scheduled > 0 && (
+              <div className="grid grid-cols-4 gap-2 text-center text-xs mt-2">
+                <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-2">
+                  <p className="font-bold text-slate-800 dark:text-slate-100">{m.scheduled}</p>
+                  <p className="text-slate-500">Scheduled</p>
+                </div>
+                <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-2">
+                  <p className="font-bold text-green-700">{m.taken}</p>
+                  <p className="text-green-600">Taken</p>
+                </div>
+                <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-2">
+                  <p className="font-bold text-red-700">{m.missed}</p>
+                  <p className="text-red-600">Missed</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-2">
+                  <p className="font-bold text-slate-700 dark:text-slate-300">
+                    {Object.values(m.missed_patterns || {}).reduce((a, b) => a + b, 0)}
+                  </p>
+                  <p className="text-slate-500">Pattern</p>
+                </div>
+              </div>
+            )}
+            {(m.recent_missed || []).length > 0 && (
+              <div className="mt-2">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Recent Missed Doses</p>
+                {m.recent_missed.slice(0, 3).map((miss, i) => (
+                  <p key={i} className="text-xs text-red-600 dark:text-red-400">
+                    • {fmtDate(miss.scheduled_at)} — {miss.skipped_reason}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </Section>
+    </div>
+  );
+}
+
+function AssessmentCompletionBody({ data }) {
+  const s = data.summary || {};
+  const thresholds = data.thresholds || {};
+  return (
+    <div className="space-y-5">
+      <Section title="System Overview" icon={CheckCircle} color="#0891b2">
+        <KpiGrid items={[
+          { label: 'Total Patients', value: s.total_patients },
+          { label: 'Patients Overdue', value: s.patients_overdue, warn: s.patients_overdue > 0 },
+          { label: 'Critical Scores', value: s.critical_scores, warn: s.critical_scores > 0 },
+        ]} />
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2">
+          {Object.entries(s.overdue_by_type || {}).map(([type, count]) => (
+            <div key={type} className="text-center p-2 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <p className="text-lg font-bold" style={{ color: count > 0 ? '#dc2626' : '#059669' }}>{count}</p>
+              <p className="text-[10px] text-slate-500 uppercase font-semibold">{type.toUpperCase()}</p>
+              <p className="text-[10px] text-slate-400">overdue</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {(data.critical_scores || []).length > 0 && (
+        <Section title="🚨 Critical Scores — Immediate Review Required" icon={AlertTriangle} color="#dc2626">
+          <Table
+            headers={['Patient', 'Assessment', 'Score', 'Clinical Flag', 'Date']}
+            rows={data.critical_scores.map(c => [
+              c.patient_name, c.assessment,
+              <span className="font-bold text-red-700">{c.score}</span>,
+              <span className="text-xs text-red-600 font-medium">{c.flag}</span>,
+              fmtDate(c.date),
+            ])}
+          />
+        </Section>
+      )}
+
+      <Section title="Patient Assessment Status" icon={Activity} color="#0891b2">
+        <Table
+          headers={['Patient', 'Diagnosis', 'Risk', 'ESAS', 'PPS', 'PHQ-9', 'GAD-7', 'Barthel', 'Overdue']}
+          rows={(data.patients || []).map(p => {
+            const a = p.assessments || {};
+            const daysBadge = (item, threshold) => {
+              if (!item) return <span className="text-slate-400 text-[10px]">Never</span>;
+              const d = item.days_since;
+              if (d == null) return <span className="text-slate-400 text-[10px]">Never</span>;
+              const color = item.overdue ? 'text-red-600 font-bold' : d <= Math.ceil(threshold / 2) ? 'text-green-600' : 'text-amber-600';
+              return <span className={`text-[10px] ${color}`}>{d}d ago</span>;
+            };
+            return [
+              p.patient_name, p.diagnosis ? p.diagnosis.substring(0, 20) + '…' : '—',
+              <SevBadge sev={p.risk_level?.toLowerCase() || 'normal'} />,
+              daysBadge(a.esas, thresholds.esas || 1),
+              daysBadge(a.pps, thresholds.pps || 30),
+              daysBadge(a.phq9, thresholds.phq9 || 14),
+              daysBadge(a.gad7, thresholds.gad7 || 14),
+              daysBadge(a.barthel, thresholds.barthel || 30),
+              p.overdue_count > 0
+                ? <span className="text-[10px] font-bold text-red-600">{p.overdue.join(', ')}</span>
+                : <CheckCircle size={12} className="text-green-600" />,
+            ];
+          })}
+        />
+      </Section>
+    </div>
+  );
+}
+
+function CarePlanProgressBody({ data }) {
+  const s = data.summary || {};
+  const catColors = {
+    pain: '#dc2626', symptom: '#d97706', functional: '#0891b2',
+    psychological: '#7c3aed', spiritual: '#059669', family: '#be123c',
+    medication: '#0369a1', nutrition: '#ca8a04', safety: '#374151',
+    general: '#64748b',
+  };
+  return (
+    <div className="space-y-5">
+      <Section title="Care Plan Summary" icon={Target} color="#059669">
+        <KpiGrid items={[
+          { label: 'Total Goals',   value: s.total_goals },
+          { label: 'Achieved',      value: s.achieved,     color: '#059669' },
+          { label: 'In Progress',   value: s.in_progress,  color: '#0891b2' },
+          { label: 'Pending',       value: s.pending,      color: '#d97706' },
+          { label: 'Overdue Goals', value: s.overdue,      warn: s.overdue > 0 },
+          { label: 'AI Suggested',  value: s.ai_suggested, color: '#7c3aed' },
+        ]} />
+        {/* Overall progress bar */}
+        <div className="mt-3">
+          <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
+            <span>Overall Progress</span>
+            <span>{s.overall_progress || 0}%</span>
+          </div>
+          <div className="h-3 rounded-full bg-slate-200 dark:bg-slate-700">
+            <div className="h-3 rounded-full transition-all"
+              style={{ width: `${s.overall_progress || 0}%`, background: 'linear-gradient(90deg,#059669,#0d9488)' }} />
+          </div>
+        </div>
+      </Section>
+
+      {Object.keys(data.category_progress || {}).length > 0 && (
+        <Section title="Progress by Goal Category" icon={BarChart3} color="#0d9488">
+          <div className="space-y-2">
+            {Object.entries(data.category_progress || {}).map(([cat, pct]) => (
+              <div key={cat}>
+                <div className="flex justify-between text-xs font-medium text-slate-600 dark:text-slate-300 mb-0.5">
+                  <span className="capitalize">{cat.replace(/_/g, ' ')}</span>
+                  <span>{pct}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700">
+                  <div className="h-2 rounded-full"
+                    style={{ width: `${pct}%`, backgroundColor: catColors[cat] || '#0d9488' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+      )}
+
+      {(data.overdue_goals || []).length > 0 && (
+        <Section title="⚠️ Overdue Goals" icon={AlertTriangle} color="#dc2626">
+          <Table
+            headers={['Goal', 'Category', 'Priority', 'Progress', 'Target Date', 'Status']}
+            rows={data.overdue_goals.map(g => [
+              g.title.length > 40 ? g.title.substring(0, 40) + '…' : g.title,
+              <span className="capitalize text-xs">{g.category}</span>,
+              <SevBadge sev={g.priority === 'critical' ? 'critical' : g.priority === 'high' ? 'high' : 'normal'} />,
+              <div className="flex items-center gap-1">
+                <div className="w-16 h-1.5 rounded-full bg-slate-200">
+                  <div className="h-1.5 rounded-full bg-amber-500" style={{ width: `${g.progress}%` }} />
+                </div>
+                <span className="text-xs">{g.progress}%</span>
+              </div>,
+              fmtDate(g.target_date),
+              <SevBadge sev="high" />,
+            ])}
+          />
+        </Section>
+      )}
+
+      <Section title="All Goals" icon={FileText} color="#374151">
+        <Table
+          headers={['Goal', 'Category', 'Priority', 'Status', 'Progress', 'Checklist', 'AI']}
+          rows={(data.goals || []).map(g => [
+            g.title.length > 35 ? g.title.substring(0, 35) + '…' : g.title,
+            <span className="capitalize text-xs">{g.category}</span>,
+            <SevBadge sev={g.priority === 'critical' ? 'critical' : g.priority === 'high' ? 'high' : 'normal'} />,
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
+              g.status === 'achieved' ? 'bg-green-100 text-green-700'
+              : g.status === 'in_progress' ? 'bg-blue-100 text-blue-700'
+              : g.status === 'discontinued' ? 'bg-slate-100 text-slate-500'
+              : 'bg-amber-100 text-amber-700'
+            }`}>{g.status}</span>,
+            <div className="flex items-center gap-1">
+              <div className="w-12 h-1.5 rounded-full bg-slate-200">
+                <div className="h-1.5 rounded-full bg-teal-500" style={{ width: `${g.progress}%` }} />
+              </div>
+              <span className="text-[10px]">{g.progress}%</span>
+            </div>,
+            g.checklist.total > 0
+              ? `${g.checklist.completed}/${g.checklist.total}`
+              : '—',
+            g.ai_suggested ? '🤖' : '👤',
+          ])}
+        />
+      </Section>
+    </div>
+  );
+}
+
 /* ── Report Viewer Modal ─────────────────────────────────────────────── */
 function ReportViewer({ data, onClose, onPrint }) {
   const meta = REPORT_META[data.report_type] || {};
@@ -484,6 +759,9 @@ function ReportViewer({ data, onClose, onPrint }) {
       case 'population':            return <PopulationBody data={data} />;
       case 'incidents':             return <IncidentsBody data={data} />;
       case 'caregiver_performance': return <CaregiverBody data={data} />;
+      case 'medication_adherence':  return <MedicationAdherenceBody data={data} />;
+      case 'assessment_completion': return <AssessmentCompletionBody data={data} />;
+      case 'care_plan_progress':    return <CarePlanProgressBody data={data} />;
       default: return <pre className="text-xs overflow-auto">{JSON.stringify(data, null, 2)}</pre>;
     }
   };
@@ -693,6 +971,14 @@ export default function Reports() {
       } else if (reportId === 'caregiver_performance') {
         if (!caregiverId) { toast.error('Please select a caregiver first'); setGenerating(null); return; }
         url = `${API_URL}/api/reports/caregiver/${caregiverId}?${params}`;
+      } else if (reportId === 'medication_adherence') {
+        if (!patientId) { toast.error('Please select a patient first'); setGenerating(null); return; }
+        url = `${API_URL}/api/reports/medication-adherence/${patientId}?${params}`;
+      } else if (reportId === 'assessment_completion') {
+        url = `${API_URL}/api/reports/assessment-completion?${params}`;
+      } else if (reportId === 'care_plan_progress') {
+        if (!patientId) { toast.error('Please select a patient first'); setGenerating(null); return; }
+        url = `${API_URL}/api/reports/care-plan-progress/${patientId}?${params}`;
       } else {
         toast.error('Unknown report type'); setGenerating(null); return;
       }

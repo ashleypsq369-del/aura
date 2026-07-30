@@ -33,7 +33,8 @@ from src.db import (
     get_db, User, Patient, Vital, Medication, Appointment,
     Alert, AuditLog, ESASAssessment, PPSAssessment,
     PHQ9Assessment, GAD7Assessment, BarthelIndexAssessment,
-    Prediction, CarePlan, CarePlanGoal, CaregiverAssignment,
+    Prediction, CarePlan, CarePlanGoal, CarePlanChecklistItem,
+    CaregiverAssignment, MedicationAdherenceLog,
     NotificationQueue as Notification
 )
 from routers.auth import get_current_user, require_role
@@ -110,6 +111,30 @@ REPORT_TYPES = [
         "access": ["admin", "clinician"],
         "uses": ["Staff appraisal", "Workload balance", "Training needs", "HR accountability"],
         "standard": "CQC Fundamental Standards, NHS Staff Performance Framework",
+    },
+    {
+        "id": "medication_adherence",
+        "name": "Medication Adherence Report",
+        "description": "Tracks whether each patient is taking prescribed medications on schedule. Shows doses taken vs missed, adherence %, PRN usage, and patterns of non-adherence by time-of-day.",
+        "access": ["admin", "clinician", "caregiver"],
+        "uses": ["Pain management review", "Patient safety", "Non-adherence investigation", "Pharmacy review"],
+        "standard": "NHS Medicines Management, NICE NG209 Palliative Care",
+    },
+    {
+        "id": "assessment_completion",
+        "name": "Assessment Completion & Overdue Report",
+        "description": "Shows which patients are overdue for ESAS, PPS, PHQ-9, GAD-7, Barthel and other assessments. Flags ESAS TSDS ≥40 (72% 30-day mortality risk) and PHQ-9 ≥15 (severe depression).",
+        "access": ["admin", "clinician"],
+        "uses": ["Clinical governance", "Quality monitoring", "Assessment compliance", "CQC evidence"],
+        "standard": "NHS NACEL 2024, ESAS-r Watanabe 2011, PHQ-9 Kroenke 2002",
+    },
+    {
+        "id": "care_plan_progress",
+        "name": "Care Plan Goal Progress Report",
+        "description": "Tracks achievement of care plan goals and daily checklist tasks. Shows progress % by goal category (pain, psychological, spiritual), overdue goals, and AI-suggested vs clinician goals.",
+        "access": ["admin", "clinician", "caregiver"],
+        "uses": ["Weekly care plan review", "Goal-oriented care", "Quality assurance", "NHS NACEL compliance"],
+        "standard": "NHS NACEL 2024 Goal-Oriented Care, NICE NG31",
     },
 ]
 
@@ -845,4 +870,457 @@ async def caregiver_performance_report(
             }
             for a, p in assignments
         ],
+    }
+
+
+# ── Report 7: Medication Adherence Report ────────────────────────────────
+
+@router.get("/medication-adherence/{patient_id}")
+async def medication_adherence_report(
+    patient_id: int,
+    date_from: Optional[str] = Query(None),
+    date_to:   Optional[str] = Query(None),
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Medication Adherence Report.
+    Tracks doses taken vs missed per medication. Flags <80% adherence.
+    Standard: NHS Medicines Management, NICE NG209 Palliative Care.
+    """
+    if current_user.role not in ("admin", "clinician", "caregiver"):
+        raise HTTPException(403, "Access denied")
+
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(404, "Patient not found")
+
+    now   = datetime.utcnow()
+    start = _parse_date(date_from, now - timedelta(days=30))
+    end   = _parse_date(date_to, now)
+
+    # Active medications
+    meds = db.query(Medication).filter(
+        Medication.patient_id == patient_id,
+        Medication.is_active == True,
+    ).all()
+
+    # Adherence logs in period
+    logs = db.query(MedicationAdherenceLog).filter(
+        MedicationAdherenceLog.patient_id == patient_id,
+        MedicationAdherenceLog.scheduled_at >= start,
+        MedicationAdherenceLog.scheduled_at <= end,
+    ).order_by(MedicationAdherenceLog.scheduled_at.desc()).all()
+
+    # Group logs by medication
+    from collections import defaultdict
+    logs_by_med: dict = defaultdict(list)
+    for lg in logs:
+        logs_by_med[lg.medication_id].append(lg)
+
+    # Build per-medication adherence summary
+    FREQ_HOURS = {
+        "once_daily": 24, "twice_daily": 12, "three_daily": 8,
+        "every_4h": 4, "every_6h": 6, "every_8h": 8,
+        "every_12h": 12, "prn": None,
+    }
+
+    med_details = []
+    total_scheduled = 0
+    total_taken = 0
+    total_missed = 0
+
+    for med in meds:
+        med_logs = logs_by_med.get(med.id, [])
+        taken  = sum(1 for lg in med_logs if lg.taken)
+        missed = sum(1 for lg in med_logs if not lg.taken)
+        scheduled = taken + missed
+
+        # Estimate scheduled doses if no logs (based on frequency × days)
+        if scheduled == 0 and med.frequency and med.frequency != "prn":
+            h = FREQ_HOURS.get(med.frequency)
+            if h:
+                days = (min(end, now) - max(start, med.start_date or start)).days
+                scheduled = max(0, int(days * 24 / h))
+                taken = 0
+                missed = scheduled
+
+        adherence_pct = round(taken / max(scheduled, 1) * 100, 1) if scheduled > 0 else None
+
+        # Missed dose patterns by hour of day
+        missed_hours = [
+            lg.scheduled_at.hour for lg in med_logs
+            if not lg.taken and lg.scheduled_at
+        ]
+        morning_misses = sum(1 for h in missed_hours if 6 <= h < 12)
+        afternoon_misses = sum(1 for h in missed_hours if 12 <= h < 18)
+        evening_misses = sum(1 for h in missed_hours if 18 <= h < 24)
+        night_misses = sum(1 for h in missed_hours if h < 6)
+
+        # Recent missed doses (last 5)
+        recent_missed = [
+            {
+                "scheduled_at": lg.scheduled_at.isoformat(),
+                "skipped_reason": lg.skipped_reason or "No reason given",
+            }
+            for lg in med_logs if not lg.taken
+        ][:5]
+
+        med_details.append({
+            "medication_id":   med.id,
+            "name":            med.name,
+            "dose":            med.dose,
+            "frequency":       med.frequency,
+            "route":           med.route,
+            "is_prn":          med.is_prn,
+            "scheduled":       scheduled,
+            "taken":           taken,
+            "missed":          missed,
+            "adherence_pct":   adherence_pct,
+            "status":          (
+                "no_data" if adherence_pct is None
+                else "good" if adherence_pct >= 80
+                else "warning" if adherence_pct >= 60
+                else "critical"
+            ),
+            "missed_patterns": {
+                "morning":   morning_misses,
+                "afternoon": afternoon_misses,
+                "evening":   evening_misses,
+                "night":     night_misses,
+            },
+            "recent_missed": recent_missed,
+        })
+
+        total_scheduled += scheduled
+        total_taken     += taken
+        total_missed    += missed
+
+    overall_pct = round(total_taken / max(total_scheduled, 1) * 100, 1) if total_scheduled > 0 else None
+
+    # Medications needing attention (<80% adherence)
+    at_risk = [m for m in med_details if m["status"] in ("warning", "critical")]
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_MED_ADHERENCE",
+                   resource_type="report", patient_id=patient_id,
+                   request=http_request,
+                   details={"period_days": (end - start).days})
+    db.commit()
+
+    return {
+        "report_type":  "medication_adherence",
+        "report_title": f"Medication Adherence — {patient.full_name}",
+        "generated_at": datetime.utcnow().isoformat(),
+        "generated_by": _user_dict(current_user),
+        "period":       {"from": start.isoformat(), "to": end.isoformat()},
+        "confidentiality": "CLINICAL IN CONFIDENCE",
+        "standard": "NHS Medicines Management / NICE NG209 Palliative Care",
+        "patient": {
+            "id": patient.id, "full_name": patient.full_name,
+            "patient_code": patient.patient_code,
+            "primary_diagnosis": patient.primary_diagnosis,
+        },
+        "summary": {
+            "total_active_medications": len(meds),
+            "total_scheduled_doses":   total_scheduled,
+            "total_taken_doses":       total_taken,
+            "total_missed_doses":      total_missed,
+            "overall_adherence_pct":   overall_pct,
+            "at_risk_medications":     len(at_risk),
+            "adherence_status": (
+                "no_data" if overall_pct is None
+                else "good" if overall_pct >= 80
+                else "warning" if overall_pct >= 60
+                else "critical"
+            ),
+        },
+        "medications": med_details,
+        "at_risk_medications": at_risk,
+    }
+
+
+# ── Report 8: Assessment Completion & Overdue Report ─────────────────────
+
+@router.get("/assessment-completion")
+async def assessment_completion_report(
+    days_overdue: int = Query(7, description="Flag assessments older than this many days"),
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Assessment Completion & Overdue Report.
+    Flags patients overdue for ESAS (daily), PPS (monthly), PHQ-9 (fortnightly).
+    Highlights concerning scores: ESAS TSDS ≥40, PHQ-9 ≥15.
+    Standard: NHS NACEL 2024, ESAS-r (Watanabe 2011), PHQ-9 (Kroenke 2002).
+    """
+    if current_user.role not in ("admin", "clinician"):
+        raise HTTPException(403, "Admin or clinician required")
+
+    now      = datetime.utcnow()
+    patients = db.query(Patient).filter(Patient.status.notin_(["deceased"])).all()
+
+    # Overdue thresholds (days)
+    THRESHOLDS = {
+        "esas":    1,   # daily
+        "pps":    30,   # monthly
+        "phq9":   14,   # fortnightly
+        "gad7":   14,
+        "barthel":30,
+    }
+
+    patient_rows = []
+    overdue_counts = {"esas": 0, "pps": 0, "phq9": 0, "gad7": 0, "barthel": 0}
+    critical_scores = []
+
+    for p in patients:
+        # Last assessment dates
+        last_esas    = db.query(ESASAssessment).filter(ESASAssessment.patient_id == p.id).order_by(ESASAssessment.assessed_at.desc()).first()
+        last_pps     = db.query(PPSAssessment).filter(PPSAssessment.patient_id == p.id).order_by(PPSAssessment.assessed_at.desc()).first()
+        last_phq9    = db.query(PHQ9Assessment).filter(PHQ9Assessment.patient_id == p.id).order_by(PHQ9Assessment.assessed_at.desc()).first()
+        last_gad7    = db.query(GAD7Assessment).filter(GAD7Assessment.patient_id == p.id).order_by(GAD7Assessment.assessed_at.desc()).first()
+        last_barthel = db.query(BarthelIndexAssessment).filter(BarthelIndexAssessment.patient_id == p.id).order_by(BarthelIndexAssessment.assessed_at.desc()).first()
+
+        def days_since(rec):
+            if not rec: return None
+            return (now - rec.assessed_at).days
+
+        esas_days  = days_since(last_esas)
+        pps_days   = days_since(last_pps)
+        phq9_days  = days_since(last_phq9)
+        gad7_days  = days_since(last_gad7)
+        barthel_days = days_since(last_barthel)
+
+        # Flag overdues
+        overdue_list = []
+        if esas_days is None or esas_days > THRESHOLDS["esas"]:
+            overdue_list.append("ESAS")
+            overdue_counts["esas"] += 1
+        if pps_days is None or pps_days > THRESHOLDS["pps"]:
+            overdue_list.append("PPS")
+            overdue_counts["pps"] += 1
+        if phq9_days is None or phq9_days > THRESHOLDS["phq9"]:
+            overdue_list.append("PHQ-9")
+            overdue_counts["phq9"] += 1
+
+        # Concerning scores
+        if last_esas:
+            tsds = sum([last_esas.pain, last_esas.tiredness, last_esas.nausea,
+                        last_esas.depression, last_esas.anxiety, last_esas.drowsiness,
+                        getattr(last_esas,'lack_of_appetite',0),
+                        last_esas.shortness_of_breath, last_esas.wellbeing])
+            if tsds >= 40:
+                critical_scores.append({
+                    "patient_id": p.id, "patient_name": p.full_name,
+                    "assessment": "ESAS", "score": tsds,
+                    "flag": "TSDS ≥40 — 72% 30-day mortality risk (Watanabe 2011)",
+                    "date": last_esas.assessed_at.isoformat(),
+                })
+
+        if last_phq9:
+            phq9_score = sum([getattr(last_phq9, f, 0) for f in [
+                "little_interest","feeling_down","sleep_trouble","feeling_tired",
+                "appetite_change","feeling_bad_about_self","trouble_concentrating",
+                "moving_slowly_or_fidgety","thoughts_of_harm",
+            ]])
+            if phq9_score >= 15:
+                critical_scores.append({
+                    "patient_id": p.id, "patient_name": p.full_name,
+                    "assessment": "PHQ-9", "score": phq9_score,
+                    "flag": "PHQ-9 ≥15 — Moderately severe to severe depression",
+                    "date": last_phq9.assessed_at.isoformat(),
+                })
+
+        patient_rows.append({
+            "patient_id":    p.id,
+            "patient_name":  p.full_name,
+            "patient_code":  p.patient_code,
+            "risk_level":    p.risk_level,
+            "diagnosis":     p.primary_diagnosis,
+            "overdue":       overdue_list,
+            "overdue_count": len(overdue_list),
+            "assessments": {
+                "esas":    {"days_since": esas_days,    "overdue": esas_days is None or esas_days > THRESHOLDS["esas"],    "threshold_days": THRESHOLDS["esas"]},
+                "pps":     {"days_since": pps_days,     "overdue": pps_days is None or pps_days > THRESHOLDS["pps"],       "threshold_days": THRESHOLDS["pps"]},
+                "phq9":    {"days_since": phq9_days,    "overdue": phq9_days is None or phq9_days > THRESHOLDS["phq9"],    "threshold_days": THRESHOLDS["phq9"]},
+                "gad7":    {"days_since": gad7_days,    "overdue": gad7_days is None or gad7_days > THRESHOLDS["gad7"],    "threshold_days": THRESHOLDS["gad7"]},
+                "barthel": {"days_since": barthel_days, "overdue": barthel_days is None or barthel_days > THRESHOLDS["barthel"], "threshold_days": THRESHOLDS["barthel"]},
+            },
+        })
+
+    # Sort: most overdue first
+    patient_rows.sort(key=lambda x: -x["overdue_count"])
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_ASSESSMENT_COMPLETION",
+                   resource_type="report", request=http_request)
+    db.commit()
+
+    return {
+        "report_type":  "assessment_completion",
+        "report_title": "Assessment Completion & Overdue Report",
+        "generated_at": datetime.utcnow().isoformat(),
+        "generated_by": _user_dict(current_user),
+        "confidentiality": "CLINICAL IN CONFIDENCE",
+        "standard": "NHS NACEL 2024 / ESAS-r Watanabe 2011 / PHQ-9 Kroenke 2002",
+        "thresholds": THRESHOLDS,
+        "summary": {
+            "total_patients":    len(patients),
+            "patients_overdue":  sum(1 for r in patient_rows if r["overdue_count"] > 0),
+            "overdue_by_type":   overdue_counts,
+            "critical_scores":   len(critical_scores),
+        },
+        "critical_scores": critical_scores,
+        "patients": patient_rows,
+    }
+
+
+# ── Report 9: Care Plan Goal Progress Report ──────────────────────────────
+
+@router.get("/care-plan-progress/{patient_id}")
+async def care_plan_progress_report(
+    patient_id: int,
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Care Plan Goal Progress Report.
+    Tracks achievement of care plan goals and daily checklist tasks.
+    Flags overdue goals and poor-progress categories.
+    Standard: NHS NACEL 2024 Goal-Oriented Care, NICE NG31.
+    """
+    if current_user.role not in ("admin", "clinician", "caregiver"):
+        raise HTTPException(403, "Access denied")
+
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(404, "Patient not found")
+
+    now = datetime.utcnow()
+
+    # Get current care plan
+    care_plan = db.query(CarePlan).filter(
+        CarePlan.patient_id == patient_id,
+        CarePlan.is_current == True,
+    ).order_by(CarePlan.version.desc()).first()
+
+    if not care_plan:
+        # Try to get any care plan
+        care_plan = db.query(CarePlan).filter(
+            CarePlan.patient_id == patient_id,
+        ).order_by(CarePlan.created_at.desc()).first()
+
+    # All goals for this patient
+    goals = db.query(CarePlanGoal).filter(
+        CarePlanGoal.patient_id == patient_id,
+    ).order_by(CarePlanGoal.priority.desc(), CarePlanGoal.created_at.desc()).all()
+
+    # Goal status breakdown
+    from collections import Counter, defaultdict
+    status_counts = Counter(g.status for g in goals)
+    category_progress: dict = defaultdict(list)
+
+    goal_details = []
+    overdue_goals = []
+
+    for g in goals:
+        # Checklist items for this goal
+        checklist = db.query(CarePlanChecklistItem).filter(
+            CarePlanChecklistItem.goal_id == g.id,
+        ).all()
+        completed_items = sum(1 for c in checklist if c.is_completed)
+        total_items = len(checklist)
+
+        # Is goal overdue?
+        is_overdue = (
+            g.target_date and
+            g.target_date < now and
+            g.status not in ("achieved", "discontinued")
+        )
+
+        goal_dict = {
+            "id":           g.id,
+            "title":        g.title,
+            "category":     g.category or "general",
+            "priority":     g.priority,
+            "status":       g.status,
+            "progress":     g.progress or 0,
+            "target_date":  g.target_date.isoformat() if g.target_date else None,
+            "achieved_date":g.achieved_date.isoformat() if g.achieved_date else None,
+            "ai_suggested": g.ai_suggested,
+            "is_overdue":   is_overdue,
+            "checklist": {
+                "total": total_items,
+                "completed": completed_items,
+                "completion_pct": round(completed_items / max(total_items, 1) * 100),
+                "items": [
+                    {
+                        "task": c.task,
+                        "frequency": c.frequency,
+                        "is_completed": c.is_completed,
+                        "completed_at": c.completed_at.isoformat() if c.completed_at else None,
+                        "due_date": c.due_date.isoformat() if c.due_date else None,
+                    }
+                    for c in checklist
+                ],
+            },
+            "notes": g.notes,
+        }
+        goal_details.append(goal_dict)
+        category_progress[g.category or "general"].append(g.progress or 0)
+
+        if is_overdue:
+            overdue_goals.append(goal_dict)
+
+    # Category averages
+    category_avg = {
+        cat: round(sum(progs) / len(progs))
+        for cat, progs in category_progress.items()
+    }
+
+    # Overall progress
+    all_progress = [g.progress or 0 for g in goals]
+    overall_progress = round(sum(all_progress) / max(len(all_progress), 1))
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_CARE_PLAN_PROGRESS",
+                   resource_type="report", patient_id=patient_id,
+                   request=http_request)
+    db.commit()
+
+    return {
+        "report_type":  "care_plan_progress",
+        "report_title": f"Care Plan Goal Progress — {patient.full_name}",
+        "generated_at": datetime.utcnow().isoformat(),
+        "generated_by": _user_dict(current_user),
+        "confidentiality": "CLINICAL IN CONFIDENCE",
+        "standard": "NHS NACEL 2024 Goal-Oriented Care / NICE NG31 End of Life Care",
+        "patient": {
+            "id": patient.id, "full_name": patient.full_name,
+            "patient_code": patient.patient_code, "diagnosis": patient.primary_diagnosis,
+        },
+        "care_plan": {
+            "id":           care_plan.id if care_plan else None,
+            "version":      care_plan.version if care_plan else None,
+            "is_current":   care_plan.is_current if care_plan else False,
+            "created_at":   care_plan.created_at.isoformat() if care_plan else None,
+            "ai_generated": care_plan.ai_generated if care_plan else False,
+        } if care_plan else None,
+        "summary": {
+            "total_goals":       len(goals),
+            "achieved":          status_counts.get("achieved", 0),
+            "in_progress":       status_counts.get("in_progress", 0),
+            "pending":           status_counts.get("pending", 0),
+            "discontinued":      status_counts.get("discontinued", 0),
+            "overdue":           len(overdue_goals),
+            "overall_progress":  overall_progress,
+            "ai_suggested":      sum(1 for g in goals if g.ai_suggested),
+            "clinician_created": sum(1 for g in goals if not g.ai_suggested),
+        },
+        "category_progress": category_avg,
+        "goals": goal_details,
+        "overdue_goals": overdue_goals,
     }

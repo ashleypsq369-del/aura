@@ -230,7 +230,7 @@ function StopModal({ med, onClose, onConfirm, pending }) {
 }
 
 /* ── Medication row (same feel as AlertCard) ─────────────────────────────── */
-function MedRow({ med, index, isStaff, onEdit, onStop }) {
+function MedRow({ med, index, isStaff, onEdit, onStop, todayTaken }) {
   const isActive = med.is_active;
   const dose     = nextDose(med);
   return (
@@ -249,6 +249,17 @@ function MedRow({ med, index, isStaff, onEdit, onStop }) {
               </span>
               {med.frequency === 'prn' && (
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">PRN</span>
+              )}
+              {/* Today's taken/due status */}
+              {isActive && todayTaken === true && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 flex items-center gap-1">
+                  <CheckCircle size={9}/> Taken today
+                </span>
+              )}
+              {isActive && todayTaken === false && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 flex items-center gap-1">
+                  <AlertTriangle size={9}/> Not taken today
+                </span>
               )}
               {dose && (
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
@@ -354,6 +365,19 @@ export default function Medications() {
   const meds     = Array.isArray(medsRaw) ? medsRaw : [];
   const active   = meds.filter(m => m.is_active);
   const inactive = meds.filter(m => !m.is_active);
+
+  // Compliance: fetch today's adherence status for the patient view
+  const { data: complianceData } = useQuery({
+    queryKey: ['compliance-tasks', patientId],
+    queryFn: () => axios.get(`${API_URL}/api/compliance/my-tasks`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
+    }).then(r => r.data).catch(() => null),
+    enabled: isPatient && !!user?.id,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
+  // true = taken, false = not taken, undefined = no data
+  const medAckDone = complianceData?.tasks?.find(t => t.id === 'medication_acknowledge')?.done;
 
   const { data: drugData } = useQuery({
     queryKey: ['drug-ints', patientId],
@@ -555,6 +579,7 @@ export default function Medications() {
           <AnimatePresence>
             {filtered.map((med, i) => (
               <MedRow key={med.id} med={med} index={i} isStaff={isStaff}
+                todayTaken={isPatient && med.is_active ? medAckDone : undefined}
                 onEdit={setEditingMed} onStop={setStopTarget}/>
             ))}
           </AnimatePresence>

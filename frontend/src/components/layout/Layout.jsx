@@ -20,6 +20,7 @@ import HintTooltip from '../HintTooltip';
 import DropdownMenu from '../ui/DropdownMenu';
 import AvatarDisplay from '../avatar/AvatarDisplay';
 import AvatarModal from '../avatar/AvatarModal';
+import TaskStatusBar from '../TaskStatusBar';
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -229,6 +230,13 @@ export default function Layout({ children }) {
             {/* Notification Center */}
             <NotificationCenter />
             
+            {/* Compact task status dots — visible to everyone */}
+            {user && (
+              <div className="hidden sm:flex items-center">
+                <TaskStatusBar compact />
+              </div>
+            )}
+
             {/* Real-Time Alerts - clinical staff only */}
             {user?.role && ['admin', 'clinician', 'caregiver'].includes(user.role) && (
               <RealTimeAlerts />
@@ -326,6 +334,12 @@ export default function Layout({ children }) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="w-full min-h-full"
           >
+            {/* Global task status — shown for all users who have tasks */}
+            {user && (
+              <div className="px-4 sm:px-6 pt-4">
+                <TaskStatusBar />
+              </div>
+            )}
             {children}
           </motion.div>
         </main>
