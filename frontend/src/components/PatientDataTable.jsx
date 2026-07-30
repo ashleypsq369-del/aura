@@ -22,10 +22,31 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { motion } from 'framer-motion';
-import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight, Building2, Heart, Home, Stethoscope, BedDouble } from 'lucide-react';
 import Progress from './ui/Progress';
 import useAppStore from '../store/useAppStore';
 import ReminderBell from './ReminderBell';
+
+// -- Care setting mini badge -----------------------------------------------
+const SETTING_CFG = {
+  hospital_based:        { label: 'Hospital',    icon: Building2, color: '#1d4ed8', bg: '#eff6ff' },
+  hospice:               { label: 'Hospice',     icon: Heart,     color: '#be123c', bg: '#fff1f2' },
+  home_based:            { label: 'Home Care',   icon: Home,      color: '#15803d', bg: '#f0fdf4' },
+  outpatient_clinic:     { label: 'Clinic',      icon: Stethoscope, color: '#0d9488', bg: '#f0fdfa' },
+  long_term_residential: { label: 'Residential', icon: BedDouble, color: '#7c3aed', bg: '#f5f3ff' },
+};
+
+function CareSettingBadge({ setting }) {
+  const cfg = SETTING_CFG[setting];
+  if (!cfg) return <span className="text-[10px] text-slate-400">—</span>;
+  const Icon = cfg.icon;
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+      style={{ backgroundColor: cfg.bg, color: cfg.color }}>
+      <Icon size={9}/>{cfg.label}
+    </span>
+  );
+}
 
 // -- Risk level badge ------------------------------------------------------
 function RiskBadge({ level }) {
@@ -122,6 +143,11 @@ const columns = [
       const cls = { active: 'badge-low', inactive: 'badge-info', deceased: 'badge-stable' };
       return <span className={cls[v] || cls.active}>{v || 'active'}</span>;
     },
+  },
+  {
+    accessorKey: 'care_setting',
+    header: 'Care Setting',
+    cell: ({ getValue }) => <CareSettingBadge setting={getValue()} />,
   },
   {
     id: 'reminder',

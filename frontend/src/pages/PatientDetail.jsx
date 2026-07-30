@@ -5,11 +5,11 @@ import axios from 'axios';
 import toast from '../utils/toast';
 import { offlinePatientsAPI } from '../api/offlineClient';
 import { motion } from 'framer-motion';
-import {
-  Activity, Pill, AlertCircle, FileText, Calendar,
+import { Activity, Pill, AlertCircle, FileText, Calendar,
   MessageCircle, Phone, Mail, User, MapPin, Heart,
   ClipboardList, Edit2, Brain, HeartHandshake,
-  Stethoscope, BedDouble, ArrowRight
+  Stethoscope, BedDouble, ArrowRight,
+  Building2, Home, Info,
 } from 'lucide-react';
 import { caregiverIntelligenceAPI, careSettingsAPI, mlAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -22,6 +22,68 @@ import PageHeader from '../components/PageHeader';
 import ImageCard from '../components/ImageCard';
 
 import { API_URL } from '../api/client';
+
+/* ── Care setting context banner for staff ─────────────────────────────── */
+const SETTING_INFO = {
+  hospital_based:        { label:'Hospital-Based',    icon:Building2,   color:'#1d4ed8', bg:'#eff6ff',
+    clinical_notes: 'Inpatient specialist care. Prioritise: vitals q4-8h, pain control, daily MDT review.',
+    key_tasks: ['Vitals every 4–8h', 'Daily symptom assessment (ESAS)', 'Medication review', 'Family communication'],
+  },
+  hospice:               { label:'Hospice',           icon:Heart,       color:'#be123c', bg:'#fff1f2',
+    clinical_notes: 'Comfort-focused care. Prioritise: dignity, pain & symptom control, family support, legacy planning.',
+    key_tasks: ['Comfort measures', 'Pain & symptom control', 'Family/bereavement support', 'Advance directive review'],
+  },
+  home_based:            { label:'Home-Based',        icon:Home,        color:'#15803d', bg:'#f0fdf4',
+    clinical_notes: 'Community care visits. Prioritise: medication compliance, carer education, safety, daily remote monitoring.',
+    key_tasks: ['Daily vitals log', 'Medication adherence', 'Carer training', 'Remote symptom monitoring'],
+  },
+  outpatient_clinic:     { label:'Outpatient Clinic', icon:Stethoscope, color:'#0d9488', bg:'#f0fdfa',
+    clinical_notes: 'Clinic-based visits. Prioritise: appointment adherence, medication review, assessment completion.',
+    key_tasks: ['Appointment scheduling', 'Assessment completion', 'Medication review', 'Pre-clinic prep'],
+  },
+  long_term_residential: { label:'Residential Care',  icon:BedDouble,   color:'#7c3aed', bg:'#f5f3ff',
+    clinical_notes: 'Residential facility. Prioritise: ADL support, socialisation, monthly PPS, family updates.',
+    key_tasks: ['Monthly PPS assessment', 'ADL monitoring', 'Community engagement', 'Family liaison'],
+  },
+};
+
+function CareSettingBanner({ setting }) {
+  const [expanded, setExpanded] = useState(false);
+  const cfg = SETTING_INFO[setting];
+  if (!cfg) return null;
+  const Icon = cfg.icon;
+  return (
+    <div className="rounded-xl border overflow-hidden" style={{ borderColor: cfg.color + '30', backgroundColor: cfg.bg }}>
+      <button onClick={() => setExpanded(v => !v)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: cfg.color + '20' }}>
+          <Icon size={16} style={{ color: cfg.color }}/>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold" style={{ color: cfg.color }}>
+            Care Setting: {cfg.label}
+          </p>
+          <p className="text-[11px] text-slate-500 truncate mt-0.5">{cfg.clinical_notes}</p>
+        </div>
+        <Info size={14} className="text-slate-400 flex-shrink-0"/>
+      </button>
+      {expanded && (
+        <div className="px-4 pb-3 border-t" style={{ borderColor: cfg.color + '20' }}>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-2 mb-1.5">Key Clinical Tasks</p>
+          <div className="flex flex-wrap gap-1.5">
+            {cfg.key_tasks.map(t => (
+              <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: cfg.color + '18', color: cfg.color }}>
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function PatientDetail() {
   const { patientId } = useParams();
@@ -304,6 +366,13 @@ export default function PatientDetail() {
           </div>
         </PageHeader>
 
+        {/* Care setting context banner — shows clinical guidance for staff */}
+        {patient.care_setting && ['clinician','admin','caregiver'].includes(user?.role) && (
+          <div className="mt-3">
+            <CareSettingBanner setting={patient.care_setting} />
+          </div>
+        )}
+
         {/* Patient content */}
         <div className="flex flex-col gap-4">
 
@@ -333,6 +402,18 @@ export default function PatientDetail() {
                 <FileText size={15} className="text-teal-600" />
                 <span className="font-medium">{patient.primary_diagnosis}</span>
               </div>
+              {/* Care setting pill */}
+              {patient.care_setting && (() => {
+                const cfg = SETTING_INFO[patient.care_setting];
+                if (!cfg) return null;
+                const Icon = cfg.icon;
+                return (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ backgroundColor: cfg.bg, color: cfg.color, border: `1px solid ${cfg.color}30` }}>
+                    <Icon size={11}/> {cfg.label}
+                  </span>
+                );
+              })()}
               <div className="ml-auto flex items-center gap-2">
                 <button onClick={() => navigate(`/assessments/${patientId}`)}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">

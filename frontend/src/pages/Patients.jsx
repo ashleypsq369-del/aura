@@ -13,7 +13,16 @@ import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import PatientDataTable from '../components/PatientDataTable';
-import { Plus, Users, Search } from 'lucide-react';
+import { Plus, Users, Search, Building2, Heart, Home, Stethoscope, BedDouble } from 'lucide-react';
+
+const CARE_SETTING_FILTERS = [
+  { value: 'all',                  label: 'All Settings',  icon: null },
+  { value: 'hospital_based',       label: 'Hospital',      icon: Building2,   color: '#1d4ed8' },
+  { value: 'hospice',              label: 'Hospice',       icon: Heart,       color: '#be123c' },
+  { value: 'home_based',           label: 'Home Care',     icon: Home,        color: '#15803d' },
+  { value: 'outpatient_clinic',    label: 'Clinic',        icon: Stethoscope, color: '#0d9488' },
+  { value: 'long_term_residential',label: 'Residential',   icon: BedDouble,   color: '#7c3aed' },
+];
 
 export default function Patients() {
   const navigate = useNavigate();
@@ -23,6 +32,7 @@ export default function Patients() {
   const [filterStatus, setFilterStatus] = useState(
     location.state?.filterStatus || 'all'
   );
+  const [filterCareSetting, setFilterCareSetting] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);
@@ -140,7 +150,8 @@ export default function Patients() {
       patient.primary_diagnosis?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       patient.patient_code?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = filterStatus === 'all' || patient.status === filterStatus;
-    return matchesSearch && matchesStatus;
+    const matchesSetting = filterCareSetting === 'all' || patient.care_setting === filterCareSetting;
+    return matchesSearch && matchesStatus && matchesSetting;
   });
 
   return (
@@ -217,19 +228,55 @@ export default function Patients() {
             ))}
           </div>
         </div>
+
+        {/* Care setting filter row */}
+        <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Care Setting:</span>
+          {CARE_SETTING_FILTERS.map(({ value, label, icon: Icon, color }) => {
+            const active = filterCareSetting === value;
+            return (
+              <button key={value} onClick={() => setFilterCareSetting(value)}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+                  active
+                    ? 'text-white border-transparent shadow-sm'
+                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                }`}
+                style={active ? { backgroundColor: color || '#475569' } : {}}>
+                {Icon && <Icon size={10}/>}
+                {label}
+                {active && value !== 'all' && (
+                  <span className="ml-0.5 opacity-75">
+                    ({patients?.filter(p => p.care_setting === value).length || 0})
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Patient Count + quick stats */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500 font-medium">
           Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
-          {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">� {filterStatus}</span>}
+          {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">· {filterStatus}</span>}
+          {filterCareSetting !== 'all' && (
+            <span className="ml-2 text-blue-600 font-semibold">
+              · {CARE_SETTING_FILTERS.find(f => f.value === filterCareSetting)?.label}
+            </span>
+          )}
         </p>
-        {searchTerm && (
-          <button onClick={() => setSearchTerm('')} className="text-xs text-slate-400 hover:text-red-500 font-semibold flex items-center gap-1">
-            Clear search �
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {filterCareSetting !== 'all' && (
+            <button onClick={() => setFilterCareSetting('all')} className="text-xs text-blue-400 hover:text-red-500 font-semibold flex items-center gap-1">
+              Clear setting ×
+            </button>
+          )}
+          {searchTerm && (
+            <button onClick={() => setSearchTerm('')} className="text-xs text-slate-400 hover:text-red-500 font-semibold flex items-center gap-1">
+              Clear search ×
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Patients Table - TanStack Table with sorting, filtering, pagination */}
