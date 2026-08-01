@@ -623,57 +623,93 @@ function ReportViewer({data,onClose}) {
     }
   };
 
-  // Print by opening a new window with clean HTML — no React/Tailwind dependencies
+  // Print using a hidden iframe — no new window, triggers print dialog directly
   const handlePrint = useCallback(() => {
     const previewEl = document.getElementById('aura-report-preview-body');
     if (!previewEl) return;
-    const win = window.open('', '_blank', 'width=900,height=700');
-    win.document.write(`<!DOCTYPE html><html><head>
+
+    // Reuse or create hidden iframe
+    let iframe = document.getElementById('aura-print-iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'aura-print-iframe';
+      iframe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:0;height:0;border:none;';
+      document.body.appendChild(iframe);
+    }
+
+    const html = `<!DOCTYPE html><html><head>
       <meta charset="utf-8"/>
       <title>${data.report_title || 'Aura Report'}</title>
       <style>
         *{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:system-ui,-apple-system,sans-serif;font-size:12px;color:#1e293b;background:white;padding:20px;}
         @page{size:A4 portrait;margin:12mm 10mm;}
-        @media print{body{padding:0;}}
-        h1{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px;}
-        h3{font-size:11px;font-weight:700;color:#374151;margin:0;}
-        p,div{font-size:11px;}
+        h1{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:6px;}
+        h3{font-size:11px;font-weight:700;color:#374151;}
+        p,div,span{font-size:11px;}
         table{border-collapse:collapse;width:100%;margin-bottom:12px;}
-        th{text-align:left;padding:5px 6px;background:#f1f5f9;border-bottom:2px solid #cbd5e1;font-weight:700;text-transform:uppercase;font-size:9px;color:#475569;letter-spacing:.05em;}
+        th{text-align:left;padding:5px 6px;background:#f1f5f9;border-bottom:2px solid #cbd5e1;font-weight:700;text-transform:uppercase;font-size:9px;color:#475569;letter-spacing:.04em;}
         td{padding:5px 6px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:top;}
-        .report-header{border-bottom:2px solid #334155;padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;}
+        .rpt-hdr{border-bottom:2px solid #334155;padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-start;}
+        .rpt-hdr-left h1{margin-bottom:4px;}
+        .rpt-hdr-meta{font-size:10px;color:#64748b;margin-top:2px;}
+        .rpt-hdr-right{text-align:right;}
+        .rpt-hdr-right .brand{font-weight:700;font-size:13px;color:#0f172a;}
         .confidentiality{border:2px solid #d97706;background:#fffbeb;padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:700;font-size:10px;color:#92400e;}
-        .section{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:14px;overflow:hidden;}
+        .section{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:14px;overflow:hidden;page-break-inside:avoid;}
         .section-hdr{padding:8px 12px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font-weight:700;font-size:11px;color:#374151;}
         .section-body{padding:10px 12px;}
         .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
         .kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;}
-        .kpi-val{font-size:18px;font-weight:700;color:#0d9488;}
+        .kpi-val{font-size:18px;font-weight:700;}
         .kpi-lbl{font-size:9px;color:#64748b;margin-top:2px;}
-        .warn{color:#dc2626;}
+        .progress-bar-wrap{height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden;margin:4px 0;}
+        .progress-bar-fill{height:10px;background:#0d9488;border-radius:5px;}
         .footer{margin-top:20px;padding-top:8px;border-top:1px solid #e2e8f0;text-align:center;font-size:8px;color:#94a3b8;}
+        /* recharts SVGs */
+        .recharts-wrapper{page-break-inside:avoid;}
       </style>
     </head><body>
-      <div class="report-header">
-        <div>
+      <div class="rpt-hdr">
+        <div class="rpt-hdr-left">
           <h1>${data.report_title}</h1>
-          <p style="color:#64748b;margin-top:4px;">Generated: ${fmt(data.generated_at)} · By: ${genBy} (${data.generated_by?.role || ''})</p>
-          ${data.period ? `<p style="color:#94a3b8;margin-top:2px;">Period: ${fmtD(data.period.from)} – ${fmtD(data.period.to)}</p>` : ''}
-          ${data.standard ? `<p style="font-size:9px;color:#94a3b8;margin-top:4px;">Standards: ${data.standard}</p>` : ''}
+          <div class="rpt-hdr-meta">Generated: ${fmt(data.generated_at)} · By: ${genBy} (${data.generated_by?.role || ''})</div>
+          ${data.period ? `<div class="rpt-hdr-meta">Period: ${fmtD(data.period.from)} – ${fmtD(data.period.to)}</div>` : ''}
+          ${data.standard ? `<div style="font-size:9px;color:#94a3b8;margin-top:4px;">Standards: ${data.standard}</div>` : ''}
         </div>
-        <div style="text-align:right;">
-          <p style="font-weight:700;font-size:13px;color:#0f172a;">Project Aura</p>
-          <p style="color:#64748b;">Palliative Care Platform</p>
+        <div class="rpt-hdr-right">
+          <div class="brand">Project Aura</div>
+          <div style="font-size:10px;color:#64748b;">Palliative Care Platform</div>
         </div>
       </div>
       ${data.confidentiality ? `<div class="confidentiality">${data.confidentiality}</div>` : ''}
       ${previewEl.innerHTML}
-      <div class="footer">Project Aura · Printed ${new Date().toLocaleString('en-GB')} · ${data.confidentiality || ''}</div>
-    </body></html>`);
-    win.document.close();
-    win.focus();
-    setTimeout(() => { win.print(); }, 600);
+      <div class="footer">Project Aura · Printed ${new Date().toLocaleString('en-GB')} · ${data.confidentiality || 'CLINICAL IN CONFIDENCE'}</div>
+    </body></html>`;
+
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+
+    // Wait for iframe to render then print
+    iframe.onload = () => {
+      try {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      } catch(e) {
+        // Fallback: open in new tab if iframe print fails (some browsers block it)
+        const win = window.open('', '_blank');
+        win.document.write(html);
+        win.document.close();
+        setTimeout(() => { win.print(); }, 500);
+      }
+    };
+    // Trigger load if already loaded
+    if (doc.readyState === 'complete') {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
   }, [data, genBy]);
 
   return (
