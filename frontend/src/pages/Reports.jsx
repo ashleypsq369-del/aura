@@ -603,16 +603,18 @@ function CaregiverBody({data}) {
 function ReportViewer({data,onClose}) {
   const printRef = useRef(null);
 
-  // react-to-print v3: contentRef clones the referenced element into a clean
-  // print iframe. pageStyle copies @page rules only — no visibility tricks.
+  // react-to-print v3: contentRef renders into a clean print iframe.
+  // Since Vite injects Tailwind as a separate stylesheet (not inline),
+  // we MUST use ignoreGlobalStyles=false so the library copies all stylesheets.
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: data.report_title || 'Aura Clinical Report',
+    ignoreGlobalStyles: false,  // copy ALL stylesheets (including Tailwind) to iframe
     pageStyle: `
-      @page { size: A4 portrait; margin: 15mm 12mm; }
+      @page { size: A4 portrait; margin: 12mm 10mm; }
+      body { background: white !important; }
       @media print {
         body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .recharts-wrapper { break-inside: avoid; }
       }
     `,
   });
@@ -680,38 +682,43 @@ function ReportViewer({data,onClose}) {
         )}
 
         {/* ── Printable content area ── */}
-        {/* react-to-print v3 clones this entire div into a clean print iframe.
-            Everything inside prints exactly as rendered — no extra CSS tricks.
-            The toolbar above is NOT inside printRef so it never appears in print. */}
-        <div ref={printRef} className="px-6 py-6 space-y-6">
-          {/* Print-only header (styled for paper) */}
-          <div className="hidden print:block pb-4 mb-4 border-b-2 border-slate-400">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-xl font-bold text-black">{data.report_title}</h1>
-                <p className="text-xs text-gray-600 mt-1">Generated: {fmt(data.generated_at)} · By: {genBy} ({data.generated_by?.role})</p>
-                {data.period && <p className="text-xs text-gray-500">Period: {fmtD(data.period.from)} – {fmtD(data.period.to)}</p>}
-                {data.standard && <p className="text-[9px] text-gray-400 mt-1">Standards: {data.standard}</p>}
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-bold text-black">Project Aura</p>
-                <p className="text-xs text-gray-500">Palliative Care Platform</p>
-              </div>
+        {/* ignoreGlobalStyles:false copies ALL stylesheets (including Tailwind) into iframe.
+            Embedded <style> tag provides print-safe base typography as fallback. */}
+        <div ref={printRef} style={{background:'white',color:'#1e293b',fontFamily:'system-ui,sans-serif',padding:'24px'}}>
+          <style>{`
+            table{border-collapse:collapse;width:100%;font-size:11px;}
+            th{text-align:left;padding:5px 6px;background:#f8fafc;border-bottom:2px solid #e2e8f0;font-weight:700;text-transform:uppercase;font-size:9px;color:#64748b;letter-spacing:.05em;}
+            td{padding:5px 6px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:top;}
+            h1{font-size:20px;font-weight:700;color:#0f172a;margin:0 0 4px 0;}
+            h3{font-size:12px;font-weight:700;color:#374151;margin:0;}
+            p{margin:0;}
+          `}</style>
+
+          {/* Print header */}
+          <div style={{borderBottom:'2px solid #e2e8f0',paddingBottom:'12px',marginBottom:'16px',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+            <div>
+              <h1 style={{fontSize:'20px',fontWeight:'700',color:'#0f172a',margin:'0 0 4px'}}>{data.report_title}</h1>
+              <p style={{fontSize:'11px',color:'#64748b'}}>Generated: {fmt(data.generated_at)} · By: {genBy} ({data.generated_by?.role})</p>
+              {data.period&&<p style={{fontSize:'10px',color:'#94a3b8',marginTop:'2px'}}>Period: {fmtD(data.period.from)} – {fmtD(data.period.to)}</p>}
+              {data.standard&&<p style={{fontSize:'9px',color:'#94a3b8',marginTop:'4px'}}>Standards: {data.standard}</p>}
             </div>
-            {data.confidentiality && (
-              <div className="mt-3 px-3 py-1.5 border-2 border-amber-600 rounded">
-                <p className="text-[10px] font-bold text-amber-800">{data.confidentiality}</p>
-              </div>
-            )}
+            <div style={{textAlign:'right'}}>
+              <p style={{fontWeight:'700',fontSize:'13px',color:'#0f172a'}}>Project Aura</p>
+              <p style={{fontSize:'10px',color:'#64748b'}}>Palliative Care Platform</p>
+            </div>
           </div>
+
+          {data.confidentiality&&(
+            <div style={{border:'2px solid #d97706',background:'#fffbeb',padding:'6px 12px',borderRadius:'6px',marginBottom:'16px',fontWeight:'700',fontSize:'10px',color:'#92400e'}}>
+              {data.confidentiality}
+            </div>
+          )}
 
           {renderBody()}
 
-          {/* Print-only footer */}
-          <div className="hidden print:block pt-4 border-t border-gray-300 text-center">
-            <p className="text-[8px] text-gray-400">
-              Project Aura Palliative Care Platform · Printed {new Date().toLocaleString('en-GB')} · {data.confidentiality}
-            </p>
+          {/* Print footer */}
+          <div style={{marginTop:'24px',paddingTop:'8px',borderTop:'1px solid #e2e8f0',textAlign:'center',fontSize:'8px',color:'#94a3b8'}}>
+            Project Aura Palliative Care Platform · Printed {new Date().toLocaleString('en-GB')} · {data.confidentiality}
           </div>
         </div>
       </motion.div>
