@@ -8,15 +8,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
-  ThumbsUp, ThumbsDown, Brain, Activity, Shield, Pill,
-  Heart, User, Zap, Target, MessageSquare, Stethoscope
+  AlertTriangle, CheckCircle,
+  ThumbsUp, ThumbsDown, Brain, Zap, Target, MessageSquare, Stethoscope
 } from 'lucide-react';
 import apiClient from '../api/client';
 import ModalShell from './ui/ModalShell';
 import {
-  InfoGrid, InfoBadge, InfoAlert, InfoSection,
-  ProgressRow, SHAPRow, Divider, ListItem
+  InfoGrid, InfoBadge, InfoAlert,
+  ProgressRow, SHAPRow, Divider
 } from './ui/ModalContent';
 
 /* Risk level configs */
@@ -136,20 +135,79 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                     <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-violet-600">§</span>
                     <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">SHAP Feature Drivers</p>
                   </div>
+
+                  {/* Low risk explanation banner */}
+                  {pct < 15 && (
+                    <div className="flex items-start gap-2.5 px-3 py-2.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+                      <span className="text-emerald-600 text-base flex-shrink-0">✓</span>
+                      <div>
+                        <p className="text-xs font-bold text-emerald-800">All clinical indicators within healthy range</p>
+                        <p className="text-[10px] text-emerald-600 mt-0.5">The features below are PROTECTING this patient from risk. Green bars = risk-reducing factors. Continue monitoring — low risk today does not mean zero risk tomorrow.</p>
+                      </div>
+                    </div>
+                  )}
+
                   <InfoAlert type="info" compact>
                     {data?.shap_explanations?.some(e => e.shap_value !== 0)
-                      ? 'Real SHAP values — each bar shows that feature\'s share of total prediction impact (0–100%). Higher % = stronger influence on this risk score.'
+                      ? `Real SHAP values from XGBoost TreeExplainer. ${pct < 15 ? 'Green bars show factors keeping risk low.' : 'Red bars show factors increasing risk, green bars show protective factors.'}`
                       : 'XGBoost feature importance — shows which clinical measurements matter most for this prediction.'}
                   </InfoAlert>
-                  {(data?.shap_explanations || []).slice(0, 10).map((exp, i) => (
-                    <SHAPRow key={i} rank={i + 1}
-                      feature={exp.feature_name || exp.display_name}
-                      value={exp.display_value || exp.value}
-                      pct={exp.pct ? parseFloat(exp.pct.toFixed(1)) : Math.min(100, Math.abs(exp.shap_value) * 10)}
-                      impact={exp.impact || (exp.shap_value > 0 ? 'increases_risk' : 'decreases_risk')} />
-                  ))}
-                  {(!data?.shap_explanations?.length) && (
-                    <div className="text-center py-8 text-slate-400 italic text-sm">No SHAP data available for this prediction.</div>
+
+                  {/* Show top risk-increasing features first, then protective */}
+                  {(() => {
+                    const explanations = data?.shap_explanations || [];
+                    const riskIncreasing = explanations.filter(e => e.impact === 'increases_risk');
+                    const riskDecreasing = explanations.filter(e => e.impact !== 'increases_risk');
+                    return (
+                      <>
+                        {riskIncreasing.length > 0 && (
+                          <>
+                            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-1">Risk-Increasing Factors</p>
+                            {riskIncreasing.slice(0, 5).map((exp, i) => (
+                              <SHAPRow key={'r'+i} rank={i + 1}
+                                feature={exp.feature_name || exp.display_name}
+                                value={exp.display_value || exp.value}
+                                pct={exp.pct ? parseFloat(exp.pct.toFixed(1)) : Math.min(100, Math.abs(exp.shap_value || 0) * 10)}
+                                impact={exp.impact || 'increases_risk'} />
+                            ))}
+                          </>
+                        )}
+                        {riskDecreasing.length > 0 && (
+                          <>
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-2">Protective Factors</p>
+                            {riskDecreasing.slice(0, 5).map((exp, i) => (
+                              <SHAPRow key={'d'+i} rank={i + 1}
+                                feature={exp.feature_name || exp.display_name}
+                                value={exp.display_value || exp.value}
+                                pct={exp.pct ? parseFloat(exp.pct.toFixed(1)) : Math.min(100, Math.abs(exp.shap_value || 0) * 10)}
+                                impact={exp.impact || 'decreases_risk'} />
+                            ))}
+                          </>
+                        )}
+                        {explanations.length === 0 && (
+                          <div className="text-center py-8 text-slate-400 italic text-sm">No SHAP data available — run AI Risk assessment first.</div>
+                        )}
+                      </>
+                    );
+                  })()}
+
+                  {/* Task-level probability summary */}
+                  {data?.tasks && Object.keys(data.tasks).length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Model Scores by Clinical Domain</p>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {Object.entries(data.tasks).map(([key, task]) => {
+                          const prob = Math.round((task.probability || 0) * 100);
+                          const color = prob > 70 ? 'text-red-600 bg-red-50 border-red-200' : prob > 40 ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-emerald-600 bg-emerald-50 border-emerald-200';
+                          return (
+                            <div key={key} className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-[10px] font-semibold ${color}`}>
+                              <span className="truncate">{key.replace(/_/g,' ').replace(/\b\w/g, c=>c.toUpperCase())}</span>
+                              <span className="font-bold ml-1 flex-shrink-0">{prob}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
