@@ -429,8 +429,8 @@ async def delete_conversation(
 
 
 @router.get("/status")
-async def get_chatbot_status():
-    """Return current LLM provider and feature status."""
+async def get_chatbot_status(current_user: User = Depends(get_current_user)):
+    """Return current LLM provider and feature status. Requires authentication."""
     return get_provider_status()
 
 

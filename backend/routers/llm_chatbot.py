@@ -589,8 +589,8 @@ async def llm_stream(
 
 
 @router.get("/status")
-async def llm_status():
-    """Return current LLM provider status."""
+async def llm_status(current_user: User = Depends(get_current_user)):
+    """Return current LLM provider status. Requires authentication."""
     return get_llm_status()
 
 

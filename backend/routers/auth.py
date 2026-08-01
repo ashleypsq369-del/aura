@@ -25,9 +25,14 @@ from services.audit_service import log_action
 router = APIRouter()
 
 # JWT Configuration
-SECRET_KEY = os.getenv("SECRET_KEY", os.getenv("JWT_SECRET_KEY", "a3f8e2d1c4b7a0f9e6d3c8b5a2f7e4d1c9b6a3f0e7d4c1b8a5f2e9d6c3b0a7"))
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY environment variable is not set. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_hex(32))\""
+    )
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 8
+ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "8"))
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 

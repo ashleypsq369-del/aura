@@ -22,20 +22,21 @@ router = APIRouter()
 UPLOAD_DIR = Path("uploads")
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
 ALLOWED_EXTENSIONS = {
-    'image': {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'},
+    'image': {'.jpg', '.jpeg', '.png', '.gif', '.webp'},  # .svg removed (XSS risk)
     'video': {'.mp4', '.webm', '.mov', '.avi'},
     'audio': {'.mp3', '.wav', '.ogg', '.m4a', '.aac'},
     'document': {'.pdf', '.doc', '.docx', '.txt', '.csv', '.xlsx'},
 }
 ALLOWED_MIME_TYPES = {
-    'image': {'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'},
+    # SVG removed: can contain embedded JavaScript (XSS risk in healthcare context)
+    'image': {'image/jpeg', 'image/png', 'image/gif', 'image/webp'},
     'video': {'video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'},
     'audio': {'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'audio/aac'},
     'document': {
-        'application/pdf', 
-        'application/msword', 
+        'application/pdf',
+        'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'text/plain', 
+        'text/plain',
         'text/csv',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     },
