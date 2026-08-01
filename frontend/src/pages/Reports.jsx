@@ -13,10 +13,9 @@
  *   Operational: Population, Incidents, Caregiver Performance
  *   Governance:  User Activity, Audit Trail
  */
-import { useState, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useReactToPrint } from 'react-to-print';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
@@ -599,26 +598,8 @@ function CaregiverBody({data}) {
   );
 }
 
-/* ── Report Viewer with react-to-print ───────────────────────── */
+/* ── Report Viewer ───────────────────────────────────────────── */
 function ReportViewer({data,onClose}) {
-  const printRef = useRef(null);
-
-  // react-to-print v3: contentRef renders into a clean print iframe.
-  // Since Vite injects Tailwind as a separate stylesheet (not inline),
-  // we MUST use ignoreGlobalStyles=false so the library copies all stylesheets.
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: data.report_title || 'Aura Clinical Report',
-    ignoreGlobalStyles: false,  // copy ALL stylesheets (including Tailwind) to iframe
-    pageStyle: `
-      @page { size: A4 portrait; margin: 12mm 10mm; }
-      body { background: white !important; }
-      @media print {
-        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      }
-    `,
-  });
-
   const meta  = REPORT_META[data.report_type] || {};
   const Icon  = meta.icon || FileText;
   const color = meta.color || '#0d9488';
@@ -642,6 +623,59 @@ function ReportViewer({data,onClose}) {
     }
   };
 
+  // Print by opening a new window with clean HTML — no React/Tailwind dependencies
+  const handlePrint = useCallback(() => {
+    const previewEl = document.getElementById('aura-report-preview-body');
+    if (!previewEl) return;
+    const win = window.open('', '_blank', 'width=900,height=700');
+    win.document.write(`<!DOCTYPE html><html><head>
+      <meta charset="utf-8"/>
+      <title>${data.report_title || 'Aura Report'}</title>
+      <style>
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:system-ui,-apple-system,sans-serif;font-size:12px;color:#1e293b;background:white;padding:20px;}
+        @page{size:A4 portrait;margin:12mm 10mm;}
+        @media print{body{padding:0;}}
+        h1{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px;}
+        h3{font-size:11px;font-weight:700;color:#374151;margin:0;}
+        p,div{font-size:11px;}
+        table{border-collapse:collapse;width:100%;margin-bottom:12px;}
+        th{text-align:left;padding:5px 6px;background:#f1f5f9;border-bottom:2px solid #cbd5e1;font-weight:700;text-transform:uppercase;font-size:9px;color:#475569;letter-spacing:.05em;}
+        td{padding:5px 6px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:top;}
+        .report-header{border-bottom:2px solid #334155;padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;}
+        .confidentiality{border:2px solid #d97706;background:#fffbeb;padding:6px 12px;border-radius:6px;margin-bottom:16px;font-weight:700;font-size:10px;color:#92400e;}
+        .section{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:14px;overflow:hidden;}
+        .section-hdr{padding:8px 12px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font-weight:700;font-size:11px;color:#374151;}
+        .section-body{padding:10px 12px;}
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+        .kpi{background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px;text-align:center;}
+        .kpi-val{font-size:18px;font-weight:700;color:#0d9488;}
+        .kpi-lbl{font-size:9px;color:#64748b;margin-top:2px;}
+        .warn{color:#dc2626;}
+        .footer{margin-top:20px;padding-top:8px;border-top:1px solid #e2e8f0;text-align:center;font-size:8px;color:#94a3b8;}
+      </style>
+    </head><body>
+      <div class="report-header">
+        <div>
+          <h1>${data.report_title}</h1>
+          <p style="color:#64748b;margin-top:4px;">Generated: ${fmt(data.generated_at)} · By: ${genBy} (${data.generated_by?.role || ''})</p>
+          ${data.period ? `<p style="color:#94a3b8;margin-top:2px;">Period: ${fmtD(data.period.from)} – ${fmtD(data.period.to)}</p>` : ''}
+          ${data.standard ? `<p style="font-size:9px;color:#94a3b8;margin-top:4px;">Standards: ${data.standard}</p>` : ''}
+        </div>
+        <div style="text-align:right;">
+          <p style="font-weight:700;font-size:13px;color:#0f172a;">Project Aura</p>
+          <p style="color:#64748b;">Palliative Care Platform</p>
+        </div>
+      </div>
+      ${data.confidentiality ? `<div class="confidentiality">${data.confidentiality}</div>` : ''}
+      ${previewEl.innerHTML}
+      <div class="footer">Project Aura · Printed ${new Date().toLocaleString('en-GB')} · ${data.confidentiality || ''}</div>
+    </body></html>`);
+    win.document.close();
+    win.focus();
+    setTimeout(() => { win.print(); }, 600);
+  }, [data, genBy]);
+
   return (
     <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
       className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center p-4 overflow-y-auto"
@@ -650,16 +684,18 @@ function ReportViewer({data,onClose}) {
         onClick={e=>e.stopPropagation()}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-4">
 
-        {/* ── Toolbar (never printed) ── */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100" style={{borderTop:`4px solid ${color}`}}>
+        {/* Toolbar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100"
+          style={{borderTop:`4px solid ${color}`}}>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{backgroundColor:color+'18'}}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{backgroundColor:color+'18'}}>
               <Icon size={18} style={{color}}/>
             </div>
             <div>
               <p className="font-bold text-slate-900 text-sm leading-tight">{data.report_title}</p>
               <p className="text-xs text-slate-500 mt-0.5">Generated {fmt(data.generated_at)} · {genBy} ({data.generated_by?.role})</p>
-              {data.period && <p className="text-xs text-slate-400">{fmtD(data.period.from)} — {fmtD(data.period.to)}</p>}
+              {data.period&&<p className="text-xs text-slate-400">{fmtD(data.period.from)} — {fmtD(data.period.to)}</p>}
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -668,58 +704,22 @@ function ReportViewer({data,onClose}) {
               <Printer size={13}/> Print / PDF
             </button>
             <button onClick={onClose}
-              className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 text-lg leading-none">
+              className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 text-lg">
               ✕
             </button>
           </div>
         </div>
 
-        {data.confidentiality && (
+        {data.confidentiality&&(
           <div className="mx-6 mt-4 flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
             <Lock size={12} className="text-amber-600 flex-shrink-0"/>
             <p className="text-[10px] font-bold text-amber-800">{data.confidentiality}</p>
           </div>
         )}
 
-        {/* ── Printable content area ── */}
-        {/* ignoreGlobalStyles:false copies ALL stylesheets (including Tailwind) into iframe.
-            Embedded <style> tag provides print-safe base typography as fallback. */}
-        <div ref={printRef} style={{background:'white',color:'#1e293b',fontFamily:'system-ui,sans-serif',padding:'24px'}}>
-          <style>{`
-            table{border-collapse:collapse;width:100%;font-size:11px;}
-            th{text-align:left;padding:5px 6px;background:#f8fafc;border-bottom:2px solid #e2e8f0;font-weight:700;text-transform:uppercase;font-size:9px;color:#64748b;letter-spacing:.05em;}
-            td{padding:5px 6px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:top;}
-            h1{font-size:20px;font-weight:700;color:#0f172a;margin:0 0 4px 0;}
-            h3{font-size:12px;font-weight:700;color:#374151;margin:0;}
-            p{margin:0;}
-          `}</style>
-
-          {/* Print header */}
-          <div style={{borderBottom:'2px solid #e2e8f0',paddingBottom:'12px',marginBottom:'16px',display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-            <div>
-              <h1 style={{fontSize:'20px',fontWeight:'700',color:'#0f172a',margin:'0 0 4px'}}>{data.report_title}</h1>
-              <p style={{fontSize:'11px',color:'#64748b'}}>Generated: {fmt(data.generated_at)} · By: {genBy} ({data.generated_by?.role})</p>
-              {data.period&&<p style={{fontSize:'10px',color:'#94a3b8',marginTop:'2px'}}>Period: {fmtD(data.period.from)} – {fmtD(data.period.to)}</p>}
-              {data.standard&&<p style={{fontSize:'9px',color:'#94a3b8',marginTop:'4px'}}>Standards: {data.standard}</p>}
-            </div>
-            <div style={{textAlign:'right'}}>
-              <p style={{fontWeight:'700',fontSize:'13px',color:'#0f172a'}}>Project Aura</p>
-              <p style={{fontSize:'10px',color:'#64748b'}}>Palliative Care Platform</p>
-            </div>
-          </div>
-
-          {data.confidentiality&&(
-            <div style={{border:'2px solid #d97706',background:'#fffbeb',padding:'6px 12px',borderRadius:'6px',marginBottom:'16px',fontWeight:'700',fontSize:'10px',color:'#92400e'}}>
-              {data.confidentiality}
-            </div>
-          )}
-
+        {/* Screen preview (innerHTML copied to print window) */}
+        <div id="aura-report-preview-body" className="px-6 py-6 space-y-5">
           {renderBody()}
-
-          {/* Print footer */}
-          <div style={{marginTop:'24px',paddingTop:'8px',borderTop:'1px solid #e2e8f0',textAlign:'center',fontSize:'8px',color:'#94a3b8'}}>
-            Project Aura Palliative Care Platform · Printed {new Date().toLocaleString('en-GB')} · {data.confidentiality}
-          </div>
         </div>
       </motion.div>
     </motion.div>
