@@ -24,7 +24,7 @@ import {
 import {
   FileText, Shield, Users, AlertTriangle, Activity,
   Clock, BarChart3, Lock, Loader2, ChevronDown, ChevronUp,
-  Printer, User, Filter, CheckCircle, XCircle, Target,
+  Printer, User, Filter, CheckCircle, Target,
   Heart, AlertCircle, Pill,
   ClipboardCheck, Building2,
 } from 'lucide-react';
@@ -67,15 +67,11 @@ function fmt(iso)     { if(!iso) return '—'; return new Date(iso).toLocaleStri
 function fmtD(iso)    { if(!iso) return '—'; return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 
 /* ── Shared atoms ────────────────────────────────────────────── */
-function SevBadge({ sev }) {
-  const cfg={critical:'bg-red-100 text-red-700',high:'bg-amber-100 text-amber-700',moderate:'bg-yellow-100 text-yellow-700',low:'bg-green-100 text-green-700',info:'bg-blue-100 text-blue-700',normal:'bg-slate-100 text-slate-600'};
-  return <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${cfg[sev]||cfg.normal}`}>{sev||'—'}</span>;
-}
 function KpiGrid({items}) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
       {items.map(({label,value,color='#0d9488',warn,subtitle})=>(
-        <div key={label} className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-3 text-center">
+        <div key={label} className="bg-slate-50 rounded-xl p-3 text-center border border-slate-100">
           <p className="text-xl font-bold" style={{color:warn&&value>0?'#dc2626':color}}>{value??'—'}</p>
           <p className="text-[11px] text-slate-500 mt-0.5 leading-tight">{label}</p>
           {subtitle&&<p className="text-[9px] text-slate-400 mt-0.5">{subtitle}</p>}
@@ -89,12 +85,12 @@ function Tbl({headers,rows}) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-xs">
-        <thead><tr className="border-b border-slate-200 dark:border-slate-700">
+        <thead><tr className="border-b border-slate-200">
           {headers.map(h=><th key={h} className="text-left py-2 px-2 text-slate-500 font-semibold uppercase tracking-wide text-[10px] whitespace-nowrap">{h}</th>)}
         </tr></thead>
         <tbody>{rows.map((row,i)=>(
-          <tr key={i} className="border-b border-slate-100 dark:border-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-            {row.map((cell,j)=><td key={j} className="py-2 px-2 text-slate-700 dark:text-slate-300">{cell}</td>)}
+          <tr key={i} className="border-b border-slate-100 hover:bg-slate-50">
+            {row.map((cell,j)=><td key={j} className="py-2 px-2 text-slate-700">{cell}</td>)}
           </tr>
         ))}</tbody>
       </table>
@@ -104,12 +100,12 @@ function Tbl({headers,rows}) {
 function Sec({title,icon:Icon,color='#0d9488',children,collapsible=false}) {
   const [open,setOpen]=useState(true);
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden print-section">
+    <div className="rounded-xl border border-slate-200 overflow-hidden">
       <button onClick={()=>collapsible&&setOpen(v=>!v)}
-        className={`w-full flex items-center gap-2.5 px-4 py-3 border-b border-slate-100 dark:border-slate-700 ${collapsible?'cursor-pointer':'cursor-default'}`}
-        style={{backgroundColor:color+'14'}}>
+        className={`w-full flex items-center gap-2.5 px-4 py-3 border-b border-slate-100 ${collapsible?'cursor-pointer':'cursor-default'}`}
+        style={{backgroundColor:color+'12'}}>
         {Icon&&<Icon size={14} style={{color}}/>}
-        <h3 className="font-bold text-sm text-slate-700 dark:text-slate-200 flex-1 text-left">{title}</h3>
+        <h3 className="font-bold text-sm text-slate-700 flex-1 text-left">{title}</h3>
         {collapsible&&(open?<ChevronUp size={13} className="text-slate-400"/>:<ChevronDown size={13} className="text-slate-400"/>)}
       </button>
       {(!collapsible||open)&&<div className="px-4 py-4">{children}</div>}
@@ -185,15 +181,15 @@ function PatientSummaryBody({data}) {
   const esas=data.symptom_assessments?.esas_trend||[];
   const vitals=data.vitals_summary?.trend||[];
   const esasChart=esas.map(e=>({date:new Date(e.date).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}),TSDS:e.tsds,Pain:e.pain,Anxiety:e.anxiety})).reverse();
-  const vitalsChart=vitals.map(v=>({date:new Date(v.recorded_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}),HR:v.heart_rate,SpO2:v.spo2,Temp:v.temperature})).reverse();
+  const vitalsChart=vitals.map(v=>({date:new Date(v.recorded_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}),HR:v.heart_rate,SpO2:v.spo2})).reverse();
   return (
     <div className="space-y-5">
       <Sec title="Patient Demographics" icon={User} color="#0891b2">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {[['Name',p.full_name],['Code',p.patient_code],['Age',p.age],['Gender',p.gender],['Diagnosis',p.primary_diagnosis],['Risk Level',p.risk_level],['Status',p.status],['Care Setting',(p.care_setting||'—').replace(/_/g,' ')]].map(([k,v])=>(
-            <div key={k} className="bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5">
+            <div key={k} className="bg-slate-50 rounded-lg p-2.5">
               <p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p>
-              <p className="font-semibold text-slate-800 dark:text-slate-100 text-xs mt-0.5">{v||'—'}</p>
+              <p className="font-semibold text-slate-800 text-xs mt-0.5">{v||'—'}</p>
             </div>
           ))}
         </div>
@@ -203,10 +199,7 @@ function PatientSummaryBody({data}) {
         <Sec title="ESAS Symptom Trend" icon={Activity} color="#059669" collapsible>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={esasChart}>
-              <XAxis dataKey="date" tick={{fontSize:10}}/>
-              <YAxis tick={{fontSize:10}} domain={[0,90]}/>
-              <Tooltip/>
-              <Legend wrapperStyle={{fontSize:11}}/>
+              <XAxis dataKey="date" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}} domain={[0,90]}/><Tooltip/><Legend wrapperStyle={{fontSize:11}}/>
               <Line type="monotone" dataKey="TSDS" stroke="#dc2626" strokeWidth={2} dot={false}/>
               <Line type="monotone" dataKey="Pain" stroke="#f97316" strokeWidth={1.5} dot={false}/>
               <Line type="monotone" dataKey="Anxiety" stroke="#7c3aed" strokeWidth={1.5} dot={false}/>
@@ -218,10 +211,7 @@ function PatientSummaryBody({data}) {
         <Sec title="Vitals Trend" icon={Activity} color="#0891b2" collapsible>
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={vitalsChart}>
-              <XAxis dataKey="date" tick={{fontSize:10}}/>
-              <YAxis tick={{fontSize:10}}/>
-              <Tooltip/>
-              <Legend wrapperStyle={{fontSize:11}}/>
+              <XAxis dataKey="date" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/><Tooltip/><Legend wrapperStyle={{fontSize:11}}/>
               <Line type="monotone" dataKey="HR" stroke="#0891b2" strokeWidth={2} dot={false}/>
               <Line type="monotone" dataKey="SpO2" stroke="#059669" strokeWidth={1.5} dot={false}/>
             </LineChart>
@@ -229,11 +219,19 @@ function PatientSummaryBody({data}) {
         </Sec>
       )}
       <Sec title="Medications" icon={Pill} color="#be123c" collapsible>
-        <Tbl headers={['Medication','Dose','Frequency','Route','Active']} rows={(data.medications?.list||[]).map(m=>[m.name,m.dose||'—',m.frequency||'—',m.route||'—',m.is_active?<CheckCircle size={12} className="text-green-600"/>:<XCircle size={12} className="text-slate-300"/>])}/>
+        <Tbl headers={['Medication','Dose','Frequency','Route','Active']}
+          rows={(data.medications?.list||[]).map(m=>[
+            m.name, m.dose||'—', m.frequency||'—', m.route||'—',
+            m.is_active ? '✓ Active' : '✗ Stopped',
+          ])}/>
       </Sec>
       <Sec title="Audit Trail" icon={Shield} color="#374151" collapsible>
         <p className="text-xs text-slate-500 mb-2">{data.audit_trail?.total_actions} actions in period.</p>
-        <Tbl headers={['Timestamp','Action','Role','Success']} rows={(data.audit_trail?.actions||[]).slice(0,15).map(a=>[fmt(a.timestamp),a.action,a.user_role,a.success?<CheckCircle size={12} className="text-green-600"/>:<XCircle size={12} className="text-red-400"/>])}/>
+        <Tbl headers={['Timestamp','Action','Role','Success']}
+          rows={(data.audit_trail?.actions||[]).slice(0,15).map(a=>[
+            fmt(a.timestamp), a.action, a.user_role,
+            a.success ? '✓' : '✗',
+          ])}/>
       </Sec>
     </div>
   );
@@ -246,18 +244,18 @@ function MdtHandoverBody({data}) {
     <div className="space-y-5">
       <KpiGrid items={[{label:'Active Patients',value:data.summary?.total_active_patients},{label:'Urgent',value:data.summary?.urgent_patients,warn:data.summary?.urgent_patients>0},{label:'Unack. Alerts',value:data.summary?.unacknowledged_alerts,warn:data.summary?.unacknowledged_alerts>0},{label:'ESAS Overdue',value:data.summary?.esas_overdue,warn:data.summary?.esas_overdue>0}]}/>
       {urgent.length>0&&(
-        <Sec title={`🚨 Urgent — ${urgent.length} patient(s) require immediate attention`} icon={AlertTriangle} color="#dc2626">
+        <Sec title={`URGENT — ${urgent.length} patient(s) require immediate attention`} icon={AlertTriangle} color="#dc2626">
           {urgent.map(p=>(
-            <div key={p.patient_id} className="mb-3 p-3 rounded-xl border border-red-200 bg-red-50 dark:bg-red-900/10">
+            <div key={p.patient_id} className="mb-3 p-3 rounded-xl border border-red-200 bg-red-50">
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="font-bold text-sm text-slate-800 dark:text-slate-100">{p.full_name}</span>
-                <SevBadge sev={p.risk_level?.toLowerCase()||'normal'}/>
+                <span className="font-bold text-sm text-slate-800">{p.full_name}</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{p.risk_level}</span>
                 <span className="text-[10px] text-slate-500">{p.diagnosis}</span>
               </div>
               {p.recent_alerts.map((a,i)=>(
-                <p key={i} className="text-xs text-red-700 dark:text-red-300">⚠ {a.severity.toUpperCase()} — {a.message}</p>
+                <p key={i} className="text-xs text-red-700">⚠ {a.severity.toUpperCase()} — {a.message}</p>
               ))}
-              {p.outstanding?.esas_overdue&&<p className="text-xs text-amber-700 mt-0.5">📋 ESAS overdue ({p.last_esas_days!=null?`${p.last_esas_days}d ago`:'never done'})</p>}
+              {p.outstanding?.esas_overdue&&<p className="text-xs text-amber-700 mt-0.5">ESAS overdue ({p.last_esas_days!=null?`${p.last_esas_days}d ago`:'never done'})</p>}
               {p.assigned_caregivers?.length>0&&<p className="text-[10px] text-slate-500 mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
             </div>
           ))}
@@ -266,13 +264,13 @@ function MdtHandoverBody({data}) {
       <Sec title="All Patients — Handover Summary" icon={Users} color="#0369a1" collapsible>
         <Tbl headers={['Patient','Risk','Last ESAS','Last Vitals','Alerts','Appts Today','Caregivers']}
           rows={allPatients.map(p=>[
-            <span className="font-semibold">{p.full_name}</span>,
-            <SevBadge sev={p.risk_level?.toLowerCase()||'normal'}/>,
-            p.last_esas_days!=null?`${p.last_esas_days}d ago`:'Never',
-            p.last_vitals_hours!=null?`${p.last_vitals_hours}h ago`:'Never',
-            p.recent_alerts.length>0?<span className="text-red-600 font-bold">{p.recent_alerts.length}</span>:'—',
-            p.appointments_today||'—',
-            p.assigned_caregivers?.join(', ')||'—',
+            p.full_name,
+            p.risk_level || '—',
+            p.last_esas_days!=null ? `${p.last_esas_days}d ago` : 'Never',
+            p.last_vitals_hours!=null ? `${p.last_vitals_hours}h ago` : 'Never',
+            p.recent_alerts.length > 0 ? `⚠ ${p.recent_alerts.length}` : '—',
+            p.appointments_today || '—',
+            p.assigned_caregivers?.join(', ') || '—',
           ])}
         />
       </Sec>
@@ -365,25 +363,25 @@ function AssessmentCompletionBody({data}) {
         <Sec title="Overdue by Assessment Type" icon={Activity} color="#7c3aed">
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={barData}>
-              <XAxis dataKey="name" tick={{fontSize:10}}/>
-              <YAxis tick={{fontSize:10}}/>
-              <Tooltip/>
+              <XAxis dataKey="name" tick={{fontSize:10}}/><YAxis tick={{fontSize:10}}/><Tooltip/>
               <Bar dataKey="overdue" fill="#7c3aed" radius={[4,4,0,0]}/>
             </BarChart>
           </ResponsiveContainer>
         </Sec>
       )}
       {(data.critical_scores||[]).length>0&&(
-        <Sec title="🚨 Critical Scores" icon={AlertTriangle} color="#dc2626">
+        <Sec title="Critical Scores — Immediate Review Required" icon={AlertTriangle} color="#dc2626">
           <Tbl headers={['Patient','Assessment','Score','Flag','Date']}
-            rows={data.critical_scores.map(c=>[c.patient_name,c.assessment,<span className="font-bold text-red-700">{c.score}</span>,<span className="text-xs text-red-600">{c.flag}</span>,fmtD(c.date)])}/>
+            rows={data.critical_scores.map(c=>[c.patient_name, c.assessment, `${c.score}`, c.flag, fmtD(c.date)])}/>
         </Sec>
       )}
       <Sec title="Patient Assessment Status" icon={Users} color="#0891b2" collapsible>
         <Tbl headers={['Patient','Risk','ESAS','PPS','PHQ-9','GAD-7','Overdue']}
           rows={(data.patients||[]).map(p=>{const a=p.assessments||{};
-            const d=(item)=>{if(!item||item.days_since==null)return<span className="text-red-500 text-[10px] font-bold">Never</span>;return<span className={`text-[10px] font-bold ${item.overdue?'text-red-600':'text-green-600'}`}>{item.days_since}d</span>;};
-            return[p.patient_name,<SevBadge sev={p.risk_level?.toLowerCase()||'normal'}/>,d(a.esas),d(a.pps),d(a.phq9),d(a.gad7),p.overdue_count>0?<span className="text-[10px] font-bold text-red-600">{p.overdue.join(', ')}</span>:<CheckCircle size={12} className="text-green-600"/>];
+            const d=(item)=>{if(!item||item.days_since==null)return 'Never';return `${item.days_since}d ${item.overdue?'(!)':''}`;};
+            return[p.patient_name, p.risk_level||'—', d(a.esas), d(a.pps), d(a.phq9), d(a.gad7),
+              p.overdue_count>0 ? p.overdue.join(', ') : '✓ Up to date',
+            ];
           })}/>
       </Sec>
     </div>
@@ -396,10 +394,10 @@ function BereavementBody({data}) {
     <div className="space-y-5">
       <KpiGrid items={[{label:'Total Families',value:data.summary?.total_families},{label:'At Risk',value:data.summary?.at_risk_families,warn:data.summary?.at_risk_families>0},{label:'Bereaved',value:data.summary?.bereaved_families,color:'#9d174d'},{label:'Engaged',value:data.summary?.engaged_families,color:'#059669'}]}/>
       {atRisk.length>0&&(
-        <Sec title="⚠️ Families Requiring Follow-Up" icon={Heart} color="#9d174d">
+        <Sec title="Families Requiring Follow-Up" icon={Heart} color="#9d174d">
           {atRisk.map(f=>(
-            <div key={f.family_user_id} className="mb-2.5 p-3 rounded-xl border border-rose-200 bg-rose-50 dark:bg-rose-900/10">
-              <p className="font-bold text-sm text-slate-800 dark:text-slate-100">{f.family_name} <span className="text-slate-500 font-normal">({f.relationship})</span></p>
+            <div key={f.family_user_id} className="mb-2.5 p-3 rounded-xl border border-rose-200 bg-rose-50">
+              <p className="font-bold text-sm text-slate-800">{f.family_name} <span className="text-slate-500 font-normal">({f.relationship})</span></p>
               <p className="text-xs text-slate-600">Patient: {f.patient_name} · Status: {f.patient_status}</p>
               {f.phq9_score!=null&&<p className="text-xs text-amber-700">PHQ-9: {f.phq9_score} — {f.phq9_severity}</p>}
               {f.gad7_score!=null&&<p className="text-xs text-purple-700">GAD-7: {f.gad7_score} — {f.gad7_severity}</p>}
@@ -410,11 +408,12 @@ function BereavementBody({data}) {
       )}
       <Sec title="All Families" icon={Users} color="#374151" collapsible>
         <Tbl headers={['Family Member','Relationship','Patient','PHQ-9','GAD-7','Engagement','At Risk']}
-          rows={(data.families||[]).map(f=>[f.family_name,f.relationship||'—',f.patient_name,
-            f.phq9_score!=null?<span className={f.phq9_score>=15?'text-red-600 font-bold':''}>{f.phq9_score}</span>:'—',
-            f.gad7_score!=null?<span className={f.gad7_score>=15?'text-red-600 font-bold':''}>{f.gad7_score}</span>:'—',
+          rows={(data.families||[]).map(f=>[
+            f.family_name, f.relationship||'—', f.patient_name,
+            f.phq9_score!=null ? `${f.phq9_score} (${f.phq9_severity||'—'})` : '—',
+            f.gad7_score!=null ? `${f.gad7_score} (${f.gad7_severity||'—'})` : '—',
             `${f.bereavement_entries} entries`,
-            f.at_risk?<span className="text-red-600 font-bold text-[10px]">⚠ Yes</span>:<CheckCircle size={12} className="text-green-600"/>
+            f.at_risk ? '⚠ Yes — Follow up needed' : '✓ OK',
           ])}/>
       </Sec>
     </div>
@@ -427,28 +426,22 @@ function GenericBody({data}) {
 
 /* ── Report Viewer with react-to-print ───────────────────────── */
 function ReportViewer({data,onClose}) {
-  const printRef=useRef(null);
-  const handlePrint=useReactToPrint({
-    contentRef:printRef,
-    documentTitle:data.report_title||'Aura Report',
-    pageStyle:`
-      @page { size: A4; margin: 18mm 15mm; }
-      @media print {
-        body * { visibility: hidden !important; }
-        #report-print-content, #report-print-content * { visibility: visible !important; }
-        #report-print-content { position: fixed; top:0; left:0; width:100%; }
-        .print-section { break-inside: avoid; }
-        .recharts-wrapper { page-break-inside: avoid; }
-      }
-    `,
-  });
-  const meta=REPORT_META[data.report_type]||{};
-  const Icon=meta.icon||FileText;
-  const color=meta.color||'#0d9488';
-  const genBy=data.generated_by?.name||data.generated_by?.full_name||'—';
+  const printRef = useRef(null);
 
-  const renderBody=()=>{
-    switch(data.report_type){
+  // react-to-print v3: contentRef clones the referenced element into a clean
+  // print iframe — no custom pageStyle tricks needed.
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: data.report_title || 'Aura Clinical Report',
+  });
+
+  const meta  = REPORT_META[data.report_type] || {};
+  const Icon  = meta.icon || FileText;
+  const color = meta.color || '#0d9488';
+  const genBy = data.generated_by?.name || data.generated_by?.full_name || '—';
+
+  const renderBody = () => {
+    switch (data.report_type) {
       case 'patient_summary':       return <PatientSummaryBody data={data}/>;
       case 'mdt_handover':          return <MdtHandoverBody data={data}/>;
       case 'advance_care_plan':     return <AdvanceCarePlanBody data={data}/>;
@@ -465,60 +458,72 @@ function ReportViewer({data,onClose}) {
       onClick={onClose}>
       <motion.div initial={{scale:0.95,y:20}} animate={{scale:1,y:0}} exit={{scale:0.95}}
         onClick={e=>e.stopPropagation()}
-        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl my-4">
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-4">
 
-        {/* Toolbar — NOT printed */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 print:hidden">
+        {/* ── Toolbar (never printed) ── */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100" style={{borderTop:`4px solid ${color}`}}>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{backgroundColor:color+'18'}}>
               <Icon size={18} style={{color}}/>
             </div>
             <div>
-              <p className="font-bold text-slate-900 dark:text-slate-100 text-sm">{data.report_title}</p>
-              <p className="text-xs text-slate-500">Generated {fmt(data.generated_at)} by {genBy}</p>
+              <p className="font-bold text-slate-900 text-sm leading-tight">{data.report_title}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Generated {fmt(data.generated_at)} · {genBy} ({data.generated_by?.role})</p>
+              {data.period && <p className="text-xs text-slate-400">{fmtD(data.period.from)} — {fmtD(data.period.to)}</p>}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition">
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition">
               <Printer size={13}/> Print / PDF
             </button>
             <button onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-500">
+              className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 text-lg leading-none">
               ✕
             </button>
           </div>
         </div>
 
-        {/* Printable content area */}
-        <div id="report-print-content" ref={printRef} className="px-6 py-6">
-          {/* Print header — only visible when printing */}
-          <div className="hidden print:block mb-6 pb-4 border-b-2 border-slate-300">
-            <div className="flex items-center justify-between">
+        {data.confidentiality && (
+          <div className="mx-6 mt-4 flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
+            <Lock size={12} className="text-amber-600 flex-shrink-0"/>
+            <p className="text-[10px] font-bold text-amber-800">{data.confidentiality}</p>
+          </div>
+        )}
+
+        {/* ── Printable content area ── */}
+        {/* react-to-print v3 clones this entire div into a clean print iframe.
+            Everything inside prints exactly as rendered — no extra CSS tricks.
+            The toolbar above is NOT inside printRef so it never appears in print. */}
+        <div ref={printRef} className="px-6 py-6 space-y-6">
+          {/* Print-only header (styled for paper) */}
+          <div className="hidden print:block pb-4 mb-4 border-b-2 border-slate-400">
+            <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-xl font-bold text-slate-900">{data.report_title}</h1>
-                <p className="text-xs text-slate-500 mt-0.5">Generated: {fmt(data.generated_at)} · By: {genBy} ({data.generated_by?.role})</p>
-                {data.period&&<p className="text-xs text-slate-400">Period: {fmtD(data.period.from)} — {fmtD(data.period.to)}</p>}
+                <h1 className="text-xl font-bold text-black">{data.report_title}</h1>
+                <p className="text-xs text-gray-600 mt-1">Generated: {fmt(data.generated_at)} · By: {genBy} ({data.generated_by?.role})</p>
+                {data.period && <p className="text-xs text-gray-500">Period: {fmtD(data.period.from)} – {fmtD(data.period.to)}</p>}
+                {data.standard && <p className="text-[9px] text-gray-400 mt-1">Standards: {data.standard}</p>}
               </div>
               <div className="text-right">
-                <p className="text-xs font-bold text-slate-700">Project Aura</p>
-                <p className="text-[10px] text-slate-400">Palliative Care Platform</p>
+                <p className="text-sm font-bold text-black">Project Aura</p>
+                <p className="text-xs text-gray-500">Palliative Care Platform</p>
               </div>
             </div>
-            {data.confidentiality&&(
-              <div className="mt-2 px-3 py-1.5 bg-amber-50 border border-amber-300 rounded-lg">
+            {data.confidentiality && (
+              <div className="mt-3 px-3 py-1.5 border-2 border-amber-600 rounded">
                 <p className="text-[10px] font-bold text-amber-800">{data.confidentiality}</p>
               </div>
             )}
-            {data.standard&&<p className="mt-1 text-[9px] text-slate-400">Standards: {data.standard}</p>}
           </div>
 
-          {/* Report body */}
-          <div className="space-y-6">{renderBody()}</div>
+          {renderBody()}
 
-          {/* Print footer */}
-          <div className="hidden print:block mt-8 pt-4 border-t border-slate-200 text-center">
-            <p className="text-[9px] text-slate-400">Project Aura · Palliative Care Platform · Printed {new Date().toLocaleString('en-GB')} · {data.confidentiality}</p>
+          {/* Print-only footer */}
+          <div className="hidden print:block pt-4 border-t border-gray-300 text-center">
+            <p className="text-[8px] text-gray-400">
+              Project Aura Palliative Care Platform · Printed {new Date().toLocaleString('en-GB')} · {data.confidentiality}
+            </p>
           </div>
         </div>
       </motion.div>
