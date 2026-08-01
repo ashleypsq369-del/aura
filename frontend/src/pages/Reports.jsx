@@ -421,7 +421,182 @@ function BereavementBody({data}) {
 }
 
 function GenericBody({data}) {
-  return <pre className="text-xs overflow-auto bg-slate-50 dark:bg-slate-900 rounded-xl p-4 max-h-96">{JSON.stringify(data,null,2)}</pre>;
+  return <pre className="text-xs overflow-auto bg-slate-50 rounded-xl p-4 max-h-96">{JSON.stringify(data,null,2)}</pre>;
+}
+
+/* ── Additional body renderers for all 12 report types ───────── */
+function MedicationAdherenceBody({data}) {
+  const s = data.summary || {};
+  const statusColor = s.adherence_status === 'good' ? '#059669'
+    : s.adherence_status === 'warning' ? '#d97706'
+    : s.adherence_status === 'critical' ? '#dc2626' : '#94a3b8';
+  return (
+    <div className="space-y-5">
+      <div className="p-4 rounded-xl border-2" style={{borderColor: statusColor, backgroundColor: statusColor+'14'}}>
+        <p className="text-[10px] font-bold uppercase text-slate-500 mb-1">Overall Adherence Rate</p>
+        <p className="text-3xl font-bold" style={{color: statusColor}}>
+          {s.overall_adherence_pct != null ? s.overall_adherence_pct + '%' : 'No data'}
+        </p>
+        <p className="text-xs text-slate-600 mt-1">
+          {s.adherence_status === 'good'    && '≥80% — Meeting clinical threshold (NHS Medicines Management)'}
+          {s.adherence_status === 'warning' && '60–79% — Below threshold. Review with prescriber.'}
+          {s.adherence_status === 'critical'&& '<60% — Critical. Immediate clinical review required.'}
+          {s.adherence_status === 'no_data' && 'No adherence logs found for this period.'}
+        </p>
+      </div>
+      <KpiGrid items={[
+        {label:'Active Medications',value:s.total_active_medications},
+        {label:'Doses Scheduled',   value:s.total_scheduled_doses},
+        {label:'Doses Taken',       value:s.total_taken_doses, color:'#059669'},
+        {label:'Doses Missed',      value:s.total_missed_doses, warn:s.total_missed_doses>0},
+      ]}/>
+      {(data.at_risk_medications||[]).length > 0 && (
+        <Sec title="Medications Needing Attention (<80%)" icon={AlertTriangle} color="#dc2626">
+          <Tbl headers={['Medication','Dose','Scheduled','Taken','Missed','Adherence']}
+            rows={(data.at_risk_medications||[]).map(m=>[
+              m.name, m.dose||'—', m.scheduled, m.taken, m.missed,
+              m.adherence_pct != null ? m.adherence_pct+'%' : '—',
+            ])}/>
+        </Sec>
+      )}
+      <Sec title="All Medications" icon={Pill} color="#be123c" collapsible>
+        <Tbl headers={['Medication','Dose','Frequency','Taken','Missed','Adherence','Status']}
+          rows={(data.medications||[]).map(m=>[
+            m.name, m.dose||'—', m.frequency||'—', m.taken, m.missed,
+            m.adherence_pct != null ? m.adherence_pct+'%' : 'No data',
+            m.status==='good'?'✓ Good':m.status==='warning'?'⚠ Low':m.status==='critical'?'✗ Critical':'—',
+          ])}/>
+      </Sec>
+    </div>
+  );
+}
+
+function CarePlanProgressBody({data}) {
+  const s = data.summary || {};
+  const barData = Object.entries(data.category_progress||{}).map(([k,v])=>({name:k.replace(/_/g,' '),progress:v}));
+  return (
+    <div className="space-y-5">
+      <KpiGrid items={[
+        {label:'Total Goals', value:s.total_goals},
+        {label:'Achieved',    value:s.achieved,    color:'#059669'},
+        {label:'In Progress', value:s.in_progress, color:'#0891b2'},
+        {label:'Overdue',     value:s.overdue,     warn:s.overdue>0},
+      ]}/>
+      <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+          <span>Overall Progress</span><span>{s.overall_progress||0}%</span>
+        </div>
+        <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
+          <div className="h-3 rounded-full bg-teal-500" style={{width:`${s.overall_progress||0}%`}}/>
+        </div>
+      </div>
+      {barData.length>0&&(
+        <Sec title="Progress by Goal Category" icon={Target} color="#0d9488">
+          <ResponsiveContainer width="100%" height={160}>
+            <BarChart data={barData} layout="vertical">
+              <XAxis type="number" tick={{fontSize:10}} domain={[0,100]}/>
+              <YAxis dataKey="name" type="category" tick={{fontSize:10}} width={100}/>
+              <Tooltip formatter={v=>v+'%'}/><Bar dataKey="progress" fill="#0d9488" radius={[0,4,4,0]}/>
+            </BarChart>
+          </ResponsiveContainer>
+        </Sec>
+      )}
+      {(data.overdue_goals||[]).length>0&&(
+        <Sec title="Overdue Goals" icon={AlertTriangle} color="#dc2626">
+          <Tbl headers={['Goal','Category','Priority','Progress','Target Date']}
+            rows={(data.overdue_goals||[]).map(g=>[
+              g.title.length>45?g.title.substring(0,45)+'…':g.title,
+              g.category, g.priority, `${g.progress}%`, fmtD(g.target_date),
+            ])}/>
+        </Sec>
+      )}
+      <Sec title="All Goals" icon={FileText} color="#374151" collapsible>
+        <Tbl headers={['Goal','Category','Status','Progress','Checklist','Source']}
+          rows={(data.goals||[]).map(g=>[
+            g.title.length>40?g.title.substring(0,40)+'…':g.title,
+            g.category||'—', g.status, `${g.progress}%`,
+            g.checklist.total>0?`${g.checklist.completed}/${g.checklist.total}`:'—',
+            g.ai_suggested?'AI':'Manual',
+          ])}/>
+      </Sec>
+    </div>
+  );
+}
+
+function UserActivityBody({data}) {
+  const s = data.summary||{};
+  return (
+    <div className="space-y-5">
+      <KpiGrid items={[{label:'Users',value:s.total_users},{label:'Total Actions',value:s.total_actions},{label:'Active Mins',value:s.total_active_mins},{label:'Failed Logins',value:s.total_failed_logins,warn:s.total_failed_logins>0}]}/>
+      {(data.users||[]).map(u=>(
+        <Sec key={u.user_id} title={`${u.user_name} (${u.user_role})`} icon={User} color="#7c3aed" collapsible>
+          <KpiGrid items={[{label:'Actions',value:u.total_actions},{label:'Sessions',value:u.active_sessions},{label:'Active Mins',value:u.total_active_mins},{label:'Logins',value:u.login_count}]}/>
+          {(u.critical_actions||[]).length>0&&(
+            <Tbl headers={['Timestamp','Action','Resource','Patient']}
+              rows={u.critical_actions.slice(0,10).map(a=>[fmt(a.timestamp),a.action,a.resource||'—',a.patient_id?'#'+a.patient_id:'—'])}/>
+          )}
+        </Sec>
+      ))}
+    </div>
+  );
+}
+
+function AuditTrailBody({data}) {
+  const t = data.totals||{};
+  return (
+    <div className="space-y-5">
+      <KpiGrid items={[{label:'Total Entries',value:t.total_entries},{label:'Critical',value:t.critical,warn:t.critical>0},{label:'High',value:t.high,color:'#d97706'},{label:'Failed',value:t.failed,warn:t.failed>0}]}/>
+      <Sec title="Audit Entries" icon={Shield} color="#374151" collapsible>
+        <Tbl headers={['Timestamp','User','Role','Action','Resource','Patient','Sev.','OK']}
+          rows={(data.entries||[]).slice(0,80).map(e=>[
+            fmt(e.timestamp),e.user_name||'—',e.user_role||'—',e.action,
+            e.resource_type||'—',e.patient_id?'#'+e.patient_id:'—',
+            e.severity,e.success?'✓':'✗',
+          ])}/>
+      </Sec>
+    </div>
+  );
+}
+
+function IncidentsBody({data}) {
+  const s = data.summary||{};
+  return (
+    <div className="space-y-5">
+      <KpiGrid items={[{label:'Total Incidents',value:s.total_incidents},{label:'Critical',value:s.critical,warn:s.critical>0},{label:'Unacknowledged',value:s.unacknowledged,warn:s.unacknowledged>0},{label:'Avg Response',value:s.avg_response_mins!=null?s.avg_response_mins.toFixed(1)+'m':'—'}]}/>
+      <Sec title="Incident Log" icon={AlertTriangle} color="#d97706" collapsible>
+        <Tbl headers={['Date/Time','Patient','Type','Severity','Response','Ack.','Overdue']}
+          rows={(data.incidents||[]).map(i=>[
+            fmt(i.created_at),i.patient_name||'—',i.alert_type||'—',i.severity,
+            i.response_time_mins!=null?i.response_time_mins.toFixed(1)+'m':'Pending',
+            i.is_acknowledged?'✓':'✗',i.overdue?'⚠ Yes':'No',
+          ])}/>
+      </Sec>
+    </div>
+  );
+}
+
+function CaregiverBody({data}) {
+  const s = data.summary||{};const cgv = data.caregiver||{};
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+          {cgv.name?.split(' ').map(n=>n[0]).join('').slice(0,2)||'??'}
+        </div>
+        <div>
+          <p className="font-bold text-slate-800">{cgv.name||'Unknown'}</p>
+          <p className="text-xs text-slate-500 capitalize">{cgv.role} · @{cgv.username}</p>
+        </div>
+      </div>
+      <KpiGrid items={[{label:'Patients Assigned',value:s.assigned_patients},{label:'Total Actions',value:s.total_actions},{label:'Active Mins',value:s.total_active_mins},{label:'Vitals Logged',value:s.vitals_logged,color:'#0891b2'}]}/>
+      {(data.assigned_patients||[]).length>0&&(
+        <Sec title="Assigned Patients" icon={Users} color="#1d4ed8">
+          <Tbl headers={['Patient','Diagnosis','Risk Level','Assigned Since']}
+            rows={data.assigned_patients.map(p=>[p.patient_name,p.diagnosis||'—',p.risk_level||'—',fmtD(p.assigned_since)])}/>
+        </Sec>
+      )}
+    </div>
+  );
 }
 
 /* ── Report Viewer with react-to-print ───────────────────────── */
@@ -429,10 +604,17 @@ function ReportViewer({data,onClose}) {
   const printRef = useRef(null);
 
   // react-to-print v3: contentRef clones the referenced element into a clean
-  // print iframe — no custom pageStyle tricks needed.
+  // print iframe. pageStyle copies @page rules only — no visibility tricks.
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: data.report_title || 'Aura Clinical Report',
+    pageStyle: `
+      @page { size: A4 portrait; margin: 15mm 12mm; }
+      @media print {
+        body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .recharts-wrapper { break-inside: avoid; }
+      }
+    `,
   });
 
   const meta  = REPORT_META[data.report_type] || {};
@@ -442,13 +624,19 @@ function ReportViewer({data,onClose}) {
 
   const renderBody = () => {
     switch (data.report_type) {
-      case 'patient_summary':       return <PatientSummaryBody data={data}/>;
-      case 'mdt_handover':          return <MdtHandoverBody data={data}/>;
-      case 'advance_care_plan':     return <AdvanceCarePlanBody data={data}/>;
-      case 'population':            return <PopulationBody data={data}/>;
-      case 'assessment_completion': return <AssessmentCompletionBody data={data}/>;
-      case 'bereavement_outcome':   return <BereavementBody data={data}/>;
-      default:                      return <GenericBody data={data}/>;
+      case 'patient_summary':        return <PatientSummaryBody data={data}/>;
+      case 'mdt_handover':           return <MdtHandoverBody data={data}/>;
+      case 'advance_care_plan':      return <AdvanceCarePlanBody data={data}/>;
+      case 'care_plan_progress':     return <CarePlanProgressBody data={data}/>;
+      case 'assessment_completion':  return <AssessmentCompletionBody data={data}/>;
+      case 'medication_adherence':   return <MedicationAdherenceBody data={data}/>;
+      case 'bereavement_outcome':    return <BereavementBody data={data}/>;
+      case 'population':             return <PopulationBody data={data}/>;
+      case 'incidents':              return <IncidentsBody data={data}/>;
+      case 'caregiver_performance':  return <CaregiverBody data={data}/>;
+      case 'user_activity':          return <UserActivityBody data={data}/>;
+      case 'audit_trail':            return <AuditTrailBody data={data}/>;
+      default:                       return <GenericBody data={data}/>;
     }
   };
 
