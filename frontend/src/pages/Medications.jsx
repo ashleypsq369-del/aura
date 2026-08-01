@@ -135,7 +135,7 @@ function PatientSearch({ list, selectedId, onSelect }) {
             {hits.length === 0
               ? <div className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</div>
               : hits.map(p => (
-                <button key={p.id} type="button" onClick={() => { onSelect(p.id); setOpen(false); setQuery?.(''); }}
+                <button key={p.id} type="button" onClick={() => { onSelect(p.id); setOpen(false); setQ(''); }}
                   className={`w-full text-left px-4 py-2.5 hover:bg-teal-50 flex items-center gap-3 border-b border-slate-50 last:border-0 ${selectedId===p.id?'bg-teal-50':''}`}>
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                     {(p.full_name||'?')[0]}

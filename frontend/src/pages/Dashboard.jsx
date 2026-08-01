@@ -29,7 +29,6 @@ import { API_URL } from '../api/client';
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { chatWithCareTeam } = useCareTeamChat();
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [criticalAlert, setCriticalAlert] = useState(null);
@@ -396,6 +395,7 @@ export default function Dashboard() {
 
 // ── Family Dashboard ───────────────────────────────────────────────────
 function FamilyDashboard({ user, summary, navigate }) {
+  const { chatWithCareTeam } = useCareTeamChat();
   const { data: journeyEvents } = useQuery({
     queryKey: ['family-journey'],
     queryFn: () => apiClient.get('/api/journey/my-journey').then(r => r.data),

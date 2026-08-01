@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Zap, AlertTriangle, Stethoscope, Heart,
+  Zap, AlertTriangle, Stethoscope, Heart, Phone, Video,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';

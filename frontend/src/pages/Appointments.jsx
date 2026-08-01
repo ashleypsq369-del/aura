@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePatientId } from '../hooks/usePatientId';
 import { useCareSettingContext } from '../context/CareSettingContext';
 import axios from 'axios';
+import { API_URL } from '../api/client';
 import PageHeader from '../components/PageHeader';
 import InlineTaskReminder from '../components/InlineTaskReminder';
 import toast from '../utils/toast';
