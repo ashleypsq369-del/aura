@@ -136,6 +136,30 @@ REPORT_TYPES = [
         "uses": ["Weekly care plan review", "Goal-oriented care", "Quality assurance", "NHS NACEL compliance"],
         "standard": "NHS NACEL 2024 Goal-Oriented Care, NICE NG31",
     },
+    {
+        "id": "mdt_handover",
+        "name": "MDT Handover / Shift Summary",
+        "description": "Multi-disciplinary team handover report: all active patients, risk levels, pending tasks, recent alerts, outstanding assessments, and priority actions for the incoming shift.",
+        "access": ["admin", "clinician", "caregiver"],
+        "uses": ["Shift handover", "MDT meeting preparation", "Safe care transfer", "Continuity of care"],
+        "standard": "NHS Safe Handover (BMA 2004), SBAR Communication Framework, CQC Fundamental Standards",
+    },
+    {
+        "id": "advance_care_plan",
+        "name": "Advance Care Plan Summary",
+        "description": "Documents the patient's stated wishes, DNR/DNACPR status, advance directive, preferred place of care/death, and spiritual/religious preferences. Essential for end-of-life decision making.",
+        "access": ["admin", "clinician", "caregiver"],
+        "uses": ["End-of-life planning", "Legal documentation", "Family communication", "Out-of-hours care"],
+        "standard": "NICE NG31 Care of Dying Adults, GMC Treatment End of Life 2024, Mental Capacity Act 2005",
+    },
+    {
+        "id": "bereavement_outcome",
+        "name": "Bereavement & Family Outcome Report",
+        "description": "Tracks family bereavement support engagement, PHQ-9/GAD-7 scores for bereaved relatives, journal activity, community participation, and identifies families at high grief risk requiring follow-up.",
+        "access": ["admin", "clinician"],
+        "uses": ["Bereavement risk assessment", "Family follow-up planning", "Grief support audit", "NACEL bereavement survey"],
+        "standard": "NACEL 2024 Bereavement Survey, NICE NG31, CRUSE Bereavement UK Guidelines",
+    },
 ]
 
 
@@ -1323,4 +1347,352 @@ async def care_plan_progress_report(
         "category_progress": category_avg,
         "goals": goal_details,
         "overdue_goals": overdue_goals,
+    }
+
+
+# ── Report 10: MDT Handover / Shift Summary ──────────────────────────────
+
+@router.get("/mdt-handover")
+async def mdt_handover_report(
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    MDT Handover / Shift Summary.
+    All active patients with risk, pending tasks, recent alerts, outstanding assessments.
+    Standard: NHS Safe Handover (BMA 2004), SBAR Framework, CQC Fundamental Standards.
+    """
+    if current_user.role not in ("admin", "clinician", "caregiver"):
+        raise HTTPException(403, "Access denied")
+
+    now = datetime.utcnow()
+    patients = db.query(Patient).filter(Patient.status.notin_(["deceased"])).all()
+
+    patient_rows = []
+    for p in patients:
+        # Recent alerts (last 24h)
+        recent_alerts = db.query(Alert).filter(
+            Alert.patient_id == p.id,
+            Alert.created_at >= now - timedelta(hours=24),
+            Alert.is_acknowledged == False,
+        ).order_by(Alert.severity.desc()).limit(3).all()
+
+        # Last ESAS
+        last_esas = db.query(ESASAssessment).filter(
+            ESASAssessment.patient_id == p.id
+        ).order_by(ESASAssessment.assessed_at.desc()).first()
+
+        # Latest vitals
+        last_vital = db.query(Vital).filter(
+            Vital.patient_id == p.id
+        ).order_by(Vital.recorded_at.desc()).first()
+
+        # Upcoming appointments today
+        today_end = now.replace(hour=23, minute=59, second=59)
+        appts_today = db.query(Appointment).filter(
+            Appointment.patient_id == p.id,
+            Appointment.scheduled_at >= now,
+            Appointment.scheduled_at <= today_end,
+            Appointment.status == "scheduled",
+        ).count()
+
+        # Outstanding assessments
+        esas_overdue = not last_esas or (now - last_esas.assessed_at).days > 1
+        last_pps = db.query(PPSAssessment).filter(PPSAssessment.patient_id == p.id).order_by(PPSAssessment.assessed_at.desc()).first()
+        pps_overdue = not last_pps or (now - last_pps.assessed_at).days > 30
+
+        # Assigned caregivers
+        assignments = db.query(CaregiverAssignment, User).join(
+            User, CaregiverAssignment.caregiver_id == User.id
+        ).filter(
+            CaregiverAssignment.patient_id == p.id,
+            CaregiverAssignment.active == True,
+        ).all()
+
+        patient_rows.append({
+            "patient_id":      p.id,
+            "patient_code":    p.patient_code,
+            "full_name":       p.full_name,
+            "age":             p.age,
+            "diagnosis":       p.primary_diagnosis,
+            "risk_level":      p.risk_level,
+            "risk_score":      p.risk_score,
+            "status":          p.status,
+            "recent_alerts":   [
+                {"type": a.alert_type, "severity": a.severity, "message": a.message[:80]}
+                for a in recent_alerts
+            ],
+            "last_esas_days":  (now - last_esas.assessed_at).days if last_esas else None,
+            "last_vitals_hours": round((now - last_vital.recorded_at).total_seconds() / 3600, 1) if last_vital else None,
+            "appointments_today": appts_today,
+            "outstanding": {
+                "esas_overdue": esas_overdue,
+                "pps_overdue": pps_overdue,
+            },
+            "assigned_caregivers": [u.full_name for _, u in assignments],
+            "priority": "urgent" if any(a.severity in ("critical","high") for a in recent_alerts) or esas_overdue
+                        else "normal",
+        })
+
+    # Sort: urgent first, then by risk score
+    patient_rows.sort(key=lambda x: (0 if x["priority"] == "urgent" else 1, -(x["risk_score"] or 0)))
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_MDT_HANDOVER",
+                   resource_type="report", request=http_request)
+    db.commit()
+
+    return {
+        "report_type":  "mdt_handover",
+        "report_title": f"MDT Handover — {now.strftime('%d %b %Y, %H:%M')}",
+        "generated_at": now.isoformat(),
+        "generated_by": _user_dict(current_user),
+        "confidentiality": "CLINICAL IN CONFIDENCE — For clinical staff only",
+        "standard": "NHS Safe Handover BMA 2004 / SBAR / CQC Fundamental Standards",
+        "summary": {
+            "total_active_patients": len(patients),
+            "urgent_patients": sum(1 for r in patient_rows if r["priority"] == "urgent"),
+            "unacknowledged_alerts": sum(len(r["recent_alerts"]) for r in patient_rows),
+            "esas_overdue": sum(1 for r in patient_rows if r["outstanding"]["esas_overdue"]),
+        },
+        "patients": patient_rows,
+    }
+
+
+# ── Report 11: Advance Care Plan Summary ────────────────────────────────
+
+@router.get("/advance-care-plan/{patient_id}")
+async def advance_care_plan_report(
+    patient_id: int,
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Advance Care Plan Summary.
+    DNR status, advance directive, preferred place of care/death, spiritual preferences.
+    Standard: NICE NG31, GMC End of Life 2024, Mental Capacity Act 2005.
+    """
+    if current_user.role not in ("admin", "clinician", "caregiver"):
+        raise HTTPException(403, "Access denied")
+
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(404, "Patient not found")
+
+    # Get care plan
+    care_plan = db.query(CarePlan).filter(
+        CarePlan.patient_id == patient_id,
+        CarePlan.is_current == True,
+    ).order_by(CarePlan.version.desc()).first()
+
+    # Goals
+    goals = db.query(CarePlanGoal).filter(
+        CarePlanGoal.patient_id == patient_id,
+    ).all() if care_plan else []
+
+    # Assigned clinician
+    clinician = db.query(User).filter(User.id == patient.primary_clinician_id).first() if patient.primary_clinician_id else None
+
+    # Caregivers
+    assignments = db.query(CaregiverAssignment, User).join(
+        User, CaregiverAssignment.caregiver_id == User.id
+    ).filter(
+        CaregiverAssignment.patient_id == patient_id,
+        CaregiverAssignment.active == True,
+    ).all()
+
+    # Last PPS for functional status
+    last_pps = db.query(PPSAssessment).filter(
+        PPSAssessment.patient_id == patient_id
+    ).order_by(PPSAssessment.assessed_at.desc()).first()
+
+    # Last risk prediction
+    prediction = db.query(Prediction).filter(
+        Prediction.patient_id == patient_id
+    ).order_by(Prediction.predicted_at.desc()).first()
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_ADVANCE_CARE_PLAN",
+                   resource_type="report", patient_id=patient_id,
+                   request=http_request)
+    db.commit()
+
+    return {
+        "report_type":  "advance_care_plan",
+        "report_title": f"Advance Care Plan — {patient.full_name}",
+        "generated_at": datetime.utcnow().isoformat(),
+        "generated_by": _user_dict(current_user),
+        "confidentiality": "STRICTLY CONFIDENTIAL — Legal document. Handle with care.",
+        "standard": "NICE NG31 / GMC End of Life 2024 / Mental Capacity Act 2005",
+        "patient": {
+            "id": patient.id,
+            "full_name": patient.full_name,
+            "patient_code": patient.patient_code,
+            "age": patient.age,
+            "gender": patient.gender,
+            "primary_diagnosis": patient.primary_diagnosis,
+            "status": patient.status,
+            "admission_date": patient.admission_date.isoformat() if patient.admission_date else None,
+        },
+        "clinical_team": {
+            "primary_clinician": _user_dict(clinician) if clinician else None,
+            "caregivers": [_user_dict(u) for _, u in assignments],
+        },
+        "advance_directives": {
+            "has_advance_directive": patient.advance_directive,
+            "dnr_status": patient.dnr_status,
+            "preferred_language": patient.preferred_language,
+            "religious_preference": patient.religious_preference,
+            "note": "Advance directive and DNACPR documentation should be reviewed with patient/family and stored in the patient's legal file.",
+        },
+        "functional_status": {
+            "pps_score": last_pps.pps_score if last_pps else None,
+            "assessed_at": last_pps.assessed_at.isoformat() if last_pps else None,
+            "risk_level": prediction.risk_level if prediction else None,
+            "risk_score": prediction.risk_score if prediction else None,
+        },
+        "care_plan": {
+            "version": care_plan.version if care_plan else None,
+            "goals_of_care": care_plan.goals_of_care if care_plan else None,
+            "pain_management_plan": care_plan.pain_management_plan if care_plan else None,
+            "psychological_support": care_plan.psychological_support if care_plan else None,
+            "spiritual_care": care_plan.spiritual_care if care_plan else None,
+            "family_support_plan": care_plan.family_support_plan if care_plan else None,
+            "advance_directives_notes": care_plan.advance_directives_notes if care_plan else None,
+            "bereavement_plan": care_plan.bereavement_plan if care_plan else None,
+            "review_date": care_plan.review_date.isoformat() if care_plan and care_plan.review_date else None,
+            "ai_generated": care_plan.ai_generated if care_plan else False,
+        } if care_plan else None,
+        "goals_summary": {
+            "total": len(goals),
+            "by_category": {cat: sum(1 for g in goals if g.category == cat)
+                           for cat in set(g.category for g in goals if g.category)},
+            "achieved": sum(1 for g in goals if g.status == "achieved"),
+        },
+        "emergency_contact": {
+            "name": patient.emergency_contact_name,
+            "relationship": patient.emergency_contact_relationship,
+            "phone": patient.emergency_contact_phone,
+        },
+    }
+
+
+# ── Report 12: Bereavement & Family Outcome Report ────────────────────────
+
+@router.get("/bereavement-outcome")
+async def bereavement_outcome_report(
+    date_from: Optional[str] = Query(None),
+    date_to:   Optional[str] = Query(None),
+    http_request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Bereavement & Family Outcome Report.
+    Tracks family engagement, PHQ-9/GAD-7 scores, journal activity, grief risk.
+    Standard: NACEL 2024 Bereavement Survey, NICE NG31, CRUSE Guidelines.
+    """
+    if current_user.role not in ("admin", "clinician"):
+        raise HTTPException(403, "Admin or clinician required")
+
+    from src.db import PatientFamilyLink, BereavementEntry, GAD7Assessment
+
+    now   = datetime.utcnow()
+    start = _parse_date(date_from, now - timedelta(days=90))
+    end   = _parse_date(date_to,   now)
+
+    # Family users with linked patients
+    family_links = db.query(PatientFamilyLink).all()
+
+    family_outcomes = []
+    at_risk_count = 0
+
+    for link in family_links:
+        family_user = db.query(User).filter(User.id == link.family_user_id).first()
+        patient = db.query(Patient).filter(Patient.id == link.patient_id).first()
+        if not family_user or not patient:
+            continue
+
+        # Bereavement entries
+        bereavement_entries = db.query(BereavementEntry).filter(
+            BereavementEntry.user_id == link.family_user_id,
+            BereavementEntry.created_at >= start,
+        ).count()
+
+        # PHQ-9
+        phq9 = db.query(PHQ9Assessment).filter(
+            PHQ9Assessment.patient_id == link.patient_id,
+        ).order_by(PHQ9Assessment.assessed_at.desc()).first()
+        phq9_score = None
+        if phq9:
+            phq9_score = sum([getattr(phq9, f, 0) for f in [
+                "little_interest","feeling_down","sleep_trouble","feeling_tired",
+                "appetite_change","feeling_bad_about_self","trouble_concentrating",
+                "moving_slowly_or_fidgety","thoughts_of_harm",
+            ]])
+
+        # GAD-7
+        gad7 = db.query(GAD7Assessment).filter(
+            GAD7Assessment.patient_id == link.patient_id,
+        ).order_by(GAD7Assessment.assessed_at.desc()).first()
+        gad7_score = None
+        if gad7:
+            gad7_score = sum([getattr(gad7, f, 0) for f in [
+                "feeling_nervous","uncontrollable_worry","worrying_too_much",
+                "trouble_relaxing","being_restless","easily_annoyed","feeling_afraid",
+            ]])
+
+        # High grief risk: PHQ-9 ≥15 OR GAD-7 ≥15 OR no bereavement engagement
+        at_risk = (
+            (phq9_score is not None and phq9_score >= 15) or
+            (gad7_score is not None and gad7_score >= 15) or
+            (patient.status == "deceased" and bereavement_entries == 0)
+        )
+        if at_risk:
+            at_risk_count += 1
+
+        family_outcomes.append({
+            "family_user_id":    link.family_user_id,
+            "family_name":       family_user.full_name,
+            "relationship":      link.relationship,
+            "patient_name":      patient.full_name,
+            "patient_status":    patient.status,
+            "bereavement_entries": bereavement_entries,
+            "phq9_score":        phq9_score,
+            "gad7_score":        gad7_score,
+            "phq9_severity":     ("Minimal" if phq9_score < 5 else "Mild" if phq9_score < 10
+                                  else "Moderate" if phq9_score < 15 else "Severe") if phq9_score is not None else None,
+            "gad7_severity":     ("Minimal" if gad7_score < 5 else "Mild" if gad7_score < 8
+                                  else "Moderate" if gad7_score < 15 else "Severe") if gad7_score is not None else None,
+            "at_risk":           at_risk,
+            "grief_support_needed": at_risk,
+        })
+
+    # Sort: at-risk first
+    family_outcomes.sort(key=lambda x: (0 if x["at_risk"] else 1))
+
+    if http_request:
+        log_action(db, user=current_user, action="REPORT_BEREAVEMENT_OUTCOME",
+                   resource_type="report", request=http_request,
+                   details={"period_days": (end - start).days})
+    db.commit()
+
+    return {
+        "report_type":  "bereavement_outcome",
+        "report_title": "Bereavement & Family Outcome Report",
+        "generated_at": datetime.utcnow().isoformat(),
+        "generated_by": _user_dict(current_user),
+        "period":       {"from": start.isoformat(), "to": end.isoformat()},
+        "confidentiality": "CLINICAL IN CONFIDENCE — Bereavement data",
+        "standard": "NACEL 2024 Bereavement Survey / NICE NG31 / CRUSE UK Guidelines",
+        "summary": {
+            "total_families":        len(family_outcomes),
+            "at_risk_families":      at_risk_count,
+            "bereaved_families":     sum(1 for f in family_outcomes if f["patient_status"] == "deceased"),
+            "engaged_families":      sum(1 for f in family_outcomes if f["bereavement_entries"] > 0),
+            "phq9_severe_count":     sum(1 for f in family_outcomes if f["phq9_score"] is not None and f["phq9_score"] >= 15),
+        },
+        "families": family_outcomes,
     }
