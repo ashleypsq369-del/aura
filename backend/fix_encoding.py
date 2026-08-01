@@ -1,56 +1,33 @@
-"""Fix mojibake encoding in backend files"""
-import pathlib
+"""Fix encoding artifacts in frontend JSX files."""
+import os
 
-files = [
-    'main.py',
-    'routers/advanced_ml.py',
-    'routers/llm_chatbot.py',
-    'routers/ml_predictions.py',
-    'routers/ai_analysis.py',
-    'services/aura_ai_engine.py',
-    'services/true_llm_engine.py',
+files_to_fix = [
+    r'c:\xampp\htdocs\ProjectAura_React\frontend\src\pages\Messages.jsx',
+    r'c:\xampp\htdocs\ProjectAura_React\frontend\src\components\AddContactModal.jsx',
 ]
 
-# Common mojibake patterns from UTF-8 double-encoded as latin-1
 replacements = [
-    # em dash variants
-    ('\u00e2\u20ac\u201c', '--'),
-    ('\u00e2\u20ac\u2014', '--'),
-    ('\u00e2\u20ac\u0094', '--'),
-    # smart quotes
-    ('\u00e2\u20ac\u02dc', "'"),
-    ('\u00e2\u20ac\u2122', "'"),
-    ('\u00e2\u20ac\u0153', '"'),
-    ('\u00e2\u20ac\x9d', '"'),
-    ('\u00e2\u0080\x94', '--'),
-    ('\u00e2\u0080\x99', "'"),
-    ('\u00e2\u0080\x9c', '"'),
-    ('\u00e2\u0080\x9d', '"'),
-    # box drawing chars that appear as mojibake
-    ('\u00e2\u0094\u0080', '--'),
-    ('\u00e2\u0094\u0082', '|'),
-    # other common ones
-    ('\u00c3\u00b9', 'u'),
-    ('\u00c3\u00a2', ''),
-    ('\u00c3\xa2', ''),
+    # AddContactModal footer emoji
+    (b'\xc3\xb0\xc5\xb8\xe2\x80\x99\xc2\xa1', b''),   # garbled 💡
+    (b'\xf0\x9f\x92\xa1', b''),                          # 💡 UTF-8
+    # Messages.jsx checkmark garble
+    (b'font-bold">"', b'font-bold">\xe2\x9c\x93'),       # " -> ✓
+    # ¥ member count
+    (b'\xc2\xa5 ', b''),                                  # ¥ + space
 ]
 
-for fname in files:
-    p = pathlib.Path(fname)
-    if not p.exists():
-        print(f"SKIP (not found): {fname}")
+for filepath in files_to_fix:
+    if not os.path.exists(filepath):
+        print(f'SKIP: {filepath}')
         continue
-    try:
-        text = p.read_text(encoding='utf-8')
-        original = text
-        for bad, good in replacements:
-            text = text.replace(bad, good)
-        if text != original:
-            p.write_text(text, encoding='utf-8')
-            print(f"Fixed: {fname}")
-        else:
-            print(f"Clean: {fname}")
-    except Exception as e:
-        print(f"ERROR {fname}: {e}")
-
-print("Done")
+    with open(filepath, 'rb') as f:
+        content = f.read()
+    original = content
+    for bad, good in replacements:
+        content = content.replace(bad, good)
+    if content != original:
+        with open(filepath, 'wb') as f:
+            f.write(content)
+        print(f'FIXED: {filepath}')
+    else:
+        print(f'NO CHANGE: {filepath}')

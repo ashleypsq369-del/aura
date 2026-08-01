@@ -174,7 +174,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
 
         {/* Footer */}
         <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
-          <p className="text-xs text-slate-400">ðŸ’¡ Added contacts appear in your message sidebar</p>
+          <p className="text-xs text-slate-400">Added contacts appear in your Messages tab</p>
           <button onClick={handleClose}
             className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
             Close

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Zap, AlertTriangle, Stethoscope, Heart, Phone, Video,
+  Zap, AlertTriangle, Stethoscope, Phone, Video,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -543,20 +543,18 @@ export default function Messages() {
             )}
           </div>
         ) : (
-          /* Contacts Tab */
-          <ContactsTab 
-            onContactClick={(contact) => {
-              // Find or create conversation with this contact
-              const existingConv = conversations.find(c => 
-                c.participants.some(p => p.id === contact.id)
+          /* Contacts Tab — onContactMessage receives contact_user_id directly */
+          <ContactsTab
+            onContactMessage={(userId) => {
+              // Find existing conversation with this user
+              const existingConv = conversations.find(c =>
+                c.participants.some(p => p.id === userId)
               );
-              
               if (existingConv) {
                 setSelectedConversation(existingConv);
                 setActiveTab('chats');
               } else {
-                // Start new conversation
-                handleStartChat(contact.id);
+                handleStartChat(userId);
                 setActiveTab('chats');
               }
             }}
@@ -836,7 +834,7 @@ export default function Messages() {
                     <div className="mb-2">
                       <p className="font-semibold text-slate-900 text-sm">{group.name}</p>
                       <p className="text-xs text-slate-600 mt-1">{group.description}</p>
-                      <p className="text-xs text-slate-500 mt-1">¥ {group.member_count} members</p>
+                      <p className="text-xs text-slate-500 mt-1">{group.member_count} members</p>
                     </div>
                     {group.has_conversation ? (
                       <button
@@ -884,7 +882,7 @@ export default function Messages() {
                       </div>
                     </div>
                     {selectedParticipants.includes(physician.id) && (
-                      <div className="w-6 h-6 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-bold">"</div>
+                      <div className="w-6 h-6 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</div>
                     )}
                   </button>
                 ))}
