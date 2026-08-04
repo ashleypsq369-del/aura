@@ -20,6 +20,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import apiClient, { bereavementAPI } from '../api/client';
 import toast from '../utils/toast';
+import PageHeader from '../components/PageHeader';
 
 const TABS = [
   { id: 'overview',    label: 'Overview',        icon: Heart            },
@@ -59,42 +60,13 @@ export default function ContinuityBridge() {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <div className="relative h-56 md:h-64 overflow-hidden">
-        <img src="/resources/african/african-elder-care.jpg" alt=""
-          className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 via-indigo-900/45 to-purple-800/15" />
-        <div className="absolute inset-0 max-w-6xl mx-auto px-6 flex flex-col justify-end pb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-full px-3 py-1 mb-3">
-              <InfinityIcon size={12} className="text-purple-300" />
-              <span className="text-white/85 text-xs font-medium">The Continuity Bridge</span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Love that outlasts time</h1>
-            <p className="text-purple-200 text-sm max-w-md leading-relaxed">
-              Preserve memories, write final messages and designate heirs — so your legacy lives on exactly as you intend.
-            </p>
-            {name && (
-              <div className="mt-3 inline-flex items-center gap-2 bg-purple-700/55 backdrop-blur border border-purple-400/40 rounded-full px-3 py-1">
-                <Heart size={11} className="text-pink-300" />
-                <span className="text-white text-xs font-medium">
-                  {isDeceased ? 'In memory of' : isHeir ? 'Legacy of' : 'Your legacy'}: {name}
-                </span>
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </div>
-
-      {/* ── Context banner ────────────────────────────────────────── */}
-      <div className="bg-indigo-50 border-b border-indigo-100">
-        <div className="max-w-6xl mx-auto px-6 py-2.5 flex items-start gap-2">
-          <Sparkles size={14} className="text-indigo-500 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-indigo-700 leading-relaxed">
-            <strong>Your personal legacy space.</strong> Create memories, write messages for loved ones, and keep a private reflective journal — separate from bereavement support for family.
-          </p>
-        </div>
-      </div>
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <PageHeader
+        image="/resources/african/african-elder-care.jpg"
+        title={name ? `${isDeceased ? 'In Memory of' : isHeir ? 'Legacy of' : 'Your Legacy'}: ${name}` : 'The Continuity Bridge'}
+        subtitle="Preserve memories, write final messages and designate heirs — so your legacy lives on exactly as you intend"
+        icon={InfinityIcon}
+      />
 
       {/* ── Sticky tabs ───────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -103,7 +75,7 @@ export default function ContinuityBridge() {
             {TABS.map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => setTab(id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
-                  selectedTab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                  selectedTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
                 <Icon size={14} />{label}
               </button>
             ))}

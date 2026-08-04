@@ -42,6 +42,8 @@ const COUNSELORS = [
   { name: 'KASA Initiative Ghana',                   phone: null,           desc: 'Community grief workshops & groups',     hours: 'Weekly sessions' },
 ];
 
+import PageHeader from '../components/PageHeader';
+
 export default function BereavedFamilyDashboard() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -86,24 +88,13 @@ export default function BereavedFamilyDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div className="relative h-56 md:h-64 overflow-hidden">
-        <img src="/resources/african/african-family-support.jpg" alt=""
-          className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 via-purple-900/45 to-transparent" />
-        <div className="absolute inset-0 max-w-6xl mx-auto px-6 flex flex-col justify-end pb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-full px-3 py-1 mb-3">
-              <Flower2 size={12} className="text-purple-300" />
-              <span className="text-white/85 text-xs font-medium">Bereavement Support</span>
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">You are not alone</h1>
-            <p className="text-purple-200 text-sm max-w-md leading-relaxed">
-              Grief is love with nowhere to go. This space offers healing resources, community, and professional care — rooted in Ghanaian culture.
-            </p>
-          </motion.div>
-        </div>
-      </div>
+      {/* ── Header ───────────────────────────────────────────────── */}
+      <PageHeader
+        image="/resources/african/african-family-support.jpg"
+        title="Bereavement Support"
+        subtitle="You are not alone — healing resources, community, and professional care rooted in Ghanaian culture"
+        icon={Flower2}
+      />
 
       {/* ── Sticky tab bar ───────────────────────────────────────── */}
       <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
@@ -112,7 +103,7 @@ export default function BereavedFamilyDashboard() {
             {visibleTabs.map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => go(id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
-                  tab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'}`}>
+                  tab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'}`}>
                 <Icon size={14} />{label}
               </button>
             ))}
@@ -336,10 +327,10 @@ function CounselingTab() {
     <div className="space-y-5">
       <div className="relative rounded-2xl overflow-hidden">
         <img src="/resources/african/african-nurse-patient.jpg" alt="" className="w-full h-44 object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 to-purple-700/25" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/65 to-slate-800/25" />
         <div className="absolute inset-0 p-6 flex flex-col justify-center">
-          <h2 className="text-white font-bold text-xl mb-1">Professional Grief Counseling</h2>
-          <p className="text-purple-200 text-sm">Trusted services available across Ghana</p>
+          <h2 className="text-white font-bold text-lg mb-1">Professional Grief Counseling</h2>
+          <p className="text-white/80 text-sm">Trusted services available across Ghana</p>
         </div>
       </div>
       <div className="space-y-3">

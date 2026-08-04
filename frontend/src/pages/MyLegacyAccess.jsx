@@ -15,6 +15,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import apiClient from '../api/client';
+import PageHeader from '../components/PageHeader';
 
 function fmt(d, opts = { year: 'numeric', month: 'long', day: 'numeric' }) {
   return d ? new Date(d).toLocaleDateString('en-GB', opts) : '—';
@@ -87,15 +88,12 @@ export default function MyLegacyAccess() {
   // Empty
   if (!legacyAccess.length) return (
     <div className="min-h-full">
-      <div className="relative h-48 overflow-hidden">
-        <img src="/resources/african/african-hands-comfort.jpg" alt=""
-          className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/70 to-purple-800/25" />
-        <div className="absolute inset-0 flex flex-col justify-end max-w-4xl mx-auto px-6 pb-8">
-          <h1 className="text-2xl font-bold text-white mb-1">My Legacy Access</h1>
-          <p className="text-purple-200 text-sm">Memories left for you by loved ones</p>
-        </div>
-      </div>
+      <PageHeader
+        image="/resources/african/african-hands-comfort.jpg"
+        title="My Legacy Access"
+        subtitle="Memories left for you by loved ones"
+        icon={HeartHandshake}
+      />
       <div className="max-w-lg mx-auto px-6 py-16 text-center">
         <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-5">
           <HeartHandshake size={28} className="text-purple-600" />
@@ -140,29 +138,13 @@ export default function MyLegacyAccess() {
 function ListView({ legacyAccess, onSelect }) {
   return (
     <div className="min-h-full">
-      {/* Hero */}
-      <div className="relative h-52 overflow-hidden">
-        <img src="/resources/african/african-elder-care.jpg" alt=""
-          className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/65 to-purple-800/20" />
-        <div className="absolute inset-0 flex flex-col justify-end max-w-5xl mx-auto px-6 pb-8">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-full px-3 py-1 mb-3">
-              <Sparkles size={12} className="text-purple-300" />
-              <span className="text-white/85 text-xs">Sacred Trust</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-1">My Legacy Access</h1>
-            <p className="text-purple-200 text-sm max-w-md">
-              Memories, messages, and journals left for you — preserved with love.
-            </p>
-          </motion.div>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-4">
-        <p className="text-sm text-slate-500">
-          You have been designated as an heir for {legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`}.
-        </p>
+      <PageHeader
+        image="/resources/african/african-elder-care.jpg"
+        title="My Legacy Access"
+        subtitle={`You have been designated as an heir for ${legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`} — preserved with love`}
+        icon={HeartHandshake}
+      />
+      <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
 
         {legacyAccess.map((item, i) => {
           const isPending = !item.is_activated;
@@ -311,20 +293,18 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
 
   return (
     <div className="min-h-full bg-slate-50 dark:bg-slate-900">
-      {/* Hero */}
-      <div className="relative h-44 overflow-hidden">
-        <img src="/resources/african/african-family-support.jpg" alt=""
-          className="w-full h-full object-cover object-center" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-950/65 to-purple-800/20" />
-        <div className="absolute inset-0 max-w-5xl mx-auto px-6 flex flex-col justify-end pb-6">
-          <button onClick={onBack}
-            className="flex items-center gap-1.5 text-white/70 hover:text-white text-xs font-semibold mb-3 transition w-fit">
-            <ArrowLeft size={14} /> All Legacy Access
-          </button>
-          <h1 className="text-xl font-bold text-white">{info.patient_name}'s Legacy</h1>
-          <p className="text-purple-200 text-xs mt-0.5">Your {info.relationship} · {info.deceased_at ? `Passed ${fmtShort(info.deceased_at)}` : ''}</p>
-        </div>
-      </div>
+      {/* Header */}
+      <PageHeader
+        image="/resources/african/african-family-support.jpg"
+        title={`${info.patient_name}'s Legacy`}
+        subtitle={`Your ${info.relationship}${info.deceased_at ? ` · Passed ${fmtShort(info.deceased_at)}` : ''}`}
+        icon={HeartHandshake}
+      >
+        <button onClick={onBack}
+          className="flex items-center gap-1.5 text-white/80 hover:text-white text-xs font-semibold transition px-3 py-1.5 bg-white/15 hover:bg-white/25 rounded-lg border border-white/25">
+          <ArrowLeft size={13} /> All Legacies
+        </button>
+      </PageHeader>
 
       {/* Sticky tabs */}
       <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -333,7 +313,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
             {tabs.map(({ id, label, icon: Icon }) => (
               <button key={id} onClick={() => onTabChange(id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
-                  activeTab === id ? 'bg-purple-700 text-white shadow-sm' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+                  activeTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
                 <Icon size={14} />{label}
               </button>
             ))}
