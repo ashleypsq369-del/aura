@@ -463,12 +463,20 @@ export default function Settings() {
                   <Row icon={Globe} iconColor="#6b7280" iconBg="#f3f4f6"
                     label="Language" desc="Sets the app's language attribute and text direction" border={false}
                     right={
-                      <select value={language} onChange={e => { updateLanguage(e.target.value); toast.success('Language updated'); }}
+                      <select value={language} onChange={e => { updateLanguage(e.target.value); toast.success('Language preference saved'); }}
                         className="text-sm text-gray-700 bg-transparent border-none outline-none cursor-pointer font-medium">
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                        <option value="fr">Français</option>
-                        <option value="tw">Twi</option>
+                        <optgroup label="International">
+                          <option value="en">English</option>
+                          <option value="fr">Français (French)</option>
+                        </optgroup>
+                        <optgroup label="Ghanaian Languages">
+                          <option value="tw">Twi (Akan)</option>
+                          <option value="gaa">Ga</option>
+                          <option value="ee">Ewe</option>
+                          <option value="dag">Dagbani</option>
+                          <option value="ha">Hausa</option>
+                          <option value="nzi">Nzema</option>
+                        </optgroup>
                       </select>
                     }
                   />

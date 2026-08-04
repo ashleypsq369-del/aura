@@ -795,24 +795,34 @@ function DrugInteractionsTab() {
 
   return (
     <div className="space-y-4">
+      {/* Compact stat row — no giant gradient blocks */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Patients Affected', value: patients.length, cls: 'from-amber-500 to-orange-600' },
-          { label: 'Severe / Major',    value: severeCount,     cls: 'from-red-600 to-rose-700'     },
-          { label: 'Total Detected',    value: totalInts,       cls: 'from-slate-600 to-slate-700'  },
-        ].map(({ label, value, cls }) => (
-          <div key={label} className={`rounded-2xl bg-gradient-to-br ${cls} p-4 text-white`}>
-            <p className="text-3xl font-black tabular-nums">{value}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider mt-1 text-white/70">{label}</p>
+          { label: 'Patients Affected', value: patients.length,
+            icon: Users,      iconBg: '#fff7ed', iconColor: '#ea580c', valColor: '#9a3412' },
+          { label: 'Severe / Major',    value: severeCount,
+            icon: AlertTriangle, iconBg: '#fef2f2', iconColor: '#dc2626', valColor: '#991b1b' },
+          { label: 'Total Detected',    value: totalInts,
+            icon: Pill,       iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
+        ].map(({ label, value, icon: Ico, iconBg, iconColor, valColor }) => (
+          <div key={label} className="rounded-xl border border-slate-200 bg-white px-4 py-3 flex items-center gap-3 shadow-sm">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: iconBg }}>
+              <Ico size={15} style={{ color: iconColor }} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-0.5">{label}</p>
+              <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{value}</p>
+            </div>
           </div>
         ))}
       </div>
       {allInts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-400">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center">
-            <CheckCircle size={28} className="text-emerald-500" />
+        <div className="flex flex-col items-center justify-center py-12 gap-3 text-slate-400">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+            <CheckCircle size={20} className="text-emerald-500" />
           </div>
-          <p className="font-bold text-emerald-700 text-base">No drug interactions detected</p>
+          <p className="font-semibold text-emerald-700 text-sm">No drug interactions detected</p>
           <p className="text-xs text-slate-400">All patient medications are currently clear.</p>
         </div>
       ) : (
@@ -857,22 +867,33 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
   ].filter(d => d.count > 0);
 
   const stats = [
-    { l: 'Total Monitored',  v: patients.length,                                                     grad: 'from-teal-600 to-cyan-600' },
-    { l: 'Critical',         v: patients.filter(p => p.risk_level === 'critical').length,            grad: 'from-red-600 to-rose-700'  },
-    { l: 'Deteriorating',    v: (sysData?.deteriorating_patients || []).length,                     grad: 'from-amber-500 to-orange-600' },
-    { l: 'Stable',           v: (sysData?.stable_patients || []).length,                            grad: 'from-emerald-600 to-teal-600' },
-    { l: 'ML Tasks Loaded',  v: (mlStatus?.total_tasks || 8) + 4,                                    grad: 'from-violet-600 to-indigo-600' },
-    { l: 'SHAP Active',      v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : '—'),           grad: 'from-slate-600 to-slate-700'   },
+    { l: 'Total Monitored',  v: patients.length,
+      iconBg: '#f0fdfa', iconColor: '#0d9488', valColor: '#0f766e' },
+    { l: 'Critical',         v: patients.filter(p => p.risk_level === 'critical').length,
+      iconBg: '#fef2f2', iconColor: '#dc2626', valColor: '#991b1b' },
+    { l: 'Deteriorating',    v: (sysData?.deteriorating_patients || []).length,
+      iconBg: '#fffbeb', iconColor: '#d97706', valColor: '#92400e' },
+    { l: 'Stable',           v: (sysData?.stable_patients || []).length,
+      iconBg: '#f0fdf4', iconColor: '#16a34a', valColor: '#166534' },
+    { l: 'ML Tasks Loaded',  v: (mlStatus?.total_tasks || 8) + 4,
+      iconBg: '#f5f3ff', iconColor: '#7c3aed', valColor: '#4c1d95' },
+    { l: 'SHAP Active',      v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : '—'),
+      iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
   ];
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-3">
-        {stats.map(({ l, v, grad }) => (
-          <div key={l} className={`rounded-2xl bg-gradient-to-br ${grad} p-4 text-white relative overflow-hidden`}>
-            <div className="absolute -top-3 -right-3 w-12 h-12 rounded-full bg-white/10 pointer-events-none" />
-            <p className="text-2xl font-black tabular-nums relative z-10">{v}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wider mt-1 text-white/70 relative z-10">{l}</p>
+        {stats.map(({ l, v, iconBg, iconColor, valColor }) => (
+          <div key={l} className="rounded-xl border border-slate-200 bg-white px-4 py-3 flex items-center gap-3 shadow-sm">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: iconBg }}>
+              <BarChart2 size={14} style={{ color: iconColor }} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 mb-0.5">{l}</p>
+              <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{v}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -925,19 +946,19 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/20 dark:to-indigo-950/20 rounded-2xl border border-violet-200 dark:border-violet-800 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
-            <Beaker size={18} className="text-white" />
+          <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
+            <Beaker size={15} className="text-violet-600" />
           </div>
           <div>
-            <p className="font-bold text-violet-900 dark:text-violet-300">Proactive Risk Scan</p>
-            <p className="text-[11px] text-violet-600 dark:text-violet-400">XGBoost across all active patients</p>
+            <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Proactive Risk Scan</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">XGBoost across all active patients</p>
           </div>
         </div>
         <button onClick={onScan} disabled={scanning}
-          className="w-full py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition shadow-md flex items-center justify-center gap-2">
-          {scanning ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} />}
+          className="w-full py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-lg font-semibold text-sm transition flex items-center justify-center gap-2">
+          {scanning ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
           {scanning ? 'Scanning patients…' : 'Run Proactive Scan'}
         </button>
       </div>
@@ -1058,82 +1079,58 @@ export default function AIInsights() {
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
       className="min-h-screen space-y-0 pb-8">
 
-      {/* ── Dark gradient hero header ── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-violet-950 pt-0">
-        {/* Subtle background grid */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: 'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
-        {/* Glow orbs */}
-        <div className="absolute top-0 right-1/4 w-64 h-64 rounded-full bg-violet-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-48 h-48 rounded-full bg-red-600/15 blur-3xl pointer-events-none" />
+      {/* ── Standard page header (matches all other pages) ── */}
+      <PageHeader
+        image="/resources/headers/header-ai-insights.jpg"
+        title="AI Clinical Intelligence"
+        subtitle="XGBoost · 8 Models · Real SHAP · Auto-refresh 30s"
+        icon={Brain}
+      >
+        <button onClick={() => { refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
+          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30">
+          <RefreshCw size={12} /> Refresh
+        </button>
+        <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
+          className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30 disabled:opacity-60">
+          {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+          {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
+        </button>
+      </PageHeader>
 
-        <div className="relative z-10 px-6 pt-6 pb-5">
-          {/* Title row */}
-          <div className="flex items-start justify-between gap-4 flex-wrap mb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-violet-900/40">
-                <Brain size={22} className="text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-black text-white tracking-tight">AI Clinical Intelligence</h1>
-                <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-                  XGBoost · 8 Models · Real SHAP · Auto-refresh 30s
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <button onClick={() => { refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
-                className="flex items-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 rounded-xl text-xs font-bold transition border border-white/10">
-                <RefreshCw size={12} /> Refresh
-              </button>
-              <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
-                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold transition disabled:opacity-60 shadow-lg shadow-violet-900/30">
-                {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
-                {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
-              </button>
-            </div>
-          </div>
-
-          {/* KPI gradient pills */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
-              <button key={v} onClick={() => { setActiveTab('risk'); setFilterRisk(v); }}
-                className={`group relative rounded-2xl p-3.5 text-left transition-all duration-200 overflow-hidden ${
-                  filterRisk === v && activeTab === 'risk'
-                    ? `bg-gradient-to-br ${grad} shadow-xl scale-[1.03]`
-                    : 'bg-white/8 hover:bg-white/15 border border-white/10 backdrop-blur-sm'
-                }`}>
-                {filterRisk === v && activeTab === 'risk' && (
-                  <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-white/20 pointer-events-none" />
-                )}
-                <div className="flex items-center justify-between mb-1 relative z-10">
-                  <Ico size={14} className="text-white/70" />
-                  {v === 'critical' && count > 0 && filterRisk !== 'critical' && (
-                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                  )}
-                </div>
-                <p className="text-2xl font-black text-white tabular-nums relative z-10">{count}</p>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-white/60 mt-0.5 relative z-10">{label}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Tab bar — flush with header bottom */}
-        <div className="relative z-10 px-6 flex gap-1 border-t border-white/10">
-          {[
-            { id: 'risk',   label: '🧠 Risk Stratification' },
-            { id: 'drugs',  label: '💊 Drug Interactions'   },
-            { id: 'system', label: '📊 System Overview'     },
-          ].map(({ id, label }) => (
-            <button key={id} onClick={() => { setActiveTab(id); setDeepDiveId(null); }}
-              className={`px-4 py-3 text-xs font-bold transition-all border-b-2 ${
-                activeTab === id
-                  ? 'border-violet-400 text-white'
-                  : 'border-transparent text-slate-400 hover:text-white'
+      {/* ── KPI pills + tab bar ── */}
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
+        {/* Compact KPI row */}
+        <div className="flex items-center gap-2 flex-wrap mb-3">
+          {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
+            <button key={v} onClick={() => { setActiveTab('risk'); setFilterRisk(v); }}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                filterRisk === v && activeTab === 'risk'
+                  ? `bg-gradient-to-r ${grad} text-white border-transparent shadow-sm`
+                  : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-slate-300'
               }`}>
-              {label}
+              <Ico size={12} />
+              <span>{count}</span>
+              <span className="text-[10px] uppercase tracking-wide opacity-80">{label}</span>
+              {v === 'critical' && count > 0 && filterRisk !== 'critical' && (
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse ml-0.5" />
+              )}
+            </button>
+          ))}
+        </div>
+        {/* Tab bar */}
+        <div className="flex gap-1">
+          {[
+            { id: 'risk',   label: 'Risk Stratification', emoji: '🧠' },
+            { id: 'drugs',  label: 'Drug Interactions',   emoji: '💊' },
+            { id: 'system', label: 'System Overview',     emoji: '📊' },
+          ].map(({ id, label, emoji }) => (
+            <button key={id} onClick={() => { setActiveTab(id); setDeepDiveId(null); }}
+              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
+                activeTab === id
+                  ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}>
+              {emoji} {label}
             </button>
           ))}
         </div>

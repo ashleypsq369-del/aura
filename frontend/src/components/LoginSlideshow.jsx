@@ -5,7 +5,7 @@ import {
   Shield, Activity, Stethoscope, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
-// All 10 downloaded images - Unsplash free license
+// Local images — downloaded to /resources/slideshow/
 const SLIDES = [
   {
     img: '/resources/slideshow/care-1.jpg',
@@ -16,7 +16,7 @@ const SLIDES = [
     color: 'from-teal-950/85 via-teal-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-7.jpg',
+    img: '/resources/slideshow/care-2.jpg',
     icon: Heart,
     tag: 'Elder Care',
     title: 'Compassionate Care for Every Age',
@@ -24,7 +24,7 @@ const SLIDES = [
     color: 'from-slate-950/85 via-slate-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-8.jpg',
+    img: '/resources/slideshow/care-3.jpg',
     icon: Users,
     tag: 'Nursing & Bedside Care',
     title: 'Bedside Care, Reimagined',
@@ -32,15 +32,15 @@ const SLIDES = [
     color: 'from-teal-950/85 via-teal-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-2.jpg',
+    img: '/resources/slideshow/care-4.jpg',
     icon: Heart,
     tag: 'Palliative Support',
     title: 'Personalised Palliative Journeys',
-    body: 'Every care journey is unique. Project Aura builds a care plan tailored to each patient\'s condition, culture, and values.',
+    body: "Every care journey is unique. Project Aura builds a care plan tailored to each patient's condition, culture, and values.",
     color: 'from-slate-950/85 via-slate-700/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-3.jpg',
+    img: '/resources/slideshow/care-5.jpg',
     icon: Users,
     tag: 'Family & Care Team',
     title: 'Connecting Families & Clinicians',
@@ -48,7 +48,7 @@ const SLIDES = [
     color: 'from-teal-950/85 via-teal-900/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-9.jpg',
+    img: '/resources/slideshow/care-6.jpg',
     icon: Brain,
     tag: 'AI-Powered Insights',
     title: 'Aura AI - Your Care Companion',
@@ -56,7 +56,7 @@ const SLIDES = [
     color: 'from-cyan-950/85 via-cyan-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-4.jpg',
+    img: '/resources/slideshow/care-7.jpg',
     icon: Activity,
     tag: 'Symptom Tracking',
     title: 'Smart Symptom & ESAS Tracking',
@@ -64,7 +64,7 @@ const SLIDES = [
     color: 'from-teal-950/85 via-teal-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-5.jpg',
+    img: '/resources/slideshow/care-8.jpg',
     icon: Calendar,
     tag: 'Appointments & Medications',
     title: 'Seamless Care Coordination',
@@ -72,7 +72,7 @@ const SLIDES = [
     color: 'from-teal-950/85 via-teal-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-10.jpg',
+    img: '/resources/slideshow/care-9.jpg',
     icon: MessageSquare,
     tag: 'Family Support',
     title: 'Supporting Families Through It All',
@@ -80,7 +80,7 @@ const SLIDES = [
     color: 'from-slate-950/85 via-slate-800/55 to-transparent',
   },
   {
-    img: '/resources/slideshow/care-6.jpg',
+    img: '/resources/slideshow/care-10.jpg',
     icon: Shield,
     tag: 'Memory & Wellbeing',
     title: 'Memory Vault & Spiritual Wellbeing',

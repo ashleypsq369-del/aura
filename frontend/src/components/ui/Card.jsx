@@ -120,8 +120,8 @@ export function StatCard({ label, value, icon: Icon, variant = 'teal', onClick, 
         </div>
       )}
       <div className="min-w-0">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 leading-none mb-1.5">{label}</p>
-        <p className="text-2xl font-bold tabular-nums leading-none" style={{ color: v.valColor }}>{value}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 leading-none mb-1">{label}</p>
+        <p className="text-xl font-bold tabular-nums leading-none" style={{ color: v.valColor }}>{value}</p>
       </div>
     </div>
   );

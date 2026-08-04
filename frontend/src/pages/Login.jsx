@@ -44,9 +44,8 @@ export default function Login() {
      */
     <div className="min-h-screen flex flex-col lg:flex-row text-[#2C3531]">
 
-      {/* € Slideshow panel €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€ */}
-      {/* Mobile: fixed-height banner. Desktop: half the screen. */}
-      <div className="w-full h-56 sm:h-72 lg:h-auto lg:w-1/2 lg:sticky lg:top-0 lg:min-h-screen flex-shrink-0 relative overflow-hidden">
+      {/* Slideshow panel — hidden on small app windows, visible on wider screens */}
+      <div className="hidden sm:block w-full h-64 sm:h-80 lg:h-auto lg:w-1/2 lg:sticky lg:top-0 lg:min-h-screen flex-shrink-0 relative overflow-hidden">
         <LoginSlideshow />
       </div>
 

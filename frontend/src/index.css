@@ -387,10 +387,10 @@ textarea {
 /* ── 9. Reduced grid density on smaller screens ────────────────────────── */
 /* Handled by the adaptive profile CSS (data-ui-profile) above */
 
-/* ── 10. Section vertical rhythm — pages never feel claustrophobic ─────── */
-.space-y-5 > * + * { margin-top: 1.5rem; }
-.space-y-6 > * + * { margin-top: 1.75rem; }
-.space-y-8 > * + * { margin-top: 2rem; }
+/* ── 10. Section vertical rhythm — tighter spacing ───────────────────── */
+.space-y-5 > * + * { margin-top: 1.1rem; }
+.space-y-6 > * + * { margin-top: 1.25rem; }
+.space-y-8 > * + * { margin-top: 1.5rem; }
 
 /* ── 11. Colour contrast floors — WCAG 1.4.3 (4.5:1 for normal text) ─── */
 /* Suppress excessively light text classes */
@@ -449,9 +449,8 @@ textarea {
   margin-right: auto;
   padding-left: 12px;
   padding-right: 12px;
-  /* Vertical rhythm: give each section breathing room */
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 @media (min-width: 480px) {
