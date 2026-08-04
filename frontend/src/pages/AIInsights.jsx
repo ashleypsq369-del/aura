@@ -1120,17 +1120,18 @@ export default function AIInsights() {
         {/* Tab bar */}
         <div className="flex gap-1">
           {[
-            { id: 'risk',   label: 'Risk Stratification', emoji: '🧠' },
-            { id: 'drugs',  label: 'Drug Interactions',   emoji: '💊' },
-            { id: 'system', label: 'System Overview',     emoji: '📊' },
-          ].map(({ id, label, emoji }) => (
+            { id: 'risk',   label: 'Risk Stratification', icon: Brain   },
+            { id: 'drugs',  label: 'Drug Interactions',   icon: Pill    },
+            { id: 'system', label: 'System Overview',     icon: BarChart2 },
+          ].map(({ id, label, icon: Ico }) => (
             <button key={id} onClick={() => { setActiveTab(id); setDeepDiveId(null); }}
-              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
                 activeTab === id
                   ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}>
-              {emoji} {label}
+              <Ico size={13} />
+              {label}
             </button>
           ))}
         </div>
