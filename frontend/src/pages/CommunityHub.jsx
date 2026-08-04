@@ -154,7 +154,7 @@ export default function CommunityHub() {
   return (
     <div className="min-h-full">
       <PageHeader
-        image="/resources/african/african-community.jpg"
+        image="/resources/african/african-community-group.jpg"
         title="Community Hub"
         subtitle="Find your people - support groups, counselling & spiritual care"
         icon={Globe}
@@ -219,24 +219,24 @@ export default function CommunityHub() {
             {/* ML/signal-driven smart recommendations */}
             {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-white border-2 border-violet-200 dark:from-violet-950/40 dark:to-indigo-950/40 dark:border-violet-800 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-4 py-3 border-b border-violet-100 dark:border-violet-800 flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600">
-                  <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                    <Brain size={14} className="text-white" />
+                className="bg-white border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
+                    <Brain size={14} className="text-teal-600" />
                   </div>
-                  <h3 className="text-sm font-bold text-white flex-1">Smart Group Recommendations</h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/25 text-white">
+                  <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex-1">Smart Group Recommendations</h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
                     {mlRecommendedGroups.length} for you
                   </span>
                 </div>
                 {(signals?.communityTags?.length > 0 || signals?.condition) && (
                   <div className="px-4 pt-2 pb-1">
-                    <p className="text-[11px] text-slate-600 dark:text-violet-300 flex items-center gap-1.5">
-                      <Sparkles size={11} className="text-violet-500" />
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 flex-wrap">
+                      <Sparkles size={11} className="text-teal-500" />
                       Matched to your profile:
-                      {signals.condition && <span className="font-semibold text-slate-800"> {signals.condition}</span>}
+                      {signals.condition && <span className="font-semibold text-slate-700"> {signals.condition}</span>}
                       {signals.communityTags?.slice(0,3).map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-white border border-violet-400 text-violet-800 dark:bg-violet-900/60 dark:text-violet-300 rounded-full text-[10px] font-bold">{t}</span>
+                        <span key={t} className="px-1.5 py-0.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-[10px] font-semibold">{t}</span>
                       ))}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export default function CommunityHub() {
                     return (
                       <button key={g.id}
                         onClick={() => navigate(`/community/${g.id}`)}
-                        className="text-left flex items-start gap-3 p-3 bg-white hover:bg-violet-50 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl border border-slate-200 hover:border-violet-300 dark:border-slate-600 dark:hover:border-violet-500 transition-all group shadow-sm">
+                        className="text-left flex items-start gap-3 p-3 bg-slate-50 hover:bg-teal-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl border border-slate-200 hover:border-teal-300 dark:border-slate-600 transition-all group shadow-sm">
                         <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
                           style={{ backgroundColor: color }}>
                           {groupInitials(g.name)}
