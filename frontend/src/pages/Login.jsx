@@ -62,8 +62,8 @@ export default function Login() {
 
             {/* Header */}
             <div className="text-center mb-5">
-              <div className="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
-                <img src="/logo.png" alt="Project Aura" className="w-12 h-12 object-contain" />
+              <div className="w-24 h-24 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
+                <img src="/logo.png" alt="Project Aura" className="w-20 h-20 object-contain" />
               </div>
               <h2 className="text-lg font-bold text-slate-900 mb-1">Welcome back</h2>
               <p className="text-xs text-slate-500 font-medium">Sign in to continue your care journey</p>

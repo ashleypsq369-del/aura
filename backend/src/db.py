@@ -1303,18 +1303,211 @@ class ConditionCareTemplate(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class PatientFamilyConsent(Base):
+    """Patient-controlled consent for family data access — stored separately to avoid ALTER TABLE on owned tables"""
+    __tablename__ = 'patient_family_consent'
+    id = Column(Integer, primary_key=True)
+    patient_user_id = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False, index=True)
+    consent_json = Column(Text, default='{}')   # {"vitals": true, "medications": false, ...}
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 class PatientJourneyEvent(Base):
     """Table 30: Human journey events (admissions, milestones, changes)"""
     __tablename__ = 'patient_journey_events'
     id = Column(Integer, primary_key=True)
     patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
-    event_type = Column(String(50))        # admission/pathway_change/high_alert/medication_change/appointment/death
+    event_type = Column(String(50))
     event_title = Column(String(200))
     event_detail = Column(Text)
-    clinical_note = Column(Text)           # clinician-only detail
+    clinical_note = Column(Text)
     is_milestone = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     created_by = Column(Integer, ForeignKey('users.id'))
+
+
+# ============================================================================
+# NEW PALLIATIVE CARE MODULES — Tables 31–34
+# ============================================================================
+
+class AdvanceCarePlan(Base):
+    """Table 31: Advance Care Planning document — goals of care, end-of-life wishes"""
+    __tablename__ = 'advance_care_plans'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    created_by = Column(Integer, ForeignKey('users.id'))
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    is_current = Column(Boolean, default=True)
+
+    # Goals of care
+    primary_goal = Column(String(100))   # comfort / function / cure_directed / unclear
+    goals_detail = Column(Text)          # free-text elaboration
+    patient_understanding = Column(Text) # what patient understands about diagnosis/prognosis
+
+    # End-of-life wishes
+    preferred_place_of_death = Column(String(100))  # home / hospice / hospital / care_home / other
+    preferred_place_detail = Column(Text)
+
+    # Resuscitation & life-sustaining treatment
+    dnr_status = Column(String(20))        # dnr / resuscitate / not_discussed
+    dnr_date = Column(DateTime)
+    cpr_wishes = Column(String(50))        # do_not_attempt / attempt / not_decided
+    mechanical_ventilation = Column(String(50))  # refuse / accept / trial_only / not_discussed
+    artificial_nutrition = Column(String(50))    # refuse / accept / trial_only / not_discussed
+    dialysis = Column(String(50))                # refuse / accept / not_applicable / not_discussed
+    hospital_admission = Column(String(50))      # refuse / accept / if_needed / not_discussed
+
+    # Cultural & spiritual wishes
+    cultural_considerations = Column(Text)  # rituals, practices important to patient
+    spiritual_wishes = Column(Text)         # prayers, blessings, sacraments, rites by faith
+    language_preference = Column(String(100))
+    family_involvement_wishes = Column(Text)
+
+    # Post-death wishes (handled sensitively)
+    organ_donation = Column(String(30))     # yes / no / not_discussed
+    post_death_wishes = Column(Text)        # burial rites, body handling per religion/culture
+
+    # Legal
+    has_lasting_power_of_attorney = Column(Boolean, default=False)
+    attorney_name = Column(String(200))
+    attorney_contact = Column(String(200))
+    has_living_will = Column(Boolean, default=False)
+
+    # Review
+    patient_confirmed = Column(Boolean, default=False)  # patient agreed this reflects wishes
+    family_witnessed = Column(Boolean, default=False)
+    next_review_date = Column(DateTime)
+    review_notes = Column(Text)
+
+
+class MDTMeeting(Base):
+    """Table 32: Multi-Disciplinary Team meeting records"""
+    __tablename__ = 'mdt_meetings'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    created_by = Column(Integer, ForeignKey('users.id'))
+    meeting_date = Column(DateTime, nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Attendance
+    attendees = Column(Text)  # JSON list: [{name, role}, ...]
+    chair_name = Column(String(200))
+    meeting_type = Column(String(50))  # routine / urgent / family_meeting / discharge_planning
+
+    # Clinical summary at time of meeting
+    clinical_summary = Column(Text)
+    current_concerns = Column(Text)
+
+    # Decisions made
+    care_plan_changes = Column(Text)
+    medication_decisions = Column(Text)
+    goals_of_care_discussed = Column(Boolean, default=False)
+    acp_reviewed = Column(Boolean, default=False)
+
+    # Referrals agreed
+    referrals_made = Column(Text)  # JSON list of referral types agreed
+
+    # Follow-up
+    action_items = Column(Text)  # JSON list: [{action, responsible, due_date}, ...]
+    next_meeting_date = Column(DateTime)
+    family_present = Column(Boolean, default=False)
+    family_feedback = Column(Text)
+    meeting_notes = Column(Text)
+
+
+class Referral(Base):
+    """Table 33: Allied health referral tracker"""
+    __tablename__ = 'referrals'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    referred_by = Column(Integer, ForeignKey('users.id'))
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Referral details
+    referral_type = Column(String(100))   # physiotherapy / occupational_therapy / social_work /
+                                          # chaplaincy / dietitian / speech_therapy /
+                                          # wound_care / psychology / palliative_specialist /
+                                          # orthotics / other
+    referral_reason = Column(Text, nullable=False)
+    urgency = Column(String(20))          # routine / urgent / emergency
+    priority = Column(String(20))         # low / medium / high / critical
+
+    # Clinical need
+    clinical_goals = Column(Text)         # what we want to achieve (comfort positioning, etc.)
+    specific_concerns = Column(Text)
+
+    # Status tracking
+    status = Column(String(30))           # pending / accepted / in_progress / completed / declined / cancelled
+    referred_to_name = Column(String(200))
+    referred_to_team = Column(String(200))
+    referred_to_contact = Column(String(200))
+
+    # Outcomes
+    accepted_at = Column(DateTime)
+    first_seen_at = Column(DateTime)
+    completed_at = Column(DateTime)
+    outcome_notes = Column(Text)
+    follow_up_needed = Column(Boolean, default=False)
+    follow_up_date = Column(DateTime)
+
+    # Palliative-specific flag
+    comfort_focused = Column(Boolean, default=True)  # goal is comfort, not cure
+
+
+class SpiritualCareNote(Base):
+    """Table 34: Spiritual care / chaplaincy visit notes — inclusive of all faiths & beliefs"""
+    __tablename__ = 'spiritual_care_notes'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    care_provider_id = Column(Integer, ForeignKey('users.id'))  # chaplain / counsellor / spiritual care worker
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    visit_date = Column(DateTime, nullable=False)
+
+    # Faith/spiritual background (as identified BY PATIENT — never assumed)
+    faith_tradition = Column(String(100))   # christian / muslim / traditional_african / hindu /
+                                            # baha_i / no_religion / spiritual_not_religious /
+                                            # other / prefer_not_to_say
+    faith_tradition_detail = Column(String(200))  # e.g. "Catholic", "Sunni Muslim", "Akan tradition"
+    specific_denomination = Column(String(200))   # further specification if relevant
+
+    # Spiritual needs assessment
+    spiritual_distress_level = Column(Integer)  # 0=none, 10=extreme
+    spiritual_needs = Column(Text)  # JSON list: pain_of_meaning / forgiveness / hope /
+                                    # connection / reconciliation / peace / ritual / prayer /
+                                    # sacred_text / music / legacy / none
+
+    # Visit details
+    visit_type = Column(String(50))   # prayer / reading / listening / ritual / anointing /
+                                      # communion / blessing / libation / ancestral_rites /
+                                      # meditation / music / storytelling / counselling / other
+    visit_duration_minutes = Column(Integer)
+    family_present = Column(Boolean, default=False)
+    care_provider_type = Column(String(100))    # chaplain / imam / pastor / traditional_elder / etc.
+    care_provider_name = Column(String(200))    # name of the person providing care
+
+    # Interventions provided (inclusive language)
+    interventions_provided = Column(Text)  # what was done — described neutrally
+    sacred_items_needed = Column(Text)     # e.g. prayer mat, rosary, libation bowl, etc.
+    referral_to_community_leader = Column(Boolean, default=False)  # imam, pastor, traditional leader
+    community_leader_name = Column(String(200))
+
+    # Patient response & wellbeing
+    patient_response = Column(Text)
+    comfort_level_after = Column(Integer)  # 0=no comfort, 10=great comfort
+    meaning_making_supported = Column(Boolean, default=False)
+    reconciliation_facilitated = Column(Boolean, default=False)
+
+    # Unfinished business / concerns
+    unresolved_concerns = Column(Text)  # forgiveness issues, estranged family, regrets
+    patient_wishes_expressed = Column(Text)  # any final wishes, messages, legacy desires
+
+    # Follow-up
+    follow_up_needed = Column(Boolean, default=False)
+    follow_up_date = Column(DateTime)
+    confidential = Column(Boolean, default=True)  # spiritual notes are usually confidential
+    notes = Column(Text)  # general clinician-visible summary only
 
 
 # ============================================================================
@@ -1335,9 +1528,29 @@ def init_database():
                     conn.execute(text(
                         "ALTER TABLE patient_preferences ADD COLUMN primary_condition VARCHAR(200)"
                     ))
+        # Add family_consent to patients if missing
+        if 'patients' in inspector.get_table_names():
+            patient_cols = {c['name'] for c in inspector.get_columns('patients')}
+            if 'family_consent' not in patient_cols:
+                with engine.begin() as conn:
+                    conn.execute(text(
+                        "ALTER TABLE patients ADD COLUMN family_consent TEXT DEFAULT '{}'"
+                    ))
+        # Add care_provider_type and care_provider_name to spiritual_care_notes if missing
+        if 'spiritual_care_notes' in inspector.get_table_names():
+            scn_cols = {c['name'] for c in inspector.get_columns('spiritual_care_notes')}
+            with engine.begin() as conn:
+                if 'care_provider_type' not in scn_cols:
+                    conn.execute(text(
+                        "ALTER TABLE spiritual_care_notes ADD COLUMN care_provider_type VARCHAR(100)"
+                    ))
+                if 'care_provider_name' not in scn_cols:
+                    conn.execute(text(
+                        "ALTER TABLE spiritual_care_notes ADD COLUMN care_provider_name VARCHAR(200)"
+                    ))
     except Exception as e:
         print(f"Schema migration note: {e}")
-    print("All 31 tables created successfully")
+    print("All 35 tables created/verified successfully")
 
 
 def get_session() -> Session:

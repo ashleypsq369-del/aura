@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, Pill, Calendar, MessageCircle, Users, FileText,
   Activity, CheckCheck, Trash2, Search, MailOpen, BellOff,
-  AlertTriangle, Clock, Filter, Heart,
+  AlertTriangle, Clock, Heart,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../api/client';
 import toast from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
+import SearchableSelect from '../components/ui/SearchableSelect';
 
 // ─── Type config — matches Settings icon style ────────────────────────────────
 const TYPE_CONFIG = {
@@ -245,13 +246,16 @@ export default function Notifications() {
                 className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 bg-gray-50" />
             </div>
             {/* Type */}
-            <div className="relative">
-              <Filter size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              <select value={typeFilter} onChange={e => setType(e.target.value)}
-                className="pl-7 pr-7 py-2 border border-gray-200 rounded-xl text-xs text-gray-700 bg-gray-50 focus:outline-none focus:border-teal-400 appearance-none cursor-pointer">
-                {typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </div>
+            <SearchableSelect
+              className="w-44"
+              accent="teal"
+              size="sm"
+              value={typeFilter}
+              onChange={v => setType(v || 'all')}
+              options={typeOptions.map(o => ({ value: o.value, label: o.label }))}
+              allowClear={false}
+              placeholder="Filter by type…"
+            />
             {/* Status toggle */}
             <div className="flex items-center bg-gray-100 rounded-xl p-1 gap-0.5">
               {['all','unread','read'].map(s => (

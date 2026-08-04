@@ -54,43 +54,72 @@ html.text-large  [class*="text-["],
 html.text-xlarge  [class*="text-["],
 html.text-xxlarge [class*="text-["] { font-size: inherit !important; }
 
-/* ── High contrast ────────────────────────────────────────────────────── */
-/* Uses CSS filter invert + hue-rotate for broad coverage without */
-/* needing to override every Tailwind color class */
+/* ── High contrast — WCAG AAA level (7:1 min) ────────────────────────── */
 html.high-contrast {
-  filter: contrast(1.5) !important;
+  /* No html-level filter — use targeted rules below for precise control */
 }
 html.high-contrast body {
   background: #ffffff !important;
   color: #000000 !important;
 }
-html.high-contrast a { color: #0000cc !important; text-decoration: underline !important; }
-html.high-contrast a:visited { color: #551A8B !important; }
-html.high-contrast *:focus {
-  outline: 4px solid #000000 !important;
-  outline-offset: 2px !important;
-}
-/* Ensure text is always dark on light bg */
+/* All text elements forced to black on white */
 html.high-contrast p, html.high-contrast span, html.high-contrast div,
 html.high-contrast h1, html.high-contrast h2, html.high-contrast h3,
 html.high-contrast h4, html.high-contrast h5, html.high-contrast h6,
-html.high-contrast label, html.high-contrast li, html.high-contrast td {
+html.high-contrast label, html.high-contrast li, html.high-contrast td,
+html.high-contrast th, html.high-contrast caption, html.high-contrast small {
   color: #000000 !important;
+  text-shadow: none !important;
 }
+/* Strong borders on all interactive elements */
 html.high-contrast button, html.high-contrast input,
 html.high-contrast textarea, html.high-contrast select {
   border: 2px solid #000000 !important;
   background: #ffffff !important;
   color: #000000 !important;
 }
-/* Exception: keep colored buttons readable */
+/* Cards and surfaces — white with thick black border */
+html.high-contrast .bg-white, html.high-contrast .bg-slate-50,
+html.high-contrast .bg-gray-50, html.high-contrast .bg-slate-100 {
+  background: #ffffff !important;
+  border: 1.5px solid #000000 !important;
+}
+/* Colored action buttons — black on white with thick border */
 html.high-contrast button[class*="bg-teal"],
 html.high-contrast button[class*="bg-red"],
 html.high-contrast button[class*="bg-blue"],
-html.high-contrast button[class*="bg-violet"] {
+html.high-contrast button[class*="bg-violet"],
+html.high-contrast button[class*="bg-green"],
+html.high-contrast button[class*="bg-amber"] {
   background-color: #000000 !important;
   color: #ffffff !important;
-  border-color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+/* Links — high visibility blue */
+html.high-contrast a { color: #0000cc !important; text-decoration: underline !important; font-weight: 600 !important; }
+html.high-contrast a:visited { color: #551a8b !important; }
+/* Focus — thick black ring, always visible */
+html.high-contrast *:focus {
+  outline: 4px solid #000000 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px #ffff00 !important; /* yellow halo for maximum visibility */
+}
+/* Muted text → forced dark */
+html.high-contrast .text-slate-400, html.high-contrast .text-slate-500,
+html.high-contrast .text-gray-400, html.high-contrast .text-gray-500,
+html.high-contrast .text-slate-600, html.high-contrast .text-gray-600 {
+  color: #222222 !important;
+}
+/* Badges and chips — black text, thick borders */
+html.high-contrast [class*="chip-"],
+html.high-contrast [class*="badge-"] {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+/* Images — slightly boosted for clarity */
+html.high-contrast img:not([aria-hidden="true"]) {
+  filter: contrast(1.3) !important;
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────── */
@@ -201,6 +230,26 @@ html.cb-tritanopia body {
 }
 html.cb-monochrome body {
   filter: grayscale(100%) contrast(1.15) !important;
+}
+
+/* Low contrast boost — enhances subtle borders and faint text */
+html.cb-low_contrast body {
+  filter: contrast(1.5) saturate(1.25) !important;
+}
+html.cb-low_contrast {
+  background: #ffffff !important;
+}
+
+/* Photosensitive — reduced brightness, desaturated colours, no animations */
+html.cb-photosensitive body {
+  filter: brightness(0.82) saturate(0.55) contrast(0.9) !important;
+}
+html.cb-photosensitive *,
+html.cb-photosensitive *::before,
+html.cb-photosensitive *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
 }
 
 /* ── Dyslexia font ───────────────────────────────────────────────────── */

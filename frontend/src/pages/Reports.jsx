@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import { API_URL } from '../api/client';
+import SearchableSelect from '../components/ui/SearchableSelect';
 
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
@@ -940,9 +941,15 @@ export default function Reports() {
               ))}
               <div>
                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Min Severity</label>
-                <select value={minSeverity} onChange={e=>setMinSeverity(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-white dark:bg-slate-700 dark:text-slate-100">
-                  {['low','moderate','high','critical'].map(s=><option key={s} value={s}>{s}</option>)}
-                </select>
+                <SearchableSelect
+                  accent="teal"
+                  size="sm"
+                  value={minSeverity}
+                  onChange={v => setMinSeverity(v || 'high')}
+                  allowClear={false}
+                  options={['low','moderate','high','critical'].map(s => ({ value: s, label: s.charAt(0).toUpperCase()+s.slice(1) }))}
+                  placeholder="Severity…"
+                />
               </div>
               <button onClick={()=>{setPatientId(null);setUserId(null);setCaregiverId(null);setDateFrom('');setDateTo('');}}
                 className="px-3 py-2 text-xs font-semibold text-slate-500 hover:text-red-600 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-red-300 transition">

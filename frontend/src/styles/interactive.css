@@ -260,7 +260,7 @@ table tbody tr {
    11. LOADING STATES - skeleton pulse
    --------------------------------------------------------------------------- */
 .skeleton {
-  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background: linear-gradient(90deg, #e8e6e3 25%, #f5f4f2 50%, #e8e6e3 75%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.4s infinite;
   border-radius: 6px;

@@ -58,6 +58,10 @@ import BriefPainInventoryForm from './pages/BriefPainInventoryForm';
 import QualityOfLifeForm from './pages/QualityOfLifeForm';
 import CaregiverBurdenForm from './pages/CaregiverBurdenForm';
 import MotorSkillsForm from './pages/MotorSkillsForm';
+import AdvanceCarePlanForm from './pages/AdvanceCarePlanForm';
+import MDTMeetingLog from './pages/MDTMeetingLog';
+import ReferralTracker from './pages/ReferralTracker';
+import SpiritualCareForm from './pages/SpiritualCareForm';
 import ContinuityBridge from './pages/ContinuityBridge';
 import MemoryVault from './pages/MemoryVault';
 import LegacySetup from './pages/LegacySetup';
@@ -71,6 +75,7 @@ import MLRiskDetail from './pages/MLRiskDetail';
 import PatientPortal from './pages/PatientPortal';
 import WellnessCheckin from './pages/WellnessCheckin';
 import AdminUserManagement from './pages/AdminUserManagement';
+import AdminFeaturePanel from './pages/AdminFeaturePanel';
 import AuditLog from './pages/AuditLog';
 import HIPAACompliance from './pages/HIPAACompliance';
 import Reports from './pages/Reports';
@@ -101,19 +106,16 @@ if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('a
 // while the real role was still loading. This ensures users who got stuck
 // (tour marked done under wrong role) will see it fresh under their real role.
 ;(function clearStaleTourKeys() {
-  // If 'patient' key is set but user is NOT actually a patient, clear it
-  // We can't know role here (no auth context yet), so we rely on a migration flag
-  if (!localStorage.getItem('aura_tour_migration_v1')) {
-    // Clear ALL v3 tour keys — they'll be recreated correctly once role is known
+  // Migration v2: only clear STEP keys (in-progress), never clear DONE keys.
+  // Done keys (aura_tour_done_ROLE_v3) are preserved so completed tours don't replay.
+  if (!localStorage.getItem('aura_tour_migration_v2')) {
     ['patient','clinician','admin','caregiver','family'].forEach(r => {
-      const key = `aura_tour_done_${r}_v3`;
-      // Only clear if it was POSSIBLY set by the stale-role bug
-      // Heuristic: if 'aura_tour_done_patient_v3' exists but we have a session
-      // for a non-patient role, it's likely a stale key. We clear all to be safe.
-      localStorage.removeItem(key);
+      // Only clear in-progress step state, not the completion marker
       sessionStorage.removeItem(`aura_tour_step_${r}`);
     });
-    localStorage.setItem('aura_tour_migration_v1', '1');
+    // Also clear the old v1 migration flag so this supersedes it cleanly
+    localStorage.removeItem('aura_tour_migration_v1');
+    localStorage.setItem('aura_tour_migration_v2', '1');
   }
 })();
 
@@ -437,6 +439,10 @@ function AppRoutes() {
                     <Route path="/assessments/:patientId/qol" element={<QualityOfLifeForm />} />
                     <Route path="/assessments/:patientId/caregiver-burden" element={<CaregiverBurdenForm />} />
                     <Route path="/assessments/:patientId/motor-skills" element={<MotorSkillsForm />} />
+                    <Route path="/assessments/:patientId/acp" element={<AdvanceCarePlanForm />} />
+                    <Route path="/assessments/:patientId/mdt" element={<MDTMeetingLog />} />
+                    <Route path="/assessments/:patientId/referrals" element={<ReferralTracker />} />
+                    <Route path="/assessments/:patientId/spiritual-care" element={<SpiritualCareForm />} />
                     <Route path="/continuity-bridge" element={<ContinuityBridge />} />
                     <Route path="/memory-vault" element={
                       <CareSettingRouteGuard featurePath="/memory-vault">
@@ -482,6 +488,7 @@ function AppRoutes() {
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/touch-demo" element={<TouchDemo />} />
                     <Route path="/admin/users" element={<AdminUserManagement />} />
+                    <Route path="/admin/features" element={<AdminFeaturePanel />} />
                     <Route path="/admin/audit" element={<AuditLog />} />
                     <Route path="/admin/hipaa-compliance" element={<HIPAACompliance />} />
                     <Route path="/admin/model-bias-report" element={<ModelBiasReportPage />} />

@@ -2,19 +2,19 @@
  * Appointments — redesigned to match Alerts.jsx design system
  * Pattern: motion.div min-h-screen space-y-5 pb-8, px-6 sections
  */
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { appointmentsAPI, patientsAPI, preferencesAPI } from '../api/client';
+import { appointmentsAPI, patientsAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { usePatientId } from '../hooks/usePatientId';
 import { useCareSettingContext } from '../context/CareSettingContext';
 import axios from 'axios';
 import { API_URL } from '../api/client';
 import PageHeader from '../components/PageHeader';
-import InlineTaskReminder from '../components/InlineTaskReminder';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
+import SearchableSelect from '../components/ui/SearchableSelect';
 import {
   Calendar, Plus, X, CheckCircle, Search, Clock,
   MapPin, Loader2, CheckSquare, XCircle, Bell, Sparkles,
@@ -71,57 +71,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
   );
 }
 
-/* ── Patient live-search ─────────────────────────────────────────────────── */
-function PatientSearch({ list, selectedId, onSelect }) {
-  const [q, setQ] = useState('');
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const sel = list.find(p => p.id === selectedId);
-  useEffect(() => {
-    const h = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-  const hits = list.filter(p => {
-    if (!q) return true;
-    const s = q.toLowerCase();
-    return (p.full_name||'').toLowerCase().includes(s)||(p.patient_code||'').toLowerCase().includes(s);
-  }).slice(0, 8);
-  return (
-    <div ref={ref} className="relative flex-1 max-w-xs">
-      <div className={`flex items-center gap-2 border rounded-xl px-3.5 py-2.5 bg-white transition-all ${open?'border-blue-500 ring-2 ring-blue-500/20 shadow-sm':'border-slate-300 hover:border-slate-400'}`}
-        onClick={() => { setQ(''); setOpen(true); }}>
-        <Search size={14} className="text-slate-400 flex-shrink-0"/>
-        <input value={open?q:sel?(sel.patient_code||sel.full_name):''}
-          onChange={e=>setQ(e.target.value)} onFocus={()=>{setQ('');setOpen(true);}}
-          placeholder={sel?(sel.patient_code||sel.full_name):'Search patient…'}
-          className="flex-1 text-sm font-medium text-slate-700 outline-none bg-transparent placeholder-slate-400"/>
-        {sel&&<button onClick={e=>{e.stopPropagation();onSelect(null);setQ('');}}><X size={13} className="text-slate-400 hover:text-red-500"/></button>}
-      </div>
-      <AnimatePresence>
-        {open&&(
-          <motion.div initial={{opacity:0,y:-4}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-4}}
-            className="absolute z-30 w-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-52 overflow-y-auto">
-            {hits.length===0?<div className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</div>
-              :hits.map(p=>(
-                <button key={p.id} type="button" onClick={()=>{onSelect(p.id);setOpen(false);setQ('');}}
-                  className={`w-full text-left px-4 py-2.5 hover:bg-blue-50 flex items-center gap-3 border-b border-slate-50 last:border-0 ${selectedId===p.id?'bg-blue-50':''}`}>
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {(p.full_name||'?')[0]}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-slate-800 text-sm truncate">{p.full_name}</p>
-                    <p className="text-xs text-slate-500">{p.patient_code} · {p.age} yrs</p>
-                  </div>
-                  {selectedId===p.id&&<CheckCircle size={14} className="text-blue-600 ml-auto flex-shrink-0"/>}
-                </button>
-              ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+/* PatientSearch replaced by SearchableSelect */
 
 /* ── Schedule Modal ──────────────────────────────────────────────────────── */
 const EMPTY_FORM = { appointment_type:'Palliative Consultation', scheduled_at:'', location:'Outpatient Clinic', location_detail:'', notes:'' };
@@ -144,13 +94,15 @@ function ScheduleModal({ onClose, onSave, pending }) {
           <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center"><X size={16} className="text-slate-400"/></button>
         </div>
         <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Type *</label>
-            <select value={f.appointment_type} onChange={up('appointment_type')}
-              className="w-full border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white">
-              {APPT_TYPES.map(t=><option key={t}>{t}</option>)}
-            </select>
-          </div>
+          <SearchableSelect
+            label="Type *"
+            accent="blue"
+            value={f.appointment_type}
+            onChange={v => setF(p => ({ ...p, appointment_type: v || 'Palliative Consultation' }))}
+            options={APPT_TYPES.map(t => ({ value: t, label: t }))}
+            allowClear={false}
+            placeholder="Select appointment type…"
+          />
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date & Time *</label>
             <input type="datetime-local" value={f.scheduled_at} onChange={up('scheduled_at')}
@@ -158,13 +110,15 @@ function ScheduleModal({ onClose, onSave, pending }) {
               className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Location *</label>
-              <select value={f.location} onChange={up('location')}
-                className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white">
-                {LOCATIONS.map(l=><option key={l}>{l}</option>)}
-              </select>
-            </div>
+            <SearchableSelect
+              label="Location *"
+              accent="blue"
+              value={f.location}
+              onChange={v => setF(p => ({ ...p, location: v || 'Outpatient Clinic' }))}
+              options={LOCATIONS.map(l => ({ value: l, label: l }))}
+              allowClear={false}
+              placeholder="Select location…"
+            />
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Detail</label>
               <input value={f.location_detail} onChange={up('location_detail')} placeholder="e.g. Room 4B"
@@ -474,7 +428,20 @@ export default function Appointments() {
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3 items-center">
             {isStaff && (
-              <PatientSearch list={patientList} selectedId={patientId} onSelect={setPatientId}/>
+              <SearchableSelect
+                className="flex-1 max-w-xs"
+                placeholder="Search patient…"
+                accent="blue"
+                value={patientId ? String(patientId) : null}
+                onChange={v => setPatientId(v ? Number(v) : null)}
+                options={patientList.map(p => ({
+                  value: String(p.id),
+                  label: p.full_name,
+                  sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+                  avatar: 'linear-gradient(135deg,#1d4ed8,#0891b2)',
+                }))}
+                nullLabel="All patients"
+              />
             )}
             <div className="flex-1 relative">
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>

@@ -236,11 +236,11 @@ export default function AIAssistant() {
               </div>
 
               {/* Conversation area */}
-              <div className="flex-1 flex flex-col overflow-hidden relative bg-sky-50 dark:bg-slate-800">
+              <div className="flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-800">
 
                 {/* Patient context card */}
                 {urlPid&&patientData&&(
-                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border bg-white dark:bg-slate-700 border-sky-200 dark:border-sky-800">
+                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border bg-white dark:bg-slate-700 border-slate-200 dark:border-sky-800">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{background:'#e0f2fe'}}>
                       <UserCircle size={16} style={{color:C.accent}}/>
                     </div>
@@ -289,7 +289,12 @@ export default function AIAssistant() {
                       {/* Stats — clinical overview */}
                       {isClinical&&dashSummary&&(
                         <div className="flex items-center gap-2 flex-wrap justify-center">
-                          {[{label:'Patients',value:dashSummary.total_patients??'—',color:'#7c3aed'},{label:'Critical',value:critical||'0',color:'#dc2626'},{label:'Alerts',value:dashSummary.active_alerts??'—',color:'#d97706'},{label:'Appointments',value:dashSummary.todays_appointments??'—',color:C.accent}].map(s=>(
+                          {[
+                            {label:'Patients',    value: dashSummary.stats?.total_patients    ?? dashSummary.total_patients    ?? '—', color:'#7c3aed'},
+                            {label:'Critical',    value: critical || '0',                                                              color:'#dc2626'},
+                            {label:'Alerts',      value: dashSummary.stats?.active_alerts     ?? dashSummary.active_alerts     ?? '—', color:'#d97706'},
+                            {label:'High Risk',   value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '—', color: C.accent},
+                          ].map(s=>(
                             <div key={s.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm">
                               <span className="text-sm font-black tabular-nums" style={{color:s.color}}>{s.value}</span>
                               <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">{s.label}</span>
@@ -369,7 +374,7 @@ export default function AIAssistant() {
                         <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:C.userBubble}}>
                           <Brain size={12} className="text-white animate-pulse"/>
                         </div>
-                        <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white border shadow-sm" style={{borderColor:'#bae6fd'}}>
+                        <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white border border-slate-200 shadow-sm">
                           <div className="flex items-center gap-2">
                             {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:C.accent}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
                             <span className="text-xs text-gray-600 font-medium ml-1">Analysing…</span>
@@ -394,13 +399,13 @@ export default function AIAssistant() {
 
                 {/* Follow-up chips after conversation started */}
                 {messages.length>0&&messages.length<6&&(
-                  <div className="px-4 pb-2 flex gap-1.5 overflow-x-auto" style={{scrollbarWidth:'none',background:'#f0f9ff'}}>
+                  <div className="px-4 pb-2 flex gap-1.5 overflow-x-auto bg-white border-t border-slate-100" style={{scrollbarWidth:'none'}}>
                     {chips.slice(0,3).map(c=>(
                       <button key={c} onClick={()=>sendMessage(c)}
-                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all border"
-                        style={{background:'#dbeafe',borderColor:'#93c5fd',color:'#1d4ed8'}}
+                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all border mt-2"
+                        style={{background:'#eff6ff',borderColor:'#bfdbfe',color:'#1d4ed8'}}
                         onMouseEnter={e=>{e.currentTarget.style.background='#1d4ed8';e.currentTarget.style.color='#ffffff';}}
-                        onMouseLeave={e=>{e.currentTarget.style.background='#dbeafe';e.currentTarget.style.color='#1d4ed8';}}>
+                        onMouseLeave={e=>{e.currentTarget.style.background='#eff6ff';e.currentTarget.style.color='#1d4ed8';}}>
                         {c}
                       </button>
                     ))}
@@ -409,13 +414,13 @@ export default function AIAssistant() {
 
                 {/* Input */}
                 <form onSubmit={e=>{e.preventDefault();sendMessage();}}
-                  className="flex-shrink-0 px-3 pb-3 pt-2 border-t flex gap-2 items-center bg-white" style={{borderColor:'#bae6fd'}}>
+                  className="flex-shrink-0 px-3 pb-3 pt-2 border-t border-slate-200 flex gap-2 items-center bg-white">
                   <input ref={inputRef} type="text" value={input} onChange={e=>setInput(e.target.value)}
                     placeholder="Ask about patients, get summaries, or draft notes…" disabled={loading}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-900 rounded-2xl outline-none transition-all disabled:opacity-50 min-w-0"
-                    style={{background:'#f0f9ff',border:'1px solid #94a3b8',caretColor:C.accent}}
+                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-900 bg-slate-50 rounded-2xl border border-slate-200 outline-none transition-all disabled:opacity-50 min-w-0"
+                    style={{caretColor:C.accent}}
                     onFocus={e=>{e.target.style.border=`2px solid ${C.accent}`;e.target.style.boxShadow=`0 0 0 3px ${C.accentGlow}`;e.target.style.background='#ffffff';}}
-                    onBlur={e=>{e.target.style.border='1px solid #94a3b8';e.target.style.boxShadow='none';e.target.style.background='#f0f9ff';}}/>
+                    onBlur={e=>{e.target.style.border='1px solid #e2e8f0';e.target.style.boxShadow='none';e.target.style.background='#f8fafc';}}/>
                   <motion.button type="submit" disabled={!input.trim()||loading}
                     whileHover={{scale:1.06}} whileTap={{scale:0.94}}
                     className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all disabled:cursor-not-allowed"

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Zap, AlertTriangle, Stethoscope, Phone, Video,
+  Zap, AlertTriangle, Stethoscope, Phone, Video, Smile, Reply,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -13,8 +13,16 @@ import ContactsTab from '../components/ContactsTab';
 import FileUpload from '../components/FileUpload';
 import Modal, { ModalFooter } from '../components/Modal';
 import { useWS } from '../context/WebSocketContext';
+import { useAuth } from '../context/AuthContext';
 
 import { API_URL } from '../api/client';
+
+const EMOJI_GRID = [
+  '😊','😂','🥰','😢','😮','🙏','❤️','💪','🤗','🫂',
+  '🌟','🔥','🙌','💙','💚','💛','💜','🤍','👍','👏',
+  '🫶','💝','🕊️','🌿','🍃','🌻','✨','🎉','🤲','😎',
+  '🫀','💖','😌','🤒','💊','🏥','🩺','🩹','☀️','🌈',
+];
 
 /* ── Message urgency classifier (client-side NLP heuristic) ─────────────── */
 const URGENT_KEYWORDS = [
@@ -50,7 +58,8 @@ const URGENCY_CFG = {
 };
 
 export default function Messages() {
-  const [activeTab, setActiveTab] = useState('chats'); // 'chats' | 'contacts'
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('chats');
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +71,10 @@ export default function Messages() {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [chatListLimit, setChatListLimit] = useState(10);
   const [groupListLimit, setGroupListLimit] = useState(10);
+  const [newChatSearch, setNewChatSearch] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
   const queryClient = useQueryClient();
   const { subscribe } = useWS();
@@ -78,7 +91,6 @@ export default function Messages() {
     return () => { unsub1(); };
   }, [subscribe, queryClient, selectedConversation]);
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const authHeaders = { Authorization: `Bearer ${localStorage.getItem('auth_token')}` };
 
   // ── Fetch care team (assigned clinician + caregivers for this user) ──────
@@ -296,14 +308,31 @@ export default function Messages() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, conversationsData]);
 
+  const insertEmoji = (emoji) => {
+    const el = inputRef.current;
+    if (!el) { setNewMessage(p => p + emoji); return; }
+    const start = el.selectionStart, end = el.selectionEnd;
+    setNewMessage(p => p.slice(0, start) + emoji + p.slice(end));
+    setTimeout(() => { el.selectionStart = el.selectionEnd = start + emoji.length; el.focus(); }, 0);
+    setShowEmojiPicker(false);
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedConversation) return;
-    
+    if (!newMessage.trim() && attachedFiles.length === 0) return;
+    if (!selectedConversation) return;
+
+    let content = newMessage.trim();
+    if (replyingTo) {
+      content = `↩ ${replyingTo.sender?.name || 'User'}: "${replyingTo.content.slice(0, 60)}${replyingTo.content.length > 60 ? '…' : ''}"\n\n${content}`;
+    }
+
     sendMessageMutation.mutate({
       conversationId: selectedConversation.id,
-      content: newMessage
+      content,
     });
+    setReplyingTo(null);
+    setShowEmojiPicker(false);
   };
 
   const handleStartGroupChat = () => {
@@ -327,8 +356,12 @@ export default function Messages() {
     );
   };
 
-  const conversations = conversationsData?.conversations || [];
-  const messages = messagesData?.messages || [];
+  const conversations = [...(conversationsData?.conversations || [])].sort(
+    (a, b) => new Date(b.last_message_at || b.created_at || 0) - new Date(a.last_message_at || a.created_at || 0)
+  );
+  const messages = [...(messagesData?.messages || [])].sort(
+    (a, b) => new Date(a.created_at) - new Date(b.created_at)
+  );
   const physicians = physiciansData?.physicians || [];
   const communityGroups = communityGroupsData?.groups || [];
 
@@ -608,113 +641,206 @@ export default function Messages() {
             <div className="flex-1 overflow-y-auto p-3 space-y-2.5 bg-white/60">
               {messages.map((msg) => {
                 const isOwn = msg.sender.id === user.id;
-                
+                const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const isAlert = msg.message_type === 'alert';
+
                 return (
                   <motion.div
                     key={msg.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                    initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+                    className={`flex items-end gap-2 ${isOwn ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className={`max-w-[70%] ${isOwn ? 'order-2' : 'order-1'}`}>
+                    {/* Avatar for incoming messages */}
+                    {!isOwn && (
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 mb-1 shadow-sm">
+                        {(msg.sender.name || 'U').charAt(0).toUpperCase()}
+                      </div>
+                    )}
+
+                    <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} max-w-[72%]`}>
+                      {/* Sender name for incoming */}
                       {!isOwn && (
-                        <p className="text-[10px] text-slate-600 mb-0.5 ml-2 font-medium">
+                        <p className="text-[10px] text-slate-500 mb-0.5 ml-1 font-semibold">
                           {msg.sender.name}
                         </p>
                       )}
-                      <div
-                        className={`px-3 py-1.5 rounded-xl shadow-md ${
-                          isOwn
-                            ? 'bg-teal-600 text-white'
-                            : msg.message_type === 'alert'
-                            ? 'bg-red-600 text-white'
-                            : 'bg-white text-slate-900 border border-slate-200'
-                        }`}
-                      >
-                        {msg.message_type === 'alert' && (
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <AlertCircle size={12} />
-                            <span className="text-[10px] font-bold uppercase">Alert</span>
+
+                      {/* Alert banner */}
+                      {isAlert && (
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-100 text-red-700 rounded-lg text-[10px] font-bold mb-1 border border-red-200">
+                          <AlertCircle size={10}/> CLINICAL ALERT
+                        </div>
+                      )}
+
+                      {/* Bubble */}
+                      <div className={`relative group px-3.5 py-2.5 rounded-2xl shadow-sm ${
+                        isOwn
+                          ? 'bg-teal-600 text-white rounded-br-sm'
+                          : isAlert
+                            ? 'bg-red-50 text-red-900 border border-red-200 rounded-bl-sm'
+                            : 'bg-white text-slate-900 border border-slate-200 rounded-bl-sm'
+                      }`}>
+                        {/* Inline reply quote */}
+                        {msg.content?.startsWith('↩ ') && (() => {
+                          const parts = msg.content.split('\n\n');
+                          if (parts.length >= 2) {
+                            return (
+                              <div className={`mb-2 pl-3 border-l-2 text-xs italic line-clamp-2 ${isOwn ? 'border-white/50 text-white/70' : 'border-teal-400 text-slate-500'}`}>
+                                {parts[0].replace('↩ ', '')}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                          {msg.content?.startsWith('↩ ') && msg.content.includes('\n\n')
+                            ? msg.content.split('\n\n').slice(1).join('\n\n')
+                            : msg.content}
+                        </p>
+
+                        {/* File attachments */}
+                        {msg.attachments?.length > 0 && (
+                          <div className="mt-2 space-y-1.5">
+                            {msg.attachments.map((file, fi) => (
+                              <a key={fi} href={file.url} target="_blank" rel="noopener noreferrer"
+                                className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition ${
+                                  isOwn ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                }`}>
+                                <Paperclip size={11}/> {file.original_filename || 'Attachment'}
+                              </a>
+                            ))}
                           </div>
                         )}
-                        <p className="text-xs whitespace-pre-wrap break-words">{msg.content}</p>
                       </div>
-                      <p className="text-[10px] text-slate-500 mt-0.5 ml-2">
-                        {new Date(msg.created_at).toLocaleTimeString([], { 
-                          hour: '2-digit', 
-                          minute: '2-digit' 
-                        })}
-                      </p>
+
+                      {/* Timestamp + status + reply */}
+                      <div className={`flex items-center gap-1 mt-0.5 px-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
+                        <span className="text-[9px] text-slate-400">{time}</span>
+                        {isOwn && (
+                          <span className="text-[9px] text-slate-400">
+                            {msg.is_read ? '✓✓' : '✓'}
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => { setReplyingTo(msg); inputRef.current?.focus(); }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded text-slate-300 hover:text-teal-500 ml-1"
+                          title="Reply"
+                        >
+                          <Reply size={11}/>
+                        </button>
+                      </div>
                     </div>
+
+                    {/* Own message avatar */}
+                    {isOwn && (
+                      <div className="w-7 h-7 rounded-full bg-teal-700 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 mb-1 shadow-sm">
+                        {(user.full_name || 'Me').charAt(0).toUpperCase()}
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input - Compact */}
-            <form onSubmit={handleSendMessage} className="p-3 bg-white border-t-3 border-slate-300 shadow-lg">
-              {/* File Upload Section */}
+            {/* Message Input */}
+            <form onSubmit={handleSendMessage} className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+
+              {/* Reply preview strip */}
+              <AnimatePresence>
+                {replyingTo && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-teal-50 dark:bg-teal-900/20 border-b border-teal-200 dark:border-teal-700">
+                    <Reply size={13} className="text-teal-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-bold text-teal-600 dark:text-teal-400">{replyingTo.sender?.name || 'User'}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{replyingTo.content?.slice(0, 80)}</p>
+                    </div>
+                    <button type="button" onClick={() => setReplyingTo(null)} className="text-slate-400 hover:text-slate-600 flex-shrink-0"><X size={13}/></button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Emoji picker */}
+              <AnimatePresence>
+                {showEmojiPicker && (
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                    className="px-3 py-2 bg-slate-50 dark:bg-slate-750 border-b border-slate-200 dark:border-slate-700">
+                    <div className="grid grid-cols-10 gap-1">
+                      {EMOJI_GRID.map(e => (
+                        <button key={e} type="button" onClick={() => insertEmoji(e)}
+                          className="w-8 h-8 flex items-center justify-center text-xl hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition">
+                          {e}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* File upload section */}
               {showFileUpload && (
-                <div className="mb-3 p-3 bg-slate-50 rounded-lg border-2 border-slate-200">
+                <div className="mx-4 mt-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-xl border border-slate-200 dark:border-slate-600">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-700">Attach Files</h4>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowFileUpload(false);
-                        setAttachedFiles([]);
-                      }}
-                      data-tip="Cancel file attachment"
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded-lg transition-all duration-150"
-                    >
-                      <X size={16} />
+                    <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300">Attach Files</h4>
+                    <button type="button" onClick={() => { setShowFileUpload(false); setAttachedFiles([]); }}
+                      className="text-slate-400 hover:text-red-500 p-1 rounded-lg transition">
+                      <X size={14}/>
                     </button>
                   </div>
                   <FileUpload
                     category="messages"
                     relatedId={selectedConversation?.id}
-                    onUploadComplete={(files) => {
-                      setAttachedFiles(files);
-                      toast.success(`${files.length} file(s) attached`);
-                    }}
+                    onUploadComplete={(files) => { setAttachedFiles(files); toast.success(`${files.length} file(s) attached`); }}
                     accept="image/*,video/*,application/pdf,.doc,.docx"
                     multiple={true}
                     maxSizeMB={50}
                   />
                   {attachedFiles.length > 0 && (
-                    <div className="mt-2 text-xs text-slate-600">
-                      " {attachedFiles.length} file(s) attached
+                    <div className="mt-2 text-xs text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                      <Paperclip size={11} className="text-teal-500"/> {attachedFiles.length} file{attachedFiles.length !== 1 ? 's' : ''} attached
                     </div>
                   )}
                 </div>
               )}
-              
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowFileUpload(!showFileUpload)}
-                  data-tip="Attach a file"
-                  className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-all duration-150"
-                  title="Attach files"
-                >
-                  <Paperclip size={20} />
+
+              <div className="flex items-end gap-2 px-3 py-3">
+                {/* Emoji button */}
+                <button type="button" onClick={() => setShowEmojiPicker(s => !s)}
+                  className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${
+                    showEmojiPicker ? 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700'
+                  }`}>
+                  <Smile size={18}/>
                 </button>
-                <input
-                  type="text"
+
+                {/* Attach button */}
+                <button type="button" onClick={() => setShowFileUpload(!showFileUpload)}
+                  className={`p-2.5 rounded-xl transition-colors flex-shrink-0 ${
+                    showFileUpload ? 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700'
+                  }`}>
+                  <Paperclip size={18}/>
+                </button>
+
+                {/* Message input — textarea for multiline */}
+                <textarea
+                  ref={inputRef}
                   value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type your message..."
-                  className="flex-1 px-3 py-2 text-sm border-2 border-slate-300 rounded-lg focus:outline-none focus:border-teal-500"
+                  onChange={e => setNewMessage(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(e); } }}
+                  placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+                  rows={1}
+                  className="flex-1 px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-600 rounded-2xl focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 bg-slate-50 dark:bg-slate-700 dark:text-slate-100 transition placeholder-slate-400 resize-none"
+                  style={{ maxHeight: '80px', overflowY: 'auto' }}
                 />
-                <button
-                  type="submit"
+
+                {/* Send button */}
+                <button type="submit"
                   disabled={(!newMessage.trim() && attachedFiles.length === 0) || sendMessageMutation.isPending}
-                  data-tip="Send message"
-                  className="px-4 py-2 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-                >
-                  <Send size={16} />
-                  <span className="text-sm">Send</span>
+                  className="p-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 shadow-sm">
+                  {sendMessageMutation.isPending ? <Loader2 size={18} className="animate-spin"/> : <Send size={18}/>}
                 </button>
               </div>
             </form>
@@ -735,38 +861,54 @@ export default function Messages() {
       {/* New Chat Modal */}
       <Modal
         isOpen={showNewChat}
-        onClose={() => { setShowNewChat(false); setChatListLimit(10); }}
+        onClose={() => { setShowNewChat(false); setChatListLimit(10); setNewChatSearch(''); }}
       >
         <div className="p-4 border-b">
-          <h3 className="font-bold text-lg mb-2">New Message</h3>
-          <p className="text-sm text-slate-600 mb-4">Search someone to start messaging:</p>
-          <div className="space-y-2">
-          {physicians.slice(0, chatListLimit).map((person) => (
+          <h3 className="font-bold text-lg mb-3">New Message</h3>
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              autoFocus
+              placeholder="Search by name or role..."
+              value={newChatSearch}
+              onChange={e => setNewChatSearch(e.target.value)}
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+          </div>
+          <div className="space-y-2 max-h-72 overflow-y-auto">
+          {physicians
+            .filter(p => !newChatSearch || p.name.toLowerCase().includes(newChatSearch.toLowerCase()) || p.role.toLowerCase().includes(newChatSearch.toLowerCase()))
+            .slice(0, chatListLimit)
+            .map((person) => (
             <button
               key={person.id}
-              onClick={() => handleStartChat(person.id)}
-              data-tip={`Start chat with ${person.name}`}
-              className="w-full p-4 border border-slate-200 rounded-lg hover:border-teal-400 hover:bg-teal-50/50 transition-colors text-left flex items-center justify-between group"
+              onClick={() => { handleStartChat(person.id); setNewChatSearch(''); }}
+              className="w-full p-3.5 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-teal-400 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 transition-colors text-left flex items-center justify-between group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold shadow-md flex-shrink-0">
                   {person.name[0]}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">{person.name}</p>
-                  <p className="text-xs text-slate-600 capitalize">{person.role}</p>
+                  <p className="font-semibold text-slate-900 dark:text-slate-100">{person.name}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">{person.role}</p>
                 </div>
               </div>
-              <UserPlus className="w-5 h-5 text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <UserPlus className="w-4 h-4 text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           ))}
-          {physicians.length > chatListLimit && (
-            <button 
-              onClick={() => setChatListLimit(physicians.length)} 
-              data-tip="Show all available contacts"
-              className="w-full mt-2 text-center text-teal-600 font-semibold text-sm hover:text-teal-700 py-2 border-2 border-dashed border-teal-200 rounded-xl"
+          {physicians.filter(p => !newChatSearch || p.name.toLowerCase().includes(newChatSearch.toLowerCase()) || p.role.toLowerCase().includes(newChatSearch.toLowerCase())).length === 0 && (
+            <div className="text-center py-6 text-slate-500 dark:text-slate-400 text-sm">
+              No users match "{newChatSearch}"
+            </div>
+          )}
+          {!newChatSearch && physicians.length > chatListLimit && (
+            <button
+              onClick={() => setChatListLimit(physicians.length)}
+              className="w-full mt-1 text-center text-teal-600 font-semibold text-sm hover:text-teal-700 py-2 border-2 border-dashed border-teal-200 rounded-xl"
             >
-              View More
+              View More ({physicians.length - chatListLimit} more)
             </button>
           )}
         </div>

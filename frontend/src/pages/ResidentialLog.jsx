@@ -11,6 +11,7 @@ import { BedDouble, Check, AlertTriangle, Heart, Send, Activity } from 'lucide-r
 import toast from '../utils/toast';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import SearchableSelect from '../components/ui/SearchableSelect';
 
 const ACTIVITIES = [
   'Morning personal care (wash, dress, groom)',
@@ -141,21 +142,33 @@ export default function ResidentialLog() {
         <div className="bg-white rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3">Food & Fluid Intake</h3>
           <div className="grid grid-cols-2 gap-3">
-            {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => (
-              <div key={meal}>
-                <label className="text-xs font-semibold text-slate-500 mb-1 block capitalize">{meal}</label>
-                <select value={intake[meal]} onChange={e => setIntake(p => ({ ...p, [meal]: e.target.value }))}
-                  className="w-full px-2 py-2 border-2 border-slate-300 rounded-xl text-xs focus:border-purple-400 outline-none">
-                  <option value="">Select...</option>
-                  <option value="full">Full</option>
-                  <option value="3/4">¾ portion</option>
-                  <option value="half">½ portion</option>
-                  <option value="quarter">¼ portion</option>
-                  <option value="refused">Refused</option>
-                  {meal === 'fluids' && <><option value="good_2L">Good (2L+)</option><option value="adequate_1L">Adequate (1L)</option><option value="poor_500ml">Poor (&lt;500ml)</option></>}
-                </select>
-              </div>
-            ))}
+            {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => {
+              const baseOpts = [
+                { value: 'full',    label: 'Full'       },
+                { value: '3/4',     label: '¾ portion'  },
+                { value: 'half',    label: '½ portion'  },
+                { value: 'quarter', label: '¼ portion'  },
+                { value: 'refused', label: 'Refused'    },
+              ];
+              const fluidOpts = [
+                { value: 'good_2L',      label: 'Good',     sublabel: '2L+' },
+                { value: 'adequate_1L',  label: 'Adequate', sublabel: '1L'  },
+                { value: 'poor_500ml',   label: 'Poor',     sublabel: '<500ml' },
+              ];
+              const opts = meal === 'fluids' ? [...baseOpts, ...fluidOpts] : baseOpts;
+              return (
+                <SearchableSelect
+                  key={meal}
+                  label={meal.charAt(0).toUpperCase() + meal.slice(1)}
+                  accent="violet"
+                  size="sm"
+                  value={intake[meal] || null}
+                  onChange={v => setIntake(p => ({ ...p, [meal]: v || '' }))}
+                  placeholder="Select…"
+                  options={opts}
+                />
+              );
+            })}
           </div>
         </div>
 
@@ -177,16 +190,22 @@ export default function ResidentialLog() {
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-3 mt-2">
               <div>
                 <label className="text-xs font-semibold text-slate-600 mb-1.5 block">Incident Type</label>
-                <select value={incidentType} onChange={e => setIncidentType(e.target.value)}
-                  className="w-full px-3 py-2 border-2 border-red-300 rounded-xl text-sm focus:border-red-500 outline-none">
-                  <option value="fall">Fall</option>
-                  <option value="medication_error">Medication Error</option>
-                  <option value="skin_injury">Skin Injury / Pressure Sore</option>
-                  <option value="choking">Choking Episode</option>
-                  <option value="aggression">Behavioural / Aggression</option>
-                  <option value="missing">Wandering / Missing</option>
-                  <option value="other">Other</option>
-                </select>
+                <SearchableSelect
+                  accent="rose"
+                  value={incidentType || null}
+                  onChange={v => setIncidentType(v || 'fall')}
+                  allowClear={false}
+                  placeholder="Select incident type…"
+                  options={[
+                    { value: 'fall',             label: 'Fall' },
+                    { value: 'medication_error', label: 'Medication Error' },
+                    { value: 'skin_injury',      label: 'Skin Injury / Pressure Sore' },
+                    { value: 'choking',          label: 'Choking Episode' },
+                    { value: 'aggression',       label: 'Behavioural / Aggression' },
+                    { value: 'missing',          label: 'Wandering / Missing' },
+                    { value: 'other',            label: 'Other' },
+                  ]}
+                />
               </div>
               <textarea value={incidentDesc} onChange={e => setIncidentDesc(e.target.value)} rows={3}
                 placeholder="Describe what happened, time, any injuries, witnesses, and immediate actions taken..."

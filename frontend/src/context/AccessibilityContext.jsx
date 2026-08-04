@@ -58,10 +58,14 @@ export function AccessibilityProvider({ children }) {
       root.classList.remove('high-contrast');
     }
 
-    // Color blind mode
-    root.classList.remove('cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia', 'cb-monochrome');
+    // Color blind / visual impairment mode
+    root.classList.remove('cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia', 'cb-monochrome', 'cb-low_contrast', 'cb-photosensitive');
     if (settings.colorBlindMode && settings.colorBlindMode !== 'none') {
       root.classList.add(`cb-${settings.colorBlindMode}`);
+      // Photosensitive also implies reduced motion
+      if (settings.colorBlindMode === 'photosensitive') {
+        root.classList.add('reduced-motion');
+      }
     }
 
     // Font size
@@ -148,7 +152,7 @@ export function AccessibilityProvider({ children }) {
     // Announce changes to screen readers
     const messages = {
       highContrast: value ? 'High contrast mode enabled' : 'High contrast mode disabled',
-      colorBlindMode: value === 'none' ? 'Color blind mode disabled' : `${value} color blind mode enabled`,
+      colorBlindMode: value === 'none' ? 'Visual impairment filter removed' : `${value.replace(/_/g,' ')} filter enabled`,
       fontSize: `Font size set to ${value}`,
       reducedMotion: value ? 'Reduced motion enabled' : 'Reduced motion disabled',
       screenReaderMode: value ? 'Screen reader mode enabled' : 'Screen reader mode disabled',

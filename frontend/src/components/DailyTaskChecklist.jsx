@@ -39,19 +39,19 @@ const TYPE_CFG = {
   compulsory_daily: {
     label:     'Required Today',
     dotColor:  'bg-red-500',
-    badgeCls:  'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    badgeCls:  'bg-red-600 text-white',
     ringColor: 'ring-red-200',
   },
   optional_daily: {
     label:     'Optional',
     dotColor:  'bg-teal-400',
-    badgeCls:  'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300',
+    badgeCls:  'bg-teal-600 text-white',
     ringColor: 'ring-teal-200',
   },
   appointment: {
     label:     'Appointment',
     dotColor:  'bg-blue-500',
-    badgeCls:  'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    badgeCls:  'bg-blue-600 text-white',
     ringColor: 'ring-blue-200',
   },
 };
@@ -98,7 +98,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
   const acknowledgeMutation = useMutation({
     mutationFn: (taskId) => axios.put(`${API_URL}/api/compliance/acknowledge`,
       { task_id: taskId }, { headers: authH() }),
-    onSuccess: (_, taskId) => {
+    onSuccess: () => {
       toast.success('Task acknowledged');
       queryClient.invalidateQueries({ queryKey: ['daily-tasks'] });
     },
@@ -289,22 +289,48 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
             <div className="space-y-2">
               {optional.map(task => {
                 const Icon = ICON_MAP[task.icon] || Activity;
+                const isPending = acknowledgeMutation.isPending && acknowledgeMutation.variables === task.id;
                 return (
                   <div key={task.id}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-100 dark:border-slate-700">
-                    <div className="w-8 h-8 rounded-xl bg-teal-100 dark:bg-teal-800/30 flex items-center justify-center flex-shrink-0">
-                      <Icon size={15} className="text-teal-600" />
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
+                      task.done
+                        ? 'bg-emerald-50 dark:bg-emerald-900/15 border-emerald-100 dark:border-emerald-800/20'
+                        : 'bg-slate-50 dark:bg-slate-700/40 border-slate-100 dark:border-slate-700'
+                    }`}>
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : 'bg-teal-100 dark:bg-teal-800/30'
+                    }`}>
+                      {task.done
+                        ? <CheckCircle2 size={15} className="text-emerald-600" />
+                        : <Icon size={15} className="text-teal-600" />
+                      }
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-slate-700 dark:text-slate-200 truncate">{task.name}</p>
+                      <p className={`font-semibold text-sm truncate ${
+                        task.done ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-700 dark:text-slate-200'
+                      }`}>{task.name}</p>
                       {task.description && (
                         <p className="text-xs text-slate-400 mt-0.5 truncate">{task.description}</p>
                       )}
                     </div>
-                    <button onClick={() => navigate(task.link)}
-                      className="flex-shrink-0 px-2.5 py-1 border border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg text-xs font-semibold hover:bg-teal-50 dark:hover:bg-teal-900/30 transition">
-                      Start
-                    </button>
+                    {!task.done && (
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {task.link && (
+                          <button onClick={() => navigate(task.link)}
+                            className="px-2.5 py-1 border border-teal-300 dark:border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg text-xs font-semibold hover:bg-teal-50 dark:hover:bg-teal-900/30 transition">
+                            Start
+                          </button>
+                        )}
+                        <button
+                          onClick={() => acknowledgeMutation.mutate(task.id)}
+                          disabled={isPending}
+                          className="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-700 transition disabled:opacity-40"
+                          title="Mark as done"
+                        >
+                          {isPending ? '...' : 'Done'}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               })}

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import usePersonalisation from '../hooks/usePersonalisation';
@@ -5,7 +6,7 @@ import { usePersonalisationFlags } from '../context/PersonalisationContext';
 import {
   Heart, Calendar, Users, BookOpen, MessageCircle, Activity,
   Clock, Stethoscope, TrendingUp, ArrowRight, MapPin,
-  Pill, FileText, Brain, Globe, CheckCircle, Sparkles, TrendingDown, Smile
+  Pill, FileText, Brain, Globe, CheckCircle, Sparkles, TrendingDown, Smile, Shield
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -59,8 +60,15 @@ export default function PatientPortal() {
   const navigate = useNavigate();
   const { chatWithCareTeam } = useCareTeamChat();
   const { patientId } = usePatientId();
-  const { isHidden: careSettingHidden, emphasis: careEmphasis } = useCareSettingContext();   // ← resolves linked patient record ID
+  const { isHidden: careSettingHidden, emphasis: careEmphasis } = useCareSettingContext();
   const token = localStorage.getItem('auth_token');
+
+  // Family should use their own Family Dashboard, not the Patient Portal
+  useEffect(() => {
+    if (user?.role === 'family') {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user?.role, navigate]);
 
   const { data: portalData, isLoading } = useQuery({
     queryKey: ['patient-portal', patientId],
@@ -162,6 +170,7 @@ export default function PatientPortal() {
     { image: '/resources/african/african-clinical-team.jpg',    icon: FileText,      title: 'Care Plan',       description: 'Your care pathway',          onClick: () => patientId ? navigate(`/patients/${patientId}/care-plan`) : navigate('/my-space'),  color: '#0369a1', priority: null },
     { image: '/resources/african/african-health-tech.jpg',  icon: Brain,         title: 'AI Companion',    description: 'Ask Aura AI',                onClick: () => window.dispatchEvent(new CustomEvent('aura:open')),                                                                   color: '#7c3aed', priority: null },
     { image: '/resources/african/african-vitals.jpg',       icon: TrendingUp,    title: 'My Records',      description: 'Full health data',           onClick: () => patientId ? navigate(`/patients/${patientId}`) : navigate('/my-space'),                  color: '#1d4ed8', priority: null },
+    { image: '/resources/african/african-clinical-team.jpg', icon: Shield,        title: 'Family Sharing',  description: 'Control what family can see', onClick: () => navigate('/settings', { state: { tab: 'privacy' } }), color: '#0f766e', priority: null },
   ];
 
   // ⚡ Reorder quick actions based on personalisation signals

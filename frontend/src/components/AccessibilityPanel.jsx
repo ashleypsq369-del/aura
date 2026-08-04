@@ -196,22 +196,25 @@ export default function AccessibilityPanel() {
               <ToggleRow id="high-contrast" label="High Contrast Mode" desc="Increases contrast for better visibility"
                 value={settings.highContrast} onChange={() => updateSetting('highContrast', !settings.highContrast)} />
 
-              {/* Color Blind Mode */}
+              {/* Visual Impairments */}
               <div className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
                 <label className="font-medium text-slate-900 flex items-center gap-2 mb-2">
                   <Eye className="w-5 h-5" aria-hidden="true" />
-                  Color Blind Mode
+                  Visual Impairments
                 </label>
                 <select
                   value={settings.colorBlindMode || 'none'}
                   onChange={e => updateSetting('colorBlindMode', e.target.value)}
                   className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:border-teal-500"
+                  aria-label="Visual impairment filter"
                 >
-                  <option value="none">None (Normal Vision)</option>
-                  <option value="protanopia">Protanopia (Red-Blind)</option>
-                  <option value="deuteranopia">Deuteranopia (Green-Blind)</option>
-                  <option value="tritanopia">Tritanopia (Blue-Blind)</option>
-                  <option value="monochrome">Monochrome (Grayscale)</option>
+                  <option value="none">No Filter — Normal Vision</option>
+                  <option value="protanopia">Protanopia — Red-Blind</option>
+                  <option value="deuteranopia">Deuteranopia — Green-Blind</option>
+                  <option value="tritanopia">Tritanopia — Blue-Blind</option>
+                  <option value="monochrome">Achromatopsia — Full Grayscale</option>
+                  <option value="low_contrast">Low Contrast Boost — Enhance faint text</option>
+                  <option value="photosensitive">Photosensitive — Reduced brightness & motion</option>
                 </select>
               </div>
 

@@ -26,7 +26,7 @@ class PostCreateRequest(BaseModel):
 
 
 class ReactRequest(BaseModel):
-    reaction_type: str  # "pray", "heart", "strong"
+    reaction_type: str  # "pray", "heart", "strong", "hug", "care", "grateful", "hope", "fire"
 
 
 class GroupCreateRequest(BaseModel):
@@ -373,7 +373,7 @@ async def get_group_posts(
         query = query.filter(CommunityPost.is_hidden == False)
 
     total = query.count()
-    posts = query.order_by(CommunityPost.created_at.desc()).offset((page - 1) * per_page).limit(per_page).all()
+    posts = query.order_by(CommunityPost.created_at.asc()).offset((page - 1) * per_page).limit(per_page).all()
 
     formatted_posts = []
     for p in posts:
@@ -439,7 +439,7 @@ async def create_post(
         author_id=current_user.id,
         display_name=display_name,
         content=request.content,
-        reactions='{"pray": 0, "heart": 0, "strong": 0}',
+        reactions='{}',
         created_at=datetime.utcnow()
     )
 
@@ -462,19 +462,23 @@ async def react_to_post(
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    if request.reaction_type not in ["pray", "heart", "strong"]:
+    if request.reaction_type not in ["pray", "heart", "strong", "hug", "care", "grateful", "hope", "fire", "sad", "wow"]:
         raise HTTPException(status_code=400, detail="Invalid reaction type")
 
     # Load reactions
-    reacts = {"pray": 0, "heart": 0, "strong": 0}
+    reacts = {"pray": 0, "heart": 0, "strong": 0, "hug": 0, "care": 0, "grateful": 0, "hope": 0, "fire": 0, "sad": 0, "wow": 0}
     if post.reactions:
         try:
-            reacts = json.loads(post.reactions)
+            stored = json.loads(post.reactions)
+            reacts.update(stored)
         except Exception:
             pass
 
-    # Increment reaction count
-    reacts[request.reaction_type] = (reacts.get(request.reaction_type, 0) or 0) + 1
+    # Toggle: if already reacted (>0), decrement; else increment
+    key = request.reaction_type
+    reacts[key] = max(0, (reacts.get(key, 0) or 0) + 1)
+    # Remove zero-count keys to keep storage lean
+    reacts = {k: v for k, v in reacts.items() if v > 0}
     post.reactions = json.dumps(reacts)
     db.commit()
 

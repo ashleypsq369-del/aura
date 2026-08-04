@@ -47,7 +47,7 @@ const FEEL_SCALE = [
 ];
 
 const C = {
-  bg:'#ffffff', bgAlt:'#f1f5f9', surface:'#e2e8f0', border:'#cbd5e1',
+  bg:'#ffffff', bgAlt:'#f8fafc', surface:'#f1f5f9', border:'#e2e8f0',
   accent:'#0d9488', accentLight:'#ccfbf1', accentGlow:'rgba(13,148,136,0.2)',
   userBubble:'linear-gradient(135deg,#0d9488,#0369a1)', userShadow:'0 4px 16px rgba(13,148,136,0.3)',
   aiBubble:'#ffffff', aiBorder:'1px solid #cbd5e1', aiShadow:'0 2px 8px rgba(0,0,0,0.10)',
@@ -314,7 +314,7 @@ export default function AuraChat() {
 
               {/* History panel */}
               {view==='history'&&(
-                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-slate-100 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
+                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-white dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
                   {histLoading&&<div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin" style={{color:C.accent}}/></div>}
                   {!histLoading&&conversations.length===0&&(
                     <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-gray-400 mb-2"/><p className="text-sm text-gray-500 font-medium">No previous conversations</p></div>
@@ -355,7 +355,7 @@ export default function AuraChat() {
                   )}
 
                   {/* Messages */}
-                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-slate-100 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
+                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-slate-50 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
 
                     {/* Empty state — warm welcome, feel scale for patients */}
                     {messages.length===0&&(
@@ -467,7 +467,7 @@ export default function AuraChat() {
                   </AnimatePresence>
 
                   {/* Input */}
-                  <div className="flex-shrink-0 px-4 py-3 border-t bg-white" style={{borderColor:'#cbd5e1'}}>
+                  <div className="flex-shrink-0 px-4 py-3 border-t bg-white border-slate-200">
                     <form onSubmit={e=>{e.preventDefault();sendMessage();}} className="space-y-1.5">
                       <div className="flex items-end gap-2">
                         <div className="flex-1 relative">
@@ -476,9 +476,9 @@ export default function AuraChat() {
                             onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}}
                             placeholder="Message Aura…" rows={1} maxLength={MAX_CHARS} disabled={loading}
                             className="w-full resize-none text-sm font-medium text-gray-900 rounded-2xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-3 disabled:opacity-50"
-                            style={{background:'#f1f5f9',border:'1px solid #94a3b8',caretColor:C.accent}}
+                            style={{background:'#f8fafc',border:'1px solid #e2e8f0',caretColor:C.accent}}
                             onFocus={e=>{e.target.style.border=`2px solid ${C.accent}`;e.target.style.boxShadow=`0 0 0 3px rgba(13,148,136,0.2)`;e.target.style.background='#ffffff';}}
-                            onBlur={e=>{e.target.style.border='1px solid #94a3b8';e.target.style.boxShadow='none';e.target.style.background='#f1f5f9';}}/>
+                            onBlur={e=>{e.target.style.border='1px solid #e2e8f0';e.target.style.boxShadow='none';e.target.style.background='#f8fafc';}}/>
                         </div>
                         <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
                           <CharRing len={input.length} max={MAX_CHARS}/>

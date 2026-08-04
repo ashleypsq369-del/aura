@@ -1,5 +1,6 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import {
   User, Bell, Palette, Globe, Eye, Shield, Brain,
   Download, Trash2, ChevronRight, Check, Sun, Moon,
@@ -22,6 +23,7 @@ import { ROLE_PRESETS } from '../components/avatar/avatarParts';
 import { useRestartTour } from '../components/AuraOnboarding';
 import FeatureRequestPanel from '../components/FeatureRequestPanel';
 import { useUIProfile, UI_PROFILE_META } from '../context/UIProfileContext';
+import FamilyConsentSettings from './FamilyConsentSettings';
 
 // Toggle is now the Radix Switch component imported above
 function Toggle({ on, onToggle, color = '#0d9488' }) {
@@ -64,6 +66,7 @@ function Section({ title, children }) {
 // -- Main Settings page -------------------------------------------------------
 export default function Settings() {
   const { user } = useAuth();
+  const location = useLocation();
   const push = usePushNotifications();
   const pwa  = useInstallPrompt();
   const restartTour = useRestartTour();
@@ -84,12 +87,20 @@ export default function Settings() {
   const [tab, setTab] = useState('profile');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 
+  // Auto-switch to tab passed via navigation state (e.g. from PatientPortal)
+  useEffect(() => {
+    if (location.state?.tab) setTab(location.state.tab);
+  }, [location.state?.tab]);
+
   const tabs = [
     { id: 'profile',       label: 'Profile',        icon: User,    tip: 'Your account and data settings' },
     { id: 'avatar',        label: 'My Avatar',      icon: Smile,   tip: 'Customise your personal avatar' },
     { id: 'appearance',    label: 'Appearance',     icon: Palette, tip: 'Theme, language and sidebar layout' },
     { id: 'accessibility', label: 'Accessibility',  icon: Eye,     tip: 'Vision, motion and assistive tech' },
     { id: 'ai',            label: 'AI & Features',  icon: Brain,   tip: 'AI tools, optional features and notifications' },
+    ...(user?.role === 'patient' ? [
+      { id: 'privacy', label: 'Family Sharing', icon: Shield, tip: 'Control what your family can see' }
+    ] : []),
   ];
 
   const getRoleStyle = (role) => ({
@@ -691,34 +702,57 @@ export default function Settings() {
 
                 {/* Vision */}
                 <Section title="Vision & Display">
-                  <Row icon={Palette} iconColor="#2563eb" iconBg="#eff6ff" label="High Contrast" desc="Stronger colour contrast"
+                  <Row icon={Palette} iconColor="#2563eb" iconBg="#eff6ff" label="High Contrast" desc="Stronger colour contrast — black/white sharp borders"
                     right={<Toggle on={a11y.highContrast} onToggle={() => updateSetting('highContrast', !a11y.highContrast)} />} />
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                          <Eye size={16} className="text-blue-600" />
-                        </div>
-                        <p className="text-sm font-medium text-gray-900">Color Blind Mode</p>
+
+                  {/* Visual Impairments — expanded */}
+                  <div className="px-4 py-4 border-b border-gray-100">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+                        <Eye size={17} className="text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">Visual Impairments</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Colour correction filters for various vision conditions</p>
                       </div>
                     </div>
-                    <select value={a11y.colorBlindMode || 'none'} onChange={e => updateSetting('colorBlindMode', e.target.value)}
-                      className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 text-gray-700 focus:outline-none focus:border-teal-500 ml-11">
-                      <option value="none">None (Normal Vision)</option>
-                      <option value="protanopia">Protanopia (Red-Blind)</option>
-                      <option value="deuteranopia">Deuteranopia (Green-Blind)</option>
-                      <option value="tritanopia">Tritanopia (Blue-Blind)</option>
-                      <option value="monochrome">Monochrome (Grayscale)</option>
-                    </select>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 ml-12">
+                      {[
+                        { value: 'none',            label: 'No Filter',              desc: 'Standard colour vision' },
+                        { value: 'protanopia',       label: 'Protanopia',             desc: 'Red-blind (1% of males)' },
+                        { value: 'deuteranopia',     label: 'Deuteranopia',           desc: 'Green-blind (most common)' },
+                        { value: 'tritanopia',       label: 'Tritanopia',             desc: 'Blue-blind (rare)' },
+                        { value: 'monochrome',       label: 'Achromatopsia',          desc: 'Full grayscale vision' },
+                        { value: 'low_contrast',     label: 'Low Contrast Boost',     desc: 'Enhances faint text & borders' },
+                        { value: 'photosensitive',   label: 'Photosensitive',         desc: 'Reduced brightness, no flashing' },
+                      ].map(opt => {
+                        const active = (a11y.colorBlindMode || 'none') === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={() => updateSetting('colorBlindMode', opt.value)}
+                            className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
+                              active
+                                ? 'border-amber-500 bg-amber-50'
+                                : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            <p className={`text-xs font-bold ${active ? 'text-amber-800' : 'text-gray-800'}`}>{opt.label}</p>
+                            <p className={`text-[10px] mt-0.5 ${active ? 'text-amber-600' : 'text-gray-400'}`}>{opt.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
+
                   <div className="px-4 py-3 border-b border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-                        <Type size={16} className="text-blue-600" />
+                      <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <Type size={17} className="text-blue-600" />
                       </div>
-                      <p className="text-sm font-medium text-gray-900">Font Size</p>
+                      <p className="text-sm font-semibold text-gray-900">Font Size</p>
                     </div>
-                    <div className="flex gap-1.5 ml-11">
+                    <div className="flex gap-1.5 ml-12">
                       {[['small','S'],['medium','M'],['large','L'],['xlarge','XL'],['xxlarge','XXL']].map(([v,lbl]) => (
                         <button key={v} onClick={() => updateSetting('fontSize', v)}
                           className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
@@ -727,7 +761,7 @@ export default function Settings() {
                       ))}
                     </div>
                   </div>
-                  <Row icon={Zap} iconColor="#2563eb" iconBg="#eff6ff" label="Reduce Motion" desc="Minimises animations - helps epilepsy, migraine, vertigo" border={false}
+                  <Row icon={Zap} iconColor="#2563eb" iconBg="#eff6ff" label="Reduce Motion" desc="Minimises animations — helps epilepsy, migraine, vertigo" border={false}
                     right={<Toggle on={a11y.reducedMotion} onToggle={() => updateSetting('reducedMotion', !a11y.reducedMotion)} />} />
                 </Section>
 
@@ -791,6 +825,11 @@ export default function Settings() {
                   <RotateCcw size={14} /> Reset Accessibility Defaults
                 </button>
               </>
+            )}
+
+            {/* -- FAMILY SHARING — patient-only consent management ------- */}
+            {tab === 'privacy' && (
+              <FamilyConsentSettings />
             )}
 
             {/* -- AI TOOLS - now merged into 'ai' tab above -------------- */}

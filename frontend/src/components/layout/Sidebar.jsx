@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
   const { hiddenNavPaths, uiFlags } = usePersonalisationFlags();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
-  const { careSetting, meta, navAdditions, isHidden } = useCareSettingContext();
+  const { careSetting, meta, navAdditions, isHidden, emphasis } = useCareSettingContext();
   const { sidebarSettings, updateSidebarSetting } = useAppSettings();
   const { profileKey, profile: uiProfile } = useUIProfile();
 
@@ -74,6 +74,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'Care Settings',    path: '/care-settings',            icon: Map },
       { name: 'Caregivers',       path: '/caregivers',               icon: HeartHandshake },
       { name: 'User Management',  path: '/admin/users',              icon: UserCog },
+      { name: 'Feature Control',  path: '/admin/features',           icon: Shield },
       { name: 'HIPAA Compliance', path: '/admin/hipaa-compliance',   icon: Shield },
       { name: 'Model Bias Report',path: '/admin/model-bias-report',  icon: Brain },
       { name: 'Audit Log',        path: '/admin/audit',              icon: Shield },
@@ -143,15 +144,6 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
       { name: 'My Profile',     path: '/profile',          icon: User },
     ]};
 
-  const navItems = (navigation[user?.role] || []).filter(item => {
-    // Personalisation: hide paths blocked by questionnaire responses
-    if (hiddenNavPaths.has(item.path)) return false;
-    // Care setting: hide features not relevant to this care context
-    if (isHidden(item.path)) return false;
-    return true;
-  });
-  const activeItemRef = useRef(null);
-
   // Build personalised "suggested" item paths for patients
   const suggestedPaths = user?.role === 'patient' && signals ? (() => {
     const s = new Set();
@@ -163,6 +155,30 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
     if (signals.carePriorities?.includes('Spending time with family')) s.add('/memory-vault');
     return s;
   })() : new Set();
+
+  const navItems = (() => {
+    const base = (navigation[user?.role] || []).filter(item => {
+      if (hiddenNavPaths.has(item.path)) return false;
+      if (isHidden(item.path)) return false;
+      return true;
+    });
+
+    // Score each item: lower = higher in list
+    // 0 = suggested by questionnaire signals (most relevant right now)
+    // 1 = emphasised by care setting
+    // 2 = normal
+    // 3 = reduced by care setting (still shown, just lower)
+    const score = (item) => {
+      if (suggestedPaths.has(item.path)) return 0;
+      const e = emphasis(item.path);
+      if (e === 'high')    return 1;
+      if (e === 'reduced') return 3;
+      return 2;
+    };
+
+    return [...base].sort((a, b) => score(a) - score(b));
+  })();
+  const activeItemRef = useRef(null);
 
   // Match exact path OR sub-routes (e.g. /care-guide/123 → /care-guide)
   const isActive = (path) =>
@@ -277,45 +293,12 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
             </div>
           )}
 
-          {/* Setting-specific nav additions */}
-          {navAdditions.map((item) => {
-            const Icon = ICON_MAP[item.name] || ClipboardList;
-            const active = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path + item.name}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-                data-tip={!showLabels && sidebarSettings.showLabels ? `⭐ ${item.name}` : undefined}
-                className={`
-                  sidebar-tip flex items-center px-2 py-2 rounded-lg transition-all duration-150 relative group
-                  ${showLabels ? 'justify-start' : 'justify-center'} h-[36px]
-                  ${active
-                    ? 'bg-white/20 text-white font-bold shadow-lg border-l-3 border-yellow-300'
-                    : 'text-yellow-200/80 hover:bg-white/10 hover:text-white border-l-3 border-yellow-400/50'
-                  }
-                `}
-              >
-                <Icon size={18} className={`${active ? 'scale-110 text-white' : 'text-yellow-200/70 group-hover:text-white'} transition-all flex-shrink-0`} strokeWidth={active ? 2.5 : 2} />
-                {showLabels && (
-                  <span className={`text-sm ml-2 truncate ${active ? 'font-bold' : 'font-medium'}`}>
-                    {item.name}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-
-          {/* Divider after setting-specific items */}
-          {navAdditions.length > 0 && (
-            <div className="h-px bg-white/10 my-1" />
-          )}
-
-          {/* Base navigation items */}
+          {/* Navigation items — ordered by care setting emphasis + questionnaire signals */}
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
             const isSuggested = suggestedPaths.has(item.path);
+            const itemEmphasis = emphasis(item.path);
             return (
               <Link
                 key={item.path}
@@ -328,8 +311,11 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                   ${showLabels ? 'justify-start' : 'justify-center'} h-[36px]
                   ${active
                     ? 'bg-white/20 text-white font-bold shadow-lg border-l-3 border-teal-300'
-                    : 'text-white/75 hover:bg-white/10 hover:text-white border-l-3 border-transparent'
-                  }                `}
+                    : itemEmphasis === 'reduced'
+                      ? 'text-white/45 hover:bg-white/10 hover:text-white/75 border-l-3 border-transparent'
+                      : 'text-white/75 hover:bg-white/10 hover:text-white border-l-3 border-transparent'
+                  }
+                `}
               >
                 <Icon size={18} className={`${active ? 'scale-110 text-white' : 'text-white/70 group-hover:text-white'} transition-all flex-shrink-0`} strokeWidth={active ? 2.5 : 2} />
 
@@ -337,6 +323,11 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                   <span className={`text-sm ml-2 truncate ${active ? 'font-bold' : 'font-medium'}`}>
                     {item.name}
                   </span>
+                )}
+
+                {/* Suggested indicator — small teal dot in label mode */}
+                {!active && isSuggested && showLabels && (
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0" />
                 )}
 
                 {item.badge && unreadCount > 0 && (
@@ -348,7 +339,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
                   </span>
                 )}
 
-                {/* Personalisation suggested dot — icon-only mode */}
+                {/* Suggested dot in icon-only mode */}
                 {!active && !item.badge && isSuggested && !showLabels && (
                   <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                 )}

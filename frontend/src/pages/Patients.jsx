@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import PatientDataTable from '../components/PatientDataTable';
+import { useAuth } from '../context/AuthContext';
 import { Plus, Users, Search, Building2, Heart, Home, Stethoscope, BedDouble } from 'lucide-react';
 
 const CARE_SETTING_FILTERS = [
@@ -27,12 +28,18 @@ const CARE_SETTING_FILTERS = [
 export default function Patients() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  // Pre-apply filter if navigated here from AI Insights with a status
   const [filterStatus, setFilterStatus] = useState(
     location.state?.filterStatus || 'all'
   );
   const [filterCareSetting, setFilterCareSetting] = useState('all');
+
+  // Patients and family should not access the full patient list — redirect to their appropriate home
+  useEffect(() => {
+    if (user?.role === 'patient') navigate('/my-space', { replace: true });
+    else if (user?.role === 'family') navigate('/dashboard', { replace: true });
+  }, [user?.role, navigate]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);

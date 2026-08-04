@@ -77,7 +77,7 @@ export default function DropdownMenu({ trigger, items = [], align = 'end', sideO
                       {Icon && <Icon size={16} className="flex-shrink-0 shrink-0" />}
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold leading-tight truncate">{item.label}</p>
-                        {item.desc && <p className="text-xs text-slate-400 mt-0.5 leading-tight opacity-70">{item.desc}</p>}
+                        {item.desc && <p className="text-xs text-slate-500 mt-0.5 leading-tight">{item.desc}</p>}
                       </div>
                       {item.badge && (
                         <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 bg-teal-100 text-teal-700 rounded-full">

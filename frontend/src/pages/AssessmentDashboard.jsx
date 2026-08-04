@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   ClipboardList, Heart, Activity, Brain, Frown, AlertCircle,
-  TrendingUp, ArrowRight, Smile, Users
+  TrendingUp, ArrowRight, Smile, Users, FileText, Send
 } from 'lucide-react';
 import apiClient from '../api/client';
 import { PageSkeleton } from '../components/LoadingSkeleton';
@@ -192,7 +192,55 @@ export default function AssessmentDashboard() {
       data: overview?.motor_skills,
       route: `/assessments/${patientId}/motor-skills`,
       frequency: 'Quarterly'
-    }
+    },
+    {
+      id: 'acp',
+      name: 'ACP',
+      fullName: 'Advance Care Plan',
+      icon: FileText,
+      color: 'teal',
+      description: 'Goals of care, DNR, end-of-life wishes, cultural & spiritual preferences',
+      data: overview?.acp,
+      route: `/assessments/${patientId}/acp`,
+      frequency: 'As needed / On change',
+      isPalliative: true,
+    },
+    {
+      id: 'mdt',
+      name: 'MDT',
+      fullName: 'MDT Meeting Log',
+      icon: Users,
+      color: 'blue',
+      description: 'Multi-disciplinary team meeting records, decisions, action items',
+      data: overview?.mdt,
+      route: `/assessments/${patientId}/mdt`,
+      frequency: 'Monthly / As needed',
+      isPalliative: true,
+    },
+    {
+      id: 'referrals',
+      name: 'Referrals',
+      fullName: 'Referral Tracker',
+      icon: Send,
+      color: 'green',
+      description: 'Allied health referrals — physio, social work, chaplaincy, traditional healer, and more',
+      data: overview?.referrals,
+      route: `/assessments/${patientId}/referrals`,
+      frequency: 'As needed',
+      isPalliative: true,
+    },
+    {
+      id: 'spiritual_care',
+      name: 'Spiritual',
+      fullName: 'Spiritual & Wellbeing Care',
+      icon: Heart,
+      color: 'violet',
+      description: 'Spiritual care notes — inclusive of all faiths (Christian, Muslim, Traditional African, Hindu, secular, and others)',
+      data: overview?.spiritual_care,
+      route: `/assessments/${patientId}/spiritual-care`,
+      frequency: 'As needed',
+      isPalliative: true,
+    },
   ];
 
   return (
@@ -221,17 +269,41 @@ export default function AssessmentDashboard() {
       <MLRiskPanel patientId={parseInt(patientId)} compact />
 
       {/* Assessment Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {assessmentTypes.map((assessment, idx) => (
-          <AssessmentCard
-            key={assessment.id}
-            assessment={assessment}
-            onClick={() => navigate(assessment.route)}
-            onXaiClick={handleGetXaiExplanation}
-            loadingXai={loadingXai}
-            delay={idx * 0.05}
-          />
-        ))}
+      <div className="space-y-5">
+        {/* Standard Assessments */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {assessmentTypes.filter(a => !a.isPalliative).map((assessment, idx) => (
+            <AssessmentCard
+              key={assessment.id}
+              assessment={assessment}
+              onClick={() => navigate(assessment.route)}
+              onXaiClick={handleGetXaiExplanation}
+              loadingXai={loadingXai}
+              delay={idx * 0.05}
+            />
+          ))}
+        </div>
+
+        {/* Palliative Care Modules */}
+        <div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-2">Palliative Care Modules</span>
+            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {assessmentTypes.filter(a => a.isPalliative).map((assessment, idx) => (
+              <AssessmentCard
+                key={assessment.id}
+                assessment={assessment}
+                onClick={() => navigate(assessment.route)}
+                onXaiClick={handleGetXaiExplanation}
+                loadingXai={loadingXai}
+                delay={idx * 0.05}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* AI Explain Modal */}
@@ -260,6 +332,7 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
     green:  { border: '#10b981', iconBg: 'bg-emerald-50',iconText: 'text-emerald-600'},
     violet: { border: '#7c3aed', iconBg: 'bg-violet-50', iconText: 'text-violet-600' },
     orange: { border: '#f97316', iconBg: 'bg-orange-50', iconText: 'text-orange-600' },
+    teal:   { border: '#0d9488', iconBg: 'bg-teal-50',   iconText: 'text-teal-600'   },
   }[assessment.color] || { border: '#0d9488', iconBg: 'bg-teal-50', iconText: 'text-teal-600' };
 
   const getStatus = () => {

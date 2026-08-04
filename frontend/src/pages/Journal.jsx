@@ -225,14 +225,14 @@ export default function Journal() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/60 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl p-4 flex items-center space-x-3"
+          className="bg-teal-50 border border-teal-200 rounded-xl p-4 flex items-center space-x-3"
         >
-          <Lock className="w-5 h-5" style={{ color: '#6B4F7A' }} />
+          <Lock className="w-5 h-5 text-teal-600 flex-shrink-0" />
           <div className="flex-1">
-            <p className="text-sm font-medium text-gray-700 dark:text-slate-200">
+            <p className="text-sm font-semibold text-teal-900">
               Your journal entries are completely private
             </p>
-            <p className="text-xs text-gray-500 dark:text-slate-400">
+            <p className="text-xs text-teal-700 mt-0.5">
               Only you can see what you write here. Write freely, without judgment.
             </p>
           </div>

@@ -106,7 +106,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
       {/* Badges + action */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {isReq && !task.done && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 uppercase tracking-wider">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white uppercase tracking-wider">
             Required
           </span>
         )}

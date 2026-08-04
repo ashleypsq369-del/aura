@@ -151,7 +151,7 @@ export default function AnimationDemo() {
             variants={slideUp}
             className="bg-white rounded-xl p-6 shadow-lg border-3 border-red-300"
           >
-            <h2 className="text-xl font-bold mb-3 text-red-700">¤ï¸ Heartbeat Effect</h2>
+            <h2 className="text-xl font-bold mb-3 text-red-700">{'\u2764\uFE0F'} Heartbeat Effect</h2>
             <div className="flex items-center justify-center py-6">
               <HeartbeatIcon className="text-6xl" />
             </div>

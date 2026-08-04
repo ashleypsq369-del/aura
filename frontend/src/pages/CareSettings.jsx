@@ -21,7 +21,7 @@ import {
   Building2, Heart, Home, Stethoscope, BedDouble,
   Users, ChevronRight, ChevronDown, Info, CheckCircle2,
   Clock, UserCheck, ArrowRight, BookOpen, Navigation,
-  ClipboardList, BarChart3, AlertCircle, Plus, Search,
+  ClipboardList, BarChart3, AlertCircle, Plus,
   Calendar, Pill, Bell, CheckCircle, XCircle, Loader2,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -32,6 +32,7 @@ import apiClient, { careSettingsAPI, patientsAPI } from '../api/client';
 import { ProStatCard } from '../components/ModernCard';
 import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
+import SearchableSelect from '../components/ui/SearchableSelect';
 
 // -- Care setting background images -------------------------------------------
 const SETTING_IMAGES = {
@@ -181,7 +182,7 @@ export default function CareSettings() {
       ]
     : isPatient || isFamily
     ? [
-        { id: 'my-setting',  label: 'My Care Setting',   icon: Heart        },
+        { id: 'my-setting',  label: isFamily ? "Loved One's Setting" : 'My Care Setting', icon: Heart },
         { id: 'settings',    label: 'All Settings',      icon: BookOpen     },
       ]
     : [
@@ -405,7 +406,7 @@ export default function CareSettings() {
                   {/* Setting header */}
                   <div className={`flex items-center gap-3 px-5 py-3 bg-gradient-to-r ${c.header}`}>
                     <Icon size={20} className="text-white" />
-                    <h3 className="font-bold text-white">{t.label}</h3>
+                    <h3 className="img-heading font-bold text-white">{t.label}</h3>
                   </div>
 
                   {/* Role rows */}
@@ -458,29 +459,47 @@ export default function CareSettings() {
       )}
 
       {/* ----------------------------------------------------------------------
-          TAB: MY CARE SETTING (patient / family)
+          TAB: MY CARE SETTING (patient) / LOVED ONE'S SETTING (family)
       ---------------------------------------------------------------------- */}
       {activeTab === 'my-setting' && (isPatient || isFamily) && (
         <div className="space-y-5">
+
+          {/* Family context note */}
+          {isFamily && (
+            <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl">
+              <Users size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-blue-900">Your loved one's care context</p>
+                <p className="text-xs text-blue-700 mt-0.5">
+                  This shows the care setting your loved one is currently assigned to.
+                  Care setting changes are managed by their clinical team.
+                </p>
+              </div>
+            </div>
+          )}
+
           {mySettingData?.current_setting ? (
             <>
               <CurrentSettingBanner
                 setting={mySettingData.current_setting}
-                onRequestChange={() => setShowRequestModal(true)}
+                onRequestChange={isPatient ? () => setShowRequestModal(true) : null}
                 navigate={navigate}
+                isFamily={isFamily}
               />
 
-              {/* Request change CTA */}
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-amber-900">Need a different care setting?</p>
-                  <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request — an admin will review and approve it.</p>
+              {/* Request change CTA — patients only, not family */}
+              {isPatient && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-amber-900">Need a different care setting?</p>
+                    <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request — an admin will review and approve it.</p>
+                  </div>
+                  <button onClick={() => setShowRequestModal(true)}
+                    className="flex-shrink-0 px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition">
+                    Request Change
+                  </button>
                 </div>
-                <button onClick={() => setShowRequestModal(true)}
-                  className="flex-shrink-0 px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition">
-                  Request Change
-                </button>
-              </div>
+              )}
 
               {mySettingData.history?.length > 1 && (
                 <SettingHistory history={mySettingData.history} />
@@ -491,9 +510,14 @@ export default function CareSettings() {
               <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
                 <Stethoscope size={28} className="text-slate-400" />
               </div>
-              <h3 className="text-lg font-bold text-slate-700 mb-2">No Care Setting Assigned Yet</h3>
+              <h3 className="text-lg font-bold text-slate-700 mb-2">
+                {isFamily ? 'No Care Setting Assigned Yet' : 'No Care Setting Assigned Yet'}
+              </h3>
               <p className="text-slate-500 text-sm max-w-sm mx-auto mb-5 leading-relaxed">
-                Your clinical team will assign you to the most appropriate care setting. Browse all 5 settings to understand what each involves.
+                {isFamily
+                  ? 'Your loved one has not yet been assigned to a care setting. Their clinical team will do this shortly.'
+                  : 'Your clinical team will assign you to the most appropriate care setting. Browse all 5 settings to understand what each involves.'
+                }
               </p>
               <button onClick={() => setActiveTab('settings')}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition text-sm">
@@ -628,11 +652,11 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
       )}
-      {/* Single overlay — just enough for text legibility */}
+      {/* Overlay — strong enough for text legibility on any image */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to bottom right, rgba(0,0,0,0.52), rgba(0,0,0,0.28), rgba(0,0,0,0.10))',
+          background: 'linear-gradient(160deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0.35) 100%)',
           zIndex: 2, pointerEvents: 'none',
         }}
       />
@@ -649,17 +673,17 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
             <ChevronRight size={18} className={`text-white/80 mt-1 transition-transform ${isSelected ? 'rotate-90' : ''}`} />
           </div>
 
-          <h3 className="font-bold text-base leading-tight mb-1.5 text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]">
+          <h3 className="img-heading font-bold text-base leading-tight mb-1.5 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
             {t.label}
           </h3>
-          <p className="text-xs text-white/90 leading-relaxed line-clamp-2 [text-shadow:0_1px_2px_rgba(0,0,0,0.6)]">
+          <p className="text-xs leading-relaxed line-clamp-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]" style={{ color: 'rgba(255,255,255,0.95)' }}>
             {t.focus}
           </p>
         </div>
 
         {t.patient_count !== undefined && (
           <div className="mt-3">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold rounded-full border border-white/25">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white text-xs font-bold rounded-full border border-white/30">
               <Users size={11} /> {t.patient_count} patients
             </span>
           </div>
@@ -684,7 +708,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
           <Icon size={28} className="text-white" />
         </div>
         <div>
-          <h2 className="text-xl font-serif font-bold text-white">{t.label}</h2>
+          <h2 className="img-heading text-xl font-serif font-bold text-white">{t.label}</h2>
           <p className="text-white/80 text-sm mt-0.5">{t.focus}</p>
         </div>
       </div>
@@ -829,7 +853,7 @@ function InteractionRow({ ix }) {
   );
 }
 
-function CurrentSettingBanner({ setting, onRequestChange, navigate }) {
+function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = false }) {
   const c        = COLOR[setting.setting_color] || COLOR.gray;
   const Icon     = ICON_MAP[setting.setting_icon] || Stethoscope;
   const img      = SETTING_IMAGES[setting.setting_key];
@@ -847,15 +871,23 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate }) {
   };
   const bullets = EXPECT[setting.setting_key] || [];
 
-  // Quick actions per setting
-  const ACTIONS = {
+  // Quick actions per setting — patient-facing
+  const PATIENT_ACTIONS = {
     hospital_based:        [{ label: 'Appointments', icon: Calendar, path: '/appointments' }, { label: 'Medications', icon: Pill, path: '/medications' }],
     hospice:               [{ label: 'My Journey', icon: Heart, path: '/my-journey' }, { label: 'Memory Vault', icon: BookOpen, path: '/memory-vault' }],
     home_based:            [{ label: 'Log Symptoms', icon: ClipboardList, path: '/wellness-checkin' }, { label: 'Medications', icon: Pill, path: '/medications' }],
     outpatient_clinic:     [{ label: 'Appointments', icon: Calendar, path: '/appointments' }, { label: 'Assessments', icon: ClipboardList, path: '/my-space' }],
     long_term_residential: [{ label: 'Wellbeing', icon: Heart, path: '/my-space' }, { label: 'Community', icon: Users, path: '/community' }],
   };
-  const actions = ACTIONS[setting.setting_key] || [];
+  // Quick actions for family — focused on communication & support
+  const FAMILY_ACTIONS = {
+    hospital_based:        [{ label: 'Messages', icon: BookOpen, path: '/messages' }, { label: 'Appointments', icon: Calendar, path: '/appointments' }],
+    hospice:               [{ label: 'Memory Vault', icon: Heart, path: '/memory-vault' }, { label: 'Messages', icon: BookOpen, path: '/messages' }],
+    home_based:            [{ label: 'Messages', icon: BookOpen, path: '/messages' }, { label: 'Resources', icon: ClipboardList, path: '/resources' }],
+    outpatient_clinic:     [{ label: 'Appointments', icon: Calendar, path: '/appointments' }, { label: 'Messages', icon: BookOpen, path: '/messages' }],
+    long_term_residential: [{ label: 'Messages', icon: BookOpen, path: '/messages' }, { label: 'Community', icon: Users, path: '/community' }],
+  };
+  const actions = (isFamily ? FAMILY_ACTIONS : PATIENT_ACTIONS)[setting.setting_key] || [];
 
   return (
     <div className="space-y-4">
@@ -876,8 +908,10 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate }) {
               <Icon size={26} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Your Care Setting</p>
-              <h2 className="text-2xl font-bold text-white leading-tight">{setting.setting_label}</h2>
+              <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">
+                {isFamily ? "Loved One's Care Setting" : 'Your Care Setting'}
+              </p>
+              <h2 className="img-heading text-2xl font-bold text-white leading-tight">{setting.setting_label}</h2>
               {assignedDate && (
                 <p className="text-white/60 text-xs mt-1 flex items-center gap-1">
                   <Clock size={11} /> Assigned {assignedDate}
@@ -1040,46 +1074,33 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
   return (
     <div className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Patient *</label>
-          <div className="search-wrap">
-            <span className="search-icon"><Search size={15} /></span>
-            <input
-              type="text"
-              placeholder="Search patient name..."
-              className="w-full py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition"
-              onChange={e => {
-                const q = e.target.value.toLowerCase();
-                const match = patients.find(p => p.full_name.toLowerCase().includes(q) || p.primary_diagnosis?.toLowerCase().includes(q));
-                if (match) setAssignPatientId(String(match.id));
-                if (!q) setAssignPatientId('');
-              }}
-              list="care-settings-patient-list"
-            />
-            <datalist id="care-settings-patient-list">
-              {patients.map(p => <option key={p.id} value={`${p.full_name} - ${p.primary_diagnosis}`} />)}
-            </datalist>
-          </div>
-          {assignPatientId && patients.length > 0 && (
-            <p className="text-xs text-teal-600 font-semibold mt-1 flex items-center gap-1">
-              ✓ {patients.find(p => String(p.id) === String(assignPatientId))?.full_name}
-            </p>
-          )}
-        </div>
+        <SearchableSelect
+          label="Patient *"
+          accent="teal"
+          value={assignPatientId ? String(assignPatientId) : null}
+          onChange={v => setAssignPatientId(v || '')}
+          placeholder="Search patient…"
+          options={patients.map(p => ({
+            value: String(p.id),
+            label: p.full_name,
+            sublabel: `${p.patient_code || '#'+p.id}${p.primary_diagnosis ? ' · ' + p.primary_diagnosis.slice(0,20) : ''}`,
+            avatar: 'linear-gradient(135deg,#0d9488,#0891b2)',
+          }))}
+        />
 
-        <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Care Setting *</label>
-          <select
-            value={f.setting_key}
-            onChange={e => set('setting_key', e.target.value)}
-            className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition"
-          >
-            <option value="">Select setting...</option>
-            {templates.map(t => (
-              <option key={t.setting_key} value={t.setting_key}>{t.label}</option>
-            ))}
-          </select>
-        </div>
+        <SearchableSelect
+          label="Care Setting *"
+          accent="teal"
+          value={f.setting_key || null}
+          onChange={v => set('setting_key', v || '')}
+          placeholder="Select setting…"
+          allowClear={false}
+          options={templates.map(t => ({
+            value: t.setting_key,
+            label: t.label,
+            sublabel: t.focus?.slice(0, 35),
+          }))}
+        />
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">

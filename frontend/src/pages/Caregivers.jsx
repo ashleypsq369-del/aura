@@ -1,8 +1,4 @@
-/**
- * Caregivers — Full-width tabbed layout
- * Tabs: Team | Analytics | Assignments
- */
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, HeartHandshake, AlertTriangle, Search, X,
@@ -16,6 +12,7 @@ import { caregiversAPI, caregiverIntelligenceAPI, advancedMlAPI, patientsAPI } f
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
+import SearchableSelect from '../components/ui/SearchableSelect';
 
 /* ── constants ──────────────────────────────────────────────────────────── */
 const GRAD = [
@@ -38,60 +35,7 @@ function BurnoutBadge({ level }) {
   return <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>Healthy</span>;
 }
 
-/* ── PatientPicker ──────────────────────────────────────────────────────── */
-function PatientPicker({ list, value, onChange, placeholder = 'Search patient…' }) {
-  const [q, setQ] = useState('');
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const sel = list.find(p => String(p.id) === String(value));
-  useEffect(() => {
-    const h = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-  const hits = list.filter(p => {
-    if (!q) return true;
-    const s = q.toLowerCase();
-    return (p.full_name||'').toLowerCase().includes(s) || (p.patient_code||'').toLowerCase().includes(s);
-  }).slice(0, 6);
-  return (
-    <div ref={ref} className="relative">
-      <div onClick={() => { setQ(''); setOpen(true); }}
-        className={`flex items-center gap-2 border-2 rounded-xl px-3 py-2.5 cursor-text transition-all bg-white
-          ${open ? 'border-violet-500 shadow-sm' : 'border-slate-200 hover:border-slate-300'}`}>
-        <Search size={13} className="text-slate-400 flex-shrink-0"/>
-        <input value={open ? q : sel ? (sel.patient_code || sel.full_name) : ''}
-          onChange={e => setQ(e.target.value)} onFocus={() => { setQ(''); setOpen(true); }}
-          placeholder={placeholder}
-          className="flex-1 outline-none bg-transparent text-sm text-slate-700 placeholder-slate-400 min-w-0"/>
-        {sel && <button onClick={e => { e.stopPropagation(); onChange(''); }}><X size={12} className="text-slate-400 hover:text-red-500"/></button>}
-      </div>
-      <AnimatePresence>
-        {open && (
-          <motion.ul initial={{opacity:0,y:-4}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-4}}
-            className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 overflow-hidden">
-            {hits.length === 0
-              ? <li className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</li>
-              : hits.map(p => (
-                <li key={p.id}>
-                  <button type="button" onClick={() => { onChange(String(p.id)); setOpen(false); setQ(''); }}
-                    className="w-full text-left px-4 py-2.5 hover:bg-violet-50 flex items-center gap-3 border-b border-slate-50 last:border-0 transition-colors">
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0">
-                      {getInitials(p.full_name)}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-slate-800 text-sm truncate">{p.full_name}</p>
-                      <p className="text-xs text-slate-400">{p.patient_code} · {p.age}y</p>
-                    </div>
-                  </button>
-                </li>
-              ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+/* PatientPicker replaced by SearchableSelect */
 
 /* ── CaregiverCard ──────────────────────────────────────────────────────── */
 function CaregiverCard({ cg, workload, burnoutLevel, avatarGrad, onBurnoutClick }) {
@@ -552,17 +496,33 @@ export default function Caregivers() {
                 <div className="p-5 space-y-3">
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Caregiver</label>
-                    <select value={manualCg} onChange={e=>setManualCg(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-white text-slate-700 focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 outline-none">
-                      <option value="">Select caregiver…</option>
-                      {caregivers.map(cg => (
-                        <option key={cg.id} value={cg.id}>{cg.full_name} — {cg.role||'Caregiver'}</option>
-                      ))}
-                    </select>
+                    <SearchableSelect
+                      accent="violet"
+                      value={manualCg ? String(manualCg) : null}
+                      onChange={v => setManualCg(v || '')}
+                      placeholder="Select caregiver…"
+                      options={caregivers.map(cg => ({
+                        value: String(cg.id),
+                        label: cg.full_name,
+                        sublabel: cg.role || 'Caregiver',
+                        avatar: 'linear-gradient(135deg,#7c3aed,#6d28d9)',
+                      }))}
+                    />
                   </div>
                   <div>
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Patient</label>
-                    <PatientPicker list={patientList} value={manualPt} onChange={setManualPt} placeholder="Search patient…"/>
+                    <SearchableSelect
+                      accent="violet"
+                      value={manualPt ? String(manualPt) : null}
+                      onChange={v => setManualPt(v || '')}
+                      placeholder="Search patient…"
+                      options={patientList.map(p => ({
+                        value: String(p.id),
+                        label: p.full_name,
+                        sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+                        avatar: 'linear-gradient(135deg,#7c3aed,#4338ca)',
+                      }))}
+                    />
                   </div>
                   <button
                     onClick={() => { if(manualCg&&manualPt) assignMutation.mutate({caregiver_id:parseInt(manualCg),patient_id:parseInt(manualPt),notes:''}); }}
@@ -581,7 +541,18 @@ export default function Caregivers() {
                     <span className="ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">🧠 ML</span>
                   </div>
                   <p className="text-xs text-slate-500">ML selects the best available caregiver based on workload and patient complexity.</p>
-                  <PatientPicker list={patientList} value={optPid} onChange={setOptPid} placeholder="Select patient to auto-assign…"/>
+                  <SearchableSelect
+                    accent="violet"
+                    value={optPid ? String(optPid) : null}
+                    onChange={v => setOptPid(v || '')}
+                    placeholder="Select patient to auto-assign…"
+                    options={patientList.map(p => ({
+                      value: String(p.id),
+                      label: p.full_name,
+                      sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+                      avatar: 'linear-gradient(135deg,#7c3aed,#4338ca)',
+                    }))}
+                  />
                   <button
                     onClick={() => optPid && optimalMutation.mutate(parseInt(optPid))}
                     disabled={!optPid||optimalMutation.isPending}

@@ -163,10 +163,10 @@ export default function TaskNudge() {
                   </text>
                 </svg>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-snug">
+                  <p className="text-xs font-semibold text-slate-800 leading-snug">
                     {message}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
+                  <p className="text-[10px] text-slate-500 mt-0.5">
                     {reqDone} of {reqTotal} required done
                   </p>
                 </div>
@@ -175,13 +175,13 @@ export default function TaskNudge() {
               {/* Pending task pills — show first 3 */}
               <div className="space-y-1.5 mb-3">
                 {pendingTasks.slice(0, 3).map(t => (
-                  <div key={t.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse flex-shrink-0"/>
-                    <p className="text-[10px] font-semibold text-red-700 dark:text-red-300 truncate">{t.name}</p>
+                  <div key={t.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-red-50 border border-red-200">
+                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0"/>
+                    <p className="text-[11px] font-bold text-red-800 truncate">{t.name}</p>
                   </div>
                 ))}
                 {pendingTasks.length > 3 && (
-                  <p className="text-[10px] text-slate-400 pl-2">+{pendingTasks.length - 3} more tasks</p>
+                  <p className="text-[10px] text-slate-500 pl-2">+{pendingTasks.length - 3} more tasks</p>
                 )}
               </div>
 

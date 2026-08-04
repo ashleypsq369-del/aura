@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Check, AlertTriangle, Pill, Heart, Send, Plus } from 'lucide-react';
 import toast from '../utils/toast';
+import SearchableSelect from '../components/ui/SearchableSelect';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -145,30 +146,34 @@ export default function DailyCareLog() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-semibold text-slate-600 mb-1.5 block">Mood</label>
-              <select value={mood} onChange={e => setMood(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-slate-300 rounded-xl text-sm focus:border-green-400 outline-none">
-                <option value="">Select...</option>
-                <option value="calm">😌 Calm</option>
-                <option value="cheerful">😊 Cheerful</option>
-                <option value="anxious">😰 Anxious</option>
-                <option value="distressed">😢 Distressed</option>
-                <option value="confused">😕 Confused</option>
-                <option value="unresponsive">😶 Unresponsive</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-slate-600 mb-1.5 block">Appetite</label>
-              <select value={appetite} onChange={e => setAppetite(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-slate-300 rounded-xl text-sm focus:border-green-400 outline-none">
-                <option value="">Select...</option>
-                <option value="good">Good - ate well</option>
-                <option value="fair">Fair - ate some</option>
-                <option value="poor">Poor - very little</option>
-                <option value="none">None - refused food</option>
-              </select>
-            </div>
+            <SearchableSelect
+              label="Mood"
+              accent="teal"
+              value={mood || null}
+              onChange={v => setMood(v || '')}
+              placeholder="Select mood…"
+              options={[
+                { value: 'calm',         label: 'Calm',         sublabel: '😌' },
+                { value: 'cheerful',     label: 'Cheerful',     sublabel: '😊' },
+                { value: 'anxious',      label: 'Anxious',      sublabel: '😰' },
+                { value: 'distressed',   label: 'Distressed',   sublabel: '😢' },
+                { value: 'confused',     label: 'Confused',     sublabel: '😕' },
+                { value: 'unresponsive', label: 'Unresponsive', sublabel: '😶' },
+              ]}
+            />
+            <SearchableSelect
+              label="Appetite"
+              accent="teal"
+              value={appetite || null}
+              onChange={v => setAppetite(v || '')}
+              placeholder="Select appetite…"
+              options={[
+                { value: 'good', label: 'Good',  sublabel: 'Ate well'       },
+                { value: 'fair', label: 'Fair',  sublabel: 'Ate some'       },
+                { value: 'poor', label: 'Poor',  sublabel: 'Very little'    },
+                { value: 'none', label: 'None',  sublabel: 'Refused food'   },
+              ]}
+            />
           </div>
         </div>
 

@@ -62,7 +62,9 @@ from routers import (
     ethics,  # Biomedical Ethics (Gap Analysis Priority 4)
     medical_knowledge,  # Medical Knowledge Database
     care_settings,      # 5 Palliative Care Delivery Settings
+    palliative_care,    # ACP, MDT Meetings, Referrals, Chaplaincy
 )
+from routers import consent  # Patient family data-sharing consent
 
 # New ML predictions router (trained XGBoost + real SHAP)
 from routers import ml_predictions
@@ -186,6 +188,8 @@ app.include_router(hci.router, prefix="/api/hci", tags=["hci"])  # HCI & ChatBot
 app.include_router(ethics.router, prefix="/api/ethics", tags=["ethics"])  # Biomedical Ethics (Priority 4)
 app.include_router(medical_knowledge.router, prefix="/api/medical", tags=["medical-knowledge"])
 app.include_router(care_settings.router, prefix="/api/care-settings", tags=["care-settings"])
+app.include_router(palliative_care.router, prefix="/api/palliative", tags=["palliative-care"])
+app.include_router(consent.router)
 app.include_router(ml_predictions.router, prefix="/api/ml", tags=["ml-predictions"])
 app.include_router(advanced_ml.router, prefix="/api/advanced-ml", tags=["advanced-ml"])
 

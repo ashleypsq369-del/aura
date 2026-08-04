@@ -73,6 +73,9 @@ export default function WellnessCheckin() {
   const { user } = useAuth();
   const { patientId } = usePatientId();
 
+  // Only patients should submit wellness check-ins — family/caregivers observe, not self-report
+  const isEligible = user?.role === 'patient';
+
   const [scores, setScores] = useState(
     Object.fromEntries(ITEMS.map(i => [i.key, null]))
   );
@@ -275,6 +278,27 @@ export default function WellnessCheckin() {
   }
 
   // € Main form €€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€
+
+  // Role guard — only patients can submit their own wellness check-in
+  if (!isEligible) {
+    return (
+      <div className="min-h-full flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-10 max-w-md text-center">
+          <Heart className="w-12 h-12 text-teal-500 mx-auto mb-4" />
+          <h2 className="text-base font-bold text-slate-900 mb-2">Patient Check-In Only</h2>
+          <p className="text-slate-500 text-sm mb-6 leading-relaxed">
+            The Daily Wellness Check-In is for patients to report their own symptoms.
+            {user?.role === 'family' && ' As a family member, you can view your loved one\'s check-ins through the Continuity Bridge.'}
+          </p>
+          <button onClick={() => navigate(user?.role === 'family' ? '/continuity-bridge' : '/dashboard')}
+            className="px-5 py-2.5 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition text-sm">
+            {user?.role === 'family' ? 'View Care Journey' : 'Go to Dashboard'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-full">
       <PageHeader

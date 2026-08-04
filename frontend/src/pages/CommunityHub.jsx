@@ -219,24 +219,24 @@ export default function CommunityHub() {
             {/* ML/signal-driven smart recommendations */}
             {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/40 border border-violet-200 dark:border-violet-800 rounded-xl overflow-hidden">
-                <div className="px-4 py-3 border-b border-violet-100 dark:border-violet-800 flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center flex-shrink-0">
+                className="bg-white border-2 border-violet-200 dark:from-violet-950/40 dark:to-indigo-950/40 dark:border-violet-800 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-violet-100 dark:border-violet-800 flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600">
+                  <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-white" />
                   </div>
-                  <h3 className="text-sm font-bold text-violet-900 dark:text-violet-200 flex-1">Smart Group Recommendations</h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-200 dark:bg-violet-800 text-violet-700 dark:text-violet-300">
+                  <h3 className="text-sm font-bold text-white flex-1">Smart Group Recommendations</h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/25 text-white">
                     {mlRecommendedGroups.length} for you
                   </span>
                 </div>
                 {(signals?.communityTags?.length > 0 || signals?.condition) && (
                   <div className="px-4 pt-2 pb-1">
-                    <p className="text-[11px] text-violet-700 dark:text-violet-300 flex items-center gap-1.5">
+                    <p className="text-[11px] text-slate-600 dark:text-violet-300 flex items-center gap-1.5">
                       <Sparkles size={11} className="text-violet-500" />
                       Matched to your profile:
-                      {signals.condition && <span className="font-semibold"> {signals.condition}</span>}
+                      {signals.condition && <span className="font-semibold text-slate-800"> {signals.condition}</span>}
                       {signals.communityTags?.slice(0,3).map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-300 rounded-full text-[10px] font-bold">{t}</span>
+                        <span key={t} className="px-1.5 py-0.5 bg-white border border-violet-400 text-violet-800 dark:bg-violet-900/60 dark:text-violet-300 rounded-full text-[10px] font-bold">{t}</span>
                       ))}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ export default function CommunityHub() {
                     return (
                       <button key={g.id}
                         onClick={() => navigate(`/community/${g.id}`)}
-                        className="text-left flex items-start gap-3 p-3 bg-white dark:bg-slate-700 hover:bg-violet-50 dark:hover:bg-slate-600 rounded-xl border border-violet-100 dark:border-slate-600 hover:border-violet-300 dark:hover:border-violet-500 transition-all group">
+                        className="text-left flex items-start gap-3 p-3 bg-white hover:bg-violet-50 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-xl border border-slate-200 hover:border-violet-300 dark:border-slate-600 dark:hover:border-violet-500 transition-all group shadow-sm">
                         <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
                           style={{ backgroundColor: color }}>
                           {groupInitials(g.name)}
@@ -260,7 +260,7 @@ export default function CommunityHub() {
                               <Users size={9} /> {g.member_count ?? 0}
                             </span>
                             {g.condition_tags?.slice(0,2).map(t => (
-                              <span key={t} className="text-[9px] font-bold px-1 py-0.5 rounded bg-violet-50 dark:bg-violet-900/40 text-violet-600 dark:text-violet-300">{t}</span>
+                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-violet-400 text-violet-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
                             ))}
                           </div>
                         </div>
@@ -274,23 +274,23 @@ export default function CommunityHub() {
 
             {/* Personalised banner */}
             {signals?.needsCommunity && activeTab === 'all' && (
-              <div className="px-4 py-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl">
-                <h3 className="text-sm font-bold text-indigo-800 mb-1 flex items-center gap-2">
-                  <Users size={14} className="text-indigo-600" />
+              <div className="px-4 py-3 bg-indigo-50 border border-indigo-300 rounded-xl">
+                <h3 className="text-sm font-bold text-indigo-900 mb-1 flex items-center gap-2">
+                  <Users size={14} className="text-indigo-700" />
                   Groups Matched to Your Profile
                 </h3>
-                <p className="text-xs text-indigo-700">
+                <p className="text-xs text-indigo-800">
                   Based on your preferences: {signals.communityTags?.join(', ')}
-                  {signals.needsEmotionalSupport && <span className="block mt-1 text-indigo-600">✨ Emotional support groups highlighted</span>}
-                  {signals.needsSpiritualSupport && <span className="block mt-1 text-indigo-600">🙏 Spiritual care groups available</span>}
+                  {signals.needsEmotionalSupport && <span className="block mt-1 text-indigo-700 font-medium">✨ Emotional support groups highlighted</span>}
+                  {signals.needsSpiritualSupport && <span className="block mt-1 text-indigo-700 font-medium">🙏 Spiritual care groups available</span>}
                 </p>
               </div>
             )}
 
             {recommended.length > 0 && (
               <div>
-                <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <Star size={12} className="fill-amber-400 text-amber-400" /> Recommended for you
+                <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <Star size={12} className="fill-amber-500 text-amber-500" /> Recommended for you
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {recommended.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
@@ -320,78 +320,96 @@ export default function CommunityHub() {
 // -- Group card -------------------------------------------------------------
 function GroupCard({ group, onToggle, pending, onOpen }) {
   const color = groupColor(group.name);
+  const initials = groupInitials(group.name);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all overflow-hidden flex flex-col">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      onClick={onOpen}
+      className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
+    >
+      {/* Top accent bar */}
+      <div className="h-1.5 w-full flex-shrink-0" style={{ background: `linear-gradient(90deg, ${color}, ${color}88)` }} />
 
-      {/* Banner */}
-      <div className="h-24 flex-shrink-0 relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${color}cc, ${color}88)` }}>
-        {group.image_url && (
-          <img src={group.image_url} alt={group.name}
-            className="w-full h-full object-cover absolute inset-0"
-            style={{ zIndex: 1 }} />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" style={{ zIndex: 2 }} />
-        {group.is_recommended && (
-          <span className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 bg-amber-400/90 rounded-full text-[10px] font-bold text-white">
-            <Star size={9} className="fill-white" /> Recommended
-          </span>
-        )}
-        {group.joined && (
-          <span className="absolute top-2 right-2 px-2 py-0.5 bg-teal-600/90 rounded-full text-[10px] font-bold text-white">✓ Joined</span>
-        )}
-      </div>
+      <div className="p-5 flex flex-col flex-1 gap-4">
 
-      {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-start gap-3 mb-3">
-          {/* Avatar - color circle, no image (image already in banner) */}
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-base flex-shrink-0 -mt-8 border-4 border-white dark:border-slate-800 shadow-md"
-            style={{ backgroundColor: color }}>
-            {groupInitials(group.name)}
+        {/* Header row: avatar + name + badges */}
+        <div className="flex items-start gap-3">
+          {/* Avatar */}
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-sm select-none"
+            style={{ backgroundColor: color }}
+          >
+            {initials}
           </div>
-          <div className="flex-1 min-w-0 pt-0.5">
-            <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug line-clamp-1">{group.name}</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-              <Users size={10} /> {group.member_count ?? 0} members
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug line-clamp-2 group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
+                {group.name}
+              </h3>
+              {group.joined && (
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0"
+                  style={{ background: `${color}18`, color }}>
+                  <Check size={9} /> Joined
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
+              <Users size={10} />
+              <span>{group.member_count ?? 0} members</span>
+              {group.is_recommended && (
+                <span className="ml-1 flex items-center gap-0.5 text-amber-600 dark:text-amber-400 font-semibold">
+                  <Star size={9} className="fill-amber-500 text-amber-500" /> Recommended
+                </span>
+              )}
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2 mb-3 flex-1">{group.description || 'A supportive community group.'}</p>
+        {/* Description */}
+        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2 flex-1">
+          {group.description || 'A supportive community group.'}
+        </p>
 
         {/* Tags */}
         {group.condition_tags?.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {group.condition_tags.slice(0, 3).map((t, i) => {
-              const chipCls = ['chip-teal','chip-violet','chip-blue','chip-emerald','chip-pink','chip-amber','chip-cyan','chip-indigo','chip-orange','chip-rose'];
-              return <span key={t} className={chipCls[i % chipCls.length]}>{t}</span>;
-            })}
+          <div className="flex flex-wrap gap-1.5">
+            {group.condition_tags.slice(0, 3).map(t => (
+              <span key={t}
+                className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border"
+                style={{ background: `${color}12`, color, borderColor: `${color}40` }}>
+                {t}
+              </span>
+            ))}
             {group.condition_tags.length > 3 && (
-              <span className="chip-teal">+{group.condition_tags.length - 3}</span>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-700 dark:text-slate-400">
+                +{group.condition_tags.length - 3}
+              </span>
             )}
           </div>
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-2 mt-auto">
+        <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
           <button
             onClick={e => { e.stopPropagation(); onToggle(); }}
             disabled={pending}
-            data-tip={group.joined ? 'Leave this group' : 'Join this community group'}
-            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-bold rounded-xl border-2 transition flex-shrink-0 ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl border-2 transition flex-shrink-0 ${
               group.joined
-                ? 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200'
-                : 'bg-white text-teal-700 border-teal-300 hover:bg-teal-50'
-            }`}>
+                ? 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
+                : 'bg-white text-teal-700 border-teal-300 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
+            }`}
+          >
             {group.joined ? 'Leave' : <><UserPlus size={11} /> Join</>}
           </button>
-          <button onClick={onOpen}
-            data-tip="Open this group chat"
-            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-bold text-white rounded-xl transition hover:opacity-90"
-            style={{ backgroundColor: color }}>
-            <MessagesSquare size={12} /> Open Chat
+          <button
+            onClick={e => { e.stopPropagation(); onOpen(); }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold text-white rounded-xl transition hover:opacity-90 active:scale-95"
+            style={{ backgroundColor: color }}
+          >
+            <MessagesSquare size={12} /> Open Group
           </button>
         </div>
       </div>

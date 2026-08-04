@@ -316,7 +316,7 @@ export default function AuraOnboarding() {
               style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)' }}>
 
               {/* Progress bar */}
-              <div className="h-1 w-full" style={{ background: '#f1f5f9' }}>
+              <div className="h-1 w-full bg-slate-100 dark:bg-slate-700">
                 <div className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${((step+1)/steps.length)*100}%`, background:'linear-gradient(90deg,#0d9488,#0369a1)' }}/>
               </div>
@@ -325,15 +325,14 @@ export default function AuraOnboarding() {
               <AnimatePresence>
                 {skipConfirm && (
                   <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                    className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl"
-                    style={{background:'rgba(255,255,255,0.98)',backdropFilter:'blur(6px)'}}>
-                    <p className="text-sm font-bold text-slate-900 text-center px-4">End the tour?</p>
-                    <p className="text-[11px] text-slate-600 text-center px-6 leading-snug">
+                    className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-white/95 dark:bg-slate-800/98 backdrop-blur-sm">
+                    <p className="text-sm font-bold text-slate-900 dark:text-white text-center px-4">End the tour?</p>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 text-center px-6 leading-snug">
                       You can restart it anytime from the avatar menu.
                     </p>
                     <div className="flex gap-2">
                       <button onClick={() => setSkipConfirm(false)}
-                        className="px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200">
+                        className="px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600">
                         Keep going
                       </button>
                       <button onClick={skip}
@@ -405,19 +404,18 @@ export default function AuraOnboarding() {
             <div className="flex-shrink-0 mb-1">
               <AuraMascot size={48} pose={hint.pose} showShadow={false}/>
             </div>
-            <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto"
-              style={{ background: '#ffffff', border: '1px solid #cbd5e1', boxShadow: '0 6px 24px rgba(0,0,0,0.12)' }}>
+            <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600"
+              style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.18)' }}>
               <div className="flex items-start gap-2">
                 <HelpCircle size={12} className="text-teal-500 flex-shrink-0 mt-0.5"/>
-                <p className="text-[11px] font-medium text-slate-700 leading-snug pr-4">{hint.hint}</p>
+                <p className="text-[11px] font-medium text-slate-700 dark:text-slate-200 leading-snug pr-4">{hint.hint}</p>
               </div>
               <button onClick={() => setShowHint(false)}
-                className="absolute top-2 right-2 text-gray-300 hover:text-gray-500 transition-colors pointer-events-auto">
+                className="absolute top-2 right-2 text-slate-300 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 transition-colors pointer-events-auto">
                 <X size={10}/>
               </button>
               {/* Tail */}
-              <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45"
-                style={{ background: '#ffffff', borderRight: '1px solid #cbd5e1', borderBottom: '1px solid #cbd5e1' }}/>
+              <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-white dark:bg-slate-800 border-r border-b border-slate-200 dark:border-slate-600"/>
             </div>
           </motion.div>
         )}

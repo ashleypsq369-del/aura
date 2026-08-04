@@ -19,6 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from '../utils/toast';
 import PageHeader from '../components/PageHeader';
+import SearchableSelect from '../components/ui/SearchableSelect';
 import { API_URL } from '../api/client';
 
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
@@ -46,28 +47,25 @@ export default function AdminFeaturePanel() {
   const [activeTab, setActiveTab] = useState('users');
   const [search, setSearch] = useState('');
   const [expandedUser, setExpandedUser] = useState(null);
-  const [reviewModal, setReviewModal] = useState(null); // { request }
-  const [overrideModal, setOverrideModal] = useState(null); // { userId, featurePath, current }
+  const [reviewModal, setReviewModal] = useState(null);
+  const [overrideModal, setOverrideModal] = useState(null);
   const [reviewNote, setReviewNote] = useState('');
   const [overrideNote, setOverrideNote] = useState('');
   const [statusFilter, setStatusFilter] = useState('pending');
 
-  if (user?.role !== 'admin') {
-    navigate('/dashboard');
-    return null;
-  }
-
-  // ── Queries ──────────────────────────────────────────────────────────────
+  // ── Queries — always run (hooks must not be conditional) ──────────────────
   const { data: usersData, isLoading: loadingUsers } = useQuery({
     queryKey: ['admin-feature-users'],
     queryFn: () => axios.get(`${API_URL}/api/features/admin/users`, { headers: authH() }).then(r => r.data),
     staleTime: 30000,
+    enabled: user?.role === 'admin',
   });
 
   const { data: requestsData, isLoading: loadingReqs } = useQuery({
     queryKey: ['admin-feature-requests', statusFilter],
     queryFn: () => axios.get(`${API_URL}/api/features/admin/requests?status=${statusFilter === 'all' ? '' : statusFilter}`, { headers: authH() }).then(r => r.data),
     staleTime: 15000,
+    enabled: user?.role === 'admin',
   });
 
   // ── Mutations ─────────────────────────────────────────────────────────────
@@ -115,6 +113,12 @@ export default function AdminFeaturePanel() {
 
   const requests = requestsData?.requests || [];
   const pendingCount = (usersData?.users || []).reduce((sum, u) => sum + (u.pending_requests || 0), 0);
+
+  // ── Role guard — after all hooks ──────────────────────────────────────────
+  if (user?.role !== 'admin') {
+    navigate('/dashboard');
+    return null;
+  }
 
   return (
     <div className="min-h-screen pb-12">
@@ -381,19 +385,22 @@ export default function AdminFeaturePanel() {
               {!overrideModal.overrideId && (
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Feature</label>
-                  <select value={overrideModal.featurePath}
-                    onChange={e => setOverrideModal(p => ({ ...p, featurePath: e.target.value }))}
-                    className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-white">
-                    <option value="">Select a feature...</option>
-                    {Object.entries({
+                  <SearchableSelect
+                    accent="teal"
+                    value={overrideModal.featurePath || null}
+                    onChange={v => setOverrideModal(p => ({ ...p, featurePath: v || '' }))}
+                    placeholder="Select a feature..."
+                    options={Object.entries({
                       '/memory-vault': 'Memory Vault', '/legacy-setup': 'Digital Legacy Setup',
                       '/legacy-content': 'Legacy Content', '/heir-management': 'Heir Management',
                       '/journal': 'Personal Journal', '/community': 'Community Hub',
                       '/bereavement-support': 'Bereavement Support', '/pre-clinic': 'Pre-Clinic Checklist',
                       '/appointments': 'Appointments', '/medications': 'Medications',
                       '/wellness-checkin': 'Wellness Check-In', '/messages': 'Messages',
-                    }).map(([path, name]) => <option key={path} value={path}>{name}</option>)}
-                  </select>
+                      '/my-space': 'Patient Portal (My Space)', '/resources': 'Resources',
+                      '/my-journey': 'My Journey Timeline', '/reports': 'Reports',
+                    }).map(([path, name]) => ({ value: path, label: name, sublabel: path }))}
+                  />
                 </div>
               )}
 

@@ -14,6 +14,7 @@ import PageHeader from '../components/PageHeader';
 import InlineTaskReminder from '../components/InlineTaskReminder';
 import toast from '../utils/toast';
 import ReminderBell from '../components/ReminderBell';
+import SearchableSelect from '../components/ui/SearchableSelect';
 import {
   Pill, Plus, X, CheckCircle, Search, Edit2, Ban,
   AlertTriangle, Clock, Loader2, Bell, Sparkles,
@@ -99,60 +100,7 @@ function KpiCard({ label, value, icon: Icon, color, selected, onClick, subtitle 
   );
 }
 
-/* ── Patient live-search ─────────────────────────────────────────────────── */
-function PatientSearch({ list, selectedId, onSelect }) {
-  const [q, setQ] = useState('');
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  const sel = list.find(p => p.id === selectedId);
-  useEffect(() => {
-    const h = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
-  }, []);
-  const hits = list.filter(p => {
-    if (!q) return true;
-    const s = q.toLowerCase();
-    return (p.full_name||'').toLowerCase().includes(s)||(p.patient_code||'').toLowerCase().includes(s);
-  }).slice(0, 8);
-  return (
-    <div ref={ref} className="relative flex-1 max-w-xs">
-      <div className={`flex items-center gap-2 border rounded-xl px-3.5 py-2.5 bg-white transition-all ${open?'border-teal-500 ring-2 ring-teal-500/20 shadow-sm':'border-slate-300 hover:border-slate-400'}`}
-        onClick={() => { setQ(''); setOpen(true); }}>
-        <Search size={15} className="text-slate-400 flex-shrink-0"/>
-        <input value={open ? q : sel ? `${sel.patient_code||sel.full_name}` : ''}
-          onChange={e => setQ(e.target.value)} onFocus={() => { setQ(''); setOpen(true); }}
-          placeholder={sel ? (sel.patient_code||sel.full_name) : 'Search patient…'}
-          className="flex-1 text-sm font-medium text-slate-700 outline-none bg-transparent placeholder-slate-400"/>
-        {sel && <button onClick={e => { e.stopPropagation(); onSelect(null); setQ(''); setOpen(false); }}>
-          <X size={13} className="text-slate-400 hover:text-red-500"/>
-        </button>}
-      </div>
-      <AnimatePresence>
-        {open && (
-          <motion.div initial={{opacity:0,y:-4}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-4}}
-            className="absolute z-30 w-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-52 overflow-y-auto">
-            {hits.length === 0
-              ? <div className="px-4 py-3 text-sm text-slate-400 text-center">No patients found</div>
-              : hits.map(p => (
-                <button key={p.id} type="button" onClick={() => { onSelect(p.id); setOpen(false); setQ(''); }}
-                  className={`w-full text-left px-4 py-2.5 hover:bg-teal-50 flex items-center gap-3 border-b border-slate-50 last:border-0 ${selectedId===p.id?'bg-teal-50':''}`}>
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {(p.full_name||'?')[0]}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-slate-800 text-sm truncate">{p.full_name}</p>
-                    <p className="text-xs text-slate-500">{p.patient_code} · {p.age} yrs</p>
-                  </div>
-                  {selectedId===p.id && <CheckCircle size={14} className="text-teal-600 ml-auto flex-shrink-0"/>}
-                </button>
-              ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
+/* PatientSearch is now handled by SearchableSelect — see import below */
 
 /* ── Add/Edit Modal ──────────────────────────────────────────────────────── */
 const EMPTY_MED = { name:'', dose:'', frequency:'once_daily', route:'Oral', indication:'', start_date: new Date().toISOString().slice(0,10) };
@@ -193,20 +141,24 @@ function MedModal({ initial, onClose, onSave, pending }) {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Frequency *</label>
-              <select value={f.frequency} onChange={up('frequency')}
-                className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white">
-                {FREQ_OPTS.map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Route</label>
-              <select value={f.route} onChange={up('route')}
-                className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none bg-white">
-                {ROUTE_OPTS.map(r=><option key={r}>{r}</option>)}
-              </select>
-            </div>
+            <SearchableSelect
+              label="Frequency *"
+              accent="teal"
+              value={f.frequency}
+              onChange={v => setF(p => ({ ...p, frequency: v || 'once_daily' }))}
+              options={FREQ_OPTS.map(o => ({ value: o.v, label: o.l }))}
+              allowClear={false}
+              placeholder="Select frequency…"
+            />
+            <SearchableSelect
+              label="Route"
+              accent="teal"
+              value={f.route}
+              onChange={v => setF(p => ({ ...p, route: v || 'Oral' }))}
+              options={ROUTE_OPTS.map(r => ({ value: r, label: r }))}
+              allowClear={false}
+              placeholder="Select route…"
+            />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Indication</label>
@@ -612,7 +564,20 @@ export default function Medications() {
           <div className="flex flex-col md:flex-row gap-3 items-center">
             {/* Patient search (staff) */}
             {isStaff && (
-              <PatientSearch list={patientList} selectedId={patientId} onSelect={setPatientId}/>
+              <SearchableSelect
+                className="flex-1 max-w-xs"
+                placeholder="Search patient…"
+                accent="teal"
+                value={patientId ? String(patientId) : null}
+                onChange={v => setPatientId(v ? Number(v) : null)}
+                options={patientList.map(p => ({
+                  value: String(p.id),
+                  label: p.full_name,
+                  sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+                  avatar: 'linear-gradient(135deg,#0d9488,#0891b2)',
+                }))}
+                nullLabel="All patients"
+              />
             )}
             {/* Text search */}
             <div className="flex-1 relative">
