@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: project-aura-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_NS4PdsGFKx2t@ep-soft-shadow-b4zx3dxd-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require
+      - key: SECRET_KEY
+        value: 71ca017d233b2480f8bf2fa01b3e1f125fe4da927c32beba94d834d1941741e8
+      - key: ACCESS_TOKEN_EXPIRE_HOURS
+        value: "8"
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_ORIGINS
+        value: https://project-aura.onrender.com,http://localhost:5173
+      - key: PYTHON_VERSION
+        value: "3.11.9"
