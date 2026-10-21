@@ -7,7 +7,7 @@ backend/__pycache__/
 **/*.pyc
 **/*.pyo
 
-# Build output
+# Build output — exclude from git, built by CI/CD on each platform
 frontend/dist/
 frontend/build/
 frontend/.vite/
@@ -23,6 +23,9 @@ frontend/.vite/
 .env.local
 .env.*.local
 # backend/.env is intentionally tracked — pre-configured for standalone use
+# Production env examples are tracked (they contain no real secrets)
+# backend/.env.production is NOT tracked — add real secrets there
+backend/.env.production
 
 # Compiled executables & binaries
 ace.exe
@@ -42,6 +45,15 @@ build/
 backend/ml_models/*.pkl
 backend/ml_models/*.joblib
 # The actual trained models in ml_training/models/ are tracked (needed for predictions)
+
+# ============================================================
+# SECURITY: NEVER commit real .env files
+# ============================================================
+backend/.env
+.env
+.env.production
+frontend/.env.local
+frontend/.env.production
 
 # Logs
 *.log

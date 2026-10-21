@@ -387,6 +387,13 @@ export default function Layout({ children }) {
           logout();
         }}
       />
+
+      {/* Copyright Footer — always visible, protects ownership */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 pointer-events-none flex justify-center">
+        <p className="text-[10px] text-gray-400/60 py-0.5 px-2 select-none">
+          © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
+        </p>
+      </div>
     </div>
   );
 }

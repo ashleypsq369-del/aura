@@ -1,6 +1,11 @@
 """
 Project Aura - FastAPI Backend
 Complete KIRO Specification Implementation
+
+Copyright (c) 2024-2026 Project Aura — Group 31
+All Rights Reserved.
+Proprietary software — see LICENSE file for terms.
+Unauthorised copying, distribution, or use is strictly prohibited.
 """
 
 import warnings
@@ -86,10 +91,15 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 # CORS Configuration — locked to known origins; set ALLOWED_ORIGINS env var to extend
+# In production (Koyeb + Vercel), set ALLOWED_ORIGINS to your Vercel URL, e.g.:
+#   ALLOWED_ORIGINS=https://project-aura.vercel.app,https://your-custom-domain.com
 _ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173"
 ).split(",")
+
+# Strip whitespace from each origin (env vars sometimes have spaces after commas)
+_ALLOWED_ORIGINS = [o.strip() for o in _ALLOWED_ORIGINS if o.strip()]
 
 # Always include the standalone app origin (pywebview loads from 127.0.0.1:8000)
 _standalone_origins = [

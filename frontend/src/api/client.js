@@ -1,16 +1,14 @@
 import axios from 'axios';
 
-// In standalone/desktop mode the frontend is served by the same FastAPI backend
-// (both at http://127.0.0.1:8000). Using a relative base means all API calls
-// go to the same origin — no CORS issues regardless of host/port.
-// In dev mode (Vite on :5173) the vite proxy forwards /api → localhost:8000.
+// API base URL resolution:
+// - Dev (Vite :5173):       '' — Vite proxy in vite.config.js forwards /api → localhost:8000
+// - Production (Vercel):    VITE_API_URL env var → Koyeb backend URL
+// - Standalone (desktop):   '' — served from same FastAPI origin at 127.0.0.1:8000
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||          // explicit override if needed
-  (import.meta.env.DEV ? 'http://localhost:8000' : '');  // dev=absolute, prod=relative
+  import.meta.env.VITE_API_URL?.trim() ||   // Koyeb URL set in Vercel env vars
+  '';                                         // empty = relative (dev proxy + standalone)
 
-// Shared API_URL for pages that use raw axios directly.
-// In production this is '' (empty string = relative, works on any host/port).
-// In dev this is 'http://localhost:8000'.
+// Shared API_URL for pages that use raw axios or raw fetch directly.
 export const API_URL = API_BASE_URL;
 
 const apiClient = axios.create({
@@ -137,8 +135,8 @@ export const llmChatbotAPI = {
     const params = new URLSearchParams({ message });
     if (conversationId) params.append('conversation_id', conversationId);
 
-    // Use absolute URL in dev, relative path in production/standalone
-    const streamBase = import.meta.env.DEV ? 'http://localhost:8000' : '';
+    // Use VITE_API_URL (Koyeb) in production, empty string for dev proxy / standalone
+    const streamBase = import.meta.env.VITE_API_URL?.trim() || '';
     const res = await fetch(
       `${streamBase}/api/llm-chatbot/stream?${params.toString()}`,
       {

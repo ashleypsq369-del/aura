@@ -13,13 +13,21 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import useAppStore from '../store/useAppStore';
 
-// Derive WebSocket URL from the current page location so it works in both
-// dev mode (ws://localhost:8000) and standalone/production (ws://127.0.0.1:8000)
+// Derive WebSocket URL:
+// - If VITE_API_URL is set (Vercel → Koyeb deployment): convert http→ws
+// - Dev mode without VITE_API_URL: use Vite proxy (ws://localhost:5173 → localhost:8000)
+// - Standalone (desktop, same origin): use page host
 function getWsBase() {
-  if (import.meta.env.DEV) {
-    return (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/^http/, 'ws');
+  const apiUrl = import.meta.env.VITE_API_URL?.trim();
+  if (apiUrl) {
+    // Convert https://xxx.koyeb.app → wss://xxx.koyeb.app
+    return apiUrl.replace(/^https/, 'wss').replace(/^http/, 'ws');
   }
-  // In production the page is served by the backend — use same host/port
+  if (import.meta.env.DEV) {
+    // Vite dev server proxy handles /ws → localhost:8000
+    return 'ws://localhost:5173';
+  }
+  // Standalone / served by FastAPI — same origin
   const proto = window.location.protocol === 'https:' ? 'wss' : 'ws';
   return `${proto}://${window.location.host}`;
 }

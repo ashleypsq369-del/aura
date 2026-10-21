@@ -1,0 +1,27 @@
+services:
+  - name: project-aura-api
+    type: web
+    instance_type: nano
+    routes:
+      - path: /
+        port: 8000
+    ports:
+      - port: 8000
+        protocol: http
+    build:
+      type: buildpack
+      builder: heroku
+      buildpack_lock_file_path: backend/requirements.txt
+    run:
+      command: uvicorn main:app --host 0.0.0.0 --port 8000
+    env:
+      - key: PORT
+        value: "8000"
+      - key: PYTHON_VERSION
+        value: "3.11"
+    health_checks:
+      - path: /health
+        port: 8000
+        protocol: http
+        initial_delay: 15
+        period: 30
