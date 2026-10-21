@@ -10,11 +10,11 @@ slowapi==0.1.9
 anthropic==0.26.0
 google-generativeai==0.7.2
 groq>=0.9.0
-xgboost==2.0.3
-shap==0.45.1
+xgboost==2.1.3
+shap==0.46.0
 joblib==1.4.2
-numpy==1.26.4
-scikit-learn==1.4.2
+numpy==2.2.6
+scikit-learn==1.6.1
 vaderSentiment==3.3.2
 bleach==6.1.0
 python-dotenv==1.0.1
