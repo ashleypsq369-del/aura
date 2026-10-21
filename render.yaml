@@ -22,3 +22,5 @@ services:
         value: https://project-aura.onrender.com,http://localhost:5173
       - key: PYTHON_VERSION
         value: "3.11.9"
+  - key: PORT
+    value: "8000"
