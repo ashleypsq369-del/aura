@@ -35,9 +35,10 @@ ace.spec
 dist/
 
 # Large binary assets (use CDN or LFS instead)
-frontend/public/resources/slideshow/
-frontend/public/resources/african/
-frontend/public/icons/
+# Note: slideshow/african/icons are now tracked so Vercel can serve them
+# frontend/public/resources/slideshow/
+# frontend/public/resources/african/
+# frontend/public/icons/
 build/
 
 # ML model files — kept in .gitignore as they're large (>50MB total)
