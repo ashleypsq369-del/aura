@@ -10,7 +10,7 @@ import json
 import hashlib
 
 from passlib.context import CryptContext
-_pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__truncate_error=False)
+_pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, JSON
 from sqlalchemy.ext.declarative import declarative_base

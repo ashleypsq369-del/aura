@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
 # Copy and install requirements first (layer caching)
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir "bcrypt==4.0.1" && \
     pip install --no-cache-dir -r requirements.txt
 
 # Download NLTK data needed by aura_ai_engine
