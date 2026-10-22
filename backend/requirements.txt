@@ -19,7 +19,7 @@ vaderSentiment==3.3.2
 bleach==6.1.0
 python-dotenv==1.0.1
 aiofiles==23.2.1
-Pillow==10.3.0
+Pillow==11.2.1
 sendgrid==6.11.0
 twilio==9.0.4
 alembic==1.13.1
