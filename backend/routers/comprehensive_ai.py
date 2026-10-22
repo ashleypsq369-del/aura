@@ -59,8 +59,8 @@ from src.db import (
     MedicationAdherenceLog, Appointment
 )
 
-# Import new tables
-from add_comprehensive_ai_tables import PatientAllergy, MedicationEffect
+# Import new tables — defined in src.db so they're created in the right order
+from src.db import PatientAllergy, MedicationEffect
 
 
 # ==================== PYDANTIC MODELS ====================

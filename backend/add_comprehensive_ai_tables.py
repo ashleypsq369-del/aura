@@ -52,11 +52,12 @@ class MedicationEffect(Base):
 print("Creating comprehensive AI monitoring tables...")
 
 try:
-    # Create tables
+    # Create tables — use checkfirst=True so it's safe to run multiple times
+    # and won't fail if parent tables don't exist yet
     Base.metadata.create_all(bind=engine, tables=[
         PatientAllergy.__table__,
         MedicationEffect.__table__
-    ])
+    ], checkfirst=True)
     
     print("[OK] Tables created successfully!")
     print("   - patient_allergies")

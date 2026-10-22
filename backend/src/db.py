@@ -2270,3 +2270,40 @@ class CareSettingInteraction(Base):
     frequency = Column(String(50))        # daily/weekly/per-visit/as-needed
     priority = Column(String(20), default='medium')  # critical/high/medium/low
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+# ── Comprehensive AI Tables (moved from add_comprehensive_ai_tables.py) ──────
+
+class PatientAllergy(Base):
+    """Patient Allergies - Critical for medication safety"""
+    __tablename__ = 'patient_allergies'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    allergen_type = Column(String(50), nullable=False)
+    allergen_name = Column(String(200), nullable=False)
+    reaction_severity = Column(String(20))
+    reaction_description = Column(Text)
+    onset_date = Column(DateTime)
+    verified_by = Column(Integer, ForeignKey('users.id'))
+    verified_at = Column(DateTime)
+    is_active = Column(Boolean, default=True)
+    notes = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class MedicationEffect(Base):
+    """Track medication effects - both intended and adverse"""
+    __tablename__ = 'medication_effects'
+    id = Column(Integer, primary_key=True)
+    medication_id = Column(Integer, ForeignKey('medications.id'), nullable=False, index=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    effect_type = Column(String(30), nullable=False)
+    effect_description = Column(String(200), nullable=False)
+    severity = Column(String(20))
+    onset_date = Column(DateTime)
+    resolution_date = Column(DateTime)
+    reported_by_patient = Column(Boolean, default=False)
+    reported_by_clinician_id = Column(Integer, ForeignKey('users.id'))
+    action_taken = Column(Text)
+    is_ongoing = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
