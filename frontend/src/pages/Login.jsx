@@ -142,7 +142,18 @@ export default function Login() {
                     value={username}
                     onChange={e => {
                       setUsername(e.target.value);
-                      setFieldErrors(p => ({ ...p, username: undefined }));
+                      // Re-validate if already shown an error
+                      if (fieldErrors.username) {
+                        const err = e.target.value.length < 3 ? 'Username must be at least 3 characters'
+                          : e.target.value.length > 50 ? 'Username cannot exceed 50 characters'
+                          : !/^[a-zA-Z0-9_]+$/.test(e.target.value) ? 'Letters, numbers and underscores only'
+                          : undefined;
+                        setFieldErrors(p => ({ ...p, username: err }));
+                      }
+                    }}
+                    onBlur={() => {
+                      const errors = validate(username, password);
+                      if (errors.username) setFieldErrors(p => ({ ...p, username: errors.username }));
                     }}
                     className="flex-1 px-3 py-2.5 outline-none text-sm text-slate-900 font-medium bg-transparent"
                     placeholder="Enter your username"
@@ -189,7 +200,16 @@ export default function Login() {
                     value={password}
                     onChange={e => {
                       setPassword(e.target.value);
-                      setFieldErrors(p => ({ ...p, password: undefined }));
+                      if (fieldErrors.password) {
+                        const err = e.target.value.length < 8 ? 'Password must be at least 8 characters'
+                          : e.target.value.length > 128 ? 'Password cannot exceed 128 characters'
+                          : undefined;
+                        setFieldErrors(p => ({ ...p, password: err }));
+                      }
+                    }}
+                    onBlur={() => {
+                      const errors = validate(username, password);
+                      if (errors.password) setFieldErrors(p => ({ ...p, password: errors.password }));
                     }}
                     className="flex-1 px-3 py-2.5 outline-none text-sm text-slate-900 font-medium bg-transparent"
                     placeholder="Enter your password"

@@ -101,62 +101,52 @@ const CARE_SETTINGS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VALIDATION
+// PER-FIELD VALIDATORS  (called on blur + on change if already touched)
 // ─────────────────────────────────────────────────────────────────────────────
-function validateStep1(data) {
+const VALIDATORS = {
+  full_name: (v) => {
+    if (!v.trim()) return 'Full name is required';
+    if (v.trim().length < 2) return 'Name must be at least 2 characters';
+    if (v.trim().length > 100) return 'Name cannot exceed 100 characters';
+    if (/[0-9]/.test(v)) return 'Name cannot contain numbers';
+    if (!/^[\p{L}\s'\-\.]+$/u.test(v.trim())) return 'Letters, spaces, hyphens and apostrophes only';
+    return null;
+  },
+  username: (v) => {
+    if (!v.trim()) return 'Username is required';
+    if (v.length < 3) return 'Username must be at least 3 characters';
+    if (v.length > 50) return 'Username cannot exceed 50 characters';
+    if (!/^[a-z0-9_]+$/.test(v)) return 'Lowercase letters, numbers and underscores only';
+    return null;
+  },
+  email: (v) => {
+    if (!v.trim()) return 'Email address is required';
+    if (v.length > 100) return 'Email cannot exceed 100 characters';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'Please enter a valid email address';
+    return null;
+  },
+  password: (v) => {
+    if (!v) return 'Password is required';
+    if (v.length < 8) return 'Password must be at least 8 characters';
+    if (v.length > 72) return 'Password cannot exceed 72 characters';
+    if (!/[A-Z]/.test(v)) return 'Must contain at least one uppercase letter';
+    if (!/[0-9]/.test(v)) return 'Must contain at least one number';
+    return null;
+  },
+};
+
+function validateStep1(data, country) {
   const errors = {};
-
-  // Full name — text, 2–100 chars, letters/spaces/hyphens/apostrophes only
-  if (!data.full_name.trim())
-    errors.full_name = 'Full name is required';
-  else if (data.full_name.trim().length < 2)
-    errors.full_name = 'Name must be at least 2 characters';
-  else if (data.full_name.trim().length > 100)
-    errors.full_name = 'Name cannot exceed 100 characters';
-  else if (!/^[\p{L}\s'\-\.]+$/u.test(data.full_name.trim()))
-    errors.full_name = 'Name can only contain letters, spaces, hyphens and apostrophes';
-
-  // Username — alphanumeric + underscore, 3–50 chars
-  if (!data.username.trim())
-    errors.username = 'Username is required';
-  else if (data.username.length < 3)
-    errors.username = 'Username must be at least 3 characters';
-  else if (data.username.length > 50)
-    errors.username = 'Username cannot exceed 50 characters';
-  else if (!/^[a-z0-9_]+$/.test(data.username))
-    errors.username = 'Lowercase letters, numbers and underscores only';
-
-  // Email — RFC-compliant, max 100
-  if (!data.email.trim())
-    errors.email = 'Email address is required';
-  else if (data.email.length > 100)
-    errors.email = 'Email cannot exceed 100 characters';
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-    errors.email = 'Please enter a valid email address';
-
-  // Phone — digits only, 4–15 (optional)
-  if (data.phone_number.trim()) {
+  Object.entries(VALIDATORS).forEach(([field, fn]) => {
+    const err = fn(data[field] ?? '');
+    if (err) errors[field] = err;
+  });
+  if (data.phone_number?.trim()) {
     const digits = data.phone_number.replace(/\D/g, '');
-    const country = COUNTRIES.find(c => c.dial === data.phone_dial);
     const max = country?.maxDigits ?? 15;
-    if (digits.length < 4)
-      errors.phone_number = 'Phone number must be at least 4 digits';
-    else if (digits.length > max)
-      errors.phone_number = `Phone number for ${country?.name ?? 'this country'} cannot exceed ${max} digits`;
+    if (digits.length < 4) errors.phone_number = 'Phone number must be at least 4 digits';
+    else if (digits.length > max) errors.phone_number = `Max ${max} digits for ${country?.name}`;
   }
-
-  // Password — min 8, max 72 (bcrypt limit), 1 uppercase, 1 digit
-  if (!data.password)
-    errors.password = 'Password is required';
-  else if (data.password.length < 8)
-    errors.password = 'Password must be at least 8 characters';
-  else if (data.password.length > 72)
-    errors.password = 'Password cannot exceed 72 characters';
-  else if (!/[A-Z]/.test(data.password))
-    errors.password = 'Must contain at least one uppercase letter';
-  else if (!/[0-9]/.test(data.password))
-    errors.password = 'Must contain at least one number';
-
   return errors;
 }
 
@@ -396,6 +386,7 @@ export default function Register() {
   const [showPw, setShowPw] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [touched, setTouched] = useState({}); // which fields user has left/interacted with
   const [serverError, setServerError] = useState('');
   const [countryDrawerOpen, setCountryDrawerOpen] = useState(false);
 
@@ -407,16 +398,48 @@ export default function Register() {
     phone_number: '', role: 'patient', care_setting: '',
   });
 
+  // Validate a single field and update errors
+  const validateField = useCallback((field, value) => {
+    if (field === 'phone_number') {
+      if (!value.trim()) { setFieldErrors(p => ({ ...p, phone_number: undefined })); return; }
+      const digits = value.replace(/\D/g, '');
+      const max = selectedCountry?.maxDigits ?? 15;
+      if (digits.length < 4)
+        setFieldErrors(p => ({ ...p, phone_number: 'Phone number must be at least 4 digits' }));
+      else if (digits.length > max)
+        setFieldErrors(p => ({ ...p, phone_number: `Max ${max} digits for ${selectedCountry?.name}` }));
+      else
+        setFieldErrors(p => ({ ...p, phone_number: undefined }));
+      return;
+    }
+    const fn = VALIDATORS[field];
+    if (!fn) return;
+    const err = fn(value);
+    setFieldErrors(p => ({ ...p, [field]: err || undefined }));
+  }, [selectedCountry]);
+
   const set = useCallback((field, value) => {
     setFormData(p => ({ ...p, [field]: value }));
-    setFieldErrors(p => ({ ...p, [field]: undefined }));
     setServerError('');
-  }, []);
+    // Re-validate immediately if field was already touched (show errors as you fix them)
+    setTouched(prev => {
+      if (prev[field]) validateField(field, value);
+      return prev;
+    });
+  }, [validateField]);
 
-  // Keep phone digits only
+  // Called when user leaves a field — mark as touched and validate
+  const handleBlur = useCallback((field) => {
+    setTouched(p => ({ ...p, [field]: true }));
+    validateField(field, formData[field] ?? '');
+  }, [validateField, formData]);
+
+  // Phone: digits only, capped at country max, validate immediately
   const handlePhone = (raw) => {
     const digits = raw.replace(/\D/g, '').slice(0, selectedCountry.maxDigits);
-    set('phone_number', digits);
+    setFormData(p => ({ ...p, phone_number: digits }));
+    setServerError('');
+    if (touched.phone_number) validateField('phone_number', digits);
   };
 
   const registerMutation = useMutation({
@@ -450,7 +473,9 @@ export default function Register() {
 
   const handleStep1 = (e) => {
     e.preventDefault();
-    const errors = validateStep1({ ...formData, phone_dial: selectedCountry.dial });
+    // Mark all fields as touched so all errors show
+    setTouched({ full_name: true, username: true, email: true, password: true, phone_number: true });
+    const errors = validateStep1(formData, selectedCountry);
     if (Object.keys(errors).length) { setFieldErrors(errors); return; }
     setStep(2);
     window.scrollTo(0, 0);
@@ -562,7 +587,12 @@ export default function Register() {
                         <input
                           type="text"
                           value={formData.full_name}
-                          onChange={e => set('full_name', e.target.value)}
+                          onChange={e => {
+                            // Block digits immediately — don't let numbers in
+                            const clean = e.target.value.replace(/[0-9]/g, '');
+                            set('full_name', clean);
+                          }}
+                          onBlur={() => handleBlur('full_name')}
                           className={inputCls(fieldErrors.full_name)}
                           placeholder="e.g., Kwame Mensah"
                           maxLength={100}
@@ -588,6 +618,7 @@ export default function Register() {
                           type="text"
                           value={formData.username}
                           onChange={e => set('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                          onBlur={() => handleBlur('username')}
                           className={inputCls(fieldErrors.username)}
                           placeholder="e.g., kwame_mensah"
                           maxLength={50}
@@ -617,6 +648,7 @@ export default function Register() {
                           type="email"
                           value={formData.email}
                           onChange={e => set('email', e.target.value)}
+                          onBlur={() => handleBlur('email')}
                           className={inputCls(fieldErrors.email)}
                           placeholder="your.email@example.com"
                           maxLength={100}
@@ -657,6 +689,7 @@ export default function Register() {
                             type="tel"
                             value={formData.phone_number}
                             onChange={e => handlePhone(e.target.value)}
+                            onBlur={() => { setTouched(p => ({ ...p, phone_number: true })); validateField('phone_number', formData.phone_number); }}
                             className={inputCls(fieldErrors.phone_number, 'font-mono tracking-wider')}
                             placeholder={`Max ${selectedCountry.maxDigits} digits`}
                             maxLength={selectedCountry.maxDigits}
@@ -716,6 +749,7 @@ export default function Register() {
                           type={showPw ? 'text' : 'password'}
                           value={formData.password}
                           onChange={e => set('password', e.target.value)}
+                          onBlur={() => handleBlur('password')}
                           className={inputCls(fieldErrors.password)}
                           placeholder="Create a strong password"
                           maxLength={72}
