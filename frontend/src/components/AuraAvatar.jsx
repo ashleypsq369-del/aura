@@ -295,9 +295,14 @@ export default function AuraAvatar() {
       dragControls={dragControls}
       dragMomentum={false}
       dragElastic={0.08}
-      dragConstraints={{ left: -40, right: window.innerWidth - 180, top: -(window.innerHeight - 200), bottom: 0 }}
+      dragConstraints={{
+        left:   -(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 200),
+        right:  0,
+        top:    -(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 200),
+        bottom: 0,
+      }}
       className="fixed bottom-4 right-4 z-[80] select-none touch-none"
-      style={{ userSelect: 'none' }}
+      style={{ userSelect: 'none', maxWidth: 'calc(100vw - 16px)' }}
     >
       <div className="relative flex flex-col items-start gap-2">
 
@@ -311,7 +316,7 @@ export default function AuraAvatar() {
               exit={  { opacity: 0, scale: 0.88,  y: 10 }}
               transition={{ type: 'spring', stiffness: 340, damping: 28 }}
               className="absolute bottom-full mb-3 right-0 pointer-events-auto"
-              style={{ width: 250, maxWidth: 'calc(100vw - 80px)' }}
+              style={{ width: 'min(250px, calc(100vw - 100px))', maxWidth: 'calc(100vw - 100px)' }}
             >
               <div
                 className="rounded-2xl overflow-hidden shadow-2xl"

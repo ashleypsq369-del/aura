@@ -365,7 +365,7 @@ export default function Patients() {
             {errorsEdit.full_name && <p className="text-red-600 text-xs mt-1">{errorsEdit.full_name.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1.5">Date of Birth *</label>
               <input

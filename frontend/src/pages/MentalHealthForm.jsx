@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -118,7 +118,7 @@ export default function MentalHealthForm() {
         (gad7Response.data.alerts_generated?.length || 0);
       
       if (totalAlerts > 0) {
-        toast.error(`⚠️ ${totalAlerts} alert(s) generated`, { duration: 5000 });
+        toast.error(`?? ${totalAlerts} alert(s) generated`, { duration: 5000 });
       }
       
       queryClient.invalidateQueries(['phq9', patientId]);
@@ -154,7 +154,7 @@ export default function MentalHealthForm() {
   const gad7Severity = getGAD7Severity(gad7Total);
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
       <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
@@ -200,7 +200,7 @@ export default function MentalHealthForm() {
           <div className="flex items-start space-x-3">
             <AlertTriangle className="w-8 h-8 text-red-600 flex-shrink-0" />
             <div>
-              <p className="font-bold text-red-900 text-lg">⚠️ CRISIS ALERT</p>
+              <p className="font-bold text-red-900 text-lg">?? CRISIS ALERT</p>
               <p className="text-red-800 mt-1">
                 Patient has indicated thoughts of self-harm. <strong>Immediate psychiatric evaluation is required.</strong> Do not leave patient alone. Contact crisis team or emergency services.
               </p>

@@ -128,7 +128,7 @@ function MedModal({ initial, onClose, onSave, pending }) {
             <input value={f.name} onChange={up('name')} placeholder="e.g. Morphine Sulfate"
               className="w-full border border-slate-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Dose *</label>
               <input value={f.dose} onChange={up('dose')} placeholder="e.g. 10mg"
@@ -140,7 +140,7 @@ function MedModal({ initial, onClose, onSave, pending }) {
                 className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <SearchableSelect
               label="Frequency *"
               accent="teal"

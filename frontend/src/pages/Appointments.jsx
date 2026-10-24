@@ -109,7 +109,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
               min={new Date().toISOString().slice(0,16)}
               className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <SearchableSelect
               label="Location *"
               accent="blue"

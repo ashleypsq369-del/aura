@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -131,7 +131,7 @@ export default function ESASForm() {
   };
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -229,10 +229,10 @@ export default function ESASForm() {
               <div className="mt-3 text-xs text-slate-600">
                 Previous: <span className="font-semibold">{previousAssessments.assessments[0][symptom.key]}/10</span>
                 {scores[symptom.key] > previousAssessments.assessments[0][symptom.key] && (
-                  <span className="ml-2 text-red-600">↑ Worsened</span>
+                  <span className="ml-2 text-red-600">? Worsened</span>
                 )}
                 {scores[symptom.key] < previousAssessments.assessments[0][symptom.key] && (
-                  <span className="ml-2 text-green-600">↓ Improved</span>
+                  <span className="ml-2 text-green-600">? Improved</span>
                 )}
               </div>
             )}

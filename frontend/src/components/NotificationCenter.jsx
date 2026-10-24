@@ -222,8 +222,15 @@ export default function NotificationCenter() {
                 exit={{ opacity: 0, y: -10, scale: 0.96 }}
                 transition={{ duration: 0.15, ease: 'easeOut' }}
                 className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col"
-                style={{ width: 360, maxHeight: 500, background: T.bg, border: `1px solid ${T.bdr}`,
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)' }}>
+                style={{
+                  width: 'min(360px, calc(100vw - 16px))',
+                  maxHeight: 500,
+                  background: T.bg,
+                  border: `1px solid ${T.bdr}`,
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
+                  /* Clamp so it never goes off the left edge */
+                  right: 'max(0px, -8px)',
+                }}>
 
                 {/* ── Header — teal gradient with unread count + actions ── */}
                 <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0"
@@ -259,7 +266,7 @@ export default function NotificationCenter() {
                 </div>
 
                 {/* ── Filter tabs — underline style, on slightly tinted bg ── */}
-                <div className="flex items-center overflow-x-auto flex-shrink-0"
+                <div className="flex items-center overflow-x-auto flex-shrink-0 scrollbar-none"
                   style={{ background: isDark ? T.tabBg : '#f0fdfa', borderBottom: `1px solid ${isDark ? T.tabBdr : '#99f6e4'}`, padding: '0 10px' }}>
                   {tabs.map(tab => {
                     const isActive = activeTab === tab.id;

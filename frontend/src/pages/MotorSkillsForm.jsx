@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -131,7 +131,7 @@ export default function MotorSkillsForm() {
   };
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -259,7 +259,7 @@ export default function MotorSkillsForm() {
               />
               {tugTime && (
                 <p className="text-xs text-slate-500 mt-1">
-                  ≤10s: Low risk | 10-14s: Moderate | &gt;14s: High risk
+                  =10s: Low risk | 10-14s: Moderate | &gt;14s: High risk
                 </p>
               )}
             </div>
@@ -364,7 +364,7 @@ export default function MotorSkillsForm() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                O₂ Saturation Before (%)
+                O2 Saturation Before (%)
               </label>
               <input
                 type="number"
@@ -379,7 +379,7 @@ export default function MotorSkillsForm() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">
-                O₂ Saturation After (%)
+                O2 Saturation After (%)
               </label>
               <input
                 type="number"
@@ -396,7 +396,7 @@ export default function MotorSkillsForm() {
           {o2SatBefore && o2SatAfter && parseInt(o2SatBefore) - parseInt(o2SatAfter) > 4 && (
             <div className="mt-4 p-3 bg-red-100 rounded-lg border border-red-300">
               <p className="text-sm font-bold text-red-900">
-                ⚠️ Significant oxygen desaturation detected ({o2SatBefore}% → {o2SatAfter}%)
+                ?? Significant oxygen desaturation detected ({o2SatBefore}% ? {o2SatAfter}%)
               </p>
             </div>
           )}

@@ -221,7 +221,7 @@ export default function Notifications() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
             {unreadCount > 0 && (
               <button onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}
                 className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm disabled:opacity-50">
@@ -237,9 +237,9 @@ export default function Notifications() {
 
         {/* ── Filters ── */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-4 mb-4">
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Search */}
-            <div className="relative flex-1 min-w-[160px]">
+          <div className="flex items-start gap-2 flex-wrap">
+            {/* Search — full width on mobile */}
+            <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input type="search" value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search notifications…"

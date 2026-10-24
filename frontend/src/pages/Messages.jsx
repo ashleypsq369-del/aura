@@ -371,10 +371,17 @@ export default function Messages() {
     return otherParticipant?.name?.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
+  // On mobile, show sidebar OR chat — never both at same time
+  const showSidebar = !selectedConversation;
+  const showChat    = !!selectedConversation;
+
   return (
-    <div className="h-[calc(100vh-100px)] flex" >
-      {/* Left Sidebar - Tabs + List (40% width) */}
-      <div className="w-2/5 bg-white border-r border-slate-200 flex flex-col">
+    <div className="h-[calc(100vh-100px)] flex overflow-hidden" >
+      {/* Left Sidebar - full width on mobile, 40% on desktop */}
+      <div className={`
+        ${showSidebar ? 'flex' : 'hidden'} lg:flex
+        w-full lg:w-2/5 bg-white border-r border-slate-200 flex-col flex-shrink-0
+      `}>
         {/* Header with Tabs - Compact */}
         <div className="px-4 py-3 border-b border-slate-200 bg-white flex-shrink-0">
           <div className="flex items-center justify-between mb-3">
@@ -595,14 +602,25 @@ export default function Messages() {
         )}
       </div>
 
-      {/* Messages Panel (60% width) */}
-      <div className="flex-1 flex flex-col w-3/5">
+      {/* Messages Panel — full width on mobile (only visible when a chat is selected), 60% on desktop */}
+      <div className={`
+        ${showChat ? 'flex' : 'hidden'} lg:flex
+        flex-1 flex-col w-full lg:w-3/5
+      `}>
         {selectedConversation ? (
           <>
             {/* Chat Header - Compact */}
             <div className="p-3 bg-white border-b-3 border-slate-300 shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
+                  {/* Back button — mobile only */}
+                  <button
+                    onClick={() => setSelectedConversation(null)}
+                    className="lg:hidden p-1.5 -ml-1 rounded-lg hover:bg-slate-100 transition-colors text-slate-500"
+                    aria-label="Back to conversations"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  </button>
                   <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-base shadow-lg">
                     {selectedConversation.participants[0]?.name?.[0] || '?'}
                   </div>

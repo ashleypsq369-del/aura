@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -164,7 +164,7 @@ export default function CaregiverBurdenForm() {
   };
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
       <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
@@ -272,7 +272,7 @@ export default function CaregiverBurdenForm() {
             {totalScore > 20 && (
               <div className="mt-4 p-3 bg-red-100 rounded-lg border border-red-300">
                 <p className="text-sm font-semibold text-red-900">
-                  ⚠️ High burden detected. Please consider requesting support services below.
+                  ?? High burden detected. Please consider requesting support services below.
                 </p>
               </div>
             )}

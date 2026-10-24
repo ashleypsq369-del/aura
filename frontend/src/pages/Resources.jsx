@@ -135,9 +135,9 @@ export default function Resources() {
           icon={BookOpen}
         />
 
-        <div className="flex gap-5 items-start py-6">
+        <div className="flex flex-col lg:flex-row gap-5 items-start py-6">
           {/* ── Left sidebar: search + category filter ── */}
-          <div className="w-52 flex-shrink-0 sticky top-4 space-y-3">
+          <div className="w-full lg:w-52 lg:flex-shrink-0 lg:sticky lg:top-4 space-y-3">
             {/* Search */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-3">
               <div className="relative">

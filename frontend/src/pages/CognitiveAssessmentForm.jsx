@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -174,7 +174,7 @@ export default function CognitiveAssessmentForm() {
   const currentInterpretation = assessmentType === 'MMSE' ? mmseInterpretation : mocaInterpretation;
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -260,7 +260,7 @@ export default function CognitiveAssessmentForm() {
         </p>
         {assessmentType === 'MoCA' && (
           <p className="text-sm text-purple-900 font-semibold">
-            ⚠️ Note: 1 point is added if education ≤ 12 years (automatically calculated)
+            ?? Note: 1 point is added if education = 12 years (automatically calculated)
           </p>
         )}
       </motion.div>
@@ -287,7 +287,7 @@ export default function CognitiveAssessmentForm() {
         />
         {assessmentType === 'MoCA' && parseInt(educationYears) <= 12 && parseInt(educationYears) > 0 && (
           <p className="text-xs text-green-600 mt-1">
-            ✓ +1 bonus point will be added to final score
+            ? +1 bonus point will be added to final score
           </p>
         )}
       </motion.div>

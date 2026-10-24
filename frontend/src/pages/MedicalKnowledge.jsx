@@ -438,10 +438,11 @@ export default function MedicalKnowledge() {
       </PageHeader>
 
       {/* ── Two-column layout ─────────────────────────────────────────── */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-5 flex gap-5 items-start">
+      {/* ── Two-column layout ─────────────────────────────────────────── */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-5 flex flex-col lg:flex-row gap-5 items-start">
 
         {/* ── LEFT: Index sidebar ──────────────────────────────────────── */}
-        <div className="w-72 flex-shrink-0 flex flex-col gap-3 sticky top-4 self-start">
+        <div className="w-full lg:w-72 lg:flex-shrink-0 flex flex-col gap-3 lg:sticky lg:top-4 lg:self-start">
           {/* Search */}
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>

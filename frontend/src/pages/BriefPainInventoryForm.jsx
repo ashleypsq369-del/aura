@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -167,7 +167,7 @@ export default function BriefPainInventoryForm() {
   const interferenceSeverity = getInterferenceSeverity(parseFloat(avgInterference));
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -332,7 +332,7 @@ export default function BriefPainInventoryForm() {
           </div>
           
           <p className="text-xs text-slate-500 mt-2">
-            💡 Click the microphone button to use voice input
+            ?? Click the microphone button to use voice input
           </p>
         </motion.div>
 
@@ -427,7 +427,7 @@ export default function BriefPainInventoryForm() {
           className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            💊 Current Pain Management
+            ?? Current Pain Management
           </h2>
           
           <div className="space-y-4">
@@ -500,7 +500,7 @@ export default function BriefPainInventoryForm() {
           </div>
           
           <p className="text-xs text-slate-500 mt-2">
-            💡 Use voice input to quickly add observations
+            ?? Use voice input to quickly add observations
           </p>
         </motion.div>
 
