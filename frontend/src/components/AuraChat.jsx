@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAppSettings } from '../context/AppSettingsContext';
 import ChatbotConsentModal from './ChatbotConsentModal';
 import CrisisInterventionOverlay from './CrisisInterventionOverlay';
 import { chatbotConsentAPI, crisisAPI } from '../api/client';
@@ -46,13 +47,57 @@ const FEEL_SCALE = [
   { emoji: '😊', label: 'Good',       msg: "I'm feeling 😊 today — pretty good!" },
 ];
 
-const C = {
-  bg:'#ffffff', bgAlt:'#f8fafc', surface:'#f1f5f9', border:'#e2e8f0',
-  accent:'#0d9488', accentLight:'#f0fdf4', accentGlow:'rgba(13,148,136,0.12)',
-  userBubble:'#0d9488', userShadow:'0 2px 8px rgba(13,148,136,0.22)',
-  aiBubble:'#ffffff', aiBorder:'1px solid #e2e8f0', aiShadow:'0 1px 4px rgba(0,0,0,0.06)',
-  text:'#0f172a', textMuted:'#475569', textFaint:'#64748b',
-};
+// ── Dual-mode theme tokens ─────────────────────────────────────────────────────
+function buildTheme(dark) {
+  if (dark) return {
+    accent:'#2dd4bf',
+    drawerBg:'#0f172a', drawerBdr:'#1e293b',
+    headerBg:'#1e293b', headerBdr:'#334155',
+    msgBg:'#0f172a',
+    aiBubbleBg:'#1e293b', aiBubbleBdr:'#334155',
+    inputAreaBg:'#1e293b', inputAreaBdr:'#334155',
+    inputFieldBg:'#0f172a', inputFieldBdr:'#334155', inputFieldText:'#f1f5f9',
+    histBg:'#0f172a', histItemBg:'#1e293b', histItemBdr:'#334155',
+    emptyChipBg:'#1e293b', emptyChipBdr:'#334155', emptyChipText:'#94a3b8',
+    footerNote:'#475569',
+    userBubble:'#0f766e',
+    botIconBg:'rgba(45,212,191,0.12)', botIconBdr:'rgba(45,212,191,0.2)',
+    nameText:'#f1f5f9', badgeBg:'rgba(45,212,191,0.12)', badgeBdr:'rgba(45,212,191,0.25)', badgeText:'#2dd4bf',
+    subText:'#64748b', msgCountText:'#64748b',
+    btnText:'#64748b', btnHoverBg:'rgba(255,255,255,0.07)', btnHoverText:'#f1f5f9',
+    sessionBarBg:'#1e293b', sessionBarBdr:'#334155',
+    typingBubbleBg:'#1e293b', typingBubbleBdr:'#334155',
+    typingDot:'#475569', typingText:'#64748b',
+    scrollPillBg:'#1e293b', scrollPillBdr:'#334155', scrollPillText:'#94a3b8',
+    patientCardBg:'#1e293b', patientCardBdr:'#334155',
+    hintBg:'#1e293b', hintBdr:'#334155', hintTitle:'#f1f5f9',
+  };
+  return {
+    accent:'#0d9488',
+    drawerBg:'#ffffff', drawerBdr:'#e2e8f0',
+    headerBg:'#ffffff', headerBdr:'#e2e8f0',
+    msgBg:'#f8fafc',
+    aiBubbleBg:'#ffffff', aiBubbleBdr:'#e2e8f0',
+    inputAreaBg:'#ffffff', inputAreaBdr:'#e2e8f0',
+    inputFieldBg:'#f8fafc', inputFieldBdr:'#e2e8f0', inputFieldText:'#0f172a',
+    histBg:'#f8fafc', histItemBg:'#ffffff', histItemBdr:'#e2e8f0',
+    emptyChipBg:'#ffffff', emptyChipBdr:'#e2e8f0', emptyChipText:'#475569',
+    footerNote:'#94a3b8',
+    userBubble:'#0d9488',
+    botIconBg:'#f0fdf4', botIconBdr:'#d1fae5',
+    nameText:'#0f172a', badgeBg:'#f0fdf4', badgeBdr:'#99f6e4', badgeText:'#0f766e',
+    subText:'#64748b', msgCountText:'#94a3b8',
+    btnText:'#9ca3af', btnHoverBg:'#f1f5f9', btnHoverText:'#374151',
+    sessionBarBg:'#f8fafc', sessionBarBdr:'#e2e8f0',
+    typingBubbleBg:'#ffffff', typingBubbleBdr:'#e2e8f0',
+    typingDot:'#cbd5e1', typingText:'#64748b',
+    scrollPillBg:'#ffffff', scrollPillBdr:'#e2e8f0', scrollPillText:'#475569',
+    patientCardBg:'#ffffff', patientCardBdr:'#e2e8f0',
+    hintBg:'#ffffff', hintBdr:'#e2e8f0', hintTitle:'#0f172a',
+  };
+}
+
+const C = { accent:'#0d9488', accentLight:'#f0fdf4' };
 
 function CharRing({ len, max }) {
   const pct = len / max;
@@ -251,6 +296,9 @@ export default function AuraChat() {
     return [...new Set([...p,...basePrompts])].slice(0,4);
   },[user,signals,basePrompts]);
 
+  const { theme } = useAppSettings();
+  const isDark = theme === 'dark';
+  const T = buildTheme(isDark);
   const isOffline=provider==='rule-based'||provider==='offline-fallback';
   const msgCount=messages.filter(m=>m.role==='user').length;
   const subLabel=isPatient?'Your personal care companion':'Clinical support';
@@ -270,20 +318,20 @@ export default function AuraChat() {
               className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.25)',backdropFilter:'blur(2px)'}}/>
             <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
               transition={{type:'spring',damping:28,stiffness:260}}
-              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col bg-white border-l border-slate-200"
-              style={{width:'min(92vw,420px)',boxShadow:'-8px 0 32px rgba(0,0,0,0.08)'}}
+              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
+              style={{width:'min(92vw,420px)',background:T.drawerBg,borderLeft:`1px solid ${T.drawerBdr}`,boxShadow:'-8px 0 32px rgba(0,0,0,0.12)'}}
               onClick={e=>e.stopPropagation()}>
 
               {/* Header — clean white */}
-              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 bg-white border-b border-slate-200">
-                <div className="w-9 h-9 rounded-full bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
+              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3" style={{background:T.headerBg,borderBottom:`1px solid ${T.headerBdr}`}}>
+                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
                   <AuraMascot size={28} isThinking={thinking} isStreaming={loading&&!thinking}/>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-slate-900 text-sm">Aura</span>
-                    <span className="bg-teal-50 text-teal-700 text-xs px-2 py-0.5 rounded-full border border-teal-200">Companion</span>
-                    {msgCount>0&&<span className="text-xs text-slate-500">{msgCount} msg{msgCount!==1?'s':''}</span>}
+                    <span className="font-semibold text-sm" style={{color:T.nameText}}>Aura</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:T.badgeBg,border:`1px solid ${T.badgeBdr}`,color:T.badgeText}}>Companion</span>
+                    {msgCount>0&&<span className="text-xs" style={{color:T.msgCountText}}>{msgCount} msg{msgCount!==1?'s':''}</span>}
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <LLMBadge provider={provider} offline={isOffline}/>
@@ -293,37 +341,37 @@ export default function AuraChat() {
                 </div>
                 <div className="flex items-center gap-0.5">
                   <button onClick={()=>setView(v=>v==='history'?'chat':'history')} title="Chat history"
-                    className={`p-1.5 rounded-lg transition-colors text-slate-400 hover:text-slate-600 hover:bg-slate-100 ${view==='history'?'bg-slate-100 text-slate-600':''}`}>
+                    style={{color:view==='history'?T.btnHoverText:T.btnText,background:view==='history'?T.btnHoverBg:'transparent'}} className="p-1.5 rounded-lg transition-colors">
                     <History size={15}/>
                   </button>
                   <button onClick={startNew} title="New chat" className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                     <Plus size={15}/>
                   </button>
-                  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"><RotateCcw size={14}/></button>}
-                  <button onClick={()=>setIsOpen(false)} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors ml-1"><X size={16}/></button>
+                  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 rounded-lg transition-colors" style={{color:T.btnText}}><RotateCcw size={14}/></button>}
+                  <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg transition-colors ml-1" style={{color:T.btnText}}><X size={16}/></button>
                 </div>
               </div>
 
               {/* Safety bar */}
-              <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:'#fde68a',background:'#fef3c7'}}>
+              <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
                 <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
-                <p className="text-[10px] text-amber-800 font-medium">Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
+                <p className="text-[10px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
               </div>
 
               {/* History panel */}
               {view==='history'&&(
-                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-white" style={{scrollbarWidth:'thin'}}>
+                <div className="flex-1 overflow-y-auto p-3 space-y-1.5" style={{background:T.histBg,scrollbarWidth:'thin'}}>
                   {histLoading&&<div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin" style={{color:C.accent}}/></div>}
                   {!histLoading&&conversations.length===0&&(
                     <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-slate-300 mb-2"/><p className="text-sm text-slate-500 font-medium">No previous conversations</p></div>
                   )}
                   {!histLoading&&conversations.map(conv=>(
-                    <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50" onClick={()=>loadConv(conv.id)}>
+                    <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all" style={{background:T.histItemBg,border:`1px solid ${T.histItemBdr}`}} onClick={()=>loadConv(conv.id)}>
                       <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{background:C.accentLight}}><MessageSquare size={12} style={{color:C.accent}}/></div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold truncate text-slate-900">{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
-                        <p className="text-[11px] truncate mt-0.5 text-slate-500">{conv.last_message}</p>
-                        <p className="text-[10px] mt-1 text-slate-400">{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs font-semibold truncate" style={{color:T.nameText}}>{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
+                        <p className="text-[11px] truncate mt-0.5" style={{color:T.subText}}>{conv.last_message}</p>
+                        <p className="text-[10px] mt-1" style={{color:T.footerNote}}>{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
                       </div>
                       <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-red-500 transition-all"><Trash2 size={12}/></button>
                     </div>
@@ -336,7 +384,7 @@ export default function AuraChat() {
                 <>
                   {/* Restored session bar */}
                   {sessionId&&messages.some(m=>m.id?.startsWith('db-'))&&(
-                    <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border-b border-slate-100 bg-slate-50">
+                    <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border-b" style={{background:T.sessionBarBg,borderColor:T.sessionBarBdr}}>
                       <button onClick={startNew} className="flex items-center gap-1 text-xs font-semibold transition-colors" style={{color:C.accent}}><ChevronLeft size={13}/>New chat</button>
                       <span className="text-slate-300">·</span>
                       <span className="text-xs text-slate-400">Viewing saved conversation</span>
@@ -353,36 +401,36 @@ export default function AuraChat() {
                   )}
 
                   {/* Messages */}
-                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-gray-50" style={{scrollbarWidth:'thin'}}>
+                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5" style={{background:T.msgBg,scrollbarWidth:'thin'}}>
 
                     {/* Empty state */}
                     {messages.length===0&&(
                       <div className="flex flex-col items-center pt-6 space-y-5">
                         <div className="w-16 h-16"><AuraMascot size={64} isThinking={thinking} isStreaming={loading&&!thinking}/></div>
                         <div className="text-center px-4">
-                          <p className="font-semibold text-slate-800 text-base mb-1">I'm here for you</p>
-                          <p className="text-sm text-slate-500 leading-relaxed">Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
+                          <p className="font-semibold text-base mb-1" style={{color:T.nameText}}>I'm here for you</p>
+                          <p className="text-sm leading-relaxed" style={{color:T.subText}}>Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
                         </div>
                         {isPatient&&(
                           <div className="w-full">
-                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center mb-3">How are you feeling today?</p>
+                            <p className="text-xs font-semibold uppercase tracking-wider text-center mb-3" style={{color:T.subText}}>How are you feeling today?</p>
                             <div className="flex justify-center gap-3">
                               {FEEL_SCALE.map(f=>(
                                 <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
-                                  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50 transition-all">
+                                  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl transition-all" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`}}>
                                   <span className="text-2xl">{f.emoji}</span>
-                                  <span className="text-[10px] font-semibold text-slate-500">{f.label}</span>
+                                  <span className="text-[10px] font-semibold" style={{color:T.subText}}>{f.label}</span>
                                 </button>
                               ))}
                             </div>
                           </div>
                         )}
                         <div className="w-full">
-                          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Or ask about…</p>
+                          <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{color:T.subText}}>Suggested</p>
                           <div className="flex flex-wrap gap-2">
                             {prompts.map((p,i)=>(
                               <button key={i} onClick={()=>sendMessage(p)} disabled={loading}
-                                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50 text-slate-700 hover:text-teal-700 disabled:opacity-40">
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-40" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`,color:T.emptyChipText}}>
                                 {p}
                               </button>
                             ))}
@@ -398,19 +446,18 @@ export default function AuraChat() {
                         <motion.div key={msg.id} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.15}}
                           className={`group flex ${isUser?'justify-end':'justify-start'} items-end gap-2`}>
                           {!isUser&&(
-                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm bg-slate-100 border border-slate-200">
-                              <Sparkles size={13} className="text-teal-600"/>
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
+                              <Sparkles size={13} style={{color:T.accent}}/>
                             </div>
                           )}
                           <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
                             <div
-                              className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none bg-teal-600 text-white':'rounded-bl-none'} ${
-                                !isUser && (
-                                  msg.crisis_flagged ? 'bg-red-50 border border-red-200 text-slate-800' :
-                                  msg.is_error ? 'bg-white border border-slate-200 text-slate-800 shadow-sm' :
-                                  'bg-white border border-slate-200 text-slate-800 shadow-sm'
-                                )
-                              }`}
+                              className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none':'rounded-bl-none'}`}
+                              style={isUser
+                                ? {background:T.userBubble,color:'#ffffff'}
+                                : msg.crisis_flagged
+                                  ? {background:'#fef2f2',border:'1px solid #fecaca',color:'#7f1d1d'}
+                                  : {background:T.aiBubbleBg,border:`1px solid ${T.aiBubbleBdr}`,color:T.nameText,boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}
                             >
                               {msg.crisis_flagged&&!isUser&&(<div className="flex items-center gap-1 mb-2 text-[11px] font-bold text-red-500"><AlertTriangle size={11}/>CRISIS SUPPORT</div>)}
                               <MsgContent content={msg.content} streaming={msg.streaming} isUser={isUser}/>
@@ -423,7 +470,7 @@ export default function AuraChat() {
                             </div>
                           </div>
                           {isUser&&(
-                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center bg-teal-600 text-white text-xs font-bold">
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-xs font-bold" style={{background:T.userBubble}}>
                               {user?.full_name?.[0]||'U'}
                             </div>
                           )}
@@ -435,13 +482,13 @@ export default function AuraChat() {
                     <AnimatePresence>
                       {thinking&&(
                         <motion.div initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} className="flex items-end gap-2">
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100 border border-slate-200">
-                            <Brain size={12} className="text-teal-600 animate-pulse"/>
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`}}>
+                            <Brain size={12} className="animate-pulse" style={{color:T.accent}}/>
                           </div>
-                          <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-white border border-slate-200 shadow-sm">
+                          <div className="px-4 py-3 rounded-2xl rounded-bl-none" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`}}>
                             <div className="flex items-center gap-2">
-                              {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full bg-slate-300" animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
-                              <span className="text-xs text-slate-500 font-medium ml-1">Aura is typing…</span>
+                              {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:T.typingDot}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
+                              <span className="text-xs font-medium ml-1" style={{color:T.typingText}}>Aura is typing…</span>
                             </div>
                           </div>
                         </motion.div>
@@ -461,7 +508,7 @@ export default function AuraChat() {
                   </AnimatePresence>
 
                   {/* Input */}
-                  <div className="flex-shrink-0 px-4 py-3 border-t border-slate-200 bg-white">
+                  <div className="flex-shrink-0 px-4 py-3 border-t" style={{background:T.inputAreaBg,borderColor:T.inputAreaBdr}}>
                     <form onSubmit={e=>{e.preventDefault();sendMessage();}} className="space-y-1.5">
                       <div className="flex items-end gap-2">
                         <div className="flex-1 relative">
@@ -469,8 +516,8 @@ export default function AuraChat() {
                             onChange={e=>{setInput(e.target.value);resizeTA();}}
                             onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}}
                             placeholder="Message Aura…" rows={1} maxLength={MAX_CHARS} disabled={loading}
-                            className="w-full resize-none text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-2.5 disabled:opacity-50 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 focus:bg-white"
-                            style={{caretColor:C.accent}}/>
+                            className="w-full resize-none rounded-xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-2.5 disabled:opacity-50 text-sm"
+                            style={{background:T.inputFieldBg,border:`1px solid ${T.inputFieldBdr}`,color:T.inputFieldText,caretColor:T.accent}}/>
                         </div>
                         <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
                           <CharRing len={input.length} max={MAX_CHARS}/>
@@ -481,7 +528,7 @@ export default function AuraChat() {
                           </motion.button>
                         </div>
                       </div>
-                      <p className="text-[10px] text-center text-slate-400 mt-1">{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
+                      <p className="text-[10px] text-center mt-1" style={{color:T.footerNote}}>{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
                     </form>
                   </div>
                 </>

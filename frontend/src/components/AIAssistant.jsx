@@ -19,18 +19,59 @@ import {
   FileText, ClipboardList, TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useAppSettings } from '../context/AppSettingsContext';
 import apiClient from '../api/client';
 import AuraMascot from './AuraMascot';
 import { API_URL } from '../api/client';
 import HintTooltip from './HintTooltip';
 
-const C = {
-  bg:'#ffffff', bgAlt:'#f8fafc', border:'#e2e8f0',
-  accent:'#0284c7', accentLight:'#e0f2fe', accentGlow:'rgba(2,132,199,0.18)',
-  userBubble:'#0284c7', userShadow:'0 4px 16px rgba(2,132,199,0.25)',
-  aiBubble:'#ffffff', aiBorder:'1px solid #cbd5e1', aiShadow:'0 2px 8px rgba(0,0,0,0.10)',
-  text:'#0f172a', textMuted:'#475569', textFaint:'#64748b',
-};
+// ── Dual-mode theme tokens ─────────────────────────────────────────────────────
+function buildAITheme(dark) {
+  if (dark) return {
+    accent:'#38bdf8',
+    drawerBg:'#0f172a', drawerBdr:'#1e293b',
+    headerBg:'#1e293b', headerBdr:'#334155',
+    msgBg:'#0f172a',
+    aiBubbleBg:'#1e293b', aiBubbleBdr:'#334155',
+    inputAreaBg:'#1e293b', inputAreaBdr:'#334155',
+    inputFieldBg:'#0f172a', inputFieldBdr:'#334155', inputFieldText:'#f1f5f9',
+    nameText:'#f1f5f9', subText:'#64748b',
+    botIconBg:'rgba(56,189,248,0.12)', botIconBdr:'rgba(56,189,248,0.2)',
+    userBubble:'#075985',
+    hintBg:'#1e293b', hintBdr:'#334155', hintTitle:'#f1f5f9',
+    patientCardBg:'#1e293b', patientCardBdr:'#334155',
+    urgentBg:'#1a1200', urgentBdr:'#78350f',
+    statsBg:'#1e293b', statsBdr:'#334155',
+    chipBg:'#1e293b', chipBdr:'#334155', chipText:'#94a3b8',
+    typingBubbleBg:'#1e293b', typingBubbleBdr:'#334155', typingDot:'#475569',
+    footerBg:'#1e293b', footerBdr:'#334155', footerChipBg:'#0f172a', footerChipBdr:'#334155', footerChipText:'#64748b',
+    scrollPillBg:'#1e293b', scrollPillText:'#94a3b8', scrollPillBdr:'#334155',
+    inputFormBg:'#1e293b', inputFormBdr:'#334155',
+  };
+  return {
+    accent:'#0284c7',
+    drawerBg:'#ffffff', drawerBdr:'#e2e8f0',
+    headerBg:'#ffffff', headerBdr:'#e2e8f0',
+    msgBg:'#f8fafc',
+    aiBubbleBg:'#ffffff', aiBubbleBdr:'#e2e8f0',
+    inputAreaBg:'#ffffff', inputAreaBdr:'#e2e8f0',
+    inputFieldBg:'#f8fafc', inputFieldBdr:'#e2e8f0', inputFieldText:'#0f172a',
+    nameText:'#0f172a', subText:'#64748b',
+    botIconBg:'#f0f9ff', botIconBdr:'#bae6fd',
+    userBubble:'#0284c7',
+    hintBg:'#ffffff', hintBdr:'#e2e8f0', hintTitle:'#1e293b',
+    patientCardBg:'#ffffff', patientCardBdr:'#e2e8f0',
+    urgentBg:'#fffbeb', urgentBdr:'#fcd34d',
+    statsBg:'#ffffff', statsBdr:'#e2e8f0',
+    chipBg:'#ffffff', chipBdr:'#e2e8f0', chipText:'#475569',
+    typingBubbleBg:'#ffffff', typingBubbleBdr:'#e2e8f0', typingDot:'#cbd5e1',
+    footerBg:'#ffffff', footerBdr:'#e2e8f0', footerChipBg:'#f0f9ff', footerChipBdr:'#bae6fd', footerChipText:'#0284c7',
+    scrollPillBg:'#0284c7', scrollPillText:'#ffffff', scrollPillBdr:'transparent',
+    inputFormBg:'#ffffff', inputFormBdr:'#e2e8f0',
+  };
+}
+
+const C = { accent:'#0284c7' };
 
 /* Analysis-focused chips — questions that NEED AI, not navigation */
 const ANALYSIS_CHIPS = {
@@ -115,6 +156,9 @@ export default function AIAssistant() {
   const location=useLocation();
   const params=useParams();
   const urlPid=params.patientId||params.patient_id||null;
+  const { theme } = useAppSettings();
+  const isDark = theme === 'dark';
+  const T = buildAITheme(isDark);
   const isClinical=['clinician','admin','caregiver'].includes(user?.role);
 
   const {data:sysInsights}=useQuery({queryKey:['ai-system-insights-assistant'],queryFn:()=>apiClient.get('/api/ai-analysis/system-insights').then(r=>r.data),enabled:isClinical,refetchInterval:60000,retry:false});
@@ -195,18 +239,18 @@ export default function AIAssistant() {
               className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.2)',backdropFilter:'blur(2px)'}}/>
             <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
               transition={{type:'spring',damping:28,stiffness:260}}
-              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col bg-white border-l border-slate-200"
-              style={{width:'min(92vw,520px)',boxShadow:'-8px 0 32px rgba(0,0,0,0.08)'}}
+              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
+              style={{width:'min(92vw,520px)',background:T.drawerBg,borderLeft:`1px solid ${T.drawerBdr}`,boxShadow:'-8px 0 32px rgba(0,0,0,0.12)'}}
               onClick={e=>e.stopPropagation()}>
 
               {/* Header — clean white */}
-              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 bg-white border-b border-slate-200">
-                <div className="w-9 h-9 rounded-full bg-sky-50 border border-sky-200 flex items-center justify-center flex-shrink-0">
+              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3" style={{background:T.headerBg,borderBottom:`1px solid ${T.headerBdr}`}}>
+                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
                   <AuraMascot size={28} isThinking={loading&&!streaming} isStreaming={streaming}/>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-slate-900 text-sm">Clinical Copilot</span>
+                    <span className="font-semibold text-sm" style={{color:T.nameText}}>Clinical Copilot</span>
                     {hasUrgent&&(
                       <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-white bg-red-500">
                         <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"/>{critical} urgent
@@ -218,34 +262,34 @@ export default function AIAssistant() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs mt-0.5 text-slate-500 font-medium capitalize">
+                  <p className="text-xs mt-0.5 font-medium capitalize" style={{color:T.subText}}>
                     {user?.role} · {readablePageName}{urlPid&&` · Patient #${urlPid}`}
                   </p>
                 </div>
                 <div className="flex items-center gap-0.5">
-                  {messages.length>0&&<button onClick={clearChat} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><RotateCcw size={14}/></button>}
-                  <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><X size={16}/></button>
+                  {messages.length>0&&<button onClick={clearChat} className="p-1.5 rounded-lg transition-colors" style={{color:T.subText}}><RotateCcw size={14}/></button>}
+                  <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg transition-colors" style={{color:T.subText}}><X size={16}/></button>
                 </div>
               </div>
 
               {/* Disclaimer */}
-              <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:'#fde68a',background:'#fef3c7'}}>
+              <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
                 <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
-                <p className="text-[10px] text-amber-800 font-medium">AI suggestions only — always apply clinical judgement · Emergency: <strong>193</strong></p>
+                <p className="text-[10px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>AI suggestions only — always apply clinical judgement · Emergency: <strong>193</strong></p>
               </div>
 
               {/* Conversation area */}
-              <div className="flex-1 flex flex-col overflow-hidden relative bg-gray-50">
+              <div className="flex-1 flex flex-col overflow-hidden relative" style={{background:T.msgBg}}>
 
                 {/* Patient context card */}
                 {urlPid&&patientData&&(
-                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border bg-white border-slate-200">
+                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border" style={{background:T.patientCardBg,borderColor:T.patientCardBdr}}>
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-50">
                       <UserCircle size={16} style={{color:C.accent}}/>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-slate-900 truncate">{patientData.full_name||patientData.name}</p>
-                      <p className="text-[10px] text-slate-500 truncate">
+                      <p className="text-xs font-bold truncate" style={{color:T.nameText}}>{patientData.full_name||patientData.name}</p>
+                      <p className="text-[10px] truncate" style={{color:T.subText}}>
                         {patientData.primary_diagnosis||'—'} · {patientData.age||'—'}y ·
                         <span className={`ml-1 font-bold ${patientData.risk_level==='Crisis'||patientData.risk_level==='critical'?'text-red-500':patientData.risk_level==='High'||patientData.risk_level==='high'?'text-amber-500':'text-emerald-600'}`}>{patientData.risk_level||'—'} risk</span>
                       </p>
@@ -256,7 +300,7 @@ export default function AIAssistant() {
 
                 {/* Urgent actions banner */}
                 {isClinical&&hasUrgent&&topActions.length>0&&messages.length===0&&(
-                  <div className="flex-shrink-0 mx-4 mt-3 p-3 rounded-xl border" style={{background:'#fffbeb',borderColor:'#fcd34d'}}>
+                  <div className="flex-shrink-0 mx-4 mt-3 p-3 rounded-xl border" style={{background:T.urgentBg,borderColor:T.urgentBdr}}>
                     <div className="flex items-center gap-2 mb-2">
                       <Activity size={12} className="text-amber-600 flex-shrink-0"/>
                       <p className="text-xs font-bold text-amber-800">{critical} patient{critical!==1?'s':''} need attention</p>
@@ -274,15 +318,15 @@ export default function AIAssistant() {
                 )}
 
                 {/* Messages */}
-                <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-4 space-y-5 bg-gray-50" style={{scrollbarWidth:'thin'}}>
+                <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-4 space-y-5" style={{background:T.msgBg,scrollbarWidth:'thin'}}>
 
                   {/* Empty state — analysis-focused */}
                   {messages.length===0&&(
                     <div className="flex flex-col items-center pt-4 space-y-5">
                       <div className="w-14 h-14"><AuraMascot size={56} isThinking={loading&&!streaming} isStreaming={streaming}/></div>
                       <div className="text-center">
-                        <p className="font-semibold text-slate-800 text-base mb-1">Clinical Copilot</p>
-                        <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">Ask me to summarise patients, explain AI predictions, flag drug interactions, or draft clinical notes.</p>
+                        <p className="font-semibold text-base mb-1" style={{color:T.nameText}}>Clinical Copilot</p>
+                        <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{color:T.subText}}>Ask me to summarise patients, explain AI predictions, flag drug interactions, or draft clinical notes.</p>
                       </div>
 
                       {/* Stats — clinical overview */}
@@ -294,9 +338,9 @@ export default function AIAssistant() {
                             {label:'Alerts',      value: dashSummary.stats?.active_alerts     ?? dashSummary.active_alerts     ?? '—', color:'#d97706'},
                             {label:'High Risk',   value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '—', color: C.accent},
                           ].map(s=>(
-                            <div key={s.label} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-200 shadow-sm">
+                            <div key={s.label} className="flex items-center gap-1.5 px-3 py-2 rounded-lg shadow-sm" style={{background:T.statsBg,border:`1px solid ${T.statsBdr}`}}>
                               <span className="text-sm font-black tabular-nums" style={{color:s.color}}>{s.value}</span>
-                              <span className="text-[10px] text-slate-500 font-medium">{s.label}</span>
+                              <span className="text-[10px] font-medium" style={{color:T.subText}}>{s.label}</span>
                             </div>
                           ))}
                         </div>
@@ -304,11 +348,11 @@ export default function AIAssistant() {
 
                       {/* Analysis chips — what AI can actually do here */}
                       <div className="w-full">
-                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Ask about this page</p>
+                        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{color:T.subText}}>Ask about this page</p>
                         <div className="flex flex-wrap gap-2">
                           {chips.map(c=>(
                             <button key={c} onClick={()=>sendMessage(c)}
-                              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white border border-slate-200 hover:border-sky-400 hover:bg-sky-50 text-slate-700 hover:text-sky-700">
+                              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all" style={{background:T.chipBg,border:`1px solid ${T.chipBdr}`,color:T.chipText}}>
                               {c}
                             </button>
                           ))}
@@ -321,9 +365,9 @@ export default function AIAssistant() {
                           const Icon=h.icon;
                           return (
                             <button key={h.label} onClick={()=>sendMessage(h.q)}
-                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all bg-white border border-slate-200 hover:border-sky-400 hover:bg-sky-50 shadow-sm">
+                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all shadow-sm" style={{background:T.hintBg,border:`1px solid ${T.hintBdr}`}}>
                               <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 bg-sky-50"><Icon size={13} style={{color:C.accent}}/></div>
-                              <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-800 truncate">{h.label}</p><p className="text-[10px] text-slate-500 truncate">{h.desc}</p></div>
+                              <div className="min-w-0"><p className="text-[11px] font-semibold truncate" style={{color:T.hintTitle}}>{h.label}</p><p className="text-[10px] truncate" style={{color:T.subText}}>{h.desc}</p></div>
                             </button>
                           );
                         })}
@@ -338,17 +382,15 @@ export default function AIAssistant() {
                       <motion.div key={msg.id} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.15}}
                         className={`group flex ${isUser?'justify-end':'justify-start'} items-end gap-2`}>
                         {!isUser&&(
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm bg-slate-100 border border-slate-200">
-                            <Bot size={12} className="text-sky-600"/>
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
+                            <Bot size={12} style={{color:T.accent}}/>
                           </div>
                         )}
                         <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
-                          <div className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none bg-sky-600 text-white':'rounded-bl-none'} ${
-                              !isUser && (
-                                msg.error ? 'bg-white border border-slate-200 shadow-sm' :
-                                'bg-white border border-slate-200 shadow-sm'
-                              )
-                            }`}>
+                          <div className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none':'rounded-bl-none'}`}
+                            style={isUser
+                              ? {background:T.userBubble,color:'#ffffff'}
+                              : {background:T.aiBubbleBg,border:`1px solid ${T.aiBubbleBdr}`,color:T.nameText,boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}>
                             <MsgContent text={msg.content} streaming={msg.streaming} isUser={isUser}/>
                           </div>
                           <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
@@ -358,7 +400,7 @@ export default function AIAssistant() {
                           </div>
                         </div>
                         {isUser&&(
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold bg-sky-600">
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold" style={{background:T.userBubble}}>
                             {user?.full_name?.[0]||'U'}
                           </div>
                         )}
@@ -370,13 +412,13 @@ export default function AIAssistant() {
                   <AnimatePresence>
                     {loading&&!streaming&&(
                       <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex items-end gap-2">
-                        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100 border border-slate-200">
-                          <Brain size={12} className="text-sky-600 animate-pulse"/>
+                        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
+                          <Brain size={12} className="animate-pulse" style={{color:T.accent}}/>
                         </div>
-                        <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-white border border-slate-200 shadow-sm">
+                        <div className="px-4 py-3 rounded-2xl rounded-bl-none" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`}}>
                           <div className="flex items-center gap-2">
-                            {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full bg-slate-300" animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
-                            <span className="text-xs text-slate-500 font-medium ml-1">Analysing…</span>
+                            {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:T.typingDot}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
+                            <span className="text-xs font-medium ml-1" style={{color:T.subText}}>Analysing…</span>
                           </div>
                         </div>
                       </motion.div>
@@ -389,7 +431,7 @@ export default function AIAssistant() {
                 <AnimatePresence>
                   {!atBottom&&(
                     <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
-                      className="absolute left-1/2 -translate-x-1/2 bottom-20 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg bg-sky-600 hover:bg-sky-700 transition-colors">
+                      className="absolute left-1/2 -translate-x-1/2 bottom-20 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition-colors" style={{background:T.scrollPillBg,color:T.scrollPillText,border:`1px solid ${T.scrollPillBdr}`}}>
                       <ChevronDown size={13}/>Jump to latest
                     </motion.button>
                   )}
@@ -397,10 +439,10 @@ export default function AIAssistant() {
 
                 {/* Follow-up chips after conversation started */}
                 {messages.length>0&&messages.length<6&&(
-                  <div className="px-4 pb-2 pt-2 flex gap-1.5 overflow-x-auto bg-white border-t border-slate-100" style={{scrollbarWidth:'none'}}>
+                  <div className="px-4 pb-2 pt-2 flex gap-1.5 overflow-x-auto border-t" style={{background:T.footerBg,borderColor:T.footerBdr,scrollbarWidth:'none'}}>
                     {chips.slice(0,3).map(c=>(
                       <button key={c} onClick={()=>sendMessage(c)}
-                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all border mt-2 bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200">
+                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all border mt-2" style={{background:T.footerChipBg,borderColor:T.footerChipBdr,color:T.footerChipText}}>
                         {c}
                       </button>
                     ))}
@@ -409,14 +451,14 @@ export default function AIAssistant() {
 
                 {/* Input */}
                 <form onSubmit={e=>{e.preventDefault();sendMessage();}}
-                  className="flex-shrink-0 px-4 pb-3 pt-2 border-t border-slate-200 flex gap-2 items-center bg-white">
+                  className="flex-shrink-0 px-4 pb-3 pt-2 border-t flex gap-2 items-center" style={{background:T.inputFormBg,borderColor:T.inputFormBdr}}>
                   <input ref={inputRef} type="text" value={input} onChange={e=>setInput(e.target.value)}
                     placeholder="Ask about patients, get summaries, or draft notes…" disabled={loading}
-                    className="flex-1 px-4 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none transition-all disabled:opacity-50 min-w-0 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 focus:bg-white"
-                    style={{caretColor:C.accent}}/>
+                    className="flex-1 px-4 py-2.5 text-sm rounded-xl outline-none transition-all disabled:opacity-50 min-w-0"
+                    style={{background:T.inputFieldBg,border:`1px solid ${T.inputFieldBdr}`,color:T.inputFieldText,caretColor:T.accent}}/>
                   <motion.button type="submit" disabled={!input.trim()||loading}
                     whileHover={{scale:1.06}} whileTap={{scale:0.94}}
-                    className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed bg-sky-600 hover:bg-sky-700 disabled:bg-slate-200 disabled:text-slate-400">
+                    className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400" style={{background:T.accent}}>
                     {loading?<Loader2 size={16} className="animate-spin"/>:<Send size={16} strokeWidth={2.5}/>}
                   </motion.button>
                 </form>
