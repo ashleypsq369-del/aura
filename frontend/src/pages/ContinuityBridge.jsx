@@ -1,10 +1,10 @@
-﻿/**
+/**
  * Continuity Bridge
- * ──────────────────
+ * ------------------
  * WHO: The PATIENT (while alive) and their designated Heirs (after death).
- * PURPOSE: Build a living legacy — memories, messages, final wishes.
+ * PURPOSE: Build a living legacy � memories, messages, final wishes.
  *          Personal grief journal (patient's own reflections during illness).
- *          Bridge between life and legacy — NOT a grief-counseling page.
+ *          Bridge between life and legacy � NOT a grief-counseling page.
  * DISTINCT FROM BereavedFamilyDashboard (which is for bereaved family healing).
  */
 import { useState } from 'react';
@@ -60,15 +60,15 @@ export default function ContinuityBridge() {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* ── Header ──────────────────────────────────────────────────── */}
+      {/* -- Header ---------------------------------------------------- */}
       <PageHeader
         image="/resources/african/african-elder-care.jpg"
         title={name ? `${isDeceased ? 'In Memory of' : isHeir ? 'Legacy of' : 'Your Legacy'}: ${name}` : 'The Continuity Bridge'}
-        subtitle="Preserve memories, write final messages and designate heirs — so your legacy lives on exactly as you intend"
+        subtitle="Preserve memories, write final messages and designate heirs � so your legacy lives on exactly as you intend"
         icon={InfinityIcon}
       />
 
-      {/* ── Sticky tabs ───────────────────────────────────────────── */}
+      {/* -- Sticky tabs --------------------------------------------- */}
       <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
@@ -83,7 +83,7 @@ export default function ContinuityBridge() {
         </div>
       </div>
 
-      {/* ── Content ───────────────────────────────────────────────── */}
+      {/* -- Content ------------------------------------------------- */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
           <motion.div key={selectedTab}
@@ -101,24 +101,24 @@ export default function ContinuityBridge() {
   );
 }
 
-/* ── Overview ──────────────────────────────────────────────────────────── */
+/* -- Overview ------------------------------------------------------------ */
 function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
   const stats = [
-    { label: 'Memories saved',    value: patientData?.memory_count   ?? '—' },
-    { label: 'Messages prepared', value: patientData?.message_count  ?? '—' },
-    { label: 'Heirs designated',  value: patientData?.heir_count     ?? '—' },
+    { label: 'Memories saved',    value: patientData?.memory_count   ?? '�' },
+    { label: 'Messages prepared', value: patientData?.message_count  ?? '�' },
+    { label: 'Heirs designated',  value: patientData?.heir_count     ?? '�' },
   ];
   const actions = [
     { icon: HeartHandshake,    label: 'Memory Vault',    sub: 'Preserve cherished moments',   tab: 'legacy',      color: 'from-purple-700 to-violet-800', img: '/resources/african/african-hands-comfort.jpg' },
     { icon: MessageSquareHeart,label: 'Final Messages',  sub: 'Words for those you love',      tab: 'messages',    color: 'from-rose-600 to-pink-700',     img: '/resources/african/african-prayer-peace.jpg' },
-    { icon: BookOpen,          label: 'My Journal',     sub: 'Private — only you can see',    tab: 'my-journal',  color: 'from-indigo-700 to-blue-800',   img: '/resources/african/journal-writing.jpg' },
+    { icon: BookOpen,          label: 'My Journal',     sub: 'Private � only you can see',    tab: 'my-journal',  color: 'from-indigo-700 to-blue-800',   img: '/resources/african/journal-writing.jpg' },
     { icon: UserCheck,         label: 'My Heirs',       sub: 'Who receives your legacy',      tab: 'heirs',       color: 'from-teal-600 to-emerald-700',  img: '/resources/african/african-family-support.jpg' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Stat strip */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {stats.map(({ label, value }) => (
           <div key={label} className="bg-white border border-slate-200 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-purple-700">{value}</p>
@@ -133,7 +133,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
         <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
           "What we have once enjoyed we can never lose. All that we love deeply becomes a part of us."
         </p>
-        <p className="text-purple-400 text-xs mt-3 font-medium">— Helen Keller</p>
+        <p className="text-purple-400 text-xs mt-3 font-medium">� Helen Keller</p>
       </div>
 
       {/* Action cards */}
@@ -163,8 +163,8 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
         <div className="space-y-4">
           {[
             { step: '1', title: 'While you are alive', desc: 'Create memories, write final messages, and designate heirs who will receive your legacy.', color: 'bg-purple-100 text-purple-700' },
-            { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet — only you can edit or delete entries.', color: 'bg-indigo-100 text-indigo-700' },
-            { step: '3', title: 'After you pass', desc: 'Designated heirs receive access to the memories and messages you left for them — exactly as you intended.', color: 'bg-teal-100 text-teal-700' },
+            { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet � only you can edit or delete entries.', color: 'bg-indigo-100 text-indigo-700' },
+            { step: '3', title: 'After you pass', desc: 'Designated heirs receive access to the memories and messages you left for them � exactly as you intended.', color: 'bg-teal-100 text-teal-700' },
           ].map(({ step, title, desc, color }) => (
             <div key={step} className="flex gap-4">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>{step}</div>
@@ -180,7 +180,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
   );
 }
 
-/* ── Memory Vault ──────────────────────────────────────────────────────── */
+/* -- Memory Vault -------------------------------------------------------- */
 function LegacyTab({ patientId, name, isHeir }) {
   const { data, isLoading } = useQuery({
     queryKey: ['legacy-memories', patientId],
@@ -212,7 +212,7 @@ function LegacyTab({ patientId, name, isHeir }) {
 
       {/* Add memory types */}
       {!isHeir && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {mediaTypes.map(({ icon: Icon, label, type }) => (
             <Link key={type} to="/memory-vault"
               className="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
@@ -250,7 +250,7 @@ function LegacyTab({ patientId, name, isHeir }) {
   );
 }
 
-/* ── Final Messages ────────────────────────────────────────────────────── */
+/* -- Final Messages ------------------------------------------------------ */
 function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
   const { data: legacyData } = useQuery({
     queryKey: ['legacy-content', patientId],
@@ -311,7 +311,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
                 <div>
                   <p className="text-sm font-semibold text-slate-800">{m.title || 'Untitled message'}</p>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    {m.recipient_type === 'all_heirs' ? 'To all heirs' : 'To specific person'} ·{' '}
+                    {m.recipient_type === 'all_heirs' ? 'To all heirs' : 'To specific person'} �{' '}
                     {new Date(m.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}
                   </p>
                 </div>
@@ -327,7 +327,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
                 <p className="text-slate-700 text-sm leading-relaxed">{m.content}</p>
               ) : (
                 <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <Lock size={12} /><span>Sealed — visible to heirs after you pass</span>
+                  <Lock size={12} /><span>Sealed � visible to heirs after you pass</span>
                 </div>
               )}
             </div>
@@ -353,7 +353,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
   );
 }
 
-/* ── My Journal ────────────────────────────────────────────────────────── */
+/* -- My Journal ---------------------------------------------------------- */
 function MyJournalTab({ patientId }) {
   const [newEntry, setNewEntry] = useState('');
   const queryClient = useQueryClient();
@@ -375,7 +375,7 @@ function MyJournalTab({ patientId }) {
     <div className="space-y-5">
       <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
         <Lock size={13} className="text-indigo-500 flex-shrink-0" />
-        <p className="text-xs text-indigo-700"><strong>Completely private.</strong> These entries are yours alone — separate from your legacy vault and not visible to heirs.</p>
+        <p className="text-xs text-indigo-700"><strong>Completely private.</strong> These entries are yours alone � separate from your legacy vault and not visible to heirs.</p>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
@@ -385,7 +385,7 @@ function MyJournalTab({ patientId }) {
         </div>
         <div className="p-5">
           <textarea value={newEntry} onChange={(e) => setNewEntry(e.target.value)}
-            placeholder="What are you feeling today? Write freely…"
+            placeholder="What are you feeling today? Write freely�"
             className="w-full border border-slate-200 rounded-xl p-4 text-sm text-slate-800 min-h-[110px] focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none resize-none leading-relaxed transition-all" />
           <div className="flex items-center justify-between mt-3">
             <span className="text-xs text-slate-400">{words} word{words !== 1 ? 's' : ''}</span>
@@ -425,7 +425,7 @@ function MyJournalTab({ patientId }) {
   );
 }
 
-/* ── Heirs ─────────────────────────────────────────────────────────────── */
+/* -- Heirs --------------------------------------------------------------- */
 function HeirsTab({ patientId, isHeir }) {
   const { data } = useQuery({
     queryKey: ['legacy-heirs', patientId],
@@ -464,7 +464,7 @@ function HeirsTab({ patientId, isHeir }) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-slate-800 text-sm">{h.heir_name || 'Unnamed heir'}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{h.relationship} · {h.access_level === 'full' ? 'Full access' : 'Limited access'}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{h.relationship} � {h.access_level === 'full' ? 'Full access' : 'Limited access'}</p>
               </div>
               <div className="flex-shrink-0">
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${h.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>

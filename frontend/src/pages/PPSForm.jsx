@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -186,7 +186,7 @@ export default function PPSForm() {
   const previousScore = previousPPS?.assessments?.[0]?.pps_score;
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -233,7 +233,7 @@ export default function PPSForm() {
             <div>
               <p className="font-bold text-red-900">Critical PPS Level</p>
               <p className="text-sm text-red-800 mt-1">
-                PPS ≤30% indicates end-of-life trajectory. Consider discussing goals of care, advance directives, and hospice services with patient and family.
+                PPS =30% indicates end-of-life trajectory. Consider discussing goals of care, advance directives, and hospice services with patient and family.
               </p>
             </div>
           </div>
@@ -345,17 +345,17 @@ export default function PPSForm() {
               <span className="font-semibold">Previous PPS: {previousScore}%</span>
               {ppsScore < previousScore && (
                 <span className="ml-2 text-red-600 font-semibold">
-                  ↓ Declined by {previousScore - ppsScore}%
+                  ? Declined by {previousScore - ppsScore}%
                 </span>
               )}
               {ppsScore > previousScore && (
                 <span className="ml-2 text-green-600 font-semibold">
-                  ↑ Improved by {ppsScore - previousScore}%
+                  ? Improved by {ppsScore - previousScore}%
                 </span>
               )}
               {ppsScore === previousScore && (
                 <span className="ml-2 text-blue-600 font-semibold">
-                  → Stable
+                  ? Stable
                 </span>
               )}
             </div>

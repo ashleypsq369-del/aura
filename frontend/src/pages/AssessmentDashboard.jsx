@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -66,7 +66,7 @@ export default function AssessmentDashboard() {
 
   if (patientError || !patient) {
     return (
-      <div className="max-w-[1400px] mx-auto px-8 py-12 text-center">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 sm:py-12 text-center">
         <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-red-200">
           <ClipboardList className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-900 mb-2">Patient Not Found</h2>
@@ -75,7 +75,7 @@ export default function AssessmentDashboard() {
             onClick={() => navigate('/patients')}
             className="px-6 py-2.5 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition"
           >
-            ← Back to Patients
+            ? Back to Patients
           </button>
         </div>
       </div>
@@ -223,7 +223,7 @@ export default function AssessmentDashboard() {
       fullName: 'Referral Tracker',
       icon: Send,
       color: 'green',
-      description: 'Allied health referrals — physio, social work, chaplaincy, traditional healer, and more',
+      description: 'Allied health referrals � physio, social work, chaplaincy, traditional healer, and more',
       data: overview?.referrals,
       route: `/assessments/${patientId}/referrals`,
       frequency: 'As needed',
@@ -235,7 +235,7 @@ export default function AssessmentDashboard() {
       fullName: 'Spiritual & Wellbeing Care',
       icon: Heart,
       color: 'violet',
-      description: 'Spiritual care notes — inclusive of all faiths (Christian, Muslim, Traditional African, Hindu, secular, and others)',
+      description: 'Spiritual care notes � inclusive of all faiths (Christian, Muslim, Traditional African, Hindu, secular, and others)',
       data: overview?.spiritual_care,
       route: `/assessments/${patientId}/spiritual-care`,
       frequency: 'As needed',
@@ -250,7 +250,7 @@ export default function AssessmentDashboard() {
         onClick={() => navigate(`/patients/${patientId}`)}
         className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-teal-700 transition-colors mt-4"
       >
-        ← Back to Patient
+        ? Back to Patient
       </button>
 
       {/* Header */}
@@ -259,7 +259,7 @@ export default function AssessmentDashboard() {
         <div>
           <h1 className="text-base font-bold text-white">Clinical Assessments</h1>
           <p className="text-sm text-purple-200 mt-0.5">
-            {patient?.full_name} · Validated palliative care assessment tools
+            {patient?.full_name} � Validated palliative care assessment tools
           </p>
         </div>
         <ClipboardList size={24} className="text-white/30" />

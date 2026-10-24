@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ResidentialLog.jsx - Long-Term Residential Care
  * =================================================
  * Combined residential care log + incident report for care aides.
@@ -27,11 +27,11 @@ const ACTIVITIES = [
 ];
 
 const WELLBEING_OPTIONS = [
-  { value: 'excellent', label: '😊 Excellent', color: 'border-green-400 bg-green-50 text-green-800' },
-  { value: 'good',      label: '🙂 Good',      color: 'border-teal-400 bg-teal-50 text-teal-800'   },
-  { value: 'fair',      label: '😐 Fair',       color: 'border-amber-400 bg-amber-50 text-amber-800'},
-  { value: 'poor',      label: '😟 Poor',       color: 'border-orange-400 bg-orange-50 text-orange-800'},
-  { value: 'distressed',label: '😢 Distressed', color: 'border-red-400 bg-red-50 text-red-800'    },
+  { value: 'excellent', label: '?? Excellent', color: 'border-green-400 bg-green-50 text-green-800' },
+  { value: 'good',      label: '?? Good',      color: 'border-teal-400 bg-teal-50 text-teal-800'   },
+  { value: 'fair',      label: '?? Fair',       color: 'border-amber-400 bg-amber-50 text-amber-800'},
+  { value: 'poor',      label: '?? Poor',       color: 'border-orange-400 bg-orange-50 text-orange-800'},
+  { value: 'distressed',label: '?? Distressed', color: 'border-red-400 bg-red-50 text-red-800'    },
 ];
 
 export default function ResidentialLog() {
@@ -106,7 +106,7 @@ export default function ResidentialLog() {
           <BedDouble className="w-7 h-7 text-white" />
           <div>
             <h1 className="text-xl font-serif font-bold text-white">Residential Care Log</h1>
-            <p className="text-purple-100 text-sm">Long-Term Residential Care · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <p className="text-purple-100 text-sm">Long-Term Residential Care � {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
       </div>
@@ -141,13 +141,13 @@ export default function ResidentialLog() {
         {/* Food & fluid intake */}
         <div className="bg-white rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3">Food & Fluid Intake</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => {
               const baseOpts = [
                 { value: 'full',    label: 'Full'       },
-                { value: '3/4',     label: '¾ portion'  },
-                { value: 'half',    label: '½ portion'  },
-                { value: 'quarter', label: '¼ portion'  },
+                { value: '3/4',     label: '� portion'  },
+                { value: 'half',    label: '� portion'  },
+                { value: 'quarter', label: '� portion'  },
                 { value: 'refused', label: 'Refused'    },
               ];
               const fluidOpts = [
@@ -164,7 +164,7 @@ export default function ResidentialLog() {
                   size="sm"
                   value={intake[meal] || null}
                   onChange={v => setIntake(p => ({ ...p, [meal]: v || '' }))}
-                  placeholder="Select…"
+                  placeholder="Select�"
                   options={opts}
                 />
               );
@@ -195,7 +195,7 @@ export default function ResidentialLog() {
                   value={incidentType || null}
                   onChange={v => setIncidentType(v || 'fall')}
                   allowClear={false}
-                  placeholder="Select incident type…"
+                  placeholder="Select incident type�"
                   options={[
                     { value: 'fall',             label: 'Fall' },
                     { value: 'medication_error', label: 'Medication Error' },

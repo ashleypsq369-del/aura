@@ -44,7 +44,7 @@ export default function AdaptiveCareGuide() {
 
   if (!guideData) {
     return (
-      <div className="max-w-[1400px] mx-auto px-8 py-16 text-center">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-10 sm:py-16 text-center">
         <BookOpen size={48} className="mx-auto mb-4 text-slate-300"/>
         <h2 className="text-xl font-bold text-slate-900 mb-2">Care Guide Not Available</h2>
         <p className="text-slate-600 mb-4">Unable to load care guidance for this patient.</p>

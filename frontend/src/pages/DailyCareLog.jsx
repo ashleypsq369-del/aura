@@ -1,4 +1,4 @@
-﻿/**
+/**
  * DailyCareLog.jsx - Home-Based Palliative Care
  * ================================================
  * Home caregiver daily log: tasks completed, patient status,
@@ -106,7 +106,7 @@ export default function DailyCareLog() {
           <Home className="w-7 h-7 text-white" />
           <div>
             <h1 className="text-xl font-serif font-bold text-white">Daily Home Care Log</h1>
-            <p className="text-green-100 text-sm">Home-Based Care · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <p className="text-green-100 text-sm">Home-Based Care � {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
       </div>
@@ -145,20 +145,20 @@ export default function DailyCareLog() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <SearchableSelect
               label="Mood"
               accent="teal"
               value={mood || null}
               onChange={v => setMood(v || '')}
-              placeholder="Select mood…"
+              placeholder="Select mood�"
               options={[
-                { value: 'calm',         label: 'Calm',         sublabel: '😌' },
-                { value: 'cheerful',     label: 'Cheerful',     sublabel: '😊' },
-                { value: 'anxious',      label: 'Anxious',      sublabel: '😰' },
-                { value: 'distressed',   label: 'Distressed',   sublabel: '😢' },
-                { value: 'confused',     label: 'Confused',     sublabel: '😕' },
-                { value: 'unresponsive', label: 'Unresponsive', sublabel: '😶' },
+                { value: 'calm',         label: 'Calm',         sublabel: '??' },
+                { value: 'cheerful',     label: 'Cheerful',     sublabel: '??' },
+                { value: 'anxious',      label: 'Anxious',      sublabel: '??' },
+                { value: 'distressed',   label: 'Distressed',   sublabel: '??' },
+                { value: 'confused',     label: 'Confused',     sublabel: '??' },
+                { value: 'unresponsive', label: 'Unresponsive', sublabel: '??' },
               ]}
             />
             <SearchableSelect
@@ -166,7 +166,7 @@ export default function DailyCareLog() {
               accent="teal"
               value={appetite || null}
               onChange={v => setAppetite(v || '')}
-              placeholder="Select appetite…"
+              placeholder="Select appetite�"
               options={[
                 { value: 'good', label: 'Good',  sublabel: 'Ate well'       },
                 { value: 'fair', label: 'Fair',  sublabel: 'Ate some'       },
@@ -196,7 +196,7 @@ export default function DailyCareLog() {
           <label className="flex items-center gap-3 mt-3 p-3 bg-red-50 border-2 border-red-200 rounded-xl cursor-pointer">
             <input type="checkbox" checked={escalate} onChange={e => setEscalate(e.target.checked)} className="w-5 h-5 accent-red-600" />
             <div>
-              <p className="text-sm font-bold text-red-800">🚨 Request urgent clinical review</p>
+              <p className="text-sm font-bold text-red-800">?? Request urgent clinical review</p>
               <p className="text-xs text-red-600">Tick this if the clinical team needs to contact you today</p>
             </div>
           </label>

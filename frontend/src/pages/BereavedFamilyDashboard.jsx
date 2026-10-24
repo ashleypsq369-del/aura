@@ -1,8 +1,8 @@
-﻿/**
+/**
  * Bereavement Support Dashboard
- * ─────────────────────────────
+ * -----------------------------
  * WHO: Bereaved family members AFTER a patient has passed away.
- * PURPOSE: Grief healing — support groups, counseling, grief screening, resources.
+ * PURPOSE: Grief healing � support groups, counseling, grief screening, resources.
  * NOT the same as Continuity Bridge (which is for building a legacy while alive).
  */
 import { useState, useEffect } from 'react';
@@ -31,12 +31,12 @@ const TABS = [
 
 const CRISIS = [
   { name: 'Ghana Ambulance',        number: '193',          tag: '24 / 7' },
-  { name: 'Mental Health Authority', number: '0800-900-888', tag: 'Free · 24 / 7' },
+  { name: 'Mental Health Authority', number: '0800-900-888', tag: 'Free � 24 / 7' },
   { name: 'Befrienders Ghana',       number: '0244-846-701', tag: '24 / 7' },
 ];
 
 const COUNSELORS = [
-  { name: 'Ghana Bereavement Counselling Services', phone: '0302-681109', desc: 'Professional grief counseling in Accra', hours: 'Mon – Fri  8 am – 5 pm' },
+  { name: 'Ghana Bereavement Counselling Services', phone: '0302-681109', desc: 'Professional grief counseling in Accra', hours: 'Mon � Fri  8 am � 5 pm' },
   { name: 'Mental Health Authority Ghana',           phone: '0800-900-888', desc: 'Toll-free national mental health line',  hours: '24 / 7 Free' },
   { name: 'Befrienders Ghana',                       phone: '0244-846-701', desc: 'Emotional support & crisis listening',   hours: '24 / 7' },
   { name: 'KASA Initiative Ghana',                   phone: null,           desc: 'Community grief workshops & groups',     hours: 'Weekly sessions' },
@@ -51,7 +51,7 @@ export default function BereavedFamilyDashboard() {
   const tabParam = searchParams.get('tab');
   const { uiFlags } = usePersonalisationFlags();
 
-  // Filter tabs based on personalisation — hide Grief Journey if not bereaved
+  // Filter tabs based on personalisation � hide Grief Journey if not bereaved
   const visibleTabs = TABS.filter(t => {
     if (t.id === 'grief'   && uiFlags.isBereaved === false) return false;
     if (t.id === 'support' && uiFlags.showCommunity === false) return false;
@@ -88,15 +88,15 @@ export default function BereavedFamilyDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* ── Header ───────────────────────────────────────────────── */}
+      {/* -- Header ------------------------------------------------- */}
       <PageHeader
         image="/resources/african/african-family-support.jpg"
         title="Bereavement Support"
-        subtitle="You are not alone — healing resources, community, and professional care rooted in Ghanaian culture"
+        subtitle="You are not alone � healing resources, community, and professional care rooted in Ghanaian culture"
         icon={Flower2}
       />
 
-      {/* ── Sticky tab bar ───────────────────────────────────────── */}
+      {/* -- Sticky tab bar ----------------------------------------- */}
       <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
@@ -111,7 +111,7 @@ export default function BereavedFamilyDashboard() {
         </div>
       </div>
 
-      {/* ── Content ──────────────────────────────────────────────── */}
+      {/* -- Content ------------------------------------------------ */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
           <motion.div key={tab}
@@ -129,7 +129,7 @@ export default function BereavedFamilyDashboard() {
   );
 }
 
-/* ── Home ─────────────────────────────────────────────────────────────── */
+/* -- Home --------------------------------------------------------------- */
 function HomeTab({ screeningData, go, chatWithCareTeam }) {
   const moodOptions = [
     { icon: Frown,  label: 'Struggling',   color: 'text-red-500',    bg: 'bg-red-50 border-red-200' },
@@ -159,7 +159,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
             className="mt-3 text-xs text-slate-500 text-center italic">
             {mood === 'Struggling' ? "It's okay to not be okay. Consider talking to a counselor today."
               : mood === 'Getting by' ? 'One day at a time. The support groups are always here for you.'
-              : 'That is wonderful. Grief has no timeline — you are doing great.'}
+              : 'That is wonderful. Grief has no timeline � you are doing great.'}
           </motion.p>
         )}
       </div>
@@ -170,10 +170,10 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
         <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
           "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
         </p>
-        <p className="text-purple-400 text-xs mt-3 font-medium">— Earl Grollman</p>
+        <p className="text-purple-400 text-xs mt-3 font-medium">� Earl Grollman</p>
       </div>
 
-      {/* Quick access — compact */}
+      {/* Quick access � compact */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
           { label: 'Track My Grief',   sub: 'Screening & progress',  color: 'from-purple-700 to-violet-800', img: '/resources/african/african-prayer-peace.jpg',    tab: 'grief' },
@@ -228,9 +228,9 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       {/* Emergency strip */}
       <div className="bg-red-50 border border-red-200 rounded-xl p-4">
         <p className="text-xs font-semibold text-red-700 mb-2.5 flex items-center gap-1.5">
-          <AlertCircle size={13} /> Crisis Support — Ghana
+          <AlertCircle size={13} /> Crisis Support � Ghana
         </p>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {CRISIS.map(({ name, number, tag }) => (
             <div key={name} className="bg-white border border-red-100 rounded-lg p-2.5 text-center">
               <p className="text-xs text-slate-500 mb-0.5">{name}</p>
@@ -244,14 +244,14 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
   );
 }
 
-/* ── Grief Journey ────────────────────────────────────────────────────── */
+/* -- Grief Journey ------------------------------------------------------ */
 function GriefJourneyTab({ screeningData }) {
   const stages = [
-    { stage: 'Denial',      desc: 'Shock and disbelief — a natural protective response',   color: 'bg-slate-100 border-slate-300' },
+    { stage: 'Denial',      desc: 'Shock and disbelief � a natural protective response',   color: 'bg-slate-100 border-slate-300' },
     { stage: 'Anger',       desc: 'Frustration, helplessness and "why" questions arise',   color: 'bg-red-50 border-red-200' },
     { stage: 'Bargaining',  desc: '"What if" thoughts as the mind searches for control',   color: 'bg-amber-50 border-amber-200' },
     { stage: 'Depression',  desc: 'Deep sadness as the full weight of the loss is felt',   color: 'bg-blue-50 border-blue-200' },
-    { stage: 'Acceptance',  desc: 'Finding a way to live alongside — not over — the grief', color: 'bg-green-50 border-green-200' },
+    { stage: 'Acceptance',  desc: 'Finding a way to live alongside � not over � the grief', color: 'bg-green-50 border-green-200' },
   ];
   return (
     <div className="space-y-5">
@@ -261,7 +261,7 @@ function GriefJourneyTab({ screeningData }) {
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
           <h3 className="text-sm font-semibold text-slate-700">Understanding the Grief Journey</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Grief is not linear — you may move between these stages many times</p>
+          <p className="text-xs text-slate-500 mt-0.5">Grief is not linear � you may move between these stages many times</p>
         </div>
         <div className="divide-y divide-slate-100">
           {stages.map(({ stage, desc, color }, i) => (
@@ -276,13 +276,13 @@ function GriefJourneyTab({ screeningData }) {
         </div>
       </div>
       <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 text-xs text-purple-700 leading-relaxed">
-        <strong>Remember:</strong> There is no right or wrong way to grieve. Cultural and spiritual practices — including Ghanaian mourning traditions — are all valid parts of your healing journey.
+        <strong>Remember:</strong> There is no right or wrong way to grieve. Cultural and spiritual practices � including Ghanaian mourning traditions � are all valid parts of your healing journey.
       </div>
     </div>
   );
 }
 
-/* ── Support Groups ───────────────────────────────────────────────────── */
+/* -- Support Groups ----------------------------------------------------- */
 function SupportGroupsTab() {
   return (
     <div className="space-y-5">
@@ -297,10 +297,10 @@ function SupportGroupsTab() {
           </Link>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {[
           [Shield,  'Safe & Moderated',   'Trained facilitators maintain a respectful space'],
-          [Star,    'Anonymous',           'Share under a display name — identity protected'],
+          [Star,    'Anonymous',           'Share under a display name � identity protected'],
           [Clock,   'Always Available',    'Post and read messages any time, day or night'],
           [Globe,   'Culturally Grounded', 'Groups that understand Ghanaian grief traditions'],
         ].map(([Icon, title, desc]) => (
@@ -314,7 +314,7 @@ function SupportGroupsTab() {
   );
 }
 
-/* ── Counseling ───────────────────────────────────────────────────────── */
+/* -- Counseling --------------------------------------------------------- */
 function CounselingTab() {
   const warnSigns = [
     'Intense grief not lessening after 6+ months',
@@ -364,7 +364,7 @@ function CounselingTab() {
   );
 }
 
-/* ── Resources ────────────────────────────────────────────────────────── */
+/* -- Resources ---------------------------------------------------------- */
 function ResourcesTab() {
   const sections = [
     { label: 'Understanding Grief', dotColor: 'bg-amber-400', items: [
@@ -378,8 +378,8 @@ function ResourcesTab() {
       { title: 'Ghanaian Funeral Customs & Grief',        url: 'https://www.ghanaweb.com/GhanaHomePage/features/Funeral-rites-in-Ghana-476231', type: 'Article' },
     ]},
     { label: 'Honouring Your Loved One', dotColor: 'bg-purple-500', items: [
-      { title: "Memory Vault — Their Legacy",             nav: '/memory-vault',          type: 'In-App' },
-      { title: "Continuity Bridge — Their Journal",       nav: '/continuity-bridge',     type: 'In-App' },
+      { title: "Memory Vault � Their Legacy",             nav: '/memory-vault',          type: 'In-App' },
+      { title: "Continuity Bridge � Their Journal",       nav: '/continuity-bridge',     type: 'In-App' },
       { title: 'Spiritual Perspectives on Loss',          url: 'https://www.helpguide.org/articles/grief/bereavement-grieving-the-loss.htm', type: 'Article' },
     ]},
   ];

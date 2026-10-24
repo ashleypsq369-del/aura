@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -155,7 +155,7 @@ export default function QualityOfLifeForm() {
   const totalScore = calculateTotalScore();
 
   return (
-    <div className="max-w-[1000px] mx-auto px-8 py-8 space-y-6">
+    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
       <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
@@ -202,7 +202,7 @@ export default function QualityOfLifeForm() {
         {/* Physical Well-Being */}
         <DomainSection
           title="Physical Well-Being"
-          icon="💪"
+          icon="??"
           color="from-red-500 to-orange-500"
           questions={questions.physical}
           scores={scores}
@@ -214,7 +214,7 @@ export default function QualityOfLifeForm() {
         {/* Social/Family Well-Being */}
         <DomainSection
           title="Social/Family Well-Being"
-          icon="👨‍👩‍👧‍👦"
+          icon="???????????"
           color="from-blue-500 to-cyan-500"
           questions={questions.social}
           scores={scores}
@@ -226,7 +226,7 @@ export default function QualityOfLifeForm() {
         {/* Emotional Well-Being */}
         <DomainSection
           title="Emotional Well-Being"
-          icon="💭"
+          icon="??"
           color="from-purple-500 to-pink-500"
           questions={questions.emotional}
           scores={scores}
@@ -238,7 +238,7 @@ export default function QualityOfLifeForm() {
         {/* Functional Well-Being */}
         <DomainSection
           title="Functional Well-Being"
-          icon="⚡"
+          icon="?"
           color="from-green-500 to-teal-500"
           questions={questions.functional}
           scores={scores}

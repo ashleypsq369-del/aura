@@ -1,6 +1,6 @@
-﻿/**
- * MyLegacyAccess — Heir View
- * ──────────────────────────
+/**
+ * MyLegacyAccess � Heir View
+ * --------------------------
  * Shows the digital legacy a deceased patient left for YOU (as their designated heir).
  * Fixed all duplicate className bugs, missing journal section, wrong vault link.
  * Added: journal entries, photo gallery placeholder, proper error states.
@@ -18,7 +18,7 @@ import apiClient from '../api/client';
 import PageHeader from '../components/PageHeader';
 
 function fmt(d, opts = { year: 'numeric', month: 'long', day: 'numeric' }) {
-  return d ? new Date(d).toLocaleDateString('en-GB', opts) : '—';
+  return d ? new Date(d).toLocaleDateString('en-GB', opts) : '�';
 }
 function fmtShort(d) {
   return fmt(d, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -69,7 +69,7 @@ export default function MyLegacyAccess() {
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
         <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-3" />
-        <p className="text-slate-500 text-sm">Loading your legacy access…</p>
+        <p className="text-slate-500 text-sm">Loading your legacy access�</p>
       </div>
     </div>
   );
@@ -109,12 +109,12 @@ export default function MyLegacyAccess() {
     </div>
   );
 
-  // ── Detail view — pending ─────────────────────────────────────────────────
+  // -- Detail view � pending -------------------------------------------------
   if (selected && info && !info.is_activated) return (
     <DetailPendingView info={info} onBack={() => setSelected(null)} />
   );
 
-  // ── Detail view — activated ───────────────────────────────────────────────
+  // -- Detail view � activated -----------------------------------------------
   if (selected && info?.is_activated) return (
     <DetailActivatedView
       info={info}
@@ -130,18 +130,18 @@ export default function MyLegacyAccess() {
     />
   );
 
-  // ── List view ─────────────────────────────────────────────────────────────
+  // -- List view -------------------------------------------------------------
   return <ListView legacyAccess={legacyAccess} onSelect={setSelected} />;
 }
 
-/* ── List View ────────────────────────────────────────────────────────────── */
+/* -- List View -------------------------------------------------------------- */
 function ListView({ legacyAccess, onSelect }) {
   return (
     <div className="min-h-full">
       <PageHeader
         image="/resources/african/african-elder-care.jpg"
         title="My Legacy Access"
-        subtitle={`You have been designated as an heir for ${legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`} — preserved with love`}
+        subtitle={`You have been designated as an heir for ${legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`} � preserved with love`}
         icon={HeartHandshake}
       />
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
@@ -244,7 +244,7 @@ function Chip({ icon: Icon, label }) {
   );
 }
 
-/* ── Pending View ─────────────────────────────────────────────────────────── */
+/* -- Pending View ----------------------------------------------------------- */
 function DetailPendingView({ info, onBack }) {
   return (
     <div className="min-h-full bg-slate-50">
@@ -282,7 +282,7 @@ function DetailPendingView({ info, onBack }) {
   );
 }
 
-/* ── Activated Detail View ────────────────────────────────────────────────── */
+/* -- Activated Detail View -------------------------------------------------- */
 function DetailActivatedView({ info, contentItems, memories, journalEntries, loadingContent, loadingMemories, loadingJournal, activeTab, onTabChange, onBack }) {
   const tabs = TABS.filter(t => {
     if (t.id === 'journal'  && !info.permissions?.can_access_journal)  return false;
@@ -297,7 +297,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
       <PageHeader
         image="/resources/african/african-family-support.jpg"
         title={`${info.patient_name}'s Legacy`}
-        subtitle={`Your ${info.relationship}${info.deceased_at ? ` · Passed ${fmtShort(info.deceased_at)}` : ''}`}
+        subtitle={`Your ${info.relationship}${info.deceased_at ? ` � Passed ${fmtShort(info.deceased_at)}` : ''}`}
         icon={HeartHandshake}
       >
         <button onClick={onBack}
@@ -335,7 +335,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <h3 className="font-semibold text-slate-800 dark:text-white">{item.title || 'Untitled'}</h3>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} � {fmtShort(item.delivered_at)}</p>
                       </div>
                       <FileText size={16} className="text-slate-300 flex-shrink-0 mt-1" />
                     </div>
@@ -405,12 +405,12 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                       <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Personal message for you</p>
                     </div>
                     <p className="text-slate-700 italic leading-relaxed">"{info.notes_from_patient}"</p>
-                    <p className="text-xs text-slate-400 mt-3 text-right">— {info.patient_name}</p>
+                    <p className="text-xs text-slate-400 mt-3 text-right">� {info.patient_name}</p>
                   </div>
                 )}
                 <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
                   <h3 className="text-sm font-semibold text-slate-700">Your Access Details</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
                       ['Relationship',  info.relationship],
                       ['Access Level',  info.access_level === 'full' ? 'Full Access' : info.access_level === 'memories_only' ? 'Memories Only' : 'Messages Only'],
@@ -419,7 +419,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                     ].map(([label, val]) => (
                       <div key={label} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                         <p className="text-xs text-slate-400 uppercase tracking-wide mb-0.5">{label}</p>
-                        <p className="text-sm font-semibold text-slate-800">{val || '—'}</p>
+                        <p className="text-sm font-semibold text-slate-800">{val || '�'}</p>
                       </div>
                     ))}
                   </div>

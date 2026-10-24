@@ -216,7 +216,7 @@ export default function CognitiveAssessmentForm() {
         <label className="block text-sm font-medium text-slate-700 mb-3">
           Select Assessment Type
         </label>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
             type="button"
             onClick={() => setAssessmentType('MMSE')}

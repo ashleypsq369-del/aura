@@ -1,5 +1,5 @@
-﻿/**
- * AIInsights — Clinical Intelligence Hub v3
+/**
+ * AIInsights � Clinical Intelligence Hub v3
  * ==========================================
  * Design: Premium medical dark-header + card-based layout
  * Inspired by: Dribbble Netra (deep-slate + glow), Behance patient management
@@ -30,7 +30,7 @@ import {
   BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts';
 
-/* ─── Design tokens ─────────────────────────────────────────────────────────── */
+/* --- Design tokens ----------------------------------------------------------- */
 const RISK = {
   critical: {
     border: 'border-l-red-500',    glow: 'shadow-red-500/20',
@@ -99,7 +99,7 @@ function getInitials(name = '') {
   return name.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
 }
 
-/* ─── Mini radial risk gauge ────────────────────────────────────────────────── */
+/* --- Mini radial risk gauge -------------------------------------------------- */
 function RiskGauge({ score = 0, size = 52 }) {
   const pct   = Math.round(score * 100);
   const color = score > 0.7 ? '#e11d48' : score > 0.4 ? '#f97316' : '#16a34a';
@@ -116,7 +116,7 @@ function RiskGauge({ score = 0, size = 52 }) {
   );
 }
 
-/* ─── 8-task compact pill grid — solid colors, white text, skip zeros ────────── */
+/* --- 8-task compact pill grid � solid colors, white text, skip zeros ---------- */
 function TaskGrid({ tasks }) {
   if (!tasks || !Object.keys(tasks).length) return null;
   const entries = Object.entries(tasks)
@@ -124,7 +124,7 @@ function TaskGrid({ tasks }) {
     .filter(([, , pct]) => pct > 0)                        // skip 0% tasks
     .sort(([, , a], [, , b]) => b - a);                    // highest first
 
-  if (!entries.length) return null;                        // all zeros — show nothing
+  if (!entries.length) return null;                        // all zeros � show nothing
 
   return (
     <div className="flex flex-wrap gap-1 mt-2">
@@ -148,7 +148,7 @@ function TaskGrid({ tasks }) {
   );
 }
 
-/* ─── SHAP / Feature Importance display ─────────────────────────────────────── */
+/* --- SHAP / Feature Importance display --------------------------------------- */
 function ShapBars({ features, shapAvailable }) {
   if (!features?.length) return (
     <div className="flex flex-col items-center justify-center py-6 gap-3 text-center">
@@ -177,7 +177,7 @@ function ShapBars({ features, shapAvailable }) {
         </span>
         <span className="text-[10px] text-slate-500">
           {shapAvailable
-            ? 'Real SHAP values — mathematically precise feature contributions'
+            ? 'Real SHAP values � mathematically precise feature contributions'
             : 'Fallback: XGBoost feature importance (SHAP computation unavailable)'
           }
         </span>
@@ -292,9 +292,9 @@ function ShapBars({ features, shapAvailable }) {
   );
 }
 
-/* ─── Premium patient card ────────────────────────────────────────────────────
+/* --- Premium patient card ----------------------------------------------------
    Design: Avatar ring with risk color glow, compact data density, two CTA buttons
-   ─────────────────────────────────────────────────────────────────────────────── */
+   ------------------------------------------------------------------------------- */
 function PatientCard({ p, isSelected, onSelect, onNavigate }) {
   const tok = riskToken(p.risk_level);
   const pct = Math.round((p.overall_risk || 0) * 100);
@@ -346,8 +346,8 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
             </div>
             <div className="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500">
               {p.patient_code && <span className="font-semibold">{p.patient_code}</span>}
-              {p.age && <><span>·</span><span>{p.age}y</span></>}
-              {p.gender && <><span>·</span><span>{p.gender}</span></>}
+              {p.age && <><span>�</span><span>{p.age}y</span></>}
+              {p.gender && <><span>�</span><span>{p.gender}</span></>}
             </div>
           </div>
 
@@ -406,7 +406,7 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
   );
 }
 
-/* ─── Deep-Dive right panel — redesigned ──────────────────────────────────── */
+/* --- Deep-Dive right panel � redesigned ------------------------------------ */
 function DeepDivePanel({ patient, navigate, onClose }) {
   const pid = String(patient.id || patient.patient_id);
   const [innerTab, setInnerTab] = useState('overview');
@@ -456,7 +456,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
     return arr.map(f => ({
       name:       f.display_name || f.feature,
       shap_value: f.shap_value,        // raw SHAP value (may be 0 for fallback)
-      pct:        f.pct || 0,          // importance % — always meaningful
+      pct:        f.pct || 0,          // importance % � always meaningful
       impact:     f.impact,
       feature_value: f.value,          // actual clinical measurement
       shap_available: mlRisk.tasks[Object.keys(mlRisk.tasks)[0]]?.shap_available ?? false,
@@ -488,7 +488,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
       className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
       style={{ height: 'calc(100vh - 200px)', minHeight: 520 }}
     >
-      {/* ── Header ── */}
+      {/* -- Header -- */}
       <div className="flex-shrink-0 relative overflow-hidden" style={{ background: hdrBg }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white, transparent 60%)' }} />
         <div className="relative px-5 py-4">
@@ -499,7 +499,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-white text-base leading-tight truncate">{patient.full_name || patient.patient_name}</p>
-              <p className="text-white/60 text-xs mt-0.5 truncate">{patient.patient_code} · {patient.primary_diagnosis?.split('(')[0]?.trim() || '—'}</p>
+              <p className="text-white/60 text-xs mt-0.5 truncate">{patient.patient_code} � {patient.primary_diagnosis?.split('(')[0]?.trim() || '�'}</p>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">{tok.label}</span>
                 {patient.age && <span className="text-[10px] text-white/50">{patient.age}y</span>}
@@ -525,12 +525,12 @@ function DeepDivePanel({ patient, navigate, onClose }) {
         <div className="flex items-center gap-2 px-4 py-2 bg-red-600 flex-shrink-0">
           <Pill size={11} className="text-white flex-shrink-0" />
           <p className="text-xs font-bold text-white">
-            {severeInts.length} severe drug interaction{severeInts.length > 1 ? 's' : ''} — review before administering
+            {severeInts.length} severe drug interaction{severeInts.length > 1 ? 's' : ''} � review before administering
           </p>
         </div>
       )}
 
-      {/* ── Pill tab bar ── */}
+      {/* -- Pill tab bar -- */}
       <div className="flex-shrink-0 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
         <div className="flex gap-1 bg-white dark:bg-slate-700 rounded-xl p-1 shadow-sm border border-slate-100 dark:border-slate-600">
           {TABS.map(({ id, label, Icon: Ic }) => (
@@ -547,16 +547,16 @@ function DeepDivePanel({ patient, navigate, onClose }) {
         </div>
       </div>
 
-      {/* ── Tab body ── */}
+      {/* -- Tab body -- */}
       <div className="flex-1 overflow-y-auto overscroll-contain">
         {mlLoad ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <div className="w-10 h-10 rounded-full border-2 border-violet-200 border-t-violet-600 animate-spin" />
-            <p className="text-xs text-slate-400">Analysing with XGBoost…</p>
+            <p className="text-xs text-slate-400">Analysing with XGBoost�</p>
           </div>
         ) : (
           <div className="p-4 space-y-3">
-            {/* ── OVERVIEW ── */}
+            {/* -- OVERVIEW -- */}
             {innerTab === 'overview' && <>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -635,12 +635,12 @@ function DeepDivePanel({ patient, navigate, onClose }) {
               {drugData && !drugData.interactions?.length && (
                 <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-3 flex items-center gap-2">
                   <CheckCircle size={14} className="text-emerald-600 flex-shrink-0"/>
-                  <p className="text-xs font-semibold text-emerald-800">No drug interactions — medication profile is clear</p>
+                  <p className="text-xs font-semibold text-emerald-800">No drug interactions � medication profile is clear</p>
                 </div>
               )}
             </>}
 
-            {/* ── AI EXPLANATION ── */}
+            {/* -- AI EXPLANATION -- */}
             {innerTab === 'shap' && (<>
               <div className="flex items-center gap-2 px-1">
                 <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-violet-600 text-white':'bg-amber-500 text-white'}`}>
@@ -651,7 +651,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
               <ShapBars features={shapFeatures} shapAvailable={sortedTasks.some(([,t])=>t.shap_available)} />
             </>)}
 
-            {/* ── DOMAINS ── */}
+            {/* -- DOMAINS -- */}
             {innerTab === 'domains' && (() => {
               const nonZero = sortedTasks.filter(([,t])=>(t.probability||0)>0);
               const display = nonZero.length>0?nonZero:sortedTasks;
@@ -683,16 +683,16 @@ function DeepDivePanel({ patient, navigate, onClose }) {
               );
             })()}
 
-            {/* ── TIMELINE ── */}
+            {/* -- TIMELINE -- */}
             {innerTab === 'timeline' && (
               !deterioration ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
                   <Loader2 size={20} className="animate-spin text-violet-400" />
-                  <p className="text-sm text-slate-400">Loading deterioration analysis…</p>
+                  <p className="text-sm text-slate-400">Loading deterioration analysis�</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {(() => {
                       const dr = deterioration.deterioration_risk||0;
                       const drPct = Math.round(dr*100);
@@ -772,7 +772,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
   );
 }
 
-/* ─── Drug Interactions Tab ────────────────────────────────────────────────── */
+/* --- Drug Interactions Tab -------------------------------------------------- */
 function DrugInteractionsTab() {
   const { data: drugAll, isLoading } = useQuery({
     queryKey: ['all-drug-ints'],
@@ -789,13 +789,13 @@ function DrugInteractionsTab() {
   if (isLoading) return (
     <div className="flex flex-col items-center justify-center py-20 gap-3">
       <Loader2 size={24} className="animate-spin text-violet-500" />
-      <p className="text-sm text-slate-400">Scanning all patient medications…</p>
+      <p className="text-sm text-slate-400">Scanning all patient medications�</p>
     </div>
   );
 
   return (
     <div className="space-y-4">
-      {/* Compact stat row — no giant gradient blocks */}
+      {/* Compact stat row � no giant gradient blocks */}
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: 'Patients Affected', value: patients.length,
@@ -851,7 +851,7 @@ function DrugInteractionsTab() {
   );
 }
 
-/* ─── System Overview Tab ───────────────────────────────────────────────────── */
+/* --- System Overview Tab ----------------------------------------------------- */
 function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
   const { data: mlStatus } = useQuery({
     queryKey: ['ml-status'],
@@ -877,7 +877,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       iconBg: '#f0fdf4', iconColor: '#16a34a', valColor: '#166534' },
     { l: 'ML Tasks Loaded',  v: (mlStatus?.total_tasks || 8) + 4,
       iconBg: '#f5f3ff', iconColor: '#7c3aed', valColor: '#4c1d95' },
-    { l: 'SHAP Active',      v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : '—'),
+    { l: 'SHAP Active',      v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : '�'),
       iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
   ];
 
@@ -924,9 +924,9 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
           </p>
           <div className="space-y-2.5">
             {[
-              { label: 'Status', value: mlStatus.available ? '🟢 Online' : '🔴 Offline' },
+              { label: 'Status', value: mlStatus.available ? '?? Online' : '?? Offline' },
               { label: 'Loaded Tasks', value: `${(mlStatus.loaded_tasks?.length || 0) + 4} / ${(mlStatus.total_tasks || 8) + 4} (8 XGBoost + 4 Advanced)` },
-              { label: 'SHAP Explanations', value: mlStatus.shap_enabled ? '✓ Active' : '✗ Disabled' },
+              { label: 'SHAP Explanations', value: mlStatus.shap_enabled ? '? Active' : '? Disabled' },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-700 last:border-0">
                 <span className="text-xs text-slate-500">{label}</span>
@@ -959,14 +959,14 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
         <button onClick={onScan} disabled={scanning}
           className="w-full py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-lg font-semibold text-sm transition flex items-center justify-center gap-2">
           {scanning ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
-          {scanning ? 'Scanning patients…' : 'Run Proactive Scan'}
+          {scanning ? 'Scanning patients�' : 'Run Proactive Scan'}
         </button>
       </div>
     </div>
   );
 }
 
-/* ─── Main component ────────────────────────────────────────────────────────── */
+/* --- Main component ---------------------------------------------------------- */
 export default function AIInsights() {
   const navigate    = useNavigate();
   const queryClient = useQueryClient();
@@ -976,7 +976,7 @@ export default function AIInsights() {
   const [searchTerm, setSearchTerm] = useState('');
   const [deepDiveId, setDeepDiveId] = useState(null);
 
-  /* ── Fetches ─────────────────────────────────────────────────────────────── */
+  /* -- Fetches --------------------------------------------------------------- */
   const { data: sysData, isLoading: sysLoad, refetch: refetchSys } = useQuery({
     queryKey: ['system-insights'],
     queryFn:  () => aiAPI.getSystemInsights().then(r => r.data),
@@ -1006,7 +1006,7 @@ export default function AIInsights() {
     onError: () => toast.error('Scan failed'),
   });
 
-  /* ── Build unified patient list ──────────────────────────────────────────── */
+  /* -- Build unified patient list -------------------------------------------- */
   const allPatients = useMemo(() => {
     const batchArr = batchRisk?.patients || [];
     const sysLists = [
@@ -1035,7 +1035,7 @@ export default function AIInsights() {
     });
   }, [batchRisk, sysData, patientsMap]);
 
-  /* ── Filter ──────────────────────────────────────────────────────────────── */
+  /* -- Filter ---------------------------------------------------------------- */
   const visiblePatients = useMemo(() => {
     let base = allPatients;
     if (filterRisk === 'critical') base = base.filter(p => ['critical','crisis'].includes((p.risk_level||'').toLowerCase()));
@@ -1067,7 +1067,7 @@ export default function AIInsights() {
 
   const isLoading = sysLoad || batchLoad;
 
-  /* ── KPI pills config ────────────────────────────────────────────────────── */
+  /* -- KPI pills config ------------------------------------------------------ */
   const KPI_PILLS = [
     { v: 'all',      label: 'All Patients', count: kpi.total,    grad: 'from-teal-600 to-cyan-600',       icon: Users },
     { v: 'critical', label: 'Critical',     count: kpi.critical,  grad: 'from-red-600 to-rose-700',        icon: AlertTriangle },
@@ -1079,11 +1079,11 @@ export default function AIInsights() {
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
       className="min-h-screen space-y-0 pb-8">
 
-      {/* ── Standard page header (matches all other pages) ── */}
+      {/* -- Standard page header (matches all other pages) -- */}
       <PageHeader
         image="/resources/headers/header-ai-insights.jpg"
         title="AI Clinical Intelligence"
-        subtitle="XGBoost · 8 Models · Real SHAP · Auto-refresh 30s"
+        subtitle="XGBoost � 8 Models � Real SHAP � Auto-refresh 30s"
         icon={Brain}
       >
         <button onClick={() => { refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
@@ -1093,11 +1093,11 @@ export default function AIInsights() {
         <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
           className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30 disabled:opacity-60">
           {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
-          {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
+          {scanMutation.isPending ? 'Scanning�' : 'Run AI Scan'}
         </button>
       </PageHeader>
 
-      {/* ── KPI pills + tab bar ── */}
+      {/* -- KPI pills + tab bar -- */}
       <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
         {/* Compact KPI row */}
         <div className="flex items-center gap-2 flex-wrap mb-3">
@@ -1137,16 +1137,16 @@ export default function AIInsights() {
         </div>
       </div>
 
-      {/* ── Content ── */}
+      {/* -- Content -- */}
       <div className="px-6 pt-5">
 
-        {/* Risk tab — search + filter bar */}
+        {/* Risk tab � search + filter bar */}
         {activeTab === 'risk' && (
           <div className="flex flex-col sm:flex-row gap-3 mb-5 items-center">
             <div className="flex-1 relative w-full">
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-                placeholder="Search patients, diagnoses, concerns…"
+                placeholder="Search patients, diagnoses, concerns�"
                 className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 outline-none text-sm shadow-sm" />
             </div>
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 flex-shrink-0">
@@ -1182,8 +1182,8 @@ export default function AIInsights() {
                 </div>
               </div>
               <div className="text-center">
-                <p className="font-bold text-slate-700 dark:text-slate-300">Running ML analysis…</p>
-                <p className="text-xs text-slate-400 mt-1">XGBoost · 8 models · Real SHAP</p>
+                <p className="font-bold text-slate-700 dark:text-slate-300">Running ML analysis�</p>
+                <p className="text-xs text-slate-400 mt-1">XGBoost � 8 models � Real SHAP</p>
               </div>
             </div>
           ) : (
@@ -1199,7 +1199,7 @@ export default function AIInsights() {
                   </h2>
                   {batchRisk?.ml_available === false && (
                     <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
-                      ⚠ ML offline — rule-based fallback
+                      ? ML offline � rule-based fallback
                     </span>
                   )}
                 </div>

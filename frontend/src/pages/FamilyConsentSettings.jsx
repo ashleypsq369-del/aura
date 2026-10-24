@@ -239,7 +239,7 @@ export default function FamilyConsentSettings() {
       </div>
 
       {/* Status summary */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="bg-white dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
           style={{ border: '1px solid #d1d5db' }}>
           <div className="text-2xl font-bold text-teal-600">{grantedCount}</div>

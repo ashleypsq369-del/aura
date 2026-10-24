@@ -332,9 +332,17 @@ export default function Layout({ children }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="w-full min-h-full"
+            className="w-full min-h-full flex flex-col"
           >
-            {children}
+            <div className="flex-1">
+              {children}
+            </div>
+            {/* Copyright footer — in document flow, never overlaps content */}
+            <footer className="w-full text-center py-2 px-4 select-none pointer-events-none" aria-hidden="true">
+              <p className="text-[10px] text-gray-400/50">
+                © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
+              </p>
+            </footer>
           </motion.div>
         </main>
       </div>
@@ -388,12 +396,7 @@ export default function Layout({ children }) {
         }}
       />
 
-      {/* Copyright Footer — always visible, protects ownership */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 pointer-events-none flex justify-center">
-        <p className="text-[10px] text-gray-400/60 py-0.5 px-2 select-none">
-          © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
-        </p>
-      </div>
+
     </div>
   );
 }

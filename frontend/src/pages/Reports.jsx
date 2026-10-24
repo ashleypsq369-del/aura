@@ -282,7 +282,7 @@ function AdvanceCarePlanBody({data}) {
   const ad=data.advance_directives||{};const cp=data.care_plan||{};
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className={`p-4 rounded-xl border-2 ${ad.dnr_status?'border-red-400 bg-red-50':'border-green-400 bg-green-50'}`}>
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">DNR / DNACPR Status</p>
           <p className={`text-xl font-bold mt-1 ${ad.dnr_status?'text-red-700':'text-green-700'}`}>{ad.dnr_status?'DNR — Do Not Resuscitate':'Full Resuscitation'}</p>
@@ -293,7 +293,7 @@ function AdvanceCarePlanBody({data}) {
         </div>
       </div>
       <Sec title="Patient Wishes & Preferences" icon={Heart} color="#be123c">
-        <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
           {[['Language Preference',ad.preferred_language||'—'],['Religious/Spiritual',ad.religious_preference||'—']].map(([k,v])=>(
             <div key={k} className="bg-slate-50 rounded-lg p-2.5"><p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p><p className="font-semibold text-slate-800 text-xs mt-0.5">{v}</p></div>
           ))}
@@ -308,7 +308,7 @@ function AdvanceCarePlanBody({data}) {
         </Sec>
       )}
       <Sec title="Emergency Contact" icon={AlertCircle} color="#dc2626">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[['Name',data.emergency_contact?.name],['Relationship',data.emergency_contact?.relationship],['Phone',data.emergency_contact?.phone]].map(([k,v])=>(
             <div key={k} className="bg-slate-50 rounded-lg p-2.5"><p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p><p className="font-semibold text-slate-800 text-xs mt-0.5">{v||'—'}</p></div>
           ))}
