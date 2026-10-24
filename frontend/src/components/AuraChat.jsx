@@ -48,9 +48,9 @@ const FEEL_SCALE = [
 
 const C = {
   bg:'#ffffff', bgAlt:'#f8fafc', surface:'#f1f5f9', border:'#e2e8f0',
-  accent:'#0d9488', accentLight:'#ccfbf1', accentGlow:'rgba(13,148,136,0.2)',
-  userBubble:'linear-gradient(135deg,#0d9488,#0369a1)', userShadow:'0 4px 16px rgba(13,148,136,0.3)',
-  aiBubble:'#ffffff', aiBorder:'1px solid #cbd5e1', aiShadow:'0 2px 8px rgba(0,0,0,0.10)',
+  accent:'#0d9488', accentLight:'#f0fdf4', accentGlow:'rgba(13,148,136,0.12)',
+  userBubble:'#0d9488', userShadow:'0 2px 8px rgba(13,148,136,0.22)',
+  aiBubble:'#ffffff', aiBorder:'1px solid #e2e8f0', aiShadow:'0 1px 4px rgba(0,0,0,0.06)',
   text:'#0f172a', textMuted:'#475569', textFaint:'#64748b',
 };
 
@@ -93,29 +93,29 @@ function Feedback() {
 }
 
 function LLMBadge({ provider, offline }) {
-  if (offline) return <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600"><WifiOff size={9}/>Offline</span>;
+  if (offline) return <span className="flex items-center gap-1 text-[10px] font-semibold text-orange-500"><WifiOff size={9}/>Offline</span>;
   const map = { openrouter:'Nemotron 550B', gemini:'Gemini 2.0', groq:'Groq Llama' };
-  return <span className="flex items-center gap-1 text-[10px] font-semibold" style={{color:C.accent}}><Zap size={9}/>{map[provider]||'AI'}</span>;
+  return <span className="flex items-center gap-1 text-[10px] font-semibold text-teal-600"><Zap size={9}/>{map[provider]||'AI'}</span>;
 }
 
 function MsgContent({ content, streaming=false, isUser=false }) {
   if (!content && !streaming) return null;
   if (isUser) return (
-    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words" style={{color:'rgba(255,255,255,0.95)'}}>
+    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-white">
       {content}{streaming&&<span className="inline-block w-2 h-4 bg-white/60 rounded-sm ml-0.5 animate-pulse align-middle"/>}
     </p>
   );
   return (
-    <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-teal-700 dark:prose-headings:text-teal-400 prose-strong:text-slate-900 dark:prose-strong:text-white prose-code:text-teal-700 dark:prose-code:text-teal-400 prose-code:bg-teal-50 dark:prose-code:bg-teal-900/30 prose-code:px-1 prose-code:rounded text-slate-700 dark:text-slate-200">
+    <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-teal-700 prose-strong:text-slate-900 prose-code:text-teal-700 prose-code:bg-teal-50 prose-code:px-1 prose-code:rounded text-slate-800">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
         code({node,inline,className,children,...props}){
           const m=/language-(\w+)/.exec(className||'');
-          return !inline&&m?<SyntaxHighlighter style={oneDark} language={m[1]} PreTag="div" className="!rounded-xl !text-xs !my-2" {...props}>{String(children).replace(/\n$/,'')}</SyntaxHighlighter>:<code className="text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 px-1.5 py-0.5 rounded text-xs" {...props}>{children}</code>;
+          return !inline&&m?<SyntaxHighlighter style={oneDark} language={m[1]} PreTag="div" className="!rounded-xl !text-xs !my-2" {...props}>{String(children).replace(/\n$/,'')}</SyntaxHighlighter>:<code className="text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded text-xs" {...props}>{children}</code>;
         },
         ul:({children})=><ul className="list-none space-y-1 my-2">{children}</ul>,
-        li:({children})=><li className="flex items-start gap-2 text-slate-700 dark:text-slate-200"><span className="text-teal-500 font-bold flex-shrink-0 text-xs mt-0.5">▸</span><span>{children}</span></li>,
-        a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-600 dark:text-teal-400 underline">{children}</a>,
-        p:({children})=><p className="my-1.5 text-slate-700 dark:text-slate-200">{children}</p>,
+        li:({children})=><li className="flex items-start gap-2 text-slate-800"><span className="text-teal-500 font-bold flex-shrink-0 text-xs mt-0.5">▸</span><span>{children}</span></li>,
+        a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-600 underline">{children}</a>,
+        p:({children})=><p className="my-1.5 text-slate-800">{children}</p>,
       }}>{content||''}</ReactMarkdown>
       {streaming&&<span className="inline-block w-2 h-4 rounded-sm ml-0.5 animate-pulse align-middle" style={{background:C.accent}}/>}
     </div>
@@ -270,39 +270,37 @@ export default function AuraChat() {
               className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.25)',backdropFilter:'blur(2px)'}}/>
             <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
               transition={{type:'spring',damping:28,stiffness:260}}
-              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
-              style={{width:'min(92vw,420px)',background:C.bg,borderLeft:'1px solid #e2e8f0',boxShadow:'-8px 0 40px rgba(0,0,0,0.12)'}}
+              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col bg-white border-l border-slate-200"
+              style={{width:'min(92vw,420px)',boxShadow:'-8px 0 32px rgba(0,0,0,0.08)'}}
               onClick={e=>e.stopPropagation()}>
 
-              {/* Header — teal gradient */}
-              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3"
-                style={{background:'linear-gradient(135deg,#0d9488,#0369a1)',borderBottom:'1px solid rgba(255,255,255,0.15)'}}>
-                <div className="relative flex-shrink-0">
-                  <AuraMascot size={34} isThinking={thinking} isStreaming={loading&&!thinking}/>
+              {/* Header — clean white */}
+              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 bg-white border-b border-slate-200">
+                <div className="w-9 h-9 rounded-full bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
+                  <AuraMascot size={28} isThinking={thinking} isStreaming={loading&&!thinking}/>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-white text-sm">Aura</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold text-white/80" style={{background:'rgba(255,255,255,0.18)'}}>Companion</span>
-                    {msgCount>0&&<span className="text-[10px] text-white/50">{msgCount} msg{msgCount!==1?'s':''}</span>}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-slate-900 text-sm">Aura</span>
+                    <span className="bg-teal-50 text-teal-700 text-xs px-2 py-0.5 rounded-full border border-teal-200">Companion</span>
+                    {msgCount>0&&<span className="text-xs text-slate-500">{msgCount} msg{msgCount!==1?'s':''}</span>}
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
                     <LLMBadge provider={provider} offline={isOffline}/>
-                    <span className="text-[10px] text-white/50">·</span>
-                    <span className="text-[10px] text-white/60">{subLabel}</span>
+                    <span className="text-xs text-slate-400">·</span>
+                    <span className="text-xs text-slate-500">{subLabel}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5">
                   <button onClick={()=>setView(v=>v==='history'?'chat':'history')} title="Chat history"
-                    className="p-1.5 rounded-lg transition-all text-white/60 hover:text-white hover:bg-white/15"
-                    style={{background:view==='history'?'rgba(255,255,255,0.2)':'transparent'}}>
+                    className={`p-1.5 rounded-lg transition-colors text-slate-400 hover:text-slate-600 hover:bg-slate-100 ${view==='history'?'bg-slate-100 text-slate-600':''}`}>
                     <History size={15}/>
                   </button>
-                  <button onClick={startNew} title="New chat" className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all">
+                  <button onClick={startNew} title="New chat" className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                     <Plus size={15}/>
                   </button>
-                  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all"><RotateCcw size={14}/></button>}
-                  <button onClick={()=>setIsOpen(false)} className="p-1.5 text-white/60 hover:text-white hover:bg-white/15 rounded-lg transition-all ml-1"><X size={16}/></button>
+                  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"><RotateCcw size={14}/></button>}
+                  <button onClick={()=>setIsOpen(false)} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors ml-1"><X size={16}/></button>
                 </div>
               </div>
 
@@ -314,18 +312,18 @@ export default function AuraChat() {
 
               {/* History panel */}
               {view==='history'&&(
-                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-white dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
+                <div className="flex-1 overflow-y-auto p-3 space-y-1.5 bg-white" style={{scrollbarWidth:'thin'}}>
                   {histLoading&&<div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin" style={{color:C.accent}}/></div>}
                   {!histLoading&&conversations.length===0&&(
-                    <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-gray-400 mb-2"/><p className="text-sm text-gray-500 font-medium">No previous conversations</p></div>
+                    <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-slate-300 mb-2"/><p className="text-sm text-slate-500 font-medium">No previous conversations</p></div>
                   )}
                   {!histLoading&&conversations.map(conv=>(
-                    <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30" onClick={()=>loadConv(conv.id)}>
+                    <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50" onClick={()=>loadConv(conv.id)}>
                       <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{background:C.accentLight}}><MessageSquare size={12} style={{color:C.accent}}/></div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold truncate text-slate-900 dark:text-white">{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
-                        <p className="text-[11px] truncate mt-0.5 text-slate-500 dark:text-slate-400">{conv.last_message}</p>
-                        <p className="text-[10px] mt-1 text-slate-400 dark:text-slate-500">{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs font-semibold truncate text-slate-900">{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
+                        <p className="text-[11px] truncate mt-0.5 text-slate-500">{conv.last_message}</p>
+                        <p className="text-[10px] mt-1 text-slate-400">{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
                       </div>
                       <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-red-500 transition-all"><Trash2 size={12}/></button>
                     </div>
@@ -338,10 +336,10 @@ export default function AuraChat() {
                 <>
                   {/* Restored session bar */}
                   {sessionId&&messages.some(m=>m.id?.startsWith('db-'))&&(
-                    <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
+                    <div className="flex-shrink-0 flex items-center gap-2 px-4 py-2 border-b border-slate-100 bg-slate-50">
                       <button onClick={startNew} className="flex items-center gap-1 text-xs font-semibold transition-colors" style={{color:C.accent}}><ChevronLeft size={13}/>New chat</button>
-                      <span className="text-gray-300">·</span>
-                      <span className="text-xs text-gray-400">Viewing saved conversation</span>
+                      <span className="text-slate-300">·</span>
+                      <span className="text-xs text-slate-400">Viewing saved conversation</span>
                     </div>
                   )}
                   {/* Flag banner */}
@@ -355,39 +353,36 @@ export default function AuraChat() {
                   )}
 
                   {/* Messages */}
-                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-slate-50 dark:bg-slate-800" style={{scrollbarWidth:'thin'}}>
+                  <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-5 space-y-5 bg-gray-50" style={{scrollbarWidth:'thin'}}>
 
-                    {/* Empty state — warm welcome, feel scale for patients */}
+                    {/* Empty state */}
                     {messages.length===0&&(
                       <div className="flex flex-col items-center pt-6 space-y-5">
                         <div className="w-16 h-16"><AuraMascot size={64} isThinking={thinking} isStreaming={loading&&!thinking}/></div>
                         <div className="text-center px-4">
-                          <p className="font-bold text-slate-900 dark:text-white text-base mb-1">I'm here for you</p>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
+                          <p className="font-semibold text-slate-800 text-base mb-1">I'm here for you</p>
+                          <p className="text-sm text-slate-500 leading-relaxed">Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
                         </div>
                         {isPatient&&(
                           <div className="w-full">
-                            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center mb-3">How are you feeling today?</p>
+                            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center mb-3">How are you feeling today?</p>
                             <div className="flex justify-center gap-3">
                               {FEEL_SCALE.map(f=>(
                                 <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
-                                  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all">
+                                  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50 transition-all">
                                   <span className="text-2xl">{f.emoji}</span>
-                                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{f.label}</span>
+                                  <span className="text-[10px] font-semibold text-slate-500">{f.label}</span>
                                 </button>
                               ))}
                             </div>
                           </div>
                         )}
                         <div className="w-full">
-                          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Or ask about…</p>
+                          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Or ask about…</p>
                           <div className="flex flex-wrap gap-2">
                             {prompts.map((p,i)=>(
                               <button key={i} onClick={()=>sendMessage(p)} disabled={loading}
-                                className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all border disabled:opacity-40"
-                                style={{background:'#d1fae5',borderColor:'#6ee7b7',color:'#065f46'}}
-                                onMouseEnter={e=>{e.currentTarget.style.background='#065f46';e.currentTarget.style.color='#ffffff';}}
-                                onMouseLeave={e=>{e.currentTarget.style.background='#d1fae5';e.currentTarget.style.color='#065f46';}}>
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white border border-slate-200 hover:border-teal-400 hover:bg-teal-50 text-slate-700 hover:text-teal-700 disabled:opacity-40">
                                 {p}
                               </button>
                             ))}
@@ -403,19 +398,19 @@ export default function AuraChat() {
                         <motion.div key={msg.id} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.15}}
                           className={`group flex ${isUser?'justify-end':'justify-start'} items-end gap-2`}>
                           {!isUser&&(
-                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm" style={{background:C.userBubble}}>
-                              <Sparkles size={13} className="text-white"/>
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm bg-slate-100 border border-slate-200">
+                              <Sparkles size={13} className="text-teal-600"/>
                             </div>
                           )}
                           <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
                             <div
-                              className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-sm':'rounded-bl-sm'} ${
-                                isUser ? '' :
-                                msg.crisis_flagged ? 'bg-red-50 border border-red-200' :
-                                msg.is_error ? 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700' :
-                                'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm'
+                              className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none bg-teal-600 text-white':'rounded-bl-none'} ${
+                                !isUser && (
+                                  msg.crisis_flagged ? 'bg-red-50 border border-red-200 text-slate-800' :
+                                  msg.is_error ? 'bg-white border border-slate-200 text-slate-800 shadow-sm' :
+                                  'bg-white border border-slate-200 text-slate-800 shadow-sm'
+                                )
                               }`}
-                              style={isUser ? {background:C.userBubble, boxShadow:C.userShadow} : undefined}
                             >
                               {msg.crisis_flagged&&!isUser&&(<div className="flex items-center gap-1 mb-2 text-[11px] font-bold text-red-500"><AlertTriangle size={11}/>CRISIS SUPPORT</div>)}
                               <MsgContent content={msg.content} streaming={msg.streaming} isUser={isUser}/>
@@ -428,7 +423,7 @@ export default function AuraChat() {
                             </div>
                           </div>
                           {isUser&&(
-                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold" style={{background:C.userBubble}}>
+                            <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center bg-teal-600 text-white text-xs font-bold">
                               {user?.full_name?.[0]||'U'}
                             </div>
                           )}
@@ -440,13 +435,13 @@ export default function AuraChat() {
                     <AnimatePresence>
                       {thinking&&(
                         <motion.div initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} className="flex items-end gap-2">
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:C.userBubble}}>
-                            <Brain size={12} className="text-white animate-pulse"/>
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100 border border-slate-200">
+                            <Brain size={12} className="text-teal-600 animate-pulse"/>
                           </div>
-                          <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm">
+                          <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-white border border-slate-200 shadow-sm">
                             <div className="flex items-center gap-2">
-                              {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:C.accent}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
-                              <span className="text-xs text-slate-600 dark:text-slate-300 font-medium ml-1">Aura is typing…</span>
+                              {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full bg-slate-300" animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
+                              <span className="text-xs text-slate-500 font-medium ml-1">Aura is typing…</span>
                             </div>
                           </div>
                         </motion.div>
@@ -459,15 +454,14 @@ export default function AuraChat() {
                   <AnimatePresence>
                     {!atBottom&&(
                       <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
-                        className="absolute left-1/2 -translate-x-1/2 bottom-24 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg"
-                        style={{background:C.userBubble,boxShadow:C.userShadow}}>
+                        className="absolute left-1/2 -translate-x-1/2 bottom-24 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg bg-teal-600 hover:bg-teal-700 transition-colors">
                         <ChevronDown size={13}/>New messages
                       </motion.button>
                     )}
                   </AnimatePresence>
 
                   {/* Input */}
-                  <div className="flex-shrink-0 px-4 py-3 border-t bg-white border-slate-200">
+                  <div className="flex-shrink-0 px-4 py-3 border-t border-slate-200 bg-white">
                     <form onSubmit={e=>{e.preventDefault();sendMessage();}} className="space-y-1.5">
                       <div className="flex items-end gap-2">
                         <div className="flex-1 relative">
@@ -475,22 +469,19 @@ export default function AuraChat() {
                             onChange={e=>{setInput(e.target.value);resizeTA();}}
                             onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}}
                             placeholder="Message Aura…" rows={1} maxLength={MAX_CHARS} disabled={loading}
-                            className="w-full resize-none text-sm font-medium text-gray-900 rounded-2xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-3 disabled:opacity-50"
-                            style={{background:'#f8fafc',border:'1px solid #e2e8f0',caretColor:C.accent}}
-                            onFocus={e=>{e.target.style.border=`2px solid ${C.accent}`;e.target.style.boxShadow=`0 0 0 3px rgba(13,148,136,0.2)`;e.target.style.background='#ffffff';}}
-                            onBlur={e=>{e.target.style.border='1px solid #e2e8f0';e.target.style.boxShadow='none';e.target.style.background='#f8fafc';}}/>
+                            className="w-full resize-none text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-2.5 disabled:opacity-50 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 focus:bg-white"
+                            style={{caretColor:C.accent}}/>
                         </div>
                         <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
                           <CharRing len={input.length} max={MAX_CHARS}/>
                           <motion.button type="submit" disabled={!input.trim()||loading}
                             whileHover={{scale:1.06}} whileTap={{scale:0.94}}
-                            className="w-9 h-9 rounded-full flex items-center justify-center text-white transition-all disabled:cursor-not-allowed"
-                            style={{background:input.trim()&&!loading?C.userBubble:'#94a3b8',boxShadow:input.trim()&&!loading?C.userShadow:'none',opacity:!input.trim()&&!loading?0.55:1}}>
+                            className="w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400">
                             {loading?<Loader2 size={15} className="animate-spin"/>:<Send size={15} strokeWidth={2.5}/>}
                           </motion.button>
                         </div>
                       </div>
-                      <p className="text-[10px] text-center text-gray-500 font-medium">{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
+                      <p className="text-[10px] text-center text-slate-400 mt-1">{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
                     </form>
                   </div>
                 </>

@@ -25,9 +25,9 @@ import { API_URL } from '../api/client';
 import HintTooltip from './HintTooltip';
 
 const C = {
-  bg:'#ffffff', bgAlt:'#f0f9ff', border:'#bae6fd',
+  bg:'#ffffff', bgAlt:'#f8fafc', border:'#e2e8f0',
   accent:'#0284c7', accentLight:'#e0f2fe', accentGlow:'rgba(2,132,199,0.18)',
-  userBubble:'linear-gradient(135deg,#0284c7,#0369a1)', userShadow:'0 4px 16px rgba(2,132,199,0.3)',
+  userBubble:'#0284c7', userShadow:'0 4px 16px rgba(2,132,199,0.25)',
   aiBubble:'#ffffff', aiBorder:'1px solid #cbd5e1', aiShadow:'0 2px 8px rgba(0,0,0,0.10)',
   text:'#0f172a', textMuted:'#475569', textFaint:'#64748b',
 };
@@ -73,21 +73,21 @@ function Feedback() {
 function MsgContent({ text, streaming, isUser=false }) {
   if (!text && !streaming) return null;
   if (isUser) return (
-    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words" style={{color:'rgba(255,255,255,0.95)'}}>
+    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words text-white">
       {text}{streaming&&<span className="inline-block w-2 h-4 bg-white/60 rounded-sm ml-0.5 animate-pulse align-middle"/>}
     </p>
   );
   return (
-    <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-sky-700 dark:prose-headings:text-sky-400 prose-strong:text-slate-900 dark:prose-strong:text-white prose-code:text-sky-700 dark:prose-code:text-sky-400 prose-code:bg-sky-50 dark:prose-code:bg-sky-900/30 prose-code:px-1 prose-code:rounded text-slate-700 dark:text-slate-200">
+    <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-sky-700 prose-strong:text-slate-900 prose-code:text-sky-700 prose-code:bg-sky-50 prose-code:px-1 prose-code:rounded text-slate-800">
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
         code({node,inline,className,children,...props}){
           const m=/language-(\w+)/.exec(className||'');
-          return !inline&&m?<SyntaxHighlighter style={oneDark} language={m[1]} PreTag="div" className="!rounded-xl !text-xs !my-2" {...props}>{String(children).replace(/\n$/,'')}</SyntaxHighlighter>:<code className="text-sky-700 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/30 px-1.5 py-0.5 rounded text-xs" {...props}>{children}</code>;
+          return !inline&&m?<SyntaxHighlighter style={oneDark} language={m[1]} PreTag="div" className="!rounded-xl !text-xs !my-2" {...props}>{String(children).replace(/\n$/,'')}</SyntaxHighlighter>:<code className="text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded text-xs" {...props}>{children}</code>;
         },
         ul:({children})=><ul className="list-none space-y-1 my-2">{children}</ul>,
-        li:({children})=><li className="flex items-start gap-2 text-slate-700 dark:text-slate-200"><span className="text-sky-500 font-bold flex-shrink-0 text-xs mt-0.5">▸</span><span>{children}</span></li>,
-        a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer" className="text-sky-600 dark:text-sky-400 underline">{children}</a>,
-        p:({children})=><p className="my-1.5 text-slate-700 dark:text-slate-200">{children}</p>,
+        li:({children})=><li className="flex items-start gap-2 text-slate-800"><span className="text-sky-500 font-bold flex-shrink-0 text-xs mt-0.5">▸</span><span>{children}</span></li>,
+        a:({href,children})=><a href={href} target="_blank" rel="noopener noreferrer" className="text-sky-600 underline">{children}</a>,
+        p:({children})=><p className="my-1.5 text-slate-800">{children}</p>,
       }}>{text||''}</ReactMarkdown>
       {streaming&&<span className="inline-block w-2 h-4 rounded-sm ml-0.5 animate-pulse align-middle" style={{background:C.accent}}/>}
     </div>
@@ -195,37 +195,36 @@ export default function AIAssistant() {
               className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.2)',backdropFilter:'blur(2px)'}}/>
             <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
               transition={{type:'spring',damping:28,stiffness:260}}
-              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col bg-white"
-              style={{width:'min(92vw,520px)',borderLeft:'1px solid #e2e8f0',boxShadow:'-8px 0 40px rgba(0,0,0,0.10)'}}
+              className="fixed top-0 right-0 bottom-0 z-50 flex flex-col bg-white border-l border-slate-200"
+              style={{width:'min(92vw,520px)',boxShadow:'-8px 0 32px rgba(0,0,0,0.08)'}}
               onClick={e=>e.stopPropagation()}>
 
-              {/* Header — sky-blue gradient (distinct from teal AuraChat) */}
-              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3"
-                style={{background:'linear-gradient(135deg,#0284c7,#0369a1)',borderBottom:'1px solid rgba(255,255,255,0.15)'}}>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:'rgba(255,255,255,0.15)'}}>
+              {/* Header — clean white */}
+              <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3 bg-white border-b border-slate-200">
+                <div className="w-9 h-9 rounded-full bg-sky-50 border border-sky-200 flex items-center justify-center flex-shrink-0">
                   <AuraMascot size={28} isThinking={loading&&!streaming} isStreaming={streaming}/>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-white text-sm">Clinical Copilot</span>
+                    <span className="font-semibold text-slate-900 text-sm">Clinical Copilot</span>
                     {hasUrgent&&(
-                      <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-white" style={{background:'rgba(239,68,68,0.85)'}}>
+                      <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-white bg-red-500">
                         <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"/>{critical} urgent
                       </span>
                     )}
                     {provider&&(
-                      <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full text-white/80" style={{background:'rgba(255,255,255,0.2)'}}>
+                      <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
                         <Zap size={9}/>{provider}
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] mt-0.5 text-white/60 font-medium capitalize">
+                  <p className="text-xs mt-0.5 text-slate-500 font-medium capitalize">
                     {user?.role} · {readablePageName}{urlPid&&` · Patient #${urlPid}`}
                   </p>
                 </div>
                 <div className="flex items-center gap-0.5">
-                  {messages.length>0&&<button onClick={clearChat} className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/15 transition-all"><RotateCcw size={14}/></button>}
-                  <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/15 transition-all"><X size={16}/></button>
+                  {messages.length>0&&<button onClick={clearChat} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><RotateCcw size={14}/></button>}
+                  <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><X size={16}/></button>
                 </div>
               </div>
 
@@ -236,28 +235,28 @@ export default function AIAssistant() {
               </div>
 
               {/* Conversation area */}
-              <div className="flex-1 flex flex-col overflow-hidden relative bg-slate-50 dark:bg-slate-800">
+              <div className="flex-1 flex flex-col overflow-hidden relative bg-gray-50">
 
                 {/* Patient context card */}
                 {urlPid&&patientData&&(
-                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border bg-white dark:bg-slate-700 border-slate-200 dark:border-sky-800">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{background:'#e0f2fe'}}>
+                  <div className="flex-shrink-0 mx-4 mt-3 px-3 py-2.5 rounded-xl flex items-center gap-3 border bg-white border-slate-200">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-sky-50">
                       <UserCircle size={16} style={{color:C.accent}}/>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{patientData.full_name||patientData.name}</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                      <p className="text-xs font-bold text-slate-900 truncate">{patientData.full_name||patientData.name}</p>
+                      <p className="text-[10px] text-slate-500 truncate">
                         {patientData.primary_diagnosis||'—'} · {patientData.age||'—'}y ·
                         <span className={`ml-1 font-bold ${patientData.risk_level==='Crisis'||patientData.risk_level==='critical'?'text-red-500':patientData.risk_level==='High'||patientData.risk_level==='high'?'text-amber-500':'text-emerald-600'}`}>{patientData.risk_level||'—'} risk</span>
                       </p>
                     </div>
-                    <Stethoscope size={14} className="text-slate-300 dark:text-slate-500"/>
+                    <Stethoscope size={14} className="text-slate-300"/>
                   </div>
                 )}
 
                 {/* Urgent actions banner */}
                 {isClinical&&hasUrgent&&topActions.length>0&&messages.length===0&&(
-                  <div className="flex-shrink-0 mx-4 mt-3 p-3 rounded-xl border" style={{background:'#fffbeb',borderColor:'#fde68a'}}>
+                  <div className="flex-shrink-0 mx-4 mt-3 p-3 rounded-xl border" style={{background:'#fffbeb',borderColor:'#fcd34d'}}>
                     <div className="flex items-center gap-2 mb-2">
                       <Activity size={12} className="text-amber-600 flex-shrink-0"/>
                       <p className="text-xs font-bold text-amber-800">{critical} patient{critical!==1?'s':''} need attention</p>
@@ -275,15 +274,15 @@ export default function AIAssistant() {
                 )}
 
                 {/* Messages */}
-                <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-4 space-y-5" style={{scrollbarWidth:'thin'}}>
+                <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto px-4 py-4 space-y-5 bg-gray-50" style={{scrollbarWidth:'thin'}}>
 
                   {/* Empty state — analysis-focused */}
                   {messages.length===0&&(
                     <div className="flex flex-col items-center pt-4 space-y-5">
                       <div className="w-14 h-14"><AuraMascot size={56} isThinking={loading&&!streaming} isStreaming={streaming}/></div>
                       <div className="text-center">
-                        <p className="font-bold text-slate-900 dark:text-white text-sm mb-1">Clinical Copilot</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">Ask me to summarise patients, explain AI predictions, flag drug interactions, or draft clinical notes.</p>
+                        <p className="font-semibold text-slate-800 text-base mb-1">Clinical Copilot</p>
+                        <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">Ask me to summarise patients, explain AI predictions, flag drug interactions, or draft clinical notes.</p>
                       </div>
 
                       {/* Stats — clinical overview */}
@@ -295,9 +294,9 @@ export default function AIAssistant() {
                             {label:'Alerts',      value: dashSummary.stats?.active_alerts     ?? dashSummary.active_alerts     ?? '—', color:'#d97706'},
                             {label:'High Risk',   value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '—', color: C.accent},
                           ].map(s=>(
-                            <div key={s.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm">
+                            <div key={s.label} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-200 shadow-sm">
                               <span className="text-sm font-black tabular-nums" style={{color:s.color}}>{s.value}</span>
-                              <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">{s.label}</span>
+                              <span className="text-[10px] text-slate-500 font-medium">{s.label}</span>
                             </div>
                           ))}
                         </div>
@@ -305,11 +304,11 @@ export default function AIAssistant() {
 
                       {/* Analysis chips — what AI can actually do here */}
                       <div className="w-full">
-                        <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Ask about this page</p>
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Ask about this page</p>
                         <div className="flex flex-wrap gap-2">
                           {chips.map(c=>(
                             <button key={c} onClick={()=>sendMessage(c)}
-                              className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all border border-sky-300 bg-sky-100 dark:bg-sky-900/40 dark:border-sky-700 text-sky-800 dark:text-sky-300 hover:bg-sky-600 hover:text-white hover:border-sky-600 dark:hover:bg-sky-600 dark:hover:text-white">
+                              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-white border border-slate-200 hover:border-sky-400 hover:bg-sky-50 text-slate-700 hover:text-sky-700">
                               {c}
                             </button>
                           ))}
@@ -322,9 +321,9 @@ export default function AIAssistant() {
                           const Icon=h.icon;
                           return (
                             <button key={h.label} onClick={()=>sendMessage(h.q)}
-                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-sky-400 hover:bg-sky-50 dark:hover:bg-slate-600 shadow-sm">
-                              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{background:'#e0f2fe'}}><Icon size={13} style={{color:C.accent}}/></div>
-                              <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 truncate">{h.label}</p><p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{h.desc}</p></div>
+                              className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all bg-white border border-slate-200 hover:border-sky-400 hover:bg-sky-50 shadow-sm">
+                              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 bg-sky-50"><Icon size={13} style={{color:C.accent}}/></div>
+                              <div className="min-w-0"><p className="text-[11px] font-semibold text-slate-800 truncate">{h.label}</p><p className="text-[10px] text-slate-500 truncate">{h.desc}</p></div>
                             </button>
                           );
                         })}
@@ -339,27 +338,27 @@ export default function AIAssistant() {
                       <motion.div key={msg.id} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:0.15}}
                         className={`group flex ${isUser?'justify-end':'justify-start'} items-end gap-2`}>
                         {!isUser&&(
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm" style={{background:C.userBubble}}>
-                            <Bot size={12} className="text-white"/>
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center shadow-sm bg-slate-100 border border-slate-200">
+                            <Bot size={12} className="text-sky-600"/>
                           </div>
                         )}
                         <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
-                          <div className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-sm':'rounded-bl-sm'} ${
-                              isUser ? '' :
-                              msg.error ? 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700' :
-                              'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-sm'
-                            }`}
-                            style={isUser ? {background:C.userBubble, boxShadow:C.userShadow} : undefined}>
+                          <div className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none bg-sky-600 text-white':'rounded-bl-none'} ${
+                              !isUser && (
+                                msg.error ? 'bg-white border border-slate-200 shadow-sm' :
+                                'bg-white border border-slate-200 shadow-sm'
+                              )
+                            }`}>
                             <MsgContent text={msg.content} streaming={msg.streaming} isUser={isUser}/>
                           </div>
                           <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                            <span className="text-[10px] text-gray-400">{msg.ts?.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+                            <span className="text-[10px] text-slate-400">{msg.ts?.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
                             {!isUser&&msg.content&&!msg.streaming&&<CopyBtn text={msg.content}/>}
                             {!isUser&&msg.content&&!msg.streaming&&<Feedback/>}
                           </div>
                         </div>
                         {isUser&&(
-                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold" style={{background:C.userBubble}}>
+                          <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold bg-sky-600">
                             {user?.full_name?.[0]||'U'}
                           </div>
                         )}
@@ -371,13 +370,13 @@ export default function AIAssistant() {
                   <AnimatePresence>
                     {loading&&!streaming&&(
                       <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex items-end gap-2">
-                        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:C.userBubble}}>
-                          <Brain size={12} className="text-white animate-pulse"/>
+                        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100 border border-slate-200">
+                          <Brain size={12} className="text-sky-600 animate-pulse"/>
                         </div>
-                        <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white border border-slate-200 shadow-sm">
+                        <div className="px-4 py-3 rounded-2xl rounded-bl-none bg-white border border-slate-200 shadow-sm">
                           <div className="flex items-center gap-2">
-                            {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:C.accent}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
-                            <span className="text-xs text-gray-600 font-medium ml-1">Analysing…</span>
+                            {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full bg-slate-300" animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
+                            <span className="text-xs text-slate-500 font-medium ml-1">Analysing…</span>
                           </div>
                         </div>
                       </motion.div>
@@ -390,8 +389,7 @@ export default function AIAssistant() {
                 <AnimatePresence>
                   {!atBottom&&(
                     <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
-                      className="absolute left-1/2 -translate-x-1/2 bottom-20 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg"
-                      style={{background:C.userBubble,boxShadow:C.userShadow}}>
+                      className="absolute left-1/2 -translate-x-1/2 bottom-20 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg bg-sky-600 hover:bg-sky-700 transition-colors">
                       <ChevronDown size={13}/>Jump to latest
                     </motion.button>
                   )}
@@ -399,13 +397,10 @@ export default function AIAssistant() {
 
                 {/* Follow-up chips after conversation started */}
                 {messages.length>0&&messages.length<6&&(
-                  <div className="px-4 pb-2 flex gap-1.5 overflow-x-auto bg-white border-t border-slate-100" style={{scrollbarWidth:'none'}}>
+                  <div className="px-4 pb-2 pt-2 flex gap-1.5 overflow-x-auto bg-white border-t border-slate-100" style={{scrollbarWidth:'none'}}>
                     {chips.slice(0,3).map(c=>(
                       <button key={c} onClick={()=>sendMessage(c)}
-                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-semibold rounded-full transition-all border mt-2"
-                        style={{background:'#eff6ff',borderColor:'#bfdbfe',color:'#1d4ed8'}}
-                        onMouseEnter={e=>{e.currentTarget.style.background='#1d4ed8';e.currentTarget.style.color='#ffffff';}}
-                        onMouseLeave={e=>{e.currentTarget.style.background='#eff6ff';e.currentTarget.style.color='#1d4ed8';}}>
+                        className="flex-shrink-0 px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all border mt-2 bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200">
                         {c}
                       </button>
                     ))}
@@ -414,17 +409,14 @@ export default function AIAssistant() {
 
                 {/* Input */}
                 <form onSubmit={e=>{e.preventDefault();sendMessage();}}
-                  className="flex-shrink-0 px-3 pb-3 pt-2 border-t border-slate-200 flex gap-2 items-center bg-white">
+                  className="flex-shrink-0 px-4 pb-3 pt-2 border-t border-slate-200 flex gap-2 items-center bg-white">
                   <input ref={inputRef} type="text" value={input} onChange={e=>setInput(e.target.value)}
                     placeholder="Ask about patients, get summaries, or draft notes…" disabled={loading}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-900 bg-slate-50 rounded-2xl border border-slate-200 outline-none transition-all disabled:opacity-50 min-w-0"
-                    style={{caretColor:C.accent}}
-                    onFocus={e=>{e.target.style.border=`2px solid ${C.accent}`;e.target.style.boxShadow=`0 0 0 3px ${C.accentGlow}`;e.target.style.background='#ffffff';}}
-                    onBlur={e=>{e.target.style.border='1px solid #e2e8f0';e.target.style.boxShadow='none';e.target.style.background='#f8fafc';}}/>
+                    className="flex-1 px-4 py-2.5 text-sm text-slate-800 bg-slate-50 border border-slate-200 rounded-xl outline-none transition-all disabled:opacity-50 min-w-0 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20 focus:bg-white"
+                    style={{caretColor:C.accent}}/>
                   <motion.button type="submit" disabled={!input.trim()||loading}
                     whileHover={{scale:1.06}} whileTap={{scale:0.94}}
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white transition-all disabled:cursor-not-allowed"
-                    style={{background:input.trim()&&!loading?C.userBubble:'#94a3b8',boxShadow:input.trim()&&!loading?C.userShadow:'none',opacity:!input.trim()&&!loading?0.55:1}}>
+                    className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed bg-sky-600 hover:bg-sky-700 disabled:bg-slate-200 disabled:text-slate-400">
                     {loading?<Loader2 size={16} className="animate-spin"/>:<Send size={16} strokeWidth={2.5}/>}
                   </motion.button>
                 </form>
