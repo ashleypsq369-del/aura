@@ -107,20 +107,68 @@ export default function RealTimeAlerts() {
       <AnimatePresence>
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+            {/* Backdrop */}
+            <div className="fixed inset-0 z-40 bg-black/30 sm:bg-transparent"
+              onClick={() => setIsOpen(false)} />
+
+            {/* ── Mobile: anchored below header, full width ── */}
             <motion.div
+              key="mobile-alerts"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15 }}
+              className="sm:hidden fixed z-50 flex flex-col rounded-b-2xl overflow-hidden shadow-2xl"
+              style={{
+                top: 60,
+                left: 8,
+                right: 8,
+                maxHeight: 'calc(100dvh - 76px)',
+                background: panel.bg,
+                border: `1px solid ${panel.bdr}`,
+              }}>
+              {/* Header */}
+              <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg,#dc2626,#b91c1c)', borderBottom: '1px solid rgba(0,0,0,0.12)' }}>
+                <div className="flex items-center gap-2">
+                  <Activity size={13} color="#fff" />
+                  <span className="font-bold text-white text-xs">Active Alerts</span>
+                  <span className="text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-bold">{totalCount}</span>
+                </div>
+                <button onClick={() => setIsOpen(false)} className="w-6 h-6 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/15">
+                  <X size={12} strokeWidth={2.5} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto" style={{ background: panel.bg }}>
+                {preview.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10">
+                    <AlertCircle size={22} style={{ color: panel.sub }} className="mb-2 opacity-30" />
+                    <p className="text-xs font-medium" style={{ color: panel.sub }}>No active alerts</p>
+                  </div>
+                ) : (
+                  preview.map(alert => <AlertRow key={alert.id} alert={alert} panel={panel} onClose={() => { setIsOpen(false); navigate(`/patients/${alert.patient_id}`); }} />)
+                )}
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0" style={{ borderTop: `1px solid ${panel.sep}`, background: panel.bg }}>
+                {totalCount > 5 && <span className="text-[10px] font-semibold" style={{ color: '#ef4444' }}>+{totalCount - 5} more</span>}
+                <button onClick={() => { navigate('/alerts'); setIsOpen(false); }} className="ml-auto text-[11px] font-semibold" style={{ color: isDark ? '#34d399' : '#0d9488' }}>All alerts →</button>
+              </div>
+            </motion.div>
+
+            {/* ── Desktop: classic right-anchored dropdown ── */}
+            <motion.div
+              key="desktop-alerts"
               initial={{ opacity: 0, y: -8, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.97 }}
               transition={{ duration: 0.13 }}
-              className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col"
+              className="hidden sm:flex absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex-col"
               style={{
-                width: 'min(310px, calc(100vw - 16px))',
+                width: 310,
                 maxHeight: 'min(400px, calc(100dvh - 80px))',
                 background: panel.bg,
                 border: `1px solid ${panel.bdr}`,
                 boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
-                right: 'max(0px, -8px)',
               }}>
 
               {/* Header */}

@@ -37,7 +37,6 @@ const NAV_ROUTES = {
   report_available: '/dashboard',            community_post: '/community',
 };
 
-// Severity color system — left border + icon badge, WCAG-AA compliant
 function getSeverity(type) {
   const critical = ['critical_vitals','crisis_alert','medication_missed'];
   const high     = ['high_risk','ml_risk_alert','alert_generated','medical_flag'];
@@ -75,18 +74,17 @@ function relTime(ts) {
   return new Date(ts).toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
-// Group notifications by time bucket — standard healthcare inbox pattern
 function groupByTime(list) {
   const now   = Date.now();
   const today = [], week = [], older = [];
   list.forEach(n => {
     const age = now - new Date(n.created_at);
-    if (age < 86400000)   today.push(n);
+    if (age < 86400000)       today.push(n);
     else if (age < 604800000) week.push(n);
-    else                  older.push(n);
+    else                      older.push(n);
   });
   const groups = [];
-  if (today.length)  groups.push({ label: 'Today',            items: today });
+  if (today.length)  groups.push({ label: 'Today',             items: today });
   if (week.length)   groups.push({ label: 'Earlier this week', items: week  });
   if (older.length)  groups.push({ label: 'Older',             items: older });
   return groups;
@@ -102,7 +100,6 @@ export default function NotificationCenter() {
   const { theme }                 = useAppSettings();
   const isDark                    = theme === 'dark';
 
-  // ── Queries ──────────────────────────────────────────────────────────────
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => apiClient.get('/api/notifications?limit=200').then(r => r.data),
@@ -115,8 +112,10 @@ export default function NotificationCenter() {
   });
   const unreadCount = unreadData?.count ?? 0;
 
-  // ── Mutations ─────────────────────────────────────────────────────────────
-  const inv = () => { queryClient.invalidateQueries(['notifications']); queryClient.invalidateQueries(['unread-count']); };
+  const inv = () => {
+    queryClient.invalidateQueries(['notifications']);
+    queryClient.invalidateQueries(['unread-count']);
+  };
   const markRead    = useMutation({ mutationFn: (id) => apiClient.put(`/api/notifications/${id}/read`), onSuccess: inv });
   const markAllRead = useMutation({ mutationFn: () => apiClient.put('/api/notifications/mark-all-read'),
     onSuccess: () => { inv(); toast.success('All marked as read'); } });
@@ -124,10 +123,8 @@ export default function NotificationCenter() {
   const clearRead   = useMutation({ mutationFn: () => apiClient.delete('/api/notifications/clear-read'),
     onSuccess: () => { inv(); toast.success('Cleared read notifications'); } });
 
-  // ── Tabs ──────────────────────────────────────────────────────────────────
   const tabs = useMemo(() => TABS.filter(t => t.roles.includes(user?.role)), [user?.role]);
 
-  // ── Filtered + sorted list ────────────────────────────────────────────────
   const filtered = useMemo(() => {
     const tab  = tabs.find(t => t.id === activeTab);
     const base = tab?.types ? notifications.filter(n => tab.types.includes(n.notification_type)) : notifications;
@@ -138,10 +135,8 @@ export default function NotificationCenter() {
     });
   }, [notifications, activeTab, tabs]);
 
-  // Group for dropdown preview (max 10)
   const previewGroups = useMemo(() => groupByTime(filtered.slice(0, 10)), [filtered]);
 
-  // Toast critical ones
   useEffect(() => {
     notifications
       .filter(n => !n.is_read && (n.notification_type?.includes('critical') || n.notification_type?.includes('missed')))
@@ -154,6 +149,16 @@ export default function NotificationCenter() {
       ));
   }, [notifications]);
 
+  // Prevent body scroll when panel is open on mobile
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
   const handleClick = (n) => {
     if (!n.is_read) markRead.mutate(n.id);
     const route = NAV_ROUTES[n.notification_type];
@@ -161,44 +166,144 @@ export default function NotificationCenter() {
     setOpen(false);
   };
 
-  // ── Theme tokens ──────────────────────────────────────────────────────────
   const T = isDark ? {
     bg: '#1a2332', bdr: 'rgba(255,255,255,0.09)',
-    headBg: '#1e2d3e', headBdr: 'rgba(255,255,255,0.07)',
     tabBg: '#1a2332', tabBdr: 'rgba(255,255,255,0.06)',
     listBg: '#1a2332', rowBdr: 'rgba(255,255,255,0.04)',
     rowUnread: 'rgba(255,255,255,0.03)', rowHover: 'rgba(255,255,255,0.06)',
     footBg: '#151e2b', footBdr: 'rgba(255,255,255,0.06)',
     title: '#f1f5f9', body: '#94a3b8', time: '#64748b',
     grpLabel: '#475569',
-    tabActiveBg: '#334155', tabActiveClr: '#f1f5f9',
-    tabIdleClr: '#64748b', tabHover: 'rgba(255,255,255,0.06)',
-    badgeBg: 'rgba(255,255,255,0.10)', badgeClr: '#94a3b8',
-    badgeActiveBg: 'rgba(255,255,255,0.18)', badgeActiveClr: '#f1f5f9',
-    btnBg: 'rgba(255,255,255,0.06)', btnClr: '#94a3b8', btnHoverClr: '#f1f5f9',
-    link: '#34d399', clear: '#475569', emptyClr: '#475569',
+    link: '#34d399', clear: '#475569',
   } : {
     bg: '#ffffff', bdr: '#e2e8f0',
-    headBg: '#ffffff', headBdr: '#e2e8f0',
     tabBg: '#f8fafc', tabBdr: '#e2e8f0',
     listBg: '#ffffff', rowBdr: '#f1f5f9',
     rowUnread: '#fafafa', rowHover: '#f5f5f5',
     footBg: '#f8fafc', footBdr: '#e2e8f0',
     title: '#0f172a', body: '#64748b', time: '#94a3b8',
     grpLabel: '#94a3b8',
-    tabActiveBg: '#0f172a', tabActiveClr: '#ffffff',
-    tabIdleClr: '#64748b', tabHover: '#f1f5f9',
-    badgeBg: '#e2e8f0', badgeClr: '#475569',
-    badgeActiveBg: 'rgba(255,255,255,0.25)', badgeActiveClr: '#ffffff',
-    btnBg: '#f1f5f9', btnClr: '#64748b', btnHoverClr: '#0f172a',
-    link: '#0d9488', clear: '#94a3b8', emptyClr: '#cbd5e1',
+    link: '#0d9488', clear: '#94a3b8',
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Panel content (shared between mobile sheet and desktop dropdown) ────────
+  const PanelContent = (
+    <>
+      {/* Header */}
+      <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0"
+        style={{ background: 'linear-gradient(135deg,#0d9488,#0891b2)', borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
+        <div className="flex items-center gap-2">
+          <Bell size={13} color="rgba(255,255,255,0.9)" />
+          <span className="text-[11px] font-bold text-white">Notifications</span>
+          {unreadCount > 0 ? (
+            <span className="text-white font-bold rounded-full flex items-center justify-center"
+              style={{ fontSize: 9, background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.4)', minWidth: 18, minHeight: 18, padding: '0 4px' }}>
+              {unreadCount} unread
+            </span>
+          ) : (
+            <span className="text-[10px] font-medium text-white/70">All caught up</span>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
+          {unreadCount > 0 && (
+            <button onClick={() => markAllRead.mutate()}
+              className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-white/15">
+              <Check size={10} strokeWidth={2.5} /> Mark all read
+            </button>
+          )}
+          <button onClick={() => setOpen(false)}
+            className="w-6 h-6 flex items-center justify-center rounded-lg transition-colors text-white/70 hover:text-white hover:bg-white/15">
+            <X size={12} strokeWidth={2.5} />
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center overflow-x-auto flex-shrink-0 scrollbar-none"
+        style={{ background: isDark ? T.tabBg : '#f0fdfa', borderBottom: `1px solid ${isDark ? T.tabBdr : '#99f6e4'}`, padding: '0 10px' }}>
+        {tabs.map(tab => {
+          const isActive = activeTab === tab.id;
+          const unreadInTab = tab.types
+            ? notifications.filter(n => !n.is_read && tab.types.includes(n.notification_type)).length
+            : unreadCount;
+          return (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              className="inline-flex items-center gap-1 py-2 px-2.5 text-[11px] font-semibold whitespace-nowrap transition-all flex-shrink-0 border-b-2"
+              style={{
+                borderColor:  isActive ? '#0d9488' : 'transparent',
+                color:        isActive ? '#0d9488' : (isDark ? '#94a3b8' : '#475569'),
+                marginBottom: '-1px',
+                background:   'transparent',
+              }}>
+              {tab.label}
+              {unreadInTab > 0 && (
+                <span style={{
+                  fontSize: 8, minWidth: 14, minHeight: 14, padding: '0 3px',
+                  borderRadius: 999, fontWeight: 700,
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  background: isActive ? '#0d9488' : (isDark ? 'rgba(255,255,255,0.12)' : '#ccfbf1'),
+                  color: isActive ? '#fff' : (isDark ? '#94a3b8' : '#0d9488'),
+                }}>
+                  {unreadInTab > 99 ? '99+' : unreadInTab}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* List */}
+      <div className="flex-1 overflow-y-auto" style={{ background: T.listBg }}>
+        {previewGroups.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10">
+            <Bell size={22} style={{ color: isDark ? '#475569' : '#cbd5e1' }} className="mb-2" />
+            <p className="text-xs font-semibold" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>You're all caught up</p>
+            <p className="text-[11px] mt-0.5" style={{ color: isDark ? '#64748b' : '#94a3b8' }}>No notifications here</p>
+          </div>
+        ) : (
+          previewGroups.map(group => (
+            <div key={group.label}>
+              <div className="flex items-center gap-1.5 px-3 py-1" style={{ borderBottom: `1px solid ${T.rowBdr}` }}>
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: T.grpLabel }}>
+                  {group.label}
+                </span>
+              </div>
+              {group.items.map(n => (
+                <NotifRow key={n.id} n={n} T={T} isDark={isDark}
+                  onDelete={() => del.mutate(n.id)}
+                  onClick={() => handleClick(n)} />
+              ))}
+            </div>
+          ))
+        )}
+        {filtered.length > 10 && (
+          <button onClick={() => { setOpen(false); navigate('/notifications'); }}
+            className="w-full py-2 text-[10px] font-semibold transition text-center"
+            style={{ color: T.link, borderTop: `1px solid ${T.rowBdr}` }}>
+            +{filtered.length - 10} more →
+          </button>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between px-3 py-2 flex-shrink-0"
+        style={{ background: T.footBg, borderTop: `1px solid ${T.footBdr}` }}>
+        <button onClick={() => { setOpen(false); navigate('/notifications'); }}
+          className="text-[10px] font-semibold transition" style={{ color: T.link }}>
+          Open inbox →
+        </button>
+        <button onClick={() => clearRead.mutate()}
+          className="flex items-center gap-1 text-[10px] transition" style={{ color: T.clear }}>
+          <Trash2 size={9} /> Clear read
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <>
+      {/* Bell trigger */}
       <div className="relative">
-        {/* Bell button */}
         <button onClick={() => setOpen(v => !v)}
           className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
           aria-label="Notifications">
@@ -211,161 +316,71 @@ export default function NotificationCenter() {
             </motion.span>
           )}
         </button>
-
-        <AnimatePresence>
-          {open && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-              <motion.div
-                initial={{ opacity: 0, y: -10, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.96 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col"
-                style={{
-                  width: 'min(360px, calc(100vw - 16px))',
-                  maxHeight: 'min(500px, calc(100dvh - 80px))',
-                  background: T.bg,
-                  border: `1px solid ${T.bdr}`,
-                  boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
-                  right: 'max(0px, -8px)',
-                }}>
-
-                {/* ── Header — teal gradient with unread count + actions ── */}
-                <div className="flex items-center justify-between px-3 py-2.5 flex-shrink-0"
-                  style={{
-                    background: 'linear-gradient(135deg,#0d9488,#0891b2)',
-                    borderBottom: '1px solid rgba(255,255,255,0.15)',
-                  }}>
-                  <div className="flex items-center gap-2">
-                    <Bell size={13} color="rgba(255,255,255,0.9)" />
-                    <span className="text-[11px] font-bold text-white">Notifications</span>
-                    {unreadCount > 0 && (
-                      <span className="text-white font-bold rounded-full flex items-center justify-center"
-                        style={{ fontSize: 9, background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.4)', minWidth: 18, minHeight: 18, padding: '0 4px' }}>
-                        {unreadCount} unread
-                      </span>
-                    )}
-                    {unreadCount === 0 && (
-                      <span className="text-[10px] font-medium text-white/70">All caught up</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {unreadCount > 0 && (
-                      <button onClick={() => markAllRead.mutate()}
-                        className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-white/15">
-                        <Check size={10} strokeWidth={2.5} /> Mark all read
-                      </button>
-                    )}
-                    <button onClick={() => setOpen(false)}
-                      className="w-6 h-6 flex items-center justify-center rounded-lg transition-colors text-white/70 hover:text-white hover:bg-white/15">
-                      <X size={12} strokeWidth={2.5} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* ── Filter tabs — underline style, on slightly tinted bg ── */}
-                <div className="flex items-center overflow-x-auto flex-shrink-0 scrollbar-none"
-                  style={{ background: isDark ? T.tabBg : '#f0fdfa', borderBottom: `1px solid ${isDark ? T.tabBdr : '#99f6e4'}`, padding: '0 10px' }}>
-                  {tabs.map(tab => {
-                    const isActive = activeTab === tab.id;
-                    const unreadInTab = tab.types
-                      ? notifications.filter(n => !n.is_read && tab.types.includes(n.notification_type)).length
-                      : unreadCount;
-                    return (
-                      <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                        className="inline-flex items-center gap-1 py-2 px-2.5 text-[11px] font-semibold whitespace-nowrap transition-all flex-shrink-0 border-b-2"
-                        style={{
-                          borderColor:  isActive ? '#0d9488' : 'transparent',
-                          color:        isActive ? '#0d9488' : (isDark ? '#94a3b8' : '#475569'),
-                          marginBottom: '-1px',
-                          background:   'transparent',
-                        }}>
-                        {tab.label}
-                        {unreadInTab > 0 && (
-                          <span style={{
-                            fontSize: 8, minWidth: 14, minHeight: 14, padding: '0 3px',
-                            borderRadius: 999, fontWeight: 700,
-                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                            background: isActive ? '#0d9488' : (isDark ? 'rgba(255,255,255,0.12)' : '#ccfbf1'),
-                            color: isActive ? '#fff' : (isDark ? '#94a3b8' : '#0d9488'),
-                          }}>
-                            {unreadInTab > 99 ? '99+' : unreadInTab}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* ── Notification list — grouped by time ── */}
-                <div className="flex-1 overflow-y-auto" style={{ background: T.listBg }}>
-                  {previewGroups.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-10">
-                      <Bell size={22} style={{ color: isDark ? '#475569' : '#cbd5e1' }} className="mb-2" />
-                      <p className="text-xs font-semibold" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>You're all caught up</p>
-                      <p className="text-[11px] mt-0.5" style={{ color: isDark ? '#64748b' : '#94a3b8' }}>No notifications here</p>
-                    </div>
-                  ) : (
-                    previewGroups.map(group => (
-                      <div key={group.label}>
-                        {/* Time group label — minimal */}
-                        <div className="flex items-center gap-1.5 px-3 py-1"
-                          style={{ borderBottom: `1px solid ${T.rowBdr}` }}>
-                          <span className="text-[9px] font-bold uppercase tracking-wider"
-                            style={{ color: T.grpLabel }}>
-                            {group.label}
-                          </span>
-                        </div>
-                        {group.items.map(n => <NotifRow key={n.id} n={n} T={T} isDark={isDark} onDelete={() => del.mutate(n.id)} onClick={() => handleClick(n)} />)}
-                      </div>
-                    ))
-                  )}
-                  {filtered.length > 10 && (
-                    <button onClick={() => { setOpen(false); navigate('/notifications'); }}
-                      className="w-full py-2 text-[10px] font-semibold transition text-center"
-                      style={{ color: T.link, borderTop: `1px solid ${T.rowBdr}` }}>
-                      +{filtered.length - 10} more →
-                    </button>
-                  )}
-                </div>
-
-                {/* ── Footer ── */}
-                <div className="flex items-center justify-between px-3 py-2 flex-shrink-0"
-                  style={{ background: T.footBg, borderTop: `1px solid ${T.footBdr}` }}>
-                  <button onClick={() => { setOpen(false); navigate('/notifications'); }}
-                    className="text-[10px] font-semibold transition" style={{ color: T.link }}>
-                    Open inbox →
-                  </button>
-                  <button onClick={() => clearRead.mutate()}
-                    className="flex items-center gap-1 text-[10px] transition" style={{ color: T.clear }}>
-                    <Trash2 size={9} /> Clear read
-                  </button>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
       </div>
 
-      {/* no modal — "view all" navigates directly to /notifications */}
+      <AnimatePresence>
+        {open && (
+          <>
+            {/* Backdrop */}
+            <div className="fixed inset-0 z-40 bg-black/30 sm:bg-transparent"
+              onClick={() => setOpen(false)} />
+
+            {/* ── Mobile: full-width bottom sheet sliding up from below header ── */}
+            <motion.div
+              key="mobile-panel"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className="sm:hidden fixed z-50 flex flex-col rounded-b-2xl overflow-hidden shadow-2xl"
+              style={{
+                top: 60,           /* sits flush below the 60px header */
+                left: 8,
+                right: 8,
+                maxHeight: 'calc(100dvh - 76px)',
+                background: T.bg,
+                border: `1px solid ${T.bdr}`,
+              }}
+            >
+              {PanelContent}
+            </motion.div>
+
+            {/* ── Desktop: classic right-anchored dropdown ── */}
+            <motion.div
+              key="desktop-panel"
+              initial={{ opacity: 0, y: -10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.96 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="hidden sm:flex fixed sm:absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex-col"
+              style={{
+                width: 360,
+                maxHeight: 'min(500px, calc(100dvh - 80px))',
+                background: T.bg,
+                border: `1px solid ${T.bdr}`,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
+                /* Keep it on screen even when near the right edge */
+                right: 0,
+              }}
+            >
+              {PanelContent}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }
 
-// ─── Notification row — dropdown ─────────────────────────────────────────────
-// Uses left colored bar for severity (standard EHR/healthcare pattern)
+// ─── Notification row ─────────────────────────────────────────────────────────
 function NotifRow({ n, T, isDark, onClick, onDelete }) {
-  const sev   = getSeverity(n.notification_type);
-  const Icon  = getIcon(n.notification_type);
+  const sev    = getSeverity(n.notification_type);
+  const Icon   = getIcon(n.notification_type);
   const unread = !n.is_read;
 
   return (
     <div className="group relative flex items-center gap-2.5 pr-2.5 pl-3.5 py-2 cursor-pointer transition-colors"
-      style={{
-        background: unread ? T.rowUnread : 'transparent',
-        borderBottom: `1px solid ${T.rowBdr}`,
-      }}
+      style={{ background: unread ? T.rowUnread : 'transparent', borderBottom: `1px solid ${T.rowBdr}` }}
       onClick={onClick}
       onMouseEnter={e => e.currentTarget.style.background = T.rowHover}
       onMouseLeave={e => e.currentTarget.style.background = unread ? T.rowUnread : 'transparent'}>
@@ -374,13 +389,13 @@ function NotifRow({ n, T, isDark, onClick, onDelete }) {
       <div className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r"
         style={{ background: unread ? sev.bar : 'transparent' }} />
 
-      {/* Icon badge — 24×24, solid */}
+      {/* Icon */}
       <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
         style={{ background: sev.bar }}>
         <Icon size={11} color="#ffffff" strokeWidth={2.5} />
       </div>
 
-      {/* Content */}
+      {/* Text */}
       <div className="flex-1 min-w-0">
         <p className="text-[11px] leading-tight truncate"
           style={{ color: T.title, fontWeight: unread ? 600 : 400 }}>
@@ -403,4 +418,3 @@ function NotifRow({ n, T, isDark, onClick, onDelete }) {
     </div>
   );
 }
-
