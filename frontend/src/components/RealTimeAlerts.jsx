@@ -114,9 +114,14 @@ export default function RealTimeAlerts() {
               exit={{ opacity: 0, y: -8, scale: 0.97 }}
               transition={{ duration: 0.13 }}
               className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col"
-              style={{ width: 'min(310px, calc(100vw - 16px))', maxHeight: 400,
-                background: panel.bg, border: `1px solid ${panel.bdr}`,
-                boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)' }}>
+              style={{
+                width: 'min(310px, calc(100vw - 16px))',
+                maxHeight: 'min(400px, calc(100dvh - 80px))',
+                background: panel.bg,
+                border: `1px solid ${panel.bdr}`,
+                boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
+                right: 'max(0px, -8px)',
+              }}>
 
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0"

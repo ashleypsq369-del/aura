@@ -224,11 +224,10 @@ export default function NotificationCenter() {
                 className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col"
                 style={{
                   width: 'min(360px, calc(100vw - 16px))',
-                  maxHeight: 500,
+                  maxHeight: 'min(500px, calc(100dvh - 80px))',
                   background: T.bg,
                   border: `1px solid ${T.bdr}`,
                   boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
-                  /* Clamp so it never goes off the left edge */
                   right: 'max(0px, -8px)',
                 }}>
 

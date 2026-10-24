@@ -343,7 +343,7 @@ export default function PatientDetail() {
           subtitle={`${patient.age || 'N/A'} yrs · ${patient.primary_diagnosis || 'No diagnosis recorded'} · ${(patient.risk_level || 'Low')} Risk`}
           icon={User}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 flex-wrap">
             <span className={getStatusBadgeColor(patient.status)}>
               {patient.status || 'active'}
             </span>
@@ -354,14 +354,14 @@ export default function PatientDetail() {
               </button>
             )}
             <button onClick={explainRisk} disabled={loadingRisk}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50">
-              <Brain size={13} /> {loadingRisk ? 'Analyzing...' : 'AI Risk'}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50">
+              <Brain size={13} /> <span className="hidden xs:inline sm:inline">{loadingRisk ? 'Analyzing...' : 'AI Risk'}</span>
             </button>
             <button onClick={() => patientUserData?.user_id
                 ? chatWith(patientUserData.user_id, `Hi ${patient?.full_name?.split(' ')[0]}, this is ${user?.full_name} from the care team.`)
                 : navigate('/messages')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition">
-              <MessageCircle size={13} /> Message
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition">
+              <MessageCircle size={13} /> <span className="hidden sm:inline">Message</span>
             </button>
           </div>
         </PageHeader>

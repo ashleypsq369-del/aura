@@ -130,7 +130,7 @@ export default function Layout({ children }) {
             {/* Mobile hamburger */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden w-9 h-9 flex items-center justify-center flex-shrink-0 text-white hover:bg-white/20 rounded-lg transition-all border border-white/30"
+              className="lg:hidden w-9 h-9 flex items-center justify-center flex-shrink-0 text-white hover:bg-white/20 rounded-lg transition-all"
               aria-label="Toggle Sidebar"
               data-tip="Open menu"
               data-tip-below=""
@@ -141,7 +141,7 @@ export default function Layout({ children }) {
             {/* Desktop sidebar toggle - show/hide sidebar */}
             <button
               onClick={() => updateSidebarSetting('desktopVisible', !sidebarSettings.desktopVisible)}
-              className="hidden lg:flex w-9 h-9 items-center justify-center flex-shrink-0 text-white hover:bg-white/20 rounded-lg transition-all border border-white/30"
+              className="hidden lg:flex w-9 h-9 items-center justify-center flex-shrink-0 text-white hover:bg-white/20 rounded-lg transition-all"
               aria-label={sidebarSettings.desktopVisible ? 'Hide sidebar' : 'Show sidebar'}
               data-tip={sidebarSettings.desktopVisible ? 'Hide sidebar' : 'Show sidebar'}
               data-tip-below=""
@@ -194,36 +194,36 @@ export default function Layout({ children }) {
             </nav>
           </div>
 
-          {/* User Section - Right Side — flex with gap-1 so buttons don't overflow */}
-          <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Dark mode quick toggle */}
+          {/* User Section - Right Side — sm sizes hidden on xs to prevent overflow */}
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+            {/* Dark mode quick toggle — hidden on xs */}
             <button
               onClick={() => updateTheme(isDark ? 'light' : 'dark')}
-              className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all"
+              className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
               aria-label="Toggle dark mode"
             >
-              {isDark ? <Sun size={16} className="text-yellow-300" /> : <Moon size={16} className="text-white" />}
+              {isDark ? <Sun size={16} className="text-yellow-300" /> : <Moon size={16} className="text-white/80" />}
             </button>
 
-            {/* Aura Companion button */}
+            {/* Aura Companion — hidden on xs */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('aura:open'))}
-              className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all relative"
+              className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
               aria-label="Open Aura care companion"
               title="Aura — Care Companion"
             >
-              <MessageCircle size={16} className="text-white" strokeWidth={2}/>
+              <MessageCircle size={16} className="text-white/80" strokeWidth={2}/>
             </button>
 
-            {/* Aura Copilot button — clinical roles only */}
+            {/* Aura Copilot — clinical roles only, hidden on mobile */}
             {user?.role && ['admin', 'clinician', 'caregiver'].includes(user.role) && (
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('aura:copilot-open'))}
-                className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded-lg border border-white/30 hover:bg-white/20 transition-all relative"
+                className="hidden md:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
                 aria-label="Open Aura clinical copilot"
                 title="Aura Copilot — Clinical Assistant"
               >
-                <Stethoscope size={16} className="text-white" strokeWidth={2}/>
+                <Stethoscope size={16} className="text-white/80" strokeWidth={2}/>
               </button>
             )}
 
@@ -247,7 +247,7 @@ export default function Layout({ children }) {
               align="end"
               trigger={
                 <button
-                  className="flex items-center gap-2 px-2 h-9 text-sm font-semibold hover:bg-white/20 rounded-lg transition-all border border-white/30 flex-shrink-0"
+                  className="flex items-center gap-1.5 px-1.5 sm:px-2 h-9 text-sm font-semibold hover:bg-white/20 rounded-lg transition-all flex-shrink-0"
                   style={{ color: '#ffffff' }}
                   aria-label="Profile and settings menu"
                   data-tip="Profile & settings"
@@ -287,15 +287,17 @@ export default function Layout({ children }) {
         >
           <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'} className="hover:text-white px-1.5 py-0.5 rounded-md hover:bg-white/20">Home</Link>
           {pathnames.map((value, index) => {
+            const label = getBreadcrumbName(value);
+            if (!label) return null;  // skip numeric IDs — fixes "Home > Patients > —" bug
             const to = `/${pathnames.slice(0, index + 1).join('/')}`;
             const isLast = index === pathnames.length - 1;
             return (
               <div key={to} className="flex items-center space-x-1.5">
                 <ChevronRight size={10} className="text-white/50" strokeWidth={3} />
                 {isLast ? (
-                  <span className="text-white font-bold px-1.5 py-0.5 rounded-md bg-white/20">{getBreadcrumbName(value)}</span>
+                  <span className="text-white font-bold px-1.5 py-0.5 rounded-md bg-white/20">{label}</span>
                 ) : (
-                  <Link to={to} className="hover:text-white px-1.5 py-0.5 rounded-md hover:bg-white/20 text-white/80">{getBreadcrumbName(value)}</Link>
+                  <Link to={to} className="hover:text-white px-1.5 py-0.5 rounded-md hover:bg-white/20 text-white/80">{label}</Link>
                 )}
               </div>
             );

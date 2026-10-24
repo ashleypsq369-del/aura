@@ -186,7 +186,7 @@ export default function Patients() {
       </PageHeader>
 
       {/* Search and Filter Bar */}
-      <div>
+      <div className="px-3 sm:px-4 space-y-3">
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
         {/* Active filter banner */}
         {location.state?.filterStatus && filterStatus !== 'all' && (
@@ -216,8 +216,8 @@ export default function Patients() {
               className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none" />
           </div>
 
-          {/* Status pills */}
-          <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+          {/* Status pills — scrollable on xs so "Deteriorating" never clips */}
+          <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto scrollbar-none flex-shrink-0">
             {[
               { value:'all',          label:'All',           color:'#475569' },
               { value:'active',       label:'Active',        color:'#0d9488' },
@@ -262,7 +262,7 @@ export default function Patients() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2 py-1 px-1">
         <p className="text-sm text-slate-500 font-medium">
           Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
           {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">· {filterStatus}</span>}

@@ -215,18 +215,19 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-      {/* Toolbar */}
-      <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 flex-wrap bg-white dark:bg-slate-900">
-        <p className="text-sm text-slate-600 dark:text-slate-300 font-medium" aria-live="polite" aria-atomic="true">
-          {loading ? 'Loading patients...' : `${totalFiltered} patient${totalFiltered !== 1 ? 's' : ''}`}
+      {/* Toolbar — table-level filter for quick in-grid search */}
+      <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 bg-white dark:bg-slate-900">
+        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium" aria-live="polite" aria-atomic="true">
+          {loading ? 'Loading...' : `${totalFiltered} patient${totalFiltered !== 1 ? 's' : ''}`}
         </p>
+        {/* Hide the secondary search on small screens — the page-level search handles it */}
         <input
           type="search"
           value={globalFilter}
           onChange={e => setGlobalFilter(e.target.value)}
           placeholder="Search patients..."
           aria-label="Search patients by name, diagnosis or code"
-          className="px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-56"
+          className="hidden sm:block px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-44"
         />
       </div>
 
