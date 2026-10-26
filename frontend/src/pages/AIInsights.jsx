@@ -394,8 +394,8 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
             onClick={e => { e.stopPropagation(); onSelect(p.id); }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ml-auto ${
               isSelected
-                ? 'bg-violet-700 text-white'
-                : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-sm'
+                ? 'bg-teal-700 text-white'
+                : 'bg-teal-600 hover:bg-teal-700 text-white'
             }`}
           >
             <Brain size={11} /> {isSelected ? 'Close' : 'Deep-Dive'}

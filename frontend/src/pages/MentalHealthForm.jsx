@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -160,7 +160,7 @@ export default function MentalHealthForm() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 shadow-lg"
+        className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20"
       >
         <div className="flex items-center space-x-4">
           <div className="p-3 rounded-lg bg-white/20">
@@ -364,7 +364,7 @@ export default function MentalHealthForm() {
           <button
             type="submit"
             disabled={submitPHQ9.isLoading || submitGAD7.isLoading}
-            className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
+            className="flex-1 bg-teal-600 hover:bg-teal-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
           >
             <Save className="w-5 h-5" />
             <span>

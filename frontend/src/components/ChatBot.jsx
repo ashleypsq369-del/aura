@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -156,8 +156,8 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
     >
       {/* Avatar */}
       {!isUser && (
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow">
-          <Bot size={14} className="text-white" />
+        <div className="w-7 h-7 rounded-full bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <Bot size={14} className="text-teal-600 dark:text-teal-400" />
         </div>
       )}
 
@@ -165,7 +165,7 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
       <div className={`max-w-[82%] group relative`}>
         <div className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
           isUser
-            ? 'bg-gradient-to-br from-violet-600 to-blue-600 text-white rounded-tr-sm'
+            ? 'bg-teal-600 dark:bg-teal-700 text-white rounded-tr-sm'
             : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
         }`}>
           {isUser ? (
@@ -223,7 +223,7 @@ function ThinkingDots() {
       animate={{ opacity: 1 }}
       className="flex gap-2 flex-row"
     >
-      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow">
+      <div className="w-7 h-7 rounded-full bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0 mt-0.5 shadow">
         <Bot size={14} className="text-white" />
       </div>
       <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
@@ -231,7 +231,7 @@ function ThinkingDots() {
           {[0, 150, 300].map(delay => (
             <div
               key={delay}
-              className="w-2 h-2 bg-gradient-to-br from-violet-500 to-blue-500 rounded-full animate-bounce"
+              className="w-2 h-2 bg-gradient-to-br bg-teal-500 rounded-full animate-bounce"
               style={{ animationDelay: `${delay}ms` }}
             />
           ))}

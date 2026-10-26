@@ -105,15 +105,15 @@ function BurnoutModal({ cg, data, loading, onClose }) {
       <motion.div initial={{opacity:0,scale:0.94,y:20}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:0.94}}
         transition={{type:'spring',damping:28,stiffness:380}}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden" onClick={e=>e.stopPropagation()}>
-        <div className="bg-gradient-to-r from-violet-600 to-purple-700 px-5 py-4 flex items-center justify-between">
+        <div className="px-5 py-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-700" style={{borderLeft:'4px solid #7c3aed'}}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white font-black text-sm">{getInitials(cg.full_name)}</div>
+            <div className="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-700 flex items-center justify-center text-violet-700 dark:text-violet-300 font-black text-sm">{getInitials(cg.full_name)}</div>
             <div>
-              <p className="font-bold text-white">{cg.full_name}</p>
-              <p className="text-violet-200 text-xs">AI Burnout Analysis · {cg.role||'Caregiver'}</p>
+              <p className="font-bold text-slate-900 dark:text-white">{cg.full_name}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs">AI Burnout Analysis · {cg.role||'Caregiver'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/30 flex items-center justify-center text-white transition-colors"><X size={15}/></button>
+          <button onClick={onClose} className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors"><X size={15}/></button>
         </div>
         <div className="p-5 space-y-4 max-h-[72vh] overflow-y-auto">
           {loading && <div className="flex flex-col items-center py-14 gap-3"><Loader2 size={28} className="animate-spin text-violet-500"/><p className="text-sm text-slate-500 font-medium">Analysing burnout risk…</p></div>}
@@ -556,7 +556,7 @@ export default function Caregivers() {
                   <button
                     onClick={() => optPid && optimalMutation.mutate(parseInt(optPid))}
                     disabled={!optPid||optimalMutation.isPending}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 transition-all shadow-sm">
+                    className="w-full flex items-center justify-center gap-2 py-2.5 bg-teal-600 hover:bg-teal-7et-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 transition-all shadow-sm">
                     {optimalMutation.isPending ? <Loader2 size={14} className="animate-spin"/> : <Zap size={14}/>}
                     {optimalMutation.isPending ? 'Finding best match…' : 'Auto-Assign'}
                   </button>

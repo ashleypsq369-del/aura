@@ -350,7 +350,7 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 .chip-pink    { background: #fdf2f8; color: #9d174d; border: 1px solid #f9a8d4; }
 
 
-/* ── 11. PAGE TINTS — removed, using standard flat bg for all routes ── */
+/* ── 11. PAGE TINTS — same standard bg for all routes ── */
 .page-tint-dashboard,
 .page-tint-patients,
 .page-tint-alerts,
@@ -358,7 +358,7 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 .page-tint-community,
 .page-tint-resources,
 .page-tint-journey,
-.page-tint-patient { background: #f4f6f8 !important; }
+.page-tint-patient { background: #f0f4f8 !important; }
 
 html.dark .page-tint-dashboard,
 html.dark .page-tint-patients,
@@ -367,7 +367,7 @@ html.dark .page-tint-clinical,
 html.dark .page-tint-community,
 html.dark .page-tint-resources,
 html.dark .page-tint-journey,
-html.dark .page-tint-patient { background: #0f172a !important; }
+html.dark .page-tint-patient { background: #0a0a0a !important; }
 
 
 /* ── 12. DIVIDER WITH CHARACTER ──────────────────────────────────────────────

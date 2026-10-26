@@ -193,13 +193,13 @@ export default function Resources() {
             {/* ML-powered personalised recommendations */}
             {mlRecommended?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="mb-5 bg-white border-2 border-violet-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-4 py-3 border-b border-violet-100 flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600">
-                  <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                    <Brain size={14} className="text-white" />
+                className="mb-5 bg-white dark:bg-slate-800 border border-violet-200 dark:border-violet-800 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2" style={{borderLeft:'4px solid #7c3aed'}}>
+                  <div className="w-7 h-7 rounded-lg bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-700 flex items-center justify-center flex-shrink-0">
+                    <Brain size={14} className="text-violet-600 dark:text-violet-400" />
                   </div>
-                  <h3 className="text-sm font-bold text-white flex-1">AI-Recommended for You</h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/25 text-white">
+                  <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 flex-1">AI-Recommended for You</h3>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 border border-violet-200 dark:border-violet-700">
                     {mlRecommended.length} match{mlRecommended.length !== 1 ? 'es' : ''}
                   </span>
                 </div>

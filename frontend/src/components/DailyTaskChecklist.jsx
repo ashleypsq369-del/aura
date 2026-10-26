@@ -219,20 +219,20 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                   <motion.div key={task.id} layout
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                       task.done
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700'
-                        : 'bg-red-50 dark:bg-red-900/15 border-red-200 dark:border-red-800'
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                     }`}>
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                      task.done ? 'bg-emerald-100 dark:bg-emerald-800/40' : 'bg-red-100 dark:bg-red-800/40'
+                      task.done ? 'bg-emerald-100 dark:bg-emerald-800/40' : 'bg-slate-100 dark:bg-slate-700'
                     }`}>
-                      <Icon size={17} className={task.done ? 'text-emerald-600' : 'text-red-500'} />
+                      <Icon size={17} className={task.done ? 'text-emerald-600' : 'text-teal-600 dark:text-teal-400'} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className={`font-semibold text-sm truncate ${
                           task.done ? 'text-emerald-700 dark:text-emerald-300 line-through opacity-70' : 'text-slate-800 dark:text-slate-100'
                         }`}>{task.name}</p>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${cfg.badgeCls}`}>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800">
                           Required
                         </span>
                       </div>
@@ -244,7 +244,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                       <CheckCircle2 size={20} className="text-emerald-500 flex-shrink-0" />
                     ) : (
                       <button onClick={() => navigate(task.link)}
-                        className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition">
+                        className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold transition">
                         Do it <ChevronRight size={12} />
                       </button>
                     )}
