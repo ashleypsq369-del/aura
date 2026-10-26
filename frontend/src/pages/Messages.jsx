@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, Search, Users, AlertCircle, Plus, 
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Zap, AlertTriangle, Stethoscope, Phone, Video, Smile, Reply,
+  Zap, AlertTriangle, Stethoscope, Phone, Video, Smile, Reply, ChevronRight,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -880,21 +880,23 @@ export default function Messages() {
       <Modal
         isOpen={showNewChat}
         onClose={() => { setShowNewChat(false); setChatListLimit(10); setNewChatSearch(''); }}
+        title="New Message"
+        icon={MessageCircle}
+        accent="teal"
+        size="sm"
       >
-        <div className="p-4 border-b">
-          <h3 className="font-bold text-lg mb-3">New Message</h3>
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <div className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               autoFocus
               placeholder="Search by name or role..."
               value={newChatSearch}
               onChange={e => setNewChatSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 focus:bg-white transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
-          <div className="space-y-2 max-h-72 overflow-y-auto">
+          <div className="space-y-1 max-h-64 overflow-y-auto -mx-1 px-1">
           {physicians
             .filter(p => !newChatSearch || p.name.toLowerCase().includes(newChatSearch.toLowerCase()) || p.role.toLowerCase().includes(newChatSearch.toLowerCase()))
             .slice(0, chatListLimit)
@@ -902,42 +904,38 @@ export default function Messages() {
             <button
               key={person.id}
               onClick={() => { handleStartChat(person.id); setNewChatSearch(''); }}
-              className="w-full p-3.5 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-teal-400 hover:bg-teal-50/50 dark:hover:bg-teal-900/20 transition-colors text-left flex items-center justify-between group"
+              className="w-full px-3 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left flex items-center gap-3 group"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold shadow-md flex-shrink-0">
-                  {person.name[0]}
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900 dark:text-slate-100">{person.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">{person.role}</p>
-                </div>
+              <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {person.name[0]}
               </div>
-              <UserPlus className="w-4 h-4 text-teal-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-slate-800 dark:text-slate-100 text-sm truncate">{person.name}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 capitalize">{person.role}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
             </button>
           ))}
           {physicians.filter(p => !newChatSearch || p.name.toLowerCase().includes(newChatSearch.toLowerCase()) || p.role.toLowerCase().includes(newChatSearch.toLowerCase())).length === 0 && (
-            <div className="text-center py-6 text-slate-500 dark:text-slate-400 text-sm">
+            <div className="text-center py-8 text-slate-400 text-sm">
               No users match "{newChatSearch}"
             </div>
           )}
           {!newChatSearch && physicians.length > chatListLimit && (
             <button
               onClick={() => setChatListLimit(physicians.length)}
-              className="w-full mt-1 text-center text-teal-600 font-semibold text-sm hover:text-teal-700 py-2 border-2 border-dashed border-teal-200 rounded-xl"
+              className="w-full mt-1 text-center text-teal-600 text-xs font-semibold hover:text-teal-700 py-2"
             >
-              View More ({physicians.length - chatListLimit} more)
+              Show {physicians.length - chatListLimit} more
             </button>
           )}
         </div>
         {physicians.length === 0 && (
-          <div className="text-center text-slate-500 py-8">
-            <Users className="w-12 h-12 mx-auto mb-2 text-slate-300" />
-            <p className="text-sm">No users available to message</p>
-            <p className="text-xs text-slate-400 mt-1">Try refreshing the page</p>
+          <div className="text-center text-slate-400 py-8">
+            <Users className="w-10 h-10 mx-auto mb-2 text-slate-300" />
+            <p className="text-sm">No users available</p>
           </div>
         )}
-        </div>
       </Modal>
 
       {/* New Group Chat Modal */}

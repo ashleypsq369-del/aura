@@ -101,11 +101,10 @@ export function StatCard({ label, value, icon: Icon, variant = 'teal', onClick, 
       onClick={onClick}
       data-tip={dataTip}
       className={`
-        rounded-xl border border-slate-200
-        px-4 py-3.5 flex items-center gap-3
-        transition-all duration-200
+        rounded-lg border px-4 py-3 flex items-center gap-3
+        transition-all duration-150 bg-white
         ${v.css}
-        ${onClick ? 'cursor-pointer hover:shadow-md hover:-translate-y-0.5' : ''}
+        ${onClick ? 'cursor-pointer hover:shadow-sm hover:-translate-y-px' : ''}
         ${className}
       `}
       {...(onClick ? { role: 'button', tabIndex: 0,
@@ -113,14 +112,14 @@ export function StatCard({ label, value, icon: Icon, variant = 'teal', onClick, 
     >
       {Icon && (
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
           style={{ backgroundColor: v.iconBg, color: v.iconColor }}
         >
-          <Icon size={16} strokeWidth={2} />
+          <Icon size={15} strokeWidth={2} />
         </div>
       )}
       <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 leading-none mb-1">{label}</p>
+        <p className="text-[11px] font-medium text-slate-400 leading-none mb-1 tracking-wide">{label}</p>
         <p className="text-xl font-bold tabular-nums leading-none" style={{ color: v.valColor }}>{value}</p>
       </div>
     </div>
