@@ -1,0 +1,657 @@
+/*
+ * premium.css — Project Aura Design Upgrade
+ * ============================================
+ * Adds texture, depth, elevation hierarchy, and visual character.
+ * Techniques: noise grain, multi-layer shadows, colored borders,
+ * ambient gradients, sharp typography, micro-details.
+ *
+ * Inspired by: Linear, Vercel, Stripe, Raycast, Notion
+ */
+
+/* ── 1. NOISE / GRAIN TEXTURE ────────────────────────────────────────────────
+   A subtle SVG noise overlay gives surfaces physical texture.
+   Inspired by: Linear app, Stripe dashboard.
+   Applied via .grain class on containers, or globally on body.            */
+
+/* Grain SVG as data URI — 65x65 tile, very subtle */
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='65' height='65' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='65' height='65' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
+}
+
+/* Grain overlay on page background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--grain);
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+html.dark body::before {
+  background-image: var(--grain-dark);
+}
+
+/* Grain on cards (subtle inner texture) */
+.card-grain {
+  position: relative;
+}
+.card-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  background-repeat: repeat;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+/* ── 2. ELEVATED CARD SYSTEM ─────────────────────────────────────────────────
+   Three elevation levels with distinct shadow profiles.
+   Real product design uses colored shadows that match the surface.        */
+
+/* Level 0 — flat, just a border */
+.elevation-0 {
+  box-shadow: none;
+  border: 1px solid #e2e8f0;
+}
+
+/* Level 1 — resting card: subtle lift */
+.elevation-1 {
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 2px 4px rgba(0,0,0,0.04),
+    0 0 0 1px rgba(0,0,0,0.04);
+}
+
+/* Level 2 — hover/active card: clear depth */
+.elevation-2 {
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 6px 16px rgba(0,0,0,0.07),
+    0 0 0 1px rgba(0,0,0,0.04);
+}
+
+/* Level 3 — modal/drawer: strong elevation */
+.elevation-3 {
+  box-shadow:
+    0 4px 8px rgba(0,0,0,0.05),
+    0 12px 32px rgba(0,0,0,0.10),
+    0 24px 64px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* Teal-tinted card shadow — for primary action cards */
+.elevation-teal {
+  box-shadow:
+    0 2px 4px rgba(13,148,136,0.06),
+    0 6px 16px rgba(13,148,136,0.10),
+    0 0 0 1px rgba(13,148,136,0.10);
+}
+
+html.dark .elevation-1 {
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.04);
+}
+html.dark .elevation-2 {
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(255,255,255,0.06);
+}
+html.dark .elevation-3 {
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(255,255,255,0.07);
+}
+
+
+/* ── 3. AMBIENT BACKGROUND SYSTEM ────────────────────────────────────────────
+   Instead of flat grey, use very subtle ambient color gradients.
+   The technique: radial-gradient orbs at page corners.                    */
+
+.ambient-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(13,148,136,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(2,132,199,0.03) 0%, transparent 60%),
+    #f8f7f5;
+}
+
+.ambient-bg-clinical {
+  background:
+    radial-gradient(ellipse 70% 50% at 0% 0%, rgba(2,132,199,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(124,58,237,0.03) 0%, transparent 60%),
+    #f8f9fb;
+}
+
+html.dark .ambient-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(13,148,136,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(2,132,199,0.05) 0%, transparent 60%),
+    #0f172a;
+}
+
+html.dark .ambient-bg-clinical {
+  background:
+    radial-gradient(ellipse 70% 50% at 0% 0%, rgba(2,132,199,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    #0f172a;
+}
+
+
+/* ── 4. SHARP CARD BORDERS ───────────────────────────────────────────────────
+   Instead of uniform slate-200 borders everywhere, use left-accent borders
+   on data cards. The left colored stripe communicates hierarchy and status. */
+
+.card-accent-teal   { border-left: 3px solid #0d9488 !important; }
+.card-accent-red    { border-left: 3px solid #dc2626 !important; }
+.card-accent-amber  { border-left: 3px solid #d97706 !important; }
+.card-accent-violet { border-left: 3px solid #7c3aed !important; }
+.card-accent-sky    { border-left: 3px solid #0284c7 !important; }
+.card-accent-rose   { border-left: 3px solid #e11d48 !important; }
+
+/* Top-accent variant (for stat cards) */
+.card-top-teal   { border-top: 3px solid #0d9488 !important; }
+.card-top-red    { border-top: 3px solid #dc2626 !important; }
+.card-top-amber  { border-top: 3px solid #d97706 !important; }
+.card-top-violet { border-top: 3px solid #7c3aed !important; }
+
+
+/* ── 5. PREMIUM BUTTON STYLES ────────────────────────────────────────────────
+   Buttons should feel tactile — slight inner shadow top edge (bevel),
+   subtle gradient, and crisp shadow on hover.                             */
+
+.btn-premium-teal {
+  background: linear-gradient(to bottom, #0f9990, #0d9488);
+  border: 1px solid #0a7a74;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 1px 3px rgba(13,148,136,0.3),
+    0 2px 8px rgba(13,148,136,0.2);
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+.btn-premium-teal:hover {
+  background: linear-gradient(to bottom, #11a8a0, #0f9990);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 2px 6px rgba(13,148,136,0.35),
+    0 4px 12px rgba(13,148,136,0.25);
+  transform: translateY(-1px);
+}
+.btn-premium-teal:active {
+  background: linear-gradient(to bottom, #0d9488, #0a7a74);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+  transform: translateY(0);
+}
+
+.btn-premium-ghost {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  color: #374151;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.btn-premium-ghost:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+}
+
+html.dark .btn-premium-ghost {
+  border-color: #334155;
+  color: #e2e8f0;
+}
+html.dark .btn-premium-ghost:hover {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+
+/* ── 6. PREMIUM TYPOGRAPHY ───────────────────────────────────────────────────
+   Use the DM Serif Display font boldly for page titles.
+   Add letter-spacing and weight variation for visual interest.            */
+
+.page-title {
+  font-family: var(--font-family-serif), serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+html.dark .page-title {
+  color: #f1f5f9;
+}
+
+.section-title {
+  font-family: var(--font-family-serif), serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #1e293b;
+}
+
+html.dark .section-title {
+  color: #e2e8f0;
+}
+
+/* Stat numbers — tabular, bold, large */
+.stat-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* Metadata / label text — tight, uppercase, tracked */
+.meta-label {
+  font-size: 0.6875rem;  /* 11px */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+html.dark .meta-label {
+  color: #475569;
+}
+
+/* Feature badge — small pill with colored dot */
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
+
+/* ── 7. GLASSMORPHISM CARDS ──────────────────────────────────────────────────
+   Use sparingly on top-of-hierarchy elements (modals, drawers, overlays).
+   Requires a colorful background behind — place these over gradients.     */
+
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+html.dark .glass {
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+html.dark .glass-strong {
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+
+/* ── 8. INNER HIGHLIGHT LINE ─────────────────────────────────────────────────
+   A 1px top edge highlight makes cards look like they have physical depth.
+   Stolen from Raycast and Linear's card designs.                          */
+
+.card-highlight {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 1px 3px rgba(0,0,0,0.06),
+    0 4px 12px rgba(0,0,0,0.06);
+}
+
+html.dark .card-highlight {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 1px 3px rgba(0,0,0,0.3),
+    0 4px 12px rgba(0,0,0,0.3);
+}
+
+
+/* ── 9. STATUS BADGE SYSTEM ──────────────────────────────────────────────────
+   Consistent colored badge tokens used across the app.                    */
+
+.badge-critical {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+}
+.badge-high {
+  background: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+.badge-moderate {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fcd34d;
+}
+.badge-stable, .badge-low {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #86efac;
+}
+.badge-info {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+html.dark .badge-critical { background: rgba(220,38,38,0.15); border-color: rgba(220,38,38,0.3); color: #f87171; }
+html.dark .badge-high     { background: rgba(234,88,12,0.15); border-color: rgba(234,88,12,0.3); color: #fb923c; }
+html.dark .badge-moderate { background: rgba(217,119,6,0.15); border-color: rgba(217,119,6,0.3); color: #fbbf24; }
+html.dark .badge-stable,
+html.dark .badge-low      { background: rgba(22,163,74,0.15); border-color: rgba(22,163,74,0.3); color: #4ade80; }
+html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba(37,99,235,0.3); color: #60a5fa; }
+
+
+/* ── 10. CHIP STYLE ──────────────────────────────────────────────────────────
+   Alternative to badges — rounder, for categories and filters.            */
+
+.chip-teal    { background: #f0fdf4; color: #0f766e; border: 1px solid #99f6e4; }
+.chip-rose    { background: #fff1f2; color: #be185d; border: 1px solid #fecdd3; }
+.chip-violet  { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+.chip-orange  { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.chip-sky     { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.chip-indigo  { background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; }
+.chip-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.chip-pink    { background: #fdf2f8; color: #9d174d; border: 1px solid #f9a8d4; }
+
+
+/* ── 11. PAGE TINTS ──────────────────────────────────────────────────────────
+   Subtle ambient color per route — makes navigation feel distinct.         */
+
+.page-tint-dashboard  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.04) 0%, transparent 70%), #f8f7f5; }
+.page-tint-patients   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(37,99,235,0.04) 0%, transparent 70%), #f8f9fb; }
+.page-tint-alerts     { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(220,38,38,0.03) 0%, transparent 70%), #fdfafa; }
+.page-tint-clinical   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(124,58,237,0.04) 0%, transparent 70%), #f9f8fc; }
+.page-tint-community  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(219,39,119,0.03) 0%, transparent 70%), #fdf8fc; }
+.page-tint-resources  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.04) 0%, transparent 70%), #f7fdf9; }
+.page-tint-journey    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(217,119,6,0.04) 0%, transparent 70%), #fdfaf4; }
+.page-tint-patient    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(22,163,74,0.03) 0%, transparent 70%), #f7fdf9; }
+
+html.dark .page-tint-dashboard  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.08) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-patients   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(37,99,235,0.07) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-alerts     { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(220,38,38,0.07) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-clinical   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(124,58,237,0.08) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-community  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(219,39,119,0.06) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-resources  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.07) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-journey    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(217,119,6,0.07) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-patient    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(22,163,74,0.06) 0%, transparent 60%), #0f172a; }
+
+
+/* ── 12. DIVIDER WITH CHARACTER ──────────────────────────────────────────────
+   Instead of plain <hr>, use gradient dividers.                           */
+
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+  border: none;
+}
+
+html.dark .divider {
+  background: linear-gradient(to right, transparent, #334155 20%, #334155 80%, transparent);
+}
+
+.divider-teal {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #99f6e4 20%, #0d9488 50%, #99f6e4 80%, transparent);
+}
+
+
+/* ── 13. GRADIENT TEXT ───────────────────────────────────────────────────────
+   For hero numbers, page counts, key metrics.                             */
+
+.text-gradient-teal {
+  background: linear-gradient(135deg, #0d9488, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-warm {
+  background: linear-gradient(135deg, #d97706, #ea580c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-clinical {
+  background: linear-gradient(135deg, #0284c7, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ── 14. ANIMATED BORDER GRADIENT ────────────────────────────────────────────
+   For key focus elements — active patient card, selected item, etc.       */
+
+@keyframes border-spin {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+.border-gradient-animated {
+  position: relative;
+}
+.border-gradient-animated::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0d9488, #0891b2, #7c3aed, #0d9488);
+  background-size: 300% 300%;
+  animation: border-spin 4s linear infinite;
+  z-index: -1;
+}
+
+
+/* ── 15. CARD HOVER LIFT SYSTEM ──────────────────────────────────────────────
+   Different lift amounts for different card types.                         */
+
+.hover-lift-sm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hover-lift-md:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.hover-lift-lg:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+/* ── 16. SCROLLBAR PREMIUM STYLING ──────────────────────────────────────────
+   Thin, nearly invisible scrollbar that appears on hover.                 */
+
+.scroll-premium {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.2s;
+}
+.scroll-premium:hover {
+  scrollbar-color: rgba(148,163,184,0.5) transparent;
+}
+.scroll-premium::-webkit-scrollbar { width: 5px; height: 5px; }
+.scroll-premium::-webkit-scrollbar-track { background: transparent; }
+.scroll-premium::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 99px;
+  transition: background 0.2s;
+}
+.scroll-premium:hover::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.5);
+}
+
+html.dark .scroll-premium:hover {
+  scrollbar-color: rgba(71,85,105,0.7) transparent;
+}
+
+
+/* ── 17. INPUT PREMIUM ───────────────────────────────────────────────────────
+   Inputs with subtle inner shadow and smooth transitions.                 */
+
+.input-premium {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-premium:focus {
+  border-color: #0d9488;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.04),
+    0 0 0 3px rgba(13,148,136,0.12);
+  outline: none;
+}
+.input-premium::placeholder { color: #9ca3af; }
+
+html.dark .input-premium {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+  color: #f1f5f9;
+}
+html.dark .input-premium:focus {
+  border-color: #2dd4bf;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,0.2),
+    0 0 0 3px rgba(45,212,191,0.12);
+}
+html.dark .input-premium::placeholder { color: #475569; }
+
+
+/* ── 18. PREMIUM TABLE ───────────────────────────────────────────────────────
+   Clean, crisp tables with proper density and hover states.               */
+
+.table-premium {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table-premium thead th {
+  background: #f8fafc;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 10px 16px;
+}
+.table-premium tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.1s ease;
+}
+.table-premium tbody tr:hover {
+  background: #f8fafc;
+}
+
+html.dark .table-premium thead th {
+  background: #1e293b;
+  color: #475569;
+  border-bottom-color: #334155;
+}
+html.dark .table-premium tbody tr { border-bottom-color: #1e293b; }
+html.dark .table-premium tbody tr:hover { background: #1e293b; }
+
+
+/* ── 19. HEADER GRADIENT SYSTEM ─────────────────────────────────────────────
+   The teal header gradient is the app's primary visual signature.
+   Enhance it with more depth and subtle texture.                          */
+
+.header-gradient {
+  background:
+    linear-gradient(to right, #0b2d26 0%, #0d6b5e 35%, #0d7399 65%, #1a3a6e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer line at bottom of header */
+.header-gradient::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(45,212,191,0.4) 30%,
+    rgba(56,189,248,0.4) 70%,
+    transparent 100%);
+}
+
+
+/* ── 20. ANIMATION UTILITIES ─────────────────────────────────────────────────
+   Subtle entrance animations for page elements.                            */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-up  { animation: fade-up  0.3s ease forwards; }
+.animate-fade-in  { animation: fade-in  0.2s ease forwards; }
+.animate-scale-in { animation: scale-in 0.2s ease forwards; }
+
+/* Staggered children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 200ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+}

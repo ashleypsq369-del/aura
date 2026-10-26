@@ -122,8 +122,7 @@ export default function Layout({ children }) {
         {/* Professional Top Header Bar */}
         <header 
           role="banner"
-          className="sticky top-0 z-30 px-4 flex items-center justify-between shadow-md h-[60px] border-b border-teal-900/30 gap-2"
-          style={{ background: 'linear-gradient(to right, #0b2d26, #0d6b5e, #0d7399, #1a3a6e)' }}
+          className="sticky top-0 z-30 px-4 flex items-center justify-between h-[60px] gap-2 header-gradient"
         >
           {/* Left: hamburger + breadcrumbs — allowed to shrink */}
           <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">

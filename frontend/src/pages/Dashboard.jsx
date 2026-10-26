@@ -155,8 +155,8 @@ export default function Dashboard() {
         {criticalAlert && (
           <CriticalAlertModal alert={criticalAlert} onClose={() => setCriticalAlert(null)} />
         )}
-        <div className="min-h-screen">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8">
+        <div className="min-h-screen ambient-bg">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
             <PageHeader
               image="/resources/cards/header-clinician.jpg"
               title="Dashboard Overview"
@@ -212,13 +212,13 @@ export default function Dashboard() {
               </div>
             )}
             <SectionErrorBoundary name="Patient Table">
-              <div className="bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+              <div className="elevation-2 bg-white dark:bg-[#1a2332] rounded-xl border border-black/[0.05] dark:border-white/[0.06] overflow-hidden">
+                <div className="px-5 py-3.5 border-b border-black/[0.05] dark:border-white/[0.05] flex items-center justify-between bg-slate-50/80 dark:bg-white/[0.02]">
                   <div>
-                    <h2 className="text-base font-bold text-slate-800 mb-0.5">Recent Patients</h2>
-                    <p className="text-slate-500 text-xs">Click any row to open the patient record</p>
+                    <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Recent Patients</h2>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Click any row to open the patient record</p>
                   </div>
-                  <span className="chip-teal">Live</span>
+                  <span className="chip-teal text-[10px]">Live</span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
