@@ -447,13 +447,13 @@ export default function Appointments() {
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search by type or location…"
-                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-sm"/>
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"/>
             </div>
             <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
               {[['active','Upcoming'],['all','All'],['resolved','Resolved']].map(([v,l]) => (
                 <button key={v} onClick={() => setFilterStatus(v)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    filterStatus===v ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
+                    filterStatus===v ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
                   }`}>{l}</button>
               ))}
             </div>
