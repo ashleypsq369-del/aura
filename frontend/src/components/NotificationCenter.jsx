@@ -167,23 +167,23 @@ export default function NotificationCenter() {
   };
 
   const T = isDark ? {
-    bg: '#1a2332', bdr: 'rgba(255,255,255,0.09)',
-    tabBg: '#1a2332', tabBdr: 'rgba(255,255,255,0.06)',
-    listBg: '#1a2332', rowBdr: 'rgba(255,255,255,0.04)',
-    rowUnread: 'rgba(255,255,255,0.03)', rowHover: 'rgba(255,255,255,0.06)',
-    footBg: '#151e2b', footBdr: 'rgba(255,255,255,0.06)',
-    title: '#f1f5f9', body: '#94a3b8', time: '#64748b',
-    grpLabel: '#475569',
-    link: '#34d399', clear: '#475569',
+    bg: '#1a1a1a', bdr: 'rgba(255,255,255,0.08)',
+    tabBg: '#111', tabBdr: 'rgba(255,255,255,0.06)',
+    listBg: '#1a1a1a', rowBdr: 'rgba(255,255,255,0.05)',
+    rowUnread: 'rgba(255,255,255,0.04)', rowHover: 'rgba(255,255,255,0.07)',
+    footBg: '#111', footBdr: 'rgba(255,255,255,0.06)',
+    title: '#f1f5f9', body: '#9ca3af', time: '#6b7280',
+    grpLabel: '#4b5563',
+    link: '#2dd4bf', clear: '#4b5563',
   } : {
-    bg: '#ffffff', bdr: '#e2e8f0',
-    tabBg: '#f8fafc', tabBdr: '#e2e8f0',
-    listBg: '#ffffff', rowBdr: '#f1f5f9',
-    rowUnread: '#fafafa', rowHover: '#f5f5f5',
-    footBg: '#f8fafc', footBdr: '#e2e8f0',
-    title: '#0f172a', body: '#64748b', time: '#94a3b8',
-    grpLabel: '#94a3b8',
-    link: '#0d9488', clear: '#94a3b8',
+    bg: '#ffffff', bdr: '#c8d0da',
+    tabBg: '#f8fafc', tabBdr: '#e5e7eb',
+    listBg: '#ffffff', rowBdr: '#f3f4f6',
+    rowUnread: '#f8fafc', rowHover: '#f3f4f6',
+    footBg: '#f8fafc', footBdr: '#e5e7eb',
+    title: '#111827', body: '#6b7280', time: '#9ca3af',
+    grpLabel: '#9ca3af',
+    link: '#0d9488', clear: '#9ca3af',
   };
 
   // ── Panel content (shared between mobile sheet and desktop dropdown) ────────
@@ -345,22 +345,24 @@ export default function NotificationCenter() {
               {PanelContent}
             </motion.div>
 
-            {/* ── Desktop: classic right-anchored dropdown ── */}
+            {/* ── Desktop: fixed-position dropdown anchored below the bell ── */}
             <motion.div
               key="desktop-panel"
               initial={{ opacity: 0, y: -10, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.96 }}
               transition={{ duration: 0.15, ease: 'easeOut' }}
-              className="hidden sm:flex fixed sm:absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex-col"
+              className="hidden sm:flex flex-col rounded-2xl overflow-hidden"
               style={{
-                width: 360,
-                maxHeight: 'min(500px, calc(100dvh - 80px))',
+                position: 'fixed',
+                top: 64,
+                right: 12,
+                width: 'min(380px, calc(100vw - 24px))',
+                maxHeight: 'min(520px, calc(100dvh - 80px))',
+                zIndex: 50,
                 background: T.bg,
                 border: `1px solid ${T.bdr}`,
-                boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08)',
-                /* Keep it on screen even when near the right edge */
-                right: 0,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08)',
               }}
             >
               {PanelContent}
@@ -370,6 +372,35 @@ export default function NotificationCenter() {
       </AnimatePresence>
     </>
   );
+}
+
+// ─── Human-readable title formatter ─────────────────────────────────────────
+// Converts raw notification types / snake_case titles to readable strings
+function formatTitle(title, type) {
+  if (title && !title.includes('_') && title.length > 3) return title; // already readable
+  const map = {
+    esas_daily:            'Daily Wellness Check-In',
+    vitals_overdue:        'Vitals Not Yet Recorded',
+    medication_reminder:   'Medication Reminder',
+    medication_missed:     'Missed Medication Dose',
+    appointment_reminder_24h: 'Appointment Tomorrow',
+    appointment_reminder_1h:  'Appointment in 1 Hour',
+    critical_vitals:       'Critical Vital Signs',
+    high_risk:             'High Risk Alert',
+    ml_risk_alert:         'AI Risk Alert',
+    crisis_alert:          'Crisis Alert',
+    alert_generated:       'Clinical Alert',
+    medical_flag:          'Medical Flag',
+    new_message:           'New Message',
+    community_post:        'Community Update',
+    report_available:      'Report Ready',
+    peer_support:          'Peer Support',
+  };
+  // Check the type first for better mapping
+  if (type && map[type]) return map[type];
+  // Fall back to converting snake_case title
+  if (title) return title.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return 'Notification';
 }
 
 // ─── Notification row ─────────────────────────────────────────────────────────
@@ -399,7 +430,7 @@ function NotifRow({ n, T, isDark, onClick, onDelete }) {
       <div className="flex-1 min-w-0">
         <p className="text-[11px] leading-tight truncate"
           style={{ color: T.title, fontWeight: unread ? 600 : 400 }}>
-          {n.title}
+          {formatTitle(n.title, n.notification_type)}
         </p>
         <p className="text-[10px] truncate" style={{ color: isDark ? '#64748b' : '#6b7280' }}>
           {n.body}
