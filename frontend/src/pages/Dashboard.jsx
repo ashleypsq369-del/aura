@@ -174,46 +174,40 @@ export default function Dashboard() {
               <ImageCard image="/resources/african/african-doctor-female.jpg"   icon={FileText}      title="Care Plans"      description="Personalised pathways"       onClick={() => navigate('/care-settings')} color="#166534" />
             </div>
             {drugWarnings?.with_severe_interactions > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-red-100 transition-colors mb-4"
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-red-200 bg-red-50 cursor-pointer hover:bg-red-100 transition-colors mb-3"
                 onClick={() => navigate('/ai-insights')}>
-                <Pill size={16} className="text-red-600 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-red-800">
-                    {drugWarnings.with_severe_interactions} patient{drugWarnings.with_severe_interactions > 1 ? 's' : ''} with SEVERE drug interactions
-                  </p>
-                  <p className="text-xs text-red-600">
-                    {drugWarnings.patients?.filter(p => p.severe > 0).slice(0, 3).map(p => p.patient_name).join(', ')}
-                    {drugWarnings.patients?.filter(p => p.severe > 0).length > 3 ? ` +${drugWarnings.patients.filter(p => p.severe > 0).length - 3} more` : ''}
-                    {' -- pharmacist review required'}
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-red-600 flex-shrink-0">View</span>
+                <Pill size={13} className="text-red-600 flex-shrink-0" />
+                <p className="text-xs font-semibold text-red-700 flex-1 min-w-0 truncate">
+                  <span className="font-bold">{drugWarnings.with_severe_interactions} severe drug interaction{drugWarnings.with_severe_interactions > 1 ? 's' : ''}</span>
+                  {' — '}{drugWarnings.patients?.filter(p => p.severe > 0).slice(0, 2).map(p => p.patient_name).join(', ')}
+                  {drugWarnings.patients?.filter(p => p.severe > 0).length > 2 ? ` +${drugWarnings.patients.filter(p => p.severe > 0).length - 2} more` : ''}
+                </p>
+                <span className="text-[11px] font-bold text-red-600 flex-shrink-0">View →</span>
               </div>
             )}
             {/* ML Proactive Scan Widget */}
             {(user.role === 'clinician' || user.role === 'admin') && (
-              <div className="border-l-4 border-violet-500 bg-violet-50 rounded-r-xl p-4 flex items-center gap-4 mb-4">
-                <Brain size={20} className="text-violet-600 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-violet-900 text-sm">ML Risk Overview</p>
-                  <p className="text-xs text-violet-700">
-                    {batchRisk
-                      ? `${batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0} patient${(batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0) !== 1 ? 's' : ''} at high/critical risk`
-                      : 'Run a scan to see patient risk levels'}
-                  </p>
-                </div>
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-white mb-3">
+                <Brain size={13} className="text-slate-500 flex-shrink-0" />
+                <p className="text-xs text-slate-600 flex-1 min-w-0">
+                  <span className="font-semibold text-slate-700">ML Risk</span>
+                  {' — '}{batchRisk
+                    ? `${batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0} at high/critical risk`
+                    : 'Run a scan to see patient risk levels'}
+                </p>
                 <button
                   onClick={() => triggerScanMutation.mutate()}
                   disabled={triggerScanMutation.isPending}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-all flex-shrink-0">
-                  <RefreshCw size={12} className={triggerScanMutation.isPending ? 'animate-spin' : ''} />
+                  className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-md text-[11px] font-semibold transition-all flex-shrink-0">
+                  <RefreshCw size={10} className={triggerScanMutation.isPending ? 'animate-spin' : ''} />
                   {triggerScanMutation.isPending ? 'Scanning…' : 'Scan Now'}
                 </button>
               </div>
             )}
             <SectionErrorBoundary name="Patient Table">
-              <div className="elevation-2 bg-white dark:bg-[#1a2332] rounded-xl border border-black/[0.05] dark:border-white/[0.06] overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-black/[0.05] dark:border-white/[0.05] flex items-center justify-between bg-slate-50/80 dark:bg-white/[0.02]">
+              <div className="card-ghana overflow-hidden">
+                <div className="kente-strip" />
+                <div className="px-5 py-3.5 border-b border-[#dde3ea] dark:border-white/[0.08] flex items-center justify-between">
                   <div>
                     <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Recent Patients</h2>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Click any row to open the patient record</p>

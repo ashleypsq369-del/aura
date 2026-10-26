@@ -53,20 +53,37 @@ function timeUntil(d) {
 
 /* ── KPI card ─────────────────────────────────────────────────────────────── */
 function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }) {
+  // Extract the accent colour from the color prop (e.g. "bg-teal-50 text-teal-700 border-teal-400")
+  const accentMap = {
+    teal:    { active: '#0d9488', bg: '#f0fdf4', text: '#0f766e' },
+    blue:    { active: '#0d9488', bg: '#f0fdf4', text: '#0f766e' }, // normalise to teal
+    emerald: { active: '#059669', bg: '#f0fdf4', text: '#047857' },
+    slate:   { active: '#64748b', bg: '#f8fafc', text: '#475569' },
+  };
+  const key = color?.match(/bg-(\w+)-/)?.[1] || 'slate';
+  const a   = accentMap[key] || accentMap.slate;
+
   return (
     <button onClick={onClick}
-      className={`relative rounded-xl border-2 px-4 py-3 text-left w-full transition-all duration-150 ${
-        selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm'
-      }`}>
-      {selected && <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full animate-pulse" style={{backgroundColor:'currentColor'}}/>}
-      <div className="flex items-center gap-2 mb-1.5">
-        <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${selected?'bg-white/30':'bg-slate-100'}`}>
-          <Icon size={13} className={selected?'text-current':'text-slate-500'}/>
+      className="relative rounded-lg text-left w-full transition-all duration-150 bg-white hover:shadow-md"
+      style={{
+        border: selected ? `2px solid ${a.active}` : '1px solid #c8d0da',
+        boxShadow: selected ? `0 0 0 1px ${a.active}20, 0 2px 8px rgba(0,0,0,0.08)` : '0 1px 3px rgba(0,0,0,0.06)',
+        padding: selected ? '11px 15px' : '12px 16px', // compensate for 2px border
+      }}>
+      {selected && (
+        <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full animate-pulse"
+          style={{ backgroundColor: a.active }} />
+      )}
+      <div className="flex items-center gap-2 mb-1">
+        <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+          style={{ background: selected ? `${a.active}18` : '#f1f5f9' }}>
+          <Icon size={12} style={{ color: selected ? a.active : '#64748b' }} />
         </div>
-        <span className={`text-[10px] font-bold uppercase tracking-wider ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
+        <span className="text-[11px] font-semibold" style={{ color: selected ? a.text : '#6b7280' }}>{label}</span>
       </div>
-      <p className={`text-2xl font-bold tabular-nums leading-none ${selected?'text-current':'text-slate-800'}`}>{value}</p>
-      {subtitle && <p className={`text-[11px] mt-1 ${selected?'text-current opacity-70':'text-slate-400'}`}>{subtitle}</p>}
+      <p className="text-xl font-bold tabular-nums leading-none" style={{ color: selected ? a.active : '#111827' }}>{value}</p>
+      {subtitle && <p className="text-[11px] mt-1" style={{ color: selected ? a.text : '#9ca3af' }}>{subtitle}</p>}
     </button>
   );
 }
