@@ -347,7 +347,7 @@ export default function AdminFeaturePanel() {
                 <p className="text-sm text-slate-600 mt-1">{reviewModal.reason}</p>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Admin Note (optional)</label>
+                <label className="block text-xs font-semibold text-slate-600r mb-1.5">Admin Note (optional)</label>
                 <textarea value={reviewNote} onChange={e => setReviewNote(e.target.value)} rows={3}
                   placeholder="Reason for your decision..."
                   className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 resize-none" />
@@ -384,7 +384,7 @@ export default function AdminFeaturePanel() {
 
               {!overrideModal.overrideId && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Feature</label>
+                  <label className="block text-xs font-semibold text-slate-600r mb-1.5">Feature</label>
                   <SearchableSelect
                     accent="teal"
                     value={overrideModal.featurePath || null}
@@ -405,7 +405,7 @@ export default function AdminFeaturePanel() {
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">State</label>
+                <label className="block text-xs font-semibold text-slate-600r mb-1.5">State</label>
                 <div className="grid grid-cols-3 gap-2">
                   {['enabled', 'disabled', 'locked'].map(s => {
                     const cfg = STATE_CFG[s];
@@ -430,7 +430,7 @@ export default function AdminFeaturePanel() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Note (optional)</label>
+                <label className="block text-xs font-semibold text-slate-600r mb-1.5">Note (optional)</label>
                 <input value={overrideNote} onChange={e => setOverrideNote(e.target.value)}
                   placeholder="Reason for this override..."
                   className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500" />

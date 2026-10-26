@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AIInsights · Clinical Intelligence Hub v3
  * ==========================================
  * Design: Premium medical dark-header + card-based layout
@@ -1193,9 +1193,9 @@ export default function AIInsights() {
                 {/* Heading row */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
                     {filterRisk === 'all' ? 'All Patients' : `${filterRisk.charAt(0).toUpperCase() + filterRisk.slice(1)} Risk`}
-                    <span className="px-2 py-0.5 bg-violet-100 text-violet-700 rounded-full text-xs font-bold">{visiblePatients.length}</span>
+                    <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold">{visiblePatients.length}</span>
                   </h2>
                   {batchRisk?.ml_available === false && (
                     <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">

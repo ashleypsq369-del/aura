@@ -30,7 +30,7 @@ const CARE_SETTINGS = {
 
 const ROLE_BADGE = {
   admin: 'bg-red-100 text-red-700 border-red-200',
-  clinician: 'bg-blue-100 text-blue-700 border-blue-200',
+  clinician: 'bg-slate-100 text-slate-600 border-slate-200',
   caregiver: 'bg-green-100 text-green-700 border-green-200',
   patient: 'bg-amber-100 text-amber-700 border-amber-200',
   family: 'bg-pink-100 text-pink-700 border-pink-200',
@@ -49,7 +49,7 @@ function KpiCard({ label, value, icon: Icon, color, onClick, active }) {
     >
       <div className="flex items-center gap-2 mb-1">
         <Icon size={15} className={color} />
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-medium text-slate-500">{label}</span>
       </div>
       <p className={`text-2xl font-bold ${color}`}>{value}</p>
     </button>
@@ -136,7 +136,7 @@ function CreateUserModal({ open, onClose, onSubmit, pending }) {
       <div className="space-y-3">
         {fields.map(([label, key, type, ph]) => (
           <div key={key}>
-            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">{label}</label>
+            <label className="block text-xs font-semibold text-slate-600r mb-1">{label}</label>
             <input
               type={type} value={form[key]} onChange={f(key)} placeholder={ph}
               className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none"
@@ -200,7 +200,7 @@ function EditUserModal({ user, open, onClose, onSubmit, pending }) {
       <div className="space-y-3">
         {textFields.map(([label, key, type]) => (
           <div key={key}>
-            <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">{label}</label>
+            <label className="block text-xs font-semibold text-slate-600r mb-1">{label}</label>
             <input
               type={type} value={form[key]} onChange={f(key)}
               className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none"

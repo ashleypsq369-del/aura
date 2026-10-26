@@ -124,7 +124,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date & Time *</label>
             <input type="datetime-local" value={f.scheduled_at} onChange={up('scheduled_at')}
               min={new Date().toISOString().slice(0,16)}
-              className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
+              className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <SearchableSelect
@@ -139,19 +139,19 @@ function ScheduleModal({ onClose, onSave, pending }) {
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Detail</label>
               <input value={f.location_detail} onChange={up('location_detail')} placeholder="e.g. Room 4B"
-                className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
+                className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
             </div>
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Notes</label>
             <textarea value={f.notes} onChange={up('notes')} rows={3}
-              className="w-full border border-slate-300 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"/>
+              className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"/>
           </div>
         </div>
         <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex gap-3">
           <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-slate-600 rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
           <button onClick={()=>onSave(f)} disabled={!valid||pending}
-            className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
+            className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
             {pending?<Loader2 size={13} className="animate-spin"/>:<CheckCircle size={13}/>}
             Schedule
           </button>
@@ -484,7 +484,7 @@ export default function Appointments() {
                 </span>
               )}
               {search && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-violet-100 text-violet-700 flex items-center gap-1">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-700 flex items-center gap-1">
                   "{search}"<button onClick={() => setSearch('')} className="font-black hover:text-red-600">×</button>
                 </span>
               )}
@@ -529,7 +529,7 @@ export default function Appointments() {
                     </p>
                     {canSchedule && !appointmentsHidden && (
                       <button onClick={() => setShowModal(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold">
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-semibold">
                         <Plus size={14}/> Schedule First Appointment
                       </button>
                     )}

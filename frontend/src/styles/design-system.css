@@ -54,24 +54,25 @@ nav[aria-label="Sidebar navigation"],.sidebar-inner {
 }
 .nav-item:not(.nav-item-active):hover { background:rgba(255,255,255,.1) !important; color:#fff !important; }
 
-/* ── 4. CARDS — white, visible border, clear shadow ────────────────────────── */
+/* ── 4. CARDS — off-white tint, visible border, clear shadow ────────────────── */
 .card,.card-elevated,.content-card,.stat-card,
 .card-ghana,.card-ghana-gold,.card-ghana-forest {
-  background: #ffffff !important;
+  background: #fafaf9 !important;
   border: 1px solid #c8d0da !important;
   border-radius: 10px !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.02) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02) !important;
   transition: box-shadow .15s ease, transform .15s ease !important;
 }
 .card:hover,.card-elevated:hover {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.14) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
   transform: translateY(-2px) !important;
 }
 
-/* Tailwind bg-white classes also need strong shadow on this bg */
+/* Tailwind bg-white classes also need the off-white tint + shadow on this bg */
 .bg-white.rounded-xl,.bg-white.rounded-2xl,.bg-white.rounded-lg,.bg-white.rounded-md,
 .bg-white.rounded {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.03) !important;
+  background-color: #fafaf9 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03) !important;
 }
 
 /* Dark mode cards */
@@ -81,10 +82,10 @@ html.dark .bg-white.rounded-xl,html.dark .bg-white.rounded-2xl,
 html.dark .bg-white.rounded-lg,html.dark .bg-white.rounded-md,
 html.dark .bg-white { background:#1a1a1a !important; border-color:#2a2a2a !important; box-shadow:0 2px 8px rgba(0,0,0,.5) !important; }
 
-/* ── 5. STAT CARD COLOURS — white with left accent stripe only ─────────────── */
+/* ── 5. STAT CARD COLOURS — off-white with left accent stripe only ─────────── */
 [class*="stat-card-"] {
-  background:#ffffff !important; border:1px solid #c8d0da !important; border-left-width:3px !important;
-  box-shadow:0 2px 8px rgba(0,0,0,0.09) !important;
+  background:#fafaf9 !important; border:1px solid #c8d0da !important; border-left-width:3px !important;
+  box-shadow:0 2px 8px rgba(0,0,0,0.07) !important;
 }
 html.dark [class*="stat-card-"] { background:#1a1a1a !important; border-color:#2a2a2a !important; border-left-width:3px !important; }
 

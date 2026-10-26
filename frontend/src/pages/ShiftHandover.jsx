@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ShiftHandover.jsx - Hospital-Based Care
  * ==========================================
  * Caregiver/nurse shift handover form.
@@ -109,7 +109,7 @@ export default function ShiftHandover() {
           <div className="flex gap-2">
             {['morning', 'afternoon', 'night'].map(s => (
               <button key={s} type="button" onClick={() => setOutgoingShift(s)}
-                className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 capitalize transition ${outgoingShift === s ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-300 text-slate-600 hover:border-blue-400'}`}>
+                className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 capitalize transition ${outgoingShift === s ? 'bg-teal-600 text-white border-blue-600' : 'border-slate-300 text-slate-600 hover:border-blue-400'}`}>
                 {s === 'morning' ? 'Morning' : s === 'afternoon' ? 'Afternoon' : 'Night'}
               </button>
             ))}
@@ -140,7 +140,7 @@ export default function ShiftHandover() {
           <label className="block text-sm font-bold text-slate-700 mb-3">Handover Notes *</label>
           <textarea value={handoverNote} onChange={e => setHandoverNote(e.target.value)}
             rows={5} placeholder="Summarise key events during your shift, patient concerns, medication changes, family communications, pending results..."
-            className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm resize-none" required />
+            className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm resize-none" required />
         </div>
 
         {/* Tasks for next shift */}

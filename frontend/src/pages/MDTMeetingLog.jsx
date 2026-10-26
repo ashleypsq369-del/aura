@@ -355,7 +355,7 @@ export default function MDTMeetingLog() {
             Cancel
           </button>
           <button type="submit" disabled={mutation.isLoading}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm transition disabled:opacity-50">
+            className="flex items-center gap-2 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm transition disabled:opacity-50">
             <Save className="w-4 h-4" />
             {mutation.isLoading ? 'Saving...' : 'Save Meeting Record'}
           </button>

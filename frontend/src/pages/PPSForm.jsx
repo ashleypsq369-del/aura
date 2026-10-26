@@ -377,7 +377,7 @@ export default function PPSForm() {
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Additional observations about functional status..."
-            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-teal-500 focus:outline-none"
           />
         </motion.div>
 
@@ -475,7 +475,7 @@ export default function PPSForm() {
               <button
                 type="button"
                 onClick={() => navigate(`/assessments/${patientId}`)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition"
+                className="flex items-center gap-2 px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition"
               >
                 Continue
                 <ArrowRight size={14} />
