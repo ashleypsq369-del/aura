@@ -44,7 +44,7 @@ export default function AppDatePicker({
     return (
       <div className={`flex flex-col gap-1 ${className}`}>
         {label && (
-          <label htmlFor={id} className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+          <label htmlFor={id} className="text-xs font-bold text-slate-600 ">
             {label}{required && <span className="text-red-500 ml-0.5">*</span>}
           </label>
         )}
@@ -69,7 +69,7 @@ export default function AppDatePicker({
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       {label && (
-        <label htmlFor={id} className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+        <label htmlFor={id} className="text-xs font-bold text-slate-600 ">
           {label}{required && <span className="text-red-500 ml-0.5">*</span>}
         </label>
       )}

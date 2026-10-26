@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Plus, X, Calendar, Trash2, Lock, ArrowLeft } from 'lucide-react';
@@ -399,7 +399,7 @@ export default function Journal() {
           </div>
           <form id="journal-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Your Reflection</label>
+              <label className="block text-xs font-bold text-slate-500  mb-2">Your Reflection</label>
               <textarea value={newEntry} onChange={e => setNewEntry(e.target.value)}
                 rows={10} required autoFocus
                 placeholder="Let your thoughts flow... This is your private space."

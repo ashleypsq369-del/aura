@@ -190,7 +190,7 @@ export default function ContactsTab({ onContactMessage }) {
 function Section({ icon: Icon, label, iconClass = 'text-slate-400', children }) {
   return (
     <div>
-      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+      <p className="text-[10px] font-bold text-slate-400  mb-2 flex items-center gap-1.5">
         <Icon size={11} className={iconClass} /> {label}
       </p>
       <div className="space-y-2">{children}</div>

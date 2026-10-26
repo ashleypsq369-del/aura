@@ -109,7 +109,7 @@ function BookSection({ icon: Icon, label, accent = 'slate', children }) {
       <div className={`flex items-center gap-2.5 px-4 py-2.5 border-b ${A.bar}`}>
         <span className={`w-1 h-4 rounded-full flex-shrink-0 ${A.left}`}/>
         <Icon size={13} className={`flex-shrink-0 ${A.lbl}`}/>
-        <span className={`text-[11px] font-bold uppercase tracking-widest select-none ${A.lbl}`}>{label}</span>
+        <span className={`text-[11px] font-bold  select-none ${A.lbl}`}>{label}</span>
       </div>
       <div className="px-5 py-4 bg-white">{children}</div>
     </div>
@@ -214,7 +214,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
                   <div key={field}>
                     <div className="flex items-center gap-2.5 mb-3">
                       <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[10px] font-bold text-slate-500 flex-shrink-0">{fi+1}</span>
-                      <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">{FIELD_LABELS[field]}</h4>
+                      <h4 className="text-[11px] font-bold text-slate-500  select-none">{FIELD_LABELS[field]}</h4>
                       <div className="flex-1 h-px bg-slate-100"/>
                     </div>
                     <div className="pl-7 text-sm text-slate-700 leading-relaxed"><RichText content={condition[field]}/></div>
@@ -282,7 +282,7 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
 
   const textarea = (field, label, rows=3) => (
     <div>
-      <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 select-none">{label}</label>
+      <label className="block text-[11px] font-bold text-slate-500  mb-1 select-none">{label}</label>
       <textarea value={form[field]||''} onChange={e=>set(field,e.target.value)} rows={rows} placeholder={`Enter ${label.toLowerCase()}...`}
         className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-teal-500 outline-none resize-none leading-relaxed"/>
     </div>
@@ -291,20 +291,20 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 select-none">Condition Name *</label>
+        <label className="block text-[11px] font-bold text-slate-500  mb-1 select-none">Condition Name *</label>
         <input value={form.condition_name} onChange={e=>set('condition_name',e.target.value)}
           className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold focus:border-teal-500 outline-none" placeholder="e.g. Advanced Heart Failure"/>
       </div>
 
       <div>
-        <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 select-none">Keywords / Synonyms</label>
+        <label className="block text-[11px] font-bold text-slate-500  mb-1 select-none">Keywords / Synonyms</label>
         <TagInput field="keywords" input={kwInput} setInput={setKwInput} placeholder="Add a keyword, press Enter"/>
       </div>
 
       {textarea('plain_language_summary', 'Plain Language Summary', 3)}
 
       <div className="border-t border-slate-100 pt-4">
-        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3 select-none">Clinical Sections</p>
+        <p className="text-[11px] font-bold text-slate-400  mb-3 select-none">Clinical Sections</p>
         <div className="space-y-4">
           {textarea('goals_of_care', 'Goals of Care', 4)}
           {textarea('pain_management_plan', 'Pain & Symptom Management', 5)}
@@ -316,11 +316,11 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
 
       <div className="border-t border-slate-100 pt-4 space-y-4">
         <div>
-          <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 select-none">Key Symptoms to Monitor</label>
+          <label className="block text-[11px] font-bold text-slate-500  mb-1 select-none">Key Symptoms to Monitor</label>
           <TagInput field="key_symptoms_to_monitor" input={symInput} setInput={setSymInput} placeholder="Add symptom, press Enter"/>
         </div>
         <div>
-          <label className="block text-[11px] font-bold text-amber-600 uppercase tracking-widest mb-1 select-none">⚠ Red Flag Symptoms</label>
+          <label className="block text-[11px] font-bold text-amber-600  mb-1 select-none">⚠ Red Flag Symptoms</label>
           <TagInput field="red_flag_symptoms" input={rfInput} setInput={setRfInput} placeholder="Add red flag, press Enter"/>
         </div>
       </div>
@@ -457,7 +457,7 @@ export default function MedicalKnowledge() {
             <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BookOpen size={13} className="text-slate-400"/>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Index</span>
+                <span className="text-[11px] font-bold text-slate-500  select-none">Index</span>
               </div>
               <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
             </div>

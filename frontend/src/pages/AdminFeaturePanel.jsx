@@ -216,7 +216,7 @@ export default function AdminFeaturePanel() {
                           exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
                           className="border-t border-slate-100 overflow-hidden">
                           <div className="px-5 py-4 space-y-3">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Overrides</p>
+                            <p className="text-xs font-bold text-slate-400 ">Active Overrides</p>
                             {u.overrides.length === 0 ? (
                               <p className="text-sm text-slate-400 italic">No overrides — all features follow care-setting defaults</p>
                             ) : (

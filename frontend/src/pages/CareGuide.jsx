@@ -790,7 +790,7 @@ function ProtocolModalContent({ protocol }) {
         </div>
         {/* Contents list — like a book's chapter contents page */}
         <div className="bg-slate-50 border-t border-slate-200 px-5 py-3">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 select-none">Contents</p>
+          <p className="text-[10px] font-bold text-slate-400  mb-2 select-none">Contents</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1">
             {protocol.sections.map((s, i) => (
               <button key={i} onClick={() => { setOpenSections(p => ({...p, [i]: true})); }}
@@ -921,7 +921,7 @@ export default function CareGuide() {
             <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BookOpen size={13} className="text-slate-400"/>
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Protocols</span>
+                <span className="text-[11px] font-bold text-slate-500  select-none">Protocols</span>
               </div>
               <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
             </div>

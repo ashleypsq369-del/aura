@@ -407,7 +407,7 @@ export default function CommunityGroupPage() {
                   <p className="text-xs text-slate-500 dark:text-slate-400">{group?.member_count ?? 0} members</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">About</p>
+                  <p className="text-[10px] font-bold text-slate-400  mb-1">About</p>
                   {editingGroup
                     ? <textarea value={editForm.description ?? group?.description ?? ''} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
                         rows={3} className="w-full border-2 border-teal-400 rounded-xl px-3 py-2 text-xs outline-none resize-none dark:bg-slate-700 dark:text-white" />
@@ -415,7 +415,7 @@ export default function CommunityGroupPage() {
                 </div>
                 {group?.condition_tags?.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Topics</p>
+                    <p className="text-[10px] font-bold text-slate-400  mb-1.5">Topics</p>
                     <div className="flex flex-wrap gap-1.5">
                       {group.condition_tags.map(t => (
                         <span key={t} className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
@@ -425,7 +425,7 @@ export default function CommunityGroupPage() {
                   </div>
                 )}
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Members ({membersData?.total ?? group?.member_count ?? 0})</p>
+                  <p className="text-[10px] font-bold text-slate-400  mb-2">Members ({membersData?.total ?? group?.member_count ?? 0})</p>
                   {membersData?.members?.map((m, i) => (
                     <div key={i} className="flex items-center gap-2 py-1.5">
                       <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-black" style={{ backgroundColor: color }}>

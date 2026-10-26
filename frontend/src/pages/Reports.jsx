@@ -122,7 +122,7 @@ function PatientPicker({value,onChange}) {
   const filtered=pts.filter(p=>!q||p.full_name?.toLowerCase().includes(q.toLowerCase())||String(p.id).includes(q)||(p.patient_code||'').toLowerCase().includes(q.toLowerCase()));
   return (
     <div className="relative">
-      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Patient</label>
+      <label className="block text-[10px] font-bold text-slate-400  mb-1">Patient</label>
       <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 dark:text-slate-100 text-left">
         <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
         <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
@@ -152,7 +152,7 @@ function UserPicker({value,onChange,label='User',roles}) {
   const sel=users.find(u=>u.id===value);
   return (
     <div className="relative">
-      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</label>
+      <label className="block text-[10px] font-bold text-slate-400  mb-1">{label}</label>
       <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 dark:text-slate-100 text-left">
         <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
         <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
@@ -284,11 +284,11 @@ function AdvanceCarePlanBody({data}) {
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className={`p-4 rounded-xl border-2 ${ad.dnr_status?'border-red-400 bg-red-50':'border-green-400 bg-green-50'}`}>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">DNR / DNACPR Status</p>
+          <p className="text-[10px] font-bold  text-slate-500">DNR / DNACPR Status</p>
           <p className={`text-xl font-bold mt-1 ${ad.dnr_status?'text-red-700':'text-green-700'}`}>{ad.dnr_status?'DNR — Do Not Resuscitate':'Full Resuscitation'}</p>
         </div>
         <div className={`p-4 rounded-xl border-2 ${ad.has_advance_directive?'border-blue-400 bg-blue-50':'border-slate-300 bg-slate-50'}`}>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Advance Directive</p>
+          <p className="text-[10px] font-bold  text-slate-500">Advance Directive</p>
           <p className={`text-xl font-bold mt-1 ${ad.has_advance_directive?'text-blue-700':'text-slate-500'}`}>{ad.has_advance_directive?'Document on File':'Not Documented'}</p>
         </div>
       </div>
@@ -303,7 +303,7 @@ function AdvanceCarePlanBody({data}) {
       {cp&&(
         <Sec title="Care Plan" icon={FileText} color="#0369a1" collapsible>
           {[['Goals of Care',cp.goals_of_care],['Pain Management',cp.pain_management_plan],['Psychological Support',cp.psychological_support],['Spiritual Care',cp.spiritual_care],['Family Support',cp.family_support_plan],['Bereavement Plan',cp.bereavement_plan],['Advance Directives Notes',cp.advance_directives_notes]].filter(([,v])=>v).map(([k,v])=>(
-            <div key={k} className="mb-3"><p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{k}</p><p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
+            <div key={k} className="mb-3"><p className="text-[10px] font-bold text-slate-400  mb-1">{k}</p><p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
           ))}
         </Sec>
       )}
@@ -808,11 +808,11 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
               exit={{height:0,opacity:0}} className="overflow-hidden">
               <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
                 <div>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Use For</p>
+                  <p className="text-[9px] text-slate-400 font-bold ">Use For</p>
                   <div className="flex flex-wrap gap-1 mt-1">{(report.uses||[]).map(u=><span key={u} className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{u}</span>)}</div>
                 </div>
                 <div>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Standard</p>
+                  <p className="text-[9px] text-slate-400 font-bold ">Standard</p>
                   <p className="text-[10px] text-slate-500 mt-0.5">{report.standard}</p>
                 </div>
               </div>
@@ -924,7 +924,7 @@ export default function Reports() {
         {/* ── Parameters panel (only when tab has reports needing selection) ── */}
         {showParams&&(
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h2 className="text-xs font-bold text-slate-500  mb-4 flex items-center gap-2">
               <Filter size={13} className="text-teal-600"/> Report Parameters
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
@@ -935,12 +935,12 @@ export default function Reports() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
               {[{label:'Date From',value:dateFrom,set:setDateFrom},{label:'Date To',value:dateTo,set:setDateTo}].map(({label,value,set})=>(
                 <div key={label}>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</label>
+                  <label className="block text-[10px] font-bold text-slate-400  mb-1">{label}</label>
                   <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-white dark:bg-slate-700 dark:text-slate-100"/>
                 </div>
               ))}
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Min Severity</label>
+                <label className="block text-[10px] font-bold text-slate-400  mb-1">Min Severity</label>
                 <SearchableSelect
                   accent="teal"
                   size="sm"

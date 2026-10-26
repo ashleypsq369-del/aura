@@ -36,7 +36,7 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
           style={{ backgroundColor: `${color}20` }}>
           <Icon size={15} style={{ color }} />
         </div>
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider truncate">{label}</p>
+        <p className="text-xs font-bold text-slate-500  truncate">{label}</p>
       </div>
       <p className="text-2xl font-bold text-slate-900 tabular-nums">{value ?? '--'}</p>
       <p className="text-xs text-slate-400">{unit}</p>

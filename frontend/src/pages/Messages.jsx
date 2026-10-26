@@ -461,7 +461,7 @@ export default function Messages() {
             {/* ── Pinned Care Team section ───────────────────────── */}
             {careTeam.length > 0 && (
               <div className="px-3 pt-3 pb-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1">
+                <p className="text-[10px] font-bold text-slate-400  mb-2 flex items-center gap-1">
                   <Stethoscope size={11} /> Your Care Team
                 </p>
                 <div className="flex flex-col gap-1">

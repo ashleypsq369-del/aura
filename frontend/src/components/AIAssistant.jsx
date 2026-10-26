@@ -348,7 +348,7 @@ export default function AIAssistant() {
 
                       {/* Analysis chips — what AI can actually do here */}
                       <div className="w-full">
-                        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{color:T.subText}}>Ask about this page</p>
+                        <p className="text-xs font-semibold  mb-2" style={{color:T.subText}}>Ask about this page</p>
                         <div className="flex flex-wrap gap-2">
                           {chips.map(c=>(
                             <button key={c} onClick={()=>sendMessage(c)}

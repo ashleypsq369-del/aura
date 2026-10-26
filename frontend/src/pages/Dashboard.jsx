@@ -473,7 +473,7 @@ function FamilyDashboard({ user, summary, navigate }) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{cfg.label}</span>
+                      <span className="text-[10px] font-bold text-slate-500 ">{cfg.label}</span>
                     </div>
                     <p className="text-sm font-semibold text-slate-900 truncate">{ev.event_title}</p>
                     {ev.event_detail && <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{ev.event_detail}</p>}

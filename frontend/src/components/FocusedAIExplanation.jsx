@@ -91,7 +91,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
           <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
             <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
             <Activity size={12} className="text-slate-500 flex-shrink-0" />
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinical Finding</span>
+            <span className="text-[11px] font-bold text-slate-500  select-none">Clinical Finding</span>
           </div>
           <div className="px-4 py-3 bg-white">
             <InfoGrid cols={2} items={[
@@ -131,7 +131,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
           <div className="flex items-center gap-2.5 px-4 py-2.5 bg-violet-50 border-b border-violet-200">
             <span className="w-1 h-4 rounded-full bg-violet-400 flex-shrink-0" />
             <Brain size={12} className="text-violet-600 flex-shrink-0" />
-            <span className="text-[11px] font-bold text-violet-700 uppercase tracking-widest select-none">Why is this clinically concerning?</span>
+            <span className="text-[11px] font-bold text-violet-700  select-none">Why is this clinically concerning?</span>
           </div>
           <div className="px-5 py-4 bg-white">
             <div className="pl-4 border-l-2 border-violet-200">
@@ -150,7 +150,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
           <div className="rounded-lg border border-slate-200 overflow-hidden">
             <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
               <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Contributing Factors</span>
+              <span className="text-[11px] font-bold text-slate-500  select-none">Contributing Factors</span>
             </div>
             <div className="px-4 py-3 bg-white space-y-2">
               {data.relevant_factors.map((f, i) => (
@@ -170,7 +170,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border-b border-amber-200">
               <span className="w-1 h-4 rounded-full bg-amber-400 flex-shrink-0" />
               <Pill size={12} className="text-amber-600 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest select-none">Drug Interactions Detected</span>
+              <span className="text-[11px] font-bold text-amber-700  select-none">Drug Interactions Detected</span>
             </div>
             <div className="px-4 py-3 bg-white space-y-2">
               {data.interactions.map((ix, i) => (
@@ -193,7 +193,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             <div className="flex items-center gap-2.5 px-4 py-2.5 bg-teal-50 border-b border-teal-200">
               <span className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
               <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-teal-700 uppercase tracking-widest select-none">Recommended Actions</span>
+              <span className="text-[11px] font-bold text-teal-700  select-none">Recommended Actions</span>
             </div>
             <div className="px-4 py-3 bg-white space-y-2">
               {data.recommendations.map((r, i) => (
@@ -217,7 +217,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
           <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
             <span className="w-1 h-4 rounded-full bg-slate-300 flex-shrink-0" />
             <MessageSquare size={12} className="text-slate-500 flex-shrink-0" />
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Was this explanation helpful?</span>
+            <span className="text-[11px] font-bold text-slate-500  select-none">Was this explanation helpful?</span>
           </div>
           <div className="px-4 py-3 bg-white">
             {!submitted ? (

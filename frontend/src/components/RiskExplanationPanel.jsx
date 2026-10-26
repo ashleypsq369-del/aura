@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RiskExplanationPanel — Full XAI / SHAP explanation modal
  * =========================================================
  * Redesigned with ModalContent structured display components.
@@ -133,7 +133,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                 <div className="p-4 space-y-3">
                   <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
                     <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-violet-600">§</span>
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">SHAP Feature Drivers</p>
+                    <p className="text-[11px] font-bold text-slate-500  select-none">SHAP Feature Drivers</p>
                   </div>
 
                   {/* Low risk explanation banner */}
@@ -162,7 +162,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                       <>
                         {riskIncreasing.length > 0 && (
                           <>
-                            <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-1">Risk-Increasing Factors</p>
+                            <p className="text-[10px] font-bold text-red-500  mt-1">Risk-Increasing Factors</p>
                             {riskIncreasing.slice(0, 5).map((exp, i) => (
                               <SHAPRow key={'r'+i} rank={i + 1}
                                 feature={exp.feature_name || exp.display_name}
@@ -174,7 +174,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                         )}
                         {riskDecreasing.length > 0 && (
                           <>
-                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-2">Protective Factors</p>
+                            <p className="text-[10px] font-bold text-emerald-600  mt-2">Protective Factors</p>
                             {riskDecreasing.slice(0, 5).map((exp, i) => (
                               <SHAPRow key={'d'+i} rank={i + 1}
                                 feature={exp.feature_name || exp.display_name}
@@ -194,7 +194,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                   {/* Task-level probability summary */}
                   {data?.tasks && Object.keys(data.tasks).length > 0 && (
                     <div className="mt-3 pt-3 border-t border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Model Scores by Clinical Domain</p>
+                      <p className="text-[10px] font-bold text-slate-400  mb-2">Model Scores by Clinical Domain</p>
                       <div className="grid grid-cols-2 gap-1.5">
                         {Object.entries(data.tasks).map(([key, task]) => {
                           const prob = Math.round((task.probability || 0) * 100);
@@ -217,7 +217,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                 <div className="p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
                     <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-violet-600">§</span>
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Risk Component Breakdown</p>
+                    <p className="text-[11px] font-bold text-slate-500  select-none">Risk Component Breakdown</p>
                   </div>
                   <InfoGrid cols={2} items={[
                     ...(data?.component_scores || []).slice(0, 5).map(c => ({
@@ -243,14 +243,14 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                 <div className="p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
                     <span className="w-4 h-4 rounded bg-amber-100 flex items-center justify-center text-[9px] font-bold text-amber-600">§</span>
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinical Concerns & Actions</p>
+                    <p className="text-[11px] font-bold text-slate-500  select-none">Clinical Concerns & Actions</p>
                   </div>
                   {(data?.key_concerns?.length > 0) ? (
                     <div className="rounded-lg border border-amber-200 overflow-hidden">
                       <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 border-b border-amber-200">
                         <span className="w-1 h-4 rounded-full bg-amber-400 flex-shrink-0" />
                         <AlertTriangle size={12} className="text-amber-600 flex-shrink-0" />
-                        <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest select-none">Key Clinical Concerns</span>
+                        <span className="text-[11px] font-bold text-amber-700  select-none">Key Clinical Concerns</span>
                       </div>
                       <div className="px-5 py-3 bg-white space-y-2">
                         {data.key_concerns.map((c, i) => (
@@ -269,7 +269,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                     <div className="flex items-center gap-2.5 px-4 py-2.5 bg-teal-50 border-b border-teal-200">
                       <span className="w-1 h-4 rounded-full bg-teal-400 flex-shrink-0" />
                       <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
-                      <span className="text-[11px] font-bold text-teal-700 uppercase tracking-widest select-none">Recommended Actions</span>
+                      <span className="text-[11px] font-bold text-teal-700  select-none">Recommended Actions</span>
                     </div>
                     <div className="px-5 py-3 bg-white space-y-2">
                       {(data?.recommended_actions || data?.recommendations || []).map((r, i) => (
@@ -288,7 +288,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                 <div className="p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
                     <span className="w-4 h-4 rounded bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">§</span>
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest select-none">Clinician Feedback</p>
+                    <p className="text-[11px] font-bold text-slate-500  select-none">Clinician Feedback</p>
                   </div>
                   <InfoAlert type="info">
                     Your feedback improves the AI model for future predictions. Do you agree with this risk assessment?

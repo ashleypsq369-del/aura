@@ -211,7 +211,7 @@ export default function PatientPortal() {
 
         {/* € Section 1: Quick Actions (all 12 features) € */}
         <div>
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">Your Features</h3>
+          <h3 className="text-xs font-bold text-slate-400  mb-3 pl-1">Your Features</h3>
           <SectionErrorBoundary name="Quick Actions">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {orderedActions.map((c, i) => (
@@ -235,7 +235,7 @@ export default function PatientPortal() {
                 <div className="flex gap-4 flex-wrap">
                   {/* Current phase highlight */}
                   <div className="flex-1 min-w-[200px] p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
-                    <p className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-1">Current Phase</p>
+                    <p className="text-xs font-bold text-purple-600  mb-1">Current Phase</p>
                     <h3 className="text-lg font-serif font-bold text-slate-800 mb-1">{journey_phase.name}</h3>
                     <p className="text-sm text-slate-600 leading-relaxed">{journey_phase.description}</p>
                     {/* Phase progress bar */}
@@ -319,7 +319,7 @@ export default function PatientPortal() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <Sparkles size={12} className="text-purple-600 flex-shrink-0" />
-                            <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider">Picked for you</span>
+                            <span className="text-[10px] font-bold text-purple-600 ">Picked for you</span>
                           </div>
                           <h5 className="font-semibold text-sm text-slate-800">{resource.title}</h5>
                           <p className="text-xs text-slate-600 mt-0.5 line-clamp-2">{resource.reason}</p>
@@ -444,7 +444,7 @@ export default function PatientPortal() {
               {esasTrends && esasTrends.count > 0 && (
                 <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    <p className="text-[11px] font-bold text-slate-500 ">
                       Symptom Trends  --  Last {esasTrends.period_days} days
                     </p>
                     <span className="text-[10px] text-slate-400">{esasTrends.count} check-in{esasTrends.count !== 1 ? 's' : ''}</span>
@@ -509,7 +509,7 @@ export default function PatientPortal() {
                         className={`rounded-xl border-2 p-3.5 ${colorMap[level] || colorMap.low}`}>
                         <div className="flex items-center gap-2 mb-2">
                           <Brain size={15} className="text-teal-600 flex-shrink-0" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-700">AI Health Check</span>
+                          <span className="text-[10px] font-bold  text-teal-700">AI Health Check</span>
                         </div>
                         <div className="flex items-center gap-2 mb-2">
                           <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotMap[level] || dotMap.low}`} />

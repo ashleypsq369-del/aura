@@ -113,7 +113,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
             </div>
           ) : (
             <div className="space-y-2">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+              <p className="text-xs font-bold text-slate-400  mb-3">
                 {users.length} result{users.length !== 1 ? 's' : ''}
               </p>
               {users.map((user, i) => {

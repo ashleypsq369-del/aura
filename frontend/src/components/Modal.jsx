@@ -191,7 +191,7 @@ export function ModalFooter({ children, className = '' }) {
 export function ModalSection({ label, children, className = '' }) {
   return (
     <div className={`space-y-2 ${className}`}>
-      {label && <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{label}</p>}
+      {label && <p className="text-xs font-bold text-slate-500 dark:text-slate-400 ">{label}</p>}
       {children}
     </div>
   );

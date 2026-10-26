@@ -122,7 +122,7 @@ function GoalCard({ goal, patientId, onUpdate }) {
           {/* Checklist */}
           {goal.checklist?.length > 0 && (
             <div className="space-y-1.5">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Checklist</p>
+              <p className="text-xs font-bold text-slate-500 ">Checklist</p>
               {goal.checklist.map(item => (
                 <div key={item.id} className="flex items-center gap-2 text-sm">
                   {item.is_completed

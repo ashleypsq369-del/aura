@@ -139,7 +139,7 @@ export default function ResetPassword() {
             {/* Token Input (if not in URL) */}
             {!tokenFromUrl && (
               <div>
-                <label className="block text-xs font-bold text-[#2C3531] uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3531]  mb-2">
                   Reset Token
                 </label>
                 <input
@@ -156,7 +156,7 @@ export default function ResetPassword() {
 
             {/* New Password Input */}
             <div>
-              <label className="block text-xs font-bold text-[#2C3531] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#2C3531]  mb-2">
                 New Password
               </label>
               <PasswordInput
@@ -172,7 +172,7 @@ export default function ResetPassword() {
 
             {/* Confirm Password Input */}
             <div>
-              <label className="block text-xs font-bold text-[#2C3531] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#2C3531]  mb-2">
                 Confirm Password
               </label>
               <PasswordInput

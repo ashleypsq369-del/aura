@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
@@ -126,7 +126,7 @@ export default function Login() {
 
               {/* Username */}
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-bold text-slate-600  mb-1.5">
                   Username <span className="text-red-500">*</span>
                 </label>
                 <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-white
@@ -180,7 +180,7 @@ export default function Login() {
               {/* Password */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                  <label className="block text-[11px] font-bold text-slate-600 ">
                     Password <span className="text-red-500">*</span>
                   </label>
                   <Link to="/forgot-password" className="text-[11px] font-bold text-teal-600 hover:text-teal-700 hover:underline">
@@ -258,7 +258,7 @@ export default function Login() {
 
             {/* Demo credentials */}
             <div className="mt-4 pt-4 border-t border-slate-200">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center mb-2.5">
+              <p className="text-[10px] font-bold text-slate-400  text-center mb-2.5">
                 Demo Accounts
               </p>
               <div className="grid grid-cols-3 gap-2 text-xs text-center">

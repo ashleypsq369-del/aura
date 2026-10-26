@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PatientDataTable.jsx - Enterprise patient list using TanStack Table
  * ====================================================================
  * - Multi-column sorting (click header to sort)
@@ -246,7 +246,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                       header.column.getIsSorted() === 'asc' ? 'ascending' :
                       header.column.getIsSorted() === 'desc' ? 'descending' : 'none'
                     }
-                    className={`px-4 py-3 text-left text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider whitespace-nowrap ${
+                    className={`px-4 py-3 text-left text-xs font-bold text-slate-700 dark:text-slate-200  whitespace-nowrap ${
                       header.column.getCanSort() ? 'cursor-pointer hover:text-teal-300 select-none' : ''
                     }`}
                   >
@@ -256,7 +256,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                     </span>
                   </th>
                 ))}
-                <th scope="col" className="px-4 py-3 text-right text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                <th scope="col" className="px-4 py-3 text-right text-xs font-bold text-slate-700 dark:text-slate-200 ">
                   Action
                 </th>
               </tr>

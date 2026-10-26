@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, Calendar, Pill, AlertTriangle,
@@ -264,7 +264,7 @@ export default function NotificationCenter() {
           previewGroups.map(group => (
             <div key={group.label}>
               <div className="flex items-center gap-1.5 px-3 py-1" style={{ borderBottom: `1px solid ${T.rowBdr}` }}>
-                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: T.grpLabel }}>
+                <span className="text-[9px] font-bold " style={{ color: T.grpLabel }}>
                   {group.label}
                 </span>
               </div>

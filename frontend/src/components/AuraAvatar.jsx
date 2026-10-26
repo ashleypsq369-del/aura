@@ -406,7 +406,7 @@ export default function AuraAvatar() {
                 {/* -- MOOD panel -- */}
                 {panel === 'mood' && (
                   <div className="p-4">
-                    <p className="text-xs font-bold text-slate-600 mb-3 uppercase tracking-wider">
+                    <p className="text-xs font-bold text-slate-600 mb-3 ">
                       How are you feeling right now?
                     </p>
                     <div className="grid grid-cols-3 gap-2">

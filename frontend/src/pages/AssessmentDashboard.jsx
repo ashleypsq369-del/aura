@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -288,7 +288,7 @@ export default function AssessmentDashboard() {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-2">Palliative Care Modules</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400  px-2">Palliative Care Modules</span>
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

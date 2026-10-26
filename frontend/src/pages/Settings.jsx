@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import {
@@ -54,7 +54,7 @@ function Section({ title, children }) {
   return (
     <div className="mb-6">
       {title && (
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2">{title}</p>
+        <p className="text-xs font-semibold text-gray-400  px-1 mb-2">{title}</p>
       )}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
         {children}
@@ -668,7 +668,7 @@ export default function Settings() {
                   </div>
                   {/* Condition presets */}
                   <div className="px-4 pt-3 pb-1">
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Condition Profile</p>
+                    <p className="text-xs font-semibold text-gray-400  mb-2">Condition Profile</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pb-3">
                       {presets.map(({ id, Icon, label, desc, color, bg, s }) => {
                         const active = a11y.assistedMode && a11y.activePreset === id;

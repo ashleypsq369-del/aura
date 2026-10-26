@@ -760,7 +760,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
               <InfoBlock title="Expected Duration" icon={Clock} color={c}>
                 <p className="text-sm text-slate-700">{t.typical_duration}</p>
                 <div className="mt-3 pt-3 border-t border-slate-200">
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Outcome Focus</p>
+                  <p className="text-xs font-bold text-slate-500  mb-1.5">Outcome Focus</p>
                   <p className="text-sm text-slate-700">{t.outcome_focus}</p>
                 </div>
               </InfoBlock>
@@ -815,7 +815,7 @@ function InfoBlock({ title, icon: Icon, color, children }) {
   const c = color || COLOR.teal;
   return (
     <div className={`p-4 rounded-xl border-2 ${c.bg} ${c.border}`}>
-      <p className={`text-xs font-bold uppercase tracking-wider ${c.text} mb-3 flex items-center gap-1.5`}>
+      <p className={`text-xs font-bold  ${c.text} mb-3 flex items-center gap-1.5`}>
         <Icon size={14} />
         {title}
       </p>
@@ -908,7 +908,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
               <Icon size={26} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">
+              <p className="text-white/70 text-xs font-semibold  mb-1">
                 {isFamily ? "Loved One's Care Setting" : 'Your Care Setting'}
               </p>
               <h2 className="img-heading text-2xl font-bold text-white leading-tight">{setting.setting_label}</h2>
@@ -928,19 +928,19 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
             <div className="flex flex-wrap gap-3 mt-5 pt-5 border-t border-white/20">
               {setting.facility_name && (
                 <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
-                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Facility</p>
+                  <p className="text-white/60 text-[10px] ">Facility</p>
                   <p className="text-white font-semibold text-sm">{setting.facility_name}</p>
                 </div>
               )}
               {setting.visit_frequency && (
                 <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
-                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Visit Frequency</p>
+                  <p className="text-white/60 text-[10px] ">Visit Frequency</p>
                   <p className="text-white font-semibold text-sm">{setting.visit_frequency}</p>
                 </div>
               )}
               {setting.primary_contact && (
                 <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
-                  <p className="text-white/60 text-[10px] uppercase tracking-wider">Care Contact</p>
+                  <p className="text-white/60 text-[10px] ">Care Contact</p>
                   <p className="text-white font-semibold text-sm">{setting.primary_contact}</p>
                 </div>
               )}

@@ -140,7 +140,7 @@ export default function ForgotPassword() {
             
             {/* Email Input */}
             <div>
-              <label className="block text-xs font-bold text-[#2C3531] uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#2C3531]  mb-2">
                 Email Address
               </label>
               <div className="relative">

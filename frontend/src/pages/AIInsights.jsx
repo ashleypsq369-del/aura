@@ -537,7 +537,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
             <button key={id} onClick={() => setInnerTab(id)}
               className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-bold transition-all"
               style={innerTab === id
-                ? { background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.3)' }
+                ? { background: '#0d9488', color: 'white', boxShadow: '0 2px 8px rgba(13,148,136,0.25)' }
                 : { color: '#94a3b8' }}
               onMouseEnter={e => { if (innerTab !== id) e.currentTarget.style.color = '#475569'; }}
               onMouseLeave={e => { if (innerTab !== id) e.currentTarget.style.color = '#94a3b8'; }}>
@@ -900,7 +900,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
 
       {distData.length > 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1">
+          <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <BarChart2 size={12} className="text-violet-500" /> Patient Risk Distribution
           </p>
           <ResponsiveContainer width="100%" height={130}>
@@ -919,7 +919,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
 
       {mlStatus && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1">
+          <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <Cpu size={12} className="text-violet-500" /> Model Health
           </p>
           <div className="space-y-2.5">
@@ -1209,7 +1209,7 @@ export default function AIInsights() {
                     <CheckCircle className="w-14 h-14 text-emerald-400 opacity-50" />
                     <p className="font-bold text-slate-600 dark:text-slate-400">No patients match current filters</p>
                     <button onClick={() => { setFilterRisk('all'); setSearchTerm(''); }}
-                      className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-bold transition">
+                      className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-semibold transition">
                       Show All Patients
                     </button>
                   </div>

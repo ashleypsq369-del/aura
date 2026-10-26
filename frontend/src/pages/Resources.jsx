@@ -155,7 +155,7 @@ export default function Resources() {
             {/* Category filter */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-3 py-2.5 border-b border-slate-100">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Categories</p>
+                <p className="text-[10px] font-bold text-slate-400 ">Categories</p>
               </div>
               <div className="p-1.5 space-y-0.5">
                 {CATEGORIES.map(({ value, label, icon: Icon }, i) => {
@@ -571,7 +571,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
       <div className="flex items-center gap-2 mb-3">
         {res?.is_ghana_specific && <span>🇬🇭</span>}
         {res?.source && (
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{res.source}</span>
+          <span className="text-[11px] font-semibold text-slate-400 ">{res.source}</span>
         )}
       </div>
 
@@ -596,7 +596,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
               </span>
             )}
             {res?.source && (
-              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">{res.source}</span>
+              <span className="text-[11px] font-semibold text-slate-400 ">{res.source}</span>
             )}
             {res?.category && (
               <span className="text-[11px] italic text-slate-400">{res.category.replace(/_/g, ' ')}</span>

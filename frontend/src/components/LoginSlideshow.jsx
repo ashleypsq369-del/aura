@@ -147,7 +147,7 @@ export default function LoginSlideshow() {
           </div>
           <div>
             <p className="font-bold text-white text-sm tracking-wide leading-none">Project Aura</p>
-            <p className="text-white/55 text-[10px] uppercase tracking-widest mt-0.5">Palliative Care · Ghana</p>
+            <p className="text-white/55 text-[10px]  mt-0.5">Palliative Care · Ghana</p>
           </div>
         </div>
       </div>
@@ -164,7 +164,7 @@ export default function LoginSlideshow() {
           >
             <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 bg-black/45 backdrop-blur-md rounded-full border border-white/25">
               <Icon size={12} className="text-teal-300 flex-shrink-0" />
-              <span className="text-[11px] font-bold text-white uppercase tracking-widest">{slide.tag}</span>
+              <span className="text-[11px] font-bold text-white ">{slide.tag}</span>
             </div>
             {/* Frosted dark pill wraps title + body - guaranteed contrast on any photo */}
             <div className="bg-black/55 backdrop-blur-sm rounded-2xl px-4 py-3 max-w-sm border border-teal-400/60">

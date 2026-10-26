@@ -175,7 +175,7 @@ export default function MyJourney() {
                   <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center flex-shrink-0">
                     <Calendar size={14} className="text-teal-600" />
                   </div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{date}</span>
+                  <span className="text-xs font-bold text-slate-500 ">{date}</span>
                   <div className="flex-1 h-px bg-slate-200" />
                 </div>
 
@@ -203,7 +203,7 @@ export default function MyJourney() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Events</p>
+                  <p className="text-xs font-semibold text-slate-500  mb-1">Total Events</p>
                   <p className="text-2xl font-bold text-slate-800 tabular-nums">{filteredEvents.length}</p>
                 </div>
                 <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -218,7 +218,7 @@ export default function MyJourney() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Milestones</p>
+                  <p className="text-xs font-semibold text-slate-500  mb-1">Milestones</p>
                   <p className="text-2xl font-bold text-slate-800 tabular-nums">
                     {filteredEvents.filter(e => e.is_milestone).length}
                   </p>
@@ -235,7 +235,7 @@ export default function MyJourney() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Critical Alerts</p>
+                  <p className="text-xs font-semibold text-slate-500  mb-1">Critical Alerts</p>
                   <p className="text-2xl font-bold text-slate-800 tabular-nums">
                     {filteredEvents.filter(e => e.event_type === 'high_alert').length}
                   </p>
@@ -252,7 +252,7 @@ export default function MyJourney() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Appointments</p>
+                  <p className="text-xs font-semibold text-slate-500  mb-1">Appointments</p>
                   <p className="text-2xl font-bold text-slate-800 tabular-nums">
                     {filteredEvents.filter(e => e.event_type === 'appointment').length}
                   </p>

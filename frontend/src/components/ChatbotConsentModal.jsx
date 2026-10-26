@@ -45,7 +45,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         {/* CAN / CANNOT */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-700 rounded-xl p-3.5">
-            <p className="text-xs font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <p className="text-xs font-bold text-teal-700 dark:text-teal-400  mb-2 flex items-center gap-1.5">
               <CheckCircle size={12}/> What I can do
             </p>
             <ul className="space-y-1.5 text-xs text-teal-900 dark:text-teal-200">
@@ -55,7 +55,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
             </ul>
           </div>
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-3.5">
-            <p className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <p className="text-xs font-bold text-red-700 dark:text-red-400  mb-2 flex items-center gap-1.5">
               <AlertTriangle size={12}/> What I cannot do
             </p>
             <ul className="space-y-1.5 text-xs text-red-900 dark:text-red-200">

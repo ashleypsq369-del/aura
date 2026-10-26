@@ -1,0 +1,466 @@
+/*
+ * ghana-theme.css — Project Aura Ghana Cultural Design System
+ * =============================================================
+ * Inspired by Kente cloth, Adinkra symbols, and Ghanaian healthcare
+ * aesthetics from homecaregh.com, advancehealthcaregh.net, imperialnursinggh.com
+ *
+ * Kente Colors:
+ *   Gold:    #D4A017  (Ashanti royalty — wisdom, wealth, high status)
+ *   Forest:  #1B4332  (Life, renewal, growth)
+ *   Teal:    #0D7377  (Healthcare, trust)
+ *   Red:     #8B1A1A  (Political struggle, sacrifice — used sparingly)
+ *   Black:   #1A1A1A  (Maturity, spiritual energy)
+ *
+ * Adinkra meanings relevant to palliative care:
+ *   Gye Nyame = "Only God" — Omnipotence (used in backgrounds)
+ *   Nyame Dua = Tree of Life — Divine presence, protection
+ *   Fawohodie = Freedom — Independence, emancipation
+ *   Nkyinkyim = Adaptability — Versatility, resilience
+ *   Aya = Fern — Endurance, resourcefulness
+ */
+
+/* ── 1. KENTE COLOR TOKENS ───────────────────────────────────────────────── */
+:root {
+  --ghana-gold:       #D4A017;
+  --ghana-gold-lt:    #FEF3C7;
+  --ghana-gold-dk:    #92400E;
+  --ghana-forest:     #1B4332;
+  --ghana-forest-lt:  #D1FAE5;
+  --ghana-teal:       #0D7377;
+  --ghana-teal-lt:    #CCFBF1;
+  --ghana-red:        #8B1A1A;
+  --ghana-red-lt:     #FEE2E2;
+  --ghana-black:      #1A1A1A;
+
+  /* Kente strip accent colors — used in border stripes */
+  --kente-1: #D4A017;   /* gold */
+  --kente-2: #0D7377;   /* teal */
+  --kente-3: #1B4332;   /* forest */
+  --kente-4: #8B1A1A;   /* red */
+  --kente-5: #1A1A1A;   /* black */
+}
+
+/* ── 2. KENTE STRIP — signature horizontal accent ────────────────────────── */
+/* A thin 4-color Kente-inspired strip. Use as top border on cards, headers. */
+.kente-strip {
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    var(--kente-1) 0%,
+    var(--kente-1) 25%,
+    var(--kente-2) 25%,
+    var(--kente-2) 50%,
+    var(--kente-3) 50%,
+    var(--kente-3) 75%,
+    var(--kente-5) 75%,
+    var(--kente-5) 100%
+  );
+  flex-shrink: 0;
+}
+
+.kente-strip-thin {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--kente-1) 0%,
+    var(--kente-1) 33%,
+    var(--kente-2) 33%,
+    var(--kente-2) 66%,
+    var(--kente-3) 66%,
+    var(--kente-3) 100%
+  );
+  flex-shrink: 0;
+}
+
+.kente-border-left {
+  border-left: 4px solid transparent;
+  border-image: linear-gradient(
+    to bottom,
+    var(--kente-1),
+    var(--kente-2),
+    var(--kente-3),
+    var(--kente-5)
+  ) 1;
+}
+
+/* ── 3. ADINKRA PATTERN BACKGROUNDS ─────────────────────────────────────── */
+/*
+ * Gye Nyame pattern — simplified geometric SVG as data URI
+ * Used as subtle watermark on card backgrounds
+ * The pattern is a stylised cross/star representing divine presence
+ */
+
+:root {
+  --adinkra-gye-nyame: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%230D7377' stroke-width='0.8' opacity='0.12'%3E%3Ccircle cx='20' cy='20' r='8'/%3E%3Cpath d='M20 4 L20 36 M4 20 L36 20'/%3E%3Cpath d='M7 7 L33 33 M33 7 L7 33'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%230D7377'/%3E%3C/g%3E%3C/svg%3E");
+
+  --adinkra-nkyinkyim: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23D4A017' stroke-width='0.8' opacity='0.10'%3E%3Cpath d='M8 24 Q16 8 24 24 Q32 40 40 24'/%3E%3Cpath d='M8 16 Q16 0 24 16 Q32 32 40 16'/%3E%3Cpath d='M8 32 Q16 16 24 32 Q32 48 40 32'/%3E%3C/g%3E%3C/svg%3E");
+
+  --kente-weave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Crect x='0' y='0' width='12' height='12' fill='%230D7377' opacity='0.04'/%3E%3Crect x='12' y='12' width='12' height='12' fill='%230D7377' opacity='0.04'/%3E%3Crect x='0' y='6' width='12' height='2' fill='%23D4A017' opacity='0.05'/%3E%3Crect x='12' y='18' width='12' height='2' fill='%23D4A017' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* ── 4. GHANA CARD BACKGROUNDS ───────────────────────────────────────────── */
+/*
+ * Cards get a teal-tinted base with subtle Kente/Adinkra texture.
+ * Three variants matching the app's use cases.
+ */
+
+.card-ghana {
+  background-color: #f0faf9; /* very light teal tint */
+  background-image: var(--kente-weave);
+  background-repeat: repeat;
+  border: 1px solid rgba(13, 115, 119, 0.15);
+  border-radius: 10px;
+  box-shadow:
+    0 1px 3px rgba(13,115,119,0.08),
+    0 4px 12px rgba(0,0,0,0.04);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-ghana::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    var(--kente-1) 0%,
+    var(--kente-1) 25%,
+    var(--kente-2) 25%,
+    var(--kente-2) 50%,
+    var(--kente-3) 50%,
+    var(--kente-3) 75%,
+    var(--kente-5) 75%,
+    var(--kente-5) 100%
+  );
+  pointer-events: none;
+}
+
+.card-ghana-gold {
+  background-color: #fdfbf0;
+  background-image: var(--adinkra-nkyinkyim);
+  background-repeat: repeat;
+  border: 1px solid rgba(212, 160, 23, 0.18);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(212,160,23,0.1), 0 4px 12px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-ghana-forest {
+  background-color: #f0fdf4;
+  background-image: var(--adinkra-gye-nyame);
+  background-repeat: repeat;
+  border: 1px solid rgba(27, 67, 50, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(27,67,50,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark mode versions */
+html.dark .card-ghana {
+  background-color: #0d1f1e;
+  background-image: var(--kente-weave);
+  border-color: rgba(13,115,119,0.2);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+}
+
+html.dark .card-ghana-gold {
+  background-color: #1a1400;
+  border-color: rgba(212,160,23,0.2);
+}
+
+html.dark .card-ghana-forest {
+  background-color: #061208;
+  border-color: rgba(27,67,50,0.25);
+}
+
+/* ── 5. GHANA BUTTON SYSTEM ──────────────────────────────────────────────── */
+/* Teal + Gold CTA — warm, confident, Ghanaian palette */
+
+.btn-ghana-primary {
+  background: linear-gradient(135deg, #0D7377, #0d9488);
+  border: 1px solid #0a5f62;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    0 2px 8px rgba(13,115,119,0.3);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-ghana-primary:hover {
+  background: linear-gradient(135deg, #0f8589, #0f9990);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    0 4px 12px rgba(13,115,119,0.4);
+  transform: translateY(-1px);
+}
+
+.btn-ghana-gold {
+  background: linear-gradient(135deg, #D4A017, #b8880f);
+  border: 1px solid #92700c;
+  color: #1A1A1A;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(212,160,23,0.3);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-ghana-gold:hover {
+  background: linear-gradient(135deg, #e0ac1c, #c49413);
+  box-shadow: 0 4px 12px rgba(212,160,23,0.4);
+  transform: translateY(-1px);
+}
+
+/* ── 6. GHANA STAT CARDS ─────────────────────────────────────────────────── */
+/* Override the existing stat-card-* with Ghana-themed versions */
+
+.stat-card-teal {
+  background: linear-gradient(135deg, #e6f7f7, #ccf5f1) !important;
+  border-left: 4px solid #0D7377 !important;
+  border-top: none !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-teal::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background-image: var(--adinkra-gye-nyame);
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+}
+
+.stat-card-amber {
+  background: linear-gradient(135deg, #fdf8e6, #fef3c7) !important;
+  border-left: 4px solid #D4A017 !important;
+}
+
+html.dark .stat-card-teal {
+  background: linear-gradient(135deg, #0d2020, #0a1a1a) !important;
+}
+
+html.dark .stat-card-amber {
+  background: linear-gradient(135deg, #1a1400, #1c1200) !important;
+}
+
+/* ── 7. KENTE SECTION DIVIDER ────────────────────────────────────────────── */
+.kente-divider {
+  width: 100%;
+  height: 6px;
+  background: repeating-linear-gradient(
+    to right,
+    #D4A017 0px, #D4A017 8px,
+    #0D7377 8px, #0D7377 16px,
+    #1B4332 16px, #1B4332 24px,
+    #1A1A1A 24px, #1A1A1A 32px
+  );
+  border-radius: 3px;
+  margin: 16px 0;
+}
+
+/* ── 8. GHANA PAGE SECTION HEADERS ──────────────────────────────────────── */
+/* Warm teal gradient with Kente strip accent */
+.page-header-ghana {
+  background: linear-gradient(135deg, #0D7377 0%, #0d9488 50%, #059669 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-ghana::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #D4A017 0%, #D4A017 25%,
+    #1B4332 25%, #1B4332 50%,
+    #8B1A1A 50%, #8B1A1A 75%,
+    #1A1A1A 75%, #1A1A1A 100%
+  );
+}
+
+/* ── 9. ADINKRA BADGE/CHIP ───────────────────────────────────────────────── */
+/* Use for Ghana-specific content markers */
+.badge-ghana {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fdf8e6;
+  border: 1.5px solid #D4A017;
+  color: #92400E;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+html.dark .badge-ghana {
+  background: rgba(212,160,23,0.15);
+  border-color: rgba(212,160,23,0.4);
+  color: #fbbf24;
+}
+
+.badge-ghana::before {
+  content: '◈';
+  font-size: 10px;
+  color: #D4A017;
+}
+
+/* ── 10. GHANA TYPOGRAPHY ────────────────────────────────────────────────── */
+.text-ghana-gold {
+  color: #D4A017;
+}
+
+.text-ghana-teal {
+  color: #0D7377;
+}
+
+.text-ghana-forest {
+  color: #1B4332;
+}
+
+.heading-ghana {
+  font-family: var(--font-family-serif), serif;
+  color: #1B4332;
+  letter-spacing: -0.02em;
+}
+
+html.dark .heading-ghana {
+  color: #6ee7b7;
+}
+
+/* ── 11. GLOBAL CARD SYSTEM — teal-tinted instead of pure white ──────────── */
+/*
+ * The global .card, .stat-card etc. in index.css stay white.
+ * But Tailwind classes like bg-white border rounded-xl get a teal micro-tint
+ * on light mode — giving the app warmth without being garish.
+ * This is applied to the main content cards only, not inputs/modals.
+ */
+
+/* Main content area cards — very subtle teal wash */
+.min-h-screen > * .bg-white.rounded-xl,
+.min-h-screen > * .bg-white.rounded-2xl {
+  background-color: #f9fdfd; /* near-white with micro teal tint */
+}
+
+/* ── 12. GHANA-THEMED SIDEBAR ────────────────────────────────────────────── */
+/* The sidebar already has a teal/forest gradient — keep but add Kente strip */
+
+aside::after,
+.sidebar-root::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    var(--kente-1) 0%,
+    var(--kente-1) 25%,
+    var(--kente-2) 25%,
+    var(--kente-2) 50%,
+    var(--kente-3) 50%,
+    var(--kente-3) 75%,
+    var(--kente-5) 75%,
+    var(--kente-5) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── 13. PAGE BACKGROUND — warm teal-cool grey ───────────────────────────── */
+/* Slightly warmer than pure cool grey — the teal tint evokes Ghanaian fabrics */
+
+body {
+  background: #eef4f4 !important; /* very subtle teal-grey — warmer than #f0f4f8 */
+}
+
+html.dark body {
+  background: #0a0a0a !important;
+}
+
+/* ── 14. KENTE LOADING SKELETON ──────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #e0efef 0%,
+    #ccf0ef 40%,
+    #e0efef 80%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: skeleton-shimmer 1.6s infinite !important;
+}
+
+html.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    #141f1f 0%,
+    #1a2d2d 40%,
+    #141f1f 80%
+  ) !important;
+}
+
+/* ── 15. FOCUS RING — Ghana teal ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #0D7377 !important;
+  outline-offset: 2px !important;
+}
+
+/* ── 16. SCROLLBAR — Ghana teal ─────────────────────────────────────────── */
+::-webkit-scrollbar-thumb {
+  background: rgba(13,115,119,0.35) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13,115,119,0.6) !important;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(45,212,191,0.25) !important;
+}
+
+/* ── 17. GHANA HEADER GRADIENT UPGRADE ───────────────────────────────────── */
+/* The main nav header — add the Kente strip at the bottom */
+header[role="banner"] {
+  background: linear-gradient(
+    to right, #0b2d26, #0d6b5e, #0D7377, #1a3a6e
+  ) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+  position: relative;
+}
+
+header[role="banner"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    #D4A017 0px, #D4A017 16px,
+    #0d9488 16px, #0d9488 32px,
+    #1B4332 32px, #1B4332 48px,
+    #1A1A1A 48px, #1A1A1A 64px
+  );
+  pointer-events: none;
+}

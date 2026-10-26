@@ -228,7 +228,7 @@ export default function Profile() {
                   { label: 'Phone',         type: 'tel',   key: 'phone',      val: profile?.phone || '',                    placeholder: '+233 XX XXX XXXX' },
                 ].map(f => (
                   <div key={f.key}>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">{f.label}</label>
+                    <label className="block text-xs font-bold text-slate-500  mb-1.5">{f.label}</label>
                     {editMode ? (
                       <input type={f.type} value={profileData[f.key]}
                         onChange={e => setProfileData({ ...profileData, [f.key]: e.target.value })}
@@ -243,7 +243,7 @@ export default function Profile() {
                 ))}
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Username</label>
+                  <label className="block text-xs font-bold text-slate-500  mb-1.5">Username</label>
                   <p className="text-sm font-semibold text-slate-800">@{user.username}</p>
                   <p className="text-xs text-slate-400 mt-0.5">Cannot be changed</p>
                 </div>
@@ -286,7 +286,7 @@ export default function Profile() {
                     { label: 'Confirm Password',  key: 'confirm_password', ph: 'Confirm new password'   },
                   ].map(f => (
                     <div key={f.key}>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-bold text-slate-500  mb-1.5">{f.label}</label>
                       <PasswordInput
                         value={passwordData[f.key]}
                         onChange={e => setPasswordData({ ...passwordData, [f.key]: e.target.value })}

@@ -423,7 +423,7 @@ export default function PatientMonitor() {
                     { l: 'Facility', v: patient?.facility_name || '—' },
                   ].map(({ l, v }) => v && (
                     <div key={l} className="p-3 bg-slate-50 rounded-lg">
-                      <p className="text-xs text-muted uppercase tracking-wider mb-0.5">{l}</p>
+                      <p className="text-xs text-muted  mb-0.5">{l}</p>
                       <p className="font-semibold text-charcoal capitalize">{v}</p>
                     </div>
                   ))}

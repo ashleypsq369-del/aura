@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Continuity Bridge
  * ------------------
  * WHO: The PATIENT (while alive) and their designated Heirs (after death).
@@ -138,7 +138,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
 
       {/* Action cards */}
       <div>
-        <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Your Legacy Tools</h2>
+        <h2 className="text-xs font-semibold text-slate-500  mb-3">Your Legacy Tools</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {actions.map(({ icon: Icon, label, sub, tab, color, img }) => (
             <motion.div key={tab} whileHover={{ y: -3 }} onClick={() => onTab(tab)}
@@ -400,7 +400,7 @@ function MyJournalTab({ patientId }) {
 
       {entries.length > 0 ? (
         <div className="space-y-3">
-          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Your entries</h3>
+          <h3 className="text-xs font-semibold text-slate-500 ">Your entries</h3>
           {entries.map((e) => (
             <motion.div key={e.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
               className="bg-white border border-slate-200 rounded-xl p-5">

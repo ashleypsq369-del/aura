@@ -238,7 +238,7 @@ export default function Patients() {
 
         {/* Care setting filter row */}
         <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Care Setting:</span>
+          <span className="text-[10px] font-bold text-slate-400 ">Care Setting:</span>
           {CARE_SETTING_FILTERS.map(({ value, label, icon: Icon, color }) => {
             const active = filterCareSetting === value;
             return (

@@ -1,4 +1,4 @@
-﻿import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -112,7 +112,7 @@ export default function SymptomsDetail() {
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
                       <Icon size={15} style={{ color }} />
                     </div>
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">{label}</p>
+                    <p className="text-xs font-bold text-slate-500 ">{label}</p>
                   </div>
                   <p className="text-2xl font-bold text-slate-900 tabular-nums">{value}</p>
                 </motion.div>

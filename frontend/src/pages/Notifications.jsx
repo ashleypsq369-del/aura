@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, Pill, Calendar, MessageCircle, Users, FileText,
@@ -80,7 +80,7 @@ function NotifRow({ n, onRead, onDelete }) {
       {/* Text block */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-0.5">
-          <span className="text-[9px] font-bold uppercase tracking-wider px-1 py-0.5 rounded"
+          <span className="text-[9px] font-bold  px-1 py-0.5 rounded"
             style={{ background: cfg.bg, color: cfg.color }}>
             {cfg.label}
           </span>
@@ -117,7 +117,7 @@ function NotifRow({ n, onRead, onDelete }) {
 function SectionLabel({ label, count }) {
   return (
     <div className="flex items-center gap-2 px-1 mb-2 mt-5 first:mt-0">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{label}</p>
+      <p className="text-xs font-semibold text-gray-400 ">{label}</p>
       <div className="h-px flex-1 bg-gray-200" />
       <span className="text-xs text-gray-400 font-medium">{count}</span>
     </div>

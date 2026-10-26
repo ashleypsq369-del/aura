@@ -61,7 +61,7 @@ export default function CriticalAlertModal({ alert, onClose }) {
         {/* Risk score */}
         <div className="flex items-center justify-between p-5 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/20 rounded-2xl border-2 border-red-200 dark:border-red-700">
           <div>
-            <span className="block text-xs font-bold text-red-800 dark:text-red-300 uppercase tracking-wider mb-1">Risk Score</span>
+            <span className="block text-xs font-bold text-red-800 dark:text-red-300  mb-1">Risk Score</span>
             <span className="text-sm text-red-700 dark:text-red-400">Threshold exceeded — Crisis Level</span>
           </div>
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type:'spring' }}

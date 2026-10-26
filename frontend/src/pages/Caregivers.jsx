@@ -69,7 +69,7 @@ function CaregiverCard({ cg, workload, burnoutLevel, avatarGrad, onBurnoutClick 
         {/* Workload */}
         <div>
           <div className="flex justify-between mb-1">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Workload</span>
+            <span className="text-[10px] font-bold text-slate-400 ">Workload</span>
             <span className={`text-[10px] font-black tabular-nums ${wbText(workloadPct)}`}>
               {workloadPct}% · <span className="font-semibold text-slate-500 capitalize">{capStatus.replace('_',' ')}</span>
             </span>
@@ -132,7 +132,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
               </div>
               {data.signals?.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Risk Signals</p>
+                  <p className="text-[10px] font-bold text-slate-400  mb-2">Risk Signals</p>
                   <div className="space-y-2">
                     {data.signals.map((s,i) => (
                       <div key={i} className="flex items-start gap-3 p-3 bg-amber-50 border border-amber-100 rounded-xl">
@@ -155,7 +155,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
               )}
               {data.recommendations?.filter(Boolean).length > 0 && (
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Recommendations</p>
+                  <p className="text-[10px] font-bold text-slate-400  mb-2">Recommendations</p>
                   <div className="space-y-2">
                     {data.recommendations.filter(Boolean).map((rec,i) => (
                       <div key={i} className="flex items-start gap-2 text-sm px-3 py-2.5 rounded-xl bg-violet-50 border border-violet-100 text-violet-800">
@@ -467,7 +467,7 @@ export default function Caregivers() {
               {/* Recommendations */}
               {teamRaw.recommendations?.filter(Boolean).length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">AI Recommendations</p>
+                  <p className="text-xs font-bold text-slate-400 ">AI Recommendations</p>
                   {teamRaw.recommendations.filter(Boolean).map((rec,i) => (
                     <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-xl border text-sm
                       ${rec.includes('⚠')||rec.includes('❌') ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
@@ -495,7 +495,7 @@ export default function Caregivers() {
                 </div>
                 <div className="p-5 space-y-3">
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Caregiver</label>
+                    <label className="text-[10px] font-bold text-slate-400  block mb-1.5">Caregiver</label>
                     <SearchableSelect
                       accent="violet"
                       value={manualCg ? String(manualCg) : null}
@@ -510,7 +510,7 @@ export default function Caregivers() {
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Patient</label>
+                    <label className="text-[10px] font-bold text-slate-400  block mb-1.5">Patient</label>
                     <SearchableSelect
                       accent="violet"
                       value={manualPt ? String(manualPt) : null}

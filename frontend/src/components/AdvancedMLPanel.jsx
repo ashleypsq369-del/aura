@@ -78,7 +78,7 @@ function DeteriorationCard({ data }) {
         {/* Velocity by dimension */}
         {Object.keys(data.velocity_by_dim || {}).length > 0 && (
           <div className="space-y-1.5">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Velocity (+ = worsening)</p>
+            <p className="text-[10px] font-bold text-gray-400 ">Velocity (+ = worsening)</p>
             {Object.entries(data.velocity_by_dim).slice(0, 5).map(([dim, vel]) => (
               <div key={dim} className="flex items-center justify-between">
                 <span className="text-[10px] text-gray-500 capitalize">{dim.replace(/_/g, ' ')}</span>
@@ -93,7 +93,7 @@ function DeteriorationCard({ data }) {
         {/* Top drivers */}
         {data.top_drivers?.length > 0 && (
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Key drivers</p>
+            <p className="text-[10px] font-bold text-gray-400 ">Key drivers</p>
             {data.top_drivers.map((d, i) => (
               <div key={i} className="flex items-start gap-1.5">
                 <AlertTriangle size={9} className="text-red-400 mt-0.5 flex-shrink-0" />
@@ -160,7 +160,7 @@ function PrognosisCard({ data }) {
 
         {data.key_factors?.length > 0 && (
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Modifying factors</p>
+            <p className="text-[10px] font-bold text-gray-400 ">Modifying factors</p>
             {data.key_factors.map((f, i) => (
               <div key={i} className="flex items-center justify-between">
                 <span className="text-[10px] text-gray-600">{f.factor}</span>

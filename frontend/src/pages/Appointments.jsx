@@ -121,7 +121,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
             placeholder="Select appointment type…"
           />
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date & Time *</label>
+            <label className="block text-xs font-bold text-slate-500  mb-1.5">Date & Time *</label>
             <input type="datetime-local" value={f.scheduled_at} onChange={up('scheduled_at')}
               min={new Date().toISOString().slice(0,16)}
               className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
@@ -137,13 +137,13 @@ function ScheduleModal({ onClose, onSave, pending }) {
               placeholder="Select location…"
             />
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Detail</label>
+              <label className="block text-xs font-bold text-slate-500  mb-1.5">Detail</label>
               <input value={f.location_detail} onChange={up('location_detail')} placeholder="e.g. Room 4B"
                 className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Notes</label>
+            <label className="block text-xs font-bold text-slate-500  mb-1.5">Notes</label>
             <textarea value={f.notes} onChange={up('notes')} rows={3}
               className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"/>
           </div>

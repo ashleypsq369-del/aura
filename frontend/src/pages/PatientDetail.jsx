@@ -70,7 +70,7 @@ function CareSettingBanner({ setting }) {
       </button>
       {expanded && (
         <div className="px-4 pb-3 border-t" style={{ borderColor: cfg.color + '20' }}>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-2 mb-1.5">Key Clinical Tasks</p>
+          <p className="text-[10px] font-bold text-slate-400  mt-2 mb-1.5">Key Clinical Tasks</p>
           <div className="flex flex-wrap gap-1.5">
             {cfg.key_tasks.map(t => (
               <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -431,7 +431,7 @@ export default function PatientDetail() {
             {/* Vitals ribbon */}
             {lastVital && (
               <div className="flex items-center gap-2 flex-wrap bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Latest Vitals</span>
+                <span className="text-[10px] font-bold text-slate-400  mr-1">Latest Vitals</span>
                 {[
                   { label: 'HR',   value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--',    ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
                   { label: 'SpO2', value: lastVital.oxygen_saturation ? `${lastVital.oxygen_saturation.toFixed(1)}%` : '--', ok: !lastVital.oxygen_saturation || lastVital.oxygen_saturation >= 95 },
@@ -491,7 +491,7 @@ export default function PatientDetail() {
 
             {/* Quick Actions grid */}
             <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+              <p className="text-[10px] font-bold text-slate-400  mb-3 flex items-center gap-1.5">
                 <Stethoscope size={10}/> Clinical Tools
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

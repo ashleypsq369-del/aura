@@ -92,10 +92,10 @@ export default function PageHeader({
         }}
       />
 
-      {/* Bottom accent line */}
+      {/* Kente strip at bottom of header */}
       <div
-        className="absolute inset-0 border-b-2 pointer-events-none"
-        style={{ borderColor: 'rgba(45,212,191,0.65)', zIndex: 3 }}
+        className="kente-strip absolute inset-x-0 bottom-0 pointer-events-none"
+        style={{ zIndex: 3 }}
       />
 
       {/* Content */}

@@ -92,7 +92,7 @@ function KpiCard({ label, value, icon: Icon, color, selected, onClick, subtitle 
         <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${selected?'bg-white/30':'bg-slate-100'}`}>
           <Icon size={13} className={selected?'text-current':'text-slate-500'}/>
         </div>
-        <span className={`text-[10px] font-bold uppercase tracking-wider ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
+        <span className={`text-[10px] font-bold  ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
       </div>
       <p className={`text-2xl font-bold tabular-nums leading-none ${selected?'text-current':'text-slate-800'}`}>{value}</p>
       {subtitle && <p className={`text-[11px] mt-1 ${selected?'text-current opacity-70':'text-slate-400'}`}>{subtitle}</p>}
@@ -124,18 +124,18 @@ function MedModal({ initial, onClose, onSave, pending }) {
         </div>
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Medication Name *</label>
+            <label className="block text-xs font-bold text-slate-500  mb-1.5">Medication Name *</label>
             <input value={f.name} onChange={up('name')} placeholder="e.g. Morphine Sulfate"
               className="w-full border border-slate-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Dose *</label>
+              <label className="block text-xs font-bold text-slate-500  mb-1.5">Dose *</label>
               <input value={f.dose} onChange={up('dose')} placeholder="e.g. 10mg"
                 className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Start Date</label>
+              <label className="block text-xs font-bold text-slate-500  mb-1.5">Start Date</label>
               <input type="date" value={f.start_date} onChange={up('start_date')}
                 className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
             </div>
@@ -161,7 +161,7 @@ function MedModal({ initial, onClose, onSave, pending }) {
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Indication</label>
+            <label className="block text-xs font-bold text-slate-500  mb-1.5">Indication</label>
             <input value={f.indication} onChange={up('indication')} placeholder="e.g. Pain management"
               className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
           </div>

@@ -207,9 +207,9 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
         {/* Compulsory tasks */}
         {required.length > 0 && (
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Lock size={12} className="text-red-500" />
-              <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Required Daily</p>
+            <div className="flex items-center gap-2 mb-2">
+              <Lock size={11} className="text-rose-400" />
+              <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Required daily</p>
             </div>
             <div className="space-y-2">
               {required.map(task => {
@@ -258,8 +258,8 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
         {/* Appointments */}
         {appts.length > 0 && (
           <div>
-            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Calendar size={12} className="text-blue-500" /> Upcoming Appointments
+            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+              <Calendar size={11} className="text-teal-500" /> Upcoming Appointments
             </p>
             <div className="space-y-2">
               {appts.map(task => (
@@ -283,8 +283,8 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
         {/* Optional tasks */}
         {optional.length > 0 && (
           <div>
-            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">
-              Optional — Encouraged Today
+            <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-2">
+              Optional today
             </p>
             <div className="space-y-2">
               {optional.map(task => {

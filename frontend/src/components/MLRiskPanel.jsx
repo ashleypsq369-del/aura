@@ -214,7 +214,7 @@ function TaskCard({ taskKey, task }) {
             <div className="px-4 pb-3 border-t border-gray-100">
               <div className="flex items-center gap-1.5 pt-2 pb-1.5">
                 <Zap size={10} className="text-gray-400"/>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                <p className="text-[10px] font-bold text-gray-400 ">
                   {task.shap_available ? 'SHAP Feature Impact' : 'Feature Importance'}
                 </p>
                 {task.shap_available && (
@@ -364,7 +364,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
           <div className="flex-1 min-w-0 space-y-2">
             {(data?.key_concerns?.length ?? 0) > 0 && (
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Key Concerns</p>
+                <p className="text-[10px] font-bold text-gray-400  mb-1">Key Concerns</p>
                 {data.key_concerns.slice(0, 3).map((c, i) => (
                   <div key={i} className="flex items-start gap-1.5 mb-0.5">
                     <AlertTriangle size={9} className="text-amber-500 flex-shrink-0 mt-0.5"/>
@@ -375,7 +375,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
             )}
             {(data?.recommended_actions?.length ?? 0) > 0 && (
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Actions</p>
+                <p className="text-[10px] font-bold text-gray-400  mb-1">Actions</p>
                 {data.recommended_actions.slice(0, 2).map((a, i) => (
                   <div key={i} className="flex items-start gap-1.5 mb-0.5">
                     <CheckCircle size={9} className="text-teal-500 flex-shrink-0 mt-0.5"/>
@@ -417,7 +417,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
       {/* ── Task detail cards with SHAP (expandable) ── */}
       <div className="space-y-2">
-        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1 flex items-center gap-1.5">
+        <p className="text-[10px] font-bold text-gray-400  px-1 flex items-center gap-1.5">
           <Brain size={10}/> SHAP Breakdown — tap any task to expand
         </p>
         {sortedTasks.map(([key, task]) => (

@@ -106,12 +106,12 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
       {/* Badges + action */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {isReq && !task.done && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white uppercase tracking-wider">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white ">
             Required
           </span>
         )}
         {isAppt && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 uppercase tracking-wider">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 ">
             Appt
           </span>
         )}
@@ -305,7 +305,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
               {/* Required tasks */}
               {requiredTasks.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 ">
                     Required Today — {reqDone}/{reqTotal}
                   </p>
                   {requiredTasks.map(task => (
@@ -321,7 +321,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
               {/* Optional tasks */}
               {optionalTasks.length > 0 && (
                 <div className="space-y-2 mt-3">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500  mt-1">
                     Optional
                   </p>
                   {optionalTasks.map(task => (

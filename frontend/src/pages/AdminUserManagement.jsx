@@ -620,7 +620,7 @@ export default function AdminUserManagement() {
                 <thead className="bg-slate-50 border-b-2 border-slate-200">
                   <tr>
                     {['User', 'Role', 'Care Setting', 'Status', 'Last Login', 'Actions'].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                      <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-slate-500 ">
                         {h}
                       </th>
                     ))}

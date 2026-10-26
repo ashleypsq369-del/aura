@@ -336,7 +336,7 @@ export default function ReminderCenter() {
                     {upcoming.length > 0 && (
                       <div>
                         <div className="px-4 py-1.5 bg-gray-50 border-b border-gray-100">
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Upcoming</p>
+                          <p className="text-[10px] font-bold  text-gray-500">Upcoming</p>
                         </div>
                         {upcoming.map(r => (
                           <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>
@@ -346,7 +346,7 @@ export default function ReminderCenter() {
                     {past.length > 0 && (
                       <div>
                         <div className="px-4 py-1.5 bg-gray-50 border-b border-gray-100">
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Past</p>
+                          <p className="text-[10px] font-bold  text-gray-500">Past</p>
                         </div>
                         {past.slice(0, 5).map(r => (
                           <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>

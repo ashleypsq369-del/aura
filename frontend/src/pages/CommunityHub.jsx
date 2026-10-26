@@ -285,7 +285,7 @@ export default function CommunityHub() {
 
             {recommended.length > 0 && (
               <div>
-                <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <p className="text-xs font-bold text-amber-800  mb-3 flex items-center gap-1.5">
                   <Star size={12} className="fill-amber-500 text-amber-500" /> Recommended for you
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -295,7 +295,7 @@ export default function CommunityHub() {
             )}
             {others.length > 0 && (
               <div>
-                {recommended.length > 0 && <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 mt-5">All Groups</p>}
+                {recommended.length > 0 && <p className="text-xs font-bold text-slate-400  mb-3 mt-5">All Groups</p>}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {others.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
                 </div>

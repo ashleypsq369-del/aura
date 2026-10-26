@@ -413,7 +413,7 @@ export default function AuraChat() {
                         </div>
                         {isPatient&&(
                           <div className="w-full">
-                            <p className="text-xs font-semibold uppercase tracking-wider text-center mb-3" style={{color:T.subText}}>How are you feeling today?</p>
+                            <p className="text-xs font-semibold  text-center mb-3" style={{color:T.subText}}>How are you feeling today?</p>
                             <div className="flex justify-center gap-3">
                               {FEEL_SCALE.map(f=>(
                                 <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
@@ -426,7 +426,7 @@ export default function AuraChat() {
                           </div>
                         )}
                         <div className="w-full">
-                          <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{color:T.subText}}>Suggested</p>
+                          <p className="text-xs font-semibold  mb-2" style={{color:T.subText}}>Suggested</p>
                           <div className="flex flex-wrap gap-2">
                             {prompts.map((p,i)=>(
                               <button key={i} onClick={()=>sendMessage(p)} disabled={loading}

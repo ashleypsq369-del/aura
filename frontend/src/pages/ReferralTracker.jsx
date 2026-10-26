@@ -306,7 +306,7 @@ export default function ReferralTracker() {
 
                       {isEditing && (
                         <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-600 space-y-3">
-                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Update Status</p>
+                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 ">Update Status</p>
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                             {Object.entries(STATUS_CONFIG).map(([val, cfg]) => {
                               const Icon = cfg.icon;
