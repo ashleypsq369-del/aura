@@ -1,4 +1,4 @@
-import { useState } from 'react';
+ï»¿import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -223,7 +223,7 @@ export default function AssessmentDashboard() {
       fullName: 'Referral Tracker',
       icon: Send,
       color: 'green',
-      description: 'Allied health referrals — physio, social work, chaplaincy, traditional healer, and more',
+      description: 'Allied health referrals Â· physio, social work, chaplaincy, traditional healer, and more',
       data: overview?.referrals,
       route: `/assessments/${patientId}/referrals`,
       frequency: 'As needed',
@@ -235,7 +235,7 @@ export default function AssessmentDashboard() {
       fullName: 'Spiritual & Wellbeing Care',
       icon: Heart,
       color: 'violet',
-      description: 'Spiritual care notes — inclusive of all faiths (Christian, Muslim, Traditional African, Hindu, secular, and others)',
+      description: 'Spiritual care notes Â· inclusive of all faiths (Christian, Muslim, Traditional African, Hindu, secular, and others)',
       data: overview?.spiritual_care,
       route: `/assessments/${patientId}/spiritual-care`,
       frequency: 'As needed',
@@ -259,7 +259,7 @@ export default function AssessmentDashboard() {
         <div>
           <h1 className="text-base font-bold text-white">Clinical Assessments</h1>
           <p className="text-sm text-purple-200 mt-0.5">
-            {patient?.full_name} · Validated palliative care assessment tools
+            {patient?.full_name} Â· Validated palliative care assessment tools
           </p>
         </div>
         <ClipboardList size={24} className="text-white/30" />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+ï»¿import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, AlertTriangle, CheckCircle, TrendingUp,
@@ -88,7 +88,7 @@ function GroupCard({ group, data, threshold }) {
               <div className="bg-white/60 rounded-lg p-3">
                 <p className="text-xs text-slate-500 font-semibold mb-1">Sample Size</p>
                 <p className="font-bold text-slate-900 text-lg">{data.count}</p>
-                {data.count < 20 && <p className="text-[10px] text-amber-600 mt-1">Small sample — results may be unreliable</p>}
+                {data.count < 20 && <p className="text-[10px] text-amber-600 mt-1">Small sample Â· results may be unreliable</p>}
               </div>
               <div className="bg-white/60 rounded-lg p-3">
                 <p className="text-xs text-slate-500 font-semibold mb-1">Std Deviation</p>
@@ -106,7 +106,7 @@ function GroupCard({ group, data, threshold }) {
                 <p className="text-xs font-bold text-red-800 mb-1 flex items-center gap-1.5"><AlertTriangle size={12}/> Action Required</p>
                 <p className="text-xs text-red-700">
                   This group has a {(Math.abs(disp)*100).toFixed(1)}% deviation from the population mean.
-                  {data.count < 30 ? ' Small sample — collect more data before acting.' : ' Investigate with clinical experts.'}
+                  {data.count < 30 ? ' Small sample Â· collect more data before acting.' : ' Investigate with clinical experts.'}
                 </p>
               </div>
             )}
@@ -148,9 +148,9 @@ export default function ModelBiasReportPage() {
   const catData = biasData?.by_category?.[cat] ?? {};
   const entries = Object.entries(catData);
   const flagged = entries.filter(([,d]) => Math.abs(d.disparity_from_mean??0) > threshold).length;
-  const grade = flagged === 0 ? { label:'A — Fair', color:'text-emerald-600', bg:'bg-emerald-50 border-emerald-200' }
-              : flagged <= 2  ? { label:'B — Moderate', color:'text-amber-600', bg:'bg-amber-50 border-amber-200' }
-              :                  { label:'C — Review', color:'text-red-600', bg:'bg-red-50 border-red-200' };
+  const grade = flagged === 0 ? { label:'A Â· Fair', color:'text-emerald-600', bg:'bg-emerald-50 border-emerald-200' }
+              : flagged <= 2  ? { label:'B Â· Moderate', color:'text-amber-600', bg:'bg-amber-50 border-amber-200' }
+              :                  { label:'C Â· Review', color:'text-red-600', bg:'bg-red-50 border-red-200' };
 
   const TABS = [
     { id:'fairness',    label:'Fairness Analysis', icon:BarChart3 },
@@ -162,7 +162,7 @@ export default function ModelBiasReportPage() {
   return (
     <div className="min-h-screen pb-12">
       <PageHeader image="/resources/african/african-health-tech.jpg" title="AI Fairness & Bias Report" icon={Brain}
-        subtitle="Ensuring equitable AI predictions across all patient demographics — Justice Principle">
+        subtitle="Ensuring equitable AI predictions across all patient demographics Â· Justice Principle">
         <button onClick={() => refetch()} className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-bold border border-white/30 transition">
           <RefreshCw size={15}/> Refresh
         </button>
@@ -187,7 +187,7 @@ export default function ModelBiasReportPage() {
                 { label:'Total Predictions', value: overall.total_predictions ?? 0, color:'text-blue-600', icon:Brain },
                 { label:'Avg Risk Score',    value: (overall.mean_risk_score??0).toFixed(3), color:'text-violet-600', icon:Activity },
                 { label:'High-Risk Count',   value: overall.high_risk_count ?? 0,  color:'text-red-500',  icon:AlertTriangle },
-                { label:'Fairness Grade',    value: grade.label.split(' — ')[0],   color: grade.color,    icon:Shield },
+                { label:'Fairness Grade',    value: grade.label.split(' Â· ')[0],   color: grade.color,    icon:Shield },
               ].map(({ label, value, color, icon: Icon }) => (
                 <div key={label} className="bg-white rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
                   <Icon size={18} className={color}/>
@@ -242,7 +242,7 @@ export default function ModelBiasReportPage() {
                     ['Total Overrides', overrideStats.total_overrides, 'text-slate-800'],
                     ['Avg Difference',  `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference||0)*100).toFixed(1)}%`, overrideStats.average_difference > 0 ? 'text-red-600' : 'text-blue-600'],
                     ['AI Bias Direction', overrideStats.direction||'Neutral', 'text-slate-700'],
-                    ['Recommendation', overrideStats.recommendation||'—', 'text-emerald-600'],
+                    ['Recommendation', overrideStats.recommendation||'â€”', 'text-emerald-600'],
                   ].map(([label, val, color]) => (
                     <div key={label} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
                       <p className="text-xs text-slate-500 mb-1">{label}</p>
@@ -274,8 +274,8 @@ export default function ModelBiasReportPage() {
                   {[
                     ['Clinician Agreement', `${impactData.clinician_agreement_rate||0}%`, 'text-emerald-600'],
                     ['High-Risk Alerts', impactData.high_risk_alerts||0, 'text-red-500'],
-                    ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||'—', 'text-blue-600'],
-                    ['Model Reliability', impactData.ai_benefit_indicators?.model_reliability||'—', impactData.ai_benefit_indicators?.model_reliability === 'High' ? 'text-emerald-600' : 'text-amber-600'],
+                    ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||'â€”', 'text-blue-600'],
+                    ['Model Reliability', impactData.ai_benefit_indicators?.model_reliability||'â€”', impactData.ai_benefit_indicators?.model_reliability === 'High' ? 'text-emerald-600' : 'text-amber-600'],
                   ].map(([label, val, color]) => (
                     <div key={label} className="bg-white rounded-xl border border-slate-200 shadow-sm px-4 py-3">
                       <p className="text-xs text-slate-500 mb-1">{label}</p>
@@ -284,7 +284,7 @@ export default function ModelBiasReportPage() {
                   ))}
                 </div>
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800">
-                  <strong>Academic Basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle — ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
+                  <strong>Academic Basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle Â· ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
                 </div>
               </>
             ) : <p className="text-slate-400 text-center py-12">No impact data available</p>}

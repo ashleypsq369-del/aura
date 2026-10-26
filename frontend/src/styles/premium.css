@@ -19,20 +19,8 @@
   --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='65' height='65' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
 }
 
-/* Grain overlay on page background */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: var(--grain);
-  background-repeat: repeat;
-  pointer-events: none;
-  z-index: 0;
-}
-
-html.dark body::before {
-  background-image: var(--grain-dark);
-}
+/* Grain overlay — disabled, keep clean */
+/* body::before removed — standard healthcare bg only */
 
 /* Grain on cards (subtle inner texture) */
 .card-grain {
@@ -110,37 +98,11 @@ html.dark .elevation-3 {
 }
 
 
-/* ── 3. AMBIENT BACKGROUND SYSTEM ────────────────────────────────────────────
-   Instead of flat grey, use very subtle ambient color gradients.
-   The technique: radial-gradient orbs at page corners.                    */
-
-.ambient-bg {
-  background:
-    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(13,148,136,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(2,132,199,0.03) 0%, transparent 60%),
-    #f8f7f5;
-}
-
-.ambient-bg-clinical {
-  background:
-    radial-gradient(ellipse 70% 50% at 0% 0%, rgba(2,132,199,0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(124,58,237,0.03) 0%, transparent 60%),
-    #f8f9fb;
-}
-
-html.dark .ambient-bg {
-  background:
-    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(13,148,136,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(2,132,199,0.05) 0%, transparent 60%),
-    #0f172a;
-}
-
-html.dark .ambient-bg-clinical {
-  background:
-    radial-gradient(ellipse 70% 50% at 0% 0%, rgba(2,132,199,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(124,58,237,0.06) 0%, transparent 60%),
-    #0f172a;
-}
+/* ── 3. AMBIENT BACKGROUND — removed, using standard flat bg ── */
+.ambient-bg { background: #f4f6f8; }
+.ambient-bg-clinical { background: #f4f6f8; }
+html.dark .ambient-bg { background: #0f172a; }
+html.dark .ambient-bg-clinical { background: #0f172a; }
 
 
 /* ── 4. SHARP CARD BORDERS ───────────────────────────────────────────────────
@@ -388,26 +350,24 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 .chip-pink    { background: #fdf2f8; color: #9d174d; border: 1px solid #f9a8d4; }
 
 
-/* ── 11. PAGE TINTS ──────────────────────────────────────────────────────────
-   Subtle ambient color per route — makes navigation feel distinct.         */
+/* ── 11. PAGE TINTS — removed, using standard flat bg for all routes ── */
+.page-tint-dashboard,
+.page-tint-patients,
+.page-tint-alerts,
+.page-tint-clinical,
+.page-tint-community,
+.page-tint-resources,
+.page-tint-journey,
+.page-tint-patient { background: #f4f6f8 !important; }
 
-.page-tint-dashboard  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.04) 0%, transparent 70%), #f8f7f5; }
-.page-tint-patients   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(37,99,235,0.04) 0%, transparent 70%), #f8f9fb; }
-.page-tint-alerts     { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(220,38,38,0.03) 0%, transparent 70%), #fdfafa; }
-.page-tint-clinical   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(124,58,237,0.04) 0%, transparent 70%), #f9f8fc; }
-.page-tint-community  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(219,39,119,0.03) 0%, transparent 70%), #fdf8fc; }
-.page-tint-resources  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.04) 0%, transparent 70%), #f7fdf9; }
-.page-tint-journey    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(217,119,6,0.04) 0%, transparent 70%), #fdfaf4; }
-.page-tint-patient    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(22,163,74,0.03) 0%, transparent 70%), #f7fdf9; }
-
-html.dark .page-tint-dashboard  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.08) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-patients   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(37,99,235,0.07) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-alerts     { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(220,38,38,0.07) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-clinical   { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(124,58,237,0.08) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-community  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(219,39,119,0.06) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-resources  { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(13,148,136,0.07) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-journey    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(217,119,6,0.07) 0%, transparent 60%), #0f172a; }
-html.dark .page-tint-patient    { background: radial-gradient(ellipse 100% 40% at 50% -20%, rgba(22,163,74,0.06) 0%, transparent 60%), #0f172a; }
+html.dark .page-tint-dashboard,
+html.dark .page-tint-patients,
+html.dark .page-tint-alerts,
+html.dark .page-tint-clinical,
+html.dark .page-tint-community,
+html.dark .page-tint-resources,
+html.dark .page-tint-journey,
+html.dark .page-tint-patient { background: #0f172a !important; }
 
 
 /* ── 12. DIVIDER WITH CHARACTER ──────────────────────────────────────────────

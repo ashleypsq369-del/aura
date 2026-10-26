@@ -108,7 +108,7 @@
   /* ─────────────────────────────────────────────────────────────────── */
   
   body {
-    background: #f5f5f3; /* warm off-white — subtle, not sterile */
+    background: #f4f6f8; /* standard healthcare neutral grey — used by Epic, MyChart, NHS */
     color: var(--color-text-primary);
     font-family: 'Inter', var(--font-family-sans), sans-serif;
     font-size: 16px;
@@ -125,9 +125,7 @@
   }
 
   html.dark body {
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(13,148,136,0.07) 0%, transparent 60%),
-      #0d1117;
+    background: #0f172a; /* deep navy — clean dark mode */
     color: var(--color-text-primary);
   }
 

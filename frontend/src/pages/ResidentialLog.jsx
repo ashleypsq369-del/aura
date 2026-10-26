@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * ResidentialLog.jsx - Long-Term Residential Care
  * =================================================
  * Combined residential care log + incident report for care aides.
@@ -106,7 +106,7 @@ export default function ResidentialLog() {
           <BedDouble className="w-7 h-7 text-white" />
           <div>
             <h1 className="text-xl font-serif font-bold text-white">Residential Care Log</h1>
-            <p className="text-purple-100 text-sm">Long-Term Residential Care · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <p className="text-purple-100 text-sm">Long-Term Residential Care Â· {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
       </div>
@@ -145,9 +145,9 @@ export default function ResidentialLog() {
             {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => {
               const baseOpts = [
                 { value: 'full',    label: 'Full'       },
-                { value: '3/4',     label: '¾ portion'  },
-                { value: 'half',    label: '½ portion'  },
-                { value: 'quarter', label: '¼ portion'  },
+                { value: '3/4',     label: 'â€” portion'  },
+                { value: 'half',    label: 'â€” portion'  },
+                { value: 'quarter', label: 'â€” portion'  },
                 { value: 'refused', label: 'Refused'    },
               ];
               const fluidOpts = [
@@ -164,7 +164,7 @@ export default function ResidentialLog() {
                   size="sm"
                   value={intake[meal] || null}
                   onChange={v => setIntake(p => ({ ...p, [meal]: v || '' }))}
-                  placeholder="Select…"
+                  placeholder="Selectâ€”"
                   options={opts}
                 />
               );
@@ -195,7 +195,7 @@ export default function ResidentialLog() {
                   value={incidentType || null}
                   onChange={v => setIncidentType(v || 'fall')}
                   allowClear={false}
-                  placeholder="Select incident type…"
+                  placeholder="Select incident typeâ€”"
                   options={[
                     { value: 'fall',             label: 'Fall' },
                     { value: 'medication_error', label: 'Medication Error' },

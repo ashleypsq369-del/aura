@@ -1,4 +1,4 @@
-/**
+ï»¿/**
  * DailyCareLog.jsx - Home-Based Palliative Care
  * ================================================
  * Home caregiver daily log: tasks completed, patient status,
@@ -106,7 +106,7 @@ export default function DailyCareLog() {
           <Home className="w-7 h-7 text-white" />
           <div>
             <h1 className="text-xl font-serif font-bold text-white">Daily Home Care Log</h1>
-            <p className="text-green-100 text-sm">Home-Based Care · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            <p className="text-green-100 text-sm">Home-Based Care Â· {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
           </div>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function DailyCareLog() {
               accent="teal"
               value={mood || null}
               onChange={v => setMood(v || '')}
-              placeholder="Select mood…"
+              placeholder="Select moodâ€”"
               options={[
                 { value: 'calm',         label: 'Calm',         sublabel: '??' },
                 { value: 'cheerful',     label: 'Cheerful',     sublabel: '??' },
@@ -166,7 +166,7 @@ export default function DailyCareLog() {
               accent="teal"
               value={appetite || null}
               onChange={v => setAppetite(v || '')}
-              placeholder="Select appetite…"
+              placeholder="Select appetiteâ€”"
               options={[
                 { value: 'good', label: 'Good',  sublabel: 'Ate well'       },
                 { value: 'fair', label: 'Fair',  sublabel: 'Ate some'       },
