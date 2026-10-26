@@ -132,7 +132,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
             {/* Header */}
             <div className={`${
               chatType === 'chatbot' 
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600' 
+                ? 'bg-teal-600 hover:bg-teal-700' 
                 : 'bg-teal-600'
             } text-white px-6 py-4 rounded-t-2xl`}>
               <div className="flex items-center justify-between">
@@ -191,7 +191,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {activeTab === 'profile' && (
                 <div className="space-y-4">
                   <div className="text-center pb-4 border-b border-gray-200">
-                    <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-3">
+                    <div className="w-24 h-24 mx-auto bg-gradient-to-br bg-teal-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-3">
                       {user?.full_name?.charAt(0).toUpperCase() || '¤'}
                     </div>
                     <h3 className="text-xl font-bold text-gray-900">{user?.full_name}</h3>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
@@ -224,7 +224,7 @@ export default function GriefProgressTracker({ screeningData }) {
 
             <button
               onClick={() => setShowScreeningForm(true)}
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
             >
               Retake Screening
             </button>
@@ -236,7 +236,7 @@ export default function GriefProgressTracker({ screeningData }) {
             </p>
             <button
               onClick={() => setShowScreeningForm(true)}
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
             >
               Start Grief Screening
             </button>
@@ -263,7 +263,7 @@ export default function GriefProgressTracker({ screeningData }) {
           Grief Journal
         </h3>
 
-        <div className="mb-6 p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200">
+        <div className="mb-6 p-4 bg-gradient-to-br bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
           <p className="text-purple-900 font-semibold mb-2">Today's Prompt:</p>
           <p className="text-purple-800 italic">"{selectedPrompt}"</p>
         </div>

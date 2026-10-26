@@ -165,7 +165,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       </div>
 
       {/* Quote */}
-      <div className="relative bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl p-6 overflow-hidden">
+      <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
         <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
         <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
           "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
@@ -176,7 +176,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       {/* Quick access · compact */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Track My Grief',   sub: 'Screening & progress',  color: 'from-purple-700 to-violet-800', img: '/resources/african/african-prayer-peace.jpg',    tab: 'grief' },
+          { label: 'Track My Grief',   sub: 'Screening & progress',  color: 'from-teal-700 to-teal-800', img: '/resources/african/african-prayer-peace.jpg',    tab: 'grief' },
           { label: 'Join a Group',     sub: 'Peer support community', color: 'from-teal-600 to-emerald-700',  img: '/resources/african/african-community-group.jpg', tab: 'support' },
           { label: 'Get Counseling',   sub: 'Professional support',   color: 'from-rose-600 to-pink-700',    img: '/resources/african/african-nurse-patient.jpg',   tab: 'counseling' },
           { label: 'Learn & Heal',     sub: 'Articles & guides',      color: 'from-amber-600 to-orange-600', img: '/resources/african/journal-writing.jpg',         tab: 'resources' },

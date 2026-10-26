@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Star, Send, Check } from 'lucide-react';
 import { usabilityAPI } from '../api/client';
@@ -83,7 +83,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 left-6 w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full shadow-2xl flex items-center justify-center z-40 hover:shadow-3xl transition-all border-4 border-white group"
+            className="fixed bottom-6 left-6 w-14 h-14 bg-teal-600 hover:bg-teal-700 rounded-full shadow-2xl flex items-center justify-center z-40 hover:shadow-3xl transition-all border-4 border-white group"
             title="Give Feedback"
           >
             <MessageSquare className="text-white" size={24} strokeWidth={2.5} />
@@ -115,7 +115,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
               className="fixed bottom-6 left-6 w-96 bg-white rounded-2xl shadow-2xl z-50 border-3 border-purple-500"
             >
               {/* Header */}
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-3 rounded-t-2xl flex items-center justify-between">
+              <div className="bg-gradient-to-r bg-teal-600 dark:bg-teal-700 text-white px-5 py-3 rounded-t-2xl flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MessageSquare size={22} strokeWidth={2.5} />
                   <div>

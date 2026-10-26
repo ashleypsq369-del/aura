@@ -101,7 +101,7 @@ export default function ResidentialLog() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto px-4 py-6 space-y-5">
 
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-5 shadow-lg border-2 border-purple-400">
+      <div className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20 border-2 border-purple-400">
         <div className="flex items-center gap-3">
           <BedDouble className="w-7 h-7 text-white" />
           <div>
@@ -215,7 +215,7 @@ export default function ResidentialLog() {
         </div>
 
         <button type="submit"
-          className={`w-full flex items-center justify-center gap-2 py-3.5 font-bold rounded-xl hover:shadow-lg transition border-2 text-white ${incident ? 'bg-red-600 border-red-600' : 'bg-gradient-to-r from-purple-600 to-indigo-600 border-purple-500'}`}>
+          className={`w-full flex items-center justify-center gap-2 py-3.5 font-bold rounded-xl hover:shadow-lg transition border-2 text-white ${incident ? 'bg-red-600 border-red-600' : 'bg-gradient-to-r bg-teal-600 border-teal-600 hover:bg-teal-700'}`}>
           <Send size={18} /> {incident ? 'Submit Log + Incident Report' : 'Submit Residential Care Log'}
         </button>
       </form>

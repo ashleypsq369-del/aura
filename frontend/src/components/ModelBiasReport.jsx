@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+﻿/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, AlertTriangle, CheckCircle, TrendingUp, Users, Filter } from 'lucide-react';
@@ -86,7 +86,7 @@ export default function ModelBiasReport() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white">
+      <div className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20 dark:border-violet-700">
         <div className="flex items-center gap-3 mb-2">
           <BarChart3 size={32} strokeWidth={2.5} />
           <div>
@@ -131,7 +131,7 @@ export default function ModelBiasReport() {
                 onClick={() => setSelectedCategory(cat.value)}
                 className={`p-3 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
                   selectedCategory === cat.value
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-2 border-purple-500'
+                    ? 'bg-gradient-to-r bg-teal-600 text-white border-2 border-teal-600'
                     : 'bg-slate-100 text-slate-700 border-2 border-slate-300 hover:border-purple-400'
                 }`}
               >
