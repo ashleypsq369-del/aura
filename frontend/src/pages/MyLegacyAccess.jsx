@@ -1,5 +1,5 @@
 /**
- * MyLegacyAccess — Heir View
+ * MyLegacyAccess ï¿½ Heir View
  * --------------------------
  * Shows the digital legacy a deceased patient left for YOU (as their designated heir).
  * Fixed all duplicate className bugs, missing journal section, wrong vault link.
@@ -18,7 +18,7 @@ import apiClient from '../api/client';
 import PageHeader from '../components/PageHeader';
 
 function fmt(d, opts = { year: 'numeric', month: 'long', day: 'numeric' }) {
-  return d ? new Date(d).toLocaleDateString('en-GB', opts) : '—';
+  return d ? new Date(d).toLocaleDateString('en-GB', opts) : 'ï¿½';
 }
 function fmtShort(d) {
   return fmt(d, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -69,7 +69,7 @@ export default function MyLegacyAccess() {
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
         <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-3" />
-        <p className="text-slate-500 text-sm">Loading your legacy access…</p>
+        <p className="text-slate-500 text-sm">Loading your legacy accessï¿½</p>
       </div>
     </div>
   );
@@ -109,12 +109,12 @@ export default function MyLegacyAccess() {
     </div>
   );
 
-  // -- Detail view — pending -------------------------------------------------
+  // -- Detail view ï¿½ pending -------------------------------------------------
   if (selected && info && !info.is_activated) return (
     <DetailPendingView info={info} onBack={() => setSelected(null)} />
   );
 
-  // -- Detail view — activated -----------------------------------------------
+  // -- Detail view ï¿½ activated -----------------------------------------------
   if (selected && info?.is_activated) return (
     <DetailActivatedView
       info={info}
@@ -141,7 +141,7 @@ function ListView({ legacyAccess, onSelect }) {
       <PageHeader
         image="/resources/african/african-elder-care.jpg"
         title="My Legacy Access"
-        subtitle={`You have been designated as an heir for ${legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`} — preserved with love`}
+        subtitle={`You have been designated as an heir for ${legacyAccess.length === 1 ? '1 person' : `${legacyAccess.length} people`} ï¿½ preserved with love`}
         icon={HeartHandshake}
       />
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-4">
@@ -159,12 +159,12 @@ function ListView({ legacyAccess, onSelect }) {
               onClick={() => onSelect(item.patient_id)}
             className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
 
-              {/* Colour strip */}
-              <div className={`h-1.5 w-full ${isPending ? 'bg-gradient-to-r from-amber-400 to-orange-400' : 'bg-gradient-to-r from-purple-600 to-violet-600'}`} />
+              {/* Semantic colour strip: amber = pending, teal = active */}
+              <div className={`h-1 w-full ${isPending ? 'bg-amber-400' : 'bg-teal-500'}`} />
 
               <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-start gap-5">
-                {/* Avatar */}
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white text-xl font-bold flex-shrink-0 shadow-md ${isPending ? 'bg-gradient-to-br from-amber-500 to-orange-500' : 'bg-gradient-to-br from-purple-600 to-violet-700'}`}>
+              {/* Avatar */}
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 text-xl font-bold flex-shrink-0 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
                   {initials}
                 </div>
 
@@ -188,7 +188,7 @@ function ListView({ legacyAccess, onSelect }) {
                         {isPending ? <Clock size={11} /> : <Unlock size={11} />}
                         {isPending ? 'Pending' : 'Active Access'}
                       </span>
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
                         {item.access_level === 'full' ? 'Full Access' : item.access_level === 'memories_only' ? 'Memories Only' : 'Messages Only'}
                       </span>
                     </div>
@@ -206,9 +206,9 @@ function ListView({ legacyAccess, onSelect }) {
 
                   {/* Personal note */}
                   {item.notes_from_patient && (
-                    <div className="bg-purple-50 border-l-4 border-purple-400 rounded-r-xl px-4 py-3 mb-3">
-                      <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-1">Personal message for you</p>
-                      <p className="text-slate-700 text-sm italic leading-relaxed">"{item.notes_from_patient}"</p>
+                    <div className="bg-slate-50 dark:bg-slate-800 border-l-4 border-teal-400 rounded-r-xl px-4 py-3 mb-3">
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Personal message for you</p>
+                      <p className="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">"{item.notes_from_patient}"</p>
                     </div>
                   )}
 
@@ -217,7 +217,7 @@ function ListView({ legacyAccess, onSelect }) {
                     <span className="text-xs text-slate-400">
                       {item.designated_at ? `Designated ${fmtShort(item.designated_at)}` : ''}
                     </span>
-                    <button className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all shadow-sm group-hover:shadow-md ${isPending ? 'bg-amber-500 hover:bg-amber-600' : 'bg-purple-700 hover:bg-purple-800'}`}>
+                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all shadow-sm group-hover:shadow-md bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600">
                       {isPending ? 'View Details' : 'Open Legacy'}
                       <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                     </button>
@@ -297,7 +297,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
       <PageHeader
         image="/resources/african/african-family-support.jpg"
         title={`${info.patient_name}'s Legacy`}
-        subtitle={`Your ${info.relationship}${info.deceased_at ? ` · Passed ${fmtShort(info.deceased_at)}` : ''}`}
+        subtitle={`Your ${info.relationship}${info.deceased_at ? ` ï¿½ Passed ${fmtShort(info.deceased_at)}` : ''}`}
         icon={HeartHandshake}
       >
         <button onClick={onBack}
@@ -335,7 +335,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <h3 className="font-semibold text-slate-800 dark:text-white">{item.title || 'Untitled'}</h3>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} ï¿½ {fmtShort(item.delivered_at)}</p>
                       </div>
                       <FileText size={16} className="text-slate-300 flex-shrink-0 mt-1" />
                     </div>
@@ -405,7 +405,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                       <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Personal message for you</p>
                     </div>
                     <p className="text-slate-700 italic leading-relaxed">"{info.notes_from_patient}"</p>
-                    <p className="text-xs text-slate-400 mt-3 text-right">— {info.patient_name}</p>
+                    <p className="text-xs text-slate-400 mt-3 text-right">ï¿½ {info.patient_name}</p>
                   </div>
                 )}
                 <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
@@ -419,7 +419,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                     ].map(([label, val]) => (
                       <div key={label} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                         <p className="text-xs text-slate-400 uppercase tracking-wide mb-0.5">{label}</p>
-                        <p className="text-sm font-semibold text-slate-800">{val || '—'}</p>
+                        <p className="text-sm font-semibold text-slate-800">{val || 'ï¿½'}</p>
                       </div>
                     ))}
                   </div>

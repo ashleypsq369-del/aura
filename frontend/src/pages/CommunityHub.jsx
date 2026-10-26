@@ -189,17 +189,14 @@ export default function CommunityHub() {
             return (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                 data-tip={`Filter by ${tab.label}`}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap border-2 transition-all flex-shrink-0 ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap border transition-all flex-shrink-0 ${
                   activeTab === tab.id
-                    ? 'text-white border-transparent shadow-sm'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300 hover:text-teal-700'
-                }`}
-                style={activeTab === tab.id ? {
-                  background: ['linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#1d4ed8,#0891b2)','linear-gradient(135deg,#7c3aed,#4338ca)','linear-gradient(135deg,#db2777,#e11d48)','linear-gradient(135deg,#059669,#0d9488)'][tabIdx % 5]
-                } : {}}>
+                    ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
+                }`}>
                 <Icon size={14} />
                 {tab.label}
-                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-500'}`}>{count}</span>
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}`}>{count}</span>
               </button>
             );
           })}
@@ -248,8 +245,7 @@ export default function CommunityHub() {
                       <button key={g.id}
                         onClick={() => navigate(`/community/${g.id}`)}
                         className="text-left flex items-start gap-3 p-3 bg-slate-50 hover:bg-teal-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl border border-slate-200 hover:border-teal-300 dark:border-slate-600 transition-all group shadow-sm">
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                          style={{ backgroundColor: color }}>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-200">
                           {groupInitials(g.name)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -319,7 +315,6 @@ export default function CommunityHub() {
 
 // -- Group card -------------------------------------------------------------
 function GroupCard({ group, onToggle, pending, onOpen }) {
-  const color = groupColor(group.name);
   const initials = groupInitials(group.name);
 
   return (
@@ -327,87 +322,78 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onOpen}
-      className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
+      className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
     >
-      {/* Top accent bar */}
-      <div className="h-1.5 w-full flex-shrink-0" style={{ background: `linear-gradient(90deg, ${color}, ${color}88)` }} />
+      {/* Single teal top accent bar — consistent across all cards */}
+      <div className="h-0.5 w-full flex-shrink-0 bg-teal-500" />
 
-      <div className="p-5 flex flex-col flex-1 gap-4">
+      <div className="p-4 flex flex-col flex-1 gap-3">
 
         {/* Header row: avatar + name + badges */}
         <div className="flex items-start gap-3">
-          {/* Avatar */}
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-sm select-none"
-            style={{ backgroundColor: color }}
-          >
+          {/* Neutral monochrome avatar */}
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 select-none bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
             {initials}
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
-              <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug line-clamp-2 group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
+              <h3 className="font-semibold text-slate-900 dark:text-white text-sm leading-snug line-clamp-2 group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
                 {group.name}
               </h3>
               {group.joined && (
-                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0"
-                  style={{ background: `${color}18`, color }}>
+                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800">
                   <Check size={9} /> Joined
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
               <Users size={10} />
               <span>{group.member_count ?? 0} members</span>
               {group.is_recommended && (
-                <span className="ml-1 flex items-center gap-0.5 text-amber-600 dark:text-amber-400 font-semibold">
-                  <Star size={9} className="fill-amber-500 text-amber-500" /> Recommended
-                </span>
+                <span className="ml-1 text-amber-600 dark:text-amber-400 font-medium">· Recommended</span>
               )}
             </p>
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2 flex-1">
+        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 flex-1">
           {group.description || 'A supportive community group.'}
         </p>
 
-        {/* Tags */}
+        {/* Tags — neutral grey pills */}
         {group.condition_tags?.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {group.condition_tags.slice(0, 3).map(t => (
-              <span key={t}
-                className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border"
-                style={{ background: `${color}12`, color, borderColor: `${color}40` }}>
+              <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
                 {t}
               </span>
             ))}
             {group.condition_tags.length > 3 && (
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-700 dark:text-slate-400">
+              <span className="px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-700">
                 +{group.condition_tags.length - 3}
               </span>
             )}
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
+        {/* Actions — single teal primary button, neutral secondary */}
+        <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">
           <button
             onClick={e => { e.stopPropagation(); onToggle(); }}
             disabled={pending}
-            className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl border-2 transition flex-shrink-0 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition flex-shrink-0 ${
               group.joined
-                ? 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
-                : 'bg-white text-teal-700 border-teal-300 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
+                ? 'bg-white text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
+                : 'bg-white text-teal-700 border-teal-200 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
             }`}
           >
             {group.joined ? 'Leave' : <><UserPlus size={11} /> Join</>}
           </button>
           <button
             onClick={e => { e.stopPropagation(); onOpen(); }}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-bold text-white rounded-xl transition hover:opacity-90 active:scale-95"
-            style={{ backgroundColor: color }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-white rounded-lg bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600 transition active:scale-95"
           >
             <MessagesSquare size={12} /> Open Group
           </button>
