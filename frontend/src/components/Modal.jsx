@@ -1,177 +1,179 @@
 /**
- * Modal.jsx — T4TSA-inspired universal modal
- * ============================================
- * Dark glassmorphism backdrop · scale-in spring animation
- * Gradient header · rounded-2xl panel · light + dark mode
- * WCAG 2.1 AA: focus trap, aria-modal, escape key, body scroll lock
+ * Modal.jsx — clean, professional healthcare modal
+ * ==================================================
+ * White header with left-accent colour strip. No dark gradients.
+ * WCAG 2.1 AA: focus trap, aria-modal, escape key, body scroll lock.
  */
-
 import { useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useAppSettings } from '../context/AppSettingsContext';
 
-const SIZE_CLASSES = {
-  sm: 'max-w-sm',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
+const SIZE_CLASSES = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
+
+const ACCENT_COLORS = {
+  teal:   { light: '#0d9488', dark: '#2dd4bf' },
+  violet: { light: '#7c3aed', dark: '#a78bfa' },
+  red:    { light: '#dc2626', dark: '#f87171' },
+  amber:  { light: '#d97706', dark: '#fbbf24' },
+  blue:   { light: '#2563eb', dark: '#60a5fa' },
+  slate:  { light: '#475569', dark: '#94a3b8' },
+  green:  { light: '#059669', dark: '#34d399' },
 };
 
-const ACCENT_GRADS = {
-  teal:   'from-teal-600 to-cyan-700',
-  violet: 'from-violet-600 to-purple-700',
-  red:    'from-red-600 to-rose-700',
-  amber:  'from-amber-500 to-orange-600',
-  blue:   'from-blue-600 to-indigo-700',
-  slate:  'from-slate-700 to-slate-900',
+const ICON_BGS = {
+  teal:   { light: '#f0fdf4', dark: 'rgba(13,148,136,0.15)'  },
+  violet: { light: '#f5f3ff', dark: 'rgba(124,58,237,0.15)' },
+  red:    { light: '#fef2f2', dark: 'rgba(220,38,38,0.15)'  },
+  amber:  { light: '#fffbeb', dark: 'rgba(217,119,6,0.15)'  },
+  blue:   { light: '#eff6ff', dark: 'rgba(29,78,216,0.15)'  },
+  slate:  { light: '#f8fafc', dark: 'rgba(71,85,105,0.15)'  },
+  green:  { light: '#f0fdf4', dark: 'rgba(5,150,105,0.15)'  },
 };
 
 export default function Modal({
-  isOpen,
-  onClose,
-  title,
+  isOpen, onClose,
+  title, description,
   size = 'md',
   closeOnBackdrop = true,
   showClose = true,
-  footerContent,
-  children,
+  footerContent, children,
   zIndex = 50,
   accent = 'teal',
   icon: Icon,
-  description,
 }) {
-  const panelRef = useRef(null);
-  const previousActiveRef = useRef(null);
-  const grad = ACCENT_GRADS[accent] || ACCENT_GRADS.teal;
+  const panelRef   = useRef(null);
+  const prevFocus  = useRef(null);
+  const { theme }  = useAppSettings();
+  const isDark     = theme === 'dark';
 
-  /* ── Body scroll lock ── */
+  const accentClr = (ACCENT_COLORS[accent] || ACCENT_COLORS.teal)[isDark ? 'dark' : 'light'];
+  const iconBg    = (ICON_BGS[accent]       || ICON_BGS.teal)[isDark ? 'dark' : 'light'];
+  const headerBg  = isDark ? '#1e293b' : '#ffffff';
+  const headerBdr = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const panelBg   = isDark ? '#1e293b' : '#ffffff';
+  const panelBdr  = isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0';
+  const bodyClr   = isDark ? '#e2e8f0' : '#1e293b';
+  const footerBg  = isDark ? 'rgba(255,255,255,0.03)' : '#f8fafc';
+  const closeBg   = isDark ? 'rgba(255,255,255,0.07)' : '#f1f5f9';
+  const closeClr  = isDark ? '#94a3b8' : '#64748b';
+
+  /* body scroll lock */
   useEffect(() => {
     if (!isOpen) return;
     const y = window.scrollY;
-    document.body.style.overflow = 'hidden';
-    document.body.style.top = `-${y}px`;
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
+    Object.assign(document.body.style, { overflow: 'hidden', top: `-${y}px`, position: 'fixed', width: '100%' });
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
+      Object.assign(document.body.style, { overflow: '', top: '', position: '', width: '' });
       window.scrollTo(0, y);
     };
   }, [isOpen]);
 
-  /* ── Focus management ── */
+  /* focus management */
   useEffect(() => {
     if (isOpen) {
-      previousActiveRef.current = document.activeElement;
+      prevFocus.current = document.activeElement;
       const t = setTimeout(() => {
         panelRef.current?.querySelector(
-          'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'
+          'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
         )?.focus();
       }, 80);
       return () => clearTimeout(t);
-    } else {
-      previousActiveRef.current?.focus();
-    }
+    } else { prevFocus.current?.focus(); }
   }, [isOpen]);
 
-  /* ── Keyboard: Escape + focus trap ── */
-  const handleKeyDown = useCallback((e) => {
+  /* keyboard */
+  const handleKey = useCallback((e) => {
     if (!isOpen) return;
     if (e.key === 'Escape') { e.stopPropagation(); onClose?.(); return; }
     if (e.key === 'Tab' && panelRef.current) {
-      const nodes = Array.from(panelRef.current.querySelectorAll(
+      const els = Array.from(panelRef.current.querySelectorAll(
         'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
       ));
-      if (!nodes.length) return;
-      if (e.shiftKey && document.activeElement === nodes[0]) { e.preventDefault(); nodes[nodes.length - 1].focus(); }
-      else if (!e.shiftKey && document.activeElement === nodes[nodes.length - 1]) { e.preventDefault(); nodes[0].focus(); }
+      if (!els.length) return;
+      if (e.shiftKey && document.activeElement === els[0]) { e.preventDefault(); els[els.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === els[els.length - 1]) { e.preventDefault(); els[0].focus(); }
     }
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [handleKey]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        /* ── Backdrop: heavy dark blur (T4TSA style) ── */
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          style={{ zIndex }}
-          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          style={{ zIndex, background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(4px)' }}
+          className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4"
           onClick={() => closeOnBackdrop && onClose?.()}
         >
-          {/* ── Panel ── */}
           <motion.div
             ref={panelRef}
-            role="dialog"
-            aria-modal="true"
+            role="dialog" aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}
-            initial={{ opacity: 0, scale: 0.93, y: 28 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.93, y: 16 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 360, mass: 0.7 }}
-            style={{ zIndex: zIndex + 1 }}
-            className={`
-              relative flex flex-col w-full ${SIZE_CLASSES[size] || SIZE_CLASSES.md}
-              rounded-t-2xl sm:rounded-2xl
-              max-h-[92dvh] sm:max-h-[90dvh]
-              bg-white dark:bg-slate-900
-              shadow-2xl shadow-black/50
-              border border-white/10
-              overflow-hidden
-            `}
-            onClick={(e) => e.stopPropagation()}
+            exit={{ opacity: 0, scale: 0.95, y: 12 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 380, mass: 0.6 }}
+            style={{
+              zIndex: zIndex + 1,
+              background: panelBg,
+              border: `1px solid ${panelBdr}`,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.10)',
+            }}
+            className={`relative flex flex-col w-full ${SIZE_CLASSES[size] || SIZE_CLASSES.md} rounded-t-2xl sm:rounded-2xl max-h-[92dvh] sm:max-h-[90dvh] overflow-hidden`}
+            onClick={e => e.stopPropagation()}
           >
-            {/* ── Gradient header (T4TSA style) ── */}
+            {/* Header */}
             {(title || showClose) && (
-              <div className={`bg-gradient-to-r ${grad} px-5 py-4 flex-shrink-0 relative overflow-hidden`}>
-                <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"/>
-                <div className="relative z-10 flex items-center gap-3">
-                  {Icon && (
-                    <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                      <Icon size={17} className="text-white"/>
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    {title && (
-                      <h2 id="modal-title" className="text-base font-bold text-white leading-tight pr-6 truncate">
-                        {title}
-                      </h2>
-                    )}
-                    {description && (
-                      <p className="text-xs text-white/70 mt-0.5 truncate">{description}</p>
-                    )}
+              <div
+                className="flex-shrink-0 flex items-center gap-3 px-5 py-4 border-b"
+                style={{ background: headerBg, borderColor: headerBdr, borderLeft: `4px solid ${accentClr}` }}
+              >
+                {Icon && (
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: iconBg }}>
+                    <Icon size={17} style={{ color: accentClr }} />
                   </div>
-                  {showClose && (
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="absolute top-0 right-0 w-9 h-9 flex items-center justify-center rounded-xl bg-white/15 hover:bg-white/30 transition-colors focus:outline-none focus:ring-2 focus:ring-white/60"
-                      aria-label="Close"
-                    >
-                      <X size={16} className="text-white"/>
-                    </button>
+                )}
+                <div className="flex-1 min-w-0">
+                  {title && (
+                    <h2 id="modal-title" className="text-sm font-bold leading-tight truncate"
+                      style={{ color: isDark ? '#f1f5f9' : '#0f172a' }}>
+                      {title}
+                    </h2>
+                  )}
+                  {description && (
+                    <p className="text-xs mt-0.5 truncate"
+                      style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                      {description}
+                    </p>
                   )}
                 </div>
+                {showClose && (
+                  <button type="button" onClick={onClose} aria-label="Close"
+                    className="w-8 h-8 flex items-center justify-center rounded-xl transition-colors flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/50"
+                    style={{ background: closeBg, color: closeClr }}>
+                    <X size={15} />
+                  </button>
+                )}
               </div>
             )}
 
-            {/* ── Scrollable body ── */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 dark:text-slate-200">
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5"
+              style={{ color: bodyClr }}>
               {children}
             </div>
 
-            {/* ── Sticky footer ── */}
+            {/* Footer */}
             {footerContent && (
-              <div className="flex-shrink-0 px-5 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+              <div className="flex-shrink-0 px-5 py-4 border-t"
+                style={{ background: footerBg, borderColor: headerBdr }}>
                 {footerContent}
               </div>
             )}
@@ -182,16 +184,10 @@ export default function Modal({
   );
 }
 
-/* ── ModalFooter ── right-aligned action row */
 export function ModalFooter({ children, className = '' }) {
-  return (
-    <div className={`flex items-center justify-end gap-3 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`flex items-center justify-end gap-3 ${className}`}>{children}</div>;
 }
 
-/* ── ModalSection ── labelled content block */
 export function ModalSection({ label, children, className = '' }) {
   return (
     <div className={`space-y-2 ${className}`}>
@@ -201,7 +197,6 @@ export function ModalSection({ label, children, className = '' }) {
   );
 }
 
-/* ── ConfirmModal ── two-button confirm dialog */
 export function ConfirmModal({
   isOpen, onClose, onConfirm,
   title = 'Are you sure?', message,
@@ -214,13 +209,12 @@ export function ConfirmModal({
     : 'bg-teal-600 hover:bg-teal-700 text-white';
 
   return (
-    <Modal
-      isOpen={isOpen} onClose={onClose} title={title} size="sm"
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm"
       accent={confirmVariant === 'danger' ? 'red' : 'teal'}
       footerContent={
         <ModalFooter>
           <button type="button" onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border-2 border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+            className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
             {cancelLabel}
           </button>
           <button type="button" onClick={onConfirm} disabled={isLoading}
