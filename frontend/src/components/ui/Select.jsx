@@ -59,7 +59,7 @@ export default function Select({
             flex items-center justify-between gap-2
             w-full px-3 ${h}
             border-2 border-slate-300 rounded-xl
-            bg-white text-slate-900
+            bg-[#f0f6fa] text-slate-900
             hover:border-teal-400
             focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -80,7 +80,7 @@ export default function Select({
             sideOffset={4}
             className="
               z-[9999] overflow-hidden
-              bg-white rounded-xl shadow-xl border-2 border-slate-200
+              bg-[#f0f6fa] rounded-xl shadow-xl border-2 border-slate-200
               max-h-[280px]
               w-[var(--radix-select-trigger-width)]
               min-w-[180px]

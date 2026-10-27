@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Heart, Activity, AlertCircle, CheckCircle } from 'lucide-react';
 
 /**
@@ -70,7 +70,7 @@ export default function PatientRiskSummary({ prediction }) {
       </div>
 
       {/* Main Message */}
-      <div className={`bg-white rounded-lg p-4 mb-4 border-2 border-${config.color}-200`}>
+      <div className={`bg-[#f0f6fa] rounded-lg p-4 mb-4 border-2 border-${config.color}-200`}>
         <p className="text-gray-800 font-medium leading-relaxed">
           {config.message}
         </p>

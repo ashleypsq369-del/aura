@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Bereavement Support Dashboard
  * -----------------------------
  * WHO: Bereaved family members AFTER a patient has passed away.
@@ -97,7 +97,7 @@ export default function BereavedFamilyDashboard() {
       />
 
       {/* -- Sticky tab bar ----------------------------------------- */}
-      <div className="sticky top-0 z-20 bg-white border-b border-slate-200 shadow-sm">
+      <div className="sticky top-0 z-20 bg-[#f0f6fa] border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {visibleTabs.map(({ id, label, icon: Icon }) => (
@@ -165,7 +165,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       </div>
 
       {/* Quote */}
-      <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
+      <div className="relative bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
         <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
         <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
           "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
@@ -213,7 +213,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       {/* Message care team button */}
       <button
         onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
-        className="w-full flex items-center gap-3 bg-white border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
+        className="w-full flex items-center gap-3 bg-[#f0f6fa] border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
       >
         <div className="w-9 h-9 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
           <MessageCircle size={16} className="text-teal-600" />
@@ -292,7 +292,7 @@ function SupportGroupsTab() {
         <div className="absolute inset-0 p-6 flex flex-col justify-end">
           <h2 className="text-white font-bold text-xl mb-1">Bereavement Support Groups</h2>
           <p className="text-teal-100 text-sm mb-4">Connect with others who truly understand what you are going through</p>
-          <Link to="/community" className="inline-flex items-center gap-2 bg-white text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
+          <Link to="/community" className="inline-flex items-center gap-2 bg-[#f0f6fa] text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
             <Users size={14} /> Join Community <ArrowRight size={13} />
           </Link>
         </div>

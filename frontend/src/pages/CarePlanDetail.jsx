@@ -53,7 +53,7 @@ function GoalCard({ goal, patientId, onUpdate }) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-white rounded-xl border-2 ${cfg.border} overflow-hidden`}
+      className={`bg-[#f0f6fa] rounded-xl border-2 ${cfg.border} overflow-hidden`}
     >
       <div
         className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50 transition-colors"

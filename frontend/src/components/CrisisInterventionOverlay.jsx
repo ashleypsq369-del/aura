@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Phone, Users, MessageCircle, X, Heart, ExternalLink } from 'lucide-react';
@@ -165,7 +165,7 @@ export default function CrisisInterventionOverlay({
                   </p>
                   <button
                     onClick={onTalkToHuman}
-                    className="w-full bg-white text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
+                    className="w-full bg-[#f0f6fa] text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
                   >
                     <MessageCircle size={24} strokeWidth={2.5} />
                     Connect with Your Care Team

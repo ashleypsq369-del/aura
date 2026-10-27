@@ -193,7 +193,7 @@ export default function Resources() {
             {/* ML-powered personalised recommendations */}
             {mlRecommended?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="mb-5 bg-white dark:bg-slate-800 border border-teal-200 dark:border-teal-800 rounded-xl overflow-hidden shadow-sm">
+                className="mb-5 bg-[#f0f6fa] dark:bg-slate-800 border border-teal-200 dark:border-teal-800 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2" style={{borderLeft:'4px solid #0d9488'}}>
                   <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-teal-600 dark:text-teal-400" />
@@ -209,7 +209,7 @@ export default function Resources() {
                     return (
                       <button key={r.id}
                         onClick={() => handleViewResource(r.id)}
-                        className="text-left flex items-start gap-3 p-3 bg-white hover:bg-teal-50 rounded-xl border border-slate-200 hover:border-teal-300 transition-all group shadow-sm">
+                        className="text-left flex items-start gap-3 p-3 bg-[#f0f6fa] hover:bg-teal-50 rounded-xl border border-slate-200 hover:border-teal-300 transition-all group shadow-sm">
                         <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
                           <TrendingUp size={13} className="text-teal-600" />
                         </div>
@@ -217,7 +217,7 @@ export default function Resources() {
                           <p className="text-xs font-semibold text-slate-900 group-hover:text-teal-700 truncate">{r.title}</p>
                           <p className="text-[10px] text-slate-500 truncate mt-0.5">{r.summary}</p>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-teal-400 text-teal-700 uppercase tracking-wide">
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#f0f6fa] border border-teal-400 text-teal-700 uppercase tracking-wide">
                               {r.category?.replace(/_/g, ' ')}
                             </span>
                             {r.is_ghana_specific && <span className="text-[9px]">🇬🇭</span>}
@@ -544,7 +544,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
             )}
             {res?.external_url && (
               <a href={res.external_url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors">
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-[#f0f6fa] text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors">
                 <ExternalLink size={12} /> Source
               </a>
             )}

@@ -307,7 +307,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
       </PageHeader>
 
       {/* Sticky tabs */}
-      <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="sticky top-0 z-20 bg-[#f0f6fa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {tabs.map(({ id, label, icon: Icon }) => (

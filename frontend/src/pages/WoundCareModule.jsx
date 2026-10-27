@@ -191,7 +191,7 @@ function AddWoundForm({ patientId, onClose }) {
   );
 }
 
-const inputCls = 'w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500';
+const inputCls = 'w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#f0f6fa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500';
 
 function Field({ label, children }) {
   return (

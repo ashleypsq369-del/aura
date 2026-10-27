@@ -68,7 +68,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
 
   return (
     <button onClick={onClick}
-      className="relative rounded-lg text-left w-full transition-all duration-150 bg-white hover:shadow-md"
+      className="relative rounded-lg text-left w-full transition-all duration-150 bg-[#f0f6fa] hover:shadow-md"
       style={{
         border: selected ? `2px solid ${a.active}` : '1px solid #c8d0da',
         boxShadow: selected ? `0 0 0 1px ${a.active}20, 0 2px 8px rgba(0,0,0,0.08)` : '0 1px 3px rgba(0,0,0,0.06)',
@@ -450,7 +450,7 @@ export default function Appointments() {
             </div>
             <div className="flex flex-wrap gap-2">
               {todayReminders.map(a => (
-                <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-white border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-[#f0f6fa] border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
                   <Clock size={10}/>
                   {new Date(a.scheduled_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — {a.appointment_type}
                 </span>

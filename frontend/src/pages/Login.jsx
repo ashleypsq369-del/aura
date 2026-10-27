@@ -98,11 +98,11 @@ export default function Login() {
           className="w-full max-w-sm"
         >
           {/* Glass effect on mobile, solid white on desktop */}
-          <div className="bg-white/90 lg:bg-white backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl border border-white/50 lg:border-slate-200 p-6 sm:p-8">
+          <div className="bg-white/90 lg:bg-[#f0f6fa] backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl border border-white/50 lg:border-slate-200 p-6 sm:p-8">
 
             {/* Header */}
             <div className="text-center mb-5">
-              <div className="w-20 h-20 bg-white border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
+              <div className="w-20 h-20 bg-[#f0f6fa] border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
                 <img src="/logo.png" alt="Project Aura" className="w-16 h-16 object-contain" />
               </div>
               <h2 className="text-lg font-bold text-slate-900 mb-1">Welcome back</h2>
@@ -129,7 +129,7 @@ export default function Login() {
                 <label className="block text-[11px] font-bold text-slate-600  mb-1.5">
                   Username <span className="text-red-500">*</span>
                 </label>
-                <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-white
+                <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-[#f0f6fa]
                   ${fieldErrors.username
                     ? 'border-red-400 ring-2 ring-red-500/20'
                     : 'border-slate-300 focus-within:ring-2 focus-within:ring-teal-500/30 focus-within:border-teal-500'
@@ -187,7 +187,7 @@ export default function Login() {
                     Forgot?
                   </Link>
                 </div>
-                <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-white
+                <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-[#f0f6fa]
                   ${fieldErrors.password
                     ? 'border-red-400 ring-2 ring-red-500/20'
                     : 'border-slate-300 focus-within:ring-2 focus-within:ring-teal-500/30 focus-within:border-teal-500'
@@ -221,7 +221,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="flex-shrink-0 w-10 flex items-center justify-center self-stretch text-slate-400 hover:text-teal-600 transition-colors bg-white"
+                    className="flex-shrink-0 w-10 flex items-center justify-center self-stretch text-slate-400 hover:text-teal-600 transition-colors bg-[#f0f6fa]"
                     tabIndex={-1}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >

@@ -219,7 +219,7 @@ export default function PatientMonitor() {
 
       {/* ── Tab bar ── */}
       <div className="px-6">
-        <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 overflow-x-auto bg-white dark:bg-slate-800 rounded-t-xl">
+        <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 overflow-x-auto bg-[#f0f6fa] dark:bg-slate-800 rounded-t-xl">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id)}
               className={`flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-all whitespace-nowrap flex-shrink-0
@@ -360,7 +360,7 @@ export default function PatientMonitor() {
                     </div>
                   </motion.div>
                 )) : (
-                  <div className="col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
+                  <div className="col-span-2 bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
                     <p className="text-slate-400 text-sm">No medications prescribed</p>
                   </div>
                 )}

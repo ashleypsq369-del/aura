@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Grain texture as a constant — keeps JSX clean and avoids parser issues
 const GRAIN_BG = {
@@ -31,7 +31,7 @@ export default function ModernCard({
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
       className={[
-        `relative bg-white rounded-xl overflow-hidden`,
+        `relative bg-[#f0f6fa] rounded-xl overflow-hidden`,
         'border border-[#dde3ea]',
         elevated
           ? 'shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.07)]'
@@ -102,7 +102,7 @@ export function ProStatCard({
       whileHover={onClick ? { y: -3 } : undefined}
       onClick={onClick}
       className={[
-        'relative bg-white rounded-xl overflow-hidden',
+        'relative bg-[#f0f6fa] rounded-xl overflow-hidden',
         'border border-black/[0.06]',
         'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_3px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]',
         'transition-all duration-200',

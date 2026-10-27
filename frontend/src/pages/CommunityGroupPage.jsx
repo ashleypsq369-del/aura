@@ -215,7 +215,7 @@ export default function CommunityGroupPage() {
           </button>
           {group && !group.joined ? (
             <button onClick={() => toggleMutation.mutate()} disabled={toggleMutation.isPending}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-sm font-bold rounded-xl transition hover:bg-slate-100" style={{ color }}>
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f0f6fa] text-sm font-bold rounded-xl transition hover:bg-slate-100" style={{ color }}>
               <UserPlus size={14} /> Join
             </button>
           ) : (
@@ -239,7 +239,7 @@ export default function CommunityGroupPage() {
       <AnimatePresence>
         {showSearch && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }} className="flex-shrink-0 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2">
+            exit={{ height: 0, opacity: 0 }} className="flex-shrink-0 bg-[#f0f6fa] dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2">
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
@@ -313,7 +313,7 @@ export default function CommunityGroupPage() {
             {showScrollBtn && (
               <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
                 onClick={() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="absolute bottom-20 right-4 w-9 h-9 rounded-full bg-white dark:bg-slate-700 shadow-lg border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition z-10">
+                className="absolute bottom-20 right-4 w-9 h-9 rounded-full bg-[#f0f6fa] dark:bg-slate-700 shadow-lg border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition z-10">
                 <ChevronDown size={16} />
               </motion.button>
             )}
@@ -321,7 +321,7 @@ export default function CommunityGroupPage() {
 
           {/* Compose */}
           {group?.joined && (
-            <div className="flex-shrink-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+            <div className="flex-shrink-0 bg-[#f0f6fa] dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
               {/* Reply preview */}
               <AnimatePresence>
                 {replyingTo && (
@@ -367,7 +367,7 @@ export default function CommunityGroupPage() {
                   maxLength={280}
                   rows={1}
                   placeholder="Share anonymously… (Enter to send, Shift+Enter for new line)"
-                  className="flex-1 px-4 py-2.5 border-2 border-slate-200 dark:border-slate-600 rounded-2xl text-sm resize-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
+                  className="flex-1 px-4 py-2.5 border-2 border-slate-200 dark:border-slate-600 rounded-2xl text-sm resize-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[#f0f6fa] dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                   style={{ maxHeight: '96px', overflowY: 'auto' }}
                 />
                 <button
@@ -390,7 +390,7 @@ export default function CommunityGroupPage() {
           {showInfo && (
             <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-              className="flex-shrink-0 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
+              className="flex-shrink-0 bg-[#f0f6fa] dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
               <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700">
                 <span className="font-bold text-slate-800 dark:text-slate-100 text-sm">Group Info</span>
                 <button onClick={() => setShowInfo(false)} className="text-slate-400 hover:text-slate-600"><X size={16} /></button>
@@ -518,7 +518,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
           <div className="flex items-center gap-1 mt-1 ml-1 flex-wrap">
             {REACTIONS.filter(r => reactions[r.type] > 0).map(r => (
               <button key={r.type} onClick={() => onReact(r.type)} title={r.label}
-                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-300 transition shadow-sm">
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs bg-[#f0f6fa] dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-teal-300 transition shadow-sm">
                 <span className="text-sm leading-none">{r.emoji}</span>
                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">{reactions[r.type]}</span>
               </button>
@@ -538,7 +538,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
               {isActiveReactionPicker && (
                 <motion.div initial={{ opacity: 0, scale: 0.9, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute bottom-8 left-0 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-2 z-20 flex gap-1">
+                  className="absolute bottom-8 left-0 bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-2 z-20 flex gap-1">
                   {REACTIONS.map(r => (
                     <button key={r.type} onClick={() => onReact(r.type)} title={r.label}
                       className="w-9 h-9 flex items-center justify-center text-xl hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition hover:scale-125">
@@ -567,7 +567,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
                 {showFlag && (
                   <motion.div initial={{ opacity: 0, scale: 0.95, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute right-0 bottom-7 w-36 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 p-2.5 z-10">
+                    className="absolute right-0 bottom-7 w-36 bg-[#f0f6fa] dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 p-2.5 z-10">
                     <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 mb-2">Report this post?</p>
                     <div className="flex gap-1.5">
                       <button onClick={() => { onFlag(); setShowFlag(false); }}

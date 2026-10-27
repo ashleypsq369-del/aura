@@ -96,7 +96,7 @@ function Sel({ value, onChange, opts, className = '' }) {
   return (
     <div className={`relative ${className}`}>
       <select value={value} onChange={e => onChange(e.target.value)}
-        className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-teal-400 appearance-none pr-6">
+        className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[#f0f6fa] focus:outline-none focus:border-teal-400 appearance-none pr-6">
         {opts.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
       </select>
       <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"/>
@@ -268,7 +268,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
           <motion.div ref={panelRef}
             initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
             transition={{ type: 'spring', damping: 24, stiffness: 320 }}
-            className="fixed z-[9999] flex flex-col bg-white"
+            className="fixed z-[9999] flex flex-col bg-[#f0f6fa]"
             style={{
               top:          pos.top,
               right:        pos.right,

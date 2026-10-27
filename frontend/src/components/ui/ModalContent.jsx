@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ModalContent.jsx — Structured display building blocks for modals
  * ================================================================
  * Provides consistent, well-designed content patterns for all modal types:
@@ -47,7 +47,7 @@ export function Field({
   const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none
     ${error
       ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200 text-red-900'
-      : 'border-slate-300 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-100 text-slate-900'}`;
+      : 'border-slate-300 bg-[#f0f6fa] focus:border-teal-500 focus:ring-2 focus:ring-teal-100 text-slate-900'}`;
 
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
@@ -69,7 +69,7 @@ export function Field({
  * SelectField — styled select inside a Field
  */
 export function SelectField({ label, name, options = [], required, error, helperText, ...rest }) {
-  const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none bg-white
+  const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none bg-[#f0f6fa]
     ${error ? 'border-red-400 focus:ring-2 focus:ring-red-200' : 'border-slate-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-100'}
     text-slate-900`;
   return (
@@ -90,7 +90,7 @@ export function SelectField({ label, name, options = [], required, error, helper
  */
 export function TextareaField({ label, name, rows = 3, required, error, helperText, className = '', ...rest }) {
   const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none resize-none
-    ${error ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200' : 'border-slate-300 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-100'}
+    ${error ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200' : 'border-slate-300 bg-[#f0f6fa] focus:border-teal-500 focus:ring-2 focus:ring-teal-100'}
     text-slate-900`;
   return (
     <Field label={label} name={name} required={required} error={error} helperText={helperText} className={className}>
@@ -140,7 +140,7 @@ export function ToggleField({ label, description, checked, onChange, name }) {
       <div className="relative mt-0.5 flex-shrink-0">
         <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} name={name} />
         <div className={`w-10 h-5.5 rounded-full transition-colors ${checked ? 'bg-teal-600' : 'bg-slate-300'}`} style={{height:'1.375rem'}} />
-        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
+        <div className={`absolute top-0.5 w-4 h-4 bg-[#f0f6fa] rounded-full shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-slate-800 group-hover:text-teal-700 transition-colors">{label}</p>
@@ -374,7 +374,7 @@ export function SHAPRow({ feature, value, pct, impact, rank }) {
   const bgColor = isRisk ? 'bg-red-50' : 'bg-emerald-50';
   return (
     <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border ${isRisk ? 'border-red-100' : 'border-emerald-100'} ${bgColor}`}>
-      {rank && <span className="w-5 h-5 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 flex-shrink-0">{rank}</span>}
+      {rank && <span className="w-5 h-5 rounded-full bg-[#f0f6fa] border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 flex-shrink-0">{rank}</span>}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 mb-1">
           <span className="text-xs font-semibold text-slate-800 truncate">{feature}</span>

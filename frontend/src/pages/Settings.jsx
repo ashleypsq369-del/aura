@@ -440,7 +440,7 @@ export default function Settings() {
                           className={`p-3 rounded-xl border-2 text-left transition-all ${
                             profileKey === key
                               ? 'border-teal-500 bg-teal-50 text-teal-800'
-                              : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
+                              : 'border-slate-200 hover:border-slate-300 bg-[#f0f6fa] text-slate-700'
                           }`}
                         >
                           <p className={`text-xs font-bold ${profileKey === key ? 'text-teal-700' : 'text-slate-700'}`}>
@@ -742,7 +742,7 @@ export default function Settings() {
                             className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
                               active
                                 ? 'border-amber-500 bg-amber-50'
-                                : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+                                : 'border-gray-200 bg-[#f0f6fa] hover:border-gray-300 hover:bg-gray-50'
                             }`}
                           >
                             <p className={`text-xs font-bold ${active ? 'text-amber-800' : 'text-gray-800'}`}>{opt.label}</p>

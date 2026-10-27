@@ -175,7 +175,7 @@ export default function CommunityHub() {
           <input type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search groups by name or topic..."
             data-tip="Search community groups"
-            className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-white shadow-sm" />
+            className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[#f0f6fa] shadow-sm" />
         </div>
 
         {/* Tabs — filtered by personalisation (spiritual hidden if opted out) */}
@@ -256,7 +256,7 @@ export default function CommunityHub() {
                               <Users size={9} /> {g.member_count ?? 0}
                             </span>
                             {g.condition_tags?.slice(0,2).map(t => (
-                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
+                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#f0f6fa] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
                             ))}
                           </div>
                         </div>

@@ -58,7 +58,7 @@ function RichText({ content }) {
             {rows.map((row, ri) => {
               const cells = row.split('|').filter(c => c.trim());
               return (
-                <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-white even:bg-slate-50'}>
+                <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[#f0f6fa] even:bg-slate-50'}>
                   {cells.map((cell, ci) => (
                     <td key={ci} className={`px-3 py-2 border-b border-slate-100 ${ri===0?'font-semibold text-slate-800':'text-slate-700'}`}>{cell.trim()}</td>
                   ))}
@@ -111,7 +111,7 @@ function BookSection({ icon: Icon, label, accent = 'slate', children }) {
         <Icon size={13} className={`flex-shrink-0 ${A.lbl}`}/>
         <span className={`text-[11px] font-bold  select-none ${A.lbl}`}>{label}</span>
       </div>
-      <div className="px-5 py-4 bg-white">{children}</div>
+      <div className="px-5 py-4 bg-[#f0f6fa]">{children}</div>
     </div>
   );
 }
@@ -205,7 +205,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
             );
           })}
         </div>
-        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-white overflow-hidden">
+        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-[#f0f6fa] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{opacity:0,y:4}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.14}} className="p-5 space-y-5">
               {tab?.fields.map((field, fi) => {
@@ -448,7 +448,7 @@ export default function MedicalKnowledge() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search conditions…"
-              className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+              className="w-full pl-9 pr-3 py-2.5 bg-[#f0f6fa] border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
           </div>
 
           {/* Index list */}
@@ -580,7 +580,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'read' && !activeId && (
               <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className="h-full flex flex-col items-center justify-center py-24 text-slate-400 bg-white rounded-xl border border-slate-200 border-dashed">
+                className="h-full flex flex-col items-center justify-center py-24 text-slate-400 bg-[#f0f6fa] rounded-xl border border-slate-200 border-dashed">
                 <BookOpen size={40} className="opacity-20 mb-3"/>
                 <p className="font-semibold text-slate-500">Select a condition from the index</p>
                 <p className="text-sm mt-1">Click any entry on the left to read its clinical reference</p>

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
 import {
   X, Settings, Volume2, Eye, Keyboard, Hand, Brain,
@@ -26,7 +26,7 @@ function ToggleRow({ id, label, desc, value, onChange }) {
           value ? 'bg-primary' : 'bg-gray-300'
         }`}
       >
-        <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${value ? 'translate-x-7' : 'translate-x-1'}`} />
+        <span className={`inline-block h-6 w-6 transform rounded-full bg-[#f0f6fa] transition-transform ${value ? 'translate-x-7' : 'translate-x-1'}`} />
       </button>
     </div>
   );
@@ -178,7 +178,7 @@ export default function AccessibilityPanel() {
                   aria-checked={settings.assistedMode}
                   aria-label="Toggle assisted mode"
                 >
-                  <span className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-md transition-transform ${
+                  <span className={`inline-block h-8 w-8 transform rounded-full bg-[#f0f6fa] shadow-md transition-transform ${
                     settings.assistedMode ? 'translate-x-9' : 'translate-x-1'
                   }`} />
                 </button>
@@ -205,7 +205,7 @@ export default function AccessibilityPanel() {
                 <select
                   value={settings.colorBlindMode || 'none'}
                   onChange={e => updateSetting('colorBlindMode', e.target.value)}
-                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:border-teal-500"
+                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-[#f0f6fa] text-gray-700 focus:outline-none focus:border-teal-500"
                   aria-label="Visual impairment filter"
                 >
                   <option value="none">No Filter — Normal Vision</option>
@@ -240,7 +240,7 @@ export default function AccessibilityPanel() {
                         </div>
                         {settings.fontSize === size.value && (
                           <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-white" />
+                            <div className="w-2 h-2 rounded-full bg-[#f0f6fa]" />
                           </div>
                         )}
                       </div>
@@ -344,7 +344,7 @@ export default function AccessibilityPanel() {
                 ['Esc', 'Close dialogs/modals'],
               ].map(([key, desc]) => (
                 <li key={key}>
-                  <kbd className="px-2 py-0.5 bg-white rounded border border-gray-300 text-xs">{key}</kbd>
+                  <kbd className="px-2 py-0.5 bg-[#f0f6fa] rounded border border-gray-300 text-xs">{key}</kbd>
                   <span className="ml-2">{desc}</span>
                 </li>
               ))}

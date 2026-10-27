@@ -314,7 +314,7 @@ function EventCard({ event }) {
       <div className={`absolute -left-[33px] w-5 h-5 rounded-full border-4 border-white shadow-lg z-10`}
         style={{ backgroundColor: event.is_milestone ? '#f59e0b' : color }} />
 
-      <div className={`bg-white rounded-lg border border-slate-200 border-l-4 hover:shadow-sm transition-all ${
+      <div className={`bg-[#f0f6fa] rounded-lg border border-slate-200 border-l-4 hover:shadow-sm transition-all ${
         event.is_milestone ? 'border-l-amber-400' : eventTypeGrad(event.event_type)
       } p-3`}>
         <div className="flex items-start gap-3">

@@ -69,7 +69,7 @@ export default function ContinuityBridge() {
       />
 
       {/* -- Sticky tabs --------------------------------------------- */}
-      <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="sticky top-0 z-20 bg-[#f0f6fa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {TABS.map(({ id, label, icon: Icon }) => (
@@ -215,7 +215,7 @@ function LegacyTab({ patientId, name, isHeir }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {mediaTypes.map(({ icon: Icon, label, type }) => (
             <Link key={type} to="/memory-vault"
-              className="flex flex-col items-center gap-2 p-3 bg-white border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
+              className="flex flex-col items-center gap-2 p-3 bg-[#f0f6fa] border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
               <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
                 <Icon size={16} className="text-purple-600" />
               </div>

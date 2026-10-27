@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, User, Bell, Palette, HelpCircle,
@@ -127,7 +127,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-white rounded-2xl shadow-2xl z-[70] flex flex-col"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-[#f0f6fa] rounded-2xl shadow-2xl z-[70] flex flex-col"
           >
             {/* Header */}
             <div className={`${
@@ -301,7 +301,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                           }`}
                         >
                           <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            className={`inline-block h-4 w-4 transform rounded-full bg-[#f0f6fa] transition-transform ${
                               soundEnabled ? 'translate-x-6' : 'translate-x-1'
                             }`}
                           />
@@ -330,7 +330,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        className={`inline-block h-4 w-4 transform rounded-full bg-[#f0f6fa] transition-transform ${
                           notifications ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />

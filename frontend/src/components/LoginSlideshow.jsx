@@ -142,7 +142,7 @@ export default function LoginSlideshow() {
       {/* Header branding */}
       <div className="absolute top-0 left-0 right-0 p-6 z-20">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
+          <div className="w-9 h-9 bg-[#f0f6fa] rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
             <img src="/logo.png" alt="Project Aura" className="w-8 h-8 object-contain" />
           </div>
           <div>
@@ -209,7 +209,7 @@ export default function LoginSlideshow() {
           {SLIDES.map((_, i) => (
             <button key={i} onClick={() => goTo(i)} aria-label={`Slide ${i + 1}`}
               className={`rounded-full transition-all duration-300 ${
-                i === current ? 'w-4 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/35 hover:bg-white/65'
+                i === current ? 'w-4 h-1.5 bg-[#f0f6fa]' : 'w-1.5 h-1.5 bg-white/35 hover:bg-white/65'
               }`} />
           ))}
         </div>

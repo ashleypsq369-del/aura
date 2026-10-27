@@ -959,7 +959,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
             <div className="flex gap-2 mt-5">
               {actions.map(({ label, icon: AIcon, path }) => (
                 <button key={path} onClick={() => navigate(path)}
-                  className="flex items-center gap-1.5 bg-white text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                  className="flex items-center gap-1.5 bg-[#f0f6fa] text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
                   <AIcon size={13} />{label}
                 </button>
               ))}
@@ -1242,7 +1242,7 @@ function ChangeRequestsPanel({ templates }) {
                 </div>
                 <div className="flex items-center gap-2 mt-2 ml-10">
                   <span className="text-xs text-slate-500">Requesting:</span>
-                  <span className="text-xs font-semibold text-amber-700 bg-white border border-amber-200 px-2 py-0.5 rounded-lg">
+                  <span className="text-xs font-semibold text-amber-700 bg-[#f0f6fa] border border-amber-200 px-2 py-0.5 rounded-lg">
                     {settingLabel(u.care_setting_change_request)}
                   </span>
                 </div>

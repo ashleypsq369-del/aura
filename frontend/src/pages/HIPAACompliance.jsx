@@ -61,7 +61,7 @@ function IncidentRow({ incident, onUpdate }) {
   const overdue = daysLeft < 0;
 
   return (
-    <div className={`border rounded-xl overflow-hidden ${incident.is_resolved ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-white'}`}>
+    <div className={`border rounded-xl overflow-hidden ${incident.is_resolved ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-[#f0f6fa]'}`}>
       <div className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50/50 transition" onClick={() => setOpen(!open)}>
         <div className={`w-2 h-8 rounded-full flex-shrink-0 ${SEV_CFG[incident.severity]?.split(' ')[0] || 'bg-slate-300'}`}/>
         <div className="flex-1 min-w-0">
@@ -82,7 +82,7 @@ function IncidentRow({ incident, onUpdate }) {
       <AnimatePresence>
         {open && (
           <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
-            className="border-t border-slate-200 px-4 py-4 space-y-3 bg-white">
+            className="border-t border-slate-200 px-4 py-4 space-y-3 bg-[#f0f6fa]">
             {incident.description && <p className="text-sm text-slate-700 bg-slate-50 rounded-lg p-3">{incident.description}</p>}
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Resolution Notes</label>

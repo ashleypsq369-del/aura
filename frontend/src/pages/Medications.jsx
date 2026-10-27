@@ -211,7 +211,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
   const dose     = nextDose(med);
   return (
     <motion.div layout initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}
-      className="group rounded-lg border bg-white transition-shadow hover:shadow-sm"
+      className="group rounded-lg border bg-[#f0f6fa] transition-shadow hover:shadow-sm"
       style={{ borderLeft:`3px solid ${isActive?'#0d9488':'#cbd5e1'}`, borderColor:'#c8d0da' }}>
       <div className="flex items-center gap-3 px-3 py-2.5">
         {/* Icon */}

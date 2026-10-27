@@ -341,7 +341,7 @@ export default function Profile() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:bg-teal-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
+                    <div className="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:bg-teal-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#f0f6fa] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
                   </label>
                 </div>
                 {/* Language */}
@@ -355,7 +355,7 @@ export default function Profile() {
                       <p className="text-[10px] text-slate-400">Interface language</p>
                     </div>
                   </div>
-                  <select className="px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold bg-white text-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
+                  <select className="px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold bg-[#f0f6fa] text-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
                     <option value="en">English</option>
                     <option value="twi">Twi</option>
                     <option value="ga">Ga</option>

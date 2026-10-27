@@ -62,7 +62,7 @@ function ColorSwatch({ items, selected, onSelect }) {
                   animate={{ scale: 1 }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
-                  <span className="w-3 h-3 rounded-full bg-white shadow-sm opacity-90" />
+                  <span className="w-3 h-3 rounded-full bg-[#f0f6fa] shadow-sm opacity-90" />
                 </motion.span>
               )}
             </button>
@@ -91,7 +91,7 @@ function AccessoryCard({ item, selected, onSelect, accentColor }) {
         focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500
         ${active
           ? 'border-teal-500 bg-teal-50 shadow-sm'
-          : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-sm'
+          : 'border-slate-100 bg-[#f0f6fa] hover:border-slate-200 hover:shadow-sm'
         }
       `}
     >
@@ -196,7 +196,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
   const displayName = user?.full_name?.split(' ')[0] || user?.username || 'Your';
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-2xl overflow-hidden shadow-xl">
+    <div className="flex flex-col h-full bg-[#f0f6fa] rounded-2xl overflow-hidden shadow-xl">
 
       {/* ── Preview panel ────────────────────────────────────────────────── */}
       <div
@@ -227,7 +227,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
       {/* ── Tab bar ──────────────────────────────────────────────────────── */}
       <div
         ref={tabBarRef}
-        className="relative flex border-b border-slate-100 bg-white overflow-x-auto flex-shrink-0 scrollbar-none"
+        className="relative flex border-b border-slate-100 bg-[#f0f6fa] overflow-x-auto flex-shrink-0 scrollbar-none"
         role="tablist"
         aria-label="Customise category"
       >
@@ -356,7 +356,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
       </div>
 
       {/* ── Footer actions ────────────────────────────────────────────────── */}
-      <div className="flex-shrink-0 px-4 py-3 bg-white border-t border-slate-100 flex items-center gap-2.5">
+      <div className="flex-shrink-0 px-4 py-3 bg-[#f0f6fa] border-t border-slate-100 flex items-center gap-2.5">
 
         {/* Reset — subtle tonal */}
         <button

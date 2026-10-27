@@ -579,7 +579,7 @@ export default function AuraAvatar() {
               ) : (
                 <motion.div onClick={() => setMinimized(false)}
                   whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.92 }}
-                  className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer shadow-lg bg-white border-2 border-amber-400"
+                  className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer shadow-lg bg-[#f0f6fa] border-2 border-amber-400"
                 >
                   <AuraMascot size={32} />
                 </motion.div>

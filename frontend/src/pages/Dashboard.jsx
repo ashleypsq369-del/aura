@@ -189,7 +189,7 @@ export default function Dashboard() {
             )}
             {/* ML Proactive Scan Widget */}
             {(user.role === 'clinician' || user.role === 'admin') && (
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-white mb-3">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-[#f0f6fa] mb-3">
                 <Brain size={13} className="text-slate-500 flex-shrink-0" />
                 <p className="text-xs text-slate-600 flex-1 min-w-0">
                   <span className="font-semibold text-slate-700">ML Risk</span>
@@ -266,7 +266,7 @@ export default function Dashboard() {
                   </table>
                   <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                     <button onClick={() => navigate('/patients')}
-                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-white dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#f0f6fa] dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                       <span>View All Patients</span>
                     </button>
                   </div>
@@ -363,7 +363,7 @@ export default function Dashboard() {
               </table>
               <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                 <button onClick={() => navigate('/patients')}
-                  className="inline-flex items-center px-5 py-2.5 bg-white dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+                  className="inline-flex items-center px-5 py-2.5 bg-[#f0f6fa] dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                   View All Patients
                 </button>
               </div>

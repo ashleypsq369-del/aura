@@ -706,7 +706,7 @@ function RichText({ content }) {
               {rows.map((row, ri) => {
                 const cells = row.split('|').filter(c => c.trim());
                 return (
-                  <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-white even:bg-slate-50'}>
+                  <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[#f0f6fa] even:bg-slate-50'}>
                     {cells.map((cell, ci) => (
                       <td key={ci} className={`px-4 py-2.5 border-b border-slate-100 ${ri === 0 ? 'font-semibold text-slate-800' : 'text-slate-700'}`}>
                         {cell.trim()}
@@ -827,7 +827,7 @@ function ProtocolModalContent({ protocol }) {
                 className="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
               >
                 {/* Chapter number */}
-                <span className="w-6 h-6 rounded flex items-center justify-center bg-white border border-slate-200 text-[11px] font-bold text-slate-500 flex-shrink-0 shadow-sm">
+                <span className="w-6 h-6 rounded flex items-center justify-center bg-[#f0f6fa] border border-slate-200 text-[11px] font-bold text-slate-500 flex-shrink-0 shadow-sm">
                   {i + 1}
                 </span>
                 {/* Left accent bar in protocol colour */}
@@ -848,7 +848,7 @@ function ProtocolModalContent({ protocol }) {
                     transition={{ duration: 0.18 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 py-4 bg-white border-t border-slate-100">
+                    <div className="px-5 py-4 bg-[#f0f6fa] border-t border-slate-100">
                       <RichText content={section.content} />
                     </div>
                   </motion.div>
@@ -913,7 +913,7 @@ export default function CareGuide() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search protocols…"
-              className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+              className="w-full pl-9 pr-3 py-2.5 bg-[#f0f6fa] border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
           </div>
 
           {/* Index */}
@@ -972,7 +972,7 @@ export default function CareGuide() {
           <AnimatePresence mode="wait">
             {!protocol ? (
               <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className="h-full flex flex-col items-center justify-center py-24 bg-white rounded-xl border border-slate-200 border-dashed text-slate-400">
+                className="h-full flex flex-col items-center justify-center py-24 bg-[#f0f6fa] rounded-xl border border-slate-200 border-dashed text-slate-400">
                 <BookOpen size={40} className="opacity-20 mb-3"/>
                 <p className="font-semibold text-slate-500">Select a protocol from the index</p>
                 <p className="text-sm mt-1">Click any entry on the left to read the full clinical guide</p>

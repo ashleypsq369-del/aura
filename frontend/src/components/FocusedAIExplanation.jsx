@@ -1,4 +1,4 @@
-﻿/**
+/**
  * FocusedAIExplanation — Context-specific clinical AI explanation modal
  * ======================================================================
  * Used from Alerts page when a clinician clicks "Explain" on a specific alert.
@@ -93,7 +93,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             <Activity size={12} className="text-slate-500 flex-shrink-0" />
             <span className="text-[11px] font-bold text-slate-500  select-none">Clinical Finding</span>
           </div>
-          <div className="px-4 py-3 bg-white">
+          <div className="px-4 py-3 bg-[#f0f6fa]">
             <InfoGrid cols={2} items={[
               { label: 'Patient',    value: data?.patient_name || '—' },
               { label: 'Finding',    value: readingLabel, sub: data?.focus_type?.replace(/_/g,' ') },
@@ -133,7 +133,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             <Brain size={12} className="text-teal-600 flex-shrink-0" />
             <span className="text-[11px] font-bold text-teal-700 select-none">Why is this clinically concerning?</span>
           </div>
-          <div className="px-5 py-4 bg-white">
+          <div className="px-5 py-4 bg-[#f0f6fa]">
             <div className="pl-4 border-l-2 border-teal-200">
               <p className="text-sm text-slate-800 leading-7">{data?.explanation || 'No explanation available.'}</p>
             </div>
@@ -152,7 +152,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
               <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
               <span className="text-[11px] font-bold text-slate-500  select-none">Contributing Factors</span>
             </div>
-            <div className="px-4 py-3 bg-white space-y-2">
+            <div className="px-4 py-3 bg-[#f0f6fa] space-y-2">
               {data.relevant_factors.map((f, i) => (
                 <SHAPRow key={i} rank={i + 1}
                   feature={f.feature_name}
@@ -172,7 +172,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
               <Pill size={12} className="text-amber-600 flex-shrink-0" />
               <span className="text-[11px] font-bold text-amber-700  select-none">Drug Interactions Detected</span>
             </div>
-            <div className="px-4 py-3 bg-white space-y-2">
+            <div className="px-4 py-3 bg-[#f0f6fa] space-y-2">
               {data.interactions.map((ix, i) => (
                 <div key={i} className="flex items-start gap-3 pl-3 border-l-2 border-amber-300">
                   <div className="flex-1 min-w-0">
@@ -195,7 +195,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
               <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
               <span className="text-[11px] font-bold text-teal-700  select-none">Recommended Actions</span>
             </div>
-            <div className="px-4 py-3 bg-white space-y-2">
+            <div className="px-4 py-3 bg-[#f0f6fa] space-y-2">
               {data.recommendations.map((r, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
@@ -219,7 +219,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             <MessageSquare size={12} className="text-slate-500 flex-shrink-0" />
             <span className="text-[11px] font-bold text-slate-500  select-none">Was this explanation helpful?</span>
           </div>
-          <div className="px-4 py-3 bg-white">
+          <div className="px-4 py-3 bg-[#f0f6fa]">
             {!submitted ? (
               <div className="space-y-3">
                 <p className="text-xs text-slate-500">Your feedback helps improve AI explanations for all clinicians.</p>
@@ -231,7 +231,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
                   ].map(({ type, label, Icon, active, passive }) => (
                     <button key={type} onClick={() => setFeedback(type)}
                       className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 text-xs font-semibold transition-all
-                        ${feedbackType === type ? active : `bg-white ${passive} hover:opacity-80`}`}>
+                        ${feedbackType === type ? active : `bg-[#f0f6fa] ${passive} hover:opacity-80`}`}>
                       <Icon size={16} />{label}
                     </button>
                   ))}

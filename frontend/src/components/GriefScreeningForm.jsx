@@ -213,7 +213,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                             <span>{option.label}</span>
                             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                               isSelected
-                                ? 'border-white bg-white'
+                                ? 'border-white bg-[#f0f6fa]'
                                 : 'border-slate-300'
                             }`}>
                               {isSelected && (

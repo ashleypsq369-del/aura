@@ -59,7 +59,7 @@ function ScoreButton({ value, selected, color, onClick }) {
       className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-bold border-2 transition-all flex-shrink-0 ${
         selected
           ? `${c.bg} text-white border-transparent shadow-md scale-110`
-          : `bg-white ${c.text} ${c.border} hover:opacity-80`
+          : `bg-[#f0f6fa] ${c.text} ${c.border} hover:opacity-80`
       }`}
     >
       {value}
@@ -334,7 +334,7 @@ export default function WellnessCheckin() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.04 }}
-                className={`bg-white rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
+                className={`bg-[#f0f6fa] rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>

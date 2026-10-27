@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Touch-Optimized Button Component
  * Provides haptic feedback, sound, and proper touch target sizes
  */
@@ -287,7 +287,7 @@ export function TouchCardButton({
       disabled={disabled}
       className={`
         w-full p-6 rounded-2xl border-2 border-gray-200
-        bg-white hover:bg-gray-50
+        bg-[#f0f6fa] hover:bg-gray-50
         transition-all duration-150
         active:scale-98
         touch-manipulation

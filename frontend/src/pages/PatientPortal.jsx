@@ -473,7 +473,7 @@ export default function PatientPortal() {
                         return `${x},${y}`;
                       }).join(' ');
                       return (
-                        <div key={key} className="flex items-center gap-2 bg-white rounded-lg border border-slate-100 px-2.5 py-2">
+                        <div key={key} className="flex items-center gap-2 bg-[#f0f6fa] rounded-lg border border-slate-100 px-2.5 py-2">
                           <div className="flex-1 min-w-0">
                             <p className="text-[10px] text-slate-500">{label}</p>
                             <p className="text-sm font-bold tabular-nums" style={{ color }}>

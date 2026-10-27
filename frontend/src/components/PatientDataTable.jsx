@@ -216,7 +216,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       {/* Toolbar — table-level filter for quick in-grid search */}
-      <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 bg-white dark:bg-slate-900">
+      <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 bg-[#f0f6fa] dark:bg-slate-900">
         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium" aria-live="polite" aria-atomic="true">
           {loading ? 'Loading...' : `${totalFiltered} patient${totalFiltered !== 1 ? 's' : ''}`}
         </p>

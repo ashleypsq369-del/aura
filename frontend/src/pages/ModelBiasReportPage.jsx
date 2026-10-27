@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, AlertTriangle, CheckCircle, TrendingUp,
@@ -300,7 +300,7 @@ export default function ModelBiasReportPage() {
               { icon:Brain,         color:'violet', title:'Model Retraining',          text:'If persistent disparities are confirmed, retrain with balanced sampling using SMOTE or stratified splitting across demographic groups.' },
               { icon:Shield,        color:'teal',   title:'Clinical Validation',       text:'Never attribute disparity to model bias alone without clinical review. Work with palliative care specialists to interpret all findings.' },
             ].map(({ icon: Icon, color, title, text }) => (
-              <div key={title} className={`bg-white border-2 rounded-2xl p-5 border-${color}-200`}>
+              <div key={title} className={`bg-[#f0f6fa] border-2 rounded-2xl p-5 border-${color}-200`}>
                 <div className="flex items-center gap-2 mb-2">
                   <Icon size={18} className={`text-${color}-600`}/>
                   <h4 className={`font-bold text-${color}-900 text-sm`}>{title}</h4>

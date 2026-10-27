@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, AlertTriangle } from 'lucide-react';
@@ -162,7 +162,7 @@ export default function NotificationBell() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
+              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-[#f0f6fa] rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
             >
               {/* Header */}
               <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-200 flex items-center justify-between">

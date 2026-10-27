@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -665,7 +665,7 @@ export default function ChatBot() {
             }}
             className={`fixed ${
               isMaximized ? 'inset-4' : 'w-[440px] h-[640px]'
-            } bg-white rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-200/60 ${
+            } bg-[#f0f6fa] rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-200/60 ${
               isDragging ? 'cursor-move select-none' : ''
             }`}
           >
@@ -721,7 +721,7 @@ export default function ChatBot() {
 
                 <div className="relative">
                   <button onClick={() => setShowHistory(v => !v)}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 text-gray-600 text-xs rounded-lg hover:bg-gray-50 transition-all">
+                    className="flex items-center gap-1 px-3 py-1.5 bg-[#f0f6fa] border border-gray-200 text-gray-600 text-xs rounded-lg hover:bg-gray-50 transition-all">
                     <Clock size={13} />
                     History ({conversations.length})
                     <ChevronDown size={11} className={`transition-transform ${showHistory ? 'rotate-180' : ''}`} />
@@ -733,7 +733,7 @@ export default function ChatBot() {
                         initial={{ opacity: 0, y: -8, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                        className="absolute top-full mt-1 left-0 w-72 bg-white border border-gray-200 rounded-xl shadow-xl max-h-72 overflow-y-auto z-20"
+                        className="absolute top-full mt-1 left-0 w-72 bg-[#f0f6fa] border border-gray-200 rounded-xl shadow-xl max-h-72 overflow-y-auto z-20"
                       >
                         {conversations.length === 0 ? (
                           <p className="p-4 text-xs text-gray-500 text-center">No conversations yet</p>
@@ -825,7 +825,7 @@ export default function ChatBot() {
                         whileHover={{ scale: 1.01, x: 2 }}
                         whileTap={{ scale: 0.99 }}
                         onClick={() => { setInput(p.replace(/^[^\s]+\s/, '')); inputRef.current?.focus(); }}
-                        className="w-full text-left px-4 py-2.5 bg-white border border-gray-200 rounded-xl hover:border-violet-300 hover:bg-violet-50/50 transition-all text-sm text-gray-700 shadow-sm"
+                        className="w-full text-left px-4 py-2.5 bg-[#f0f6fa] border border-gray-200 rounded-xl hover:border-violet-300 hover:bg-violet-50/50 transition-all text-sm text-gray-700 shadow-sm"
                       >
                         {p}
                       </motion.button>
@@ -855,7 +855,7 @@ export default function ChatBot() {
             </div>
 
             {/* -- Input area -- */}
-            <div className="px-4 py-3 border-t border-gray-100 bg-white flex-shrink-0">
+            <div className="px-4 py-3 border-t border-gray-100 bg-[#f0f6fa] flex-shrink-0">
               {/* Streaming indicator */}
               {isStreaming && (
                 <div className="flex items-center gap-1.5 mb-2 text-xs text-teal-600">
@@ -879,7 +879,7 @@ export default function ChatBot() {
                   maxLength={2000}
                   disabled={isLoading || isStreaming}
                   autoFocus
-                  className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 transition-all resize-none min-h-[42px] max-h-[140px] overflow-y-auto leading-relaxed bg-gray-50 focus:bg-white disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 transition-all resize-none min-h-[42px] max-h-[140px] overflow-y-auto leading-relaxed bg-gray-50 focus:bg-[#f0f6fa] disabled:opacity-50"
                   style={{ height: 'auto' }}
                   onInput={e => {
                     e.target.style.height = 'auto';

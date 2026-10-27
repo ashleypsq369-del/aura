@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
@@ -357,7 +357,7 @@ export default function GriefProgressTracker({ screeningData }) {
 
 function SelfCareCard({ title, description }) {
   return (
-    <div className="p-4 bg-white rounded-lg border-2 border-teal-200">
+    <div className="p-4 bg-[#f0f6fa] rounded-lg border-2 border-teal-200">
       <p className="font-bold text-teal-900 mb-1">{title}</p>
       <p className="text-teal-700 text-sm">{description}</p>
     </div>

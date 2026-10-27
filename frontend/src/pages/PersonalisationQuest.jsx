@@ -1491,13 +1491,13 @@ function FieldRenderer({ field, value, onChange }) {
                 className={`relative px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
                   sel
                     ? 'border-teal-600 bg-teal-50/80 shadow-sm ring-1 ring-teal-500/30'
-                    : 'border-slate-200 bg-white hover:border-teal-300 hover:bg-teal-50/30'
+                    : 'border-slate-200 bg-[#f0f6fa] hover:border-teal-300 hover:bg-teal-50/30'
                 }`}>
                 <div className="flex items-center gap-3">
                   <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                    sel ? 'border-teal-600 bg-teal-600' : 'border-slate-300 bg-white'
+                    sel ? 'border-teal-600 bg-teal-600' : 'border-slate-300 bg-[#f0f6fa]'
                   }`}>
-                    {sel && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                    {sel && <div className="w-1.5 h-1.5 rounded-full bg-[#f0f6fa]" />}
                   </div>
                   <span className={`text-sm ${sel ? 'text-teal-900 font-semibold' : 'text-slate-600 font-medium'}`}>{l}</span>
                 </div>
@@ -1530,7 +1530,7 @@ function FieldRenderer({ field, value, onChange }) {
                 className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-all duration-150 ${
                   sel
                     ? 'border-teal-600 bg-teal-600 text-white shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-teal-400 hover:text-teal-700'
+                    : 'border-slate-200 bg-[#f0f6fa] text-slate-600 hover:border-teal-400 hover:text-teal-700'
                 }`}>
                 {opt}
               </button>
@@ -1617,7 +1617,7 @@ function ConditionSelectField({ label, value, onChange }) {
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input type="text" placeholder="Search your condition..." value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none bg-white transition-all" />
+          className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none bg-[#f0f6fa] transition-all" />
       </div>
       {loading ? (
         <div className="text-center py-6"><Loader2 size={20} className="animate-spin mx-auto text-teal-500" /></div>
@@ -1630,7 +1630,7 @@ function ConditionSelectField({ label, value, onChange }) {
                 className={`px-3 py-2 rounded-xl border text-left text-sm font-medium transition-all duration-150 ${
                   sel
                     ? 'border-teal-600 bg-teal-50 text-teal-900 shadow-sm ring-1 ring-teal-500/30'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-teal-300 hover:bg-slate-50'
+                    : 'border-slate-200 bg-[#f0f6fa] text-slate-600 hover:border-teal-300 hover:bg-slate-50'
                 }`}>
                 <span className="flex items-center gap-1.5">
                   {sel && <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />}

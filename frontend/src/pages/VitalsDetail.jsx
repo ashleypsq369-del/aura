@@ -23,7 +23,7 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
     ? 'border-amber-300 bg-amber-50'
     : status === 'critical'
     ? 'border-red-300 bg-red-50 animate-pulse'
-    : 'border-slate-200 bg-white';
+    : 'border-slate-200 bg-[#f0f6fa]';
 
   return (
     <motion.div

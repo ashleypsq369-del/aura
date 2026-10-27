@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Star, Send, Check } from 'lucide-react';
 import { usabilityAPI } from '../api/client';
@@ -112,7 +112,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
               initial={{ opacity: 0, x: -100, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -100, scale: 0.9 }}
-              className="fixed bottom-6 left-6 w-96 bg-white rounded-2xl shadow-2xl z-50 border-3 border-purple-500"
+              className="fixed bottom-6 left-6 w-96 bg-[#f0f6fa] rounded-2xl shadow-2xl z-50 border-3 border-purple-500"
             >
               {/* Header */}
               <div className="bg-gradient-to-r bg-teal-600 dark:bg-teal-700 text-white px-5 py-3 rounded-t-2xl flex items-center justify-between">

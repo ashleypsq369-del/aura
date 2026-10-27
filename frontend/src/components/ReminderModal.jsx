@@ -102,7 +102,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
             <select
               value={repeat}
               onChange={(e) => setRepeat(e.target.value)}
-              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-white"
+              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-[#f0f6fa]"
             >
               <option value="none">Does not repeat</option>
               <option value="daily">Daily</option>
@@ -118,7 +118,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
             <select
               value={remindBefore}
               onChange={(e) => setRemindBefore(e.target.value)}
-              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-white"
+              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-[#f0f6fa]"
             >
               <option value="0m">At time of event</option>
               <option value="5m">5 minutes before</option>
@@ -138,7 +138,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
             <select
               value={notifyVia}
               onChange={(e) => setNotifyVia(e.target.value)}
-              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-white"
+              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-[#f0f6fa]"
             >
               <option value="in-app">In-App Notification</option>
               <option value="email">Email</option>
@@ -154,7 +154,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
             <select
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-white"
+              className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 focus:outline-none transition bg-[#f0f6fa]"
             >
               <option value="self">Self (Patient)</option>
               <option value="caregiver">Primary Caregiver</option>
@@ -181,7 +181,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
                 className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition ${
                   actionRequired === act.id
                     ? 'border-teal-600 bg-teal-50 text-teal-700'
-                    : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
+                    : 'border-slate-200 bg-[#f0f6fa] text-slate-500 hover:border-slate-300'
                 }`}
               >
                 {act.label}
@@ -205,7 +205,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
                   className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition ${
                     priority === lower
                       ? 'border-teal-600 bg-teal-50 text-teal-700'
-                      : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
+                      : 'border-slate-200 bg-[#f0f6fa] text-slate-500 hover:border-slate-300'
                   }`}
                 >
                   {p}

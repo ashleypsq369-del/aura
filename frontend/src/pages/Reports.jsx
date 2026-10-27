@@ -123,12 +123,12 @@ function PatientPicker({value,onChange}) {
   return (
     <div className="relative">
       <label className="block text-[10px] font-bold text-slate-400  mb-1">Patient</label>
-      <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 dark:text-slate-100 text-left">
+      <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[#f0f6fa] dark:bg-slate-700 dark:text-slate-100 text-left">
         <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
         <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
       </button>
       {open&&(
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+        <div className="absolute z-50 mt-1 w-full bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
           <div className="p-2 border-b border-slate-100 dark:border-slate-700">
             <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 dark:text-slate-100 outline-none"/>
           </div>
@@ -153,12 +153,12 @@ function UserPicker({value,onChange,label='User',roles}) {
   return (
     <div className="relative">
       <label className="block text-[10px] font-bold text-slate-400  mb-1">{label}</label>
-      <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 dark:text-slate-100 text-left">
+      <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[#f0f6fa] dark:bg-slate-700 dark:text-slate-100 text-left">
         <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
         <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
       </button>
       {open&&(
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+        <div className="absolute z-50 mt-1 w-full bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
           <div className="p-2 border-b border-slate-100 dark:border-slate-700">
             <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 dark:text-slate-100 outline-none"/>
           </div>
@@ -936,7 +936,7 @@ export default function Reports() {
               {[{label:'Date From',value:dateFrom,set:setDateFrom},{label:'Date To',value:dateTo,set:setDateTo}].map(({label,value,set})=>(
                 <div key={label}>
                   <label className="block text-[10px] font-bold text-slate-400  mb-1">{label}</label>
-                  <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-white dark:bg-slate-700 dark:text-slate-100"/>
+                  <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[#f0f6fa] dark:bg-slate-700 dark:text-slate-100"/>
                 </div>
               ))}
               <div>

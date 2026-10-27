@@ -185,7 +185,7 @@ export default function NotificationTester() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-8 p-6 bg-white rounded-xl shadow-md border-2 border-teal-200"
+          className="mt-8 p-6 bg-[#f0f6fa] rounded-xl shadow-md border-2 border-teal-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-teal-600" />

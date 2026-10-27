@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { WifiOff, Wifi, Upload, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -141,7 +141,7 @@ export default function OfflineIndicator() {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute bottom-full right-0 mb-2 w-80 bg-white rounded-lg shadow-xl border-2 border-slate-200 p-4"
+                className="absolute bottom-full right-0 mb-2 w-80 bg-[#f0f6fa] rounded-lg shadow-xl border-2 border-slate-200 p-4"
               >
                 <h3 className="text-sm font-bold text-slate-900 mb-3">
                   {isOnline ? '🌐 Online Status' : '📴 Offline Status'}

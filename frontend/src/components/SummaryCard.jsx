@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 /**
@@ -41,7 +41,7 @@ export default function SummaryCard({
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`bg-white rounded-2xl p-6 border-3 ${statusColors[status]} hover:shadow-xl transition-all cursor-pointer group`}
+      className={`bg-[#f0f6fa] rounded-2xl p-6 border-3 ${statusColors[status]} hover:shadow-xl transition-all cursor-pointer group`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

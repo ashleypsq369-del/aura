@@ -224,12 +224,12 @@ export default function Notifications() {
           <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
             {unreadCount > 0 && (
               <button onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}
-                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-white dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm disabled:opacity-50">
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-[#f0f6fa] dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm disabled:opacity-50">
                 <CheckCheck size={13} /> Mark all read
               </button>
             )}
             <button onClick={() => clearRead.mutate()}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm">
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-slate-400 bg-[#f0f6fa] dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm">
               <BellOff size={13} /> Clear read
             </button>
           </div>

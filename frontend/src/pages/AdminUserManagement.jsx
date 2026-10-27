@@ -43,7 +43,7 @@ function KpiCard({ label, value, icon: Icon, color, onClick, active }) {
   return (
     <button
       onClick={onClick}
-      className={`bg-white rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
+      className={`bg-[#f0f6fa] rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
         active ? 'border-teal-500 shadow-md' : 'border-slate-200 hover:border-slate-300'
       }`}
     >
@@ -252,7 +252,7 @@ function InlineConfirm({ message, onConfirm, onCancel, confirmLabel = 'Confirm',
       <div className="flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onCancel}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 transition"
+          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#f0f6fa] border border-slate-300 hover:bg-slate-50 text-slate-700 transition"
         >
           Cancel
         </button>
@@ -338,7 +338,7 @@ function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPendi
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.12, ease: 'easeOut' }}
-            className="absolute right-0 top-9 z-50 w-52 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden"
+            className="absolute right-0 top-9 z-50 w-52 bg-[#f0f6fa] border border-slate-200 rounded-xl shadow-xl overflow-hidden"
           >
             <button
               onClick={handleEdit}

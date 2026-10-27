@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MLRiskSummaryCard — compact ML risk teaser on PatientDetail
  * Clean white card with solid colored badges (no bars, no faint tints)
  * Clicking navigates to /patients/:id/ml-risk for full SHAP detail
@@ -84,7 +84,7 @@ export default function MLRiskSummaryCard({ patientId }) {
       whileHover={{ y: -1, boxShadow: '0 8px 24px rgba(0,0,0,0.10)' }}
       whileTap={{ scale: 0.99 }}
       onClick={() => navigate(`/patients/${patientId}/ml-risk`)}
-      className={`w-full text-left rounded-2xl border border-slate-200 border-l-4 ${cfg.borderL} bg-white overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
+      className={`w-full text-left rounded-2xl border border-slate-200 border-l-4 ${cfg.borderL} bg-[#f0f6fa] overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
     >
       {/* Top strip for critical/high */}
       {(level === 'critical' || level === 'high') && (

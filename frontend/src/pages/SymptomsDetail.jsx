@@ -123,7 +123,7 @@ export default function SymptomsDetail() {
             {chartData.length > 1 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                 className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="lg:col-span-2 bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-200">
                     <h2 className="text-sm font-bold text-slate-900">Pain Level Trend</h2>
                   </div>

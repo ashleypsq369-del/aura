@@ -165,7 +165,7 @@ export default function FeatureRequestPanel() {
                               onChange={e => setReason(e.target.value)}
                               rows={2}
                               placeholder="Why do you need access to this feature? (e.g. My doctor recommended I use the Memory Vault)"
-                              className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-white dark:bg-slate-800 dark:text-slate-100 resize-none"
+                              className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[#f0f6fa] dark:bg-slate-800 dark:text-slate-100 resize-none"
                             />
                             <div className="flex gap-2">
                               <button

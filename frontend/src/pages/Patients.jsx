@@ -201,7 +201,7 @@ export default function Patients() {
                'Showing Stable Patients -- Maintaining good health'}
             </span>
             <button onClick={() => { setFilterStatus('all'); navigate('/patients', { replace: true, state: {} }); }}
-              className="ml-3 px-2.5 py-1 bg-white rounded-lg border text-xs font-bold hover:bg-slate-50 transition">
+              className="ml-3 px-2.5 py-1 bg-[#f0f6fa] rounded-lg border text-xs font-bold hover:bg-slate-50 transition">
               Clear
             </button>
           </div>
