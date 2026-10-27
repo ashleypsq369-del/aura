@@ -248,7 +248,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  {showLabels && (
  <div className="min-w-0">
  <p className="text-sm font-bold text-white leading-tight truncate">Project Aura</p>
- <p className="text-[9px] text-white/60 uppercase tracking-wider">Healthcare</p>
+ <p className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</p>
  </div>
  )}
  </div>

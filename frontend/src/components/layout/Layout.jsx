@@ -156,7 +156,7 @@ export default function Layout({ children }) {
  <img src="/logo.png" alt="Project Aura" className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5" />
  <div className="flex flex-col">
  <span className="font-bold text-sm leading-none" style={{ color: '#ffffff' }}>Project Aura</span>
- <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: 'rgba(255,255,255,0.65)' }}>Healthcare</span>
+ <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</span>
  </div>
  </div>
 
