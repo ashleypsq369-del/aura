@@ -124,7 +124,8 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
   // ── Compact mode — for dashboard card ─────────────────────────────────
   if (compact) {
     return (
-      <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4"
+        style={{ background: 'var(--card-bg, #e8fafa)' }}>
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <ProgressRing pct={completion_pct} size={44} />
@@ -183,7 +184,8 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
 
   // ── Full mode ─────────────────────────────────────────────────────────
   return (
-    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+      style={{ background: 'var(--card-bg, #e8fafa)' }}>
       {/* Header */}
       <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -220,7 +222,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                       task.done
                         ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
-                        : 'bg-[#e8fafa] dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                        : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                     }`}>
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
                       task.done ? 'bg-emerald-100 dark:bg-emerald-800/40' : 'bg-slate-100 dark:bg-slate-700'
@@ -232,7 +234,12 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                         <p className={`font-semibold text-sm truncate ${
                           task.done ? 'text-emerald-700 dark:text-emerald-300 line-through opacity-70' : 'text-slate-800 dark:text-slate-100'
                         }`}>{task.name}</p>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold border"
+                          style={{
+                            background: '#fff1f2',
+                            color: '#be123c',
+                            borderColor: '#fda4af',
+                          }}>
                           Required
                         </span>
                       </div>

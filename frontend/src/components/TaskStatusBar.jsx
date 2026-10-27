@@ -70,12 +70,12 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
     <motion.div
       initial={{ opacity: 0, x: -6 }}
       animate={{ opacity: 1, x: 0 }}
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors
+      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors border
         ${task.done
-          ? 'bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800/20'
+          ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/20'
           : isReq
-            ? 'bg-[#e8fafa] dark:bg-slate-800 border border-red-100 dark:border-red-900/30'
-            : 'bg-[#e8fafa] dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50'
+            ? 'bg-red-50/60 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
+            : 'bg-slate-50 dark:bg-slate-700/30 border-slate-100 dark:border-slate-700/50'
         }`}
     >
       {/* Status icon */}
@@ -235,8 +235,8 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
   return (
     <div
-      className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm"
-      style={{ borderLeft: `4px solid ${accentColor}` }}
+      className="rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm"
+      style={{ borderLeft: `4px solid ${accentColor}`, background: 'var(--card-bg, #e8fafa)' }}
     >
       {/* ── Collapsed header (always visible) ── */}
       <button
