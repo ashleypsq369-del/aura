@@ -595,12 +595,12 @@ Table 4.4: Representative TanStack Query caching parameters applied to server st
 
 | Query key | Stale time | Refetch interval | Rationale |
 |---|---|---|---|
-| patients | 5 minutes | — | Patient list changes infrequently |
-| patient-vitals | Not cached | — | Always shown fresh on navigation |
-| ml-risk | 5 minutes | — | ML inference is comparatively expensive |
-| alerts | — | 30 seconds | Clinical urgency requires near real time data |
-| notifications | — | 30 seconds | Drives the user-facing unread badge |
-| all-drug-ints | 10 minutes | — | Expensive all-patient batch scan |
+| patients | 5 minutes | - | Patient list changes infrequently |
+| patient-vitals | Not cached | - | Always shown fresh on navigation |
+| ml-risk | 5 minutes | - | ML inference is comparatively expensive |
+| alerts | - | 30 seconds | Clinical urgency requires near real time data |
+| notifications | - | 30 seconds | Drives the user-facing unread badge |
+| all-drug-ints | 10 minutes | - | Expensive all-patient batch scan |
 
 Because the Unified Care Dashboard eventually spanned dozens of independently built screens, a separate pass was needed once the core functionality existed to keep their presentation consistent. A shared colour theme was extended with a dark variant, verified screen by screen rather than assumed to work automatically, since colours set directly on a component rather than derived from the shared theme were repeatedly found to be illegible once the dark variant was active. The layout was likewise reviewed for use on a small mobile screen, since caregivers in the settings this project targets are more likely to access the platform from a phone than a desktop; the navigation drawer, the clinical assessment forms, and the page-level padding were each adjusted to remain usable at narrow viewport widths rather than simply shrinking a desktop layout. A toast-based notification library was adopted for transient feedback, such as confirming that a setting was saved, in preference to a modal dialogue, because a transient confirmation should not block the user's next action the way a modal does. Finally, a small set of feature flags, covering optional interface behaviour such as list virtualisation for very large patient tables, celebratory animation on goal completion, and route level progress indication, were exposed through the settings screen so that these behaviours could be tuned per deployment without a code change, consistent with the configuration-over-code principle already applied to the environment variables described in Section 4.2.
 

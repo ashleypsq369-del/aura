@@ -1,10 +1,10 @@
-# 🎨 Dissertation Diagrams — Ready to Generate
+# 🎨 Dissertation Diagrams - Ready to Generate
 # All prompts and code are ready. Just paste and export.
 
 ---
 
 ## ══════════════════════════════════════════════
-## FIGURES 3.1 & 3.4 — USE MERMAID.LIVE
+## FIGURES 3.1 & 3.4 - USE MERMAID.LIVE
 ## ══════════════════════════════════════════════
 ## HOW TO USE MERMAID:
 ## 1. Go to https://mermaid.live
@@ -16,22 +16,22 @@
 
 ---
 
-## FIGURE 3.1 — SDLC / Waterfall Phases
+## FIGURE 3.1 - SDLC / Waterfall Phases
 ## PASTE THIS ENTIRE BLOCK into https://mermaid.live
 
 ```
 flowchart TD
     A["📋 PHASE 1: REQUIREMENTS ANALYSIS\n────────────────────────────────\n• Literature review on palliative care systems\n• Stakeholder interviews with clinicians & patients\n• Identification of 5 user roles & 15 core features\n• Functional & non-functional requirements defined\n• Ghana healthcare context analysis\n• HIPAA/data privacy requirements identified"]
 
-    B["🎨 PHASE 2: SYSTEM DESIGN\n────────────────────────────────\n• Database schema — 34 SQLAlchemy models\n• API architecture — FastAPI, 39 REST endpoints\n• ML pipeline design — XGBoost × 8 clinical tasks\n• UI wireframes for 5 role-based dashboards\n• 3-tier architecture blueprint\n• Personalisation engine design"]
+    B["🎨 PHASE 2: SYSTEM DESIGN\n────────────────────────────────\n• Database schema - 34 SQLAlchemy models\n• API architecture - FastAPI, 39 REST endpoints\n• ML pipeline design - XGBoost × 8 clinical tasks\n• UI wireframes for 5 role-based dashboards\n• 3-tier architecture blueprint\n• Personalisation engine design"]
 
     C["💻 PHASE 3: IMPLEMENTATION\n────────────────────────────────\n• Frontend: React 19 + Vite + TailwindCSS\n• Backend: FastAPI + SQLAlchemy + SQLite\n• ML: XGBoost 8-task classifier + SHAP\n• LLM: Gemini/Groq integration\n• Offline: Service worker + offlineClient.js\n• Accessibility: 14 a11y settings + voice control"]
 
-    D["🧪 PHASE 4: TESTING & VALIDATION\n────────────────────────────────\n• Unit tests — test_api.py (39 endpoints)\n• ML model accuracy validation\n• SHAP value correctness verification\n• HIPAA compliance audit trail check\n• Cross-browser compatibility testing\n• Mobile responsiveness testing"]
+    D["🧪 PHASE 4: TESTING & VALIDATION\n────────────────────────────────\n• Unit tests - test_api.py (39 endpoints)\n• ML model accuracy validation\n• SHAP value correctness verification\n• HIPAA compliance audit trail check\n• Cross-browser compatibility testing\n• Mobile responsiveness testing"]
 
-    E["🚀 PHASE 5: DEPLOYMENT\n────────────────────────────────\n• Web: Vite build served via FastAPI\n• Desktop: pywebview wrapper\n• Demo data seeding — 34 users, 13 patients\n• Branch: feature/personalisation-and-ui-polish\n• GitHub repository (private)"]
+    E["🚀 PHASE 5: DEPLOYMENT\n────────────────────────────────\n• Web: Vite build served via FastAPI\n• Desktop: pywebview wrapper\n• Demo data seeding - 34 users, 13 patients\n• Branch: feature/personalisation-and-ui-polish\n• GitHub repository (private)"]
 
-    F["🔄 PHASE 6: MAINTENANCE\n────────────────────────────────\n• ML model retraining — retrain_targeted.py\n• Bug fixes from user testing feedback\n• Dark mode & mobile responsiveness patches\n• Personalisation engine enhancements\n• Documentation updates"]
+    F["🔄 PHASE 6: MAINTENANCE\n────────────────────────────────\n• ML model retraining - retrain_targeted.py\n• Bug fixes from user testing feedback\n• Dark mode & mobile responsiveness patches\n• Personalisation engine enhancements\n• Documentation updates"]
 
     A --> B --> C --> D --> E --> F
 
@@ -45,12 +45,12 @@ flowchart TD
 
 ---
 
-## FIGURE 3.4 — AI / SHAP Explainability Pipeline
+## FIGURE 3.4 - AI / SHAP Explainability Pipeline
 ## PASTE THIS ENTIRE BLOCK into https://mermaid.live
 
 ```
 flowchart TB
-    subgraph INPUT["📥 INPUT — Patient Clinical Record"]
+    subgraph INPUT["📥 INPUT - Patient Clinical Record"]
         direction LR
         D1["Demographics\nAge, Gender, Diagnosis"]
         D2["ESAS Symptoms\nPain 0-10 × 8 items"]
@@ -59,11 +59,11 @@ flowchart TB
         D5["Assessments\nPPS, Barthel, PHQ-9"]
     end
 
-    subgraph FE["⚙️ FEATURE ENGINEERING — ml_model_service.py"]
+    subgraph FE["⚙️ FEATURE ENGINEERING - ml_model_service.py"]
         F1["28 Features Extracted\n& Normalised via SavedScaler"]
     end
 
-    subgraph ML["🤖 XGBOOST ENSEMBLE — 8 Parallel Classifiers"]
+    subgraph ML["🤖 XGBOOST ENSEMBLE - 8 Parallel Classifiers"]
         direction LR
         M1["Pain\nRisk"]
         M2["Mortality\nRisk"]
@@ -76,11 +76,11 @@ flowchart TB
     end
 
     subgraph SCORE["📊 RISK SCORING"]
-        S1["Overall Risk Score\n0.0 — 1.0"]
+        S1["Overall Risk Score\n0.0 - 1.0"]
         S2["Risk Level\nLow / Moderate / High / Crisis"]
     end
 
-    subgraph SHAP["🔍 SHAP TreeExplainer — shap_values computed"]
+    subgraph SHAP["🔍 SHAP TreeExplainer - shap_values computed"]
         SH1["Feature: Pain Score (ESAS)\nImpact: +12.3% → Increases risk"]
         SH2["Feature: PPS Score\nImpact: +9.1% → Increases risk"]
         SH3["Feature: Age\nImpact: +7.4% → Increases risk"]
@@ -91,7 +91,7 @@ flowchart TB
         P1["overall_risk, risk_level\nshap_values JSON\ntask_scores JSON"]
     end
 
-    subgraph UI["🖥️ FRONTEND — RiskExplanationPanel.jsx"]
+    subgraph UI["🖥️ FRONTEND - RiskExplanationPanel.jsx"]
         U1["SHAP Bar Chart\nClinician sees plain-English\nexplanation of each factor"]
         U2["Domain Breakdown\n8 risk task scores\nwith progress bars"]
         U3["Clinician Feedback\nAgree / Partial / Disagree\n→ ML learning loop"]
@@ -116,11 +116,11 @@ flowchart TB
 ---
 
 ## ══════════════════════════════════════════════
-## FIGURES 3.2, 3.3, 3.5, 3.6 — USE ERASER.IO
+## FIGURES 3.2, 3.3, 3.5, 3.6 - USE ERASER.IO
 ## ══════════════════════════════════════════════
 ## HOW TO USE ERASER:
 ## 1. Go to the URL shown for each figure
-## 2. Click "Try it free" — NO account needed for 5 free diagrams
+## 2. Click "Try it free" - NO account needed for 5 free diagrams
 ## 3. Paste the EXACT prompt shown below
 ## 4. Click Generate
 ## 5. Export → PNG → Download
@@ -128,11 +128,11 @@ flowchart TB
 
 ---
 
-## FIGURE 3.2 — SYSTEM ARCHITECTURE DIAGRAM
+## FIGURE 3.2 - SYSTEM ARCHITECTURE DIAGRAM
 ## GO TO: https://eraser.io/ai/system-architecture-diagram-generator
 ## PASTE THIS PROMPT:
 
-Three-tier system architecture for ProjectAura — an AI-powered palliative care management platform.
+Three-tier system architecture for ProjectAura - an AI-powered palliative care management platform.
 
 PRESENTATION LAYER (top):
 - React 19 web application (browser-based, runs on port 5173 in dev)
@@ -159,11 +159,11 @@ CONNECTIONS:
 
 ---
 
-## FIGURE 3.3 — ENTITY-RELATIONSHIP DIAGRAM (ERD)
+## FIGURE 3.3 - ENTITY-RELATIONSHIP DIAGRAM (ERD)
 ## GO TO: https://eraser.io/ai/erd-generator
 ## PASTE THIS PROMPT:
 
-Create a detailed ERD for ProjectAura — a palliative care management platform database.
+Create a detailed ERD for ProjectAura - a palliative care management platform database.
 
 ENTITIES and their key attributes:
 
@@ -206,44 +206,44 @@ USER one-to-many AUDIT_LOG
 
 ---
 
-## FIGURE 3.5 — SECURITY / DATA-FLOW ARCHITECTURE
+## FIGURE 3.5 - SECURITY / DATA-FLOW ARCHITECTURE
 ## GO TO: https://eraser.io/ai/system-architecture-diagram-generator
 ## PASTE THIS PROMPT:
 
-Security and data-flow architecture diagram for ProjectAura — a HIPAA-compliant palliative care platform.
+Security and data-flow architecture diagram for ProjectAura - a HIPAA-compliant palliative care platform.
 
 Show the complete security chain as a vertical flow with these layers:
 
-LAYER 1 — CLIENT (Browser/Desktop App):
+LAYER 1 - CLIENT (Browser/Desktop App):
 - User enters username + password
 - HTTPS/TLS encrypts all data in transit
 - JWT token stored in localStorage after successful login
 - All subsequent requests include: Authorization: Bearer <token>
 
-LAYER 2 — FASTAPI AUTHENTICATION MIDDLEWARE:
+LAYER 2 - FASTAPI AUTHENTICATION MIDDLEWARE:
 - JWT token decoded and verified (SECRET_KEY, 24h expiry)
 - User identity confirmed: user_id, role extracted
 - Failed login counter incremented (lockout after 5 attempts)
 - Password comparison via bcrypt hash (never stored plaintext)
 
-LAYER 3 — RBAC (Role-Based Access Control):
+LAYER 3 - RBAC (Role-Based Access Control):
 - 5 roles: admin, clinician, caregiver, patient, family
 - require_role() dependency decorator on each endpoint
 - Admin-only: user management, audit log, HIPAA compliance
 - Patient-only: own data access (patient_id filtering)
 - Clinician: all patient data for assigned patients
 
-LAYER 4 — ENDPOINT HANDLER:
+LAYER 4 - ENDPOINT HANDLER:
 - Input validated via Pydantic models (type safety)
 - Business logic executed
 - Response data filtered by role
 
-LAYER 5 — AUDIT LOG (HIPAA Compliance):
+LAYER 5 - AUDIT LOG (HIPAA Compliance):
 - Every action recorded: user_id, role, action, resource_type, resource_id, timestamp
-- Immutable — no UPDATE or DELETE on audit records
+- Immutable - no UPDATE or DELETE on audit records
 - Exportable via /api/admin/hipaa-compliance
 
-LAYER 6 — DATABASE (SQLite):
+LAYER 6 - DATABASE (SQLite):
 - Passwords: bcrypt hashed (never readable)
 - Patient data: row-level isolation per patient_id
 - Sensitive fields: questionnaire data encrypted at rest
@@ -251,7 +251,7 @@ LAYER 6 — DATABASE (SQLite):
 
 ---
 
-## FIGURE 3.6 — SYSTEM PROCESS FLOWCHART
+## FIGURE 3.6 - SYSTEM PROCESS FLOWCHART
 ## GO TO: https://eraser.io/ai/flowchart-generator
 ## PASTE THIS PROMPT:
 

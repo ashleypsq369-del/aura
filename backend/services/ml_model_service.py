@@ -106,7 +106,7 @@ class MLModelService:
             vdir = task_dir / version
 
             try:
-                # ── Model (required) — load directly, no thread ────────────
+                # ── Model (required) - load directly, no thread ────────────
                 model_path = vdir / "model.joblib"
                 if not model_path.exists():
                     logger.warning(f"model.joblib missing for {task}")
@@ -119,7 +119,7 @@ class MLModelService:
                 if scaler_path.exists():
                     self.scalers[task] = joblib.load(scaler_path)
 
-                # ── SHAP explainer — rebuild inline from model (faster than
+                # ── SHAP explainer - rebuild inline from model (faster than
                 #    loading the large .joblib explainer files) ─────────────
                 self._try_rebuild_explainer(task)
                 if task not in self.explainers:
@@ -366,7 +366,7 @@ class MLModelService:
         return info
 
 
-# ── Singleton — lazy-loaded on first use ──────────────────────────────────
+# ── Singleton - lazy-loaded on first use ──────────────────────────────────
 _service: Optional[MLModelService] = None
 
 def get_ml_service() -> MLModelService:

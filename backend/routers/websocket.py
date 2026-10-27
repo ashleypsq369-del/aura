@@ -1,9 +1,9 @@
 """
-WebSocket Router — Project Aura Real-Time System
+WebSocket Router - Project Aura Real-Time System
 =================================================
 Channels:
-  /ws/{user_id}                — per-user authenticated connection
-  /ws/broadcast/{room}         — room-based (patient-{id}, clinicians, all)
+  /ws/{user_id}                - per-user authenticated connection
+  /ws/broadcast/{room}         - room-based (patient-{id}, clinicians, all)
 
 Events pushed server→client:
   new_alert       { alert }
@@ -109,7 +109,7 @@ class ConnectionManager:
         return list(self.connections.keys())
 
 
-# Singleton instance — import this from other modules to push events
+# Singleton instance - import this from other modules to push events
 manager = ConnectionManager()
 
 
@@ -214,7 +214,7 @@ def verify_token(token: str, db):
     """
     from jose import jwt, JWTError
     import os
-    # Must match auth.py — prefer SECRET_KEY, fall back to JWT_SECRET_KEY, then hardcoded default
+    # Must match auth.py - prefer SECRET_KEY, fall back to JWT_SECRET_KEY, then hardcoded default
     SECRET = os.getenv(
         "SECRET_KEY",
         os.getenv("JWT_SECRET_KEY", "a3f8e2d1c4b7a0f9e6d3c8b5a2f7e4d1c9b6a3f0e7d4c1b8a5f2e9d6c3b0a7")

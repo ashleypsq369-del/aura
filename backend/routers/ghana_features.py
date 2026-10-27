@@ -131,7 +131,7 @@ def complete_with_report(
     _notify_family(
         db,
         appt.patient_id,
-        title=f"Visit Complete — {patient_name}",
+        title=f"Visit Complete - {patient_name}",
         body=f"{nurse_name} has completed a visit. Condition: {data.overall_condition.title()}. Tap to view the full report.",
     )
     report.sent_to_family = True
@@ -361,7 +361,7 @@ PATHWAY_OPTIONS = [
     {
         "key": "respite",
         "title": "Respite Care",
-        "description": "Temporary relief for family caregivers — in-home or residential stay",
+        "description": "Temporary relief for family caregivers - in-home or residential stay",
         "icon": "Coffee",
         "services": ["in_home_respite", "residential_respite", "overnight_care"],
         "color": "#059669",

@@ -22,7 +22,7 @@ with engine.connect() as conn:
         )).scalar()
         print(f'Table {t}:', 'EXISTS' if r else 'MISSING')
 
-    # Check what's actually crashing login — test the auth import
+    # Check what's actually crashing login - test the auth import
     try:
         from routers.auth import router
         print('auth.py import: OK')

@@ -205,7 +205,7 @@ async def get_my_preferences(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get the current user's own preferences — use /my instead of /{user_id} with own ID."""
+    """Get the current user's own preferences - use /my instead of /{user_id} with own ID."""
     return await get_preferences(current_user.id, current_user, db)
 
 

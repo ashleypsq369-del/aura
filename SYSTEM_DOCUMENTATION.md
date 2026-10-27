@@ -1,4 +1,4 @@
-# Project Aura — Complete System Documentation
+# Project Aura - Complete System Documentation
 
 > AI-powered palliative care platform built for Ghana's healthcare context.
 > Full-stack: React 19 + FastAPI + SQLite + XGBoost + self-hosted NLP.
@@ -10,11 +10,11 @@
 1. [System Overview](#1-system-overview)
 2. [Architecture](#2-architecture)
 3. [User Roles & Access Control](#3-user-roles--access-control)
-4. [Backend — File Structure](#4-backend--file-structure)
+4. [Backend - File Structure](#4-backend--file-structure)
 5. [Database Models](#5-database-models)
 6. [API Routes](#6-api-routes)
 7. [AI & ML System](#7-ai--ml-system)
-8. [Frontend — File Structure](#8-frontend--file-structure)
+8. [Frontend - File Structure](#8-frontend--file-structure)
 9. [Frontend Pages](#9-frontend-pages)
 10. [Frontend Components](#10-frontend-components)
 11. [State Management & Context](#11-state-management--context)
@@ -34,7 +34,7 @@
 
 ## 1. System Overview
 
-Project Aura is a comprehensive **palliative care management platform** designed for hospitals, hospices, home care, and outpatient settings in Ghana. It serves five user roles across the full continuum of care — from initial diagnosis through death and bereavement.
+Project Aura is a comprehensive **palliative care management platform** designed for hospitals, hospices, home care, and outpatient settings in Ghana. It serves five user roles across the full continuum of care - from initial diagnosis through death and bereavement.
 
 ### Core Capabilities
 
@@ -114,7 +114,7 @@ Role is stored on the `User` model. RBAC is enforced in every FastAPI endpoint v
 
 ---
 
-## 4. Backend — File Structure
+## 4. Backend - File Structure
 
 ```
 backend/
@@ -331,7 +331,7 @@ All models defined in `backend/src/db.py` using SQLAlchemy ORM on SQLite.
 
 All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and `/api/auth/register`.
 
-### Auth — `/api/auth`
+### Auth - `/api/auth`
 | Method | Path | Description |
 |---|---|---|
 | POST | `/login` | Returns JWT access token |
@@ -341,7 +341,7 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/reset-password` | Apply new password with token |
 | GET | `/me` | Get current user profile |
 
-### Patients — `/api/patients`
+### Patients - `/api/patients`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/` | List patients (admin/clinician: all; caregiver: assigned) |
@@ -350,14 +350,14 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | PUT | `/{id}` | Update patient |
 | GET | `/search` | Search patients |
 
-### Vitals — `/api/vitals`
+### Vitals - `/api/vitals`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/{patient_id}` | Get patient vitals |
 | POST | `/` | Log new vitals |
 | GET | `/{patient_id}/recent` | Most recent vitals |
 
-### Medications — `/api/medications`
+### Medications - `/api/medications`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/{patient_id}` | List active medications |
@@ -365,14 +365,14 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | PUT | `/{id}` | Update medication |
 | DELETE | `/{id}` | Discontinue medication |
 
-### Appointments — `/api/appointments`
+### Appointments - `/api/appointments`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/{patient_id}` | List appointments |
 | POST | `/` | Schedule appointment |
 | PUT | `/{id}` | Update status (scheduled/completed/cancelled) |
 
-### Clinical Assessments — `/api/clinical-assessments`
+### Clinical Assessments - `/api/clinical-assessments`
 | Method | Path | Description |
 |---|---|---|
 | POST | `/esas` | Submit ESAS assessment |
@@ -388,7 +388,7 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/cognitive` | Submit Cognitive Assessment |
 | POST | `/motor-skills` | Submit Motor Skills |
 
-### Care Plans — `/api/care-plans`
+### Care Plans - `/api/care-plans`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/{patient_id}` | Get care plan |
@@ -400,14 +400,14 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/{id}/interventions` | Add intervention |
 | PUT | `/interventions/{iv_id}` | Update intervention |
 
-### Alerts — `/api/alerts`
+### Alerts - `/api/alerts`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/` | List all alerts |
 | GET | `/unread-count` | Unread count |
 | PUT | `/{id}/acknowledge` | Acknowledge alert |
 
-### Notifications — `/api/notifications`
+### Notifications - `/api/notifications`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/` | List notifications |
@@ -417,7 +417,7 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | DELETE | `/{id}` | Delete notification |
 | DELETE | `/clear-read` | Clear read notifications |
 
-### Community — `/api/community`
+### Community - `/api/community`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/groups` | List all groups (with `joined` per user) |
@@ -431,7 +431,7 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/posts/{id}/flag` | Flag for moderation |
 | PUT | `/posts/{id}/moderate` | Admin moderation |
 
-### Messaging — `/api/messaging`
+### Messaging - `/api/messaging`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/conversations` | List conversations |
@@ -440,14 +440,14 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/conversations/{id}/messages` | Send message |
 | GET | `/physicians` | List physicians for new chat |
 
-### Journey — `/api/journey`
+### Journey - `/api/journey`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/patients/{patient_id}` | Get patient journey timeline |
 | GET | `/my-journey` | Get logged-in user's journey |
 | POST | `/` | Create journey event (clinician/admin) |
 
-### AI — `/api/ai`
+### AI - `/api/ai`
 | Method | Path | Description |
 |---|---|---|
 | POST | `/predict/{patient_id}` | Run risk prediction |
@@ -455,12 +455,12 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 | POST | `/predict-batch` | Batch risk prediction |
 | POST | `/override/{prediction_id}` | Clinician override |
 
-### Dashboard — `/api/dashboard`
+### Dashboard - `/api/dashboard`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/summary` | Role-adaptive summary stats |
 
-### HIPAA — `/api/hipaa`
+### HIPAA - `/api/hipaa`
 | Method | Path | Description |
 |---|---|---|
 | GET | `/compliance-dashboard` | Compliance overview |
@@ -493,7 +493,7 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 
 ### Aura AI Engine (`backend/services/aura_ai_engine.py`)
 
-Self-hosted NLP companion — zero external API calls required:
+Self-hosted NLP companion - zero external API calls required:
 
 - **TF-IDF intent classifier** trained on 500+ medical Q&A pairs
 - **Entity extraction**: symptoms, medications, body parts, emotions
@@ -504,7 +504,7 @@ Self-hosted NLP companion — zero external API calls required:
 
 ### LLM Routing (`backend/services/llm_engine.py`)
 
-Priority cascade — falls back if API key absent or request fails:
+Priority cascade - falls back if API key absent or request fails:
 
 ```
 Groq (llama3-8b) → Anthropic Claude → Ollama (local) → Aura AI Engine
@@ -520,7 +520,7 @@ Reads all patient data (ESAS, PPS, PHQ-9, vitals, medications, diagnosis) and ge
 
 ---
 
-## 8. Frontend — File Structure
+## 8. Frontend - File Structure
 
 ```
 frontend/
@@ -595,14 +595,14 @@ frontend/
 | File | Route | Description |
 |---|---|---|
 | `Dashboard.jsx` | `/dashboard` | Role-adaptive: clinician KPIs, caregiver summary, family overview |
-| `PatientPortal.jsx` | `/my-space` | Patient home — 12 feature tiles, journey phase, care team, wellbeing snapshot |
+| `PatientPortal.jsx` | `/my-space` | Patient home - 12 feature tiles, journey phase, care team, wellbeing snapshot |
 
 ### Patient Management
 | File | Route | Description |
 |---|---|---|
 | `Patients.jsx` | `/patients` | Searchable patient list with risk badges |
-| `PatientDetail.jsx` | `/patients/:id` | Full patient profile — 8 clinical domain tiles |
-| `PatientMonitor.jsx` | `/patient/:id` | Real-time monitoring — vitals chart, symptoms, care plan, assessments |
+| `PatientDetail.jsx` | `/patients/:id` | Full patient profile - 8 clinical domain tiles |
+| `PatientMonitor.jsx` | `/patient/:id` | Real-time monitoring - vitals chart, symptoms, care plan, assessments |
 | `VitalsDetail.jsx` | `/patients/:id/vitals` | Vitals history charts |
 | `MedicationsDetail.jsx` | `/patients/:id/medications` | Full medication history |
 | `SymptomsDetail.jsx` | `/patients/:id/symptoms` | Symptom trend charts |
@@ -632,18 +632,18 @@ frontend/
 ### Community
 | File | Route | Description |
 |---|---|---|
-| `CommunityHub.jsx` | `/community` | Group listing — rich cards, join/leave, search, tabs |
+| `CommunityHub.jsx` | `/community` | Group listing - rich cards, join/leave, search, tabs |
 | `CommunityGroupPage.jsx` | `/community/:groupId` | Full-screen group chat with info sidebar |
 
 ### Resources & Education
 | File | Route | Description |
 |---|---|---|
-| `Resources.jsx` | `/resources` | Educational resources — search, filter, bookmark, download |
+| `Resources.jsx` | `/resources` | Educational resources - search, filter, bookmark, download |
 
 ### Legacy & Bereavement
 | File | Route | Description |
 |---|---|---|
-| `ContinuityBridge.jsx` | `/continuity-bridge` | Grief support hub — journal, resources, groups, counselling |
+| `ContinuityBridge.jsx` | `/continuity-bridge` | Grief support hub - journal, resources, groups, counselling |
 | `MemoryVault.jsx` | `/memory-vault` | Preserve and share memories |
 | `Journal.jsx` | `/journal` | Private grief journal |
 | `LegacySetup.jsx` | `/legacy-setup` | Digital legacy configuration |
@@ -704,8 +704,8 @@ frontend/
 | `AuraChat.jsx` | Teal floating AI companion chatbot (bottom-right) |
 | `AIAssistant.jsx` | Purple floating clinical navigation assistant (above AuraChat) |
 | `CriticalAlertModal.jsx` | Full-screen critical alert overlay with SHAP data |
-| `RealTimeAlerts.jsx` | Alerts bell in header — dropdown + "View All" modal |
-| `NotificationCenter.jsx` | Bell in header — categorised notification dropdown |
+| `RealTimeAlerts.jsx` | Alerts bell in header - dropdown + "View All" modal |
+| `NotificationCenter.jsx` | Bell in header - categorised notification dropdown |
 | `ExplainabilityPanel.jsx` | SHAP explanation panel for predictions |
 | `SHAPBarChart.jsx` | Horizontal SHAP bar chart |
 | `SHAPWaterfallChart.jsx` | SHAP waterfall chart |
@@ -781,7 +781,7 @@ frontend/
 | `AppSettingsContext` | `context/AppSettingsContext.jsx` | `theme`, `isDark`, `showAiWidgets`, `updateTheme()` |
 | `CareSettingContext` | `context/CareSettingContext.jsx` | `careSetting`, `setCareSetting()`, care setting metadata |
 
-**Server state:** All API data managed by `@tanstack/react-query` — queries with 30-second polling for live data (vitals, alerts, notifications).
+**Server state:** All API data managed by `@tanstack/react-query` - queries with 30-second polling for live data (vitals, alerts, notifications).
 
 ---
 
@@ -790,7 +790,7 @@ frontend/
 ### Hooks
 | Hook | Purpose |
 |---|---|
-| `useIdleTimer` | Fires `onIdle` callback after 15 minutes, shows warning at 14 minutes — HIPAA compliance |
+| `useIdleTimer` | Fires `onIdle` callback after 15 minutes, shows warning at 14 minutes - HIPAA compliance |
 | `useVoiceControl` | Listens for voice commands via Web Speech API, navigates app hands-free |
 | `useTouchSupport` | Initialises haptic feedback (navigator.vibrate) and Web Audio context |
 | `useAnimations` | Provides AOS and Framer Motion animation helpers |
@@ -821,9 +821,9 @@ BrowserRouter
 ```
 
 **Global overlays** rendered in `AppRoutes` regardless of route:
-- `AuraChat` — teal AI companion (toggleable in Settings)
-- `AIAssistant` — purple clinical assistant (toggleable in Settings)
-- `AutoLogoffWarning` — HIPAA idle timer overlay
+- `AuraChat` - teal AI companion (toggleable in Settings)
+- `AIAssistant` - purple clinical assistant (toggleable in Settings)
+- `AutoLogoffWarning` - HIPAA idle timer overlay
 
 ---
 
@@ -842,7 +842,7 @@ The app is designed to work offline for key read operations:
 | `assessments` | Assessment results | 24h |
 | `caregivers` | Caregiver directory | 24h |
 | `resources` | Educational resources | 24h |
-| `community` | Community groups (live only, skip cache — joined state is user-specific) | — |
+| `community` | Community groups (live only, skip cache - joined state is user-specific) | - |
 | `notifications` | Notification list | 24h |
 | `predictions` | Risk predictions | 24h |
 | `dashboard` | Dashboard summary | 24h |
@@ -858,7 +858,7 @@ Write operations (POST/PUT) are queued in `offlineStorage.js` and replayed when 
 - **Account lockout** after 5 failed login attempts (`User.locked_until`)
 - **HIPAA auto-logoff** at 15 minutes of inactivity (`useIdleTimer`)
 - **Role-based access control** enforced on every backend endpoint
-- **Audit trail** — every data access and mutation logged to `audit_logs`
+- **Audit trail** - every data access and mutation logged to `audit_logs`
 - **Client-side encryption** for chat messages (`chatEncryption.js`)
 - **CORS** configured in `main.py` for localhost development
 
@@ -868,14 +868,14 @@ Write operations (POST/PUT) are queued in `offlineStorage.js` and replayed when 
 
 Two parallel systems with different purposes:
 
-### Alerts (`/api/alerts`) — Emergency
+### Alerts (`/api/alerts`) - Emergency
 - Created by AI prediction engine when risk thresholds are crossed
 - Severities: `low`, `medium`, `high`, `critical`
 - Shown in `RealTimeAlerts` header component with red badge
 - Critical alerts trigger browser toast notifications
 - Clinicians must acknowledge each alert
 
-### Notifications (`/api/notifications`) — Routine
+### Notifications (`/api/notifications`) - Routine
 - Created by `NotificationService` background monitor
 - Types: `appointment_reminder_24h`, `appointment_reminder_1h`, `medication_reminder`, `medication_missed`, `new_message`, `community_post`, `high_risk`, `report_available`
 - Shown in `NotificationCenter` header component with categorised dropdown
@@ -889,7 +889,7 @@ Two parallel systems with different purposes:
 
 - 50 seeded condition-specific groups (pain, cancer, HIV, spiritual, counselling, Ghana-specific)
 - Each group has `image_url`, `condition_tags`, `member_count`, `created_by`
-- Posts are anonymised — display name shows `"Kofi · Cancer Journey"` not real name
+- Posts are anonymised - display name shows `"Kofi · Cancer Journey"` not real name
 - Posts max 280 characters
 - Reactions: 🙏 pray, ❤️ heart, 💪 strong
 - Flagging → admin moderation
@@ -902,13 +902,13 @@ Two parallel systems with different purposes:
 - Group conversations (multiple participants)
 - File attachments (images, documents, audio)
 - Read receipts + emoji reactions
-- Frontend: `Messages.jsx` — WhatsApp-style layout
+- Frontend: `Messages.jsx` - WhatsApp-style layout
 
 ### AI Chatbot (`/api/chatbot` + `/api/conversational-chatbot`)
 
 - Two separate chatbots with different purposes:
-  - `chatbot` — Navigation-focused: helps users find pages, look up clinical data
-  - `conversational-chatbot` — Emotional companion: full LLM with crisis detection
+  - `chatbot` - Navigation-focused: helps users find pages, look up clinical data
+  - `conversational-chatbot` - Emotional companion: full LLM with crisis detection
 - Consent required before use (HIPAA)
 - Crisis detection escalates to care team
 - Chat messages optionally encrypted client-side
@@ -919,17 +919,17 @@ Two parallel systems with different purposes:
 
 ### Digital Legacy Planning
 Patient designates heirs and creates posthumous content:
-1. **Legacy Setup** (`/legacy-setup`) — consent, sharing permissions, witness designation
-2. **Content Creator** (`/legacy-content`) — write letters, record audio/video messages, set delivery triggers
-3. **Heir Management** (`/heir-management`) — assign heirs with access levels
-4. **Heir Access** (`/my-legacy-access`) — heirs view their designated access after patient death
+1. **Legacy Setup** (`/legacy-setup`) - consent, sharing permissions, witness designation
+2. **Content Creator** (`/legacy-content`) - write letters, record audio/video messages, set delivery triggers
+3. **Heir Management** (`/heir-management`) - assign heirs with access levels
+4. **Heir Access** (`/my-legacy-access`) - heirs view their designated access after patient death
 
 ### Bereavement Support (`/continuity-bridge`)
 For family members after patient death:
-- **Grief Journal** — private entries with mood tracking
-- **PG-13 Screening** — Prolonged Grief Disorder screening tool
-- **Post-Death Schedule** — structured support touchpoints at 1 week, 1 month, 3 months, 6 months
-- **Support Resources** — Ghana-specific grief counselling contacts
+- **Grief Journal** - private entries with mood tracking
+- **PG-13 Screening** - Prolonged Grief Disorder screening tool
+- **Post-Death Schedule** - structured support touchpoints at 1 week, 1 month, 3 months, 6 months
+- **Support Resources** - Ghana-specific grief counselling contacts
 
 ---
 
@@ -1056,14 +1056,14 @@ File: `backend/.env` (copy from `.env.example`)
 ### Prerequisites
 - Node.js 18+ and npm
 - Python 3.10+
-- XAMPP (or any web server — only used as project root, not for serving)
+- XAMPP (or any web server - only used as project root, not for serving)
 
 ### Backend
 ```bash
 cd backend
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env — set SECRET_KEY at minimum
+# Edit .env - set SECRET_KEY at minimum
 python seed_medical_db.py      # seed medical knowledge
 python seed_community_groups.py # seed 50 community groups
 python seed_all_data.py         # optional: seed full demo data
@@ -1098,4 +1098,4 @@ python ace.py
 
 ---
 
-*Document generated: June 2026 — Project Aura v1.0*
+*Document generated: June 2026 - Project Aura v1.0*

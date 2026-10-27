@@ -6,7 +6,7 @@ Multi-channel notification delivery:
   - Web Push (VAPID) for browser/device push
   - Email via SendGrid (reuses existing key)
 
-All channels are optional — if keys are not configured the channel is silently
+All channels are optional - if keys are not configured the channel is silently
 skipped and in-app notification still works.
 
 Setup:
@@ -43,7 +43,7 @@ FROM_EMAIL          = os.getenv("FROM_EMAIL",         "noreply@projectaura.gh").
 def send_sms(to_number: str, message: str) -> bool:
     """Send SMS via Twilio. Returns True on success."""
     if not all([TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER]):
-        log.debug("SMS skipped — Twilio not configured")
+        log.debug("SMS skipped - Twilio not configured")
         return False
     if not to_number:
         return False
@@ -88,7 +88,7 @@ def send_web_push(subscription_info: dict, title: str, body: str,
                   url: str = "/notifications", icon: str = "/favicon.svg") -> bool:
     """Send a browser push notification via VAPID/Web Push API."""
     if not all([VAPID_PRIVATE_KEY, VAPID_PUBLIC_KEY]):
-        log.debug("Web push skipped — VAPID keys not configured")
+        log.debug("Web push skipped - VAPID keys not configured")
         return False
     try:
         from pywebpush import webpush, WebPushException
@@ -117,7 +117,7 @@ def send_web_push(subscription_info: dict, title: str, body: str,
 def send_email(to_email: str, subject: str, body_html: str) -> bool:
     """Send email via SendGrid."""
     if not SENDGRID_API_KEY:
-        log.debug("Email skipped — SendGrid not configured")
+        log.debug("Email skipped - SendGrid not configured")
         return False
     if not to_email:
         return False
@@ -141,7 +141,7 @@ def send_email(to_email: str, subject: str, body_html: str) -> bool:
 
 def send_email_alert(to_email: str, patient_name: str, alert_type: str, detail: str) -> bool:
     """Format and send a clinical email alert."""
-    subject = f"ProjectAura Alert — {patient_name}"
+    subject = f"ProjectAura Alert - {patient_name}"
     body = f"""
     <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;padding:24px;border-radius:12px">
       <div style="background:linear-gradient(135deg,#0d9488,#7c3aed);padding:16px 24px;border-radius:8px;margin-bottom:16px">
@@ -173,19 +173,19 @@ def deliver_notification(
     """
     results = {}
 
-    # SMS — only for critical alerts and if phone exists
+    # SMS - only for critical alerts and if phone exists
     if critical and user_phone:
         results["sms"] = send_sms_alert(user_phone, patient_name, alert_type, body)
     else:
         results["sms"] = "skipped"
 
-    # Email — critical alerts or if email enabled
+    # Email - critical alerts or if email enabled
     if critical and user_email:
         results["email"] = send_email_alert(user_email, patient_name, alert_type, body)
     else:
         results["email"] = "skipped"
 
-    # Web push — all notifications
+    # Web push - all notifications
     push_results = []
     for sub in push_subscriptions:
         ok = send_web_push(sub, title, body)

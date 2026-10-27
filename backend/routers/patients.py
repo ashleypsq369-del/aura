@@ -218,7 +218,7 @@ async def list_patients(
             query = query.filter(Patient.status == status)
         return _build(query.all())
 
-    # Patient: only own record — resolve via PatientPreferences first
+    # Patient: only own record - resolve via PatientPreferences first
     if current_user.role == 'patient':
         from src.db import PatientPreferences
         pref = db.query(PatientPreferences).filter(
@@ -428,7 +428,7 @@ async def patch_patient(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Partial update of patient record — used by onboarding questionnaire and self-service.
+    """Partial update of patient record - used by onboarding questionnaire and self-service.
     Patients can update their own record; clinicians/admins can update any."""
     from services.access_control import assert_patient_access
     assert_patient_access(patient_id, current_user, db)
@@ -548,7 +548,7 @@ async def get_patient_vitals(
             "patient_id": vital.patient_id,
             "recorded_at": vital.recorded_at.isoformat() if vital.recorded_at else None,
             "heart_rate": vital.heart_rate,
-            # Both naming variants — PatientDetail uses _sys/_dia, other pages use _systolic/_diastolic
+            # Both naming variants - PatientDetail uses _sys/_dia, other pages use _systolic/_diastolic
             "blood_pressure_sys":       vital.blood_pressure_sys,
             "blood_pressure_dia":       vital.blood_pressure_dia,
             "blood_pressure_systolic":  vital.blood_pressure_sys,

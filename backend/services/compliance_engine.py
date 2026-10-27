@@ -45,7 +45,7 @@ DAILY_TASKS = [
     {
         "id":          "esas_daily",
         "name":        "Daily Wellness Check-In (ESAS)",
-        "description": "Rate your 8 symptoms today — pain, tiredness, anxiety and more.",
+        "description": "Rate your 8 symptoms today - pain, tiredness, anxiety and more.",
         "type":        "compulsory_daily",
         "roles":       ["patient"],
         "link":        "/wellness-checkin",
@@ -71,12 +71,12 @@ DAILY_TASKS = [
     {
         "id":          "journal_daily",
         "name":        "Daily Journal Entry",
-        "description": "Write a short journal entry — your feelings, reflections, anything.",
+        "description": "Write a short journal entry - your feelings, reflections, anything.",
         "type":        "optional_daily",
         "roles":       ["patient", "family"],
         "link":        "/journal",
         "icon":        "book",
-        "check_fn":    None,   # No automated check — user-driven
+        "check_fn":    None,   # No automated check - user-driven
         "reminder_msg":"Take a moment to write in your journal today.",
         "clinician_alert_if_missed": False,
     },
@@ -194,7 +194,7 @@ def has_medication_log_today(db: Session, patient_id: int) -> bool:
         ).first()
         return result is not None
     except Exception:
-        # Table may not exist — fallback: treat as incomplete if patient has active meds
+        # Table may not exist - fallback: treat as incomplete if patient has active meds
         active_meds = db.query(Medication).filter(
             Medication.patient_id == patient_id,
             Medication.is_active == True,
@@ -255,7 +255,7 @@ def get_patient_compliance_status(
         tasks.append({
             "id":          f"appt_{appt.id}",
             "name":        f"Appointment: {appt.appointment_type}",
-            "description": f"{appt.location} — in {int(hours_until)}h",
+            "description": f"{appt.location} - in {int(hours_until)}h",
             "type":        "appointment",
             "icon":        "calendar",
             "link":        "/appointments",

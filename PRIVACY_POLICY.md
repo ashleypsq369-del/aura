@@ -3,13 +3,13 @@
 **Last Updated:** June 5, 2026  
 **Effective Date:** June 5, 2026  
 **Version:** 2.0.0  
-**Status:** DEMO / TESTING — Not legal advice. These documents are drafts for demonstration purposes and should be reviewed by a qualified attorney before production use.
+**Status:** DEMO / TESTING - Not legal advice. These documents are drafts for demonstration purposes and should be reviewed by a qualified attorney before production use.
 
 ---
 
 ## 1. Introduction
 
-**ProjectAura** ("we," "us," "our") is an AI-powered palliative care management platform designed for healthcare delivery in Ghana and Sub-Saharan Africa. We understand that the information stored on this Platform is among the most sensitive data anyone can entrust to a digital service — health records, end-of-life wishes, personal memories, and family communications.
+**ProjectAura** ("we," "us," "our") is an AI-powered palliative care management platform designed for healthcare delivery in Ghana and Sub-Saharan Africa. We understand that the information stored on this Platform is among the most sensitive data anyone can entrust to a digital service - health records, end-of-life wishes, personal memories, and family communications.
 
 This Privacy Policy explains how we collect, use, share, protect, and manage your personal and health information when you use ProjectAura (the "Platform").
 
@@ -219,19 +219,19 @@ Data is shared within your care team based on role-based access controls:
 
 We share limited data with these third-party services to operate the Platform:
 
-#### Email Delivery — SendGrid
+#### Email Delivery - SendGrid
 - **Data shared**: Recipient email address, email subject and body
 - **Purpose**: Sending notifications, reminders, alerts
 - **Legal basis**: Legitimate interest (service delivery)
 - **Safeguards**: SendGrid processes data under their privacy policy and DPA
 
-#### SMS Delivery — Twilio
+#### SMS Delivery - Twilio
 - **Data shared**: Recipient phone number, message content
 - **Purpose**: Sending medication reminders, appointment alerts, critical notifications
 - **Legal basis**: Consent and vital interests
 - **Safeguards**: Twilio is GDPR compliant and processes data under DPA
 
-#### AI/LLM APIs — Anthropic (Claude), Google (Gemini), Groq
+#### AI/LLM APIs - Anthropic (Claude), Google (Gemini), Groq
 - **Data shared**: De-identified or minimally identified query text for chatbot responses
 - **Purpose**: Generating AI chatbot responses, care recommendations
 - **Legal basis**: Consent and legitimate interest
@@ -241,12 +241,12 @@ We share limited data with these third-party services to operate the Platform:
   - Data processing agreements in place
   - Queries are scoped to the specific interaction only
 
-#### Database Hosting — Neon (PostgreSQL)
+#### Database Hosting - Neon (PostgreSQL)
 - **Data shared**: All Platform data (encrypted at rest)
 - **Purpose**: Primary data storage and retrieval
 - **Safeguards**: AES-256 encryption at rest, TLS 1.2+ in transit, access controls
 
-#### Application Hosting — Render
+#### Application Hosting - Render
 - **Data shared**: Application code and runtime data
 - **Purpose**: Hosting the FastAPI backend application
 - **Safeguards**: Secure deployment, environment variable management, no direct database access
@@ -381,7 +381,7 @@ ProjectAura uses AI/ML in several ways. We are committed to transparency:
 - **Right to Human Review**: You can request human review of AI decisions
 - **Right to Object**: You can object to AI processing of your data (though this may limit some features)
 - **Right to Feedback**: You can provide feedback on AI accuracy to improve or correct outputs
-- **No Automated Decision-Making**: AI does not make autonomous decisions about your care — all decisions involve human clinicians
+- **No Automated Decision-Making**: AI does not make autonomous decisions about your care - all decisions involve human clinicians
 
 ### 9.3 AI Data Minimization
 - We send only the minimum necessary data to LLM APIs
@@ -728,7 +728,7 @@ By using ProjectAura, you acknowledge that:
 | **How is data protected?** | Encryption (TLS 1.2+ / AES-256), access controls, audit logging |
 | **How long is data kept?** | Medical records: 7+ years. Other data: varies by type (see Section 11) |
 | **Can you delete your data?** | Yes, subject to legal retention requirements |
-| **Do we use AI on your data?** | Yes, for risk prediction, recommendations, and chatbot support — with transparency |
+| **Do we use AI on your data?** | Yes, for risk prediction, recommendations, and chatbot support - with transparency |
 | **Can you opt out of AI?** | You can object to AI processing; this may limit some features |
 | **Who regulates us?** | Ghana Data Protection Commission, and GDPR/HIPAA authorities as applicable |
 | **How to contact us?** | privacy@projectaura.com |

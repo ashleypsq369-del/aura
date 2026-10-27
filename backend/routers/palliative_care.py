@@ -1,5 +1,5 @@
 """
-Palliative Care Modules — ACP, MDT Meetings, Referrals, Spiritual Care
+Palliative Care Modules - ACP, MDT Meetings, Referrals, Spiritual Care
 Endpoints for the four clinical modules (Tables 31–34).
 """
 
@@ -143,7 +143,7 @@ def _require_patient(db: Session, patient_id: int) -> Patient:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ACP — Advance Care Planning
+# ACP - Advance Care Planning
 # ─────────────────────────────────────────────────────────────────────────────
 
 @router.post("/acp")
@@ -191,7 +191,7 @@ def create_or_update_acp(
         db=db,
         patient_id=data.patient_id,
         assessment_type="Advance Care Plan",
-        notes=f"ACP {action} — Goal: {data.primary_goal or 'not set'}, DNR: {data.dnr_status or 'not set'}",
+        notes=f"ACP {action} - Goal: {data.primary_goal or 'not set'}, DNR: {data.dnr_status or 'not set'}",
         created_by=current_user.id,
     )
     log_action(
@@ -382,7 +382,7 @@ def create_referral(
         db=db,
         patient_id=data.patient_id,
         assessment_type="Referral",
-        notes=f"{data.referral_type} referral ({data.urgency}) — {data.referral_reason[:80] if data.referral_reason else ''}",
+        notes=f"{data.referral_type} referral ({data.urgency}) - {data.referral_reason[:80] if data.referral_reason else ''}",
         created_by=current_user.id,
     )
     log_action(

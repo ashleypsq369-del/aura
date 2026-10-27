@@ -65,7 +65,7 @@ async def get_portal_dashboard(
         if patient:
             resolved_id = patient.id
             # Skip the access check if the portal resolved the patient by name match
-            # (the patient record IS this user — the ID just doesn't match numerically).
+            # (the patient record IS this user - the ID just doesn't match numerically).
             # Only enforce the check for clinicians/admins accessing other patients.
             if current_user.role not in ("patient", "family"):
                 if not check_patient_access(resolved_id, current_user, db):

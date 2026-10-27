@@ -59,7 +59,7 @@ from src.db import (
     MedicationAdherenceLog, Appointment
 )
 
-# Import new tables — defined in src.db so they're created in the right order
+# Import new tables - defined in src.db so they're created in the right order
 from src.db import PatientAllergy, MedicationEffect
 
 
@@ -270,7 +270,7 @@ def extract_all_patient_features(patient_id: int, db: Session) -> Tuple[Dict, np
         feature_dict['esas_anxiety']   = esas.anxiety    or 3
         feature_dict['esas_depression']= esas.depression or 3
         feature_dict['esas_wellbeing'] = esas.wellbeing  or 5
-        # Compute total from individual fields — ESASAssessment has no esas_total column
+        # Compute total from individual fields - ESASAssessment has no esas_total column
         feature_dict['esas_total'] = sum([
             esas.pain or 0, esas.tiredness or 0, esas.nausea or 0,
             esas.depression or 0, esas.anxiety or 0,
@@ -870,7 +870,7 @@ async def assess_comprehensive_risk(
     Returns SHAP explanations showing WHY the AI predicted this risk level
     """
     
-    # 1. Extract all features — wrapped so a single missing field won't 500
+    # 1. Extract all features - wrapped so a single missing field won't 500
     try:
         feature_dict, feature_array, feature_names = extract_all_patient_features(patient_id, db)
     except HTTPException:

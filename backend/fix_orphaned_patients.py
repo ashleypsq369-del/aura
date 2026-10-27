@@ -4,7 +4,7 @@ fix_orphaned_patients.py
 One-time migration: creates Patient records for any patient/family users
 who registered before the auto-creation fix was applied.
 
-Safe to run multiple times — skips users who already have a Patient link.
+Safe to run multiple times - skips users who already have a Patient link.
 
 Usage:
   cd backend
@@ -28,7 +28,7 @@ def fix_orphaned():
         ).order_by(User.id.asc()).first()
 
         if not clinician:
-            print("No clinician found — assignments will be skipped")
+            print("No clinician found - assignments will be skipped")
 
         # Find all patient/family users
         patient_users = db.query(User).filter(
@@ -72,7 +72,7 @@ def fix_orphaned():
                 fixed += 1
                 continue
 
-            # No patient at all — create one
+            # No patient at all - create one
             code = f"PA{user.id:04d}"
             # Avoid duplicate patient_code
             existing_code = db.query(Patient).filter(Patient.patient_code == code).first()

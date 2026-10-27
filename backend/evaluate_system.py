@@ -126,7 +126,7 @@ except Exception as e:
     traceback.print_exc()
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. ML MODELS — LOADING & METRICS
+# 2. ML MODELS - LOADING & METRICS
 # ─────────────────────────────────────────────────────────────────────────────
 section("2. ML MODEL LOADING & METRICS")
 
@@ -252,7 +252,7 @@ except Exception as e:
     p(FAIL, "Metrics file read failed", str(e))
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 4. LIVE PREDICTION TEST — run all 8 models on a synthetic patient
+# 4. LIVE PREDICTION TEST - run all 8 models on a synthetic patient
 # ─────────────────────────────────────────────────────────────────────────────
 section("4. LIVE PREDICTION TEST (SYNTHETIC PATIENT)")
 
@@ -394,7 +394,7 @@ except Exception as e:
     traceback.print_exc()
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 6. FEATURE EXTRACTION TEST — real patient from DB
+# 6. FEATURE EXTRACTION TEST - real patient from DB
 # ─────────────────────────────────────────────────────────────────────────────
 section("6. FEATURE EXTRACTION FROM REAL DB PATIENTS")
 
@@ -713,7 +713,7 @@ try:
         p(FAIL, f"{bad_temps} vitals have impossible temperature values",
           "possible Fahrenheit data -- run temp normalisation")
 
-    # Alert message float precision check — look for floats with 4+ decimal places
+    # Alert message float precision check - look for floats with 4+ decimal places
     bad_floats = db.execute(_sql_text(
         "SELECT COUNT(*) FROM alerts WHERE "
         "message REGEXP '[0-9]+\\.[0-9]{4,}'"
@@ -817,7 +817,7 @@ except Exception as e:
     p(FAIL, "Feature coverage check failed", str(e))
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 12. PREDICTION CONSISTENCY TEST — same patient, same result
+# 12. PREDICTION CONSISTENCY TEST - same patient, same result
 # ─────────────────────────────────────────────────────────────────────────────
 section("12. PREDICTION CONSISTENCY (DETERMINISM)")
 

@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**A comprehensive, INTELLIGENT palliative care platform for the Ghanaian healthcare context** — with proactive monitoring, disease-specific intelligence, and personalized care.
+**A comprehensive, INTELLIGENT palliative care platform for the Ghanaian healthcare context** - with proactive monitoring, disease-specific intelligence, and personalized care.
 
 > **🤖 INTELLIGENT CARE SYSTEM (June 2026):** FULLY OPERATIONAL! 🎉  
 > **Backend:** 100% ✅ | **Frontend:** 100% ✅ | **AI Intelligence:** 100% ✅ | **Proactive Monitoring:** ✅ | **Real-Time Alerts:** ✅  

@@ -75,7 +75,7 @@ REPORT_TYPES = [
     {
         "id": "user_activity",
         "name": "User Activity & Time Report",
-        "description": "All actions performed by a user (or all users) with timestamps — logins, patient views, assessments submitted, messages sent. Includes time-on-task estimates for HCI analysis.",
+        "description": "All actions performed by a user (or all users) with timestamps - logins, patient views, assessments submitted, messages sent. Includes time-on-task estimates for HCI analysis.",
         "access": ["admin"],
         "uses": ["Accountability", "Staff performance", "HCI time-on-task", "Compliance"],
         "standard": "HIPAA §164.312(b) Audit Controls, ISO 9001 Traceability",
@@ -99,7 +99,7 @@ REPORT_TYPES = [
     {
         "id": "incidents",
         "name": "Incident & Alert Report",
-        "description": "All high and critical alerts generated in a period — patient, severity, type, response time, who acknowledged, and outcome. Identifies patterns of deterioration.",
+        "description": "All high and critical alerts generated in a period - patient, severity, type, response time, who acknowledged, and outcome. Identifies patterns of deterioration.",
         "access": ["admin", "clinician"],
         "uses": ["Patient safety", "Critical incident review", "Near-miss analysis", "Quality assurance"],
         "standard": "NHS Patient Safety Incident Framework, NPSA",
@@ -320,11 +320,11 @@ async def patient_clinical_summary(
 
     return {
         "report_type": "patient_summary",
-        "report_title": f"Clinical Summary — {patient.full_name}",
+        "report_title": f"Clinical Summary - {patient.full_name}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period": {"from": start.isoformat(), "to": end.isoformat()},
-        "confidentiality": "CLINICAL IN CONFIDENCE — Not for unauthorised disclosure",
+        "confidentiality": "CLINICAL IN CONFIDENCE - Not for unauthorised disclosure",
         "standard": "NHS NACEL 2024 / HIPAA Right of Access §164.524",
 
         "patient": {
@@ -524,11 +524,11 @@ async def user_activity_report(
 
     return {
         "report_type": "user_activity",
-        "report_title": f"User Activity Report — {'All Users' if not user_id else f'User #{user_id}'}",
+        "report_title": f"User Activity Report - {'All Users' if not user_id else f'User #{user_id}'}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period": {"from": start.isoformat(), "to": end.isoformat()},
-        "confidentiality": "RESTRICTED — Admin use only. Contains personal access data.",
+        "confidentiality": "RESTRICTED - Admin use only. Contains personal access data.",
         "standard": "HIPAA §164.312(b) Audit Controls / ISO 9001:2015 §8.5.2 Traceability",
         "summary": {
             "total_users": len(user_summaries),
@@ -553,7 +553,7 @@ async def clinical_audit_trail(
     db: Session = Depends(get_db),
 ):
     """
-    Clinical Audit Trail — HIPAA §164.312(b) compliant.
+    Clinical Audit Trail - HIPAA §164.312(b) compliant.
     Full chronological log of all system actions.
     Clinicians can query for their own patients; admins see everything.
     Standard: HIPAA §164.312(b), GDPR Art.30.
@@ -616,11 +616,11 @@ async def clinical_audit_trail(
 
     return {
         "report_type": "audit_trail",
-        "report_title": f"Clinical Audit Trail{'— Patient #'+str(patient_id) if patient_id else ''}",
+        "report_title": f"Clinical Audit Trail{' -  Patient #'+str(patient_id) if patient_id else ''}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period": {"from": start.isoformat(), "to": end.isoformat()},
-        "confidentiality": "STRICTLY CONFIDENTIAL — Legal record. Do not alter.",
+        "confidentiality": "STRICTLY CONFIDENTIAL - Legal record. Do not alter.",
         "standard": "HIPAA §164.312(b) / GDPR Art.30 / NHS IG Toolkit",
         "totals": {
             "total_entries": len(entries),
@@ -642,7 +642,7 @@ async def population_report(
 ):
     """
     Population & Caseload Report.
-    System-wide overview of all patients — risk distribution, alerts, care settings.
+    System-wide overview of all patients - risk distribution, alerts, care settings.
     Standard: NHS Quality Account, HQIP Clinical Audit Guide 2020.
     """
     if current_user.role not in ("admin", "clinician"):
@@ -717,7 +717,7 @@ async def incident_report(
 ):
     """
     Incident & Alert Report.
-    All alerts above a severity threshold — type, patient, response time, outcome.
+    All alerts above a severity threshold - type, patient, response time, outcome.
     Standard: NHS Patient Safety Incident Framework, NPSA.
     """
     if current_user.role not in ("admin", "clinician"):
@@ -773,7 +773,7 @@ async def incident_report(
         "generated_by": _user_dict(current_user),
         "period": {"from": start.isoformat(), "to": end.isoformat()},
         "standard": "NHS Patient Safety Incident Framework / NPSA",
-        "confidentiality": "CLINICAL IN CONFIDENCE — Patient safety record",
+        "confidentiality": "CLINICAL IN CONFIDENCE - Patient safety record",
         "summary": {
             "total_incidents":     len(incidents),
             "critical":            sum(1 for i in incidents if i["severity"] == "critical"),
@@ -867,7 +867,7 @@ async def caregiver_performance_report(
 
     return {
         "report_type": "caregiver_performance",
-        "report_title": f"Caregiver Performance — {caregiver.full_name}",
+        "report_title": f"Caregiver Performance - {caregiver.full_name}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period": {"from": start.isoformat(), "to": end.isoformat()},
@@ -1035,7 +1035,7 @@ async def medication_adherence_report(
 
     return {
         "report_type":  "medication_adherence",
-        "report_title": f"Medication Adherence — {patient.full_name}",
+        "report_title": f"Medication Adherence - {patient.full_name}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period":       {"from": start.isoformat(), "to": end.isoformat()},
@@ -1139,7 +1139,7 @@ async def assessment_completion_report(
                 critical_scores.append({
                     "patient_id": p.id, "patient_name": p.full_name,
                     "assessment": "ESAS", "score": tsds,
-                    "flag": "TSDS ≥40 — 72% 30-day mortality risk (Watanabe 2011)",
+                    "flag": "TSDS ≥40 - 72% 30-day mortality risk (Watanabe 2011)",
                     "date": last_esas.assessed_at.isoformat(),
                 })
 
@@ -1153,7 +1153,7 @@ async def assessment_completion_report(
                 critical_scores.append({
                     "patient_id": p.id, "patient_name": p.full_name,
                     "assessment": "PHQ-9", "score": phq9_score,
-                    "flag": "PHQ-9 ≥15 — Moderately severe to severe depression",
+                    "flag": "PHQ-9 ≥15 - Moderately severe to severe depression",
                     "date": last_phq9.assessed_at.isoformat(),
                 })
 
@@ -1317,7 +1317,7 @@ async def care_plan_progress_report(
 
     return {
         "report_type":  "care_plan_progress",
-        "report_title": f"Care Plan Goal Progress — {patient.full_name}",
+        "report_title": f"Care Plan Goal Progress - {patient.full_name}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "confidentiality": "CLINICAL IN CONFIDENCE",
@@ -1445,10 +1445,10 @@ async def mdt_handover_report(
 
     return {
         "report_type":  "mdt_handover",
-        "report_title": f"MDT Handover — {now.strftime('%d %b %Y, %H:%M')}",
+        "report_title": f"MDT Handover - {now.strftime('%d %b %Y, %H:%M')}",
         "generated_at": now.isoformat(),
         "generated_by": _user_dict(current_user),
-        "confidentiality": "CLINICAL IN CONFIDENCE — For clinical staff only",
+        "confidentiality": "CLINICAL IN CONFIDENCE - For clinical staff only",
         "standard": "NHS Safe Handover BMA 2004 / SBAR / CQC Fundamental Standards",
         "summary": {
             "total_active_patients": len(patients),
@@ -1521,10 +1521,10 @@ async def advance_care_plan_report(
 
     return {
         "report_type":  "advance_care_plan",
-        "report_title": f"Advance Care Plan — {patient.full_name}",
+        "report_title": f"Advance Care Plan - {patient.full_name}",
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
-        "confidentiality": "STRICTLY CONFIDENTIAL — Legal document. Handle with care.",
+        "confidentiality": "STRICTLY CONFIDENTIAL - Legal document. Handle with care.",
         "standard": "NICE NG31 / GMC End of Life 2024 / Mental Capacity Act 2005",
         "patient": {
             "id": patient.id,
@@ -1685,7 +1685,7 @@ async def bereavement_outcome_report(
         "generated_at": datetime.utcnow().isoformat(),
         "generated_by": _user_dict(current_user),
         "period":       {"from": start.isoformat(), "to": end.isoformat()},
-        "confidentiality": "CLINICAL IN CONFIDENCE — Bereavement data",
+        "confidentiality": "CLINICAL IN CONFIDENCE - Bereavement data",
         "standard": "NACEL 2024 Bereavement Survey / NICE NG31 / CRUSE UK Guidelines",
         "summary": {
             "total_families":        len(family_outcomes),

@@ -13,7 +13,7 @@ from sqlalchemy import text, inspect
 from src.db import Base, engine, UserFeatureOverride, FeatureRequest, PatientPreferences, User
 
 print("=" * 55)
-print("ProjectAura — Database Migration")
+print("ProjectAura - Database Migration")
 print("=" * 55)
 
 inspector = inspect(engine)
@@ -51,7 +51,7 @@ with engine.begin() as conn:
     # 3. Check users table for new optional columns we may have added
     user_cols = {c['name'] for c in inspector.get_columns('users')}
     # These are relationship-only, no new columns needed on users table
-    print(f"  Users table has {len(user_cols)} columns — OK")
+    print(f"  Users table has {len(user_cols)} columns - OK")
 
 print()
 print("Migration complete.")

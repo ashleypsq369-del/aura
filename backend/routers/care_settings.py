@@ -360,7 +360,7 @@ async def request_care_setting_change(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Patient requests a care setting change (pending admin approval). Family cannot request changes — only the patient themselves."""
+    """Patient requests a care setting change (pending admin approval). Family cannot request changes - only the patient themselves."""
     if current_user.role != "patient":
         raise HTTPException(
             status_code=403,

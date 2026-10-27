@@ -375,7 +375,7 @@ async def admin_delete_override(
     db.delete(override)
     db.commit()
 
-    return {"message": "Override removed — feature reverts to care-setting default"}
+    return {"message": "Override removed - feature reverts to care-setting default"}
 
 
 # ── Questionnaire-driven gate persistence ─────────────────────────────────────

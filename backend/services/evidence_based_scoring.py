@@ -32,7 +32,7 @@ from __future__ import annotations
 from typing import Dict, Any, Optional, List
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 1 — PALLIATIVE PROGNOSTIC INDEX (PPI)
+# MODEL 1 - PALLIATIVE PROGNOSTIC INDEX (PPI)
 # Source: Morita et al. (1999) Support Care Cancer 7(2):128-133
 # Validated: 150 training + 95 testing terminally ill cancer patients
 # Japan Hospice Palliative Care Group, multi-centre
@@ -66,7 +66,7 @@ def score_ppi(
     has_delirium: bool = False,
 ) -> Dict[str, Any]:
     """
-    Palliative Prognostic Index — Morita et al. (1999).
+    Palliative Prognostic Index - Morita et al. (1999).
     PPI > 6:  <3 weeks survival (sensitivity 80%, specificity 85%)
     PPI 5-6:  <6 weeks survival
     PPI <= 4: >6 weeks survival
@@ -126,7 +126,7 @@ def score_ppi(
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 2 — PALLIATIVE PROGNOSTIC SCORE (PaP Score)
+# MODEL 2 - PALLIATIVE PROGNOSTIC SCORE (PaP Score)
 # Source: Maltoni et al. (1999) J Clin Oncol 17(9):2823-2830
 #         Revised with delirium: Scarpi et al. (2012) PMC3248779
 # Validated in 5 European centres, 518 terminally ill cancer patients
@@ -182,7 +182,7 @@ def score_pap(
     has_delirium: bool = False,
 ) -> Dict[str, Any]:
     """
-    Palliative Prognostic Score — Maltoni et al. (1999) + Scarpi (2012).
+    Palliative Prognostic Score - Maltoni et al. (1999) + Scarpi (2012).
     PaP Group A: total 0-5.5   → >70% 30-day survival
     PaP Group B: total 5.6-11  → 30-70% 30-day survival
     PaP Group C: total 11.1-17.5 → <30% 30-day survival
@@ -230,7 +230,7 @@ def score_pap(
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 3 — ESAS SYMPTOM RISK (Watanabe 2011 + Seow 2011 TSDS model)
+# MODEL 3 - ESAS SYMPTOM RISK (Watanabe 2011 + Seow 2011 TSDS model)
 # Sources:
 #   Watanabe SM et al. (2011) JPSM. Per-item severity thresholds.
 #   Seow H et al. (2011) J Oncol Pract doi:10.1200/JOP.2010.000174
@@ -314,7 +314,7 @@ def score_esas(
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 4 — PPS SURVIVAL PROGNOSIS
+# MODEL 4 - PPS SURVIVAL PROGNOSIS
 # Source: Bischoff KE et al. (2024) JAMA Network Open. CC-BY Open Access.
 # doi:10.1001/jamanetworkopen.2024.20472
 # Dataset: real inpatient + outpatient palliative care patients, UCSF
@@ -334,7 +334,7 @@ PPS_SURVIVAL_TABLE = {
 }
 
 def score_pps(pps_score: int) -> Dict[str, Any]:
-    """PPS-based actuarial survival prognosis — Bischoff et al. 2024."""
+    """PPS-based actuarial survival prognosis - Bischoff et al. 2024."""
     decile = max(10, min(100, round(pps_score / 10) * 10))
     p = PPS_SURVIVAL_TABLE[decile]
     if p["m6"] >= 0.90:   risk = "critical"
@@ -360,7 +360,7 @@ def score_pps(pps_score: int) -> Dict[str, Any]:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 5 — PHQ-9 DEPRESSION SEVERITY
+# MODEL 5 - PHQ-9 DEPRESSION SEVERITY
 # Source: Kroenke K, Spitzer RL (2002) J Gen Intern Med 16:606-613
 # Dataset: 6,000 patients in 8 primary care + 7 OB/GYN clinics
 # Sensitivity 88%, specificity 88% for major depression at threshold ≥10
@@ -369,8 +369,8 @@ def score_pps(pps_score: int) -> Dict[str, Any]:
 PHQ9_BANDS = [
     ( 0,  4, "minimal",          "low",      "Monitor at next routine visit"),
     ( 5,  9, "mild",             "low",      "Watchful waiting; repeat PHQ-9 at follow-up"),
-    (10, 14, "moderate",         "moderate", "Develop treatment plan — psychotherapy or medication"),
-    (15, 19, "moderately_severe","high",     "Active treatment — psychotherapy AND/OR medication"),
+    (10, 14, "moderate",         "moderate", "Develop treatment plan - psychotherapy or medication"),
+    (15, 19, "moderately_severe","high",     "Active treatment - psychotherapy AND/OR medication"),
     (20, 27, "severe",           "critical", "Immediate referral to mental health specialist"),
 ]
 
@@ -394,7 +394,7 @@ def score_phq9(total: int, item9_suicidal: int = 0) -> Dict[str, Any]:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 6 — GAD-7 ANXIETY SEVERITY
+# MODEL 6 - GAD-7 ANXIETY SEVERITY
 # Source: Spitzer RL et al. (2006) Arch Intern Med 166(10):1092-1097
 # Dataset: 2,740 patients; sensitivity 89%, specificity 82% at ≥10
 # ══════════════════════════════════════════════════════════════════════════════
@@ -422,7 +422,7 @@ def score_gad7(total: int) -> Dict[str, Any]:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# MODEL 7 — BARTHEL INDEX FUNCTIONAL DEPENDENCE + MORTALITY RISK
+# MODEL 7 - BARTHEL INDEX FUNCTIONAL DEPENDENCE + MORTALITY RISK
 # Source: Mahoney FI, Barthel DW (1965) MD State Med J 14:61-65
 #         Mortality revision: Frontiers Public Health (2024) doi:10.3389/fpubh.2024.1478897
 # Dataset: 100+ post-stroke patients originally; mortality data from 5,000+ patients
@@ -430,7 +430,7 @@ def score_gad7(total: int) -> Dict[str, Any]:
 
 BARTHEL_BANDS = [
     (  0,  20, "total_dependence",   "critical", "Fully dependent. Requires intensive 24h nursing care."),
-    ( 21,  60, "severe_dependence",  "high",     "Severe dependence. High caregiver burden — assess support."),
+    ( 21,  60, "severe_dependence",  "high",     "Severe dependence. High caregiver burden - assess support."),
     ( 61,  90, "moderate_dependence","moderate", "Moderate dependence. Daily assistance required."),
     ( 91,  99, "minimal_dependence", "low",      "Mostly independent. Monitor for deterioration."),
     (100, 100, "independent",        "low",      "Fully independent. Routine monitoring."),
@@ -489,7 +489,7 @@ def composite_palliative_risk(
     risk_pool: List[float] = []
     all_actions: List[str] = []
 
-    # --- ESAS (weighted highest — most direct symptom measure) ---------------
+    # --- ESAS (weighted highest - most direct symptom measure) ---------------
     esas = score_esas(
         esas_pain, esas_tiredness, esas_nausea, esas_depression,
         esas_anxiety, esas_drowsiness, esas_appetite, esas_breath, esas_wellbeing,
@@ -559,7 +559,7 @@ def composite_palliative_risk(
     elif overall >= 0.15: level = "low"
     else:                 level = "normal"
 
-    # Top features for SHAP display — from ESAS importances
+    # Top features for SHAP display - from ESAS importances
     top_features = esas.get("feature_importances", [])[:5]
 
     # References list

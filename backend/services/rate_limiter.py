@@ -1,4 +1,4 @@
-"""Shared rate-limiter instance — import in main.py and auth.py."""
+"""Shared rate-limiter instance - import in main.py and auth.py."""
 import os
 # Prevent starlette.config.Config from auto-reading .env with wrong encoding on Windows
 os.environ.setdefault("ENV_FILE", "")

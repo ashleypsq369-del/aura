@@ -1,4 +1,4 @@
-# ProjectAura — Complete System Master Documentation
+# ProjectAura - Complete System Master Documentation
 
 > **Last Updated:** July 28, 2026
 > **Version:** 3.1 (Post-UI Polish · Personalisation Engine · Methodology Clarification)
@@ -12,15 +12,15 @@
 2. [Development Methodology](#2-development-methodology)
 3. [Architecture](#3-architecture)
 4. [User Roles](#4-user-roles)
-5. [What's New — July 2026 Session](#5-whats-new--july-2026-session)
-5. [Frontend — Pages](#5-frontend--pages)
-6. [Frontend — Components](#6-frontend--components)
-7. [Frontend — Hooks](#7-frontend--hooks)
-8. [Frontend — Context Providers](#8-frontend--context-providers)
-9. [Frontend — API Client](#9-frontend--api-client)
-10. [Backend — Routers / Endpoints](#10-backend--routers--endpoints)
-11. [Backend — Services](#11-backend--services)
-12. [ML System — 8 XGBoost Models + SHAP](#12-ml-system--8-xgboost-models--shap)
+5. [What's New - July 2026 Session](#5-whats-new--july-2026-session)
+5. [Frontend - Pages](#5-frontend--pages)
+6. [Frontend - Components](#6-frontend--components)
+7. [Frontend - Hooks](#7-frontend--hooks)
+8. [Frontend - Context Providers](#8-frontend--context-providers)
+9. [Frontend - API Client](#9-frontend--api-client)
+10. [Backend - Routers / Endpoints](#10-backend--routers--endpoints)
+11. [Backend - Services](#11-backend--services)
+12. [ML System - 8 XGBoost Models + SHAP](#12-ml-system--8-xgboost-models--shap)
 13. [Database Models](#13-database-models)
 14. [Personalisation Engine](#14-personalisation-engine)
 15. [Accessibility System](#15-accessibility-system)
@@ -77,13 +77,13 @@ ProjectAura followed a **sequential Waterfall methodology**, adapted for the con
 1. **No direct stakeholder consultation.** Requirements were not gathered through interviews, focus groups, or surveys with clinicians, patients, or families. No real users were consulted at any stage of development.
 
 2. **Requirements derived from literature, not users.** System requirements were extracted from published clinical frameworks and academic literature:
-   - ESAS (Edmonton Symptom Assessment System) — validated 8-symptom palliative care tool
-   - WHO (2020) *Palliative Care Fact Sheet* — global need and care gap evidence
-   - Hui & Bruera (2017) — clinical decision-making frameworks in palliative oncology
-   - HIPAA Security Rule — data protection requirements for health records systems
-   - NHS Coordinate My Care programme documentation — multi-role care coordination patterns
+   - ESAS (Edmonton Symptom Assessment System) - validated 8-symptom palliative care tool
+   - WHO (2020) *Palliative Care Fact Sheet* - global need and care gap evidence
+   - Hui & Bruera (2017) - clinical decision-making frameworks in palliative oncology
+   - HIPAA Security Rule - data protection requirements for health records systems
+   - NHS Coordinate My Care programme documentation - multi-role care coordination patterns
 
-3. **No user acceptance testing.** The system was evaluated through technical testing only — API endpoint tests (`test_api.py`), ML model validation (AUC/ROC curves, confusion matrices), and SHAP explainability correctness checks. No usability testing with target clinical populations was conducted.
+3. **No user acceptance testing.** The system was evaluated through technical testing only - API endpoint tests (`test_api.py`), ML model validation (AUC/ROC curves, confusion matrices), and SHAP explainability correctness checks. No usability testing with target clinical populations was conducted.
 
 Because requirements were defined upfront from literature and did not evolve through user feedback loops, the Waterfall model is the honest and accurate description of this project's lifecycle.
 
@@ -95,9 +95,9 @@ Because requirements were defined upfront from literature and did not evolve thr
 |---|---|
 | **Agile / Scrum** | Agile requires real users providing feedback between sprints. No users were involved. Feature additions during development were driven by design decisions, not user stories. |
 | **Iterative / Incremental** | IID requires validated feedback from a user population to justify each new iteration. Without user testing, what appeared iterative was simply sequential implementation of a pre-planned feature set. |
-| **Prototyping** | Prototyping builds a throwaway mock to gather user reactions before committing to a design. No prototype was shown to stakeholders — no stakeholders existed for this project. |
+| **Prototyping** | Prototyping builds a throwaway mock to gather user reactions before committing to a design. No prototype was shown to stakeholders - no stakeholders existed for this project. |
 | **Spiral** | Spiral is a risk-driven enterprise model requiring formal risk registers and management reviews between each cycle. Inapplicable to a solo student project. |
-| **Big Bang** | Big Bang implies no structured plan — features are implemented in arbitrary order. ProjectAura had a deliberate design-first approach: database schema → API → ML pipeline → frontend. |
+| **Big Bang** | Big Bang implies no structured plan - features are implemented in arbitrary order. ProjectAura had a deliberate design-first approach: database schema → API → ML pipeline → frontend. |
 
 ---
 
@@ -116,9 +116,9 @@ Because requirements were defined upfront from literature and did not evolve thr
 
 ### 2.4 Academic Justification for Waterfall
 
-The Waterfall model is appropriate when requirements are well-understood before implementation begins (Sommerville, 2016). In this project, requirements were derived from validated clinical tools and published evidence rather than evolving through discovery with users. This mirrors how many clinical decision-support system prototypes are built in academic research settings — from evidence-based specification rather than participatory design.
+The Waterfall model is appropriate when requirements are well-understood before implementation begins (Sommerville, 2016). In this project, requirements were derived from validated clinical tools and published evidence rather than evolving through discovery with users. This mirrors how many clinical decision-support system prototypes are built in academic research settings - from evidence-based specification rather than participatory design.
 
-> *"Although participatory design and user-centred iterative approaches are generally preferred for healthcare systems, the scope of this project — a solo undergraduate dissertation without access to clinical populations for ethical research — necessitated a literature-driven, sequential development approach. User acceptance testing and co-design with clinicians and patients are explicitly identified as primary directions for future work."*
+> *"Although participatory design and user-centred iterative approaches are generally preferred for healthcare systems, the scope of this project - a solo undergraduate dissertation without access to clinical populations for ethical research - necessitated a literature-driven, sequential development approach. User acceptance testing and co-design with clinicians and patients are explicitly identified as primary directions for future work."*
 
 ---
 
@@ -126,10 +126,10 @@ The Waterfall model is appropriate when requirements are well-understood before 
 
 The absence of user involvement is a significant limitation that is acknowledged transparently:
 
-- **No requirement validation** — requirements reflect the developer's interpretation of clinical literature, not verified clinician needs
-- **No usability testing** — the interface has not been evaluated for learnability or efficiency with real clinical users
-- **No clinical validation** — ML risk predictions have not been validated against real patient outcomes; synthetic training data was used
-- **No ethical approval** — the system was developed as a proof-of-concept artefact; deployment with real patients would require full NHS/GHS ethics committee approval, GDPR compliance review, and clinical safety certification (DCB0129)
+- **No requirement validation** - requirements reflect the developer's interpretation of clinical literature, not verified clinician needs
+- **No usability testing** - the interface has not been evaluated for learnability or efficiency with real clinical users
+- **No clinical validation** - ML risk predictions have not been validated against real patient outcomes; synthetic training data was used
+- **No ethical approval** - the system was developed as a proof-of-concept artefact; deployment with real patients would require full NHS/GHS ethics committee approval, GDPR compliance review, and clinical safety certification (DCB0129)
 
 These limitations do not invalidate the project as an academic artefact. The contribution is a **functional proof-of-concept system** demonstrating the technical feasibility of AI-assisted palliative care coordination, with a clear pathway to clinical validation in future work.
 
@@ -155,7 +155,7 @@ These limitations do not invalidate the project as an academic artefact. The con
 │  │ 39 Routers   │ │ 13 Services  │ │ ML Pipeline │ │
 │  └──────────────┘ └──────────────┘ └─────────────┘ │
 │  ┌──────────────────────────────────────────────────┐│
-│  │ SQLite (aura.db) — 34 demo users pre-seeded     ││
+│  │ SQLite (aura.db) - 34 demo users pre-seeded     ││
 │  │ XGBoost models × 8 tasks + SHAP TreeExplainer   ││
 │  └──────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────┘
@@ -175,7 +175,7 @@ These limitations do not invalidate the project as an academic artefact. The con
 
 ---
 
-## 5. What's New — July 2026 Session
+## 5. What's New - July 2026 Session
 
 ### 4.1 Personalisation Engine (NEW)
 The questionnaire now fully customises the system per user:
@@ -203,12 +203,12 @@ Global applier in `AppRoutes` fetches preferences from backend once per session 
 Derives `uiFlags` and `hiddenNavPaths` from questionnaire responses. Every component reads from this instead of checking preferences directly.
 
 **uiFlags include:**
-- `showCommunity` — false if `wants_community: no`
-- `showLegacy` — false if `legacy_interest: no`
-- `showAI` — false if `ai_analysis_consent: no`
-- `showSpiritualItems` — false if `spiritual_importance: not`
-- `simplifiedNav` — true if `tech_comfort: basic` or `info_style: simple`
-- `isBurntOut`, `isBereaved` — derived from questionnaire emotional state
+- `showCommunity` - false if `wants_community: no`
+- `showLegacy` - false if `legacy_interest: no`
+- `showAI` - false if `ai_analysis_consent: no`
+- `showSpiritualItems` - false if `spiritual_importance: not`
+- `simplifiedNav` - true if `tech_comfort: basic` or `info_style: simple`
+- `isBurntOut`, `isBereaved` - derived from questionnaire emotional state
 
 **What gets hidden by PersonalisationContext:**
 - Sidebar nav items (Community, Legacy paths, Digital Legacy, etc.)
@@ -220,14 +220,14 @@ Derives `uiFlags` and `hiddenNavPaths` from questionnaire responses. Every compo
 - AI widgets (AuraChat + AIAssistant): hidden if no AI consent
 - CareGuide tabs: spiritual items filtered
 
-### 4.3 Medical Knowledge Base — CRUD (NEW)
-- Backend: `POST /api/medical/conditions` — create (clinician/admin)
-- Backend: `PUT /api/medical/conditions/:name` — update (clinician/admin)
-- Backend: `DELETE /api/medical/conditions/:name` — delete (admin only)
+### 4.3 Medical Knowledge Base - CRUD (NEW)
+- Backend: `POST /api/medical/conditions` - create (clinician/admin)
+- Backend: `PUT /api/medical/conditions/:name` - update (clinician/admin)
+- Backend: `DELETE /api/medical/conditions/:name` - delete (admin only)
 - Frontend: Add/Edit forms with tag inputs for keywords, red flags, symptoms
 - GET `/api/medical/conditions` now returns `can_edit` flag
 
-### 4.4 Medical KB + CareGuide — Two-Column Library Layout (NEW)
+### 4.4 Medical KB + CareGuide - Two-Column Library Layout (NEW)
 Both pages redesigned from card grid + modal → **two-column library**:
 - Left sidebar: searchable index with dot colours per entry
 - Right pane: full reading view with book-like sections
@@ -242,37 +242,37 @@ All detail/preview forms redesigned to look like clinical reference books:
 - `FocusedAIExplanation`: per-section bordered boxes with accent stripes
 - `ResourceModal`: reading-guide line, `border-l-2` margin annotation style
 
-### 4.6 Settings — All Buttons Wired (FIXED)
+### 4.6 Settings - All Buttons Wired (FIXED)
 Previously placeholder-only items now all functional:
-- Install App (PWA) — shows when `pwa.canInstall` is true, calls `pwa.install()`
-- Restart App Tour — calls `useRestartTour()` hook, fires `aura:restart-tour` event
-- Clear All Data — now clears all 19 relevant localStorage keys + shows toast
-- Language change — shows `toast.success('Language updated')`
-- Accessibility Reset — shows toast confirmation
-- `featureSettings.virtualizedLists` — wired to PatientDataTable page size
-- `featureSettings.smoothScrollReveal` — wired to AOS init in AppRoutes
-- `featureSettings.pageProgressBar` — wired in NProgressBar ✅ (was already done)
-- `featureSettings.errorBoundaries` — wired in SectionErrorBoundary ✅
+- Install App (PWA) - shows when `pwa.canInstall` is true, calls `pwa.install()`
+- Restart App Tour - calls `useRestartTour()` hook, fires `aura:restart-tour` event
+- Clear All Data - now clears all 19 relevant localStorage keys + shows toast
+- Language change - shows `toast.success('Language updated')`
+- Accessibility Reset - shows toast confirmation
+- `featureSettings.virtualizedLists` - wired to PatientDataTable page size
+- `featureSettings.smoothScrollReveal` - wired to AOS init in AppRoutes
+- `featureSettings.pageProgressBar` - wired in NProgressBar ✅ (was already done)
+- `featureSettings.errorBoundaries` - wired in SectionErrorBoundary ✅
 
-### 4.7 Dark Mode — Comprehensive Fix
+### 4.7 Dark Mode - Comprehensive Fix
 Added `dark:` Tailwind variants across:
-- `AuraChat` — message area, AI bubbles, history cards, feel-scale buttons
-- `AIAssistant` — conversation area, chip buttons, capability cards
-- `AuraOnboarding` — tour card background, skip confirm overlay
-- `Settings` — Section wrapper (cascades to ALL settings cards), tab bar
-- `Notifications` — page bg, filter card, group containers, row hover
-- `PatientPortal` — Section component (cascades to all portal sections)
-- `Dashboard` — care updates card, patient table footer
-- `CommunityHub` — ML recommendation panel, inner group cards
-- `BereavedFamilyDashboard` — sticky tab bar
-- `MyLegacyAccess` — page bg, sticky tabs, list/content cards
-- `ContinuityBridge` — sticky tab bar
-- `AdminUserManagement` — table header text (was `text-slate-200` on light bg)
-- `Journal` — privacy notice, prompt card, entry cards
-- `MemoryVault` — memory cards, empty state
+- `AuraChat` - message area, AI bubbles, history cards, feel-scale buttons
+- `AIAssistant` - conversation area, chip buttons, capability cards
+- `AuraOnboarding` - tour card background, skip confirm overlay
+- `Settings` - Section wrapper (cascades to ALL settings cards), tab bar
+- `Notifications` - page bg, filter card, group containers, row hover
+- `PatientPortal` - Section component (cascades to all portal sections)
+- `Dashboard` - care updates card, patient table footer
+- `CommunityHub` - ML recommendation panel, inner group cards
+- `BereavedFamilyDashboard` - sticky tab bar
+- `MyLegacyAccess` - page bg, sticky tabs, list/content cards
+- `ContinuityBridge` - sticky tab bar
+- `AdminUserManagement` - table header text (was `text-slate-200` on light bg)
+- `Journal` - privacy notice, prompt card, entry cards
+- `MemoryVault` - memory cards, empty state
 
 ### 4.8 Mobile Responsiveness Fixes
-- **Sidebar mobile**: when drawer opens, `showLabels = isOpen ? true : expanded` — labels always show on mobile
+- **Sidebar mobile**: when drawer opens, `showLabels = isOpen ? true : expanded` - labels always show on mobile
 - **WellnessCheckin ESAS buttons**: `w-9→w-7 sm:w-9`, overflow-x-auto scroll row
 - **PageHeader**: `px-6→px-3 sm:px-6 md:px-8` to prevent left-clip on small screens
 - **Global CSS**: `html, body { overflow-x: hidden; max-width: 100vw }` added
@@ -282,7 +282,7 @@ Added `dark:` Tailwind variants across:
 
 ### 4.9 Toast / Sonner Fixes
 - Sonner `offset="80px"` prop positions toaster below 60px header
-- `expand={false}`, `visibleToasts={3}`, `gap={6}` — clean stacked look
+- `expand={false}`, `visibleToasts={3}`, `gap={6}` - clean stacked look
 - Duration increased to 6000ms
 - Duplicate "Offline data ready" toast fixed with `id: 'offline-prefetch'`
 - `prefetchForOffline()` now only fires on `user?.id` change (not every render)
@@ -302,7 +302,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 5. Frontend — Pages
+## 5. Frontend - Pages
 
 ### Patient-Facing
 | Page | Route | Description |
@@ -320,7 +320,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 ### Clinician-Facing
 | Page | Route | Description |
 |---|---|---|
-| `Dashboard` | `/dashboard` | Overview (clinician/caregiver/admin/family — role-adaptive) |
+| `Dashboard` | `/dashboard` | Overview (clinician/caregiver/admin/family - role-adaptive) |
 | `Patients` | `/patients` | Patient list with TanStack Table, sorting, filtering |
 | `PatientDetail` | `/patients/:id` | Full patient profile, risk summary, caregiver assignment |
 | `AIInsights` | `/ai-insights` | Two-pane: patient list + DeepDive XAI panel |
@@ -343,12 +343,12 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 | `CommunityHub` | `/community` | Group listing, ML recommendations, spiritual tab (personalisation-filtered) |
 | `Resources` | `/resources` | Educational resources with PDF viewer, bookmarks |
 | `Profile` | `/profile` | Profile edit, password change |
-| `AuditLog` | `/admin/audit` | Audit trail (admin only) — fixed route `/api/admin/audit-log` |
+| `AuditLog` | `/admin/audit` | Audit trail (admin only) - fixed route `/api/admin/audit-log` |
 | `AdminUserManagement` | `/admin/users` | User CRUD (admin only) |
 
 ---
 
-## 6. Frontend — Components
+## 6. Frontend - Components
 
 ### Layout
 | Component | Purpose |
@@ -367,8 +367,8 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 ### Clinical
 | Component | Purpose |
 |---|---|
-| `RiskExplanationPanel.jsx` | XAI modal: SHAP bars, domain breakdown, feedback — book-style |
-| `FocusedAIExplanation.jsx` | Per-alert clinical AI explanation — book-style |
+| `RiskExplanationPanel.jsx` | XAI modal: SHAP bars, domain breakdown, feedback - book-style |
+| `FocusedAIExplanation.jsx` | Per-alert clinical AI explanation - book-style |
 | `RealTimeAlerts.jsx` | Header bell with live poll |
 | `PatientDataTable.jsx` | TanStack Table with `virtualizedLists` feature flag |
 | `MLRiskSummaryCard.jsx` | Compact risk card for patient detail |
@@ -383,7 +383,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 7. Frontend — Hooks
+## 7. Frontend - Hooks
 
 | Hook | Purpose |
 |---|---|
@@ -398,18 +398,18 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 8. Frontend — Context Providers
+## 8. Frontend - Context Providers
 
 | Context | Purpose |
 |---|---|
-| `PersonalisationContext` | `uiFlags`, `hiddenNavPaths`, `hiddenSections` — derived from questionnaire |
+| `PersonalisationContext` | `uiFlags`, `hiddenNavPaths`, `hiddenSections` - derived from questionnaire |
 | `AppSettingsContext` | theme, language, notifications, chatbot/assistant settings, sidebar, featureFlags |
 | `AccessibilityContext` | highContrast, fontSize, reducedMotion, assistedMode, presets |
 | `AuthContext` | user, isAuthenticated, login/logout |
 | `CareSettingContext` | careSetting, navAdditions, meta (hospital/hospice/home/etc.) |
 | `WebSocketContext` | WS connection, message handler |
 
-### PersonalisationContext — uiFlags Reference
+### PersonalisationContext - uiFlags Reference
 ```js
 {
   showCommunity,      // false if wants_community === 'no'
@@ -426,7 +426,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 }
 ```
 
-### AppSettingsContext — featureSettings
+### AppSettingsContext - featureSettings
 ```js
 {
   confettiOnMilestone: true,   // MilestoneConfetti on goal completion
@@ -440,9 +440,9 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 9. Frontend — API Client
+## 9. Frontend - API Client
 
-`frontend/src/api/client.js` — all API calls via Axios with `Bearer` token.
+`frontend/src/api/client.js` - all API calls via Axios with `Bearer` token.
 
 ### Key API groups
 | Export | Endpoints |
@@ -460,9 +460,9 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 10. Backend — Routers / Endpoints
+## 10. Backend - Routers / Endpoints
 
-`backend/routers/` — 39 router files mounted in `main.py`.
+`backend/routers/` - 39 router files mounted in `main.py`.
 
 ### Key routes
 | Router | Prefix | Notable endpoints |
@@ -474,7 +474,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 | `comprehensive_ai.py` | `/api/comprehensive-ai` | SHAP explanation, feedback |
 | `care_plans.py` | `/api/care-plans` | generate, goals, interventions |
 | `notifications.py` | `/api/notifications` | CRUD, mark-read, push |
-| `admin.py` | `/api/admin` | users CRUD, `/audit-log` (singular — not audit-logs) |
+| `admin.py` | `/api/admin` | users CRUD, `/audit-log` (singular - not audit-logs) |
 | `preferences.py` | `/api/preferences` | questionnaire data, personalisation |
 | `messaging.py` | `/api/messages` | conversations, messages, `?userId=X` deep-link |
 | `legacy.py` | `/api/legacy` | consent, heir, content, my-legacy-access |
@@ -484,11 +484,11 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 11. Backend — Services
+## 11. Backend - Services
 
 | Service | Purpose |
 |---|---|
-| `true_llm_engine.py` | Gemini/Groq/OpenRouter LLM calls (uses `os.getenv` — no hardcoded keys) |
+| `true_llm_engine.py` | Gemini/Groq/OpenRouter LLM calls (uses `os.getenv` - no hardcoded keys) |
 | `ml_model_service.py` | XGBoost inference, SHAP TreeExplainer |
 | `care_plan_engine.py` | AI care plan generation from assessment data |
 | `notification_service.py` | Push + in-app notifications, Web Push VAPID |
@@ -501,7 +501,7 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 ---
 
-## 12. ML System — 8 XGBoost Models + SHAP
+## 12. ML System - 8 XGBoost Models + SHAP
 
 8 parallel XGBoost classifiers trained on clinically-parameterised synthetic data:
 
@@ -526,22 +526,22 @@ Across Medications, Appointments, ModernCard `ProStatCard`:
 
 Key SQLAlchemy models in `backend/src/db.py`:
 
-- `User` — auth, role, care_setting, professional verification
-- `Patient` — demographics, diagnosis, risk level, linked user
-- `ConditionCareTemplate` — medical knowledge base conditions (**now supports CRUD**)
-- `CarePlan` — goals, interventions, AI-generated sections
-- `Goal` — status, priority, category, checklist
-- `Intervention` — clinical interventions with frequency
-- `Assessment` / `ESAS` / `PPS` / `PHQ9` — clinical assessments
-- `Alert` — severity, type, acknowledged, patient link
-- `Message` / `Conversation` — messaging system
-- `Notification` — in-app + push notifications
-- `UserPreferences` — questionnaire answers (full personalisation data)
-- `CommunityGroup` / `CommunityPost` / `CommunityReaction` — community system
-- `LegacyConsent` / `HeirDesignation` / `LegacyContent` — digital legacy
-- `BereavedFamilyEntry` — grief journal, screening, support
-- `AuditLog` — HIPAA audit trail
-- `PushSubscription` — Web Push VAPID subscriptions
+- `User` - auth, role, care_setting, professional verification
+- `Patient` - demographics, diagnosis, risk level, linked user
+- `ConditionCareTemplate` - medical knowledge base conditions (**now supports CRUD**)
+- `CarePlan` - goals, interventions, AI-generated sections
+- `Goal` - status, priority, category, checklist
+- `Intervention` - clinical interventions with frequency
+- `Assessment` / `ESAS` / `PPS` / `PHQ9` - clinical assessments
+- `Alert` - severity, type, acknowledged, patient link
+- `Message` / `Conversation` - messaging system
+- `Notification` - in-app + push notifications
+- `UserPreferences` - questionnaire answers (full personalisation data)
+- `CommunityGroup` / `CommunityPost` / `CommunityReaction` - community system
+- `LegacyConsent` / `HeirDesignation` / `LegacyContent` - digital legacy
+- `BereavedFamilyEntry` - grief journal, screening, support
+- `AuditLog` - HIPAA audit trail
+- `PushSubscription` - Web Push VAPID subscriptions
 
 ---
 
@@ -549,7 +549,7 @@ Key SQLAlchemy models in `backend/src/db.py`:
 
 ### How It Works
 
-**1. Questionnaire (`/setup` — PersonalisationQuest.jsx)**
+**1. Questionnaire (`/setup` - PersonalisationQuest.jsx)**
 - Patient: 10 steps covering language, diagnosis, ESAS symptoms, emotional wellbeing, physical function, nutrition, spiritual/cultural care, family/social, content preferences (theme, notification preference NEW), AI consent
 - Family: 8 steps covering relationship, caregiving role, emotional wellbeing, faith/culture, legacy, consent
 - On completion: `onSuccess` immediately applies 12 settings to localStorage (theme, language, font, sidebar mode, a11y, notifications, AI consent)
@@ -595,16 +595,16 @@ Managed by `AccessibilityContext`. All settings saved to `localStorage('accessib
 | `highContrast` | Adds `high-contrast` CSS class to `<html>` |
 | `colorBlindMode` | Adds `cb-protanopia` / `cb-deuteranopia` / `cb-tritanopia` / `cb-monochrome` |
 | `fontSize` | Adds `text-small/medium/large/xlarge/xxlarge` class to `<html>` |
-| `reducedMotion` | Adds `reduced-motion` class — CSS reduces all animations |
-| `screenReaderMode` | Adds `screen-reader-mode` class — enhanced ARIA descriptions |
+| `reducedMotion` | Adds `reduced-motion` class - CSS reduces all animations |
+| `screenReaderMode` | Adds `screen-reader-mode` class - enhanced ARIA descriptions |
 | `voiceControl` | Enables `useVoiceControl` hook |
-| `largeTouch` | Adds `large-touch` class — bigger tap targets |
-| `simplifiedUI` | Adds `simplified-ui` class — cleaner layout |
+| `largeTouch` | Adds `large-touch` class - bigger tap targets |
+| `simplifiedUI` | Adds `simplified-ui` class - cleaner layout |
 | `assistedMode` | Combines multiple settings for cognitive impairment |
 | `focusMode` | Dims everything except focused element |
 | `readingGuide` | Horizontal line follows cursor |
 | `textSpacing` | `spacing-normal/relaxed/wide` class |
-| `dyslexiaFont` | Adds `dyslexia-font` class — rounded spaced font |
+| `dyslexiaFont` | Adds `dyslexia-font` class - rounded spaced font |
 
 ### Condition Presets
 - Dementia: xxlarge font, voice, reduced motion, large touch
@@ -619,20 +619,20 @@ Managed by `AccessibilityContext`. All settings saved to `localStorage('accessib
 ## 16. Settings & Feature Flags
 
 ### Settings Tabs
-1. **Profile** — account details (read-only), Edit Profile → `/profile`, Export Settings (JSON), Clear All Data (19 localStorage keys), App Info, **Install App (PWA)**, **Restart Tour**
-2. **Avatar** — avatar builder modal, role presets, reset to default
-3. **Appearance** — theme (light/dark/auto), language (with toast), sidebar mode
-4. **Accessibility** — high contrast, colour blind, font size, motion, assistive tech, condition presets
-5. **AI & Features** — AI widgets toggle, Aura Chat, AI Assistant settings, notifications, push notifications, optional feature flags
+1. **Profile** - account details (read-only), Edit Profile → `/profile`, Export Settings (JSON), Clear All Data (19 localStorage keys), App Info, **Install App (PWA)**, **Restart Tour**
+2. **Avatar** - avatar builder modal, role presets, reset to default
+3. **Appearance** - theme (light/dark/auto), language (with toast), sidebar mode
+4. **Accessibility** - high contrast, colour blind, font size, motion, assistive tech, condition presets
+5. **AI & Features** - AI widgets toggle, Aura Chat, AI Assistant settings, notifications, push notifications, optional feature flags
 
 ### Feature Flags (all wired)
 | Flag | Where consumed |
 |---|---|
-| `pageProgressBar` | `NProgressBar.jsx` — stops/starts NProgress |
-| `errorBoundaries` | `SectionErrorBoundary.jsx` — wraps/unwraps ErrorBoundary |
-| `smoothScrollReveal` | `AppRoutes useEffect` — AOS.init(disable: true/false) |
-| `virtualizedLists` | `PatientDataTable.jsx` — sets pageSize to full count when off |
-| `confettiOnMilestone` | `MilestoneConfetti` — fires on assessment/goal completion |
+| `pageProgressBar` | `NProgressBar.jsx` - stops/starts NProgress |
+| `errorBoundaries` | `SectionErrorBoundary.jsx` - wraps/unwraps ErrorBoundary |
+| `smoothScrollReveal` | `AppRoutes useEffect` - AOS.init(disable: true/false) |
+| `virtualizedLists` | `PatientDataTable.jsx` - sets pageSize to full count when off |
+| `confettiOnMilestone` | `MilestoneConfetti` - fires on assessment/goal completion |
 | `inlineDatePicker` | Date fields in forms |
 
 ---
@@ -650,9 +650,9 @@ Managed by `AccessibilityContext`. All settings saved to `localStorage('accessib
 - `--color-card-bg: #1e293b`
 - `--color-border-light: #334155`
 
-**AuraChat/AIAssistant** — hardcoded `background: '#ffffff'` replaced with `bg-white dark:bg-slate-800`
+**AuraChat/AIAssistant** - hardcoded `background: '#ffffff'` replaced with `bg-white dark:bg-slate-800`
 
-**Sonner toasts** — `theme="system"` on `<SonnerToaster>` + colour overrides in `sonner-overrides.css`
+**Sonner toasts** - `theme="system"` on `<SonnerToaster>` + colour overrides in `sonner-overrides.css`
 
 ---
 
@@ -660,16 +660,16 @@ Managed by `AccessibilityContext`. All settings saved to `localStorage('accessib
 
 ### Layout
 - Mobile sidebar: drawer (fixed, z-40, w-72) with dark backdrop overlay
-- When drawer opens: `showLabels = true` — nav labels always visible on mobile
+- When drawer opens: `showLabels = true` - nav labels always visible on mobile
 - Main content: `flex-1 min-w-0 overflow-x-hidden`
 - Global: `html, body { overflow-x: hidden; max-width: 100vw }`
 
 ### Responsive Patterns Used
-- `px-3 sm:px-6 md:px-8` — page container padding
-- `grid-cols-2 sm:grid-cols-3 md:grid-cols-4` — card grids
-- `w-7 h-7 sm:w-9 sm:h-9` — ESAS score buttons
-- `text-xl md:text-2xl` — page titles
-- `hidden sm:inline` — tab labels (icon-only on mobile)
+- `px-3 sm:px-6 md:px-8` - page container padding
+- `grid-cols-2 sm:grid-cols-3 md:grid-cols-4` - card grids
+- `w-7 h-7 sm:w-9 sm:h-9` - ESAS score buttons
+- `text-xl md:text-2xl` - page titles
+- `hidden sm:inline` - tab labels (icon-only on mobile)
 
 ### `.page-section` CSS utility
 ```css
@@ -713,11 +713,11 @@ Managed by `AccessibilityContext`. All settings saved to `localStorage('accessib
 ## 20. Care Setting System
 
 5 care delivery modes:
-- `hospital_based` — full clinical team, 24h monitoring
-- `hospice` — comfort-focused, family visits
-- `home_based` — caregiver-led, telemedicine
-- `outpatient_clinic` — scheduled visits
-- `long_term_residential` — nursing home
+- `hospital_based` - full clinical team, 24h monitoring
+- `hospice` - comfort-focused, family visits
+- `home_based` - caregiver-led, telemedicine
+- `outpatient_clinic` - scheduled visits
+- `long_term_residential` - nursing home
 
 Each mode adds context-specific nav items via `CareSettingContext.navAdditions`.
 Care setting visible in sidebar (when expanded) as a coloured badge.
@@ -793,9 +793,9 @@ toast.dismiss(id)
 - **HIPAA auto-logoff** at 15 minutes inactivity (`useIdleTimer`)
 - **Password hashing** via bcrypt
 - **Failed login tracking** with lockout after 5 attempts (30-minute lockout)
-- **Rate limiting** on `/api/auth/login` — 10 requests/minute via `slowapi`
+- **Rate limiting** on `/api/auth/login` - 10 requests/minute via `slowapi`
 
-### 24.1 Audit Logging — Full Implementation
+### 24.1 Audit Logging - Full Implementation
 
 All significant actions now write to the `AuditLog` table with **IP address and User-Agent captured**.
 
@@ -825,7 +825,7 @@ log_action(db, user=current_user, action="CREATE_VITAL",
 
 ### 24.2 HIPAA Compliance Dashboard
 
-`GET /api/compliance/status` — now **dynamically computed** from live DB state:
+`GET /api/compliance/status` - now **dynamically computed** from live DB state:
 - Queries `AuditLog` count and IP coverage percentage in real time
 - Queries `BreachIncident` table for open/resolved counts
 - Queries `User` table for total/active user counts
@@ -854,8 +854,8 @@ log_action(db, user=current_user, action="CREATE_VITAL",
 
 `backend/.env` (pre-configured for SQLite, no external DB required):
 ```
-GEMINI_API_KEY=       # optional — free from aistudio.google.com
-GROQ_API_KEY=         # optional — free from groq.com
+GEMINI_API_KEY=       # optional - free from aistudio.google.com
+GROQ_API_KEY=         # optional - free from groq.com
 OPENROUTER_API_KEY=   # optional
 SECRET_KEY=           # JWT secret
 DATABASE_URL=sqlite:///./aura.db
@@ -887,7 +887,7 @@ ProjectAura_React/
 ├── frontend/src/
 │   ├── App.jsx                   # Routes + PersonalisationProvider + global applier
 │   ├── context/
-│   │   ├── PersonalisationContext.jsx  # NEW — uiFlags, hiddenNavPaths
+│   │   ├── PersonalisationContext.jsx  # NEW - uiFlags, hiddenNavPaths
 │   │   ├── AppSettingsContext.jsx      # featureSettings, theme, sidebar
 │   │   └── AccessibilityContext.jsx    # a11y settings + presets
 │   ├── hooks/
@@ -976,10 +976,10 @@ User toggles setting in Settings page
 *Trained on clinically-parameterised synthetic data. Real-world validation with patient data required before clinical deployment.*
 
 ### Known Limitations
-- Training data is synthetic — real-world accuracy will differ
+- Training data is synthetic - real-world accuracy will differ
 - Personalisation questionnaire `ai_analysis_consent: no` silences AI features
-- GitHub secret scanning blocks push if old API keys exist in commit history — use `.env`
-- Image assets (African photos, slideshow) are excluded from git (`.gitignore`) — must be present locally
+- GitHub secret scanning blocks push if old API keys exist in commit history - use `.env`
+- Image assets (African photos, slideshow) are excluded from git (`.gitignore`) - must be present locally
 
 ---
 
@@ -1009,13 +1009,13 @@ User toggles setting in Settings page
 
 ProjectAura is designed as a **palliative care platform framework**, not a single-purpose app:
 
-1. **Role-adaptive UI** — same codebase serves 5 completely different user types with different navigation, features, and content
-2. **Personalisation-driven hiding** — the questionnaire doesn't just save preferences, it actively reshapes the interface
-3. **Pluggable AI** — rule-based offline + LLM online + XGBoost clinical models can be swapped independently
-4. **Care-setting aware** — hospital, hospice, home, clinic, and residential modes each surface different workflows
-5. **Culturally-parameterised** — language choices, spiritual care, cultural practices, Ghana-specific resources all affect what's shown
-6. **Feature-flagged** — all optional enhancements toggleable without code changes
-7. **Extensible medical KB** — clinicians add conditions; AI engine, community, resources all benefit automatically
+1. **Role-adaptive UI** - same codebase serves 5 completely different user types with different navigation, features, and content
+2. **Personalisation-driven hiding** - the questionnaire doesn't just save preferences, it actively reshapes the interface
+3. **Pluggable AI** - rule-based offline + LLM online + XGBoost clinical models can be swapped independently
+4. **Care-setting aware** - hospital, hospice, home, clinic, and residential modes each surface different workflows
+5. **Culturally-parameterised** - language choices, spiritual care, cultural practices, Ghana-specific resources all affect what's shown
+6. **Feature-flagged** - all optional enhancements toggleable without code changes
+7. **Extensible medical KB** - clinicians add conditions; AI engine, community, resources all benefit automatically
 
 ---
 

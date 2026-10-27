@@ -332,7 +332,7 @@ async def send_message_endpoint(
                     ws_manager.send_to_user(p.user_id, "new_message", msg_payload)
                 )
         except Exception:
-            pass  # WS push is best-effort — don't fail the HTTP response
+            pass  # WS push is best-effort - don't fail the HTTP response
 
         return {
             "message_id": message.id,

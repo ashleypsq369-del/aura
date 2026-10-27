@@ -109,7 +109,7 @@ def _get_caregiver_tasks(db, current_user) -> dict:
             required_completed += 1
         tasks.append({
             "id":          f"vitals_{pid}",
-            "name":        f"Vitals — {pname}",
+            "name":        f"Vitals - {pname}",
             "description": f"Record heart rate, BP, SpO2 (every {interval_h}h).",
             "type":        "compulsory_periodic",
             "icon":        "activity",
@@ -125,7 +125,7 @@ def _get_caregiver_tasks(db, current_user) -> dict:
             required_completed += 1
         tasks.append({
             "id":          f"esas_{pid}",
-            "name":        f"ESAS Check-In — {pname}",
+            "name":        f"ESAS Check-In - {pname}",
             "description": "Daily symptom check-in for this patient.",
             "type":        "compulsory_daily",
             "icon":        "heart",
@@ -138,13 +138,13 @@ def _get_caregiver_tasks(db, current_user) -> dict:
         pps_done = has_pps_within_days(db, pid, 30)
         tasks.append({
             "id":          f"pps_{pid}",
-            "name":        f"PPS Assessment — {pname}",
+            "name":        f"PPS Assessment - {pname}",
             "description": "Monthly functional status assessment.",
             "type":        "compulsory_periodic",
             "icon":        "clipboard",
             "link":        f"/assessments/{pid}/pps",
             "done":        pps_done,
-            "required":    False,   # monthly — optional reminder only
+            "required":    False,   # monthly - optional reminder only
         })
 
         # ── Upcoming appointments ─────────────────────────────────────────
@@ -153,7 +153,7 @@ def _get_caregiver_tasks(db, current_user) -> dict:
             hours_until = (appt.scheduled_at - datetime.utcnow()).total_seconds() / 3600
             tasks.append({
                 "id":          f"appt_{appt.id}",
-                "name":        f"Appointment: {appt.appointment_type} — {pname}",
+                "name":        f"Appointment: {appt.appointment_type} - {pname}",
                 "description": f"{appt.location} in {int(hours_until)}h",
                 "type":        "appointment",
                 "icon":        "calendar",
@@ -220,7 +220,7 @@ def _run_scan_task(db: Session):
 @router.get("/schedule")
 async def get_task_schedule(current_user: User = Depends(get_current_user)):
     """
-    Returns the full definition of all care tasks — compulsory and optional,
+    Returns the full definition of all care tasks - compulsory and optional,
     their frequency, role requirements, and reminder settings.
     """
     return {

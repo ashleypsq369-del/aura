@@ -36,7 +36,7 @@ if OPENROUTER_API_KEY:
     try:
         import httpx as _httpx_check  # noqa: F401
         OPENROUTER_AVAILABLE = True
-        print(f"[LLM] OpenRouter ({OPENROUTER_MODEL}): ACTIVE (primary LLM — Nemotron 550B)")
+        print(f"[LLM] OpenRouter ({OPENROUTER_MODEL}): ACTIVE (primary LLM - Nemotron 550B)")
     except ImportError:
         print("[LLM] WARNING: httpx not installed -> run: pip install httpx")
 else:

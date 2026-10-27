@@ -1,4 +1,4 @@
-c# Project Aura — How to Run
+c# Project Aura - How to Run
 
 ## What you need (install once)
 
@@ -71,7 +71,7 @@ This can happen if they registered before the patient auto-creation fix. Run thi
 cd backend
 python fix_orphaned_patients.py
 ```
-It's safe to run multiple times — skips users who are already properly linked.
+It's safe to run multiple times - skips users who are already properly linked.
 
 ---
 
@@ -138,7 +138,7 @@ pip install -r requirements.txt
 ```
 
 **Database errors**
-Delete `backend/aura.db` and re-run `START_HERE.bat` — it will recreate with fresh demo data.
+Delete `backend/aura.db` and re-run `START_HERE.bat` - it will recreate with fresh demo data.
 
 **Frontend shows old version**
 ```

@@ -256,7 +256,7 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
             new_patient = Patient(
                 full_name=request.full_name,
                 patient_code=f"PA{new_user.id:04d}",
-                date_of_birth=datetime(1970, 1, 1),  # placeholder — updated after onboarding
+                date_of_birth=datetime(1970, 1, 1),  # placeholder - updated after onboarding
                 gender=None,
                 primary_diagnosis="To be assessed",
                 status="active",

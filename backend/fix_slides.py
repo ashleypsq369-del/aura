@@ -16,52 +16,52 @@ headers = {
 # Each tuple: (filename, url, description)
 # All Unsplash free-to-use. Selected specifically for African/Black subjects.
 slides = [
-    # 1 — Black male doctor reviewing patient records / clinical monitoring
+    # 1 - Black male doctor reviewing patient records / clinical monitoring
     ("care-1.jpg",
      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200&q=80",
      "Black male doctor reviewing patient"),
 
-    # 2 — Black female nurse caring for elderly patient
+    # 2 - Black female nurse caring for elderly patient
     ("care-2.jpg",
      "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1200&q=80",
      "Black female nurse caring for elderly patient"),
 
-    # 3 — Black nurse at patient bedside
+    # 3 - Black nurse at patient bedside
     ("care-3.jpg",
      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&q=80",
      "Black nurse at bedside"),
 
-    # 4 — Black doctor holding patient hand / palliative care compassion
+    # 4 - Black doctor holding patient hand / palliative care compassion
     ("care-4.jpg",
      "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=1200&q=80",
      "Doctor holding patient hand - palliative"),
 
-    # 5 — African family together in hospital / care team
+    # 5 - African family together in hospital / care team
     ("care-5.jpg",
      "https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1200&q=80",
      "African family in hospital"),
 
-    # 6 — Black doctor using tablet/laptop — AI insights (NOT surgery)
+    # 6 - Black doctor using tablet/laptop - AI insights (NOT surgery)
     ("care-6.jpg",
      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80",
      "Doctor using digital tablet - AI"),
 
-    # 7 — Black clinician checking patient symptoms / consultation
+    # 7 - Black clinician checking patient symptoms / consultation
     ("care-7.jpg",
      "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1200&q=80",
      "Black clinician with patient - symptoms"),
 
-    # 8 — Medications / pills organised — pharmacist context
+    # 8 - Medications / pills organised - pharmacist context
     ("care-8.jpg",
      "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1200&q=80",
      "Medications pills organised"),
 
-    # 9 — Black family comfort scene / bereavement support
+    # 9 - Black family comfort scene / bereavement support
     ("care-9.jpg",
      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",
      "Black family comfort scene"),
 
-    # 10 — Black person writing in journal / memory preservation
+    # 10 - Black person writing in journal / memory preservation
     ("care-10.jpg",
      "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80",
      "Person writing journal memories"),
@@ -77,7 +77,7 @@ for name, url, desc in slides:
             data = r.read()
             f.write(data)
         kb = os.path.getsize(path) // 1024
-        print(f"  OK  {name}  ({kb} KB)  —  {desc}")
+        print(f"  OK  {name}  ({kb} KB)  -  {desc}")
     except Exception as e:
         print(f"  FAIL {name}: {e}")
     time.sleep(0.4)

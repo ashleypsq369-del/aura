@@ -3,7 +3,7 @@
 **Last Updated:** June 5, 2026  
 **Effective Date:** June 5, 2026  
 **Version:** 2.0.0  
-**Status:** DEMO / TESTING — Not legal advice. These documents are drafts for demonstration purposes and should be reviewed by a qualified attorney before production use.
+**Status:** DEMO / TESTING - Not legal advice. These documents are drafts for demonstration purposes and should be reviewed by a qualified attorney before production use.
 
 ---
 

@@ -1,4 +1,4 @@
-"""Quick PostgreSQL browser — generates HTML report and opens in browser."""
+"""Quick PostgreSQL browser - generates HTML report and opens in browser."""
 import webbrowser, os
 from datetime import datetime
 import psycopg2
@@ -10,7 +10,7 @@ cur.execute("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY 
 tables = [r[0] for r in cur.fetchall()]
 
 html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
-<title>ProjectAura — PostgreSQL {datetime.now().strftime('%d %b %Y %H:%M')}</title>
+<title>ProjectAura - PostgreSQL {datetime.now().strftime('%d %b %Y %H:%M')}</title>
 <style>
 body{{font-family:system-ui,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}}
 h1{{background:linear-gradient(135deg,#0d9488,#7c3aed);margin:0;padding:16px 24px;font-size:18px;color:white}}
@@ -27,7 +27,7 @@ td{{padding:4px 10px;border-bottom:1px solid #1e293b;color:#cbd5e1;max-width:300
 tr:hover td{{background:#1e293b}}
 .empty{{color:#475569;font-style:italic;padding:8px 0;font-size:12px}}
 </style></head><body>
-<h1>🐘 ProjectAura PostgreSQL — {len(tables)} tables — {datetime.now().strftime('%d %b %Y %H:%M')}</h1>
+<h1>🐘 ProjectAura PostgreSQL - {len(tables)} tables - {datetime.now().strftime('%d %b %Y %H:%M')}</h1>
 <div class="pg">✓ PostgreSQL 18 · localhost:5432 · aura</div>
 <div class="nav">"""
 

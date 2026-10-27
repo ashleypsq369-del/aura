@@ -1,5 +1,5 @@
 """
-ProjectAura — Dissertation Figure Generator
+ProjectAura - Dissertation Figure Generator
 ============================================
 Generates Figure 5.1 (Feature Importance) and Figure 5.2 (ROC + Confusion Matrix)
 
@@ -21,7 +21,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 print("=" * 60)
-print("ProjectAura — Dissertation Figure Generator")
+print("ProjectAura - Dissertation Figure Generator")
 print("=" * 60)
 
 try:
@@ -51,7 +51,7 @@ for d in [os.path.join(os.path.dirname(__file__), 'models'),
 OUTPUT_DIR = os.path.dirname(__file__)
 
 if not model_path:
-    print("❌ No model found — creating demo XGBoost model...")
+    print("❌ No model found - creating demo XGBoost model...")
     from xgboost import XGBClassifier
     model = XGBClassifier(n_estimators=50, max_depth=4, random_state=42, eval_metric='logloss')
     n_features = 10
@@ -62,7 +62,7 @@ else:
     print(f"\n📁 Loading: {os.path.relpath(model_path)}")
     model = joblib.load(model_path)
     n_features = model.n_features_in_ if hasattr(model, 'n_features_in_') else 10
-    print(f"✅ {type(model).__name__} — {n_features} features")
+    print(f"✅ {type(model).__name__} - {n_features} features")
 
 # ── Feature names ─────────────────────────────────────────────
 ALL_NAMES = [
@@ -121,7 +121,7 @@ y = ((pain + well) / 2 > 0.5).astype(int)
 print(f"   {N} samples, {n_features} features, {y.sum()} high-risk ({y.mean()*100:.0f}%)")
 
 # ── FIGURE 5.1 ────────────────────────────────────────────────
-print("\n📊 Figure 5.1 — Feature Importance Chart...")
+print("\n📊 Figure 5.1 - Feature Importance Chart...")
 try:
     importances = model.feature_importances_
     idx = np.argsort(importances)
@@ -135,8 +135,8 @@ try:
     ax.set_yticklabels([NAMES[i] for i in idx], fontsize=10)
     ax.set_xlabel('Feature Importance (XGBoost Gain)', fontsize=12)
     ax.set_title(
-        'Figure 5.1 — Feature Importance\n'
-        'XGBoost Palliative Care Risk Model — ProjectAura',
+        'Figure 5.1 - Feature Importance\n'
+        'XGBoost Palliative Care Risk Model - ProjectAura',
         fontsize=13, fontweight='bold'
     )
     ax.grid(axis='x', alpha=0.3)
@@ -152,7 +152,7 @@ except Exception as e:
     print(f"❌ Fig 5.1 failed: {e}")
 
 # ── FIGURE 5.2 ────────────────────────────────────────────────
-print("\n📈 Figure 5.2 — ROC Curve + Confusion Matrix...")
+print("\n📈 Figure 5.2 - ROC Curve + Confusion Matrix...")
 try:
     yp  = model.predict_proba(X)[:, 1]
     yc  = model.predict(X)
@@ -167,7 +167,7 @@ try:
     ax2  = fig2.add_subplot(1, 2, 2)
 
     fig2.suptitle(
-        'Figure 5.2 — Model Performance Evaluation\n'
+        'Figure 5.2 - Model Performance Evaluation\n'
         'ProjectAura XGBoost Risk Prediction (Synthetic Test Data)',
         fontsize=13, fontweight='bold'
     )
@@ -189,7 +189,7 @@ try:
              fontsize=13, color='#0d9488', fontweight='bold',
              transform=ax1.transAxes)
 
-    # Confusion Matrix — draw manually without imshow tick issues
+    # Confusion Matrix - draw manually without imshow tick issues
     cm_norm = cm.astype(float) / cm.sum(axis=1, keepdims=True)  # row-normalized
     labels = ['Low Risk', 'High Risk'][:nc]
 
@@ -243,6 +243,6 @@ for fname in ['fig5_1_shap_summary.png', 'fig5_2_roc_and_confusion.png']:
     if os.path.exists(fp):
         print(f"  ✅ {fname} ({os.path.getsize(fp)//1024} KB) → {fp}")
     else:
-        print(f"  ❌ {fname} — not generated")
+        print(f"  ❌ {fname} - not generated")
 print("\nIn Word: Insert → Pictures → This Device → select PNG")
 print("=" * 60)

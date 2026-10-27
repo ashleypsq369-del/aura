@@ -1,5 +1,5 @@
 """
-access_control.py  —  ProjectAura Data-Scoping Layer
+access_control.py  -  ProjectAura Data-Scoping Layer
 =====================================================
 Single source of truth for patient access decisions.
 
@@ -37,7 +37,7 @@ def get_accessible_patient_ids(user, db: Session) -> Optional[List[int]]:
 
     if user.role == "patient":
         ids: List[int] = []
-        # 1) preferences link (primary path — created at registration)
+        # 1) preferences link (primary path - created at registration)
         prefs = db.query(PatientPreferences).filter(
             PatientPreferences.user_id == user.id,
             PatientPreferences.patient_id != None,
@@ -71,7 +71,7 @@ def get_accessible_patient_ids(user, db: Session) -> Optional[List[int]]:
         ).all()
         return [lnk.patient_id for lnk in links]
 
-    return []  # unknown role — deny
+    return []  # unknown role - deny
 
 
 def assert_patient_access(patient_id: int, user, db: Session) -> None:
@@ -81,7 +81,7 @@ def assert_patient_access(patient_id: int, user, db: Session) -> None:
     """
     allowed = get_accessible_patient_ids(user, db)
     if allowed is None:
-        return  # admin/clinician — unrestricted
+        return  # admin/clinician - unrestricted
     if patient_id not in allowed:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

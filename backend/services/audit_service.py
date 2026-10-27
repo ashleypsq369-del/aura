@@ -1,5 +1,5 @@
 """
-Audit Service — ProjectAura
+Audit Service - ProjectAura
 ============================
 Centralised helper for writing AuditLog entries.
 Import `log_action` anywhere in the backend and call it after any
@@ -47,7 +47,7 @@ def log_action(
     resource_type Lowercase noun, e.g. "vital", "medication", "patient".
     resource_id   PK of the affected row (optional).
     patient_id    Patient the action relates to (optional).
-    request       FastAPI Request object — used to capture IP + User-Agent.
+    request       FastAPI Request object - used to capture IP + User-Agent.
     details       Free-form dict serialised to JSON in the `details` column.
     success       False if the action was attempted but failed.
     """

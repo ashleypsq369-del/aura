@@ -115,7 +115,7 @@ def sublabel(ax, cx, y, text):
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.1 — SDLC WATERFALL
+# FIG 3.1 - SDLC WATERFALL
 # ══════════════════════════════════════════════════════════════
 def fig3_1():
     # Exactly 5 phases as described in report Section 3.3.1-3.3.5
@@ -152,7 +152,7 @@ def fig3_1():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.2 — SYSTEM ARCHITECTURE
+# FIG 3.2 - SYSTEM ARCHITECTURE
 # Matches report Section 3.4: 5 functional pillars as named
 # in the figure caption: Data Input Layer, Intelligent
 # Monitoring Core, Adaptive Care Guide, Unified Care
@@ -172,7 +172,7 @@ def fig3_2():
     CX = 4.5
 
     # ── Five functional pillars (vertical stack) ─────────────────
-    # 1. Data Input Layer (top — users enter data here)
+    # 1. Data Input Layer (top - users enter data here)
     r1 = rect(ax, CX, 10.60, BW, BH,
               '1.  Data Input Layer\n'
               'Vitals  |  Symptoms  |  Medications  |  ESAS  |  PPS  |  Barthel  |  PHQ-9  |  GAD-7',
@@ -234,7 +234,7 @@ def fig3_2():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.3 — ERD  (clean entity boxes)
+# FIG 3.3 - ERD  (clean entity boxes)
 # ══════════════════════════════════════════════════════════════
 def fig3_3():
     fig, ax = plt.subplots(figsize=(13, 9))
@@ -249,7 +249,7 @@ def fig3_3():
         top = cy + hh/2
         bot = cy - hh/2 - bh
 
-        # Header (slightly shaded — lightest possible)
+        # Header (slightly shaded - lightest possible)
         hdr = FancyBboxPatch((cx-1.4, cy-hh/2), 2.8, hh,
                              boxstyle='round,pad=0.02',
                              facecolor='#eeeeee', edgecolor=FG, lw=1.1, zorder=3)
@@ -310,7 +310,7 @@ def fig3_3():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.4 — AI / SHAP PIPELINE
+# FIG 3.4 - AI / SHAP PIPELINE
 # Same fan-out / fan-in pattern as reference image
 # ══════════════════════════════════════════════════════════════
 def fig3_4():
@@ -324,12 +324,12 @@ def fig3_4():
     r_feat = rect(ax, 3.5,  9.20, BW, BH, 'Feature Engineering  (28 features)', fs=11)
     r_sel  = rect(ax, 3.5,  8.00, BW, BH, 'Model Selection', fs=11)
 
-    # Fan out — 3 models
+    # Fan out - 3 models
     r_m1 = rect(ax, 1.1, 6.80, BW_SM, BH, 'Pain Risk\nModel', fs=10)
     r_m2 = rect(ax, 3.5, 6.80, BW_SM, BH, 'Mortality\nModel', fs=10)
     r_m3 = rect(ax, 5.9, 6.80, BW_SM, BH, 'Admission\nModel', fs=10)
 
-    # Fan in — converge to training
+    # Fan in - converge to training
     r_train = rect(ax, 3.5, 5.55, BW, BH, 'Model Training  (XGBoost x 8)', fs=11)
     r_score = rect(ax, 3.5, 4.55, BW, BH, 'Risk Score  (0.0 - 1.0)', fs=11)
     r_shap  = rect(ax, 3.5, 3.55, BW, BH, 'SHAP Explainer', fs=11)
@@ -358,7 +358,7 @@ def fig3_4():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.5 — SECURITY / DATA-FLOW
+# FIG 3.5 - SECURITY / DATA-FLOW
 # ══════════════════════════════════════════════════════════════
 def fig3_5():
     BH, GAP = 0.58, 0.44
@@ -394,7 +394,7 @@ def fig3_5():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIG 3.6 — SYSTEM PROCESS FLOWCHART  (with diamonds + fan)
+# FIG 3.6 - SYSTEM PROCESS FLOWCHART  (with diamonds + fan)
 # ══════════════════════════════════════════════════════════════
 def fig3_6():
     RW, RH = 4.0, 0.58

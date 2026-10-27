@@ -1,4 +1,4 @@
-# Project Aura — Free Deployment Guide
+# Project Aura - Free Deployment Guide
 ## Stack: Koyeb (backend) + Neon (PostgreSQL) + Vercel (frontend)
 
 Everything is already configured. Follow these steps in order.
@@ -11,7 +11,7 @@ Everything is already configured. Follow these steps in order.
 
 ---
 
-## Step 1 — Push to GitHub
+## Step 1 - Push to GitHub
 
 **IMPORTANT: Make your repository PRIVATE before pushing.**
 A private repo means only you (and people you invite) can see your source code and history.
@@ -33,20 +33,20 @@ git push -u origin main
 
 ---
 
-## Step 2 — Set Up Neon PostgreSQL (Free Database)
+## Step 2 - Set Up Neon PostgreSQL (Free Database)
 
 1. Go to [https://console.neon.tech](https://console.neon.tech) and sign up free
 2. Click **New Project** → name it `project-aura` → click Create
 3. On the dashboard, click **Connection string** → choose **Pooled connection**
-4. Copy the URL — it looks like:
+4. Copy the URL - it looks like:
    ```
    postgresql://username:password@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require
    ```
-5. **Save this URL** — you'll need it in Step 3
+5. **Save this URL** - you'll need it in Step 3
 
 ---
 
-## Step 3 — Deploy Backend on Koyeb
+## Step 3 - Deploy Backend on Koyeb
 
 1. Go to [https://app.koyeb.com](https://app.koyeb.com) and sign up free
 2. Click **Create Service** → choose **GitHub**
@@ -64,18 +64,18 @@ git push -u origin main
    |-----|-------|
    | `DATABASE_URL` | *(your Neon connection string from Step 2)* |
    | `SECRET_KEY` | *(run `python -c "import secrets; print(secrets.token_hex(32))"` to generate)* |
-   | `ALLOWED_ORIGINS` | *(leave blank for now — fill in after Vercel deploy in Step 5)* |
+   | `ALLOWED_ORIGINS` | *(leave blank for now - fill in after Vercel deploy in Step 5)* |
    | `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` |
-   | `GROQ_API_KEY` | *(your Groq key — optional)* |
-   | `GEMINI_API_KEY` | *(your Gemini key — optional)* |
+   | `GROQ_API_KEY` | *(your Groq key - optional)* |
+   | `GEMINI_API_KEY` | *(your Gemini key - optional)* |
 
 6. Click **Deploy**
 7. Wait ~3 minutes for build to complete
-8. Copy your Koyeb URL — looks like: `https://project-aura-api-xxxx.koyeb.app`
+8. Copy your Koyeb URL - looks like: `https://project-aura-api-xxxx.koyeb.app`
 
 ---
 
-## Step 4 — Seed the Database
+## Step 4 - Seed the Database
 
 After the backend is running, you need to populate the database with initial data.
 
@@ -85,11 +85,11 @@ The easiest way:
 
 Or use the Neon SQL editor:
 1. Go to [https://console.neon.tech](https://console.neon.tech) → your project → **SQL Editor**
-2. The app auto-creates all tables on first startup — no manual SQL needed
+2. The app auto-creates all tables on first startup - no manual SQL needed
 
 ---
 
-## Step 5 — Deploy Frontend on Vercel
+## Step 5 - Deploy Frontend on Vercel
 
 1. Go to [https://vercel.com](https://vercel.com) and sign up free (use GitHub login)
 2. Click **Add New → Project**
@@ -103,11 +103,11 @@ Or use the Neon SQL editor:
    - Name: `VITE_API_URL`
    - Value: *(your Koyeb URL from Step 3, e.g. `https://project-aura-api-xxxx.koyeb.app`)*
 6. Click **Deploy**
-7. Wait ~2 minutes — Vercel gives you a URL like: `https://project-aura-xyz.vercel.app`
+7. Wait ~2 minutes - Vercel gives you a URL like: `https://project-aura-xyz.vercel.app`
 
 ---
 
-## Step 6 — Wire CORS Back to Koyeb
+## Step 6 - Wire CORS Back to Koyeb
 
 1. Go back to Koyeb → your service → **Environment Variables**
 2. Add/update:
@@ -117,7 +117,7 @@ Or use the Neon SQL editor:
 
 ---
 
-## Step 7 — Test It
+## Step 7 - Test It
 
 1. Open your Vercel URL in a browser
 2. The app should look and work exactly like local
@@ -143,12 +143,12 @@ Check `LOGIN_CREDENTIALS.txt` in the project root for demo accounts.
 
 | Problem | Fix |
 |---------|-----|
-| Backend 500 on startup | Check Koyeb logs — likely `DATABASE_URL` not set correctly |
+| Backend 500 on startup | Check Koyeb logs - likely `DATABASE_URL` not set correctly |
 | Login fails | Make sure `SECRET_KEY` is set in Koyeb env vars |
 | API calls return CORS error | Make sure `ALLOWED_ORIGINS` in Koyeb matches your Vercel URL exactly (no trailing slash) |
-| Frontend shows blank page | Check Vercel build logs — likely `VITE_API_URL` env var missing |
-| WebSocket not connecting | WebSockets work on Koyeb nano — check browser console for the WS URL |
-| ML features slow | Normal — XGBoost models load on first request, then stay cached in memory |
+| Frontend shows blank page | Check Vercel build logs - likely `VITE_API_URL` env var missing |
+| WebSocket not connecting | WebSockets work on Koyeb nano - check browser console for the WS URL |
+| ML features slow | Normal - XGBoost models load on first request, then stay cached in memory |
 
 ---
 

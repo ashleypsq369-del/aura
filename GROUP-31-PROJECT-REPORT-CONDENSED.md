@@ -390,7 +390,7 @@ output, informed consent cannot be genuine. Gerke et al. (2020) work through the
 ethical implications of opaque clinical AI. Hildt (2025) argues that explainability is a
 moral obligation, not a technical option, because an uninterpretable recommendation
 cannot be consented to or meaningfully evaluated. Tilala et al. (2024) map the four
-principles of biomedical ethics — beneficence, non-maleficence, autonomy, and justice —
+principles of biomedical ethics - beneficence, non-maleficence, autonomy, and justice  - 
 directly onto AI design requirements and show that all four require transparency. Wang et
 al. (2023) add that AI in palliative care risks being read as a substitute for clinical empathy,
 which it is not built to be.
@@ -407,7 +407,7 @@ Conversational agents can deliver information in a form that is easier for elder
 those with low health literacy, and people in emotional distress than reading a document.
 However, Kocaballi et al. (2019) found that most health chatbots lack proper consent,
 safety, and privacy structures. Coghlan et al. (2023) document cases of unhealthy chatbot
-dependency in distressed users — a specific risk in palliative care settings.
+dependency in distressed users - a specific risk in palliative care settings.
 
 
 2.3 Empirical Review
@@ -431,7 +431,7 @@ experienced complicated grief, major depression, PTSD, and increased suicidal id
 Digital bereavement interventions using journalling, peer communication, and access to
 mental health resources showed positive outcomes, with participant retention typically
 above 70%. Crucially, no platform reviewed integrated bereavement tools into care
-coordination — the gap this project fills.
+coordination - the gap this project fills.
 
 2.3.3 Personalisation, Privacy, and Explainability
 
@@ -550,7 +550,7 @@ when placed inside a dashboard. Online bereavement interventions show measurable
 positive outcomes. Privacy-preserving AI architectures are technically achievable. No
 reviewed system, however, puts these together. Nothing integrates symptom monitoring,
 explainable clinical decision support, care coordination, and structured bereavement
-follow-up into a single platform — let alone one designed for settings where hospital
+follow-up into a single platform - let alone one designed for settings where hospital
 infrastructure is limited, community care exists largely in policy documents, and families
 bear the full weight of caregiving with no systemic support once the patient dies. The
 literature provides the components separately. This project assembles them, specifically for
@@ -564,8 +564,8 @@ receive. Care is fragmented, families carry caregiving with no formal involvemen
 in this space has been limited to opaque mortality models that stop being relevant once the
 patient dies. Bereavement support is documented as a clinical need but absent from every
 platform reviewed. Privacy frameworks in deployed systems are inadequate, and the
-ethical obligation to make clinical AI explainable — documented by Gerke et al. (2020),
-Hildt (2025), and Tilala et al. (2024) — is rarely met.
+ethical obligation to make clinical AI explainable - documented by Gerke et al. (2020),
+Hildt (2025), and Tilala et al. (2024) - is rarely met.
 
 In Ghana, the COMPASS Ghana data (Anon., 2024a) and Ghana Palliative Care Association
 (GPCA) documentation (Anon., 2024b) make these failures concrete: referrals arrive too
@@ -592,7 +592,7 @@ Guide, the Unified Care Dashboard, and the Continuity Bridge.
 The project follows a design science research approach, where the primary contribution is
 a purposefully built artefact rather than a tested hypothesis (Hevner et al., 2004). The
 fragmentation, explainability gaps, and absence of bereavement support documented in
-Chapters 1 and 2 constitute the problem. The artefact — a full-stack web platform — was
+Chapters 1 and 2 constitute the problem. The artefact - a full-stack web platform - was
 built to address it. Work proceeded through four stages: problem awareness (literature
 review), suggestion (candidate architectures and models), development (the build), and
 evaluation (testing against the objectives). This approach fits because the research
@@ -602,8 +602,8 @@ statistical question about human subjects.
 3.3 Software Development Life Cycle
 
 The Waterfall model was adopted as the software development life cycle (Royce, 1970).
-It structures development into five sequential phases — Requirements Analysis, System
-Design, Implementation, Testing, and Deployment and Documentation — each completed
+It structures development into five sequential phases - Requirements Analysis, System
+Design, Implementation, Testing, and Deployment and Documentation - each completed
 and reviewed before the next begins. Three reasons made it the right choice here. First,
 a capstone project has a fixed academic timetable with supervisor sign-off gates at defined
 milestones, which maps naturally onto sequential phase completion. Second, requirements
@@ -615,11 +615,11 @@ produces the auditable trail this report records.
 Figure 3.1: Waterfall Software Development Life Cycle Followed for the Project
 [See dissertation figures guide for diagram]
 
-3.3.1 Phase 1 — Requirements Analysis
+3.3.1 Phase 1 - Requirements Analysis
 
 Requirements were derived by walking through the palliative care journey from diagnosis
-to bereavement and asking what each stakeholder — admin, clinician, caregiver, patient,
-and family — would need at each stage. Functional requirements covered clinical data
+to bereavement and asking what each stakeholder - admin, clinician, caregiver, patient,
+and family - would need at each stage. Functional requirements covered clinical data
 capture (vital signs, symptoms, medications, appointments, and six validated assessment
 instruments: the Edmonton Symptom Assessment System (ESAS), the Palliative Performance Scale (PPS),
 the Barthel Index, the Mini Mental State Examination (MMSE), the Patient Health Questionnaire-9 (PHQ-9),
@@ -629,24 +629,24 @@ Non-functional requirements included explainable AI output, offline-capable data
 accessibility for users with visual, motor, or cognitive
 impairment, and role-based access control with audit logging.
 
-3.3.2 Phase 2 — System Design
+3.3.2 Phase 2 - System Design
 
 The design phase converted requirements into architecture before any code was written.
 A layered client-server architecture was selected. An entity-relationship model was drafted
 for the database. The eight clinical risk domains to be predicted were identified from the
 assessment instruments, and a decision was made that every prediction must carry a SHAP
-explanation — no risk score would reach a clinician without one. Low-fidelity wireframes
+explanation - no risk score would reach a clinician without one. Low-fidelity wireframes
 were produced for the role-aware dashboard, the patient portal, and the family-facing
 Continuity Bridge.
 
-3.3.3 Phase 3 — Implementation
+3.3.3 Phase 3 - Implementation
 
 Implementation proceeded in dependency order: authentication and the core clinical
 modules first, the Intelligent Monitoring Core next, the Unified Care Dashboard once risk
 data existed to display, and the Adaptive Care Guide and Continuity Bridge last. Each
 module's design was reviewed against its specification before it was considered complete.
 
-3.3.4 Phase 4 — Testing
+3.3.4 Phase 4 - Testing
 
 Testing operated at three levels: an API smoke test suite; held-out evaluation of each
 XGBoost model using a stratified 80/20 train-test split, Stratified K-Fold cross-validation
@@ -655,12 +655,12 @@ of every module's principal user interface flows against the seeded demonstratio
 The evaluation is of a prototype on synthetic data. These limitations are stated plainly in
 Chapter 5.
 
-3.3.5 Phase 5 — Deployment and Documentation
+3.3.5 Phase 5 - Deployment and Documentation
 
 For development and demonstration, the backend runs on Uvicorn at port 8000 and the
 frontend on the Vite development server at port 5173, with a Windows launcher script
-starting both together. All configuration — database connection string, JWT signing secret,
-and LLM provider API keys — is externalised to environment variables, so the same
+starting both together. All configuration - database connection string, JWT signing secret,
+and LLM provider API keys - is externalised to environment variables, so the same
 codebase can be pointed at a production PostgreSQL database and served behind a
 production process manager without any code change.
 
@@ -695,7 +695,7 @@ it consists of: a feature extraction function that reads the most recent vitals,
 scores, medications, and alert history for a given patient; eight independently trained
 XGBoost classifiers, each scoring one clinical risk domain; a SHAP TreeExplainer
 attached to each model; and a weighted aggregation function combining the eight domain
-scores into a single overall risk level — low, moderate, high, or critical. A background
+scores into a single overall risk level - low, moderate, high, or critical. A background
 scheduler periodically re-runs this pipeline across all active patients and raises an alert
 for any patient whose overall risk crosses the high or critical threshold.
 
@@ -704,8 +704,8 @@ for any patient whose overall risk crosses the high or critical threshold.
 The Adaptive Care Guide turns clinical context into recommended action. It has three
 components. A care plan engine maps a patient's diagnosis, functional status, and symptom
 burden onto goals, checklist items, and interventions. A personalisation engine reads an
-onboarding questionnaire completed at first login — covering primary condition, care
-priorities, spiritual background, emotional needs, and content preferences — and derives
+onboarding questionnaire completed at first login - covering primary condition, care
+priorities, spiritual background, emotional needs, and content preferences - and derives
 interface visibility flags, content tags, and a daily focus message from these signals. These
 flags centrally control which navigation sections, AI assistants, and spiritual care content
 are shown to that user across the entire interface, so a patient who opted out of a feature
@@ -732,8 +732,8 @@ timeline view of the care journey; a memory vault with automatic clustering of e
 themes such as joy, family, and gratitude; a private grief journal with natural language tone
 detection; a 13-item PG-13 grief screening instrument; and a digital legacy system through
 which a patient can designate heirs and prepare messages for delivery after death. Each
-heir carries an independently assigned access level — full, memories only, or messages
-only — enforced separately from the user's system role.
+heir carries an independently assigned access level - full, memories only, or messages
+only - enforced separately from the user's system role.
 
 3.5 Database Design
 
@@ -745,28 +745,28 @@ production, switched by a single environment variable. The Patient entity is the
 the schema; almost every other table relates to it by a foreign key. Tables fall into six
 functional groups:
 
-Core tables — User, Patient, Vital, Symptom, Medication, Appointment, Alert,
-NotificationQueue — capturing identity, the patient record, and the moment-to-moment
+Core tables - User, Patient, Vital, Symptom, Medication, Appointment, Alert,
+NotificationQueue - capturing identity, the patient record, and the moment-to-moment
 clinical events.
 
-Assessment tables — ESASAssessment, PPSAssessment, FunctionalAssessment (Barthel),
+Assessment tables - ESASAssessment, PPSAssessment, FunctionalAssessment (Barthel),
 CognitiveAssessment (MMSE), PHQ9Assessment, GAD7Assessment,
-MedicationAdherenceLog — each corresponding to one validated clinical instrument and
+MedicationAdherenceLog - each corresponding to one validated clinical instrument and
 supplying features directly to the Intelligent Monitoring Core.
 
-Care and planning tables — CarePlan, CareGoal, CareGoalChecklist, CareIntervention,
-CaregiverAssignment, PatientPreferences, CareSetting — recording the Adaptive Care
+Care and planning tables - CarePlan, CareGoal, CareGoalChecklist, CareIntervention,
+CaregiverAssignment, PatientPreferences, CareSetting - recording the Adaptive Care
 Guide's output and caregiver assignments.
 
-Community and social tables — CommunityGroup, GroupMembership, GroupPost,
-PostReaction, Message, Conversation, Resource, ResourceBookmark — supporting peer
+Community and social tables - CommunityGroup, GroupMembership, GroupPost,
+PostReaction, Message, Conversation, Resource, ResourceBookmark - supporting peer
 support and educational content.
 
-Bereavement and legacy tables — BereavementEntry, GriefScreening, LegacyConsent,
-LegacyHeir, LegacyContent — implementing the Continuity Bridge.
+Bereavement and legacy tables - BereavementEntry, GriefScreening, LegacyConsent,
+LegacyHeir, LegacyContent - implementing the Continuity Bridge.
 
-Governance tables — UsabilityFeedback, ChatbotConsent, CrisisAlert, ClinicalOverride,
-AuditLog — supporting ethical oversight and usability evaluation.
+Governance tables - UsabilityFeedback, ChatbotConsent, CrisisAlert, ClinicalOverride,
+AuditLog - supporting ethical oversight and usability evaluation.
 
 Schema changes were applied through incremental migration scripts rather than a
 monolithic schema definition, reflecting the fact that several tables were added once the
@@ -781,7 +781,7 @@ Figure 3.4: Explainable AI Pipeline from Input Features to SHAP-Based Clinician 
 Explainability was treated as a first-class design requirement, not an add-on, in direct
 response to the opacity of existing mortality tools documented in Chapter 2. The system
 therefore does not use a single monolithic model. Instead, eight independent XGBoost
-classifiers — one per clinical domain — are trained, each paired with its own SHAP
+classifiers - one per clinical domain - are trained, each paired with its own SHAP
 TreeExplainer so that every risk score can be traced back to the specific clinical values
 that drove it.
 
@@ -797,8 +797,8 @@ medication adherence risk, caregiver burden, clinical deterioration trajectory, 
 30-day mortality risk. Feature vectors are assembled from the most recent vitals, ESAS,
 PPS, Barthel, MMSE, PHQ-9, and GAD-7 scores, the active medication list, medication
 adherence history, alert history over the preceding six months, and a recorded social
-support score. Clinically appropriate default values are substituted for missing readings —
-for example, a default heart rate of 80 bpm or oxygen saturation of 95% — so a prediction
+support score. Clinically appropriate default values are substituted for missing readings  - 
+for example, a default heart rate of 80 bpm or oxygen saturation of 95% - so a prediction
 is still produced for patients whose records are incomplete.
 
 Each model was trained on 8,000 synthetic samples generated from parameter
@@ -824,7 +824,7 @@ synthetic data; the figures in Table 3.1 show that each model learned the clinic
 relationships encoded in its training distribution correctly, not that it would perform at the
 same level on a real hospital population. Published XGBoost models trained on real
 palliative care data typically report AUC in the range of 0.75 to 0.88 for comparable
-tasks — that range is the realistic benchmark for eventual clinical deployment. Second, the
+tasks - that range is the realistic benchmark for eventual clinical deployment. Second, the
 lower precision for vital signs risk (77.2%), symptom burden (75.6%), and admission risk
 (81.3%) reflects a deliberate bias toward recall: in palliative care, a false positive that
 prompts an unnecessary clinical review is judged far less harmful than a false negative
@@ -835,7 +835,7 @@ is never uncertain about which kind of explanation they are reading. The first i
 SHAP-driven explanation attached to every XGBoost prediction, always labelled with an
 explicit "XGBoost SHAP" badge. The second is a rule-based clinical explanation engine
 that answers plain-language questions about a specific vital sign, symptom, or alert using
-threshold-based clinical heuristics — used where a targeted, human-readable explanation
+threshold-based clinical heuristics - used where a targeted, human-readable explanation
 of a single observation is more useful than a full multi-feature breakdown.
 
 3.7 Security and Privacy Architecture
@@ -848,8 +848,8 @@ Authentication uses JSON Web Tokens signed with HS256, issued at login with a 24
 expiry. Passwords are hashed using bcrypt through the passlib library. Authorisation is
 enforced through role-based access control: every backend endpoint declares the roles
 permitted to call it, and a dedicated middleware validates the token and attaches the
-resolved user before any route handler executes. All administrative actions — creating a
-user, deactivating an account, resetting a password — are written to an append-only
+resolved user before any route handler executes. All administrative actions - creating a
+user, deactivating an account, resetting a password - are written to an append-only
 AuditLog table.
 
 At the data layer, SQLAlchemy parameterises every database query, removing SQL
@@ -891,7 +891,7 @@ Two process flows illustrate how the architectural layers cooperate at runtime.
 The authentication flow works as follows. A user submits credentials; the backend
 verifies them against the stored bcrypt hash and issues a signed JWT; the frontend stores
 that token and attaches it as a bearer header to every subsequent request; the user is
-routed to the view appropriate to their role — the personalisation questionnaire on first
+routed to the view appropriate to their role - the personalisation questionnaire on first
 login, the patient portal for a patient, or the role-aware dashboard for a clinician or
 caregiver.
 
@@ -902,8 +902,8 @@ feature vector. That vector passes through all eight XGBoost models in turn. Eac
 model's SHAP TreeExplainer produces a ranked list of the clinical values that most
 influenced its prediction. The eight domain scores are combined using the clinical weights
 shown in Table 4.2, with vital signs and symptom burden weighted most heavily, into a
-single overall risk level. The complete result — overall level, eight domain scores, SHAP
-explanations, and a short list of plain-language key concerns — is returned to the frontend
+single overall risk level. The complete result - overall level, eight domain scores, SHAP
+explanations, and a short list of plain-language key concerns - is returned to the frontend
 in one response and rendered simultaneously on the patient record summary gauge and
 the AI Insights hub deep-dive panel.
 
@@ -944,8 +944,8 @@ the engineering problems encountered and how each was resolved.
 
 Project AURA is a full-stack application with a React/Vite frontend, a FastAPI backend,
 a SQLAlchemy data access layer, and an XGBoost/SHAP inference layer. A lightweight
-launcher starts both servers together with a single command. All configuration — database
-connection string, JWT signing secret, and LLM API keys — is externalised to environment
+launcher starts both servers together with a single command. All configuration - database
+connection string, JWT signing secret, and LLM API keys - is externalised to environment
 variables, consistent with the deployment principle described in Section 3.3.5.
 
 Table 4.1 gives the scale of the codebase at the end of the implementation phase.
@@ -968,9 +968,9 @@ Figure 4.1: Patient Symptom Tracking and Data Entry Screen
 [See dissertation figures guide for screenshot]
 
 The data input layer is a set of dedicated capture screens on the frontend, each backed by
-a corresponding API route and schema validation layer. Vital sign capture — heart rate,
+a corresponding API route and schema validation layer. Vital sign capture - heart rate,
 systolic and diastolic blood pressure, oxygen saturation, temperature, and respiratory rate
-— follows a consistent create-and-retrieve pattern: a submission endpoint logs the reading,
+ -  follows a consistent create-and-retrieve pattern: a submission endpoint logs the reading,
 and a retrieval endpoint returns the patient's history for the trend chart. Symptom logging,
 medication records, and appointment scheduling follow the same pattern.
 
@@ -984,7 +984,7 @@ reaches the database.
 
 Because the system targets low-infrastructure settings, every capture form is wrapped by
 an offline-first data access layer. A read attempts the network and falls back to a local
-browser cache on failure. A write — such as logging a vital sign — is queued locally and
+browser cache on failure. A write - such as logging a vital sign - is queued locally and
 re-attempted once connectivity is restored. A persistent connectivity indicator in the
 interface tells caregivers whether a reading has reached the server or is still waiting to
 synchronise.
@@ -1036,8 +1036,8 @@ the risk summary and explanation panels, always labelled "XGBoost SHAP explanati
 while the rule-based engine's output appears in a separate component. A clinician can
 never mistake one for the other.
 
-The advanced analytics service — covering 30-day deterioration trending, drug interaction
-detection, caregiver burnout estimation, and prognosis — is implemented separately from
+The advanced analytics service - covering 30-day deterioration trending, drug interaction
+detection, caregiver burnout estimation, and prognosis - is implemented separately from
 the main inference pipeline and consumed by the clinical intelligence timeline, the
 medication interaction banner, and the caregiver workload panel.
 
@@ -1059,7 +1059,7 @@ completed at first login. These signals are consumed throughout the interface: t
 portal uses them for the greeting and quick actions, the community hub uses them to score
 group recommendations, and the resource library uses them to rank the AI reading list.
 Crucially, the same signals determine a single set of interface visibility flags applied
-everywhere — which navigation sections appear, whether the two AI assistants are shown,
+everywhere - which navigation sections appear, whether the two AI assistants are shown,
 whether spiritual care content appears in the care plan and knowledge base. Centralising
 this logic in one place was necessary because the questionnaire grew to cover consent,
 spiritual preference, community interest, and legacy interest together; without a single
@@ -1082,8 +1082,8 @@ The family-facing view presents a care-appropriate, de-identified summary of the
 underlying journey events, so that raw clinical values the patient has not consented to
 share are never exposed to family members.
 
-The two clinical reference tools — a care protocol library and a searchable medical
-knowledge base — were restructured during implementation from a card-and-modal layout
+The two clinical reference tools - a care protocol library and a searchable medical
+knowledge base - were restructured during implementation from a card-and-modal layout
 into a two-column reading interface: an index pane paired with a full reading pane, modelled
 on a reference book. A clinician under time pressure needs to scan a table of contents and
 jump directly to the relevant section; a modal does not support this once content grows
@@ -1106,14 +1106,14 @@ the same landing route, with the branching logic driven by the authenticated use
 A searchable patient list, a full patient record view carrying a vitals ribbon and compact
 risk summary, a real-time monitoring view, and a SHAP deep-dive view give clinicians
 progressively more detail as they move from a caseload overview to a single patient's risk
-profile. The clinical intelligence hub — restricted to clinician and admin roles — presents
+profile. The clinical intelligence hub - restricted to clinician and admin roles - presents
 system-wide counts of critical, high-risk, and stable patients alongside an on-demand risk
 scan control, in three tabs covering risk stratification, drug interaction warnings, and a
 system overview with model health status.
 
 Two components implement a lightweight client-side classifier rather than calling the full
 inference pipeline. The messaging view scans each conversation's most recent message
-against a fixed vocabulary of urgency terms — urgent, pain, breathing, unconscious — to
+against a fixed vocabulary of urgency terms - urgent, pain, breathing, unconscious - to
 sort flagged conversations above routine messages. The notification centre assigns each
 notification a base score by type, weighted so that a critical vitals or ML risk notification
 always outranks a routine appointment reminder, then adds a recency bonus and an unread
@@ -1135,12 +1135,12 @@ Table 4.4.
 Table 4.4: Representative TanStack Query caching parameters applied to server state
 
 Query key          Stale time    Refetch interval    Rationale
-patients           5 minutes     —                   Patient list changes infrequently
-patient-vitals     Not cached    —                   Always shown fresh on navigation
-ml-risk            5 minutes     —                   ML inference is comparatively expensive
-alerts             —             30 seconds          Clinical urgency requires near real-time data
-notifications      —             30 seconds          Drives the user-facing unread badge
-all-drug-ints      10 minutes    —                   Expensive all-patient batch scan
+patients           5 minutes     -                   Patient list changes infrequently
+patient-vitals     Not cached    -                   Always shown fresh on navigation
+ml-risk            5 minutes     -                   ML inference is comparatively expensive
+alerts             -             30 seconds          Clinical urgency requires near real-time data
+notifications      -             30 seconds          Drives the user-facing unread badge
+all-drug-ints      10 minutes    -                   Expensive all-patient batch scan
 
 A consistency pass over the Dashboard extended dark-mode support to every table header,
 both AI assistant widgets, the guided onboarding tour, and every major dashboard, portal,
@@ -1154,12 +1154,12 @@ mobile device than a desktop.
 
 4.7.1 Care Setting System
 
-The system supports five care settings — hospital, hospice, home care, community clinic,
-and palliative day centre — each configurable through the administrative interface. The
+The system supports five care settings - hospital, hospice, home care, community clinic,
+and palliative day centre - each configurable through the administrative interface. The
 active care setting is propagated to the frontend through a dedicated CareSettingContext,
 which adjusts navigation additions, clinical form defaults, and protocol recommendations
 based on where care is being delivered. This means the same codebase serves a hospital
-ward and a home-based caregiver without any code change — the behaviour is driven by
+ward and a home-based caregiver without any code change - the behaviour is driven by
 the setting stored against the logged-in user's account.
 
 4.7.2 AI Conversational Assistants
@@ -1171,7 +1171,7 @@ and family roles. AIAssistant is a clinician copilot with a sky-blue theme; it i
 to clinician and admin roles and answers clinical questions about the patient record,
 protocol guidance, and medication queries. Both assistants stream responses from
 Gemini 1.5 Flash as the primary provider, with automatic fallback to Groq Llama 3.1 if the
-primary provider is unavailable — ensuring the conversational layer remains functional
+primary provider is unavailable - ensuring the conversational layer remains functional
 even if one external service is down.
 
 Both assistants are hidden entirely for users who declined AI consent during the
@@ -1210,7 +1210,7 @@ shared clinical workstations.
 
 4.7.6 Guided Onboarding Tour
 
-A guided application tour — AuraOnboarding — walks new users through the principal
+A guided application tour - AuraOnboarding - walks new users through the principal
 interface areas on first login using a step-by-step overlay. The tour can be restarted at any
 time from the Settings page through the `useRestartTour` hook. This is particularly
 relevant given the system targets users with variable digital literacy; the tour provides a
@@ -1225,13 +1225,13 @@ Figure 4.5: Bereavement Support Module Screen
 
 The Continuity Bridge is implemented across four screens and a supporting set of routes.
 The memory vault applies a client-side clustering routine grouping a family member's
-uploaded memories into themes — joy, family, gratitude, adventures, reflection — with a
+uploaded memories into themes - joy, family, gratitude, adventures, reflection - with a
 toggle between a chronological grid and thematic grouping.
 
 The private grief journal rotates compassionate writing prompts and applies natural
 language tone detection to classify each entry into one of eight tones: grief, hope, anxiety,
 acceptance, and others. The detected tone appears as a badge on the entry. Journal entries
-are visible only to their author and are never surfaced to clinical staff — this boundary is
+are visible only to their author and are never surfaced to clinical staff - this boundary is
 enforced at the access control layer, not just by interface convention.
 
 The grief screening form implements the 13-item PG-13 instrument across three domains:
@@ -1241,8 +1241,8 @@ respondent for a prolonged grief referral. Where the screening is flagged, the r
 displays the Ghana Mental Health Authority crisis line alongside the recommendation.
 
 The digital legacy workflow is enforced as a strict sequence. A patient first records
-consent, then designates heirs — each with a relationship, an access level (full, memories
-only, or messages only), and an independent flag governing access to private content —
+consent, then designates heirs - each with a relationship, an access level (full, memories
+only, or messages only), and an independent flag governing access to private content  - 
 and then creates posthumous content. Each piece of content carries a delivery trigger of
 either "after death" or a specific date. Following the patient's death, a clinician activates
 the legacy through the administrative interface. From that point, the heir access view
@@ -1274,8 +1274,8 @@ Figure 4.6: Login and Authentication Screen
 
 Authentication middleware validates the signed token on every incoming request and
 attaches the resolved user before any route handler executes. A role-based access control
-layer supplies reusable dependency checks — for clinicians, administrators, caregivers, and
-callers with a verified patient relationship — that every route declares explicitly. This
+layer supplies reusable dependency checks - for clinicians, administrators, caregivers, and
+callers with a verified patient relationship - that every route declares explicitly. This
 centralisation means a role check cannot be bypassed by calling a route directly.
 
 Every administrative action is written to an append-only audit record. Request and
@@ -1296,8 +1296,8 @@ assisted mode for patients with cognitive impairment. Assisted mode combines the
 font size, oversized controls, a simplified layout, reduced animation, and high-visibility
 focus indicators in a single switch. A fixed set of keyboard shortcuts covers skipping to
 main content, reaching navigation, reaching search, returning to the dashboard, and
-closing an open dialogue. Centralising these settings in one shared state — rather than
-having each screen implement its own — was necessary given the number of independently
+closing an open dialogue. Centralising these settings in one shared state - rather than
+having each screen implement its own - was necessary given the number of independently
 built screens; without a single source, settings would drift out of sync between older and
 newer parts of the interface.
 
@@ -1321,7 +1321,7 @@ recorded honestly because they are part of the engineering record of the project
 Route precedence conflicts. A specific, literally-named route and a dynamic parameterised
 route from different modules conflicted because the framework matches routes in
 registration order and the dynamic pattern was broad enough to match the literal path.
-The fix was to register literal routes before parameterised ones — a standing convention
+The fix was to register literal routes before parameterised ones - a standing convention
 applied throughout the router configuration.
 
 Cross-origin and WebSocket authentication trade-off. Under the Cross-Origin Resource
@@ -1354,7 +1354,7 @@ any bulk find-and-replace operation.
 
 Interface default in wrong state. Sound effects were found to be enabled by default because
 the stored preference evaluated as true unless explicitly the string false. This was corrected
-so sound plays only once a user has explicitly opted in — an assistive feature should
+so sound plays only once a user has explicitly opted in - an assistive feature should
 default to off.
 
 Data shape mismatch in stored preferences. The personalisation layer occasionally failed
@@ -1366,13 +1366,13 @@ place in the system.
 Regression in a previously working component. A risk summary component had been
 temporarily removed from the patient record view during a debugging session and not
 reinstated once debugging was complete. This was caught during a manual review pass
-over the Dashboard — not by an automated check — and the component was restored.
+over the Dashboard - not by an automated check - and the component was restored.
 
 Two observations follow from this record. Most problems were caught through manual
 review and the development environment's compiler and linter diagnostics rather than an
 automated test suite, consistent with the absence of a formal unit testing framework noted
-in Section 3.3.4. Several problems — particularly the router ordering and CORS/WebSocket
-issues — arise directly from architectural decisions in Chapter 3, and their resolution is
+in Section 3.3.4. Several problems - particularly the router ordering and CORS/WebSocket
+issues - arise directly from architectural decisions in Chapter 3, and their resolution is
 best understood as refining that design under implementation pressure rather than as
 evidence against the design.
 
@@ -1415,7 +1415,7 @@ held-out model evaluation, and a manual requirements-driven walkthrough of every
 module's principal user interface flows. To support the manual testing, the database was
 seeded with 12 synthetic patients together with associated vitals, medications,
 appointments, and clinical assessments. One demonstration account was created for each
-of the five user roles — admin, clinician, caregiver, patient, and family — so every
+of the five user roles - admin, clinician, caregiver, patient, and family - so every
 role-aware view could be exercised as intended. No automated unit test suite, load test,
 external clinical validation, or formal user study was conducted.
 
@@ -1456,7 +1456,7 @@ The held-out test performance of all eight models was obtained under the trainin
 described in Section 3.6: 8,000 synthetic samples per task; 80/20 stratified split; Stratified
 K-Fold cross-validation during hyperparameter tuning; SMOTE for class imbalance; fixed
 random seed of 42. All eight models achieved AUC above 0.97. The caregiver burden and psychological risk
-models reached the highest F1 scores — 96.5% and 97.3% respectively. The pain risk,
+models reached the highest F1 scores - 96.5% and 97.3% respectively. The pain risk,
 symptom burden, and admission risk models recorded lower precision (77.2%, 75.6%, and
 81.3%) while maintaining recall above 90% in each case.
 
@@ -1478,13 +1478,13 @@ Admission risk label             Positive if PPS < 40, ESAS total > 45, and ED v
 The synthetic data was generated from parameter distributions grounded in published
 palliative care statistics rather than sampled from real patient records. The figures in
 Table 3.1 show that each model learned the clinical relationships encoded in its training
-distribution correctly — they do not predict performance on a real hospital population.
+distribution correctly - they do not predict performance on a real hospital population.
 Published XGBoost models trained on real palliative care data typically report AUC of
 0.75 to 0.88 for comparable tasks; that range, not the figures in Table 3.1, is the
 realistic benchmark for eventual clinical use.
 
 The three models flagged for lower precision were retrained in a targeted second pass
-adjusting class balancing and decision thresholds — pain risk, symptom burden, and
+adjusting class balancing and decision thresholds - pain risk, symptom burden, and
 admission risk. All three improved precision while preserving high recall; the figures in
 Table 3.1 already reflect those retrained results. The clinical implication is visible in the
 implementation: a pain risk precision of 77.2% means a meaningful proportion of proactive
@@ -1575,7 +1575,7 @@ Specific Objective                              Status and Evidence
 The first specific objective is met by the data input layer, notification machinery, and
 alert system, all confirmed in Table 5.3. The second is met, with the XGBoost deviation
 from the originally proposed Random Forest classifier recorded here as a deliberate
-design-phase refinement — both are tree-based ensemble methods, and XGBoost was
+design-phase refinement - both are tree-based ensemble methods, and XGBoost was
 chosen specifically to guarantee exact rather than approximated Shapley values. The third
 is met at the prototype level the scope defined in Section 1.5; the coordination,
 bereavement, and security features are each implemented and verified, but the term
@@ -1588,7 +1588,7 @@ Read together, the results support the conclusion that the four functional pilla
 address the gaps documented in Chapter 2. The fragmentation of clinical, coordination,
 and family tools into separate products is addressed by the single Unified Care Dashboard
 verified in Section 5.5. The opacity of existing risk tools is addressed by pairing every
-XGBoost prediction with a genuine SHAP explanation — covering pain risk, symptom
+XGBoost prediction with a genuine SHAP explanation - covering pain risk, symptom
 burden, psychological risk, deterioration, medication adherence, mortality risk, caregiver
 burden, and admission risk. The near-total absence of structured bereavement support in
 existing platforms is addressed by the Continuity Bridge, whose grief screening, memory
@@ -1597,7 +1597,7 @@ vault, and digital legacy components each confirmed correct function.
 Several capabilities beyond the four core pillars further strengthen the system's fitness for
 the Ghanaian context. The care setting system allows the same codebase to serve a hospital
 ward, a hospice, and a home-based caregiver without code change. The two AI
-conversational assistants — one for patients and families, one for clinicians — with
+conversational assistants - one for patients and families, one for clinicians - with
 provider redundancy between Gemini and Groq ensure the conversational layer stays
 functional under unreliable connectivity. The Web Push and PWA implementation allows
 clinical alerts to reach staff on mobile devices even when the browser is closed, which
@@ -1606,8 +1606,8 @@ with ML-powered group recommendations extends the social support dimension that 
 literature identifies as protective against complicated grief.
 
 Measured against the SDG framing in Section 1.4, the evidence supports the claim that a
-working artefact contributing to Goals 3 and 9 has been produced. The Goal 10 claim —
-reduced inequalities — is better understood as a claim about design intent: no underserved
+working artefact contributing to Goals 3 and 9 has been produced. The Goal 10 claim  - 
+reduced inequalities - is better understood as a claim about design intent: no underserved
 community has yet used the system.
 
 The honest ML reporting in Section 5.4 is itself a meaningful result for a resource-
@@ -1654,9 +1654,9 @@ This chapter reported the API integration check, the held-out performance of the
 XGBoost models, and the manual verification of 12 principal runtime flows, then
 evaluated the completed system against the three specific objectives from Chapter 1. All
 three objectives were met. The deviation from Random Forest to XGBoost for the second
-objective was recorded and justified. The limitations of the evaluation — synthetic training
+objective was recorded and justified. The limitations of the evaluation - synthetic training
 data, no user study, no formal accessibility audit, no security testing, no automated
-regression suite — were stated plainly rather than allowed to inflate the claims made for
+regression suite - were stated plainly rather than allowed to inflate the claims made for
 the system.
 
 

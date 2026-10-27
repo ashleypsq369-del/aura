@@ -1,4 +1,4 @@
-# PROJECT AURA — FINAL DEFENSE DOCUMENT
+# PROJECT AURA - FINAL DEFENSE DOCUMENT
 ## Group 31 | UMaT Tarkwa | BSc Computer Science & Engineering
 ### Title: An AI Framework for Personalised and Explainable Palliative Care Systems
 
@@ -6,29 +6,29 @@
 
 > **How to use this document:**
 > Read it like a script you own, not one you memorise.
-> Every answer below is written the way you should actually say it — direct, confident, technically precise.
+> Every answer below is written the way you should actually say it - direct, confident, technically precise.
 > The panel will probe. Know the code. Know the numbers. Know the why.
 
 ---
 
 ---
 
-## PART 1 — SYSTEM OVERVIEW (Say this in under 90 seconds)
+## PART 1 - SYSTEM OVERVIEW (Say this in under 90 seconds)
 
 **What the system is:**
 Project AURA is a full-stack, AI-powered palliative care platform built specifically for the Ghanaian healthcare context. It has four functional pillars working together in one web application:
 
-1. **Intelligent Monitoring Core** — captures clinical data (vitals, symptoms, assessments), runs 8 XGBoost risk models, generates SHAP explanations, and proactively alerts clinicians
-2. **Adaptive Care Guide** — AI-generated care plans personalised per patient diagnosis and onboarding preferences
-3. **Unified Care Dashboard** — one platform serving 5 roles (admin, clinician, caregiver, patient, family) with role-appropriate views and real-time data
-4. **Continuity Bridge** — structured bereavement support, grief journal, PG-13 screening, memory vault, and digital legacy for families after a patient dies
+1. **Intelligent Monitoring Core** - captures clinical data (vitals, symptoms, assessments), runs 8 XGBoost risk models, generates SHAP explanations, and proactively alerts clinicians
+2. **Adaptive Care Guide** - AI-generated care plans personalised per patient diagnosis and onboarding preferences
+3. **Unified Care Dashboard** - one platform serving 5 roles (admin, clinician, caregiver, patient, family) with role-appropriate views and real-time data
+4. **Continuity Bridge** - structured bereavement support, grief journal, PG-13 screening, memory vault, and digital legacy for families after a patient dies
 
 **What makes it new:**
-No reviewed system combined all four. Existing tools — Alora, CareSmartz360, Netsmart — handle records and scheduling only. None have clinical AI. None have bereavement support. We built both, for the Ghanaian context, in one platform.
+No reviewed system combined all four. Existing tools - Alora, CareSmartz360, Netsmart - handle records and scheduling only. None have clinical AI. None have bereavement support. We built both, for the Ghanaian context, in one platform.
 
 ---
 
-## PART 2 — THE PROBLEM (Evidence you cite)
+## PART 2 - THE PROBLEM (Evidence you cite)
 
 | Statistic | Source |
 |---|---|
@@ -40,29 +40,29 @@ No reviewed system combined all four. Existing tools — Alora, CareSmartz360, N
 | Clinicians will not act on AI recommendations they cannot understand | Parsons et al. (2025); Abbas et al. (2025) |
 
 **The four gaps the system closes:**
-1. Care fragmentation — records don't travel between settings
-2. Opaque AI — existing tools produce risk scores with no explanation
-3. No family involvement — families carry caregiving with zero formal support
-4. No bereavement — care stops the moment the patient dies
+1. Care fragmentation - records don't travel between settings
+2. Opaque AI - existing tools produce risk scores with no explanation
+3. No family involvement - families carry caregiving with zero formal support
+4. No bereavement - care stops the moment the patient dies
 
 ---
 
-## PART 3 — OBJECTIVES AND EVIDENCE OF ACHIEVEMENT
+## PART 3 - OBJECTIVES AND EVIDENCE OF ACHIEVEMENT
 
 ### Objective 1: Real-time symptom tracking, medication management, scheduling
 **Met. Evidence:**
 
 - `notification_service.py` → `check_medication_schedule()` calculates next dose time from frequency string, creates reminder 15 min before, marks missed if not logged within 30 min
-- `notification_service.py` → `check_critical_vitals()` checks SpO2 <90%, HR <50 or >120, BP sys >180 or <90, Temp >38.5°C — creates Alert + NotificationQueue entries in real time
+- `notification_service.py` → `check_critical_vitals()` checks SpO2 <90%, HR <50 or >120, BP sys >180 or <90, Temp >38.5°C - creates Alert + NotificationQueue entries in real time
 - `notification_service.py` → `check_upcoming_appointments()` sends 24h and 1h reminders to patient + family links
 - Offline-first: IndexedDB queue stores writes when no connectivity; service worker caches assets; data syncs on reconnect
-- **10 validated clinical instruments**: ESAS, PPS, PHQ-9, GAD-7, Barthel, BPI, QoL, MMSE/MoCA, Zarit Burden, Motor Skills — each a dedicated form, dedicated DB table, dedicated API endpoint
+- **10 validated clinical instruments**: ESAS, PPS, PHQ-9, GAD-7, Barthel, BPI, QoL, MMSE/MoCA, Zarit Burden, Motor Skills - each a dedicated form, dedicated DB table, dedicated API endpoint
 
 ### Objective 2: Explainable AI using SHAP-based models
 **Met, with one recorded deviation (XGBoost over Random Forest).**
 
 - 8 XGBoost classifiers, one per clinical domain
-- Each paired with SHAP `TreeExplainer` — exact Shapley values (not approximated)
+- Each paired with SHAP `TreeExplainer` - exact Shapley values (not approximated)
 - `RiskExplanationPanel.jsx` renders SHAP bars + waterfall charts in the UI
 - Two explanation systems kept architecturally separate: SHAP (bar/waterfall, labelled "XGBoost SHAP") vs rule-based heuristics (single-observation, plain language)
 - Clinician feedback loop (agree/partial/disagree) feeds back to backend
@@ -73,25 +73,25 @@ No reviewed system combined all four. Existing tools — Alora, CareSmartz360, N
 - JWT + RBAC enforced on every endpoint (not just UI)
 - HIPAA-aligned: audit log, 15-min auto-logoff, breach tracking, patient data export
 - Continuity Bridge: grief journal (NLP tone detection), PG-13 screening, memory vault, digital legacy with heir access levels
-- **Honest caveat**: "user-friendly" is a design claim — no user study was conducted
+- **Honest caveat**: "user-friendly" is a design claim - no user study was conducted
 
 ---
 
 ---
 
-## PART 4 — TECHNOLOGY STACK WITH JUSTIFICATION
+## PART 4 - TECHNOLOGY STACK WITH JUSTIFICATION
 
 ### Frontend
 
 | Technology | Why |
 |---|---|
 | **React 18/19 + Vite** | Component model maps to role-adaptive UI; Vite is 10-100x faster hot reload than CRA; large clinical web precedent |
-| **TanStack Query** | Server-state caching with stale-time tuning per data type — alerts: 30s, patients: 5min, ML risk: 5min, drug interactions: 10min |
+| **TanStack Query** | Server-state caching with stale-time tuning per data type - alerts: 30s, patients: 5min, ML risk: 5min, drug interactions: 10min |
 | **TanStack Table** | Sortable, filterable 40+ column patient list with row virtualisation |
 | **Tailwind CSS** | Utility-first; `dark:` variants for dark mode; responsive breakpoints built in |
 | **Framer Motion** | Accessible animations; respects `reducedMotion` system preference |
 | **Recharts** | SHAP bar/waterfall charts, vital trend sparklines, risk gauges |
-| **Axios** | HTTP client with JWT Bearer interceptor — token attached automatically to every request |
+| **Axios** | HTTP client with JWT Bearer interceptor - token attached automatically to every request |
 | **Sonner (toast)** | Clinical alert toasts; positioned 80px below header to avoid covering nav |
 | **idb (IndexedDB)** | Structured offline storage: patients, vitals, meds, appointments, pending-write queue |
 | **Web Speech API** | Voice-to-text input forms; voice navigation commands |
@@ -104,12 +104,12 @@ No reviewed system combined all four. Existing tools — Alora, CareSmartz360, N
 | **FastAPI** | Async Python; auto-generates OpenAPI docs at `/docs`; native Pydantic integration |
 | **Uvicorn (ASGI)** | Handles async + WebSocket connections concurrently |
 | **SQLAlchemy 2.0** | ORM; parameterised queries eliminate SQL injection by construction; DB-agnostic |
-| **Pydantic v2** | Schema validation — malformed input rejected at API boundary before touching DB |
+| **Pydantic v2** | Schema validation - malformed input rejected at API boundary before touching DB |
 | **python-jose** | JWT signing/verification (HS256) |
 | **passlib + bcrypt** | Adaptive password hashing; industry standard for credential storage |
-| **bleach** | Sanitises user-supplied text before storage — prevents XSS |
+| **bleach** | Sanitises user-supplied text before storage - prevents XSS |
 | **slowapi** | Rate limiting: 10 requests/min on `/api/auth/login` |
-| **WebSockets** | Real-time push of alerts, messages, notifications — no polling needed |
+| **WebSockets** | Real-time push of alerts, messages, notifications - no polling needed |
 
 ### AI / ML
 
@@ -117,18 +117,18 @@ No reviewed system combined all four. Existing tools — Alora, CareSmartz360, N
 |---|---|
 | **XGBoost** | Handles tabular, partially missing clinical data; fast retraining; exact SHAP compatibility |
 | **scikit-learn** | Preprocessing pipelines, StratifiedKFold CV, label encoding |
-| **SMOTE** | Corrects class imbalance — palliative risk events are rare in real populations |
-| **SHAP TreeExplainer** | Cooperative game theory; exact per-feature Shapley values for tree models — not approximated |
+| **SMOTE** | Corrects class imbalance - palliative risk events are rare in real populations |
+| **SHAP TreeExplainer** | Cooperative game theory; exact per-feature Shapley values for tree models - not approximated |
 | **Gemini 1.5 Flash** | Primary LLM for conversational assistants; free tier |
 | **Groq Llama 3.1** | Automatic fallback when Gemini unavailable |
-| **Aura AI Engine (local)** | TF-IDF + cosine similarity over 300+ labelled phrases, 500+ Q&A pairs, crisis guard — zero internet required |
+| **Aura AI Engine (local)** | TF-IDF + cosine similarity over 300+ labelled phrases, 500+ Q&A pairs, crisis guard - zero internet required |
 
 **How the Aura AI Engine actually works (from `aura_ai_engine.py`):**
-1. `_preprocess(text)` — lowercase, tokenise, remove stopwords, apply Porter stemmer
+1. `_preprocess(text)` - lowercase, tokenise, remove stopwords, apply Porter stemmer
 2. `TfidfVectorizer` (ngrams 1–2) trained on all labelled intent examples
-3. `classify_intent(text)` — cosine similarity against TF-IDF matrix → top-N (intent, confidence) pairs
-4. `extract_entities(text)` — regex for pain scale 0–10, named symptoms, medication names (30+ drugs), time references, body parts
-5. `is_crisis(text)` — hardcoded keyword guard runs first, always, before any other processing
+3. `classify_intent(text)` - cosine similarity against TF-IDF matrix → top-N (intent, confidence) pairs
+4. `extract_entities(text)` - regex for pain scale 0–10, named symptoms, medication names (30+ drugs), time references, body parts
+5. `is_crisis(text)` - hardcoded keyword guard runs first, always, before any other processing
 6. Response built from `KNOWLEDGE_BASE` (500+ Q&A) matched by intent + entity
 
 **How `llm_engine.py` works:**
@@ -144,11 +144,11 @@ No reviewed system combined all four. Existing tools — Alora, CareSmartz360, N
 | **SQLite (dev)** | Zero-config; single `.db` file; changed to PostgreSQL by one env var |
 | **PostgreSQL (prod)** | Full ACID, full-text search, connection pooling at scale |
 | **VAPID (Web Push)** | Signed push messages to device even when browser is closed |
-| **JWT HS256** | Stateless — no server-side session store; scales horizontally |
+| **JWT HS256** | Stateless - no server-side session store; scales horizontally |
 
 ---
 
-## PART 5 — ARCHITECTURE EXPLAINED
+## PART 5 - ARCHITECTURE EXPLAINED
 
 ### Three-tier, five-layer
 
@@ -168,13 +168,13 @@ Layer 5: Gemini 1.5 → Groq Llama 3.1 → Local Aura AI Engine
 Low latency, no extra deployment complexity, no inter-service network call. For a prototype in a resource-limited setting this is correct. For production at scale, extracting to a dedicated inference service is the natural evolution.
 
 **Why not microservices?**
-A monolith was the right choice for a prototype. Microservices add network complexity, distributed tracing, and service discovery overhead that adds no value to a system of this scope. The code is structured as if it were microservices — 39 routers, each owning its domain — so extraction is straightforward later.
+A monolith was the right choice for a prototype. Microservices add network complexity, distributed tracing, and service discovery overhead that adds no value to a system of this scope. The code is structured as if it were microservices - 39 routers, each owning its domain - so extraction is straightforward later.
 
 ---
 
 ---
 
-## PART 6 — THE ML SYSTEM IN FULL TECHNICAL DETAIL
+## PART 6 - THE ML SYSTEM IN FULL TECHNICAL DETAIL
 
 ### 8 XGBoost Models
 
@@ -192,7 +192,7 @@ A monolith was the right choice for a prototype. Microservices add network compl
 **Feature vector assembled per patient:**
 Most recent vitals (HR, BP, SpO2, Temp, RR) + ESAS scores + PPS score + Barthel score + MMSE/MoCA score + PHQ-9 total + GAD-7 total + active medication count + medication adherence rate + alert count last 6 months (proxy for ED visits) + social support score
 
-**Missing value handling:** Clinically appropriate defaults substituted — HR=80, SpO2=95%, BP=120/80 — so a prediction is always returned even for incomplete records.
+**Missing value handling:** Clinically appropriate defaults substituted - HR=80, SpO2=95%, BP=120/80 - so a prediction is always returned even for incomplete records.
 
 **Training protocol (from `retrain_targeted.py` and documentation):**
 - 8,000 synthetic samples per task
@@ -200,7 +200,7 @@ Most recent vitals (HR, BP, SpO2, Temp, RR) + ESAS scores + PPS score + Barthel 
 - Stratified K-Fold CV during hyperparameter tuning
 - SMOTE for class imbalance correction
 - Fixed random seed = 42 (reproducibility)
-- Three models retrained in second pass: `vital_risk`, `symptom_burden`, `admission_risk` — precision improved while recall preserved
+- Three models retrained in second pass: `vital_risk`, `symptom_burden`, `admission_risk` - precision improved while recall preserved
 
 **Held-out performance (Table 3.1):**
 
@@ -218,24 +218,24 @@ Most recent vitals (HR, BP, SpO2, Temp, RR) + ESAS scores + PPS score + Barthel 
 **Why lower precision on pain/symptom/admission is intentional:**
 In palliative care, a false positive (unnecessary clinical review) costs time. A false negative (missing a deteriorating patient) costs a life. The system deliberately biases toward recall. The 6-hour alert deduplication window manages false-positive alert volume.
 
-**Real-world benchmark:** Published XGBoost on real palliative data reports AUC 0.75–0.88. Our figures show the models correctly learned their training distributions — not that they will achieve this on a real hospital population.
+**Real-world benchmark:** Published XGBoost on real palliative data reports AUC 0.75–0.88. Our figures show the models correctly learned their training distributions - not that they will achieve this on a real hospital population.
 
 **Overall risk aggregation:**
 Weighted sum of 8 domain scores → Critical >70%, High 50–70%, Moderate 30–50%, Low <30%
 
-**Proactive background scan:** Runs across all active/stable/deteriorating patients. 6-hour deduplication — same patient not re-alerted within 6 hours of a previous alert.
+**Proactive background scan:** Runs across all active/stable/deteriorating patients. 6-hour deduplication - same patient not re-alerted within 6 hours of a previous alert.
 
 ### How SHAP Works (explain this if asked)
 
 SHAP stands for SHapley Additive exPlanations. It comes from cooperative game theory (Lundberg & Lee, 2017). The idea: treat each feature as a "player" in a game whose "payout" is the model's prediction. Shapley values calculate each player's fair contribution by averaging their marginal contribution across all possible orderings of players.
 
-`TreeExplainer` computes exact Shapley values for tree-based models — not approximated. This is why XGBoost was chosen over Random Forest: Random Forest with SHAP uses a slower, approximated explainer. XGBoost + TreeExplainer gives exact values at speed.
+`TreeExplainer` computes exact Shapley values for tree-based models - not approximated. This is why XGBoost was chosen over Random Forest: Random Forest with SHAP uses a slower, approximated explainer. XGBoost + TreeExplainer gives exact values at speed.
 
 **What a clinician sees:** "Pain score 8/10 pushed risk up by +0.23. PPS 30 pushed risk up by +0.18. Good medication adherence pushed risk down by −0.11." That is actionable. A raw risk score of 0.71 is not.
 
 ---
 
-## PART 7 — DATABASE DESIGN
+## PART 7 - DATABASE DESIGN
 
 **~40 SQLAlchemy tables, 6 functional groups:**
 
@@ -248,16 +248,16 @@ SHAP stands for SHapley Additive exPlanations. It comes from cooperative game th
 | Bereavement & Legacy | bereavement_entries, grief_screenings, legacy_consents, legacy_heirs, legacy_content | Continuity Bridge |
 | Governance | audit_logs, breach_incidents, crisis_alerts, clinical_overrides, usability_feedback, chatbot_consent | Compliance and ethics |
 
-**Central entity:** `patients` — almost every other table has a foreign key to `patient_id`.
+**Central entity:** `patients` - almost every other table has a foreign key to `patient_id`.
 
 **DB-agnostic design:** SQLAlchemy ORM; `DATABASE_URL=sqlite:///./aura.db` in dev; `DATABASE_URL=postgresql://...` in production. One env var change. No code change.
 
 **Why not MongoDB or a NoSQL database?**
-Palliative care data is highly relational — a vital links to a patient, which links to a clinician, care plan, alerts, and family. Relational integrity (foreign keys, transactions) is essential for clinical correctness. JSON fields are used where flexibility is needed (SHAP values, condition tags) but the core schema is relational.
+Palliative care data is highly relational - a vital links to a patient, which links to a clinician, care plan, alerts, and family. Relational integrity (foreign keys, transactions) is essential for clinical correctness. JSON fields are used where flexibility is needed (SHAP values, condition tags) but the core schema is relational.
 
 ---
 
-## PART 8 — USER ROLES — COMPLETE
+## PART 8 - USER ROLES - COMPLETE
 
 | Role | Landing route | Core permissions |
 |---|---|---|
@@ -267,7 +267,7 @@ Palliative care data is highly relational — a vital links to a patient, which 
 | **patient** | `/my-space` | Own data: wellness check-in, care plan (view), resources, community, messaging, legacy, appointments |
 | **family** | `/dashboard` | Linked patient: journey timeline (de-identified), memory vault, bereavement, legacy (if designated heir) |
 
-**RBAC implementation:** Every FastAPI endpoint calls `require_role()` dependency before the handler executes. Role check is in the backend — the frontend hiding features is UX convenience only, not a security boundary. A malicious actor calling an endpoint directly will still be rejected.
+**RBAC implementation:** Every FastAPI endpoint calls `require_role()` dependency before the handler executes. Role check is in the backend - the frontend hiding features is UX convenience only, not a security boundary. A malicious actor calling an endpoint directly will still be rejected.
 
 **Dual access control on legacy content:** Family role alone is insufficient. An `heir_access_level` field (full / memories_only / messages_only) is checked separately from the system role. Patient designates access level per heir individually.
 
@@ -275,7 +275,7 @@ Palliative care data is highly relational — a vital links to a patient, which 
 
 ---
 
-## PART 9 — KEY WORKFLOWS (How the system actually runs)
+## PART 9 - KEY WORKFLOWS (How the system actually runs)
 
 ### Authentication Flow
 1. User submits credentials → bcrypt hash verified → signed JWT issued (HS256, 8h expiry)
@@ -307,25 +307,25 @@ Clinician submits ESAS/PPS/Barthel → pipeline re-runs immediately → risk pan
 2. `onSuccess` applies 12 settings immediately to localStorage: theme, language, font size, sidebar mode, a11y, notifications, AI consent
 3. Backend saves `UserPreferences` row
 4. `PersonalisationContext` derives `uiFlags`: `showCommunity`, `showAI`, `showLegacy`, `showSpiritualItems`, `simplifiedNav`, `isBereaved`, `isBurntOut`
-5. Every component reads from this central context — one flag, consistent across all screens
+5. Every component reads from this central context - one flag, consistent across all screens
 6. On every subsequent login: `AppRoutes` re-fetches and re-applies (guarded by `sessionStorage` so it only runs once per session)
 
 ### Digital Legacy Flow
 1. Patient creates consent at `/legacy-setup`
-2. Designates heirs — each gets: relationship, `access_level` (full/memories_only/messages_only), `can_access_private` flag
-3. Creates posthumous content — each piece has a `delivery_trigger` ("after_death" or specific date)
+2. Designates heirs - each gets: relationship, `access_level` (full/memories_only/messages_only), `can_access_private` flag
+3. Creates posthumous content - each piece has a `delivery_trigger` ("after_death" or specific date)
 4. After patient's death → clinician activates legacy via admin interface
-5. `/my-legacy-access` becomes available to heirs — content filtered strictly by `heir_access_level`, not by system role
+5. `/my-legacy-access` becomes available to heirs - content filtered strictly by `heir_access_level`, not by system role
 
 ### WebSocket Real-Time Flow
 - Single WebSocket endpoint, connection manager maps authenticated connections to rooms
 - On connection: token validated same as REST; auto-subscribed to `general`, `clinicians`, `caregivers`, or `patient_{id}` room based on role
 - Three event types: alert_update (broadcast to clinicians room), new_message (broadcast to conversation participants), new_notification (directed to single recipient)
-- Frontend `WebSocketContext` exposes subscribe/unsubscribe to components — components don't manage connection state themselves
+- Frontend `WebSocketContext` exposes subscribe/unsubscribe to components - components don't manage connection state themselves
 
 ---
 
-## PART 10 — SECURITY & COMPLIANCE
+## PART 10 - SECURITY & COMPLIANCE
 
 ### Authentication & Session
 - JWT HS256, 8-hour expiry
@@ -348,23 +348,23 @@ Clinician submits ESAS/PPS/Barthel → pipeline re-runs immediately → risk pan
 - Audit log: all significant actions logged with `user_id`, `user_role`, `action`, `resource_type`, `patient_id`, `ip_address`, `user_agent`, `success`, `details` JSON
 - Breach incident tracking: `BreachIncident` table, auto-calculates HHS 60-day notification deadline
 - Patient data export: `GET /api/portal/my-data/export` returns all PHI as downloadable JSON (HIPAA Right of Access, 45 CFR §164.524)
-- HIPAA compliance dashboard: dynamically computed from live DB — queries audit log count, breach incidents, user counts; not hardcoded
+- HIPAA compliance dashboard: dynamically computed from live DB - queries audit log count, breach incidents, user counts; not hardcoded
 
 ### Continuity Bridge Additional Layer
 - Family role alone does not grant legacy access
 - `heir_access_level` checked separately from system role at every legacy content query
-- Journal entries visible only to their author — enforced at access control layer, not just UI convention
+- Journal entries visible only to their author - enforced at access control layer, not just UI convention
 
 **Why "HIPAA-aligned" not "HIPAA-compliant"?**
 Full HIPAA compliance requires formal certification, Business Associate Agreements, physical security controls, and staff training programmes. A student prototype cannot be formally certified. The system implements the technical safeguard requirements of the HIPAA Security Rule.
 
 ---
 
-## PART 11 — CARE PLAN ENGINE (from `care_plan_engine.py`)
+## PART 11 - CARE PLAN ENGINE (from `care_plan_engine.py`)
 
 The care plan engine detects disease profile from diagnosis text:
-1. `detect_disease_profile(diagnosis)` — checks 7 hardcoded profiles (cancer, heart_failure, COPD, dementia, renal_failure, stroke, general_palliative) by keyword matching
-2. Falls back to `ConditionCareTemplate` DB table if no hardcoded match — allows clinicians to add new conditions that immediately affect care plan generation
+1. `detect_disease_profile(diagnosis)` - checks 7 hardcoded profiles (cancer, heart_failure, COPD, dementia, renal_failure, stroke, general_palliative) by keyword matching
+2. Falls back to `ConditionCareTemplate` DB table if no hardcoded match - allows clinicians to add new conditions that immediately affect care plan generation
 3. Profile contains: `key_goals`, `standard_interventions`, `red_flags`, `monitoring_schedule`, `guide_sections`
 
 **Feature analysis per patient:**
@@ -381,7 +381,7 @@ The care plan engine detects disease profile from diagnosis text:
 
 ---
 
-## PART 12 — VALIDATED CLINICAL TOOLS (Know each one)
+## PART 12 - VALIDATED CLINICAL TOOLS (Know each one)
 
 | Tool | Full Name | Score Range | Clinical Threshold | Why it's in the system |
 |---|---|---|---|---|
@@ -392,22 +392,22 @@ The care plan engine detects disease profile from diagnosis text:
 | **Barthel Index** | Barthel Activities of Daily Living | 0–100 (10 ADL items) | 0–20: total dependence; 91–100: independent | Determines practical care needs; drives caregiver assignment |
 | **MMSE** | Mini-Mental State Examination | 0–30 | <24 suggests cognitive impairment | Dementia affects ability to self-report symptoms accurately |
 | **MoCA** | Montreal Cognitive Assessment | 0–30 (+1 if ≤12yrs education) | <26 suggests impairment | More sensitive than MMSE for mild impairment |
-| **BPI** | Brief Pain Inventory | Severity + Interference subscales | Severity >7 = severe pain | Captures both pain intensity AND functional impact — not just a number |
-| **FACT-G** | Functional Assessment of Cancer Therapy – General | Physical/Social/Emotional/Functional | Per-subscale interpretation | WHO defines palliative care as improving quality of life — QoL must be measured |
+| **BPI** | Brief Pain Inventory | Severity + Interference subscales | Severity >7 = severe pain | Captures both pain intensity AND functional impact - not just a number |
+| **FACT-G** | Functional Assessment of Cancer Therapy – General | Physical/Social/Emotional/Functional | Per-subscale interpretation | WHO defines palliative care as improving quality of life - QoL must be measured |
 | **Zarit Burden Interview** | Zarit Caregiver Burden Scale | 0–48 (12 items × 0–4) | 0–20: little burden; 41–48: severe | Families carry all caregiving in Ghana with no support; measuring burden is central |
 | **PG-13** | Prolonged Grief-13 | 13–65 (13 items × 1–5) | ≥30 → prolonged grief referral | Finucane (2024): 40% of bereaved need formal support; PG-13 identifies which ones |
 | **Motor Skills** | Physical Function Assessment | Grip strength, TUG, gait speed, balance | Falls risk classification | Falls are a major safety risk, especially for dementia patients |
 
 ---
 
-## PART 13 — METHODOLOGY
+## PART 13 - METHODOLOGY
 
 ### SDLC: Waterfall (Royce, 1970)
 
 **Three reasons this was the right choice:**
-1. Fixed academic timetable with supervisor sign-off gates — maps directly to sequential phase completion
-2. Requirements derived upfront from published literature — ESAS protocols, WHO guidelines, HIPAA rules, NHS CmC documentation — not from evolving user feedback
-3. Solo/small team benefits from documenting each phase fully before moving on — creates the auditable trail this report records
+1. Fixed academic timetable with supervisor sign-off gates - maps directly to sequential phase completion
+2. Requirements derived upfront from published literature - ESAS protocols, WHO guidelines, HIPAA rules, NHS CmC documentation - not from evolving user feedback
+3. Solo/small team benefits from documenting each phase fully before moving on - creates the auditable trail this report records
 
 **Research approach: Design Science Research (Hevner et al., 2004)**
 Primary contribution is a purposefully built artefact, not a tested hypothesis. Work proceeds through: problem awareness → suggestion → development → evaluation. The research question is "what can be built and how well does it perform?" not a statistical question about human subjects.
@@ -430,7 +430,7 @@ Primary contribution is a purposefully built artefact, not a tested hypothesis. 
 
 ---
 
-## PART 14 — TESTING
+## PART 14 - TESTING
 
 ### What was tested:
 
@@ -448,7 +448,7 @@ Primary contribution is a purposefully built artefact, not a tested hypothesis. 
 
 **3. Manual Runtime Flow Verification (Table 5.3)**
 - 12 synthetic patients seeded + 1 account per role
-- 15 principal flows manually exercised — all passed:
+- 15 principal flows manually exercised - all passed:
   - Authentication, WebSocket push, ML pipeline, alert lifecycle
   - Assessment → ML feedback, drug interaction detection
   - Caregiver auto-assignment, messaging urgency, notification priority ordering
@@ -466,34 +466,34 @@ Primary contribution is a purposefully built artefact, not a tested hypothesis. 
 
 ---
 
-## PART 15 — CONTRIBUTION TO KNOWLEDGE
+## PART 15 - CONTRIBUTION TO KNOWLEDGE
 
 Say this confidently when asked "what is new?":
 
-1. **First integrated prototype** combining symptom monitoring + explainable clinical AI + care coordination + structured bereavement support in one platform. Table 2.1 (24 reviewed works) — none combined all four.
+1. **First integrated prototype** combining symptom monitoring + explainable clinical AI + care coordination + structured bereavement support in one platform. Table 2.1 (24 reviewed works) - none combined all four.
 
-2. **SHAP explainability out of the lab** into a working web prototype. Abbas et al. (2025) analysed 62 XAI studies — most remain at benchmark level. We integrated SHAP into a live system where every risk score is inseparable from its explanation.
+2. **SHAP explainability out of the lab** into a working web prototype. Abbas et al. (2025) analysed 62 XAI studies - most remain at benchmark level. We integrated SHAP into a live system where every risk score is inseparable from its explanation.
 
-3. **Bereavement as a first-class feature** — Finucane et al. (2024): 40% of bereaved need formal support. Every reviewed platform offered nothing after death. The Continuity Bridge fills this gap directly.
+3. **Bereavement as a first-class feature** - Finucane et al. (2024): 40% of bereaved need formal support. Every reviewed platform offered nothing after death. The Continuity Bridge fills this gap directly.
 
-4. **Personalisation-first architecture** — questionnaire that actively reshapes the interface: hides features, changes language, adjusts font, removes AI widgets if consent not given. Addresses all 6 failure modes Templin et al. (2024) identified.
+4. **Personalisation-first architecture** - questionnaire that actively reshapes the interface: hides features, changes language, adjusts font, removes AI widgets if consent not given. Addresses all 6 failure modes Templin et al. (2024) identified.
 
-5. **Ghana-context specificity** — Ghana Card/NHIS integration, Twi/Ga/Ewe language support, Ghana Mental Health Authority crisis line, COMPASS/GPCA data grounding. No reviewed platform addresses this context.
+5. **Ghana-context specificity** - Ghana Card/NHIS integration, Twi/Ga/Ewe language support, Ghana Mental Health Authority crisis line, COMPASS/GPCA data grounding. No reviewed platform addresses this context.
 
-6. **Consent enforced at rendering level** — when patient declines AI consent, widgets are removed from the DOM. Not just blocked when clicked. Addresses consent-deficit failure Kocaballi et al. (2019) identified.
+6. **Consent enforced at rendering level** - when patient declines AI consent, widgets are removed from the DOM. Not just blocked when clicked. Addresses consent-deficit failure Kocaballi et al. (2019) identified.
 
-7. **Honest synthetic-data reporting** — states real-world AUC benchmark (0.75–0.88) alongside prototype figures. More transparent than most published clinical AI work.
-
----
+7. **Honest synthetic-data reporting** - states real-world AUC benchmark (0.75–0.88) alongside prototype figures. More transparent than most published clinical AI work.
 
 ---
 
-## PART 16 — LIMITATIONS (say these with confidence, not apology)
+---
+
+## PART 16 - LIMITATIONS (say these with confidence, not apology)
 
 | Limitation | Honest statement |
 |---|---|
 | Synthetic training data | Models learned their training distribution correctly. Real-world validation requires real patient data and ethics approval. Real-world AUC benchmark is 0.75–0.88. |
-| No user study | "User-friendly" is a design claim. Usability requires SUS testing with real clinical populations — primary recommendation for future work. |
+| No user study | "User-friendly" is a design claim. Usability requires SUS testing with real clinical populations - primary recommendation for future work. |
 | No accessibility audit | Features are implemented. Formal NVDA/VoiceOver audit is future work. |
 | No penetration testing | Security architecture follows best practices. Formal pentest before any deployment. |
 | No ethics approval | Required before deployment (GHS Ethics Committee, DCB0129 clinical safety cert). System is a proof-of-concept artefact. |
@@ -503,31 +503,31 @@ Say this confidently when asked "what is new?":
 
 ---
 
-## PART 17 — FUTURE RECOMMENDATIONS
+## PART 17 - FUTURE RECOMMENDATIONS
 
-1. **Clinical validation on real GHS patient data** — collaborate with KATH, KBTH or Komfo Anokye Teaching Hospital under ethics approval
-2. **Formal usability study** — System Usability Scale (SUS) with clinicians, patients, families at a Ghanaian facility
-3. **Formal accessibility audit** — NVDA and VoiceOver with actual users with visual/motor impairment
-4. **Penetration testing** — before any production deployment
-5. **Model retraining on real data** — replace synthetic training data; expect AUC 0.75–0.88
-6. **GHS Ethics Committee approval + DCB0129** — required before deployment with real patients
-7. **Federated learning** — train models across facilities without sharing raw patient data (Alamri et al., 2025)
-8. **NHIS database integration** — automatic insurance verification at patient registration
-9. **Expanded language support** — Hausa, Dagbani for Northern region coverage
-10. **IoT device integration** — vital signs monitors feeding data directly instead of manual entry
-11. **React Native mobile app** — convert PWA to native app for deeper device integration
-
----
-
-## PART 18 — SDG CONTRIBUTIONS
-
-- **SDG 3 — Good Health and Well-being:** Improves palliative care quality, symptom monitoring, mental health support for underserved populations
-- **SDG 9 — Industry, Innovation and Infrastructure:** Demonstrates AI + modern web tech applied to a healthcare gap in sub-Saharan Africa
-- **SDG 10 — Reduced Inequalities:** Most direct claim — designed for communities underserved by Ghana's urban-concentrated palliative care system
+1. **Clinical validation on real GHS patient data** - collaborate with KATH, KBTH or Komfo Anokye Teaching Hospital under ethics approval
+2. **Formal usability study** - System Usability Scale (SUS) with clinicians, patients, families at a Ghanaian facility
+3. **Formal accessibility audit** - NVDA and VoiceOver with actual users with visual/motor impairment
+4. **Penetration testing** - before any production deployment
+5. **Model retraining on real data** - replace synthetic training data; expect AUC 0.75–0.88
+6. **GHS Ethics Committee approval + DCB0129** - required before deployment with real patients
+7. **Federated learning** - train models across facilities without sharing raw patient data (Alamri et al., 2025)
+8. **NHIS database integration** - automatic insurance verification at patient registration
+9. **Expanded language support** - Hausa, Dagbani for Northern region coverage
+10. **IoT device integration** - vital signs monitors feeding data directly instead of manual entry
+11. **React Native mobile app** - convert PWA to native app for deeper device integration
 
 ---
 
-## PART 19 — KEY NUMBERS TO KNOW COLD
+## PART 18 - SDG CONTRIBUTIONS
+
+- **SDG 3 - Good Health and Well-being:** Improves palliative care quality, symptom monitoring, mental health support for underserved populations
+- **SDG 9 - Industry, Innovation and Infrastructure:** Demonstrates AI + modern web tech applied to a healthcare gap in sub-Saharan Africa
+- **SDG 10 - Reduced Inequalities:** Most direct claim - designed for communities underserved by Ghana's urban-concentrated palliative care system
+
+---
+
+## PART 19 - KEY NUMBERS TO KNOW COLD
 
 | Item | Number |
 |---|---|
@@ -569,19 +569,19 @@ Say this confidently when asked "what is new?":
 
 ---
 
-## PART 20 — STRICT Q&A (Panel questions with precise answers)
+## PART 20 - STRICT Q&A (Panel questions with precise answers)
 
 ---
 
 **Q: Explain exactly how your AI risk prediction works, step by step.**
 
-When a clinician opens a patient record, the backend runs the inference service. It reads the patient's most recent vitals, ESAS scores, PPS score, Barthel index, MMSE score, PHQ-9 total, GAD-7 total, active medication count, adherence history, and alert history over the last 6 months. It assembles these into a feature vector. That vector is passed through all 8 XGBoost classifiers. Each model outputs a probability between 0 and 1 for its domain. Each model has a SHAP TreeExplainer attached — that explainer computes exact Shapley values showing exactly which features drove that model's prediction and by how much. The 8 probabilities are combined using fixed clinical weights — pain risk gets weight 1.5, caregiver burden gets 0.8 — into one overall weighted score. If that score exceeds the critical threshold of 70%, an alert is created and pushed over WebSocket to every connected clinician. The complete result — overall level, 8 domain scores, SHAP feature contributions, and a plain-language summary — is returned to the frontend in a single HTTP response and rendered simultaneously on the patient summary and the AI Insights deep-dive panel.
+When a clinician opens a patient record, the backend runs the inference service. It reads the patient's most recent vitals, ESAS scores, PPS score, Barthel index, MMSE score, PHQ-9 total, GAD-7 total, active medication count, adherence history, and alert history over the last 6 months. It assembles these into a feature vector. That vector is passed through all 8 XGBoost classifiers. Each model outputs a probability between 0 and 1 for its domain. Each model has a SHAP TreeExplainer attached - that explainer computes exact Shapley values showing exactly which features drove that model's prediction and by how much. The 8 probabilities are combined using fixed clinical weights - pain risk gets weight 1.5, caregiver burden gets 0.8 - into one overall weighted score. If that score exceeds the critical threshold of 70%, an alert is created and pushed over WebSocket to every connected clinician. The complete result - overall level, 8 domain scores, SHAP feature contributions, and a plain-language summary - is returned to the frontend in a single HTTP response and rendered simultaneously on the patient summary and the AI Insights deep-dive panel.
 
 ---
 
 **Q: What is SHAP and why is it better than standard feature importance?**
 
-SHAP — SHapley Additive exPlanations — is grounded in cooperative game theory (Lundberg and Lee, 2017). The principle: treat each feature as a player in a coalition game whose payout is the model prediction. Shapley values compute each player's fair contribution by averaging their marginal contribution across all possible orderings of players.
+SHAP - SHapley Additive exPlanations - is grounded in cooperative game theory (Lundberg and Lee, 2017). The principle: treat each feature as a player in a coalition game whose payout is the model prediction. Shapley values compute each player's fair contribution by averaging their marginal contribution across all possible orderings of players.
 
 Standard feature importance tells you globally which features a model relied on most across all patients. SHAP tells you the exact contribution of each feature to this specific patient's prediction right now. So instead of "pain score is generally important," you get "this patient's pain score of 8/10 pushed their risk up by +0.23." That is what a clinician needs to act. Abbas et al. (2025) confirmed that SHAP explanations integrated into clinical dashboards were most effective at building clinician trust. That is exactly our implementation.
 
@@ -591,43 +591,43 @@ TreeExplainer computes exact values for tree-based models. Random Forest with SH
 
 **Q: Your model AUC is 0.998. That sounds too good. Explain.**
 
-It is high because the models were trained and evaluated on synthetic data generated from the same parameter distributions. They learned those distributions correctly — that is what the numbers show. They do not show performance on a real hospital population.
+It is high because the models were trained and evaluated on synthetic data generated from the same parameter distributions. They learned those distributions correctly - that is what the numbers show. They do not show performance on a real hospital population.
 
 Published XGBoost models trained on real palliative care data typically report AUC between 0.75 and 0.88 for comparable tasks. That range is the realistic clinical benchmark. We state both figures explicitly in the report so the reader knows exactly what was measured and what was not.
 
-The high figures also reflect that the training labels were assigned using clinical thresholds from published literature — for example, pain risk label is positive if SpO2 < 90%, HR > 120, or temperature > 38.5°C. A model trained and tested on data generated from those same rules will naturally score very well. Real patient data has noise, confounders, and clinical variability that synthetic data does not capture.
+The high figures also reflect that the training labels were assigned using clinical thresholds from published literature - for example, pain risk label is positive if SpO2 < 90%, HR > 120, or temperature > 38.5°C. A model trained and tested on data generated from those same rules will naturally score very well. Real patient data has noise, confounders, and clinical variability that synthetic data does not capture.
 
 ---
 
 **Q: Why did you use XGBoost and not the Random Forest your proposal mentioned?**
 
-XGBoost is directly compatible with SHAP TreeExplainer, which computes exact Shapley values for tree-based models. Random Forest with SHAP uses TreeExplainer in an approximated mode — it is slower and less precise. Since explainability was a first-class design requirement, not an add-on, XGBoost was the correct choice. Both are tree-based gradient ensemble methods. The substitution is a refinement within the same algorithmic family, not a departure from the objective. We record it explicitly in Table 5.4 and Section 5.6.
+XGBoost is directly compatible with SHAP TreeExplainer, which computes exact Shapley values for tree-based models. Random Forest with SHAP uses TreeExplainer in an approximated mode - it is slower and less precise. Since explainability was a first-class design requirement, not an add-on, XGBoost was the correct choice. Both are tree-based gradient ensemble methods. The substitution is a refinement within the same algorithmic family, not a departure from the objective. We record it explicitly in Table 5.4 and Section 5.6.
 
 ---
 
 **Q: Why not a neural network or deep learning model?**
 
-Palliative care data is tabular and partially missing. Deep learning performs poorly on small, tabular, incomplete datasets — it requires large, complete datasets and extensive tuning. More importantly, neural networks are black boxes. Explainability was not optional in our design — it was stated as a specific objective. An unexplainable recommendation cannot be acted on by a clinician (Parsons et al., 2025). XGBoost + SHAP is the current state-of-the-art combination specifically for structured clinical data with explanation requirements, confirmed by Abbas et al. (2025) across 62 XAI studies.
+Palliative care data is tabular and partially missing. Deep learning performs poorly on small, tabular, incomplete datasets - it requires large, complete datasets and extensive tuning. More importantly, neural networks are black boxes. Explainability was not optional in our design - it was stated as a specific objective. An unexplainable recommendation cannot be acted on by a clinician (Parsons et al., 2025). XGBoost + SHAP is the current state-of-the-art combination specifically for structured clinical data with explanation requirements, confirmed by Abbas et al. (2025) across 62 XAI studies.
 
 ---
 
-**Q: Why Waterfall? You were adding features throughout — isn't that Agile?**
+**Q: Why Waterfall? You were adding features throughout - isn't that Agile?**
 
-Adding features during development does not make a process Agile. Agile requires real users giving feedback between sprints that drives what is built next. No users were involved at any stage of this project. The features added during implementation were driven by design decisions and the developer's own analysis of literature gaps — not by user stories from a patient or clinician. Without user sprints, calling it Agile would be academically dishonest. Waterfall is the honest and accurate description of how this project was conducted.
+Adding features during development does not make a process Agile. Agile requires real users giving feedback between sprints that drives what is built next. No users were involved at any stage of this project. The features added during implementation were driven by design decisions and the developer's own analysis of literature gaps - not by user stories from a patient or clinician. Without user sprints, calling it Agile would be academically dishonest. Waterfall is the honest and accurate description of how this project was conducted.
 
 ---
 
-**Q: How does the offline capability actually work — walk me through it technically.**
+**Q: How does the offline capability actually work - walk me through it technically.**
 
-Two layers work together. The first is a service worker registered by the Vite PWA plugin. On first visit it pre-caches all static assets — JavaScript bundles, CSS, images. On subsequent visits the app loads from cache even with no network.
+Two layers work together. The first is a service worker registered by the Vite PWA plugin. On first visit it pre-caches all static assets - JavaScript bundles, CSS, images. On subsequent visits the app loads from cache even with no network.
 
-The second layer is an IndexedDB database in the browser, managed through the `idb` library. It holds structured stores for patients, vitals, medications, appointments, and educational resources, plus a pending-write queue. When a caregiver submits vitals with no network connection, the write is intercepted by the offline client wrapper, serialised into the pending-write queue in IndexedDB, and the caregiver sees a success response. A connectivity monitor watches for the network to return. When it does, the queue flushes automatically — each pending write is sent to the backend in order, and the local cache is updated with the server's confirmed response. A persistent indicator in the navigation bar shows the caregiver whether their last submission has reached the server or is still queued.
+The second layer is an IndexedDB database in the browser, managed through the `idb` library. It holds structured stores for patients, vitals, medications, appointments, and educational resources, plus a pending-write queue. When a caregiver submits vitals with no network connection, the write is intercepted by the offline client wrapper, serialised into the pending-write queue in IndexedDB, and the caregiver sees a success response. A connectivity monitor watches for the network to return. When it does, the queue flushes automatically - each pending write is sent to the backend in order, and the local cache is updated with the server's confirmed response. A persistent indicator in the navigation bar shows the caregiver whether their last submission has reached the server or is still queued.
 
 ---
 
 **Q: Explain exactly how the notification service detects a missed medication.**
 
-In `notification_service.py`, `check_medication_schedule()` runs on a schedule. For each active, non-PRN medication it calls `calculate_next_dose_time()`, which parses the frequency string — "twice daily" maps to 12-hour intervals, "every 4 hours" maps to 4-hour intervals — and calculates the next expected dose time from the medication's start date. If `now > next_dose_time + timedelta(minutes=30)`, it queries `MedicationAdherenceLog` to see if a `taken=True` record exists for that scheduled time. If none exists, it creates a `MedicationAdherenceLog` entry with `taken=False, skipped_reason='Missed - not taken within 30 minutes'`, creates a `NotificationQueue` entry to the patient, and then queries `PatientFamilyLink` to notify every linked family member. A deduplication check prevents the same missed-dose notification being created twice.
+In `notification_service.py`, `check_medication_schedule()` runs on a schedule. For each active, non-PRN medication it calls `calculate_next_dose_time()`, which parses the frequency string - "twice daily" maps to 12-hour intervals, "every 4 hours" maps to 4-hour intervals - and calculates the next expected dose time from the medication's start date. If `now > next_dose_time + timedelta(minutes=30)`, it queries `MedicationAdherenceLog` to see if a `taken=True` record exists for that scheduled time. If none exists, it creates a `MedicationAdherenceLog` entry with `taken=False, skipped_reason='Missed - not taken within 30 minutes'`, creates a `NotificationQueue` entry to the patient, and then queries `PatientFamilyLink` to notify every linked family member. A deduplication check prevents the same missed-dose notification being created twice.
 
 ---
 
@@ -635,7 +635,7 @@ In `notification_service.py`, `check_medication_schedule()` runs on a schedule. 
 
 When a patient completes the questionnaire, their answers are saved to `patient_preferences`. `PersonalisationContext` in the frontend reads these answers and derives boolean `uiFlags`. For example: if `wants_community === 'no'`, `showCommunity` is false. If `ai_analysis_consent === 'no'`, `showAI` is false. If `spiritual_importance === 'not'`, `showSpiritualItems` is false.
 
-These flags are consumed by every component that has conditional content. The sidebar reads `hiddenNavPaths` and removes the community link. The patient portal filters its quick action tiles. The community hub hides the spiritual care tab. The AI widgets (`AuraChat`, `AIAssistant`) are not rendered at all — they are not just disabled but removed from the DOM. The care plan hides the spiritual care section.
+These flags are consumed by every component that has conditional content. The sidebar reads `hiddenNavPaths` and removes the community link. The patient portal filters its quick action tiles. The community hub hides the spiritual care tab. The AI widgets (`AuraChat`, `AIAssistant`) are not rendered at all - they are not just disabled but removed from the DOM. The care plan hides the spiritual care section.
 
 The critical design decision was centralising this in one context rather than having each screen implement its own preference checks. Without that, the same patient would see community on one screen and not another. One flag, applied consistently across 65 pages.
 
@@ -651,61 +651,61 @@ In `aura_ai_engine.py`, the `is_crisis()` function runs first, before any intent
 
 They serve fundamentally different users with different needs, different tone requirements, and different access levels.
 
-`AuraChat` is the patient and family companion — teal theme, emotionally supportive language, restricted to patient and family roles. It is built around the Aura AI Engine's 500+ clinical Q&A pairs, sentiment detection, and crisis guard. Its purpose is emotional support, symptom explanation, and navigation help.
+`AuraChat` is the patient and family companion - teal theme, emotionally supportive language, restricted to patient and family roles. It is built around the Aura AI Engine's 500+ clinical Q&A pairs, sentiment detection, and crisis guard. Its purpose is emotional support, symptom explanation, and navigation help.
 
-`AIAssistant` is the clinician copilot — sky-blue theme, clinical language, context-aware (reads current page and patient ID), restricted to clinician and admin roles. It answers questions about drug interactions, protocol guidance, and patient-specific clinical queries.
+`AIAssistant` is the clinician copilot - sky-blue theme, clinical language, context-aware (reads current page and patient ID), restricted to clinician and admin roles. It answers questions about drug interactions, protocol guidance, and patient-specific clinical queries.
 
-Building one would mean a system that either speaks to distressed patients in clinical language, or answers clinical questions with emotional hedging. Wang et al. (2023) specifically warn that AI in palliative care risks substituting for human empathy — keeping them separate makes the distinction explicit at the architecture level. A clinician is never uncertain whether they are reading clinical AI output or emotional support text.
+Building one would mean a system that either speaks to distressed patients in clinical language, or answers clinical questions with emotional hedging. Wang et al. (2023) specifically warn that AI in palliative care risks substituting for human empathy - keeping them separate makes the distinction explicit at the architecture level. A clinician is never uncertain whether they are reading clinical AI output or emotional support text.
 
-Both are hidden when `ai_analysis_consent === 'no'` — consent enforced at rendering level, not just at query submission.
+Both are hidden when `ai_analysis_consent === 'no'` - consent enforced at rendering level, not just at query submission.
 
 ---
 
 **Q: Why did you choose FastAPI over Django or Flask?**
 
-FastAPI is async by default via Python's `asyncio`. That is critical for two reasons in this system: WebSocket connections that must be held open concurrently while HTTP requests also arrive, and the background notification scanner that runs asynchronously alongside the API. Flask is synchronous by default and has no native WebSocket support. Django is heavier than needed — it is a full web framework with templating, ORM migrations, and admin built in, all of which we don't use since the frontend is React. FastAPI generates OpenAPI documentation automatically at `/docs` — essential for development and for demonstrating the API surface. It integrates natively with Pydantic for request validation, which was a hard requirement. It was the right tool.
+FastAPI is async by default via Python's `asyncio`. That is critical for two reasons in this system: WebSocket connections that must be held open concurrently while HTTP requests also arrive, and the background notification scanner that runs asynchronously alongside the API. Flask is synchronous by default and has no native WebSocket support. Django is heavier than needed - it is a full web framework with templating, ORM migrations, and admin built in, all of which we don't use since the frontend is React. FastAPI generates OpenAPI documentation automatically at `/docs` - essential for development and for demonstrating the API surface. It integrates natively with Pydantic for request validation, which was a hard requirement. It was the right tool.
 
 ---
 
 **Q: How does RBAC prevent a patient from accessing another patient's data?**
 
-Two layers. First, the `require_role()` dependency on every endpoint checks the user's role from the JWT. A user with the patient role can only call endpoints that the patient role is permitted on. Second, for patient-specific endpoints, the handler checks that the `patient_id` in the request matches the patient linked to the authenticated user's own account in the database. It is not enough to have the patient role — you must be that specific patient. Both checks happen in the backend before any database query executes. The frontend hiding features for other roles is a UX improvement, not a security control.
+Two layers. First, the `require_role()` dependency on every endpoint checks the user's role from the JWT. A user with the patient role can only call endpoints that the patient role is permitted on. Second, for patient-specific endpoints, the handler checks that the `patient_id` in the request matches the patient linked to the authenticated user's own account in the database. It is not enough to have the patient role - you must be that specific patient. Both checks happen in the backend before any database query executes. The frontend hiding features for other roles is a UX improvement, not a security control.
 
 ---
 
 **Q: What does your audit log actually capture?**
 
-Every significant action writes to the `AuditLog` table. The record includes: `user_id`, `user_role`, `action` (e.g. `CREATE_VITAL`, `LOGIN_SUCCESS`, `LOGIN_FAILED`, `DISCONTINUE_MEDICATION`), `resource_type`, `resource_id`, `patient_id`, `ip_address`, `user_agent`, `success` boolean, `details` JSON, `created_at`. The audit log is append-only — records are never deleted. The admin HIPAA dashboard queries it live to compute `audit_log_entries` count and `audit_ip_coverage_pct`. Actions audited include: login/logout, patient create/update, vital create, medication create/update/discontinue, appointment create, ESAS assessment create, all admin user management operations, bereavement journal entries, and caregiver assignments.
+Every significant action writes to the `AuditLog` table. The record includes: `user_id`, `user_role`, `action` (e.g. `CREATE_VITAL`, `LOGIN_SUCCESS`, `LOGIN_FAILED`, `DISCONTINUE_MEDICATION`), `resource_type`, `resource_id`, `patient_id`, `ip_address`, `user_agent`, `success` boolean, `details` JSON, `created_at`. The audit log is append-only - records are never deleted. The admin HIPAA dashboard queries it live to compute `audit_log_entries` count and `audit_ip_coverage_pct`. Actions audited include: login/logout, patient create/update, vital create, medication create/update/discontinue, appointment create, ESAS assessment create, all admin user management operations, bereavement journal entries, and caregiver assignments.
 
 ---
 
-**Q: Your project title says "framework" — is this actually a framework or just an application?**
+**Q: Your project title says "framework" - is this actually a framework or just an application?**
 
-It is both, and the distinction matters. As a web application it is complete and functional. As a framework it is designed to be extended: the care plan engine queries the `ConditionCareTemplate` database table, so a clinician adding a new condition through the interface immediately affects care plan generation — no code change required. The `PersonalisationContext` provides a single extension point that affects all 65 pages simultaneously. The 5 care settings change navigation, defaults, and protocol recommendations through configuration, not code. The ML inference pipeline has a clean service interface — models can be swapped independently of the API layer. The LLM layer has a provider cascade — Gemini → Groq → local engine — that can be extended by adding a new provider to `llm_engine.py`. The system was designed to grow with clinical practice, not be frozen at submission.
+It is both, and the distinction matters. As a web application it is complete and functional. As a framework it is designed to be extended: the care plan engine queries the `ConditionCareTemplate` database table, so a clinician adding a new condition through the interface immediately affects care plan generation - no code change required. The `PersonalisationContext` provides a single extension point that affects all 65 pages simultaneously. The 5 care settings change navigation, defaults, and protocol recommendations through configuration, not code. The ML inference pipeline has a clean service interface - models can be swapped independently of the API layer. The LLM layer has a provider cascade - Gemini → Groq → local engine - that can be extended by adding a new provider to `llm_engine.py`. The system was designed to grow with clinical practice, not be frozen at submission.
 
 ---
 
 **Q: What would you do differently if you were starting again?**
 
-Directly and honestly: I would plan for automated testing from day one. The manual review process caught bugs but several regressions — like the risk summary component being accidentally removed during a debugging session — were caught late. A pytest suite for the backend endpoints and a React Testing Library suite for the critical frontend flows would have caught those immediately. I would also define a cleaner data contract between the ML training environment and the serving environment at the start, rather than handling version-mismatch warnings late in the process. On the architecture side, the system is well-designed and I would not change the core choices — FastAPI, XGBoost + SHAP, React, SQLAlchemy. The CORS/WebSocket authentication trade-off (passing token as connection parameter rather than cookie) is a known compromise that should be resolved before production deployment.
+Directly and honestly: I would plan for automated testing from day one. The manual review process caught bugs but several regressions - like the risk summary component being accidentally removed during a debugging session - were caught late. A pytest suite for the backend endpoints and a React Testing Library suite for the critical frontend flows would have caught those immediately. I would also define a cleaner data contract between the ML training environment and the serving environment at the start, rather than handling version-mismatch warnings late in the process. On the architecture side, the system is well-designed and I would not change the core choices - FastAPI, XGBoost + SHAP, React, SQLAlchemy. The CORS/WebSocket authentication trade-off (passing token as connection parameter rather than cookie) is a known compromise that should be resolved before production deployment.
 
 ---
 
 **Q: What is the clinical justification for weighting pain risk at 1.5 and caregiver burden at 0.8?**
 
-WHO (2024) defines palliative care as the "prevention and relief of suffering" — pain is the most prevalent and most distressing symptom in palliative care. Uncontrolled pain is the primary reason for emergency admissions in this population (Singer et al., 2016). It gets the highest weight because it directly represents the core clinical mission of palliative care.
+WHO (2024) defines palliative care as the "prevention and relief of suffering" - pain is the most prevalent and most distressing symptom in palliative care. Uncontrolled pain is the primary reason for emergency admissions in this population (Singer et al., 2016). It gets the highest weight because it directly represents the core clinical mission of palliative care.
 
-Caregiver burden gets the lowest weight not because it is unimportant — Finucane et al. (2024) and COMPASS Ghana (2024a) show it is critical — but because it is a systemic background risk rather than an acute clinical emergency. High caregiver burden does not require the same immediate clinical response as SpO2 of 85%. The system still tracks and surfaces it prominently in the caregiver view and the care intelligence hub. The weight reflects urgency of response, not clinical importance.
-
----
+Caregiver burden gets the lowest weight not because it is unimportant - Finucane et al. (2024) and COMPASS Ghana (2024a) show it is critical - but because it is a systemic background risk rather than an acute clinical emergency. High caregiver burden does not require the same immediate clinical response as SpO2 of 85%. The system still tracks and surfaces it prominently in the caregiver view and the care intelligence hub. The weight reflects urgency of response, not clinical importance.
 
 ---
 
-**Q: Explain the 6-hour alert deduplication window. Isn't that dangerous — what if someone deteriorates within 6 hours?**
+---
 
-The deduplication applies to the proactive background scan only — the scheduled scan that runs across all patients. It does not apply to manual submissions. If a clinician submits a new ESAS assessment and the risk is critical, an alert is created immediately regardless of the 6-hour window. If a caregiver records a vital sign showing SpO2 at 85%, `check_critical_vitals()` creates an alert immediately — no deduplication there either.
+**Q: Explain the 6-hour alert deduplication window. Isn't that dangerous - what if someone deteriorates within 6 hours?**
 
-The 6-hour window exists because the background scanner runs periodically and would otherwise re-alert on the same deteriorating patient on every run. That is alert fatigue — clinicians start ignoring all alerts because they are overwhelmed by repeated identical ones. A false-positive rate of roughly 23% on pain risk (77.2% precision) means a meaningful number of scan alerts are already on patients who are not deteriorating. Multiplying that by repeated alerts every hour would make the system unusable. The window is a deliberate design choice that trades marginal safety margin on the scan for clinician adoption of the alert system. Manual data entry always bypasses it.
+The deduplication applies to the proactive background scan only - the scheduled scan that runs across all patients. It does not apply to manual submissions. If a clinician submits a new ESAS assessment and the risk is critical, an alert is created immediately regardless of the 6-hour window. If a caregiver records a vital sign showing SpO2 at 85%, `check_critical_vitals()` creates an alert immediately - no deduplication there either.
+
+The 6-hour window exists because the background scanner runs periodically and would otherwise re-alert on the same deteriorating patient on every run. That is alert fatigue - clinicians start ignoring all alerts because they are overwhelmed by repeated identical ones. A false-positive rate of roughly 23% on pain risk (77.2% precision) means a meaningful number of scan alerts are already on patients who are not deteriorating. Multiplying that by repeated alerts every hour would make the system unusable. The window is a deliberate design choice that trades marginal safety margin on the scan for clinician adoption of the alert system. Manual data entry always bypasses it.
 
 ---
 
@@ -722,51 +722,51 @@ The `journey_tracker.py` service implements 6 phases with automatic trigger cond
 | Transition | PPS < 20, OR terminal prognosis recorded |
 | Legacy | Digital legacy activated after patient's death |
 
-The thresholds come from the validated tools themselves — an ESAS total above 50 means every symptom is averaging above 5.5/10, which clinical literature identifies as significant symptom burden. PPS below 40 means the patient is mainly bed-bound — clinical evidence shows this level is associated with prognosis of weeks to months.
+The thresholds come from the validated tools themselves - an ESAS total above 50 means every symptom is averaging above 5.5/10, which clinical literature identifies as significant symptom burden. PPS below 40 means the patient is mainly bed-bound - clinical evidence shows this level is associated with prognosis of weeks to months.
 
-The family-facing view shows a de-identified summary of these phase events. Raw clinical values the patient has not consented to share are never exposed to family members — this is enforced at the query level in the portal router, not just by hiding values in the UI.
+The family-facing view shows a de-identified summary of these phase events. Raw clinical values the patient has not consented to share are never exposed to family members - this is enforced at the query level in the portal router, not just by hiding values in the UI.
 
 ---
 
 **Q: What does "consent enforced at rendering level" actually mean in code?**
 
-In `PersonalisationContext.jsx`, when the questionnaire answer `ai_analysis_consent === 'no'`, the `showAI` flag is set to `false`. The `AuraChat` component and `AIAssistant` component are wrapped in conditional rendering — `{uiFlags.showAI && <AuraChat />}`. When `showAI` is false, these components are never mounted in the React tree at all. They do not exist in the DOM. They cannot be triggered by keyboard navigation, screen readers, or any other means.
+In `PersonalisationContext.jsx`, when the questionnaire answer `ai_analysis_consent === 'no'`, the `showAI` flag is set to `false`. The `AuraChat` component and `AIAssistant` component are wrapped in conditional rendering - `{uiFlags.showAI && <AuraChat />}`. When `showAI` is false, these components are never mounted in the React tree at all. They do not exist in the DOM. They cannot be triggered by keyboard navigation, screen readers, or any other means.
 
-This is different from disabling them — a disabled button still exists and can be probed. And it is different from just blocking the API call — the component would still load, show a prompt, and then fail. Our approach means the entire AI surface disappears from the user's interface based on their consent choice, with zero possibility of accidental access. Kocaballi et al. (2019) found that most health chatbots lack proper consent structures — ours enforces consent at the architectural level.
+This is different from disabling them - a disabled button still exists and can be probed. And it is different from just blocking the API call - the component would still load, show a prompt, and then fail. Our approach means the entire AI surface disappears from the user's interface based on their consent choice, with zero possibility of accidental access. Kocaballi et al. (2019) found that most health chatbots lack proper consent structures - ours enforces consent at the architectural level.
 
 ---
 
 **Q: Why did you use SQLite for a healthcare application?**
 
-SQLite is used for development and demonstration only. The architecture is explicitly database-agnostic via SQLAlchemy — switching to PostgreSQL requires changing a single `DATABASE_URL` environment variable in `.env`. No code changes. No migration needed. The `db.py` models are written against SQLAlchemy's abstraction layer, not SQLite-specific syntax.
+SQLite is used for development and demonstration only. The architecture is explicitly database-agnostic via SQLAlchemy - switching to PostgreSQL requires changing a single `DATABASE_URL` environment variable in `.env`. No code changes. No migration needed. The `db.py` models are written against SQLAlchemy's abstraction layer, not SQLite-specific syntax.
 
-SQLite was the right choice for a prototype because it requires zero infrastructure setup — no database server, no connection pool configuration, no separate process. This matters for demonstration in a university environment. PostgreSQL is specified for production and is supported without any code modification. The dissertation documents this explicitly in Section 3.3.5.
+SQLite was the right choice for a prototype because it requires zero infrastructure setup - no database server, no connection pool configuration, no separate process. This matters for demonstration in a university environment. PostgreSQL is specified for production and is supported without any code modification. The dissertation documents this explicitly in Section 3.3.5.
 
 ---
 
-**Q: How does the medical knowledge base work — and how does it feed into the care plan engine?**
+**Q: How does the medical knowledge base work - and how does it feed into the care plan engine?**
 
-The medical knowledge base has two layers. First, 7 hardcoded `DISEASE_PROFILES` in `care_plan_engine.py` for the most common palliative diagnoses — cancer, heart failure, COPD, dementia, renal failure, stroke, and general palliative. Each profile contains: keyword list for diagnosis matching, priority symptoms, recommended goals, standard interventions, red flags, monitoring schedule, and full clinical guide sections.
+The medical knowledge base has two layers. First, 7 hardcoded `DISEASE_PROFILES` in `care_plan_engine.py` for the most common palliative diagnoses - cancer, heart failure, COPD, dementia, renal failure, stroke, and general palliative. Each profile contains: keyword list for diagnosis matching, priority symptoms, recommended goals, standard interventions, red flags, monitoring schedule, and full clinical guide sections.
 
-Second, the `ConditionCareTemplate` database table — manageable through the two-column library UI by clinicians and admins. This is where the system becomes a framework: a clinician adds a new condition through the web interface, the care plan engine detects it via `detect_disease_profile()`, which queries the DB after checking hardcoded profiles. The new condition immediately affects care plan generation for any patient with that diagnosis — no code changes, no redeployment.
+Second, the `ConditionCareTemplate` database table - manageable through the two-column library UI by clinicians and admins. This is where the system becomes a framework: a clinician adds a new condition through the web interface, the care plan engine detects it via `detect_disease_profile()`, which queries the DB after checking hardcoded profiles. The new condition immediately affects care plan generation for any patient with that diagnosis - no code changes, no redeployment.
 
-The knowledge base also drives the medical knowledge page (two-column library with book-style reading pane), the adaptive care guide, the community hub's spiritual care tab content, and — through personalisation flags — what clinical reference sections are shown to a specific user.
+The knowledge base also drives the medical knowledge page (two-column library with book-style reading pane), the adaptive care guide, the community hub's spiritual care tab content, and - through personalisation flags - what clinical reference sections are shown to a specific user.
 
 ---
 
 **Q: What happens when the Gemini API is down or the API key is not configured?**
 
-The `llm_engine.py` routes through a cascade: Gemini 1.5 Flash first, Groq Llama 3.1 as fallback. If both are unavailable — no API keys in `.env`, or both services are down — the system falls back to the local Aura AI Engine. This is not a degraded mode where the chatbot stops working. The Aura AI Engine is a complete, production-capable conversational system: TF-IDF intent classifier trained on 300+ labelled phrases, 500+ medical Q&A pairs, entity extraction, crisis detection, sentiment analysis, conversation memory. It handles all core clinical conversation use cases entirely offline.
+The `llm_engine.py` routes through a cascade: Gemini 1.5 Flash first, Groq Llama 3.1 as fallback. If both are unavailable - no API keys in `.env`, or both services are down - the system falls back to the local Aura AI Engine. This is not a degraded mode where the chatbot stops working. The Aura AI Engine is a complete, production-capable conversational system: TF-IDF intent classifier trained on 300+ labelled phrases, 500+ medical Q&A pairs, entity extraction, crisis detection, sentiment analysis, conversation memory. It handles all core clinical conversation use cases entirely offline.
 
-The provider cascade means the system delivers continuous service even with unreliable connectivity — which was a specific design requirement for the Ghanaian context where internet access can be intermittent.
+The provider cascade means the system delivers continuous service even with unreliable connectivity - which was a specific design requirement for the Ghanaian context where internet access can be intermittent.
 
 ---
 
-**Q: How do you handle data privacy — specifically, can a caregiver see a patient's journal entries?**
+**Q: How do you handle data privacy - specifically, can a caregiver see a patient's journal entries?**
 
-No. Journal entries have an `is_private` flag and their `author_id` is stored. The bereavement journal router enforces that only the author can retrieve their own entries. This is not a frontend UI convention — it is checked in the backend before any database query. The code comment in the relevant section states: "Journal entries are visible only to their author and are never surfaced to clinical staff — this boundary is enforced at the access control layer, not just by interface convention."
+No. Journal entries have an `is_private` flag and their `author_id` is stored. The bereavement journal router enforces that only the author can retrieve their own entries. This is not a frontend UI convention - it is checked in the backend before any database query. The code comment in the relevant section states: "Journal entries are visible only to their author and are never surfaced to clinical staff - this boundary is enforced at the access control layer, not just by interface convention."
 
-Similarly, the digital legacy content is filtered at the query level — each `LegacyContent` record is checked against the requesting user's `heir_access_level` before being returned. A family member designated with `memories_only` access cannot retrieve `messages_only` content even if they know the content's ID and call the endpoint directly.
+Similarly, the digital legacy content is filtered at the query level - each `LegacyContent` record is checked against the requesting user's `heir_access_level` before being returned. A family member designated with `memories_only` access cannot retrieve `messages_only` content even if they know the content's ID and call the endpoint directly.
 
 ---
 
@@ -780,13 +780,13 @@ Our system directly addresses three of the four biomedical ethics principles tha
 
 **Autonomy** (respect patient choice): The personalisation questionnaire gives patients explicit control over whether AI features appear in their interface. A patient who declines AI consent sees no AI anywhere in the system. Legacy consent records the patient's wishes for posthumous data access. Advance directive and DNR fields are first-class data in the patient record.
 
-**Justice** (fairness and equity): The system is designed for the Ghanaian context specifically — the population where the gap between policy and practice is most acute. Offline capability ensures it is usable in settings without reliable infrastructure. Multi-language support (Twi, Ga, Ewe) addresses language barriers.
+**Justice** (fairness and equity): The system is designed for the Ghanaian context specifically - the population where the gap between policy and practice is most acute. Offline capability ensures it is usable in settings without reliable infrastructure. Multi-language support (Twi, Ga, Ewe) addresses language barriers.
 
-Gerke et al. (2020) and Hildt (2025) both argue explainability is a moral obligation in clinical AI. Our system treats it as an architectural constraint — no risk score reaches a clinician without its SHAP explanation.
+Gerke et al. (2020) and Hildt (2025) both argue explainability is a moral obligation in clinical AI. Our system treats it as an architectural constraint - no risk score reaches a clinician without its SHAP explanation.
 
 ---
 
-## PART 21 — LITERATURE QUICK REFERENCE
+## PART 21 - LITERATURE QUICK REFERENCE
 
 | Author | Year | What they say | Where you use it |
 |---|---|---|---|
@@ -821,7 +821,7 @@ Gerke et al. (2020) and Hildt (2025) both argue explainability is a moral obliga
 
 ---
 
-## PART 22 — DEMO SEQUENCE (if you get to demonstrate)
+## PART 22 - DEMO SEQUENCE (if you get to demonstrate)
 
 1. **Login as Clinician** (`dr_mensah` / `clinic123`) → show role-adaptive dashboard, patient list with risk badges
 2. **Open a patient** → show vitals ribbon, compact risk summary, care pathway badge, DNR status
@@ -837,13 +837,13 @@ Gerke et al. (2020) and Hildt (2025) both argue explainability is a moral obliga
 ## FINAL STATEMENT
 
 Your system is:
-- **Technically complete** — 65 pages, 39 routers, 8 ML models, 40 DB tables, all working
-- **Evidence-grounded** — every design decision traces to a literature source
-- **Honestly scoped** — limitations are stated clearly and future work is defined
-- **Genuinely novel** — no reviewed system combined all four pillars for this context
-- **Defensible at every level** — you know the code, the clinical tools, the protocols, the numbers
+- **Technically complete** - 65 pages, 39 routers, 8 ML models, 40 DB tables, all working
+- **Evidence-grounded** - every design decision traces to a literature source
+- **Honestly scoped** - limitations are stated clearly and future work is defined
+- **Genuinely novel** - no reviewed system combined all four pillars for this context
+- **Defensible at every level** - you know the code, the clinical tools, the protocols, the numbers
 
-Walk in owning it. Say "we" for the team, say "I" when explaining what you personally understand. When you don't know something, say "that is outside what we tested — it would be addressed in future work." That is the honest answer and the right one.
+Walk in owning it. Say "we" for the team, say "I" when explaining what you personally understand. When you don't know something, say "that is outside what we tested - it would be addressed in future work." That is the honest answer and the right one.
 
 ---
 *Generated from full codebase analysis including `aura_ai_engine.py`, `llm_engine.py`, `care_plan_engine.py`, `notification_service.py`, `retrain_targeted.py`, all system documentation, and the condensed project report. Version: August 2026.*

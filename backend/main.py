@@ -2,9 +2,9 @@
 Project Aura - FastAPI Backend
 Complete KIRO Specification Implementation
 
-Copyright (c) 2024-2026 Project Aura — Group 31
+Copyright (c) 2024-2026 Project Aura - Group 31
 All Rights Reserved.
-Proprietary software — see LICENSE file for terms.
+Proprietary software - see LICENSE file for terms.
 Unauthorised copying, distribution, or use is strictly prohibited.
 """
 
@@ -91,7 +91,7 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
-# CORS Configuration — locked to known origins; set ALLOWED_ORIGINS env var to extend
+# CORS Configuration - locked to known origins; set ALLOWED_ORIGINS env var to extend
 # In production (Koyeb + Vercel), set ALLOWED_ORIGINS to your Vercel URL, e.g.:
 #   ALLOWED_ORIGINS=https://project-aura.vercel.app,https://your-custom-domain.com
 _ALLOWED_ORIGINS = os.getenv(
@@ -127,9 +127,9 @@ app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
 # NOTE: Full dist static file mounting is done at the BOTTOM of this file
 # (after all API routers) via dedicated sub-directory mounts + SPA fallback.
-# Do NOT add partial /assets or /icons mounts here — they are handled below.
+# Do NOT add partial /assets or /icons mounts here - they are handled below.
 
-# Global exception handler — ensures CORS headers even on 500 errors
+# Global exception handler - ensures CORS headers even on 500 errors
 from fastapi.responses import JSONResponse
 from fastapi import Request
 
@@ -150,7 +150,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Security headers middleware
 @app.middleware("http")
 async def security_headers(request: Request, call_next):
-    # Skip for WebSocket upgrade requests — middleware breaks WS handshake
+    # Skip for WebSocket upgrade requests - middleware breaks WS handshake
     if request.headers.get("upgrade", "").lower() == "websocket":
         return await call_next(request)
     response = await call_next(request)
@@ -217,7 +217,7 @@ app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
 from routers import compliance
 app.include_router(compliance.router, prefix="/api/compliance", tags=["compliance"])
 
-# WebSocket — no prefix, handles its own /ws/{user_id} path
+# WebSocket - no prefix, handles its own /ws/{user_id} path
 app.include_router(ws_router.router, tags=["websocket"])
 
 
@@ -478,7 +478,7 @@ async def notification_monitoring_loop():
 
 async def compliance_scan_loop():
     """
-    Background task — runs the care task compliance scan every 4 hours.
+    Background task - runs the care task compliance scan every 4 hours.
     Checks whether compulsory daily tasks (ESAS, medication acknowledgement, vitals)
     have been completed and creates reminder notifications for overdue ones.
     Fires appointment reminders at 24h and 1h before each appointment.
@@ -531,7 +531,7 @@ async def health_check():
 
 @app.get("/")
 async def serve_root():
-    """Root — serve React SPA if built, otherwise API info"""
+    """Root - serve React SPA if built, otherwise API info"""
     _idx = Path(__file__).parent.parent / "frontend" / "dist" / "index.html"
     if _idx.exists():
         from fastapi.responses import FileResponse as _FR
@@ -549,7 +549,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
 
 
-# ── SPA Fallback (must be LAST — after all API routers) ──────────────────────
+# ── SPA Fallback (must be LAST - after all API routers) ──────────────────────
 # Mount the entire dist folder as static files so ALL public assets
 # (images, fonts, resources/, icons/, sw.js, manifest.json, etc.)
 # are served correctly with proper MIME types.

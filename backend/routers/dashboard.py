@@ -1,4 +1,4 @@
-"""Dashboard Router — role-scoped summary data"""
+"""Dashboard Router - role-scoped summary data"""
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from src.db import get_db, User, Patient, Alert, CaregiverAssignment, PatientFamilyLink

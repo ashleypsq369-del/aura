@@ -303,7 +303,7 @@ async def get_compliance_status(
     # Audit coverage: what fraction of audit entries have IP captured
     audit_coverage = round((audit_with_ip / audit_entries * 100), 1) if audit_entries else 0
 
-    # ── HIPAA checklist — statuses now computed from live data ────────────
+    # ── HIPAA checklist - statuses now computed from live data ────────────
     compliance_items = [
         {
             "id": 1,
@@ -324,7 +324,7 @@ async def get_compliance_status(
             "category": "Access Control",
             "requirement": "Role-based access control (5 roles)",
             "status": "implemented",
-            "notes": "admin / clinician / caregiver / patient / family — RBAC on all endpoints"
+            "notes": "admin / clinician / caregiver / patient / family - RBAC on all endpoints"
         },
         {
             "id": 4,
@@ -361,7 +361,7 @@ async def get_compliance_status(
         {
             "id": 8,
             "category": "Privacy",
-            "requirement": "Right of Access — patient data export",
+            "requirement": "Right of Access - patient data export",
             "status": "implemented",
             "notes": "GET /portal/my-data/export returns full JSON with Content-Disposition header"
         },
@@ -406,7 +406,7 @@ async def get_compliance_status(
             "requirement": "Encryption at rest",
             "status": "partial",
             "notes": "Passwords bcrypt-hashed. Full DB-level encryption at rest "
-                     "requires OS-level disk encryption or SQLCipher — outside scope of prototype"
+                     "requires OS-level disk encryption or SQLCipher - outside scope of prototype"
         },
         {
             "id": 14,
@@ -420,7 +420,7 @@ async def get_compliance_status(
             "category": "Contingency",
             "requirement": "Data backup and recovery",
             "status": "partial",
-            "notes": "SQLite file-based — manual backup required. "
+            "notes": "SQLite file-based - manual backup required. "
                      "Automated backup not yet configured."
         },
         {

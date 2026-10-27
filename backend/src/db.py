@@ -37,12 +37,12 @@ if DATABASE_URL.startswith('postgresql'):
         _test_engine.dispose()
         print(f"[DB] Connected to PostgreSQL")
     except Exception as _pg_err:
-        print(f"[DB] PostgreSQL unavailable ({_pg_err.__class__.__name__}) — falling back to SQLite")
+        print(f"[DB] PostgreSQL unavailable ({_pg_err.__class__.__name__}) - falling back to SQLite")
         _effective_url = 'sqlite:///aura.db'
 
 DATABASE_URL = _effective_url
 
-# connect_args is SQLite-specific — PostgreSQL doesn't accept check_same_thread
+# connect_args is SQLite-specific - PostgreSQL doesn't accept check_same_thread
 _connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 _pool_kwargs   = {} if DATABASE_URL.startswith("sqlite") else {"pool_size": 5, "max_overflow": 10}
 engine = create_engine(DATABASE_URL, echo=False, connect_args=_connect_args, **_pool_kwargs)
@@ -1147,7 +1147,7 @@ class PatientPreferences(Base):
     ai_analysis_consent = Column(String(20), default='yes')
     ai_data_sharing_consent = Column(String(20), default='no')
     care_team_sharing = Column(String(20), default='yes')
-    # UI Adaptation — stored in localStorage on the client; DB columns
+    # UI Adaptation - stored in localStorage on the client; DB columns
     # added via migration when DB owner permissions are available.
     # age_group = Column(String(20))   # pending migration
     # ui_needs  = Column(Text)          # pending migration
@@ -1304,7 +1304,7 @@ class ConditionCareTemplate(Base):
 
 
 class PatientFamilyConsent(Base):
-    """Patient-controlled consent for family data access — stored separately to avoid ALTER TABLE on owned tables"""
+    """Patient-controlled consent for family data access - stored separately to avoid ALTER TABLE on owned tables"""
     __tablename__ = 'patient_family_consent'
     id = Column(Integer, primary_key=True)
     patient_user_id = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False, index=True)
@@ -1327,11 +1327,11 @@ class PatientJourneyEvent(Base):
 
 
 # ============================================================================
-# NEW PALLIATIVE CARE MODULES — Tables 31–34
+# NEW PALLIATIVE CARE MODULES - Tables 31–34
 # ============================================================================
 
 class AdvanceCarePlan(Base):
-    """Table 31: Advance Care Planning document — goals of care, end-of-life wishes"""
+    """Table 31: Advance Care Planning document - goals of care, end-of-life wishes"""
     __tablename__ = 'advance_care_plans'
     id = Column(Integer, primary_key=True)
     patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
@@ -1457,7 +1457,7 @@ class Referral(Base):
 
 
 class SpiritualCareNote(Base):
-    """Table 34: Spiritual care / chaplaincy visit notes — inclusive of all faiths & beliefs"""
+    """Table 34: Spiritual care / chaplaincy visit notes - inclusive of all faiths & beliefs"""
     __tablename__ = 'spiritual_care_notes'
     id = Column(Integer, primary_key=True)
     patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
@@ -1465,7 +1465,7 @@ class SpiritualCareNote(Base):
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
     visit_date = Column(DateTime, nullable=False)
 
-    # Faith/spiritual background (as identified BY PATIENT — never assumed)
+    # Faith/spiritual background (as identified BY PATIENT - never assumed)
     faith_tradition = Column(String(100))   # christian / muslim / traditional_african / hindu /
                                             # baha_i / no_religion / spiritual_not_religious /
                                             # other / prefer_not_to_say
@@ -1488,7 +1488,7 @@ class SpiritualCareNote(Base):
     care_provider_name = Column(String(200))    # name of the person providing care
 
     # Interventions provided (inclusive language)
-    interventions_provided = Column(Text)  # what was done — described neutrally
+    interventions_provided = Column(Text)  # what was done - described neutrally
     sacred_items_needed = Column(Text)     # e.g. prayer mat, rosary, libation bowl, etc.
     referral_to_community_leader = Column(Boolean, default=False)  # imam, pastor, traditional leader
     community_leader_name = Column(String(200))
@@ -1515,7 +1515,7 @@ class SpiritualCareNote(Base):
 # ============================================================================
 
 class VisitReport(Base):
-    """Auto-generated report after appointment completion — shared with family"""
+    """Auto-generated report after appointment completion - shared with family"""
     __tablename__ = 'visit_reports'
     id = Column(Integer, primary_key=True)
     appointment_id = Column(Integer, ForeignKey('appointments.id'), unique=True, nullable=False, index=True)
@@ -1644,7 +1644,7 @@ def get_db():
 def hash_password(password: str) -> str:
     """Hash password using bcrypt via passlib.
     
-    bcrypt has a hard 72-byte limit — truncate silently to stay compatible
+    bcrypt has a hard 72-byte limit - truncate silently to stay compatible
     with the underlying C library while keeping the passlib wrapper happy.
     """
     return _pwd_ctx.hash(password[:72])
@@ -1662,7 +1662,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def authenticate_user(username: str, password: str, db: Session) -> Optional[User]:
-    """Authenticate user — uses verify_password for bcrypt + SHA-256 compat."""
+    """Authenticate user - uses verify_password for bcrypt + SHA-256 compat."""
     user = db.query(User).filter(User.username == username).first()
     if user and verify_password(password, user.hashed_password):
         user.last_login = datetime.utcnow()

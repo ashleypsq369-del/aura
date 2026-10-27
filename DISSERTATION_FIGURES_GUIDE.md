@@ -1,4 +1,4 @@
-# 📊 Dissertation Figures — Complete Step-by-Step Guide
+# 📊 Dissertation Figures - Complete Step-by-Step Guide
 
 > This file tells you exactly what to do for every figure placeholder in your dissertation.
 > Figures 3.x = draw in draw.io | Figures 4.x = screenshot from the running app | Figures 5.x = run Python
@@ -10,8 +10,8 @@
 | Tool | Link | Cost | For |
 |---|---|---|---|
 | draw.io | https://app.diagrams.net | Free | All 3.x diagrams |
-| Running app | http://localhost:5173 | — | All 4.x screenshots |
-| Python (already installed) | — | — | Figures 5.1, 5.2 |
+| Running app | http://localhost:5173 | - | All 4.x screenshots |
+| Python (already installed) | - | - | Figures 5.1, 5.2 |
 | Snipping Tool | Windows key + Shift + S | Free | All screenshots |
 
 ---
@@ -33,7 +33,7 @@ Login credentials to use:
 
 ---
 
-## FIGURE 3.1 — SDLC / WATERFALL PHASES DIAGRAM
+## FIGURE 3.1 - SDLC / WATERFALL PHASES DIAGRAM
 
 **Type:** Draw yourself in draw.io
 **What it shows:** How you planned and built the system, phase by phase
@@ -53,7 +53,7 @@ PHASE 1: REQUIREMENTS ANALYSIS
 
 Box 2 (medium teal):
 PHASE 2: SYSTEM DESIGN
-• Database schema (db.py — 34 models)
+• Database schema (db.py - 34 models)
 • API architecture (FastAPI, 39 routers)
 • ML pipeline design (XGBoost × 8 tasks)
 • UI wireframes and role-based navigation
@@ -89,7 +89,7 @@ PHASE 6: MAINTENANCE
 
 ---
 
-## FIGURE 3.2 — SYSTEM ARCHITECTURE DIAGRAM
+## FIGURE 3.2 - SYSTEM ARCHITECTURE DIAGRAM
 
 **Type:** Draw yourself in draw.io
 **What it shows:** 3-tier architecture of the whole system
@@ -98,23 +98,23 @@ PHASE 6: MAINTENANCE
 1. Open https://app.diagrams.net → New Blank diagram
 2. Draw 3 large horizontal bands (layers), label them
 
-**Top band — PRESENTATION LAYER (light teal background):**
+**Top band - PRESENTATION LAYER (light teal background):**
 Draw 3 small boxes inside:
-- `React 19 + Vite (Browser)` — "Patient, Clinician, Family, Admin views"
-- `Tailwind CSS + Framer Motion` — "Responsive UI, animations"  
-- `pywebview Desktop App` — "Optional offline desktop wrapper"
+- `React 19 + Vite (Browser)` - "Patient, Clinician, Family, Admin views"
+- `Tailwind CSS + Framer Motion` - "Responsive UI, animations"  
+- `pywebview Desktop App` - "Optional offline desktop wrapper"
 
-**Middle band — APPLICATION LAYER (light blue):**
+**Middle band - APPLICATION LAYER (light blue):**
 Draw 4 boxes:
-- `FastAPI (Uvicorn :8000)` — "39 REST endpoints, JWT auth, RBAC"
-- `XGBoost ML Service` — "8 models × SHAP TreeExplainer"
-- `Aura AI Engine` — "Rule-based + Gemini/Groq LLM"
-- `Notification Service` — "In-app + Web Push (VAPID)"
+- `FastAPI (Uvicorn :8000)` - "39 REST endpoints, JWT auth, RBAC"
+- `XGBoost ML Service` - "8 models × SHAP TreeExplainer"
+- `Aura AI Engine` - "Rule-based + Gemini/Groq LLM"
+- `Notification Service` - "In-app + Web Push (VAPID)"
 
-**Bottom band — DATA LAYER (light gray):**
+**Bottom band - DATA LAYER (light gray):**
 Draw 2 boxes:
-- `SQLite (aura.db)` — "34 tables, 34 demo users pre-seeded"
-- `ML Model Files (.joblib)` — "8 XGBoost models + scalers"
+- `SQLite (aura.db)` - "34 tables, 34 demo users pre-seeded"
+- `ML Model Files (.joblib)` - "8 XGBoost models + scalers"
 
 **Arrows between layers:**
 - Presentation ↔ Application: "HTTPS REST / WebSocket"
@@ -124,7 +124,7 @@ Draw 2 boxes:
 
 ---
 
-## FIGURE 3.3 — ENTITY-RELATIONSHIP DIAGRAM (ERD)
+## FIGURE 3.3 - ENTITY-RELATIONSHIP DIAGRAM (ERD)
 
 **Type:** Draw yourself in draw.io
 **What it shows:** Main database tables and their relationships
@@ -155,7 +155,7 @@ USER (id, username, email, role, is_active)
 
 ### Step-by-step:
 1. draw.io → New → Click "Search shapes" in left panel → type "entity"
-2. Drag "Entity" shapes onto canvas — one per table
+2. Drag "Entity" shapes onto canvas - one per table
 3. Double-click each entity to add: table name at top, attributes listed below
 4. Use "Line" tool with crow's-foot ends for relationships
 5. Label relationships: "1:1", "1:N", "N:M"
@@ -164,7 +164,7 @@ USER (id, username, email, role, is_active)
 
 ---
 
-## FIGURE 3.4 — AI/SHAP EXPLAINABILITY PIPELINE
+## FIGURE 3.4 - AI/SHAP EXPLAINABILITY PIPELINE
 
 **Type:** Draw yourself in draw.io
 **What it shows:** How patient data flows through the ML model and becomes an explanation
@@ -179,11 +179,11 @@ USER (id, username, email, role, is_active)
  - Medications (count, types)
  - Activity level, PPS score
          ↓
-[Feature Engineering — 28 features extracted]
+[Feature Engineering - 28 features extracted]
  - Normalised using saved scaler
  - Missing values imputed
          ↓
-[XGBoost Ensemble — 8 Parallel Models]
+[XGBoost Ensemble - 8 Parallel Models]
  ┌─────────────┐  ┌─────────────┐  ┌──────────────┐
  │ Pain Risk   │  │ Mortality   │  │ Admission    │
  │ Model       │  │ Risk Model  │  │ Risk Model   │
@@ -206,7 +206,7 @@ USER (id, username, email, role, is_active)
 
 ---
 
-## FIGURE 3.5 — SECURITY / DATA-FLOW ARCHITECTURE
+## FIGURE 3.5 - SECURITY / DATA-FLOW ARCHITECTURE
 
 **Type:** Draw yourself in draw.io
 **What it shows:** How authentication and data protection works
@@ -218,13 +218,13 @@ USER (id, username, email, role, is_active)
  User enters credentials
          │
          ↓ HTTPS (TLS encrypted)
-[FastAPI — Auth Middleware]
+[FastAPI - Auth Middleware]
  - Hash comparison (bcrypt)
  - JWT token issued (24h expiry)
  - Failed login counter (lockout at 5)
          │
          ↓ JWT in Authorization header
-[FastAPI — RBAC Middleware]
+[FastAPI - RBAC Middleware]
  - Role check: admin / clinician / caregiver / patient / family
  - Permission matrix per endpoint
          │
@@ -250,7 +250,7 @@ USER (id, username, email, role, is_active)
 
 ---
 
-## FIGURE 3.6 — SYSTEM PROCESS FLOWCHART
+## FIGURE 3.6 - SYSTEM PROCESS FLOWCHART
 
 **Type:** Draw yourself in draw.io
 **What it shows:** A complete user journey from login to action
@@ -262,7 +262,7 @@ START
   ↓
 [User opens http://localhost:5173]
   ↓
-[Login Page — enter username + password]
+[Login Page - enter username + password]
   ↓
 <Valid credentials?> ──NO──→ [Show error message] ──→ retry
   ↓ YES
@@ -276,7 +276,7 @@ START
   ↓ (clinician path)
 [Clinician selects patient]
   ↓
-[View Patient Detail — vitals, symptoms, medications]
+[View Patient Detail - vitals, symptoms, medications]
   ↓
 [Click "AI Risk Assessment"]
   ↓
@@ -299,7 +299,7 @@ END (repeating cycle each session)
 
 ---
 
-## FIGURE 4.1 — UI Screenshot: Data Input / Symptom Tracking
+## FIGURE 4.1 - UI Screenshot: Data Input / Symptom Tracking
 
 **Type:** Screenshot of running app
 
@@ -312,7 +312,7 @@ END (repeating cycle each session)
 6. Take a full-page screenshot: **Windows + Shift + S** → select whole browser window
 7. Crop to show just the form content
 
-**Alternative — Patient doing their own check-in:**
+**Alternative - Patient doing their own check-in:**
 - Login as patient: `patient` / `patient123`
 - Click "Wellness Check" in sidebar
 - URL: `http://localhost:5173/wellness-checkin`
@@ -320,7 +320,7 @@ END (repeating cycle each session)
 
 ---
 
-## FIGURE 4.2 — UI Screenshot: Clinician Risk Prediction / SHAP View
+## FIGURE 4.2 - UI Screenshot: Clinician Risk Prediction / SHAP View
 
 **Type:** Screenshot of running app
 
@@ -331,14 +331,14 @@ END (repeating cycle each session)
    - OR go to: `http://localhost:5173/ai-insights`
    - Select a patient → click "AI Explain" tab
 4. The SHAP bar chart shows features with their importance percentages
-5. Screenshot the SHAP panel — make sure the bars and feature names are visible
+5. Screenshot the SHAP panel - make sure the bars and feature names are visible
 
 **Best view:** `/ai-insights` page → click a patient card → "AI Explain" tab  
 Shows: Overall risk %, SHAP feature bars, domain breakdown
 
 ---
 
-## FIGURE 4.3 — UI Screenshot: Adaptive Care Guide
+## FIGURE 4.3 - UI Screenshot: Adaptive Care Guide
 
 **Type:** Screenshot of running app
 
@@ -349,14 +349,14 @@ Shows: Overall risk %, SHAP feature bars, domain breakdown
 4. This shows the AI-personalised care guide for that specific patient
 5. Screenshot the full guide showing disease-specific protocols
 
-**Alternative — General Care Guide:**
+**Alternative - General Care Guide:**
 - Go to `http://localhost:5173/care-guide`
 - Click any protocol card (e.g. "Pain Management")
 - The two-column library view opens with sections
 
 ---
 
-## FIGURE 4.4 — UI Screenshot: Unified Care Dashboard
+## FIGURE 4.4 - UI Screenshot: Unified Care Dashboard
 
 **Type:** Screenshot of running app
 
@@ -378,7 +378,7 @@ Shows: Overall risk %, SHAP feature bars, domain breakdown
 
 ---
 
-## FIGURE 4.5 — UI Screenshot: Bereavement Support Module
+## FIGURE 4.5 - UI Screenshot: Bereavement Support Module
 
 **Type:** Screenshot of running app
 
@@ -395,7 +395,7 @@ Shows: Overall risk %, SHAP feature bars, domain breakdown
 
 ---
 
-## FIGURE 4.6 — UI Screenshot: Login / Authentication Screen
+## FIGURE 4.6 - UI Screenshot: Login / Authentication Screen
 
 **Type:** Screenshot of running app
 
@@ -410,11 +410,11 @@ Shows: Overall risk %, SHAP feature bars, domain breakdown
    - Slideshow background images
 4. Screenshot before entering any credentials (clean state)
 
-**Tip:** The login page has a beautiful African healthcare image slideshow background — make sure the full page is visible.
+**Tip:** The login page has a beautiful African healthcare image slideshow background - make sure the full page is visible.
 
 ---
 
-## FIGURE 5.1 — SHAP Summary Plot (Python)
+## FIGURE 5.1 - SHAP Summary Plot (Python)
 
 **Type:** Generate with Python script
 
@@ -479,7 +479,7 @@ X_test = np.random.rand(n_samples, n_features) * 10
 y_test = (np.random.rand(n_samples) > 0.6).astype(int)  # ~40% high risk
 
 # ── Figure 5.1: SHAP Summary Plot ────────────────────────────────────────────
-print("\n📊 Generating Figure 5.1 — SHAP Summary Plot...")
+print("\n📊 Generating Figure 5.1 - SHAP Summary Plot...")
 try:
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_test[:100])  # First 100 samples
@@ -493,7 +493,7 @@ try:
         max_display=15,
         plot_type="dot"
     )
-    plt.title("Figure 5.1 — SHAP Feature Importance\nXGBoost Risk Prediction Model (ProjectAura)",
+    plt.title("Figure 5.1 - SHAP Feature Importance\nXGBoost Risk Prediction Model (ProjectAura)",
               fontsize=12, fontweight='bold', pad=20)
     plt.tight_layout()
     plt.savefig('fig5_1_shap_summary.png', dpi=150, bbox_inches='tight',
@@ -504,7 +504,7 @@ except Exception as e:
     print("❌ SHAP plot failed:", e)
 
 # ── Figure 5.2: ROC Curve ─────────────────────────────────────────────────────
-print("\n📈 Generating Figure 5.2 — ROC Curve...")
+print("\n📈 Generating Figure 5.2 - ROC Curve...")
 try:
     y_pred_proba = model.predict_proba(X_test)[:, 1]
     y_pred = model.predict(X_test)
@@ -524,7 +524,7 @@ try:
     axes[0].set_ylim([0, 1.02])
     axes[0].set_xlabel('False Positive Rate', fontsize=12)
     axes[0].set_ylabel('True Positive Rate', fontsize=12)
-    axes[0].set_title('ROC Curve — XGBoost Risk Model', fontsize=13, fontweight='bold')
+    axes[0].set_title('ROC Curve - XGBoost Risk Model', fontsize=13, fontweight='bold')
     axes[0].legend(loc='lower right', fontsize=11)
     axes[0].grid(True, alpha=0.3)
 
@@ -535,12 +535,12 @@ try:
         display_labels=['Low Risk', 'High Risk']
     )
     disp.plot(ax=axes[1], cmap='Blues', colorbar=False)
-    axes[1].set_title('Confusion Matrix — XGBoost Risk Model',
+    axes[1].set_title('Confusion Matrix - XGBoost Risk Model',
                       fontsize=13, fontweight='bold')
     axes[1].set_xlabel('Predicted Label', fontsize=12)
     axes[1].set_ylabel('True Label', fontsize=12)
 
-    plt.suptitle('Figure 5.2 — Model Performance Evaluation\nProjectAura XGBoost Risk Prediction',
+    plt.suptitle('Figure 5.2 - Model Performance Evaluation\nProjectAura XGBoost Risk Prediction',
                  fontsize=13, fontweight='bold', y=1.02)
     plt.tight_layout()
     plt.savefig('fig5_2_roc_and_confusion.png', dpi=150, bbox_inches='tight',
@@ -567,13 +567,13 @@ pip install shap matplotlib scikit-learn joblib numpy
 
 ---
 
-## FIGURE 5.2 — ROC Curve + Confusion Matrix (Python)
+## FIGURE 5.2 - ROC Curve + Confusion Matrix (Python)
 
-Already included in the `generate_figures.py` script above — both Fig 5.1 and 5.2 are generated together.
+Already included in the `generate_figures.py` script above - both Fig 5.1 and 5.2 are generated together.
 
 The script saves:
-- `fig5_1_shap_summary.png` — SHAP dot plot showing feature importance
-- `fig5_2_roc_and_confusion.png` — ROC curve (left) + confusion matrix (right) side by side
+- `fig5_1_shap_summary.png` - SHAP dot plot showing feature importance
+- `fig5_2_roc_and_confusion.png` - ROC curve (left) + confusion matrix (right) side by side
 
 ---
 
@@ -581,12 +581,12 @@ The script saves:
 
 | Figure | Source | Steps |
 |---|---|---|
-| **3.1** SDLC Waterfall | draw.io — draw | 6 stacked boxes with phase descriptions |
-| **3.2** System Architecture | draw.io — draw | 3 horizontal bands (Browser / FastAPI / Database) |
-| **3.3** ERD | draw.io — Entity shapes | User→Patient→Vitals/Meds/Alerts/CarePlan |
-| **3.4** AI/SHAP Pipeline | draw.io — flowchart | Patient Data → Feature Eng → XGBoost → SHAP → Frontend |
-| **3.5** Security/Data-Flow | draw.io — flowchart | Browser → JWT → RBAC → Endpoint → AuditLog → DB |
-| **3.6** System Process Flow | draw.io — flowchart | Login → Role → Dashboard → Patient → ML → Alert |
+| **3.1** SDLC Waterfall | draw.io - draw | 6 stacked boxes with phase descriptions |
+| **3.2** System Architecture | draw.io - draw | 3 horizontal bands (Browser / FastAPI / Database) |
+| **3.3** ERD | draw.io - Entity shapes | User→Patient→Vitals/Meds/Alerts/CarePlan |
+| **3.4** AI/SHAP Pipeline | draw.io - flowchart | Patient Data → Feature Eng → XGBoost → SHAP → Frontend |
+| **3.5** Security/Data-Flow | draw.io - flowchart | Browser → JWT → RBAC → Endpoint → AuditLog → DB |
+| **3.6** System Process Flow | draw.io - flowchart | Login → Role → Dashboard → Patient → ML → Alert |
 | **4.1** Symptom Tracking | Screenshot app | `/assessments/{id}/esas` or `/wellness-checkin` |
 | **4.2** SHAP Risk View | Screenshot app | `/ai-insights` → patient card → AI Explain tab |
 | **4.3** Adaptive Care Guide | Screenshot app | `/care-guide/{patientId}` |

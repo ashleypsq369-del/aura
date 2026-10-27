@@ -587,7 +587,7 @@ async def trigger_proactive_scan(
 
 # ══════════════════════════════════════════════════════════════════════════════
 # EVIDENCE-BASED SCORING ENDPOINTS
-# These use validated published clinical models — NOT synthetic XGBoost.
+# These use validated published clinical models - NOT synthetic XGBoost.
 # All scores derived from peer-reviewed literature with real patient data.
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -632,7 +632,7 @@ async def evidence_based_composite(
     PPS (Bischoff 2024), PHQ-9 (Kroenke 2002), GAD-7 (Spitzer 2006),
     Barthel (Mahoney 1965).
     Returns overall risk level, survival estimates, and clinical actions.
-    No synthetic data — all models derived from real published patient cohorts.
+    No synthetic data - all models derived from real published patient cohorts.
     """
     result = composite_palliative_risk(
         esas_pain=body.esas_pain, esas_tiredness=body.esas_tiredness,

@@ -29,5 +29,5 @@ with engine.begin() as conn:
     else:
         print("Already exists: spiritual_care_notes.care_provider_type")
 
-    # New palliative tables — create_all handles these (new tables, not existing)
+    # New palliative tables - create_all handles these (new tables, not existing)
     print("Migration complete.")

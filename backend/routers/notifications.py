@@ -432,7 +432,7 @@ async def subscribe_push(
     db: Session = Depends(get_db),
 ):
     """Register a browser push subscription for this user."""
-    # Upsert — update if endpoint exists, create if not
+    # Upsert - update if endpoint exists, create if not
     existing = db.query(PushSubscription).filter(
         PushSubscription.endpoint == data.endpoint
     ).first()
@@ -491,7 +491,7 @@ async def test_push(
     for s in subs:
         ok = send_web_push(
             {"endpoint": s.endpoint, "keys": {"p256dh": s.p256dh, "auth": s.auth}},
-            "ProjectAura — Push Enabled ✓",
+            "ProjectAura - Push Enabled ✓",
             "You'll now receive real-time alerts on this device.",
             url="/notifications",
         )

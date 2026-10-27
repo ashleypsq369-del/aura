@@ -496,7 +496,7 @@ def dispatch_critical_alert(db, patient_id: int, alert_type: str,
     ).all():
         recipient_ids.append(link.family_user_id)
 
-    title = f"🚨 {alert_type.replace('_', ' ').title()} — {patient_name}"
+    title = f"🚨 {alert_type.replace('_', ' ').title()} - {patient_name}"
 
     for uid in recipient_ids:
         # In-app notification
