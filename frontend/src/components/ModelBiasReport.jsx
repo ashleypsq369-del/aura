@@ -86,7 +86,7 @@ export default function ModelBiasReport() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20 dark:border-violet-700">
+      <div className="rounded-xl p-5 border-l-4 border-teal-500 bg-violet-50 dark:bg-violet-900/20 dark:border-violet-700">
         <div className="flex items-center gap-3 mb-2">
           <BarChart3 size={32} strokeWidth={2.5} />
           <div>

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Progress.jsx - Accessible progress bar using Radix UI
  * =====================================================
  * - role="progressbar" + aria-valuenow/min/max for screen readers
@@ -19,10 +19,10 @@ const VARIANTS = {
   amber:   { track: 'bg-amber-100',  fill: 'bg-amber-500'  },
   orange:  { track: 'bg-orange-100', fill: 'bg-orange-500' },
   danger:  { track: 'bg-red-100',    fill: 'bg-red-600'    },
-  blue:    { track: 'bg-blue-100',   fill: 'bg-blue-500'   },
+  blue:    { track: 'bg-blue-100',   fill: 'bg-teal-500'   },
   purple:  { track: 'bg-purple-100', fill: 'bg-purple-500' },
   slate:   { track: 'bg-slate-200',  fill: 'bg-slate-500'  },
-  violet:  { track: 'bg-violet-100', fill: 'bg-violet-600' },
+  violet:  { track: 'bg-violet-100', fill: 'bg-teal-600' },
 };
 
 /** Auto-pick variant based on 0-10 clinical score */

@@ -163,7 +163,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
         <div className="space-y-4">
           {[
             { step: '1', title: 'While you are alive', desc: 'Create memories, write final messages, and designate heirs who will receive your legacy.', color: 'bg-purple-100 text-purple-700' },
-            { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet · only you can edit or delete entries.', color: 'bg-indigo-100 text-indigo-700' },
+            { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet · only you can edit or delete entries.', color: 'bg-indigo-100 text-teal-700' },
             { step: '3', title: 'After you pass', desc: 'Designated heirs receive access to the memories and messages you left for them · exactly as you intended.', color: 'bg-teal-100 text-teal-700' },
           ].map(({ step, title, desc, color }) => (
             <div key={step} className="flex gap-4">
@@ -272,8 +272,8 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
   return (
     <div className="space-y-5">
       <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 flex items-start gap-3">
-        <Key size={15} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-indigo-700 leading-relaxed">
+        <Key size={15} className="text-teal-600 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-teal-700 leading-relaxed">
           {isHeir || isDeceased
             ? 'These are the messages your loved one prepared for you. They are delivered exactly as intended.'
             : 'These messages are sealed and private. Your heirs will only receive them after you pass. You can edit or delete them any time.'}
@@ -374,8 +374,8 @@ function MyJournalTab({ patientId }) {
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
-        <Lock size={13} className="text-indigo-500 flex-shrink-0" />
-        <p className="text-xs text-indigo-700"><strong>Completely private.</strong> These entries are yours alone · separate from your legacy vault and not visible to heirs.</p>
+        <Lock size={13} className="text-teal-500 flex-shrink-0" />
+        <p className="text-xs text-teal-700"><strong>Completely private.</strong> These entries are yours alone · separate from your legacy vault and not visible to heirs.</p>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">

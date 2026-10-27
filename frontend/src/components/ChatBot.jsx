@@ -112,7 +112,7 @@ function renderInline(text) {
 function ProviderBadge({ status }) {
   if (!status) return null;
   const cfg = {
-    gemini:      { icon: <Sparkles size={10} />, label: 'Gemini',   color: 'bg-blue-500/20 text-blue-300' },
+    gemini:      { icon: <Sparkles size={10} />, label: 'Gemini',   color: 'bg-teal-500/20 text-blue-300' },
     groq:        { icon: <Zap size={10} />,       label: 'Groq',     color: 'bg-purple-500/20 text-purple-300' },
     'rule-based':{ icon: <Cpu size={10} />,       label: 'Offline',  color: 'bg-gray-500/20 text-gray-300' },
     fallback:    { icon: <Cpu size={10} />,       label: 'Limited',  color: 'bg-gray-500/20 text-gray-300' },
@@ -858,8 +858,8 @@ export default function ChatBot() {
             <div className="px-4 py-3 border-t border-gray-100 bg-white flex-shrink-0">
               {/* Streaming indicator */}
               {isStreaming && (
-                <div className="flex items-center gap-1.5 mb-2 text-xs text-violet-600">
-                  <div className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-pulse" />
+                <div className="flex items-center gap-1.5 mb-2 text-xs text-teal-600">
+                  <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-pulse" />
                   Aura is responding...
                   <button onClick={() => setIsStreaming(false)}
                     className="ml-auto text-gray-400 hover:text-gray-600 flex items-center gap-1">

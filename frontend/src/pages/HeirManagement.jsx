@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Plus, X, Trash2, Heart, Shield, AlertCircle } from 'lucide-react';
@@ -212,7 +212,7 @@ export default function HeirManagement() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 flex items-start space-x-3"
         >
-          <AlertCircle className="w-6 h-6 text-blue-600 mt-1" />
+          <AlertCircle className="w-6 h-6 text-teal-600 mt-1" />
           <div className="flex-1">
             <h3 className="font-medium text-blue-900 mb-2">What are Heirs?</h3>
             <p className="text-sm text-blue-800">

@@ -384,7 +384,7 @@ export default function PatientDetail() {
               className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-white">
               <div className="flex items-center gap-2 text-slate-700">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
-                  <User size={13} className="text-blue-600" />
+                  <User size={13} className="text-teal-600" />
                 </div>
                 <span className="font-semibold">{patient.age || 'N/A'} yrs · {patient.gender || 'N/A'}</span>
               </div>

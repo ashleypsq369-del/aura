@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MyLegacyAccess · Heir View
  * --------------------------
  * Shows the digital legacy a deceased patient left for YOU (as their designated heir).
@@ -377,7 +377,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
             {activeTab === 'journal' && (
               <div className="space-y-4">
                 <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-center gap-2">
-                  <Lock size={13} className="text-indigo-500 flex-shrink-0" />
+                  <Lock size={13} className="text-teal-500 flex-shrink-0" />
                   <p className="text-xs text-indigo-700">These are personal journal entries written by {info.patient_name} during their journey. They shared access with you as their designated heir.</p>
                 </div>
                 {loadingJournal ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :

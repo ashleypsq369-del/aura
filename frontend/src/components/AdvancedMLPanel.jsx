@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AdvancedMLPanel.jsx
  * ====================
  * Displays all P6-P11 advanced ML analysis for a patient:
@@ -268,7 +268,7 @@ export default function AdvancedMLPanel({ patientId }) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
-        <Activity size={14} className="text-violet-500 animate-pulse" />
+        <Activity size={14} className="text-teal-500 animate-pulse" />
         <p className="text-xs text-gray-600">Running advanced analysis (deterioration, prognosis, drug interactions)...</p>
       </div>
     );
@@ -287,7 +287,7 @@ export default function AdvancedMLPanel({ patientId }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Activity size={14} className="text-violet-600" />
+          <Activity size={14} className="text-teal-600" />
           <h3 className="text-xs font-semibold text-gray-800">Advanced Clinical Analysis</h3>
         </div>
         <button onClick={() => refetch()} disabled={isFetching}

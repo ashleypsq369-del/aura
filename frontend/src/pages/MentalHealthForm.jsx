@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -160,7 +160,7 @@ export default function MentalHealthForm() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20"
+        className="rounded-xl p-5 border-l-4 border-teal-500 bg-violet-50 dark:bg-violet-900/20"
       >
         <div className="flex items-center space-x-4">
           <div className="p-3 rounded-lg bg-white/20">

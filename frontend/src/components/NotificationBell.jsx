@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, AlertTriangle } from 'lucide-react';
@@ -92,7 +92,7 @@ export default function NotificationBell() {
       case 'critical': return 'text-red-600 bg-red-50';
       case 'high': return 'text-orange-600 bg-orange-50';
       case 'medium': return 'text-yellow-600 bg-yellow-50';
-      case 'low': return 'text-blue-600 bg-blue-50';
+      case 'low': return 'text-teal-600 bg-blue-50';
       default: return 'text-gray-600 bg-gray-50';
     }
   };

@@ -165,7 +165,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                     className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all relative ${
                       activeTab === tab.id
                         ? chatType === 'chatbot'
-                          ? 'text-blue-600'
+                          ? 'text-teal-600'
                           : 'text-teal-600'
                         : 'text-gray-600 hover:text-gray-900'
                     }`}
@@ -176,7 +176,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                       <motion.div
                         layoutId="activeTab"
                         className={`absolute bottom-0 left-0 right-0 h-0.5 ${
-                          chatType === 'chatbot' ? 'bg-blue-600' : 'bg-teal-600'
+                          chatType === 'chatbot' ? 'bg-teal-600' : 'bg-teal-600'
                         }`}
                       />
                     )}
@@ -248,7 +248,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                         <select
                           value={theme}
                           onChange={(e) => handleThemeChange(e.target.value)}
-                          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                         >
                           <option value="light">Light</option>
                           <option value="dark">Dark</option>
@@ -272,7 +272,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                         <select
                           value={language}
                           onChange={(e) => handleLanguageChange(e.target.value)}
-                          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                         >
                           <option value="en">English</option>
                           <option value="es">Espaol</option>
@@ -297,7 +297,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                         <button
                           onClick={handleSoundToggle}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            soundEnabled ? 'bg-blue-600' : 'bg-gray-300'
+                            soundEnabled ? 'bg-teal-600' : 'bg-gray-300'
                           }`}
                         >
                           <span
@@ -326,7 +326,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                     <button
                       onClick={handleNotificationToggle}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        notifications ? 'bg-blue-600' : 'bg-gray-300'
+                        notifications ? 'bg-teal-600' : 'bg-gray-300'
                       }`}
                     >
                       <span
@@ -382,7 +382,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                     <div className="space-y-2">
                       <button
                         onClick={handleExportSettings}
-                        className="w-full flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+                        className="w-full flex items-center gap-2 px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all"
                       >
                         <Download size={18} />
                         Export Settings

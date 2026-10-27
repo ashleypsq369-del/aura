@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 /**
@@ -20,7 +20,7 @@ export default function SummaryCard({
   status = 'normal',
   onClick,
   badge,
-  badgeColor = 'bg-blue-100 text-blue-700 border-blue-300'
+  badgeColor = 'bg-blue-100 text-teal-700 border-blue-300'
 }) {
   const statusColors = {
     normal: 'border-slate-200 hover:border-teal-400',

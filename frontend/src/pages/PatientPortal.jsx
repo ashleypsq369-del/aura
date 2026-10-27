@@ -357,12 +357,12 @@ export default function PatientPortal() {
                   {community_groups.slice(0, 3).map(group => (
                     <button key={group.id} onClick={() => navigate('/community')}
                       data-tip="Join this community group"
-                      className="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all group flex items-center justify-between">
+                      className="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-teal-400 hover:bg-blue-50/50 transition-all group flex items-center justify-between">
                       <div>
-                        <h5 className="font-semibold text-sm text-slate-800 group-hover:text-blue-700">{group.name}</h5>
+                        <h5 className="font-semibold text-sm text-slate-800 group-hover:text-teal-700">{group.name}</h5>
                         <p className="text-xs text-slate-400 mt-0.5">{group.member_count} members</p>
                       </div>
-                      <ArrowRight size={14} className="text-slate-300 group-hover:text-blue-500" />
+                      <ArrowRight size={14} className="text-slate-300 group-hover:text-teal-500" />
                     </button>
                   ))}
                 </div>

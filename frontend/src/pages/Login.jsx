@@ -277,13 +277,13 @@ export default function Login() {
                       setError('');
                     }}
                     className={`p-2 rounded-lg border text-center transition-all hover:scale-[1.03] active:scale-[0.97]
-                      ${color === 'blue'   ? 'bg-blue-50   border-blue-200   hover:border-blue-400'   :
+                      ${color === 'blue'   ? 'bg-blue-50   border-blue-200   hover:border-teal-400'   :
                         color === 'green'  ? 'bg-green-50  border-green-200  hover:border-green-400'  :
                                              'bg-purple-50 border-purple-200 hover:border-purple-400'}`}
                   >
                     <p className="font-bold text-slate-800 text-[11px]">{label}</p>
                     <p className={`font-mono text-[10px] mt-0.5
-                      ${color === 'blue' ? 'text-blue-600' :
+                      ${color === 'blue' ? 'text-teal-600' :
                         color === 'green' ? 'text-green-600' : 'text-purple-600'}`}>
                       {user}
                     </p>

@@ -98,7 +98,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
 
   const getCategoryColor = (category) => {
     const colors = {
-      palliative_care_basics: 'bg-blue-100 text-blue-700',
+      palliative_care_basics: 'bg-blue-100 text-teal-700',
       pain_management: 'bg-red-100 text-red-700',
       symptom_management: 'bg-green-100 text-green-700',
       family_support: 'bg-purple-100 text-purple-700',
@@ -164,7 +164,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
             <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <HardDrive className="w-6 h-6 text-blue-600" />
+                  <HardDrive className="w-6 h-6 text-teal-600" />
                   <div>
                     <p className="font-bold text-gray-900">Storage Used</p>
                     <p className="text-sm text-gray-600">

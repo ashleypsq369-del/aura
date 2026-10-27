@@ -16,7 +16,7 @@ const PRIORITY_STYLE = {
   critical: { bg:'bg-red-50',    border:'border-red-400',    text:'text-red-900',   icon:'s¨', badge:'bg-red-100 text-red-700' },
   high:     { bg:'bg-orange-50', border:'border-orange-400', text:'text-orange-900',icon:'⚠ï¸', badge:'bg-orange-100 text-orange-700' },
   medium:   { bg:'bg-yellow-50', border:'border-yellow-400', text:'text-yellow-900',icon:'', badge:'bg-yellow-100 text-yellow-700' },
-  low:      { bg:'bg-blue-50',   border:'border-blue-400',   text:'text-blue-900',  icon:'„ï¸', badge:'bg-blue-100 text-blue-700' },
+  low:      { bg:'bg-blue-50',   border:'border-teal-400',   text:'text-blue-900',  icon:'„ï¸', badge:'bg-blue-100 text-teal-700' },
 };
 
 export default function AdaptiveCareGuide() {

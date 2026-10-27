@@ -323,14 +323,14 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
   // Per-color accent palette (border-left + icon bg)
   const accent = {
     rose:   { border: '#f43f5e', iconBg: 'bg-rose-50',   iconText: 'text-rose-600'   },
-    blue:   { border: '#3b82f6', iconBg: 'bg-blue-50',   iconText: 'text-blue-600'   },
+    blue:   { border: '#3b82f6', iconBg: 'bg-blue-50',   iconText: 'text-teal-600'   },
     purple: { border: '#a855f7', iconBg: 'bg-purple-50', iconText: 'text-purple-600' },
     amber:  { border: '#f59e0b', iconBg: 'bg-amber-50',  iconText: 'text-amber-600'  },
     cyan:   { border: '#06b6d4', iconBg: 'bg-cyan-50',   iconText: 'text-cyan-600'   },
-    indigo: { border: '#6366f1', iconBg: 'bg-indigo-50', iconText: 'text-indigo-600' },
+    indigo: { border: '#6366f1', iconBg: 'bg-indigo-50', iconText: 'text-teal-600' },
     red:    { border: '#ef4444', iconBg: 'bg-red-50',    iconText: 'text-red-600'    },
     green:  { border: '#10b981', iconBg: 'bg-emerald-50',iconText: 'text-emerald-600'},
-    violet: { border: '#7c3aed', iconBg: 'bg-violet-50', iconText: 'text-violet-600' },
+    violet: { border: '#7c3aed', iconBg: 'bg-violet-50', iconText: 'text-teal-600' },
     orange: { border: '#f97316', iconBg: 'bg-orange-50', iconText: 'text-orange-600' },
     teal:   { border: '#0d9488', iconBg: 'bg-teal-50',   iconText: 'text-teal-600'   },
   }[assessment.color] || { border: '#0d9488', iconBg: 'bg-teal-50', iconText: 'text-teal-600' };

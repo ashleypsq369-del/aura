@@ -249,18 +249,18 @@ export default function CommunityHub() {
                           {groupInitials(g.name)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-violet-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-teal-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
                           <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{g.description || 'Supportive community group'}</p>
                           <div className="flex items-center gap-1.5 mt-1">
                             <span className="text-[9px] text-slate-400 dark:text-slate-500 flex items-center gap-0.5">
                               <Users size={9} /> {g.member_count ?? 0}
                             </span>
                             {g.condition_tags?.slice(0,2).map(t => (
-                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-violet-400 text-violet-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
+                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
                             ))}
                           </div>
                         </div>
-                        <MessagesSquare size={13} className="text-violet-400 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <MessagesSquare size={13} className="text-teal-400 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </button>
                     );
                   })}
@@ -272,13 +272,13 @@ export default function CommunityHub() {
             {signals?.needsCommunity && activeTab === 'all' && (
               <div className="px-4 py-3 bg-indigo-50 border border-indigo-300 rounded-xl">
                 <h3 className="text-sm font-bold text-indigo-900 mb-1 flex items-center gap-2">
-                  <Users size={14} className="text-indigo-700" />
+                  <Users size={14} className="text-teal-700" />
                   Groups Matched to Your Profile
                 </h3>
                 <p className="text-xs text-indigo-800">
                   Based on your preferences: {signals.communityTags?.join(', ')}
-                  {signals.needsEmotionalSupport && <span className="block mt-1 text-indigo-700 font-medium">✨ Emotional support groups highlighted</span>}
-                  {signals.needsSpiritualSupport && <span className="block mt-1 text-indigo-700 font-medium">🙏 Spiritual care groups available</span>}
+                  {signals.needsEmotionalSupport && <span className="block mt-1 text-teal-700 font-medium">✨ Emotional support groups highlighted</span>}
+                  {signals.needsSpiritualSupport && <span className="block mt-1 text-teal-700 font-medium">🙏 Spiritual care groups available</span>}
                 </p>
               </div>
             )}

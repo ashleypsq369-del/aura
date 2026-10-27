@@ -1,4 +1,4 @@
-﻿import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { 
   pageTransition, 
@@ -86,10 +86,10 @@ export default function AnimationDemo() {
             variants={scaleIn}
             className="bg-white rounded-xl p-6 shadow-lg border-3 border-blue-300"
           >
-            <h2 className="text-xl font-bold mb-3 text-blue-700">¢ Counting Animation</h2>
+            <h2 className="text-xl font-bold mb-3 text-teal-700">¢ Counting Animation</h2>
             <div className="grid grid-cols-3 gap-4 mb-3">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-3xl font-bold text-teal-600">
                   <AnimatedNumber value={120} suffix=" bpm" />
                 </div>
                 <div className="text-xs text-gray-500">Heart Rate</div>
@@ -138,7 +138,7 @@ export default function AnimationDemo() {
                   <span>Care Plan Completion</span>
                   <span className="font-bold">60%</span>
                 </div>
-                <AnimatedProgressBar percentage={60} color="bg-blue-600" />
+                <AnimatedProgressBar percentage={60} color="bg-teal-600" />
               </div>
             </div>
             <div className="bg-green-50 p-3 rounded-lg">

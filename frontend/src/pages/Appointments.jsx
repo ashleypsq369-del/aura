@@ -108,7 +108,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
         className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center"><Calendar size={15}/></div>
+            <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center"><Calendar size={15}/></div>
             <h2 className="font-bold text-slate-800">Schedule Appointment</h2>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center"><X size={16} className="text-slate-400"/></button>
@@ -116,7 +116,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
         <div className="p-6 space-y-4">
           <SearchableSelect
             label="Type *"
-            accent="blue"
+            accent="teal"
             value={f.appointment_type}
             onChange={v => setF(p => ({ ...p, appointment_type: v || 'Palliative Consultation' }))}
             options={APPT_TYPES.map(t => ({ value: t, label: t }))}
@@ -178,7 +178,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
       className={`group border-l-4 ${cfg.borderL} ${cfg.bg} rounded-r-xl border border-slate-200 p-4 transition-shadow hover:shadow-md ${past&&appt.status==='scheduled'?'opacity-70':''}`}>
       <div className="flex items-start gap-3">
         <div className={`mt-0.5 flex-shrink-0 ${cfg.pulse?'animate-pulse':''}`}>
-          <Calendar className={`w-5 h-5 ${today?'text-teal-600':appt.status==='completed'?'text-emerald-600':appt.status==='cancelled'?'text-slate-400':'text-blue-600'}`}/>
+          <Calendar className={`w-5 h-5 ${today?'text-teal-600':appt.status==='completed'?'text-emerald-600':appt.status==='cancelled'?'text-slate-400':'text-teal-500'}`}/>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 flex-wrap">
@@ -186,7 +186,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
               <span className="font-bold text-slate-900 text-sm">{appt.appointment_type}</span>
               <AppointmentStatusBadge status={appt.status || 'scheduled'} compact />
               {until && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 flex items-center gap-0.5">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 flex items-center gap-0.5">
                   <Clock size={9}/> {until}
                 </span>
               )}
@@ -426,7 +426,7 @@ export default function Appointments() {
             selected={filterStatus==='active'} onClick={() => setFilterStatus('active')}
             subtitle="Scheduled visits"/>
           <KpiCard label="Today" value={kpi.today} icon={Clock}
-            color="bg-blue-50 text-blue-700 border-blue-400"
+            color="bg-cyan-50 text-cyan-700 border-cyan-400"
             selected={false} onClick={() => setFilterStatus('active')}
             subtitle={new Date().toLocaleDateString('en-GB',{weekday:'long'})}/>
           <KpiCard label="Completed" value={kpi.completed} icon={CheckCircle}
@@ -510,7 +510,7 @@ export default function Appointments() {
             <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-100">
               <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1"><ListFilter size={11}/> Filters:</span>
               {filterStatus !== 'active' && (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 flex items-center gap-1">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-700 flex items-center gap-1">
                   {filterStatus}<button onClick={() => setFilterStatus('active')} className="font-black hover:text-red-600">×</button>
                 </span>
               )}
@@ -529,7 +529,7 @@ export default function Appointments() {
       <div className="px-6 space-y-5">
         {isLoading ? (
           <div className="flex items-center justify-center h-40">
-            <Loader2 size={28} className="animate-spin text-blue-600"/>
+            <Loader2 size={28} className="animate-spin text-teal-600"/>
           </div>
         ) : !patientId ? (
           <div className="bg-white rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
@@ -544,9 +544,9 @@ export default function Appointments() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"/>
+                    <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"/>
                     Upcoming Appointments
-                    <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">{upcomingAppts.length}</span>
+                    <span className="ml-1 px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full text-xs font-bold">{upcomingAppts.length}</span>
                   </h2>
                 </div>
                 {upcomingAppts.length === 0 ? (

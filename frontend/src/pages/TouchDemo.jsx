@@ -80,7 +80,7 @@ export default function TouchDemo() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Volume2 className="w-6 h-6 text-blue-600" />
+                <Volume2 className="w-6 h-6 text-teal-600" />
                 <div>
                   <p className="font-bold text-gray-900">Sound Effects</p>
                   <p className="text-sm text-gray-600">Audio feedback</p>
@@ -165,7 +165,7 @@ export default function TouchDemo() {
         {/* Sound Effects Demo */}
         <div className="mb-6 bg-white rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-            <Volume2 className="w-6 h-6 text-blue-600" />
+            <Volume2 className="w-6 h-6 text-teal-600" />
             <span>Sound Effects</span>
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">

@@ -193,7 +193,7 @@ export default function CrisisInterventionOverlay({
                         <h5 className="font-bold text-sm mb-1">{contact.title}</h5>
                         <p className={`font-bold text-2xl mb-1 ${
                           contact.color === 'red' ? 'text-red-700' : 
-                          contact.color === 'blue' ? 'text-blue-700' : 'text-teal-700'
+                          contact.color === 'blue' ? 'text-teal-700' : 'text-teal-700'
                         }`}>
                           {contact.number}
                         </p>
@@ -202,7 +202,7 @@ export default function CrisisInterventionOverlay({
                           href={`tel:${contact.number.replace(/[^0-9+]/g, '')}`}
                           className={`mt-2 inline-flex items-center gap-1 text-xs font-bold ${
                             contact.color === 'red' ? 'text-red-700 hover:text-red-800' : 
-                            contact.color === 'blue' ? 'text-blue-700 hover:text-blue-800' : 
+                            contact.color === 'blue' ? 'text-teal-700 hover:text-blue-800' : 
                             'text-teal-700 hover:text-teal-800'
                           }`}
                         >

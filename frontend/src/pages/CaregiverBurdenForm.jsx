@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -25,7 +25,7 @@ const questions = [
 
 const options = [
   { value: 0, label: 'Never', color: 'bg-green-500' },
-  { value: 1, label: 'Rarely', color: 'bg-blue-500' },
+  { value: 1, label: 'Rarely', color: 'bg-teal-500' },
   { value: 2, label: 'Sometimes', color: 'bg-yellow-500' },
   { value: 3, label: 'Frequently', color: 'bg-orange-500' },
   { value: 4, label: 'Nearly Always', color: 'bg-red-500' }
@@ -170,7 +170,7 @@ export default function CaregiverBurdenForm() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl p-5 border-l-4 border-violet-500 bg-violet-50 dark:bg-violet-900/20"
+        className="rounded-xl p-5 border-l-4 border-teal-500 bg-violet-50 dark:bg-violet-900/20"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">

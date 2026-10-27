@@ -670,7 +670,7 @@ const COLORS = {
   purple: { gradient: 'from-purple-600 to-purple-500',bg:'bg-purple-50',border:'border-purple-200',text:'text-purple-700',badge:'bg-purple-100 text-purple-700',icon:'bg-purple-600',section:'bg-purple-50 border-purple-200 text-purple-700' },
   yellow: { gradient: 'from-yellow-500 to-yellow-400',bg:'bg-yellow-50',border:'border-yellow-200',text:'text-yellow-800',badge:'bg-yellow-100 text-yellow-800',icon:'bg-yellow-500',section:'bg-yellow-50 border-yellow-200 text-yellow-800' },
   green:  { gradient: 'from-green-600 to-green-500', bg:'bg-green-50', border:'border-green-200', text:'text-green-700', badge:'bg-green-100 text-green-700', icon:'bg-green-600', section:'bg-green-50 border-green-200 text-green-700'  },
-  blue:   { gradient: 'from-blue-600 to-blue-500',   bg:'bg-blue-50',  border:'border-blue-200',  text:'text-blue-700',  badge:'bg-blue-100 text-blue-700',  icon:'bg-blue-600',  section:'bg-blue-50 border-blue-200 text-blue-700'    },
+  blue:   { gradient: 'from-blue-600 to-blue-500',   bg:'bg-blue-50',  border:'border-blue-200',  text:'text-teal-700',  badge:'bg-blue-100 text-teal-700',  icon:'bg-teal-600',  section:'bg-blue-50 border-blue-200 text-teal-700'    },
   pink:   { gradient: 'from-pink-600 to-pink-500',   bg:'bg-pink-50',  border:'border-pink-200',  text:'text-pink-700',  badge:'bg-pink-100 text-pink-700',  icon:'bg-pink-600',  section:'bg-pink-50 border-pink-200 text-pink-700'    },
   rose:   { gradient: 'from-rose-700 to-rose-600',   bg:'bg-rose-50',  border:'border-rose-300',  text:'text-rose-800',  badge:'bg-rose-100 text-rose-800',  icon:'bg-rose-700',  section:'bg-rose-50 border-rose-300 text-rose-800'    },
 };

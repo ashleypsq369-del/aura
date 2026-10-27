@@ -120,7 +120,7 @@ export default function SpiritualCareForm() {
     });
   };
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
   const textareaCls = `${inputCls} resize-none`;
   const selectCls = inputCls;
 
@@ -151,7 +151,7 @@ export default function SpiritualCareForm() {
         </button>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Heart className="w-6 h-6 text-violet-600" />
+            <Heart className="w-6 h-6 text-teal-600" />
             Spiritual & Wellbeing Care Note
           </h1>
           {patient && <p className="text-slate-500 dark:text-slate-400 text-sm">{patient.full_name}</p>}
@@ -174,7 +174,7 @@ export default function SpiritualCareForm() {
                     <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                       {new Date(h.visit_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full text-xs bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300">{h.visit_type}</span>
+                    <span className="px-2 py-0.5 rounded-full text-xs bg-violet-100 text-teal-700 dark:bg-violet-900/30 dark:text-violet-300">{h.visit_type}</span>
                     <span className="text-xs text-slate-400">{h.religious_denomination}</span>
                   </div>
                   {expandedHistory === h.id ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
@@ -222,7 +222,7 @@ export default function SpiritualCareForm() {
                 <button key={t.value} type="button" onClick={() => set('visit_type', t.value)}
                   className={`text-left px-3 py-2 rounded-lg border-2 text-xs transition ${
                     form.visit_type === t.value
-                      ? 'border-violet-500 bg-violet-50 dark:bg-violet-900/30'
+                      ? 'border-teal-500 bg-violet-50 dark:bg-violet-900/30'
                       : 'border-slate-200 dark:border-slate-600 hover:border-violet-300'
                   }`}>
                   {t.label}
@@ -231,7 +231,7 @@ export default function SpiritualCareForm() {
             </div>
           </Field>
           <div className="flex items-center gap-3">
-            <input type="checkbox" id="fam" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-violet-600" />
+            <input type="checkbox" id="fam" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
             <label htmlFor="fam" className="text-sm text-slate-700 dark:text-slate-300">Family member(s) present during visit</label>
           </div>
         </Section>
@@ -245,7 +245,7 @@ export default function SpiritualCareForm() {
                 <button key={t.value} type="button" onClick={() => set('faith_tradition', t.value)}
                   className={`text-left px-3 py-2 rounded-lg border-2 text-sm transition ${
                     form.faith_tradition === t.value
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                      ? 'border-teal-500 bg-blue-50 dark:bg-blue-900/30'
                       : 'border-slate-200 dark:border-slate-600 hover:border-blue-300'
                   }`}>
                   <div className="font-medium text-slate-900 dark:text-slate-100">{t.label}</div>
@@ -279,7 +279,7 @@ export default function SpiritualCareForm() {
                 <button key={n} type="button" onClick={() => toggleNeed(n)}
                   className={`px-3 py-1.5 rounded-full text-xs border-2 transition ${
                     selectedNeeds.includes(n)
-                      ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300'
+                      ? 'border-teal-500 bg-indigo-50 dark:bg-indigo-900/30 text-teal-700 dark:text-indigo-300'
                       : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-indigo-300'
                   }`}>{n}
                 </button>
@@ -349,7 +349,7 @@ export default function SpiritualCareForm() {
             </label>
           </div>
           <div className="flex items-center gap-3">
-            <input type="checkbox" id="fu" checked={form.follow_up_needed} onChange={e => set('follow_up_needed', e.target.checked)} className="w-4 h-4 rounded text-violet-600" />
+            <input type="checkbox" id="fu" checked={form.follow_up_needed} onChange={e => set('follow_up_needed', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
             <label htmlFor="fu" className="text-sm text-slate-700 dark:text-slate-300">Follow-up visit needed</label>
           </div>
           {form.follow_up_needed && (
@@ -368,7 +368,7 @@ export default function SpiritualCareForm() {
             Cancel
           </button>
           <button type="submit" disabled={mutation.isLoading}
-            className="flex items-center gap-2 px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-xl font-semibold text-sm transition disabled:opacity-50">
+            className="flex items-center gap-2 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm transition disabled:opacity-50">
             <Save className="w-4 h-4" />
             {mutation.isLoading ? 'Saving...' : 'Save Care Note'}
           </button>

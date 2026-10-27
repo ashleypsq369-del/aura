@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MLRiskPanel.jsx
  * ================
  * Displays real XGBoost ML risk predictions with SHAP waterfall chart.
@@ -261,7 +261,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
         <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
-          <Brain size={14} className="text-violet-600 animate-pulse" />
+          <Brain size={14} className="text-teal-600 animate-pulse" />
         </div>
         <div>
           <p className="text-xs font-semibold text-gray-700">Running ML Risk Models...</p>
@@ -324,12 +324,12 @@ export default function MLRiskPanel({ patientId, compact = false }) {
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-violet-50">
-              <Brain size={14} className="text-violet-600"/>
+              <Brain size={14} className="text-teal-600"/>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-xs font-semibold text-gray-800 leading-none">ML Risk Assessment</p>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-50 text-violet-700 border border-violet-200">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500"/>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
                 XGBoost
               </span>
               {data?.tasks && Object.values(data.tasks).some(t => t.shap_available) && (
@@ -339,7 +339,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
                 </span>
               )}
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"/>
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
                 {(data?.models_available ?? 0) + 4}/12 models
               </span>
             </div>

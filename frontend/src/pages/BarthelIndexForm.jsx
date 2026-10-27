@@ -147,7 +147,7 @@ export default function BarthelIndexForm() {
 
   const getIndependenceLevel = (total) => {
     if (total >= 90) return { label: 'Independent', color: 'text-green-600', bg: 'bg-green-100' };
-    if (total >= 60) return { label: 'Slightly Dependent', color: 'text-blue-600', bg: 'bg-blue-100' };
+    if (total >= 60) return { label: 'Slightly Dependent', color: 'text-teal-600', bg: 'bg-blue-100' };
     if (total >= 40) return { label: 'Moderately Dependent', color: 'text-yellow-600', bg: 'bg-yellow-100' };
     if (total >= 20) return { label: 'Severely Dependent', color: 'text-orange-600', bg: 'bg-orange-100' };
     return { label: 'Totally Dependent', color: 'text-red-600', bg: 'bg-red-100' };
@@ -272,7 +272,7 @@ export default function BarthelIndexForm() {
                 <h3 className="text-lg font-bold text-slate-900">{item.label}</h3>
               </div>
               {scores[item.key] !== null && (
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-teal-600">
                   {scores[item.key]}
                 </div>
               )}
@@ -287,7 +287,7 @@ export default function BarthelIndexForm() {
                   onClick={() => setScores({ ...scores, [item.key]: option.value })}
                   className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all ${
                     scores[item.key] === option.value
-                      ? 'border-blue-500 bg-blue-50 shadow-md'
+                      ? 'border-teal-500 bg-blue-50 shadow-md'
                       : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50'
                   }`}
                 >
@@ -297,7 +297,7 @@ export default function BarthelIndexForm() {
                       <div className="text-sm text-slate-600">{option.desc}</div>
                     </div>
                     {scores[item.key] === option.value && (
-                      <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                      <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
                         <div className="w-2 h-2 rounded-full bg-white"></div>
                       </div>
                     )}
@@ -363,7 +363,7 @@ export default function BarthelIndexForm() {
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Any additional observations about patient's functional status..."
-            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-teal-500 focus:outline-none"
           />
         </motion.div>
 

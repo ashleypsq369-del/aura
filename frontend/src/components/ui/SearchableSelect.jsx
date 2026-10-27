@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SearchableSelect — universal searchable dropdown
  * =================================================
  * Replaces every plain <select> and hand-rolled PatientSearch/UserPicker
@@ -25,8 +25,8 @@ import { ChevronDown, Search, X, Check } from 'lucide-react';
 
 const ACCENT = {
   teal:   { ring: 'ring-teal-500/20',   border: 'border-teal-500',   hover: 'hover:bg-teal-50',   check: 'text-teal-600',   badge: 'bg-teal-500' },
-  blue:   { ring: 'ring-blue-500/20',   border: 'border-blue-500',   hover: 'hover:bg-blue-50',   check: 'text-blue-600',   badge: 'bg-blue-500' },
-  violet: { ring: 'ring-violet-500/20', border: 'border-violet-500', hover: 'hover:bg-violet-50', check: 'text-violet-600', badge: 'bg-violet-500' },
+  blue:   { ring: 'ring-blue-500/20',   border: 'border-teal-500',   hover: 'hover:bg-blue-50',   check: 'text-teal-600',   badge: 'bg-teal-500' },
+  violet: { ring: 'ring-violet-500/20', border: 'border-teal-500', hover: 'hover:bg-violet-50', check: 'text-teal-600', badge: 'bg-teal-500' },
   rose:   { ring: 'ring-rose-500/20',   border: 'border-rose-500',   hover: 'hover:bg-rose-50',   check: 'text-rose-600',   badge: 'bg-rose-500' },
   amber:  { ring: 'ring-amber-500/20',  border: 'border-amber-500',  hover: 'hover:bg-amber-50',  check: 'text-amber-600',  badge: 'bg-amber-500' },
 };

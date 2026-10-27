@@ -28,7 +28,7 @@ const TONE_CONFIG = {
   fear:       { emoji: '😰', label: 'Anxiety',    color: 'bg-amber-50 text-amber-700',        border: 'border-amber-200' },
   anger:      { emoji: '🔥', label: 'Frustration',color: 'bg-orange-50 text-orange-700',      border: 'border-orange-200' },
   love:       { emoji: '💜', label: 'Love',       color: 'bg-purple-50 text-purple-700',      border: 'border-purple-200' },
-  sadness:    { emoji: '🌧️', label: 'Sadness',    color: 'bg-blue-50 text-blue-700',          border: 'border-blue-200' },
+  sadness:    { emoji: '🌧️', label: 'Sadness',    color: 'bg-blue-50 text-teal-700',          border: 'border-blue-200' },
   acceptance: { emoji: '🕊️', label: 'Acceptance', color: 'bg-teal-50 text-teal-700',          border: 'border-teal-200' },
   neutral:    { emoji: '📝', label: 'Reflection', color: 'bg-slate-50 text-slate-500',        border: 'border-slate-100' },
 };

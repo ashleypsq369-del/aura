@@ -19,7 +19,7 @@ const CATEGORY_CONFIG = {
   psychological: { label: 'Psychological', color: 'text-purple-600',  bg: 'bg-purple-50',  border: 'border-purple-200',  Icon: Brain },
   spiritual:     { label: 'Spiritual',     color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   Icon: Heart },
   family:        { label: 'Family',        color: 'text-teal-600',    bg: 'bg-teal-50',    border: 'border-teal-200',    Icon: Users },
-  functional:    { label: 'Functional',    color: 'text-blue-600',    bg: 'bg-blue-50',    border: 'border-blue-200',    Icon: Target },
+  functional:    { label: 'Functional',    color: 'text-teal-600',    bg: 'bg-blue-50',    border: 'border-blue-200',    Icon: Target },
   general:       { label: 'General',       color: 'text-slate-600',   bg: 'bg-slate-50',   border: 'border-slate-200',   Icon: Shield },
 };
 
@@ -270,7 +270,7 @@ export default function CarePlanDetail() {
     ...(hiddenSections.has('spiritual') || hiddenSections.has('spiritual_care') ? [] : [
       { key: 'spiritual_care',     label: 'Spiritual Care',         icon: Shield,  color: 'text-amber-600',  bg: 'bg-amber-50' },
     ]),
-    { key: 'family_support_plan',  label: 'Family Support',         icon: Users,   color: 'text-blue-600',   bg: 'bg-blue-50' },
+    { key: 'family_support_plan',  label: 'Family Support',         icon: Users,   color: 'text-teal-600',   bg: 'bg-blue-50' },
     { key: 'overall_notes',        label: 'Overall Notes',          icon: FileText,color: 'text-slate-600',  bg: 'bg-slate-50' },
   ];
 
@@ -370,7 +370,7 @@ export default function CarePlanDetail() {
                 <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Shield size={16} className="text-blue-600" />
+                      <Shield size={16} className="text-teal-600" />
                     </div>
                     <h2 className="font-bold text-slate-800 text-sm">Interventions</h2>
                   </div>

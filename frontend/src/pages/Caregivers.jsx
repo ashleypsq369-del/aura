@@ -360,7 +360,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
         <div className="p-5 space-y-4 max-h-[72vh] overflow-y-auto">
           {loading && (
             <div className="flex flex-col items-center py-12 gap-3">
-              <Loader2 size={24} className="animate-spin text-violet-500" />
+              <Loader2 size={24} className="animate-spin text-teal-500" />
               <p className="text-sm text-slate-500">Analysing burnout risk…</p>
             </div>
           )}
@@ -412,7 +412,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
                   <div className="space-y-1.5">
                     {data.recommendations.filter(Boolean).map((rec, i) => (
                       <div key={i} className="flex items-start gap-2 p-2.5 bg-violet-50 border border-violet-100 rounded-lg text-xs text-violet-800">
-                        <TrendingUp size={12} className="flex-shrink-0 mt-0.5 text-violet-500" /> {rec}
+                        <TrendingUp size={12} className="flex-shrink-0 mt-0.5 text-teal-500" /> {rec}
                       </div>
                     ))}
                   </div>

@@ -408,12 +408,12 @@ export default function MedicalKnowledge() {
   // ── Colour palette per index ──────────────────────────────────────────
   const PALETTES = [
     { dot:'bg-teal-400',   text:'text-teal-700',   active:'bg-teal-50 border-teal-300'   },
-    { dot:'bg-blue-400',   text:'text-blue-700',   active:'bg-blue-50 border-blue-300'   },
+    { dot:'bg-teal-400',   text:'text-teal-700',   active:'bg-blue-50 border-blue-300'   },
     { dot:'bg-purple-400', text:'text-purple-700', active:'bg-purple-50 border-purple-300'},
     { dot:'bg-amber-400',  text:'text-amber-700',  active:'bg-amber-50 border-amber-300' },
     { dot:'bg-rose-400',   text:'text-rose-700',   active:'bg-rose-50 border-rose-300'   },
     { dot:'bg-green-400',  text:'text-green-700',  active:'bg-green-50 border-green-300' },
-    { dot:'bg-indigo-400', text:'text-indigo-700', active:'bg-indigo-50 border-indigo-300'},
+    { dot:'bg-indigo-400', text:'text-teal-700', active:'bg-indigo-50 border-indigo-300'},
   ];
 
   return (

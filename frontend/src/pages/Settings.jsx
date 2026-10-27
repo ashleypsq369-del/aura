@@ -297,10 +297,10 @@ export default function Settings() {
                       <button onClick={() => { pwa.install(); toast.success('Opening install prompt…'); }}
                         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors text-left">
                         <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-                          <Smartphone size={16} className="text-indigo-600" />
+                          <Smartphone size={16} className="text-teal-600" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-indigo-700">Install App</p>
+                          <p className="text-sm font-medium text-teal-700">Install App</p>
                           <p className="text-xs text-gray-500">Add Project Aura to your home screen for offline use</p>
                         </div>
                         <ChevronRight size={16} className="text-gray-400" />
@@ -578,8 +578,8 @@ export default function Settings() {
                             disabled={push.loading}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                               push.subscribed
-                                ? 'bg-violet-100 text-violet-700 hover:bg-red-100 hover:text-red-700 border border-violet-200 hover:border-red-200'
-                                : 'bg-violet-600 hover:bg-violet-700 text-white shadow-sm'
+                                ? 'bg-teal-50 text-teal-700 hover:bg-red-100 hover:text-red-700 border border-teal-200 hover:border-red-200'
+                                : 'bg-teal-600 hover:bg-teal-700 text-white shadow-sm'
                             }`}
                           >
                             {push.loading
@@ -649,18 +649,18 @@ export default function Settings() {
                 <Section title="Assisted Mode">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Brain size={16} className="text-violet-700" />
+                      <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Brain size={16} className="text-teal-600" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <p className="text-sm font-medium text-gray-900">
                             Assisted Mode
                             {a11y.assistedMode && (
-                              <span className="ml-2 inline-block px-1.5 py-0.5 bg-violet-100 text-violet-700 text-[10px] font-bold rounded">ON</span>
+                              <span className="ml-2 inline-block px-1.5 py-0.5 bg-teal-50 text-teal-700 text-[10px] font-bold rounded">ON</span>
                             )}
                           </p>
-                          <Toggle on={a11y.assistedMode} onToggle={() => a11y.assistedMode ? disableAssistedMode() : enableAssistedMode()} color="#7c3aed" />
+                          <Toggle on={a11y.assistedMode} onToggle={() => a11y.assistedMode ? disableAssistedMode() : enableAssistedMode()} color="#0d9488" />
                         </div>
                         <p className="text-xs text-gray-500 mt-0.5">One-tap setup for cognitive or physical needs</p>
                       </div>
@@ -755,8 +755,8 @@ export default function Settings() {
 
                   <div className="px-4 py-3 border-b border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-                        <Type size={17} className="text-blue-600" />
+                      <div className="w-9 h-9 rounded-xl bg-teal-50 flex items-center justify-center flex-shrink-0">
+                        <Type size={17} className="text-teal-600" />
                       </div>
                       <p className="text-sm font-semibold text-gray-900">Font Size</p>
                     </div>
@@ -769,7 +769,7 @@ export default function Settings() {
                       ))}
                     </div>
                   </div>
-                  <Row icon={Zap} iconColor="#2563eb" iconBg="#eff6ff" label="Reduce Motion" desc="Minimises animations — helps epilepsy, migraine, vertigo" border={false}
+                  <Row icon={Zap} iconColor="#0d9488" iconBg="#f0fdfa" label="Reduce Motion" desc="Minimises animations — helps epilepsy, migraine, vertigo" border={false}
                     right={<Toggle on={a11y.reducedMotion} onToggle={() => updateSetting('reducedMotion', !a11y.reducedMotion)} />} />
                 </Section>
 

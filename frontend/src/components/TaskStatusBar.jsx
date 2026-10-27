@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TaskStatusBar — Universal task completion widget
  * ================================================
  * compact  — header pill: fits the dark teal nav bar
@@ -89,7 +89,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
       {/* Feature icon */}
       <div className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
         ${task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : isAppt ? 'bg-blue-100 dark:bg-blue-900/30' : isReq ? 'bg-red-50 dark:bg-red-900/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
-        <Icon size={13} className={task.done ? 'text-emerald-600' : isAppt ? 'text-blue-600' : isReq ? 'text-red-500' : 'text-slate-500'}/>
+        <Icon size={13} className={task.done ? 'text-emerald-600' : isAppt ? 'text-teal-600' : isReq ? 'text-red-500' : 'text-slate-500'}/>
       </div>
 
       {/* Text */}
@@ -111,7 +111,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
           </span>
         )}
         {isAppt && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 ">
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-teal-600 ">
             Appt
           </span>
         )}

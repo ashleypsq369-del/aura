@@ -50,7 +50,7 @@ const ICON_MAP = {
 
 // -- Color config -------------------------------------------------------------
 const COLOR = {
-  blue:   { bg: 'bg-blue-50',   border: 'border-blue-200',   text: 'text-blue-700',   badge: 'bg-blue-100 text-blue-700',   dot: 'bg-blue-500',   header: 'from-blue-600 to-blue-700',   fallback: '#1d4ed8' },
+  blue:   { bg: 'bg-blue-50',   border: 'border-blue-200',   text: 'text-teal-700',   badge: 'bg-blue-100 text-teal-700',   dot: 'bg-teal-500',   header: 'from-blue-600 to-blue-700',   fallback: '#1d4ed8' },
   rose:   { bg: 'bg-rose-50',   border: 'border-rose-200',   text: 'text-rose-700',   badge: 'bg-rose-100 text-rose-700',   dot: 'bg-rose-500',   header: 'from-rose-600 to-rose-700',   fallback: '#e11d48' },
   green:  { bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  badge: 'bg-green-100 text-green-700', dot: 'bg-green-500',  header: 'from-green-600 to-green-700',  fallback: '#059669' },
   teal:   { bg: 'bg-teal-50',   border: 'border-teal-200',   text: 'text-teal-700',   badge: 'bg-teal-100 text-teal-700',   dot: 'bg-teal-500',   header: 'from-teal-600 to-teal-700',   fallback: '#0d9488' },
@@ -60,7 +60,7 @@ const COLOR = {
 
 const ROLE_COLORS = {
   admin:     'bg-purple-100 text-purple-700',
-  clinician: 'bg-blue-100 text-blue-700',
+  clinician: 'bg-blue-100 text-teal-700',
   nurse:     'bg-teal-100 text-teal-700',
   caregiver: 'bg-green-100 text-green-700',
   patient:   'bg-orange-100 text-orange-700',
@@ -467,10 +467,10 @@ export default function CareSettings() {
           {/* Family context note */}
           {isFamily && (
             <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl">
-              <Users size={16} className="text-blue-600 flex-shrink-0 mt-0.5" />
+              <Users size={16} className="text-teal-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-blue-900">Your loved one's care context</p>
-                <p className="text-xs text-blue-700 mt-0.5">
+                <p className="text-xs text-teal-700 mt-0.5">
                   This shows the care setting your loved one is currently assigned to.
                   Care setting changes are managed by their clinical team.
                 </p>

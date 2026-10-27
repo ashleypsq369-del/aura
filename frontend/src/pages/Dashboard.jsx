@@ -407,9 +407,9 @@ function FamilyDashboard({ user, summary, navigate }) {
     admission:          { Icon: UserPlus,   color: 'border-teal-500',   bg: 'bg-teal-50',   iconCls: 'text-teal-600',   label: 'Admission' },
     medication_started: { Icon: Pill,       color: 'border-purple-500', bg: 'bg-purple-50', iconCls: 'text-purple-600', label: 'Medication' },
     medication_changed: { Icon: Pill,       color: 'border-amber-500',  bg: 'bg-amber-50',  iconCls: 'text-amber-600',  label: 'Medication' },
-    assessment:         { Icon: FileText,   color: 'border-blue-500',   bg: 'bg-blue-50',   iconCls: 'text-blue-600',   label: 'Assessment' },
+    assessment:         { Icon: FileText,   color: 'border-teal-500',   bg: 'bg-blue-50',   iconCls: 'text-teal-600',   label: 'Assessment' },
     daily_care_log:     { Icon: Activity,   color: 'border-green-500',  bg: 'bg-green-50',  iconCls: 'text-green-600',  label: 'Care Log' },
-    shift_handover:     { Icon: RefreshCw,  color: 'border-indigo-500', bg: 'bg-indigo-50', iconCls: 'text-indigo-600', label: 'Handover' },
+    shift_handover:     { Icon: RefreshCw,  color: 'border-teal-500', bg: 'bg-indigo-50', iconCls: 'text-teal-600', label: 'Handover' },
     status_change:      { Icon: BarChart2,  color: 'border-orange-500', bg: 'bg-orange-50', iconCls: 'text-orange-600', label: 'Status' },
     milestone:          { Icon: Star,       color: 'border-yellow-500', bg: 'bg-yellow-50', iconCls: 'text-yellow-600', label: 'Milestone' },
   };

@@ -287,9 +287,9 @@ function AdvanceCarePlanBody({data}) {
           <p className="text-[10px] font-bold  text-slate-500">DNR / DNACPR Status</p>
           <p className={`text-xl font-bold mt-1 ${ad.dnr_status?'text-red-700':'text-green-700'}`}>{ad.dnr_status?'DNR — Do Not Resuscitate':'Full Resuscitation'}</p>
         </div>
-        <div className={`p-4 rounded-xl border-2 ${ad.has_advance_directive?'border-blue-400 bg-blue-50':'border-slate-300 bg-slate-50'}`}>
+        <div className={`p-4 rounded-xl border-2 ${ad.has_advance_directive?'border-teal-400 bg-blue-50':'border-slate-300 bg-slate-50'}`}>
           <p className="text-[10px] font-bold  text-slate-500">Advance Directive</p>
-          <p className={`text-xl font-bold mt-1 ${ad.has_advance_directive?'text-blue-700':'text-slate-500'}`}>{ad.has_advance_directive?'Document on File':'Not Documented'}</p>
+          <p className={`text-xl font-bold mt-1 ${ad.has_advance_directive?'text-teal-700':'text-slate-500'}`}>{ad.has_advance_directive?'Document on File':'Not Documented'}</p>
         </div>
       </div>
       <Sec title="Patient Wishes & Preferences" icon={Heart} color="#be123c">
@@ -580,7 +580,7 @@ function CaregiverBody({data}) {
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-teal-700 font-bold text-lg">
           {cgv.name?.split(' ').map(n=>n[0]).join('').slice(0,2)||'??'}
         </div>
         <div>
@@ -960,7 +960,7 @@ export default function Reports() {
             <div className="flex flex-wrap gap-2 mt-3">
               {patientId&&<span className="text-[10px] px-2.5 py-1 bg-teal-50 text-teal-700 rounded-full border border-teal-200 font-medium">Patient #{patientId}</span>}
               {userId&&<span className="text-[10px] px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200 font-medium">User #{userId}</span>}
-              {caregiverId&&<span className="text-[10px] px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-200 font-medium">Caregiver #{caregiverId}</span>}
+              {caregiverId&&<span className="text-[10px] px-2.5 py-1 bg-blue-50 text-teal-700 rounded-full border border-blue-200 font-medium">Caregiver #{caregiverId}</span>}
               {dateFrom&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">From: {dateFrom}</span>}
               {dateTo&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">To: {dateTo}</span>}
             </div>

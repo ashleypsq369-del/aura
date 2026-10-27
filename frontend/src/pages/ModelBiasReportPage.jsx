@@ -96,7 +96,7 @@ function GroupCard({ group, data, threshold }) {
               </div>
               <div className="bg-white/60 rounded-lg p-3">
                 <p className="text-xs text-slate-500 font-semibold mb-1">vs Mean</p>
-                <p className={`font-bold text-lg ${disp > 0 ? 'text-red-600' : 'text-blue-600'}`}>
+                <p className={`font-bold text-lg ${disp > 0 ? 'text-red-600' : 'text-teal-600'}`}>
                   {disp >= 0 ? '+' : ''}{(disp * 100).toFixed(1)}%
                 </p>
               </div>
@@ -140,7 +140,7 @@ export default function ModelBiasReportPage() {
 
   if (isLoading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <Loader2 size={32} className="animate-spin text-violet-600"/>
+      <Loader2 size={32} className="animate-spin text-teal-600"/>
     </div>
   );
 
@@ -173,7 +173,7 @@ export default function ModelBiasReportPage() {
         <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setTab(id)}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${tab===id ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white/60'}`}>
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${tab===id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white/60'}`}>
               <Icon size={14}/>{label}
             </button>
           ))}
@@ -184,8 +184,8 @@ export default function ModelBiasReportPage() {
           <div className="space-y-5">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label:'Total Predictions', value: overall.total_predictions ?? 0, color:'text-blue-600', icon:Brain },
-                { label:'Avg Risk Score',    value: (overall.mean_risk_score??0).toFixed(3), color:'text-violet-600', icon:Activity },
+                { label:'Total Predictions', value: overall.total_predictions ?? 0, color:'text-teal-600', icon:Brain },
+                { label:'Avg Risk Score',    value: (overall.mean_risk_score??0).toFixed(3), color:'text-teal-600', icon:Activity },
                 { label:'High-Risk Count',   value: overall.high_risk_count ?? 0,  color:'text-red-500',  icon:AlertTriangle },
                 { label:'Fairness Grade',    value: grade.label.split(' · ')[0],   color: grade.color,    icon:Shield },
               ].map(({ label, value, color, icon: Icon }) => (
@@ -240,7 +240,7 @@ export default function ModelBiasReportPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
                     ['Total Overrides', overrideStats.total_overrides, 'text-slate-800'],
-                    ['Avg Difference',  `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference||0)*100).toFixed(1)}%`, overrideStats.average_difference > 0 ? 'text-red-600' : 'text-blue-600'],
+                    ['Avg Difference',  `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference||0)*100).toFixed(1)}%`, overrideStats.average_difference > 0 ? 'text-red-600' : 'text-teal-600'],
                     ['AI Bias Direction', overrideStats.direction||'Neutral', 'text-slate-700'],
                     ['Recommendation', overrideStats.recommendation||'—', 'text-emerald-600'],
                   ].map(([label, val, color]) => (
@@ -274,7 +274,7 @@ export default function ModelBiasReportPage() {
                   {[
                     ['Clinician Agreement', `${impactData.clinician_agreement_rate||0}%`, 'text-emerald-600'],
                     ['High-Risk Alerts', impactData.high_risk_alerts||0, 'text-red-500'],
-                    ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||'—', 'text-blue-600'],
+                    ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||'—', 'text-teal-600'],
                     ['Model Reliability', impactData.ai_benefit_indicators?.model_reliability||'—', impactData.ai_benefit_indicators?.model_reliability === 'High' ? 'text-emerald-600' : 'text-amber-600'],
                   ].map(([label, val, color]) => (
                     <div key={label} className="bg-white rounded-xl border border-slate-200 shadow-sm px-4 py-3">

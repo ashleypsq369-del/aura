@@ -267,14 +267,14 @@ export default function Patients() {
           Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
           {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">· {filterStatus}</span>}
           {filterCareSetting !== 'all' && (
-            <span className="ml-2 text-blue-600 font-semibold">
+            <span className="ml-2 text-teal-600 font-semibold">
               · {CARE_SETTING_FILTERS.find(f => f.value === filterCareSetting)?.label}
             </span>
           )}
         </p>
         <div className="flex items-center gap-2">
           {filterCareSetting !== 'all' && (
-            <button onClick={() => setFilterCareSetting('all')} className="text-xs text-blue-400 hover:text-red-500 font-semibold flex items-center gap-1">
+            <button onClick={() => setFilterCareSetting('all')} className="text-xs text-teal-500 hover:text-red-500 font-semibold flex items-center gap-1">
               Clear setting ×
             </button>
           )}

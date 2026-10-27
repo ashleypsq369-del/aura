@@ -76,14 +76,14 @@ export default function AnimationDemoSimple() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="bg-white p-6 rounded-xl shadow-lg border-4 border-blue-300"
           >
-            <h2 className="text-2xl font-bold mb-3 text-blue-700">🔢 3. Counting Animation</h2>
+            <h2 className="text-2xl font-bold mb-3 text-teal-700">🔢 3. Counting Animation</h2>
             <div className="text-center mb-4">
-              <div className="text-5xl font-bold text-blue-600 mb-2">{count}</div>
+              <div className="text-5xl font-bold text-teal-600 mb-2">{count}</div>
               <div className="text-sm text-gray-500">Heart Rate (bpm)</div>
             </div>
             <button
               onClick={startCount}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold"
+              className="w-full px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-bold"
             >
               Start Count
             </button>
@@ -179,7 +179,7 @@ export default function AnimationDemoSimple() {
             transition={{ delay: 0.7, duration: 0.5 }}
             className="bg-white p-6 rounded-xl shadow-lg border-4 border-indigo-300"
           >
-            <h2 className="text-2xl font-bold mb-3 text-indigo-700">📋 7. Staggered List</h2>
+            <h2 className="text-2xl font-bold mb-3 text-teal-700">📋 7. Staggered List</h2>
             {['Check-in', 'Vitals', 'Medication', 'Notes'].map((item, i) => (
               <motion.div
                 key={i}

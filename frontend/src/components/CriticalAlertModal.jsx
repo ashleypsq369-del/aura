@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { AlertTriangle, Phone, UserPlus, ArrowUpCircle, Brain, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -47,7 +47,7 @@ export default function CriticalAlertModal({ alert, onClose }) {
             Assign to Urgent Review
           </button>
           <button onClick={() => handleAction.mutate('contact')} disabled={handleAction.isPending}
-            className="flex-1 min-w-[160px] flex items-center justify-center gap-2 px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition shadow-lg disabled:opacity-50">
+            className="flex-1 min-w-[160px] flex items-center justify-center gap-2 px-5 py-3.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold transition shadow-lg disabled:opacity-50">
             <Phone size={16}/> Contact Family Now
           </button>
           <button onClick={() => handleAction.mutate('escalate')} disabled={handleAction.isPending}

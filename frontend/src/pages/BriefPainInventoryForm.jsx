@@ -327,7 +327,7 @@ export default function BriefPainInventoryForm() {
                 setPainLocation(prev => prev ? `${prev} ${text}` : text);
               }}
               placeholder="Speak to describe pain location"
-              buttonClassName="p-3 rounded-lg border-2 border-blue-500 bg-blue-500 text-white hover:bg-blue-600 transition-all"
+              buttonClassName="p-3 rounded-lg border-2 border-teal-500 bg-teal-500 text-white hover:bg-teal-600 transition-all"
             />
           </div>
           
@@ -495,7 +495,7 @@ export default function BriefPainInventoryForm() {
                 setNotes(prev => prev ? `${prev} ${text}` : text);
               }}
               placeholder="Speak to add notes"
-              buttonClassName="p-3 rounded-lg border-2 border-blue-500 bg-blue-500 text-white hover:bg-blue-600 transition-all"
+              buttonClassName="p-3 rounded-lg border-2 border-teal-500 bg-teal-500 text-white hover:bg-teal-600 transition-all"
             />
           </div>
           

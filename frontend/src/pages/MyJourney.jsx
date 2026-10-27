@@ -207,7 +207,7 @@ export default function MyJourney() {
                   <p className="text-2xl font-bold text-slate-800 tabular-nums">{filteredEvents.length}</p>
                 </div>
                 <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-                  <Activity size={18} className="text-blue-600" />
+                  <Activity size={18} className="text-teal-600" />
                 </div>
               </div>
             </motion.button>

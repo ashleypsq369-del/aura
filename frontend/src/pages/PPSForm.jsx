@@ -354,7 +354,7 @@ export default function PPSForm() {
                 </span>
               )}
               {ppsScore === previousScore && (
-                <span className="ml-2 text-blue-600 font-semibold">
+                <span className="ml-2 text-teal-600 font-semibold">
                   ? Stable
                 </span>
               )}
@@ -433,15 +433,15 @@ export default function PPSForm() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 16 }}
-              className="border-l-4 border-blue-500 bg-blue-50 rounded-xl p-5 shadow-sm"
+              className="border-l-4 border-teal-500 bg-blue-50 rounded-xl p-5 shadow-sm"
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-bold text-blue-900 text-sm flex items-center gap-2">
-                  <Brain size={15} className="text-blue-600" />
+                  <Brain size={15} className="text-teal-600" />
                   Functional Decline Risk
                 </h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-black text-blue-700 tabular-nums">
+                  <span className="text-lg font-black text-teal-700 tabular-nums">
                     {Math.round((mlResult.probability ?? 0) * 100)}%
                   </span>
                   {mlResult.risk_level && (
@@ -454,7 +454,7 @@ export default function PPSForm() {
 
               {mlResult.top_features?.length > 0 && (
                 <div className="mb-4 space-y-2">
-                  <p className="text-[10px] font-bold text-blue-600 ">Key Drivers</p>
+                  <p className="text-[10px] font-bold text-teal-600 ">Key Drivers</p>
                   {mlResult.top_features.slice(0, 3).map((feature, i) => (
                     <div key={i}>
                       <p className="text-xs text-slate-700 mb-0.5">{feature.display_name}</p>

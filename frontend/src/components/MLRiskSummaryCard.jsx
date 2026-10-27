@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MLRiskSummaryCard — compact ML risk teaser on PatientDetail
  * Clean white card with solid colored badges (no bars, no faint tints)
  * Clicking navigates to /patients/:id/ml-risk for full SHAP detail
@@ -95,7 +95,7 @@ export default function MLRiskSummaryCard({ patientId }) {
       <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center flex-shrink-0">
-            <Brain size={16} className="text-violet-700" />
+            <Brain size={16} className="text-teal-700" />
           </div>
           <div>
             <p className="text-sm font-bold text-slate-900 leading-tight">ML Risk Assessment</p>

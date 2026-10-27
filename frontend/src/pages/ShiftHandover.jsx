@@ -92,7 +92,7 @@ export default function ShiftHandover() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto px-4 py-6 space-y-6">
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-5 shadow-lg border-2 border-blue-400">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-5 shadow-lg border-2 border-teal-400">
         <div className="flex items-center gap-3">
           <ClipboardList className="w-7 h-7 text-white" />
           <div>
@@ -109,7 +109,7 @@ export default function ShiftHandover() {
           <div className="flex gap-2">
             {['morning', 'afternoon', 'night'].map(s => (
               <button key={s} type="button" onClick={() => setOutgoingShift(s)}
-                className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 capitalize transition ${outgoingShift === s ? 'bg-teal-600 text-white border-blue-600' : 'border-slate-300 text-slate-600 hover:border-blue-400'}`}>
+                className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 capitalize transition ${outgoingShift === s ? 'bg-teal-600 text-white border-teal-600' : 'border-slate-300 text-slate-600 hover:border-teal-400'}`}>
                 {s === 'morning' ? 'Morning' : s === 'afternoon' ? 'Afternoon' : 'Night'}
               </button>
             ))}
@@ -122,7 +122,7 @@ export default function ShiftHandover() {
             <label className="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Users size={16} />Patients Requiring Attention (select all that apply)</label>
             <div className="space-y-2">
               {patients.slice(0, 8).map(({ patient }) => (
-                <label key={patient.id} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition ${selectedPatients.includes(patient.id) ? 'border-blue-400 bg-blue-50' : 'border-slate-200 hover:border-blue-300'}`}>
+                <label key={patient.id} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition ${selectedPatients.includes(patient.id) ? 'border-teal-400 bg-blue-50' : 'border-slate-200 hover:border-blue-300'}`}>
                   <input type="checkbox" checked={selectedPatients.includes(patient.id)} onChange={() => togglePatient(patient.id)} className="w-4 h-4 rounded accent-blue-600" />
                   <div>
                     <p className="font-semibold text-sm text-slate-900">{patient.full_name}</p>
@@ -140,14 +140,14 @@ export default function ShiftHandover() {
           <label className="block text-sm font-bold text-slate-700 mb-3">Handover Notes *</label>
           <textarea value={handoverNote} onChange={e => setHandoverNote(e.target.value)}
             rows={5} placeholder="Summarise key events during your shift, patient concerns, medication changes, family communications, pending results..."
-            className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm resize-none" required />
+            className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-100 outline-none text-sm resize-none" required />
         </div>
 
         {/* Tasks for next shift */}
         <div className="bg-white rounded-xl border-2 border-slate-200 p-5">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><AlertTriangle size={16} />Tasks for Incoming Shift</label>
-            <button type="button" onClick={addTask} className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition">
+            <button type="button" onClick={addTask} className="flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-blue-800 transition">
               <Plus size={14} /> Add Task
             </button>
           </div>
@@ -163,7 +163,7 @@ export default function ShiftHandover() {
                 </select>
                 <input value={task.text} onChange={e => updateTask(task.id, 'text', e.target.value)}
                   placeholder="Task description..."
-                  className="flex-1 px-3 py-2 border-2 border-slate-300 rounded-xl text-sm focus:border-blue-400 outline-none" />
+                  className="flex-1 px-3 py-2 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-400 outline-none" />
                 <button type="button" onClick={() => removeTask(task.id)} className="text-slate-400 hover:text-red-500 transition pt-2 text-lg leading-none">-</button>
               </div>
             ))}
@@ -172,7 +172,7 @@ export default function ShiftHandover() {
 
         {/* Submit */}
         <button type="submit"
-          className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:shadow-lg transition border-2 border-blue-500">
+          className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:shadow-lg transition border-2 border-teal-500">
           <Send size={18} /> Submit Handover to Incoming Shift
         </button>
       </form>

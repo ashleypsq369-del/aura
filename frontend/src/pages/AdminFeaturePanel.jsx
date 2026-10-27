@@ -30,7 +30,7 @@ const STATE_CFG = {
   locked:   { label: 'Locked',   icon: Lock,    cls: 'bg-red-100 text-red-700 border-red-200' },
 };
 const SOURCE_CFG = {
-  admin:             { label: 'Admin',        cls: 'text-indigo-600' },
+  admin:             { label: 'Admin',        cls: 'text-teal-600' },
   questionnaire:     { label: 'Questionnaire', cls: 'text-teal-600' },
   request_approved:  { label: 'User Request', cls: 'text-emerald-600' },
 };
@@ -134,7 +134,7 @@ export default function AdminFeaturePanel() {
         {/* KPI row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Total Users', value: usersData?.total || 0, icon: Users, color: 'text-blue-600' },
+            { label: 'Total Users', value: usersData?.total || 0, icon: Users, color: 'text-teal-600' },
             { label: 'Pending Requests', value: pendingCount, icon: Clock, color: pendingCount > 0 ? 'text-amber-600' : 'text-slate-400' },
             { label: 'Active Overrides', value: (usersData?.users || []).reduce((s, u) => s + u.override_count, 0), icon: Shield, color: 'text-teal-600' },
             { label: 'Locked Features', value: (usersData?.users || []).reduce((s, u) => s + u.overrides.filter(o => o.state === 'locked').length, 0), icon: Lock, color: 'text-red-500' },

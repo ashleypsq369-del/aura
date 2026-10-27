@@ -165,7 +165,7 @@ export default function VitalsDetail() {
                   mlRisk.risk_level === 'warning'  ? 'border-amber-500 bg-amber-50' :
                                                      'border-teal-500 bg-teal-50'
                 }`}>
-                <Brain size={16} className="flex-shrink-0 mt-0.5 text-violet-600" />
+                <Brain size={16} className="flex-shrink-0 mt-0.5 text-teal-600" />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-slate-900 text-sm flex items-center gap-2">
                     ML Vital Risk Assessment

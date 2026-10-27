@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ModalContent.jsx — Structured display building blocks for modals
  * ================================================================
  * Provides consistent, well-designed content patterns for all modal types:
@@ -113,7 +113,7 @@ export function FieldGroup({ children, cols = 2, className = '' }) {
 export function FieldSection({ title, icon: Icon, children, accent = 'teal', className = '' }) {
   const colors = {
     teal: 'bg-teal-50 border-teal-200 text-teal-700',
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
+    blue: 'bg-blue-50 border-blue-200 text-teal-700',
     purple: 'bg-purple-50 border-purple-200 text-purple-700',
     amber: 'bg-amber-50 border-amber-200 text-amber-700',
     red: 'bg-red-50 border-red-200 text-red-700',
@@ -249,7 +249,7 @@ export function InfoBadge({ label, variant = 'default', size = 'sm' }) {
  */
 export function InfoAlert({ type = 'info', title, children, compact = false }) {
   const configs = {
-    info:    { bg: 'bg-blue-50 border-blue-200',   icon: Info,          iconClass: 'text-blue-500',   titleClass: 'text-blue-800'   },
+    info:    { bg: 'bg-blue-50 border-blue-200',   icon: Info,          iconClass: 'text-teal-500',   titleClass: 'text-blue-800'   },
     warning: { bg: 'bg-amber-50 border-amber-200', icon: AlertTriangle, iconClass: 'text-amber-500',  titleClass: 'text-amber-800'  },
     danger:  { bg: 'bg-red-50 border-red-200',     icon: XCircle,       iconClass: 'text-red-500',    titleClass: 'text-red-800'    },
     success: { bg: 'bg-green-50 border-green-200', icon: CheckCircle,   iconClass: 'text-green-500',  titleClass: 'text-green-800'  },
@@ -297,7 +297,7 @@ export function DataCard({ label, value, sub, icon: Icon, accent = 'teal', trend
     red:    { bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    num: 'text-red-800'  },
     amber:  { bg: 'bg-amber-50',  border: 'border-amber-200',  text: 'text-amber-700',  num: 'text-amber-800'},
     green:  { bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  num: 'text-green-800'},
-    blue:   { bg: 'bg-blue-50',   border: 'border-blue-200',   text: 'text-blue-700',   num: 'text-blue-800' },
+    blue:   { bg: 'bg-blue-50',   border: 'border-blue-200',   text: 'text-teal-700',   num: 'text-blue-800' },
     purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', num: 'text-purple-800'},
     slate:  { bg: 'bg-slate-50',  border: 'border-slate-200',  text: 'text-slate-600',  num: 'text-slate-800'},
   };
@@ -324,7 +324,7 @@ export function DataCard({ label, value, sub, icon: Icon, accent = 'teal', trend
  * ListItem — styled bullet list item with optional badge
  */
 export function ListItem({ children, badge, badgeVariant = 'default', icon: Icon, accent = 'teal' }) {
-  const dotColors = { teal: 'bg-teal-500', blue: 'bg-blue-500', red: 'bg-red-500', amber: 'bg-amber-500', green: 'bg-green-500' };
+  const dotColors = { teal: 'bg-teal-500', blue: 'bg-teal-500', red: 'bg-red-500', amber: 'bg-amber-500', green: 'bg-green-500' };
   return (
     <div className="flex items-start gap-2.5 py-1.5">
       {Icon
@@ -342,7 +342,7 @@ export function ListItem({ children, badge, badgeVariant = 'default', icon: Icon
 export function ProgressRow({ label, value, max = 100, color = 'teal', showValue = true, valueLabel }) {
   const pct = Math.min(100, Math.round((value / max) * 100));
   const barColors = {
-    teal: 'bg-teal-500', blue: 'bg-blue-500', red: 'bg-red-500',
+    teal: 'bg-teal-500', blue: 'bg-teal-500', red: 'bg-red-500',
     amber: 'bg-amber-500', green: 'bg-green-500', purple: 'bg-purple-500',
   };
   return (

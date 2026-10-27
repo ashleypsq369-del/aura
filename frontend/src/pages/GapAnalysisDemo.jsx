@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Brain, Shield, MessageCircle, Scale, Heart, 
@@ -134,7 +134,7 @@ export default function GapAnalysisDemo() {
           className="mb-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 rounded-2xl p-8 text-white shadow-2xl"
         >
           <h1 className="text-4xl font-bold mb-3">
-            🎯 Gap Analysis Implementation - Complete Demo
+            ?? Gap Analysis Implementation - Complete Demo
           </h1>
           <p className="text-lg text-white/90 mb-4">
             All 5 Academic Research Priorities - 100% Implemented - Fully Operational
@@ -242,7 +242,7 @@ export default function GapAnalysisDemo() {
             {/* Features */}
             <div className="mb-6">
               <h3 className="text-lg font-bold text-slate-900 mb-4">
-                ✨ Key Features Implemented
+                ? Key Features Implemented
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {selectedPriority.features.map((feature, idx) => (
@@ -260,7 +260,7 @@ export default function GapAnalysisDemo() {
             {/* Links */}
             <div>
               <h3 className="text-lg font-bold text-slate-900 mb-4">
-                🚀 Access Points
+                ?? Access Points
               </h3>
               <div className="space-y-3">
                 {selectedPriority.links.map((link, idx) => (
@@ -290,7 +290,7 @@ export default function GapAnalysisDemo() {
           <StatCard 
             label="API Endpoints" 
             value="40" 
-            color="bg-blue-500" 
+            color="bg-teal-500" 
           />
           <StatCard 
             label="Database Tables" 

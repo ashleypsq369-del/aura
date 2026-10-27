@@ -74,7 +74,7 @@ const CARE_SETTINGS = [
   {
     key: 'hospital_based', label: 'Hospital-Based Care',
     icon: Building2, description: 'Admitted to or regularly attending a hospital palliative care unit',
-    accent: { border:'border-blue-500', bg:'bg-blue-50', dot:'bg-blue-500', text:'text-blue-700', ring:'ring-blue-200' },
+    accent: { border:'border-teal-500', bg:'bg-blue-50', dot:'bg-teal-500', text:'text-teal-700', ring:'ring-teal-200' },
   },
   {
     key: 'hospice', label: 'Hospice Care',
@@ -94,7 +94,7 @@ const CARE_SETTINGS = [
   {
     key: 'long_term_residential', label: 'Residential / Nursing Home',
     icon: BedDouble, description: 'Living in a nursing home or long-term care facility',
-    accent: { border:'border-violet-500', bg:'bg-violet-50', dot:'bg-violet-500', text:'text-violet-700', ring:'ring-violet-200' },
+    accent: { border:'border-teal-500', bg:'bg-violet-50', dot:'bg-teal-500', text:'text-teal-700', ring:'ring-violet-200' },
   },
 ];
 

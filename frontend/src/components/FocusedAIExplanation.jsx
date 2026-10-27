@@ -1,4 +1,4 @@
-/**
+﻿/**
  * FocusedAIExplanation — Context-specific clinical AI explanation modal
  * ======================================================================
  * Used from Alerts page when a clinician clicks "Explain" on a specific alert.
@@ -130,8 +130,8 @@ export default function FocusedAIExplanation({ data, onClose }) {
         <div className="rounded-lg border border-violet-200 overflow-hidden">
           <div className="flex items-center gap-2.5 px-4 py-2.5 bg-violet-50 border-b border-violet-200">
             <span className="w-1 h-4 rounded-full bg-violet-400 flex-shrink-0" />
-            <Brain size={12} className="text-violet-600 flex-shrink-0" />
-            <span className="text-[11px] font-bold text-violet-700  select-none">Why is this clinically concerning?</span>
+            <Brain size={12} className="text-teal-600 flex-shrink-0" />
+            <span className="text-[11px] font-bold text-teal-700  select-none">Why is this clinically concerning?</span>
           </div>
           <div className="px-5 py-4 bg-white">
             <div className="pl-4 border-l-2 border-violet-200">
@@ -242,9 +242,9 @@ export default function FocusedAIExplanation({ data, onClose }) {
                       className="overflow-hidden space-y-2">
                       <textarea value={note} onChange={e => setNote(e.target.value)} rows={2}
                         placeholder="What would make this explanation more useful? (optional)"
-                        className="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100 resize-none transition-all" />
+                        className="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-violet-100 resize-none transition-all" />
                       <button onClick={submitFeedback} disabled={submitting}
-                        className="w-full py-2.5 bg-violet-700 hover:bg-violet-800 text-white font-bold rounded-xl disabled:opacity-50 transition-colors text-sm shadow-sm">
+                        className="w-full py-2.5 bg-teal-700 hover:bg-violet-800 text-white font-bold rounded-xl disabled:opacity-50 transition-colors text-sm shadow-sm">
                         {submitting ? 'Submitting…' : 'Submit Feedback'}
                       </button>
                     </motion.div>

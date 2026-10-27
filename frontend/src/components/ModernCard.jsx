@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 
 // Grain texture as a constant — keeps JSX clean and avoids parser issues
 const GRAIN_BG = {
@@ -272,7 +272,7 @@ export function InfoCard({ title, children, variant = 'info', className = '' }) 
 }
 
 // ─── StatCard — legacy compat ─────────────────────────────────────────────────
-export function StatCard({ title, value, icon: Icon, color = 'bg-blue-500', trend, className = '' }) {
+export function StatCard({ title, value, icon: Icon, color = 'bg-teal-500', trend, className = '' }) {
   return (
     <ModernCard elevated className={className}>
       <div className="p-3">

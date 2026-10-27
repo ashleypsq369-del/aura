@@ -135,7 +135,7 @@ export default function MDTMeetingLog() {
         </button>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Users className="w-6 h-6 text-blue-600" />
+            <Users className="w-6 h-6 text-teal-600" />
             MDT Meeting Log
           </h1>
           {patient && <p className="text-slate-500 dark:text-slate-400 text-sm">{patient.full_name}</p>}
@@ -159,7 +159,7 @@ export default function MDTMeetingLog() {
                     </span>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                       m.meeting_type === 'urgent' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
-                      m.meeting_type === 'family_meeting' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                      m.meeting_type === 'family_meeting' ? 'bg-blue-100 text-teal-700 dark:bg-blue-900/30 dark:text-blue-300' :
                       'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
                     }`}>
                       {MEETING_TYPES.find(t => t.value === m.meeting_type)?.label || m.meeting_type}
@@ -221,7 +221,7 @@ export default function MDTMeetingLog() {
             </Field>
             <div className="flex items-end gap-3">
               <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                <input type="checkbox" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-blue-600" />
+                <input type="checkbox" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
                 Family member(s) present
               </label>
             </div>
@@ -248,7 +248,7 @@ export default function MDTMeetingLog() {
               </div>
             ))}
           </div>
-          <button type="button" onClick={addAttendee} className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          <button type="button" onClick={addAttendee} className="flex items-center gap-2 text-sm text-teal-600 dark:text-blue-400 hover:underline">
             <Plus className="w-3.5 h-3.5" /> Add attendee
           </button>
         </Section>

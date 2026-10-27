@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AlertDialog.jsx - WCAG 2.1 AA destructive confirmation using Radix
  * ==================================================================
  * Use this instead of window.confirm() for:
@@ -41,7 +41,7 @@ export default function AlertDialog({
   const iconConfig = {
     danger:  { icon: AlertTriangle, iconClass: 'text-red-600',   iconBg: 'bg-red-100',   btnClass: 'bg-red-600 hover:bg-red-700 focus:ring-red-500'   },
     warning: { icon: AlertTriangle, iconClass: 'text-amber-600', iconBg: 'bg-amber-100', btnClass: 'bg-amber-600 hover:bg-amber-700 focus:ring-amber-500' },
-    info:    { icon: Info,          iconClass: 'text-blue-600',  iconBg: 'bg-blue-100',  btnClass: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'   },
+    info:    { icon: Info,          iconClass: 'text-teal-600',  iconBg: 'bg-blue-100',  btnClass: 'bg-teal-600 hover:bg-teal-700 focus:ring-teal-500'   },
   }[variant] || iconConfig.danger;
 
   const Icon = iconConfig.icon;

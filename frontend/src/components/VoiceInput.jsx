@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+﻿/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +98,7 @@ export default function VoiceInput({
           ${buttonClassName || 'p-3 rounded-lg border-2 transition-all'}
           ${isListening 
             ? 'bg-red-500 border-red-600 text-white' 
-            : 'bg-blue-500 border-blue-600 text-white hover:bg-blue-600'
+            : 'bg-teal-500 border-teal-600 text-white hover:bg-teal-600'
           }
         `}
         title={isListening ? 'Stop recording' : 'Start voice input'}
@@ -137,8 +137,8 @@ export default function VoiceInput({
               {/* Listening State */}
               {isListening && !error && (
                 <div className="flex items-center space-x-2">
-                  <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-                  <span className="text-sm font-medium text-blue-600">
+                  <Loader2 className="w-4 h-4 text-teal-600 animate-spin" />
+                  <span className="text-sm font-medium text-teal-600">
                     Listening...
                   </span>
                 </div>

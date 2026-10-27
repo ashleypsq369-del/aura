@@ -170,7 +170,7 @@ function ShapBars({ features, shapAvailable }) {
       <div className="flex items-center gap-2 pb-1">
         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
           shapAvailable
-            ? 'bg-violet-600 text-white'
+            ? 'bg-teal-600 text-white'
             : 'bg-amber-500 text-white'
         }`}>
           {shapAvailable ? 'XGBoost SHAP' : 'Feature Importance'}
@@ -643,7 +643,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
             {/* -- AI EXPLANATION -- */}
             {innerTab === 'shap' && (<>
               <div className="flex items-center gap-2 px-1">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-violet-600 text-white':'bg-amber-500 text-white'}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-teal-600 text-white':'bg-amber-500 text-white'}`}>
                   {sortedTasks.some(([,t])=>t.shap_available)?'XGBoost SHAP':'Feature Importance'}
                 </span>
                 <p className="text-[10px] text-slate-400">Factors driving this risk prediction</p>
@@ -687,7 +687,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
             {innerTab === 'timeline' && (
               !deterioration ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-10">
-                  <Loader2 size={20} className="animate-spin text-violet-400" />
+                  <Loader2 size={20} className="animate-spin text-teal-400" />
                   <p className="text-sm text-slate-400">Loading deterioration analysis—</p>
                 </div>
               ) : (
@@ -788,7 +788,7 @@ function DrugInteractionsTab() {
 
   if (isLoading) return (
     <div className="flex flex-col items-center justify-center py-20 gap-3">
-      <Loader2 size={24} className="animate-spin text-violet-500" />
+      <Loader2 size={24} className="animate-spin text-teal-500" />
       <p className="text-sm text-slate-400">Scanning all patient medications—</p>
     </div>
   );
@@ -901,7 +901,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       {distData.length > 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
-            <BarChart2 size={12} className="text-violet-500" /> Patient Risk Distribution
+            <BarChart2 size={12} className="text-teal-500" /> Patient Risk Distribution
           </p>
           <ResponsiveContainer width="100%" height={130}>
             <BarChart data={distData} barCategoryGap="30%">
@@ -920,7 +920,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       {mlStatus && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
-            <Cpu size={12} className="text-violet-500" /> Model Health
+            <Cpu size={12} className="text-teal-500" /> Model Health
           </p>
           <div className="space-y-2.5">
             {[
@@ -936,7 +936,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
             {mlStatus.loaded_tasks?.length > 0 && (
               <div className="flex flex-wrap gap-1 pt-1">
                 {mlStatus.loaded_tasks.map(t => (
-                  <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-100">
+                  <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-teal-700 border border-violet-100">
                     {TASK_SHORT[t] || t}
                   </span>
                 ))}
@@ -949,7 +949,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
-            <Beaker size={15} className="text-violet-600" />
+            <Beaker size={15} className="text-teal-600" />
           </div>
           <div>
             <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Proactive Risk Scan</p>
@@ -1147,7 +1147,7 @@ export default function AIInsights() {
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Search patients, diagnoses, concerns—"
-                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 outline-none text-sm shadow-sm" />
+                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
             </div>
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 flex-shrink-0">
               <ListFilter size={12} className="text-slate-400 ml-1" />
@@ -1178,7 +1178,7 @@ export default function AIInsights() {
               <div className="relative w-20 h-20">
                 <div className="w-20 h-20 rounded-full border-4 border-violet-100 border-t-violet-600 animate-spin" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Brain size={24} className="text-violet-600" />
+                  <Brain size={24} className="text-teal-600" />
                 </div>
               </div>
               <div className="text-center">

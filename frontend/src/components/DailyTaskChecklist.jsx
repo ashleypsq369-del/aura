@@ -1,4 +1,4 @@
-/**
+﻿/**
  * DailyTaskChecklist
  * ==================
  * Displays the patient's daily care task checklist with completion status.
@@ -50,8 +50,8 @@ const TYPE_CFG = {
   },
   appointment: {
     label:     'Appointment',
-    dotColor:  'bg-blue-500',
-    badgeCls:  'bg-blue-600 text-white',
+    dotColor:  'bg-teal-500',
+    badgeCls:  'bg-teal-600 text-white',
     ringColor: 'ring-blue-200',
   },
 };
@@ -265,13 +265,13 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
               {appts.map(task => (
                 <div key={task.id}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                  <Calendar size={16} className="text-blue-600 flex-shrink-0" />
+                  <Calendar size={16} className="text-teal-600 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-blue-800 dark:text-blue-200 truncate">{task.name}</p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-0.5">{task.description}</p>
+                    <p className="text-xs text-teal-600 dark:text-blue-400 mt-0.5">{task.description}</p>
                   </div>
                   <button onClick={() => navigate(task.link)}
-                    className="flex-shrink-0 px-2.5 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition">
+                    className="flex-shrink-0 px-2.5 py-1 bg-teal-600 text-white rounded-lg text-xs font-bold hover:bg-teal-700 transition">
                     View
                   </button>
                 </div>

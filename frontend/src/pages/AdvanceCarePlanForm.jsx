@@ -220,7 +220,7 @@ export default function AdvanceCarePlanForm() {
                   onClick={() => set('preferred_place_of_death', opt.toLowerCase().replace(/ \/ /, '_').replace(/ /g, '_'))}
                   className={`px-3 py-1.5 rounded-full text-sm border-2 transition ${
                     form.preferred_place_of_death === opt.toLowerCase().replace(/ \/ /, '_').replace(/ /g, '_')
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                      ? 'border-teal-500 bg-blue-50 dark:bg-blue-900/30 text-teal-700 dark:text-blue-300'
                       : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-blue-300'
                   }`}
                 >

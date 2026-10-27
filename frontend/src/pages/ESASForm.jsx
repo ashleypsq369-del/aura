@@ -252,7 +252,7 @@ export default function ESASForm() {
               id="proxy"
               checked={completedByProxy}
               onChange={(e) => setCompletedByProxy(e.target.checked)}
-              className="w-4 h-4 text-blue-600 rounded"
+              className="w-4 h-4 text-teal-600 rounded"
             />
             <label htmlFor="proxy" className="text-sm font-semibold text-slate-900">
               Completed by proxy (nurse, family member)
@@ -269,7 +269,7 @@ export default function ESASForm() {
                 value={proxyRelationship}
                 onChange={(e) => setProxyRelationship(e.target.value)}
                 placeholder="e.g., Spouse, Daughter, Nurse"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-teal-500 focus:outline-none"
                 required={completedByProxy}
               />
             </div>
@@ -291,7 +291,7 @@ export default function ESASForm() {
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             placeholder="Any additional observations or context..."
-            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none"
+            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-teal-500 focus:outline-none"
           />
         </motion.div>
 

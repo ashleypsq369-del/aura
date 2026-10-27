@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Search, UserPlus, Loader2, CheckCircle, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,7 +11,7 @@ import { API_URL } from '../api/client';
 const ROLE_COLORS = {
   clinician: 'bg-teal-100 text-teal-700',
   caregiver: 'bg-purple-100 text-purple-700',
-  patient:   'bg-blue-100 text-blue-700',
+  patient:   'bg-blue-100 text-teal-700',
   family:    'bg-rose-100 text-rose-700',
   admin:     'bg-slate-100 text-slate-600',
   nurse:     'bg-cyan-100 text-cyan-700',

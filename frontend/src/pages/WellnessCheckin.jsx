@@ -38,7 +38,7 @@ const ITEMS = [
 
 const COLORS = {
   rose:    { bg: 'bg-rose-500',    light: 'bg-rose-50',    border: 'border-rose-200',    text: 'text-rose-700',    fill: '#f43f5e' },
-  indigo:  { bg: 'bg-indigo-500',  light: 'bg-indigo-50',  border: 'border-indigo-200',  text: 'text-indigo-700',  fill: '#6366f1' },
+  indigo:  { bg: 'bg-teal-500',  light: 'bg-indigo-50',  border: 'border-indigo-200',  text: 'text-teal-700',  fill: '#6366f1' },
   amber:   { bg: 'bg-amber-500',   light: 'bg-amber-50',   border: 'border-amber-200',   text: 'text-amber-700',   fill: '#f59e0b' },
   purple:  { bg: 'bg-purple-500',  light: 'bg-purple-50',  border: 'border-purple-200',  text: 'text-purple-700',  fill: '#a855f7' },
   orange:  { bg: 'bg-orange-500',  light: 'bg-orange-50',  border: 'border-orange-200',  text: 'text-orange-700',  fill: '#f97316' },
@@ -212,7 +212,7 @@ export default function WellnessCheckin() {
             const friendlyLevel = {
               critical: { label: 'Your health needs attention today', color: 'bg-rose-50 border-rose-200', text: 'text-rose-800', dot: 'bg-rose-500 animate-pulse', emoji: '🔴' },
               high:     { label: 'Worth keeping an eye on', color: 'bg-amber-50 border-amber-200', text: 'text-amber-800', dot: 'bg-amber-500', emoji: '🟡' },
-              moderate: { label: 'Managing reasonably well', color: 'bg-blue-50 border-blue-200', text: 'text-blue-800', dot: 'bg-blue-400', emoji: '🔵' },
+              moderate: { label: 'Managing reasonably well', color: 'bg-blue-50 border-blue-200', text: 'text-blue-800', dot: 'bg-teal-400', emoji: '🔵' },
               low:      { label: 'Feeling quite well today', color: 'bg-emerald-50 border-emerald-200', text: 'text-emerald-800', dot: 'bg-emerald-500', emoji: '🟢' },
             }[mlRisk.overall_level] || { label: 'Check-in recorded', color: 'bg-slate-50 border-slate-200', text: 'text-slate-700', dot: 'bg-slate-400', emoji: '⚪' };
 
