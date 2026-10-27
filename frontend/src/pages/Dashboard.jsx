@@ -435,25 +435,23 @@ function FamilyDashboard({ user, summary, navigate }) {
           icon={Heart}
         />
 
-        {/* Feature 4: Last visit hero card */}
+        {/* Feature 4: Care Status hero — last visit + quick actions */}
         {patientId && (
           <FamilyDashboardHero patientId={patientId} patientName={summary?.patient?.full_name} />
         )}
+
+        {/* Quick navigation ImageCards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => chatWithCareTeam()}              color="#be123c" />
-          <ImageCard image="/resources/african/african-memory.jpg"  icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#7c3aed" />
-          <ImageCard image="/resources/african/african-medical-reading.jpg"     icon={BookOpen}      title="Resources"      description="Caregiver support guides" onClick={() => navigate('/resources')}          color="#1d4ed8" />
-          <ImageCard image="/resources/african/african-community.jpg"     icon={Globe}         title="Community"      description="Connect with others"      onClick={() => navigate('/community')}          color="#0f766e" />
-          <ImageCard image="/resources/african/african-appointment.jpg"  icon={Calendar}      title="Appointments"   description="Upcoming care visits"     onClick={() => navigate('/appointments')}       color="#0369a1" />
-          <ImageCard image="/resources/african/african-family-care.jpg"       icon={MapPin}        title="Care Journey"   description="Track their journey"      onClick={() => navigate('/continuity-bridge')}  color="#166534" />
-          <ImageCard image="/resources/african/journal-writing.jpg"       icon={FileText}      title="Grief Journal"  description="Your private journal"     onClick={() => navigate('/journal')}            color="#4c1d95" />
-          <ImageCard image="/resources/african/african-grief-support.jpg"     icon={Activity}      title="Bereavement"    description="Support resources"        onClick={() => navigate('/bereavement-support')} color="#9f1239" />
+          <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => chatWithCareTeam()}              color="#0d9488" />
+          <ImageCard image="/resources/african/african-appointment.jpg"     icon={Calendar}      title="Appointments"   description="Upcoming care visits"     onClick={() => navigate('/appointments')}       color="#0891b2" />
+          <ImageCard image="/resources/african/african-memory.jpg"          icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#059669" />
+          <ImageCard image="/resources/african/african-medical-reading.jpg" icon={BookOpen}      title="Resources"      description="Caregiver support guides" onClick={() => navigate('/resources')}          color="#0d9488" />
+          <ImageCard image="/resources/african/african-community.jpg"       icon={Globe}         title="Community"      description="Connect with others"      onClick={() => navigate('/community')}          color="#0891b2" />
+          <ImageCard image="/resources/african/african-family-care.jpg"     icon={MapPin}        title="Care Journey"   description="Track their journey"      onClick={() => navigate('/continuity-bridge')}  color="#059669" />
+          <ImageCard image="/resources/african/journal-writing.jpg"         icon={FileText}      title="Grief Journal"  description="Your private journal"     onClick={() => navigate('/journal')}            color="#0d9488" />
+          <ImageCard image="/resources/african/african-grief-support.jpg"   icon={Activity}      title="Bereavement"    description="Support resources"        onClick={() => navigate('/bereavement-support')} color="#e11d48" />
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard label="Care Updates"  value={events.length || summary?.stats?.recent_updates || 0}  icon={Heart}         variant="red"    onClick={() => navigate('/continuity-bridge')} />          <StatCard label="Messages"      value={summary?.stats?.unread_messages ?? 0}                   icon={MessageSquare} variant="blue"   onClick={() => navigate('/messages')} />
-          <StatCard label="Appointments"  value={summary?.stats?.upcoming_appointments ?? 0}             icon={Calendar}      variant="purple" onClick={() => navigate('/appointments')} />
-          <StatCard label="Memories"      value={summary?.stats?.memory_count ?? 0}                     icon={Activity}      variant="teal"   onClick={() => navigate('/memory-vault')} />
-        </div>
+        {/* StatCard row REMOVED — data is shown in the Care Status hero above */}
 
         {/* Daily task checklist for family — shows appointments + optional tasks */}
         <TaskStatusBar />

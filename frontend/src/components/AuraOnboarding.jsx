@@ -158,15 +158,21 @@ export default function AuraOnboarding() {
     setStepState(n);
   }, [role]);
 
+  /* ── Session-level dismissed guard — prevents tour re-showing after skip in same session ── */
+  const [tourDismissedThisSession, setTourDismissedThisSession] = useState(false);
+
   /* Start tour once per login — fires when BOTH user.id AND role are known */
   useEffect(() => {
     // Wait until auth is fully resolved (both id and role populated)
     if (!user?.id || !user?.role) return;
 
+    // Already dismissed in this browser session — never show again until page reload
+    if (tourDismissedThisSession) return;
+
     const currentRole = user.role;
     const currentSteps = TOURS[currentRole] || TOURS.patient;
 
-    // Already done? Never show again.
+    // Already done in localStorage? Never show again.
     const done = localStorage.getItem(TOUR_KEY(currentRole));
     if (done) return;
 
@@ -189,10 +195,8 @@ export default function AuraOnboarding() {
 
     setTimeout(() => setShowTour(true), 600);
 
-  // Depend on BOTH id AND role — this fires once when the real user object arrives,
-  // and never re-fires just because the route changes.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, user?.role]);
+  }, [user?.id, user?.role, tourDismissedThisSession]);
 
   /* Listen for restart event */
   useEffect(() => {
@@ -240,9 +244,10 @@ export default function AuraOnboarding() {
     const currentRole = user?.role;
     if (!currentRole) return;
     if (isLast) {
-      // Done — mark permanent, clean up session
+      // Done — mark permanent, clean up session, guard against re-show
       localStorage.setItem(TOUR_KEY(currentRole), '1');
       sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
+      setTourDismissedThisSession(true);
       setShowTour(false);
       return;
     }
@@ -273,8 +278,12 @@ export default function AuraOnboarding() {
   const skip = useCallback(() => {
     const currentRole = user?.role;
     if (!currentRole) return;
+    // Persist permanently in localStorage
     localStorage.setItem(TOUR_KEY(currentRole), '1');
+    // Also clear session step so it can't resume
     sessionStorage.removeItem(TOUR_STEP_KEY(currentRole));
+    // Guard against the useEffect re-showing the tour in the same session
+    setTourDismissedThisSession(true);
     setShowTour(false);
     setSkipConfirm(false);
   }, [user?.role]);
@@ -319,7 +328,7 @@ export default function AuraOnboarding() {
               }}>
 
               {/* Progress bar */}
-              <div className="h-1 w-full bg-slate-100 dark:bg-slate-700">
+              <div className="h-1 w-full" style={{ background: 'rgba(13,148,136,0.15)' }}>
                 <div className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${((step+1)/steps.length)*100}%`, background:'linear-gradient(90deg,#0d9488,#0369a1)' }}/>
               </div>
@@ -328,22 +337,23 @@ export default function AuraOnboarding() {
               <AnimatePresence>
                 {skipConfirm && (
                   <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                    className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-white/95 dark:bg-slate-800/98 backdrop-blur-sm">
-                    <p className="text-sm font-bold text-slate-900 dark:text-white text-center px-4">End the tour?</p>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-300 text-center px-6 leading-snug">
+                    className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl backdrop-blur-sm"
+                    style={{ background: 'rgba(240,253,250,0.97)' }}>
+                    <p className="text-sm font-bold text-center px-4" style={{ color: '#071520' }}>End the tour?</p>
+                    <p className="text-[11px] text-center px-6 leading-snug" style={{ color: '#1e4f6a' }}>
                       You can restart it anytime from the avatar menu.
                     </p>
                     <div className="flex gap-2">
                       <button onClick={() => setSkipConfirm(false)}
                         className="px-4 py-1.5 rounded-xl text-xs font-semibold transition-colors"
-                        style={{ background: '#e2e8f0', color: '#334155' }}
+                        style={{ background: '#e2e8f0', color: '#0b2235' }}
                         onMouseEnter={e => e.currentTarget.style.background = '#cbd5e1'}
                         onMouseLeave={e => e.currentTarget.style.background = '#e2e8f0'}>
                         Keep going
                       </button>
                       <button onClick={skip}
                         className="px-4 py-1.5 rounded-xl text-xs font-bold text-white transition-colors"
-                        style={{background:'#ef4444'}}>
+                        style={{ background: '#ef4444' }}>
                         End tour
                       </button>
                     </div>
@@ -361,18 +371,21 @@ export default function AuraOnboarding() {
 
                 {/* Text */}
                 <motion.div key={step} initial={{opacity:0,x:8}} animate={{opacity:1,x:0}} transition={{duration:0.18}} className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-slate-900 leading-tight">{current.title}</p>
-                  <p className="text-[11px] text-slate-600 leading-snug mt-0.5 line-clamp-2">{current.body}</p>
+                  <p className="text-xs font-bold leading-tight" style={{ color: '#071520' }}>{current.title}</p>
+                  <p className="text-[11px] leading-snug mt-0.5 line-clamp-2" style={{ color: '#1e4f6a' }}>{current.body}</p>
                 </motion.div>
               </div>
 
               {/* Footer controls */}
               <div className="flex items-center justify-between px-4 pb-3 gap-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-500 font-medium tabular-nums">{step+1}/{steps.length}</span>
+                  <span className="text-[10px] font-medium tabular-nums" style={{ color: '#2a6080' }}>{step+1}/{steps.length}</span>
                   {step > 0 && (
                     <button onClick={goBack}
-                      className="flex items-center gap-0.5 text-[11px] text-slate-500 hover:text-slate-700 transition-colors">
+                      className="flex items-center gap-0.5 text-[11px] transition-colors"
+                      style={{ color: '#2a6080' }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#071520'}
+                      onMouseLeave={e => e.currentTarget.style.color = '#2a6080'}>
                       <ChevronLeft size={11}/>Back
                     </button>
                   )}
@@ -380,7 +393,10 @@ export default function AuraOnboarding() {
                 <div className="flex items-center gap-2">
                   {!isLast && (
                     <button onClick={requestSkip}
-                      className="text-[11px] text-slate-400 hover:text-red-500 transition-colors px-1.5 py-1 rounded-lg hover:bg-red-50">
+                      className="text-[11px] transition-colors px-1.5 py-1 rounded-lg"
+                      style={{ color: '#3a7592' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#3a7592'; e.currentTarget.style.background = 'transparent'; }}>
                       End tour
                     </button>
                   )}
