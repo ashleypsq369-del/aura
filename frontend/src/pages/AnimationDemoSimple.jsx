@@ -41,7 +41,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-teal-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-teal-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-teal-700">✨ 1. Page Transition</h2>
             <p className="text-gray-600 mb-3">
@@ -58,7 +58,7 @@ export default function AnimationDemoSimple() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-purple-300 cursor-pointer"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-purple-300 cursor-pointer"
           >
             <h2 className="text-2xl font-bold mb-3 text-purple-700">🎯 2. Hover Effect</h2>
             <p className="text-gray-600 mb-3">
@@ -74,7 +74,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-blue-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-blue-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-teal-700">🔢 3. Counting Animation</h2>
             <div className="text-center mb-4">
@@ -94,7 +94,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-green-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-green-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-green-700">📊 4. Progress Bar</h2>
             <div className="space-y-3 mb-3">
@@ -120,7 +120,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-red-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-red-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-red-700">❤️ 5. Heartbeat Effect</h2>
             <div className="flex items-center justify-center py-6">
@@ -147,7 +147,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-amber-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-amber-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-amber-700">💓 6. Pulsing Vital</h2>
             <div className="grid grid-cols-2 gap-3">
@@ -177,7 +177,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-indigo-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-indigo-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-teal-700">📋 7. Staggered List</h2>
             {['Check-in', 'Vitals', 'Medication', 'Notes'].map((item, i) => (
@@ -199,7 +199,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-pink-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-pink-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-pink-700">🔘 8. Interactive Button</h2>
             <motion.button
@@ -220,7 +220,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.9, duration: 0.4 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-orange-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-orange-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-orange-700">⚠️ 9. Alert Animation</h2>
             <motion.div
@@ -239,7 +239,7 @@ export default function AnimationDemoSimple() {
           </motion.div>
 
           {/* 10. CSS Hover Effects */}
-          <div className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-cyan-300 animate-fade-in">
+          <div className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-cyan-300 animate-fade-in">
             <h2 className="text-2xl font-bold mb-3 text-cyan-700">🎨 10. CSS Animations</h2>
             <div className="space-y-2">
               <div className="p-3 bg-cyan-50 rounded hover-lift cursor-pointer">
@@ -254,7 +254,7 @@ export default function AnimationDemoSimple() {
           {/* 11. Scroll Animation */}
           <div
             data-aos="zoom-in"
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-lime-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-lime-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-lime-700">📜 11. Scroll Animation</h2>
             <p className="text-gray-600">
@@ -270,7 +270,7 @@ export default function AnimationDemoSimple() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
-            className="bg-[#e8fafa] p-6 rounded-xl shadow-lg border-4 border-slate-300"
+            className="bg-slate-50 p-6 rounded-xl shadow-lg border-4 border-slate-300"
           >
             <h2 className="text-2xl font-bold mb-3">⏳ 12. Loading Skeleton</h2>
             {[1, 2, 3].map(i => (
@@ -318,7 +318,7 @@ export default function AnimationDemoSimple() {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#e8fafa] rounded-2xl p-6 max-w-md w-full"
+            className="bg-slate-50 rounded-2xl p-6 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-2xl font-bold mb-3">Modal with Animation!</h2>

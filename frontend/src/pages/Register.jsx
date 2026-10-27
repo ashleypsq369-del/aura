@@ -173,7 +173,7 @@ function CountrySelector({ selected, onChange }) {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1.5 h-11 px-3 border-2 border-slate-200 rounded-xl bg-[#e8fafa] hover:border-teal-400 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
+        className="flex items-center gap-1.5 h-11 px-3 border-2 border-slate-200 rounded-xl bg-slate-50 hover:border-teal-400 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
         aria-haspopup="listbox"
         aria-label={`Phone country: ${selected.name} ${selected.dial}`}
       >
@@ -190,7 +190,7 @@ function CountrySelector({ selected, onChange }) {
             animate={{ opacity:1, y:0,  scale:1    }}
             exit  ={{ opacity:0, y:-6, scale:0.97 }}
             transition={{ duration:0.15 }}
-            className="absolute top-full left-0 mt-1.5 w-72 bg-[#e8fafa] border border-slate-200 rounded-2xl shadow-2xl z-[200] overflow-hidden"
+            className="absolute top-full left-0 mt-1.5 w-72 bg-slate-50 border border-slate-200 rounded-2xl shadow-2xl z-[200] overflow-hidden"
             role="listbox"
           >
             {/* Search bar */}
@@ -277,7 +277,7 @@ const inputBorder = (err) =>
     : 'border-slate-200 focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/15';
 
 const inputWrap = (err) =>
-  `flex items-center border-2 rounded-xl overflow-hidden bg-[#e8fafa] transition-all ${inputBorder(err)}`;
+  `flex items-center border-2 rounded-xl overflow-hidden bg-slate-50 transition-all ${inputBorder(err)}`;
 
 function IconSlot({ err, children }) {
   return (
@@ -422,12 +422,12 @@ export default function Register() {
         >
 
           {/* ── Card ───────────────────────────────────────────────────────── */}
-          <div className="bg-white/95 lg:bg-[#e8fafa] backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-slate-200 overflow-hidden">
+          <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-slate-200 overflow-hidden">
 
             {/* Header banner */}
             <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 bg-[#e8fafa] rounded-xl flex items-center justify-center shadow overflow-hidden flex-shrink-0">
+                <div className="w-11 h-11 bg-slate-50 rounded-xl flex items-center justify-center shadow overflow-hidden flex-shrink-0">
                   <img src="/logo.png" alt="Project Aura" className="w-10 h-10 object-contain" />
                 </div>
                 <div>
@@ -445,8 +445,8 @@ export default function Register() {
                   <div key={n} className={`flex items-center ${idx < 1 ? 'flex-1':''}`}>
                     <div className="flex items-center gap-2">
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all ${
-                        n < step  ? 'bg-[#e8fafa] text-teal-600'        :
-                        n === step? 'bg-[#e8fafa] text-teal-700 shadow' :
+                        n < step  ? 'bg-slate-50 text-teal-600'        :
+                        n === step? 'bg-slate-50 text-teal-700 shadow' :
                                     'bg-white/20 text-white/60'
                       }`}>
                         {n < step ? <CheckCircle size={14}/> : n}
@@ -456,7 +456,7 @@ export default function Register() {
                     {idx < 1 && (
                       <div className="flex-1 mx-3 h-px relative">
                         <div className="absolute inset-0 bg-white/20 rounded-full"/>
-                        <motion.div className="absolute inset-y-0 left-0 bg-[#e8fafa] rounded-full" animate={{ width: step > 1 ? '100%':'0%' }} transition={{ duration:0.4 }}/>
+                        <motion.div className="absolute inset-y-0 left-0 bg-slate-50 rounded-full" animate={{ width: step > 1 ? '100%':'0%' }} transition={{ duration:0.4 }}/>
                       </div>
                     )}
                   </div>
@@ -542,7 +542,7 @@ export default function Register() {
                     hint={!errors.phone ? 'Optional — used for appointment reminders only' : undefined}>
                     <div className="flex gap-2">
                       <CountrySelector selected={country} onChange={(c) => { setCountry(c); setField('phone',''); }}/>
-                      <div className={`flex-1 flex items-center border-2 rounded-xl overflow-hidden bg-[#e8fafa] transition-all ${inputBorder(errors.phone)}`}>
+                      <div className={`flex-1 flex items-center border-2 rounded-xl overflow-hidden bg-slate-50 transition-all ${inputBorder(errors.phone)}`}>
                         <IconSlot err={errors.phone}><Phone size={14}/></IconSlot>
                         <input
                           id="phone" type="tel" inputMode="numeric" autoComplete="tel-national"
@@ -612,7 +612,7 @@ export default function Register() {
                   <InputGroup id="role" label="I am registering as"
                     hint="Healthcare professionals are registered by your organisation's administrator">
                     <select id="role" value={form.role} onChange={e => setField('role', e.target.value)}
-                      className="w-full h-11 px-3 border-2 border-slate-200 rounded-xl text-sm text-slate-800 font-medium outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 bg-[#e8fafa] transition-all appearance-none cursor-pointer">
+                      className="w-full h-11 px-3 border-2 border-slate-200 rounded-xl text-sm text-slate-800 font-medium outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 bg-slate-50 transition-all appearance-none cursor-pointer">
                       <option value="patient">A patient</option>
                       <option value="family">A family member or carer</option>
                     </select>
@@ -652,7 +652,7 @@ export default function Register() {
                             className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                               sel
                                 ? `${a.border} ${a.bg} ring-2 ${a.ring}`
-                                : 'border-slate-200 bg-[#e8fafa] hover:border-slate-300 hover:bg-slate-50'
+                                : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-50'
                             }`}
                           >
                             {/* Icon circle */}
@@ -670,7 +670,7 @@ export default function Register() {
 
                             {/* Radio indicator */}
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                              sel ? `${a.border} bg-[#e8fafa]` : 'border-slate-300 bg-[#e8fafa]'
+                              sel ? `${a.border} bg-slate-50` : 'border-slate-300 bg-slate-50'
                             }`}>
                               {sel && <div className={`w-2.5 h-2.5 rounded-full ${a.dot}`}/>}
                             </div>

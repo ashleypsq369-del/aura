@@ -6,6 +6,7 @@ import {
   Globe, LogOut
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Switch from './ui/Switch';
 import SignOutModal from './SignOutModal';
 
 export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) {
@@ -127,7 +128,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-[#e8fafa] rounded-2xl shadow-2xl z-[70] flex flex-col"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-slate-50 rounded-2xl shadow-2xl z-[70] flex flex-col"
           >
             {/* Header */}
             <div className={`${
@@ -291,21 +292,14 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                           {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                           <div>
                             <p className="text-sm font-medium text-gray-900">Sound Effects</p>
-                            <p className="text-xs text-gray-500">Message sounds & alerts</p>
+                            <p className="text-xs text-gray-500">Message sounds &amp; alerts</p>
                           </div>
                         </div>
-                        <button
-                          onClick={handleSoundToggle}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            soundEnabled ? 'bg-teal-600' : 'bg-gray-300'
-                          }`}
-                        >
-                          <span
-                            className={`inline-block h-4 w-4 transform rounded-full bg-[#e8fafa] transition-transform ${
-                              soundEnabled ? 'translate-x-6' : 'translate-x-1'
-                            }`}
-                          />
-                        </button>
+                        <Switch
+                          checked={soundEnabled}
+                          onCheckedChange={handleSoundToggle}
+                          color="#0d9488"
+                        />
                       </div>
                     </div>
                   </div>
@@ -315,7 +309,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {/* Notifications Tab */}
               {activeTab === 'notifications' && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                     <div className="flex items-center gap-3">
                       <Bell size={20} />
                       <div>
@@ -323,18 +317,11 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                         <p className="text-xs text-gray-500">Receive chat notifications</p>
                       </div>
                     </div>
-                    <button
-                      onClick={handleNotificationToggle}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        notifications ? 'bg-teal-600' : 'bg-gray-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-[#e8fafa] transition-transform ${
-                          notifications ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
+                    <Switch
+                      checked={notifications}
+                      onCheckedChange={handleNotificationToggle}
+                      color="#0d9488"
+                    />
                   </div>
 
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">

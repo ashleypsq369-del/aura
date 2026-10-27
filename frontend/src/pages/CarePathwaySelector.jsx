@@ -125,7 +125,7 @@ export default function CarePathwaySelector() {
               {loadingOptions ? (
                 <div className="space-y-3">
                   {[1,2,3].map(i => (
-                    <div key={i} className="h-20 bg-[#e8fafa] dark:bg-slate-800 rounded-xl animate-pulse border border-slate-200 dark:border-slate-700" />
+                    <div key={i} className="h-20 bg-slate-50 dark:bg-slate-800 rounded-xl animate-pulse border border-slate-200 dark:border-slate-700" />
                   ))}
                 </div>
               ) : (
@@ -289,7 +289,7 @@ export default function CarePathwaySelector() {
                 onChange={e => setSelected(s => ({ ...s, primary_concern: e.target.value }))}
                 rows={4}
                 placeholder="e.g. My father has severe pain and difficulty moving. We need help with wound care and daily medication…"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-[#e8fafa] text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
               />
 
               <div className="flex gap-2">

@@ -102,7 +102,7 @@ export default function FormFileUpload({
                 return (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between p-2 bg-[#e8fafa] rounded border border-slate-200"
+                    className="flex items-center justify-between p-2 bg-slate-50 rounded border border-slate-200"
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <FileIcon size={16} className="text-teal-600 flex-shrink-0" />

@@ -133,7 +133,7 @@ export default function VoiceInput({
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-full mt-2 left-0 right-0 z-50"
           >
-            <div className="bg-[#e8fafa] rounded-lg shadow-lg border-2 border-slate-200 p-4">
+            <div className="bg-slate-50 rounded-lg shadow-lg border-2 border-slate-200 p-4">
               {/* Listening State */}
               {isListening && !error && (
                 <div className="flex items-center space-x-2">

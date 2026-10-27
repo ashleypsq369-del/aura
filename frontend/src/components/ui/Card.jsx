@@ -29,7 +29,7 @@ export const Card = forwardRef(({ className = '', children, onClick, ...props },
   <div
     ref={ref}
     className={`
-      bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm
+      bg-slate-50 rounded-2xl border border-slate-200 shadow-sm
       ${onClick ? 'cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-150' : ''}
       ${className}
     `}
@@ -102,7 +102,7 @@ export function StatCard({ label, value, icon: Icon, variant = 'teal', onClick, 
       data-tip={dataTip}
       className={`
         rounded-lg border px-4 py-3 flex items-center gap-3
-        transition-all duration-150 bg-[#e8fafa]
+        transition-all duration-150 bg-slate-50
         ${v.css}
         ${onClick ? 'cursor-pointer hover:shadow-sm hover:-translate-y-px' : ''}
         ${className}

@@ -147,7 +147,7 @@ export default function LegacySetup() {
     }
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[#e8fafa] rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">No Patient Linked</h2>
           <p className="text-gray-600 mb-4">
@@ -228,7 +228,7 @@ export default function LegacySetup() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#e8fafa] rounded-lg border border-slate-200 p-8 shadow-lg space-y-6"
+          className="bg-slate-50 rounded-lg border border-slate-200 p-8 shadow-lg space-y-6"
         >
           <h2 className="text-base font-semibold" className="text-purple-700">
             Consent & Permissions
@@ -391,7 +391,7 @@ export default function LegacySetup() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-[#e8fafa] rounded-lg border border-slate-200 p-8 shadow-lg"
+            className="bg-slate-50 rounded-lg border border-slate-200 p-8 shadow-lg"
           >
             <h2 className="text-base font-semibold mb-6" className="text-purple-700">
               Next Steps

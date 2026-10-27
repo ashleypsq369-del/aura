@@ -119,7 +119,7 @@ export default function GriefProgressTracker({ screeningData }) {
   return (
     <div className="space-y-6">
       {/* Grief Stages Timeline */}
-      <div className="bg-[#e8fafa] rounded-xl shadow-lg border-2 border-slate-200 p-6">
+      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
         <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
           <Heart size={24} className="text-purple-600" />
           Understanding Your Grief Journey
@@ -150,7 +150,7 @@ export default function GriefProgressTracker({ screeningData }) {
                   <div className={`p-3 rounded-full ${
                     isCurrentStage
                       ? `bg-${stage.color}-100 border-2 border-${stage.color}-400`
-                      : 'bg-[#e8fafa] border-2 border-slate-300'
+                      : 'bg-slate-50 border-2 border-slate-300'
                   }`}>
                     <Icon 
                       size={24} 
@@ -191,7 +191,7 @@ export default function GriefProgressTracker({ screeningData }) {
       </div>
 
       {/* Grief Screening */}
-      <div className="bg-[#e8fafa] rounded-xl shadow-lg border-2 border-slate-200 p-6">
+      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
         <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
           <Calendar size={24} className="text-purple-600" />
           Grief Check-In
@@ -257,7 +257,7 @@ export default function GriefProgressTracker({ screeningData }) {
       </div>
 
       {/* Journaling Section */}
-      <div className="bg-[#e8fafa] rounded-xl shadow-lg border-2 border-slate-200 p-6">
+      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
         <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
           <BookOpen size={24} className="text-purple-600" />
           Grief Journal
@@ -357,7 +357,7 @@ export default function GriefProgressTracker({ screeningData }) {
 
 function SelfCareCard({ title, description }) {
   return (
-    <div className="p-4 bg-[#e8fafa] rounded-lg border-2 border-teal-200">
+    <div className="p-4 bg-slate-50 rounded-lg border-2 border-teal-200">
       <p className="font-bold text-teal-900 mb-1">{title}</p>
       <p className="text-teal-700 text-sm">{description}</p>
     </div>

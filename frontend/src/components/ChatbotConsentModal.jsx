@@ -85,7 +85,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         </div>
 
         {/* Consent checkbox */}
-        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-slate-200 dark:border-slate-600 hover:border-teal-400 transition-colors bg-[#e8fafa] dark:bg-slate-800">
+        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-slate-200 dark:border-slate-600 hover:border-teal-400 transition-colors bg-slate-50 dark:bg-slate-800">
           <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded text-teal-600 border-slate-400 focus:ring-teal-500 cursor-pointer accent-teal-600"/>
           <span className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">

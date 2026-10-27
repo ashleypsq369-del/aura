@@ -361,7 +361,7 @@ export default function Layout({ children }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#e8fafa] rounded-2xl shadow-xl max-w-sm w-full p-8 text-center border border-[#EAEAE8]"
+              className="bg-slate-50 rounded-2xl shadow-xl max-w-sm w-full p-8 text-center border border-[#EAEAE8]"
             >
               <Loader2 className="w-12 h-12 text-teal-800 animate-spin mx-auto mb-4" />
               <h3 className="text-xl font-serif font-bold text-[#2C3531] mb-2">Signing Out</h3>

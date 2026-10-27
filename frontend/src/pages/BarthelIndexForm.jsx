@@ -262,7 +262,7 @@ export default function BarthelIndexForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center flex-shrink-0">
@@ -298,7 +298,7 @@ export default function BarthelIndexForm() {
                     </div>
                     {scores[item.key] === option.value && (
                       <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-[#e8fafa]"></div>
+                        <div className="w-2 h-2 rounded-full bg-slate-50"></div>
                       </div>
                     )}
                   </div>
@@ -353,7 +353,7 @@ export default function BarthelIndexForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

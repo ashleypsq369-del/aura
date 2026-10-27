@@ -162,7 +162,7 @@ export default function NotificationBell() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-[#e8fafa] rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
+              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-slate-50 rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
             >
               {/* Header */}
               <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-200 flex items-center justify-between">

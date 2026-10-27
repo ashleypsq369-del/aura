@@ -175,7 +175,7 @@ export default function ESASForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
@@ -244,7 +244,7 @@ export default function ESASForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <div className="flex items-center space-x-2 mb-4">
             <input
@@ -281,7 +281,7 @@ export default function ESASForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

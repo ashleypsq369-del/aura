@@ -118,7 +118,7 @@ export default function AdvanceCarePlanForm() {
   };
 
   const Section = ({ title, icon: Icon, color = 'teal', children }) => (
-    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
         <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
         <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>
@@ -135,7 +135,7 @@ export default function AdvanceCarePlanForm() {
     </div>
   );
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[#e8fafa] dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
   const selectCls = inputCls;
   const textareaCls = `${inputCls} resize-none`;
 

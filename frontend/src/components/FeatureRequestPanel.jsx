@@ -75,7 +75,7 @@ export default function FeatureRequestPanel() {
   if (hiddenFeatures.length === 0) return null;
 
   return (
-    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
@@ -165,7 +165,7 @@ export default function FeatureRequestPanel() {
                               onChange={e => setReason(e.target.value)}
                               rows={2}
                               placeholder="Why do you need access to this feature? (e.g. My doctor recommended I use the Memory Vault)"
-                              className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[#e8fafa] dark:bg-slate-800 dark:text-slate-100 resize-none"
+                              className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 resize-none"
                             />
                             <div className="flex gap-2">
                               <button

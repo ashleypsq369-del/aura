@@ -113,7 +113,7 @@ export default function DailyCareLog() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Care tasks checklist */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Check size={16} />Care Tasks Completed Today</h3>
           <div className="grid grid-cols-1 gap-2">
             {[...CARE_TASKS, ...customTasks].map(task => (
@@ -133,7 +133,7 @@ export default function DailyCareLog() {
         </div>
 
         {/* Patient status */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5 space-y-4">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5 space-y-4">
           <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2"><Heart size={16} />Patient Status</h3>
           
           <div>
@@ -178,7 +178,7 @@ export default function DailyCareLog() {
         </div>
 
         {/* Medication notes */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Pill size={16} />Medication Notes</h3>
           <textarea value={medNotes} onChange={e => setMedNotes(e.target.value)} rows={3}
             placeholder="e.g., Morphine 10mg given at 09:00. Patient refused afternoon dose. PRN used at 14:30 for breakthrough pain."
@@ -186,7 +186,7 @@ export default function DailyCareLog() {
         </div>
 
         {/* Concerns */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><AlertTriangle size={16} />Concerns / Changes</h3>
           <textarea value={concerns} onChange={e => setConcerns(e.target.value)} rows={3}
             placeholder="Any new symptoms, changes in condition, family concerns, safety issues, or anything the clinical team should know..."

@@ -75,7 +75,7 @@ export default function PreClinicChecklist() {
           <h2 className="text-base font-bold text-teal-900 mb-2">You're Ready!</h2>
           <p className="text-teal-700 mb-2">Pre-clinic checklist completed.</p>
           {nextAppt && (
-            <div className="bg-[#e8fafa] rounded-xl p-4 border border-teal-200 my-4 text-left">
+            <div className="bg-slate-50 rounded-xl p-4 border border-teal-200 my-4 text-left">
               <p className="text-sm font-bold text-teal-800">Your Next Appointment</p>
               <p className="text-sm text-slate-700 mt-1">{nextAppt.appointment_type} · {new Date(nextAppt.appointment_date).toLocaleString()}</p>
               <p className="text-sm text-slate-600">{nextAppt.location}</p>
@@ -94,7 +94,7 @@ export default function PreClinicChecklist() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl mx-auto px-4 py-6 space-y-5">
 
       {/* Header */}
-      <div className="bg-[#e8fafa] rounded-lg border border-slate-200 p-4">
+      <div className="bg-slate-50 rounded-lg border border-slate-200 p-4">
         <div className="flex items-center gap-3">
           <Stethoscope className="w-7 h-7 text-white" />
           <div>
@@ -120,7 +120,7 @@ export default function PreClinicChecklist() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Preparation checklist */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-1 flex items-center gap-2">
             <ClipboardList size={16} />Appointment Preparation
           </h3>
@@ -142,7 +142,7 @@ export default function PreClinicChecklist() {
         </div>
 
         {/* Pre-screen symptoms */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5 space-y-4">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5 space-y-4">
           <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
             <AlertCircle size={16} />How are you feeling today?
           </h3>

@@ -69,7 +69,7 @@ export default function ContinuityBridge() {
       />
 
       {/* -- Sticky tabs --------------------------------------------- */}
-      <div className="sticky top-0 z-20 bg-[#e8fafa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="sticky top-0 z-20 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {TABS.map(({ id, label, icon: Icon }) => (
@@ -120,7 +120,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
       {/* Stat strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {stats.map(({ label, value }) => (
-          <div key={label} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4 text-center">
+          <div key={label} className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-purple-700">{value}</p>
             <p className="text-xs text-slate-500 mt-1">{label}</p>
           </div>
@@ -158,7 +158,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
       </div>
 
       {/* Timeline */}
-      <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-5">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
         <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2"><Clock size={14} className="text-purple-500" /> How the Continuity Bridge Works</h3>
         <div className="space-y-4">
           {[
@@ -215,7 +215,7 @@ function LegacyTab({ patientId, name, isHeir }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {mediaTypes.map(({ icon: Icon, label, type }) => (
             <Link key={type} to="/memory-vault"
-              className="flex flex-col items-center gap-2 p-3 bg-[#e8fafa] border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
+              className="flex flex-col items-center gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all group">
               <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
                 <Icon size={16} className="text-purple-600" />
               </div>
@@ -230,14 +230,14 @@ function LegacyTab({ patientId, name, isHeir }) {
        entries.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {entries.slice(0, 9).map((m) => (
-            <div key={m.id} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4">
+            <div key={m.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4">
               <p className="text-xs text-slate-400 mb-1.5">{new Date(m.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</p>
               <p className="text-slate-700 text-sm line-clamp-4 leading-relaxed">{m.content}</p>
             </div>
           ))}
         </div>
       ) : (
-        <div className="bg-[#e8fafa] border border-dashed border-slate-300 rounded-2xl p-12 text-center">
+        <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-12 text-center">
           <Star size={28} className="mx-auto mb-3 text-slate-300" />
           <p className="text-sm font-medium text-slate-600 mb-1">No memories yet</p>
           <p className="text-xs text-slate-400">Start preserving moments that matter</p>
@@ -284,7 +284,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {messageTypes.map(({ icon: Icon, label, sub }) => (
             <Link key={label} to="/legacy-content"
-              className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:border-purple-300 hover:bg-purple-50 transition-all group">
+              className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center text-center gap-3 hover:border-purple-300 hover:bg-purple-50 transition-all group">
               <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center group-hover:bg-purple-200 transition-colors">
                 <Icon size={18} className="text-purple-600" />
               </div>
@@ -306,7 +306,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
             {isHeir ? 'Messages left for you' : 'Your prepared messages'}
           </h3>
           {messages.map((m) => (
-            <div key={m.id} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-5">
+            <div key={m.id} className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <p className="text-sm font-semibold text-slate-800">{m.title || 'Untitled message'}</p>
@@ -334,7 +334,7 @@ function FinalMessagesTab({ patientId, isHeir, isDeceased }) {
           ))}
         </div>
       ) : !isHeir ? (
-        <div className="bg-[#e8fafa] border border-dashed border-slate-300 rounded-2xl p-10 text-center">
+        <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-10 text-center">
           <MessageSquareHeart size={28} className="mx-auto mb-3 text-slate-300" />
           <p className="text-sm font-medium text-slate-600 mb-1">No messages yet</p>
           <p className="text-xs text-slate-400 mb-4">The words you leave behind are the greatest gift of all</p>
@@ -378,7 +378,7 @@ function MyJournalTab({ patientId }) {
         <p className="text-xs text-teal-700"><strong>Completely private.</strong> These entries are yours alone · separate from your legacy vault and not visible to heirs.</p>
       </div>
 
-      <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl overflow-hidden">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
           <Feather size={14} className="text-slate-500" />
           <span className="text-sm font-semibold text-slate-700">New Entry</span>
@@ -403,7 +403,7 @@ function MyJournalTab({ patientId }) {
           <h3 className="text-xs font-semibold text-slate-500 ">Your entries</h3>
           {entries.map((e) => (
             <motion.div key={e.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-[#e8fafa] border border-slate-200 rounded-xl p-5">
+              className="bg-slate-50 border border-slate-200 rounded-xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
                 <p className="text-xs text-slate-400">
@@ -439,7 +439,7 @@ function HeirsTab({ patientId, isHeir }) {
   const heirs = data?.heirs || [];
 
   if (isHeir) return (
-    <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-8 text-center">
+    <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center">
       <Key size={28} className="mx-auto mb-3 text-purple-400" />
       <p className="text-sm font-semibold text-slate-700 mb-1">You are a designated heir</p>
       <p className="text-xs text-slate-500">You have been granted access to this legacy by the patient or their care team.</p>
@@ -458,7 +458,7 @@ function HeirsTab({ patientId, isHeir }) {
       {heirs.length > 0 ? (
         <div className="space-y-3">
           {heirs.map((h) => (
-            <div key={h.id} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+            <div key={h.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
                 <span className="text-sm font-bold text-purple-700">{(h.heir_name || 'H')[0].toUpperCase()}</span>
               </div>
@@ -476,7 +476,7 @@ function HeirsTab({ patientId, isHeir }) {
           ))}
         </div>
       ) : (
-        <div className="bg-[#e8fafa] border border-dashed border-slate-300 rounded-2xl p-10 text-center">
+        <div className="bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-10 text-center">
           <UserCheck size={28} className="mx-auto mb-3 text-slate-300" />
           <p className="text-sm font-medium text-slate-600 mb-1">No heirs designated yet</p>
           <p className="text-xs text-slate-400 mb-4">Choose who will receive your legacy</p>

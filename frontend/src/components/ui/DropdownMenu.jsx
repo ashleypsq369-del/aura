@@ -43,7 +43,7 @@ export default function DropdownMenu({ trigger, items = [], align = 'end', sideO
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -6 }}
                 transition={{ duration: 0.14 }}
-                className="z-[9999] min-w-[200px] bg-[#e8fafa] rounded-xl shadow-2xl border border-slate-200 p-1.5 outline-none dropdown-menu-content"
+                className="z-[9999] min-w-[200px] bg-slate-50 rounded-xl shadow-2xl border border-slate-200 p-1.5 outline-none dropdown-menu-content"
               >
                 {items.map((item, i) => {
                   if (item.type === 'separator') {

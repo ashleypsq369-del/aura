@@ -100,7 +100,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative bg-[#e8fafa] rounded-2xl border border-slate-200 hover:border-teal-300 hover:shadow-md transition-all group"
+      className="relative bg-slate-50 rounded-2xl border border-slate-200 hover:border-teal-300 hover:shadow-md transition-all group"
     >
       <div className="flex items-center gap-3.5 p-4">
         {/* Avatar */}
@@ -205,7 +205,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className="absolute right-0 top-8 z-50 w-44 bg-[#e8fafa] rounded-xl shadow-xl border border-slate-200 overflow-hidden"
+                    className="absolute right-0 top-8 z-50 w-44 bg-slate-50 rounded-xl shadow-xl border border-slate-200 overflow-hidden"
                     onClick={e => e.stopPropagation()}
                   >
                     <button
@@ -262,7 +262,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
                           </button>
                           <button
                             onClick={() => setConfirmRemove(false)}
-                            className="flex-1 py-1 bg-[#e8fafa] border border-slate-200 text-slate-600 text-[11px] font-semibold rounded-lg hover:bg-slate-50 transition"
+                            className="flex-1 py-1 bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-semibold rounded-lg hover:bg-slate-50 transition"
                           >
                             Cancel
                           </button>

@@ -222,7 +222,7 @@ export default function CareSettings() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap transition-all ${
                 activeTab === tab.id
-                  ? 'bg-[#e8fafa] text-teal-700 shadow-md'
+                  ? 'bg-slate-50 text-teal-700 shadow-md'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
               }`}
             >
@@ -247,7 +247,7 @@ export default function CareSettings() {
           </div>
 
           {/* Distribution */}
-          <div className="bg-[#e8fafa] rounded-2xl p-6 border-2 border-slate-200 shadow-sm">
+          <div className="bg-slate-50 rounded-2xl p-6 border-2 border-slate-200 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
               <BarChart3 size={20} className="text-teal-600" />
               Patient Distribution Across Settings
@@ -367,7 +367,7 @@ export default function CareSettings() {
       ---------------------------------------------------------------------- */}
       {activeTab === 'matrix' && (
         <div className="space-y-5">
-          <div className="bg-[#e8fafa] rounded-2xl border-2 border-slate-200 shadow-sm p-5">
+          <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 shadow-sm p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <Users size={20} className="text-teal-600" />
@@ -506,7 +506,7 @@ export default function CareSettings() {
               )}
             </>
           ) : (
-            <div className="bg-[#e8fafa] rounded-2xl p-12 border border-slate-200 text-center">
+            <div className="bg-slate-50 rounded-2xl p-12 border border-slate-200 text-center">
               <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
                 <Stethoscope size={28} className="text-slate-400" />
               </div>
@@ -959,7 +959,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
             <div className="flex gap-2 mt-5">
               {actions.map(({ label, icon: AIcon, path }) => (
                 <button key={path} onClick={() => navigate(path)}
-                  className="flex items-center gap-1.5 bg-[#e8fafa] text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+                  className="flex items-center gap-1.5 bg-slate-50 text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
                   <AIcon size={13} />{label}
                 </button>
               ))}
@@ -970,7 +970,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
 
       {/* What to expect */}
       {bullets.length > 0 && (
-        <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-5">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
           <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
             <Info size={15} className="text-teal-500" /> What to expect in this setting
           </h3>
@@ -992,7 +992,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
 
 function SettingHistory({ history }) {
   return (
-    <div className="bg-[#e8fafa] rounded-2xl border-2 border-slate-200 p-5">
+    <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-5">
       <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
         <Clock size={18} className="text-teal-600" />
         Care Setting History
@@ -1039,7 +1039,7 @@ function SettingHistory({ history }) {
 
 function AssignPatientPanel({ patients, templates, assignForm, setAssignForm, assignPatientId, setAssignPatientId, onSubmit, isPending }) {
   return (
-    <div className="bg-[#e8fafa] rounded-2xl border-2 border-teal-200 shadow-sm p-6">
+    <div className="bg-slate-50 rounded-2xl border-2 border-teal-200 shadow-sm p-6">
       <h2 className="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
         <UserCheck size={20} className="text-teal-600" />
         Assign Patient to Care Setting
@@ -1208,7 +1208,7 @@ function ChangeRequestsPanel({ templates }) {
   };
 
   return (
-    <div className="bg-[#e8fafa] rounded-2xl border-2 border-slate-200 shadow-sm p-6">
+    <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 shadow-sm p-6">
       <div className="flex items-center gap-2 mb-5">
         <Bell size={20} className="text-amber-500" />
         <h2 className="text-lg font-bold text-slate-900">Care Setting Change Requests</h2>
@@ -1242,7 +1242,7 @@ function ChangeRequestsPanel({ templates }) {
                 </div>
                 <div className="flex items-center gap-2 mt-2 ml-10">
                   <span className="text-xs text-slate-500">Requesting:</span>
-                  <span className="text-xs font-semibold text-amber-700 bg-[#e8fafa] border border-amber-200 px-2 py-0.5 rounded-lg">
+                  <span className="text-xs font-semibold text-amber-700 bg-slate-50 border border-amber-200 px-2 py-0.5 rounded-lg">
                     {settingLabel(u.care_setting_change_request)}
                   </span>
                 </div>

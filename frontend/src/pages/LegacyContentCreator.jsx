@@ -179,7 +179,7 @@ export default function LegacyContentCreator() {
   if (!patientId && !isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[#e8fafa] rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <FileText className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             No Patient Linked
@@ -195,7 +195,7 @@ export default function LegacyContentCreator() {
   if (!hasConsent) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[#e8fafa] rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Consent Required
@@ -218,7 +218,7 @@ export default function LegacyContentCreator() {
   if (!hasHeirs) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[#e8fafa] rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Users className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Designate Heirs First
@@ -279,7 +279,7 @@ export default function LegacyContentCreator() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
-                  className="bg-[#e8fafa] rounded-lg border border-slate-200 p-6 shadow-md hover:shadow-lg transition relative group"
+                  className="bg-slate-50 rounded-lg border border-slate-200 p-6 shadow-md hover:shadow-lg transition relative group"
                 >
                   {/* Delete Button */}
                   {!item.is_delivered && (

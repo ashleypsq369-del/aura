@@ -223,7 +223,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-3 border-purple-300"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-3 border-purple-300"
         >
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -259,7 +259,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-3 border-amber-300"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-3 border-amber-300"
         >
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -294,7 +294,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-3">
             If you checked off any problems, how <strong>difficult</strong> have these problems made it for you to do your work, take care of things at home, or get along with other people?
@@ -322,7 +322,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Clinical Notes (Optional)
@@ -413,7 +413,7 @@ function QuestionItem({ question, value, onChange, isHighAlert, questionNumber }
                 ? isHighAlert
                   ? 'bg-red-600 text-white shadow-lg'
                   : 'bg-purple-600 text-white shadow-lg'
-                : 'bg-[#e8fafa] text-slate-700 hover:bg-slate-100 border border-slate-300'
+                : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-300'
             }`}
           >
             {option.label}

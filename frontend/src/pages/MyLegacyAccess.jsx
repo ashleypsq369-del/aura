@@ -77,7 +77,7 @@ export default function MyLegacyAccess() {
   // Error
   if (isError) return (
     <div className="min-h-full flex items-center justify-center">
-      <div className="bg-[#e8fafa] border border-red-200 rounded-2xl p-10 max-w-md text-center">
+      <div className="bg-slate-50 border border-red-200 rounded-2xl p-10 max-w-md text-center">
         <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
         <p className="text-slate-700 font-semibold">Unable to load legacy access</p>
         <p className="text-sm text-slate-400 mt-1">Please try again later or contact your care team.</p>
@@ -157,7 +157,7 @@ function ListView({ legacyAccess, onSelect }) {
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07 }}
               onClick={() => onSelect(item.patient_id)}
-            className="bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
+            className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
 
               {/* Semantic colour strip: amber = pending, teal = active */}
               <div className={`h-1 w-full ${isPending ? 'bg-amber-400' : 'bg-teal-500'}`} />
@@ -253,7 +253,7 @@ function DetailPendingView({ info, onBack }) {
           className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-semibold transition">
           <ArrowLeft size={16} /> Back
         </button>
-        <div className="bg-[#e8fafa] border border-amber-200 rounded-2xl p-8 text-center">
+        <div className="bg-slate-50 border border-amber-200 rounded-2xl p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-5">
             <Clock size={28} className="text-amber-500" />
           </div>
@@ -307,7 +307,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
       </PageHeader>
 
       {/* Sticky tabs */}
-      <div className="sticky top-0 z-20 bg-[#e8fafa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="sticky top-0 z-20 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {tabs.map(({ id, label, icon: Icon }) => (
@@ -331,7 +331,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                 <p className="text-sm text-slate-500">Letters and messages left especially for you.</p>
                 {loadingContent ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
                  contentItems.length > 0 ? contentItems.map(item => (
-                  <div key={item.id} className="bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
+                  <div key={item.id} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <h3 className="font-semibold text-slate-800 dark:text-white">{item.title || 'Untitled'}</h3>
@@ -358,7 +358,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                  memories.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {memories.map(m => (
-                      <div key={m.id} className="bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+                      <div key={m.id} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
                         <p className="text-xs text-slate-400 dark:text-slate-500 mb-1.5">{fmtShort(m.created_at)}</p>
                         <p className="text-slate-700 dark:text-slate-300 text-sm line-clamp-5 leading-relaxed">{m.content}</p>
                       </div>
@@ -382,7 +382,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                 </div>
                 {loadingJournal ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
                  journalEntries.length > 0 ? journalEntries.map(e => (
-                  <div key={e.id} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-5">
+                  <div key={e.id} className="bg-slate-50 border border-slate-200 rounded-xl p-5">
                     <p className="text-xs text-slate-400 mb-2.5">{fmt(e.created_at, { weekday:'long', day:'numeric', month:'long', year:'numeric' })}</p>
                     <p className="text-slate-700 text-sm leading-relaxed">{e.content}</p>
                   </div>
@@ -408,7 +408,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
                     <p className="text-xs text-slate-400 mt-3 text-right">— {info.patient_name}</p>
                   </div>
                 )}
-                <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
                   <h3 className="text-sm font-semibold text-slate-700">Your Access Details</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[

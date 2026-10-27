@@ -44,7 +44,7 @@ export default function Accordion({
   });
 
   return (
-    <div className={`bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden ${className}`}>
+    <div className={`bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden ${className}`}>
       {/* Header - clickable trigger */}
       <button
         type="button"

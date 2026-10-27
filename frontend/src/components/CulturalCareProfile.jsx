@@ -57,7 +57,7 @@ export default function CulturalCareProfile({ patientId, editable = false }) {
   const langLabel = LANGUAGES.find(l => l.value === profile.preferred_language)?.label || profile.preferred_language || '—';
 
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-800 overflow-hidden">
+    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden">
       <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
         style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
         <div className="flex items-center gap-2">
@@ -130,7 +130,7 @@ function EditForm({ form, setForm }) {
         <select
           value={form.preferred_language || 'en'}
           onChange={e => set('preferred_language', e.target.value)}
-          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
         >
           {LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
         </select>
@@ -141,7 +141,7 @@ function EditForm({ form, setForm }) {
         <select
           value={form.religious_preference || ''}
           onChange={e => set('religious_preference', e.target.value)}
-          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
         >
           <option value="">Select…</option>
           {RELIGIONS.map(r => <option key={r} value={r}>{r}</option>)}
@@ -155,7 +155,7 @@ function EditForm({ form, setForm }) {
           value={form.cultural_practices || ''}
           onChange={e => set('cultural_practices', e.target.value)}
           placeholder="e.g. Libation, Prayer at meals, Family elder involvement"
-          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
         />
       </div>
 
@@ -179,7 +179,7 @@ function EditForm({ form, setForm }) {
           onChange={e => set('cultural_notes', e.target.value)}
           rows={2}
           placeholder="Any additional cultural or personal context for care…"
-          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+          className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
         />
       </div>
     </div>

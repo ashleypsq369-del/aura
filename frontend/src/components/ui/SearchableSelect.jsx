@@ -117,7 +117,7 @@ export default function SearchableSelect({
         disabled={disabled}
         onClick={() => { if (!disabled) { setQ(''); setOpen(!open); } }}
         className={`w-full flex items-center gap-2 border-2 rounded-xl px-3 ${py} text-left transition-all
-          bg-[#e8fafa] dark:bg-slate-800
+          bg-slate-50 dark:bg-slate-800
           ${open
             ? `${a.border} ring-2 ${a.ring} shadow-sm`
             : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
@@ -175,11 +175,11 @@ export default function SearchableSelect({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.13, ease: 'easeOut' }}
-            className="absolute z-[200] top-full left-0 right-0 mt-1.5 bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
+            className="absolute z-[200] top-full left-0 right-0 mt-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
             style={{ maxHeight: '16rem' }}
           >
             {/* Search input */}
-            <div className="sticky top-0 p-2 border-b border-slate-100 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-800">
+            <div className="sticky top-0 p-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
               <div className="flex items-center gap-2 px-2.5 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700">
                 <Search size={13} className="text-slate-400 flex-shrink-0" />
                 <input

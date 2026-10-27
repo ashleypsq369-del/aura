@@ -206,14 +206,14 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                           className={`w-full p-4 rounded-xl border-2 text-left transition-all font-semibold ${
                             isSelected
                               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-purple-500 shadow-lg'
-                              : 'bg-[#e8fafa] text-slate-700 border-slate-300 hover:border-purple-400 hover:bg-purple-50'
+                              : 'bg-slate-50 text-slate-700 border-slate-300 hover:border-purple-400 hover:bg-purple-50'
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             <span>{option.label}</span>
                             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                               isSelected
-                                ? 'border-white bg-[#e8fafa]'
+                                ? 'border-white bg-slate-50'
                                 : 'border-slate-300'
                             }`}>
                               {isSelected && (

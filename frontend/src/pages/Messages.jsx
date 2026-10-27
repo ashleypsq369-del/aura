@@ -380,10 +380,10 @@ export default function Messages() {
       {/* Left Sidebar - full width on mobile, 40% on desktop */}
       <div className={`
         ${showSidebar ? 'flex' : 'hidden'} lg:flex
-        w-full lg:w-2/5 bg-[#e8fafa] border-r border-slate-200 flex-col flex-shrink-0
+        w-full lg:w-2/5 bg-slate-50 border-r border-slate-200 flex-col flex-shrink-0
       `}>
         {/* Header with Tabs - Compact */}
-        <div className="px-4 py-3 border-b border-slate-200 bg-[#e8fafa] flex-shrink-0">
+        <div className="px-4 py-3 border-b border-slate-200 bg-slate-50 flex-shrink-0">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-bold text-slate-900 flex items-center gap-1.5">
               <MessageCircle className="w-5 h-5 text-teal-600" />
@@ -418,7 +418,7 @@ export default function Messages() {
               className={`flex-1 px-3 py-2 rounded-lg font-bold text-xs transition-all ${
                 activeTab === 'chats'
                   ? 'bg-teal-600 text-white'
-                  : 'bg-[#e8fafa] text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               <MessageCircle className="inline w-3.5 h-3.5 mr-1.5" />
@@ -429,7 +429,7 @@ export default function Messages() {
               className={`flex-1 px-3 py-2 rounded-lg font-bold text-xs transition-all ${
                 activeTab === 'contacts'
                   ? 'bg-teal-600 text-white'
-                  : 'bg-[#e8fafa] text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               <Users className="inline w-3.5 h-3.5 mr-1.5" />
@@ -610,7 +610,7 @@ export default function Messages() {
         {selectedConversation ? (
           <>
             {/* Chat Header - Compact */}
-            <div className="p-3 bg-[#e8fafa] border-b-3 border-slate-300 shadow-md">
+            <div className="p-3 bg-slate-50 border-b-3 border-slate-300 shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   {/* Back button — mobile only */}
@@ -698,7 +698,7 @@ export default function Messages() {
                           ? 'bg-teal-600 text-white rounded-br-sm'
                           : isAlert
                             ? 'bg-red-50 text-red-900 border border-red-200 rounded-bl-sm'
-                            : 'bg-[#e8fafa] text-slate-900 border border-slate-200 rounded-bl-sm'
+                            : 'bg-slate-50 text-slate-900 border border-slate-200 rounded-bl-sm'
                       }`}>
                         {/* Inline reply quote */}
                         {msg.content?.startsWith('↩ ') && (() => {
@@ -765,7 +765,7 @@ export default function Messages() {
             </div>
 
             {/* Message Input */}
-            <form onSubmit={handleSendMessage} className="bg-[#e8fafa] dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+            <form onSubmit={handleSendMessage} className="bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
 
               {/* Reply preview strip */}
               <AnimatePresence>
@@ -893,7 +893,7 @@ export default function Messages() {
               placeholder="Search by name or role..."
               value={newChatSearch}
               onChange={e => setNewChatSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 focus:bg-[#e8fafa] transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 focus:bg-slate-50 transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
           <div className="space-y-1 max-h-64 overflow-y-auto -mx-1 px-1">

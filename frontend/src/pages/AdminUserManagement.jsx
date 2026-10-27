@@ -43,7 +43,7 @@ function KpiCard({ label, value, icon: Icon, color, onClick, active }) {
   return (
     <button
       onClick={onClick}
-      className={`bg-[#e8fafa] rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
+      className={`bg-slate-50 rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
         active ? 'border-teal-500 shadow-md' : 'border-slate-200 hover:border-slate-300'
       }`}
     >
@@ -252,7 +252,7 @@ function InlineConfirm({ message, onConfirm, onCancel, confirmLabel = 'Confirm',
       <div className="flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onCancel}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#e8fafa] border border-slate-300 hover:bg-slate-50 text-slate-700 transition"
+          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-50 border border-slate-300 hover:bg-slate-50 text-slate-700 transition"
         >
           Cancel
         </button>
@@ -338,7 +338,7 @@ function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPendi
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -6 }}
             transition={{ duration: 0.12, ease: 'easeOut' }}
-            className="absolute right-0 top-9 z-50 w-52 bg-[#e8fafa] border border-slate-200 rounded-xl shadow-xl overflow-hidden"
+            className="absolute right-0 top-9 z-50 w-52 bg-slate-50 border border-slate-200 rounded-xl shadow-xl overflow-hidden"
           >
             <button
               onClick={handleEdit}
@@ -548,7 +548,7 @@ export default function AdminUserManagement() {
         </div>
 
         {/* ── Filters ─────────────────────────────── */}
-        <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-3">
+        <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -603,7 +603,7 @@ export default function AdminUserManagement() {
         )}
 
         {/* ── Users Table ─────────────────────────── */}
-        <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           {isLoading ? (
             <div className="p-12 text-center">
               <Loader2 size={28} className="animate-spin text-teal-600 mx-auto mb-3" />

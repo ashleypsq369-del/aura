@@ -144,7 +144,7 @@ export default function NotificationTester() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-[#e8fafa] rounded-xl shadow-md border-2 border-slate-200 overflow-hidden hover:shadow-lg transition-all"
+                className="bg-slate-50 rounded-xl shadow-md border-2 border-slate-200 overflow-hidden hover:shadow-lg transition-all"
               >
                 <div className={`h-2 bg-gradient-to-r ${notif.color}`} />
                 
@@ -185,7 +185,7 @@ export default function NotificationTester() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-8 p-6 bg-[#e8fafa] rounded-xl shadow-md border-2 border-teal-200"
+          className="mt-8 p-6 bg-slate-50 rounded-xl shadow-md border-2 border-teal-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-teal-600" />

@@ -84,7 +84,7 @@ export default function MLRiskSummaryCard({ patientId }) {
       whileHover={{ y: -1, boxShadow: '0 8px 24px rgba(0,0,0,0.10)' }}
       whileTap={{ scale: 0.99 }}
       onClick={() => navigate(`/patients/${patientId}/ml-risk`)}
-      className={`w-full text-left rounded-2xl border border-slate-200 border-l-4 ${cfg.borderL} bg-[#e8fafa] overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
+      className={`w-full text-left rounded-2xl border border-slate-200 border-l-4 ${cfg.borderL} bg-slate-50 overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
     >
       {/* Top strip for critical/high */}
       {(level === 'critical' || level === 'high') && (

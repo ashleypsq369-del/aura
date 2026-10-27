@@ -85,7 +85,7 @@ export default function WellbeingDetail() {
                   const val = latest[key] ?? 0;
                   return (
                     <motion.div key={key} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-                      className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-3 text-center">
+                      className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-3 text-center">
                       <div className="w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
                         <Icon size={14} style={{ color }} />
                       </div>
@@ -105,7 +105,7 @@ export default function WellbeingDetail() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 {/* Radar */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                  className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                  className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-200">
                     <h2 className="text-sm font-bold text-slate-900">Symptom Profile</h2>
                     <p className="text-xs text-slate-500 dark:text-slate-400">Latest assessment overview</p>
@@ -124,7 +124,7 @@ export default function WellbeingDetail() {
                 {/* Trend */}
                 {trendData.length > 1 && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="px-5 py-4 border-b border-slate-200">
                       <h2 className="text-sm font-bold text-slate-900">Key Trends</h2>
                       <p className="text-xs text-slate-500 dark:text-slate-400">Pain, anxiety & wellbeing over time</p>
@@ -150,7 +150,7 @@ export default function WellbeingDetail() {
 
             {/* History table */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6 mb-8">
+              className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6 mb-8">
               <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
                 <h2 className="text-base font-bold text-slate-900">Assessment History</h2>
                 <p className="text-slate-500 text-sm">Complete record of wellbeing assessments</p>

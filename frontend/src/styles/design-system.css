@@ -16,12 +16,12 @@
   --card-border: #8ecfe0;
   --card-shadow: 0 2px 8px rgba(0,80,120,0.10);
 
-  --text-900: #0a1f2e;
-  --text-800: #0d2a3d;
-  --text-700: #1e4a5f;
-  --text-600: #2a5f78;
-  --text-500: #3a7090;
-  --text-400: #4d88a0;
+  --text-900: #071520;
+  --text-800: #0b2235;
+  --text-700: #163850;
+  --text-600: #1e4f6a;
+  --text-500: #2a6080;
+  --text-400: #3a7592;
 
   --c-teal:    #0d9488;
   --c-cyan:    #0891b2;
@@ -115,6 +115,11 @@ html.dark {
   .text-slate-600, .text-gray-600   { color: var(--text-600) !important; }
   .text-slate-500, .text-gray-500   { color: var(--text-500) !important; }
   .text-slate-400, .text-gray-400   { color: var(--text-400) !important; }
+  /* Bump up 300 — Tailwind default #d1d5db is invisible on cyan cards */
+  .text-slate-300, .text-gray-300   { color: var(--text-400) !important; }
+  /* 200 used on dark panels intentionally — keep but not on light */
+  html:not(.dark) .text-slate-200,
+  html:not(.dark) .text-gray-200    { color: var(--text-500) !important; }
 
   .text-teal-600, .text-teal-700,
   .text-teal-800, .text-teal-900    { color: var(--c-teal) !important; }
@@ -180,6 +185,12 @@ html.dark {
   /* ── BUTTONS: remaining blue → teal ── */
   .bg-blue-600 { background-color: #0d9488 !important; }
   .bg-blue-700 { background-color: #0f766e !important; }
+  /* bg-primary fallback — used in some legacy components */
+  .bg-primary   { background-color: #0d9488 !important; }
+  .text-primary { color: var(--c-teal) !important; }
+  .ring-primary { --tw-ring-color: #0d9488 !important; }
+  .border-primary { border-color: #0d9488 !important; }
+  .focus\:ring-primary\/30:focus { --tw-ring-color: rgba(13,148,136,0.30) !important; }
 
   /* ── TYPOGRAPHY ── */
   h1 { font-size: 1.25rem  !important; font-weight: 700; letter-spacing: -0.01em; }

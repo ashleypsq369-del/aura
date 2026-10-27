@@ -111,7 +111,7 @@ export default function VisitRatingModal({
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
           >
             <div
-              className="w-full max-w-sm rounded-2xl bg-[#e8fafa] dark:bg-slate-800 shadow-2xl overflow-hidden"
+              className="w-full max-w-sm rounded-2xl bg-slate-50 dark:bg-slate-800 shadow-2xl overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
@@ -181,7 +181,7 @@ export default function VisitRatingModal({
                       onChange={e => setComment(e.target.value)}
                       rows={3}
                       placeholder="How was your experience?"
-                      className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
                     />
                   </div>
 

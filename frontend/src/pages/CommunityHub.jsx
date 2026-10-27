@@ -175,7 +175,7 @@ export default function CommunityHub() {
           <input type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search groups by name or topic..."
             data-tip="Search community groups"
-            className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[#e8fafa] shadow-sm" />
+            className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-slate-50 shadow-sm" />
         </div>
 
         {/* Tabs — filtered by personalisation (spiritual hidden if opted out) */}
@@ -192,7 +192,7 @@ export default function CommunityHub() {
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap border transition-all flex-shrink-0 ${
                   activeTab === tab.id
                     ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
-                    : 'bg-[#e8fafa] dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
+                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
                 }`}>
                 <Icon size={14} />
                 {tab.label}
@@ -216,7 +216,7 @@ export default function CommunityHub() {
             {/* ML/signal-driven smart recommendations */}
             {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-[#e8fafa] border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
+                className="bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-teal-600" />
@@ -256,7 +256,7 @@ export default function CommunityHub() {
                               <Users size={9} /> {g.member_count ?? 0}
                             </span>
                             {g.condition_tags?.slice(0,2).map(t => (
-                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#e8fafa] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
+                              <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
                             ))}
                           </div>
                         </div>
@@ -322,7 +322,7 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onOpen}
-      className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
+      className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
     >
       {/* Single teal top accent bar — consistent across all cards */}
       <div className="h-0.5 w-full flex-shrink-0 bg-teal-500" />
@@ -385,8 +385,8 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
             disabled={pending}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition flex-shrink-0 ${
               group.joined
-                ? 'bg-[#e8fafa] text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
-                : 'bg-[#e8fafa] text-teal-700 border-teal-200 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
+                ? 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
+                : 'bg-slate-50 text-teal-700 border-teal-200 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
             }`}
           >
             {group.joined ? 'Leave' : <><UserPlus size={11} /> Join</>}
@@ -454,7 +454,7 @@ function CreateGroupModal({ onClose, onSubmit, pending }) {
             {CATEGORY_TAGS.map(t => (
               <button key={t.value} type="button" onClick={() => toggleTag(t.value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition ${
-                  form.tags.includes(t.value) ? 'bg-teal-600 text-white border-teal-600' : 'bg-[#e8fafa] text-slate-600 border-slate-300 hover:border-teal-400'
+                  form.tags.includes(t.value) ? 'bg-teal-600 text-white border-teal-600' : 'bg-slate-50 text-slate-600 border-slate-300 hover:border-teal-400'
                 }`}>
                 {t.label}
               </button>

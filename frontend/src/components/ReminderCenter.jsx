@@ -231,7 +231,7 @@ export default function ReminderCenter() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.96 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col bg-[#e8fafa]"
+              className="absolute right-0 mt-2 z-50 rounded-2xl overflow-hidden flex flex-col bg-slate-50"
               style={{ width: 340, maxHeight: 520, border: '1px solid #e2e8f0', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}
               onClick={e => e.stopPropagation()}
             >
@@ -291,17 +291,17 @@ export default function ReminderCenter() {
 
                       {/* Date/time */}
                       <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)}
-                        className="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 bg-[#e8fafa]"/>
+                        className="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 bg-slate-50"/>
 
                       <div className="flex gap-2">
                         {/* Remind before */}
                         <select value={before} onChange={e => setBefore(e.target.value)}
-                          className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[#e8fafa] focus:outline-none focus:border-amber-400">
+                          className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-400">
                           {BEFORE.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
                         </select>
                         {/* Repeat */}
                         <select value={repeat} onChange={e => setRepeat(e.target.value)}
-                          className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[#e8fafa] focus:outline-none focus:border-amber-400">
+                          className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-400">
                           {REPEATS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
                         </select>
                       </div>

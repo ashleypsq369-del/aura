@@ -113,7 +113,7 @@ export default function ResidentialLog() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Activities */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Activity size={16} />Daily Activities</h3>
           <div className="grid grid-cols-1 gap-1.5">
             {ACTIVITIES.map(a => (
@@ -126,7 +126,7 @@ export default function ResidentialLog() {
         </div>
 
         {/* Wellbeing */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Heart size={16} />Resident Wellbeing Today</h3>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
             {WELLBEING_OPTIONS.map(opt => (
@@ -139,7 +139,7 @@ export default function ResidentialLog() {
         </div>
 
         {/* Food & fluid intake */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3">Food & Fluid Intake</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => {
@@ -173,7 +173,7 @@ export default function ResidentialLog() {
         </div>
 
         {/* Notes */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <h3 className="text-sm font-bold text-slate-700 mb-3">Care Notes</h3>
           <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
             placeholder="Any observations, mood changes, visitor notes, or care team communications..."
@@ -181,7 +181,7 @@ export default function ResidentialLog() {
         </div>
 
         {/* Incident report */}
-        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
           <label className="flex items-center gap-3 cursor-pointer mb-3">
             <input type="checkbox" checked={incident} onChange={e => setIncident(e.target.checked)} className="w-5 h-5 accent-red-600" />
             <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500" />Report an Incident</h3>
