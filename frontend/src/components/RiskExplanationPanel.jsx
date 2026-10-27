@@ -111,7 +111,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
             <button key={id} onClick={() => setTab(id)}
               className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
                 tab === id
-                  ? 'bg-[#f0f6fa] text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
+                  ? 'bg-[#e8fafa] text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
                   : 'text-slate-400 hover:bg-white/70 hover:text-slate-600'
               }`}>
               <Icon size={11} className={tab === id ? 'text-teal-600' : ''} />
@@ -124,7 +124,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
         </div>
 
         {/* ── § 3  Tab panel ────────────────────────────────────────── */}
-        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-[#f0f6fa] overflow-hidden">
+        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-[#e8fafa] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.14 }}>
 
@@ -252,7 +252,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                         <AlertTriangle size={12} className="text-amber-600 flex-shrink-0" />
                         <span className="text-[11px] font-bold text-amber-700  select-none">Key Clinical Concerns</span>
                       </div>
-                      <div className="px-5 py-3 bg-[#f0f6fa] space-y-2">
+                      <div className="px-5 py-3 bg-[#e8fafa] space-y-2">
                         {data.key_concerns.map((c, i) => (
                           <div key={i} className="flex items-start gap-3">
                             <span className="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
@@ -271,7 +271,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
                       <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
                       <span className="text-[11px] font-bold text-teal-700  select-none">Recommended Actions</span>
                     </div>
-                    <div className="px-5 py-3 bg-[#f0f6fa] space-y-2">
+                    <div className="px-5 py-3 bg-[#e8fafa] space-y-2">
                       {(data?.recommended_actions || data?.recommendations || []).map((r, i) => (
                         <div key={i} className="flex items-start gap-3">
                           <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>

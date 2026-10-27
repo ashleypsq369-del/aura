@@ -71,7 +71,7 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
 /* ─── Section card wrapper ───────────────────────────────────────────────── */
 function Section({ title, children }) {
   return (
-    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       {title && (
         <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700"
           style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
@@ -142,7 +142,7 @@ export default function PatientMonitor() {
   const rc = riskColor[patient?.risk_level] || '#64748b';
 
   return (
-    <div className="min-h-screen pb-10 space-y-5" style={{ background: '#dce8f0' }}>
+    <div className="min-h-screen pb-10 space-y-5" style={{ background: '#c2dde8' }}>
 
       {/* ── Header ── */}
       <div className="relative overflow-hidden rounded-b-2xl"
@@ -219,7 +219,7 @@ export default function PatientMonitor() {
 
       {/* ── Tab bar ── */}
       <div className="px-6">
-        <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 overflow-x-auto bg-[#f0f6fa] dark:bg-slate-800 rounded-t-xl">
+        <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 overflow-x-auto bg-[#e8fafa] dark:bg-slate-800 rounded-t-xl">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id)}
               className={`flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-all whitespace-nowrap flex-shrink-0
@@ -344,7 +344,7 @@ export default function PatientMonitor() {
                   <motion.div key={m.id}
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04 }}
-                    className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                    className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <p className="font-bold text-slate-800 dark:text-white text-sm">{m.name}</p>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0
@@ -360,7 +360,7 @@ export default function PatientMonitor() {
                     </div>
                   </motion.div>
                 )) : (
-                  <div className="col-span-2 bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
+                  <div className="col-span-2 bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
                     <p className="text-slate-400 text-sm">No medications prescribed</p>
                   </div>
                 )}
@@ -374,7 +374,7 @@ export default function PatientMonitor() {
                   <motion.div key={a.id}
                     initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04 }}
-                    className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
+                    className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
                     <div className="w-9 h-9 rounded-lg bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 flex-shrink-0">
                       <Calendar size={16} />
                     </div>
@@ -396,7 +396,7 @@ export default function PatientMonitor() {
                     }`}>{a.status || 'scheduled'}</span>
                   </motion.div>
                 )) : (
-                  <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
+                  <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
                     <p className="text-slate-400 text-sm">No appointments scheduled</p>
                   </div>
                 )}

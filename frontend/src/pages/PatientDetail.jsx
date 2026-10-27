@@ -299,7 +299,7 @@ export default function PatientDetail() {
     return (
       <PageTransition>
         <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6">
-          <div className="bg-[#f0f6fa] rounded-lg border border-red-200 p-8 text-center">
+          <div className="bg-[#e8fafa] rounded-lg border border-red-200 p-8 text-center">
             <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
             <h2 className="text-base font-bold text-slate-900 mb-1">Patient Not Found</h2>
             <p className="text-sm text-slate-500 mb-4">Unable to load patient information</p>
@@ -381,7 +381,7 @@ export default function PatientDetail() {
 
             {/* Patient info strip */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-[#f0f6fa]">
+              className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-[#e8fafa]">
               <div className="flex items-center gap-2 text-slate-700">
                 <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
                   <User size={13} className="text-teal-600" />
@@ -433,7 +433,7 @@ export default function PatientDetail() {
 
             {/* Vitals ribbon */}
             {lastVital && (
-              <div className="flex items-center gap-2 flex-wrap bg-[#f0f6fa] border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
+              <div className="flex items-center gap-2 flex-wrap bg-[#e8fafa] border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
                 <span className="text-[10px] font-bold text-slate-400  mr-1">Latest Vitals</span>
                 {[
                   { label: 'HR',   value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--',    ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
@@ -464,7 +464,7 @@ export default function PatientDetail() {
             {/* Caregiver Assignment */}
             {canAssignCaregiver && caregiverMatches?.recommendations?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-[#f0f6fa] rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
+                className="bg-[#e8fafa] rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                     <HeartHandshake size={15} className="text-purple-600" />
@@ -478,7 +478,7 @@ export default function PatientDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {caregiverMatches.recommendations.slice(0, 3).map((rec) => (
                     <div key={rec.caregiver_id}
-                      className={`bg-[#f0f6fa] rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
+                      className={`bg-[#e8fafa] rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
                       <p className="font-bold text-slate-900 text-sm">{rec.caregiver_name}</p>
                       <p className="text-xs text-slate-600 mb-2">Match: {rec.match_score}% · {rec.workload?.capacity_status}</p>
                       {rec.already_assigned

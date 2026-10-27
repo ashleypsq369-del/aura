@@ -34,7 +34,7 @@ import {
 const RISK = {
   critical: {
     border: 'border-l-red-500',    glow: 'shadow-red-500/20',
-    ring: 'ring-2 ring-red-500/40', bg: 'bg-[#f0f6fa]',
+    ring: 'ring-2 ring-red-500/40', bg: 'bg-[#e8fafa]',
     badge: 'bg-red-600 text-white', text: 'text-red-600',
     barColor: '#e11d48',            gradFrom: 'from-red-600',  gradTo: 'to-rose-700',
     dot: 'bg-red-500 animate-pulse',label: 'Critical',         Icon: AlertTriangle,
@@ -43,7 +43,7 @@ const RISK = {
   },
   high: {
     border: 'border-l-orange-500', glow: 'shadow-orange-500/20',
-    ring: 'ring-2 ring-orange-400/40', bg: 'bg-[#f0f6fa]',
+    ring: 'ring-2 ring-orange-400/40', bg: 'bg-[#e8fafa]',
     badge: 'bg-orange-500 text-white', text: 'text-orange-600',
     barColor: '#f97316',            gradFrom: 'from-orange-500', gradTo: 'to-amber-600',
     dot: 'bg-orange-500',           label: 'High Risk',         Icon: AlertCircle,
@@ -52,7 +52,7 @@ const RISK = {
   },
   moderate: {
     border: 'border-l-amber-500',  glow: 'shadow-amber-400/15',
-    ring: 'ring-2 ring-amber-400/30', bg: 'bg-[#f0f6fa]',
+    ring: 'ring-2 ring-amber-400/30', bg: 'bg-[#e8fafa]',
     badge: 'bg-amber-500 text-white', text: 'text-amber-600',
     barColor: '#d97706',            gradFrom: 'from-amber-500', gradTo: 'to-orange-500',
     dot: 'bg-amber-500',            label: 'Moderate',          Icon: Activity,
@@ -61,7 +61,7 @@ const RISK = {
   },
   low: {
     border: 'border-l-teal-500',   glow: 'shadow-teal-500/10',
-    ring: '',                       bg: 'bg-[#f0f6fa]',
+    ring: '',                       bg: 'bg-[#e8fafa]',
     badge: 'bg-teal-600 text-white',text: 'text-teal-600',
     barColor: '#0d9488',            gradFrom: 'from-teal-600',  gradTo: 'to-emerald-600',
     dot: 'bg-teal-500',             label: 'Stable',            Icon: CheckCircle,
@@ -70,7 +70,7 @@ const RISK = {
   },
   unknown: {
     border: 'border-l-slate-400',  glow: '',
-    ring: '',                       bg: 'bg-[#f0f6fa]',
+    ring: '',                       bg: 'bg-[#e8fafa]',
     badge: 'bg-slate-500 text-white',text: 'text-slate-500',
     barColor: '#94a3b8',            gradFrom: 'from-slate-500', gradTo: 'to-slate-600',
     dot: 'bg-slate-400',            label: 'Unknown',           Icon: Shield,
@@ -217,7 +217,7 @@ function ShapBars({ features, shapAvailable }) {
               {/* Direction dot */}
               <span className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5 ${iconCls}`}>
                 {neutral ? (
-                  <span className="w-2 h-2 rounded-full bg-[#f0f6fa]" />
+                  <span className="w-2 h-2 rounded-full bg-[#e8fafa]" />
                 ) : risk ? (
                   <TrendingUp size={11} className="text-white" />
                 ) : (
@@ -310,7 +310,7 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
       transition={{ type: 'spring', damping: 28, stiffness: 400 }}
       className={`
         relative rounded-2xl border border-slate-200 overflow-hidden cursor-pointer
-        bg-[#f0f6fa] shadow-sm transition-all duration-150
+        bg-[#e8fafa] shadow-sm transition-all duration-150
         border-l-4 ${tok.border}
         ${isSelected
           ? `${tok.ring} shadow-lg`
@@ -485,7 +485,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
     <motion.div key={pid}
       initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }}
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-      className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-[#f0f6fa] dark:bg-slate-900"
+      className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-900"
       style={{ height: 'calc(100vh - 200px)', minHeight: 520 }}
     >
       {/* -- Header -- */}
@@ -532,7 +532,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
 
       {/* -- Pill tab bar -- */}
       <div className="flex-shrink-0 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-700">
-        <div className="flex gap-1 bg-[#f0f6fa] dark:bg-slate-700 rounded-xl p-1 shadow-sm border border-slate-100 dark:border-slate-600">
+        <div className="flex gap-1 bg-[#e8fafa] dark:bg-slate-700 rounded-xl p-1 shadow-sm border border-slate-100 dark:border-slate-600">
           {TABS.map(({ id, label, Icon: Ic }) => (
             <button key={id} onClick={() => setInnerTab(id)}
               className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-bold transition-all"
@@ -805,7 +805,7 @@ function DrugInteractionsTab() {
           { label: 'Total Detected',    value: totalInts,
             icon: Pill,       iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
         ].map(({ label, value, icon: Ico, iconBg, iconColor, valColor }) => (
-          <div key={label} className="rounded-xl border border-slate-200 bg-[#f0f6fa] px-4 py-3 flex items-center gap-3 shadow-sm">
+          <div key={label} className="rounded-xl border border-slate-200 bg-[#e8fafa] px-4 py-3 flex items-center gap-3 shadow-sm">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: iconBg }}>
               <Ico size={15} style={{ color: iconColor }} />
@@ -885,7 +885,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-3">
         {stats.map(({ l, v, iconBg, iconColor, valColor }) => (
-          <div key={l} className="rounded-xl border border-slate-200 bg-[#f0f6fa] px-4 py-3 flex items-center gap-3 shadow-sm">
+          <div key={l} className="rounded-xl border border-slate-200 bg-[#e8fafa] px-4 py-3 flex items-center gap-3 shadow-sm">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: iconBg }}>
               <BarChart2 size={14} style={{ color: iconColor }} />
@@ -899,7 +899,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       </div>
 
       {distData.length > 0 && (
-        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+        <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <BarChart2 size={12} className="text-teal-500" /> Patient Risk Distribution
           </p>
@@ -918,7 +918,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       )}
 
       {mlStatus && (
-        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+        <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <Cpu size={12} className="text-teal-500" /> Model Health
           </p>
@@ -946,7 +946,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
         </div>
       )}
 
-      <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+      <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
             <Beaker size={15} className="text-teal-600" />
@@ -1098,7 +1098,7 @@ export default function AIInsights() {
       </PageHeader>
 
       {/* -- KPI pills + tab bar -- */}
-      <div className="bg-[#f0f6fa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
+      <div className="bg-[#e8fafa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
         {/* Compact KPI row */}
         <div className="flex items-center gap-2 flex-wrap mb-3">
           {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
@@ -1147,7 +1147,7 @@ export default function AIInsights() {
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Search patients, diagnoses, concerns—"
-                className="w-full pl-10 pr-4 py-2.5 bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
+                className="w-full pl-10 pr-4 py-2.5 bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
             </div>
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 flex-shrink-0">
               <ListFilter size={12} className="text-slate-400 ml-1" />
@@ -1205,7 +1205,7 @@ export default function AIInsights() {
                 </div>
 
                 {visiblePatients.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center bg-[#f0f6fa] dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 py-20 gap-4">
+                  <div className="flex flex-col items-center justify-center bg-[#e8fafa] dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 py-20 gap-4">
                     <CheckCircle className="w-14 h-14 text-emerald-400 opacity-50" />
                     <p className="font-bold text-slate-600 dark:text-slate-400">No patients match current filters</p>
                     <button onClick={() => { setFilterRisk('all'); setSearchTerm(''); }}

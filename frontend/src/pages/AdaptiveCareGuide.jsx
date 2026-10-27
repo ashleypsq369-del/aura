@@ -100,7 +100,7 @@ export default function AdaptiveCareGuide() {
           </div>
           <button
             onClick={() => navigate(`/patients/${patientId}/care-plan`)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#f0f6fa] text-purple-700 rounded-xl font-bold text-sm hover:bg-purple-50 transition shadow-md"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#e8fafa] text-purple-700 rounded-xl font-bold text-sm hover:bg-purple-50 transition shadow-md"
           >
             <FileText size={16}/> View Full Care Plan
           </button>
@@ -144,7 +144,7 @@ export default function AdaptiveCareGuide() {
       {/* Care Priorities */}
       {guideData.care_priorities && guideData.care_priorities.length > 0 && (
         <motion.div initial={{opacity:0,y:10}} animate={{opacity:1,y:0}}
-          className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-5 shadow-sm">
+          className="bg-[#e8fafa] border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
             <Target size={18} className="text-teal-600"/> Priority Focus Areas
           </h3>
@@ -210,7 +210,7 @@ export default function AdaptiveCareGuide() {
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}}>
-                      <div className="px-6 py-5 bg-[#f0f6fa]">
+                      <div className="px-6 py-5 bg-[#e8fafa]">
                         <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
                           {(protocol.content || '').split('\n').map((line, li) => {
                             const boldFormatted = line.split(/(\*\*[^*]+\*\*)/).map((part, pi) =>
@@ -230,7 +230,7 @@ export default function AdaptiveCareGuide() {
           })}
         </div>
       ) : (
-        <div className="text-center py-12 bg-[#f0f6fa] rounded-2xl border-2 border-dashed border-slate-300">
+        <div className="text-center py-12 bg-[#e8fafa] rounded-2xl border-2 border-dashed border-slate-300">
           <BookOpen size={48} className="mx-auto mb-4 text-slate-300"/>
           <p className="text-slate-600 font-semibold">No specific protocols found for this diagnosis.</p>
           <p className="text-sm text-slate-400 mt-2">Use the general Care Guide or generate a full care plan.</p>
@@ -254,7 +254,7 @@ export default function AdaptiveCareGuide() {
           <h3 className="font-bold text-red-900 mb-3 flex items-center gap-2"><Phone size={18}/>Emergency Contacts</h3>
           <div className="space-y-2">
             {guideData.emergency_contacts.map((contact, i) => (
-              <div key={i} className="bg-[#f0f6fa] px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
+              <div key={i} className="bg-[#e8fafa] px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
                 {contact}
               </div>
             ))}

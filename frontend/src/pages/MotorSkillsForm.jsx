@@ -170,7 +170,7 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
             <Dumbbell className="w-6 h-6 mr-2 text-orange-600" />
@@ -231,7 +231,7 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
             <Timer className="w-6 h-6 mr-2 text-orange-600" />
@@ -302,7 +302,7 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
             <Activity className="w-6 h-6 mr-2 text-orange-600" />
@@ -406,7 +406,7 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-4">
             Balance & Coordination
@@ -455,7 +455,7 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

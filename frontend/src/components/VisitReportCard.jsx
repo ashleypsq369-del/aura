@@ -53,7 +53,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#f0f6fa] dark:bg-slate-800 p-4 animate-pulse">
+      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-800 p-4 animate-pulse">
         <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-2/3 mb-2" />
         <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-1/2" />
       </div>
@@ -66,7 +66,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
   const CondIcon = meta.icon;
 
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#f0f6fa] dark:bg-slate-800 overflow-hidden">
+    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-800 overflow-hidden">
       {/* Header */}
       <div
         className="px-4 py-3 flex items-center justify-between cursor-pointer"

@@ -272,7 +272,7 @@ export default function QualityOfLifeForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)
@@ -337,7 +337,7 @@ function DomainSection({ title, icon, questions, scores, setScores, domainScore,
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+      className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
     >
       <div className={`flex items-center justify-between mb-4 pb-3 border-b-2`}>
         <h3 className="text-xl font-bold text-slate-900 flex items-center">

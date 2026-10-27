@@ -266,7 +266,7 @@ export default function PPSForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <div className="mb-6">
             <div className="flex items-end justify-between mb-4">
@@ -316,23 +316,23 @@ export default function PPSForm() {
             <p className="text-slate-700 mb-4">{currentLevel.description}</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="bg-[#f0f6fa] rounded p-3">
+              <div className="bg-[#e8fafa] rounded p-3">
                 <p className="text-xs text-slate-600 font-semibold mb-1">Ambulation</p>
                 <p className="text-sm text-slate-900">{currentLevel.ambulation.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-[#f0f6fa] rounded p-3">
+              <div className="bg-[#e8fafa] rounded p-3">
                 <p className="text-xs text-slate-600 font-semibold mb-1">Activity & Disease</p>
                 <p className="text-sm text-slate-900">{currentLevel.activity.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-[#f0f6fa] rounded p-3">
+              <div className="bg-[#e8fafa] rounded p-3">
                 <p className="text-xs text-slate-600 font-semibold mb-1">Self-Care</p>
                 <p className="text-sm text-slate-900">{currentLevel.self_care.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-[#f0f6fa] rounded p-3">
+              <div className="bg-[#e8fafa] rounded p-3">
                 <p className="text-xs text-slate-600 font-semibold mb-1">Oral Intake</p>
                 <p className="text-sm text-slate-900">{currentLevel.intake.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-[#f0f6fa] rounded p-3 md:col-span-2">
+              <div className="bg-[#e8fafa] rounded p-3 md:col-span-2">
                 <p className="text-xs text-slate-600 font-semibold mb-1">Consciousness</p>
                 <p className="text-sm text-slate-900">{currentLevel.consciousness.replace(/_/g, ' ')}</p>
               </div>
@@ -367,7 +367,7 @@ export default function PPSForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Clinical Notes (Optional)

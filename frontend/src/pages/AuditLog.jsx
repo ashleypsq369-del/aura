@@ -68,7 +68,7 @@ export default function AuditLog() {
         </div>
 
         {/* Filters */}
-        <div className="bg-[#f0f6fa] rounded-lg border border-slate-200 p-3 mb-4">
+        <div className="bg-[#e8fafa] rounded-lg border border-slate-200 p-3 mb-4">
           <div className="flex gap-3 flex-wrap">
             <div className="flex-1 min-w-[200px] search-wrap">
               <span className="search-icon"><Search size={15} /></span>
@@ -88,7 +88,7 @@ export default function AuditLog() {
         </div>
 
         {/* Table */}
-        <div className="bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
             <h2 className="text-base font-bold text-slate-900">Activity Log</h2>
             <p className="text-slate-500 text-sm">Complete audit trail of system actions</p>

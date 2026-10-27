@@ -1,21 +1,28 @@
 /*
  * design-system.css — Project Aura
- * Light blue-grey design system. Clean, compact, professional.
+ * Cyan-tinted card design. Cards pop clearly against the page background.
+ * Card: #e8fafa (bright cyan-tinted) · Page: #c2dde8 (deeper blue-grey)
+ * Text: #0a1f2e (deep navy) for maximum contrast on cyan cards
  *
  * KEY: We use @layer to beat Tailwind v4's utility specificity.
  */
 
 /* ─── BASE LAYER — overrides Tailwind utilities ─────────────────────────── */
 @layer base {
-  /* Page background — clear blue-grey so cards stand out */
+  /* Page background — deeper blue-grey so cyan cards pop */
   html body,
   html body * {
-    --page-bg: #dce8f0;
+    --page-bg: #c2dde8;
+    --card-bg: #e8fafa;
+    --card-border: #8ecfe0;
+    --text-primary: #0a1f2e;
+    --text-secondary: #1e4a5f;
+    --text-muted: #3a6678;
   }
 
   body {
-    background-color: #dce8f0 !important;
-    color: #1a2332 !important;
+    background-color: #c2dde8 !important;
+    color: #0a1f2e !important;
     font-size: 13px !important;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -33,47 +40,51 @@
   /* ── Page bg applied to all wrappers ── */
   .min-h-screen, .min-h-full,
   [class*="page-tint-"], .ambient-bg {
-    background-color: #dce8f0 !important;
+    background-color: #c2dde8 !important;
   }
   html.dark .min-h-screen, html.dark .min-h-full,
   html.dark [class*="page-tint-"], html.dark .ambient-bg {
     background-color: #0a0a0a !important;
   }
 
-  /* ── Cards — light blue-white, NOT pure white ── */
-  .bg-white,
+  /* ── Cards — bright cyan-tinted background, clearly visible ── */
+  .bg-\[\#f0f6fa\],
   .bg-slate-50,
   .bg-gray-50 {
-    background-color: #f0f6fa !important;
+    background-color: #e8fafa !important;
+    color: #0a1f2e !important;
   }
-  html.dark .bg-white,
+  html.dark .bg-\[\#f0f6fa\],
   html.dark .bg-slate-50,
   html.dark .bg-gray-50 {
-    background-color: #161b22 !important;
+    background-color: #0f1f26 !important;
+    color: #e8edf3 !important;
   }
 
   /* Explicit card classes */
   .card, .card-elevated, .content-card, .stat-card {
-    background-color: #f0f6fa !important;
-    border: 1px solid #b8cedd !important;
+    background-color: #e8fafa !important;
+    border: 1px solid #8ecfe0 !important;
     border-radius: 8px !important;
-    box-shadow: 0 1px 4px rgba(0,50,100,0.07) !important;
+    box-shadow: 0 2px 8px rgba(0,80,120,0.10) !important;
+    color: #0a1f2e !important;
   }
   html.dark .card, html.dark .card-elevated,
   html.dark .content-card, html.dark .stat-card {
-    background-color: #161b22 !important;
-    border-color: #21303f !important;
+    background-color: #0f1f26 !important;
+    border-color: #1a3040 !important;
+    color: #e8edf3 !important;
   }
 
   /* Stat card accent strips */
   [class*="stat-card-"] {
-    background-color: #f0f6fa !important;
-    border: 1px solid #b8cedd !important;
+    background-color: #e8fafa !important;
+    border: 1px solid #8ecfe0 !important;
     border-left-width: 3px !important;
   }
   html.dark [class*="stat-card-"] {
-    background-color: #161b22 !important;
-    border-color: #21303f !important;
+    background-color: #0f1f26 !important;
+    border-color: #1a3040 !important;
     border-left-width: 3px !important;
   }
   .stat-card-teal    { border-left-color: #0d9488 !important; }
@@ -159,14 +170,22 @@
   thead th {
     font-size: 11px !important; font-weight: 600 !important;
     text-transform: none !important; letter-spacing: 0.02em !important;
-    color: #475569 !important; background: #e4eef5 !important;
-    border-bottom: 1px solid #b8cedd !important; padding: 8px 14px !important;
+    color: #1e4a5f !important; background: #cce9f0 !important;
+    border-bottom: 1px solid #8ecfe0 !important; padding: 8px 14px !important;
   }
-  tbody tr { border-bottom: 1px solid #dce8f0; }
-  tbody tr:hover { background: #e8f2f8; }
+  tbody tr { border-bottom: 1px solid #c2dde8; }
+  tbody tr:hover { background: #d4edf5; }
   html.dark thead th { background: #0f1923 !important; color: #4b5563 !important; border-color: #1a2535 !important; }
   html.dark tbody tr { border-color: #1a2535; }
-  html.dark tbody tr:hover { background: #161b22; }
+  html.dark tbody tr:hover { background: #0f1f26; }
+
+  /* ── Strong text on cyan cards ── */
+  .text-slate-900, .text-gray-900 { color: #0a1f2e !important; }
+  .text-slate-800, .text-gray-800 { color: #0d2a3d !important; }
+  .text-slate-700, .text-gray-700 { color: #1e4a5f !important; }
+  .text-slate-600, .text-gray-600 { color: #2a5f78 !important; }
+  .text-slate-500, .text-gray-500 { color: #3a7090 !important; }
+  .text-slate-400, .text-gray-400 { color: #4d88a0 !important; }
 
   /* ── Dark mode text ── */
   html.dark .text-slate-900 { color: #e8edf3 !important; }
@@ -186,10 +205,16 @@
   html.dark .text-violet-600  { color: #c4b5fd !important; }
 
   /* ── Dark mode borders ── */
-  html.dark .border-slate-200 { border-color: #21303f !important; }
+  html.dark .border-slate-200 { border-color: #1a3040 !important; }
   html.dark .border-slate-100 { border-color: #1a2535 !important; }
-  html.dark .bg-slate-100 { background-color: #1a2535 !important; }
-  html.dark .bg-white { background-color: #161b22 !important; }
+  html.dark .bg-slate-100 { background-color: #0f1f26 !important; }
+  html.dark .bg-white { background-color: #0f1f26 !important; }
+  html.dark .bg-\[\#f0f6fa\] { background-color: #0f1f26 !important; }
+  html.dark .bg-\[\#e8fafa\] { background-color: #0f1f26 !important; }
+
+  /* ── Dark text on light cyan (normal mode) ── */
+  html:not(.dark) .bg-\[\#f0f6fa\] { background-color: #e8fafa !important; }
+  html:not(.dark) .bg-\[\#e8fafa\] { background-color: #e8fafa !important; }
 
   /* ── Pastel bg dark mode ── */
   html.dark .bg-red-50     { background-color: rgba(220,38,38,0.08) !important; }

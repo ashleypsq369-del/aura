@@ -52,7 +52,7 @@ export default function Switch({
       >
         <RadixSwitch.Thumb
           className={`
-            pointer-events-none block h-[20px] w-[20px] rounded-full bg-[#f0f6fa] shadow-lg ring-0
+            pointer-events-none block h-[20px] w-[20px] rounded-full bg-[#e8fafa] shadow-lg ring-0
             transition-transform duration-200 ease-in-out
             data-[state=checked]:translate-x-[18px]
             data-[state=unchecked]:translate-x-0

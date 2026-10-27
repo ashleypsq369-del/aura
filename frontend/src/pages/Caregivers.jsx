@@ -95,7 +95,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
-      className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
+      className="bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
     >
       {/* Coloured top band */}
       <div className="h-1.5 w-full" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
@@ -240,7 +240,7 @@ function TrustProfileModal({ cg, onClose }) {
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+        className="bg-[#e8fafa] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Header band */}
@@ -337,7 +337,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+        className="bg-[#e8fafa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-1.5" style={{ background: `linear-gradient(to right, ${ringBg}, ${ringBg}88)` }} />
@@ -525,7 +525,7 @@ function FeatureShowcase({ navigate }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
-              className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+              className="bg-[#e8fafa] rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all cursor-pointer group"
               onClick={() => navigate(f.route)}
             >
               <div className="h-1" style={{ background: f.color }} />
@@ -734,14 +734,14 @@ export default function Caregivers() {
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search by name, role or email…"
-                className="w-full pl-10 pr-9 py-2.5 bg-[#f0f6fa] border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 outline-none text-sm shadow-sm" />
+                className="w-full pl-10 pr-9 py-2.5 bg-[#e8fafa] border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 outline-none text-sm shadow-sm" />
               {search && (
                 <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded bg-slate-100 hover:bg-red-100 flex items-center justify-center">
                   <X size={11} className="text-slate-500" />
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-1 bg-[#f0f6fa] border border-slate-200 rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
+            <div className="flex items-center gap-1 bg-[#e8fafa] border border-slate-200 rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
               {FILTERS.map(f => (
                 <button key={f.id} onClick={() => setFilter(f.id)}
                   className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
@@ -765,7 +765,7 @@ export default function Caregivers() {
               <p className="text-sm text-slate-500">Loading care team…</p>
             </div>
           ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-[#f0f6fa] rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
+            <div className="flex flex-col items-center justify-center bg-[#e8fafa] rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
               <Users size={36} className="text-slate-300" />
               <p className="font-bold text-slate-500">No caregivers match</p>
               <button onClick={() => { setSearch(''); setFilter('all'); }} className="text-xs text-teal-600 hover:underline font-semibold">Clear filters</button>
@@ -795,7 +795,7 @@ export default function Caregivers() {
                   <p className="text-xs text-slate-400">{filtered.length} workers · page {page + 1} of {pageCount}</p>
                   <div className="flex items-center gap-1.5">
                     <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
-                      className="w-8 h-8 rounded-xl border border-slate-200 bg-[#f0f6fa] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
+                      className="w-8 h-8 rounded-xl border border-slate-200 bg-[#e8fafa] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
                       <ChevronLeft size={14} />
                     </button>
                     {Array.from({ length: pageCount }, (_, idx) => (
@@ -803,7 +803,7 @@ export default function Caregivers() {
                         className={`h-2 rounded-full transition-all duration-200 ${idx === page ? 'w-6 bg-teal-600' : 'w-2 bg-slate-300 hover:bg-teal-400'}`} />
                     ))}
                     <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
-                      className="w-8 h-8 rounded-xl border border-slate-200 bg-[#f0f6fa] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
+                      className="w-8 h-8 rounded-xl border border-slate-200 bg-[#e8fafa] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
                       <ChevronRight size={14} />
                     </button>
                   </div>
@@ -833,7 +833,7 @@ export default function Caregivers() {
                   { l: 'Overloaded',        v: teamRaw.overloaded_caregivers ?? 0,             icon: AlertTriangle, c: '#ef4444' },
                 ].map(({ l, v, icon: Icon, c }) => (
                   <div key={l}
-                    className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border bg-[#f0f6fa] shadow-sm"
+                    className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border bg-[#e8fafa] shadow-sm"
                     style={{ borderColor: `${c}30` }}>
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
                       style={{ background: `${c}15`, color: c }}>
@@ -847,7 +847,7 @@ export default function Caregivers() {
 
               {/* Workload table */}
               {teamRaw.team_metrics?.length > 0 && (
-                <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-100">
                     <h3 className="font-bold text-slate-800 text-sm">Workload Distribution</h3>
                     <p className="text-xs text-slate-500 mt-0.5">Current patient load per caregiver</p>
@@ -914,7 +914,7 @@ export default function Caregivers() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Manual assign */}
             {isStaff && (
-              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
                   <UserPlus size={15} className="text-teal-600" />
                   <h3 className="font-bold text-slate-800 text-sm">Manual Assignment</h3>
@@ -974,7 +974,7 @@ export default function Caregivers() {
             )}
 
             {/* Current assignments list */}
-            <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ListChecks size={15} className="text-teal-600" />
@@ -1018,7 +1018,7 @@ export default function Caregivers() {
       {tab === 'mypatients' && (
         <div className="px-6 space-y-3">
           {myPatients.length === 0 ? (
-            <div className="flex flex-col items-center bg-[#f0f6fa] rounded-2xl border border-dashed border-slate-300 py-16 gap-3">
+            <div className="flex flex-col items-center bg-[#e8fafa] rounded-2xl border border-dashed border-slate-300 py-16 gap-3">
               <Heart size={32} className="text-slate-300" />
               <p className="font-bold text-slate-500">No patients assigned yet</p>
             </div>
@@ -1028,7 +1028,7 @@ export default function Caregivers() {
                 const pid = p.patient_id || p.id;
                 return (
                   <motion.div key={pid} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
+                    className="bg-[#e8fafa] rounded-xl border border-slate-200 p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
                     onClick={() => navigate(`/patients/${pid}`)}>
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {getInitials(p.patient_name || p.full_name)}

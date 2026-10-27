@@ -120,12 +120,12 @@ export default function SpiritualCareForm() {
     });
   };
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[#f0f6fa] dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[#e8fafa] dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
   const textareaCls = `${inputCls} resize-none`;
   const selectCls = inputCls;
 
   const Section = ({ title, icon: Icon, color = 'violet', children }) => (
-    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
         <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
         <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>

@@ -207,7 +207,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Zap size={20} className="text-rose-500 flex-shrink-0" /> Pain Severity
@@ -305,7 +305,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
             <MapPin className="w-6 h-6 mr-2" /> Pain Location
@@ -341,7 +341,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4">
             Pain Type (Select all that apply)
@@ -374,7 +374,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4">
             Pain Interference with Daily Life
@@ -424,7 +424,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h2 className="text-xl font-bold text-slate-900 mb-4">
             ?? Current Pain Management
@@ -474,7 +474,7 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#e8fafa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

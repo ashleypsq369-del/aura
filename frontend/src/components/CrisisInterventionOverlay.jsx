@@ -106,7 +106,7 @@ export default function CrisisInterventionOverlay({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-[#f0f6fa] rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
+              className="bg-[#e8fafa] rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
             >
               {/* Header - Urgent */}
               <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-5 relative">
@@ -165,7 +165,7 @@ export default function CrisisInterventionOverlay({
                   </p>
                   <button
                     onClick={onTalkToHuman}
-                    className="w-full bg-[#f0f6fa] text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
+                    className="w-full bg-[#e8fafa] text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
                   >
                     <MessageCircle size={24} strokeWidth={2.5} />
                     Connect with Your Care Team

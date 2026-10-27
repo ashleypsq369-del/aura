@@ -35,7 +35,7 @@ function Section({ icon: Icon, iconColor = 'text-teal-600', iconBg = 'bg-teal-50
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
+      className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
     >
       <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
         style={{ background: `linear-gradient(to right, ${accentColor}12, transparent)` }}>
@@ -115,7 +115,7 @@ export default function PatientPortal() {
   if (!portalData || portalData.error) {
     return (
       <div className="min-h-full flex items-center justify-center p-6">
-        <div className="bg-[#f0f6fa] rounded-lg shadow-sm p-10 text-center max-w-md border border-slate-200">
+        <div className="bg-[#e8fafa] rounded-lg shadow-sm p-10 text-center max-w-md border border-slate-200">
           <div className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-8 h-8 text-teal-600" />
           </div>
@@ -267,7 +267,7 @@ export default function PatientPortal() {
                       return (
                         <div key={name} className="flex items-center gap-2">
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm transition-all ${
-                            isActive ? 'text-white scale-110' : isPast ? 'text-white' : 'bg-[#f0f6fa] text-slate-300 border-slate-200'
+                            isActive ? 'text-white scale-110' : isPast ? 'text-white' : 'bg-[#e8fafa] text-slate-300 border-slate-200'
                           }`}
                           style={isActive ? { background: 'linear-gradient(135deg,#7c3aed,#4338ca)' } :
                                  isPast   ? { background: 'linear-gradient(135deg,#0d9488,#0891b2)' } : {}}>
@@ -473,7 +473,7 @@ export default function PatientPortal() {
                         return `${x},${y}`;
                       }).join(' ');
                       return (
-                        <div key={key} className="flex items-center gap-2 bg-[#f0f6fa] rounded-lg border border-slate-100 px-2.5 py-2">
+                        <div key={key} className="flex items-center gap-2 bg-[#e8fafa] rounded-lg border border-slate-100 px-2.5 py-2">
                           <div className="flex-1 min-w-0">
                             <p className="text-[10px] text-slate-500">{label}</p>
                             <p className="text-sm font-bold tabular-nums" style={{ color }}>

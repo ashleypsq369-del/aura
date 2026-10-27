@@ -53,7 +53,7 @@ function GoalCard({ goal, patientId, onUpdate }) {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-[#f0f6fa] rounded-xl border-2 ${cfg.border} overflow-hidden`}
+      className={`bg-[#e8fafa] rounded-xl border-2 ${cfg.border} overflow-hidden`}
     >
       <div
         className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50 transition-colors"
@@ -234,7 +234,7 @@ export default function CarePlanDetail() {
     return (
       <PageTransition>
         <div className="max-w-[1200px] mx-auto px-4 py-8">
-          <div className="bg-[#f0f6fa] rounded-xl border border-red-200 p-8 text-center">
+          <div className="bg-[#e8fafa] rounded-xl border border-red-200 p-8 text-center">
             <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
             <h2 className="text-base font-bold text-slate-900 mb-2">No Care Plan Found</h2>
             <p className="text-sm text-slate-500 mb-5">No care plan exists for this patient yet.</p>
@@ -300,7 +300,7 @@ export default function CarePlanDetail() {
         </PageHeader>
 
         {/* Summary strip */}
-        <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm mb-0">
+        <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm mb-0">
           <div className="flex items-center gap-2">
             <span className="badge-stable">{carePlan.care_phase || 'Active'}</span>
           </div>
@@ -321,7 +321,7 @@ export default function CarePlanDetail() {
           <div className="lg:col-span-2 space-y-5">
 
             {/* Active Goals */}
-            <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden">
+            <div className="bg-[#e8fafa] rounded-xl border border-slate-200 overflow-hidden">
               <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between"
                 style={{ background: 'linear-gradient(to right, #0d948815, transparent)' }}>
                 <div className="flex items-center gap-3">
@@ -345,7 +345,7 @@ export default function CarePlanDetail() {
 
             {/* Completed Goals */}
             {completedGoals.length > 0 && (
-              <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden">
+              <div className="bg-[#e8fafa] rounded-xl border border-slate-200 overflow-hidden">
                 <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
@@ -366,7 +366,7 @@ export default function CarePlanDetail() {
 
             {/* Interventions */}
             {interventions.length > 0 && (
-              <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden">
+              <div className="bg-[#e8fafa] rounded-xl border border-slate-200 overflow-hidden">
                 <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -417,7 +417,7 @@ export default function CarePlanDetail() {
               const text = carePlan[key];
               const isEditing = editingSection === key;
               return (
-                <div key={key} className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden">
+                <div key={key} className="bg-[#e8fafa] rounded-xl border border-slate-200 overflow-hidden">
                   <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between"
                     style={{ background: `linear-gradient(to right, ${bg.replace('bg-', '')}40, transparent)` }}>
                     <div className="flex items-center gap-2">

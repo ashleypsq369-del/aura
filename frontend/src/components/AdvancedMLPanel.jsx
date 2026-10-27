@@ -52,7 +52,7 @@ function DeteriorationCard({ data }) {
 
   return (
     <div
-      className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+      className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
       style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
     >
       {/* Header — px-4 py-3 */}
@@ -122,7 +122,7 @@ function PrognosisCard({ data }) {
 
   return (
     <div
-      className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+      className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
       style={{ borderLeftWidth: 4, borderLeftColor: catColor }}
     >
       {/* Header — px-4 py-3 */}
@@ -188,7 +188,7 @@ function DrugInteractionsCard({ interactions, medCount }) {
   if (!interactions?.length) {
     return (
       <div
-        className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
+        className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
         style={{ borderLeftWidth: 4, borderLeftColor: '#16a34a' }}
       >
         <Pill size={14} className="text-green-600" />
@@ -205,7 +205,7 @@ function DrugInteractionsCard({ interactions, medCount }) {
 
   return (
     <div
-      className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+      className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
       style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
     >
       <button className="w-full flex items-center gap-3 px-4 py-3 text-left"
@@ -267,7 +267,7 @@ export default function AdvancedMLPanel({ patientId }) {
 
   if (isLoading) {
     return (
-      <div className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
         <Activity size={14} className="text-teal-500 animate-pulse" />
         <p className="text-xs text-gray-600">Running advanced analysis (deterioration, prognosis, drug interactions)...</p>
       </div>
@@ -276,7 +276,7 @@ export default function AdvancedMLPanel({ patientId }) {
 
   if (error || !data) {
     return (
-      <div className="bg-[#f0f6fa] rounded-2xl border border-amber-200 shadow-sm p-4">
+      <div className="bg-[#e8fafa] rounded-2xl border border-amber-200 shadow-sm p-4">
         <p className="text-xs text-amber-700">Advanced analysis unavailable — check backend connection.</p>
       </div>
     );
@@ -311,7 +311,7 @@ export default function AdvancedMLPanel({ patientId }) {
       {/* Wellness check-in trends */}
       {data.checkin_trends && Object.keys(data.checkin_trends).length > 0 && (
         <div
-          className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+          className="bg-[#e8fafa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
           style={{ borderLeftWidth: 4, borderLeftColor: '#0d9488' }}
         >
           {/* Header — px-4 py-3 */}
@@ -338,7 +338,7 @@ export default function AdvancedMLPanel({ patientId }) {
                 return (
                   <div
                     key={key}
-                    className="bg-[#f0f6fa] rounded-xl border border-gray-200 p-2"
+                    className="bg-[#e8fafa] rounded-xl border border-gray-200 p-2"
                     style={{ borderLeftWidth: 3, borderLeftColor: cellBorder }}
                   >
                     {/* text-[10px] label */}

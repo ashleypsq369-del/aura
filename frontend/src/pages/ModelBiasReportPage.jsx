@@ -189,7 +189,7 @@ export default function ModelBiasReportPage() {
                 { label:'High-Risk Count',   value: overall.high_risk_count ?? 0,  color:'text-red-500',  icon:AlertTriangle },
                 { label:'Fairness Grade',    value: grade.label.split(' · ')[0],   color: grade.color,    icon:Shield },
               ].map(({ label, value, color, icon: Icon }) => (
-                <div key={label} className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
+                <div key={label} className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
                   <Icon size={18} className={color}/>
                   <div><p className="text-xs text-slate-500">{label}</p><p className={`text-xl font-bold ${color}`}>{value}</p></div>
                 </div>
@@ -211,7 +211,7 @@ export default function ModelBiasReportPage() {
             <div className="flex gap-2 flex-wrap">
               {Object.entries(CATS).map(([key, { label, icon: Icon, color }]) => (
                 <button key={key} onClick={() => setCat(key)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all ${cat===key ? 'text-white border-transparent shadow-sm' : 'bg-[#f0f6fa] text-slate-700 border-slate-200 hover:border-slate-300'}`}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all ${cat===key ? 'text-white border-transparent shadow-sm' : 'bg-[#e8fafa] text-slate-700 border-slate-200 hover:border-slate-300'}`}
                   style={cat===key ? { backgroundColor: color } : {}}>
                   <Icon size={14}/>{label}
                 </button>
@@ -221,7 +221,7 @@ export default function ModelBiasReportPage() {
             {/* Group cards */}
             <div className="space-y-3">
               {entries.length === 0 ? (
-                <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 p-12 text-center">
+                <div className="bg-[#e8fafa] rounded-2xl border border-slate-200 p-12 text-center">
                   <BarChart3 size={36} className="mx-auto text-slate-300 mb-3"/>
                   <p className="text-slate-500">No data available for this category</p>
                 </div>
@@ -244,14 +244,14 @@ export default function ModelBiasReportPage() {
                     ['AI Bias Direction', overrideStats.direction||'Neutral', 'text-slate-700'],
                     ['Recommendation', overrideStats.recommendation||'—', 'text-emerald-600'],
                   ].map(([label, val, color]) => (
-                    <div key={label} className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4">
+                    <div key={label} className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4">
                       <p className="text-xs text-slate-500 mb-1">{label}</p>
                       <p className={`text-lg font-bold ${color}`}>{val}</p>
                     </div>
                   ))}
                 </div>
                 {overrideStats.by_reason && Object.keys(overrideStats.by_reason).length > 0 && (
-                  <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm p-5">
+                  <div className="bg-[#e8fafa] rounded-2xl border border-slate-200 shadow-sm p-5">
                     <h3 className="text-sm font-bold text-slate-800 mb-3">Override Reasons Breakdown</h3>
                     <div className="flex flex-wrap gap-2">
                       {Object.entries(overrideStats.by_reason).map(([reason, count]) => (
@@ -277,7 +277,7 @@ export default function ModelBiasReportPage() {
                     ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||'—', 'text-teal-600'],
                     ['Model Reliability', impactData.ai_benefit_indicators?.model_reliability||'—', impactData.ai_benefit_indicators?.model_reliability === 'High' ? 'text-emerald-600' : 'text-amber-600'],
                   ].map(([label, val, color]) => (
-                    <div key={label} className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm px-4 py-3">
+                    <div key={label} className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm px-4 py-3">
                       <p className="text-xs text-slate-500 mb-1">{label}</p>
                       <p className={`text-xl font-bold ${color}`}>{val}</p>
                     </div>
@@ -300,7 +300,7 @@ export default function ModelBiasReportPage() {
               { icon:Brain,         color:'violet', title:'Model Retraining',          text:'If persistent disparities are confirmed, retrain with balanced sampling using SMOTE or stratified splitting across demographic groups.' },
               { icon:Shield,        color:'teal',   title:'Clinical Validation',       text:'Never attribute disparity to model bias alone without clinical review. Work with palliative care specialists to interpret all findings.' },
             ].map(({ icon: Icon, color, title, text }) => (
-              <div key={title} className={`bg-[#f0f6fa] border-2 rounded-2xl p-5 border-${color}-200`}>
+              <div key={title} className={`bg-[#e8fafa] border-2 rounded-2xl p-5 border-${color}-200`}>
                 <div className="flex items-center gap-2 mb-2">
                   <Icon size={18} className={`text-${color}-600`}/>
                   <h4 className={`font-bold text-${color}-900 text-sm`}>{title}</h4>

@@ -59,7 +59,7 @@ export default function ContactsTab({ onContactMessage }) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 py-4 border-b border-slate-100 bg-[#f0f6fa] flex-shrink-0">
+      <div className="px-4 py-4 border-b border-slate-100 bg-[#e8fafa] flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="font-bold text-slate-900 text-sm flex items-center gap-2">

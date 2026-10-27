@@ -91,7 +91,7 @@ export default function AppDatePicker({
           disabled={disabled}
           required={required}
           autoComplete="off"
-          className="w-full pl-9 pr-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none transition bg-[#f0f6fa]"
+          className="w-full pl-9 pr-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none transition bg-[#e8fafa]"
           wrapperClassName="w-full"
           calendarClassName="shadow-xl border-2 border-teal-200 rounded-xl font-sans text-sm"
           popperPlacement="bottom-start"

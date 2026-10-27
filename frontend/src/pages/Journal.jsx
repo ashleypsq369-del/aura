@@ -243,7 +243,7 @@ export default function Journal() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-[#f0f6fa] dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 shadow-md text-center"
+          className="bg-[#e8fafa] dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 shadow-md text-center"
         >
           <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.7 }} />
           <p className="text-xl italic text-gray-700 dark:text-slate-200">
@@ -274,7 +274,7 @@ export default function Journal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
+                className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
                 style={{ borderColor: ['#e9d5ff','#dbeafe','#d1fae5','#fce7f3','#fef3c7','#cffafe'][index % 6] }}
               >
                 {/* Top accent */}

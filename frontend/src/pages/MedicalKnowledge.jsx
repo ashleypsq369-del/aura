@@ -58,7 +58,7 @@ function RichText({ content }) {
             {rows.map((row, ri) => {
               const cells = row.split('|').filter(c => c.trim());
               return (
-                <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[#f0f6fa] even:bg-slate-50'}>
+                <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[#e8fafa] even:bg-slate-50'}>
                   {cells.map((cell, ci) => (
                     <td key={ci} className={`px-3 py-2 border-b border-slate-100 ${ri===0?'font-semibold text-slate-800':'text-slate-700'}`}>{cell.trim()}</td>
                   ))}
@@ -111,7 +111,7 @@ function BookSection({ icon: Icon, label, accent = 'slate', children }) {
         <Icon size={13} className={`flex-shrink-0 ${A.lbl}`}/>
         <span className={`text-[11px] font-bold  select-none ${A.lbl}`}>{label}</span>
       </div>
-      <div className="px-5 py-4 bg-[#f0f6fa]">{children}</div>
+      <div className="px-5 py-4 bg-[#e8fafa]">{children}</div>
     </div>
   );
 }
@@ -196,7 +196,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
             return (
               <button key={t.id} onClick={() => setActiveTab(t.id)}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-[12px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
-                  active ? 'bg-[#f0f6fa] text-slate-900 shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-slate-500 hover:bg-white/70 hover:text-slate-700'
+                  active ? 'bg-[#e8fafa] text-slate-900 shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-slate-500 hover:bg-white/70 hover:text-slate-700'
                 }`}>
                 <Icon size={12} className={active?'text-teal-600':''}/>
                 <span className="hidden sm:inline">{t.label}</span>
@@ -205,7 +205,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
             );
           })}
         </div>
-        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-[#f0f6fa] overflow-hidden">
+        <div className="border border-t-0 border-slate-200 rounded-b-lg bg-[#e8fafa] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{opacity:0,y:4}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.14}} className="p-5 space-y-5">
               {tab?.fields.map((field, fi) => {
@@ -448,11 +448,11 @@ export default function MedicalKnowledge() {
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
             <input type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="Search conditions…"
-              className="w-full pl-9 pr-3 py-2.5 bg-[#f0f6fa] border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+              className="w-full pl-9 pr-3 py-2.5 bg-[#e8fafa] border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
           </div>
 
           {/* Index list */}
-          <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
+          <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
             {/* Index header */}
             <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -518,7 +518,7 @@ export default function MedicalKnowledge() {
           <AnimatePresence mode="wait">
             {mode === 'add' && (
               <motion.div key="add" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-5 py-4 bg-teal-50 border-b border-teal-200">
                   <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center flex-shrink-0">
                     <Plus size={16} className="text-white"/>
@@ -540,7 +540,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'edit' && detail && (
               <motion.div key="edit" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-5 py-4 bg-amber-50 border-b border-amber-200">
                   <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
                     <Edit2 size={15} className="text-white"/>
@@ -580,7 +580,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'read' && !activeId && (
               <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-                className="h-full flex flex-col items-center justify-center py-24 text-slate-400 bg-[#f0f6fa] rounded-xl border border-slate-200 border-dashed">
+                className="h-full flex flex-col items-center justify-center py-24 text-slate-400 bg-[#e8fafa] rounded-xl border border-slate-200 border-dashed">
                 <BookOpen size={40} className="opacity-20 mb-3"/>
                 <p className="font-semibold text-slate-500">Select a condition from the index</p>
                 <p className="text-sm mt-1">Click any entry on the left to read its clinical reference</p>
@@ -595,7 +595,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'read' && activeId && (
               <motion.div key={activeId} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 {loadingDetail || !detail ? (
                   <div className="flex flex-col items-center justify-center py-24">
                     <RefreshCw size={28} className="animate-spin text-teal-500 mb-3"/>

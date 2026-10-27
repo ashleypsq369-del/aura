@@ -187,7 +187,7 @@ export default function Patients() {
 
       {/* Search and Filter Bar */}
       <div className="px-3 sm:px-4 space-y-3">
-      <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4">
+      <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4">
         {/* Active filter banner */}
         {location.state?.filterStatus && filterStatus !== 'all' && (
           <div className={`flex items-center justify-between mb-3 px-4 py-2.5 rounded-xl border text-sm font-semibold ${
@@ -201,7 +201,7 @@ export default function Patients() {
                'Showing Stable Patients -- Maintaining good health'}
             </span>
             <button onClick={() => { setFilterStatus('all'); navigate('/patients', { replace: true, state: {} }); }}
-              className="ml-3 px-2.5 py-1 bg-[#f0f6fa] rounded-lg border text-xs font-bold hover:bg-slate-50 transition">
+              className="ml-3 px-2.5 py-1 bg-[#e8fafa] rounded-lg border text-xs font-bold hover:bg-slate-50 transition">
               Clear
             </button>
           </div>
@@ -246,7 +246,7 @@ export default function Patients() {
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
                   active
                     ? 'text-white border-transparent shadow-sm'
-                    : 'bg-[#f0f6fa] border-slate-200 text-slate-600 hover:border-slate-300'
+                    : 'bg-[#e8fafa] border-slate-200 text-slate-600 hover:border-slate-300'
                 }`}
                 style={active ? { backgroundColor: color || '#475569' } : {}}>
                 {Icon && <Icon size={10}/>}

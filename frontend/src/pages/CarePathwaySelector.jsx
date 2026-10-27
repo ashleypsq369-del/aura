@@ -81,7 +81,7 @@ export default function CarePathwaySelector() {
   const STEPS = ['Choose Pathway', 'Select Services', 'Support Level', 'Your Concern'];
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#dce8f0' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#c2dde8' }}>
       <div className="w-full max-w-lg">
         {/* Progress indicator */}
         {step < 4 && (
@@ -125,7 +125,7 @@ export default function CarePathwaySelector() {
               {loadingOptions ? (
                 <div className="space-y-3">
                   {[1,2,3].map(i => (
-                    <div key={i} className="h-20 bg-[#f0f6fa] dark:bg-slate-800 rounded-xl animate-pulse border border-slate-200 dark:border-slate-700" />
+                    <div key={i} className="h-20 bg-[#e8fafa] dark:bg-slate-800 rounded-xl animate-pulse border border-slate-200 dark:border-slate-700" />
                   ))}
                 </div>
               ) : (
@@ -289,7 +289,7 @@ export default function CarePathwaySelector() {
                 onChange={e => setSelected(s => ({ ...s, primary_concern: e.target.value }))}
                 rows={4}
                 placeholder="e.g. My father has severe pain and difficulty moving. We need help with wound care and daily medication…"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-[#f0f6fa] text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-[#e8fafa] text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
               />
 
               <div className="flex gap-2">

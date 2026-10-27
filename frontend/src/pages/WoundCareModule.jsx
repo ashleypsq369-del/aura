@@ -40,7 +40,7 @@ function WoundCard({ log, idx }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: idx * 0.05 }}
-      className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+      className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden"
     >
       <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
         style={{ background: `${meta.color}08` }}>
@@ -96,7 +96,7 @@ function AddWoundForm({ patientId, onClose }) {
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   return (
-    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+    <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-bold text-slate-800 dark:text-white text-sm">New Wound Log</h3>
         <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400">
@@ -191,7 +191,7 @@ function AddWoundForm({ patientId, onClose }) {
   );
 }
 
-const inputCls = 'w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#f0f6fa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500';
+const inputCls = 'w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[#e8fafa] dark:bg-slate-700 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500';
 
 function Field({ label, children }) {
   return (
@@ -217,7 +217,7 @@ export default function WoundCareModule() {
   const sites = [...new Set(logs.map(l => l.wound_site))];
 
   return (
-    <div className="min-h-screen" style={{ background: '#dce8f0' }}>
+    <div className="min-h-screen" style={{ background: '#c2dde8' }}>
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
         <PageHeader
           title="Wound Care"
@@ -251,14 +251,14 @@ export default function WoundCareModule() {
         {isLoading ? (
           <div className="space-y-3">
             {[1,2].map(i => (
-              <div key={i} className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 animate-pulse">
+              <div key={i} className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 animate-pulse">
                 <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-1/2 mb-2" />
                 <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-2/3" />
               </div>
             ))}
           </div>
         ) : logs.length === 0 ? (
-          <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center">
+          <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center">
             <Camera size={32} className="text-slate-300 dark:text-slate-600 mx-auto mb-2" />
             <p className="text-slate-500 dark:text-slate-400 text-sm">No wound logs recorded yet</p>
           </div>

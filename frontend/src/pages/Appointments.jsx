@@ -37,7 +37,7 @@ const LOCATIONS = [
   'Korle Bu Teaching Hospital','Ridge Hospital','37 Military Hospital',
 ];
 const STATUS_CFG = {
-  scheduled: { borderL:'border-l-blue-500',   bg:'bg-[#f0f6fa]',       badge:'badge-moderate', label:'Scheduled', pulse:false },
+  scheduled: { borderL:'border-l-blue-500',   bg:'bg-[#e8fafa]',       badge:'badge-moderate', label:'Scheduled', pulse:false },
   completed: { borderL:'border-l-emerald-500', bg:'bg-emerald-50',  badge:'badge-stable',   label:'Completed', pulse:false },
   cancelled: { borderL:'border-l-slate-400',   bg:'bg-slate-50',    badge:'badge-info',     label:'Cancelled', pulse:false },
   today:     { borderL:'border-l-teal-500',    bg:'bg-teal-50',     badge:'badge-low',      label:'Today',     pulse:true  },
@@ -68,7 +68,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
 
   return (
     <button onClick={onClick}
-      className="relative rounded-lg text-left w-full transition-all duration-150 bg-[#f0f6fa] hover:shadow-md"
+      className="relative rounded-lg text-left w-full transition-all duration-150 bg-[#e8fafa] hover:shadow-md"
       style={{
         border: selected ? `2px solid ${a.active}` : '1px solid #c8d0da',
         boxShadow: selected ? `0 0 0 1px ${a.active}20, 0 2px 8px rgba(0,0,0,0.08)` : '0 1px 3px rgba(0,0,0,0.06)',
@@ -105,7 +105,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
       className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
         onClick={e=>e.stopPropagation()}
-        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+        className="bg-[#e8fafa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center"><Calendar size={15}/></div>
@@ -450,7 +450,7 @@ export default function Appointments() {
             </div>
             <div className="flex flex-wrap gap-2">
               {todayReminders.map(a => (
-                <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-[#f0f6fa] border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-[#e8fafa] border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
                   <Clock size={10}/>
                   {new Date(a.scheduled_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — {a.appointment_type}
                 </span>
@@ -473,7 +473,7 @@ export default function Appointments() {
       {/* Filter bar + Content — hidden for care settings that gate appointments */}
       {!appointmentsHidden && (<>
       <div className="px-6">
-        <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+        <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3 items-center">
             {isStaff && (
               <SearchableSelect
@@ -532,7 +532,7 @@ export default function Appointments() {
             <Loader2 size={28} className="animate-spin text-teal-600"/>
           </div>
         ) : !patientId ? (
-          <div className="bg-[#f0f6fa] rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
+          <div className="bg-[#e8fafa] rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
             <Search size={36} className="mx-auto text-slate-300 mb-3"/>
             <p className="font-bold text-slate-600 text-base mb-1">Search for a patient</p>
             <p className="text-slate-400 text-sm">Select a patient above to view their appointments.</p>
@@ -550,7 +550,7 @@ export default function Appointments() {
                   </h2>
                 </div>
                 {upcomingAppts.length === 0 ? (
-                  <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-10 text-center">
+                  <div className="bg-[#e8fafa] rounded-xl border border-slate-200 p-10 text-center">
                     <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3"/>
                     <p className="text-slate-600 font-bold mb-1">No upcoming appointments</p>
                     <p className="text-slate-400 text-sm mb-4">
@@ -585,7 +585,7 @@ export default function Appointments() {
               <div>
                 <button onClick={() => setResolvedExpanded(v => !v)}
                   className={`w-full flex items-center justify-between px-5 py-3.5 rounded-xl border-2 font-bold text-sm transition-all ${
-                    resolvedExpanded ? 'bg-slate-100 border-slate-300 text-slate-700' : 'bg-[#f0f6fa] border-slate-200 text-slate-600 hover:border-slate-300'
+                    resolvedExpanded ? 'bg-slate-100 border-slate-300 text-slate-700' : 'bg-[#e8fafa] border-slate-200 text-slate-600 hover:border-slate-300'
                   }`}>
                   <div className="flex items-center gap-2.5">
                     <CheckCircle size={16} className={resolvedExpanded?'text-emerald-500':'text-green-400'}/>

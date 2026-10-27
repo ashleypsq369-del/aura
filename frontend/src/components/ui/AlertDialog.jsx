@@ -72,7 +72,7 @@ export default function AlertDialog({
                 className="
                   fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                   w-[90vw] max-w-md
-                  bg-[#f0f6fa] rounded-2xl shadow-2xl border border-slate-200
+                  bg-[#e8fafa] rounded-2xl shadow-2xl border border-slate-200
                   p-6 focus:outline-none
                 "
               >

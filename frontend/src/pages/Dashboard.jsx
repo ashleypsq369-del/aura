@@ -189,7 +189,7 @@ export default function Dashboard() {
             )}
             {/* ML Proactive Scan Widget */}
             {(user.role === 'clinician' || user.role === 'admin') && (
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-[#f0f6fa] mb-3">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-[#e8fafa] mb-3">
                 <Brain size={13} className="text-slate-500 flex-shrink-0" />
                 <p className="text-xs text-slate-600 flex-1 min-w-0">
                   <span className="font-semibold text-slate-700">ML Risk</span>
@@ -232,7 +232,7 @@ export default function Dashboard() {
                         <motion.tr key={patient.id}
                           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
                           onClick={() => navigate(`/patients/${patient.patient_id || patient.id}`)}
-                          className="bg-[#f0f6fa] dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
+                          className="bg-[#e8fafa] dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
                           <td className="py-3 px-6">
                             <div className="flex items-center space-x-2.5">
                               <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -266,7 +266,7 @@ export default function Dashboard() {
                   </table>
                   <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                     <button onClick={() => navigate('/patients')}
-                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#f0f6fa] dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+                      className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#e8fafa] dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                       <span>View All Patients</span>
                     </button>
                   </div>
@@ -306,7 +306,7 @@ export default function Dashboard() {
           <div className="mb-6">
             <TaskStatusBar />
           </div>
-          <div className="bg-[#f0f6fa] rounded-xl shadow-xl border border-slate-200 overflow-hidden">
+          <div className="bg-[#e8fafa] rounded-xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-slate-800 mb-0.5">Your Patients</h2>
@@ -332,7 +332,7 @@ export default function Dashboard() {
                       <motion.tr key={pid}
                         initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
                         onClick={() => navigate(`/patients/${pid}`)}
-                        className="bg-[#f0f6fa] dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
+                        className="bg-[#e8fafa] dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
                         <td className="py-3 px-6">
                           <div className="flex items-center space-x-2.5">
                             <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -363,7 +363,7 @@ export default function Dashboard() {
               </table>
               <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
                 <button onClick={() => navigate('/patients')}
-                  className="inline-flex items-center px-5 py-2.5 bg-[#f0f6fa] dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+                  className="inline-flex items-center px-5 py-2.5 bg-[#e8fafa] dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
                   View All Patients
                 </button>
               </div>
@@ -382,7 +382,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-xl font-semibold text-teal-800 mb-4">Welcome back, {user?.full_name}</h1>
-      <div className="bg-[#f0f6fa] rounded-lg shadow-md p-8 text-center">
+      <div className="bg-[#e8fafa] rounded-lg shadow-md p-8 text-center">
         <p className="text-slate-500">Your dashboard is ready.</p>
       </div>
     </div>
@@ -457,7 +457,7 @@ function FamilyDashboard({ user, summary, navigate }) {
 
         {/* Daily task checklist for family — shows appointments + optional tasks */}
         <TaskStatusBar />
-        <div className="bg-[#f0f6fa] dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-[#e8fafa] dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-slate-800 dark:text-white">Recent Care Updates</h2>

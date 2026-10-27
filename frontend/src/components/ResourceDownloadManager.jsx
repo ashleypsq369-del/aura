@@ -205,7 +205,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                         p-5 rounded-xl border-2 text-left
                         transition-all duration-150 touch-manipulation
                         ${downloading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-teal-50 hover:border-teal-400 active:scale-98'}
-                        ${selectedPreset === presetKey ? 'border-teal-500 bg-teal-50' : 'border-gray-200 bg-[#f0f6fa]'}
+                        ${selectedPreset === presetKey ? 'border-teal-500 bg-teal-50' : 'border-gray-200 bg-[#e8fafa]'}
                       `}
                       onTouchStart={() => {
                         if (!downloading) {
@@ -271,7 +271,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                     <div key={category} className="border-2 border-gray-200 rounded-xl overflow-hidden">
                       <button
                         onClick={() => setExpandedCategory(isExpanded ? null : category)}
-                        className="w-full p-4 bg-[#f0f6fa] hover:bg-gray-50 flex items-center justify-between touch-manipulation"
+                        className="w-full p-4 bg-[#e8fafa] hover:bg-gray-50 flex items-center justify-between touch-manipulation"
                         onTouchStart={() => haptic.light()}
                       >
                         <div className="flex items-center space-x-3">
@@ -305,7 +305,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                                 return (
                                   <div
                                     key={resource.id}
-                                    className="p-3 bg-[#f0f6fa] rounded-lg border border-gray-200 flex items-center justify-between"
+                                    className="p-3 bg-[#e8fafa] rounded-lg border border-gray-200 flex items-center justify-between"
                                   >
                                     <div className="flex-1">
                                       <p className="font-semibold text-gray-900 text-sm">

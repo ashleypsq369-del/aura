@@ -79,7 +79,7 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
 
   // Full card
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#f0f6fa] dark:bg-slate-800 overflow-hidden">
+    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-[#e8fafa] dark:bg-slate-800 overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700"
         style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>

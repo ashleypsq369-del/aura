@@ -312,7 +312,7 @@ export default function AuraOnboarding() {
               pointerEvents: 'auto',
             }}
           >
-            <div className="rounded-2xl overflow-hidden bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+            <div className="rounded-2xl overflow-hidden bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
               style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)' }}>
 
               {/* Progress bar */}
@@ -404,7 +404,7 @@ export default function AuraOnboarding() {
             <div className="flex-shrink-0 mb-1">
               <AuraMascot size={48} pose={hint.pose} showShadow={false}/>
             </div>
-            <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-600"
+            <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-600"
               style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.18)' }}>
               <div className="flex items-start gap-2">
                 <HelpCircle size={12} className="text-teal-500 flex-shrink-0 mt-0.5"/>
@@ -415,7 +415,7 @@ export default function AuraOnboarding() {
                 <X size={10}/>
               </button>
               {/* Tail */}
-              <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-[#f0f6fa] dark:bg-slate-800 border-r border-b border-slate-200 dark:border-slate-600"/>
+              <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-[#e8fafa] dark:bg-slate-800 border-r border-b border-slate-200 dark:border-slate-600"/>
             </div>
           </motion.div>
         )}

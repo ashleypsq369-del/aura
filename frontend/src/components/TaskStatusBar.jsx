@@ -74,8 +74,8 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
         ${task.done
           ? 'bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800/20'
           : isReq
-            ? 'bg-[#f0f6fa] dark:bg-slate-800 border border-red-100 dark:border-red-900/30'
-            : 'bg-[#f0f6fa] dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50'
+            ? 'bg-[#e8fafa] dark:bg-slate-800 border border-red-100 dark:border-red-900/30'
+            : 'bg-[#e8fafa] dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50'
         }`}
     >
       {/* Status icon */}
@@ -235,7 +235,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
   return (
     <div
-      className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm"
+      className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm"
       style={{ borderLeft: `4px solid ${accentColor}` }}
     >
       {/* ── Collapsed header (always visible) ── */}

@@ -23,7 +23,7 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
     ? 'border-amber-300 bg-amber-50'
     : status === 'critical'
     ? 'border-red-300 bg-red-50 animate-pulse'
-    : 'border-slate-200 bg-[#f0f6fa]';
+    : 'border-slate-200 bg-[#e8fafa]';
 
   return (
     <motion.div
@@ -191,7 +191,7 @@ export default function VitalsDetail() {
             {/* Chart */}
             {chartData.length > 1 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                className="bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+                className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
                 <div className="px-6 py-4 border-b border-slate-200">
                   <h2 className="text-base font-bold text-slate-900">Vital Signs Trend</h2>
                 </div>
@@ -215,7 +215,7 @@ export default function VitalsDetail() {
 
             {/* History table */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+              className="bg-[#e8fafa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
               <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
                 <h2 className="text-base font-bold text-slate-900">Vitals History</h2>
                 <p className="text-slate-500 text-sm">Complete record of all vital sign measurements</p>

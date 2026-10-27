@@ -97,7 +97,7 @@ export default function BereavedFamilyDashboard() {
       />
 
       {/* -- Sticky tab bar ----------------------------------------- */}
-      <div className="sticky top-0 z-20 bg-[#f0f6fa] border-b border-slate-200 shadow-sm">
+      <div className="sticky top-0 z-20 bg-[#e8fafa] border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
             {visibleTabs.map(({ id, label, icon: Icon }) => (
@@ -142,7 +142,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
     <div className="space-y-6">
 
       {/* Mood check-in */}
-      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl p-5">
+      <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-5">
         <p className="text-sm font-semibold text-slate-700 mb-3">How are you feeling today?</p>
         <div className="flex gap-3">
           {moodOptions.map(({ icon: Icon, label, color, bg }) => (
@@ -165,7 +165,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       </div>
 
       {/* Quote */}
-      <div className="relative bg-[#f0f6fa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
+      <div className="relative bg-[#e8fafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
         <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
         <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
           "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
@@ -195,7 +195,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
 
       {/* Grief check-in CTA */}
       {!screeningData?.completed_recently && (
-        <div className="bg-[#f0f6fa] border border-purple-200 rounded-xl p-4 flex items-center gap-4">
+        <div className="bg-[#e8fafa] border border-purple-200 rounded-xl p-4 flex items-center gap-4">
           <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
             <Calendar size={17} className="text-purple-600" />
           </div>
@@ -213,7 +213,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
       {/* Message care team button */}
       <button
         onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
-        className="w-full flex items-center gap-3 bg-[#f0f6fa] border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
+        className="w-full flex items-center gap-3 bg-[#e8fafa] border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
       >
         <div className="w-9 h-9 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
           <MessageCircle size={16} className="text-teal-600" />
@@ -232,7 +232,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {CRISIS.map(({ name, number, tag }) => (
-            <div key={name} className="bg-[#f0f6fa] border border-red-100 rounded-lg p-2.5 text-center">
+            <div key={name} className="bg-[#e8fafa] border border-red-100 rounded-lg p-2.5 text-center">
               <p className="text-xs text-slate-500 mb-0.5">{name}</p>
               <p className="font-bold text-red-600 text-sm">{number}</p>
               <p className="text-xs text-slate-400">{tag}</p>
@@ -255,10 +255,10 @@ function GriefJourneyTab({ screeningData }) {
   ];
   return (
     <div className="space-y-5">
-      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl p-6">
+      <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl p-6">
         <GriefProgressTracker screeningData={screeningData} />
       </div>
-      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl overflow-hidden">
+      <div className="bg-[#e8fafa] border border-slate-200 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
           <h3 className="text-sm font-semibold text-slate-700">Understanding the Grief Journey</h3>
           <p className="text-xs text-slate-500 mt-0.5">Grief is not linear · you may move between these stages many times</p>
@@ -292,7 +292,7 @@ function SupportGroupsTab() {
         <div className="absolute inset-0 p-6 flex flex-col justify-end">
           <h2 className="text-white font-bold text-xl mb-1">Bereavement Support Groups</h2>
           <p className="text-teal-100 text-sm mb-4">Connect with others who truly understand what you are going through</p>
-          <Link to="/community" className="inline-flex items-center gap-2 bg-[#f0f6fa] text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
+          <Link to="/community" className="inline-flex items-center gap-2 bg-[#e8fafa] text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
             <Users size={14} /> Join Community <ArrowRight size={13} />
           </Link>
         </div>
@@ -304,7 +304,7 @@ function SupportGroupsTab() {
           [Clock,   'Always Available',    'Post and read messages any time, day or night'],
           [Globe,   'Culturally Grounded', 'Groups that understand Ghanaian grief traditions'],
         ].map(([Icon, title, desc]) => (
-          <div key={title} className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-4 flex gap-3">
+          <div key={title} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4 flex gap-3">
             <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0"><Icon size={15} className="text-teal-600" /></div>
             <div><p className="text-sm font-semibold text-slate-800">{title}</p><p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p></div>
           </div>
@@ -335,7 +335,7 @@ function CounselingTab() {
       </div>
       <div className="space-y-3">
         {COUNSELORS.map((r, i) => (
-          <div key={i} className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-4 flex items-start gap-4">
+          <div key={i} className="bg-[#e8fafa] border border-slate-200 rounded-xl p-4 flex items-start gap-4">
             <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
               <Phone size={15} className="text-purple-600" />
             </div>
@@ -386,7 +386,7 @@ function ResourcesTab() {
   return (
     <div className="space-y-4">
       {sections.map(({ label, dotColor, items }) => (
-        <div key={label} className="bg-[#f0f6fa] border border-slate-200 rounded-2xl overflow-hidden">
+        <div key={label} className="bg-[#e8fafa] border border-slate-200 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
             <div className={`w-2 h-2 rounded-full ${dotColor}`} />
             <h3 className="font-semibold text-slate-800 text-sm">{label}</h3>

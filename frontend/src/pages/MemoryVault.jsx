@@ -208,7 +208,7 @@ export default function MemoryVault() {
 
         {/* Patient Status Banner */}
         {patientName && (
-          <div className="bg-[#f0f6fa] border border-purple-100 rounded-lg px-4 py-3 flex items-center gap-3">
+          <div className="bg-[#e8fafa] border border-purple-100 rounded-lg px-4 py-3 flex items-center gap-3">
             <Users className="w-4 h-4 flex-shrink-0 text-purple-700" />
             <div>
               <p className="text-sm font-medium text-slate-700">
@@ -239,7 +239,7 @@ export default function MemoryVault() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border-2 transition-all ${
                     showClustered
                       ? 'bg-purple-600 text-white border-purple-600'
-                      : 'bg-[#f0f6fa] text-purple-700 border-purple-300 hover:bg-purple-50'
+                      : 'bg-[#e8fafa] text-purple-700 border-purple-300 hover:bg-purple-50'
                   }`}
                 >
                   {showClustered ? '📋 Grid View' : '🗂️ Group by Theme'}
@@ -266,7 +266,7 @@ export default function MemoryVault() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.04, duration: 0.2 }}
-                            className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                            className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                             style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                           >
                             <div className="h-1 w-full" style={{
@@ -317,7 +317,7 @@ export default function MemoryVault() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {clustered.other.map((memory, index) => (
                         <motion.div key={memory.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.04 }}
-                          className="bg-[#f0f6fa] rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                          className="bg-[#e8fafa] rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                           style={{ borderColor: '#e9d5ff' }}>
                           <div className="h-1 w-full" style={{ background: 'linear-gradient(to right,#7c3aed,#9d174d)' }} />
                           <div className="p-4">
@@ -348,7 +348,7 @@ export default function MemoryVault() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.04, duration: 0.2 }}
-                    className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                    className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                     style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                   >
                     {/* Top accent - cycles through memory colors */}
@@ -403,7 +403,7 @@ export default function MemoryVault() {
           </>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-purple-100 dark:border-slate-700 p-10 text-center">
+            className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl border border-purple-100 dark:border-slate-700 p-10 text-center">
             <Heart className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.3 }} />
             <h3 className="text-lg font-semibold mb-2 text-purple-700">Your Memory Vault is Empty</h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm mb-5">Start preserving the precious moments, stories, and reflections you want to keep forever.</p>

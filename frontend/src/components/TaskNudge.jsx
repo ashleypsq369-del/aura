@@ -115,7 +115,7 @@ export default function TaskNudge() {
           transition={{ type: 'spring', damping: 22, stiffness: 300 }}
           className="fixed bottom-24 right-5 z-[9000] w-72 pointer-events-auto"
         >
-          <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+          <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
             style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)' }}>
 
             {/* Accent top bar */}

@@ -104,7 +104,7 @@ export default function ShiftHandover() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Shift selector */}
-        <div className="bg-[#f0f6fa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
           <label className="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Clock size={16} />Outgoing Shift</label>
           <div className="flex gap-2">
             {['morning', 'afternoon', 'night'].map(s => (
@@ -118,7 +118,7 @@ export default function ShiftHandover() {
 
         {/* Patients flagged */}
         {patients.length > 0 && (
-          <div className="bg-[#f0f6fa] rounded-xl border-2 border-slate-200 p-5">
+          <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
             <label className="block text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Users size={16} />Patients Requiring Attention (select all that apply)</label>
             <div className="space-y-2">
               {patients.slice(0, 8).map(({ patient }) => (
@@ -136,7 +136,7 @@ export default function ShiftHandover() {
         )}
 
         {/* Handover note */}
-        <div className="bg-[#f0f6fa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
           <label className="block text-sm font-bold text-slate-700 mb-3">Handover Notes *</label>
           <textarea value={handoverNote} onChange={e => setHandoverNote(e.target.value)}
             rows={5} placeholder="Summarise key events during your shift, patient concerns, medication changes, family communications, pending results..."
@@ -144,7 +144,7 @@ export default function ShiftHandover() {
         </div>
 
         {/* Tasks for next shift */}
-        <div className="bg-[#f0f6fa] rounded-xl border-2 border-slate-200 p-5">
+        <div className="bg-[#e8fafa] rounded-xl border-2 border-slate-200 p-5">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><AlertTriangle size={16} />Tasks for Incoming Shift</label>
             <button type="button" onClick={addTask} className="flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-800 transition">

@@ -85,7 +85,7 @@ function KpiCard({ label, value, icon: Icon, color, selected, onClick, subtitle 
   return (
     <button onClick={onClick}
       className={`relative rounded-xl border-2 px-4 py-3 text-left w-full transition-all duration-150 ${
-        selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-[#f0f6fa] border-slate-200 hover:border-slate-300 hover:shadow-sm'
+        selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-[#e8fafa] border-slate-200 hover:border-slate-300 hover:shadow-sm'
       }`}>
       {selected && <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor:'currentColor' }}/>}
       <div className="flex items-center gap-2 mb-1.5">
@@ -114,7 +114,7 @@ function MedModal({ initial, onClose, onSave, pending }) {
       className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
         onClick={e=>e.stopPropagation()}
-        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+        className="bg-[#e8fafa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center"><Pill size={15}/></div>
@@ -186,7 +186,7 @@ function StopModal({ med, onClose, onConfirm, pending }) {
       className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
         onClick={e=>e.stopPropagation()}
-        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
+        className="bg-[#e8fafa] rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
         <div className="p-6 text-center">
           <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><Ban size={22} className="text-red-600"/></div>
           <h3 className="font-bold text-slate-900 text-lg mb-2">Discontinue {med?.name}?</h3>
@@ -211,7 +211,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
   const dose     = nextDose(med);
   return (
     <motion.div layout initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}
-      className="group rounded-lg border bg-[#f0f6fa] transition-shadow hover:shadow-sm"
+      className="group rounded-lg border bg-[#e8fafa] transition-shadow hover:shadow-sm"
       style={{ borderLeft:`3px solid ${isActive?'#0d9488':'#cbd5e1'}`, borderColor:'#c8d0da' }}>
       <div className="flex items-center gap-3 px-3 py-2.5">
         {/* Icon */}
@@ -504,7 +504,7 @@ export default function Medications() {
       {/* Dose reminders */}
       {reminders.length > 0 && (
         <div className="px-6">
-          <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4">
+          <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4">
             <div className="flex items-center gap-2 mb-3">
               <Bell size={15} className="text-amber-600"/>
               <h3 className="font-bold text-slate-800 text-sm">Upcoming Doses — Next 24 Hours</h3>
@@ -538,7 +538,7 @@ export default function Medications() {
 
       {/* Filter bar */}
       <div className="px-6">
-        <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+        <div className="bg-[#e8fafa] rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3 items-center">
             {/* Patient search (staff) */}
             {isStaff && (
@@ -589,13 +589,13 @@ export default function Medications() {
             </div>
           </div>
         ) : !patientId ? (
-          <div className="bg-[#f0f6fa] rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
+          <div className="bg-[#e8fafa] rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
             <Search size={36} className="mx-auto text-slate-300 mb-3"/>
             <p className="font-bold text-slate-600 text-base mb-1">Search for a patient</p>
             <p className="text-slate-400 text-sm">Select a patient above to view their medications.</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-12 text-center">
+          <div className="bg-[#e8fafa] rounded-xl border border-slate-200 p-12 text-center">
             <Pill size={36} className="mx-auto text-slate-300 mb-3"/>
             <p className="font-bold text-slate-600 mb-1">{filterTab==='active' ? 'No active medications' : 'No medication history'}</p>
             <p className="text-slate-400 text-sm mb-4">{filterTab==='active' ? 'No medications currently prescribed.' : 'No discontinued medications on record.'}</p>

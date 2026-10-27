@@ -32,7 +32,7 @@ export default function AnimatedModal({ isOpen, onClose, children, size = 'md' }
           {/* Modal */}
           <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
             <motion.div
-              className={`${sizeClasses[size]} w-full bg-[#f0f6fa] rounded-2xl shadow-2xl pointer-events-auto`}
+              className={`${sizeClasses[size]} w-full bg-[#e8fafa] rounded-2xl shadow-2xl pointer-events-auto`}
               variants={slideUp}
               initial="initial"
               animate="animate"
