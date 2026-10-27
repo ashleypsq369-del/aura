@@ -1,16 +1,16 @@
 /**
- * Register.jsx – Project Aura
+ * Register.jsx ΓÇô Project Aura
  * Healthcare-standard signup form (NHS / MyChart / Epic conventions):
- * • One card, two steps, plenty of breathing room
- * • Inline errors on blur; live re-check while typing once touched
- * • Confirm password field
- * • Compact inline country + dial-code selector (no modal / drawer)
- * • No distracting character counters; no clutter
- * • Slideshow full-screen on mobile (glass card), left-half on desktop
+ * ΓÇó One card, two steps, plenty of breathing room
+ * ΓÇó Inline errors on blur; live re-check while typing once touched
+ * ΓÇó Confirm password field
+ * ΓÇó Compact inline country + dial-code selector (no modal / drawer)
+ * ΓÇó No distracting character counters; no clutter
+ * ΓÇó Slideshow full-screen on mobile (glass card), left-half on desktop
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  Loader2, User as UserIcon, Mail, Phone, Lock,
@@ -26,50 +26,50 @@ import { useAuth } from '../context/AuthContext';
 import LoginSlideshow from '../components/LoginSlideshow';
 import { API_URL } from '../api/client';
 
-// ─── Countries (ITU-T E.164) ──────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Countries (ITU-T E.164) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const COUNTRIES = [
- { code:'GH', name:'Ghana', dial:'+233', flag:'🇬🇭', max:9 },
- { code:'NG', name:'Nigeria', dial:'+234', flag:'🇳🇬', max:10 },
- { code:'ZA', name:'South Africa', dial:'+27', flag:'🇿🇦', max:9 },
- { code:'KE', name:'Kenya', dial:'+254', flag:'🇰🇪', max:9 },
- { code:'ET', name:'Ethiopia', dial:'+251', flag:'🇪🇹', max:9 },
- { code:'EG', name:'Egypt', dial:'+20', flag:'🇪🇬', max:10 },
- { code:'TZ', name:'Tanzania', dial:'+255', flag:'🇹🇿', max:9 },
- { code:'UG', name:'Uganda', dial:'+256', flag:'🇺🇬', max:9 },
- { code:'CI', name:"Côte d'Ivoire", dial:'+225', flag:'🇨🇮', max:10 },
- { code:'CM', name:'Cameroon', dial:'+237', flag:'🇨🇲', max:9 },
- { code:'SN', name:'Senegal', dial:'+221', flag:'🇸🇳', max:9 },
- { code:'MA', name:'Morocco', dial:'+212', flag:'🇲🇦', max:9 },
- { code:'RW', name:'Rwanda', dial:'+250', flag:'🇷🇼', max:9 },
- { code:'ZW', name:'Zimbabwe', dial:'+263', flag:'🇿🇼', max:9 },
- { code:'ZM', name:'Zambia', dial:'+260', flag:'🇿🇲', max:9 },
- { code:'LR', name:'Liberia', dial:'+231', flag:'🇱🇷', max:8 },
- { code:'SL', name:'Sierra Leone', dial:'+232', flag:'🇸🇱', max:8 },
- { code:'GN', name:'Guinea', dial:'+224', flag:'🇬🇳', max:9 },
- { code:'BJ', name:'Benin', dial:'+229', flag:'🇧🇯', max:8 },
- { code:'TG', name:'Togo', dial:'+228', flag:'🇹🇬', max:8 },
- { code:'BF', name:'Burkina Faso', dial:'+226', flag:'🇧🇫', max:8 },
- { code:'ML', name:'Mali', dial:'+223', flag:'🇲🇱', max:8 },
- { code:'NE', name:'Niger', dial:'+227', flag:'🇳🇪', max:8 },
- { code:'SS', name:'South Sudan', dial:'+211', flag:'🇸🇸', max:9 },
- { code:'SD', name:'Sudan', dial:'+249', flag:'🇸🇩', max:9 },
- { code:'GB', name:'United Kingdom', dial:'+44', flag:'🇬🇧', max:10 },
- { code:'US', name:'United States', dial:'+1', flag:'🇺🇸', max:10 },
- { code:'CA', name:'Canada', dial:'+1', flag:'🇨🇦', max:10 },
- { code:'AU', name:'Australia', dial:'+61', flag:'🇦🇺', max:9 },
- { code:'DE', name:'Germany', dial:'+49', flag:'🇩🇪', max:11 },
- { code:'FR', name:'France', dial:'+33', flag:'🇫🇷', max:9 },
- { code:'IN', name:'India', dial:'+91', flag:'🇮🇳', max:10 },
- { code:'BR', name:'Brazil', dial:'+55', flag:'🇧🇷', max:11 },
- { code:'IT', name:'Italy', dial:'+39', flag:'🇮🇹', max:10 },
- { code:'ES', name:'Spain', dial:'+34', flag:'🇪🇸', max:9 },
- { code:'NL', name:'Netherlands', dial:'+31', flag:'🇳🇱', max:9 },
- { code:'IE', name:'Ireland', dial:'+353', flag:'🇮🇪', max:9 },
- { code:'SA', name:'Saudi Arabia', dial:'+966', flag:'🇸🇦', max:9 },
- { code:'AE', name:'UAE', dial:'+971', flag:'🇦🇪', max:9 },
+ { code:'GH', name:'Ghana', dial:'+233', flag:'≡ƒç¼≡ƒç¡', max:9 },
+ { code:'NG', name:'Nigeria', dial:'+234', flag:'≡ƒç│≡ƒç¼', max:10 },
+ { code:'ZA', name:'South Africa', dial:'+27', flag:'≡ƒç┐≡ƒçª', max:9 },
+ { code:'KE', name:'Kenya', dial:'+254', flag:'≡ƒç░≡ƒç¬', max:9 },
+ { code:'ET', name:'Ethiopia', dial:'+251', flag:'≡ƒç¬≡ƒç╣', max:9 },
+ { code:'EG', name:'Egypt', dial:'+20', flag:'≡ƒç¬≡ƒç¼', max:10 },
+ { code:'TZ', name:'Tanzania', dial:'+255', flag:'≡ƒç╣≡ƒç┐', max:9 },
+ { code:'UG', name:'Uganda', dial:'+256', flag:'≡ƒç║≡ƒç¼', max:9 },
+ { code:'CI', name:"C├┤te d'Ivoire", dial:'+225', flag:'≡ƒç¿≡ƒç«', max:10 },
+ { code:'CM', name:'Cameroon', dial:'+237', flag:'≡ƒç¿≡ƒç▓', max:9 },
+ { code:'SN', name:'Senegal', dial:'+221', flag:'≡ƒç╕≡ƒç│', max:9 },
+ { code:'MA', name:'Morocco', dial:'+212', flag:'≡ƒç▓≡ƒçª', max:9 },
+ { code:'RW', name:'Rwanda', dial:'+250', flag:'≡ƒç╖≡ƒç╝', max:9 },
+ { code:'ZW', name:'Zimbabwe', dial:'+263', flag:'≡ƒç┐≡ƒç╝', max:9 },
+ { code:'ZM', name:'Zambia', dial:'+260', flag:'≡ƒç┐≡ƒç▓', max:9 },
+ { code:'LR', name:'Liberia', dial:'+231', flag:'≡ƒç▒≡ƒç╖', max:8 },
+ { code:'SL', name:'Sierra Leone', dial:'+232', flag:'≡ƒç╕≡ƒç▒', max:8 },
+ { code:'GN', name:'Guinea', dial:'+224', flag:'≡ƒç¼≡ƒç│', max:9 },
+ { code:'BJ', name:'Benin', dial:'+229', flag:'≡ƒçº≡ƒç»', max:8 },
+ { code:'TG', name:'Togo', dial:'+228', flag:'≡ƒç╣≡ƒç¼', max:8 },
+ { code:'BF', name:'Burkina Faso', dial:'+226', flag:'≡ƒçº≡ƒç½', max:8 },
+ { code:'ML', name:'Mali', dial:'+223', flag:'≡ƒç▓≡ƒç▒', max:8 },
+ { code:'NE', name:'Niger', dial:'+227', flag:'≡ƒç│≡ƒç¬', max:8 },
+ { code:'SS', name:'South Sudan', dial:'+211', flag:'≡ƒç╕≡ƒç╕', max:9 },
+ { code:'SD', name:'Sudan', dial:'+249', flag:'≡ƒç╕≡ƒç⌐', max:9 },
+ { code:'GB', name:'United Kingdom', dial:'+44', flag:'≡ƒç¼≡ƒçº', max:10 },
+ { code:'US', name:'United States', dial:'+1', flag:'≡ƒç║≡ƒç╕', max:10 },
+ { code:'CA', name:'Canada', dial:'+1', flag:'≡ƒç¿≡ƒçª', max:10 },
+ { code:'AU', name:'Australia', dial:'+61', flag:'≡ƒçª≡ƒç║', max:9 },
+ { code:'DE', name:'Germany', dial:'+49', flag:'≡ƒç⌐≡ƒç¬', max:11 },
+ { code:'FR', name:'France', dial:'+33', flag:'≡ƒç½≡ƒç╖', max:9 },
+ { code:'IN', name:'India', dial:'+91', flag:'≡ƒç«≡ƒç│', max:10 },
+ { code:'BR', name:'Brazil', dial:'+55', flag:'≡ƒçº≡ƒç╖', max:11 },
+ { code:'IT', name:'Italy', dial:'+39', flag:'≡ƒç«≡ƒç╣', max:10 },
+ { code:'ES', name:'Spain', dial:'+34', flag:'≡ƒç¬≡ƒç╕', max:9 },
+ { code:'NL', name:'Netherlands', dial:'+31', flag:'≡ƒç│≡ƒç▒', max:9 },
+ { code:'IE', name:'Ireland', dial:'+353', flag:'≡ƒç«≡ƒç¬', max:9 },
+ { code:'SA', name:'Saudi Arabia', dial:'+966', flag:'≡ƒç╕≡ƒçª', max:9 },
+ { code:'AE', name:'UAE', dial:'+971', flag:'≡ƒçª≡ƒç¬', max:9 },
 ];
 
-// ─── Care settings ────────────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Care settings ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const CARE_SETTINGS = [
  {
  key: 'hospital_based', label: 'Hospital-Based Care',
@@ -98,7 +98,7 @@ const CARE_SETTINGS = [
  },
 ];
 
-// ─── Validators (called on blur + re-called while typing if already touched) ──
+// ΓöÇΓöÇΓöÇ Validators (called on blur + re-called while typing if already touched) ΓöÇΓöÇ
 const VALIDATORS = {
  full_name: v => {
  if (!v.trim()) return 'Please enter your full name';
@@ -121,8 +121,8 @@ const VALIDATORS = {
  password: v => {
  if (!v) return 'Please create a password';
  if (v.length < 8) return 'Password must be at least 8 characters';
- if (!/[A-Z]/.test(v)) return 'Include at least one uppercase letter (A–Z)';
- if (!/[0-9]/.test(v)) return 'Include at least one number (0–9)';
+ if (!/[A-Z]/.test(v)) return 'Include at least one uppercase letter (AΓÇôZ)';
+ if (!/[0-9]/.test(v)) return 'Include at least one number (0ΓÇô9)';
  return null;
  },
  confirm_password: (v, pw) => {
@@ -132,7 +132,7 @@ const VALIDATORS = {
  },
 };
 
-// ─── Compact inline country selector ─────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Compact inline country selector ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function CountrySelector({ selected, onChange }) {
  const [open, setOpen] = useState(false);
  const [query, setQuery] = useState('');
@@ -202,7 +202,7 @@ function CountrySelector({ selected, onChange }) {
  type="text"
  value={query}
  onChange={e => setQuery(e.target.value)}
- placeholder="Search country or code…"
+ placeholder="Search country or codeΓÇª"
  className="w-full pl-9 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-teal-400 bg-slate-50"
  autoComplete="off"
  />
@@ -243,7 +243,7 @@ function CountrySelector({ selected, onChange }) {
  );
 }
 
-// ─── Input field wrapper ──────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Input field wrapper ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function InputGroup({ id, label, required, error, success, hint, children }) {
  return (
  <div className="space-y-1.5">
@@ -287,12 +287,10 @@ function IconSlot({ err, children }) {
  );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ΓöÇΓöÇΓöÇ Main component ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 export default function Register() {
  const navigate = useNavigate();
  const { setUser } = useAuth();
- const loc = useLocation();
- const preRole = new URLSearchParams(loc.search).get('role') || 'patient';
 
  const [step, setStep] = useState(1);
  const [showPw, setShowPw] = useState(false);
@@ -301,16 +299,15 @@ export default function Register() {
  const [errors, setErrors] = useState({});
  const [touched, setTouched] = useState({});
  const [serverErr, setServerErr] = useState('');
- const [country, setCountry] = useState(COUNTRIES[0]);
+ const [country, setCountry] = useState(COUNTRIES[0]); // Ghana default
 
  const [form, setForm] = useState({
-   full_name:'', username:'', email:'',
-   password:'', confirm_password:'',
-   phone:'', role: preRole, care_setting:'',
-   gender:'', date_of_birth:'',
+ full_name:'', username:'', email:'',
+ password:'', confirm_password:'',
+ phone:'', role: preRole, care_setting:'', gender:'', date_of_birth:'',
  });
 
- // ── Validation helpers ────────────────────────────────────────────────────
+ // ΓöÇΓöÇ Validation helpers ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
  const validateOne = useCallback((field, value) => {
  if (field === 'confirm_password') return VALIDATORS.confirm_password(value, form.password);
  if (field === 'phone') {
@@ -353,7 +350,7 @@ export default function Register() {
  setField('phone', digits);
  };
 
- // ── Step 1 submit ─────────────────────────────────────────────────────────
+ // ΓöÇΓöÇ Step 1 submit ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
  const handleStep1 = (e) => {
  e.preventDefault();
  const fields = ['full_name','username','email','password','confirm_password'];
@@ -374,7 +371,7 @@ export default function Register() {
  window.scrollTo(0, 0);
  };
 
- // ── Final submit ──────────────────────────────────────────────────────────
+ // ΓöÇΓöÇ Final submit ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
  const registerMutation = useMutation({
  mutationFn: (data) => axios.post(`${API_URL}/api/auth/register`, {
  username: data.username,
@@ -403,7 +400,7 @@ export default function Register() {
  registerMutation.mutate(form);
  };
 
- // ── Render ────────────────────────────────────────────────────────────────
+ // ΓöÇΓöÇ Render ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
  return (
  <div className="min-h-screen flex flex-col lg:flex-row">
 
@@ -415,7 +412,7 @@ export default function Register() {
  <LoginSlideshow />
  </div>
 
- {/* ── Form panel ───────────────────────────────────────────────────── */}
+ {/* ΓöÇΓöÇ Form panel ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
  <div className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-8 lg:px-10 min-h-screen lg:min-h-0 overflow-y-auto bg-slate-50/0 lg:bg-slate-50">
  <motion.div
  initial={{ opacity:0, y:16 }}
@@ -424,7 +421,7 @@ export default function Register() {
  className="w-full max-w-[440px] my-4"
  >
 
- {/* ── Card ───────────────────────────────────────────────────────── */}
+ {/* ΓöÇΓöÇ Card ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */}
  <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-slate-200 overflow-hidden">
 
  {/* Header banner */}
@@ -435,7 +432,7 @@ export default function Register() {
  </div>
  <div>
  <h1 className="text-white font-bold text-lg leading-none">Create your account</h1>
- <p className="text-teal-100 text-xs mt-0.5">Project Aura · Palliative Care Platform</p>
+ <p className="text-teal-100 text-xs mt-0.5">Project Aura ┬╖ Palliative Care Platform</p>
  </div>
  </div>
 
@@ -481,7 +478,7 @@ export default function Register() {
  )}
  </AnimatePresence>
 
- {/* ══ STEP 1 ══════════════════════════════════════════════════ */}
+ {/* ΓòÉΓòÉ STEP 1 ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
  {step === 1 && (
  <form onSubmit={handleStep1} noValidate className="space-y-4">
 
@@ -561,47 +558,6 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Gender (optional) */}
- <div>
- <p className="text-sm font-semibold text-slate-700 mb-2">Gender <span className="text-slate-400 font-normal text-xs">(optional)</span></p>
- <div className="grid grid-cols-2 gap-2">
- {[
- { value:'male', label:'Male' },
- { value:'female', label:'Female' },
- { value:'other', label:'Other' },
- { value:'prefer_not_to_say', label:'Prefer not to say' },
- ].map(g => (
- <button key={g.value} type="button"
- onClick={() => setField('gender', form.gender === g.value ? '' : g.value)}
- className={`py-2.5 px-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
- form.gender === g.value
- ? 'border-teal-500 bg-teal-50 text-teal-700'
- : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
- }`}>
- {g.label}
- </button>
- ))}
- </div>
- </div>
-
- {/* Date of birth (optional) */}
- <div>
- <label htmlFor="dob" className="block text-sm font-semibold text-slate-700 mb-1.5">
- Date of birth <span className="text-slate-400 font-normal text-xs">(optional)</span>
- </label>
- <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-slate-50 transition-all ${inputBorder(false)}`}>
- <IconSlot err={false}><Calendar size={14}/></IconSlot>
- <input
- id="dob" type="date"
- value={form.date_of_birth}
- onChange={e => setField('date_of_birth', e.target.value)}
- max={new Date(Date.now() - 5*365.25*24*3600000).toISOString().split('T')[0]}
- min={new Date(Date.now() - 120*365.25*24*3600000).toISOString().split('T')[0]}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent"
- />
- </div>
- </div>
-
  {/* Password */}
  <InputGroup id="password" label="Password" required error={errors.password}
  hint={!errors.password && !touched.password ? 'At least 8 characters, one uppercase letter and one number' : undefined}>
@@ -658,29 +614,23 @@ export default function Register() {
  <select id="role" value={form.role} onChange={e => setField('role', e.target.value)}
  className="w-full h-11 px-3 border-2 border-slate-200 rounded-xl text-sm text-slate-800 font-medium outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/15 bg-slate-50 transition-all appearance-none cursor-pointer">
  <option value="patient">A patient</option>
- <option value="family">A family member or carer</option>
+ <option value="family">A family member (not a caregiver)</option>
  </select>
  </InputGroup>
 
  <button type="submit"
  className="w-full h-12 bg-teal-600 hover:bg-teal-700 active:scale-[0.98] text-white rounded-xl font-semibold text-sm transition-all shadow-sm mt-2 flex items-center justify-center gap-2">
- Continue <span aria-hidden="true">→</span>
+ Continue <span aria-hidden="true">ΓåÆ</span>
  </button>
 
  <p className="text-center text-sm text-slate-500 pt-1">
  Already have an account?{' '}
  <Link to="/login" className="text-teal-600 font-semibold hover:underline">Sign in</Link>
  </p>
- <p className="text-center text-xs text-slate-400 pt-0.5">
- Wrong account type?{' '}
- <Link to="/get-started" className="text-teal-600 font-semibold hover:underline">Choose again</Link>
- {' '}&bull;{' '}
- <Link to="/provider-register" className="text-teal-600 font-semibold hover:underline">Provider registration</Link>
- </p>
  </form>
  )}
 
- {/* ══ STEP 2 ══════════════════════════════════════════════════ */}
+ {/* ΓòÉΓòÉ STEP 2 ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
  {step === 2 && (
  <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -745,13 +695,13 @@ export default function Register() {
  <div className="flex gap-3 pt-1">
  <button type="button" onClick={() => { setStep(1); setServerErr(''); }}
  className="flex-1 h-12 border-2 border-slate-200 text-slate-600 rounded-xl font-semibold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
- ← Back
+ ΓåÉ Back
  </button>
  <button type="submit"
  disabled={registerMutation.isPending || !terms || !form.care_setting}
  className="flex-[2] h-12 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm shadow-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2">
  {registerMutation.isPending
- ? <><Loader2 size={15} className="animate-spin"/>Creating account…</>
+ ? <><Loader2 size={15} className="animate-spin"/>Creating accountΓÇª</>
  : 'Create account'}
  </button>
  </div>
@@ -763,7 +713,7 @@ export default function Register() {
  </div>
 
  <p className="text-center text-[10px] text-white/60 lg:text-slate-400 mt-3 drop-shadow-sm select-none">
- © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved
+ ┬⌐ {new Date().getFullYear()} Project Aura ┬╖ Group 31 ┬╖ All rights reserved
  </p>
  </motion.div>
  </div>
