@@ -139,6 +139,10 @@ if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('a
   if (stored === 'visual') html.classList.add('high-contrast');
 })();
 
+// Ghana Homecare Features
+import WoundCareModule from './pages/WoundCareModule';
+import CarePathwaySelector from './pages/CarePathwaySelector';
+
 // Gap Analysis Priority Pages
 import MedicalKnowledge from './pages/MedicalKnowledge';
 import ModelBiasReportPage from './pages/ModelBiasReportPage';
@@ -421,6 +425,7 @@ function AppRoutes() {
                     <Route path="/patients/:patientId/care-plan" element={<CarePlanDetail />} />
                     <Route path="/patients/:patientId/appointments" element={<Appointments />} />
                     <Route path="/patients/:patientId/wellbeing" element={<WellbeingDetail />} />
+                    <Route path="/patients/:patientId/wound-care" element={<WoundCareModule />} />
                     <Route path="/patients/:patientId/ml-risk" element={<MLRiskDetail />} />
                     <Route path="/ai-insights" element={<AIInsights />} />
                     <Route path="/alerts" element={<Alerts />} />
@@ -487,6 +492,7 @@ function AppRoutes() {
                     <Route path="/notification-tester" element={<NotificationTester />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/touch-demo" element={<TouchDemo />} />
+                    <Route path="/care-pathway-selector" element={<CarePathwaySelector />} />
                     <Route path="/admin/users" element={<AdminUserManagement />} />
                     <Route path="/admin/features" element={<AdminFeaturePanel />} />
                     <Route path="/admin/audit" element={<AuditLog />} />

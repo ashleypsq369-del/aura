@@ -1511,11 +1511,81 @@ class SpiritualCareNote(Base):
 
 
 # ============================================================================
+# GHANA HOMECARE FEATURES - Feature Set 8 (GNA Healthcare / AgedCare Ghana)
+# ============================================================================
+
+class VisitReport(Base):
+    """Auto-generated report after appointment completion — shared with family"""
+    __tablename__ = 'visit_reports'
+    id = Column(Integer, primary_key=True)
+    appointment_id = Column(Integer, ForeignKey('appointments.id'), unique=True, nullable=False, index=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    nurse_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    vitals_summary = Column(JSON)          # {bp, hr, temp, spo2, pain_score}
+    medications_given = Column(JSON)       # list of {name, dose, route, time}
+    nurse_notes = Column(Text)
+    wound_observations = Column(Text)
+    pain_score = Column(Integer)           # 0-10
+    overall_condition = Column(String(30), default='stable')  # improving/stable/worsening
+    next_visit_recommendations = Column(Text)
+    generated_at = Column(DateTime, default=datetime.utcnow)
+    sent_to_family = Column(Boolean, default=False)
+    sent_at = Column(DateTime)
+
+
+class WoundCareLog(Base):
+    """Per-wound photographic + descriptive healing progress log"""
+    __tablename__ = 'wound_care_logs'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    recorded_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    wound_site = Column(String(100), nullable=False)   # e.g. "Left heel", "Sacrum"
+    description = Column(Text)
+    photo_path = Column(String(500))       # relative path under /static/wounds/
+    healing_stage = Column(String(20), default='stable')  # improving/stable/worsening
+    wound_type = Column(String(50))        # pressure_ulcer/surgical/diabetic/burn/other
+    size_cm = Column(String(20))           # e.g. "3x2"
+    depth = Column(String(30))             # superficial/partial/full/bone
+    exudate = Column(String(30))           # none/minimal/moderate/heavy
+    odour = Column(Boolean, default=False)
+    treatment_applied = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+
+class CaregiverRating(Base):
+    """Patient/family 5-star rating after each completed visit"""
+    __tablename__ = 'caregiver_ratings'
+    id = Column(Integer, primary_key=True)
+    appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=False, index=True)
+    caregiver_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    rating = Column(Integer, nullable=False)   # 1-5
+    comment = Column(Text)
+    category_scores = Column(JSON)  # {punctuality, communication, care_quality, cleanliness}
+    created_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class CarePathwayPreference(Base):
+    """Guided onboarding: patient/family selects their care pathway"""
+    __tablename__ = 'care_pathway_preferences'
+    id = Column(Integer, primary_key=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    pathway_type = Column(String(50), nullable=False)  # nursing/clinical/family/escort/respite
+    selected_services = Column(JSON)   # list of service keys chosen
+    primary_concern = Column(String(200))
+    support_level = Column(String(20), default='standard')  # basic/standard/intensive
+    selected_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+# ============================================================================
 # Database Initialization
 # ============================================================================
 
 def init_database():
-    """Create all tables (21 original + 9 extension + password reset token)"""
+    """Create all tables (21 original + 9 extension + password reset token + 4 Ghana features)"""
     from sqlalchemy import inspect, text
     Base.metadata.create_all(bind=engine)
     # Lightweight migration for columns added after initial schema

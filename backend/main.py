@@ -70,6 +70,7 @@ from routers import (
     palliative_care,    # ACP, MDT Meetings, Referrals, Chaplaincy
 )
 from routers import consent  # Patient family data-sharing consent
+from routers import ghana_features  # Ghana Homecare Feature Set (8 features)
 
 # New ML predictions router (trained XGBoost + real SHAP)
 from routers import ml_predictions
@@ -200,6 +201,7 @@ app.include_router(medical_knowledge.router, prefix="/api/medical", tags=["medic
 app.include_router(care_settings.router, prefix="/api/care-settings", tags=["care-settings"])
 app.include_router(palliative_care.router, prefix="/api/palliative", tags=["palliative-care"])
 app.include_router(consent.router)
+app.include_router(ghana_features.router, prefix="/api", tags=["ghana-features"])  # 8 Ghana Homecare Features
 app.include_router(ml_predictions.router, prefix="/api/ml", tags=["ml-predictions"])
 app.include_router(advanced_ml.router, prefix="/api/advanced-ml", tags=["advanced-ml"])
 

@@ -171,6 +171,7 @@ export default function PatientPortal() {
     { image: '/resources/african/african-health-tech.jpg',  icon: Brain,         title: 'AI Companion',    description: 'Ask Aura AI',                onClick: () => window.dispatchEvent(new CustomEvent('aura:open')),                                                                   color: '#7c3aed', priority: null },
     { image: '/resources/african/african-vitals.jpg',       icon: TrendingUp,    title: 'My Records',      description: 'Full health data',           onClick: () => patientId ? navigate(`/patients/${patientId}`) : navigate('/my-space'),                  color: '#1d4ed8', priority: null },
     { image: '/resources/african/african-clinical-team.jpg', icon: Shield,        title: 'Family Sharing',  description: 'Control what family can see', onClick: () => navigate('/settings', { state: { tab: 'privacy' } }), color: '#0f766e', priority: null },
+    { image: '/resources/african/african-appointment.jpg',   icon: Stethoscope,   title: 'Care Pathway',    description: 'Choose your care type',       onClick: () => navigate('/care-pathway-selector'),                   color: '#0891b2', priority: null },
   ];
 
   // ⚡ Reorder quick actions based on personalisation signals

@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import SearchableSelect from '../components/ui/SearchableSelect';
+import CaregiverTrustProfile from '../components/CaregiverTrustProfile';
 
 /* ── constants ──────────────────────────────────────────────────────────── */
 const GRAD = [
@@ -84,6 +85,8 @@ function CaregiverCard({ cg, workload, burnoutLevel, avatarGrad, onBurnoutClick 
           {cg.email && <p className="flex items-center gap-1.5 text-xs text-slate-500 truncate"><Mail size={11} className="text-slate-400 flex-shrink-0"/>{cg.email}</p>}
           {cg.phone && <p className="flex items-center gap-1.5 text-xs text-slate-500"><Phone size={11} className="text-slate-400 flex-shrink-0"/>{cg.phone}</p>}
         </div>
+        {/* Trust badges — Feature 3 */}
+        <CaregiverTrustProfile userId={cg.id} inline />
         {/* AI button */}
         <button onClick={onBurnoutClick}
           className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 font-bold text-xs border border-violet-200 transition-all">

@@ -418,3 +418,37 @@ export const clinicalAssessmentsAPI = {
   // Assessments list
   getAssessments: (patientId)  => apiClient.get(`/api/assessments/patient/${patientId}/overview`),
 };
+
+// ── Ghana Homecare Features API ───────────────────────────────────────────
+export const visitReportAPI = {
+  completeWithReport: (appointmentId, data) =>
+    apiClient.post(`/api/appointments/${appointmentId}/complete-with-report`, data),
+  getReport: (appointmentId) =>
+    apiClient.get(`/api/appointments/${appointmentId}/visit-report`),
+};
+
+export const woundCareAPI = {
+  list: (patientId) => apiClient.get(`/api/wound-care/${patientId}`),
+  create: (patientId, data) => apiClient.post(`/api/wound-care/${patientId}`, data),
+};
+
+export const caregiverRatingsAPI = {
+  submit: (data) => apiClient.post('/api/caregiver-ratings', data),
+  getForCaregiver: (caregiverId) => apiClient.get(`/api/caregiver-ratings/${caregiverId}`),
+};
+
+export const culturalProfileAPI = {
+  get: (patientId) => apiClient.get(`/api/patients/${patientId}/cultural-profile`),
+  update: (patientId, data) => apiClient.put(`/api/patients/${patientId}/cultural-profile`, data),
+};
+
+export const carePathwaysAPI = {
+  getOptions: () => apiClient.get('/api/care-pathways/options'),
+  select: (data) => apiClient.post('/api/care-pathways', data),
+  getPatient: (patientId) => apiClient.get(`/api/care-pathways/${patientId}`),
+};
+
+export const trustProfileAPI = {
+  get: (userId) => apiClient.get(`/api/caregiver-trust/${userId}`),
+  update: (userId, data) => apiClient.put(`/api/caregiver-trust/${userId}`, data),
+};

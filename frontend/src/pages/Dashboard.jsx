@@ -23,6 +23,8 @@ import DailyTaskChecklist from '../components/DailyTaskChecklist';
 import TaskStatusBar from '../components/TaskStatusBar';
 import { StatCard } from '../components/ui/Card';
 import { useCareTeamChat } from '../hooks/useCareTeamChat';
+import FamilyDashboardHero from '../components/FamilyDashboardHero';
+import { usePatientId } from '../hooks/usePatientId';
 
 import { API_URL } from '../api/client';
 
@@ -390,6 +392,7 @@ export default function Dashboard() {
 // ── Family Dashboard ───────────────────────────────────────────────────
 function FamilyDashboard({ user, summary, navigate }) {
   const { chatWithCareTeam } = useCareTeamChat();
+  const { patientId } = usePatientId();
   const { data: journeyEvents } = useQuery({
     queryKey: ['family-journey'],
     queryFn: () => apiClient.get('/api/journey/my-journey').then(r => r.data),
@@ -431,6 +434,11 @@ function FamilyDashboard({ user, summary, navigate }) {
           subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'there'} -- stay connected with your loved one's care journey`}
           icon={Heart}
         />
+
+        {/* Feature 4: Last visit hero card */}
+        {patientId && (
+          <FamilyDashboardHero patientId={patientId} patientName={summary?.patient?.full_name} />
+        )}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <ImageCard image="/resources/african/african-nurse-male.jpg"      icon={MessageSquare} title="Messages"       description="Chat with care team"      onClick={() => chatWithCareTeam()}              color="#be123c" />
           <ImageCard image="/resources/african/african-memory.jpg"  icon={Heart}         title="Memory Vault"   description="Share precious memories"  onClick={() => navigate('/memory-vault')}       color="#7c3aed" />
@@ -442,8 +450,7 @@ function FamilyDashboard({ user, summary, navigate }) {
           <ImageCard image="/resources/african/african-grief-support.jpg"     icon={Activity}      title="Bereavement"    description="Support resources"        onClick={() => navigate('/bereavement-support')} color="#9f1239" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard label="Care Updates"  value={events.length || summary?.stats?.recent_updates || 0}  icon={Heart}         variant="red"    onClick={() => navigate('/continuity-bridge')} />
-          <StatCard label="Messages"      value={summary?.stats?.unread_messages ?? 0}                   icon={MessageSquare} variant="blue"   onClick={() => navigate('/messages')} />
+          <StatCard label="Care Updates"  value={events.length || summary?.stats?.recent_updates || 0}  icon={Heart}         variant="red"    onClick={() => navigate('/continuity-bridge')} />          <StatCard label="Messages"      value={summary?.stats?.unread_messages ?? 0}                   icon={MessageSquare} variant="blue"   onClick={() => navigate('/messages')} />
           <StatCard label="Appointments"  value={summary?.stats?.upcoming_appointments ?? 0}             icon={Calendar}      variant="purple" onClick={() => navigate('/appointments')} />
           <StatCard label="Memories"      value={summary?.stats?.memory_count ?? 0}                     icon={Activity}      variant="teal"   onClick={() => navigate('/memory-vault')} />
         </div>

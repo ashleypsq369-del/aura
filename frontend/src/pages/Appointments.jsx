@@ -18,8 +18,11 @@ import SearchableSelect from '../components/ui/SearchableSelect';
 import {
   Calendar, Plus, X, CheckCircle, Search, Clock,
   MapPin, Loader2, CheckSquare, XCircle, Bell, Sparkles,
-  ChevronDown, ChevronUp, ListFilter,
+  ChevronDown, ChevronUp, ListFilter, FileText,
 } from 'lucide-react';
+import AppointmentStatusBadge from '../components/AppointmentStatusBadge';
+import VisitReportCard from '../components/VisitReportCard';
+import VisitRatingModal from '../components/VisitRatingModal';
 
 /* ── Helpers ─────────────────────────────────────────────────────────────── */
 const APPT_TYPES = [
@@ -162,12 +165,13 @@ function ScheduleModal({ onClose, onSave, pending }) {
 }
 
 /* ── Appointment card (AlertCard style) ─────────────────────────────────── */
-function AppointmentCard({ appt, canSchedule, onComplete, onCancel }) {
+function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, userId }) {
   const today   = isToday(appt.scheduled_at);
   const past    = isPast(appt.scheduled_at);
   const status  = today && appt.status === 'scheduled' ? 'today' : (appt.status || 'scheduled');
   const cfg     = STATUS_CFG[status] || STATUS_CFG.scheduled;
   const until   = !past && appt.status === 'scheduled' ? timeUntil(appt.scheduled_at) : null;
+  const [showRating, setShowRating] = useState(false);
 
   return (
     <motion.div layout initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
@@ -180,7 +184,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel }) {
           <div className="flex items-start justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-slate-900 text-sm">{appt.appointment_type}</span>
-              <span className={cfg.badge}>{cfg.label}</span>
+              <AppointmentStatusBadge status={appt.status || 'scheduled'} compact />
               {until && (
                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 flex items-center gap-0.5">
                   <Clock size={9}/> {until}
@@ -220,6 +224,33 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel }) {
                 className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-bold transition">
                 <XCircle size={11}/> Cancel
               </button>
+            </div>
+          )}
+
+          {/* Post-visit report — Feature 1 */}
+          {appt.status === 'completed' && (
+            <div className="mt-3">
+              <VisitReportCard appointmentId={appt.id} visitDate={appt.scheduled_at} />
+            </div>
+          )}
+
+          {/* Rate this visit — Feature 8 */}
+          {appt.status === 'completed' && appt.clinician_id && (
+            <div className="mt-2">
+              <button
+                onClick={() => setShowRating(true)}
+                className="flex items-center gap-1 px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-bold transition"
+              >
+                <FileText size={11}/> Rate This Visit
+              </button>
+              <VisitRatingModal
+                isOpen={showRating}
+                onClose={() => setShowRating(false)}
+                appointmentId={appt.id}
+                caregiverId={appt.clinician_id}
+                patientId={patientId}
+                caregiverName={appt.clinician_name}
+              />
             </div>
           )}
         </div>
@@ -539,6 +570,7 @@ export default function Appointments() {
                     <div className="space-y-2.5">
                       {upcomingAppts.map(a => (
                         <AppointmentCard key={a.id} appt={a} canSchedule={canSchedule}
+                          patientId={patientId} userId={user?.id}
                           onComplete={id => updateMutation.mutate({ id, status:'completed' })}
                           onCancel={id => updateMutation.mutate({ id, status:'cancelled' })}/>
                       ))}
@@ -570,6 +602,7 @@ export default function Appointments() {
                       <div className="space-y-2.5">
                         {pastAppts.slice(0, 20).map(a => (
                           <AppointmentCard key={a.id} appt={a} canSchedule={false}
+                            patientId={patientId} userId={user?.id}
                             onComplete={() => {}} onCancel={() => {}}/>
                         ))}
                       </div>

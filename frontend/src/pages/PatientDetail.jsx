@@ -20,6 +20,8 @@ import MLRiskSummaryCard from '../components/MLRiskSummaryCard';
 import ModalShell from '../components/ui/ModalShell';
 import PageHeader from '../components/PageHeader';
 import ImageCard from '../components/ImageCard';
+import CulturalCareProfile from '../components/CulturalCareProfile';
+import CaregiverTrustProfile from '../components/CaregiverTrustProfile';
 
 import { API_URL } from '../api/client';
 
@@ -322,6 +324,7 @@ export default function PatientDetail() {
     { image: '/resources/african/african-clinical-team.jpg', icon: FileText,      title: 'Care Plan',    description: 'Goals & interventions',      onClick: () => navigate(`/patients/${patientId}/care-plan`),  color: '#0369a1' },
     { image: '/resources/african/african-wellbeing.jpg',   icon: Heart,         title: 'Wellbeing',    description: 'ESAS assessments',           onClick: () => navigate(`/patients/${patientId}/wellbeing`),   color: '#9d174d' },
     { image: '/resources/african/african-appointment.jpg',icon: Calendar,    title: 'Appointments', description: 'Scheduled visits',           onClick: () => navigate(`/patients/${patientId}/appointments`),color: '#1d4ed8' },
+    { image: '/resources/african/african-nurse-male.jpg',  icon: Stethoscope, title: 'Wound Care',   description: 'Healing progress log',       onClick: () => navigate(`/patients/${patientId}/wound-care`),  color: '#0891b2' },
     {
       image: '/resources/african/african-clinical-team.jpg',
       icon: MessageCircle,
@@ -502,6 +505,12 @@ export default function PatientDetail() {
                 ))}
               </div>
             </div>
+
+            {/* Cultural Care Profile — Feature 6 */}
+            <CulturalCareProfile
+              patientId={patientId}
+              editable={['clinician','admin'].includes(user?.role)}
+            />
           </div>
 
         {/* Risk Explanation Panel */}
