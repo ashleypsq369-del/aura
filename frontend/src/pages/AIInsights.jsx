@@ -129,18 +129,19 @@ function TaskGrid({ tasks }) {
   return (
     <div className="flex flex-wrap gap-1 mt-2">
       {entries.slice(0, 6).map(([key, , pct]) => {
-        const [bg, txt] = pct > 70
-          ? ['bg-red-600', 'text-white']
+        const [bg, txt, borderC] = pct > 70
+          ? ['#fef2f2', '#dc2626', '#fca5a5']
           : pct > 40
-          ? ['bg-orange-500', 'text-white']
+          ? ['#fff7ed', '#ea580c', '#fed7aa']
           : pct > 15
-          ? ['bg-amber-400', 'text-white']
-          : ['bg-slate-400', 'text-white'];
+          ? ['#fefce8', '#ca8a04', '#fde68a']
+          : ['#f8fafc', '#64748b', '#e2e8f0'];
         return (
           <span key={key}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black ${bg} ${txt} shadow-sm`}>
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold"
+            style={{ background: bg, color: txt, border: `1px solid ${borderC}` }}>
             {TASK_SHORT[key] || key}
-            <span className="bg-white/25 rounded-full px-1 ml-0.5">{pct}%</span>
+            <span className="font-bold opacity-80">{pct}%</span>
           </span>
         );
       })}
@@ -310,13 +311,14 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
       transition={{ type: 'spring', damping: 28, stiffness: 400 }}
       className={`
         relative rounded-2xl border border-slate-200 overflow-hidden cursor-pointer
-        bg-slate-50 shadow-sm transition-all duration-150
+        shadow-sm transition-all duration-150
         border-l-4 ${tok.border}
         ${isSelected
           ? `${tok.ring} shadow-lg`
           : `hover:shadow-md hover:border-slate-300`
         }
       `}
+      style={{ background: '#ffffff' }}
       onClick={() => onSelect(p.id)}
     >
       {/* Critical pulsing top border */}
