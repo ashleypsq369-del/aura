@@ -100,11 +100,11 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
 
   const getRoleColor = (role) => {
     const colors = {
-      patient: 'bg-blue-100 text-blue-800',
-      clinician: 'bg-green-100 text-green-800',
-      family: 'bg-purple-100 text-purple-800',
+      patient:   'bg-teal-100 text-teal-800',
+      clinician: 'bg-emerald-100 text-emerald-800',
+      family:    'bg-amber-100 text-amber-800',
       caregiver: 'bg-orange-100 text-orange-800',
-      admin: 'bg-red-100 text-red-800'
+      admin:     'bg-red-100 text-red-800'
     };
     return colors[role] || 'bg-gray-100 text-gray-800';
   };

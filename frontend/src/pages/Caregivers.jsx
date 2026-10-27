@@ -411,7 +411,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
                   <p className="text-[10px] font-bold text-slate-400 mb-2">Recommendations</p>
                   <div className="space-y-1.5">
                     {data.recommendations.filter(Boolean).map((rec, i) => (
-                      <div key={i} className="flex items-start gap-2 p-2.5 bg-violet-50 border border-violet-100 rounded-lg text-xs text-violet-800">
+                      <div key={i} className="flex items-start gap-2 p-2.5 bg-teal-50 border border-teal-100 rounded-lg text-xs text-teal-800">
                         <TrendingUp size={12} className="flex-shrink-0 mt-0.5 text-teal-500" /> {rec}
                       </div>
                     ))}

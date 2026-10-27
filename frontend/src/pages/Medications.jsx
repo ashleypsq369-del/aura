@@ -513,7 +513,7 @@ export default function Medications() {
             <div className="space-y-2">
               {reminders.map(m => {
                 const { hoursUntil, next } = m.doseTime;
-                const urgency = hoursUntil < 1 ? 'bg-red-100 text-red-800 border-red-200' : hoursUntil < 4 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-blue-50 text-blue-800 border-blue-200';
+                const urgency = hoursUntil < 1 ? 'bg-red-100 text-red-800 border-red-200' : hoursUntil < 4 ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-teal-50 text-teal-800 border-teal-200';
                 const badge = hoursUntil < 1 ? 'NOW' : hoursUntil < 4 ? 'SOON' : next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
                 return (
                   <div key={m.id} className={`flex items-center justify-between border rounded-xl px-3 py-2.5 ${urgency}`}>

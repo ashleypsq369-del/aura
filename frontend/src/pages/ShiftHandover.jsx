@@ -147,7 +147,7 @@ export default function ShiftHandover() {
         <div className="bg-white rounded-xl border-2 border-slate-200 p-5">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><AlertTriangle size={16} />Tasks for Incoming Shift</label>
-            <button type="button" onClick={addTask} className="flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-blue-800 transition">
+            <button type="button" onClick={addTask} className="flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-800 transition">
               <Plus size={14} /> Add Task
             </button>
           </div>
