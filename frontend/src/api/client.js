@@ -452,3 +452,39 @@ export const trustProfileAPI = {
  get: (userId) => apiClient.get(`/api/caregiver-trust/${userId}`),
  update: (userId, data) => apiClient.put(`/api/caregiver-trust/${userId}`, data),
 };
+
+// ── Services Provider Marketplace ─────────────────────────────────────────────
+export const servicesAPI = {
+  getTypes:           ()           => apiClient.get('/api/services/types'),
+  getProviders:       (params)     => apiClient.get('/api/services/providers', { params }),
+  getProvider:        (id)         => apiClient.get(`/api/services/providers/${id}`),
+  getProviderSlots:   (id, date)   => apiClient.get(`/api/services/providers/${id}/slots`, { params: { date } }),
+  apply:              (data)       => apiClient.post('/api/services/apply', data),
+  getMyApplication:   ()           => apiClient.get('/api/services/my-application'),
+  getMyAvailability:  ()           => apiClient.get('/api/services/my-availability'),
+  setAvailability:    (slots)      => apiClient.post('/api/services/my-availability', slots),
+  createBooking:      (data)       => apiClient.post('/api/services/bookings', data),
+  getMyBookings:      ()           => apiClient.get('/api/services/bookings/mine'),
+  confirmBooking:     (id)         => apiClient.put(`/api/services/bookings/${id}/confirm`),
+  cancelBooking:      (id)         => apiClient.put(`/api/services/bookings/${id}/cancel`),
+  getProviderRatings: (id)         => apiClient.get(`/api/services/providers/${id}/ratings`),
+  submitRating:       (data)       => apiClient.post('/api/services/ratings', data),
+};
+
+export const providerAdminAPI = {
+  getApplications:    (params)     => apiClient.get('/api/admin/provider-applications', { params }),
+  getApplication:     (id)         => apiClient.get(`/api/admin/provider-applications/${id}`),
+  reviewApplication:  (id, data)   => apiClient.put(`/api/admin/provider-applications/${id}/review`, data),
+  getPendingCount:    ()           => apiClient.get('/api/admin/provider-applications/pending-count'),
+  getActivity:        (params)     => apiClient.get('/api/admin/provider-activity', { params }),
+};
+
+export const avatarAPI = {
+  upload: (file) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    return apiClient.post('/api/profile/avatar', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+};

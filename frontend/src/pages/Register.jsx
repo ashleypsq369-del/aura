@@ -10,13 +10,13 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  Loader2, User as UserIcon, Mail, Phone, Lock,
  Eye, EyeOff, Search, X, ChevronDown,
  CheckCircle, AlertCircle,
- Building2, Heart, Home, Stethoscope, BedDouble,
+ Building2, Heart, Home, Stethoscope, BedDouble, Calendar,
 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -291,6 +291,8 @@ function IconSlot({ err, children }) {
 export default function Register() {
  const navigate = useNavigate();
  const { setUser } = useAuth();
+ const loc = useLocation();
+ const preRole = new URLSearchParams(loc.search).get('role') || 'patient';
 
  const [step, setStep] = useState(1);
  const [showPw, setShowPw] = useState(false);
@@ -299,12 +301,13 @@ export default function Register() {
  const [errors, setErrors] = useState({});
  const [touched, setTouched] = useState({});
  const [serverErr, setServerErr] = useState('');
- const [country, setCountry] = useState(COUNTRIES[0]); // Ghana default
+ const [country, setCountry] = useState(COUNTRIES[0]);
 
  const [form, setForm] = useState({
- full_name:'', username:'', email:'',
- password:'', confirm_password:'',
- phone:'', role:'patient', care_setting:'',
+   full_name:'', username:'', email:'',
+   password:'', confirm_password:'',
+   phone:'', role: preRole, care_setting:'',
+   gender:'', date_of_birth:'',
  });
 
  // ── Validation helpers ────────────────────────────────────────────────────
@@ -558,6 +561,47 @@ export default function Register() {
  </div>
  </InputGroup>
 
+ {/* Gender (optional) */}
+ <div>
+ <p className="text-sm font-semibold text-slate-700 mb-2">Gender <span className="text-slate-400 font-normal text-xs">(optional)</span></p>
+ <div className="grid grid-cols-2 gap-2">
+ {[
+ { value:'male', label:'Male' },
+ { value:'female', label:'Female' },
+ { value:'other', label:'Other' },
+ { value:'prefer_not_to_say', label:'Prefer not to say' },
+ ].map(g => (
+ <button key={g.value} type="button"
+ onClick={() => setField('gender', form.gender === g.value ? '' : g.value)}
+ className={`py-2.5 px-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
+ form.gender === g.value
+ ? 'border-teal-500 bg-teal-50 text-teal-700'
+ : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+ }`}>
+ {g.label}
+ </button>
+ ))}
+ </div>
+ </div>
+
+ {/* Date of birth (optional) */}
+ <div>
+ <label htmlFor="dob" className="block text-sm font-semibold text-slate-700 mb-1.5">
+ Date of birth <span className="text-slate-400 font-normal text-xs">(optional)</span>
+ </label>
+ <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-slate-50 transition-all ${inputBorder(false)}`}>
+ <IconSlot err={false}><Calendar size={14}/></IconSlot>
+ <input
+ id="dob" type="date"
+ value={form.date_of_birth}
+ onChange={e => setField('date_of_birth', e.target.value)}
+ max={new Date(Date.now() - 5*365.25*24*3600000).toISOString().split('T')[0]}
+ min={new Date(Date.now() - 120*365.25*24*3600000).toISOString().split('T')[0]}
+ className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent"
+ />
+ </div>
+ </div>
+
  {/* Password */}
  <InputGroup id="password" label="Password" required error={errors.password}
  hint={!errors.password && !touched.password ? 'At least 8 characters, one uppercase letter and one number' : undefined}>
@@ -626,6 +670,12 @@ export default function Register() {
  <p className="text-center text-sm text-slate-500 pt-1">
  Already have an account?{' '}
  <Link to="/login" className="text-teal-600 font-semibold hover:underline">Sign in</Link>
+ </p>
+ <p className="text-center text-xs text-slate-400 pt-0.5">
+ Wrong account type?{' '}
+ <Link to="/get-started" className="text-teal-600 font-semibold hover:underline">Choose again</Link>
+ {' '}&bull;{' '}
+ <Link to="/provider-register" className="text-teal-600 font-semibold hover:underline">Provider registration</Link>
  </p>
  </form>
  )}

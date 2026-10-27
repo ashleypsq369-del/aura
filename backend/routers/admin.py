@@ -11,7 +11,10 @@ from sqlalchemy.orm import Session
 import csv
 import io
 
-from src.db import get_db, User, UserProfile, AuditLog, PatientPreferences, hash_password
+from src.db import (
+    get_db, User, UserProfile, AuditLog, PatientPreferences, hash_password,
+    ProviderApplication, ServiceTypeConfig, ProviderBooking, NotificationQueue,
+)
 from routers.auth import get_current_user, require_role, validate_password_strength
 
 router = APIRouter()
@@ -334,3 +337,217 @@ async def get_audit_log(
             for log, user in results
         ]
     }
+
+
+# ─── Provider Application Review ──────────────────────────────────────────────
+
+@router.get("/provider-applications/pending-count")
+async def get_pending_count(
+    _: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    count = db.query(ProviderApplication).filter(
+        ProviderApplication.approval_status == "pending"
+    ).count()
+    return {"count": count}
+
+
+@router.get("/provider-applications")
+async def list_provider_applications(
+    status: Optional[str] = None,
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, le=100),
+    _: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    query = db.query(ProviderApplication)
+    if status:
+        query = query.filter(ProviderApplication.approval_status == status)
+    total = query.count()
+    apps = query.order_by(ProviderApplication.submitted_at.desc()).offset(
+        (page - 1) * per_page
+    ).limit(per_page).all()
+
+    results = []
+    for a in apps:
+        u = db.query(User).filter(User.id == a.user_id).first()
+        stype = db.query(ServiceTypeConfig).filter(ServiceTypeConfig.key == a.service_type).first()
+        results.append({
+            "id": a.id,
+            "user_id": a.user_id,
+            "applicant_name": u.full_name if u else "Unknown",
+            "applicant_email": u.email if u else None,
+            "service_type": a.service_type,
+            "service_label": stype.label if stype else a.service_type,
+            "service_color": stype.color if stype else "#0d9488",
+            "assessment_score": a.assessment_score,
+            "min_pass_score": stype.min_pass_score if stype else 70,
+            "passed": a.assessment_score >= (stype.min_pass_score if stype else 70),
+            "approval_status": a.approval_status,
+            "submitted_at": a.submitted_at.isoformat() if a.submitted_at else None,
+        })
+    return {"total": total, "page": page, "per_page": per_page, "applications": results}
+
+
+@router.get("/provider-applications/{application_id}")
+async def get_provider_application_detail(
+    application_id: int,
+    _: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    app = db.query(ProviderApplication).filter(ProviderApplication.id == application_id).first()
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    u = db.query(User).filter(User.id == app.user_id).first()
+    profile = db.query(UserProfile).filter(UserProfile.user_id == app.user_id).first()
+    stype = db.query(ServiceTypeConfig).filter(ServiceTypeConfig.key == app.service_type).first()
+
+    questions = stype.assessment_questions if stype else []
+    answers = app.assessment_answers or {}
+    question_results = []
+    for q in questions:
+        qid = str(q.get("id"))
+        selected = answers.get(qid)
+        correct_idx = q.get("correct_index")
+        opts = q.get("options", [])
+        earned = 0
+        if selected is not None:
+            try:
+                earned = opts[int(selected)].get("score", 0)
+            except (IndexError, TypeError):
+                pass
+        question_results.append({
+            "id": q.get("id"),
+            "question": q.get("question"),
+            "scenario_context": q.get("scenario_context"),
+            "options": opts,
+            "selected_index": int(selected) if selected is not None else None,
+            "correct_index": correct_idx,
+            "is_correct": (int(selected) == correct_idx) if selected is not None else False,
+            "score_earned": earned,
+        })
+
+    return {
+        "id": app.id,
+        "user_id": app.user_id,
+        "applicant_name": u.full_name if u else "Unknown",
+        "applicant_email": u.email if u else None,
+        "applicant_phone": u.phone if u else None,
+        "gender": getattr(u, "gender", None),
+        "region": profile.region if profile else None,
+        "address": getattr(profile, "address", None) or getattr(u, "address", None),
+        "location": getattr(u, "location", None),
+        "service_type": app.service_type,
+        "service_label": stype.label if stype else app.service_type,
+        "service_color": stype.color if stype else "#0d9488",
+        "min_pass_score": stype.min_pass_score if stype else 70,
+        "bio": app.bio,
+        "years_experience": app.years_experience,
+        "qualifications": app.qualifications or [],
+        "document_paths": app.document_paths or [],
+        "assessment_score": app.assessment_score,
+        "passed": app.assessment_score >= (stype.min_pass_score if stype else 70),
+        "question_results": question_results,
+        "approval_status": app.approval_status,
+        "admin_notes": app.admin_notes,
+        "submitted_at": app.submitted_at.isoformat() if app.submitted_at else None,
+        "reviewed_at": app.reviewed_at.isoformat() if app.reviewed_at else None,
+    }
+
+
+class ReviewApplicationRequest(BaseModel):
+    action: str
+    notes: Optional[str] = None
+
+
+@router.put("/provider-applications/{application_id}/review")
+async def review_provider_application(
+    application_id: int,
+    request: ReviewApplicationRequest,
+    current_admin: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    if request.action not in ("approve", "reject", "needs_review"):
+        raise HTTPException(400, "action must be approve, reject, or needs_review")
+
+    app = db.query(ProviderApplication).filter(ProviderApplication.id == application_id).first()
+    if not app:
+        raise HTTPException(404, "Application not found")
+
+    app.approval_status = {"approve": "approved", "reject": "rejected", "needs_review": "needs_review"}[request.action]
+    app.admin_notes = request.notes
+    app.reviewed_by = current_admin.id
+    app.reviewed_at = datetime.utcnow()
+
+    provider = db.query(User).filter(User.id == app.user_id).first()
+    if provider:
+        if request.action == "approve":
+            provider.is_active = True
+            provider.is_verified = True
+            provider.is_professional = True
+            provider.professional_title = f"Verified {app.service_type.replace('_',' ').title()}"
+            p = db.query(UserProfile).filter(UserProfile.user_id == provider.id).first()
+            if p:
+                p.specialisation = app.service_type
+            db.add(NotificationQueue(
+                recipient_id=provider.id, notification_type="application_approved",
+                title="Application Approved!",
+                body=f"Congratulations {provider.full_name}! Your {app.service_type} application has been approved. Log in to access your Provider Hub.",
+                is_read=False,
+            ))
+        else:
+            reason = request.notes or "Please contact us for more information."
+            db.add(NotificationQueue(
+                recipient_id=provider.id,
+                notification_type="application_rejected" if request.action == "reject" else "application_needs_review",
+                title="Application Update" if request.action == "reject" else "Additional Information Needed",
+                body=reason, is_read=False,
+            ))
+
+    db.add(AuditLog(
+        user_id=current_admin.id, user_role=current_admin.role,
+        action=f"provider_application_{request.action}d", resource_type="provider_application",
+        resource_id=application_id, success=True,
+    ))
+    db.commit()
+    return {"message": f"Application {app.approval_status}", "status": app.approval_status}
+
+
+@router.get("/provider-activity")
+async def get_provider_activity(
+    page: int = Query(1, ge=1),
+    per_page: int = Query(20, le=100),
+    _: User = Depends(require_role("admin")),
+    db: Session = Depends(get_db),
+):
+    providers = db.query(User).filter(User.role == "provider").all()
+    results = []
+    for p in providers:
+        total = db.query(ProviderBooking).filter(ProviderBooking.provider_id == p.id).count()
+        completed = db.query(ProviderBooking).filter(
+            ProviderBooking.provider_id == p.id,
+            ProviderBooking.status == "completed"
+        ).count()
+        from src.db import CaregiverRating
+        ratings = db.query(CaregiverRating).filter(CaregiverRating.caregiver_id == p.id).all()
+        avg = round(sum(r.rating for r in ratings) / len(ratings), 1) if ratings else None
+        profile_edits = db.query(AuditLog).filter(
+            AuditLog.user_id == p.id,
+            AuditLog.action == "profile_updated",
+        ).count()
+        results.append({
+            "id": p.id,
+            "full_name": p.full_name,
+            "service_type": p.professional_title,
+            "is_active": p.is_active,
+            "total_bookings": total,
+            "completed_bookings": completed,
+            "average_rating": avg,
+            "total_reviews": len(ratings),
+            "last_login": p.last_login.isoformat() if p.last_login else None,
+            "profile_edits": profile_edits,
+        })
+    total_count = len(results)
+    paged = results[(page - 1) * per_page: page * per_page]
+    return {"total": total_count, "page": page, "providers": paged}

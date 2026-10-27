@@ -1,81 +1,112 @@
 /**
- * AvatarDisplay.jsx - Compact avatar shown throughout the app
- * Reads saved avatar from localStorage, falls back to initials circle
+ * AvatarDisplay — profile photo with real image support
+ * Priority: 1) uploaded server photo  2) DiceBear role+gender avatar  3) initials
  */
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import AvatarRenderer from './AvatarRenderer';
-import { ROLE_PRESETS } from './avatarParts';
+import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import apiClient from '../../api/client';
+
+const API_BASE = import.meta.env.VITE_API_URL?.trim() || '';
+
+// Deterministic role+gender avatar via DiceBear personas
+function dicebearUrl(role, gender) {
+  const seed = `aura-${role || 'user'}-${gender || 'neutral'}-v2`;
+  return `https://api.dicebear.com/7.x/personas/svg?seed=${encodeURIComponent(seed)}&backgroundColor=b6e3f4,c0aede,d1f4a5,ffdfbf&backgroundType=gradientLinear&radius=50`;
+}
+
+const ROLE_COLORS = {
+  clinician: ['#0d9488','#0891b2'],
+  caregiver: ['#059669','#0d9488'],
+  patient:   ['#0891b2','#0369a1'],
+  family:    ['#d97706','#ea580c'],
+  admin:     ['#0d9488','#059669'],
+  provider:  ['#7c3aed','#0d9488'],
+};
+
+function InitialsBubble({ name, size, role }) {
+  const [c1, c2] = ROLE_COLORS[role] || ['#0d9488','#0891b2'];
+  const initials = (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: '50%',
+      background: `linear-gradient(135deg,${c1},${c2})`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#fff', fontWeight: 700, flexShrink: 0,
+      fontSize: Math.max(Math.floor(size * 0.36), 10),
+    }}>
+      {initials}
+    </div>
+  );
+}
 
 export default function AvatarDisplay({
   size = 36,
   className = '',
   onClick,
   showRing = false,
+  userId = null,  // pass to show another user's avatar
 }) {
   const { user } = useAuth();
-  const [avatarConfig, setAvatarConfig] = useState(null);
+  const targetId = userId || user?.id;
+  const [imgErr, setImgErr]         = useState(false);
+  const [dicebearErr, setDicebearErr] = useState(false);
 
-  useEffect(() => {
-    const load = () => {
-      try {
-        const saved = localStorage.getItem('user_avatar');
-        if (saved) {
-          setAvatarConfig(JSON.parse(saved));
-        } else {
-          // Default preset for role
-          const preset = ROLE_PRESETS[user?.role] || ROLE_PRESETS.patient;
-          setAvatarConfig({ ...preset, role: user?.role || 'patient' });
-        }
-      } catch {
-        const preset = ROLE_PRESETS[user?.role] || ROLE_PRESETS.patient;
-        setAvatarConfig({ ...preset, role: user?.role || 'patient' });
-      }
-    };
+  const { data: profile } = useQuery({
+    queryKey: ['profile-avatar', targetId],
+    queryFn: () => apiClient.get('/api/profile').then(r => r.data),
+    enabled: !!targetId && !userId,   // only fetch own profile; userId variant relies on passed prop
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  });
 
-    load();
-    // Listen for avatar updates from the builder
-    window.addEventListener('avatar_updated', load);
-    return () => window.removeEventListener('avatar_updated', load);
-  }, [user?.role]);
+  const avatarUrl = profile?.avatar_url || profile?.profile?.avatar_url || null;
+  const gender    = profile?.gender     || user?.gender;
+  const role      = profile?.role       || user?.role;
+  const name      = profile?.full_name  || user?.full_name;
 
-  const initials = user?.full_name
-    ?.split(' ').slice(0, 2).map(n => n[0]?.toUpperCase()).join('') || 'U';
+  const ringStyle = showRing
+    ? { boxShadow: '0 0 0 2px #0d9488, 0 0 0 4px rgba(13,148,136,0.18)' }
+    : {};
 
-  return (
-    <motion.div
-      whileHover={onClick ? { scale: 1.05 } : {}}
-      whileTap={onClick ? { scale: 0.95 } : {}}
-      onClick={onClick}
-      className={`relative flex-shrink-0 ${onClick ? 'cursor-pointer' : ''} ${className}`}
-      style={{ width: size, height: size }}
-      title={onClick ? 'Edit avatar' : undefined}
-    >
-      {showRing && (
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'linear-gradient(135deg, #0d9488, #7c3aed)',
-            padding: 2,
-          }}
-        />
-      )}
-      <div
-        className={`${showRing ? 'absolute inset-[2px]' : 'w-full h-full'} rounded-full overflow-hidden bg-gradient-to-br from-teal-50 to-slate-100 flex items-center justify-center`}
-        style={{ width: showRing ? undefined : size, height: showRing ? undefined : size }}
-      >
-        {avatarConfig ? (
-          <AvatarRenderer config={avatarConfig} size={size * 1.3} />
-        ) : (
-          <span
-            className="font-bold text-teal-700"
-            style={{ fontSize: size * 0.38 }}
-          >
-            {initials}
-          </span>
-        )}
+  const wrap = {
+    width: size, height: size, borderRadius: '50%',
+    overflow: 'hidden', flexShrink: 0,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: onClick ? 'pointer' : 'default',
+    ...ringStyle,
+  };
+
+  // ── 1. Real uploaded photo ──
+  if (avatarUrl && !imgErr) {
+    const src = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
+    return (
+      <div style={wrap} className={className} onClick={onClick}>
+        <img src={src} alt={name || 'Profile'}
+          onError={() => setImgErr(true)}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </div>
-    </motion.div>
+    );
+  }
+
+  // ── 2. DiceBear role+gender avatar ──
+  if (!dicebearErr) {
+    return (
+      <div style={wrap} className={className} onClick={onClick}>
+        <img src={dicebearUrl(role, gender)} alt={name || 'Profile'}
+          onError={() => setDicebearErr(true)}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      </div>
+    );
+  }
+
+  // ── 3. Initials fallback ──
+  return (
+    <div style={{ ...wrap, overflow: 'visible' }} className={className} onClick={onClick}>
+      <InitialsBubble name={name} size={size} role={role} />
+    </div>
   );
 }
+
+// Export helper for use in provider cards
+export { dicebearUrl };

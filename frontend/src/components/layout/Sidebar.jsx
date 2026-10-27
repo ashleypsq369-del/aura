@@ -4,7 +4,7 @@ import {
  LayoutDashboard, Users, Brain, Bell, Pill, Calendar, 
  HeartHandshake, FileText, Infinity as InfinityIcon,
  BookOpen, MessagesSquare, Map, User, Shield, UserCog, X, MessageCircle, Mail, Heart, Target,
- Sparkles, ClipboardList, Home, Activity, ChevronLeft, ChevronRight,
+ Sparkles, ClipboardList, Home, Activity, ChevronLeft, ChevronRight, Briefcase,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { alertsAPI } from '../../api/client';
@@ -90,6 +90,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Medications', path: '/medications', icon: Pill },
  { name: 'Appointments', path: '/appointments', icon: Calendar },
  { name: 'Caregivers', path: '/caregivers', icon: HeartHandshake },
+ { name: 'Services', path: '/services', icon: Briefcase },
  { name: 'Resources', path: '/resources', icon: BookOpen },
  { name: 'Care Guide', path: '/care-guide', icon: FileText },
  { name: 'Care Settings', path: '/care-settings', icon: Map },
@@ -109,6 +110,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Care Setting', path: '/care-settings', icon: Target },
  { name: 'Resources', path: '/resources', icon: BookOpen },
  { name: 'Community', path: '/community', icon: MessagesSquare },
+ { name: 'Services', path: '/services', icon: Briefcase },
  { name: 'Memory Vault', path: '/memory-vault', icon: HeartHandshake },
  { name: 'My Journal', path: '/journal', icon: FileText },
  { name: 'Digital Legacy', path: '/legacy-setup', icon: Shield },
@@ -121,6 +123,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Messages', path: '/messages', icon: MessageCircle },
  { name: 'Appointments', path: '/appointments', icon: Calendar },
  { name: 'Medications', path: '/medications', icon: Pill },
+ { name: 'Services', path: '/services', icon: Briefcase },
  { name: 'Continuity Bridge', path: '/continuity-bridge', icon: InfinityIcon },
  { name: 'Bereavement Support',path: '/bereavement-support', icon: Heart },
  { name: 'Care Setting', path: '/care-settings', icon: Target },
@@ -135,6 +138,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Messages', path: '/messages', icon: MessageCircle },
  { name: 'Medications', path: '/medications', icon: Pill },
  { name: 'Appointments', path: '/appointments', icon: Calendar },
+ { name: 'Services', path: '/services', icon: Briefcase },
  { name: 'Shift Handover', path: '/shift-handover', icon: ClipboardList },
  { name: 'Daily Care Log', path: '/daily-care-log', icon: Home },
  { name: 'Residential Log',path: '/residential-log', icon: ClipboardList },

@@ -55,10 +55,14 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
     full_name: str
-    role: str = "patient"           # patient / family (public registration only)
+    role: str = "patient"
     phone: Optional[str] = None
-    linked_patient_id: Optional[int] = None   # for family/patient roles
-    care_setting: Optional[str] = None        # chosen at registration for patient/family
+    gender: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    address: Optional[str] = None
+    location: Optional[str] = None
+    linked_patient_id: Optional[int] = None
+    care_setting: Optional[str] = None
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -240,12 +244,23 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
         consent_given=False,
         created_at=datetime.utcnow(),
     )
-    # Save care_setting if provided (patient/family choose at registration)
+    # Save care_setting + new demographic fields
     try:
         if request.care_setting:
             new_user.care_setting = request.care_setting
+        if request.gender:
+            new_user.gender = request.gender
+        if request.date_of_birth:
+            try:
+                new_user.date_of_birth = datetime.strptime(request.date_of_birth, "%Y-%m-%d")
+            except ValueError:
+                pass
+        if request.address:
+            new_user.address = request.address
+        if request.location:
+            new_user.location = request.location
     except Exception:
-        pass  # column may not exist yet in old DB
+        pass
     db.add(new_user)
     db.flush()  # get new_user.id
 

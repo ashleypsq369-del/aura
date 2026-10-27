@@ -142,6 +142,10 @@ if (localStorage.getItem('aura_dismissed') === 'true' || localStorage.getItem('a
 // Ghana Homecare Features
 import WoundCareModule from './pages/WoundCareModule';
 import CarePathwaySelector from './pages/CarePathwaySelector';
+// Services Provider Marketplace
+import Services from './pages/Services';
+import ProviderRegister from './pages/ProviderRegister';
+import RoleSelector from './pages/RoleSelector';
 
 // Gap Analysis Priority Pages
 import MedicalKnowledge from './pages/MedicalKnowledge';
@@ -392,6 +396,8 @@ function AppRoutes() {
  <Route path="/register" element={<Register />} />
  <Route path="/forgot-password" element={<ForgotPassword />} />
  <Route path="/reset-password" element={<ResetPassword />} />
+ <Route path="/provider-register" element={<ProviderRegister />} />
+ <Route path="/get-started" element={<RoleSelector />} />
  {/* Chatbot redirect - public (catches pre-login visits), preserves ?userId= params */}
  <Route path="/chatbot" element={<RedirectWithSearch to="/messages" />} />
  
@@ -493,6 +499,8 @@ function AppRoutes() {
  <Route path="/settings" element={<Settings />} />
  <Route path="/touch-demo" element={<TouchDemo />} />
  <Route path="/care-pathway-selector" element={<CarePathwaySelector />} />
+ <Route path="/services" element={<Services />} />
+ <Route path="/services" element={<Services />} />
  <Route path="/admin/users" element={<AdminUserManagement />} />
  <Route path="/admin/features" element={<AdminFeaturePanel />} />
  <Route path="/admin/audit" element={<AuditLog />} />

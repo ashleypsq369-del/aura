@@ -63,6 +63,10 @@ class User(Base):
     role = Column(String(20), nullable=False)
     full_name = Column(String(100), nullable=False)
     phone = Column(String(20))
+    gender = Column(String(20), nullable=True)           # male/female/other/prefer_not_to_say
+    date_of_birth = Column(DateTime, nullable=True)
+    address = Column(Text, nullable=True)                # home/work address
+    location = Column(String(200), nullable=True)        # city/district display string
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
     consent_given = Column(Boolean, default=False)
@@ -100,11 +104,13 @@ class UserProfile(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     avatar_initials = Column(String(3))
+    avatar_url = Column(String(500), nullable=True)      # uploaded photo path
     department = Column(String(100))
     license_number = Column(String(50))
     specialisation = Column(String(100))
     facility_name = Column(String(200))
     region = Column(String(50))
+    address = Column(Text, nullable=True)                # street address
     language_pref = Column(String(20), default='en')
     notification_email = Column(Boolean, default=True)
     notification_sms = Column(Boolean, default=False)
@@ -1581,6 +1587,75 @@ class CarePathwayPreference(Base):
 
 
 # ============================================================================
+# SERVICES PROVIDER MARKETPLACE MODELS
+# ============================================================================
+
+class ServiceTypeConfig(Base):
+    """Service type definitions with role-specific MCQ assessment questions"""
+    __tablename__ = 'service_type_configs'
+    id = Column(Integer, primary_key=True)
+    key = Column(String(50), unique=True, nullable=False, index=True)
+    label = Column(String(100), nullable=False)
+    description = Column(Text)
+    icon_name = Column(String(50))
+    color = Column(String(20))
+    required_certifications = Column(JSON)
+    assessment_questions = Column(JSON)
+    min_pass_score = Column(Integer, default=70)
+    is_active = Column(Boolean, default=True)
+
+
+class ProviderApplication(Base):
+    """Provider self-registration — pending admin review"""
+    __tablename__ = 'provider_applications'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    service_type = Column(String(50), nullable=False)
+    bio = Column(Text)
+    years_experience = Column(Integer, default=0)
+    qualifications = Column(JSON)
+    document_paths = Column(JSON)
+    assessment_answers = Column(JSON)
+    assessment_score = Column(Float, default=0.0)
+    approval_status = Column(String(20), default='pending')
+    admin_notes = Column(Text)
+    reviewed_by = Column(Integer, ForeignKey('users.id'), nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    submitted_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class ProviderAvailability(Base):
+    """Weekly availability schedule for a provider"""
+    __tablename__ = 'provider_availability'
+    id = Column(Integer, primary_key=True)
+    provider_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    day_of_week = Column(Integer, nullable=False)
+    start_time = Column(String(5), nullable=False)
+    end_time = Column(String(5), nullable=False)
+    slot_duration_minutes = Column(Integer, default=60)
+    is_active = Column(Boolean, default=True)
+
+
+class ProviderBooking(Base):
+    """Booking request from patient/family/clinician to a provider"""
+    __tablename__ = 'provider_bookings'
+    id = Column(Integer, primary_key=True)
+    provider_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    patient_id = Column(Integer, ForeignKey('patients.id'), nullable=True, index=True)
+    booked_by = Column(Integer, ForeignKey('users.id'), nullable=False)
+    service_type = Column(String(50), nullable=False)
+    requested_date = Column(DateTime, nullable=False)
+    start_time = Column(String(5))
+    duration_minutes = Column(Integer, default=60)
+    status = Column(String(20), default='pending')
+    notes = Column(Text)
+    appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+# ============================================================================
 # Database Initialization
 # ============================================================================
 
@@ -1620,7 +1695,31 @@ def init_database():
                     ))
     except Exception as e:
         print(f"Schema migration note: {e}")
-    print("All 35 tables created/verified successfully")
+
+    # ── Services marketplace column migrations ────────────────────────────────
+    try:
+        inspector2 = inspect(engine)
+        with engine.begin() as conn:
+            # UserProfile new columns
+            up_cols = {c['name'] for c in inspector2.get_columns('user_profiles')}
+            if 'avatar_url' not in up_cols:
+                conn.execute(text("ALTER TABLE user_profiles ADD COLUMN avatar_url VARCHAR(500)"))
+            if 'address' not in up_cols:
+                conn.execute(text("ALTER TABLE user_profiles ADD COLUMN address TEXT"))
+            # User new columns
+            u_cols = {c['name'] for c in inspector2.get_columns('users')}
+            if 'gender' not in u_cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN gender VARCHAR(20)"))
+            if 'date_of_birth' not in u_cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN date_of_birth TIMESTAMP"))
+            if 'address' not in u_cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN address TEXT"))
+            if 'location' not in u_cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN location VARCHAR(200)"))
+    except Exception as e2:
+        print(f"Services migration note: {e2}")
+
+    print("All tables created/verified successfully")
 
 
 def get_session() -> Session:
