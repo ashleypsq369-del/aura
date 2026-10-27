@@ -49,7 +49,7 @@ export default function TouchButton({
   // Variant styles
   const variantStyles = {
     primary: 'bg-teal-600 text-white hover:bg-teal-700 border-2 border-teal-500',
-    secondary: 'bg-white text-teal-600 border-2 border-teal-500 hover:bg-teal-50',
+    secondary: 'bg-[#f0f6fa] text-teal-600 border-2 border-teal-500 hover:bg-teal-50',
     success: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-500',
     danger: 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 border-2 border-red-500',
     warning: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:from-yellow-600 hover:to-orange-700 border-2 border-yellow-500',

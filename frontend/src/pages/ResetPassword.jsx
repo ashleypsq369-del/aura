@@ -76,7 +76,7 @@ export default function ResetPassword() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md"
         >
-          <div className="bg-white rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10 text-center">
+          <div className="bg-[#f0f6fa] rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1, rotate: 360 }}
@@ -111,7 +111,7 @@ export default function ResetPassword() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10">
+        <div className="bg-[#f0f6fa] rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10">
           
           {/* Header */}
           <div className="text-center mb-8">

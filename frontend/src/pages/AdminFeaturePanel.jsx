@@ -139,7 +139,7 @@ export default function AdminFeaturePanel() {
             { label: 'Active Overrides', value: (usersData?.users || []).reduce((s, u) => s + u.override_count, 0), icon: Shield, color: 'text-teal-600' },
             { label: 'Locked Features', value: (usersData?.users || []).reduce((s, u) => s + u.overrides.filter(o => o.state === 'locked').length, 0), icon: Lock, color: 'text-red-500' },
           ].map(({ label, value, icon: Icon, color }) => (
-            <div key={label} className="bg-white rounded-xl border border-slate-200 px-4 py-3 flex items-center gap-3">
+            <div key={label} className="bg-[#f0f6fa] rounded-xl border border-slate-200 px-4 py-3 flex items-center gap-3">
               <Icon size={18} className={color} />
               <div>
                 <p className="text-xs text-slate-500">{label}</p>
@@ -183,7 +183,7 @@ export default function AdminFeaturePanel() {
             ) : (
               <div className="space-y-2">
                 {users.map(u => (
-                  <div key={u.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                  <div key={u.id} className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden">
                     {/* User row */}
                     <div className="flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-slate-50 transition-colors"
                       onClick={() => setExpandedUser(expandedUser === u.id ? null : u.id)}>
@@ -271,7 +271,7 @@ export default function AdminFeaturePanel() {
               {['pending', 'approved', 'denied', 'all'].map(s => (
                 <button key={s} onClick={() => setStatusFilter(s)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
-                    statusFilter === s ? 'bg-teal-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                    statusFilter === s ? 'bg-teal-600 text-white' : 'bg-[#f0f6fa] border border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}>
                   {s === 'all' ? 'All' : s}
                 </button>
@@ -283,7 +283,7 @@ export default function AdminFeaturePanel() {
                 <Loader2 size={24} className="animate-spin mr-2" /> Loading requests...
               </div>
             ) : requests.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+              <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-12 text-center">
                 <Clock size={36} className="mx-auto text-slate-300 mb-3" />
                 <p className="text-slate-500 text-sm">No {statusFilter === 'all' ? '' : statusFilter} requests</p>
               </div>
@@ -293,7 +293,7 @@ export default function AdminFeaturePanel() {
                   const sc = STATUS_CFG[r.status] || STATUS_CFG.pending;
                   const Icon = sc.icon;
                   return (
-                    <div key={r.id} className="bg-white rounded-xl border border-slate-200 px-5 py-4">
+                    <div key={r.id} className="bg-[#f0f6fa] rounded-xl border border-slate-200 px-5 py-4">
                       <div className="flex items-start gap-4">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -339,7 +339,7 @@ export default function AdminFeaturePanel() {
             onClick={() => setReviewModal(null)}>
             <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+              className="bg-[#f0f6fa] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
               <h2 className="text-base font-bold text-slate-800">Review Feature Request</h2>
               <div className="bg-slate-50 rounded-xl p-4">
                 <p className="text-sm font-semibold text-slate-700">{reviewModal.user?.name}</p>
@@ -377,7 +377,7 @@ export default function AdminFeaturePanel() {
             onClick={() => setOverrideModal(null)}>
             <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+              className="bg-[#f0f6fa] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
               <h2 className="text-base font-bold text-slate-800">
                 {overrideModal.overrideId ? 'Update' : 'Add'} Feature Override
               </h2>

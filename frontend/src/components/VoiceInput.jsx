@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -133,7 +133,7 @@ export default function VoiceInput({
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-full mt-2 left-0 right-0 z-50"
           >
-            <div className="bg-white rounded-lg shadow-lg border-2 border-slate-200 p-4">
+            <div className="bg-[#f0f6fa] rounded-lg shadow-lg border-2 border-slate-200 p-4">
               {/* Listening State */}
               {isListening && !error && (
                 <div className="flex items-center space-x-2">

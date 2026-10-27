@@ -95,7 +95,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
-      className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
+      className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
     >
       {/* Coloured top band */}
       <div className="h-1.5 w-full" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
@@ -240,7 +240,7 @@ function TrustProfileModal({ cg, onClose }) {
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Header band */}
@@ -337,7 +337,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
         initial={{ opacity: 0, scale: 0.95, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="h-1.5" style={{ background: `linear-gradient(to right, ${ringBg}, ${ringBg}88)` }} />
@@ -525,7 +525,7 @@ function FeatureShowcase({ navigate }) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
-              className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+              className="bg-[#f0f6fa] rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all cursor-pointer group"
               onClick={() => navigate(f.route)}
             >
               <div className="h-1" style={{ background: f.color }} />
@@ -847,7 +847,7 @@ export default function Caregivers() {
 
               {/* Workload table */}
               {teamRaw.team_metrics?.length > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-100">
                     <h3 className="font-bold text-slate-800 text-sm">Workload Distribution</h3>
                     <p className="text-xs text-slate-500 mt-0.5">Current patient load per caregiver</p>
@@ -914,7 +914,7 @@ export default function Caregivers() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Manual assign */}
             {isStaff && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
                   <UserPlus size={15} className="text-teal-600" />
                   <h3 className="font-bold text-slate-800 text-sm">Manual Assignment</h3>
@@ -974,7 +974,7 @@ export default function Caregivers() {
             )}
 
             {/* Current assignments list */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ListChecks size={15} className="text-teal-600" />
@@ -1028,7 +1028,7 @@ export default function Caregivers() {
                 const pid = p.patient_id || p.id;
                 return (
                   <motion.div key={pid} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
+                    className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
                     onClick={() => navigate(`/patients/${pid}`)}>
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {getInitials(p.patient_name || p.full_name)}

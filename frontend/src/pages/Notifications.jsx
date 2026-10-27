@@ -236,7 +236,7 @@ export default function Notifications() {
         </div>
 
         {/* ── Filters ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-4 mb-4">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-4 mb-4">
           <div className="flex items-start gap-2 flex-wrap">
             {/* Search — full width on mobile */}
             <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
@@ -261,7 +261,7 @@ export default function Notifications() {
               {['all','unread','read'].map(s => (
                 <button key={s} onClick={() => setSt(s)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all capitalize ${
-                    statusFilter === s ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    statusFilter === s ? 'bg-[#f0f6fa] text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                   }`}>
                   {s}
                 </button>
@@ -272,7 +272,7 @@ export default function Notifications() {
 
         {/* ── List — wrapped in Settings-style white card ── */}
         {isLoading ? (
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b border-gray-100 last:border-0 animate-pulse">
                 <div className="w-9 h-9 rounded-xl bg-gray-100 flex-shrink-0" />
@@ -285,7 +285,7 @@ export default function Notifications() {
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-14 text-center">
+          <div className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm p-14 text-center">
             <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
               <Bell size={20} className="text-gray-300" />
             </div>
@@ -299,7 +299,7 @@ export default function Notifications() {
             {todayItems.length > 0 && (
               <>
                 <SectionLabel label="Today" count={todayItems.length} />
-                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+                <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {todayItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>
@@ -309,7 +309,7 @@ export default function Notifications() {
             {weekItems.length > 0 && (
               <>
                 <SectionLabel label="Earlier this week" count={weekItems.length} />
-                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+                <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {weekItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>
@@ -319,7 +319,7 @@ export default function Notifications() {
             {olderItems.length > 0 && (
               <>
                 <SectionLabel label="Older" count={olderItems.length} />
-                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+                <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
                   <AnimatePresence initial={false}>
                     {olderItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
                   </AnimatePresence>

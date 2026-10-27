@@ -212,7 +212,7 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center">
             <Heart className="w-6 h-6 mr-2 text-purple-600" />
@@ -283,7 +283,7 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <h3 className="text-lg font-bold text-slate-900 mb-4">Support Needs (Optional)</h3>
           <p className="text-sm text-slate-600 mb-4">
@@ -330,7 +330,7 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

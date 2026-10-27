@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Search, UserPlus, Loader2, CheckCircle, Users } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -128,7 +128,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
                     className={`flex items-center gap-3.5 p-3.5 rounded-xl border transition-all ${
                       user.is_contact
                         ? 'bg-slate-50 border-slate-200 opacity-70'
-                        : 'bg-white border-slate-200 hover:border-teal-300 hover:shadow-sm'
+                        : 'bg-[#f0f6fa] border-slate-200 hover:border-teal-300 hover:shadow-sm'
                     }`}
                   >
                     {/* Avatar */}

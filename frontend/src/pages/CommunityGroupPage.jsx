@@ -503,7 +503,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
         </p>
 
         {/* Bubble */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-slate-200 dark:border-slate-700">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-slate-200 dark:border-slate-700">
           {/* Quote block */}
           {quoteText && (
             <div className="mb-2 pl-3 border-l-2 border-teal-400 text-xs text-slate-500 dark:text-slate-400 italic line-clamp-2">

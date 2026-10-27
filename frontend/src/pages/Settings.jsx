@@ -56,7 +56,7 @@ function Section({ title, children }) {
       {title && (
         <p className="text-xs font-semibold text-gray-400  px-1 mb-2">{title}</p>
       )}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+      <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
         {children}
       </div>
     </div>
@@ -163,7 +163,7 @@ export default function Settings() {
       </motion.div>
 
         {/* -- Tab bar ---------------------------------------------------- */}
-        <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm mb-6 overflow-hidden">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm mb-6 overflow-hidden">
           <div className="flex overflow-x-auto">
             {tabs.map(({ id, label, icon: Icon, tip }, i) => {
               const tabColors = [
@@ -763,7 +763,7 @@ export default function Settings() {
                     <div className="flex gap-1.5 ml-12">
                       {[['small','S'],['medium','M'],['large','L'],['xlarge','XL'],['xxlarge','XXL']].map(([v,lbl]) => (
                         <button key={v} onClick={() => updateSetting('fontSize', v)}
-                          className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>
+                          className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-[#f0f6fa] text-gray-600 border-gray-200 hover:border-gray-300'}`}>
                           {lbl}
                         </button>
                       ))}
@@ -818,7 +818,7 @@ export default function Settings() {
                           className={`flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-all ${
                             a11y.textSpacing === v
                               ? 'bg-teal-600 text-white border-teal-600'
-                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                              : 'bg-[#f0f6fa] text-gray-600 border-gray-200 hover:border-gray-300'
                           }`}>
                           {lbl}
                         </button>

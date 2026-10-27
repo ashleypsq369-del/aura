@@ -125,7 +125,7 @@ export default function SpiritualCareForm() {
   const selectCls = inputCls;
 
   const Section = ({ title, icon: Icon, color = 'violet', children }) => (
-    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
         <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
         <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>

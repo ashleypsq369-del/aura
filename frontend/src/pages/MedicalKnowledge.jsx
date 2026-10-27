@@ -196,7 +196,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
             return (
               <button key={t.id} onClick={() => setActiveTab(t.id)}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-[12px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
-                  active ? 'bg-white text-slate-900 shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-slate-500 hover:bg-white/70 hover:text-slate-700'
+                  active ? 'bg-[#f0f6fa] text-slate-900 shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-slate-500 hover:bg-white/70 hover:text-slate-700'
                 }`}>
                 <Icon size={12} className={active?'text-teal-600':''}/>
                 <span className="hidden sm:inline">{t.label}</span>
@@ -452,7 +452,7 @@ export default function MedicalKnowledge() {
           </div>
 
           {/* Index list */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
+          <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
             {/* Index header */}
             <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -518,7 +518,7 @@ export default function MedicalKnowledge() {
           <AnimatePresence mode="wait">
             {mode === 'add' && (
               <motion.div key="add" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-5 py-4 bg-teal-50 border-b border-teal-200">
                   <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center flex-shrink-0">
                     <Plus size={16} className="text-white"/>
@@ -540,7 +540,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'edit' && detail && (
               <motion.div key="edit" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex items-center gap-3 px-5 py-4 bg-amber-50 border-b border-amber-200">
                   <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
                     <Edit2 size={15} className="text-white"/>
@@ -595,7 +595,7 @@ export default function MedicalKnowledge() {
 
             {mode === 'read' && activeId && (
               <motion.div key={activeId} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 {loadingDetail || !detail ? (
                   <div className="flex flex-col items-center justify-center py-24">
                     <RefreshCw size={28} className="animate-spin text-teal-500 mb-3"/>

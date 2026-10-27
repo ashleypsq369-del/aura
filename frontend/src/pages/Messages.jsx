@@ -418,7 +418,7 @@ export default function Messages() {
               className={`flex-1 px-3 py-2 rounded-lg font-bold text-xs transition-all ${
                 activeTab === 'chats'
                   ? 'bg-teal-600 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[#f0f6fa] text-slate-600 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               <MessageCircle className="inline w-3.5 h-3.5 mr-1.5" />
@@ -429,7 +429,7 @@ export default function Messages() {
               className={`flex-1 px-3 py-2 rounded-lg font-bold text-xs transition-all ${
                 activeTab === 'contacts'
                   ? 'bg-teal-600 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[#f0f6fa] text-slate-600 hover:bg-slate-50 border border-slate-200'
               }`}
             >
               <Users className="inline w-3.5 h-3.5 mr-1.5" />
@@ -698,7 +698,7 @@ export default function Messages() {
                           ? 'bg-teal-600 text-white rounded-br-sm'
                           : isAlert
                             ? 'bg-red-50 text-red-900 border border-red-200 rounded-bl-sm'
-                            : 'bg-white text-slate-900 border border-slate-200 rounded-bl-sm'
+                            : 'bg-[#f0f6fa] text-slate-900 border border-slate-200 rounded-bl-sm'
                       }`}>
                         {/* Inline reply quote */}
                         {msg.content?.startsWith('↩ ') && (() => {
@@ -765,7 +765,7 @@ export default function Messages() {
             </div>
 
             {/* Message Input */}
-            <form onSubmit={handleSendMessage} className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+            <form onSubmit={handleSendMessage} className="bg-[#f0f6fa] dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
 
               {/* Reply preview strip */}
               <AnimatePresence>

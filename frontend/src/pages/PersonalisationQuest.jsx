@@ -1421,7 +1421,7 @@ export default function PersonalisationQuest() {
             <button onClick={handleBack} disabled={currentStep === 1}
               className={`flex items-center gap-2 px-5 py-2 rounded-xl font-semibold text-sm transition-all ${
                 currentStep === 1 ? 'opacity-0 cursor-not-allowed' :
-                'bg-white text-slate-600 border border-slate-300 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50/50 shadow-sm'
+                'bg-[#f0f6fa] text-slate-600 border border-slate-300 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50/50 shadow-sm'
               }`}>
               <ArrowLeft size={15} /> Back
             </button>

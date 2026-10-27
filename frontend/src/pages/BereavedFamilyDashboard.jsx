@@ -142,7 +142,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
     <div className="space-y-6">
 
       {/* Mood check-in */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5">
+      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl p-5">
         <p className="text-sm font-semibold text-slate-700 mb-3">How are you feeling today?</p>
         <div className="flex gap-3">
           {moodOptions.map(({ icon: Icon, label, color, bg }) => (
@@ -195,7 +195,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
 
       {/* Grief check-in CTA */}
       {!screeningData?.completed_recently && (
-        <div className="bg-white border border-purple-200 rounded-xl p-4 flex items-center gap-4">
+        <div className="bg-[#f0f6fa] border border-purple-200 rounded-xl p-4 flex items-center gap-4">
           <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
             <Calendar size={17} className="text-purple-600" />
           </div>
@@ -232,7 +232,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {CRISIS.map(({ name, number, tag }) => (
-            <div key={name} className="bg-white border border-red-100 rounded-lg p-2.5 text-center">
+            <div key={name} className="bg-[#f0f6fa] border border-red-100 rounded-lg p-2.5 text-center">
               <p className="text-xs text-slate-500 mb-0.5">{name}</p>
               <p className="font-bold text-red-600 text-sm">{number}</p>
               <p className="text-xs text-slate-400">{tag}</p>
@@ -255,10 +255,10 @@ function GriefJourneyTab({ screeningData }) {
   ];
   return (
     <div className="space-y-5">
-      <div className="bg-white border border-slate-200 rounded-2xl p-6">
+      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl p-6">
         <GriefProgressTracker screeningData={screeningData} />
       </div>
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+      <div className="bg-[#f0f6fa] border border-slate-200 rounded-2xl overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
           <h3 className="text-sm font-semibold text-slate-700">Understanding the Grief Journey</h3>
           <p className="text-xs text-slate-500 mt-0.5">Grief is not linear · you may move between these stages many times</p>
@@ -304,7 +304,7 @@ function SupportGroupsTab() {
           [Clock,   'Always Available',    'Post and read messages any time, day or night'],
           [Globe,   'Culturally Grounded', 'Groups that understand Ghanaian grief traditions'],
         ].map(([Icon, title, desc]) => (
-          <div key={title} className="bg-white border border-slate-200 rounded-xl p-4 flex gap-3">
+          <div key={title} className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-4 flex gap-3">
             <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0"><Icon size={15} className="text-teal-600" /></div>
             <div><p className="text-sm font-semibold text-slate-800">{title}</p><p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p></div>
           </div>
@@ -335,7 +335,7 @@ function CounselingTab() {
       </div>
       <div className="space-y-3">
         {COUNSELORS.map((r, i) => (
-          <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-4">
+          <div key={i} className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-4 flex items-start gap-4">
             <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
               <Phone size={15} className="text-purple-600" />
             </div>
@@ -386,7 +386,7 @@ function ResourcesTab() {
   return (
     <div className="space-y-4">
       {sections.map(({ label, dotColor, items }) => (
-        <div key={label} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div key={label} className="bg-[#f0f6fa] border border-slate-200 rounded-2xl overflow-hidden">
           <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
             <div className={`w-2 h-2 rounded-full ${dotColor}`} />
             <h3 className="font-semibold text-slate-800 text-sm">{label}</h3>

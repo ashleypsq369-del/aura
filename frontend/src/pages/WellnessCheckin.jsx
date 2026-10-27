@@ -164,7 +164,7 @@ export default function WellnessCheckin() {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white rounded-lg shadow-sm p-10 max-w-md w-full text-center border-2 border-emerald-200"
+          className="bg-[#f0f6fa] rounded-lg shadow-sm p-10 max-w-md w-full text-center border-2 border-emerald-200"
         >
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring' }}>
             <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
@@ -283,7 +283,7 @@ export default function WellnessCheckin() {
   if (!isEligible) {
     return (
       <div className="min-h-full flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-10 max-w-md text-center">
+        <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm p-10 max-w-md text-center">
           <Heart className="w-12 h-12 text-teal-500 mx-auto mb-4" />
           <h2 className="text-base font-bold text-slate-900 mb-2">Patient Check-In Only</h2>
           <p className="text-slate-500 text-sm mb-6 leading-relaxed">
@@ -374,7 +374,7 @@ export default function WellnessCheckin() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: ITEMS.length * 0.04 }}
-            className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm"
+            className="bg-[#f0f6fa] rounded-2xl border-2 border-slate-200 p-5 shadow-sm"
           >
             <label className="block text-sm font-bold text-slate-900 mb-2">
               Anything else to share? <span className="text-slate-400 font-normal">(optional)</span>

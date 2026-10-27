@@ -445,8 +445,8 @@ export default function Register() {
                   <div key={n} className={`flex items-center ${idx < 1 ? 'flex-1':''}`}>
                     <div className="flex items-center gap-2">
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all ${
-                        n < step  ? 'bg-white text-teal-600'        :
-                        n === step? 'bg-white text-teal-700 shadow' :
+                        n < step  ? 'bg-[#f0f6fa] text-teal-600'        :
+                        n === step? 'bg-[#f0f6fa] text-teal-700 shadow' :
                                     'bg-white/20 text-white/60'
                       }`}>
                         {n < step ? <CheckCircle size={14}/> : n}

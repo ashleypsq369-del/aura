@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, TrendingUp, BarChart3, Activity, ThumbsUp, ThumbsDown, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -58,7 +58,7 @@ export default function ExplainabilityPanel({
 
   if (!prediction) {
     return (
-      <div className="bg-white rounded-lg p-8 shadow-md border-2 border-gray-200 text-center">
+      <div className="bg-[#f0f6fa] rounded-lg p-8 shadow-md border-2 border-gray-200 text-center">
         <Brain className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <p className="text-gray-600 mb-4">No AI prediction available</p>
         {onRequestNewPrediction && (
@@ -131,7 +131,7 @@ export default function ExplainabilityPanel({
       </motion.div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
+      <div className="bg-[#f0f6fa] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
         <div className="flex border-b-2 border-gray-200">
           {[
             { id: 'explanation', label: 'Plain English', icon: MessageSquare },
@@ -206,7 +206,7 @@ export default function ExplainabilityPanel({
       </div>
 
       {/* Clinician Feedback Section */}
-      <div className="bg-white rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
+      <div className="bg-[#f0f6fa] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
         <button
           onClick={() => setFeedbackExpanded(!feedbackExpanded)}
           className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition"

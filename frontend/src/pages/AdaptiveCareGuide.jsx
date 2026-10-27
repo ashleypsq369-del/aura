@@ -144,7 +144,7 @@ export default function AdaptiveCareGuide() {
       {/* Care Priorities */}
       {guideData.care_priorities && guideData.care_priorities.length > 0 && (
         <motion.div initial={{opacity:0,y:10}} animate={{opacity:1,y:0}}
-          className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          className="bg-[#f0f6fa] border border-slate-200 rounded-xl p-5 shadow-sm">
           <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
             <Target size={18} className="text-teal-600"/> Priority Focus Areas
           </h3>
@@ -254,7 +254,7 @@ export default function AdaptiveCareGuide() {
           <h3 className="font-bold text-red-900 mb-3 flex items-center gap-2"><Phone size={18}/>Emergency Contacts</h3>
           <div className="space-y-2">
             {guideData.emergency_contacts.map((contact, i) => (
-              <div key={i} className="bg-white px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
+              <div key={i} className="bg-[#f0f6fa] px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
                 {contact}
               </div>
             ))}

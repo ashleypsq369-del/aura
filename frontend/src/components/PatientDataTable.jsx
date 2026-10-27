@@ -214,7 +214,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
   const totalFiltered = table.getFilteredRowModel().rows.length;
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+    <div className="bg-[#f0f6fa] dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       {/* Toolbar — table-level filter for quick in-grid search */}
       <div className="px-4 py-2.5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3 bg-[#f0f6fa] dark:bg-slate-900">
         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium" aria-live="polite" aria-atomic="true">
@@ -265,7 +265,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
           <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60">
             {loading ? (
               [...Array(5)].map((_, i) => (
-                <tr key={i} className="bg-white dark:bg-slate-900">
+                <tr key={i} className="bg-[#f0f6fa] dark:bg-slate-900">
                   {columns.map((_, j) => (
                     <td key={j} className="px-4 py-3">
                       <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded skeleton" />
@@ -287,7 +287,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.02 }}
-                  className="bg-white dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group border-l-2 border-l-transparent hover:border-l-teal-500"
+                  className="bg-[#f0f6fa] dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group border-l-2 border-l-transparent hover:border-l-teal-500"
                   onClick={() => handleViewPatient(row.original)}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleViewPatient(row.original)}
                   tabIndex={0}

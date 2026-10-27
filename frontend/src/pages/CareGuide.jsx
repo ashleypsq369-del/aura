@@ -917,7 +917,7 @@ export default function CareGuide() {
           </div>
 
           {/* Index */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
+          <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
             <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BookOpen size={13} className="text-slate-400"/>
@@ -979,7 +979,7 @@ export default function CareGuide() {
               </motion.div>
             ) : (
               <motion.div key={protocol.id} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-5">
                   <ProtocolModalContent protocol={protocol}/>
                 </div>

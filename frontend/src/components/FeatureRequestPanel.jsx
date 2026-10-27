@@ -75,7 +75,7 @@ export default function FeatureRequestPanel() {
   if (hiddenFeatures.length === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}

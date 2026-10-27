@@ -67,7 +67,7 @@ export default function AssessmentDashboard() {
   if (patientError || !patient) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 sm:py-12 text-center">
-        <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-red-200">
+        <div className="bg-[#f0f6fa] rounded-xl p-8 shadow-lg border-2 border-red-200">
           <ClipboardList className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-slate-900 mb-2">Patient Not Found</h2>
           <p className="text-slate-600 mb-6">Could not load patient with ID {patientId}.</p>
@@ -353,7 +353,7 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       onClick={onClick}
-      className="bg-white rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden group"
+      className="bg-[#f0f6fa] rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden group"
       style={{ borderLeft: `4px solid ${accent.border}` }}
     >
       <div className="px-4 py-3 flex items-start gap-3">

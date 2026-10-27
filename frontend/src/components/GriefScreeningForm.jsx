@@ -206,7 +206,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                           className={`w-full p-4 rounded-xl border-2 text-left transition-all font-semibold ${
                             isSelected
                               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-purple-500 shadow-lg'
-                              : 'bg-white text-slate-700 border-slate-300 hover:border-purple-400 hover:bg-purple-50'
+                              : 'bg-[#f0f6fa] text-slate-700 border-slate-300 hover:border-purple-400 hover:bg-purple-50'
                           }`}
                         >
                           <div className="flex items-center justify-between">

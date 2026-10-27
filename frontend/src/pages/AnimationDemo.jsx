@@ -56,7 +56,7 @@ export default function AnimationDemo() {
           {/* 1. Page Transition (You're seeing it now!) */}
           <motion.div
             variants={slideUp}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-teal-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-teal-300"
           >
             <h2 className="text-xl font-bold mb-3 text-teal-700">¨ Page Transition</h2>
             <p className="text-gray-600 mb-3">
@@ -70,7 +70,7 @@ export default function AnimationDemo() {
           {/* 2. Hover Cards */}
           <AnimatedCard
             hover={true}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-purple-300 cursor-pointer"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-purple-300 cursor-pointer"
           >
             <h2 className="text-xl font-bold mb-3 text-purple-700">Ž¯ Hover Effect</h2>
             <p className="text-gray-600 mb-3">
@@ -84,7 +84,7 @@ export default function AnimationDemo() {
           {/* 3. Animated Numbers (Health Metrics) */}
           <motion.div
             variants={scaleIn}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-blue-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-blue-300"
           >
             <h2 className="text-xl font-bold mb-3 text-teal-700">¢ Counting Animation</h2>
             <div className="grid grid-cols-3 gap-4 mb-3">
@@ -115,7 +115,7 @@ export default function AnimationDemo() {
           {/* 4. Progress Bars */}
           <motion.div
             variants={scaleIn}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-green-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-green-300"
           >
             <h2 className="text-xl font-bold mb-3 text-green-700">Š Progress Animation</h2>
             <div className="space-y-4 mb-3">
@@ -149,7 +149,7 @@ export default function AnimationDemo() {
           {/* 5. Heartbeat Animation */}
           <motion.div
             variants={slideUp}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-red-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-red-300"
           >
             <h2 className="text-xl font-bold mb-3 text-red-700">{'\u2764\uFE0F'} Heartbeat Effect</h2>
             <div className="flex items-center justify-center py-6">
@@ -166,7 +166,7 @@ export default function AnimationDemo() {
           {/* 6. Pulsing Vitals */}
           <motion.div
             variants={slideUp}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-amber-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-amber-300"
           >
             <h2 className="text-xl font-bold mb-3 text-amber-700"> Pulsing Vital Signs</h2>
             <div className="grid grid-cols-2 gap-3 mb-3">
@@ -187,7 +187,7 @@ export default function AnimationDemo() {
           {/* 7. Staggered List */}
           <motion.div
             variants={slideUp}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-indigo-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-indigo-300"
           >
             <h2 className="text-xl font-bold mb-3 text-indigo-700"> Staggered List</h2>
             <AnimatedList>
@@ -209,7 +209,7 @@ export default function AnimationDemo() {
           {/* 8. Interactive Buttons */}
           <motion.div
             variants={scaleIn}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-pink-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-pink-300"
           >
             <h2 className="text-xl font-bold mb-3 text-pink-700">˜ Interactive Buttons</h2>
             <div className="space-y-3 mb-3">
@@ -238,7 +238,7 @@ export default function AnimationDemo() {
           {/* 9. Alert Animation */}
           <motion.div
             variants={alertAnimation}
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-orange-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-orange-300"
           >
             <h2 className="text-xl font-bold mb-3 text-orange-700">⚠ï¸ Alert Animation</h2>
             <motion.div
@@ -259,7 +259,7 @@ export default function AnimationDemo() {
           </motion.div>
 
           {/* 10. CSS Animations */}
-          <div className="bg-white rounded-xl p-6 shadow-lg border-3 border-cyan-300 animate-fade-in">
+          <div className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-cyan-300 animate-fade-in">
             <h2 className="text-xl font-bold mb-3 text-cyan-700">Ž¨ CSS Animations</h2>
             <div className="space-y-3 mb-3">
               <div className="p-3 bg-cyan-50 rounded-lg hover-lift cursor-pointer">
@@ -280,7 +280,7 @@ export default function AnimationDemo() {
           {/* 11. Scroll Animations (AOS) */}
           <div 
             data-aos="zoom-in"
-            className="bg-white rounded-xl p-6 shadow-lg border-3 border-lime-300"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border-3 border-lime-300"
           >
             <h2 className="text-xl font-bold mb-3 text-lime-700">Scroll Animation</h2>
             <p className="text-gray-600 mb-3">
@@ -294,7 +294,7 @@ export default function AnimationDemo() {
           {/* 12. Loading Skeleton */}
           <motion.div
             variants={slideUp}
-            className="bg-white rounded-xl p-6 shadow-lg border border-slate-200"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-lg border border-slate-200"
           >
             <h2 className="text-xl font-bold mb-3 text-slate-700"> Loading Skeleton</h2>
             <HealthDataSkeleton rows={3} />

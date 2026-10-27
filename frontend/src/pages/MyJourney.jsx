@@ -84,7 +84,7 @@ export default function MyJourney() {
   if (!patientId && !patientLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="bg-white rounded-lg border border-slate-200 p-8 max-w-sm text-center">
+        <div className="bg-[#f0f6fa] rounded-lg border border-slate-200 p-8 max-w-sm text-center">
           <MapPin className="w-10 h-10 mx-auto mb-3 text-teal-400 opacity-60" />
           <h2 className="text-sm font-bold text-slate-900 mb-2">No Patient Linked</h2>
           <p className="text-xs text-slate-500">Your care journey timeline will appear here once your account is linked to a patient record.</p>
@@ -123,7 +123,7 @@ export default function MyJourney() {
               return (
                 <button key={type.value} onClick={() => setSelectedEventType(type.value)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
-                    active ? 'text-white border-transparent shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300'
+                    active ? 'text-white border-transparent shadow-sm' : 'bg-[#f0f6fa] text-slate-600 border-slate-200 hover:border-teal-300'
                   }`}
                   style={active ? { background: grads[i % grads.length] } : {}}
                 >
@@ -142,7 +142,7 @@ export default function MyJourney() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                   dateRange === r.value
                     ? 'bg-teal-600 text-white border-teal-600'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300'
+                    : 'bg-[#f0f6fa] text-slate-600 border-slate-200 hover:border-teal-300'
                 }`}
               >
                 {r.label}
@@ -157,7 +157,7 @@ export default function MyJourney() {
             <Loader2 className="w-10 h-10 animate-spin text-teal-600" />
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="bg-white rounded-lg border border-slate-200 p-10 text-center">
+          <div className="bg-[#f0f6fa] rounded-lg border border-slate-200 p-10 text-center">
             <MapPin className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <h3 className="text-sm font-semibold text-slate-700 mb-1">No events found</h3>
             <p className="text-xs text-slate-400">

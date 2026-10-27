@@ -1,4 +1,4 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, AlertTriangle, CheckCircle, TrendingUp, Users, Filter } from 'lucide-react';
@@ -98,26 +98,26 @@ export default function ModelBiasReport() {
 
       {/* Overall Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white border-2 border-slate-300 rounded-xl p-4">
+        <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-4">
           <p className="text-xs text-slate-600 font-semibold mb-1">Total Predictions</p>
           <p className="text-3xl font-bold text-slate-900">{biasData.overall.total_predictions || 0}</p>
         </div>
-        <div className="bg-white border-2 border-slate-300 rounded-xl p-4">
+        <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-4">
           <p className="text-xs text-slate-600 font-semibold mb-1">Average Risk Score</p>
           <p className="text-3xl font-bold text-slate-900">{(biasData.overall.mean_risk_score || 0).toFixed(2)}</p>
         </div>
-        <div className="bg-white border-2 border-slate-300 rounded-xl p-4">
+        <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-4">
           <p className="text-xs text-slate-600 font-semibold mb-1">Std Deviation</p>
           <p className="text-3xl font-bold text-slate-900">{(biasData.overall.std_risk_score || 0).toFixed(2)}</p>
         </div>
-        <div className="bg-white border-2 border-slate-300 rounded-xl p-4">
+        <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-4">
           <p className="text-xs text-slate-600 font-semibold mb-1">High Risk Count</p>
           <p className="text-3xl font-bold text-red-600">{biasData.overall.high_risk_count || 0}</p>
         </div>
       </div>
 
       {/* Category Selector */}
-      <div className="bg-white border-2 border-slate-300 rounded-xl p-4">
+      <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-4">
         <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
           <Filter size={20} />
           Analyze By Category
@@ -168,7 +168,7 @@ export default function ModelBiasReport() {
 
       {/* Category Breakdown */}
       {categoryData && (
-        <div className="bg-white border-2 border-slate-300 rounded-xl p-6">
+        <div className="bg-[#f0f6fa] border-2 border-slate-300 rounded-xl p-6">
           <h3 className="font-bold text-slate-900 text-lg mb-4">
             {categories.find((c) => c.value === selectedCategory)?.label} Analysis
           </h3>

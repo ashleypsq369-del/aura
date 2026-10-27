@@ -30,7 +30,7 @@ const SEV_CFG = {
 
 function KpiCard({ label, value, icon: Icon, color }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
+    <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
       <Icon size={18} className={color}/>
       <div><p className="text-xs text-slate-500">{label}</p><p className={`text-2xl font-bold ${color}`}>{value ?? '—'}</p></div>
     </div>
@@ -195,7 +195,7 @@ export default function HIPAACompliance() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Score ring card */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col items-center justify-center gap-3">
+              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col items-center justify-center gap-3">
                 <ScoreRing score={score}/>
                 <p className="text-sm font-bold text-slate-700">Overall Compliance</p>
                 <div className="text-xs text-slate-500 text-center">
@@ -203,7 +203,7 @@ export default function HIPAACompliance() {
                 </div>
               </div>
               {/* Live metrics */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
+              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
                 <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><Users size={15} className="text-teal-600"/> Live System Metrics</h3>
                 {[
                   ['Total Users', compliance?.live_metrics?.total_users],
@@ -219,7 +219,7 @@ export default function HIPAACompliance() {
                 ))}
               </div>
               {/* Breach summary */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
+              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
                 <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><AlertTriangle size={15} className="text-red-500"/> Breach Incidents</h3>
                 {breachStats ? [
                   ['Total', breachStats.total_incidents, 'text-slate-800'],
@@ -244,12 +244,12 @@ export default function HIPAACompliance() {
             <div className="flex flex-wrap gap-2">
               {categories.map(cat => (
                 <button key={cat} onClick={() => setCatFilter(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${catFilter===cat ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-slate-600 border-slate-200 hover:border-teal-400'}`}>
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${catFilter===cat ? 'bg-teal-600 text-white border-teal-600' : 'bg-[#f0f6fa] text-slate-600 border-slate-200 hover:border-teal-400'}`}>
                   {cat === 'all' ? 'All Categories' : cat}
                 </button>
               ))}
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
               {filtered.map((item, i) => {
                 const cfg = STATUS_CFG[item.status] || STATUS_CFG.partial;
                 const Icon = cfg.icon;
@@ -323,7 +323,7 @@ export default function HIPAACompliance() {
               )}
             </AnimatePresence>
             {incidents.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+              <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 p-12 text-center">
                 <Shield size={36} className="mx-auto text-slate-300 mb-3"/>
                 <p className="text-slate-600 font-semibold">No breach incidents recorded</p>
               </div>
@@ -338,7 +338,7 @@ export default function HIPAACompliance() {
         {/* DATA EXPORT TAB */}
         {tab === 'export' && isPatient && (
           <div className="space-y-4">
-            <div className="bg-white rounded-2xl border border-teal-200 shadow-sm p-6">
+            <div className="bg-[#f0f6fa] rounded-2xl border border-teal-200 shadow-sm p-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0"><Lock size={24} className="text-teal-600"/></div>
                 <div className="flex-1">
@@ -356,7 +356,7 @@ export default function HIPAACompliance() {
           </div>
         )}
         {tab === 'export' && !isPatient && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+          <div className="bg-[#f0f6fa] rounded-2xl border border-slate-200 p-12 text-center">
             <Shield size={36} className="mx-auto text-slate-300 mb-3"/>
             <p className="text-slate-600 font-semibold">Data Export for Patients</p>
             <p className="text-slate-400 text-sm mt-1">This feature allows patients to download their complete health record. Clinicians and admins access data through Reports.</p>

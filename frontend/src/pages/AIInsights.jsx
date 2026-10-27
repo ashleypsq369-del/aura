@@ -34,7 +34,7 @@ import {
 const RISK = {
   critical: {
     border: 'border-l-red-500',    glow: 'shadow-red-500/20',
-    ring: 'ring-2 ring-red-500/40', bg: 'bg-white',
+    ring: 'ring-2 ring-red-500/40', bg: 'bg-[#f0f6fa]',
     badge: 'bg-red-600 text-white', text: 'text-red-600',
     barColor: '#e11d48',            gradFrom: 'from-red-600',  gradTo: 'to-rose-700',
     dot: 'bg-red-500 animate-pulse',label: 'Critical',         Icon: AlertTriangle,
@@ -43,7 +43,7 @@ const RISK = {
   },
   high: {
     border: 'border-l-orange-500', glow: 'shadow-orange-500/20',
-    ring: 'ring-2 ring-orange-400/40', bg: 'bg-white',
+    ring: 'ring-2 ring-orange-400/40', bg: 'bg-[#f0f6fa]',
     badge: 'bg-orange-500 text-white', text: 'text-orange-600',
     barColor: '#f97316',            gradFrom: 'from-orange-500', gradTo: 'to-amber-600',
     dot: 'bg-orange-500',           label: 'High Risk',         Icon: AlertCircle,
@@ -52,7 +52,7 @@ const RISK = {
   },
   moderate: {
     border: 'border-l-amber-500',  glow: 'shadow-amber-400/15',
-    ring: 'ring-2 ring-amber-400/30', bg: 'bg-white',
+    ring: 'ring-2 ring-amber-400/30', bg: 'bg-[#f0f6fa]',
     badge: 'bg-amber-500 text-white', text: 'text-amber-600',
     barColor: '#d97706',            gradFrom: 'from-amber-500', gradTo: 'to-orange-500',
     dot: 'bg-amber-500',            label: 'Moderate',          Icon: Activity,
@@ -61,7 +61,7 @@ const RISK = {
   },
   low: {
     border: 'border-l-teal-500',   glow: 'shadow-teal-500/10',
-    ring: '',                       bg: 'bg-white',
+    ring: '',                       bg: 'bg-[#f0f6fa]',
     badge: 'bg-teal-600 text-white',text: 'text-teal-600',
     barColor: '#0d9488',            gradFrom: 'from-teal-600',  gradTo: 'to-emerald-600',
     dot: 'bg-teal-500',             label: 'Stable',            Icon: CheckCircle,
@@ -70,7 +70,7 @@ const RISK = {
   },
   unknown: {
     border: 'border-l-slate-400',  glow: '',
-    ring: '',                       bg: 'bg-white',
+    ring: '',                       bg: 'bg-[#f0f6fa]',
     badge: 'bg-slate-500 text-white',text: 'text-slate-500',
     barColor: '#94a3b8',            gradFrom: 'from-slate-500', gradTo: 'to-slate-600',
     dot: 'bg-slate-400',            label: 'Unknown',           Icon: Shield,
@@ -899,7 +899,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       </div>
 
       {distData.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <BarChart2 size={12} className="text-teal-500" /> Patient Risk Distribution
           </p>
@@ -918,7 +918,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
       )}
 
       {mlStatus && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
           <p className="text-xs font-bold text-slate-500  mb-3 flex items-center gap-1">
             <Cpu size={12} className="text-teal-500" /> Model Health
           </p>
@@ -946,7 +946,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+      <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
             <Beaker size={15} className="text-teal-600" />
@@ -1098,7 +1098,7 @@ export default function AIInsights() {
       </PageHeader>
 
       {/* -- KPI pills + tab bar -- */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
+      <div className="bg-[#f0f6fa] dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3">
         {/* Compact KPI row */}
         <div className="flex items-center gap-2 flex-wrap mb-3">
           {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (

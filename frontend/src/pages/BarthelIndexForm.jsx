@@ -262,7 +262,7 @@ export default function BarthelIndexForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center flex-shrink-0">
@@ -353,7 +353,7 @@ export default function BarthelIndexForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Additional Notes (Optional)

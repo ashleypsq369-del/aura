@@ -144,7 +144,7 @@ export default function NotificationTester() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-md border-2 border-slate-200 overflow-hidden hover:shadow-lg transition-all"
+                className="bg-[#f0f6fa] rounded-xl shadow-md border-2 border-slate-200 overflow-hidden hover:shadow-lg transition-all"
               >
                 <div className={`h-2 bg-gradient-to-r ${notif.color}`} />
                 

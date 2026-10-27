@@ -191,7 +191,7 @@ export default function FamilyConsentSettings() {
       </div>
 
       {/* Category toggles */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm divide-y divide-gray-200 dark:divide-slate-700"
+      <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm divide-y divide-gray-200 dark:divide-slate-700"
         style={{ border: '1px solid #d1d5db' }}>
         {CATEGORIES.map((cat, i) => {
           const Icon = cat.icon;
@@ -240,12 +240,12 @@ export default function FamilyConsentSettings() {
 
       {/* Status summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-white dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
           style={{ border: '1px solid #d1d5db' }}>
           <div className="text-2xl font-bold text-teal-600">{grantedCount}</div>
           <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">Categories shared</div>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
           style={{ border: '1px solid #d1d5db' }}>
           <div className="text-2xl font-bold text-slate-700 dark:text-slate-300">{CATEGORIES.length - grantedCount}</div>
           <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">Categories private</div>

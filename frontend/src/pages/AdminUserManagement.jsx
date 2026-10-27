@@ -548,7 +548,7 @@ export default function AdminUserManagement() {
         </div>
 
         {/* ── Filters ─────────────────────────────── */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-3">
+        <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -603,7 +603,7 @@ export default function AdminUserManagement() {
         )}
 
         {/* ── Users Table ─────────────────────────── */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           {isLoading ? (
             <div className="p-12 text-center">
               <Loader2 size={28} className="animate-spin text-teal-600 mx-auto mb-3" />

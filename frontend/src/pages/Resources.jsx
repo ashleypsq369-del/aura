@@ -139,7 +139,7 @@ export default function Resources() {
           {/* ── Left sidebar: search + category filter ── */}
           <div className="w-full lg:w-52 lg:flex-shrink-0 lg:sticky lg:top-4 space-y-3">
             {/* Search */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-3">
+            <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-3">
               <div className="relative">
                 <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                 <input
@@ -153,7 +153,7 @@ export default function Resources() {
             </div>
 
             {/* Category filter */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-3 py-2.5 border-b border-slate-100">
                 <p className="text-[10px] font-bold text-slate-400 ">Categories</p>
               </div>
@@ -251,7 +251,7 @@ export default function Resources() {
                 <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
               </div>
             ) : !resources || resources.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+              <div className="bg-[#f0f6fa] rounded-xl border border-slate-200 p-12 text-center">
                 <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
                 <h3 className="text-base font-semibold text-slate-700 mb-1">No resources found</h3>
                 <p className="text-sm text-slate-500">{searchQuery ? 'Try adjusting your search terms' : 'Resources will appear here'}</p>
@@ -324,7 +324,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
   return (
     <div
       onClick={onView}
-      className="bg-white rounded-lg border border-slate-200 hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer flex flex-col overflow-hidden"
+      className="bg-[#f0f6fa] rounded-lg border border-slate-200 hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer flex flex-col overflow-hidden"
     >
       <div
         className="h-1 flex-shrink-0"

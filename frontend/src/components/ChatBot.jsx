@@ -166,7 +166,7 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
         <div className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
           isUser
             ? 'bg-teal-600 dark:bg-teal-700 text-white rounded-tr-sm'
-            : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
+            : 'bg-[#f0f6fa] border border-gray-100 text-gray-800 rounded-tl-sm'
         }`}>
           {isUser ? (
             <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
@@ -226,7 +226,7 @@ function ThinkingDots() {
       <div className="w-7 h-7 rounded-full bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0 mt-0.5 shadow">
         <Bot size={14} className="text-white" />
       </div>
-      <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+      <div className="bg-[#f0f6fa] border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
         <div className="flex items-center gap-1.5">
           {[0, 150, 300].map(delay => (
             <div

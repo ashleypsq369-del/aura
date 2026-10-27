@@ -106,7 +106,7 @@ export default function CrisisInterventionOverlay({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
+              className="bg-[#f0f6fa] rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
             >
               {/* Header - Urgent */}
               <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-5 relative">

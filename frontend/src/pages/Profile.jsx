@@ -157,7 +157,7 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Profile Summary Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg border border-slate-200 p-5 sticky top-6">
+            <div className="bg-[#f0f6fa] rounded-lg border border-slate-200 p-5 sticky top-6">
               <div className="text-center">
                 <div className="relative inline-block mb-3">
                   <AvatarDisplay size={72} showRing className="mx-auto" />
@@ -201,7 +201,7 @@ export default function Profile() {
           <div className="lg:col-span-2 space-y-5">
             
             {/* Personal Information */}
-            <div className="bg-white rounded-lg border border-slate-200">
+            <div className="bg-[#f0f6fa] rounded-lg border border-slate-200">
               <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
                 <h2 className="text-sm font-bold text-slate-900">Personal Information</h2>
                 {!editMode && (
@@ -264,7 +264,7 @@ export default function Profile() {
             </div>
 
             {/* Change Password */}
-            <div className="bg-white rounded-lg border border-slate-200">
+            <div className="bg-[#f0f6fa] rounded-lg border border-slate-200">
               <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <h2 className="text-sm font-bold text-slate-900">Password</h2>
@@ -323,7 +323,7 @@ export default function Profile() {
             </div>
 
             {/* Preferences */}
-            <div className="bg-white rounded-lg border border-slate-200">
+            <div className="bg-[#f0f6fa] rounded-lg border border-slate-200">
               <div className="px-5 py-3 border-b border-slate-100">
                 <h2 className="text-sm font-bold text-slate-900">Preferences</h2>
               </div>

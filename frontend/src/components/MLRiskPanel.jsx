@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MLRiskPanel.jsx
  * ================
  * Displays real XGBoost ML risk predictions with SHAP waterfall chart.
@@ -151,7 +151,7 @@ function TaskCard({ taskKey, task }) {
   return (
     <motion.div
       layout
-      className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+      className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
       style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
     >
       {/* Header — px-4 py-2.5 */}
@@ -259,7 +259,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+      <div className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
         <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
           <Brain size={14} className="text-teal-600 animate-pulse" />
         </div>
@@ -273,7 +273,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
   if (error || !data) {
     return (
-      <div className="bg-white rounded-2xl border border-amber-200 shadow-sm p-4 flex items-center gap-3">
+      <div className="bg-[#f0f6fa] rounded-2xl border border-amber-200 shadow-sm p-4 flex items-center gap-3">
         <Info size={14} className="text-amber-500 flex-shrink-0" />
         <p className="text-xs text-amber-700">
           ML models not available.
@@ -295,7 +295,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
   if (compact) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
+      <div className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
         style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}>
         <RiskGauge value={overallRisk} level={overallLvl} size={60} />
         <div className="flex-1 min-w-0">
@@ -317,7 +317,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
     <div className="space-y-3">
       {/* ── Overall Risk Hero Card — white bg, left border-l-4 ── */}
       <div
-        className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+        className="bg-[#f0f6fa] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
         style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
       >
         {/* Header bar — px-4 py-3 */}
@@ -395,7 +395,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
             const tc   = riskColor(t.risk_level).text;
             return (
               <div key={key}
-                className="bg-white rounded-xl border border-gray-200 p-2 transition-colors hover:bg-gray-50"
+                className="bg-[#f0f6fa] rounded-xl border border-gray-200 p-2 transition-colors hover:bg-gray-50"
                 style={{ borderLeftWidth: 2, borderLeftColor: lbc }}>
                 <p className="text-[10px] font-semibold text-gray-600 truncate leading-tight">
                   {meta.label?.replace(' Risk', '').replace(' Burden', '') ?? key}

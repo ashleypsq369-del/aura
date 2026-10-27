@@ -107,7 +107,7 @@ export default function SymptomsDetail() {
                 { label: 'Last 7 Days',     value: symptoms.filter(s => (Date.now() - new Date(s.recorded_at)) < 7*86400000).length, icon: Activity, color: '#1d4ed8' },
               ].map(({ label, value, icon: Icon, color }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                  className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+                  className="bg-[#f0f6fa] rounded-xl border border-slate-200 shadow-sm p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
                       <Icon size={15} style={{ color }} />
@@ -140,7 +140,7 @@ export default function SymptomsDetail() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-200">
                     <h2 className="text-sm font-bold text-slate-900">Symptom Frequency</h2>
                   </div>
@@ -161,7 +161,7 @@ export default function SymptomsDetail() {
 
             {/* History table */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+              className="bg-[#f0f6fa] rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
               <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
                 <h2 className="text-base font-bold text-slate-900">Symptom History</h2>
                 <p className="text-slate-500 text-sm">Complete log of patient-reported symptoms</p>

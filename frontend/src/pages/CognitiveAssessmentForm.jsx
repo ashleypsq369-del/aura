@@ -211,7 +211,7 @@ export default function CognitiveAssessmentForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+        className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
       >
         <label className="block text-sm font-medium text-slate-700 mb-3">
           Select Assessment Type
@@ -270,7 +270,7 @@ export default function CognitiveAssessmentForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+        className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
       >
         <label className="block text-sm font-medium text-slate-700 mb-2">
           Patient's Years of Education {assessmentType === 'MoCA' && <span className="text-red-500">*</span>}
@@ -300,7 +300,7 @@ export default function CognitiveAssessmentForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 + idx * 0.05 }}
-            className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
@@ -372,7 +372,7 @@ export default function CognitiveAssessmentForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="bg-white rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[#f0f6fa] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <label className="block text-sm font-medium text-slate-700 mb-2">
             Clinical Notes (Optional)

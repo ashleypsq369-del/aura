@@ -170,7 +170,7 @@ export default function ReferralTracker() {
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-            className="bg-white dark:bg-slate-800 rounded-xl border border-green-200 dark:border-green-700 overflow-hidden"
+            className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-green-200 dark:border-green-700 overflow-hidden"
           >
             <div className="px-5 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-700 flex items-center justify-between">
               <h3 className="font-semibold text-green-900 dark:text-green-100 text-sm flex items-center gap-2">
@@ -258,7 +258,7 @@ export default function ReferralTracker() {
 
       {/* Referrals List */}
       {referrals.length === 0 ? (
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-12 text-center">
           <Send className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h3 className="font-semibold text-slate-600 dark:text-slate-300 mb-1">No referrals yet</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">Click "New Referral" to create the first referral for this patient.</p>
@@ -269,7 +269,7 @@ export default function ReferralTracker() {
             const typeInfo = REFERRAL_TYPES.find(t => t.value === r.referral_type);
             const isEditing = editingId === r.id;
             return (
-              <div key={r.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div key={r.id} className="bg-[#f0f6fa] dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                 <div
                   className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-750"
                   onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}

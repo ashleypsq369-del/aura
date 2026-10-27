@@ -1,4 +1,4 @@
-﻿/**
+/**
  * DailyTaskChecklist
  * ==================
  * Displays the patient's daily care task checklist with completion status.
@@ -124,7 +124,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
   // ── Compact mode — for dashboard card ─────────────────────────────────
   if (compact) {
     return (
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+      <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <ProgressRing pct={completion_pct} size={44} />
@@ -183,7 +183,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
 
   // ── Full mode ─────────────────────────────────────────────────────────
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+    <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -220,7 +220,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                       task.done
                         ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
-                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                        : 'bg-[#f0f6fa] dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
                     }`}>
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
                       task.done ? 'bg-emerald-100 dark:bg-emerald-800/40' : 'bg-slate-100 dark:bg-slate-700'

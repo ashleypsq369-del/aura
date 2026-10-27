@@ -299,7 +299,7 @@ export default function PatientDetail() {
     return (
       <PageTransition>
         <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6">
-          <div className="bg-white rounded-lg border border-red-200 p-8 text-center">
+          <div className="bg-[#f0f6fa] rounded-lg border border-red-200 p-8 text-center">
             <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
             <h2 className="text-base font-bold text-slate-900 mb-1">Patient Not Found</h2>
             <p className="text-sm text-slate-500 mb-4">Unable to load patient information</p>
@@ -464,7 +464,7 @@ export default function PatientDetail() {
             {/* Caregiver Assignment */}
             {canAssignCaregiver && caregiverMatches?.recommendations?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
+                className="bg-[#f0f6fa] rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                     <HeartHandshake size={15} className="text-purple-600" />

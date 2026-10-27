@@ -111,7 +111,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
             <button key={id} onClick={() => setTab(id)}
               className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
                 tab === id
-                  ? 'bg-white text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
+                  ? 'bg-[#f0f6fa] text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
                   : 'text-slate-400 hover:bg-white/70 hover:text-slate-600'
               }`}>
               <Icon size={11} className={tab === id ? 'text-teal-600' : ''} />

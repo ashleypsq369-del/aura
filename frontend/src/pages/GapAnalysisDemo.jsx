@@ -166,7 +166,7 @@ export default function GapAnalysisDemo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedPriority(priority)}
-                className="bg-white rounded-xl shadow-lg border-2 border-slate-200 hover:border-purple-400 hover:shadow-xl transition-all cursor-pointer group"
+                className="bg-[#f0f6fa] rounded-xl shadow-lg border-2 border-slate-200 hover:border-purple-400 hover:shadow-xl transition-all cursor-pointer group"
               >
                 <div className={`bg-gradient-to-r ${priority.color} p-6 rounded-t-xl`}>
                   <div className="flex items-center justify-between mb-3">
@@ -215,7 +215,7 @@ export default function GapAnalysisDemo() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl shadow-2xl border-2 border-purple-300 p-8 mb-8"
+            className="bg-[#f0f6fa] rounded-2xl shadow-2xl border-2 border-purple-300 p-8 mb-8"
           >
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -310,7 +310,7 @@ export default function GapAnalysisDemo() {
 
 function StatCard({ label, value, color }) {
   return (
-    <div className="bg-white rounded-xl shadow-lg border-2 border-slate-200 p-6 text-center">
+    <div className="bg-[#f0f6fa] rounded-xl shadow-lg border-2 border-slate-200 p-6 text-center">
       <div className={`${color} w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3`}>
         <CheckCircle size={24} className="text-white" />
       </div>

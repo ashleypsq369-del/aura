@@ -719,7 +719,7 @@ function ReportViewer({data,onClose}) {
       onClick={onClose}>
       <motion.div initial={{scale:0.95,y:20}} animate={{scale:1,y:0}} exit={{scale:0.95}}
         onClick={e=>e.stopPropagation()}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-4">
+        className="bg-[#f0f6fa] rounded-2xl shadow-2xl w-full max-w-4xl my-4">
 
         {/* Toolbar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100"
@@ -772,7 +772,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
   const blocked=(meta.needsPatient&&!patientId)||(meta.needsCaregiver&&!caregiverId);
   return (
     <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
-      className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+      className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
       style={{borderLeft:`4px solid ${color}`}}>
       <div className="p-4">
         <div className="flex items-start gap-3 mb-3">
@@ -906,7 +906,7 @@ export default function Reports() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
         {/* ── Tab navigation ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1.5 flex gap-1">
+        <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1.5 flex gap-1">
           {TABS.map(tab=>{
             const Icon=tab.icon;
             const count=allReports.filter(r=>(REPORT_META[r.id]?.tab||'clinical')===tab.id).length;
@@ -923,7 +923,7 @@ export default function Reports() {
 
         {/* ── Parameters panel (only when tab has reports needing selection) ── */}
         {showParams&&(
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
+          <div className="bg-[#f0f6fa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
             <h2 className="text-xs font-bold text-slate-500  mb-4 flex items-center gap-2">
               <Filter size={13} className="text-teal-600"/> Report Parameters
             </h2>
