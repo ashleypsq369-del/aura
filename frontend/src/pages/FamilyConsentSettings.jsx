@@ -143,7 +143,8 @@ export default function FamilyConsentSettings() {
   return (
     <div className="space-y-5">
       {/* Header card */}
-      <div className="bg-gradient-to-br from-teal-600 to-indigo-600 rounded-2xl p-5 text-white">
+      <div className="rounded-2xl p-5 text-white"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}>
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
             <Users className="w-5 h-5" />
@@ -191,7 +192,7 @@ export default function FamilyConsentSettings() {
       </div>
 
       {/* Category toggles */}
-      <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm divide-y divide-gray-200 dark:divide-slate-700"
+      <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm divide-y divide-gray-200 dark:divide-slate-700"
         style={{ border: '1px solid #d1d5db' }}>
         {CATEGORIES.map((cat, i) => {
           const Icon = cat.icon;
@@ -229,7 +230,7 @@ export default function FamilyConsentSettings() {
                   granted ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-600'
                 }`}
               >
-                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[#e8fafa] shadow-md transition-transform ${
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-slate-50 shadow-md transition-transform ${
                   granted ? 'translate-x-5' : 'translate-x-0'
                 }`} />
               </button>
@@ -240,12 +241,12 @@ export default function FamilyConsentSettings() {
 
       {/* Status summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
           style={{ border: '1px solid #d1d5db' }}>
           <div className="text-2xl font-bold text-teal-600">{grantedCount}</div>
           <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">Categories shared</div>
         </div>
-        <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl px-4 py-3 text-center"
           style={{ border: '1px solid #d1d5db' }}>
           <div className="text-2xl font-bold text-slate-700 dark:text-slate-300">{CATEGORIES.length - grantedCount}</div>
           <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5">Categories private</div>

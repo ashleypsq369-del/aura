@@ -56,7 +56,7 @@ function Section({ title, children }) {
       {title && (
         <p className="text-xs font-semibold text-gray-400  px-1 mb-2">{title}</p>
       )}
-      <div className="bg-[#e8fafa] dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+      <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
         {children}
       </div>
     </div>
@@ -104,12 +104,12 @@ export default function Settings() {
   ];
 
   const getRoleStyle = (role) => ({
-    patient:   { bg: '#eff6ff', color: '#1d4ed8' },
+    patient:   { bg: '#f0fdfa', color: '#0d9488' },
     clinician: { bg: '#f0fdf4', color: '#15803d' },
-    family:    { bg: '#faf5ff', color: '#7e22ce' },
+    family:    { bg: '#ecfeff', color: '#0891b2' },
     caregiver: { bg: '#fff7ed', color: '#c2410c' },
     admin:     { bg: '#fef2f2', color: '#dc2626' },
-  }[role] || { bg: '#f9fafb', color: '#374151' });
+  }[role] || { bg: '#f0fdfa', color: '#0d9488' });
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify({ theme, language, notifications, accessibility: a11y }, null, 2)], { type: 'application/json' });
@@ -146,49 +146,43 @@ export default function Settings() {
     <div className="min-h-screen px-3 sm:p-6 py-4">
       <div className="max-w-5xl mx-auto">
 
-      {/* -- Page header - same compact style as Resources page ------- */}
+      {/* -- Page header — teal, compact -------------------------------- */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6 rounded-xl p-4 shadow-md border border-slate-200 flex items-center gap-4"
-        style={{ background: 'linear-gradient(135deg, #4338ca, #7c3aed)' }}
+        className="mb-5 rounded-xl overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}
       >
-        <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-          <Shield size={20} style={{ color: '#ffffff' }} />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold font-serif" style={{ color: '#ffffff' }}>Settings</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>Manage your account, appearance and preferences</p>
+        <div className="px-5 py-4 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+            <Shield size={17} color="#ffffff" />
+          </div>
+          <div>
+            <h1 className="text-base font-bold text-white leading-tight">Settings</h1>
+            <p className="text-[11px] text-white/70">Manage your account, appearance and preferences</p>
+          </div>
         </div>
       </motion.div>
 
-        {/* -- Tab bar ---------------------------------------------------- */}
-        <div className="bg-[#e8fafa] dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-sm mb-6 overflow-hidden">
+        {/* -- Tab bar — teal, compact ------------------------------------ */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 mb-5 overflow-hidden"
+          style={{ background: 'var(--card-bg, #e8fafa)' }}>
           <div className="flex overflow-x-auto">
-            {tabs.map(({ id, label, icon: Icon, tip }, i) => {
-              const tabColors = [
-                '#0d9488','#db2777','#7c3aed','#1d4ed8','#d97706','#059669','#0891b2','#4338ca'
-              ];
-              const c = tabColors[i % tabColors.length];
-              return (
-                <button
-                  key={id}
-                  onClick={() => setTab(id)}
-                  data-tip={tip}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-all min-w-[80px] ${
-                    tab === id
-                      ? 'border-b-[3px] bg-opacity-5'
-                      : 'border-transparent text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700'
+            {tabs.map(({ id, label, icon: Icon, tip }) => (
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                title={tip}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 transition-all min-w-[70px]
+                  ${tab === id
+                    ? 'border-teal-600 text-teal-700 dark:text-teal-400 bg-teal-50/80 dark:bg-teal-900/20'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50/40 dark:hover:bg-teal-900/10'
                   }`}
-                  style={tab === id
-                    ? { borderBottomColor: c, color: c, backgroundColor: `${c}0f` }
-                    : {}}
-                >
-                  <Icon size={15} />
-                  <span className="hidden sm:inline">{label}</span>
-                </button>
-              );
-            })}
+              >
+                <Icon size={13} />
+                <span className="hidden sm:inline">{label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -440,7 +434,7 @@ export default function Settings() {
                           className={`p-3 rounded-xl border-2 text-left transition-all ${
                             profileKey === key
                               ? 'border-teal-500 bg-teal-50 text-teal-800'
-                              : 'border-slate-200 hover:border-slate-300 bg-[#e8fafa] text-slate-700'
+                              : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700'
                           }`}
                         >
                           <p className={`text-xs font-bold ${profileKey === key ? 'text-teal-700' : 'text-slate-700'}`}>
@@ -742,7 +736,7 @@ export default function Settings() {
                             className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
                               active
                                 ? 'border-amber-500 bg-amber-50'
-                                : 'border-gray-200 bg-[#e8fafa] hover:border-gray-300 hover:bg-gray-50'
+                                : 'border-gray-200 bg-slate-50 hover:border-gray-300 hover:bg-gray-50'
                             }`}
                           >
                             <p className={`text-xs font-bold ${active ? 'text-amber-800' : 'text-gray-800'}`}>{opt.label}</p>
@@ -763,7 +757,7 @@ export default function Settings() {
                     <div className="flex gap-1.5 ml-12">
                       {[['small','S'],['medium','M'],['large','L'],['xlarge','XL'],['xxlarge','XXL']].map(([v,lbl]) => (
                         <button key={v} onClick={() => updateSetting('fontSize', v)}
-                          className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-[#e8fafa] text-gray-600 border-gray-200 hover:border-gray-300'}`}>
+                          className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-slate-50 text-gray-600 border-gray-200 hover:border-gray-300'}`}>
                           {lbl}
                         </button>
                       ))}
@@ -818,7 +812,7 @@ export default function Settings() {
                           className={`flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-all ${
                             a11y.textSpacing === v
                               ? 'bg-teal-600 text-white border-teal-600'
-                              : 'bg-[#e8fafa] text-gray-600 border-gray-200 hover:border-gray-300'
+                              : 'bg-slate-50 text-gray-600 border-gray-200 hover:border-gray-300'
                           }`}>
                           {lbl}
                         </button>
