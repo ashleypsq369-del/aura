@@ -318,18 +318,22 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
         </div>
       </InputGroup>
 
-      {/* Phone */}
-      <InputGroup id="phone" label="Phone number"
-        hint="Optional - include country code e.g. +233501234567">
-        <div className={inputWrap(errors.phone)}>
-          <IconSlot err={errors.phone}><Phone size={14}/></IconSlot>
-          <input id="phone" type="tel" inputMode="numeric" autoComplete="tel"
-            value={form.phone}
-            onChange={e => set('phone', e.target.value.replace(/[^0-9+\s-]/g,''))}
-            onBlur={() => onBlur('phone')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent font-mono placeholder:text-slate-400 placeholder:font-sans"
-            placeholder="+233 XX XXX XXXX"
-            maxLength={20} />
+      {/* Phone with country selector */}
+      <InputGroup id="phone" label="Phone number" error={errors.phone}
+        hint={!errors.phone ? 'Optional - select your country then enter your number' : undefined}>
+        <div className="flex gap-2">
+          <CountrySelector selected={country} onChange={c => { setCountry(c); set('phone', ''); }}/>
+          <div className={`flex-1 flex items-center border-2 rounded-xl overflow-hidden bg-white transition-all ${inputBorder(errors.phone)}`}>
+            <IconSlot err={errors.phone}><Phone size={14}/></IconSlot>
+            <input id="phone" type="tel" inputMode="numeric" autoComplete="tel-national"
+              value={form.phone}
+              onChange={e => handlePhone(e.target.value)}
+              onBlur={() => onBlur('phone')}
+              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent font-mono placeholder:text-slate-400 placeholder:font-sans"
+              placeholder={`${country.max} digit number`}
+              maxLength={country.max}
+              pattern="[0-9]*"/>
+          </div>
         </div>
       </InputGroup>
 
@@ -372,20 +376,20 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
         </div>
       </InputGroup>
 
-      {/* Gender */}
+      {/* Gender - compact dropdown */}
       <InputGroup id="gender" label="Gender" hint="Optional">
-        <div className="grid grid-cols-2 gap-2">
-          {[{v:'male',l:'Male'},{v:'female',l:'Female'},{v:'other',l:'Other'},{v:'prefer_not_to_say',l:'Prefer not to say'}].map(g => (
-            <button key={g.v} type="button"
-              onClick={() => set('gender', form.gender === g.v ? '' : g.v)}
-              className={`py-2 px-3 rounded-xl border-2 text-sm font-medium transition-all ${
-                form.gender === g.v
-                  ? 'border-teal-500 bg-teal-50 text-teal-700'
-                  : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
-              }`}>
-              {g.l}
-            </button>
-          ))}
+        <div className={inputWrap(false)}>
+          <IconSlot err={false}><span className="text-[10px] font-bold text-slate-400">Sex</span></IconSlot>
+          <select id="gender" value={form.gender} onChange={e => set('gender', e.target.value)}
+            className="flex-1 h-11 px-3 text-sm text-slate-700 outline-none bg-transparent appearance-none cursor-pointer">
+            <option value="">Prefer not to say</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Non-binary</option>
+          </select>
+          <span className="w-10 h-11 flex items-center justify-center text-slate-400 border-l border-slate-100 flex-shrink-0 pointer-events-none">
+            <ChevronDown size={14}/>
+          </span>
         </div>
       </InputGroup>
 
@@ -1066,9 +1070,9 @@ export default function ProviderRegister() {
         <div className="flex items-center justify-center mb-4">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full">
             <img src="/logo.png" alt="Project Aura" className="w-5 h-5 rounded-md"/>
-            <span className="text-xs font-bold text-white/90 tracking-wide">Project Aura</span>
-            <span className="text-white/40 mx-0.5">|</span>
-            <span className="text-[11px] font-semibold text-teal-300 uppercase tracking-wider">Provider Registration</span>
+            <span className="text-xs font-bold tracking-wide" style={{ color: '#ffffff' }}>Project Aura</span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>|</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#D4A017' }}>Provider Registration</span>
           </div>
         </div>
 
@@ -1087,11 +1091,15 @@ export default function ProviderRegister() {
 
         {/* Step label */}
         <div className="text-center mb-3">
-          <p className="text-xs font-semibold text-white/50 uppercase tracking-widest">
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Step {step+1} of {STEPS.length}
           </p>
-          <h2 className="text-2xl font-bold text-white mt-0.5 drop-shadow-lg">{STEP_TITLES[step]}</h2>
-          <p className="text-sm text-white/80 mt-1 max-w-md mx-auto drop-shadow">{STEP_SUBTITLES[step]}</p>
+          <h2 className="text-2xl font-bold mt-0.5" style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+            {STEP_TITLES[step]}
+          </h2>
+          <p className="text-sm mt-1 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+            {STEP_SUBTITLES[step]}
+          </p>
         </div>
 
         {/* Glass card */}
@@ -1152,11 +1160,23 @@ export default function ProviderRegister() {
 
         {/* Bottom links */}
         <div className="text-center mt-5 flex items-center justify-center gap-4 flex-wrap">
-          <Link to="/login" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Sign in</Link>
-          <span className="text-white/40 text-sm">|</span>
-          <Link to="/get-started" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Patient / family</Link>
-          <span className="text-white/40 text-sm">|</span>
-          <Link to="/register?role=caregiver" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Caregiver</Link>
+          <Link to="/login"
+            className="font-bold text-sm transition-all hover:opacity-80"
+            style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+            Sign in
+          </Link>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>|</span>
+          <Link to="/get-started"
+            className="font-bold text-sm transition-all hover:opacity-80"
+            style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+            Patient / family
+          </Link>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>|</span>
+          <Link to="/register?role=caregiver"
+            className="font-bold text-sm transition-all hover:opacity-80"
+            style={{ color: '#ffffff', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
+            Caregiver
+          </Link>
         </div>
       </motion.div>
     </div>
