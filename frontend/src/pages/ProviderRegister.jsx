@@ -73,6 +73,114 @@ const STEP_SUBTITLES = [
   'Upload credentials and agree to our provider code of conduct',
 ];
 
+/* Countries list (same as Register.jsx) */
+const COUNTRIES = [
+  { code:'GH', name:'Ghana',          dial:'+233', flag:'\uD83C\uDDEC\uD83C\uDDED', max:9  },
+  { code:'NG', name:'Nigeria',         dial:'+234', flag:'\uD83C\uDDF3\uD83C\uDDEC', max:10 },
+  { code:'ZA', name:'South Africa',    dial:'+27',  flag:'\uD83C\uDDFF\uD83C\uDDE6', max:9  },
+  { code:'KE', name:'Kenya',           dial:'+254', flag:'\uD83C\uDDF0\uD83C\uDDEA', max:9  },
+  { code:'GB', name:'United Kingdom',  dial:'+44',  flag:'\uD83C\uDDEC\uD83C\uDDE7', max:10 },
+  { code:'US', name:'United States',   dial:'+1',   flag:'\uD83C\uDDFA\uD83C\uDDF8', max:10 },
+  { code:'CA', name:'Canada',          dial:'+1',   flag:'\uD83C\uDDE8\uD83C\uDDE6', max:10 },
+  { code:'AU', name:'Australia',       dial:'+61',  flag:'\uD83C\uDDE6\uD83C\uDDFA', max:9  },
+  { code:'ET', name:'Ethiopia',        dial:'+251', flag:'\uD83C\uDDEA\uD83C\uDDF9', max:9  },
+  { code:'TZ', name:'Tanzania',        dial:'+255', flag:'\uD83C\uDDF9\uD83C\uDDFF', max:9  },
+  { code:'UG', name:'Uganda',          dial:'+256', flag:'\uD83C\uDDFA\uD83C\uDDEC', max:9  },
+  { code:'CM', name:'Cameroon',        dial:'+237', flag:'\uD83C\uDDE8\uD83C\uDDF2', max:9  },
+  { code:'SN', name:'Senegal',         dial:'+221', flag:'\uD83C\uDDF8\uD83C\uDDF3', max:9  },
+  { code:'RW', name:'Rwanda',          dial:'+250', flag:'\uD83C\uDDF7\uD83C\uDDFC', max:9  },
+  { code:'DE', name:'Germany',         dial:'+49',  flag:'\uD83C\uDDE9\uD83C\uDDEA', max:11 },
+  { code:'FR', name:'France',          dial:'+33',  flag:'\uD83C\uDDEB\uD83C\uDDF7', max:9  },
+  { code:'IN', name:'India',           dial:'+91',  flag:'\uD83C\uDDEE\uD83C\uDDF3', max:10 },
+  { code:'SA', name:'Saudi Arabia',    dial:'+966', flag:'\uD83C\uDDF8\uD83C\uDDE6', max:9  },
+  { code:'AE', name:'UAE',             dial:'+971', flag:'\uD83C\uDDE6\uD83C\uDDEA', max:9  },
+];
+
+/* CountrySelector (same pattern as Register.jsx) */
+function CountrySelector({ selected, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const wrapRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const list = (() => {
+    const base = [COUNTRIES[0], ...COUNTRIES.slice(1).sort((a,b) => a.name.localeCompare(b.name))];
+    if (!query.trim()) return base;
+    const q = query.toLowerCase();
+    return base.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q));
+  })();
+
+  useEffect(() => {
+    const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) { setOpen(false); setQuery(''); } };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  useEffect(() => { if (open) setTimeout(() => inputRef.current?.focus(), 40); }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const h = e => { if (e.key === 'Escape') { setOpen(false); setQuery(''); } };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [open]);
+
+  return (
+    <div className="relative flex-shrink-0" ref={wrapRef}>
+      <button type="button" onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-1.5 h-11 px-3 border-2 border-slate-200 rounded-xl bg-white hover:border-teal-400 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
+        aria-label={`Phone country: ${selected.name} ${selected.dial}`}>
+        <span className="text-lg leading-none">{selected.flag}</span>
+        <span className="text-sm font-semibold text-slate-700 font-mono tracking-tight">{selected.dial}</span>
+        <ChevronDown size={13} className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}/>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity:0, y:-6, scale:0.97 }}
+            animate={{ opacity:1, y:0, scale:1 }}
+            exit={{ opacity:0, y:-6, scale:0.97 }}
+            transition={{ duration:0.15 }}
+            className="absolute top-full left-0 mt-1.5 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl z-[200] overflow-hidden">
+            <div className="p-2.5 border-b border-slate-100">
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+                <input ref={inputRef} type="text" value={query} onChange={e => setQuery(e.target.value)}
+                  placeholder="Search country..."
+                  className="w-full pl-9 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-teal-400 bg-white text-slate-800"
+                  autoComplete="off"/>
+                {query && (
+                  <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5">
+                    <X size={12}/>
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="max-h-52 overflow-y-auto overscroll-contain">
+              {list.length === 0
+                ? <p className="text-center text-sm text-slate-400 py-6">No results</p>
+                : list.map(c => (
+                  <button key={c.code} type="button"
+                    onClick={() => { onChange(c); setOpen(false); setQuery(''); }}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left text-sm transition-colors hover:bg-slate-50 border-b border-slate-50 last:border-0 ${
+                      c.code === selected.code ? 'bg-teal-50/60' : ''
+                    }`}>
+                    <span className="text-xl leading-none w-7 text-center flex-shrink-0">{c.flag}</span>
+                    <span className={`flex-1 truncate font-medium ${c.code === selected.code ? 'text-teal-700' : 'text-slate-700'}`}>{c.name}</span>
+                    <span className="font-mono text-xs text-slate-400 flex-shrink-0">{c.dial}</span>
+                    {c.code === selected.code && <CheckCircle size={14} className="text-teal-500 flex-shrink-0"/>}
+                  </button>
+                ))
+              }
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 /* Validators (same rules as Register.jsx) */
 const VALIDATORS = {
   full_name: v => {
@@ -156,6 +264,12 @@ function IconSlot({ err, children }) {
 function StepAccount({ form, set, errors, touched, onBlur }) {
   const [showPw, setShowPw]   = useState(false);
   const [showCpw, setShowCpw] = useState(false);
+  const [country, setCountry] = useState(COUNTRIES[0]);
+
+  const handlePhone = raw => {
+    const digits = raw.replace(/\D/g, '').slice(0, country.max);
+    set('phone', digits);
+  };
 
   return (
     <div className="space-y-4">
@@ -976,8 +1090,8 @@ export default function ProviderRegister() {
           <p className="text-xs font-semibold text-white/50 uppercase tracking-widest">
             Step {step+1} of {STEPS.length}
           </p>
-          <h2 className="text-2xl font-bold text-white mt-0.5">{STEP_TITLES[step]}</h2>
-          <p className="text-sm text-white/70 mt-1 max-w-md mx-auto">{STEP_SUBTITLES[step]}</p>
+          <h2 className="text-2xl font-bold text-white mt-0.5 drop-shadow-lg">{STEP_TITLES[step]}</h2>
+          <p className="text-sm text-white/80 mt-1 max-w-md mx-auto drop-shadow">{STEP_SUBTITLES[step]}</p>
         </div>
 
         {/* Glass card */}
@@ -1037,12 +1151,12 @@ export default function ProviderRegister() {
         </div>
 
         {/* Bottom links */}
-        <div className="text-center mt-4 flex items-center justify-center gap-4 flex-wrap">
-          <Link to="/login" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Sign in</Link>
-          <span className="text-white/30 text-xs">|</span>
-          <Link to="/get-started" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Patient / family registration</Link>
-          <span className="text-white/30 text-xs">|</span>
-          <Link to="/register?role=caregiver" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Caregiver registration</Link>
+        <div className="text-center mt-5 flex items-center justify-center gap-4 flex-wrap">
+          <Link to="/login" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Sign in</Link>
+          <span className="text-white/40 text-sm">|</span>
+          <Link to="/get-started" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Patient / family</Link>
+          <span className="text-white/40 text-sm">|</span>
+          <Link to="/register?role=caregiver" className="text-white font-semibold text-sm hover:text-teal-300 transition-colors drop-shadow">Caregiver</Link>
         </div>
       </motion.div>
     </div>
