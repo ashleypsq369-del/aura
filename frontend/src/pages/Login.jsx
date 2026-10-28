@@ -57,9 +57,20 @@ export default function Login() {
       const savedUserStr = localStorage.getItem('user');
       if (savedUserStr) {
         const u = JSON.parse(savedUserStr);
-        if (u.needs_questionnaire) navigate('/setup');
-        else if (u.role === 'patient') navigate('/my-space');
-        else navigate('/dashboard');
+        if (u.needs_questionnaire) {
+          navigate('/setup');
+        } else {
+          // Role-based landing pages
+          const dest = {
+            patient:   '/my-space',
+            family:    '/dashboard',
+            caregiver: '/dashboard',
+            clinician: '/dashboard',
+            admin:     '/dashboard',
+            provider:  '/services',
+          }[u.role] || '/dashboard';
+          navigate(dest);
+        }
       } else {
         navigate('/dashboard');
       }

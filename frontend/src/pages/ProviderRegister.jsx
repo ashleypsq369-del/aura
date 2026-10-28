@@ -43,7 +43,37 @@ const FALLBACK_TYPES = [
   { key:'chaplain',       label:'Chaplain / Spiritual Care',description:'Interfaith spiritual support for patients and families', icon_name:'Heart', color:'#0369a1', min_pass_score:60, assessment_questions:[], required_certifications:['Theology Degree or Chaplaincy Certificate'] },
 ];
 
-/* ── Validators (same rules as Register.jsx) ────────────────────────────────── */
+/* ── Background images for full-screen cycling ─────────────────────────────── */
+const BG_IMAGES = [
+  '/resources/slideshow/care-1.jpg',
+  '/resources/slideshow/care-2.jpg',
+  '/resources/slideshow/care-3.jpg',
+  '/resources/slideshow/care-4.jpg',
+  '/resources/slideshow/care-5.jpg',
+  '/resources/slideshow/care-6.jpg',
+  '/resources/slideshow/care-7.jpg',
+  '/resources/slideshow/care-8.jpg',
+  '/resources/slideshow/care-9.jpg',
+  '/resources/slideshow/care-10.jpg',
+];
+
+const STEP_TITLES = [
+  'Create your account',
+  'Choose your service type',
+  'Your professional profile',
+  'Knowledge assessment',
+  'Documents & declaration',
+];
+
+const STEP_SUBTITLES = [
+  'Tell us about you — all information is kept secure and private',
+  'Your assessment questions will be tailored to this specific role',
+  'Your experience, qualifications, and location',
+  'Scenario-based questions to assess your palliative care knowledge',
+  'Upload credentials and agree to our provider code of conduct',
+];
+
+/* Validators (same rules as Register.jsx) */
 const VALIDATORS = {
   full_name: v => {
     if (!v?.trim()) return 'Please enter your full name';
@@ -701,12 +731,19 @@ const PROF_VALIDATORS = {
 
 export default function ProviderRegister() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState(EMPTY);
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
+  const [step, setStep]         = useState(0);
+  const [form, setForm]         = useState(EMPTY);
+  const [errors, setErrors]     = useState({});
+  const [touched, setTouched]   = useState({});
   const [serverErr, setServerErr] = useState('');
   const [submitted, setSubmitted] = useState(null);
+  const [bgIdx, setBgIdx]       = useState(0);
+
+  // Cycle background every 6s
+  useEffect(() => {
+    const t = setInterval(() => setBgIdx(i => (i+1) % BG_IMAGES.length), 6000);
+    return () => clearInterval(t);
+  }, []);
 
   const set = useCallback((k, v) => {
     setForm(f => ({ ...f, [k]: v }));
@@ -837,146 +874,177 @@ export default function ProviderRegister() {
   if (submitted) {
     const passed = submitted.passed;
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#c2dde8' }}>
-        <motion.div initial={{ opacity:0, scale:0.95 }} animate={{ opacity:1, scale:1 }}
-          className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl">
-          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${passed?'bg-teal-100':'bg-amber-100'}`}>
+      <div className="min-h-screen relative flex items-center justify-center p-4">
+        {/* Background */}
+        <div className="fixed inset-0 z-0">
+          <img src={BG_IMAGES[bgIdx]} alt="" aria-hidden="true"
+            className="w-full h-full object-cover"/>
+          <div className="absolute inset-0 bg-teal-950/70"/>
+        </div>
+        <motion.div initial={{ opacity:0, scale:0.95, y:20 }} animate={{ opacity:1, scale:1, y:0 }}
+          transition={{ duration:0.4 }}
+          className="relative z-10 bg-white/95 backdrop-blur-xl rounded-2xl p-8 max-w-md w-full text-center shadow-2xl border border-white/30">
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 ${passed?'bg-teal-100':'bg-amber-100'}`}>
             {passed
-              ? <CheckCircle size={36} className="text-teal-600"/>
-              : <AlertCircle size={36} className="text-amber-500"/>
+              ? <CheckCircle size={44} className="text-teal-600"/>
+              : <AlertCircle size={44} className="text-amber-500"/>
             }
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Application Submitted!</h2>
-          <p className="text-slate-600 text-sm mb-4 leading-relaxed">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Application Submitted!</h2>
+          <p className="text-slate-600 text-sm mb-5 leading-relaxed">
             Your application as a <strong>{selectedType?.label}</strong> has been received.
-            We review all applications within <strong>2 business days</strong>.
+            Our team reviews all applications within <strong>2 business days</strong>.
+            You will receive a notification on your registered email once approved.
           </p>
-          <div className={`rounded-xl p-4 mb-5 ${passed?'bg-teal-50 border border-teal-100':'bg-amber-50 border border-amber-100'}`}>
-            <p className="text-2xl font-black" style={{ color: passed?'#0d9488':'#d97706' }}>
+          <div className={`rounded-xl p-5 mb-5 ${passed?'bg-teal-50 border-2 border-teal-200':'bg-amber-50 border-2 border-amber-200'}`}>
+            <p className="text-3xl font-black tabular-nums" style={{ color: passed?'#0d9488':'#d97706' }}>
               {submitted.assessment_score}%
             </p>
-            <p className="text-xs font-semibold mt-0.5" style={{ color: passed?'#0d9488':'#d97706' }}>
-              Knowledge Score {passed ? '- PASS' : `- min ${submitted.min_pass_score}% required`}
+            <p className="text-sm font-semibold mt-1" style={{ color: passed?'#0d9488':'#d97706' }}>
+              Knowledge Assessment {passed ? '- PASS' : `- minimum ${submitted.min_pass_score}% required`}
             </p>
+            {!passed && (
+              <p className="text-xs text-amber-700 mt-2">
+                Your score is below the minimum, but our admin team will still review your full application including documents and experience.
+              </p>
+            )}
           </div>
-          <p className="text-xs text-slate-500 mb-5">
-            You will receive a notification once your application is reviewed.
-          </p>
           <button onClick={() => navigate('/login')}
-            className="w-full py-3 rounded-xl text-sm font-bold text-white"
+            className="w-full py-3 rounded-xl text-sm font-bold text-white shadow-md active:scale-[0.98] transition-all"
             style={{ background:'#0d9488' }}>
             Go to Login
           </button>
+          <p className="text-xs text-slate-400 mt-3">
+            Questions? Contact us at <span className="text-teal-600 font-semibold">support@projectaura.health</span>
+          </p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#c2dde8' }}>
-      {/* Left slideshow - desktop only */}
-      <div className="hidden lg:block w-5/12 flex-shrink-0">
-        <LoginSlideshow/>
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-y-auto">
+
+      {/* Full-screen cycling background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <AnimatePresence initial={false}>
+          <motion.img
+            key={bgIdx}
+            src={BG_IMAGES[bgIdx]}
+            alt="" aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ zIndex:1 }}
+            initial={{ opacity:0, scale:1.04 }}
+            animate={{ opacity:1, scale:1 }}
+            exit={{ opacity:0 }}
+            transition={{ duration:1.2, ease:'easeInOut' }}
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-teal-950/65" style={{ zIndex:2 }}/>
       </div>
 
-      {/* Right form panel */}
-      <div className="flex-1 flex items-start justify-center overflow-y-auto py-8 px-4">
-        <div className="w-full max-w-lg">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 mb-5">
-            <img src="/logo.png" alt="Project Aura" className="w-8 h-8 rounded-lg shadow-sm"/>
-            <div>
-              <p className="font-bold text-sm text-slate-800 leading-tight">Project Aura</p>
-              <p className="text-[10px] font-semibold uppercase tracking-wider" style={{ color:'#D4A017' }}>Provider Registration</p>
-            </div>
+      {/* Centered card */}
+      <motion.div initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }}
+        transition={{ duration:0.4 }}
+        className="relative z-10 w-full max-w-2xl my-6">
+
+        {/* Header badge */}
+        <div className="flex items-center justify-center mb-4">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full">
+            <img src="/logo.png" alt="Project Aura" className="w-5 h-5 rounded-md"/>
+            <span className="text-xs font-bold text-white/90 tracking-wide">Project Aura</span>
+            <span className="text-white/40 mx-0.5">|</span>
+            <span className="text-[11px] font-semibold text-teal-300 uppercase tracking-wider">Provider Registration</span>
           </div>
-
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            {/* Progress bar */}
-            <div className="h-1.5 bg-slate-100">
-              <div className="h-full transition-all duration-500 rounded-full"
-                style={{
-                  width: `${((step+1)/STEPS.length)*100}%`,
-                  background: selectedType?.color || '#0d9488',
-                }}/>
-            </div>
-
-            {/* Step indicator */}
-            <div className="px-5 pt-4 pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-1 overflow-x-auto">
-                {STEPS.map((s, i) => (
-                  <div key={s} className="flex items-center gap-1 flex-shrink-0">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
-                      i < step ? 'bg-teal-600 text-white'
-                        : i === step ? 'text-white' : 'bg-slate-100 text-slate-400'
-                    }`}
-                      style={{ background: i === step ? (selectedType?.color||'#0d9488') : undefined }}>
-                      {i < step ? <CheckCircle size={12}/> : i+1}
-                    </div>
-                    <span className={`text-[11px] font-semibold hidden sm:block ${i===step?'text-slate-800':'text-slate-400'}`}>{s}</span>
-                    {i < STEPS.length-1 && <ChevronRight size={12} className="text-slate-200 flex-shrink-0"/>}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Server error */}
-            <AnimatePresence>
-              {serverErr && (
-                <motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:'auto'}} exit={{opacity:0,height:0}}
-                  className="mx-5 mt-4 p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5" role="alert">
-                  <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0"/>
-                  <p className="text-sm text-red-700 font-medium">{serverErr}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Step content */}
-            <div className="p-5">
-              <AnimatePresence mode="wait">
-                <motion.div key={step}
-                  initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }}
-                  exit={{ opacity:0, x:-16 }} transition={{ duration:0.18 }}>
-                  {step === 0 && <StepAccount form={form} set={set} errors={errors} touched={touched} onBlur={onBlur}/>}
-                  {step === 1 && <StepServiceType form={form} set={set} types={types}/>}
-                  {step === 2 && <StepProfile form={form} set={set} errors={errors} onBlur={onBlur} selectedType={selectedType}/>}
-                  {step === 3 && <StepAssessment form={form} set={set} questions={questions} serviceColor={selectedType?.color}/>}
-                  {step === 4 && <StepDocuments form={form} set={set}/>}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Footer navigation */}
-            <div className="px-5 pb-5 flex gap-3">
-              {step > 0 && (
-                <button onClick={() => setStep(s => s-1)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-slate-300 transition-all">
-                  <ChevronLeft size={15}/> Back
-                </button>
-              )}
-              <button onClick={handleNext}
-                disabled={!canNext() || submitMutation.isPending}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-40 transition-all active:scale-[0.98]"
-                style={{ background: selectedType?.color || '#0d9488' }}>
-                {submitMutation.isPending
-                  ? <><Loader2 size={15} className="animate-spin"/> Submitting...</>
-                  : step === 4
-                    ? <><CheckCircle size={15}/> Submit Application</>
-                    : <>Continue <ChevronRight size={15}/></>
-                }
-              </button>
-            </div>
-          </div>
-
-          {/* Bottom links */}
-          <p className="text-center text-xs text-slate-500 mt-4">
-            Already have an account?{' '}
-            <Link to="/login" className="text-teal-600 font-semibold hover:underline">Sign in</Link>
-            {' '}&bull;{' '}
-            <Link to="/get-started" className="text-teal-600 font-semibold hover:underline">Patient/family registration</Link>
-          </p>
         </div>
-      </div>
+
+        {/* Progress dots */}
+        <div className="flex justify-center gap-2 mb-5">
+          {STEPS.map((s, i) => (
+            <div key={s} className="rounded-full transition-all duration-300 flex items-center justify-center"
+              title={s}
+              style={{
+                height: 8,
+                width: i === step ? 32 : 8,
+                background: i < step ? '#2dd4bf' : i === step ? (selectedType?.color || '#0d9488') : 'rgba(255,255,255,0.2)',
+              }}/>
+          ))}
+        </div>
+
+        {/* Step label */}
+        <div className="text-center mb-3">
+          <p className="text-xs font-semibold text-white/50 uppercase tracking-widest">
+            Step {step+1} of {STEPS.length}
+          </p>
+          <h2 className="text-2xl font-bold text-white mt-0.5">{STEP_TITLES[step]}</h2>
+          <p className="text-sm text-white/70 mt-1 max-w-md mx-auto">{STEP_SUBTITLES[step]}</p>
+        </div>
+
+        {/* Glass card */}
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+          <div className="h-1.5 transition-all duration-500"
+            style={{ background: selectedType?.color || '#0d9488' }}/>
+
+          {/* Server error */}
+          <AnimatePresence>
+            {serverErr && (
+              <motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:'auto'}} exit={{opacity:0,height:0}}
+                className="mx-6 mt-4 p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5" role="alert">
+                <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0"/>
+                <div className="flex-1">
+                  <p className="text-sm text-red-700 font-medium">{serverErr}</p>
+                  <button onClick={() => setServerErr('')} className="text-xs text-red-500 hover:text-red-700 font-semibold mt-0.5">Dismiss</button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Step content */}
+          <div className="px-7 py-6">
+            <AnimatePresence mode="wait">
+              <motion.div key={step}
+                initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }}
+                exit={{ opacity:0, x:-20 }} transition={{ duration:0.2 }}>
+                {step === 0 && <StepAccount form={form} set={set} errors={errors} touched={touched} onBlur={onBlur}/>}
+                {step === 1 && <StepServiceType form={form} set={set} types={types}/>}
+                {step === 2 && <StepProfile form={form} set={set} errors={errors} onBlur={onBlur} selectedType={selectedType}/>}
+                {step === 3 && <StepAssessment form={form} set={set} questions={questions} serviceColor={selectedType?.color}/>}
+                {step === 4 && <StepDocuments form={form} set={set}/>}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Footer nav */}
+          <div className="px-7 pb-6 pt-2 flex gap-3 border-t border-slate-100">
+            {step > 0 && (
+              <button onClick={() => { setStep(s => s-1); setServerErr(''); }}
+                className="flex items-center gap-1.5 px-5 py-3 border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-teal-400 hover:text-teal-700 transition-all">
+                <ChevronLeft size={15}/> Back
+              </button>
+            )}
+            <button onClick={handleNext}
+              disabled={!canNext() || submitMutation.isPending}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white disabled:opacity-40 transition-all active:scale-[0.98] shadow-md"
+              style={{ background: selectedType?.color || '#0d9488' }}>
+              {submitMutation.isPending
+                ? <><Loader2 size={15} className="animate-spin"/> Submitting...</>
+                : step === 4
+                  ? <><CheckCircle size={15}/> Submit Application</>
+                  : <>Continue <ChevronRight size={15}/></>
+              }
+            </button>
+          </div>
+        </div>
+
+        {/* Bottom links */}
+        <div className="text-center mt-4 flex items-center justify-center gap-4 flex-wrap">
+          <Link to="/login" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Sign in</Link>
+          <span className="text-white/30 text-xs">|</span>
+          <Link to="/get-started" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Patient / family registration</Link>
+          <span className="text-white/30 text-xs">|</span>
+          <Link to="/register?role=caregiver" className="text-white/60 hover:text-white text-xs font-semibold transition-colors">Caregiver registration</Link>
+        </div>
+      </motion.div>
     </div>
   );
 }
