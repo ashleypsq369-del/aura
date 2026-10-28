@@ -16,7 +16,7 @@ import re
 
 from services.rate_limiter import limiter
 from src.db import (
-    get_db, User, AuditLog, UserProfile, PatientPreferences,
+    get_db, User, AuditLog, UserProfile, UserExtended, PatientPreferences,
     PasswordResetToken, authenticate_user, hash_password, verify_password,
     Patient,
 )
@@ -244,21 +244,10 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
         consent_given=False,
         created_at=datetime.utcnow(),
     )
-    # Save care_setting + new demographic fields
+    # Save care_setting only (no longer storing gender/dob/address on User model)
     try:
         if request.care_setting:
             new_user.care_setting = request.care_setting
-        if request.gender:
-            new_user.gender = request.gender
-        if request.date_of_birth:
-            try:
-                new_user.date_of_birth = datetime.strptime(request.date_of_birth, "%Y-%m-%d")
-            except ValueError:
-                pass
-        if request.address:
-            new_user.address = request.address
-        if request.location:
-            new_user.location = request.location
     except Exception:
         pass
     db.add(new_user)
@@ -304,9 +293,25 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
             )
             auto_patient_id = None
 
-    # Create UserProfile
+    # Create UserProfile — professional/notification preferences
+    dob = None
+    if request.date_of_birth:
+        try:
+            dob = datetime.strptime(request.date_of_birth, "%Y-%m-%d")
+        except ValueError:
+            pass
     profile = UserProfile(user_id=new_user.id, language_pref="en")
     db.add(profile)
+
+    # Create UserExtended — demographics
+    ext = UserExtended(
+        user_id=new_user.id,
+        gender=request.gender,
+        date_of_birth=dob,
+        address=request.address,
+        location=request.location,
+    )
+    db.add(ext)
 
     # Initialise preferences and link to patient record
     prefs = PatientPreferences(

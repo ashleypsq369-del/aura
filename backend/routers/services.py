@@ -27,10 +27,11 @@ from pathlib import Path
 import uuid
 
 from src.db import (
-    get_db, User, UserProfile, Patient, Appointment,
+    get_db, User, UserProfile, UserExtended, Patient, Appointment,
     CaregiverRating, NotificationQueue, AuditLog,
     ServiceTypeConfig, ProviderApplication,
     ProviderAvailability, ProviderBooking,
+    PatientFamilyLink, PatientPreferences,
 )
 from routers.auth import get_current_user, hash_password, validate_password_strength
 
@@ -55,20 +56,22 @@ def _provider_dict(user: User, profile: UserProfile, db: Session, include_sensit
     app = db.query(ProviderApplication).filter(
         ProviderApplication.user_id == user.id
     ).order_by(ProviderApplication.id.desc()).first()
+    # Read demographic fields from UserExtended
+    ext = db.query(UserExtended).filter(UserExtended.user_id == user.id).first()
 
     d = {
         "id": user.id,
         "full_name": user.full_name,
         "role": user.role,
-        "gender": getattr(user, 'gender', None),
+        "gender": ext.gender if ext else None,
         "professional_title": user.professional_title,
         "service_type": app.service_type if app else (profile.specialisation if profile else None),
         "specialisation": profile.specialisation if profile else None,
         "facility_name": profile.facility_name if profile else None,
         "region": profile.region if profile else None,
-        "address": getattr(profile, 'address', None) or getattr(user, 'address', None),
-        "location": getattr(user, 'location', None),
-        "avatar_url": profile.avatar_url if profile else None,
+        "address": ext.address if ext else None,
+        "location": ext.location if ext else None,
+        "avatar_url": ext.avatar_url if ext else None,
         "is_professional": user.is_professional,
         "is_verified": user.is_verified,
         "nmc_pin": profile.license_number if profile else None,
@@ -381,18 +384,11 @@ def apply_as_provider(
         is_professional=False,
         created_at=datetime.utcnow(),
     )
-    try:
-        new_user.gender = data.gender
-        new_user.date_of_birth = dob
-        new_user.address = data.address
-        new_user.location = data.location
-    except Exception:
-        pass
 
     db.add(new_user)
     db.flush()
 
-    # Create UserProfile
+    # Create UserProfile (professional fields only)
     profile = UserProfile(
         user_id=new_user.id,
         license_number=data.license_number,
@@ -401,11 +397,23 @@ def apply_as_provider(
         region=data.region,
         language_pref="en",
     )
-    try:
-        profile.address = data.address
-    except Exception:
-        pass
     db.add(profile)
+
+    # Create UserExtended (demographic fields)
+    dob = None
+    if data.date_of_birth:
+        try:
+            dob = datetime.strptime(data.date_of_birth, "%Y-%m-%d")
+        except ValueError:
+            pass
+    ext = UserExtended(
+        user_id=new_user.id,
+        gender=data.gender,
+        date_of_birth=dob,
+        address=data.address,
+        location=data.location,
+    )
+    db.add(ext)
 
     # Create application
     app = ProviderApplication(

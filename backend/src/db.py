@@ -63,10 +63,6 @@ class User(Base):
     role = Column(String(20), nullable=False)
     full_name = Column(String(100), nullable=False)
     phone = Column(String(20))
-    gender = Column(String(20), nullable=True)           # male/female/other/prefer_not_to_say
-    date_of_birth = Column(DateTime, nullable=True)
-    address = Column(Text, nullable=True)                # home/work address
-    location = Column(String(200), nullable=True)        # city/district display string
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
     consent_given = Column(Boolean, default=False)
@@ -104,16 +100,26 @@ class UserProfile(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     avatar_initials = Column(String(3))
-    avatar_url = Column(String(500), nullable=True)      # uploaded photo path
     department = Column(String(100))
     license_number = Column(String(50))
     specialisation = Column(String(100))
     facility_name = Column(String(200))
     region = Column(String(50))
-    address = Column(Text, nullable=True)                # street address
     language_pref = Column(String(20), default='en')
     notification_email = Column(Boolean, default=True)
     notification_sms = Column(Boolean, default=False)
+
+
+class UserExtended(Base):
+    """Extra demographic fields for users - new table owned by aura_user"""
+    __tablename__ = 'user_extended'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True, index=True)
+    avatar_url = Column(String(500), nullable=True)
+    gender = Column(String(20), nullable=True)
+    date_of_birth = Column(DateTime, nullable=True)
+    address = Column(Text, nullable=True)
+    location = Column(String(200), nullable=True)
 
 
 class Patient(Base):
