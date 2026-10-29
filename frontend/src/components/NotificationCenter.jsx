@@ -35,6 +35,10 @@ const NAV_ROUTES = {
   ml_risk_alert: '/ai-insights',             crisis_alert: '/alerts',
   alert_generated: '/alerts',                new_message: '/messages',
   report_available: '/dashboard',            community_post: '/community',
+  // Services / booking notifications
+  booking_confirmed: '/services',            booking_cancelled: '/services',
+  booking_reminder: '/services',             provider_approved: '/services',
+  booking_request: '/services',              provider_review: '/services',
 };
 
 function getSeverity(type) {
@@ -43,11 +47,13 @@ function getSeverity(type) {
   const appt     = ['appointment_reminder_24h','appointment_reminder_1h'];
   const med      = ['medication_reminder'];
   const msg      = ['new_message','community_post','community_reply','peer_support'];
+  const booking  = ['booking_confirmed','booking_cancelled','booking_reminder','booking_request','provider_approved','provider_review'];
   if (critical.includes(type)) return { bar: '#dc2626', badge: '#fee2e2', icon: '#dc2626', label: 'critical' };
   if (high.includes(type))     return { bar: '#ea580c', badge: '#ffedd5', icon: '#ea580c', label: 'high'     };
-  if (appt.includes(type))     return { bar: '#7c3aed', badge: '#ede9fe', icon: '#7c3aed', label: 'appt'    };
-  if (med.includes(type))      return { bar: '#2563eb', badge: '#dbeafe', icon: '#2563eb', label: 'med'     };
+  if (appt.includes(type))     return { bar: '#0d9488', badge: '#f0fdfa', icon: '#0d9488', label: 'appt'    };
+  if (med.includes(type))      return { bar: '#0891b2', badge: '#ecfeff', icon: '#0891b2', label: 'med'     };
   if (msg.includes(type))      return { bar: '#059669', badge: '#d1fae5', icon: '#059669', label: 'msg'     };
+  if (booking.includes(type))  return { bar: '#0d9488', badge: '#f0fdfa', icon: '#0d9488', label: 'service' };
   return                              { bar: '#94a3b8', badge: '#f1f5f9', icon: '#64748b', label: 'info'    };
 }
 
@@ -61,6 +67,9 @@ function getIcon(type) {
     alert_generated: AlertTriangle,     medical_flag: AlertTriangle,
     community_post: Users,              community_reply: Users,
     peer_support: Heart,
+    booking_confirmed: Calendar,        booking_cancelled: Clock,
+    booking_reminder: Clock,            booking_request: Calendar,
+    provider_approved: Check,           provider_review: FileText,
   };
   return m[type] || Bell;
 }
@@ -264,7 +273,7 @@ export default function NotificationCenter() {
           previewGroups.map(group => (
             <div key={group.label}>
               <div className="flex items-center gap-1.5 px-3 py-1" style={{ borderBottom: `1px solid ${T.rowBdr}` }}>
-                <span className="text-[9px] font-bold " style={{ color: T.grpLabel }}>
+                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: T.grpLabel }}>
                   {group.label}
                 </span>
               </div>
@@ -344,7 +353,6 @@ export default function NotificationCenter() {
             >
               {PanelContent}
             </motion.div>
-
             {/* ── Desktop: fixed-position dropdown anchored below the bell ── */}
             <motion.div
               key="desktop-panel"

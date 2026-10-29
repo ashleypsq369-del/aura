@@ -31,6 +31,13 @@ const TYPE_CONFIG = {
  ml_risk_alert: { icon: Activity, label: 'ML Risk', bar: '#7c3aed', bg: '#f5f3ff', color: '#6d28d9' },
  critical_vitals: { icon: Activity, label: 'Vitals', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
  high_risk: { icon: AlertTriangle, label: 'High Risk', bar: '#ea580c', bg: '#fff7ed', color: '#c2410c' },
+ // Services & bookings
+ booking_confirmed: { icon: Calendar, label: 'Booking Confirmed', bar: '#0d9488', bg: '#f0fdfa', color: '#0d9488' },
+ booking_cancelled: { icon: Calendar, label: 'Booking Cancelled', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
+ booking_reminder:  { icon: Clock,    label: 'Booking Reminder',  bar: '#7c3aed', bg: '#faf5ff', color: '#7c3aed' },
+ booking_request:   { icon: Calendar, label: 'New Booking',       bar: '#0891b2', bg: '#f0f9ff', color: '#0369a1' },
+ provider_approved: { icon: Activity, label: 'Provider Approved', bar: '#059669', bg: '#f0fdf4', color: '#047857' },
+ provider_review:   { icon: FileText, label: 'Review Received',   bar: '#d97706', bg: '#fffbeb', color: '#92400e' },
 };
 const DEFAULT_CFG = { icon: Bell, label: 'Notification', bar: '#94a3b8', bg: '#f8fafc', color: '#64748b' };
 const getCfg = (t) => TYPE_CONFIG[t] || DEFAULT_CFG;

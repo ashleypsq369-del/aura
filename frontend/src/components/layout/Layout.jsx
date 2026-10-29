@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
  Menu, ChevronRight, X, Loader2, LogOut, Settings, User, 
  Moon, Sun, Shield, HelpCircle, PanelLeftClose, PanelLeftOpen,
- MessageCircle, Stethoscope,
+ MessageCircle, Stethoscope, Briefcase, Calendar,
 } from 'lucide-react';
 import Sidebar from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
@@ -267,11 +267,13 @@ export default function Layout({ children }) {
  { type: 'separator' },
  { label: 'My Avatar', icon: User, desc: 'Customise your avatar', onClick: () => setShowAvatarBuilder(true) },
  { label: 'My Profile', icon: User, desc: 'View and edit profile', onClick: () => navigate('/profile') },
+ ...(user?.role === 'provider' ? [{ label: 'Provider Profile', icon: Briefcase, desc: 'Edit your services profile', onClick: () => navigate('/provider-register') }] : []),
  { label: 'Settings', icon: Settings, desc: 'App preferences & accessibility', onClick: () => navigate('/settings') },
  { label: isDark ? 'Light Mode' : 'Dark Mode', icon: isDark ? Sun : Moon, desc: isDark ? 'Switch to light theme' : 'Switch to dark theme', onClick: () => updateTheme(isDark ? 'light' : 'dark') },
  { type: 'separator' },
  { label: 'Help & Resources', icon: HelpCircle, desc: 'Get support and guidance', onClick: () => navigate('/resources') },
  ...(user?.role === 'admin' ? [{ label: 'Admin Panel', icon: Shield, desc: 'Manage users and system', onClick: () => navigate('/admin/users') }] : []),
+ ...(user?.role === 'provider' ? [{ label: 'My Bookings', icon: Calendar, desc: 'View and manage bookings', onClick: () => navigate('/services') }] : []),
  { type: 'separator' },
  { label: 'Sign Out', icon: LogOut, variant: 'danger', onClick: () => setShowSignOutModal(true) },
  ]}

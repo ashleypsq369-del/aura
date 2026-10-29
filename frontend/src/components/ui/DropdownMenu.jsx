@@ -69,9 +69,9 @@ export default function DropdownMenu({ trigger, items = [], align = 'end', sideO
  <Icon size={16} className="flex-shrink-0 text-slate-500" />
  )}
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-slate-800 leading-tight">{item.label}</p>
+ <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--text-900)' }}>{item.label}</p>
  {item.desc && (
- <p className="text-[11px] text-slate-400 mt-0.5 leading-tight truncate">{item.desc}</p>
+ <p className="text-[11px] mt-0.5 leading-tight truncate" style={{ color: 'var(--text-500)' }}>{item.desc}</p>
  )}
  </div>
  {item.badge && (

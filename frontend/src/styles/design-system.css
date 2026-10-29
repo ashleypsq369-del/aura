@@ -283,3 +283,23 @@ html.dark {
   html.dark .badge-stable   { background:rgba(13,148,136,0.15); color:#2dd4bf; border-color:rgba(13,148,136,0.35); }
   html.dark .badge-info     { background:rgba(8,145,178,0.15);  color:#67e8f9; border-color:rgba(8,145,178,0.35);  }
 }
+
+/* ── Force white text on dark hero sections — beats all CSS var overrides ── */
+.hero-text-white,
+.hero-text-white h1,
+.hero-text-white p,
+.hero-text-white span {
+  color: #ffffff !important;
+}
+.hero-text-muted {
+  color: rgba(255,255,255,0.75) !important;
+}
+
+/* ── Dropdown menu icon colour ── */
+.dropdown-icon {
+  color: var(--text-600) !important;
+}
+
+/* ── Services notification badges ── */
+.notif-services { --bar: #0d9488; --badge: #f0fdfa; --icon: #0d9488; }
+.notif-booking  { --bar: #7c3aed; --badge: #faf5ff; --icon: #7c3aed; }

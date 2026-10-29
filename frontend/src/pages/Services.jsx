@@ -929,7 +929,7 @@ export default function Services() {
                   <motion.div key={heroIdx}
                     initial={{ opacity:0, y:28 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-28 }}
                     transition={{ duration:0.45, ease:[0.22,1,0.36,1] }}>
-                    <h1 style={{ color:'#ffffff', fontSize:'clamp(26px,3.5vw,42px)', fontWeight:900, lineHeight:1.1, margin:'0 0 8px', letterSpacing:'-0.02em', textShadow:'0 2px 20px rgba(0,0,0,0.5)' }}>
+                    <h1 className="hero-text-white" style={{ fontSize:'clamp(26px,3.5vw,42px)', fontWeight:900, lineHeight:1.1, margin:'0 0 8px', letterSpacing:'-0.02em', textShadow:'0 2px 20px rgba(0,0,0,0.5)' }}>
                       {HERO_HEADLINES[heroIdx].text}
                     </h1>
                     <p style={{ color:'rgba(255,255,255,0.75)', fontSize:14, fontWeight:500, margin:0, textShadow:'0 1px 6px rgba(0,0,0,0.4)' }}>

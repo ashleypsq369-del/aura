@@ -20,6 +20,7 @@ import PageHeader from '../components/PageHeader';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionErrorBoundary from '../components/SectionErrorBoundary';
 import Progress from '../components/ui/Progress';
+import ServicesWidget from '../components/ServicesWidget';
 import { clinicalAssessmentsAPI, mlAPI } from '../api/client';
 
 import { API_URL } from '../api/client';
@@ -530,6 +531,7 @@ export default function PatientPortal() {
  { label: 'Log how I feel today', icon: Heart, color: 'bg-rose-500', nav: '/wellness-checkin', action: null },
  { label: 'View my pain scores', icon: Activity, color: 'bg-orange-500', nav: patientId ? `/patients/${patientId}` : '/my-space', action: null },
  { label: 'My care plan', icon: FileText, color: 'bg-teal-600', nav: patientId ? `/patients/${patientId}/care-plan` : '/my-space', action: null },
+ { label: 'Find a Care Professional', icon: Stethoscope, color: 'bg-teal-700', nav: '/services', action: null },
  { label: 'Ask Aura AI', icon: Brain, color: 'bg-purple-600', nav: null, action: () => window.dispatchEvent(new CustomEvent('aura:open')) },
  ].map(({ label, icon: Icon, color, nav, action }) => (
  <button key={label} onClick={() => action ? action() : navigate(nav)}
@@ -544,6 +546,11 @@ export default function PatientPortal() {
  ))}
  </div>
  </Section>
+
+ {/* ── Services Widget ── */}
+ <SectionErrorBoundary>
+ <ServicesWidget />
+ </SectionErrorBoundary>
 
  </div>
  </div>

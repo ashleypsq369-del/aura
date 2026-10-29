@@ -514,3 +514,129 @@ def dispatch_critical_alert(db, patient_id: int, alert_type: str,
         _deliver_to_user(db, uid, title, message, alert_type, patient_name, critical=True)
 
     db.commit()
+
+
+# ─── Booking / Services notifications ────────────────────────────────────────
+
+def notify_booking_confirmed(db: Session, booking_id: int):
+    """Send confirmation notification to patient and provider."""
+    try:
+        from src.db import ProviderBooking
+        booking = db.query(ProviderBooking).filter(ProviderBooking.id == booking_id).first()
+        if not booking:
+            return
+
+        date_str = booking.requested_date.strftime('%A %d %B') if booking.requested_date else 'your upcoming date'
+        time_str = f' at {booking.start_time}' if booking.start_time else ''
+
+        # Notify patient
+        if booking.patient_id:
+            db.add(NotificationQueue(
+                recipient_id=booking.patient_id,
+                notification_type='booking_confirmed',
+                title='Booking Confirmed',
+                body=f'Your session on {date_str}{time_str} has been confirmed by your provider.',
+                is_read=False,
+                created_at=datetime.utcnow(),
+            ))
+
+        # Notify provider
+        if booking.provider_id:
+            db.add(NotificationQueue(
+                recipient_id=booking.provider_id,
+                notification_type='booking_request',
+                title='New Booking Request',
+                body=f'You have a new booking request for {date_str}{time_str}.',
+                is_read=False,
+                created_at=datetime.utcnow(),
+            ))
+
+        db.commit()
+    except Exception as e:
+        print(f'[notify_booking_confirmed] Error: {e}')
+
+
+def notify_booking_cancelled(db: Session, booking_id: int, cancelled_by: str = 'patient'):
+    """Send cancellation notifications."""
+    try:
+        from src.db import ProviderBooking
+        booking = db.query(ProviderBooking).filter(ProviderBooking.id == booking_id).first()
+        if not booking:
+            return
+
+        date_str = booking.requested_date.strftime('%A %d %B') if booking.requested_date else 'your session'
+        notify_id = booking.provider_id if cancelled_by == 'patient' else booking.patient_id
+
+        if notify_id:
+            db.add(NotificationQueue(
+                recipient_id=notify_id,
+                notification_type='booking_cancelled',
+                title='Booking Cancelled',
+                body=f'The booking for {date_str} has been cancelled.',
+                is_read=False,
+                created_at=datetime.utcnow(),
+            ))
+        db.commit()
+    except Exception as e:
+        print(f'[notify_booking_cancelled] Error: {e}')
+
+
+def check_upcoming_bookings(db: Session):
+    """
+    Send 24h reminders for upcoming confirmed bookings.
+    Called by the scheduler.
+    """
+    try:
+        from src.db import ProviderBooking
+        now  = datetime.utcnow()
+        tomorrow = now + timedelta(hours=25)
+        today    = now + timedelta(hours=23)
+
+        bookings = db.query(ProviderBooking).filter(
+            ProviderBooking.status == 'confirmed',
+            ProviderBooking.requested_date >= today.date(),
+            ProviderBooking.requested_date <= tomorrow.date(),
+        ).all()
+
+        for b in bookings:
+            for uid in [b.patient_id, b.provider_id]:
+                if not uid:
+                    continue
+                existing = db.query(NotificationQueue).filter(
+                    NotificationQueue.recipient_id == uid,
+                    NotificationQueue.notification_type == 'booking_reminder',
+                    NotificationQueue.body.contains(str(b.id)),
+                    NotificationQueue.created_at >= now - timedelta(hours=2),
+                ).first()
+                if not existing:
+                    date_str = b.requested_date.strftime('%A %d %B') if b.requested_date else 'tomorrow'
+                    time_str = f' at {b.start_time}' if b.start_time else ''
+                    db.add(NotificationQueue(
+                        recipient_id=uid,
+                        notification_type='booking_reminder',
+                        title='Session Reminder',
+                        body=f'Reminder: your care session is tomorrow ({date_str}{time_str}). Booking #{b.id}',
+                        is_read=False,
+                        created_at=datetime.utcnow(),
+                    ))
+        db.commit()
+        return len(bookings)
+    except Exception as e:
+        print(f'[check_upcoming_bookings] Error: {e}')
+        return 0
+
+
+def notify_provider_approved(db: Session, provider_user_id: int):
+    """Notify a provider that their application has been approved."""
+    try:
+        db.add(NotificationQueue(
+            recipient_id=provider_user_id,
+            notification_type='provider_approved',
+            title='Application Approved!',
+            body='Congratulations — your provider application has been approved. You are now live on Aura Services.',
+            is_read=False,
+            created_at=datetime.utcnow(),
+        ))
+        db.commit()
+    except Exception as e:
+        print(f'[notify_provider_approved] Error: {e}')
