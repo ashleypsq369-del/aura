@@ -37,8 +37,8 @@ import { toast } from 'sonner';
 const ICON_MAP = { Stethoscope, Activity, Heart, Brain, Users, Hand, FileText };
 
 const TYPE_META = {
-  nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',      icon:Stethoscope, img:'https://images.pexels.com/photos/3985163/pexels-photo-3985163.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  doctor:          { color:'#0891b2', bg:'#f0f9ff', label:'Palliative Physician',  icon:Activity,    img:'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',      icon:Stethoscope, img:'https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  doctor:          { color:'#0891b2', bg:'#f0f9ff', label:'Palliative Physician',  icon:Activity,    img:'https://images.pexels.com/photos/5407206/pexels-photo-5407206.jpeg?auto=compress&cs=tinysrgb&w=400' },
   physiotherapist: { color:'#059669', bg:'#f0fdf4', label:'Physiotherapist',       icon:Heart,       img:'https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=400' },
   counsellor:      { color:'#7c3aed', bg:'#faf5ff', label:'Counsellor',            icon:Brain,       img:'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=400' },
   nanny:           { color:'#d97706', bg:'#fffbeb', label:'Specialist Nanny',      icon:Users,       img:'https://images.pexels.com/photos/3905766/pexels-photo-3905766.jpeg?auto=compress&cs=tinysrgb&w=400' },
@@ -52,6 +52,14 @@ const HERO_HEADLINES = [
   'Book a palliative nurse at home',
   'Connect with grief counsellors',
   'Trusted physicians across Ghana',
+];
+
+// African & diverse healthcare photos — dark enough for white text
+const HERO_SLIDES = [
+  { url:'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 30%' },
+  { url:'https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 40%' },
+  { url:'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 20%' },
+  { url:'https://images.pexels.com/photos/7578808/pexels-photo-7578808.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 25%' },
 ];
 
 const TESTIMONIALS = [
@@ -129,88 +137,111 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
   const meta = TYPE_META[p.service_type] || { color:'#0d9488', bg:'#f0fdfa', label:p.service_type, icon:Briefcase, img:'' };
   const Icon = meta.icon;
   const initials = (p.full_name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
-  const available = (p.id % 3) !== 0; // demo: simulate availability
+  const available = (p.id % 3) !== 0;
 
   return (
     <motion.div
       layout
       initial={{ opacity:0, y:16 }}
       animate={{ opacity:1, y:0 }}
-      whileHover={{ y:-6, boxShadow:'0 20px 60px rgba(0,0,0,0.13)' }}
-      transition={{ type:'spring', stiffness:300, damping:24 }}
+      whileHover={{ y:-5, boxShadow:'0 16px 48px rgba(0,0,0,0.14)' }}
+      transition={{ type:'spring', stiffness:300, damping:26 }}
       style={{
-        background:'#ffffff',
-        borderRadius:20,
-        overflow:'hidden',
-        border:'1.5px solid #f1f5f9',
-        cursor:'pointer',
-        position:'relative',
-        boxShadow: featured ? '0 8px 32px rgba(13,148,136,0.12)' : '0 2px 12px rgba(0,0,0,0.06)',
+        background:'#ffffff', borderRadius:20, overflow:'hidden',
+        border:'1.5px solid #f1f5f9', cursor:'pointer', position:'relative',
+        boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.13)' : '0 2px 10px rgba(0,0,0,0.06)',
       }}
       onClick={() => onView(p)}
     >
       {/* Featured ribbon */}
       {featured && (
         <div style={{
-          position:'absolute', top:12, right:12, zIndex:2,
+          position:'absolute', top:10, right:10, zIndex:3,
           background:'linear-gradient(135deg,#f59e0b,#d97706)',
           color:'#fff', fontSize:9, fontWeight:800,
-          padding:'3px 8px', borderRadius:999, letterSpacing:'0.05em',
-          textTransform:'uppercase', boxShadow:'0 2px 8px rgba(245,158,11,0.4)',
+          padding:'3px 8px', borderRadius:999, letterSpacing:'0.05em', textTransform:'uppercase',
+          boxShadow:'0 2px 8px rgba(245,158,11,0.4)',
         }}>⭐ Featured</div>
       )}
 
-      {/* Colour-bar header image area */}
-      <div style={{ height:72, position:'relative', overflow:'hidden',
-        background:`linear-gradient(135deg,${meta.color},${meta.color}99)` }}>
+      {/* ── Photo header band ── */}
+      <div style={{
+        height:90, position:'relative', overflow:'hidden',
+        background:`linear-gradient(135deg,${meta.color}dd,${meta.color}88)`,
+      }}>
         {meta.img && (
           <img src={meta.img} alt="" style={{
-            width:'100%', height:'100%', objectFit:'cover',
-            opacity:0.25, filter:'saturate(1.4)',
+            width:'100%', height:'100%', objectFit:'cover', opacity:0.3, filter:'saturate(1.3)',
           }}/>
         )}
+        {/* Gradient overlay from bottom so avatar area is clean */}
         <div style={{
           position:'absolute', inset:0,
-          background:`linear-gradient(135deg,${meta.color}cc,transparent)`,
+          background:`linear-gradient(to bottom, ${meta.color}44 0%, ${meta.color}ee 100%)`,
         }}/>
       </div>
 
-      {/* Avatar overlapping header */}
-      <div style={{ padding:'0 16px 16px', marginTop:-28 }}>
-        <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', marginBottom:10 }}>
-          <div style={{ position:'relative' }}>
+      {/* ── Avatar — large circle overlapping band ── */}
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', padding:'0 16px', marginTop:-38 }}>
+        <div style={{ position:'relative', zIndex:2 }}>
+          {/* Outer ring */}
+          <div style={{
+            width:76, height:76, borderRadius:'50%',
+            background:`conic-gradient(${meta.color} 0deg, ${meta.color}88 180deg, ${meta.color}44 360deg)`,
+            padding:3,
+            boxShadow:`0 4px 20px ${meta.color}55, 0 0 0 4px #fff`,
+          }}>
+            {/* Inner circle — photo or initials */}
             <div style={{
-              width:56, height:56, borderRadius:16,
+              width:'100%', height:'100%', borderRadius:'50%',
+              background:`linear-gradient(145deg,${meta.color},${meta.color}bb)`,
               display:'flex', alignItems:'center', justifyContent:'center',
-              color:'#fff', fontWeight:900, fontSize:18,
-              background:`linear-gradient(135deg,${meta.color},${meta.color}bb)`,
-              border:'3px solid #fff',
-              boxShadow:'0 4px 16px rgba(0,0,0,0.15)',
+              overflow:'hidden',
             }}>
-              {initials}
+              {p.avatar_url ? (
+                <img src={p.avatar_url} alt={p.full_name} style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
+              ) : (
+                <span style={{
+                  color:'#fff', fontWeight:900,
+                  fontSize: initials.length > 2 ? 18 : 22,
+                  letterSpacing:'-0.5px',
+                  fontFamily:'"Inter","SF Pro Display",-apple-system,sans-serif',
+                  textShadow:'0 1px 4px rgba(0,0,0,0.25)',
+                }}>
+                  {initials}
+                </span>
+              )}
             </div>
-            {p.is_verified && (
-              <div style={{
-                position:'absolute', bottom:-2, right:-2,
-                width:18, height:18, borderRadius:'50%',
-                background:'#0d9488', border:'2px solid #fff',
-                display:'flex', alignItems:'center', justifyContent:'center',
-              }}>
-                <BadgeCheck size={10} style={{ color:'#fff' }} strokeWidth={2.5}/>
-              </div>
-            )}
           </div>
+          {/* Verified dot */}
+          {p.is_verified && (
+            <div style={{
+              position:'absolute', bottom:2, right:2,
+              width:20, height:20, borderRadius:'50%',
+              background:'#10b981', border:'2.5px solid #fff',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
+            }}>
+              <BadgeCheck size={11} style={{ color:'#fff' }} strokeWidth={2.5}/>
+            </div>
+          )}
+        </div>
+        <div style={{ paddingBottom:4 }}>
           <AvailBadge available={available}/>
         </div>
+      </div>
 
-        {/* Name + type badge */}
-        <p style={{ fontWeight:800, color:'#0f172a', fontSize:14, lineHeight:1.3, marginBottom:2 }}>
+      {/* ── Card body ── */}
+      <div style={{ padding:'10px 16px 16px' }}>
+        {/* Name */}
+        <p style={{ fontWeight:800, color:'#0f172a', fontSize:15, lineHeight:1.25, marginBottom:4 }}>
           {p.full_name}
         </p>
+        {/* Role pill */}
         <span style={{
           display:'inline-flex', alignItems:'center', gap:4,
-          fontSize:10, fontWeight:700, padding:'3px 8px', borderRadius:999,
-          background:meta.bg, color:meta.color, marginBottom:6,
+          fontSize:10, fontWeight:700, padding:'3px 9px', borderRadius:999,
+          background:meta.bg, color:meta.color, marginBottom:7,
         }}>
           <Icon size={9} strokeWidth={2.5}/> {meta.label}
         </span>
@@ -222,37 +253,36 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           </p>
         )}
 
-        {/* Rating */}
+        {/* Stars */}
         <div style={{ marginBottom:8 }}>
           <Stars value={p.average_rating} count={p.total_reviews} size={11}/>
         </div>
 
-        {/* Bio snippet */}
+        {/* Bio */}
         {p.bio && (
           <p style={{
-            fontSize:11, color:'#64748b', lineHeight:1.5,
-            display:'-webkit-box', WebkitLineClamp:2,
-            WebkitBoxOrient:'vertical', overflow:'hidden',
+            fontSize:11, color:'#64748b', lineHeight:1.55,
+            display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
             marginBottom:12,
           }}>
             {p.bio}
           </p>
         )}
 
-        {/* Credential badges */}
+        {/* Badges row */}
         <div style={{ display:'flex', gap:4, flexWrap:'wrap', marginBottom:12 }}>
           {p.nmc_pin && (
             <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:6,
+              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
               background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4',
               display:'flex', alignItems:'center', gap:3,
             }}>
-              <Award size={8}/> NMC Reg.
+              <Award size={8}/> NMC
             </span>
           )}
           {p.is_verified && (
             <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:6,
+              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
               background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0',
               display:'flex', alignItems:'center', gap:3,
             }}>
@@ -261,7 +291,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           )}
           {p.years_experience > 0 && (
             <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:6,
+              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
               background:'#f8fafc', color:'#475569', border:'1px solid #e2e8f0',
             }}>
               {p.years_experience}y exp
@@ -269,21 +299,21 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           )}
         </div>
 
-        {/* Action buttons */}
+        {/* 3 CTA buttons */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:6 }}>
           {[
-            { label:'Profile', Icon:FileText, action:(e) => { e.stopPropagation(); onView(p); }, bg:`${meta.color}12`, color:meta.color },
-            { label:'Book', Icon:Calendar,    action:(e) => { e.stopPropagation(); onBook(p); }, bg:meta.color, color:'#fff' },
-            { label:'Chat', Icon:MessageCircle, action:(e) => { e.stopPropagation(); onMessage(p); }, bg:'#0d948812', color:'#0d9488' },
-          ].map(({ label, Icon: Ic, action, bg, color }) => (
+            { label:'Profile',  Icon:FileText,       action:(e)=>{e.stopPropagation();onView(p);},    bg:`${meta.color}12`, color:meta.color },
+            { label:'Book',     Icon:Calendar,        action:(e)=>{e.stopPropagation();onBook(p);},    bg:meta.color,        color:'#fff'     },
+            { label:'Chat',     Icon:MessageCircle,   action:(e)=>{e.stopPropagation();onMessage(p);}, bg:'#0d948812',       color:'#0d9488'  },
+          ].map(({ label, Icon:Ic, action, bg, color }) => (
             <button key={label} onClick={action}
               style={{
                 display:'flex', flexDirection:'column', alignItems:'center', gap:3,
                 padding:'8px 4px', borderRadius:12, fontSize:10, fontWeight:800,
-                border:'none', cursor:'pointer', transition:'all 0.15s',
-                background:bg, color,
+                border:'none', cursor:'pointer', background:bg, color,
+                transition:'opacity 0.12s',
               }}
-              onMouseEnter={e => e.currentTarget.style.opacity='0.85'}
+              onMouseEnter={e => e.currentTarget.style.opacity='0.8'}
               onMouseLeave={e => e.currentTarget.style.opacity='1'}
             >
               <Ic size={13}/> {label}
@@ -346,15 +376,28 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
 
           {/* Provider identity at bottom */}
           <div style={{ position:'absolute', bottom:16, left:20, right:60, display:'flex', alignItems:'flex-end', gap:14 }}>
+            {/* Circular avatar */}
             <div style={{
-              width:64, height:64, borderRadius:18, flexShrink:0,
-              display:'flex', alignItems:'center', justifyContent:'center',
-              color:'#fff', fontWeight:900, fontSize:22,
-              background:`linear-gradient(135deg,${meta.color},${meta.color}bb)`,
-              border:'3px solid rgba(255,255,255,0.5)',
-              boxShadow:'0 4px 20px rgba(0,0,0,0.3)',
+              width:68, height:68, borderRadius:'50%', flexShrink:0,
+              background:`conic-gradient(${meta.color} 0deg, ${meta.color}88 180deg, ${meta.color}44 360deg)`,
+              padding:3,
+              boxShadow:`0 4px 20px ${meta.color}55, 0 0 0 3px rgba(255,255,255,0.4)`,
             }}>
-              {initials}
+              <div style={{
+                width:'100%', height:'100%', borderRadius:'50%',
+                background:`linear-gradient(145deg,${meta.color},${meta.color}bb)`,
+                display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden',
+              }}>
+                {p.avatar_url ? (
+                  <img src={p.avatar_url} alt={p.full_name} style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
+                ) : (
+                  <span style={{
+                    color:'#fff', fontWeight:900, fontSize:22, letterSpacing:'-0.5px',
+                    fontFamily:'"Inter","SF Pro Display",-apple-system,sans-serif',
+                    textShadow:'0 1px 4px rgba(0,0,0,0.25)',
+                  }}>{initials}</span>
+                )}
+              </div>
             </div>
             <div>
               <p style={{ color:'#fff', fontWeight:800, fontSize:18, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{p.full_name}</p>
@@ -381,43 +424,43 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           )}
 
           {/* Quick stats grid */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:20 }}>
+          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:16 }}>
             {[
-              { l:'Experience', v: p.years_experience ? `${p.years_experience} yrs` : '-' },
-              { l:'Region', v: p.region || '-' },
-              { l:'Bookings', v: p.total_bookings || 0 },
-            ].map(r => (
+              { l:'Experience', v: p.years_experience ? `${p.years_experience} yrs` : null },
+              { l:'Region', v: p.region || null },
+              { l:'Bookings', v: p.total_bookings != null ? `${p.total_bookings} bookings` : null },
+            ].filter(r => r.v).map(r => (
               <div key={r.l} style={{
-                background:'#f8fafc', borderRadius:12, padding:'10px 12px',
-                textAlign:'center',
+                background:'#f1f5f9', borderRadius:10, padding:'6px 14px',
+                display:'flex', flexDirection:'column',
               }}>
-                <p style={{ fontSize:10, color:'#94a3b8', fontWeight:600, marginBottom:2 }}>{r.l}</p>
-                <p style={{ fontSize:14, fontWeight:800, color:'#0f172a' }}>{r.v}</p>
+                <p style={{ fontSize:10, color:'#94a3b8', fontWeight:600, marginBottom:1 }}>{r.l}</p>
+                <p style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{r.v}</p>
               </div>
             ))}
           </div>
 
           {/* Verification badges */}
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:20 }}>
+          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:20, paddingBottom:20, borderBottom:'1px solid #f1f5f9' }}>
             {p.nmc_pin && (
-              <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700,
-                padding:'6px 12px', borderRadius:10,
+              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
+                padding:'5px 12px', borderRadius:8,
                 background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4' }}>
-                <Award size={13}/>NMC PIN: {p.nmc_pin}
+                <Award size={12}/>NMC Reg.
               </span>
             )}
             {p.is_verified && (
-              <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700,
-                padding:'6px 12px', borderRadius:10,
+              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
+                padding:'5px 12px', borderRadius:8,
                 background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0' }}>
-                <Shield size={13}/>Ghana Card Verified
+                <Shield size={12}/>Ghana Card
               </span>
             )}
             {p.is_professional && (
-              <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, fontWeight:700,
-                padding:'6px 12px', borderRadius:10,
+              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
+                padding:'5px 12px', borderRadius:8,
                 background:'#eff6ff', color:'#1d4ed8', border:'1px solid #bfdbfe' }}>
-                <BadgeCheck size={13}/>Aura Verified
+                <BadgeCheck size={12}/>Aura Verified
               </span>
             )}
           </div>
@@ -425,7 +468,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           {/* About */}
           {p.bio && (
             <div style={{ marginBottom:20 }}>
-              <h3 style={{ fontSize:11, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>About</h3>
+              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:6 }}>About</p>
               <p style={{ fontSize:13, color:'#334155', lineHeight:1.7 }}>{p.bio}</p>
             </div>
           )}
@@ -433,19 +476,21 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           {/* Specialisation */}
           {p.specialisation && (
             <div style={{ marginBottom:20 }}>
-              <h3 style={{ fontSize:11, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Specialisation</h3>
-              <p style={{ fontSize:13, color:'#334155', fontWeight:600 }}>{p.specialisation}</p>
+              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:6 }}>Specialisation</p>
+              <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 12px', borderRadius:8, background:'#f0fdfa', border:'1px solid #ccfbf1' }}>
+                <p style={{ fontSize:13, color:'#0d9488', fontWeight:600, margin:0 }}>{p.specialisation}</p>
+              </div>
             </div>
           )}
 
           {/* Qualifications */}
           {p.qualifications?.length > 0 && (
             <div style={{ marginBottom:20 }}>
-              <h3 style={{ fontSize:11, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Qualifications</h3>
+              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:10 }}>Qualifications</p>
               <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                 {p.qualifications.map((q, i) => (
                   <div key={i} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
-                    <CheckCircle size={14} style={{ color:'#0d9488', flexShrink:0, marginTop:1 }}/>
+                    <CheckCircle size={14} style={{ color:'#0d9488', flexShrink:0, marginTop:2 }}/>
                     <span style={{ fontSize:13, color:'#334155', fontWeight:600 }}>
                       {q.title}{q.institution && <span style={{ color:'#64748b', fontWeight:400 }}> — {q.institution}</span>}
                       {q.year && <span style={{ color:'#94a3b8', fontWeight:400 }}> ({q.year})</span>}
@@ -459,7 +504,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           {/* Reviews */}
           {p.ratings?.length > 0 && (
             <div style={{ marginBottom:20 }}>
-              <h3 style={{ fontSize:11, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>Patient Reviews</h3>
+              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:10 }}>Patient Reviews</p>
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {p.ratings.slice(0, 5).map((r, i) => (
                   <div key={i} style={{ background:'#f8fafc', borderRadius:14, padding:'12px 14px' }}>
@@ -781,12 +826,19 @@ export default function Services() {
   const [bookProvider, setBookProvider] = useState(null);
   const [tab, setTab]                   = useState('browse');
   const [heroIdx, setHeroIdx]           = useState(0);
+  const [slideIdx, setSlideIdx]         = useState(0);
   const [scrolled, setScrolled]         = useState(false);
   const searchRef                       = useRef(null);
 
   // Cycle hero headlines
   useEffect(() => {
     const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_HEADLINES.length), 3500);
+    return () => clearInterval(t);
+  }, []);
+
+  // Cycle background slides — slightly slower than headlines
+  useEffect(() => {
+    const t = setInterval(() => setSlideIdx(i => (i + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(t);
   }, []);
 
@@ -884,35 +936,38 @@ export default function Services() {
         background:'linear-gradient(135deg,#071520 0%,#0b3028 35%,#0d6b5e 65%,#0891b2 100%)',
         paddingBottom:0,
       }}>
-        {/* Background image overlay */}
+        {/* ── Crossfading background slideshow ── */}
+        {HERO_SLIDES.map((slide, i) => (
+          <div key={i} style={{
+            position:'absolute', inset:0, zIndex:0,
+            backgroundImage:`url(${slide.url})`,
+            backgroundSize:'cover', backgroundPosition:slide.pos,
+            opacity: i === slideIdx ? 0.28 : 0,
+            transition:'opacity 1.4s ease-in-out',
+          }}/>
+        ))}
+        {/* Deep dark overlay so white text is always crisp */}
         <div style={{
-          position:'absolute', inset:0, zIndex:0,
-          backgroundImage:'url(https://images.pexels.com/photos/4226219/pexels-photo-4226219.jpeg?auto=compress&cs=tinysrgb&w=1200)',
-          backgroundSize:'cover', backgroundPosition:'center 30%',
-          opacity:0.12,
-        }}/>
-        {/* Radial glow */}
-        <div style={{
-          position:'absolute', inset:0, zIndex:0,
-          background:'radial-gradient(ellipse at 75% 50%, rgba(8,145,178,0.35) 0%, transparent 65%)',
+          position:'absolute', inset:0, zIndex:1,
+          background:'linear-gradient(to right, rgba(7,21,32,0.72) 0%, rgba(11,48,40,0.55) 50%, rgba(8,145,178,0.25) 100%)',
         }}/>
         {/* Bottom wave */}
         <div style={{
-          position:'absolute', bottom:-1, left:0, right:0, zIndex:1,
+          position:'absolute', bottom:-1, left:0, right:0, zIndex:2,
           height:60,
           background:'var(--page-bg)',
           clipPath:'ellipse(55% 100% at 50% 100%)',
         }}/>
 
-        <div style={{ position:'relative', zIndex:2, maxWidth:1100, margin:'0 auto', padding:'72px 24px 100px' }}>
+        <div style={{ position:'relative', zIndex:3, maxWidth:1100, margin:'0 auto', padding:'72px 24px 100px' }}>
           <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:32, alignItems:'center' }}>
 
             {/* Left: headline + search */}
             <div style={{ maxWidth:580 }}>
-              {/* Eyebrow */}
+              {/* Eyebrow + slide dots */}
               <motion.div
                 initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }}
-                style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16 }}>
+                style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16, flexWrap:'wrap' }}>
                 <Sparkles size={14} style={{ color:'#5eead4' }}/>
                 <span style={{ color:'#5eead4', fontSize:11, fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase' }}>
                   Ghana Healthcare Services
@@ -924,21 +979,38 @@ export default function Services() {
                 }}>
                   NMC Verified
                 </span>
+                {/* Slideshow dots */}
+                <div style={{ display:'flex', gap:5, marginLeft:'auto' }}>
+                  {HERO_SLIDES.map((_, i) => (
+                    <button key={i} onClick={() => setSlideIdx(i)} style={{
+                      width: i===slideIdx ? 18 : 6, height:6, borderRadius:999,
+                      background: i===slideIdx ? '#5eead4' : 'rgba(255,255,255,0.35)',
+                      border:'none', cursor:'pointer', transition:'all 0.35s', padding:0,
+                    }}/>
+                  ))}
+                </div>
               </motion.div>
 
               {/* Animated headline */}
-              <div style={{ height:80, overflow:'hidden', marginBottom:16 }}>
+              <div style={{ minHeight:60, overflow:'hidden', marginBottom:16 }}>
                 <AnimatePresence mode="wait">
                   <motion.h1 key={heroIdx}
                     initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-30 }}
                     transition={{ duration:0.45, ease:'easeOut' }}
-                    style={{ color:'#ffffff', fontSize:'clamp(26px,4vw,44px)', fontWeight:900, lineHeight:1.1, margin:0 }}>
+                    style={{
+                      color:'#ffffff',
+                      fontSize:'clamp(24px,3.5vw,40px)',
+                      fontWeight:900,
+                      lineHeight:1.15,
+                      margin:0,
+                      textShadow:'0 2px 12px rgba(0,0,0,0.4)',
+                    }}>
                     {HERO_HEADLINES[heroIdx]}
                   </motion.h1>
                 </AnimatePresence>
               </div>
 
-              <p style={{ color:'rgba(255,255,255,0.7)', fontSize:15, lineHeight:1.7, marginBottom:32, maxWidth:480 }}>
+              <p style={{ color:'rgba(255,255,255,0.85)', fontSize:15, lineHeight:1.7, marginBottom:32, maxWidth:480, textShadow:'0 1px 4px rgba(0,0,0,0.3)' }}>
                 Browse NMC-registered nurses, palliative physicians, physiotherapists, counsellors and more.
                 Every provider is Ghana Card verified and reviewed by real patients.
               </p>
@@ -1029,99 +1101,105 @@ export default function Services() {
       <div style={{ maxWidth:1100, margin:'0 auto', padding:'0 20px' }}>
 
         {/* ── HOW IT WORKS ── */}
-        <section style={{ paddingTop:48, paddingBottom:48 }}>
-          <div style={{ textAlign:'center', marginBottom:32 }}>
-            <p style={{ fontSize:11, fontWeight:800, color:'#0d9488', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:8 }}>Simple Process</p>
-            <h2 style={{ fontSize:26, fontWeight:900, color:'#0f172a', margin:0 }}>How Aura Services works</h2>
+        <section style={{ paddingTop:48, paddingBottom:40 }}>
+          <div style={{ textAlign:'center', marginBottom:36 }}>
+            <p style={{ fontSize:11, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:6 }}>Simple Process</p>
+            <h2 style={{ fontSize:24, fontWeight:900, color:'#0f172a', margin:0, lineHeight:1.2 }}>How Aura Services works</h2>
+            <p style={{ fontSize:13, color:'#64748b', marginTop:8 }}>Get matched with a verified professional in under 5 minutes</p>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:20 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:0, position:'relative' }}>
+            {/* Connector line */}
+            <div style={{
+              position:'absolute', top:36, left:'17%', right:'17%', height:2,
+              background:'linear-gradient(to right,#0d9488,#0891b2)',
+              zIndex:0,
+            }}/>
             {HOW_IT_WORKS.map((step, i) => (
               <motion.div key={step.step}
-                initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }}
-                viewport={{ once:true }} transition={{ delay: i * 0.12 }}
-                style={{
-                  background:'#fff', borderRadius:20, padding:'28px 24px',
-                  border:'1.5px solid #f1f5f9', textAlign:'center',
-                  boxShadow:'0 2px 16px rgba(0,0,0,0.06)',
-                  position:'relative', overflow:'hidden',
-                }}>
+                initial={{ opacity:0, y:16 }} whileInView={{ opacity:1, y:0 }}
+                viewport={{ once:true }} transition={{ delay: i * 0.15 }}
+                style={{ textAlign:'center', padding:'0 24px', position:'relative', zIndex:1 }}>
+                {/* Step circle */}
                 <div style={{
-                  position:'absolute', top:-12, right:-12,
-                  fontSize:64, fontWeight:900, color:`${step.color}08`, lineHeight:1,
-                }}>
-                  {step.step}
-                </div>
-                <div style={{
-                  width:52, height:52, borderRadius:16,
-                  background:`linear-gradient(135deg,${step.color}22,${step.color}44)`,
+                  width:72, height:72, borderRadius:'50%',
+                  background:`linear-gradient(135deg,${step.color},${step.color}cc)`,
                   display:'flex', alignItems:'center', justifyContent:'center',
-                  margin:'0 auto 16px',
-                  border:`2px solid ${step.color}33`,
+                  margin:'0 auto 20px',
+                  boxShadow:`0 8px 24px ${step.color}40`,
+                  border:'4px solid #fff',
+                  position:'relative',
                 }}>
-                  <step.icon size={22} style={{ color:step.color }}/>
+                  <step.icon size={28} style={{ color:'#fff' }}/>
+                  <div style={{
+                    position:'absolute', top:-8, right:-8, width:24, height:24, borderRadius:'50%',
+                    background:step.color, border:'2px solid #fff',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    fontSize:10, fontWeight:900, color:'#fff',
+                  }}>{i+1}</div>
                 </div>
-                <p style={{ fontWeight:800, fontSize:15, color:'#0f172a', marginBottom:8 }}>{step.title}</p>
-                <p style={{ fontSize:12, color:'#64748b', lineHeight:1.6 }}>{step.desc}</p>
+                <p style={{ fontWeight:800, fontSize:16, color:'#0f172a', marginBottom:8 }}>{step.title}</p>
+                <p style={{ fontSize:13, color:'#64748b', lineHeight:1.6, maxWidth:200, margin:'0 auto' }}>{step.desc}</p>
               </motion.div>
             ))}
           </div>
         </section>
 
         {/* ── SERVICE CATEGORIES ── */}
-        <section style={{ paddingBottom:48 }}>
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
+        <section style={{ paddingBottom:40 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:14 }}>
             <div>
-              <p style={{ fontSize:11, fontWeight:800, color:'#0d9488', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:4 }}>Browse by Role</p>
-              <h2 style={{ fontSize:22, fontWeight:900, color:'#0f172a', margin:0 }}>All service categories</h2>
+              <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
+              <h2 style={{ fontSize:18, fontWeight:800, color:'#0f172a', margin:0 }}>All service categories</h2>
             </div>
           </div>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))', gap:12 }}>
-            {/* All chip */}
-            <motion.button whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
+
+          {/* Horizontal scroll strip — no orphan chips */}
+          <div style={{
+            display:'flex', gap:8, overflowX:'auto', paddingBottom:8,
+            scrollbarWidth:'none', msOverflowStyle:'none',
+          }}>
+            {/* All pill */}
+            <motion.button whileTap={{ scale:0.94 }}
               onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
               style={{
-                borderRadius:16, padding:'16px 12px', textAlign:'center',
-                border: `2px solid ${filterType==='' ? '#0f172a' : '#e2e8f0'}`,
+                display:'flex', alignItems:'center', gap:7, flexShrink:0,
+                padding:'8px 16px', borderRadius:999,
+                border:`2px solid ${filterType==='' ? '#0f172a' : '#e2e8f0'}`,
                 background: filterType==='' ? '#0f172a' : '#fff',
-                cursor:'pointer', transition:'all 0.2s',
+                cursor:'pointer', transition:'all 0.18s', whiteSpace:'nowrap',
               }}>
-              <div style={{ width:40, height:40, borderRadius:12, background: filterType==='' ? 'rgba(255,255,255,0.15)' : '#f1f5f9', margin:'0 auto 8px', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <Briefcase size={18} style={{ color: filterType==='' ? '#fff' : '#64748b' }}/>
+              <div style={{
+                width:26, height:26, borderRadius:'50%',
+                background: filterType==='' ? 'rgba(255,255,255,0.15)' : '#f1f5f9',
+                display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+              }}>
+                <Briefcase size={13} style={{ color: filterType==='' ? '#fff' : '#64748b' }}/>
               </div>
-              <p style={{ fontSize:11, fontWeight:800, color: filterType==='' ? '#fff' : '#334155' }}>All</p>
+              <span style={{ fontSize:12, fontWeight:700, color: filterType==='' ? '#fff' : '#334155' }}>All</span>
+              {filterType === '' && <span style={{ fontSize:10, fontWeight:700, background:'rgba(255,255,255,0.2)', color:'#fff', padding:'1px 6px', borderRadius:999 }}>16</span>}
             </motion.button>
 
             {Object.entries(TYPE_META).map(([key, meta]) => {
               const sel = filterType === key;
               return (
-                <motion.button key={key} whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
+                <motion.button key={key} whileTap={{ scale:0.94 }}
                   onClick={() => { setFilterType(sel ? '' : key); setPage(1); setTab('browse'); }}
                   style={{
-                    borderRadius:16, padding:'16px 12px', textAlign:'center',
-                    border: `2px solid ${sel ? meta.color : '#e2e8f0'}`,
-                    background: sel ? `${meta.color}12` : '#fff',
-                    cursor:'pointer', transition:'all 0.2s',
-                    position:'relative', overflow:'hidden',
+                    display:'flex', alignItems:'center', gap:7, flexShrink:0,
+                    padding:'8px 16px', borderRadius:999,
+                    border:`2px solid ${sel ? meta.color : '#e2e8f0'}`,
+                    background: sel ? meta.color : '#fff',
+                    cursor:'pointer', transition:'all 0.18s', whiteSpace:'nowrap',
+                    boxShadow: sel ? `0 4px 14px ${meta.color}40` : 'none',
                   }}>
-                  {/* Image background */}
-                  <div style={{ position:'absolute', inset:0, overflow:'hidden', borderRadius:14 }}>
-                    <img src={meta.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity: sel ? 0.15 : 0.06, transition:'opacity 0.2s' }}/>
+                  <div style={{
+                    width:26, height:26, borderRadius:'50%', flexShrink:0,
+                    background: sel ? 'rgba(255,255,255,0.25)' : `${meta.color}18`,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                  }}>
+                    <meta.icon size={13} style={{ color: sel ? '#fff' : meta.color }}/>
                   </div>
-                  <div style={{ position:'relative', zIndex:1 }}>
-                    <div style={{
-                      width:40, height:40, borderRadius:12,
-                      background: sel ? meta.color : `${meta.color}20`,
-                      margin:'0 auto 8px',
-                      display:'flex', alignItems:'center', justifyContent:'center',
-                      boxShadow: sel ? `0 4px 12px ${meta.color}44` : 'none',
-                      transition:'all 0.2s',
-                    }}>
-                      <meta.icon size={18} style={{ color: sel ? '#fff' : meta.color }}/>
-                    </div>
-                    <p style={{ fontSize:10, fontWeight:800, color: sel ? meta.color : '#334155', lineHeight:1.3 }}>
-                      {meta.label}
-                    </p>
-                  </div>
+                  <span style={{ fontSize:12, fontWeight:700, color: sel ? '#fff' : '#334155' }}>{meta.label}</span>
                 </motion.button>
               );
             })}
