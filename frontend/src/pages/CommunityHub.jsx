@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  Users, MessageCircle, Heart, Search, Plus,
- UserPlus, MessagesSquare, Star, Globe, Loader2, Check, Brain, Sparkles,
+ UserPlus, MessagesSquare, Star, Globe, Loader2, Check, Brain, Sparkles, X,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -315,92 +315,161 @@ export default function CommunityHub() {
 
 // -- Group card -------------------------------------------------------------
 function GroupCard({ group, onToggle, pending, onOpen }) {
- const initials = groupInitials(group.name);
+  const initials = groupInitials(group.name);
+  const color    = groupColor(group.name);
 
- return (
- <motion.div
- initial={{ opacity: 0, y: 12 }}
- animate={{ opacity: 1, y: 0 }}
- onClick={onOpen}
- className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col cursor-pointer group"
- >
- {/* Single teal top accent bar - consistent across all cards */}
- <div className="h-0.5 w-full flex-shrink-0 bg-teal-500" />
+  // Pick a cover image based on group tags
+  const COVER_IMGS = {
+    cancer:       'https://images.pexels.com/photos/6823568/pexels-photo-6823568.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+    grief:        'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+    spiritual:    'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+    mental_health:'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+    caregiver:    'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+    palliative:   'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
+  };
+  const tags = group.condition_tags || [];
+  const coverImg = COVER_IMGS[tags.find(t => COVER_IMGS[t])] || null;
 
- <div className="p-4 flex flex-col flex-1 gap-3">
+  return (
+    <motion.div
+      initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }}
+      whileHover={{ y:-5, boxShadow:'0 18px 50px rgba(0,0,0,0.3)' }}
+      onClick={onOpen}
+      style={{
+        background:'#0f172a', borderRadius:20, overflow:'hidden',
+        border:'1.5px solid #1e293b', cursor:'pointer',
+        display:'flex', flexDirection:'column',
+        boxShadow:'0 2px 16px rgba(0,0,0,0.2)',
+        transition:'box-shadow 0.2s',
+      }}
+    >
+      {/* ── Cover image / colour block ── */}
+      <div style={{ height:130, position:'relative', overflow:'hidden', background:`linear-gradient(135deg,${color}cc,${color}66)`, flexShrink:0 }}>
+        {coverImg && (
+          <img src={coverImg} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.3 }}/>
+        )}
+        {/* Dark gradient bottom */}
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(15,23,42,0.85) 0%,transparent 60%)' }}/>
 
- {/* Header row: avatar + name + badges */}
- <div className="flex items-start gap-3">
- {/* Neutral monochrome avatar */}
- <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 select-none bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
- {initials}
- </div>
+        {/* Member count badge top-right */}
+        <div style={{
+          position:'absolute', top:10, right:10,
+          display:'flex', alignItems:'center', gap:4,
+          background:'rgba(15,23,42,0.7)', backdropFilter:'blur(4px)',
+          borderRadius:8, padding:'3px 9px', border:'1px solid rgba(255,255,255,0.1)',
+        }}>
+          <Users size={10} style={{ color:'#94a3b8' }}/>
+          <span style={{ fontSize:11, fontWeight:700, color:'#e2e8f0' }}>{group.member_count ?? 0}</span>
+        </div>
 
- <div className="flex-1 min-w-0">
- <div className="flex items-start justify-between gap-2">
- <h3 className="font-semibold text-slate-900 dark:text-white text-sm leading-snug line-clamp-2 group-hover:text-teal-700 dark:group-hover:text-teal-300 transition-colors">
- {group.name}
- </h3>
- {group.joined && (
- <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800">
- <Check size={9} /> Joined
- </span>
- )}
- </div>
- <p className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-0.5">
- <Users size={10} />
- <span>{group.member_count ?? 0} members</span>
- {group.is_recommended && (
- <span className="ml-1 text-amber-600 dark:text-amber-400 font-medium">· Recommended</span>
- )}
- </p>
- </div>
- </div>
+        {/* Joined badge top-left */}
+        {group.joined && (
+          <div style={{
+            position:'absolute', top:10, left:10,
+            display:'flex', alignItems:'center', gap:4,
+            background:color, borderRadius:8, padding:'3px 9px',
+            boxShadow:`0 2px 8px ${color}55`,
+          }}>
+            <Check size={9} style={{ color:'#fff' }}/>
+            <span style={{ fontSize:10, fontWeight:800, color:'#fff' }}>Joined</span>
+          </div>
+        )}
 
- {/* Description */}
- <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 flex-1">
- {group.description || 'A supportive community group.'}
- </p>
+        {/* Avatar circle at bottom overlapping */}
+        <div style={{ position:'absolute', bottom:-20, left:16 }}>
+          <div style={{
+            width:44, height:44, borderRadius:14,
+            background:`linear-gradient(135deg,${color},${color}bb)`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            border:'2.5px solid #0f172a', boxShadow:`0 4px 14px ${color}44`,
+            fontSize:14, fontWeight:900, color:'#fff',
+            fontFamily:'"Inter",-apple-system,sans-serif',
+          }}>
+            {initials}
+          </div>
+        </div>
+      </div>
 
- {/* Tags - neutral grey pills */}
- {group.condition_tags?.length > 0 && (
- <div className="flex flex-wrap gap-1.5">
- {group.condition_tags.slice(0, 3).map(t => (
- <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
- {t}
- </span>
- ))}
- {group.condition_tags.length > 3 && (
- <span className="px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-700">
- +{group.condition_tags.length - 3}
- </span>
- )}
- </div>
- )}
+      {/* ── Card body ── */}
+      <div style={{ padding:'28px 16px 0', flex:1, display:'flex', flexDirection:'column' }}>
+        {/* Name */}
+        <p style={{ fontWeight:800, color:'#f1f5f9', fontSize:14, lineHeight:1.25, margin:'0 0 4px' }}>
+          {group.name}
+        </p>
 
- {/* Actions - single teal primary button, neutral secondary */}
- <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">
- <button
- onClick={e => { e.stopPropagation(); onToggle(); }}
- disabled={pending}
- className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition flex-shrink-0 ${
- group.joined
- ? 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-600'
- : 'bg-slate-50 text-teal-700 border-teal-200 hover:bg-teal-50 dark:bg-slate-800 dark:text-teal-400 dark:border-teal-700'
- }`}
- >
- {group.joined ? 'Leave' : <><UserPlus size={11} /> Join</>}
- </button>
- <button
- onClick={e => { e.stopPropagation(); onOpen(); }}
- className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold text-white rounded-lg bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600 transition active:scale-95"
- >
- <MessagesSquare size={12} /> Open Group
- </button>
- </div>
- </div>
- </motion.div>
- );
+        {/* Description */}
+        <p style={{
+          fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 10px',
+          display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
+        }}>
+          {group.description || 'A supportive community group for patients and caregivers.'}
+        </p>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div style={{ display:'flex', gap:5, flexWrap:'wrap', marginBottom:10 }}>
+            {tags.slice(0,3).map(t => (
+              <span key={t} style={{
+                fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
+                background:'#1e293b', color:'#64748b', border:'1px solid #334155',
+                textTransform:'capitalize',
+              }}>{t.replace('_',' ')}</span>
+            ))}
+            {tags.length > 3 && (
+              <span style={{ fontSize:9, color:'#475569', padding:'2px 6px' }}>+{tags.length-3}</span>
+            )}
+          </div>
+        )}
+
+        {/* Stats row */}
+        <div style={{ display:'flex', borderTop:'1px solid #1e293b', paddingTop:10, marginBottom:12 }}>
+          {[
+            { v: group.member_count ?? 0, l:'Members' },
+            { v: group.is_recommended ? 'Yes' : 'No', l:'Recommended' },
+            { v: group.joined ? 'Yes' : 'No', l:'Joined' },
+          ].map((s, i) => (
+            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<2?'1px solid #1e293b':'none' }}>
+              <p style={{ fontSize:13, fontWeight:800, color:'#e2e8f0', margin:0, lineHeight:1 }}>{s.v}</p>
+              <p style={{ fontSize:9, color:'#475569', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CTA ── */}
+      <div style={{ padding:'0 14px 14px', display:'flex', flexDirection:'column', gap:7 }}>
+        <button
+          onClick={e => { e.stopPropagation(); onOpen(); }}
+          style={{
+            width:'100%', padding:'11px 0', borderRadius:12, fontSize:13, fontWeight:800,
+            background:color, color:'#fff', border:'none', cursor:'pointer',
+            display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+            boxShadow:`0 4px 14px ${color}44`, transition:'opacity 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.opacity='0.88'}
+          onMouseLeave={e => e.currentTarget.style.opacity='1'}
+        >
+          <MessagesSquare size={14}/> Open Group
+        </button>
+        <button
+          onClick={e => { e.stopPropagation(); onToggle(); }}
+          disabled={pending}
+          style={{
+            width:'100%', padding:'9px 0', borderRadius:12, fontSize:12, fontWeight:700,
+            background:'#1e293b', color: group.joined?'#f87171':'#94a3b8',
+            border:`1.5px solid ${group.joined?'#7f1d1d':'#334155'}`,
+            cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+            transition:'all 0.15s',
+          }}
+        >
+          {group.joined
+            ? <><X size={12}/> Leave</>
+            : <><UserPlus size={12}/> Join Group</>
+          }
+        </button>
+      </div>
+    </motion.div>
+  );
 }
 
 // -- Create Group Modal -----------------------------------------------------

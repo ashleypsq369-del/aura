@@ -166,9 +166,9 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       whileHover={{ y:-6, boxShadow:'0 20px 56px rgba(0,0,0,0.13)' }}
       transition={{ type:'spring', stiffness:280, damping:26 }}
       style={{
-        background:'#ffffff', borderRadius:22, overflow:'hidden',
-        border:'1.5px solid #f1f5f9', cursor:'pointer', position:'relative',
-        boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.14)' : '0 2px 12px rgba(0,0,0,0.07)',
+        background:'#0f172a', borderRadius:22, overflow:'hidden',
+        border:'1.5px solid #1e293b', cursor:'pointer', position:'relative',
+        boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.22)' : '0 2px 16px rgba(0,0,0,0.22)',
         display:'flex', flexDirection:'column',
       }}
       onClick={() => onView(p)}
@@ -230,32 +230,32 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       <div style={{ padding:'14px 16px 0', flex:1, display:'flex', flexDirection:'column' }}>
 
         {/* Name + verified */}
-        <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
-          <p style={{ fontWeight:800, color:'#0f172a', fontSize:15, lineHeight:1.2, margin:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
+          <p style={{ fontWeight:800, color:'#f1f5f9', fontSize:14, lineHeight:1.2, margin:0 }}>
             {p.full_name}
           </p>
           {p.is_verified && (
-            <BadgeCheck size={16} style={{ color:'#0d9488', flexShrink:0 }}/>
+            <BadgeCheck size={15} style={{ color:'#5eead4', flexShrink:0 }}/>
           )}
         </div>
 
         {/* Role */}
-        <p style={{ fontSize:11, color:'#64748b', margin:'0 0 8px', fontWeight:500 }}>{meta.label}</p>
+        <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 7px', fontWeight:500 }}>{meta.label}</p>
 
         {/* Bio — 2 lines max */}
         {p.bio && (
           <p style={{
-            fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 12px',
+            fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 10px',
             display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
           }}>
             {p.bio}
           </p>
         )}
 
-        {/* Stats row — like the "20k Reviews · 50+ Projects · $50/hr" row in Style A */}
+        {/* Stats row */}
         <div style={{
           display:'flex', alignItems:'center', gap:0,
-          borderTop:'1px solid #f1f5f9', paddingTop:10, marginBottom:12,
+          borderTop:'1px solid #1e293b', paddingTop:9, marginBottom:10,
         }}>
           {[
             { v: p.total_reviews > 0 ? `${p.total_reviews}` : '0',  l:'Reviews' },
@@ -264,21 +264,21 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           ].map((s, i) => (
             <div key={s.l} style={{
               flex:1, textAlign:'center',
-              borderRight: i < 2 ? '1px solid #f1f5f9' : 'none',
+              borderRight: i < 2 ? '1px solid #1e293b' : 'none',
             }}>
-              <p style={{ fontSize:13, fontWeight:800, color:'#0f172a', margin:0, lineHeight:1 }}>{s.v}</p>
-              <p style={{ fontSize:9, color:'#94a3b8', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
+              <p style={{ fontSize:13, fontWeight:800, color:'#e2e8f0', margin:0, lineHeight:1 }}>{s.v}</p>
+              <p style={{ fontSize:9, color:'#475569', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
             </div>
           ))}
         </div>
 
         {/* Availability + region */}
         {p.region && (
-          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'#94a3b8', margin:'0 0 10px' }}>
+          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'#475569', margin:'0 0 10px' }}>
             <MapPin size={9}/> {p.region}
             <span style={{ marginLeft:'auto' }}>
-              <span style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:9, fontWeight:700, color: available ? '#16a34a' : '#dc2626' }}>
-                <span style={{ width:5, height:5, borderRadius:'50%', background: available ? '#22c55e' : '#ef4444', display:'inline-block', boxShadow: available ? '0 0 0 2px #bbf7d0' : 'none' }}/>
+              <span style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:9, fontWeight:700, color: available ? '#4ade80' : '#f87171' }}>
+                <span style={{ width:5, height:5, borderRadius:'50%', background: available ? '#22c55e' : '#ef4444', display:'inline-block', boxShadow: available ? '0 0 0 2px rgba(34,197,94,0.3)' : 'none' }}/>
                 {available ? 'Available' : 'Busy'}
               </span>
             </span>
@@ -286,29 +286,29 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         )}
       </div>
 
-      {/* ── CTA — full-width dark button like Style A ── */}
-      <div style={{ padding:'0 16px 14px' }}>
+      {/* ── CTA buttons — dark card style ── */}
+      <div style={{ padding:'0 14px 14px' }}>
         <button
           onClick={e => { e.stopPropagation(); onBook(p); }}
           style={{
             width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
             padding:'11px 0', borderRadius:12, fontSize:13, fontWeight:800,
-            background:'#0f172a', color:'#fff', border:'none', cursor:'pointer',
-            transition:'background 0.15s', letterSpacing:'0.01em',
+            background: meta.color, color:'#fff', border:'none', cursor:'pointer',
+            transition:'opacity 0.15s', letterSpacing:'0.01em',
+            boxShadow:`0 4px 16px ${meta.color}44`,
           }}
-          onMouseEnter={e => e.currentTarget.style.background='#1e293b'}
-          onMouseLeave={e => e.currentTarget.style.background='#0f172a'}
+          onMouseEnter={e => e.currentTarget.style.opacity='0.88'}
+          onMouseLeave={e => e.currentTarget.style.opacity='1'}
         >
           <Calendar size={14}/> Book Session
         </button>
-        {/* Secondary actions row */}
-        <div style={{ display:'flex', gap:8, marginTop:8 }}>
+        <div style={{ display:'flex', gap:7, marginTop:8 }}>
           <button onClick={e => { e.stopPropagation(); onView(p); }}
-            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:`${meta.color}12`, color:meta.color, border:`1.5px solid ${meta.color}30`, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5 }}>
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#1e293b', color:'#94a3b8', border:'1.5px solid #334155', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
             <FileText size={12}/> Profile
           </button>
           <button onClick={e => { e.stopPropagation(); onMessage(p); }}
-            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#f8fafc', color:'#64748b', border:'1.5px solid #e2e8f0', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5 }}>
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#1e293b', color:'#94a3b8', border:'1.5px solid #334155', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
             <MessageCircle size={12}/> Chat
           </button>
         </div>
@@ -928,10 +928,10 @@ export default function Services() {
                   <motion.div key={heroIdx}
                     initial={{ opacity:0, y:28 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-28 }}
                     transition={{ duration:0.45, ease:[0.22,1,0.36,1] }}>
-                    <h1 style={{ color:'#ffffff', fontSize:'clamp(26px,3.5vw,42px)', fontWeight:900, lineHeight:1.1, margin:'0 0 8px', letterSpacing:'-0.02em' }}>
+                    <h1 style={{ color:'#ffffff', fontSize:'clamp(26px,3.5vw,42px)', fontWeight:900, lineHeight:1.1, margin:'0 0 8px', letterSpacing:'-0.02em', textShadow:'0 2px 20px rgba(0,0,0,0.5)' }}>
                       {HERO_HEADLINES[heroIdx].text}
                     </h1>
-                    <p style={{ color:'rgba(255,255,255,0.6)', fontSize:14, fontWeight:500, margin:0 }}>
+                    <p style={{ color:'rgba(255,255,255,0.75)', fontSize:14, fontWeight:500, margin:0, textShadow:'0 1px 6px rgba(0,0,0,0.4)' }}>
                       {HERO_HEADLINES[heroIdx].sub}
                     </p>
                   </motion.div>
@@ -993,30 +993,11 @@ export default function Services() {
 
         {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizontal) ── */}
         <section style={{ paddingTop:24, paddingBottom:24 }}>
-          {/* Header */}
+          {/* Header — title only, no pills here */}
           <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:12 }}>
             <div>
               <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
               <h2 style={{ fontSize:16, fontWeight:800, color:'#0f172a', margin:0 }}>Who do you need?</h2>
-            </div>
-            {/* Pill strip — scrollable, no chevrons */}
-            <div style={{ display:'flex', gap:6, overflowX:'auto', scrollbarWidth:'none', maxWidth:'60%' }}>
-              <motion.button whileTap={{ scale:0.93 }}
-                onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
-                style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'5px 11px', borderRadius:999, border:`1.5px solid ${filterType===''?'#0f172a':'#e2e8f0'}`, background:filterType===''?'#0f172a':'#fff', cursor:'pointer' }}>
-                <span style={{ fontSize:11, fontWeight:700, color:filterType===''?'#fff':'#475569' }}>All</span>
-              </motion.button>
-              {Object.entries(TYPE_META).map(([key, meta]) => {
-                const sel = filterType===key;
-                return (
-                  <motion.button key={key} whileTap={{ scale:0.93 }}
-                    onClick={() => { setFilterType(sel?'':key); setPage(1); setTab('browse'); setSlideIdx(Object.keys(TYPE_META).indexOf(key)); }}
-                    style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'5px 11px', borderRadius:999, border:`1.5px solid ${sel?meta.color:'#e2e8f0'}`, background:sel?meta.color:'#fff', cursor:'pointer', boxShadow:sel?`0 2px 8px ${meta.color}30`:'none' }}>
-                    <meta.icon size={10} style={{ color:sel?'#fff':meta.color }}/>
-                    <span style={{ fontSize:11, fontWeight:700, color:sel?'#fff':'#475569', whiteSpace:'nowrap' }}>{meta.label}</span>
-                  </motion.button>
-                );
-              })}
             </div>
           </div>
 
@@ -1072,6 +1053,26 @@ export default function Services() {
                   style={{ width:i===slideIdx%8?16:5, height:5, borderRadius:999, padding:0, border:'none', cursor:'pointer', background:i===slideIdx%8?'#fff':'rgba(255,255,255,0.4)', transition:'all 0.3s' }}/>
               ))}
             </div>
+          </div>
+
+          {/* ── Pill filter strip — BELOW the card, full width, contained ── */}
+          <div style={{ display:'flex', gap:7, overflowX:'auto', paddingTop:14, paddingBottom:4, scrollbarWidth:'none', msOverflowStyle:'none' }}>
+            <motion.button whileTap={{ scale:0.93 }}
+              onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
+              style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${filterType===''?'#0f172a':'#e2e8f0'}`, background:filterType===''?'#0f172a':'#fff', cursor:'pointer', whiteSpace:'nowrap' }}>
+              <span style={{ fontSize:11, fontWeight:700, color:filterType===''?'#fff':'#475569' }}>All</span>
+            </motion.button>
+            {Object.entries(TYPE_META).map(([key, meta]) => {
+              const sel = filterType===key;
+              return (
+                <motion.button key={key} whileTap={{ scale:0.93 }}
+                  onClick={() => { setFilterType(sel?'':key); setPage(1); setTab('browse'); setSlideIdx(Object.keys(TYPE_META).indexOf(key)); }}
+                  style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${sel?meta.color:'#e2e8f0'}`, background:sel?meta.color:'#fff', cursor:'pointer', whiteSpace:'nowrap', boxShadow:sel?`0 2px 8px ${meta.color}30`:'none', transition:'all 0.18s' }}>
+                  <meta.icon size={10} style={{ color:sel?'#fff':meta.color }}/>
+                  <span style={{ fontSize:11, fontWeight:700, color:sel?'#fff':'#475569' }}>{meta.label}</span>
+                </motion.button>
+              );
+            })}
           </div>
         </section>
         {/* ── PREMIUM TABS ── */}
