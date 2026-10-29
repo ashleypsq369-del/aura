@@ -72,13 +72,29 @@ html.dark {
     background-color: var(--page-bg) !important;
   }
 
-  /* Card backgrounds — only Tailwind semantic classes, NOT arbitrary values
-     (arbitrary #e8fafa values are used in component inline styles — 
-      don't override or they bleed into modals, buttons, overlays) */
-  .bg-slate-50,
-  .bg-gray-50 {
+  /* Card backgrounds — only in LIGHT MODE, never override dark mode backgrounds */
+  html:not(.dark) .bg-slate-50,
+  html:not(.dark) .bg-gray-50 {
     background-color: var(--card-bg) !important;
   }
+
+  /* Dark mode page + card backgrounds */
+  html.dark .min-h-screen,
+  html.dark .min-h-full,
+  html.dark [class*="page-tint-"] {
+    background-color: #0a0a0a !important;
+  }
+  /* Dark mode Tailwind bg classes - ensure correct dark values */
+  html.dark .bg-slate-800  { background-color: #1e293b !important; }
+  html.dark .bg-slate-900  { background-color: #0f172a !important; }
+  html.dark .bg-slate-700  { background-color: #334155 !important; }
+  /* Dark mode: card bg override applies too */
+  html.dark .bg-slate-50,
+  html.dark .bg-gray-50    { background-color: var(--card-bg) !important; }
+  /* Dark mode text - white stays white */
+  html.dark .text-white    { color: #ffffff !important; }
+  html.dark .text-slate-100 { color: #f1f5f9 !important; }
+  html.dark .text-slate-200 { color: #e2e8f0 !important; }
 
   /* Explicit .card classes */
   .card, .card-elevated, .content-card, .stat-card {

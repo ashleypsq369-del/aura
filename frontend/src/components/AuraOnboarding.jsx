@@ -371,19 +371,19 @@ export default function AuraOnboarding() {
 
  {/* Text */}
  <motion.div key={step} initial={{opacity:0,x:8}} animate={{opacity:1,x:0}} transition={{duration:0.18}} className="flex-1 min-w-0">
- <p className="text-xs font-bold leading-tight" style={{ color: '#071520' }}>{current.title}</p>
- <p className="text-[11px] leading-snug mt-0.5 line-clamp-2" style={{ color: '#1e4f6a' }}>{current.body}</p>
+ <p className="text-xs font-bold leading-tight" style={{ color: 'var(--text-900)' }}>{current.title}</p>
+ <p className="text-[11px] leading-snug mt-0.5 line-clamp-2" style={{ color: 'var(--text-700)' }}>{current.body}</p>
  </motion.div>
  </div>
 
  {/* Footer controls */}
  <div className="flex items-center justify-between px-4 pb-3 gap-2">
  <div className="flex items-center gap-2">
- <span className="text-[10px] font-medium tabular-nums" style={{ color: '#2a6080' }}>{step+1}/{steps.length}</span>
+ <span className="text-[10px] font-medium tabular-nums" style={{ color: 'var(--text-500)' }}>{step+1}/{steps.length}</span>
  {step > 0 && (
  <button onClick={goBack}
  className="flex items-center gap-0.5 text-[11px] transition-colors"
- style={{ color: '#2a6080' }}
+ style={{ color: 'var(--text-600)' }}
  onMouseEnter={e => e.currentTarget.style.color = '#071520'}
  onMouseLeave={e => e.currentTarget.style.color = '#2a6080'}>
  <ChevronLeft size={11}/>Back
@@ -394,7 +394,7 @@ export default function AuraOnboarding() {
  {!isLast && (
  <button onClick={requestSkip}
  className="text-[11px] transition-colors px-1.5 py-1 rounded-lg"
- style={{ color: '#3a7592' }}
+ style={{ color: 'var(--text-500)' }}
  onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
  onMouseLeave={e => { e.currentTarget.style.color = '#3a7592'; e.currentTarget.style.background = 'transparent'; }}>
  End tour

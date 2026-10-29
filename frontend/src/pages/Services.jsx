@@ -450,12 +450,12 @@ function ProviderHub({ user }) {
     <div className="space-y-4">
       <div className="rounded-2xl p-5 border border-amber-200" style={{ background:'#fffbeb' }}>
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-            <Clock size={18} className="text-amber-600"/>
+          <div className="w-10 h-10 rounded-xl bg-amber-200 flex items-center justify-center flex-shrink-0">
+            <Clock size={18} className="text-amber-800"/>
           </div>
           <div>
-            <p className="font-bold text-amber-900">Application Under Review</p>
-            <p className="text-sm text-amber-700 mt-1">
+            <p className="font-bold" style={{color:'#78350f'}}>Application Under Review</p>
+            <p className="text-sm mt-1" style={{color:'#92400e'}}>
               Your <strong>{appData.service_label}</strong> application is being reviewed by our team.
             </p>
             <div className="mt-3 flex items-center gap-3">

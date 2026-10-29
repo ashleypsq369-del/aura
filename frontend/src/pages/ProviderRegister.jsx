@@ -467,11 +467,10 @@ function StepServiceType({ form, set, types }) {
                   </div>
                   {sel && <CheckCircle size={14} style={{ color: t.color }} className="ml-auto"/>}
                 </div>
-                <p className="font-bold text-sm text-slate-800 leading-tight">{t.label}</p>
-                <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">{t.description}</p>
+                <p className="font-bold text-sm text-slate-900 leading-tight">{t.label}</p>
+                <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">{t.description}</p>
                 <div className="mt-2 flex flex-wrap gap-1">
-                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
-                    style={{ background: `${t.color}15`, color: t.color }}>
+                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                     Min pass: {t.min_pass_score}%
                   </span>
                 </div>

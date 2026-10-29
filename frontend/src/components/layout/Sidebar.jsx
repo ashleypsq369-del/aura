@@ -146,7 +146,16 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Resources', path: '/resources', icon: BookOpen },
  { name: 'Community', path: '/community', icon: MessagesSquare },
  { name: 'My Profile', path: '/profile', icon: User },
- ]};
+ ],
+ provider: [
+ { name: 'Services Hub', path: '/services', icon: Briefcase },
+ { name: 'Messages', path: '/messages', icon: MessageCircle },
+ { name: 'Appointments', path: '/appointments', icon: Calendar },
+ { name: 'Resources', path: '/resources', icon: BookOpen },
+ { name: 'Community', path: '/community', icon: MessagesSquare },
+ { name: 'My Profile', path: '/profile', icon: User },
+ ],
+};
 
  // Build personalised "suggested" item paths for patients
  const suggestedPaths = user?.role === 'patient' && signals ? (() => {
