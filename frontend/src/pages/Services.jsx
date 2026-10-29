@@ -910,7 +910,7 @@ export default function Services() {
         {/* Bottom wave */}
         <div style={{ position:'absolute', bottom:-1, left:0, right:0, height:48, background:'var(--page-bg)', clipPath:'ellipse(55% 100% at 50% 100%)' }}/>
 
-        <div style={{ position:'relative', zIndex:2, maxWidth:1100, margin:'0 auto', padding:'52px 24px 80px' }}>
+        <div style={{ position:'relative', zIndex:2, maxWidth:1100, margin:'0 auto', padding:'52px 24px 80px' }} className="on-dark-bg">
           <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:40, alignItems:'center' }}>
 
             {/* LEFT */}

@@ -56,7 +56,7 @@ html.dark {
 @layer base {
   body {
     background-color: var(--page-bg) !important;
-    color: var(--text-800) !important;
+    color: var(--text-800);
     font-size: 13px !important;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -284,21 +284,23 @@ html.dark {
   html.dark .badge-info     { background:rgba(8,145,178,0.15);  color:#67e8f9; border-color:rgba(8,145,178,0.35);  }
 }
 
-/* ── Force white text on dark hero sections — beats all CSS var overrides ── */
-.hero-text-white,
+/* ── Force white text on dark hero sections — beats ALL cascade ── */
+.hero-text-white                { color: #ffffff !important; }
+.hero-text-white *              { color: inherit !important; }
 .hero-text-white h1,
+.hero-text-white h2,
+.hero-text-white h3             { color: #ffffff !important; }
 .hero-text-white p,
-.hero-text-white span {
-  color: #ffffff !important;
-}
-.hero-text-muted {
-  color: rgba(255,255,255,0.75) !important;
-}
+.hero-text-white span           { color: rgba(255,255,255,0.85) !important; }
+.hero-text-muted                { color: rgba(255,255,255,0.75) !important; }
+
+/* Force white on any element explicitly marked on-dark-bg */
+.on-dark-bg                     { color: #ffffff !important; }
+.on-dark-bg .text-secondary     { color: #d97706 !important; }   /* amber for secondary labels */
+.on-dark-bg .text-muted         { color: rgba(255,255,255,0.65) !important; }
 
 /* ── Dropdown menu icon colour ── */
-.dropdown-icon {
-  color: var(--text-600) !important;
-}
+.dropdown-icon { color: var(--text-600) !important; }
 
 /* ── Services notification badges ── */
 .notif-services { --bar: #0d9488; --badge: #f0fdfa; --icon: #0d9488; }

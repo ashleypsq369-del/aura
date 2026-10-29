@@ -1089,14 +1089,14 @@ export default function ProviderRegister() {
         </div>
 
         {/* Step label */}
-        <div className="text-center mb-3">
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <div className="text-center mb-3 on-dark-bg">
+          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Step {step+1} of {STEPS.length}
           </p>
-          <h2 className="text-2xl font-bold mt-0.5" style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+          <h2 className="text-2xl font-bold mt-0.5 hero-text-white" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
             {STEP_TITLES[step]}
           </h2>
-          <p className="text-sm mt-1 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+          <p className="text-sm mt-1 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.8)', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
             {STEP_SUBTITLES[step]}
           </p>
         </div>
