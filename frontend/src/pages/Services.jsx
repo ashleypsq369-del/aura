@@ -150,193 +150,167 @@ function AvailBadge({ available = true }) {
   );
 }
 
-/* ─────────────────────────── PROVIDER CARD ─────────────────────────────── */
+/* ─────────────────────────── PROVIDER CARD  (Style A) ─────────────────── */
 function ProviderCard({ p, onView, onBook, onMessage, featured }) {
-  const meta = TYPE_META[p.service_type] || { color:'#0d9488', bg:'#f0fdfa', label:p.service_type, icon:Briefcase, img:'' };
-  const Icon = meta.icon;
-  const initials = (p.full_name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  const meta      = TYPE_META[p.service_type] || { color:'#0d9488', bg:'#f0fdfa', label:p.service_type, icon:Briefcase, img:'' };
+  const Icon      = meta.icon;
+  const initials  = (p.full_name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
   const available = (p.id % 3) !== 0;
+  const rating    = p.average_rating ? p.average_rating.toFixed(1) : null;
 
   return (
     <motion.div
       layout
-      initial={{ opacity:0, y:16 }}
+      initial={{ opacity:0, y:14 }}
       animate={{ opacity:1, y:0 }}
-      whileHover={{ y:-5, boxShadow:'0 16px 48px rgba(0,0,0,0.14)' }}
-      transition={{ type:'spring', stiffness:300, damping:26 }}
+      whileHover={{ y:-6, boxShadow:'0 20px 56px rgba(0,0,0,0.13)' }}
+      transition={{ type:'spring', stiffness:280, damping:26 }}
       style={{
-        background:'#ffffff', borderRadius:20, overflow:'hidden',
+        background:'#ffffff', borderRadius:22, overflow:'hidden',
         border:'1.5px solid #f1f5f9', cursor:'pointer', position:'relative',
-        boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.13)' : '0 2px 10px rgba(0,0,0,0.06)',
+        boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.14)' : '0 2px 12px rgba(0,0,0,0.07)',
+        display:'flex', flexDirection:'column',
       }}
       onClick={() => onView(p)}
     >
-      {/* Featured ribbon */}
-      {featured && (
-        <div style={{
-          position:'absolute', top:10, right:10, zIndex:3,
-          background:'linear-gradient(135deg,#f59e0b,#d97706)',
-          color:'#fff', fontSize:9, fontWeight:800,
-          padding:'3px 8px', borderRadius:999, letterSpacing:'0.05em', textTransform:'uppercase',
-          boxShadow:'0 2px 8px rgba(245,158,11,0.4)',
-        }}>⭐ Featured</div>
-      )}
+      {/* ── PHOTO AREA — top 48% of card, like Style A ── */}
+      <div style={{ position:'relative', height:170, flexShrink:0, overflow:'hidden', background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
 
-      {/* ── Photo header band ── */}
-      <div style={{
-        height:90, position:'relative', overflow:'hidden',
-        background:`linear-gradient(135deg,${meta.color}dd,${meta.color}88)`,
-      }}>
+        {/* Role image fills the area — NO dark overlay on top half */}
         {meta.img && (
-          <img src={meta.img} alt="" style={{
-            width:'100%', height:'100%', objectFit:'cover', opacity:0.3, filter:'saturate(1.3)',
-          }}/>
+          <img src={meta.img} alt={meta.label}
+            style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
         )}
-        {/* Gradient overlay from bottom so avatar area is clean */}
-        <div style={{
-          position:'absolute', inset:0,
-          background:`linear-gradient(to bottom, ${meta.color}44 0%, ${meta.color}ee 100%)`,
-        }}/>
+
+        {/* Initials fallback watermark when no real photo */}
+        {!meta.img && (
+          <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <span style={{ fontSize:52, fontWeight:900, color:'rgba(255,255,255,0.25)', letterSpacing:'-2px' }}>{initials}</span>
+          </div>
+        )}
+
+        {/* ⭐ Rating badge — top right, like Style A */}
+        {rating && (
+          <div style={{
+            position:'absolute', top:10, right:10, zIndex:2,
+            display:'flex', alignItems:'center', gap:4,
+            background:'rgba(255,255,255,0.95)', borderRadius:10,
+            padding:'4px 9px', boxShadow:'0 2px 10px rgba(0,0,0,0.15)',
+          }}>
+            <Star size={12} style={{ color:'#f59e0b', fill:'#f59e0b' }}/>
+            <span style={{ fontSize:12, fontWeight:800, color:'#0f172a' }}>{rating}</span>
+          </div>
+        )}
+
+        {/* Featured tag */}
+        {featured && (
+          <div style={{
+            position:'absolute', top:10, left:10, zIndex:2,
+            background:'linear-gradient(135deg,#f59e0b,#d97706)',
+            color:'#fff', fontSize:9, fontWeight:800,
+            padding:'3px 8px', borderRadius:999, textTransform:'uppercase',
+            boxShadow:'0 2px 8px rgba(245,158,11,0.45)',
+          }}>Featured</div>
+        )}
+
+        {/* Save / bookmark icon — top right under rating if no rating */}
+        <button onClick={e => e.stopPropagation()}
+          style={{
+            position:'absolute', bottom:10, right:10, zIndex:2,
+            width:30, height:30, borderRadius:'50%',
+            background:'rgba(255,255,255,0.9)', border:'none', cursor:'pointer',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow:'0 2px 8px rgba(0,0,0,0.15)',
+          }}>
+          <FileText size={13} style={{ color:'#64748b' }}/>
+        </button>
       </div>
 
-      {/* ── Avatar — large circle overlapping band ── */}
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', padding:'0 16px', marginTop:-38 }}>
-        <div style={{ position:'relative', zIndex:2 }}>
-          {/* Outer ring */}
-          <div style={{
-            width:76, height:76, borderRadius:'50%',
-            background:`conic-gradient(${meta.color} 0deg, ${meta.color}88 180deg, ${meta.color}44 360deg)`,
-            padding:3,
-            boxShadow:`0 4px 20px ${meta.color}55, 0 0 0 4px #fff`,
-          }}>
-            {/* Inner circle — photo or initials */}
-            <div style={{
-              width:'100%', height:'100%', borderRadius:'50%',
-              background:`linear-gradient(145deg,${meta.color},${meta.color}bb)`,
-              display:'flex', alignItems:'center', justifyContent:'center',
-              overflow:'hidden',
-            }}>
-              {p.avatar_url ? (
-                <img src={p.avatar_url} alt={p.full_name} style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
-              ) : (
-                <span style={{
-                  color:'#fff', fontWeight:900,
-                  fontSize: initials.length > 2 ? 18 : 22,
-                  letterSpacing:'-0.5px',
-                  fontFamily:'"Inter","SF Pro Display",-apple-system,sans-serif',
-                  textShadow:'0 1px 4px rgba(0,0,0,0.25)',
-                }}>
-                  {initials}
-                </span>
-              )}
-            </div>
-          </div>
-          {/* Verified dot */}
+      {/* ── CARD BODY ── */}
+      <div style={{ padding:'14px 16px 0', flex:1, display:'flex', flexDirection:'column' }}>
+
+        {/* Name + verified */}
+        <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+          <p style={{ fontWeight:800, color:'#0f172a', fontSize:15, lineHeight:1.2, margin:0 }}>
+            {p.full_name}
+          </p>
           {p.is_verified && (
-            <div style={{
-              position:'absolute', bottom:2, right:2,
-              width:20, height:20, borderRadius:'50%',
-              background:'#10b981', border:'2.5px solid #fff',
-              display:'flex', alignItems:'center', justifyContent:'center',
-              boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
-            }}>
-              <BadgeCheck size={11} style={{ color:'#fff' }} strokeWidth={2.5}/>
-            </div>
+            <BadgeCheck size={16} style={{ color:'#0d9488', flexShrink:0 }}/>
           )}
         </div>
-        <div style={{ paddingBottom:4 }}>
-          <AvailBadge available={available}/>
-        </div>
-      </div>
 
-      {/* ── Card body ── */}
-      <div style={{ padding:'10px 16px 16px' }}>
-        {/* Name */}
-        <p style={{ fontWeight:800, color:'#0f172a', fontSize:15, lineHeight:1.25, marginBottom:4 }}>
-          {p.full_name}
-        </p>
-        {/* Role pill */}
-        <span style={{
-          display:'inline-flex', alignItems:'center', gap:4,
-          fontSize:10, fontWeight:700, padding:'3px 9px', borderRadius:999,
-          background:meta.bg, color:meta.color, marginBottom:7,
-        }}>
-          <Icon size={9} strokeWidth={2.5}/> {meta.label}
-        </span>
+        {/* Role */}
+        <p style={{ fontSize:11, color:'#64748b', margin:'0 0 8px', fontWeight:500 }}>{meta.label}</p>
 
-        {/* Region */}
-        {p.region && (
-          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'#64748b', marginBottom:6 }}>
-            <MapPin size={10}/> {p.region}
-          </p>
-        )}
-
-        {/* Stars */}
-        <div style={{ marginBottom:8 }}>
-          <Stars value={p.average_rating} count={p.total_reviews} size={11}/>
-        </div>
-
-        {/* Bio */}
+        {/* Bio — 2 lines max */}
         {p.bio && (
           <p style={{
-            fontSize:11, color:'#64748b', lineHeight:1.55,
+            fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 12px',
             display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
-            marginBottom:12,
           }}>
             {p.bio}
           </p>
         )}
 
-        {/* Badges row */}
-        <div style={{ display:'flex', gap:4, flexWrap:'wrap', marginBottom:12 }}>
-          {p.nmc_pin && (
-            <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
-              background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4',
-              display:'flex', alignItems:'center', gap:3,
+        {/* Stats row — like the "20k Reviews · 50+ Projects · $50/hr" row in Style A */}
+        <div style={{
+          display:'flex', alignItems:'center', gap:0,
+          borderTop:'1px solid #f1f5f9', paddingTop:10, marginBottom:12,
+        }}>
+          {[
+            { v: p.total_reviews > 0 ? `${p.total_reviews}` : '0',  l:'Reviews' },
+            { v: p.years_experience > 0 ? `${p.years_experience}yr` : 'New', l:'Exp' },
+            { v: p.nmc_pin ? 'NMC' : p.is_verified ? 'VRF' : '-',  l:'Cert' },
+          ].map((s, i) => (
+            <div key={s.l} style={{
+              flex:1, textAlign:'center',
+              borderRight: i < 2 ? '1px solid #f1f5f9' : 'none',
             }}>
-              <Award size={8}/> NMC
-            </span>
-          )}
-          {p.is_verified && (
-            <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
-              background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0',
-              display:'flex', alignItems:'center', gap:3,
-            }}>
-              <Shield size={8}/> Verified
-            </span>
-          )}
-          {p.years_experience > 0 && (
-            <span style={{
-              fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
-              background:'#f8fafc', color:'#475569', border:'1px solid #e2e8f0',
-            }}>
-              {p.years_experience}y exp
-            </span>
-          )}
+              <p style={{ fontSize:13, fontWeight:800, color:'#0f172a', margin:0, lineHeight:1 }}>{s.v}</p>
+              <p style={{ fontSize:9, color:'#94a3b8', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
+            </div>
+          ))}
         </div>
 
-        {/* 3 CTA buttons */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:6 }}>
-          {[
-            { label:'Profile',  Icon:FileText,       action:(e)=>{e.stopPropagation();onView(p);},    bg:`${meta.color}12`, color:meta.color },
-            { label:'Book',     Icon:Calendar,        action:(e)=>{e.stopPropagation();onBook(p);},    bg:meta.color,        color:'#fff'     },
-            { label:'Chat',     Icon:MessageCircle,   action:(e)=>{e.stopPropagation();onMessage(p);}, bg:'#0d948812',       color:'#0d9488'  },
-          ].map(({ label, Icon:Ic, action, bg, color }) => (
-            <button key={label} onClick={action}
-              style={{
-                display:'flex', flexDirection:'column', alignItems:'center', gap:3,
-                padding:'8px 4px', borderRadius:12, fontSize:10, fontWeight:800,
-                border:'none', cursor:'pointer', background:bg, color,
-                transition:'opacity 0.12s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.opacity='0.8'}
-              onMouseLeave={e => e.currentTarget.style.opacity='1'}
-            >
-              <Ic size={13}/> {label}
-            </button>
-          ))}
+        {/* Availability + region */}
+        {p.region && (
+          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'#94a3b8', margin:'0 0 10px' }}>
+            <MapPin size={9}/> {p.region}
+            <span style={{ marginLeft:'auto' }}>
+              <span style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:9, fontWeight:700, color: available ? '#16a34a' : '#dc2626' }}>
+                <span style={{ width:5, height:5, borderRadius:'50%', background: available ? '#22c55e' : '#ef4444', display:'inline-block', boxShadow: available ? '0 0 0 2px #bbf7d0' : 'none' }}/>
+                {available ? 'Available' : 'Busy'}
+              </span>
+            </span>
+          </p>
+        )}
+      </div>
+
+      {/* ── CTA — full-width dark button like Style A ── */}
+      <div style={{ padding:'0 16px 14px' }}>
+        <button
+          onClick={e => { e.stopPropagation(); onBook(p); }}
+          style={{
+            width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+            padding:'11px 0', borderRadius:12, fontSize:13, fontWeight:800,
+            background:'#0f172a', color:'#fff', border:'none', cursor:'pointer',
+            transition:'background 0.15s', letterSpacing:'0.01em',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background='#1e293b'}
+          onMouseLeave={e => e.currentTarget.style.background='#0f172a'}
+        >
+          <Calendar size={14}/> Book Session
+        </button>
+        {/* Secondary actions row */}
+        <div style={{ display:'flex', gap:8, marginTop:8 }}>
+          <button onClick={e => { e.stopPropagation(); onView(p); }}
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:`${meta.color}12`, color:meta.color, border:`1.5px solid ${meta.color}30`, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5 }}>
+            <FileText size={12}/> Profile
+          </button>
+          <button onClick={e => { e.stopPropagation(); onMessage(p); }}
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#f8fafc', color:'#64748b', border:'1.5px solid #e2e8f0', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5 }}>
+            <MessageCircle size={12}/> Chat
+          </button>
         </div>
       </div>
     </motion.div>
@@ -351,218 +325,196 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
     queryFn:  () => servicesAPI.getProvider(provider.id).then(r => r.data),
     enabled:  !!provider.id,
   });
-  const p = full || provider;
+  const p        = full || provider;
   const initials = (p.full_name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const rating   = p.average_rating ? p.average_rating.toFixed(1) : null;
+  const available = (p.id % 3) !== 0;
 
   return (
     <>
       {/* Backdrop */}
       <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-        style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', backdropFilter:'blur(4px)', zIndex:50 }}
+        style={{ position:'fixed', inset:0, background:'rgba(15,23,42,0.55)', backdropFilter:'blur(4px)', zIndex:50 }}
         onClick={onClose}/>
 
       {/* Sheet */}
       <motion.div
         initial={{ x:'100%' }} animate={{ x:0 }} exit={{ x:'100%' }}
-        transition={{ type:'spring', damping:28, stiffness:280 }}
+        transition={{ type:'spring', damping:28, stiffness:260 }}
         style={{
           position:'fixed', right:0, top:0, bottom:0, zIndex:51,
-          width:'100%', maxWidth:500,
-          background:'#fff', boxShadow:'-4px 0 60px rgba(0,0,0,0.15)',
+          width:'100%', maxWidth:480, background:'#fff',
+          boxShadow:'-8px 0 60px rgba(0,0,0,0.18)',
           display:'flex', flexDirection:'column', overflowY:'auto',
         }}
       >
-        {/* Image hero header */}
-        <div style={{
-          height:180, position:'relative', overflow:'hidden', flexShrink:0,
-          background:`linear-gradient(135deg,${meta.color},${meta.color}99)`,
-        }}>
+        {/* ── Photo hero header — large, clean, like the card ── */}
+        <div style={{ height:230, position:'relative', overflow:'hidden', flexShrink:0, background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
           {meta.img && (
-            <img src={meta.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.35 }}/>
+            <img src={meta.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
           )}
-          <div style={{ position:'absolute', inset:0, background:`linear-gradient(to top,rgba(0,0,0,0.7),transparent)` }}/>
+          {/* Only bottom gradient — no dark overlay on the whole photo */}
+          <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)' }}/>
 
           {/* Close */}
           <button onClick={onClose} style={{
-            position:'absolute', top:12, right:12, width:36, height:36, borderRadius:'50%',
-            background:'rgba(255,255,255,0.2)', border:'none', cursor:'pointer',
-            display:'flex', alignItems:'center', justifyContent:'center',
-            backdropFilter:'blur(4px)',
+            position:'absolute', top:14, right:14, width:36, height:36, borderRadius:'50%',
+            background:'rgba(255,255,255,0.9)', border:'none', cursor:'pointer',
+            display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.15)',
           }}>
-            <X size={18} style={{ color:'#fff' }}/>
+            <X size={17} style={{ color:'#0f172a' }}/>
           </button>
 
-          {/* Provider identity at bottom */}
-          <div style={{ position:'absolute', bottom:16, left:20, right:60, display:'flex', alignItems:'flex-end', gap:14 }}>
-            {/* Circular avatar */}
-            <div style={{
-              width:68, height:68, borderRadius:'50%', flexShrink:0,
-              background:`conic-gradient(${meta.color} 0deg, ${meta.color}88 180deg, ${meta.color}44 360deg)`,
-              padding:3,
-              boxShadow:`0 4px 20px ${meta.color}55, 0 0 0 3px rgba(255,255,255,0.4)`,
-            }}>
-              <div style={{
-                width:'100%', height:'100%', borderRadius:'50%',
-                background:`linear-gradient(145deg,${meta.color},${meta.color}bb)`,
-                display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden',
-              }}>
-                {p.avatar_url ? (
-                  <img src={p.avatar_url} alt={p.full_name} style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
-                ) : (
-                  <span style={{
-                    color:'#fff', fontWeight:900, fontSize:22, letterSpacing:'-0.5px',
-                    fontFamily:'"Inter","SF Pro Display",-apple-system,sans-serif',
-                    textShadow:'0 1px 4px rgba(0,0,0,0.25)',
-                  }}>{initials}</span>
-                )}
-              </div>
+          {/* Name + verified over photo bottom */}
+          <div style={{ position:'absolute', bottom:16, left:20, right:60 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:3 }}>
+              <p style={{ color:'#fff', fontWeight:900, fontSize:20, margin:0, textShadow:'0 2px 8px rgba(0,0,0,0.4)' }}>{p.full_name}</p>
+              {p.is_verified && <BadgeCheck size={18} style={{ color:'#5eead4', flexShrink:0 }}/>}
             </div>
-            <div>
-              <p style={{ color:'#fff', fontWeight:800, fontSize:18, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{p.full_name}</p>
+            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
               <span style={{
-                display:'inline-block', fontSize:11, fontWeight:700,
-                padding:'2px 10px', borderRadius:999,
-                background:'rgba(255,255,255,0.2)', color:'#fff',
-                backdropFilter:'blur(4px)', marginTop:3,
+                display:'inline-flex', alignItems:'center', gap:5, fontSize:11, fontWeight:700,
+                padding:'3px 10px', borderRadius:999, background:meta.color,
               }}>
-                {meta.label}
+                <meta.icon size={11} style={{ color:'#fff' }}/><span style={{ color:'#fff' }}>{meta.label}</span>
               </span>
+              {rating && (
+                <span style={{ display:'inline-flex', alignItems:'center', gap:4, background:'rgba(255,255,255,0.9)', borderRadius:8, padding:'2px 8px' }}>
+                  <Star size={11} style={{ color:'#f59e0b', fill:'#f59e0b' }}/>
+                  <span style={{ fontSize:12, fontWeight:800, color:'#0f172a' }}>{rating}</span>
+                  {p.total_reviews > 0 && <span style={{ fontSize:10, color:'#64748b' }}>({p.total_reviews})</span>}
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div style={{ flex:1, padding:'20px 24px', overflowY:'auto' }}>
+        {/* ── Sheet content ── */}
+        <div style={{ flex:1, overflowY:'auto' }}>
 
-          {/* Rating row */}
-          {p.average_rating != null && (
-            <div style={{ marginBottom:16 }}>
-              <Stars value={p.average_rating} count={p.total_reviews} size={15}/>
-            </div>
-          )}
-
-          {/* Quick stats grid */}
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:16 }}>
+          {/* Stats strip */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', borderBottom:'1px solid #f1f5f9' }}>
             {[
-              { l:'Experience', v: p.years_experience ? `${p.years_experience} yrs` : null },
-              { l:'Region', v: p.region || null },
-              { l:'Bookings', v: p.total_bookings != null ? `${p.total_bookings} bookings` : null },
-            ].filter(r => r.v).map(r => (
-              <div key={r.l} style={{
-                background:'#f1f5f9', borderRadius:10, padding:'6px 14px',
-                display:'flex', flexDirection:'column',
-              }}>
-                <p style={{ fontSize:10, color:'#94a3b8', fontWeight:600, marginBottom:1 }}>{r.l}</p>
-                <p style={{ fontSize:13, fontWeight:700, color:'#0f172a' }}>{r.v}</p>
+              { v: p.years_experience ? `${p.years_experience}` : '0', l:'Yrs Exp' },
+              { v: p.total_reviews    || 0,                             l:'Reviews' },
+              { v: p.total_bookings   || 0,                             l:'Bookings' },
+              { v: available ? '●' : '○',                               l: available?'Available':'Busy',
+                vc: available ? '#16a34a' : '#ef4444' },
+            ].map(s => (
+              <div key={s.l} style={{ padding:'14px 0', textAlign:'center', borderRight:'1px solid #f1f5f9' }}>
+                <p style={{ fontSize:17, fontWeight:900, color: s.vc||'#0f172a', margin:0 }}>{s.v}</p>
+                <p style={{ fontSize:9, color:'#94a3b8', margin:'2px 0 0', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em' }}>{s.l}</p>
               </div>
             ))}
           </div>
 
           {/* Verification badges */}
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:20, paddingBottom:20, borderBottom:'1px solid #f1f5f9' }}>
+          <div style={{ padding:'14px 20px', display:'flex', gap:8, flexWrap:'wrap', borderBottom:'1px solid #f8fafc' }}>
             {p.nmc_pin && (
-              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
-                padding:'5px 12px', borderRadius:8,
-                background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4' }}>
-                <Award size={12}/>NMC Reg.
+              <span style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, padding:'5px 12px', borderRadius:8, background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4' }}>
+                <Award size={12}/>NMC: {p.nmc_pin}
               </span>
             )}
             {p.is_verified && (
-              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
-                padding:'5px 12px', borderRadius:8,
-                background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0' }}>
-                <Shield size={12}/>Ghana Card
+              <span style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, padding:'5px 12px', borderRadius:8, background:'#f0fdf4', color:'#16a34a', border:'1px solid #bbf7d0' }}>
+                <Shield size={12}/>Ghana Card Verified
               </span>
             )}
             {p.is_professional && (
-              <span style={{ display:'inline-flex', alignItems:'center', gap:5, fontSize:12, fontWeight:600,
-                padding:'5px 12px', borderRadius:8,
-                background:'#eff6ff', color:'#1d4ed8', border:'1px solid #bfdbfe' }}>
+              <span style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, padding:'5px 12px', borderRadius:8, background:'#eff6ff', color:'#1d4ed8', border:'1px solid #bfdbfe' }}>
                 <BadgeCheck size={12}/>Aura Verified
               </span>
             )}
           </div>
 
-          {/* About */}
-          {p.bio && (
-            <div style={{ marginBottom:20 }}>
-              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:6 }}>About</p>
-              <p style={{ fontSize:13, color:'#334155', lineHeight:1.7 }}>{p.bio}</p>
-            </div>
-          )}
+          <div style={{ padding:'20px' }}>
 
-          {/* Specialisation */}
-          {p.specialisation && (
-            <div style={{ marginBottom:20 }}>
-              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:6 }}>Specialisation</p>
-              <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'6px 12px', borderRadius:8, background:'#f0fdfa', border:'1px solid #ccfbf1' }}>
-                <p style={{ fontSize:13, color:'#0d9488', fontWeight:600, margin:0 }}>{p.specialisation}</p>
+            {/* About */}
+            {p.bio && (
+              <div style={{ marginBottom:20 }}>
+                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>About</p>
+                <p style={{ fontSize:13, color:'#334155', lineHeight:1.75, margin:0 }}>{p.bio}</p>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Qualifications */}
-          {p.qualifications?.length > 0 && (
-            <div style={{ marginBottom:20 }}>
-              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:10 }}>Qualifications</p>
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                {p.qualifications.map((q, i) => (
-                  <div key={i} style={{ display:'flex', gap:8, alignItems:'flex-start' }}>
-                    <CheckCircle size={14} style={{ color:'#0d9488', flexShrink:0, marginTop:2 }}/>
-                    <span style={{ fontSize:13, color:'#334155', fontWeight:600 }}>
-                      {q.title}{q.institution && <span style={{ color:'#64748b', fontWeight:400 }}> — {q.institution}</span>}
-                      {q.year && <span style={{ color:'#94a3b8', fontWeight:400 }}> ({q.year})</span>}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            {/* Details grid */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:20 }}>
+              {[
+                { l:'Region',        v: p.region },
+                { l:'Specialisation', v: p.specialisation },
+                { l:'Facility',      v: p.facility_name },
+                { l:'Experience',    v: p.years_experience ? `${p.years_experience} years` : null },
+              ].filter(r => r.v).map(r => (
+                <div key={r.l} style={{ background:'#f8fafc', borderRadius:12, padding:'10px 14px' }}>
+                  <p style={{ fontSize:9, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:3 }}>{r.l}</p>
+                  <p style={{ fontSize:13, fontWeight:700, color:'#0f172a', margin:0 }}>{r.v}</p>
+                </div>
+              ))}
             </div>
-          )}
 
-          {/* Reviews */}
-          {p.ratings?.length > 0 && (
-            <div style={{ marginBottom:20 }}>
-              <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', letterSpacing:'0.04em', marginBottom:10 }}>Patient Reviews</p>
-              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                {p.ratings.slice(0, 5).map((r, i) => (
-                  <div key={i} style={{ background:'#f8fafc', borderRadius:14, padding:'12px 14px' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:6 }}>
-                      {[1,2,3,4,5].map(n => (
-                        <Star key={n} size={11} style={{ color: n<=r.rating ? '#f59e0b' : '#e2e8f0', fill: n<=r.rating ? '#f59e0b' : 'none' }}/>
-                      ))}
-                      <span style={{ fontSize:10, color:'#94a3b8', marginLeft:4 }}>
-                        {new Date(r.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short' })}
-                      </span>
+            {/* Qualifications */}
+            {p.qualifications?.length > 0 && (
+              <div style={{ marginBottom:20 }}>
+                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Qualifications</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                  {p.qualifications.map((q, i) => (
+                    <div key={i} style={{ display:'flex', gap:10, alignItems:'flex-start' }}>
+                      <div style={{ width:20, height:20, borderRadius:'50%', background:'#f0fdfa', border:'1.5px solid #99f6e4', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+                        <CheckCircle size={11} style={{ color:'#0d9488' }}/>
+                      </div>
+                      <div>
+                        <p style={{ fontSize:13, fontWeight:700, color:'#0f172a', margin:0 }}>{q.title}</p>
+                        {q.institution && <p style={{ fontSize:11, color:'#64748b', margin:'2px 0 0' }}>{q.institution}{q.year ? ` · ${q.year}` : ''}</p>}
+                      </div>
                     </div>
-                    {r.comment && <p style={{ fontSize:12, color:'#475569', lineHeight:1.5 }}>{r.comment}</p>}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Reviews */}
+            {p.ratings?.length > 0 && (
+              <div style={{ marginBottom:20 }}>
+                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Patient Reviews</p>
+                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                  {p.ratings.slice(0, 4).map((r, i) => (
+                    <div key={i} style={{ background:'#f8fafc', borderRadius:14, padding:'12px 14px' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:6 }}>
+                        {[1,2,3,4,5].map(n => (
+                          <Star key={n} size={11} style={{ color:n<=r.rating?'#f59e0b':'#e2e8f0', fill:n<=r.rating?'#f59e0b':'none' }}/>
+                        ))}
+                        <span style={{ fontSize:10, color:'#94a3b8', marginLeft:4 }}>
+                          {new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})}
+                        </span>
+                      </div>
+                      {r.comment && <p style={{ fontSize:12, color:'#475569', lineHeight:1.5, margin:0 }}>{r.comment}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Sticky CTA footer */}
-        <div style={{
-          padding:'16px 24px', borderTop:'1px solid #f1f5f9',
-          background:'#fff', display:'flex', gap:12, flexShrink:0,
-        }}>
-          <button onClick={() => onMessage(p)} style={{
-            flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-            padding:'14px', borderRadius:14, fontSize:14, fontWeight:700,
-            background:'#f0fdfa', color:'#0d9488',
-            border:'2px solid #99f6e4', cursor:'pointer', transition:'all 0.15s',
-          }}>
-            <MessageCircle size={16}/> Message
-          </button>
+        {/* ── Sticky CTA footer — same style as card ── */}
+        <div style={{ padding:'14px 20px 20px', borderTop:'1px solid #f1f5f9', background:'#fff', flexShrink:0 }}>
           <button onClick={() => onBook(p)} style={{
-            flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8,
-            padding:'14px', borderRadius:14, fontSize:14, fontWeight:700,
-            background:meta.color, color:'#fff',
-            border:'none', cursor:'pointer', transition:'all 0.15s',
-            boxShadow:`0 4px 16px ${meta.color}44`,
+            width:'100%', padding:'14px', borderRadius:14, fontSize:14, fontWeight:800,
+            background:'#0f172a', color:'#fff', border:'none', cursor:'pointer',
+            display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+            marginBottom:10, letterSpacing:'0.01em',
+          }}
+            onMouseEnter={e => e.currentTarget.style.background='#1e293b'}
+            onMouseLeave={e => e.currentTarget.style.background='#0f172a'}
+          >
+            <Calendar size={16}/> Book a Session
+          </button>
+          <button onClick={() => onMessage(p)} style={{
+            width:'100%', padding:'13px', borderRadius:14, fontSize:14, fontWeight:700,
+            background:'transparent', color:'#0d9488', border:`2px solid #0d9488`,
+            cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8,
           }}>
-            <Calendar size={16}/> Book Session
+            <MessageCircle size={15}/> Send Message
           </button>
         </div>
       </motion.div>
