@@ -336,8 +336,8 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
       whileHover={{ y:-5, boxShadow:'0 18px 50px rgba(0,0,0,0.3)' }}
       onClick={onOpen}
       style={{
-        background:'#0f172a', borderRadius:20, overflow:'hidden',
-        border:'1.5px solid #1e293b', cursor:'pointer',
+        background:'var(--card-bg)', borderRadius:20, overflow:'hidden',
+        border:'1.5px solid var(--card-border)', cursor:'pointer',
         display:'flex', flexDirection:'column',
         boxShadow:'0 2px 16px rgba(0,0,0,0.2)',
         transition:'box-shadow 0.2s',
@@ -349,13 +349,13 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
           <img src={coverImg} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.3 }}/>
         )}
         {/* Dark gradient bottom */}
-        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(15,23,42,0.85) 0%,transparent 60%)' }}/>
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%)' }}/>
 
         {/* Member count badge top-right */}
         <div style={{
           position:'absolute', top:10, right:10,
           display:'flex', alignItems:'center', gap:4,
-          background:'rgba(15,23,42,0.7)', backdropFilter:'blur(4px)',
+          background:'rgba(0,0,0,0.55)', backdropFilter:'blur(4px)',
           borderRadius:8, padding:'3px 9px', border:'1px solid rgba(255,255,255,0.1)',
         }}>
           <Users size={10} style={{ color:'#94a3b8' }}/>
@@ -381,7 +381,7 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
             width:44, height:44, borderRadius:14,
             background:`linear-gradient(135deg,${color},${color}bb)`,
             display:'flex', alignItems:'center', justifyContent:'center',
-            border:'2.5px solid #0f172a', boxShadow:`0 4px 14px ${color}44`,
+            border:'2.5px solid var(--card-bg)', boxShadow:`0 4px 14px ${color}44`,
             fontSize:14, fontWeight:900, color:'#fff',
             fontFamily:'"Inter",-apple-system,sans-serif',
           }}>
@@ -393,13 +393,13 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
       {/* ── Card body ── */}
       <div style={{ padding:'28px 16px 0', flex:1, display:'flex', flexDirection:'column' }}>
         {/* Name */}
-        <p style={{ fontWeight:800, color:'#f1f5f9', fontSize:14, lineHeight:1.25, margin:'0 0 4px' }}>
+        <p style={{ fontWeight:800, color:'var(--text-900)', fontSize:14, lineHeight:1.25, margin:'0 0 4px' }}>
           {group.name}
         </p>
 
         {/* Description */}
         <p style={{
-          fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 10px',
+          fontSize:11, color:'var(--text-500)', lineHeight:1.55, margin:'0 0 10px',
           display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
         }}>
           {group.description || 'A supportive community group for patients and caregivers.'}
@@ -411,7 +411,7 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
             {tags.slice(0,3).map(t => (
               <span key={t} style={{
                 fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
-                background:'#1e293b', color:'#64748b', border:'1px solid #334155',
+                background:'var(--card-border)33', color:'var(--text-500)', border:'1px solid var(--card-border)',
                 textTransform:'capitalize',
               }}>{t.replace('_',' ')}</span>
             ))}
@@ -422,15 +422,15 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
         )}
 
         {/* Stats row */}
-        <div style={{ display:'flex', borderTop:'1px solid #1e293b', paddingTop:10, marginBottom:12 }}>
+        <div style={{ display:'flex', borderTop:'1px solid var(--card-border)', paddingTop:10, marginBottom:12 }}>
           {[
             { v: group.member_count ?? 0, l:'Members' },
             { v: group.is_recommended ? 'Yes' : 'No', l:'Recommended' },
             { v: group.joined ? 'Yes' : 'No', l:'Joined' },
           ].map((s, i) => (
-            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<2?'1px solid #1e293b':'none' }}>
-              <p style={{ fontSize:13, fontWeight:800, color:'#e2e8f0', margin:0, lineHeight:1 }}>{s.v}</p>
-              <p style={{ fontSize:9, color:'#475569', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
+            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<2?'1px solid var(--card-border)':'none' }}>
+              <p style={{ fontSize:13, fontWeight:800, color:'var(--text-900)', margin:0, lineHeight:1 }}>{s.v}</p>
+              <p style={{ fontSize:9, color:'var(--text-500)', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
             </div>
           ))}
         </div>
@@ -456,8 +456,9 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
           disabled={pending}
           style={{
             width:'100%', padding:'9px 0', borderRadius:12, fontSize:12, fontWeight:700,
-            background:'#1e293b', color: group.joined?'#f87171':'#94a3b8',
-            border:`1.5px solid ${group.joined?'#7f1d1d':'#334155'}`,
+            background:'var(--card-border)22', color: group.joined?'#ef4444':'var(--text-600)',
+            border:`1.5px solid ${group.joined?'#ef444444':'var(--card-border)'}`,
+
             cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:6,
             transition:'all 0.15s',
           }}

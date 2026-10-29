@@ -121,7 +121,7 @@ function Stars({ value, count, size = 13 }) {
     <span style={{ display:'flex', alignItems:'center', gap:2 }}>
       {[1,2,3,4,5].map(n => (
         <Star key={n} size={size} strokeWidth={1.5}
-          style={{ color: n <= Math.round(value) ? '#f59e0b' : '#e2e8f0',
+          style={{ color: n <= Math.round(value) ? '#f59e0b' : 'var(--card-border)',
                    fill:  n <= Math.round(value) ? '#f59e0b' : 'none' }}/>
       ))}
       <span style={{ marginLeft:4, fontSize:12, fontWeight:700, color:'#334155' }}>{value.toFixed(1)}</span>
@@ -166,8 +166,8 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       whileHover={{ y:-6, boxShadow:'0 20px 56px rgba(0,0,0,0.13)' }}
       transition={{ type:'spring', stiffness:280, damping:26 }}
       style={{
-        background:'#0f172a', borderRadius:22, overflow:'hidden',
-        border:'1.5px solid #1e293b', cursor:'pointer', position:'relative',
+        background:'var(--card-bg)', borderRadius:22, overflow:'hidden',
+        border:'1.5px solid var(--card-border)', cursor:'pointer', position:'relative',
         boxShadow: featured ? '0 6px 28px rgba(13,148,136,0.22)' : '0 2px 16px rgba(0,0,0,0.22)',
         display:'flex', flexDirection:'column',
       }}
@@ -231,7 +231,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
 
         {/* Name + verified */}
         <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
-          <p style={{ fontWeight:800, color:'#f1f5f9', fontSize:14, lineHeight:1.2, margin:0 }}>
+          <p style={{ fontWeight:800, color:'var(--text-900)', fontSize:14, lineHeight:1.2, margin:0 }}>
             {p.full_name}
           </p>
           {p.is_verified && (
@@ -240,12 +240,12 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         </div>
 
         {/* Role */}
-        <p style={{ fontSize:11, color:'#94a3b8', margin:'0 0 7px', fontWeight:500 }}>{meta.label}</p>
+        <p style={{ fontSize:11, color:'var(--text-500)', margin:'0 0 7px', fontWeight:500 }}>{meta.label}</p>
 
         {/* Bio — 2 lines max */}
         {p.bio && (
           <p style={{
-            fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 10px',
+            fontSize:11, color:'var(--text-500)', lineHeight:1.55, margin:'0 0 10px',
             display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
           }}>
             {p.bio}
@@ -255,7 +255,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         {/* Stats row */}
         <div style={{
           display:'flex', alignItems:'center', gap:0,
-          borderTop:'1px solid #1e293b', paddingTop:9, marginBottom:10,
+          borderTop:'1px solid var(--card-border)', paddingTop:9, marginBottom:10,
         }}>
           {[
             { v: p.total_reviews > 0 ? `${p.total_reviews}` : '0',  l:'Reviews' },
@@ -264,17 +264,17 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           ].map((s, i) => (
             <div key={s.l} style={{
               flex:1, textAlign:'center',
-              borderRight: i < 2 ? '1px solid #1e293b' : 'none',
+              borderRight: i < 2 ? '1px solid var(--card-border)' : 'none',
             }}>
-              <p style={{ fontSize:13, fontWeight:800, color:'#e2e8f0', margin:0, lineHeight:1 }}>{s.v}</p>
-              <p style={{ fontSize:9, color:'#475569', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
+              <p style={{ fontSize:13, fontWeight:800, color:'var(--text-900)', margin:0, lineHeight:1 }}>{s.v}</p>
+              <p style={{ fontSize:9, color:'var(--text-500)', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
             </div>
           ))}
         </div>
 
         {/* Availability + region */}
         {p.region && (
-          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'#475569', margin:'0 0 10px' }}>
+          <p style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'var(--text-500)', margin:'0 0 10px' }}>
             <MapPin size={9}/> {p.region}
             <span style={{ marginLeft:'auto' }}>
               <span style={{ display:'inline-flex', alignItems:'center', gap:4, fontSize:9, fontWeight:700, color: available ? '#4ade80' : '#f87171' }}>
@@ -304,11 +304,11 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         </button>
         <div style={{ display:'flex', gap:7, marginTop:8 }}>
           <button onClick={e => { e.stopPropagation(); onView(p); }}
-            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#1e293b', color:'#94a3b8', border:'1.5px solid #334155', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'var(--card-border)22', color:'var(--text-600)', border:'1.5px solid var(--card-border)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
             <FileText size={12}/> Profile
           </button>
           <button onClick={e => { e.stopPropagation(); onMessage(p); }}
-            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'#1e293b', color:'#94a3b8', border:'1.5px solid #334155', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
+            style={{ flex:1, padding:'8px 0', borderRadius:10, fontSize:11, fontWeight:700, background:'var(--card-border)22', color:'var(--text-600)', border:'1.5px solid var(--card-border)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:4 }}>
             <MessageCircle size={12}/> Chat
           </button>
         </div>
@@ -343,7 +343,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
         transition={{ type:'spring', damping:28, stiffness:260 }}
         style={{
           position:'fixed', right:0, top:0, bottom:0, zIndex:51,
-          width:'100%', maxWidth:480, background:'#fff',
+          width:'100%', maxWidth:480, background:'var(--card-bg)',
           boxShadow:'-8px 0 60px rgba(0,0,0,0.18)',
           display:'flex', flexDirection:'column', overflowY:'auto',
         }}
@@ -401,15 +401,15 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
               { v: available ? '●' : '○',                               l: available?'Available':'Busy',
                 vc: available ? '#16a34a' : '#ef4444' },
             ].map(s => (
-              <div key={s.l} style={{ padding:'14px 0', textAlign:'center', borderRight:'1px solid #f1f5f9' }}>
-                <p style={{ fontSize:17, fontWeight:900, color: s.vc||'#0f172a', margin:0 }}>{s.v}</p>
+              <div key={s.l} style={{ padding:'14px 0', textAlign:'center', borderRight:'1px solid var(--card-border)' }}>
+                <p style={{ fontSize:17, fontWeight:900, color: s.vc||'var(--text-900)', margin:0 }}>{s.v}</p>
                 <p style={{ fontSize:9, color:'#94a3b8', margin:'2px 0 0', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em' }}>{s.l}</p>
               </div>
             ))}
           </div>
 
           {/* Verification badges */}
-          <div style={{ padding:'14px 20px', display:'flex', gap:8, flexWrap:'wrap', borderBottom:'1px solid #f8fafc' }}>
+          <div style={{ padding:'14px 20px', display:'flex', gap:8, flexWrap:'wrap', borderBottom:'1px solid var(--card-border)' }}>
             {p.nmc_pin && (
               <span style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:11, fontWeight:700, padding:'5px 12px', borderRadius:8, background:'#f0fdfa', color:'#0d9488', border:'1px solid #99f6e4' }}>
                 <Award size={12}/>NMC: {p.nmc_pin}
@@ -432,8 +432,8 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
             {/* About */}
             {p.bio && (
               <div style={{ marginBottom:20 }}>
-                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>About</p>
-                <p style={{ fontSize:13, color:'#334155', lineHeight:1.75, margin:0 }}>{p.bio}</p>
+                <p style={{ fontSize:10, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8 }}>About</p>
+                <p style={{ fontSize:13, color:'var(--text-800)', lineHeight:1.75, margin:0 }}>{p.bio}</p>
               </div>
             )}
 
@@ -445,9 +445,9 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
                 { l:'Facility',      v: p.facility_name },
                 { l:'Experience',    v: p.years_experience ? `${p.years_experience} years` : null },
               ].filter(r => r.v).map(r => (
-                <div key={r.l} style={{ background:'#f8fafc', borderRadius:12, padding:'10px 14px' }}>
-                  <p style={{ fontSize:9, color:'#94a3b8', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:3 }}>{r.l}</p>
-                  <p style={{ fontSize:13, fontWeight:700, color:'#0f172a', margin:0 }}>{r.v}</p>
+                <div key={r.l} style={{ background:'var(--card-border)22', borderRadius:12, padding:'10px 14px' }}>
+                  <p style={{ fontSize:9, color:'var(--text-500)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:3 }}>{r.l}</p>
+                  <p style={{ fontSize:13, fontWeight:700, color:'var(--text-900)', margin:0 }}>{r.v}</p>
                 </div>
               ))}
             </div>
@@ -455,16 +455,16 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
             {/* Qualifications */}
             {p.qualifications?.length > 0 && (
               <div style={{ marginBottom:20 }}>
-                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Qualifications</p>
+                <p style={{ fontSize:10, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Qualifications</p>
                 <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
                   {p.qualifications.map((q, i) => (
                     <div key={i} style={{ display:'flex', gap:10, alignItems:'flex-start' }}>
-                      <div style={{ width:20, height:20, borderRadius:'50%', background:'#f0fdfa', border:'1.5px solid #99f6e4', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+                      <div style={{ width:20, height:20, borderRadius:'50%', background:'var(--card-border)44', border:'1.5px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
                         <CheckCircle size={11} style={{ color:'#0d9488' }}/>
                       </div>
                       <div>
-                        <p style={{ fontSize:13, fontWeight:700, color:'#0f172a', margin:0 }}>{q.title}</p>
-                        {q.institution && <p style={{ fontSize:11, color:'#64748b', margin:'2px 0 0' }}>{q.institution}{q.year ? ` · ${q.year}` : ''}</p>}
+                        <p style={{ fontSize:13, fontWeight:700, color:'var(--text-900)', margin:0 }}>{q.title}</p>
+                        {q.institution && <p style={{ fontSize:11, color:'var(--text-600)', margin:'2px 0 0' }}>{q.institution}{q.year ? ` · ${q.year}` : ''}</p>}
                       </div>
                     </div>
                   ))}
@@ -475,19 +475,19 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
             {/* Reviews */}
             {p.ratings?.length > 0 && (
               <div style={{ marginBottom:20 }}>
-                <p style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Patient Reviews</p>
+                <p style={{ fontSize:10, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:10 }}>Patient Reviews</p>
                 <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                   {p.ratings.slice(0, 4).map((r, i) => (
-                    <div key={i} style={{ background:'#f8fafc', borderRadius:14, padding:'12px 14px' }}>
+                    <div key={i} style={{ background:'var(--card-border)22', borderRadius:14, padding:'12px 14px' }}>
                       <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:6 }}>
                         {[1,2,3,4,5].map(n => (
-                          <Star key={n} size={11} style={{ color:n<=r.rating?'#f59e0b':'#e2e8f0', fill:n<=r.rating?'#f59e0b':'none' }}/>
+                          <Star key={n} size={11} style={{ color:n<=r.rating?'#f59e0b':'var(--card-border)', fill:n<=r.rating?'#f59e0b':'none' }}/>
                         ))}
                         <span style={{ fontSize:10, color:'#94a3b8', marginLeft:4 }}>
                           {new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'})}
                         </span>
                       </div>
-                      {r.comment && <p style={{ fontSize:12, color:'#475569', lineHeight:1.5, margin:0 }}>{r.comment}</p>}
+                      {r.comment && <p style={{ fontSize:12, color:'var(--text-700)', lineHeight:1.5, margin:0 }}>{r.comment}</p>}
                     </div>
                   ))}
                 </div>
@@ -497,15 +497,16 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
         </div>
 
         {/* ── Sticky CTA footer — same style as card ── */}
-        <div style={{ padding:'14px 20px 20px', borderTop:'1px solid #f1f5f9', background:'#fff', flexShrink:0 }}>
+        <div style={{ padding:'14px 20px 20px', borderTop:'1px solid var(--card-border)', background:'var(--card-bg)', flexShrink:0 }}>
           <button onClick={() => onBook(p)} style={{
             width:'100%', padding:'14px', borderRadius:14, fontSize:14, fontWeight:800,
-            background:'#0f172a', color:'#fff', border:'none', cursor:'pointer',
+            background:'#0d9488', color:'#fff', border:'none', cursor:'pointer',
             display:'flex', alignItems:'center', justifyContent:'center', gap:8,
             marginBottom:10, letterSpacing:'0.01em',
+            boxShadow:'0 4px 16px rgba(13,148,136,0.35)',
           }}
-            onMouseEnter={e => e.currentTarget.style.background='#1e293b'}
-            onMouseLeave={e => e.currentTarget.style.background='#0f172a'}
+            onMouseEnter={e => e.currentTarget.style.opacity='0.88'}
+            onMouseLeave={e => e.currentTarget.style.opacity='1'}
           >
             <Calendar size={16}/> Book a Session
           </button>
@@ -570,7 +571,7 @@ function BookingModal({ provider, onClose }) {
             {initials}
           </div>
           <div style={{ flex:1 }}>
-            <p style={{ fontWeight:800, color:'#0f172a', fontSize:14 }}>{provider.full_name}</p>
+            <p style={{ fontWeight:800, color:'var(--text-900)', fontSize:14 }}>{provider.full_name}</p>
             <p style={{ fontSize:11, color:'#64748b' }}>{TYPE_META[provider.service_type]?.label}</p>
           </div>
           <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', padding:4 }}>
@@ -586,7 +587,7 @@ function BookingModal({ provider, onClose }) {
               onChange={e => { setDate(e.target.value); setTime(''); }}
               style={{
                 width:'100%', border:'1.5px solid #e2e8f0', borderRadius:12,
-                padding:'10px 14px', fontSize:13, color:'#0f172a',
+                padding:'10px 14px', fontSize:13, color:'var(--text-900)',
                 outline:'none', boxSizing:'border-box',
               }}/>
           </div>
@@ -606,7 +607,7 @@ function BookingModal({ provider, onClose }) {
                           style={{
                             padding:'7px 14px', borderRadius:10, fontSize:12, fontWeight:700,
                             cursor:'pointer', transition:'all 0.15s',
-                            border: `2px solid ${time===s ? meta.color : '#e2e8f0'}`,
+                            border: `2px solid ${time===s ? meta.color : 'var(--card-border)'}`,
                             background: time===s ? `${meta.color}12` : '#fff',
                             color: time===s ? meta.color : '#64748b',
                           }}>
@@ -626,7 +627,7 @@ function BookingModal({ provider, onClose }) {
               placeholder="Describe your care needs..."
               style={{
                 width:'100%', border:'1.5px solid #e2e8f0', borderRadius:12,
-                padding:'10px 14px', fontSize:13, color:'#0f172a',
+                padding:'10px 14px', fontSize:13, color:'var(--text-900)',
                 resize:'none', outline:'none', boxSizing:'border-box',
               }}/>
           </div>
@@ -844,8 +845,8 @@ export default function Services() {
   const featured = providers.slice(0, 4);
 
   const handleMessage = (p) => {
-    navigate('/messages');
-    toast.info(`Open Messages to chat with ${p.full_name}`);
+    // Navigate to messages with userId param — Messages.jsx will find or create the conversation
+    navigate(`/messages?userId=${p.id}`);
   };
 
   const scrollToSearch = () => {
@@ -997,7 +998,7 @@ export default function Services() {
           <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:12 }}>
             <div>
               <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
-              <h2 style={{ fontSize:16, fontWeight:800, color:'#0f172a', margin:0 }}>Who do you need?</h2>
+              <h2 style={{ fontSize:16, fontWeight:800, color:'var(--text-900)', margin:0 }}>Who do you need?</h2>
             </div>
           </div>
 
@@ -1059,7 +1060,7 @@ export default function Services() {
           <div style={{ display:'flex', gap:7, overflowX:'auto', paddingTop:14, paddingBottom:4, scrollbarWidth:'none', msOverflowStyle:'none' }}>
             <motion.button whileTap={{ scale:0.93 }}
               onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
-              style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${filterType===''?'#0f172a':'#e2e8f0'}`, background:filterType===''?'#0f172a':'#fff', cursor:'pointer', whiteSpace:'nowrap' }}>
+              style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${filterType===''?'var(--text-900)':'var(--card-border)'}`, background:filterType===''?'var(--text-900)':'var(--card-bg)', cursor:'pointer', whiteSpace:'nowrap' }}>
               <span style={{ fontSize:11, fontWeight:700, color:filterType===''?'#fff':'#475569' }}>All</span>
             </motion.button>
             {Object.entries(TYPE_META).map(([key, meta]) => {
@@ -1067,7 +1068,7 @@ export default function Services() {
               return (
                 <motion.button key={key} whileTap={{ scale:0.93 }}
                   onClick={() => { setFilterType(sel?'':key); setPage(1); setTab('browse'); setSlideIdx(Object.keys(TYPE_META).indexOf(key)); }}
-                  style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${sel?meta.color:'#e2e8f0'}`, background:sel?meta.color:'#fff', cursor:'pointer', whiteSpace:'nowrap', boxShadow:sel?`0 2px 8px ${meta.color}30`:'none', transition:'all 0.18s' }}>
+                  style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0, padding:'6px 13px', borderRadius:999, border:`1.5px solid ${sel?meta.color:'var(--card-border)'}`, background:sel?meta.color:'var(--card-bg)', cursor:'pointer', whiteSpace:'nowrap', boxShadow:sel?`0 2px 8px ${meta.color}30`:'none', transition:'all 0.18s' }}>
                   <meta.icon size={10} style={{ color:sel?'#fff':meta.color }}/>
                   <span style={{ fontSize:11, fontWeight:700, color:sel?'#fff':'#475569' }}>{meta.label}</span>
                 </motion.button>
@@ -1103,7 +1104,7 @@ export default function Services() {
             {/* Filters row */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap', marginBottom:20 }}>
               <p style={{ fontSize:13, color:'#64748b' }}>
-                Showing <strong style={{ color:'#0f172a' }}>{total}</strong> provider{total!==1?'s':''}
+                Showing <strong style={{ color:'var(--text-900)' }}>{total}</strong> provider{total!==1?'s':''}
                 {filterType && <> in <strong style={{ color: TYPE_META[filterType]?.color }}>{TYPE_META[filterType]?.label}</strong></>}
               </p>
               <div style={{ display:'flex', gap:8, alignItems:'center' }}>
@@ -1151,14 +1152,14 @@ export default function Services() {
               </div>
             ) : providers.length === 0 ? (
               <div style={{
-                background:'#fff', borderRadius:20, border:'2px dashed #e2e8f0',
+                background:'var(--card-bg)', borderRadius:20, border:'2px dashed var(--card-border)',
                 padding:'64px 32px', textAlign:'center',
               }}>
                 <div style={{ width:64, height:64, borderRadius:20, background:'#f1f5f9', margin:'0 auto 16px', display:'flex', alignItems:'center', justifyContent:'center' }}>
                   <Briefcase size={28} style={{ color:'#94a3b8' }}/>
                 </div>
-                <p style={{ fontWeight:800, color:'#475569', fontSize:16 }}>No providers found</p>
-                <p style={{ fontSize:13, color:'#94a3b8', marginTop:6 }}>Try clearing your filters or searching by a different term</p>
+                <p style={{ fontWeight:800, color:'var(--text-700)', fontSize:16 }}>No providers found</p>
+                <p style={{ fontSize:13, color:'var(--text-500)', marginTop:6 }}>Try clearing your filters or searching by a different term</p>
                 <button onClick={() => { setSearch(''); setFilterType(''); setFilterRegion(''); }}
                   style={{
                     marginTop:16, padding:'10px 20px', borderRadius:10, fontSize:13, fontWeight:700,
@@ -1219,8 +1220,8 @@ export default function Services() {
         {tab === 'browse' && (
           <section style={{ paddingTop:48, paddingBottom:48 }}>
             <div style={{ textAlign:'center', marginBottom:28 }}>
-              <p style={{ fontSize:11, fontWeight:800, color:'#0d9488', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:8 }}>Real Stories</p>
-              <h2 style={{ fontSize:24, fontWeight:900, color:'#0f172a', margin:0 }}>What patients say</h2>
+              <p style={{ fontSize:11, fontWeight:800, color:'var(--c-teal)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:8 }}>Real Stories</p>
+              <h2 style={{ fontSize:24, fontWeight:900, color:'var(--text-900)', margin:0 }}>What patients say</h2>
             </div>
             <TestimonialCarousel/>
           </section>
