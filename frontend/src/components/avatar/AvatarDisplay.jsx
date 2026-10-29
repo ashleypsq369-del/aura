@@ -1,10 +1,15 @@
 /**
  * AvatarDisplay — profile photo with real image support
  * Priority: 1) uploaded server photo  2) DiceBear role+gender avatar  3) initials
+ *
+ * Key fixes:
+ * - staleTime: 0 so query always refetches after invalidation
+ * - imgErr resets when avatarUrl changes (useEffect) so a new upload shows immediately
+ * - gcTime: 0 so old cached data is discarded on invalidation
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../api/client';
 
 const API_BASE = import.meta.env.VITE_API_URL?.trim() || '';
@@ -45,18 +50,19 @@ export default function AvatarDisplay({
   className = '',
   onClick,
   showRing = false,
-  userId = null,  // pass to show another user's avatar
+  userId = null,
 }) {
   const { user } = useAuth();
   const targetId = userId || user?.id;
-  const [imgErr, setImgErr]         = useState(false);
+  const [imgErr, setImgErr]           = useState(false);
   const [dicebearErr, setDicebearErr] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ['profile-avatar', targetId],
-    queryFn: () => apiClient.get('/api/profile').then(r => r.data),
-    enabled: !!targetId && !userId,   // only fetch own profile; userId variant relies on passed prop
-    staleTime: 5 * 60 * 1000,
+    queryFn:  () => apiClient.get('/api/profile').then(r => r.data),
+    enabled:  !!targetId && !userId,
+    staleTime: 0,          // always consider stale → refetch after invalidation
+    gcTime:    0,          // don't cache between invalidations
     retry: false,
   });
 
@@ -64,6 +70,11 @@ export default function AvatarDisplay({
   const gender    = profile?.gender     || user?.gender;
   const role      = profile?.role       || user?.role;
   const name      = profile?.full_name  || user?.full_name;
+
+  // Reset imgErr whenever the URL changes (new upload) so the photo is retried
+  useEffect(() => {
+    setImgErr(false);
+  }, [avatarUrl]);
 
   const ringStyle = showRing
     ? { boxShadow: '0 0 0 2px #0d9488, 0 0 0 4px rgba(13,148,136,0.18)' }
@@ -79,12 +90,17 @@ export default function AvatarDisplay({
 
   // ── 1. Real uploaded photo ──
   if (avatarUrl && !imgErr) {
-    const src = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
+    // Add cache-busting param so browser doesn't serve the old 404'd image from cache
+    const base = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
+    const src  = `${base}?v=${Date.now()}`;
     return (
       <div style={wrap} className={className} onClick={onClick}>
-        <img src={src} alt={name || 'Profile'}
+        <img
+          src={src}
+          alt={name || 'Profile'}
           onError={() => setImgErr(true)}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
       </div>
     );
   }
@@ -93,9 +109,12 @@ export default function AvatarDisplay({
   if (!dicebearErr) {
     return (
       <div style={wrap} className={className} onClick={onClick}>
-        <img src={dicebearUrl(role, gender)} alt={name || 'Profile'}
+        <img
+          src={dicebearUrl(role, gender)}
+          alt={name || 'Profile'}
           onError={() => setDicebearErr(true)}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
       </div>
     );
   }
@@ -108,5 +127,4 @@ export default function AvatarDisplay({
   );
 }
 
-// Export helper for use in provider cards
 export { dicebearUrl };
