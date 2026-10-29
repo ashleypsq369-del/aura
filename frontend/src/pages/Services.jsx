@@ -490,13 +490,13 @@ export default function Services() {
           style={{backgroundImage:'radial-gradient(circle at 70% 50%, #fff 0%, transparent 60%)'}}/>
         <div className="relative max-w-5xl mx-auto px-6 py-10">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles size={14} className="text-teal-300"/>
-            <span className="text-teal-300 text-xs font-bold uppercase tracking-widest">Ghana Healthcare Services</span>
+            <Sparkles size={14} style={{ color:'#5eead4' }}/>
+            <span style={{ color:'#5eead4' }} className="text-xs font-bold uppercase tracking-widest">Ghana Healthcare Services</span>
           </div>
-          <h1 className="text-3xl font-black text-white mb-2 leading-tight">
+          <h1 className="text-3xl font-black mb-2 leading-tight" style={{ color:'#ffffff' }}>
             Find a verified care professional
           </h1>
-          <p className="text-white/70 text-sm mb-6 max-w-lg">
+          <p className="text-sm mb-6 max-w-lg" style={{ color:'rgba(255,255,255,0.75)' }}>
             Browse NMC-verified nurses, palliative doctors, physiotherapists, counsellors and more.
             Every provider is Ghana Card verified and rated by patients.
           </p>
@@ -524,8 +524,8 @@ export default function Services() {
               {v:'100%', l:'Ghana Card verified'},
             ].map(s=>(
               <div key={s.l}>
-                <p className="text-xl font-black text-white">{s.v}</p>
-                <p className="text-white/60 text-[11px]">{s.l}</p>
+                <p className="text-xl font-black" style={{ color:'#ffffff' }}>{s.v}</p>
+                <p className="text-[11px]" style={{ color:'rgba(255,255,255,0.6)' }}>{s.l}</p>
               </div>
             ))}
           </div>
