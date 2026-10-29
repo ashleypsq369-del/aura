@@ -37,29 +37,30 @@ import { toast } from 'sonner';
 const ICON_MAP = { Stethoscope, Activity, Heart, Brain, Users, Hand, FileText };
 
 const TYPE_META = {
-  nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',      icon:Stethoscope, img:'https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  doctor:          { color:'#0891b2', bg:'#f0f9ff', label:'Palliative Physician',  icon:Activity,    img:'https://images.pexels.com/photos/5407206/pexels-photo-5407206.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  physiotherapist: { color:'#059669', bg:'#f0fdf4', label:'Physiotherapist',       icon:Heart,       img:'https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  counsellor:      { color:'#7c3aed', bg:'#faf5ff', label:'Counsellor',            icon:Brain,       img:'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  nanny:           { color:'#d97706', bg:'#fffbeb', label:'Specialist Nanny',      icon:Users,       img:'https://images.pexels.com/photos/3905766/pexels-photo-3905766.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  masseur:         { color:'#ea580c', bg:'#fff7ed', label:'Therapeutic Masseur',   icon:Hand,        img:'https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  social_worker:   { color:'#db2777', bg:'#fdf2f8', label:'Social Worker',         icon:Users,       img:'https://images.pexels.com/photos/8942991/pexels-photo-8942991.jpeg?auto=compress&cs=tinysrgb&w=400' },
-  chaplain:        { color:'#0369a1', bg:'#eff6ff', label:'Chaplain',              icon:Heart,       img:'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=400' },
+  nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',      icon:Stethoscope, img:'https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  doctor:          { color:'#0891b2', bg:'#f0f9ff', label:'Palliative Physician',  icon:Activity,    img:'https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  physiotherapist: { color:'#059669', bg:'#f0fdf4', label:'Physiotherapist',       icon:Heart,       img:'https://images.pexels.com/photos/4506109/pexels-photo-4506109.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  counsellor:      { color:'#7c3aed', bg:'#faf5ff', label:'Counsellor',            icon:Brain,       img:'https://images.pexels.com/photos/8942991/pexels-photo-8942991.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  nanny:           { color:'#d97706', bg:'#fffbeb', label:'Specialist Nanny',      icon:Users,       img:'https://images.pexels.com/photos/3905766/pexels-photo-3905766.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  masseur:         { color:'#ea580c', bg:'#fff7ed', label:'Therapeutic Masseur',   icon:Hand,        img:'https://images.pexels.com/photos/3997989/pexels-photo-3997989.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  social_worker:   { color:'#db2777', bg:'#fdf2f8', label:'Social Worker',         icon:Users,       img:'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
+  chaplain:        { color:'#0369a1', bg:'#eff6ff', label:'Chaplain',              icon:Heart,       img:'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop' },
 };
 
 const HERO_HEADLINES = [
-  'Find a verified care professional',
-  'Book a palliative nurse at home',
-  'Connect with grief counsellors',
-  'Trusted physicians across Ghana',
+  { text:'Find a verified care professional', sub:'Ghana\'s largest palliative care network' },
+  { text:'Book a palliative nurse at home',   sub:'NMC-registered, Ghana Card verified' },
+  { text:'Connect with grief counsellors',    sub:'Compassionate support, when you need it' },
+  { text:'Trusted physicians across Ghana',   sub:'Palliative physicians in every region' },
 ];
 
-// African & diverse healthcare photos — dark enough for white text
+// African/diverse healthcare Pexels photos — one per role (exact fit)
+// opacity kept at 1 — shown in CARDS, not as overlays
 const HERO_SLIDES = [
-  { url:'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 30%' },
-  { url:'https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 40%' },
-  { url:'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 20%' },
-  { url:'https://images.pexels.com/photos/7578808/pexels-photo-7578808.jpeg?auto=compress&cs=tinysrgb&w=1400', pos:'center 25%' },
+  'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=1400',
+  'https://images.pexels.com/photos/7578808/pexels-photo-7578808.jpeg?auto=compress&cs=tinysrgb&w=1400',
 ];
 
 const TESTIMONIALS = [
@@ -928,165 +929,153 @@ export default function Services() {
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════
-          HERO SECTION
-          Inspired by: Zocdoc, Care.com, Maven Clinic
+          HERO — pure dark gradient, animated text only
+          No background image overlay — clean & legible
       ══════════════════════════════════════════════ */}
       <div style={{
         position:'relative', overflow:'hidden',
-        background:'linear-gradient(135deg,#071520 0%,#0b3028 35%,#0d6b5e 65%,#0891b2 100%)',
-        paddingBottom:0,
+        background:'linear-gradient(135deg,#071520 0%,#0b3028 40%,#0d6b5e 70%,#0a4a6e 100%)',
       }}>
-        {/* ── Crossfading background slideshow ── */}
-        {HERO_SLIDES.map((slide, i) => (
+        {/* Subtle geometric pattern */}
+        <div style={{
+          position:'absolute', inset:0,
+          backgroundImage:'radial-gradient(circle at 20% 50%, rgba(13,148,136,0.18) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(8,145,178,0.15) 0%, transparent 40%)',
+        }}/>
+        {/* Animated particle dots */}
+        {[...Array(6)].map((_,i) => (
           <div key={i} style={{
-            position:'absolute', inset:0, zIndex:0,
-            backgroundImage:`url(${slide.url})`,
-            backgroundSize:'cover', backgroundPosition:slide.pos,
-            opacity: i === slideIdx ? 0.28 : 0,
-            transition:'opacity 1.4s ease-in-out',
+            position:'absolute', borderRadius:'50%',
+            width: [6,4,8,5,7,4][i], height: [6,4,8,5,7,4][i],
+            background:'rgba(94,234,212,0.4)',
+            top:[`15%`,`65%`,`30%`,`80%`,`45%`,`20%`][i],
+            left:[`10%`,`20%`,`55%`,`70%`,`85%`,`40%`][i],
+            animation:`float${i} ${[6,8,7,9,5,7][i]}s ease-in-out infinite`,
+            opacity:0.6,
           }}/>
         ))}
-        {/* Deep dark overlay so white text is always crisp */}
+        {/* Bottom wave into page bg */}
         <div style={{
-          position:'absolute', inset:0, zIndex:1,
-          background:'linear-gradient(to right, rgba(7,21,32,0.72) 0%, rgba(11,48,40,0.55) 50%, rgba(8,145,178,0.25) 100%)',
-        }}/>
-        {/* Bottom wave */}
-        <div style={{
-          position:'absolute', bottom:-1, left:0, right:0, zIndex:2,
-          height:60,
-          background:'var(--page-bg)',
+          position:'absolute', bottom:-1, left:0, right:0,
+          height:56, background:'var(--page-bg)',
           clipPath:'ellipse(55% 100% at 50% 100%)',
         }}/>
 
-        <div style={{ position:'relative', zIndex:3, maxWidth:1100, margin:'0 auto', padding:'72px 24px 100px' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:32, alignItems:'center' }}>
+        <div style={{ position:'relative', zIndex:2, maxWidth:1100, margin:'0 auto', padding:'64px 24px 96px' }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:40, alignItems:'center' }}>
 
-            {/* Left: headline + search */}
-            <div style={{ maxWidth:580 }}>
+            {/* LEFT — text + search */}
+            <div style={{ maxWidth:560 }}>
               {/* Eyebrow + slide dots */}
-              <motion.div
-                initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }}
-                style={{ display:'flex', alignItems:'center', gap:8, marginBottom:16, flexWrap:'wrap' }}>
-                <Sparkles size={14} style={{ color:'#5eead4' }}/>
-                <span style={{ color:'#5eead4', fontSize:11, fontWeight:800, letterSpacing:'0.12em', textTransform:'uppercase' }}>
+              <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }}
+                style={{ display:'flex', alignItems:'center', gap:8, marginBottom:20, flexWrap:'wrap' }}>
+                <Sparkles size={13} style={{ color:'#5eead4' }}/>
+                <span style={{ color:'#5eead4', fontSize:11, fontWeight:800, letterSpacing:'0.14em', textTransform:'uppercase' }}>
                   Ghana Healthcare Services
                 </span>
                 <span style={{
                   fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:999,
-                  background:'rgba(94,234,212,0.2)', color:'#5eead4',
-                  border:'1px solid rgba(94,234,212,0.3)',
-                }}>
-                  NMC Verified
-                </span>
-                {/* Slideshow dots */}
+                  background:'rgba(94,234,212,0.15)', color:'#5eead4',
+                  border:'1px solid rgba(94,234,212,0.35)',
+                }}>NMC Verified</span>
+                {/* Slide dots */}
                 <div style={{ display:'flex', gap:5, marginLeft:'auto' }}>
-                  {HERO_SLIDES.map((_, i) => (
+                  {HERO_SLIDES.map((_,i) => (
                     <button key={i} onClick={() => setSlideIdx(i)} style={{
-                      width: i===slideIdx ? 18 : 6, height:6, borderRadius:999,
-                      background: i===slideIdx ? '#5eead4' : 'rgba(255,255,255,0.35)',
-                      border:'none', cursor:'pointer', transition:'all 0.35s', padding:0,
+                      width:i===slideIdx?20:6, height:6, borderRadius:999, padding:0, border:'none', cursor:'pointer',
+                      background:i===slideIdx?'#5eead4':'rgba(255,255,255,0.25)', transition:'all 0.3s',
                     }}/>
                   ))}
                 </div>
               </motion.div>
 
-              {/* Animated headline */}
-              <div style={{ minHeight:60, overflow:'hidden', marginBottom:16 }}>
+              {/* Animated headline — big, white, clean */}
+              <div style={{ minHeight:96, overflow:'hidden', marginBottom:12 }}>
                 <AnimatePresence mode="wait">
-                  <motion.h1 key={heroIdx}
-                    initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-30 }}
-                    transition={{ duration:0.45, ease:'easeOut' }}
-                    style={{
-                      color:'#ffffff',
-                      fontSize:'clamp(24px,3.5vw,40px)',
-                      fontWeight:900,
-                      lineHeight:1.15,
-                      margin:0,
-                      textShadow:'0 2px 12px rgba(0,0,0,0.4)',
+                  <motion.div key={heroIdx}
+                    initial={{ opacity:0, y:32 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-32 }}
+                    transition={{ duration:0.5, ease:[0.22,1,0.36,1] }}>
+                    <h1 style={{
+                      color:'#ffffff', fontSize:'clamp(28px,4vw,46px)', fontWeight:900,
+                      lineHeight:1.1, margin:'0 0 10px',
+                      textShadow:'0 2px 20px rgba(0,0,0,0.3)',
+                      letterSpacing:'-0.02em',
                     }}>
-                    {HERO_HEADLINES[heroIdx]}
-                  </motion.h1>
+                      {HERO_HEADLINES[heroIdx].text}
+                    </h1>
+                    <p style={{ color:'rgba(255,255,255,0.65)', fontSize:14, fontWeight:500, margin:0 }}>
+                      {HERO_HEADLINES[heroIdx].sub}
+                    </p>
+                  </motion.div>
                 </AnimatePresence>
               </div>
 
-              <p style={{ color:'rgba(255,255,255,0.85)', fontSize:15, lineHeight:1.7, marginBottom:32, maxWidth:480, textShadow:'0 1px 4px rgba(0,0,0,0.3)' }}>
+              <p style={{ color:'rgba(255,255,255,0.75)', fontSize:14, lineHeight:1.75, marginBottom:28, maxWidth:460 }}>
                 Browse NMC-registered nurses, palliative physicians, physiotherapists, counsellors and more.
                 Every provider is Ghana Card verified and reviewed by real patients.
               </p>
 
-              {/* Hero search bar */}
-              <div ref={searchRef} style={{ display:'flex', gap:8, maxWidth:520 }}>
+              {/* Search bar */}
+              <div ref={searchRef} style={{ display:'flex', gap:8, maxWidth:500 }}>
                 <div style={{ flex:1, position:'relative' }}>
-                  <Search size={16} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'#94a3b8' }}/>
-                  <input
-                    value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+                  <Search size={15} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'#94a3b8' }}/>
+                  <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
                     placeholder="Name, specialisation or region..."
                     style={{
-                      width:'100%', paddingLeft:44, paddingRight:14, paddingTop:14, paddingBottom:14,
-                      borderRadius:14, border:'none', fontSize:14, color:'#0f172a',
-                      background:'rgba(255,255,255,0.97)',
-                      boxShadow:'0 8px 32px rgba(0,0,0,0.2)',
-                      outline:'none', boxSizing:'border-box',
+                      width:'100%', paddingLeft:42, paddingRight:14, paddingTop:13, paddingBottom:13,
+                      borderRadius:12, border:'none', fontSize:14, color:'#0f172a',
+                      background:'rgba(255,255,255,0.96)', outline:'none', boxSizing:'border-box',
+                      boxShadow:'0 8px 32px rgba(0,0,0,0.22)',
                     }}/>
                 </div>
-                <button
-                  style={{
-                    padding:'14px 22px', borderRadius:14, fontSize:14, fontWeight:800,
-                    background:'linear-gradient(135deg,#0d9488,#059669)',
-                    color:'#fff', border:'none', cursor:'pointer',
-                    boxShadow:'0 4px 16px rgba(13,148,136,0.5)',
-                    whiteSpace:'nowrap', flexShrink:0,
-                  }}>
-                  Search
-                </button>
+                <button style={{
+                  padding:'13px 22px', borderRadius:12, fontSize:14, fontWeight:800,
+                  background:'linear-gradient(135deg,#0d9488,#059669)',
+                  color:'#fff', border:'none', cursor:'pointer', flexShrink:0,
+                  boxShadow:'0 4px 16px rgba(13,148,136,0.45)',
+                }}>Search</button>
               </div>
 
-              {/* Popular searches */}
+              {/* Popular quick-filters */}
               <div style={{ display:'flex', alignItems:'center', gap:8, marginTop:14, flexWrap:'wrap' }}>
-                <span style={{ fontSize:11, color:'rgba(255,255,255,0.5)' }}>Popular:</span>
-                {['Palliative Nurse', 'Grief Counsellor', 'Physiotherapist', 'Accra'].map(s => (
+                <span style={{ fontSize:11, color:'rgba(255,255,255,0.45)', fontWeight:600 }}>Popular:</span>
+                {['Palliative Nurse','Grief Counsellor','Physiotherapist','Accra'].map(s => (
                   <button key={s} onClick={() => { setSearch(s); setPage(1); }}
                     style={{
-                      padding:'4px 10px', borderRadius:999, fontSize:11, fontWeight:600,
-                      background:'rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.8)',
-                      border:'1px solid rgba(255,255,255,0.2)', cursor:'pointer',
-                      transition:'all 0.15s',
-                    }}>
-                    {s}
-                  </button>
+                      padding:'4px 11px', borderRadius:999, fontSize:11, fontWeight:600,
+                      background:'rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.8)',
+                      border:'1px solid rgba(255,255,255,0.18)', cursor:'pointer', transition:'all 0.15s',
+                    }}>{s}</button>
                 ))}
               </div>
             </div>
 
-            {/* Right: floating stat cards — desktop only */}
-            <div style={{ display:'flex', flexDirection:'column', gap:12, flexShrink:0 }}>
+            {/* RIGHT — stat cards */}
+            <div style={{ display:'flex', flexDirection:'column', gap:10, flexShrink:0 }}>
               {[
-                { icon:UserCheck, color:'#0d9488', val:<Counter to={16} suffix="+"/>, label:'Verified Providers', bg:'rgba(13,148,136,0.15)' },
-                { icon:Briefcase, color:'#0891b2', val:'8', label:'Service Categories', bg:'rgba(8,145,178,0.15)' },
-                { icon:Shield,    color:'#059669', val:'100%', label:'Ghana Card Verified', bg:'rgba(5,150,105,0.15)' },
-                { icon:ThumbsUp,  color:'#f59e0b', val:<Counter to={98} suffix="%"/>, label:'Patient Satisfaction', bg:'rgba(245,158,11,0.15)' },
+                { icon:UserCheck, color:'#0d9488', val:<Counter to={16} suffix="+"/>, label:'Verified Providers' },
+                { icon:Briefcase, color:'#0891b2', val:'8', label:'Service Categories' },
+                { icon:Shield,    color:'#059669', val:'100%', label:'Ghana Card Verified' },
+                { icon:ThumbsUp,  color:'#d97706', val:<Counter to={98} suffix="%"/>, label:'Patient Satisfaction' },
               ].map(s => (
                 <motion.div key={s.label}
-                  initial={{ opacity:0, x:30 }} animate={{ opacity:1, x:0 }}
-                  whileHover={{ scale:1.04 }}
+                  initial={{ opacity:0, x:24 }} animate={{ opacity:1, x:0 }}
+                  whileHover={{ scale:1.03, x:-2 }}
                   style={{
-                    background:s.bg, backdropFilter:'blur(8px)',
-                    border:'1px solid rgba(255,255,255,0.12)',
-                    borderRadius:16, padding:'14px 18px',
-                    display:'flex', alignItems:'center', gap:12,
-                    minWidth:190,
+                    background:'rgba(255,255,255,0.07)', backdropFilter:'blur(8px)',
+                    border:'1px solid rgba(255,255,255,0.1)',
+                    borderRadius:14, padding:'12px 16px',
+                    display:'flex', alignItems:'center', gap:12, minWidth:180,
                   }}>
                   <div style={{
-                    width:38, height:38, borderRadius:12,
-                    background:s.color, display:'flex', alignItems:'center', justifyContent:'center',
-                    boxShadow:`0 4px 12px ${s.color}44`,
+                    width:36, height:36, borderRadius:10, background:s.color,
+                    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+                    boxShadow:`0 4px 12px ${s.color}55`,
                   }}>
-                    <s.icon size={18} style={{ color:'#fff' }}/>
+                    <s.icon size={17} style={{ color:'#fff' }}/>
                   </div>
                   <div>
-                    <p style={{ fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>{s.val}</p>
-                    <p style={{ fontSize:11, color:'rgba(255,255,255,0.6)', marginTop:2 }}>{s.label}</p>
+                    <p style={{ fontSize:20, fontWeight:900, color:'#fff', lineHeight:1, letterSpacing:'-0.02em' }}>{s.val}</p>
+                    <p style={{ fontSize:10, color:'rgba(255,255,255,0.55)', marginTop:2 }}>{s.label}</p>
                   </div>
                 </motion.div>
               ))}
@@ -1144,85 +1133,140 @@ export default function Services() {
           </div>
         </section>
 
-        {/* ── SERVICE CATEGORIES ── */}
+        {/* ── ROLE IMAGE CARDS CAROUSEL ── */}
         <section style={{ paddingBottom:40 }}>
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:14 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:16 }}>
             <div>
-              <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
-              <h2 style={{ fontSize:18, fontWeight:800, color:'#0f172a', margin:0 }}>All service categories</h2>
+              <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.14em', textTransform:'uppercase', marginBottom:3 }}>Browse by Role</p>
+              <h2 style={{ fontSize:18, fontWeight:800, color:'#0f172a', margin:0 }}>Who do you need?</h2>
+            </div>
+            <div style={{ display:'flex', gap:6 }}>
+              <button onClick={() => setSlideIdx(i => Math.max(0, i-1))}
+                style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #e2e8f0', background:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b' }}>
+                <ChevronLeft size={16}/>
+              </button>
+              <button onClick={() => setSlideIdx(i => Math.min(Object.keys(TYPE_META).length-1, i+1))}
+                style={{ width:32, height:32, borderRadius:'50%', border:'1.5px solid #e2e8f0', background:'#fff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b' }}>
+                <ChevronRight size={16}/>
+              </button>
             </div>
           </div>
 
-          {/* Horizontal scroll strip — no orphan chips */}
-          <div style={{
-            display:'flex', gap:8, overflowX:'auto', paddingBottom:8,
-            scrollbarWidth:'none', msOverflowStyle:'none',
-          }}>
-            {/* All pill */}
+          {/* Horizontal scroll strip — pill filters */}
+          <div style={{ display:'flex', gap:8, overflowX:'auto', paddingBottom:8, marginBottom:20, scrollbarWidth:'none' }}>
             <motion.button whileTap={{ scale:0.94 }}
               onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
               style={{
                 display:'flex', alignItems:'center', gap:7, flexShrink:0,
-                padding:'8px 16px', borderRadius:999,
+                padding:'7px 14px', borderRadius:999,
                 border:`2px solid ${filterType==='' ? '#0f172a' : '#e2e8f0'}`,
                 background: filterType==='' ? '#0f172a' : '#fff',
-                cursor:'pointer', transition:'all 0.18s', whiteSpace:'nowrap',
+                cursor:'pointer', transition:'all 0.18s',
               }}>
-              <div style={{
-                width:26, height:26, borderRadius:'50%',
-                background: filterType==='' ? 'rgba(255,255,255,0.15)' : '#f1f5f9',
-                display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
-              }}>
-                <Briefcase size={13} style={{ color: filterType==='' ? '#fff' : '#64748b' }}/>
-              </div>
+              <Briefcase size={12} style={{ color: filterType==='' ? '#fff' : '#64748b' }}/>
               <span style={{ fontSize:12, fontWeight:700, color: filterType==='' ? '#fff' : '#334155' }}>All</span>
-              {filterType === '' && <span style={{ fontSize:10, fontWeight:700, background:'rgba(255,255,255,0.2)', color:'#fff', padding:'1px 6px', borderRadius:999 }}>16</span>}
             </motion.button>
-
             {Object.entries(TYPE_META).map(([key, meta]) => {
               const sel = filterType === key;
               return (
                 <motion.button key={key} whileTap={{ scale:0.94 }}
-                  onClick={() => { setFilterType(sel ? '' : key); setPage(1); setTab('browse'); }}
+                  onClick={() => { setFilterType(sel?'':key); setPage(1); setTab('browse'); }}
                   style={{
                     display:'flex', alignItems:'center', gap:7, flexShrink:0,
-                    padding:'8px 16px', borderRadius:999,
+                    padding:'7px 14px', borderRadius:999,
                     border:`2px solid ${sel ? meta.color : '#e2e8f0'}`,
                     background: sel ? meta.color : '#fff',
-                    cursor:'pointer', transition:'all 0.18s', whiteSpace:'nowrap',
-                    boxShadow: sel ? `0 4px 14px ${meta.color}40` : 'none',
+                    cursor:'pointer', transition:'all 0.18s',
+                    boxShadow: sel ? `0 4px 12px ${meta.color}40` : 'none',
                   }}>
-                  <div style={{
-                    width:26, height:26, borderRadius:'50%', flexShrink:0,
-                    background: sel ? 'rgba(255,255,255,0.25)' : `${meta.color}18`,
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                  }}>
-                    <meta.icon size={13} style={{ color: sel ? '#fff' : meta.color }}/>
-                  </div>
-                  <span style={{ fontSize:12, fontWeight:700, color: sel ? '#fff' : '#334155' }}>{meta.label}</span>
+                  <meta.icon size={12} style={{ color: sel ? '#fff' : meta.color }}/>
+                  <span style={{ fontSize:12, fontWeight:700, color: sel ? '#fff' : '#334155', whiteSpace:'nowrap' }}>{meta.label}</span>
                 </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Image cards — 4 visible, scrollable */}
+          <div style={{ display:'flex', gap:14, overflowX:'auto', paddingBottom:8, scrollbarWidth:'none' }}>
+            {Object.entries(TYPE_META).map(([key, meta], idx) => {
+              const sel = filterType === key;
+              return (
+                <motion.div key={key}
+                  initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }}
+                  transition={{ delay: idx * 0.06 }}
+                  whileHover={{ y:-6, boxShadow:`0 20px 48px ${meta.color}30` }}
+                  onClick={() => { setFilterType(sel?'':key); setPage(1); setTab('browse'); }}
+                  style={{
+                    flexShrink:0, width:175, borderRadius:20, overflow:'hidden',
+                    cursor:'pointer', position:'relative',
+                    border:`2.5px solid ${sel ? meta.color : 'transparent'}`,
+                    boxShadow: sel ? `0 8px 32px ${meta.color}40` : '0 2px 12px rgba(0,0,0,0.08)',
+                    transition:'border-color 0.2s',
+                  }}>
+                  {/* Photo */}
+                  <div style={{ height:140, overflow:'hidden', position:'relative' }}>
+                    <img src={meta.img} alt={meta.label}
+                      style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.4s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.transform='scale(1.08)'}
+                      onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+                    />
+                    {/* Gradient overlay — bottom only, subtle */}
+                    <div style={{
+                      position:'absolute', bottom:0, left:0, right:0, height:60,
+                      background:'linear-gradient(to top, rgba(0,0,0,0.55), transparent)',
+                    }}/>
+                    {/* Selected check */}
+                    {sel && (
+                      <div style={{
+                        position:'absolute', top:8, right:8,
+                        width:24, height:24, borderRadius:'50%',
+                        background:meta.color, border:'2px solid #fff',
+                        display:'flex', alignItems:'center', justifyContent:'center',
+                      }}>
+                        <CheckCircle size={13} style={{ color:'#fff' }}/>
+                      </div>
+                    )}
+                  </div>
+                  {/* Label */}
+                  <div style={{
+                    padding:'10px 12px 12px',
+                    background:'#fff',
+                  }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:3 }}>
+                      <div style={{
+                        width:28, height:28, borderRadius:8, background:`${meta.color}18`,
+                        display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+                      }}>
+                        <meta.icon size={14} style={{ color:meta.color }}/>
+                      </div>
+                      <p style={{ fontSize:12, fontWeight:800, color:'#0f172a', lineHeight:1.3 }}>{meta.label}</p>
+                    </div>
+                    <p style={{ fontSize:10, color:'#94a3b8', fontWeight:600 }}>
+                      {key === 'nurse' ? '2 providers' : key === 'doctor' ? '2 providers' : '2 providers'}
+                    </p>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
         </section>
 
-        {/* ── TABS ── */}
-        <div style={{ display:'flex', borderBottom:'2px solid #f1f5f9', marginBottom:24, gap:4 }}>
+        {/* ── PREMIUM TABS ── */}
+        <div style={{
+          display:'inline-flex', background:'#f1f5f9', borderRadius:14, padding:4,
+          marginBottom:24, gap:2,
+        }}>
           {[
             { id:'browse',   label:'Browse Providers', icon:Stethoscope },
             { id:'bookings', label:'My Bookings',       icon:Calendar    },
           ].map(({ id, label, icon:Ic }) => (
             <button key={id} onClick={() => setTab(id)} style={{
-              display:'flex', alignItems:'center', gap:8,
-              padding:'12px 20px', fontSize:13, fontWeight:700,
-              borderBottom: `3px solid ${tab===id ? '#0d9488' : 'transparent'}`,
+              display:'flex', alignItems:'center', gap:7,
+              padding:'9px 18px', borderRadius:10, fontSize:13, fontWeight:700,
+              background: tab===id ? '#fff' : 'transparent',
               color: tab===id ? '#0d9488' : '#64748b',
-              background:'none', border:'none',
-              borderBottomWidth:3,
-              borderBottomStyle:'solid',
-              borderBottomColor: tab===id ? '#0d9488' : 'transparent',
-              cursor:'pointer', transition:'all 0.15s',
-              marginBottom:-2,
+              border:'none', cursor:'pointer', transition:'all 0.2s',
+              boxShadow: tab===id ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
             }}>
               <Ic size={14}/> {label}
             </button>
