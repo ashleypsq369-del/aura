@@ -167,15 +167,15 @@ async def upload_avatar(
 
     extended = _get_or_create_extended(db, current_user.id)
 
-    # Delete old avatar file
+    # Delete old avatar file if it exists
     old = extended.avatar_url
-    if old and "/uploads/profiles/" in old:
+    if old and ("/uploads/profiles/" in old or "/static/uploads/profiles/" in old):
         old_path = UPLOAD_DIR / old.split("/")[-1]
         if old_path.exists():
             try: old_path.unlink()
             except Exception: pass
 
-    extended.avatar_url = f"/static/uploads/profiles/{filename}"
+    extended.avatar_url = f"/uploads/profiles/{filename}"
     db.add(AuditLog(user_id=current_user.id, user_role=current_user.role,
                     action="avatar_uploaded", resource_type="user",
                     resource_id=current_user.id, success=True))

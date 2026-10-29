@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   User, Mail, Phone, Shield, Lock, Bell, Globe, Save, 
-  Loader2, CheckCircle, Edit2, Palette
+  Loader2, CheckCircle, Edit2, Palette, Camera, Upload,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
 import PasswordInput from '../components/PasswordInput';
 import PasswordStrength from '../components/PasswordStrength';
-import FormFileUpload from '../components/FormFileUpload';
 import AvatarDisplay from '../components/avatar/AvatarDisplay';
 import AvatarModal from '../components/avatar/AvatarModal';
+import apiClient from '../api/client';
 
 import { API_URL } from '../api/client';
 
@@ -19,8 +19,10 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [showAvatarBuilder, setShowAvatarBuilder] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const avatarInputRef = useRef(null);
   const queryClient = useQueryClient();
-  const user = JSON.parse(localStorage.getItem('user') || '');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   // Profile form state
   const [profileData, setProfileData] = useState({
@@ -34,12 +36,36 @@ export default function Profile() {
     new_password: '',
     confirm_password: ''});
 
+  // ── Avatar upload — uses /api/profile/avatar which saves to UserExtended ──
+  const handleAvatarUpload = async (file) => {
+    if (!file) return;
+    const allowed = ['image/jpeg','image/png','image/webp'];
+    if (!allowed.includes(file.type)) { toast.error('Only JPEG, PNG or WebP images are allowed'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error('Image must be under 5MB'); return; }
+    setAvatarUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await apiClient.post('/api/profile/avatar', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      toast.success('Profile photo updated!');
+      // Invalidate so AvatarDisplay re-fetches
+      queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
+      queryClient.invalidateQueries({ queryKey: ['user-profile', user.id] });
+    } catch (e) {
+      toast.error(e.response?.data?.detail || 'Photo upload failed');
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   // Fetch user profile
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['user-profile', user.id],
     queryFn: async () => {
       const token = localStorage.getItem('auth_token');
-      const response = await axios.get(`${API_URL}/api/profile/${user.id}`, {
+      const response = await axios.get(`${API_URL}/api/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return response.data;
@@ -162,11 +188,13 @@ export default function Profile() {
                 <div className="relative inline-block mb-3">
                   <AvatarDisplay size={72} showRing className="mx-auto" />
                   <button
-                    onClick={() => setShowAvatarBuilder(true)}
-                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center shadow-md transition-colors"
-                    title="Customise avatar"
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    disabled={avatarUploading}
+                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center shadow-md transition-colors disabled:opacity-50"
+                    title="Upload profile photo"
                   >
-                    <Palette size={13} />
+                    {avatarUploading ? <Loader2 size={11} className="animate-spin"/> : <Camera size={11}/>}
                   </button>
                 </div>
                 <h2 className="text-sm font-bold text-slate-900 mb-1">
@@ -213,14 +241,33 @@ export default function Profile() {
               </div>
 
               <form onSubmit={handleProfileSubmit} className="p-4 space-y-4">
-                {/* Profile picture upload */}
-                <FormFileUpload
-                  category="profiles"
-                  label="Profile Picture"
-                  description="Upload a profile picture (optional)"
-                  accept="image/*"
-                  maxSizeMB={10}
-                />
+                {/* Profile picture — direct upload to /api/profile/avatar */}
+                <div>
+                  <label className="block text-xs font-bold mb-2" style={{ color:'var(--text-600)' }}>Profile Picture</label>
+                  <div className="flex items-center gap-4">
+                    <AvatarDisplay size={56} showRing />
+                    <div className="flex-1">
+                      <input
+                        ref={avatarInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        onChange={e => { if (e.target.files[0]) handleAvatarUpload(e.target.files[0]); }}
+                      />
+                      <button type="button"
+                        onClick={() => avatarInputRef.current?.click()}
+                        disabled={avatarUploading}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors disabled:opacity-50"
+                      >
+                        {avatarUploading
+                          ? <><Loader2 size={13} className="animate-spin"/> Uploading...</>
+                          : <><Camera size={13}/> Upload Photo</>
+                        }
+                      </button>
+                      <p className="text-xs mt-1" style={{ color:'var(--text-500)' }}>JPEG, PNG or WebP · max 5MB</p>
+                    </div>
+                  </div>
+                </div>
 
                 {[
                   { label: 'Full Name',     type: 'text',  key: 'full_name',  val: profile?.full_name || user.full_name,   placeholder: 'Your full name' },

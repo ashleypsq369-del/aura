@@ -126,6 +126,11 @@ _static_dir = Path(__file__).parent / "static"
 _static_dir.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
+# Serve user uploads (profile photos, attachments, etc.)
+_uploads_dir = Path(__file__).parent / "uploads"
+_uploads_dir.mkdir(exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(_uploads_dir)), name="uploads")
+
 # NOTE: Full dist static file mounting is done at the BOTTOM of this file
 # (after all API routers) via dedicated sub-directory mounts + SPA fallback.
 # Do NOT add partial /assets or /icons mounts here - they are handled below.
