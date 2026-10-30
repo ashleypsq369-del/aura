@@ -10,7 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  Loader2, User as UserIcon, Mail, Phone, Lock,
@@ -291,6 +291,8 @@ function IconSlot({ err, children }) {
 export default function Register() {
  const navigate = useNavigate();
  const { setUser } = useAuth();
+ const [searchParams] = useSearchParams();
+ const preRole = searchParams.get('role') || '';
 
  const [step, setStep] = useState(1);
  const [showPw, setShowPw] = useState(false);
