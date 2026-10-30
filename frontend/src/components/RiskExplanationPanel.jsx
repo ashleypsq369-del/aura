@@ -88,13 +88,13 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <InfoBadge label={`${conf}% confidence`} variant="default" size="xs" />
  </div>
  {data?.summary && (
- <p className="text-xs text-slate-600 mt-1 leading-snug max-w-xs">{data.summary}</p>
+ <p className="text-xs text-[var(--text-600)] mt-1 leading-snug max-w-xs">{data.summary}</p>
  )}
  </div>
  </div>
  <div className="text-right flex-shrink-0">
  <p className="text-3xl font-black tabular-nums leading-none text-slate-900">{pct}<span className="text-base font-semibold text-slate-400">%</span></p>
- <p className="text-[10px] text-slate-400 uppercase tracking-wide mt-0.5">overall risk</p>
+ <p className="text-[10px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">overall risk</p>
  </div>
  </div>
  {/* Animated bar - reading gauge */}
@@ -106,13 +106,13 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  </div>
 
  {/* ── § 2 Chapter tabs - book divider style ────────────────── */}
- <div className="flex border border-slate-200 rounded-t-lg overflow-hidden bg-slate-50">
+ <div className="flex border border-[var(--card-border)] rounded-t-lg overflow-hidden bg-slate-50">
  {TABS.map(({ id, label, icon: Icon }, idx) => (
  <button key={id} onClick={() => setTab(id)}
- className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
+ className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 text-[11px] font-semibold transition-all border-r border-[var(--card-border)] last:border-r-0 ${
  tab === id
- ? 'bg-slate-50 text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
- : 'text-slate-400 hover:bg-white/70 hover:text-slate-600'
+ ? 'bg-[var(--card-bg)] text-teal-700 shadow-[inset_0_-2px_0_0_#7c3aed]'
+ : 'text-[var(--text-400)] hover:bg-white/70 hover:text-slate-600'
  }`}>
  <Icon size={11} className={tab === id ? 'text-teal-600' : ''} />
  <span className="hidden sm:inline">{label}</span>
@@ -124,7 +124,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  </div>
 
  {/* ── § 3 Tab panel ────────────────────────────────────────── */}
- <div className="border border-t-0 border-slate-200 rounded-b-lg bg-slate-50 overflow-hidden">
+ <div className="border border-t-0 border-[var(--card-border)] rounded-b-lg bg-[var(--card-bg)] overflow-hidden">
  <AnimatePresence mode="wait">
  <motion.div key={tab} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.14 }}>
 
@@ -133,7 +133,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="p-4 space-y-3">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
  <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-teal-600">§</span>
- <p className="text-[11px] font-bold text-slate-500 select-none">SHAP Feature Drivers</p>
+ <p className="text-[11px] font-bold text-[var(--text-500)] select-none">SHAP Feature Drivers</p>
  </div>
 
  {/* Low risk explanation banner */}
@@ -185,7 +185,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  </>
  )}
  {explanations.length === 0 && (
- <div className="text-center py-8 text-slate-400 italic text-sm">No SHAP data available - run AI Risk assessment first.</div>
+ <div className="text-center py-8 text-[var(--text-400)] italic text-sm">No SHAP data available - run AI Risk assessment first.</div>
  )}
  </>
  );
@@ -194,7 +194,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {/* Task-level probability summary */}
  {data?.tasks && Object.keys(data.tasks).length > 0 && (
  <div className="mt-3 pt-3 border-t border-slate-100">
- <p className="text-[10px] font-bold text-slate-400 mb-2">Model Scores by Clinical Domain</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Model Scores by Clinical Domain</p>
  <div className="grid grid-cols-2 gap-1.5">
  {Object.entries(data.tasks).map(([key, task]) => {
  const prob = Math.round((task.probability || 0) * 100);
@@ -217,7 +217,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
  <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-teal-600">§</span>
- <p className="text-[11px] font-bold text-slate-500 select-none">Risk Component Breakdown</p>
+ <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Risk Component Breakdown</p>
  </div>
  <InfoGrid cols={2} items={[
  ...(data?.component_scores || []).slice(0, 5).map(c => ({
@@ -243,7 +243,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
  <span className="w-4 h-4 rounded bg-amber-100 flex items-center justify-center text-[9px] font-bold text-amber-600">§</span>
- <p className="text-[11px] font-bold text-slate-500 select-none">Clinical Concerns & Actions</p>
+ <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Clinical Concerns & Actions</p>
  </div>
  {(data?.key_concerns?.length > 0) ? (
  <div className="rounded-lg border border-amber-200 overflow-hidden">
@@ -252,11 +252,11 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <AlertTriangle size={12} className="text-amber-600 flex-shrink-0" />
  <span className="text-[11px] font-bold text-amber-700 select-none">Key Clinical Concerns</span>
  </div>
- <div className="px-5 py-3 bg-slate-50 space-y-2">
+ <div className="px-5 py-3 bg-[var(--card-bg)] space-y-2">
  {data.key_concerns.map((c, i) => (
  <div key={i} className="flex items-start gap-3">
  <span className="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
- <p className="text-sm text-slate-700 leading-relaxed">{c}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">{c}</p>
  </div>
  ))}
  </div>
@@ -271,11 +271,11 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
  <span className="text-[11px] font-bold text-teal-700 select-none">Recommended Actions</span>
  </div>
- <div className="px-5 py-3 bg-slate-50 space-y-2">
+ <div className="px-5 py-3 bg-[var(--card-bg)] space-y-2">
  {(data?.recommended_actions || data?.recommendations || []).map((r, i) => (
  <div key={i} className="flex items-start gap-3">
  <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
- <p className="text-sm text-slate-700 leading-relaxed">{r}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">{r}</p>
  </div>
  ))}
  </div>
@@ -288,7 +288,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
  <span className="w-4 h-4 rounded bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">§</span>
- <p className="text-[11px] font-bold text-slate-500 select-none">Clinician Feedback</p>
+ <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Clinician Feedback</p>
  </div>
  <InfoAlert type="info">
  Your feedback improves the AI model for future predictions. Do you agree with this risk assessment?
@@ -328,9 +328,9 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  </div>
 
  {/* ── Model footnote ────────────────────────────────────────── */}
- <div className="flex items-start gap-2 px-1 border-t border-slate-100 pt-3">
+ <div className="flex items-start gap-2 px-1 border-t border-[var(--card-border)]/50 pt-3">
  <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
- <p className="text-[10px] text-slate-400 leading-relaxed">
+ <p className="text-[10px] text-[var(--text-400)] leading-relaxed">
  <span className="font-semibold text-slate-500">XGBoost v1.0 · SHAP TreeExplainer</span> ·
  Trained on clinically-parameterised synthetic data · Results should be reviewed by a qualified clinician
  </p>

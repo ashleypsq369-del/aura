@@ -48,7 +48,7 @@ export default function Select({
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       {label && (
-        <label htmlFor={selectId} className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+        <label htmlFor={selectId} className="text-xs font-bold text-[var(--text-600)] uppercase tracking-wider">
           {label}{required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
         </label>
       )}
@@ -59,7 +59,7 @@ export default function Select({
             flex items-center justify-between gap-2
             w-full px-3 ${h}
             border-2 border-slate-300 rounded-xl
-            bg-slate-50 text-slate-900
+            bg-[var(--card-bg)] text-slate-900
             hover:border-teal-400
             focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20
             disabled:opacity-50 disabled:cursor-not-allowed
@@ -70,7 +70,7 @@ export default function Select({
         >
           <RadixSelect.Value placeholder={placeholder} />
           <RadixSelect.Icon>
-            <ChevronDown size={15} className="text-slate-400 flex-shrink-0" />
+            <ChevronDown size={15} className="text-[var(--text-400)] flex-shrink-0" />
           </RadixSelect.Icon>
         </RadixSelect.Trigger>
 
@@ -80,7 +80,7 @@ export default function Select({
             sideOffset={4}
             className="
               z-[9999] overflow-hidden
-              bg-slate-50 rounded-xl shadow-xl border-2 border-slate-200
+              bg-[var(--card-bg)] rounded-xl shadow-xl border-2 border-slate-200
               max-h-[280px]
               w-[var(--radix-select-trigger-width)]
               min-w-[180px]
@@ -100,7 +100,7 @@ export default function Select({
                   ))
                 ) : (
                   <RadixSelect.Group key={groupName}>
-                    <RadixSelect.Label className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <RadixSelect.Label className="px-3 py-1.5 text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider">
                       {groupName}
                     </RadixSelect.Label>
                     {groupOpts.map((opt) => (

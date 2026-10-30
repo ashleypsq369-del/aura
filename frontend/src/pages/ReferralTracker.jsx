@@ -111,7 +111,7 @@ export default function ReferralTracker() {
     updateMutation.mutate({ id: referralId, data: statusUpdate });
   };
 
-  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[var(--card-bg)] text-[var(--text-900)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
   const textareaCls = `${inputCls} resize-none`;
 
   const groupedReferrals = referrals.reduce((acc, r) => {
@@ -147,14 +147,14 @@ export default function ReferralTracker() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(`/assessments/${patientId}`)} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition">
-            <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            <ArrowLeft className="w-5 h-5 text-[var(--text-600)] dark:text-slate-300" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-[var(--text-900)] flex items-center gap-2">
               <Send className="w-6 h-6 text-green-600" />
               Referral Tracker
             </h1>
-            {patient && <p className="text-slate-500 dark:text-slate-400 text-sm">{patient.full_name}</p>}
+            {patient && <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm">{patient.full_name}</p>}
           </div>
         </div>
         <button
@@ -170,7 +170,7 @@ export default function ReferralTracker() {
         {showForm && (
           <motion.div
             initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-            className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-green-200 dark:border-green-700 overflow-hidden"
+            className="bg-[var(--card-bg)] rounded-xl border border-green-200 dark:border-green-700 overflow-hidden"
           >
             <div className="px-5 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-700 flex items-center justify-between">
               <h3 className="font-semibold text-green-900 dark:text-green-100 text-sm flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function ReferralTracker() {
             </div>
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Referral Type *</label>
+                <label className="block text-sm font-medium text-[var(--text-700)] mb-2">Referral Type *</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {REFERRAL_TYPES.map(t => (
                     <button
@@ -190,7 +190,7 @@ export default function ReferralTracker() {
                       className={`text-left px-3 py-2 rounded-lg border-2 text-sm transition ${
                         form.referral_type === t.value
                           ? `border-${t.color}-500 bg-${t.color}-50 dark:bg-${t.color}-900/30 font-medium`
-                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300'
+                          : 'border-[var(--card-border)] dark:border-slate-600 hover:border-slate-300'
                       }`}
                     >
                       {t.label}
@@ -201,14 +201,14 @@ export default function ReferralTracker() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Urgency</label>
+                  <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Urgency</label>
                   <div className="flex gap-2">
                     {Object.entries(URGENCY_CONFIG).map(([val, cfg]) => (
                       <button key={val} type="button" onClick={() => set('urgency', val)}
                         className={`flex-1 py-1.5 rounded-lg text-sm border-2 transition ${
                           form.urgency === val
                             ? `border-${cfg.color}-500 bg-${cfg.color}-50 dark:bg-${cfg.color}-900/30 font-medium`
-                            : 'border-slate-200 dark:border-slate-600 hover:border-slate-300'
+                            : 'border-[var(--card-border)] dark:border-slate-600 hover:border-slate-300'
                         }`}>
                         {cfg.label}
                       </button>
@@ -216,34 +216,34 @@ export default function ReferralTracker() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Referred To</label>
+                  <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Referred To</label>
                   <input className={inputCls} placeholder="Clinician / team name" value={form.referred_to_name} onChange={e => set('referred_to_name', e.target.value)} />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Referral Reason *</label>
+                <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Referral Reason *</label>
                 <textarea className={textareaCls} rows={2} placeholder="Clinical reason for referral..." value={form.referral_reason} onChange={e => set('referral_reason', e.target.value)} required />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Clinical Goals</label>
+                <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Clinical Goals</label>
                 <textarea className={textareaCls} rows={2} placeholder="What should this referral achieve for the patient? (comfort-focused goals)" value={form.clinical_goals} onChange={e => set('clinical_goals', e.target.value)} />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Team / Department</label>
+                  <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Team / Department</label>
                   <input className={inputCls} value={form.referred_to_team} onChange={e => set('referred_to_team', e.target.value)} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Contact</label>
+                  <label className="block text-sm font-medium text-[var(--text-700)] mb-1">Contact</label>
                   <input className={inputCls} placeholder="Phone / email" value={form.referred_to_contact} onChange={e => set('referred_to_contact', e.target.value)} />
                 </div>
               </div>
 
               <div className="flex justify-end gap-3">
-                <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 rounded-xl border border-slate-300 dark:border-slate-600 text-sm text-[var(--text-700)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
                   Cancel
                 </button>
                 <button type="submit" disabled={createMutation.isLoading} className="flex items-center gap-2 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-semibold transition disabled:opacity-50">
@@ -258,10 +258,10 @@ export default function ReferralTracker() {
 
       {/* Referrals List */}
       {referrals.length === 0 ? (
-        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+        <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-12 text-center">
           <Send className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="font-semibold text-slate-600 dark:text-slate-300 mb-1">No referrals yet</h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Click "New Referral" to create the first referral for this patient.</p>
+          <h3 className="font-semibold text-[var(--text-600)] mb-1">No referrals yet</h3>
+          <p className="text-sm text-[var(--text-500)] dark:text-slate-400">Click "New Referral" to create the first referral for this patient.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -269,13 +269,13 @@ export default function ReferralTracker() {
             const typeInfo = REFERRAL_TYPES.find(t => t.value === r.referral_type);
             const isEditing = editingId === r.id;
             return (
-              <div key={r.id} className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div key={r.id} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
                 <div
-                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-750"
+                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--card-bg)] dark:hover:bg-slate-750"
                   onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                 >
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="font-semibold text-sm text-slate-900 dark:text-slate-100">{typeInfo?.label || r.referral_type}</span>
+                    <span className="font-semibold text-sm text-[var(--text-900)] dark:text-slate-100">{typeInfo?.label || r.referral_type}</span>
                     <StatusBadge status={r.status} />
                     <UrgencyBadge urgency={r.urgency} />
                     <span className="text-xs text-slate-400">{new Date(r.created_at).toLocaleDateString('en-GB')}</span>
@@ -284,7 +284,7 @@ export default function ReferralTracker() {
                     <button
                       type="button"
                       onClick={e => { e.stopPropagation(); setEditingId(isEditing ? null : r.id); setStatusUpdate({ status: r.status }); }}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 transition"
+                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-[var(--text-500)] transition"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
@@ -297,16 +297,16 @@ export default function ReferralTracker() {
                     <motion.div
                       initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-                      className="border-t border-slate-200 dark:border-slate-600 px-4 py-4 bg-slate-50 dark:bg-slate-750 space-y-3 text-sm"
+                      className="border-t border-[var(--card-border)] dark:border-slate-600 px-4 py-4 bg-[var(--card-bg)] dark:bg-slate-750 space-y-3 text-sm"
                     >
-                      {r.referral_reason && <div><span className="font-medium text-slate-600 dark:text-slate-300">Reason: </span><span className="text-slate-700 dark:text-slate-200">{r.referral_reason}</span></div>}
-                      {r.clinical_goals && <div><span className="font-medium text-slate-600 dark:text-slate-300">Goals: </span><span className="text-slate-700 dark:text-slate-200">{r.clinical_goals}</span></div>}
-                      {r.referred_to_name && <div><span className="font-medium text-slate-600 dark:text-slate-300">Referred to: </span><span className="text-slate-700 dark:text-slate-200">{r.referred_to_name}{r.referred_to_team && ` (${r.referred_to_team})`}</span></div>}
-                      {r.outcome_notes && <div><span className="font-medium text-slate-600 dark:text-slate-300">Outcome: </span><span className="text-slate-700 dark:text-slate-200">{r.outcome_notes}</span></div>}
+                      {r.referral_reason && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Reason: </span><span className="text-[var(--text-700)] dark:text-slate-200">{r.referral_reason}</span></div>}
+                      {r.clinical_goals && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Goals: </span><span className="text-[var(--text-700)] dark:text-slate-200">{r.clinical_goals}</span></div>}
+                      {r.referred_to_name && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Referred to: </span><span className="text-[var(--text-700)] dark:text-slate-200">{r.referred_to_name}{r.referred_to_team && ` (${r.referred_to_team})`}</span></div>}
+                      {r.outcome_notes && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Outcome: </span><span className="text-[var(--text-700)] dark:text-slate-200">{r.outcome_notes}</span></div>}
 
                       {isEditing && (
-                        <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-600 space-y-3">
-                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 ">Update Status</p>
+                        <div className="mt-3 pt-3 border-t border-[var(--card-border)] dark:border-slate-600 space-y-3">
+                          <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] ">Update Status</p>
                           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                             {Object.entries(STATUS_CONFIG).map(([val, cfg]) => {
                               const Icon = cfg.icon;
@@ -318,7 +318,7 @@ export default function ReferralTracker() {
                                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm border-2 transition ${
                                     statusUpdate.status === val
                                       ? `border-${cfg.color}-500 bg-${cfg.color}-50 dark:bg-${cfg.color}-900/30`
-                                      : 'border-slate-200 dark:border-slate-600 hover:border-slate-300'
+                                      : 'border-[var(--card-border)] dark:border-slate-600 hover:border-slate-300'
                                   }`}
                                 >
                                   <Icon className="w-3.5 h-3.5" /> {cfg.label}
@@ -327,7 +327,7 @@ export default function ReferralTracker() {
                             })}
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">Outcome Notes</label>
+                            <label className="block text-xs font-medium text-[var(--text-600)] mb-1">Outcome Notes</label>
                             <textarea
                               className={`${inputCls} resize-none`} rows={2}
                               value={statusUpdate.outcome_notes || ''}
@@ -357,7 +357,7 @@ export default function ReferralTracker() {
       )}
 
       <div className="flex justify-start">
-        <button onClick={() => navigate(`/assessments/${patientId}`)} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition">
+        <button onClick={() => navigate(`/assessments/${patientId}`)} className="flex items-center gap-2 text-sm text-[var(--text-500)] hover:text-[var(--text-700)] dark:text-[var(--text-400)] dark:hover:text-slate-200 transition">
           <ArrowLeft className="w-4 h-4" /> Back to Assessments
         </button>
       </div>

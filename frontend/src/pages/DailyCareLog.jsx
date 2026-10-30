@@ -113,11 +113,11 @@ export default function DailyCareLog() {
 
  <form onSubmit={handleSubmit} className="space-y-5">
  {/* Care tasks checklist */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Check size={16} />Care Tasks Completed Today</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3 flex items-center gap-2"><Check size={16} />Care Tasks Completed Today</h3>
  <div className="grid grid-cols-1 gap-2">
  {[...CARE_TASKS, ...customTasks].map(task => (
- <label key={task} className={`flex items-center gap-3 p-2.5 rounded-xl border-2 cursor-pointer transition ${completedTasks.includes(task) ? 'border-green-400 bg-green-50' : 'border-slate-200 hover:border-green-300'}`}>
+ <label key={task} className={`flex items-center gap-3 p-2.5 rounded-xl border-2 cursor-pointer transition ${completedTasks.includes(task) ? 'border-green-400 bg-green-50' : 'border-[var(--card-border)] hover:border-green-300'}`}>
  <input type="checkbox" checked={completedTasks.includes(task)} onChange={() => toggleTask(task)} className="w-4 h-4 accent-green-600" />
  <span className={`text-sm ${completedTasks.includes(task) ? 'text-green-800 font-semibold line-through opacity-60' : 'text-slate-700'}`}>{task}</span>
  </label>
@@ -133,14 +133,14 @@ export default function DailyCareLog() {
  </div>
 
  {/* Patient status */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5 space-y-4">
- <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2"><Heart size={16} />Patient Status</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5 space-y-4">
+ <h3 className="text-sm font-bold text-[var(--text-700)] flex items-center gap-2"><Heart size={16} />Patient Status</h3>
  
  <div>
- <label className="text-xs font-semibold text-slate-600 mb-2 block">Pain Level: {painLevel}/10</label>
+ <label className="text-xs font-semibold text-[var(--text-600)] mb-2 block">Pain Level: {painLevel}/10</label>
  <input type="range" min="0" max="10" value={painLevel} onChange={e => setPainLevel(Number(e.target.value))}
  className="w-full accent-green-600" />
- <div className="flex justify-between text-xs text-slate-400 mt-1">
+ <div className="flex justify-between text-xs text-[var(--text-400)] mt-1">
  <span>No pain</span><span>Unbearable</span>
  </div>
  </div>
@@ -178,16 +178,16 @@ export default function DailyCareLog() {
  </div>
 
  {/* Medication notes */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Pill size={16} />Medication Notes</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3 flex items-center gap-2"><Pill size={16} />Medication Notes</h3>
  <textarea value={medNotes} onChange={e => setMedNotes(e.target.value)} rows={3}
  placeholder="e.g., Morphine 10mg given at 09:00. Patient refused afternoon dose. PRN used at 14:30 for breakthrough pain."
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-green-400 outline-none resize-none" />
  </div>
 
  {/* Concerns */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><AlertTriangle size={16} />Concerns / Changes</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3 flex items-center gap-2"><AlertTriangle size={16} />Concerns / Changes</h3>
  <textarea value={concerns} onChange={e => setConcerns(e.target.value)} rows={3}
  placeholder="Any new symptoms, changes in condition, family concerns, safety issues, or anything the clinical team should know..."
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-green-400 outline-none resize-none" />

@@ -97,13 +97,13 @@ export default function BereavedFamilyDashboard() {
  />
 
  {/* -- Sticky tab bar ----------------------------------------- */}
- <div className="sticky top-0 z-20 bg-slate-50 border-b border-slate-200 shadow-sm">
+ <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-sm">
  <div className="max-w-6xl mx-auto px-4">
  <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
  {visibleTabs.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => go(id)}
  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
- tab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'}`}>
+ tab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-700)] hover:bg-slate-100'}`}>
  <Icon size={14} />{label}
  </button>
  ))}
@@ -142,13 +142,13 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  <div className="space-y-6">
 
  {/* Mood check-in */}
- <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
- <p className="text-sm font-semibold text-slate-700 mb-3">How are you feeling today?</p>
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-5">
+ <p className="text-sm font-semibold text-[var(--text-700)] mb-3">How are you feeling today?</p>
  <div className="flex gap-3">
  {moodOptions.map(({ icon: Icon, label, color, bg }) => (
  <button key={label} onClick={() => setMood(label)}
  className={`flex-1 flex flex-col items-center gap-2 py-3 rounded-xl border text-xs font-semibold transition-all ${
- mood === label ? bg + ' ring-2 ring-offset-1 ring-purple-400' : 'border-slate-200 hover:bg-slate-50'}`}>
+ mood === label ? bg + ' ring-2 ring-offset-1 ring-purple-400' : 'border-[var(--card-border)] hover:bg-slate-50'}`}>
  <Icon size={22} className={color} />
  <span className="text-slate-700">{label}</span>
  </button>
@@ -156,7 +156,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  </div>
  {mood && (
  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
- className="mt-3 text-xs text-slate-500 text-center italic">
+ className="mt-3 text-xs text-[var(--text-500)] text-center italic">
  {mood === 'Struggling' ? "It's okay to not be okay. Consider talking to a counselor today."
  : mood === 'Getting by' ? 'One day at a time. The support groups are always here for you.'
  : 'That is wonderful. Grief has no timeline · you are doing great.'}
@@ -165,7 +165,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  </div>
 
  {/* Quote */}
- <div className="relative bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
+ <div className="relative bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
  <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
  <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
  "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."
@@ -195,13 +195,13 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
 
  {/* Grief check-in CTA */}
  {!screeningData?.completed_recently && (
- <div className="bg-slate-50 border border-purple-200 rounded-xl p-4 flex items-center gap-4">
+ <div className="bg-[var(--card-bg)] border border-purple-200 rounded-xl p-4 flex items-center gap-4">
  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
  <Calendar size={17} className="text-purple-600" />
  </div>
  <div className="flex-1">
  <p className="text-sm font-semibold text-slate-800">Grief Screening Due</p>
- <p className="text-xs text-slate-500 mt-0.5">Helps us personalise your bereavement support plan</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Helps us personalise your bereavement support plan</p>
  </div>
  <button onClick={() => go('grief')}
  className="flex-shrink-0 flex items-center gap-1.5 bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-800 transition-colors">
@@ -213,14 +213,14 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  {/* Message care team button */}
  <button
  onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
- className="w-full flex items-center gap-3 bg-slate-50 border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
+ className="w-full flex items-center gap-3 bg-[var(--card-bg)] border border-teal-200 rounded-xl p-4 hover:bg-teal-50 transition-all text-left"
  >
  <div className="w-9 h-9 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
  <MessageCircle size={16} className="text-teal-600" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 text-sm">Message Your Care Team</p>
- <p className="text-xs text-slate-500 mt-0.5">Ask questions or share how you're doing</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">Message Your Care Team</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Ask questions or share how you're doing</p>
  </div>
  <ChevronRight size={16} className="text-teal-500 flex-shrink-0" />
  </button>
@@ -232,8 +232,8 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
  {CRISIS.map(({ name, number, tag }) => (
- <div key={name} className="bg-slate-50 border border-red-100 rounded-lg p-2.5 text-center">
- <p className="text-xs text-slate-500 mb-0.5">{name}</p>
+ <div key={name} className="bg-[var(--card-bg)] border border-red-100 rounded-lg p-2.5 text-center">
+ <p className="text-xs text-[var(--text-500)] mb-0.5">{name}</p>
  <p className="font-bold text-red-600 text-sm">{number}</p>
  <p className="text-xs text-slate-400">{tag}</p>
  </div>
@@ -255,21 +255,21 @@ function GriefJourneyTab({ screeningData }) {
  ];
  return (
  <div className="space-y-5">
- <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-6">
  <GriefProgressTracker screeningData={screeningData} />
  </div>
- <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
- <div className="px-5 py-4 border-b border-slate-100 bg-slate-50">
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl overflow-hidden">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 bg-slate-50">
  <h3 className="text-sm font-semibold text-slate-700">Understanding the Grief Journey</h3>
- <p className="text-xs text-slate-500 mt-0.5">Grief is not linear · you may move between these stages many times</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Grief is not linear · you may move between these stages many times</p>
  </div>
  <div className="divide-y divide-slate-100">
  {stages.map(({ stage, desc, color }, i) => (
  <div key={stage} className="flex items-start gap-4 px-5 py-4">
- <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0 ${color}`}>{i + 1}</div>
+ <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold text-[var(--text-600)] flex-shrink-0 ${color}`}>{i + 1}</div>
  <div>
  <p className="text-sm font-semibold text-slate-800">{stage}</p>
- <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5 leading-relaxed">{desc}</p>
  </div>
  </div>
  ))}
@@ -292,7 +292,7 @@ function SupportGroupsTab() {
  <div className="absolute inset-0 p-6 flex flex-col justify-end">
  <h2 className="text-white font-bold text-xl mb-1">Bereavement Support Groups</h2>
  <p className="text-teal-100 text-sm mb-4">Connect with others who truly understand what you are going through</p>
- <Link to="/community" className="inline-flex items-center gap-2 bg-slate-50 text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
+ <Link to="/community" className="inline-flex items-center gap-2 bg-[var(--card-bg)] text-teal-700 font-semibold text-sm px-4 py-2 rounded-lg w-fit hover:bg-teal-50 transition-colors">
  <Users size={14} /> Join Community <ArrowRight size={13} />
  </Link>
  </div>
@@ -304,9 +304,9 @@ function SupportGroupsTab() {
  [Clock, 'Always Available', 'Post and read messages any time, day or night'],
  [Globe, 'Culturally Grounded', 'Groups that understand Ghanaian grief traditions'],
  ].map(([Icon, title, desc]) => (
- <div key={title} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex gap-3">
+ <div key={title} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 flex gap-3">
  <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0"><Icon size={15} className="text-teal-600" /></div>
- <div><p className="text-sm font-semibold text-slate-800">{title}</p><p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{desc}</p></div>
+ <div><p className="text-sm font-semibold text-slate-800">{title}</p><p className="text-xs text-[var(--text-500)] mt-0.5 leading-relaxed">{desc}</p></div>
  </div>
  ))}
  </div>
@@ -335,14 +335,14 @@ function CounselingTab() {
  </div>
  <div className="space-y-3">
  {COUNSELORS.map((r, i) => (
- <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-4">
+ <div key={i} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 flex items-start gap-4">
  <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
  <Phone size={15} className="text-purple-600" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 text-sm">{r.name}</p>
- <p className="text-xs text-slate-500 mt-0.5">{r.desc}</p>
- <p className="text-xs text-slate-400 mt-0.5">{r.hours}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{r.name}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">{r.desc}</p>
+ <p className="text-xs text-[var(--text-400)] mt-0.5">{r.hours}</p>
  </div>
  {r.phone && <p className="font-bold text-purple-700 text-sm flex-shrink-0">{r.phone}</p>}
  </div>
@@ -386,26 +386,26 @@ function ResourcesTab() {
  return (
  <div className="space-y-4">
  {sections.map(({ label, dotColor, items }) => (
- <div key={label} className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden">
- <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-slate-100 bg-slate-50">
+ <div key={label} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl overflow-hidden">
+ <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-[var(--card-border)]/50 bg-slate-50">
  <div className={`w-2 h-2 rounded-full ${dotColor}`} />
- <h3 className="font-semibold text-slate-800 text-sm">{label}</h3>
+ <h3 className="font-semibold text-[var(--text-800)] text-sm">{label}</h3>
  </div>
  <div className="divide-y divide-slate-100">
  {items.map((item) => (
  <button key={item.title}
  onClick={() => item.nav ? (window.location.href = item.nav) : window.open(item.url, '_blank', 'noopener')}
- className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-slate-50 transition-colors text-left group">
+ className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[var(--card-bg)] transition-colors text-left group">
  <div className="flex items-center gap-3">
- <FileText size={14} className="text-slate-400 flex-shrink-0" />
+ <FileText size={14} className="text-[var(--text-400)] flex-shrink-0" />
  <div>
  <p className="text-sm text-slate-800">{item.title}</p>
  <p className="text-xs text-slate-400">{item.type}</p>
  </div>
  </div>
  {item.url
- ? <ExternalLink size={13} className="text-slate-300 group-hover:text-slate-500 flex-shrink-0" />
- : <ChevronRight size={13} className="text-slate-300 group-hover:text-slate-500 flex-shrink-0" />}
+ ? <ExternalLink size={13} className="text-slate-300 group-hover:text-[var(--text-500)] flex-shrink-0" />
+ : <ChevronRight size={13} className="text-slate-300 group-hover:text-[var(--text-500)] flex-shrink-0" />}
  </button>
  ))}
  </div>

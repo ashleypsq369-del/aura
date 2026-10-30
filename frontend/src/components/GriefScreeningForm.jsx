@@ -188,7 +188,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                     <p className="text-xs font-bold text-purple-700 uppercase mb-2">
                       {currentQ.category}
                     </p>
-                    <p className="text-xl font-semibold text-slate-900 leading-relaxed">
+                    <p className="text-xl font-semibold text-[var(--text-900)] leading-relaxed">
                       {currentQ.question}
                     </p>
                   </div>
@@ -206,7 +206,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                           className={`w-full p-4 rounded-xl border-2 text-left transition-all font-semibold ${
                             isSelected
                               ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-purple-500 shadow-lg'
-                              : 'bg-slate-50 text-slate-700 border-slate-300 hover:border-purple-400 hover:bg-purple-50'
+                              : 'bg-[var(--card-bg)] text-[var(--text-700)] border-slate-300 hover:border-purple-400 hover:bg-purple-50'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -233,7 +233,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
                 <button
                   onClick={handlePrevious}
                   disabled={currentQuestion === 0}
-                  className="px-4 py-2 text-slate-600 font-semibold hover:bg-slate-100 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 text-[var(--text-600)] font-semibold hover:bg-slate-100 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   ← Previous
                 </button>
@@ -287,12 +287,12 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
               Continue
             </button>
             <button onClick={onClose}
-              className="px-6 py-3 border-2 border-slate-300 text-slate-700 dark:text-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
+              className="px-6 py-3 border-2 border-slate-300 text-[var(--text-700)] rounded-lg font-semibold hover:bg-[var(--card-bg)] transition-all">
               Close
             </button>
           </div>
 
-          <p className="text-xs text-slate-500 text-center">
+          <p className="text-xs text-[var(--text-500)] text-center">
             🔒 Your responses are confidential and stored securely
           </p>
         </div>
@@ -302,7 +302,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
       {submitScreeningMutation.isPending && (
         <div className="flex flex-col items-center justify-center py-8">
           <Loader2 className="w-12 h-12 animate-spin text-purple-600 mb-3" />
-          <p className="text-slate-700 font-semibold">Processing your responses...</p>
+          <p className="text-[var(--text-700)] font-semibold">Processing your responses...</p>
         </div>
       )}
     </ModalShell>

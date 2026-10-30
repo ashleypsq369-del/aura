@@ -162,7 +162,7 @@ export default function NotificationBell() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-slate-50 rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
+              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
             >
               {/* Header */}
               <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-200 flex items-center justify-between">
@@ -192,7 +192,7 @@ export default function NotificationBell() {
                         key={alert.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className={`p-4 hover:bg-gray-50 transition-colors ${
+                        className={`p-4 hover:bg-[var(--card-bg)] transition-colors ${
                           alert.is_acknowledged ? 'opacity-60' : ''
                         }`}
                       >
@@ -245,7 +245,7 @@ export default function NotificationBell() {
 
               {/* Footer */}
               {alerts && alerts.length > 0 && (
-                <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                <div className="px-4 py-3 bg-[var(--card-bg)] border-t border-gray-200">
                   <button
                     onClick={() => {
                       setShowDropdown(false);

@@ -56,7 +56,7 @@ function Section({ title, children }) {
  {title && (
  <p className="text-xs font-semibold text-gray-400 px-1 mb-2">{title}</p>
  )}
- <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
  {children}
  </div>
  </div>
@@ -165,7 +165,7 @@ export default function Settings() {
  </motion.div>
 
  {/* -- Tab bar - teal, compact ------------------------------------ */}
- <div className="rounded-xl border border-slate-200 dark:border-slate-700 mb-5 overflow-hidden"
+ <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 mb-5 overflow-hidden"
  style={{ background: 'var(--card-bg, #e8fafa)' }}>
  <div className="flex overflow-x-auto">
  {tabs.map(({ id, label, icon: Icon, tip }) => (
@@ -176,7 +176,7 @@ export default function Settings() {
  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 transition-all min-w-[70px]
  ${tab === id
  ? 'border-teal-600 text-teal-700 dark:text-teal-400 bg-teal-50/80 dark:bg-teal-900/20'
- : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50/40 dark:hover:bg-teal-900/10'
+ : 'border-transparent text-[var(--text-500)] dark:text-[var(--text-400)] hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50/40 dark:hover:bg-teal-900/10'
  }`}
  >
  <Icon size={13} />
@@ -237,7 +237,7 @@ export default function Settings() {
  <Section title="Data">
  <button onClick={handleExport}
  data-tip="Download your current settings as a JSON file"
- className="w-full flex items-center gap-3 px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors text-left">
+ className="w-full flex items-center gap-3 px-4 py-3 border-b border-gray-100 hover:bg-[var(--card-bg)] transition-colors text-left">
  <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
  <Download size={16} className="text-teal-600" />
  </div>
@@ -314,8 +314,8 @@ export default function Settings() {
  <AvatarDisplay size={90} showRing />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-slate-900 mb-1">Personalise your avatar</p>
- <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+ <p className="text-sm font-semibold text-[var(--text-900)] mb-1">Personalise your avatar</p>
+ <p className="text-xs text-[var(--text-500)] mb-4 leading-relaxed">
  Choose your skin tone, hair, eyes, outfit and more. Your avatar appears in the app header, profile page and chat.
  </p>
  <button
@@ -330,7 +330,7 @@ export default function Settings() {
  </Section>
 
  <Section title="Role Presets">
- <p className="text-xs text-slate-500 px-5 py-3 border-b border-slate-100">
+ <p className="text-xs text-[var(--text-500)] px-5 py-3 border-b border-slate-100">
  Quick-start with a pre-designed avatar based on role, age group or style.
  </p>
  {[
@@ -346,7 +346,7 @@ export default function Settings() {
  localStorage.setItem('user_avatar', JSON.stringify(preset));
  window.dispatchEvent(new CustomEvent('avatar_updated'));
  }}
- className="w-full flex items-center gap-3 px-5 py-3 border-b border-slate-100 hover:bg-teal-50 transition-colors text-left">
+ className="w-full flex items-center gap-3 px-5 py-3 border-b border-[var(--card-border)]/50 hover:bg-teal-50 transition-colors text-left">
  <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
  <RoleIcon size={16} className="text-teal-600" />
  </div>
@@ -361,7 +361,7 @@ export default function Settings() {
 
  <Section title="About Your Avatar">
  <div className="px-5 py-4 space-y-2">
- <p className="text-xs text-slate-500 leading-relaxed">Your avatar is stored locally on your device and is only visible to you. It replaces the initials circle in the app header and your profile page.</p>
+ <p className="text-xs text-[var(--text-500)] leading-relaxed">Your avatar is stored locally on your device and is only visible to you. It replaces the initials circle in the app header and your profile page.</p>
  <button
  onClick={() => { localStorage.removeItem('user_avatar'); window.dispatchEvent(new CustomEvent('avatar_updated')); }}
  className="flex items-center gap-2 text-xs text-red-500 hover:text-red-700 font-semibold transition-colors mt-2"
@@ -434,20 +434,20 @@ export default function Settings() {
  className={`p-3 rounded-xl border-2 text-left transition-all ${
  profileKey === key
  ? 'border-teal-500 bg-teal-50 text-teal-800'
- : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700'
+ : 'border-[var(--card-border)] hover:border-slate-300 bg-[var(--card-bg)] text-slate-700'
  }`}
  >
  <p className={`text-xs font-bold ${profileKey === key ? 'text-teal-700' : 'text-slate-700'}`}>
  {meta.label}
  </p>
- <p className="text-[10px] text-slate-400 mt-0.5 leading-tight">{meta.description}</p>
+ <p className="text-[10px] text-[var(--text-400)] mt-0.5 leading-tight">{meta.description}</p>
  {profileKey === key && (
  <span className="mt-1 inline-block text-[9px] font-bold text-teal-600 uppercase tracking-wide">Active</span>
  )}
  </button>
  ))}
  </div>
- <p className="text-[10px] text-slate-400 flex items-start gap-1">
+ <p className="text-[10px] text-[var(--text-400)] flex items-start gap-1">
  <Info size={11} className="flex-shrink-0 mt-0.5" />
  Switching profile applies larger text, adjusted touch targets, and layout changes immediately. Based on W3C WCAG 2.2 and COGA guidelines.
  </p>
@@ -542,7 +542,7 @@ export default function Settings() {
  {/* ── Push Notifications ── */}
  <Section title="Device Push Notifications">
  {!push.supported ? (
- <div className="px-4 py-3 text-sm text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+ <div className="px-4 py-3 text-sm text-[var(--text-500)] bg-[var(--card-bg)] rounded-xl border border-slate-200">
  Your browser does not support push notifications. Try Chrome, Edge, or Firefox.
  </div>
  ) : push.permission === 'denied' ? (
@@ -695,7 +695,7 @@ export default function Settings() {
  </div>
  {a11y.assistedMode && (
  <button onClick={disableAssistedMode}
- className="w-full mb-3 py-2 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium hover:bg-gray-50 transition-all">
+ className="w-full mb-3 py-2 rounded-lg border border-gray-200 text-gray-500 text-xs font-medium hover:bg-[var(--card-bg)] transition-all">
  Turn Off Assisted Mode
  </button>
  )}
@@ -736,7 +736,7 @@ export default function Settings() {
  className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
  active
  ? 'border-amber-500 bg-amber-50'
- : 'border-gray-200 bg-slate-50 hover:border-gray-300 hover:bg-gray-50'
+ : 'border-gray-200 bg-[var(--card-bg)] hover:border-gray-300 hover:bg-gray-50'
  }`}
  >
  <p className={`text-xs font-bold ${active ? 'text-amber-800' : 'text-gray-800'}`}>{opt.label}</p>
@@ -757,7 +757,7 @@ export default function Settings() {
  <div className="flex gap-1.5 ml-12">
  {[['small','S'],['medium','M'],['large','L'],['xlarge','XL'],['xxlarge','XXL']].map(([v,lbl]) => (
  <button key={v} onClick={() => updateSetting('fontSize', v)}
- className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-slate-50 text-gray-600 border-gray-200 hover:border-gray-300'}`}>
+ className={`flex-1 py-1.5 rounded-lg text-xs font-semibold border transition-all ${a11y.fontSize===v ? 'bg-teal-600 text-white border-teal-600' : 'bg-[var(--card-bg)] text-gray-600 border-gray-200 hover:border-gray-300'}`}>
  {lbl}
  </button>
  ))}
@@ -812,7 +812,7 @@ export default function Settings() {
  className={`flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-all ${
  a11y.textSpacing === v
  ? 'bg-teal-600 text-white border-teal-600'
- : 'bg-slate-50 text-gray-600 border-gray-200 hover:border-gray-300'
+ : 'bg-[var(--card-bg)] text-gray-600 border-gray-200 hover:border-gray-300'
  }`}>
  {lbl}
  </button>
@@ -823,7 +823,7 @@ export default function Settings() {
 
  <button onClick={() => { resetSettings(); toast.success('Accessibility settings reset to defaults'); }}
  data-tip="Reset all accessibility settings to their defaults"
- className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition-all">
+ className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-[var(--card-bg)] transition-all">
  <RotateCcw size={14} /> Reset Accessibility Defaults
  </button>
  </>

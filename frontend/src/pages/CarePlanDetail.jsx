@@ -53,10 +53,10 @@ function GoalCard({ goal, patientId, onUpdate }) {
  <motion.div
  initial={{ opacity: 0, y: 8 }}
  animate={{ opacity: 1, y: 0 }}
- className={`bg-slate-50 rounded-xl border-2 ${cfg.border} overflow-hidden`}
+ className={`bg-[var(--card-bg)] rounded-xl border-2 ${cfg.border} overflow-hidden`}
  >
  <div
- className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50 transition-colors"
+ className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-[var(--card-bg)] transition-colors"
  onClick={() => setExpanded(e => !e)}
  >
  <button
@@ -72,7 +72,7 @@ function GoalCard({ goal, patientId, onUpdate }) {
 
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-0.5">
- <p className={`text-sm font-semibold ${isCompleted ? 'text-slate-400 line-through' : 'text-slate-900'}`}>
+ <p className={`text-sm font-semibold ${isCompleted ? 'text-[var(--text-400)] line-through' : 'text-slate-900'}`}>
  {goal.title}
  </p>
  <span className={`${PRIORITY_BADGE[goal.priority] || 'badge-info'}`}>{goal.priority}</span>
@@ -98,15 +98,15 @@ function GoalCard({ goal, patientId, onUpdate }) {
  </div>
 
  {expanded && (
- <div className="px-4 pb-4 border-t border-slate-100 pt-3 space-y-3">
+ <div className="px-4 pb-4 border-t border-[var(--card-border)]/50 pt-3 space-y-3">
  {goal.description && (
- <p className="text-sm text-slate-600 leading-relaxed">{goal.description}</p>
+ <p className="text-sm text-[var(--text-600)] leading-relaxed">{goal.description}</p>
  )}
 
  {/* Progress bar */}
  {goal.progress != null && (
  <div>
- <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+ <div className="flex items-center justify-between text-xs text-[var(--text-500)] mb-1">
  <span>Progress</span>
  <span className="font-semibold">{goal.progress}%</span>
  </div>
@@ -122,14 +122,14 @@ function GoalCard({ goal, patientId, onUpdate }) {
  {/* Checklist */}
  {goal.checklist?.length > 0 && (
  <div className="space-y-1.5">
- <p className="text-xs font-bold text-slate-500 ">Checklist</p>
+ <p className="text-xs font-bold text-[var(--text-500)] ">Checklist</p>
  {goal.checklist.map(item => (
  <div key={item.id} className="flex items-center gap-2 text-sm">
  {item.is_completed
  ? <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
  : <Circle size={14} className="text-slate-300 flex-shrink-0" />
  }
- <span className={item.is_completed ? 'text-slate-400 line-through' : 'text-slate-700'}>
+ <span className={item.is_completed ? 'text-[var(--text-400)] line-through' : 'text-slate-700'}>
  {item.title}
  </span>
  </div>
@@ -138,8 +138,8 @@ function GoalCard({ goal, patientId, onUpdate }) {
  )}
 
  {goal.notes && (
- <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
- <p className="text-xs font-bold text-slate-500 mb-1">Notes</p>
+ <div className="p-3 bg-[var(--card-bg)] rounded-lg border border-slate-100">
+ <p className="text-xs font-bold text-[var(--text-500)] mb-1">Notes</p>
  <p className="text-sm text-slate-600">{goal.notes}</p>
  </div>
  )}
@@ -234,13 +234,13 @@ export default function CarePlanDetail() {
  return (
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 py-8">
- <div className="bg-slate-50 rounded-xl border border-red-200 p-8 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-red-200 p-8 text-center">
  <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
- <h2 className="text-base font-bold text-slate-900 mb-2">No Care Plan Found</h2>
- <p className="text-sm text-slate-500 mb-5">No care plan exists for this patient yet.</p>
+ <h2 className="text-base font-bold text-[var(--text-900)] mb-2">No Care Plan Found</h2>
+ <p className="text-sm text-[var(--text-500)] mb-5">No care plan exists for this patient yet.</p>
  <div className="flex gap-3 justify-center">
  <button onClick={() => navigate(-1)}
- className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition flex items-center gap-2">
+ className="px-4 py-2 border border-slate-300 text-[var(--text-700)] rounded-lg text-sm font-semibold hover:bg-[var(--card-bg)] transition flex items-center gap-2">
  <ArrowLeft size={14} /> Back
  </button>
  <button
@@ -300,7 +300,7 @@ export default function CarePlanDetail() {
  </PageHeader>
 
  {/* Summary strip */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm mb-0">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm mb-0">
  <div className="flex items-center gap-2">
  <span className="badge-stable">{carePlan.care_phase || 'Active'}</span>
  </div>
@@ -308,7 +308,7 @@ export default function CarePlanDetail() {
  <div className="text-slate-600"><strong className="text-teal-700">{completedGoals.length}</strong> completed</div>
  <div className="text-slate-600"><strong className="text-slate-900">{interventions.length}</strong> interventions</div>
  {carePlan.review_date && (
- <div className="text-slate-600 ml-auto">
+ <div className="text-[var(--text-600)] ml-auto">
  Review: <strong>{new Date(carePlan.review_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</strong>
  </div>
  )}
@@ -321,14 +321,14 @@ export default function CarePlanDetail() {
  <div className="lg:col-span-2 space-y-5">
 
  {/* Active Goals */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
- <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between"
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: 'linear-gradient(to right, #0d948815, transparent)' }}>
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
  <Target size={16} className="text-teal-600" />
  </div>
- <h2 className="font-bold text-slate-800 text-sm">Active Goals</h2>
+ <h2 className="font-bold text-[var(--text-800)] text-sm">Active Goals</h2>
  </div>
  <span className="chip-teal">{activeGoals.length}</span>
  </div>
@@ -338,20 +338,20 @@ export default function CarePlanDetail() {
  <GoalCard key={goal.id} goal={goal} patientId={patientId}
  onUpdate={() => queryClient.invalidateQueries(['care-plan', patientId])} />
  )) : (
- <p className="text-center text-slate-400 text-sm py-6">No active goals</p>
+ <p className="text-center text-[var(--text-400)] text-sm py-6">No active goals</p>
  )}
  </div>
  </div>
 
  {/* Completed Goals */}
  {completedGoals.length > 0 && (
- <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
- <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
  <CheckCircle size={16} className="text-green-600" />
  </div>
- <h2 className="font-bold text-slate-800 text-sm">Completed Goals</h2>
+ <h2 className="font-bold text-[var(--text-800)] text-sm">Completed Goals</h2>
  </div>
  <span className="chip-emerald">{completedGoals.length}</span>
  </div>
@@ -366,32 +366,32 @@ export default function CarePlanDetail() {
 
  {/* Interventions */}
  {interventions.length > 0 && (
- <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
- <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
  <Shield size={16} className="text-teal-600" />
  </div>
- <h2 className="font-bold text-slate-800 text-sm">Interventions</h2>
+ <h2 className="font-bold text-[var(--text-800)] text-sm">Interventions</h2>
  </div>
  <span className="chip-blue">{interventions.length}</span>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-50 border-b border-slate-200">
- <th className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">Intervention</th>
- <th className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">Category</th>
- <th className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">Frequency</th>
- <th className="text-left py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">Status</th>
+ <tr className="bg-[var(--card-bg)] border-b border-slate-200">
+ <th className="text-left py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">Intervention</th>
+ <th className="text-left py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">Category</th>
+ <th className="text-left py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">Frequency</th>
+ <th className="text-left py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">Status</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100">
  {interventions.map((iv) => (
- <tr key={iv.id} className="hover:bg-slate-50 transition-colors">
+ <tr key={iv.id} className="hover:bg-[var(--card-bg)] transition-colors">
  <td className="py-3 px-4">
  <p className="text-sm font-semibold text-slate-900">{iv.title}</p>
- {iv.description && <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{iv.description}</p>}
+ {iv.description && <p className="text-xs text-[var(--text-500)] mt-0.5 line-clamp-1">{iv.description}</p>}
  </td>
  <td className="py-3 px-4">
  <span className="chip-teal">{iv.category || 'General'}</span>
@@ -417,14 +417,14 @@ export default function CarePlanDetail() {
  const text = carePlan[key];
  const isEditing = editingSection === key;
  return (
- <div key={key} className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
- <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between"
+ <div key={key} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: `linear-gradient(to right, ${bg.replace('bg-', '')}40, transparent)` }}>
  <div className="flex items-center gap-2">
  <div className={`w-7 h-7 rounded-lg ${bg} flex items-center justify-center flex-shrink-0`}>
  <SectionIcon size={14} className={color} />
  </div>
- <h3 className="font-bold text-slate-800 text-xs">{label}</h3>
+ <h3 className="font-bold text-[var(--text-800)] text-xs">{label}</h3>
  </div>
  <div className="flex items-center gap-1">
  {text && (
@@ -466,9 +466,9 @@ export default function CarePlanDetail() {
  className="w-full text-sm border border-slate-300 rounded-lg px-3 py-2 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none resize-none"
  />
  ) : text ? (
- <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{text}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed whitespace-pre-line">{text}</p>
  ) : (
- <p className="text-xs text-slate-400 italic">Not documented yet. Click edit to add.</p>
+ <p className="text-xs text-[var(--text-400)] italic">Not documented yet. Click edit to add.</p>
  )}
  </div>
  </div>

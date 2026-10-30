@@ -44,7 +44,7 @@ const capColor = s => ({
 })[s] || { dot:'#10b981', label:'Available', bg:'#10b98115', text:'#065f46' };
 
 function Stars({ value, count }) {
- if (value == null) return <span className="text-[11px] text-slate-400 italic">No reviews</span>;
+ if (value == null) return <span className="text-[11px] text-[var(--text-400)] italic">No reviews</span>;
  return (
  <span className="flex items-center gap-0.5">
  {[1,2,3,4,5].map(n => (
@@ -95,7 +95,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  initial={{ opacity: 0, y: 12 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.97 }}
- className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
  >
  {/* Coloured top band */}
  <div className="h-1.5 w-full" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
@@ -113,8 +113,8 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
 
  {/* Name + role + availability */}
  <div className="flex-1 min-w-0">
- <p className="font-bold text-slate-900 text-sm leading-tight truncate">{cg.full_name}</p>
- <p className="text-[11px] text-slate-500 capitalize">{cg.role || 'Caregiver'}</p>
+ <p className="font-bold text-[var(--text-900)] text-sm leading-tight truncate">{cg.full_name}</p>
+ <p className="text-[11px] text-[var(--text-500)] capitalize">{cg.role || 'Caregiver'}</p>
  {trust?.specialisation && (
  <p className="text-[10px] text-teal-600 font-medium truncate">{trust.specialisation}</p>
  )}
@@ -136,7 +136,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  {trust?.ghana_card_verified && <VerifyBadge icon={Shield} label="Ghana Card" color="#0891b2" />}
  {trust?.is_professional && <VerifyBadge icon={BadgeCheck} label="Verified Pro" color="#059669" />}
  {!trust?.nmc_pin && !trust?.ghana_card_verified && (
- <span className="text-[10px] text-slate-400 italic">Badges loading…</span>
+ <span className="text-[10px] text-[var(--text-400)] italic">Badges loading…</span>
  )}
  </div>
 
@@ -146,7 +146,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  {/* Workload bar */}
  <div>
  <div className="flex justify-between mb-1">
- <span className="text-[10px] text-slate-400 font-semibold">Workload</span>
+ <span className="text-[10px] text-[var(--text-400)] font-semibold">Workload</span>
  <span className="text-[10px] font-bold tabular-nums" style={{ color: workloadPct > 75 ? '#ef4444' : workloadPct >= 50 ? '#f59e0b' : '#10b981' }}>
  {activePatients} patients · {workloadPct}%
  </span>
@@ -181,13 +181,13 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  {/* Contact row */}
  <div className="space-y-0.5">
  {cg.email && (
- <p className="flex items-center gap-1.5 text-[11px] text-slate-500 truncate">
- <Mail size={10} className="text-slate-400 flex-shrink-0" /> {cg.email}
+ <p className="flex items-center gap-1.5 text-[11px] text-[var(--text-500)] truncate">
+ <Mail size={10} className="text-[var(--text-400)] flex-shrink-0" /> {cg.email}
  </p>
  )}
  {cg.phone && (
  <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
- <Phone size={10} className="text-slate-400 flex-shrink-0" /> {cg.phone}
+ <Phone size={10} className="text-[var(--text-400)] flex-shrink-0" /> {cg.phone}
  </p>
  )}
  </div>
@@ -240,18 +240,18 @@ function TrustProfileModal({ cg, onClose }) {
  initial={{ opacity: 0, scale: 0.95, y: 16 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95 }}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
  onClick={e => e.stopPropagation()}
  >
  {/* Header band */}
  <div className="h-1.5 bg-gradient-to-r from-teal-500 to-cyan-500" />
- <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm">
  {getInitials(cg.full_name)}
  </div>
  <div>
- <p className="font-bold text-slate-900 text-sm">{cg.full_name}</p>
+ <p className="font-bold text-[var(--text-900)] text-sm">{cg.full_name}</p>
  <p className="text-[11px] text-slate-500">{cg.role}</p>
  </div>
  </div>
@@ -269,15 +269,15 @@ function TrustProfileModal({ cg, onClose }) {
  <>
  {/* Verification badges */}
  <div>
- <p className="text-[10px] font-bold text-slate-400 mb-2">Verification</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Verification</p>
  <div className="flex flex-wrap gap-2">
  {trust.nmc_pin
  ? <VerifyBadge icon={Award} label={`NMC PIN: ${trust.nmc_pin}`} color="#0d9488" />
- : <span className="text-[11px] text-slate-400 italic">NMC PIN not on file</span>
+ : <span className="text-[11px] text-[var(--text-400)] italic">NMC PIN not on file</span>
  }
  {trust.ghana_card_verified
  ? <VerifyBadge icon={Shield} label="Ghana Card Verified" color="#0891b2" />
- : <span className="text-[11px] text-slate-400 italic">Ghana Card not verified</span>
+ : <span className="text-[11px] text-[var(--text-400)] italic">Ghana Card not verified</span>
  }
  {trust.is_professional && <VerifyBadge icon={BadgeCheck} label={trust.professional_title || 'Verified Pro'} color="#059669" />}
  </div>
@@ -285,38 +285,38 @@ function TrustProfileModal({ cg, onClose }) {
 
  {/* Rating */}
  <div>
- <p className="text-[10px] font-bold text-slate-400 mb-1">Service Rating</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-1">Service Rating</p>
  <Stars value={trust.average_rating} count={trust.total_reviews} />
  </div>
 
  {/* Meta */}
  <div className="grid grid-cols-2 gap-2 text-[11px]">
  {trust.specialisation && (
- <div className="bg-slate-50 rounded-lg px-3 py-2">
- <p className="text-slate-400 font-medium">Specialisation</p>
+ <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
+ <p className="text-[var(--text-400)] font-medium">Specialisation</p>
  <p className="font-semibold text-slate-700">{trust.specialisation}</p>
  </div>
  )}
  {trust.facility_name && (
- <div className="bg-slate-50 rounded-lg px-3 py-2">
- <p className="text-slate-400 font-medium">Facility</p>
- <p className="font-semibold text-slate-700 truncate">{trust.facility_name}</p>
+ <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
+ <p className="text-[var(--text-400)] font-medium">Facility</p>
+ <p className="font-semibold text-[var(--text-700)] truncate">{trust.facility_name}</p>
  </div>
  )}
  {trust.region && (
- <div className="bg-slate-50 rounded-lg px-3 py-2">
- <p className="text-slate-400 font-medium">Region</p>
+ <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
+ <p className="text-[var(--text-400)] font-medium">Region</p>
  <p className="font-semibold text-slate-700">{trust.region}</p>
  </div>
  )}
- <div className="bg-slate-50 rounded-lg px-3 py-2">
- <p className="text-slate-400 font-medium">Active Patients</p>
+ <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
+ <p className="text-[var(--text-400)] font-medium">Active Patients</p>
  <p className="font-semibold text-slate-700">{trust.active_patients ?? 0}</p>
  </div>
  </div>
  </>
  ) : (
- <p className="text-sm text-slate-500 text-center py-6">No trust profile data available</p>
+ <p className="text-sm text-[var(--text-500)] text-center py-6">No trust profile data available</p>
  )}
  </div>
  </motion.div>
@@ -337,18 +337,18 @@ function BurnoutModal({ cg, data, loading, onClose }) {
  initial={{ opacity: 0, scale: 0.95, y: 16 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95 }}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
  onClick={e => e.stopPropagation()}
  >
  <div className="h-1.5" style={{ background: `linear-gradient(to right, ${ringBg}, ${ringBg}88)` }} />
- <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm"
  style={{ background: ringBg }}>
  {getInitials(cg.full_name)}
  </div>
  <div>
- <p className="font-bold text-slate-900 text-sm">{cg.full_name}</p>
+ <p className="font-bold text-[var(--text-900)] text-sm">{cg.full_name}</p>
  <p className="text-[11px] text-slate-500">AI Burnout Analysis</p>
  </div>
  </div>
@@ -372,13 +372,13 @@ function BurnoutModal({ cg, data, loading, onClose }) {
  )}
  {!loading && data && (
  <>
- <div className="flex items-center gap-4 bg-slate-50 rounded-xl p-4">
+ <div className="flex items-center gap-4 bg-[var(--card-bg)] rounded-xl p-4">
  <div className="w-16 h-16 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg flex-shrink-0"
  style={{ background: ringBg }}>
  {pct}%
  </div>
  <div>
- <p className="font-bold text-slate-900 capitalize">{level} Risk</p>
+ <p className="font-bold text-[var(--text-900)] capitalize">{level} Risk</p>
  <p className="text-xs text-slate-500">ML burnout probability</p>
  <BurnoutDot level={level} />
  </div>
@@ -386,13 +386,13 @@ function BurnoutModal({ cg, data, loading, onClose }) {
 
  {data.signals?.length > 0 && (
  <div>
- <p className="text-[10px] font-bold text-slate-400 mb-2">Risk Signals</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Risk Signals</p>
  <div className="space-y-1.5">
  {data.signals.map((s, i) => (
  <div key={i} className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-100 rounded-lg text-xs">
  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0 mt-1" />
  <span className="font-semibold text-slate-700">{s.signal}</span>
- {s.value && <span className="text-slate-500 ml-auto">{s.value}</span>}
+ {s.value && <span className="text-[var(--text-500)] ml-auto">{s.value}</span>}
  </div>
  ))}
  </div>
@@ -408,7 +408,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
 
  {data.recommendations?.filter(Boolean).length > 0 && (
  <div>
- <p className="text-[10px] font-bold text-slate-400 mb-2">Recommendations</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Recommendations</p>
  <div className="space-y-1.5">
  {data.recommendations.filter(Boolean).map((rec, i) => (
  <div key={i} className="flex items-start gap-2 p-2.5 bg-teal-50 border border-teal-100 rounded-lg text-xs text-teal-800">
@@ -525,7 +525,7 @@ function FeatureShowcase({ navigate }) {
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.04 }}
- className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-all cursor-pointer group"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden hover:shadow-md transition-all cursor-pointer group"
  onClick={() => navigate(f.route)}
  >
  <div className="h-1" style={{ background: f.color }} />
@@ -540,10 +540,10 @@ function FeatureShowcase({ navigate }) {
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-0.5">
  <span className="text-[10px] font-bold text-slate-400">{f.num}</span>
- <p className="font-bold text-slate-800 text-sm">{f.title}</p>
+ <p className="font-bold text-[var(--text-800)] text-sm">{f.title}</p>
  </div>
- <p className="text-[11px] text-slate-500 leading-relaxed mb-2">{f.desc}</p>
- <div className="flex items-center gap-1 text-[10px] text-slate-400 border-t border-slate-100 pt-2">
+ <p className="text-[11px] text-[var(--text-500)] leading-relaxed mb-2">{f.desc}</p>
+ <div className="flex items-center gap-1 text-[10px] text-[var(--text-400)] border-t border-[var(--card-border)]/50 pt-2">
  <Info size={9} />
  <span className="truncate">{f.where}</span>
  <CRight size={10} className="ml-auto text-slate-300 group-hover:text-teal-500 transition-colors flex-shrink-0" />
@@ -705,11 +705,11 @@ export default function Caregivers() {
 
  {/* Tab bar */}
  <div className="px-6">
- <div className="flex border-b border-slate-200 gap-0 overflow-x-auto">
+ <div className="flex border-b border-[var(--card-border)] gap-0 overflow-x-auto">
  {TABS.map(({ id, label, Icon }) => (
  <button key={id} onClick={() => setTab(id)}
  className={`flex items-center gap-1.5 px-4 py-3 text-sm font-bold border-b-2 transition-all whitespace-nowrap flex-shrink-0
- ${tab === id ? 'border-teal-600 text-teal-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}>
+ ${tab === id ? 'border-teal-600 text-teal-700' : 'border-transparent text-[var(--text-500)] hover:text-[var(--text-700)] hover:border-slate-300'}`}>
  <Icon size={14} />
  {label}
  {id === 'team' && (
@@ -731,23 +731,23 @@ export default function Caregivers() {
  {/* Search + filter bar */}
  <div className="flex flex-col sm:flex-row gap-2">
  <div className="relative flex-1">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+ <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
  <input value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search by name, role or email…"
- className="w-full pl-10 pr-9 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 outline-none text-sm shadow-sm" />
+ className="w-full pl-10 pr-9 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 outline-none text-sm shadow-sm" />
  {search && (
  <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded bg-slate-100 hover:bg-red-100 flex items-center justify-center">
  <X size={11} className="text-slate-500" />
  </button>
  )}
  </div>
- <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
+ <div className="flex items-center gap-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
  {FILTERS.map(f => (
  <button key={f.id} onClick={() => setFilter(f.id)}
  className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
  ${filter === f.id
  ? 'bg-teal-600 text-white shadow-sm'
- : 'text-slate-600 hover:bg-slate-100'}`}>
+ : 'text-[var(--text-600)] hover:bg-slate-100'}`}>
  {f.label}
  <span className={`text-[10px] font-black px-1 rounded-full tabular-nums
  ${filter === f.id ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-500'}`}>
@@ -765,7 +765,7 @@ export default function Caregivers() {
  <p className="text-sm text-slate-500">Loading care team…</p>
  </div>
  ) : filtered.length === 0 ? (
- <div className="flex flex-col items-center justify-center bg-slate-50 rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
+ <div className="flex flex-col items-center justify-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
  <Users size={36} className="text-slate-300" />
  <p className="font-bold text-slate-500">No caregivers match</p>
  <button onClick={() => { setSearch(''); setFilter('all'); }} className="text-xs text-teal-600 hover:underline font-semibold">Clear filters</button>
@@ -795,7 +795,7 @@ export default function Caregivers() {
  <p className="text-xs text-slate-400">{filtered.length} workers · page {page + 1} of {pageCount}</p>
  <div className="flex items-center gap-1.5">
  <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
- className="w-8 h-8 rounded-xl border border-slate-200 bg-slate-50 hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
+ className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
  <ChevronLeft size={14} />
  </button>
  {Array.from({ length: pageCount }, (_, idx) => (
@@ -803,7 +803,7 @@ export default function Caregivers() {
  className={`h-2 rounded-full transition-all duration-200 ${idx === page ? 'w-6 bg-teal-600' : 'w-2 bg-slate-300 hover:bg-teal-400'}`} />
  ))}
  <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
- className="w-8 h-8 rounded-xl border border-slate-200 bg-slate-50 hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-slate-500 shadow-sm transition-all">
+ className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
  <ChevronRight size={14} />
  </button>
  </div>
@@ -833,7 +833,7 @@ export default function Caregivers() {
  { l: 'Overloaded', v: teamRaw.overloaded_caregivers ?? 0, icon: AlertTriangle, c: '#ef4444' },
  ].map(({ l, v, icon: Icon, c }) => (
  <div key={l}
- className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border bg-slate-50 shadow-sm"
+ className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border bg-[var(--card-bg)] shadow-sm"
  style={{ borderColor: `${c}30` }}>
  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
  style={{ background: `${c}15`, color: c }}>
@@ -847,10 +847,10 @@ export default function Caregivers() {
 
  {/* Workload table */}
  {teamRaw.team_metrics?.length > 0 && (
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  <div className="px-5 py-4 border-b border-slate-100">
- <h3 className="font-bold text-slate-800 text-sm">Workload Distribution</h3>
- <p className="text-xs text-slate-500 mt-0.5">Current patient load per caregiver</p>
+ <h3 className="font-bold text-[var(--text-800)] text-sm">Workload Distribution</h3>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Current patient load per caregiver</p>
  </div>
  <div className="divide-y divide-slate-100">
  {teamRaw.team_metrics.map((m, i) => {
@@ -866,7 +866,7 @@ export default function Caregivers() {
  {(m.caregiver_name || '?')[0]}
  </div>
  <div className="w-36 min-w-0 flex-shrink-0">
- <p className="font-semibold text-slate-800 text-sm truncate">{m.caregiver_name}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm truncate">{m.caregiver_name}</p>
  <p className="text-xs text-slate-400">{pts} patient{pts !== 1 ? 's' : ''}</p>
  </div>
  <div className="flex-1 min-w-0">
@@ -914,14 +914,14 @@ export default function Caregivers() {
  <div className="grid md:grid-cols-2 gap-6">
  {/* Manual assign */}
  {isStaff && (
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
- <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center gap-2">
  <UserPlus size={15} className="text-teal-600" />
- <h3 className="font-bold text-slate-800 text-sm">Manual Assignment</h3>
+ <h3 className="font-bold text-[var(--text-800)] text-sm">Manual Assignment</h3>
  </div>
  <div className="p-5 space-y-3">
  <div>
- <label className="text-[10px] font-bold text-slate-400 block mb-1">Caregiver</label>
+ <label className="text-[10px] font-bold text-[var(--text-400)] block mb-1">Caregiver</label>
  <SearchableSelect accent="teal"
  value={manualCg ? String(manualCg) : null}
  onChange={v => setManualCg(v || '')}
@@ -930,7 +930,7 @@ export default function Caregivers() {
  />
  </div>
  <div>
- <label className="text-[10px] font-bold text-slate-400 block mb-1">Patient</label>
+ <label className="text-[10px] font-bold text-[var(--text-400)] block mb-1">Patient</label>
  <SearchableSelect accent="teal"
  value={manualPt ? String(manualPt) : null}
  onChange={v => setManualPt(v || '')}
@@ -949,10 +949,10 @@ export default function Caregivers() {
  </div>
 
  {/* AI Auto-Assign */}
- <div className="border-t border-slate-100 px-5 py-4 space-y-3">
+ <div className="border-t border-[var(--card-border)]/50 px-5 py-4 space-y-3">
  <div className="flex items-center gap-2">
  <Zap size={13} className="text-teal-500" />
- <h4 className="font-bold text-slate-700 text-sm">AI Auto-Assign</h4>
+ <h4 className="font-bold text-[var(--text-700)] text-sm">AI Auto-Assign</h4>
  <span className="ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">ML</span>
  </div>
  <p className="text-xs text-slate-500">ML selects the best available caregiver based on workload and patient complexity.</p>
@@ -974,11 +974,11 @@ export default function Caregivers() {
  )}
 
  {/* Current assignments list */}
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
- <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-2">
  <ListChecks size={15} className="text-teal-600" />
- <h3 className="font-bold text-slate-800 text-sm">Current Assignments</h3>
+ <h3 className="font-bold text-[var(--text-800)] text-sm">Current Assignments</h3>
  </div>
  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700">{assignments.length}</span>
  </div>
@@ -994,8 +994,8 @@ export default function Caregivers() {
  {getInitials(a.caregiver_name)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 text-xs truncate">{a.caregiver_name}</p>
- <p className="text-[10px] text-slate-500 truncate">→ {a.patient_name}</p>
+ <p className="font-semibold text-[var(--text-800)] text-xs truncate">{a.caregiver_name}</p>
+ <p className="text-[10px] text-[var(--text-500)] truncate">→ {a.patient_name}</p>
  </div>
  {isStaff && (
  <button onClick={() => removeMutation.mutate(a.id)}
@@ -1018,7 +1018,7 @@ export default function Caregivers() {
  {tab === 'mypatients' && (
  <div className="px-6 space-y-3">
  {myPatients.length === 0 ? (
- <div className="flex flex-col items-center bg-slate-50 rounded-2xl border border-dashed border-slate-300 py-16 gap-3">
+ <div className="flex flex-col items-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 py-16 gap-3">
  <Heart size={32} className="text-slate-300" />
  <p className="font-bold text-slate-500">No patients assigned yet</p>
  </div>
@@ -1028,13 +1028,13 @@ export default function Caregivers() {
  const pid = p.patient_id || p.id;
  return (
  <motion.div key={pid} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
- className="bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
  onClick={() => navigate(`/patients/${pid}`)}>
  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
  {getInitials(p.patient_name || p.full_name)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-bold text-slate-800 text-sm truncate">{p.patient_name || p.full_name}</p>
+ <p className="font-bold text-[var(--text-800)] text-sm truncate">{p.patient_name || p.full_name}</p>
  <p className="text-[11px] text-slate-500">{p.primary_diagnosis || 'Patient'}</p>
  </div>
  <ChevronRight size={16} className="text-slate-300 flex-shrink-0" />

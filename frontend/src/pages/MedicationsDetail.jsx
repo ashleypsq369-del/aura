@@ -67,7 +67,7 @@ export default function MedicationsDetail() {
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
  <button onClick={() => navigate(-1)}
- className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mt-4 mb-2 group">
+ className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mt-4 mb-2 group">
  <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" /> Back
  </button>
 
@@ -93,12 +93,12 @@ export default function MedicationsDetail() {
  { label: 'Total', value: meds.length, icon: Pill, color: '#0d9488' },
  ].map(({ label, value, icon: Icon, color }, i) => (
  <motion.div key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
  <div className="flex items-center gap-2 mb-2">
  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
  <Icon size={15} style={{ color }} />
  </div>
- <p className="text-xs font-bold text-slate-500 ">{label}</p>
+ <p className="text-xs font-bold text-[var(--text-500)] ">{label}</p>
  </div>
  <p className="text-2xl font-bold text-slate-900">{value}</p>
  </motion.div>
@@ -107,11 +107,11 @@ export default function MedicationsDetail() {
 
  {/* Active Medications */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
- <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200 flex items-center justify-between">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
+ <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-[var(--card-border)] flex items-center justify-between">
  <div>
  <h2 className="text-base font-bold text-slate-900">Active Medications</h2>
- <p className="text-slate-500 text-sm">Currently prescribed medications</p>
+ <p className="text-[var(--text-500)] text-sm">Currently prescribed medications</p>
  </div>
  <span className="chip-teal">{activeMeds.length} Active</span>
  </div>
@@ -119,15 +119,15 @@ export default function MedicationsDetail() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
  {['Medication','Dosage','Frequency','Start Date','Route','AI'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
+ <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
  {activeMeds.map((med) => (
- <tr key={med.id} className="hover:bg-slate-50 transition-colors h-[52px]">
+ <tr key={med.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
  <td className="py-3 px-4">
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-lg bg-rose-50 flex items-center justify-center flex-shrink-0">
@@ -135,7 +135,7 @@ export default function MedicationsDetail() {
  </div>
  <div>
  <p className="text-sm font-bold text-slate-900">{med.name}</p>
- {med.generic_name && <p className="text-xs text-slate-500 dark:text-slate-400">{med.generic_name}</p>}
+ {med.generic_name && <p className="text-xs text-[var(--text-500)] dark:text-slate-400">{med.generic_name}</p>}
  </div>
  </div>
  </td>
@@ -158,7 +158,7 @@ export default function MedicationsDetail() {
  {activeMeds.length === 0 && (
  <div className="py-10 text-center">
  <Pill className="w-10 h-10 mx-auto mb-2 text-slate-300" />
- <p className="text-slate-500 text-sm font-medium">No active medications</p>
+ <p className="text-[var(--text-500)] text-sm font-medium">No active medications</p>
  </div>
  )}
  </div>
@@ -167,23 +167,23 @@ export default function MedicationsDetail() {
  {/* Inactive / History */}
  {inactiveMeds.length > 0 && (
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
  <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
  <h2 className="text-base font-bold text-slate-900">Medication History</h2>
- <p className="text-slate-500 text-sm">Discontinued medications</p>
+ <p className="text-[var(--text-500)] text-sm">Discontinued medications</p>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
  {['Medication','Dosage','Frequency','Start Date','End Date','Reason'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
+ <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
  {inactiveMeds.map((med) => (
- <tr key={med.id} className="hover:bg-slate-50 transition-colors opacity-70 h-[52px]">
+ <tr key={med.id} className="hover:bg-[var(--card-bg)] transition-colors opacity-70 h-[52px]">
  <td className="py-3 px-4 text-sm font-semibold text-slate-700">{med.name}</td>
  <td className="py-3 px-4 text-sm text-slate-600">{med.dosage}</td>
  <td className="py-3 px-4 text-sm text-slate-600">{getFrequencyText(med.frequency)}</td>

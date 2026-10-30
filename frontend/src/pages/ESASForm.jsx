@@ -175,7 +175,7 @@ export default function ESASForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
@@ -191,7 +191,7 @@ export default function ESASForm() {
                 <div className={`text-4xl font-bold bg-gradient-to-r ${getScoreColor(scores[symptom.key])} text-transparent bg-clip-text`}>
                   {scores[symptom.key]}
                 </div>
-                <div className="text-xs text-slate-600 font-semibold">
+                <div className="text-xs text-[var(--text-600)] font-semibold">
                   {getScoreLabel(scores[symptom.key])}
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function ESASForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <div className="flex items-center space-x-2 mb-4">
             <input
@@ -261,7 +261,7 @@ export default function ESASForm() {
 
           {completedByProxy && (
             <div className="mt-3">
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Relationship to Patient
               </label>
               <input
@@ -281,9 +281,9 @@ export default function ESASForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           <textarea
@@ -333,7 +333,7 @@ export default function ESASForm() {
             <button
               type="button"
               onClick={() => navigate(`/assessments/${patientId}`)}
-              className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+              className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
             >
               Cancel
             </button>
@@ -377,7 +377,7 @@ export default function ESASForm() {
                   <p className="text-[10px] font-bold text-teal-600 ">Symptom Burden Drivers</p>
                   {mlResult.tasks.symptom_burden.top_features.slice(0, 3).map((feature, i) => (
                     <div key={i}>
-                      <p className="text-xs text-slate-700 mb-0.5">{feature.display_name}</p>
+                      <p className="text-xs text-[var(--text-700)] mb-0.5">{feature.display_name}</p>
                       <div className="w-full h-1.5 bg-slate-100 rounded-full">
                         <div
                           className="h-full rounded-full"

@@ -179,7 +179,7 @@ export default function LegacyContentCreator() {
   if (!patientId && !isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <FileText className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             No Patient Linked
@@ -195,7 +195,7 @@ export default function LegacyContentCreator() {
   if (!hasConsent) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Consent Required
@@ -218,7 +218,7 @@ export default function LegacyContentCreator() {
   if (!hasHeirs) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Users className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Designate Heirs First
@@ -279,7 +279,7 @@ export default function LegacyContentCreator() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
-                  className="bg-slate-50 rounded-lg border border-slate-200 p-6 shadow-md hover:shadow-lg transition relative group"
+                  className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-6 shadow-md hover:shadow-lg transition relative group"
                 >
                   {/* Delete Button */}
                   {!item.is_delivered && (
@@ -387,7 +387,7 @@ export default function LegacyContentCreator() {
               <button
                 type="button"
                 onClick={() => { setShowModal(false); resetForm(); }}
-                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
+                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-[var(--card-bg)] transition"
                 style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
               >
                 Cancel
@@ -407,7 +407,7 @@ export default function LegacyContentCreator() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Content Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
                 Content Type
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -437,13 +437,13 @@ export default function LegacyContentCreator() {
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Title *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., To My Dearest Daughter, Thank You Letter, Final Words..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -451,13 +451,13 @@ export default function LegacyContentCreator() {
 
             {/* Content */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Content *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Content *</label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 rows={10}
                 placeholder="Write your message here..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -465,9 +465,9 @@ export default function LegacyContentCreator() {
 
             {/* Recipient */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">Who should receive this?</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Who should receive this?</label>
               <div className="space-y-3">
-                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="all_heirs" checked={recipientType === 'all_heirs'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3">
@@ -475,14 +475,14 @@ export default function LegacyContentCreator() {
                     <p className="text-sm text-gray-600 dark:text-slate-400">Everyone you've designated as an heir</p>
                   </div>
                 </label>
-                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="specific_heir" checked={recipientType === 'specific_heir'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3 flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white mb-2">Specific Heir</p>
+                    <p className="font-medium text-gray-900 mb-2">Specific Heir</p>
                     {recipientType === 'specific_heir' && (
                       <select value={recipientHeirId} onChange={(e) => setRecipientHeirId(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
                         style={{ borderColor: '#6B4F7A40' }}>
                         <option value="">Search an heir...</option>
                         {heirs.map((heir) => <option key={heir.id} value={heir.id}>{heir.heir_name} ({heir.relationship})</option>)}
@@ -490,14 +490,14 @@ export default function LegacyContentCreator() {
                     )}
                   </div>
                 </label>
-                <label className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="specific_person" checked={recipientType === 'specific_person'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3 flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white mb-2">Specific Person</p>
+                    <p className="font-medium text-gray-900 mb-2">Specific Person</p>
                     {recipientType === 'specific_person' && (
                       <select value={recipientUserId} onChange={(e) => setRecipientUserId(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
                         style={{ borderColor: '#6B4F7A40' }}>
                         <option value="">Search a person...</option>
                         {users.map((u) => <option key={u.id} value={u.id}>{u.full_name} ({u.role})</option>)}
@@ -510,10 +510,10 @@ export default function LegacyContentCreator() {
 
             {/* Delivery Trigger */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-3">When should this be delivered?</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">When should this be delivered?</label>
               <div className="space-y-3">
                 {DELIVERY_TRIGGERS.map((trigger) => (
-                  <label key={trigger.value} className="flex items-center p-4 bg-gray-50 dark:bg-slate-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <label key={trigger.value} className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
                     <input type="radio" name="delivery" value={trigger.value} checked={deliveryTrigger === trigger.value}
                       onChange={(e) => setDeliveryTrigger(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                     <div className="ml-3 flex-1">
@@ -527,7 +527,7 @@ export default function LegacyContentCreator() {
                       {trigger.value === 'specific_date' && deliveryTrigger === 'specific_date' && (
                         <input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)}
                           min={new Date().toISOString().split('T')[0]}
-                          className="mt-2 px-3 py-2 border rounded-lg focus:outline-none dark:bg-slate-700 dark:border-slate-500 dark:text-white"
+                          className="mt-2 px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
                           style={{ borderColor: '#6B4F7A40' }} />
                       )}
                     </div>

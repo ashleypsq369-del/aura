@@ -51,7 +51,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Settings Toggle */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Settings</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -71,7 +71,7 @@ export default function TouchDemo() {
               >
                 <div
                   className={`
-                    absolute top-1 w-6 h-6 bg-slate-50 rounded-full shadow-md transition-all
+                    absolute top-1 w-6 h-6 bg-[var(--card-bg)] rounded-full shadow-md transition-all
                     ${hapticEnabled ? 'right-1' : 'left-1'}
                   `}
                 />
@@ -95,7 +95,7 @@ export default function TouchDemo() {
               >
                 <div
                   className={`
-                    absolute top-1 w-6 h-6 bg-slate-50 rounded-full shadow-md transition-all
+                    absolute top-1 w-6 h-6 bg-[var(--card-bg)] rounded-full shadow-md transition-all
                     ${soundEnabled ? 'right-1' : 'left-1'}
                   `}
                 />
@@ -105,7 +105,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Haptic Feedback Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
             <Vibrate className="w-6 h-6 text-purple-600" />
             <span>Haptic Feedback Patterns</span>
@@ -163,7 +163,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Sound Effects Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
             <Volume2 className="w-6 h-6 text-teal-600" />
             <span>Sound Effects</span>
@@ -221,7 +221,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Button Sizes Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
             <Hand className="w-6 h-6 text-teal-600" />
             <span>Touch Target Sizes (WCAG 2.5.5)</span>
@@ -255,7 +255,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Icon Buttons Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Icon Buttons</h2>
           <div className="flex items-center space-x-3">
             <TouchIconButton
@@ -283,7 +283,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Card Buttons Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Touch-Optimized Cards</h2>
           <div className="space-y-3">
             <TouchCardButton
@@ -302,7 +302,7 @@ export default function TouchDemo() {
         </div>
 
         {/* Gesture Detection Demo */}
-        <div className="mb-6 bg-slate-50 rounded-xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Gesture Detection</h2>
           <div
             className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-8 mb-4 text-center border-2 border-teal-300"
@@ -323,7 +323,7 @@ export default function TouchDemo() {
           </div>
 
           {/* Gesture Log */}
-          <div className="bg-gray-50 rounded-lg p-4 border-2 border-gray-200">
+          <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-gray-200">
             <p className="font-bold text-gray-900 mb-2">Gesture Log:</p>
             {gestureLog.length === 0 ? (
               <p className="text-sm text-gray-500">No gestures detected yet...</p>

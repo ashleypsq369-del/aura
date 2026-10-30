@@ -105,20 +105,20 @@ export default function MDTMeetingLog() {
 
  const toggleReferral = (type) => setReferralsMade(r => r.includes(type) ? r.filter(t => t !== type) : [...r, type]);
 
- const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+ const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[var(--card-bg)] text-[var(--text-900)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
  const selectCls = inputCls;
  const textareaCls = `${inputCls} resize-none`;
 
  const Field = ({ label, children }) => (
  <div>
- <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{label}</label>
+ <label className="block text-sm font-medium text-[var(--text-700)] mb-1">{label}</label>
  {children}
  </div>
  );
 
  const Section = ({ title, icon: Icon, color = 'teal', children }) => (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
- <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-[var(--card-border)] dark:border-slate-700 flex items-center gap-2`}>
  <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
  <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>
  </div>
@@ -131,14 +131,14 @@ export default function MDTMeetingLog() {
  {/* Header */}
  <div className="flex items-center gap-3">
  <button onClick={() => navigate(`/assessments/${patientId}`)} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition">
- <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+ <ArrowLeft className="w-5 h-5 text-[var(--text-600)] dark:text-slate-300" />
  </button>
  <div>
- <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-900)] flex items-center gap-2">
  <Users className="w-6 h-6 text-teal-600" />
  MDT Meeting Log
  </h1>
- {patient && <p className="text-slate-500 dark:text-slate-400 text-sm">{patient.full_name}</p>}
+ {patient && <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm">{patient.full_name}</p>}
  </div>
  </div>
 
@@ -147,20 +147,20 @@ export default function MDTMeetingLog() {
  <Section title={`Previous Meetings (${meetings.length})`} icon={Calendar} color="slate">
  <div className="space-y-2">
  {meetings.map((m) => (
- <div key={m.id} className="border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden">
+ <div key={m.id} className="border border-[var(--card-border)] dark:border-slate-600 rounded-xl overflow-hidden">
  <button
  type="button"
  onClick={() => setExpandedMeeting(expandedMeeting === m.id ? null : m.id)}
- className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-left"
+ className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition text-left"
  >
  <div className="flex items-center gap-3">
- <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+ <span className="text-sm font-medium text-[var(--text-900)] dark:text-slate-100">
  {new Date(m.meeting_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
  </span>
  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
  m.meeting_type === 'urgent' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' :
  m.meeting_type === 'family_meeting' ? 'bg-blue-100 text-teal-700 dark:bg-blue-900/30 dark:text-blue-300' :
- 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
+ 'bg-slate-100 text-[var(--text-600)] dark:text-slate-300'
  }`}>
  {MEETING_TYPES.find(t => t.value === m.meeting_type)?.label || m.meeting_type}
  </span>
@@ -173,22 +173,22 @@ export default function MDTMeetingLog() {
  <motion.div
  initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
- className="border-t border-slate-200 dark:border-slate-600 px-4 py-3 space-y-2 bg-slate-50 dark:bg-slate-750 text-sm"
+ className="border-t border-[var(--card-border)] dark:border-slate-600 px-4 py-3 space-y-2 bg-[var(--card-bg)] dark:bg-slate-750 text-sm"
  >
  {m.attendees?.length > 0 && (
  <div>
- <span className="font-medium text-slate-600 dark:text-slate-300">Attendees: </span>
- <span className="text-slate-700 dark:text-slate-200">{m.attendees.map(a => `${a.name} (${a.role})`).join(', ')}</span>
+ <span className="font-medium text-[var(--text-600)] dark:text-slate-300">Attendees: </span>
+ <span className="text-[var(--text-700)] dark:text-slate-200">{m.attendees.map(a => `${a.name} (${a.role})`).join(', ')}</span>
  </div>
  )}
- {m.clinical_summary && <div><span className="font-medium text-slate-600 dark:text-slate-300">Summary: </span><span className="text-slate-700 dark:text-slate-200">{m.clinical_summary}</span></div>}
- {m.decisions && <div><span className="font-medium text-slate-600 dark:text-slate-300">Decisions: </span><span className="text-slate-700 dark:text-slate-200">{m.decisions}</span></div>}
+ {m.clinical_summary && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Summary: </span><span className="text-[var(--text-700)] dark:text-slate-200">{m.clinical_summary}</span></div>}
+ {m.decisions && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Decisions: </span><span className="text-[var(--text-700)] dark:text-slate-200">{m.decisions}</span></div>}
  {m.action_items?.length > 0 && (
  <div>
- <span className="font-medium text-slate-600 dark:text-slate-300">Actions: </span>
+ <span className="font-medium text-[var(--text-600)] dark:text-slate-300">Actions: </span>
  <ul className="mt-1 space-y-1">
  {m.action_items.map((a, i) => (
- <li key={i} className="text-slate-700 dark:text-slate-200">• {a.action} - {a.responsible} {a.due_date && `(by ${a.due_date})`}</li>
+ <li key={i} className="text-[var(--text-700)] dark:text-slate-200">• {a.action} - {a.responsible} {a.due_date && `(by ${a.due_date})`}</li>
  ))}
  </ul>
  </div>
@@ -220,7 +220,7 @@ export default function MDTMeetingLog() {
  placeholder="e.g. Dr Mensah" />
  </Field>
  <div className="flex items-end gap-3">
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] dark:text-slate-300">
  <input type="checkbox" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
  Family member(s) present
  </label>
@@ -266,11 +266,11 @@ export default function MDTMeetingLog() {
  placeholder="Key issues to address today..." />
  </Field>
  <div className="flex gap-4 flex-wrap">
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] dark:text-slate-300">
  <input type="checkbox" checked={form.goals_of_care_discussed} onChange={e => set('goals_of_care_discussed', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
  Goals of care discussed
  </label>
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] dark:text-slate-300">
  <input type="checkbox" checked={form.acp_reviewed} onChange={e => set('acp_reviewed', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
  ACP reviewed
  </label>
@@ -302,7 +302,7 @@ export default function MDTMeetingLog() {
  className={`px-3 py-1.5 rounded-full text-sm border-2 transition ${
  referralsMade.includes(type)
  ? 'border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300'
- : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-green-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] hover:border-green-300'
  }`}
  >
  {type}
@@ -351,7 +351,7 @@ export default function MDTMeetingLog() {
 
  <div className="flex items-center gap-3 justify-end">
  <button type="button" onClick={() => navigate(`/assessments/${patientId}`)}
- className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm font-medium">
+ className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-[var(--text-700)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition text-sm font-medium">
  Cancel
  </button>
  <button type="submit" disabled={mutation.isLoading}

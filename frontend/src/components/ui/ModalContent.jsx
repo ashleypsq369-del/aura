@@ -47,12 +47,12 @@ export function Field({
  const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none
  ${error
  ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200 text-red-900'
- : 'border-slate-300 bg-slate-50 focus:border-teal-500 focus:ring-2 focus:ring-teal-100 text-slate-900'}`;
+ : 'border-slate-300 bg-[var(--card-bg)] focus:border-teal-500 focus:ring-2 focus:ring-teal-100 text-slate-900'}`;
 
  return (
  <div className={`flex flex-col gap-1 ${className}`}>
  {label && (
- <label htmlFor={name} className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+ <label htmlFor={name} className="text-xs font-semibold text-[var(--text-600)] uppercase tracking-wide">
  {label}{required && <span className="text-red-500 ml-0.5">*</span>}
  </label>
  )}
@@ -90,7 +90,7 @@ export function SelectField({ label, name, options = [], required, error, helper
  */
 export function TextareaField({ label, name, rows = 3, required, error, helperText, className = '', ...rest }) {
  const base = `w-full px-3 py-2.5 text-sm rounded-xl border transition-all outline-none resize-none
- ${error ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200' : 'border-slate-300 bg-slate-50 focus:border-teal-500 focus:ring-2 focus:ring-teal-100'}
+ ${error ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200' : 'border-slate-300 bg-[var(--card-bg)] focus:border-teal-500 focus:ring-2 focus:ring-teal-100'}
  text-slate-900`;
  return (
  <Field label={label} name={name} required={required} error={error} helperText={helperText} className={className}>
@@ -140,11 +140,11 @@ export function ToggleField({ label, description, checked, onChange, name }) {
  <div className="relative mt-0.5 flex-shrink-0">
  <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} name={name} />
  <div className={`w-10 h-5.5 rounded-full transition-colors ${checked ? 'bg-teal-600' : 'bg-slate-300'}`} style={{height:'1.375rem'}} />
- <div className={`absolute top-0.5 w-4 h-4 bg-slate-50 rounded-full shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
+ <div className={`absolute top-0.5 w-4 h-4 bg-[var(--card-bg)] rounded-full shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-slate-800 group-hover:text-teal-700 transition-colors">{label}</p>
- {description && <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{description}</p>}
+ <p className="text-sm font-semibold text-[var(--text-800)] group-hover:text-teal-700 transition-colors">{label}</p>
+ {description && <p className="text-xs text-[var(--text-500)] mt-0.5 leading-relaxed">{description}</p>}
  </div>
  </label>
  );
@@ -186,10 +186,10 @@ export function StepWizard({ steps, current }) {
  */
 export function InfoRow({ label, value, valueClass = '', mono = false, children }) {
  return (
- <div className="flex items-start justify-between gap-3 py-2 border-b border-slate-100 last:border-0">
- <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex-shrink-0 mt-0.5">{label}</span>
- <span className={`text-sm font-medium text-slate-800 text-right ${mono ? 'font-mono' : ''} ${valueClass}`}>
- {children || value || <span className="text-slate-400 italic"> - </span>}
+ <div className="flex items-start justify-between gap-3 py-2 border-b border-[var(--card-border)]/50 last:border-0">
+ <span className="text-xs font-semibold text-[var(--text-500)] uppercase tracking-wide flex-shrink-0 mt-0.5">{label}</span>
+ <span className={`text-sm font-medium text-[var(--text-800)] text-right ${mono ? 'font-mono' : ''} ${valueClass}`}>
+ {children || value || <span className="text-[var(--text-400)] italic"> - </span>}
  </span>
  </div>
  );
@@ -212,10 +212,10 @@ export function InfoGrid({ items = [], cols = 2 }) {
  purple: 'border-purple-200 bg-purple-50',
  };
  return (
- <div key={label} className={`border rounded-xl p-2.5 ${colors[accent] || 'border-slate-200 bg-slate-50'}`}>
- <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide truncate">{label}</p>
- <p className="text-sm font-bold text-slate-900 mt-0.5 leading-tight">{value || ' - '}</p>
- {sub && <p className="text-[10px] text-slate-500 mt-0.5 capitalize">{sub}</p>}
+ <div key={label} className={`border rounded-xl p-2.5 ${colors[accent] || 'border-[var(--card-border)] bg-slate-50'}`}>
+ <p className="text-[10px] font-semibold text-[var(--text-500)] uppercase tracking-wide truncate">{label}</p>
+ <p className="text-sm font-bold text-[var(--text-900)] mt-0.5 leading-tight">{value || ' - '}</p>
+ {sub && <p className="text-[10px] text-[var(--text-500)] mt-0.5 capitalize">{sub}</p>}
  </div>
  );
  })}
@@ -234,7 +234,7 @@ export function InfoBadge({ label, variant = 'default', size = 'sm' }) {
  info: 'bg-blue-100 text-blue-800 border-blue-200',
  purple: 'bg-purple-100 text-purple-800 border-purple-200',
  teal: 'bg-teal-100 text-teal-800 border-teal-200',
- default: 'bg-slate-100 text-slate-700 border-slate-200',
+ default: 'bg-slate-100 text-[var(--text-700)] border-slate-200',
  };
  const sizes = { xs: 'px-2 py-0.5 text-[10px]', sm: 'px-2.5 py-1 text-xs', md: 'px-3 py-1.5 text-sm' };
  return (
@@ -260,7 +260,7 @@ export function InfoAlert({ type = 'info', title, children, compact = false }) {
  <Icon size={compact ? 14 : 16} className={`${iconClass} flex-shrink-0 mt-0.5`} />
  <div className="flex-1 min-w-0">
  {title && <p className={`text-xs font-bold uppercase tracking-wide mb-1 ${titleClass}`}>{title}</p>}
- <div className="text-xs text-slate-700 leading-relaxed">{children}</div>
+ <div className="text-xs text-[var(--text-700)] leading-relaxed">{children}</div>
  </div>
  </div>
  );
@@ -328,9 +328,9 @@ export function ListItem({ children, badge, badgeVariant = 'default', icon: Icon
  return (
  <div className="flex items-start gap-2.5 py-1.5">
  {Icon
- ? <Icon size={14} className="text-slate-400 flex-shrink-0 mt-0.5" />
+ ? <Icon size={14} className="text-[var(--text-400)] flex-shrink-0 mt-0.5" />
  : <div className={`w-1.5 h-1.5 rounded-full ${dotColors[accent] || dotColors.teal} flex-shrink-0 mt-1.5`} />}
- <span className="text-sm text-slate-700 flex-1 leading-relaxed">{children}</span>
+ <span className="text-sm text-[var(--text-700)] flex-1 leading-relaxed">{children}</span>
  {badge && <InfoBadge label={badge} variant={badgeVariant} size="xs" />}
  </div>
  );
@@ -374,10 +374,10 @@ export function SHAPRow({ feature, value, pct, impact, rank }) {
  const bgColor = isRisk ? 'bg-red-50' : 'bg-emerald-50';
  return (
  <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border ${isRisk ? 'border-red-100' : 'border-emerald-100'} ${bgColor}`}>
- {rank && <span className="w-5 h-5 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 flex-shrink-0">{rank}</span>}
+ {rank && <span className="w-5 h-5 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center text-[10px] font-bold text-[var(--text-500)] flex-shrink-0">{rank}</span>}
  <div className="flex-1 min-w-0">
  <div className="flex items-center justify-between gap-2 mb-1">
- <span className="text-xs font-semibold text-slate-800 truncate">{feature}</span>
+ <span className="text-xs font-semibold text-[var(--text-800)] truncate">{feature}</span>
  <span className={`text-xs font-bold flex-shrink-0 ${textColor}`}>
  {isRisk ? '▲' : '▼'} {pct}%
  </span>
@@ -392,7 +392,7 @@ export function SHAPRow({ feature, value, pct, impact, rank }) {
  />
  </div>
  {value !== undefined && (
- <span className="text-[10px] text-slate-500 flex-shrink-0 font-mono">{typeof value === 'number' ? value.toFixed(1) : value}</span>
+ <span className="text-[10px] text-[var(--text-500)] flex-shrink-0 font-mono">{typeof value === 'number' ? value.toFixed(1) : value}</span>
  )}
  </div>
  </div>
@@ -408,7 +408,7 @@ export function Divider({ label, className = '' }) {
  return (
  <div className={`flex items-center gap-3 my-1 ${className}`}>
  <div className="flex-1 h-px bg-slate-200" />
- {label && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex-shrink-0">{label}</span>}
+ {label && <span className="text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider flex-shrink-0">{label}</span>}
  <div className="flex-1 h-px bg-slate-200" />
  </div>
  );

@@ -271,7 +271,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                     <div key={category} className="border-2 border-gray-200 rounded-xl overflow-hidden">
                       <button
                         onClick={() => setExpandedCategory(isExpanded ? null : category)}
-                        className="w-full p-4 bg-slate-50 hover:bg-gray-50 flex items-center justify-between touch-manipulation"
+                        className="w-full p-4 bg-[var(--card-bg)] hover:bg-[var(--card-bg)] flex items-center justify-between touch-manipulation"
                         onTouchStart={() => haptic.light()}
                       >
                         <div className="flex items-center space-x-3">
@@ -298,14 +298,14 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                             exit={{ height: 0 }}
                             className="overflow-hidden"
                           >
-                            <div className="p-4 bg-gray-50 space-y-2">
+                            <div className="p-4 bg-[var(--card-bg)] space-y-2">
                               {resources.map((resource) => {
                                 const isDownloaded = downloaded.some(d => d.id === resource.id);
                                 
                                 return (
                                   <div
                                     key={resource.id}
-                                    className="p-3 bg-slate-50 rounded-lg border border-gray-200 flex items-center justify-between"
+                                    className="p-3 bg-[var(--card-bg)] rounded-lg border border-gray-200 flex items-center justify-between"
                                   >
                                     <div className="flex-1">
                                       <p className="font-semibold text-gray-900 text-sm">

@@ -266,7 +266,7 @@ export default function PPSForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
           <div className="mb-6">
             <div className="flex items-end justify-between mb-4">
@@ -278,7 +278,7 @@ export default function PPSForm() {
                 <div className={`text-6xl font-bold bg-gradient-to-r ${getScoreColor(ppsScore)} text-transparent bg-clip-text`}>
                   {ppsScore}%
                 </div>
-                <p className="text-sm text-slate-600 font-semibold mt-1">
+                <p className="text-sm text-[var(--text-600)] font-semibold mt-1">
                   {getPrognosisText(ppsScore)}
                 </p>
               </div>
@@ -311,29 +311,29 @@ export default function PPSForm() {
           </div>
 
           {/* Current Level Details */}
-          <div className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200">
-            <h3 className="font-bold text-slate-900 mb-3">PPS {ppsScore}% Description:</h3>
-            <p className="text-slate-700 mb-4">{currentLevel.description}</p>
+          <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-slate-200">
+            <h3 className="font-bold text-[var(--text-900)] mb-3">PPS {ppsScore}% Description:</h3>
+            <p className="text-[var(--text-700)] mb-4">{currentLevel.description}</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="bg-slate-50 rounded p-3">
-                <p className="text-xs text-slate-600 font-semibold mb-1">Ambulation</p>
+              <div className="bg-[var(--card-bg)] rounded p-3">
+                <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Ambulation</p>
                 <p className="text-sm text-slate-900">{currentLevel.ambulation.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-slate-50 rounded p-3">
-                <p className="text-xs text-slate-600 font-semibold mb-1">Activity & Disease</p>
+              <div className="bg-[var(--card-bg)] rounded p-3">
+                <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Activity & Disease</p>
                 <p className="text-sm text-slate-900">{currentLevel.activity.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-slate-50 rounded p-3">
-                <p className="text-xs text-slate-600 font-semibold mb-1">Self-Care</p>
+              <div className="bg-[var(--card-bg)] rounded p-3">
+                <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Self-Care</p>
                 <p className="text-sm text-slate-900">{currentLevel.self_care.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-slate-50 rounded p-3">
-                <p className="text-xs text-slate-600 font-semibold mb-1">Oral Intake</p>
+              <div className="bg-[var(--card-bg)] rounded p-3">
+                <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Oral Intake</p>
                 <p className="text-sm text-slate-900">{currentLevel.intake.replace(/_/g, ' ')}</p>
               </div>
-              <div className="bg-slate-50 rounded p-3 md:col-span-2">
-                <p className="text-xs text-slate-600 font-semibold mb-1">Consciousness</p>
+              <div className="bg-[var(--card-bg)] rounded p-3 md:col-span-2">
+                <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Consciousness</p>
                 <p className="text-sm text-slate-900">{currentLevel.consciousness.replace(/_/g, ' ')}</p>
               </div>
             </div>
@@ -367,9 +367,9 @@ export default function PPSForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Clinical Notes (Optional)
           </label>
           <textarea
@@ -419,7 +419,7 @@ export default function PPSForm() {
             <button
               type="button"
               onClick={() => navigate(`/assessments/${patientId}`)}
-              className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+              className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
             >
               Cancel
             </button>
@@ -457,7 +457,7 @@ export default function PPSForm() {
                   <p className="text-[10px] font-bold text-teal-600 ">Key Drivers</p>
                   {mlResult.top_features.slice(0, 3).map((feature, i) => (
                     <div key={i}>
-                      <p className="text-xs text-slate-700 mb-0.5">{feature.display_name}</p>
+                      <p className="text-xs text-[var(--text-700)] mb-0.5">{feature.display_name}</p>
                       <div className="w-full h-1.5 bg-slate-100 rounded-full">
                         <div
                           className="h-full rounded-full"

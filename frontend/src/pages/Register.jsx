@@ -173,13 +173,13 @@ function CountrySelector({ selected, onChange }) {
  <button
  type="button"
  onClick={() => setOpen(o => !o)}
- className="flex items-center gap-1.5 h-11 px-3 border-2 border-slate-200 rounded-xl bg-slate-50 hover:border-teal-400 focus:outline-none focus:border-slate-300 transition-all"
+ className="flex items-center gap-1.5 h-11 px-3 border-2 border-[var(--card-border)] rounded-xl bg-slate-50 hover:border-teal-400 focus:outline-none focus:border-slate-300 transition-all"
  aria-haspopup="listbox"
  aria-label={`Phone country: ${selected.name} ${selected.dial}`}
  >
  <span className="text-lg leading-none select-none">{selected.flag}</span>
- <span className="text-sm font-semibold text-slate-700 font-mono tracking-tight">{selected.dial}</span>
- <ChevronDown size={13} className={`text-slate-400 transition-transform duration-200 ${open ? 'rotate-180':''}`} />
+ <span className="text-sm font-semibold text-[var(--text-700)] font-mono tracking-tight">{selected.dial}</span>
+ <ChevronDown size={13} className={`text-[var(--text-400)] transition-transform duration-200 ${open ? 'rotate-180':''}`} />
  </button>
 
  {/* Dropdown */}
@@ -190,24 +190,24 @@ function CountrySelector({ selected, onChange }) {
  animate={{ opacity:1, y:0, scale:1 }}
  exit ={{ opacity:0, y:-6, scale:0.97 }}
  transition={{ duration:0.15 }}
- className="absolute top-full left-0 mt-1.5 w-72 bg-slate-50 border border-slate-200 rounded-2xl shadow-2xl z-[200] overflow-hidden"
+ className="absolute top-full left-0 mt-1.5 w-72 bg-slate-50 border border-[var(--card-border)] rounded-2xl shadow-2xl z-[200] overflow-hidden"
  role="listbox"
  >
  {/* Search bar */}
  <div className="p-2.5 border-b border-slate-100">
  <div className="relative">
- <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+ <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  <input
  ref={inputRef}
  type="text"
  value={query}
  onChange={e => setQuery(e.target.value)}
  placeholder="Search country or code…"
- className="w-full pl-9 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-slate-300 bg-slate-50"
+ className="w-full pl-9 pr-8 py-2 text-sm border border-[var(--card-border)] rounded-lg focus:outline-none focus:border-slate-300 bg-slate-50"
  autoComplete="off"
  />
  {query && (
- <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5">
+ <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-400)] hover:text-[var(--text-600)] p-0.5">
  <X size={12}/>
  </button>
  )}
@@ -217,7 +217,7 @@ function CountrySelector({ selected, onChange }) {
  {/* Country list */}
  <div className="max-h-52 overflow-y-auto overscroll-contain">
  {list.length === 0 ? (
- <p className="text-center text-sm text-slate-400 py-8">No results for "{query}"</p>
+ <p className="text-center text-sm text-[var(--text-400)] py-8">No results for "{query}"</p>
  ) : list.map(c => (
  <button
  key={c.code}
@@ -231,7 +231,7 @@ function CountrySelector({ selected, onChange }) {
  >
  <span className="text-xl leading-none w-7 text-center flex-shrink-0">{c.flag}</span>
  <span className={`flex-1 truncate font-medium ${c.code === selected.code ? 'text-teal-700':'text-slate-700'}`}>{c.name}</span>
- <span className="font-mono text-xs text-slate-400 flex-shrink-0">{c.dial}</span>
+ <span className="font-mono text-xs text-[var(--text-400)] flex-shrink-0">{c.dial}</span>
  {c.code === selected.code && <CheckCircle size={14} className="text-teal-500 flex-shrink-0"/>}
  </button>
  ))}
@@ -247,7 +247,7 @@ function CountrySelector({ selected, onChange }) {
 function InputGroup({ id, label, required, error, success, hint, children }) {
  return (
  <div className="space-y-1.5">
- <label htmlFor={id} className="block text-sm font-semibold text-slate-700 leading-none">
+ <label htmlFor={id} className="block text-sm font-semibold text-[var(--text-700)] leading-none">
  {label}{required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
  </label>
  {children}
@@ -274,7 +274,7 @@ function InputGroup({ id, label, required, error, success, hint, children }) {
 const inputBorder = (err) =>
  err
  ? 'border-red-400 focus-within:border-red-400'
- : 'border-slate-200 focus-within:border-slate-300';
+ : 'border-[var(--card-border)] focus-within:border-slate-300';
 
 const inputWrap = (err) =>
  `flex items-center border-2 rounded-xl overflow-hidden bg-slate-50 transition-all ${inputBorder(err)}`;
@@ -282,7 +282,7 @@ const inputWrap = (err) =>
 function IconSlot({ err, children }) {
  return (
  <span className={`flex items-center justify-center w-10 h-11 flex-shrink-0 border-r transition-colors ${
- err ? 'border-red-200 bg-red-50/60 text-red-400' : 'border-slate-100 bg-slate-50 text-slate-400'
+ err ? 'border-red-200 bg-red-50/60 text-red-400' : 'border-[var(--card-border)]/50 bg-slate-50 text-slate-400'
  }`}>{children}</span>
  );
 }
@@ -424,7 +424,7 @@ export default function Register() {
  >
 
  {/* ── Card ───────────────────────────────────────────────────────── */}
- <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-slate-200 overflow-hidden">
+ <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-[var(--card-border)] overflow-hidden">
 
  {/* Header banner */}
  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5">
@@ -494,7 +494,7 @@ export default function Register() {
  value={form.full_name}
  onChange={e => setField('full_name', e.target.value.replace(/\d/g,''))}
  onBlur={() => handleBlur('full_name')}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
  placeholder="e.g., Kwame Mensah"
  maxLength={100} spellCheck={false}
  aria-describedby="full_name-hint"
@@ -514,7 +514,7 @@ export default function Register() {
  value={form.username}
  onChange={e => setField('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,''))}
  onBlur={() => handleBlur('username')}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
  placeholder="e.g., kwame_mensah"
  maxLength={50}
  aria-invalid={!!errors.username}
@@ -531,7 +531,7 @@ export default function Register() {
  value={form.email}
  onChange={e => setField('email', e.target.value)}
  onBlur={() => handleBlur('email')}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
  placeholder="your@email.com"
  maxLength={100}
  aria-invalid={!!errors.email}
@@ -551,7 +551,7 @@ export default function Register() {
  value={form.phone}
  onChange={e => handlePhone(e.target.value)}
  onBlur={() => { setTouched(p=>({...p,phone:true})); if(form.phone&&form.phone.length<4) setErrors(e=>({...e,phone:'Phone number is too short'})); }}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent font-mono placeholder:text-slate-400 placeholder:font-sans"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent font-mono placeholder:text-[var(--text-400)] placeholder:font-sans"
  placeholder="Phone number"
  maxLength={country.max}
  pattern="[0-9]*"
@@ -570,13 +570,13 @@ export default function Register() {
  value={form.password}
  onChange={e => setField('password', e.target.value)}
  onBlur={() => handleBlur('password')}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
  placeholder="Create a secure password"
  maxLength={72}
  aria-invalid={!!errors.password}
  />
  <button type="button" onClick={() => setShowPw(s=>!s)}
- className="w-10 h-11 flex items-center justify-center flex-shrink-0 text-slate-400 hover:text-teal-600 border-l border-slate-100 transition-colors"
+ className="w-10 h-11 flex items-center justify-center flex-shrink-0 text-[var(--text-400)] hover:text-teal-600 border-l border-[var(--card-border)]/50 transition-colors"
  aria-label={showPw?'Hide password':'Show password'}>
  {showPw ? <EyeOff size={15}/> : <Eye size={15}/>}
  </button>
@@ -597,13 +597,13 @@ export default function Register() {
  value={form.confirm_password}
  onChange={e => setField('confirm_password', e.target.value)}
  onBlur={() => handleBlur('confirm_password')}
- className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+ className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
  placeholder="Re-enter your password"
  maxLength={72}
  aria-invalid={!!errors.confirm_password}
  />
  <button type="button" onClick={() => setShowCpw(s=>!s)}
- className="w-10 h-11 flex items-center justify-center flex-shrink-0 text-slate-400 hover:text-teal-600 border-l border-slate-100 transition-colors"
+ className="w-10 h-11 flex items-center justify-center flex-shrink-0 text-[var(--text-400)] hover:text-teal-600 border-l border-[var(--card-border)]/50 transition-colors"
  aria-label={showCpw?'Hide password':'Show password'}>
  {showCpw ? <EyeOff size={15}/> : <Eye size={15}/>}
  </button>
@@ -614,7 +614,7 @@ export default function Register() {
  <InputGroup id="role" label="I am registering as"
  hint="Healthcare professionals are registered by your organisation's administrator">
  <select id="role" value={form.role} onChange={e => setField('role', e.target.value)}
- className="w-full h-11 px-3 border-2 border-slate-200 rounded-xl text-sm text-slate-800 font-medium outline-none focus:border-slate-300 bg-slate-50 transition-all appearance-none cursor-pointer">
+ className="w-full h-11 px-3 border-2 border-[var(--card-border)] rounded-xl text-sm text-[var(--text-800)] font-medium outline-none focus:border-slate-300 bg-slate-50 transition-all appearance-none cursor-pointer">
  <option value="patient">A patient</option>
  <option value="family">A family member (not a caregiver)</option>
  </select>
@@ -625,7 +625,7 @@ export default function Register() {
  Continue <span aria-hidden="true">→</span>
  </button>
 
- <p className="text-center text-sm text-slate-500 pt-1">
+ <p className="text-center text-sm text-[var(--text-500)] pt-1">
  Already have an account?{' '}
  <Link to="/login" className="text-teal-600 font-semibold hover:underline">Sign in</Link>
  </p>
@@ -638,7 +638,7 @@ export default function Register() {
 
  <div>
  <h2 className="text-base font-bold text-slate-900">Your care setting</h2>
- <p className="text-sm text-slate-500 mt-0.5 mb-4">
+ <p className="text-sm text-[var(--text-500)] mt-0.5 mb-4">
  How do you currently receive palliative care? This helps us personalise your dashboard and resources.
  </p>
 
@@ -654,7 +654,7 @@ export default function Register() {
  className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
  sel
  ? `${a.border} ${a.bg} ring-2 ${a.ring}`
- : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-50'
+ : 'border-[var(--card-border)] bg-slate-50 hover:border-slate-300 hover:bg-slate-50'
  }`}
  >
  {/* Icon circle */}
@@ -667,7 +667,7 @@ export default function Register() {
  {/* Text */}
  <div className="flex-1 min-w-0">
  <p className={`font-semibold text-sm ${sel ? a.text : 'text-slate-800'}`}>{s.label}</p>
- <p className="text-xs text-slate-500 mt-0.5 leading-snug">{s.description}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5 leading-snug">{s.description}</p>
  </div>
 
  {/* Radio indicator */}
@@ -683,10 +683,10 @@ export default function Register() {
  </div>
 
  {/* Terms */}
- <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-slate-200 hover:border-teal-300 cursor-pointer transition-colors bg-slate-50/80">
+ <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-300 cursor-pointer transition-colors bg-slate-50/80">
  <input type="checkbox" checked={terms} onChange={e => { setTerms(e.target.checked); setServerErr(''); }}
  className="mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer"/>
- <p className="text-xs text-slate-600 leading-relaxed">
+ <p className="text-xs text-[var(--text-600)] leading-relaxed">
  I agree to the{' '}
  <span className="text-teal-600 font-semibold">Terms of Service</span> and{' '}
  <span className="text-teal-600 font-semibold">Privacy Policy</span>, and consent to my health information being used for care coordination purposes.
@@ -696,7 +696,7 @@ export default function Register() {
  {/* Step 2 actions */}
  <div className="flex gap-3 pt-1">
  <button type="button" onClick={() => { setStep(1); setServerErr(''); }}
- className="flex-1 h-12 border-2 border-slate-200 text-slate-600 rounded-xl font-semibold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
+ className="flex-1 h-12 border-2 border-[var(--card-border)] text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
  ← Back
  </button>
  <button type="submit"
@@ -714,7 +714,7 @@ export default function Register() {
  </div>
  </div>
 
- <p className="text-center text-[10px] text-white/60 lg:text-slate-400 mt-3 drop-shadow-sm select-none">
+ <p className="text-center text-[10px] text-white/60 lg:text-[var(--text-400)] mt-3 drop-shadow-sm select-none">
  © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved
  </p>
  </motion.div>

@@ -151,7 +151,7 @@ function MsgContent({ content, streaming=false, isUser=false }) {
  </p>
  );
  return (
- <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-teal-700 prose-strong:text-slate-900 prose-code:text-teal-700 prose-code:bg-teal-50 prose-code:px-1 prose-code:rounded text-slate-800">
+ <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-teal-700 prose-strong:text-[var(--text-900)] prose-code:text-teal-700 prose-code:bg-teal-50 prose-code:px-1 prose-code:rounded text-slate-800">
  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
  code({node,inline,className,children,...props}){
  const m=/language-(\w+)/.exec(className||'');
@@ -344,7 +344,7 @@ export default function AuraChat() {
  style={{color:view==='history'?T.btnHoverText:T.btnText,background:view==='history'?T.btnHoverBg:'transparent'}} className="p-1.5 rounded-lg transition-colors">
  <History size={15}/>
  </button>
- <button onClick={startNew} title="New chat" className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+ <button onClick={startNew} title="New chat" className="p-1.5 text-[var(--text-400)] hover:text-[var(--text-600)] hover:bg-slate-100 rounded-lg transition-colors">
  <Plus size={15}/>
  </button>
  {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 rounded-lg transition-colors" style={{color:T.btnText}}><RotateCcw size={14}/></button>}
@@ -363,7 +363,7 @@ export default function AuraChat() {
  <div className="flex-1 overflow-y-auto p-3 space-y-1.5" style={{background:T.histBg,scrollbarWidth:'thin'}}>
  {histLoading&&<div className="flex justify-center py-10"><Loader2 size={20} className="animate-spin" style={{color:C.accent}}/></div>}
  {!histLoading&&conversations.length===0&&(
- <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-slate-300 mb-2"/><p className="text-sm text-slate-500 font-medium">No previous conversations</p></div>
+ <div className="text-center py-14"><MessageSquare size={28} className="mx-auto text-slate-300 mb-2"/><p className="text-sm text-[var(--text-500)] font-medium">No previous conversations</p></div>
  )}
  {!histLoading&&conversations.map(conv=>(
  <div key={conv.id} className="group flex items-start gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all" style={{background:T.histItemBg,border:`1px solid ${T.histItemBdr}`}} onClick={()=>loadConv(conv.id)}>
@@ -373,7 +373,7 @@ export default function AuraChat() {
  <p className="text-[11px] truncate mt-0.5" style={{color:T.subText}}>{conv.last_message}</p>
  <p className="text-[10px] mt-1" style={{color:T.footerNote}}>{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
  </div>
- <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-slate-400 hover:text-red-500 transition-all"><Trash2 size={12}/></button>
+ <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-[var(--text-400)] hover:text-red-500 transition-all"><Trash2 size={12}/></button>
  </div>
  ))}
  </div>

@@ -191,7 +191,7 @@ export function ModalFooter({ children, className = '' }) {
 export function ModalSection({ label, children, className = '' }) {
  return (
  <div className={`space-y-2 ${className}`}>
- {label && <p className="text-xs font-bold text-slate-500 dark:text-slate-400 ">{label}</p>}
+ {label && <p className="text-xs font-bold text-[var(--text-500)] dark:text-[var(--text-400)] ">{label}</p>}
  {children}
  </div>
  );
@@ -214,7 +214,7 @@ export function ConfirmModal({
  footerContent={
  <ModalFooter>
  <button type="button" onClick={onClose}
- className="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+ className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
  {cancelLabel}
  </button>
  <button type="button" onClick={onConfirm} disabled={isLoading}
@@ -224,7 +224,7 @@ export function ConfirmModal({
  </ModalFooter>
  }
  >
- {message && <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{message}</p>}
+ {message && <p className="text-sm text-[var(--text-700)] leading-relaxed">{message}</p>}
  </Modal>
  );
 }

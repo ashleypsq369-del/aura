@@ -152,12 +152,12 @@ export default function PatientIntakeForm({ onSubmit, onCancel, isSubmitting }) 
       {/* Navigation buttons */}
       <div className="flex gap-3 pt-2 border-t border-slate-100">
         <button type="button" onClick={onCancel}
-          className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+          className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-[var(--text-700)] hover:bg-[var(--card-bg)] transition-colors">
           Cancel
         </button>
         {step > 0 && (
           <button type="button" onClick={() => setStep((s) => s - 1)}
-            className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1">
+            className="px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold text-[var(--text-700)] hover:bg-[var(--card-bg)] transition-colors flex items-center gap-1">
             ← Back
           </button>
         )}

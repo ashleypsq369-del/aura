@@ -109,15 +109,15 @@ export default function Login() {
           className="w-full max-w-sm"
         >
           {/* Glass effect on mobile, solid white on desktop */}
-          <div className="bg-white/90 lg:bg-slate-50 backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl border border-white/50 lg:border-slate-200 p-6 sm:p-8">
+          <div className="bg-white/90 lg:bg-slate-50 backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl border border-white/50 lg:border-[var(--card-border)] p-6 sm:p-8">
 
             {/* Header */}
             <div className="text-center mb-5">
-              <div className="w-20 h-20 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
+              <div className="w-20 h-20 bg-slate-50 border border-[var(--card-border)] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
                 <img src="/logo.png" alt="Project Aura" className="w-16 h-16 object-contain" />
               </div>
-              <h2 className="text-lg font-bold text-slate-900 mb-1">Welcome back</h2>
-              <p className="text-xs text-slate-500 font-medium">Sign in to continue your care journey</p>
+              <h2 className="text-lg font-bold text-[var(--text-900)] mb-1">Welcome back</h2>
+              <p className="text-xs text-[var(--text-500)] font-medium">Sign in to continue your care journey</p>
             </div>
 
             {/* Server error */}
@@ -137,7 +137,7 @@ export default function Login() {
 
               {/* Username */}
               <div>
-                <label className="block text-[11px] font-bold text-slate-600  mb-1.5">
+                <label className="block text-[11px] font-bold text-[var(--text-600)]  mb-1.5">
                   Username <span className="text-red-500">*</span>
                 </label>
                 <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-slate-50
@@ -166,7 +166,7 @@ export default function Login() {
                       const errors = validate(username, password);
                       if (errors.username) setFieldErrors(p => ({ ...p, username: errors.username }));
                     }}
-                    className="flex-1 px-3 py-2.5 outline-none text-sm text-slate-900 font-medium bg-transparent"
+                    className="flex-1 px-3 py-2.5 outline-none text-sm text-[var(--text-900)] font-medium bg-transparent"
                     placeholder="Enter your username"
                     required
                     disabled={loading}
@@ -178,7 +178,7 @@ export default function Login() {
                   />
                   {/* Character count hint */}
                   {username.length > 40 && (
-                    <span className="text-[10px] text-slate-400 pr-2 flex-shrink-0">{username.length}/50</span>
+                    <span className="text-[10px] text-[var(--text-400)] pr-2 flex-shrink-0">{username.length}/50</span>
                   )}
                 </div>
                 {fieldErrors.username && (
@@ -191,7 +191,7 @@ export default function Login() {
               {/* Password */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="block text-[11px] font-bold text-slate-600 ">
+                  <label className="block text-[11px] font-bold text-[var(--text-600)] ">
                     Password <span className="text-red-500">*</span>
                   </label>
                   <Link to="/forgot-password" className="text-[11px] font-bold text-teal-600 hover:text-teal-700 hover:underline">
@@ -222,7 +222,7 @@ export default function Login() {
                       const errors = validate(username, password);
                       if (errors.password) setFieldErrors(p => ({ ...p, password: errors.password }));
                     }}
-                    className="flex-1 px-3 py-2.5 outline-none text-sm text-slate-900 font-medium bg-transparent"
+                    className="flex-1 px-3 py-2.5 outline-none text-sm text-[var(--text-900)] font-medium bg-transparent"
                     placeholder="Enter your password"
                     required
                     disabled={loading}
@@ -232,7 +232,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="flex-shrink-0 w-10 flex items-center justify-center self-stretch text-slate-400 hover:text-teal-600 transition-colors bg-slate-50"
+                    className="flex-shrink-0 w-10 flex items-center justify-center self-stretch text-[var(--text-400)] hover:text-teal-600 transition-colors bg-slate-50"
                     tabIndex={-1}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
@@ -273,7 +273,7 @@ export default function Login() {
 
             {/* Demo credentials */}
             <div className="mt-4 pt-4 border-t border-slate-200">
-              <p className="text-[10px] font-bold text-slate-400  text-center mb-2.5">
+              <p className="text-[10px] font-bold text-[var(--text-400)]  text-center mb-2.5">
                 Demo Accounts
               </p>
               <div className="grid grid-cols-3 gap-2 text-xs text-center">
@@ -296,7 +296,7 @@ export default function Login() {
                         color === 'green'  ? 'bg-green-50  border-green-200  hover:border-green-400'  :
                                              'bg-purple-50 border-purple-200 hover:border-purple-400'}`}
                   >
-                    <p className="font-bold text-slate-800 text-[11px]">{label}</p>
+                    <p className="font-bold text-[var(--text-800)] text-[11px]">{label}</p>
                     <p className={`font-mono text-[10px] mt-0.5
                       ${color === 'blue' ? 'text-teal-600' :
                         color === 'green' ? 'text-green-600' : 'text-purple-600'}`}>
@@ -305,12 +305,12 @@ export default function Login() {
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-center text-slate-400 mt-2">Click any card to auto-fill credentials</p>
+              <p className="text-[10px] text-center text-[var(--text-400)] mt-2">Click any card to auto-fill credentials</p>
             </div>
 
           </div>
 
-          <p className="text-center text-[10px] text-white/70 lg:text-slate-400 mt-3 drop-shadow">
+          <p className="text-center text-[10px] text-white/70 lg:text-[var(--text-400)] mt-3 drop-shadow">
             © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
           </p>
         </motion.div>

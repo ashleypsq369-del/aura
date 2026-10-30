@@ -23,7 +23,7 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
  ? 'border-amber-300 bg-amber-50'
  : status === 'critical'
  ? 'border-red-300 bg-red-50 animate-pulse'
- : 'border-slate-200 bg-slate-50';
+ : 'border-[var(--card-border)] bg-slate-50';
 
  return (
  <motion.div
@@ -36,9 +36,9 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
  style={{ backgroundColor: `${color}20` }}>
  <Icon size={15} style={{ color }} />
  </div>
- <p className="text-xs font-bold text-slate-500 truncate">{label}</p>
+ <p className="text-xs font-bold text-[var(--text-500)] truncate">{label}</p>
  </div>
- <p className="text-2xl font-bold text-slate-900 tabular-nums">{value ?? '--'}</p>
+ <p className="text-2xl font-bold text-[var(--text-900)] tabular-nums">{value ?? '--'}</p>
  <p className="text-xs text-slate-400">{unit}</p>
  </motion.div>
  );
@@ -117,7 +117,7 @@ export default function VitalsDetail() {
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
  <button onClick={() => navigate(-1)}
- className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mt-4 mb-2 group">
+ className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mt-4 mb-2 group">
  <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" /> Back
  </button>
 
@@ -167,7 +167,7 @@ export default function VitalsDetail() {
  }`}>
  <Brain size={16} className="flex-shrink-0 mt-0.5 text-teal-600" />
  <div className="flex-1 min-w-0">
- <p className="font-bold text-slate-900 text-sm flex items-center gap-2">
+ <p className="font-bold text-[var(--text-900)] text-sm flex items-center gap-2">
  ML Vital Risk Assessment
  <span className={`text-xs px-2 py-0.5 rounded-full font-bold capitalize border ${
  mlRisk.risk_level === 'critical' ? 'text-red-700 bg-red-50 border-red-200' :
@@ -191,7 +191,7 @@ export default function VitalsDetail() {
  {/* Chart */}
  {chartData.length > 1 && (
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
  <div className="px-6 py-4 border-b border-slate-200">
  <h2 className="text-base font-bold text-slate-900">Vital Signs Trend</h2>
  </div>
@@ -215,35 +215,35 @@ export default function VitalsDetail() {
 
  {/* History table */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
  <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
  <h2 className="text-base font-bold text-slate-900">Vitals History</h2>
- <p className="text-slate-500 text-sm">Complete record of all vital sign measurements</p>
+ <p className="text-[var(--text-500)] text-sm">Complete record of all vital sign measurements</p>
  </div>
 
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
  {['Date & Time','BP (mmHg)','HR (bpm)','Temp (°C)','O₂ Sat (%)','Resp. Rate','Recorded By'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
+ <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
- <th className="text-right py-3 px-4 text-xs font-bold text-slate-600 uppercase tracking-wide">AI</th>
+ <th className="text-right py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">AI</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
  {vitals.map((v) => (
- <tr key={v.id} className="hover:bg-slate-50 transition-colors h-[52px]">
- <td className="py-3 px-4 text-sm font-medium text-slate-900 dark:text-white">
+ <tr key={v.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
+ <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)] dark:text-white">
  {new Date(v.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </td>
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">
  {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia ?? 0)}` : '--'}
  </td>
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.temperature?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.temperature?.toFixed(1) ?? '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
  <td className="py-3 px-4 text-sm text-slate-500">{v.recorded_by || 'System'}</td>
  <td className="py-3 px-4 text-right">
  {v.heart_rate >= 100 || v.oxygen_saturation < 95 ? (
@@ -260,8 +260,8 @@ export default function VitalsDetail() {
  {vitals.length === 0 && (
  <div className="py-12 text-center">
  <Activity className="w-12 h-12 mx-auto mb-3 text-slate-300" />
- <p className="text-slate-500 font-medium">No vitals recorded</p>
- <p className="text-sm text-slate-400 mt-1">Start recording vital signs to track patient health</p>
+ <p className="text-[var(--text-500)] font-medium">No vitals recorded</p>
+ <p className="text-sm text-[var(--text-400)] mt-1">Start recording vital signs to track patient health</p>
  </div>
  )}
  </div>

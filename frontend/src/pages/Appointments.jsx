@@ -68,7 +68,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
 
  return (
  <button onClick={onClick}
- className="relative rounded-lg text-left w-full transition-all duration-150 bg-slate-50 hover:shadow-md"
+ className="relative rounded-lg text-left w-full transition-all duration-150 bg-[var(--card-bg)] hover:shadow-md"
  style={{
  border: selected ? `2px solid ${a.active}` : '1px solid #c8d0da',
  boxShadow: selected ? `0 0 0 1px ${a.active}20, 0 2px 8px rgba(0,0,0,0.08)` : '0 1px 3px rgba(0,0,0,0.06)',
@@ -105,8 +105,8 @@ function ScheduleModal({ onClose, onSave, pending }) {
  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
  <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
  onClick={e=>e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
- <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+ <div className="px-6 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center"><Calendar size={15}/></div>
  <h2 className="font-bold text-slate-800">Schedule Appointment</h2>
@@ -124,7 +124,7 @@ function ScheduleModal({ onClose, onSave, pending }) {
  placeholder="Select appointment type…"
  />
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Date & Time *</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Date & Time *</label>
  <input type="datetime-local" value={f.scheduled_at} onChange={up('scheduled_at')}
  min={new Date().toISOString().slice(0,16)}
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
@@ -140,19 +140,19 @@ function ScheduleModal({ onClose, onSave, pending }) {
  placeholder="Select location…"
  />
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Detail</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Detail</label>
  <input value={f.location_detail} onChange={up('location_detail')} placeholder="e.g. Room 4B"
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
  </div>
  </div>
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Notes</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Notes</label>
  <textarea value={f.notes} onChange={up('notes')} rows={3}
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none resize-none"/>
  </div>
  </div>
- <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-slate-600 rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 flex gap-3">
+ <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
  <button onClick={()=>onSave(f)} disabled={!valid||pending}
  className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
  {pending?<Loader2 size={13} className="animate-spin"/>:<CheckCircle size={13}/>}
@@ -175,7 +175,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
 
  return (
  <motion.div layout initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
- className={`group border-l-4 ${cfg.borderL} ${cfg.bg} rounded-r-xl border border-slate-200 p-4 transition-shadow hover:shadow-md ${past&&appt.status==='scheduled'?'opacity-70':''}`}>
+ className={`group border-l-4 ${cfg.borderL} ${cfg.bg} rounded-r-xl border border-[var(--card-border)] p-4 transition-shadow hover:shadow-md ${past&&appt.status==='scheduled'?'opacity-70':''}`}>
  <div className="flex items-start gap-3">
  <div className={`mt-0.5 flex-shrink-0 ${cfg.pulse?'animate-pulse':''}`}>
  <Calendar className={`w-5 h-5 ${today?'text-teal-600':appt.status==='completed'?'text-emerald-600':appt.status==='cancelled'?'text-slate-400':'text-teal-500'}`}/>
@@ -183,7 +183,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
  <div className="flex-1 min-w-0">
  <div className="flex items-start justify-between gap-2 flex-wrap">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="font-bold text-slate-900 text-sm">{appt.appointment_type}</span>
+ <span className="font-bold text-[var(--text-900)] text-sm">{appt.appointment_type}</span>
  <AppointmentStatusBadge status={appt.status || 'scheduled'} compact />
  {until && (
  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 flex items-center gap-0.5">
@@ -192,7 +192,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
  )}
  </div>
  <div className="flex items-center gap-2 flex-shrink-0">
- <span className="text-xs text-slate-400 flex items-center gap-1 flex-shrink-0">
+ <span className="text-xs text-[var(--text-400)] flex items-center gap-1 flex-shrink-0">
  <Clock size={11}/>
  {new Date(appt.scheduled_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
  {' '}
@@ -207,12 +207,12 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
  </div>
  </div>
 
- <p className="text-slate-600 text-sm mt-1 flex items-center gap-1.5">
- <MapPin size={13} className="text-slate-400 flex-shrink-0"/>
+ <p className="text-[var(--text-600)] text-sm mt-1 flex items-center gap-1.5">
+ <MapPin size={13} className="text-[var(--text-400)] flex-shrink-0"/>
  {appt.location || ' - '}
  {appt.location_detail && <span className="text-slate-400">· {appt.location_detail}</span>}
  </p>
- {appt.notes && <p className="text-xs text-slate-500 mt-1.5 line-clamp-2">{appt.notes}</p>}
+ {appt.notes && <p className="text-xs text-[var(--text-500)] mt-1.5 line-clamp-2">{appt.notes}</p>}
 
  {canSchedule && appt.status === 'scheduled' && (
  <div className="flex gap-2 mt-3">
@@ -390,14 +390,14 @@ export default function Appointments() {
  {/* Care setting gate - hospice patients: appointments are hidden */}
  {appointmentsHidden && (
  <div className="px-6">
- <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
+ <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-8 text-center">
  <Calendar size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="font-bold text-slate-600 text-base mb-1">No clinic appointments needed</p>
- <p className="text-slate-400 text-sm max-w-sm mx-auto">
+ <p className="font-bold text-[var(--text-600)] text-base mb-1">No clinic appointments needed</p>
+ <p className="text-[var(--text-400)] text-sm max-w-sm mx-auto">
  Your care setting ({careSetting?.replace(/_/g,' ')}) focuses on comfort care at home or in the hospice.
  Your care team visits you directly - no clinic appointments required.
  </p>
- <p className="text-xs text-slate-400 mt-3">
+ <p className="text-xs text-[var(--text-400)] mt-3">
  If you have questions about your care schedule, use{' '}
  <a href="/messages" className="text-teal-600 font-semibold hover:underline">Messages</a>{' '}
  to contact your care team.
@@ -434,7 +434,7 @@ export default function Appointments() {
  selected={filterStatus==='resolved'} onClick={() => setFilterStatus('resolved')}
  subtitle="Done appointments"/>
  <KpiCard label="Cancelled" value={kpi.cancelled} icon={XCircle}
- color="bg-slate-100 text-slate-600 border-slate-400"
+ color="bg-slate-100 text-[var(--text-600)] border-slate-400"
  selected={false} onClick={() => setFilterStatus('all')}
  subtitle="Cancelled visits"/>
  </div>
@@ -450,7 +450,7 @@ export default function Appointments() {
  </div>
  <div className="flex flex-wrap gap-2">
  {todayReminders.map(a => (
- <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-slate-50 border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
+ <span key={a.id} className="inline-flex items-center gap-1.5 text-xs bg-[var(--card-bg)] border border-teal-200 text-teal-800 font-semibold px-3 py-1.5 rounded-full shadow-sm">
  <Clock size={10}/>
  {new Date(a.scheduled_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} - {a.appointment_type}
  </span>
@@ -473,7 +473,7 @@ export default function Appointments() {
  {/* Filter bar + Content - hidden for care settings that gate appointments */}
  {!appointmentsHidden && (<>
  <div className="px-6">
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 space-y-3">
  <div className="flex flex-col md:flex-row gap-3 items-center">
  {isStaff && (
  <SearchableSelect
@@ -492,7 +492,7 @@ export default function Appointments() {
  />
  )}
  <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+ <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  <input value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search by type or location…"
  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"/>
@@ -501,14 +501,14 @@ export default function Appointments() {
  {[['active','Upcoming'],['all','All'],['resolved','Resolved']].map(([v,l]) => (
  <button key={v} onClick={() => setFilterStatus(v)}
  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterStatus===v ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
+ filterStatus===v ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
  }`}>{l}</button>
  ))}
  </div>
  </div>
  {(search || filterStatus !== 'active') && (
  <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-100">
- <span className="text-[11px] text-slate-400 font-semibold flex items-center gap-1"><ListFilter size={11}/> Filters:</span>
+ <span className="text-[11px] text-[var(--text-400)] font-semibold flex items-center gap-1"><ListFilter size={11}/> Filters:</span>
  {filterStatus !== 'active' && (
  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-700 flex items-center gap-1">
  {filterStatus}<button onClick={() => setFilterStatus('active')} className="font-black hover:text-red-600">×</button>
@@ -519,7 +519,7 @@ export default function Appointments() {
  "{search}"<button onClick={() => setSearch('')} className="font-black hover:text-red-600">×</button>
  </span>
  )}
- <button onClick={() => { setFilterStatus('active'); setSearch(''); }} className="text-xs text-slate-400 hover:text-red-500 font-semibold ml-auto">Clear all</button>
+ <button onClick={() => { setFilterStatus('active'); setSearch(''); }} className="text-xs text-[var(--text-400)] hover:text-red-500 font-semibold ml-auto">Clear all</button>
  </div>
  )}
  </div>
@@ -532,10 +532,10 @@ export default function Appointments() {
  <Loader2 size={28} className="animate-spin text-teal-600"/>
  </div>
  ) : !patientId ? (
- <div className="bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-dashed border-[var(--card-border)] p-14 text-center">
  <Search size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="font-bold text-slate-600 text-base mb-1">Search for a patient</p>
- <p className="text-slate-400 text-sm">Select a patient above to view their appointments.</p>
+ <p className="font-bold text-[var(--text-600)] text-base mb-1">Search for a patient</p>
+ <p className="text-[var(--text-400)] text-sm">Select a patient above to view their appointments.</p>
  </div>
  ) : (
  <>
@@ -543,17 +543,17 @@ export default function Appointments() {
  {showActive && (
  <div>
  <div className="flex items-center justify-between mb-3">
- <h2 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+ <h2 className="text-sm font-bold text-[var(--text-700)] flex items-center gap-2">
  <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"/>
  Upcoming Appointments
  <span className="ml-1 px-2 py-0.5 bg-teal-50 text-teal-700 rounded-full text-xs font-bold">{upcomingAppts.length}</span>
  </h2>
  </div>
  {upcomingAppts.length === 0 ? (
- <div className="bg-slate-50 rounded-xl border border-slate-200 p-10 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-10 text-center">
  <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-3"/>
- <p className="text-slate-600 font-bold mb-1">No upcoming appointments</p>
- <p className="text-slate-400 text-sm mb-4">
+ <p className="text-[var(--text-600)] font-bold mb-1">No upcoming appointments</p>
+ <p className="text-[var(--text-400)] text-sm mb-4">
  {appointmentsHidden
  ? 'Your care team visits you directly - no clinic appointments needed.'
  : 'No appointments currently scheduled.'}
@@ -585,7 +585,7 @@ export default function Appointments() {
  <div>
  <button onClick={() => setResolvedExpanded(v => !v)}
  className={`w-full flex items-center justify-between px-5 py-3.5 rounded-xl border-2 font-bold text-sm transition-all ${
- resolvedExpanded ? 'bg-slate-100 border-slate-300 text-slate-700' : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
+ resolvedExpanded ? 'bg-slate-100 border-slate-300 text-slate-700' : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-600)] hover:border-slate-300'
  }`}>
  <div className="flex items-center gap-2.5">
  <CheckCircle size={16} className={resolvedExpanded?'text-emerald-500':'text-green-400'}/>

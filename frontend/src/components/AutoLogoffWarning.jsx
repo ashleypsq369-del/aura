@@ -30,7 +30,7 @@ export default function AutoLogoffWarning({ show, remainingSeconds, onStayActive
  <Activity size={16}/> I'm Still Here
  </button>
  <button onClick={onLogout}
- className="py-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-semibold hover:bg-slate-50 transition-all">
+ className="py-3 bg-[var(--card-bg)] border-2 border-slate-300 dark:border-slate-600 text-[var(--text-700)] rounded-xl font-semibold hover:bg-[var(--card-bg)] transition-all">
  Logout Now
  </button>
  </div>
@@ -47,18 +47,18 @@ export default function AutoLogoffWarning({ show, remainingSeconds, onStayActive
  </p>
  </div>
  </div>
- <p className="text-base font-semibold text-slate-800 dark:text-slate-200">
+ <p className="text-base font-semibold text-[var(--text-800)] dark:text-slate-200">
  Auto-logout in <span className="text-amber-600 font-black">{remainingSeconds}s</span>
  </p>
  </div>
  {/* Message */}
  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4">
- <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">
  <span className="font-bold">For your security:</span> You've been inactive for 14 minutes.
  To protect patient data and comply with HIPAA regulations, you will be logged out after 15 minutes of inactivity.
  </p>
  </div>
- <p className="text-xs text-slate-400 text-center">
+ <p className="text-xs text-[var(--text-400)] text-center">
  Any mouse movement, click, or key press will reset the timer.
  </p>
  </div>

@@ -28,7 +28,7 @@ export default function IntelligentRecommendations({ patientId }) {
 
   if (isLoading) {
     return (
-      <div className="bg-slate-50 rounded-lg p-6 border-2 border-slate-200 animate-pulse">
+      <div className="bg-[var(--card-bg)] rounded-lg p-6 border-2 border-[var(--card-border)] animate-pulse">
         <div className="h-6 bg-slate-200 rounded w-1/2 mb-4"></div>
         <div className="space-y-3">
           <div className="h-4 bg-slate-200 rounded"></div>
@@ -68,11 +68,11 @@ export default function IntelligentRecommendations({ patientId }) {
       </div>
 
       {/* Disease-Specific Context */}
-      <div className="bg-slate-50 rounded-lg p-4 border-2 border-purple-200 mb-4">
+      <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-purple-200 mb-4">
         <div className="flex items-start space-x-3">
           <Target className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-slate-900 mb-2">Care Priorities:</p>
+            <p className="text-sm font-semibold text-[var(--text-900)] mb-2">Care Priorities:</p>
             <div className="flex flex-wrap gap-2">
               {profile.care_priorities?.map((priority, idx) => (
                 <span
@@ -94,10 +94,10 @@ export default function IntelligentRecommendations({ patientId }) {
             <RecommendationItem key={idx} recommendation={rec} index={idx} />
           ))
         ) : (
-          <div className="bg-slate-50 rounded-lg p-4 border-2 border-green-200 text-center">
+          <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-green-200 text-center">
             <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
             <p className="text-sm font-semibold text-slate-900">All parameters within target range</p>
-            <p className="text-xs text-slate-600 mt-1">Continue current care plan</p>
+            <p className="text-xs text-[var(--text-600)] mt-1">Continue current care plan</p>
           </div>
         )}
       </div>
@@ -145,13 +145,13 @@ function RecommendationItem({ recommendation, index }) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 hover:border-purple-300 transition-all"
+      className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-[var(--card-border)] hover:border-purple-300 transition-all"
     >
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0 mt-0.5">
           {icon}
         </div>
-        <p className="text-sm text-slate-800 leading-relaxed">
+        <p className="text-sm text-[var(--text-800)] leading-relaxed">
           {recommendation}
         </p>
       </div>

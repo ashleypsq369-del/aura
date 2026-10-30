@@ -1,0 +1,212 @@
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+
+/**
+ * The server file itself: tool declarations, the zod schemas they compile to,
+ * and the shutdown path. None of that is reachable from a unit test, and a
+ * break in it reaches every MCP client at once.
+ *
+ * Driven with the SDK's own client over stdio, which is the code path a real
+ * editor takes. No browser: every case here either fails before launch or never
+ * reaches an extraction.
+ */
+
+const SERVER = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'mcp-server.js');
+
+interface ToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: { type: string; properties?: Record<string, unknown>; required?: string[] };
+}
+
+interface ToolCallResult {
+  content: Array<{ type: string; text: string }>;
+  isError?: boolean;
+}
+
+async function connect() {
+  const transport = new StdioClientTransport({ command: process.execPath, args: [SERVER] });
+  const client = new Client({ name: 'protocol-smoke', version: '1' });
+  await client.connect(transport);
+  return { client, transport };
+}
+
+let client: Client;
+let tools: ToolDefinition[];
+
+before(async () => {
+  ({ client } = await connect());
+  tools = (await client.listTools()).tools as ToolDefinition[];
+});
+
+after(async () => { await client?.close().catch(() => {}); });
+
+const call = async (name: string, args: Record<string, unknown>) =>
+  (await client.callTool({ name, arguments: args })) as unknown as ToolCallResult;
+
+test('the server announces itself and its version', () => {
+  const info = client.getServerVersion();
+  assert.equal(info?.name, 'dembrandt');
+  assert.match(String(info?.version), /^\d+\.\d+\.\d+/);
+});
+
+test('every tool compiles to a valid schema', () => {
+  // zod 4 rejects some zod 3 spellings at schema-build time, and the failure
+  // takes down tools/list for every tool at once: one bad parameter breaks the
+  // whole server, which is how #158 shipped a compute_drift nobody could call.
+  assert.equal(tools.length, 21, `the tool set changed: ${tools.map(t => t.name).join(', ')}`);
+  for (const tool of tools) {
+    assert.equal(tool.inputSchema.type, 'object', `${tool.name} has no object schema`);
+    assert.ok(tool.description.length > 40, `${tool.name} needs a usable description`);
+  }
+});
+
+test('extraction tools expose the crawl and auth surface', () => {
+  const extraction = ['get_design_tokens', 'get_color_palette', 'get_typography',
+    'get_component_styles', 'get_surfaces', 'get_spacing', 'get_brand_identity'];
+  for (const name of extraction) {
+    const tool = tools.find(t => t.name === name);
+    assert.ok(tool, `${name} is missing`);
+    const props = Object.keys(tool.inputSchema.properties ?? {});
+    for (const param of ['url', 'pages', 'paths', 'sitemap', 'header', 'cookieFile', 'basicAuth', 'userAgent', 'noSandbox']) {
+      assert.ok(props.includes(param), `${name} is missing ${param}`);
+    }
+  }
+});
+
+test('pure tools accept a job_id in place of an inline extraction', () => {
+  for (const name of ['get_findings', 'export_dtcg', 'export_tailwind', 'export_shadcn', 'generate_design_md', 'render_report']) {
+    const tool = tools.find(t => t.name === name);
+    assert.ok(tool, `${name} is missing`);
+    const schema = tool.inputSchema;
+    assert.ok(Object.keys(schema.properties ?? {}).includes('job_id'), `${name} takes no job_id`);
+    // Requiring either one makes the other form unusable.
+    assert.ok(!(schema.required ?? []).includes('result'), `${name} still requires result`);
+    assert.ok(!(schema.required ?? []).includes('job_id'), `${name} requires job_id`);
+  }
+  const drift = tools.find(t => t.name === 'compute_drift');
+  const driftProps = Object.keys(drift?.inputSchema.properties ?? {});
+  assert.ok(driftProps.includes('baselineJobId') && driftProps.includes('candidateJobId'));
+});
+
+test('an unknown job_id is a tool error, not a protocol error', async () => {
+  const res = await call('get_findings', { job_id: 'job_nope' });
+  assert.equal(res.isError, true);
+  assert.match(res.content[0].text, /No job found with id: job_nope/);
+});
+
+test('omitting both result and job_id names what is missing', async () => {
+  const res = await call('export_dtcg', {});
+  assert.equal(res.isError, true);
+  assert.match(res.content[0].text, /Pass either result or job_id/);
+});
+
+test('the pure tools run without a browser', async () => {
+  const extraction = {
+    url: 'https://example.com/',
+    extractedAt: '2026-01-01T00:00:00.000Z',
+    meta: { schemaVersion: '1.8.0', dembrandtVersion: '0.29.0' },
+    colors: { palette: [{ normalized: '#133174', count: 40, confidence: 'high' }], semantic: { primary: '#133174' }, cssVariables: {} },
+    typography: { styles: [], sources: {} },
+    spacing: { commonValues: [] },
+    borderRadius: { values: [] },
+  };
+  const drift = await call('compute_drift', { baseline: extraction, candidate: extraction });
+  assert.notEqual(drift.isError, true, `compute_drift errored: ${JSON.stringify(drift)}`);
+  assert.equal(JSON.parse(drift.content[0].text).score, 0, 'an extraction cannot drift from itself');
+
+  const md = await call('generate_design_md', { result: extraction });
+  assert.notEqual(md.isError, true);
+  assert.match(md.content[0].text, /^#/m);
+});
+
+test('the emitters an agent can reach match the ones the CLI writes', async () => {
+  const extraction = {
+    url: 'https://example.com/',
+    extractedAt: '2026-01-01T00:00:00.000Z',
+    meta: { schemaVersion: '1.14.0', dembrandtVersion: '0.34.2' },
+    colors: {
+      palette: [{ color: '#133174', normalized: '#133174', count: 40, confidence: 'high', role: 'surface', onColor: '#ffffff' }],
+      semantic: { primary: '#133174', background: '#ffffff', text: '#111111' },
+      cssVariables: {},
+    },
+    typography: { styles: [], sources: {} },
+    spacing: { commonValues: [] },
+    borderRadius: { values: [{ value: '8px', confidence: 'high', count: 12 }] },
+  };
+
+  const shadcn = await call('export_shadcn', { result: extraction });
+  assert.notEqual(shadcn.isError, true, `export_shadcn errored: ${JSON.stringify(shadcn)}`);
+  assert.match(shadcn.content[0].text, /@theme inline/, 'the mapping block is what makes the file work');
+  assert.match(shadcn.content[0].text, /--primary:/);
+
+  const tailwind = await call('export_tailwind', { result: extraction });
+  assert.notEqual(tailwind.isError, true, `export_tailwind errored: ${JSON.stringify(tailwind)}`);
+  assert.match(tailwind.content[0].text, /@theme/);
+});
+
+test('the pure analysis tools grade and validate without a browser', async () => {
+  const contrast = await call('check_contrast', {
+    pairs: [
+      { foreground: '#767676', background: '#ffffff', label: 'body grey' },
+      { foreground: '#767676', background: '#ffffff', fontSizePx: 32, fontWeight: 700, label: 'the same grey, headline size' },
+      { foreground: 'not-a-colour', background: '#ffffff', label: 'unparseable' },
+    ],
+  });
+  assert.notEqual(contrast.isError, true, `check_contrast errored: ${JSON.stringify(contrast)}`);
+  const graded = JSON.parse(contrast.content[0].text).pairs;
+  assert.equal(graded[0].requiredAA, 4.5, 'body text is graded at 4.5:1');
+  assert.equal(graded[1].requiredAA, 3, '18pt+ is large scale and graded at 3:1');
+  assert.ok(graded[2].error, 'an unparseable colour is reported, not graded');
+
+  const valid = await call('validate_dtcg', {
+    tokens: { brand: { $type: 'color', $value: { colorSpace: 'srgb', components: [0.1, 0.2, 0.4] } } },
+  });
+  assert.equal(JSON.parse(valid.content[0].text).valid, true);
+
+  const broken = await call('validate_dtcg', {
+    tokens: { brand: { $type: 'color', $value: { colorSpace: 'srgb', components: [2, 0, 0] } } },
+  });
+  assert.equal(JSON.parse(broken.content[0].text).valid, false, 'a component out of range is not valid');
+});
+
+test('check_robots answers on an unreachable host instead of hanging', async () => {
+  const res = await call('check_robots', { url: 'http://127.0.0.1:1/' });
+  assert.notEqual(res.isError, true, `check_robots errored: ${JSON.stringify(res)}`);
+  const verdict = JSON.parse(res.content[0].text);
+  assert.ok('status' in verdict, 'the verdict must name the robots.txt status');
+  assert.notEqual(verdict.status, 'ok', 'a refused connection is not a readable robots.txt');
+  assert.ok('allowed' in verdict, 'the caller needs a yes or no, not just a status');
+});
+
+test('job listing works before any job exists', async () => {
+  const res = await call('list_jobs', {});
+  assert.deepEqual(JSON.parse(res.content[0].text), { jobs: [] });
+
+test('an extraction tool queues instead of blocking, and the job can be cancelled', async () => {
+  const queued = await call('get_motion', { url: 'https://example.com/' });
+  assert.notEqual(queued.isError, true, `get_motion errored: ${JSON.stringify(queued)}`);
+  const { job_id: jobId, status } = JSON.parse(queued.content[0].text);
+  assert.ok(jobId, 'an async extraction must hand back a job_id');
+  assert.equal(status, 'queued');
+
+  const cancelled = await call('cancel_job', { job_id: jobId });
+  assert.notEqual(cancelled.isError, true);
+  const after = await call('get_job_status', { job_id: jobId });
+  assert.doesNotMatch(after.content[0].text, /"status":\s*"completed"/, 'a cancelled job must not complete');
+});
+
+});
+
+test('the process exits when its transport closes', async () => {
+  const fresh = await connect();
+  const proc = (fresh.transport as unknown as { _process?: { exitCode: number | null } })._process;
+  await fresh.client.close();
+  // Give the child a moment to notice stdin closed.
+  await new Promise(r => setTimeout(r, 500));
+  assert.notEqual(proc?.exitCode, null, 'closing the transport must end the process, not leave it running');
+});

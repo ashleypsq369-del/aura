@@ -356,7 +356,7 @@ export default function AuraAvatar() {
  <div className="p-4">
  <div className="flex items-start gap-2 mb-3">
  <Sparkles size={16} className="text-amber-500 flex-shrink-0 mt-0.5" />
- <p className="text-sm text-slate-700 leading-relaxed font-medium">{tip}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed font-medium">{tip}</p>
  </div>
  <div className="flex items-center justify-between">
  <button onClick={nextTip}
@@ -406,7 +406,7 @@ export default function AuraAvatar() {
  {/* -- MOOD panel -- */}
  {panel === 'mood' && (
  <div className="p-4">
- <p className="text-xs font-bold text-slate-600 mb-3 ">
+ <p className="text-xs font-bold text-[var(--text-600)] mb-3 ">
  How are you feeling right now?
  </p>
  <div className="grid grid-cols-3 gap-2">
@@ -428,7 +428,7 @@ export default function AuraAvatar() {
  </div>
  {userMood && (
  <button onClick={() => setUserMood(null)}
- className="mt-2.5 text-[11px] text-slate-400 hover:text-slate-600 w-full text-center transition-colors">
+ className="mt-2.5 text-[11px] text-[var(--text-400)] hover:text-[var(--text-600)] w-full text-center transition-colors">
  Change response
  </button>
  )}
@@ -441,7 +441,7 @@ export default function AuraAvatar() {
  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-3">
  <Sparkles size={22} className="text-amber-500" />
  </div>
- <p className="text-sm font-semibold text-slate-700 leading-relaxed mb-4 italic">
+ <p className="text-sm font-semibold text-[var(--text-700)] leading-relaxed mb-4 italic">
  "{affirmation}"
  </p>
  <motion.button
@@ -493,7 +493,7 @@ export default function AuraAvatar() {
  onClick={() => handleNav(t.nav)}
  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 transition-colors text-left"
  >
- <t.Icon size={16} className="text-slate-500 flex-shrink-0" />
+ <t.Icon size={16} className="text-[var(--text-500)] flex-shrink-0" />
  <div>
  <p className="text-xs font-bold text-slate-800">{t.label}</p>
  <p className="text-[10px] text-slate-400">{t.desc}</p>
@@ -579,7 +579,7 @@ export default function AuraAvatar() {
  ) : (
  <motion.div onClick={() => setMinimized(false)}
  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.92 }}
- className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer shadow-lg bg-slate-50 border-2 border-amber-400"
+ className="w-11 h-11 rounded-full flex items-center justify-center cursor-pointer shadow-lg bg-[var(--card-bg)] border-2 border-amber-400"
  >
  <AuraMascot size={32} />
  </motion.div>

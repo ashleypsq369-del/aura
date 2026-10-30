@@ -69,7 +69,7 @@ export default function MyLegacyAccess() {
  <div className="min-h-full flex items-center justify-center">
  <div className="text-center">
  <Loader2 className="w-10 h-10 animate-spin text-purple-500 mx-auto mb-3" />
- <p className="text-slate-500 text-sm">Loading your legacy access - </p>
+ <p className="text-[var(--text-500)] text-sm">Loading your legacy access - </p>
  </div>
  </div>
  );
@@ -77,10 +77,10 @@ export default function MyLegacyAccess() {
  // Error
  if (isError) return (
  <div className="min-h-full flex items-center justify-center">
- <div className="bg-slate-50 border border-red-200 rounded-2xl p-10 max-w-md text-center">
+ <div className="bg-[var(--card-bg)] border border-red-200 rounded-2xl p-10 max-w-md text-center">
  <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
- <p className="text-slate-700 font-semibold">Unable to load legacy access</p>
- <p className="text-sm text-slate-400 mt-1">Please try again later or contact your care team.</p>
+ <p className="text-[var(--text-700)] font-semibold">Unable to load legacy access</p>
+ <p className="text-sm text-[var(--text-400)] mt-1">Please try again later or contact your care team.</p>
  </div>
  </div>
  );
@@ -98,11 +98,11 @@ export default function MyLegacyAccess() {
  <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-5">
  <HeartHandshake size={28} className="text-purple-600" />
  </div>
- <h2 className="text-lg font-bold text-slate-800 mb-2">No Legacy Access Yet</h2>
- <p className="text-slate-500 text-sm leading-relaxed mb-2">
+ <h2 className="text-lg font-bold text-[var(--text-800)] mb-2">No Legacy Access Yet</h2>
+ <p className="text-[var(--text-500)] text-sm leading-relaxed mb-2">
  You haven't been designated as an heir for anyone's digital legacy yet.
  </p>
- <p className="text-slate-400 text-xs">
+ <p className="text-[var(--text-400)] text-xs">
  When someone designates you, their memories, messages, and legacy will appear here.
  </p>
  </div>
@@ -157,14 +157,14 @@ function ListView({ legacyAccess, onSelect }) {
  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.07 }}
  onClick={() => onSelect(item.patient_id)}
- className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
+ className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
 
  {/* Semantic colour strip: amber = pending, teal = active */}
  <div className={`h-1 w-full ${isPending ? 'bg-amber-400' : 'bg-teal-500'}`} />
 
  <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-start gap-5">
  {/* Avatar */}
- <div className="w-14 h-14 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 text-xl font-bold flex-shrink-0 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600">
+ <div className="w-14 h-14 rounded-xl flex items-center justify-center text-[var(--text-600)] text-xl font-bold flex-shrink-0 bg-slate-100 border border-[var(--card-border)] dark:border-slate-600">
  {initials}
  </div>
 
@@ -172,12 +172,12 @@ function ListView({ legacyAccess, onSelect }) {
  {/* Name + badges */}
  <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
  <div>
- <h2 className="text-lg font-bold text-slate-900 dark:text-white">{item.patient_name}</h2>
- <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
- Your <span className="font-medium text-slate-700 dark:text-slate-300">{item.relationship}</span>
+ <h2 className="text-lg font-bold text-[var(--text-900)] dark:text-white">{item.patient_name}</h2>
+ <p className="text-sm text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">
+ Your <span className="font-medium text-[var(--text-700)] dark:text-slate-300">{item.relationship}</span>
  </p>
  {item.deceased_at && (
- <p className="text-xs text-slate-400 flex items-center gap-1 mt-1">
+ <p className="text-xs text-[var(--text-400)] flex items-center gap-1 mt-1">
  <Calendar size={11} /> Passed {fmtShort(item.deceased_at)}
  </p>
  )}
@@ -188,7 +188,7 @@ function ListView({ legacyAccess, onSelect }) {
  {isPending ? <Clock size={11} /> : <Unlock size={11} />}
  {isPending ? 'Pending' : 'Active Access'}
  </span>
- <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+ <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-[var(--text-600)] border border-[var(--card-border)] dark:border-slate-600">
  {item.access_level === 'full' ? 'Full Access' : item.access_level === 'memories_only' ? 'Memories Only' : 'Messages Only'}
  </span>
  </div>
@@ -206,9 +206,9 @@ function ListView({ legacyAccess, onSelect }) {
 
  {/* Personal note */}
  {item.notes_from_patient && (
- <div className="bg-slate-50 dark:bg-slate-800 border-l-4 border-teal-400 rounded-r-xl px-4 py-3 mb-3">
- <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Personal message for you</p>
- <p className="text-slate-700 dark:text-slate-300 text-sm italic leading-relaxed">"{item.notes_from_patient}"</p>
+ <div className="bg-[var(--card-bg)] border-l-4 border-teal-400 rounded-r-xl px-4 py-3 mb-3">
+ <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] uppercase tracking-wide mb-1">Personal message for you</p>
+ <p className="text-[var(--text-700)] text-sm italic leading-relaxed">"{item.notes_from_patient}"</p>
  </div>
  )}
 
@@ -228,7 +228,7 @@ function ListView({ legacyAccess, onSelect }) {
  );
  })}
 
- <p className="text-center text-xs text-slate-400 italic pt-4">
+ <p className="text-center text-xs text-[var(--text-400)] italic pt-4">
  This is a sacred trust. These memories were left specifically for you.
  </p>
  </div>
@@ -238,7 +238,7 @@ function ListView({ legacyAccess, onSelect }) {
 
 function Chip({ icon: Icon, label }) {
  return (
- <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
+ <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-600)] bg-[var(--card-bg)] border border-[var(--card-border)] px-3 py-1.5 rounded-lg">
  <Icon size={12} className="text-purple-600" /> {label}
  </span>
  );
@@ -250,18 +250,18 @@ function DetailPendingView({ info, onBack }) {
  <div className="min-h-full bg-slate-50">
  <div className="max-w-2xl mx-auto px-4 py-8 space-y-5">
  <button onClick={onBack}
- className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-semibold transition">
+ className="flex items-center gap-2 text-[var(--text-500)] hover:text-[var(--text-800)] text-sm font-semibold transition">
  <ArrowLeft size={16} /> Back
  </button>
- <div className="bg-slate-50 border border-amber-200 rounded-2xl p-8 text-center">
+ <div className="bg-[var(--card-bg)] border border-amber-200 rounded-2xl p-8 text-center">
  <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-5">
  <Clock size={28} className="text-amber-500" />
  </div>
- <h1 className="text-xl font-bold text-slate-800 mb-1">{info.patient_name}'s Legacy</h1>
- <p className="text-slate-500 text-sm mb-1">
+ <h1 className="text-xl font-bold text-[var(--text-800)] mb-1">{info.patient_name}'s Legacy</h1>
+ <p className="text-[var(--text-500)] text-sm mb-1">
  You have been designated as their <strong>{info.relationship}</strong>.
  </p>
- <p className="text-slate-400 text-xs mb-6">
+ <p className="text-[var(--text-400)] text-xs mb-6">
  Legacy content will become available after activation by the care team.
  </p>
  {info.notes_from_patient && (
@@ -270,11 +270,11 @@ function DetailPendingView({ info, onBack }) {
  <Quote size={14} className="text-purple-500" />
  <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Personal message for you</p>
  </div>
- <p className="text-slate-700 italic leading-relaxed text-sm">"{info.notes_from_patient}"</p>
+ <p className="text-[var(--text-700)] italic leading-relaxed text-sm">"{info.notes_from_patient}"</p>
  </div>
  )}
  {info.designated_at && (
- <p className="text-xs text-slate-400 mt-5">Designated on {fmt(info.designated_at)}</p>
+ <p className="text-xs text-[var(--text-400)] mt-5">Designated on {fmt(info.designated_at)}</p>
  )}
  </div>
  </div>
@@ -292,7 +292,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  });
 
  return (
- <div className="min-h-full bg-slate-50 dark:bg-slate-900">
+ <div className="min-h-full bg-[var(--card-bg)] dark:bg-slate-900">
  {/* Header */}
  <PageHeader
  image="/resources/african/african-family-support.jpg"
@@ -307,13 +307,13 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  </PageHeader>
 
  {/* Sticky tabs */}
- <div className="sticky top-0 z-20 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+ <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] dark:border-slate-700 shadow-sm">
  <div className="max-w-5xl mx-auto px-4">
  <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
  {tabs.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => onTabChange(id)}
  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
- activeTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+ activeTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-700)] hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
  <Icon size={14} />{label}
  </button>
  ))}
@@ -331,15 +331,15 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  <p className="text-sm text-slate-500">Letters and messages left especially for you.</p>
  {loadingContent ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
  contentItems.length > 0 ? contentItems.map(item => (
- <div key={item.id} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
+ <div key={item.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl p-5">
  <div className="flex items-start justify-between gap-3 mb-3">
  <div>
- <h3 className="font-semibold text-slate-800 dark:text-white">{item.title || 'Untitled'}</h3>
- <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
+ <h3 className="font-semibold text-[var(--text-800)] dark:text-white">{item.title || 'Untitled'}</h3>
+ <p className="text-xs text-[var(--text-400)] dark:text-[var(--text-500)] mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
  </div>
  <FileText size={16} className="text-slate-300 flex-shrink-0 mt-1" />
  </div>
- <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
+ <p className="text-[var(--text-700)] text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
  </div>
  )) : (
  <div className="text-center py-12 text-slate-400">
@@ -358,9 +358,9 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  memories.length > 0 ? (
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
  {memories.map(m => (
- <div key={m.id} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
- <p className="text-xs text-slate-400 dark:text-slate-500 mb-1.5">{fmtShort(m.created_at)}</p>
- <p className="text-slate-700 dark:text-slate-300 text-sm line-clamp-5 leading-relaxed">{m.content}</p>
+ <div key={m.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl p-4">
+ <p className="text-xs text-[var(--text-400)] dark:text-[var(--text-500)] mb-1.5">{fmtShort(m.created_at)}</p>
+ <p className="text-[var(--text-700)] text-sm line-clamp-5 leading-relaxed">{m.content}</p>
  </div>
  ))}
  </div>
@@ -382,9 +382,9 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  </div>
  {loadingJournal ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
  journalEntries.length > 0 ? journalEntries.map(e => (
- <div key={e.id} className="bg-slate-50 border border-slate-200 rounded-xl p-5">
- <p className="text-xs text-slate-400 mb-2.5">{fmt(e.created_at, { weekday:'long', day:'numeric', month:'long', year:'numeric' })}</p>
- <p className="text-slate-700 text-sm leading-relaxed">{e.content}</p>
+ <div key={e.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-5">
+ <p className="text-xs text-[var(--text-400)] mb-2.5">{fmt(e.created_at, { weekday:'long', day:'numeric', month:'long', year:'numeric' })}</p>
+ <p className="text-[var(--text-700)] text-sm leading-relaxed">{e.content}</p>
  </div>
  )) : (
  <div className="text-center py-12 text-slate-400">
@@ -404,11 +404,11 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  <Quote size={15} className="text-purple-500" />
  <p className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Personal message for you</p>
  </div>
- <p className="text-slate-700 italic leading-relaxed">"{info.notes_from_patient}"</p>
- <p className="text-xs text-slate-400 mt-3 text-right"> - {info.patient_name}</p>
+ <p className="text-[var(--text-700)] italic leading-relaxed">"{info.notes_from_patient}"</p>
+ <p className="text-xs text-[var(--text-400)] mt-3 text-right"> - {info.patient_name}</p>
  </div>
  )}
- <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-5 space-y-4">
  <h3 className="text-sm font-semibold text-slate-700">Your Access Details</h3>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {[
@@ -417,8 +417,8 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  ['Designated', fmtShort(info.designated_at)],
  ['Activated', fmtShort(info.activated_at)],
  ].map(([label, val]) => (
- <div key={label} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
- <p className="text-xs text-slate-400 uppercase tracking-wide mb-0.5">{label}</p>
+ <div key={label} className="bg-[var(--card-bg)] rounded-xl p-3 border border-slate-100">
+ <p className="text-xs text-[var(--text-400)] uppercase tracking-wide mb-0.5">{label}</p>
  <p className="text-sm font-semibold text-slate-800">{val || ' - '}</p>
  </div>
  ))}
@@ -430,7 +430,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  {info.permissions?.can_access_photos && <Chip icon={Eye} label="Photos" />}
  </div>
  </div>
- <p className="text-center text-xs text-slate-400 italic pt-2">
+ <p className="text-center text-xs text-[var(--text-400)] italic pt-2">
  This is a sacred trust. These memories were left specifically for you.
  </p>
  </div>

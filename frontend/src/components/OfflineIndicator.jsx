@@ -141,9 +141,9 @@ export default function OfflineIndicator() {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute bottom-full right-0 mb-2 w-80 bg-slate-50 rounded-lg shadow-xl border-2 border-slate-200 p-4"
+                className="absolute bottom-full right-0 mb-2 w-80 bg-[var(--card-bg)] rounded-lg shadow-xl border-2 border-[var(--card-border)] p-4"
               >
-                <h3 className="text-sm font-bold text-slate-900 mb-3">
+                <h3 className="text-sm font-bold text-[var(--text-900)] mb-3">
                   {isOnline ? '🌐 Online Status' : '📴 Offline Status'}
                 </h3>
 
@@ -172,7 +172,7 @@ export default function OfflineIndicator() {
                 {/* Pending Assessments */}
                 {pendingCount > 0 && (
                   <div className="mb-3">
-                    <p className="text-xs text-slate-600 mb-2">
+                    <p className="text-xs text-[var(--text-600)] mb-2">
                       <strong>{pendingCount}</strong> assessment{pendingCount !== 1 ? 's' : ''} saved locally
                     </p>
                     <p className="text-xs text-slate-500">
@@ -227,7 +227,7 @@ export default function OfflineIndicator() {
                 {/* Close button */}
                 <button
                   onClick={() => setShowDetails(false)}
-                  className="mt-3 w-full text-xs text-slate-600 hover:text-slate-900"
+                  className="mt-3 w-full text-xs text-[var(--text-600)] hover:text-slate-900"
                 >
                   Close
                 </button>

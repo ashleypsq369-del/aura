@@ -71,25 +71,25 @@ function KpiGrid({items}) {
  return (
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
  {items.map(({label,value,color='#0d9488',warn,subtitle})=>(
- <div key={label} className="bg-slate-50 rounded-xl p-3 text-center border border-slate-100">
+ <div key={label} className="bg-[var(--card-bg)] rounded-xl p-3 text-center border border-slate-100">
  <p className="text-xl font-bold" style={{color:warn&&value>0?'#dc2626':color}}>{value??' - '}</p>
- <p className="text-[11px] text-slate-500 mt-0.5 leading-tight">{label}</p>
- {subtitle&&<p className="text-[9px] text-slate-400 mt-0.5">{subtitle}</p>}
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5 leading-tight">{label}</p>
+ {subtitle&&<p className="text-[9px] text-[var(--text-400)] mt-0.5">{subtitle}</p>}
  </div>
  ))}
  </div>
  );
 }
 function Tbl({headers,rows}) {
- if(!rows?.length) return <p className="text-xs text-slate-400 py-2">No data.</p>;
+ if(!rows?.length) return <p className="text-xs text-[var(--text-400)] py-2">No data.</p>;
  return (
  <div className="overflow-x-auto">
  <table className="w-full text-xs">
  <thead><tr className="border-b border-slate-200">
- {headers.map(h=><th key={h} className="text-left py-2 px-2 text-slate-500 font-semibold uppercase tracking-wide text-[10px] whitespace-nowrap">{h}</th>)}
+ {headers.map(h=><th key={h} className="text-left py-2 px-2 text-[var(--text-500)] font-semibold uppercase tracking-wide text-[10px] whitespace-nowrap">{h}</th>)}
  </tr></thead>
  <tbody>{rows.map((row,i)=>(
- <tr key={i} className="border-b border-slate-100 hover:bg-slate-50">
+ <tr key={i} className="border-b border-[var(--card-border)]/50 hover:bg-slate-50">
  {row.map((cell,j)=><td key={j} className="py-2 px-2 text-slate-700">{cell}</td>)}
  </tr>
  ))}</tbody>
@@ -100,12 +100,12 @@ function Tbl({headers,rows}) {
 function Sec({title,icon:Icon,color='#0d9488',children,collapsible=false}) {
  const [open,setOpen]=useState(true);
  return (
- <div className="rounded-xl border border-slate-200 overflow-hidden">
+ <div className="rounded-xl border border-[var(--card-border)] overflow-hidden">
  <button onClick={()=>collapsible&&setOpen(v=>!v)}
- className={`w-full flex items-center gap-2.5 px-4 py-3 border-b border-slate-100 ${collapsible?'cursor-pointer':'cursor-default'}`}
+ className={`w-full flex items-center gap-2.5 px-4 py-3 border-b border-[var(--card-border)]/50 ${collapsible?'cursor-pointer':'cursor-default'}`}
  style={{backgroundColor:color+'12'}}>
  {Icon&&<Icon size={14} style={{color}}/>}
- <h3 className="font-bold text-sm text-slate-700 flex-1 text-left">{title}</h3>
+ <h3 className="font-bold text-sm text-[var(--text-700)] flex-1 text-left">{title}</h3>
  {collapsible&&(open?<ChevronUp size={13} className="text-slate-400"/>:<ChevronDown size={13} className="text-slate-400"/>)}
  </button>
  {(!collapsible||open)&&<div className="px-4 py-4">{children}</div>}
@@ -122,19 +122,19 @@ function PatientPicker({value,onChange}) {
  const filtered=pts.filter(p=>!q||p.full_name?.toLowerCase().includes(q.toLowerCase())||String(p.id).includes(q)||(p.patient_code||'').toLowerCase().includes(q.toLowerCase()));
  return (
  <div className="relative">
- <label className="block text-[10px] font-bold text-slate-400 mb-1">Patient</label>
- <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 dark:text-slate-100 text-left">
- <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
- <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
+ <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">Patient</label>
+ <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
+ <span className={sel?'text-[var(--text-800)] dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
+ <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
- <div className="absolute z-50 mt-1 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
- <div className="p-2 border-b border-slate-100 dark:border-slate-700">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 dark:text-slate-100 outline-none"/>
+ <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+ <div className="p-2 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] dark:border-slate-600 rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
  {filtered.slice(0,30).map(p=>(
  <button key={p.id} type="button" onClick={()=>{onChange(p.id);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 flex items-center justify-between">
- <span className="font-medium text-slate-800 dark:text-slate-100">{p.full_name}</span>
+ <span className="font-medium text-[var(--text-800)] dark:text-slate-100">{p.full_name}</span>
  <span className="text-slate-400">{p.patient_code||'#'+p.id}</span>
  </button>
  ))}
@@ -152,21 +152,21 @@ function UserPicker({value,onChange,label='User',roles}) {
  const sel=users.find(u=>u.id===value);
  return (
  <div className="relative">
- <label className="block text-[10px] font-bold text-slate-400 mb-1">{label}</label>
- <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 dark:text-slate-100 text-left">
- <span className={sel?'text-slate-800 dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
- <ChevronDown size={14} className="text-slate-400 flex-shrink-0"/>
+ <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">{label}</label>
+ <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
+ <span className={sel?'text-[var(--text-800)] dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
+ <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
- <div className="absolute z-50 mt-1 w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
- <div className="p-2 border-b border-slate-100 dark:border-slate-700">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-700 dark:text-slate-100 outline-none"/>
+ <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+ <div className="p-2 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] dark:border-slate-600 rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
- <button type="button" onClick={()=>{onChange(null);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 border-b border-slate-100 dark:border-slate-700"> - All {label.toLowerCase()}s</button>
+ <button type="button" onClick={()=>{onChange(null);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs text-[var(--text-400)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 border-b border-[var(--card-border)]/50 dark:border-slate-700"> - All {label.toLowerCase()}s</button>
  {filtered.slice(0,30).map(u=>(
  <button key={u.id} type="button" onClick={()=>{onChange(u.id);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 flex items-center justify-between">
- <span className="font-medium text-slate-800 dark:text-slate-100">{u.full_name}</span>
- <span className="text-slate-400 capitalize">{u.role} #{u.id}</span>
+ <span className="font-medium text-[var(--text-800)] dark:text-slate-100">{u.full_name}</span>
+ <span className="text-[var(--text-400)] capitalize">{u.role} #{u.id}</span>
  </button>
  ))}
  </div>
@@ -187,9 +187,9 @@ function PatientSummaryBody({data}) {
  <Sec title="Patient Demographics" icon={User} color="#0891b2">
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
  {[['Name',p.full_name],['Code',p.patient_code],['Age',p.age],['Gender',p.gender],['Diagnosis',p.primary_diagnosis],['Risk Level',p.risk_level],['Status',p.status],['Care Setting',(p.care_setting||' - ').replace(/_/g,' ')]].map(([k,v])=>(
- <div key={k} className="bg-slate-50 rounded-lg p-2.5">
- <p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p>
- <p className="font-semibold text-slate-800 text-xs mt-0.5">{v||' - '}</p>
+ <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5">
+ <p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p>
+ <p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v||' - '}</p>
  </div>
  ))}
  </div>
@@ -226,7 +226,7 @@ function PatientSummaryBody({data}) {
  ])}/>
  </Sec>
  <Sec title="Audit Trail" icon={Shield} color="#374151" collapsible>
- <p className="text-xs text-slate-500 mb-2">{data.audit_trail?.total_actions} actions in period.</p>
+ <p className="text-xs text-[var(--text-500)] mb-2">{data.audit_trail?.total_actions} actions in period.</p>
  <Tbl headers={['Timestamp','Action','Role','Success']}
  rows={(data.audit_trail?.actions||[]).slice(0,15).map(a=>[
  fmt(a.timestamp), a.action, a.user_role,
@@ -256,7 +256,7 @@ function MdtHandoverBody({data}) {
  <p key={i} className="text-xs text-red-700">⚠ {a.severity.toUpperCase()} - {a.message}</p>
  ))}
  {p.outstanding?.esas_overdue&&<p className="text-xs text-amber-700 mt-0.5">ESAS overdue ({p.last_esas_days!=null?`${p.last_esas_days}d ago`:'never done'})</p>}
- {p.assigned_caregivers?.length>0&&<p className="text-[10px] text-slate-500 mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
+ {p.assigned_caregivers?.length>0&&<p className="text-[10px] text-[var(--text-500)] mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
  </div>
  ))}
  </Sec>
@@ -295,7 +295,7 @@ function AdvanceCarePlanBody({data}) {
  <Sec title="Patient Wishes & Preferences" icon={Heart} color="#be123c">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
  {[['Language Preference',ad.preferred_language||' - '],['Religious/Spiritual',ad.religious_preference||' - ']].map(([k,v])=>(
- <div key={k} className="bg-slate-50 rounded-lg p-2.5"><p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p><p className="font-semibold text-slate-800 text-xs mt-0.5">{v}</p></div>
+ <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v}</p></div>
  ))}
  </div>
  </Sec>
@@ -303,14 +303,14 @@ function AdvanceCarePlanBody({data}) {
  {cp&&(
  <Sec title="Care Plan" icon={FileText} color="#0369a1" collapsible>
  {[['Goals of Care',cp.goals_of_care],['Pain Management',cp.pain_management_plan],['Psychological Support',cp.psychological_support],['Spiritual Care',cp.spiritual_care],['Family Support',cp.family_support_plan],['Bereavement Plan',cp.bereavement_plan],['Advance Directives Notes',cp.advance_directives_notes]].filter(([,v])=>v).map(([k,v])=>(
- <div key={k} className="mb-3"><p className="text-[10px] font-bold text-slate-400 mb-1">{k}</p><p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
+ <div key={k} className="mb-3"><p className="text-[10px] font-bold text-[var(--text-400)] mb-1">{k}</p><p className="text-xs text-[var(--text-600)] bg-[var(--card-bg)] rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
  ))}
  </Sec>
  )}
  <Sec title="Emergency Contact" icon={AlertCircle} color="#dc2626">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  {[['Name',data.emergency_contact?.name],['Relationship',data.emergency_contact?.relationship],['Phone',data.emergency_contact?.phone]].map(([k,v])=>(
- <div key={k} className="bg-slate-50 rounded-lg p-2.5"><p className="text-[10px] text-slate-400 font-semibold uppercase">{k}</p><p className="font-semibold text-slate-800 text-xs mt-0.5">{v||' - '}</p></div>
+ <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v||' - '}</p></div>
  ))}
  </div>
  </Sec>
@@ -397,7 +397,7 @@ function BereavementBody({data}) {
  <Sec title="Families Requiring Follow-Up" icon={Heart} color="#9d174d">
  {atRisk.map(f=>(
  <div key={f.family_user_id} className="mb-2.5 p-3 rounded-xl border border-rose-200 bg-rose-50">
- <p className="font-bold text-sm text-slate-800">{f.family_name} <span className="text-slate-500 font-normal">({f.relationship})</span></p>
+ <p className="font-bold text-sm text-slate-800">{f.family_name} <span className="text-[var(--text-500)] font-normal">({f.relationship})</span></p>
  <p className="text-xs text-slate-600">Patient: {f.patient_name} · Status: {f.patient_status}</p>
  {f.phq9_score!=null&&<p className="text-xs text-amber-700">PHQ-9: {f.phq9_score} - {f.phq9_severity}</p>}
  {f.gad7_score!=null&&<p className="text-xs text-purple-700">GAD-7: {f.gad7_score} - {f.gad7_severity}</p>}
@@ -421,7 +421,7 @@ function BereavementBody({data}) {
 }
 
 function GenericBody({data}) {
- return <pre className="text-xs overflow-auto bg-slate-50 rounded-xl p-4 max-h-96">{JSON.stringify(data,null,2)}</pre>;
+ return <pre className="text-xs overflow-auto bg-[var(--card-bg)] rounded-xl p-4 max-h-96">{JSON.stringify(data,null,2)}</pre>;
 }
 
 /* ── Additional body renderers for all 12 report types ───────── */
@@ -433,11 +433,11 @@ function MedicationAdherenceBody({data}) {
  return (
  <div className="space-y-5">
  <div className="p-4 rounded-xl border-2" style={{borderColor: statusColor, backgroundColor: statusColor+'14'}}>
- <p className="text-[10px] font-bold uppercase text-slate-500 mb-1">Overall Adherence Rate</p>
+ <p className="text-[10px] font-bold uppercase text-[var(--text-500)] mb-1">Overall Adherence Rate</p>
  <p className="text-3xl font-bold" style={{color: statusColor}}>
  {s.overall_adherence_pct != null ? s.overall_adherence_pct + '%' : 'No data'}
  </p>
- <p className="text-xs text-slate-600 mt-1">
+ <p className="text-xs text-[var(--text-600)] mt-1">
  {s.adherence_status === 'good' && '≥80% - Meeting clinical threshold (NHS Medicines Management)'}
  {s.adherence_status === 'warning' && '60–79% - Below threshold. Review with prescriber.'}
  {s.adherence_status === 'critical'&& '<60% - Critical. Immediate clinical review required.'}
@@ -482,8 +482,8 @@ function CarePlanProgressBody({data}) {
  {label:'In Progress', value:s.in_progress, color:'#0891b2'},
  {label:'Overdue', value:s.overdue, warn:s.overdue>0},
  ]}/>
- <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
- <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+ <div className="p-3 bg-[var(--card-bg)] rounded-xl border border-slate-200">
+ <div className="flex justify-between text-xs font-semibold text-[var(--text-600)] mb-1">
  <span>Overall Progress</span><span>{s.overall_progress||0}%</span>
  </div>
  <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
@@ -579,13 +579,13 @@ function CaregiverBody({data}) {
  const s = data.summary||{};const cgv = data.caregiver||{};
  return (
  <div className="space-y-5">
- <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+ <div className="flex items-center gap-3 p-4 bg-[var(--card-bg)] rounded-xl border border-slate-200">
  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-teal-700 font-bold text-lg">
  {cgv.name?.split(' ').map(n=>n[0]).join('').slice(0,2)||'??'}
  </div>
  <div>
  <p className="font-bold text-slate-800">{cgv.name||'Unknown'}</p>
- <p className="text-xs text-slate-500 capitalize">{cgv.role} · @{cgv.username}</p>
+ <p className="text-xs text-[var(--text-500)] capitalize">{cgv.role} · @{cgv.username}</p>
  </div>
  </div>
  <KpiGrid items={[{label:'Patients Assigned',value:s.assigned_patients},{label:'Total Actions',value:s.total_actions},{label:'Active Mins',value:s.total_active_mins},{label:'Vitals Logged',value:s.vitals_logged,color:'#0891b2'}]}/>
@@ -719,7 +719,7 @@ function ReportViewer({data,onClose}) {
  onClick={onClose}>
  <motion.div initial={{scale:0.95,y:20}} animate={{scale:1,y:0}} exit={{scale:0.95}}
  onClick={e=>e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-4xl my-4">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-4xl my-4">
 
  {/* Toolbar */}
  <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100"
@@ -730,8 +730,8 @@ function ReportViewer({data,onClose}) {
  <Icon size={18} style={{color}}/>
  </div>
  <div>
- <p className="font-bold text-slate-900 text-sm leading-tight">{data.report_title}</p>
- <p className="text-xs text-slate-500 mt-0.5">Generated {fmt(data.generated_at)} · {genBy} ({data.generated_by?.role})</p>
+ <p className="font-bold text-[var(--text-900)] text-sm leading-tight">{data.report_title}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Generated {fmt(data.generated_at)} · {genBy} ({data.generated_by?.role})</p>
  {data.period&&<p className="text-xs text-slate-400">{fmtD(data.period.from)} - {fmtD(data.period.to)}</p>}
  </div>
  </div>
@@ -741,7 +741,7 @@ function ReportViewer({data,onClose}) {
  <Printer size={13}/> Print / PDF
  </button>
  <button onClick={onClose}
- className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 text-lg">
+ className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] hover:bg-[var(--card-bg)] text-[var(--text-500)] text-lg">
  ✕
  </button>
  </div>
@@ -772,7 +772,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  const blocked=(meta.needsPatient&&!patientId)||(meta.needsCaregiver&&!caregiverId);
  return (
  <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
- className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
  style={{borderLeft:`4px solid ${color}`}}>
  <div className="p-4">
  <div className="flex items-start gap-3 mb-3">
@@ -781,8 +781,8 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  <Icon size={16} style={{color}}/>
  </div>
  <div className="flex-1 min-w-0">
- <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm leading-tight">{report.name}</h3>
- <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed line-clamp-2">{report.description}</p>
+ <h3 className="font-bold text-[var(--text-800)] text-sm leading-tight">{report.name}</h3>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5 leading-relaxed line-clamp-2">{report.description}</p>
  </div>
  </div>
  {blocked&&(
@@ -798,7 +798,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  {generating===report.id?<><Loader2 size={12} className="animate-spin"/> Generating…</>:<><FileText size={12}/> Generate</>}
  </button>
  <button onClick={()=>setExpanded(!expanded)}
- className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+ className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] dark:border-slate-600 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
  {expanded?<ChevronUp size={13}/>:<ChevronDown size={13}/>}
  </button>
  </div>
@@ -806,14 +806,14 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  {expanded&&(
  <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}}
  exit={{height:0,opacity:0}} className="overflow-hidden">
- <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
+ <div className="mt-3 pt-3 border-t border-[var(--card-border)]/50 dark:border-slate-700 space-y-2">
  <div>
- <p className="text-[9px] text-slate-400 font-bold ">Use For</p>
- <div className="flex flex-wrap gap-1 mt-1">{(report.uses||[]).map(u=><span key={u} className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{u}</span>)}</div>
+ <p className="text-[9px] text-[var(--text-400)] font-bold ">Use For</p>
+ <div className="flex flex-wrap gap-1 mt-1">{(report.uses||[]).map(u=><span key={u} className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-[var(--text-600)] dark:text-slate-300">{u}</span>)}</div>
  </div>
  <div>
- <p className="text-[9px] text-slate-400 font-bold ">Standard</p>
- <p className="text-[10px] text-slate-500 mt-0.5">{report.standard}</p>
+ <p className="text-[9px] text-[var(--text-400)] font-bold ">Standard</p>
+ <p className="text-[10px] text-[var(--text-500)] mt-0.5">{report.standard}</p>
  </div>
  </div>
  </motion.div>
@@ -854,7 +854,7 @@ export default function Reports() {
  <div className="text-center p-8">
  <Lock size={48} className="mx-auto text-slate-300 mb-4"/>
  <h2 className="text-xl font-bold text-slate-600">Access Restricted</h2>
- <p className="text-slate-400 mt-2">Reports are for Admin and Clinician roles only.</p>
+ <p className="text-[var(--text-400)] mt-2">Reports are for Admin and Clinician roles only.</p>
  <button onClick={()=>navigate('/dashboard')} className="mt-4 px-5 py-2.5 bg-teal-600 text-white rounded-xl font-semibold text-sm hover:bg-teal-700 transition">Back to Dashboard</button>
  </div>
  </div>
@@ -906,16 +906,16 @@ export default function Reports() {
  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
  {/* ── Tab navigation ── */}
- <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-1.5 flex gap-1">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-1.5 flex gap-1">
  {TABS.map(tab=>{
  const Icon=tab.icon;
  const count=allReports.filter(r=>(REPORT_META[r.id]?.tab||'clinical')===tab.id).length;
  const active=activeTab===tab.id;
  return (
  <button key={tab.id} onClick={()=>setActiveTab(tab.id)}
- className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all ${active?'bg-teal-600 text-white shadow-sm':'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}>
+ className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all ${active?'bg-teal-600 text-white shadow-sm':'text-[var(--text-600)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700/50'}`}>
  <Icon size={15}/><span className="hidden sm:inline">{tab.label}</span>
- {count>0&&<span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${active?'bg-white/30 text-white':'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300'}`}>{count}</span>}
+ {count>0&&<span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${active?'bg-white/30 text-white':'bg-slate-200 dark:bg-slate-600 text-[var(--text-600)] dark:text-slate-300'}`}>{count}</span>}
  </button>
  );
  })}
@@ -923,8 +923,8 @@ export default function Reports() {
 
  {/* ── Parameters panel (only when tab has reports needing selection) ── */}
  {showParams&&(
- <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5">
- <h2 className="text-xs font-bold text-slate-500 mb-4 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-5">
+ <h2 className="text-xs font-bold text-[var(--text-500)] mb-4 flex items-center gap-2">
  <Filter size={13} className="text-teal-600"/> Report Parameters
  </h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
@@ -935,12 +935,12 @@ export default function Reports() {
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
  {[{label:'Date From',value:dateFrom,set:setDateFrom},{label:'Date To',value:dateTo,set:setDateTo}].map(({label,value,set})=>(
  <div key={label}>
- <label className="block text-[10px] font-bold text-slate-400 mb-1">{label}</label>
- <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-slate-50 dark:bg-slate-700 dark:text-slate-100"/>
+ <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">{label}</label>
+ <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)] dark:text-slate-100"/>
  </div>
  ))}
  <div>
- <label className="block text-[10px] font-bold text-slate-400 mb-1">Min Severity</label>
+ <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">Min Severity</label>
  <SearchableSelect
  accent="teal"
  size="sm"
@@ -952,7 +952,7 @@ export default function Reports() {
  />
  </div>
  <button onClick={()=>{setPatientId(null);setUserId(null);setCaregiverId(null);setDateFrom('');setDateTo('');}}
- className="px-3 py-2 text-xs font-semibold text-slate-500 hover:text-red-600 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-red-300 transition">
+ className="px-3 py-2 text-xs font-semibold text-[var(--text-500)] hover:text-red-600 border border-[var(--card-border)] dark:border-slate-600 rounded-xl hover:border-red-300 transition">
  Clear
  </button>
  </div>
@@ -961,8 +961,8 @@ export default function Reports() {
  {patientId&&<span className="text-[10px] px-2.5 py-1 bg-teal-50 text-teal-700 rounded-full border border-teal-200 font-medium">Patient #{patientId}</span>}
  {userId&&<span className="text-[10px] px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200 font-medium">User #{userId}</span>}
  {caregiverId&&<span className="text-[10px] px-2.5 py-1 bg-blue-50 text-teal-700 rounded-full border border-blue-200 font-medium">Caregiver #{caregiverId}</span>}
- {dateFrom&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">From: {dateFrom}</span>}
- {dateTo&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full border border-slate-200">To: {dateTo}</span>}
+ {dateFrom&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">From: {dateFrom}</span>}
+ {dateTo&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">To: {dateTo}</span>}
  </div>
  </div>
  )}

@@ -118,8 +118,8 @@ export default function AdvanceCarePlanForm() {
  };
 
  const Section = ({ title, icon: Icon, color = 'teal', children }) => (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
- <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-[var(--card-border)] dark:border-slate-700 flex items-center gap-2`}>
  <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
  <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>
  </div>
@@ -129,13 +129,13 @@ export default function AdvanceCarePlanForm() {
 
  const Field = ({ label, hint, children }) => (
  <div>
- <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{label}</label>
- {hint && <p className="text-xs text-slate-500 dark:text-slate-400 mb-1.5">{hint}</p>}
+ <label className="block text-sm font-medium text-[var(--text-700)] mb-1">{label}</label>
+ {hint && <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] mb-1.5">{hint}</p>}
  {children}
  </div>
  );
 
- const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+ const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[var(--card-bg)] text-[var(--text-900)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
  const selectCls = inputCls;
  const textareaCls = `${inputCls} resize-none`;
 
@@ -147,15 +147,15 @@ export default function AdvanceCarePlanForm() {
  onClick={() => navigate(`/assessments/${patientId}`)}
  className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition"
  >
- <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+ <ArrowLeft className="w-5 h-5 text-[var(--text-600)] dark:text-slate-300" />
  </button>
  <div>
- <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-900)] flex items-center gap-2">
  <FileText className="w-6 h-6 text-teal-600" />
  Advance Care Plan
  </h1>
  {patient && (
- <p className="text-slate-500 dark:text-slate-400 text-sm">
+ <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm">
  {patient.full_name} • {existing ? `Version ${existing.version} - updating` : 'Creating new ACP'}
  </p>
  )}
@@ -185,11 +185,11 @@ export default function AdvanceCarePlanForm() {
  className={`text-left p-3 rounded-xl border-2 transition ${
  form.primary_goal === opt.value
  ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/30'
- : 'border-slate-200 dark:border-slate-600 hover:border-teal-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 hover:border-teal-300'
  }`}
  >
- <div className="font-medium text-sm text-slate-900 dark:text-slate-100">{opt.label}</div>
- <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{opt.desc}</div>
+ <div className="font-medium text-sm text-[var(--text-900)] dark:text-slate-100">{opt.label}</div>
+ <div className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">{opt.desc}</div>
  </button>
  ))}
  </div>
@@ -221,7 +221,7 @@ export default function AdvanceCarePlanForm() {
  className={`px-3 py-1.5 rounded-full text-sm border-2 transition ${
  form.preferred_place_of_death === opt.toLowerCase().replace(/ \/ /, '_').replace(/ /g, '_')
  ? 'border-teal-500 bg-blue-50 dark:bg-blue-900/30 text-teal-700 dark:text-blue-300'
- : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-blue-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] hover:border-blue-300'
  }`}
  >
  {opt}
@@ -326,7 +326,7 @@ export default function AdvanceCarePlanForm() {
  <input type="checkbox" id="lpa" checked={form.has_lasting_power_of_attorney}
  onChange={e => set('has_lasting_power_of_attorney', e.target.checked)}
  className="w-4 h-4 rounded text-teal-600" />
- <label htmlFor="lpa" className="text-sm text-slate-700 dark:text-slate-300">Has LPA / Power of Attorney</label>
+ <label htmlFor="lpa" className="text-sm text-[var(--text-700)] dark:text-slate-300">Has LPA / Power of Attorney</label>
  </div>
  </Field>
  <Field label="Living Will">
@@ -334,7 +334,7 @@ export default function AdvanceCarePlanForm() {
  <input type="checkbox" id="lw" checked={form.has_living_will}
  onChange={e => set('has_living_will', e.target.checked)}
  className="w-4 h-4 rounded text-teal-600" />
- <label htmlFor="lw" className="text-sm text-slate-700 dark:text-slate-300">Has a Living Will / Advance Directive</label>
+ <label htmlFor="lw" className="text-sm text-[var(--text-700)] dark:text-slate-300">Has a Living Will / Advance Directive</label>
  </div>
  </Field>
  </div>
@@ -367,13 +367,13 @@ export default function AdvanceCarePlanForm() {
  <input type="checkbox" checked={form.patient_confirmed}
  onChange={e => set('patient_confirmed', e.target.checked)}
  className="w-4 h-4 rounded text-teal-600" />
- <span className="text-sm text-slate-700 dark:text-slate-300">Patient has confirmed this reflects their wishes</span>
+ <span className="text-sm text-[var(--text-700)] dark:text-slate-300">Patient has confirmed this reflects their wishes</span>
  </label>
  <label className="flex items-center gap-3 cursor-pointer">
  <input type="checkbox" checked={form.family_witnessed}
  onChange={e => set('family_witnessed', e.target.checked)}
  className="w-4 h-4 rounded text-teal-600" />
- <span className="text-sm text-slate-700 dark:text-slate-300">Family member has witnessed and is aware</span>
+ <span className="text-sm text-[var(--text-700)] dark:text-slate-300">Family member has witnessed and is aware</span>
  </label>
  </div>
  </Section>
@@ -383,7 +383,7 @@ export default function AdvanceCarePlanForm() {
  <button
  type="button"
  onClick={() => navigate(`/assessments/${patientId}`)}
- className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm font-medium"
+ className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-[var(--text-700)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition text-sm font-medium"
  >
  Cancel
  </button>

@@ -59,13 +59,13 @@ export default function ContactsTab({ onContactMessage }) {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 py-4 border-b border-slate-100 bg-slate-50 flex-shrink-0">
+      <div className="px-4 py-4 border-b border-[var(--card-border)]/50 bg-[var(--card-bg)] flex-shrink-0">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+            <h2 className="font-bold text-[var(--text-900)] text-sm flex items-center gap-2">
               <Users size={16} className="text-teal-600" /> Contacts
             </h2>
-            <p className="text-[10px] text-slate-400 mt-0.5">
+            <p className="text-[10px] text-[var(--text-400)] mt-0.5">
               {contacts.length} total &middot; {onlineCount} online
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function ContactsTab({ onContactMessage }) {
 
         {/* Search */}
         <div className="relative mb-3">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
           <input
             type="text"
             value={searchQuery}
@@ -95,7 +95,7 @@ export default function ContactsTab({ onContactMessage }) {
           className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all ${
             favOnly
               ? 'bg-amber-50 text-amber-700 border-amber-300'
-              : 'bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300'
+              : 'bg-[var(--card-bg)] text-[var(--text-500)] border-[var(--card-border)] hover:border-slate-300'
           }`}
         >
           <Star size={11} className={favOnly ? 'fill-amber-500 text-amber-500' : 'text-slate-400'} />
@@ -110,7 +110,7 @@ export default function ContactsTab({ onContactMessage }) {
             <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
               <Users size={24} className="text-slate-300" />
             </div>
-            <p className="font-semibold text-slate-600 text-sm">
+            <p className="font-semibold text-[var(--text-600)] text-sm">
               {searchQuery ? 'No contacts found' : 'No contacts yet'}
             </p>
             <p className="text-xs mt-1 mb-5">
@@ -190,7 +190,7 @@ export default function ContactsTab({ onContactMessage }) {
 function Section({ icon: Icon, label, iconClass = 'text-slate-400', children }) {
   return (
     <div>
-      <p className="text-[10px] font-bold text-slate-400  mb-2 flex items-center gap-1.5">
+      <p className="text-[10px] font-bold text-[var(--text-400)]  mb-2 flex items-center gap-1.5">
         <Icon size={11} className={iconClass} /> {label}
       </p>
       <div className="space-y-2">{children}</div>

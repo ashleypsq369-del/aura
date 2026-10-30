@@ -36,16 +36,16 @@ function Section({ icon: Icon, iconColor = 'text-teal-600', iconBg = 'bg-teal-50
  <motion.div
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
- className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 shadow-sm overflow-hidden"
  >
- <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
  style={{ background: `linear-gradient(to right, ${accentColor}12, transparent)` }}>
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
  style={{ backgroundColor: `${accentColor}20`, color: accentColor }}>
  <Icon size={16} strokeWidth={2.5} />
  </div>
- <h2 className="font-bold text-slate-800 dark:text-white text-sm">{title}</h2>
+ <h2 className="font-bold text-[var(--text-800)] text-sm">{title}</h2>
  </div>
  {action}
  </div>
@@ -116,12 +116,12 @@ export default function PatientPortal() {
  if (!portalData || portalData.error) {
  return (
  <div className="min-h-full flex items-center justify-center p-6">
- <div className="bg-slate-50 rounded-lg shadow-sm p-10 text-center max-w-md border border-slate-200">
+ <div className="bg-[var(--card-bg)] rounded-lg shadow-sm p-10 text-center max-w-md border border-slate-200">
  <div className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-4">
  <Sparkles className="w-8 h-8 text-teal-600" />
  </div>
- <h2 className="text-base font-bold text-slate-800 mb-2">Almost there!</h2>
- <p className="text-slate-500 mb-2">Your profile is being set up. Your care team will link your account shortly.</p>
+ <h2 className="text-base font-bold text-[var(--text-800)] mb-2">Almost there!</h2>
+ <p className="text-[var(--text-500)] mb-2">Your profile is being set up. Your care team will link your account shortly.</p>
  <p className="text-sm text-slate-400">If you just completed your questionnaire, try refreshing the page.</p>
  <div className="flex gap-3 justify-center mt-6">
  <button onClick={() => window.location.reload()}
@@ -131,7 +131,7 @@ export default function PatientPortal() {
  </button>
  <button onClick={() => chatWithCareTeam()}
  data-tip="Message your care team"
- className="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-semibold text-sm hover:bg-slate-200 transition-all duration-150">
+ className="px-5 py-2.5 bg-slate-100 text-[var(--text-700)] rounded-xl font-semibold text-sm hover:bg-slate-200 transition-all duration-150">
  Message Care Team
  </button>
  </div>
@@ -213,7 +213,7 @@ export default function PatientPortal() {
 
  {/* € Section 1: Quick Actions (all 12 features) € */}
  <div>
- <h3 className="text-xs font-bold text-slate-400 mb-3 pl-1">Your Features</h3>
+ <h3 className="text-xs font-bold text-[var(--text-400)] mb-3 pl-1">Your Features</h3>
  <SectionErrorBoundary name="Quick Actions">
  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
  {orderedActions.map((c, i) => (
@@ -238,8 +238,8 @@ export default function PatientPortal() {
  {/* Current phase highlight */}
  <div className="flex-1 min-w-[200px] p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border border-purple-200">
  <p className="text-xs font-bold text-purple-600 mb-1">Current Phase</p>
- <h3 className="text-lg font-serif font-bold text-slate-800 mb-1">{journey_phase.name}</h3>
- <p className="text-sm text-slate-600 leading-relaxed">{journey_phase.description}</p>
+ <h3 className="text-lg font-serif font-bold text-[var(--text-800)] mb-1">{journey_phase.name}</h3>
+ <p className="text-sm text-[var(--text-600)] leading-relaxed">{journey_phase.description}</p>
  {/* Phase progress bar */}
  <div className="mt-3">
  <Progress
@@ -253,7 +253,7 @@ export default function PatientPortal() {
  </div>
  {journey_phase.what_next && (
  <div className="mt-3 p-3 bg-white/80 rounded-lg border border-purple-100">
- <p className="text-xs font-semibold text-slate-500 mb-0.5">What's Next</p>
+ <p className="text-xs font-semibold text-[var(--text-500)] mb-0.5">What's Next</p>
  <p className="text-sm text-slate-700">{journey_phase.what_next}</p>
  </div>
  )}
@@ -268,7 +268,7 @@ export default function PatientPortal() {
  return (
  <div key={name} className="flex items-center gap-2">
  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm transition-all ${
- isActive ? 'text-white scale-110' : isPast ? 'text-white' : 'bg-slate-50 text-slate-300 border-slate-200'
+ isActive ? 'text-white scale-110' : isPast ? 'text-white' : 'bg-[var(--card-bg)] text-slate-300 border-slate-200'
  }`}
  style={isActive ? { background: 'linear-gradient(135deg,#7c3aed,#4338ca)' } :
  isPast ? { background: 'linear-gradient(135deg,#0d9488,#0891b2)' } : {}}>
@@ -292,8 +292,8 @@ export default function PatientPortal() {
  )}
  {today_focus && (
  <>
- <h4 className="font-serif font-bold text-lg text-slate-800 mb-2">{today_focus.title}</h4>
- <p className="text-slate-600 leading-relaxed text-sm mb-4">{today_focus.content}</p>
+ <h4 className="font-serif font-bold text-lg text-[var(--text-800)] mb-2">{today_focus.title}</h4>
+ <p className="text-[var(--text-600)] leading-relaxed text-sm mb-4">{today_focus.content}</p>
  {today_focus.action && (
  <button onClick={() => navigate(today_focus.action_link)}
  data-tip={today_focus.action}
@@ -324,7 +324,7 @@ export default function PatientPortal() {
  <span className="text-[10px] font-bold text-purple-600 ">Picked for you</span>
  </div>
  <h5 className="font-semibold text-sm text-slate-800">{resource.title}</h5>
- <p className="text-xs text-slate-600 mt-0.5 line-clamp-2">{resource.reason}</p>
+ <p className="text-xs text-[var(--text-600)] mt-0.5 line-clamp-2">{resource.reason}</p>
  </div>
  </div>
  </div>
@@ -332,15 +332,15 @@ export default function PatientPortal() {
  {recommended_resources?.slice(0, 3).map(resource => (
  <button key={resource.id} onClick={() => navigate('/resources')}
  data-tip="Open this resource"
- className="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-teal-400 hover:bg-teal-50/50 transition-all group">
+ className="w-full text-left p-3.5 rounded-xl border border-[var(--card-border)] hover:border-teal-400 hover:bg-teal-50/50 transition-all group">
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1 min-w-0">
- <h5 className="font-semibold text-sm text-slate-800 group-hover:text-teal-700 truncate">{resource.title}</h5>
- <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{resource.summary}</p>
+ <h5 className="font-semibold text-sm text-[var(--text-800)] group-hover:text-teal-700 truncate">{resource.title}</h5>
+ <p className="text-xs text-[var(--text-500)] mt-0.5 line-clamp-1">{resource.summary}</p>
  <div className="flex items-center gap-2 mt-1.5">
- <span className="text-[10px] font-bold text-slate-400 uppercase">{resource.format}</span>
+ <span className="text-[10px] font-bold text-[var(--text-400)] uppercase">{resource.format}</span>
  <span className="text-slate-300">·</span>
- <span className="text-[10px] text-slate-400 capitalize">{resource.category?.replace('_', ' ')}</span>
+ <span className="text-[10px] text-[var(--text-400)] capitalize">{resource.category?.replace('_', ' ')}</span>
  </div>
  </div>
  <ArrowRight size={14} className="text-slate-300 group-hover:text-teal-500 flex-shrink-0 mt-1" />
@@ -358,10 +358,10 @@ export default function PatientPortal() {
  {community_groups.slice(0, 3).map(group => (
  <button key={group.id} onClick={() => navigate('/community')}
  data-tip="Join this community group"
- className="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-teal-400 hover:bg-blue-50/50 transition-all group flex items-center justify-between">
+ className="w-full text-left p-3.5 rounded-xl border border-[var(--card-border)] hover:border-teal-400 hover:bg-blue-50/50 transition-all group flex items-center justify-between">
  <div>
- <h5 className="font-semibold text-sm text-slate-800 group-hover:text-teal-700">{group.name}</h5>
- <p className="text-xs text-slate-400 mt-0.5">{group.member_count} members</p>
+ <h5 className="font-semibold text-sm text-[var(--text-800)] group-hover:text-teal-700">{group.name}</h5>
+ <p className="text-xs text-[var(--text-400)] mt-0.5">{group.member_count} members</p>
  </div>
  <ArrowRight size={14} className="text-slate-300 group-hover:text-teal-500" />
  </button>
@@ -378,26 +378,26 @@ export default function PatientPortal() {
  <Section icon={Users} title="Your Care Team" accentColor="#059669">
  <div className="space-y-4">
  {care_team?.clinician && (
- <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+ <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--card-bg)] border border-slate-100">
  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-base shadow-sm flex-shrink-0">
  {care_team.clinician.name[0]}
  </div>
  <div className="min-w-0">
- <p className="font-semibold text-slate-800 text-sm truncate">{care_team.clinician.name}</p>
- <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+ <p className="font-semibold text-[var(--text-800)] text-sm truncate">{care_team.clinician.name}</p>
+ <p className="text-xs text-[var(--text-500)] flex items-center gap-1 mt-0.5">
  <Stethoscope size={11} /> {care_team.clinician.role}
  </p>
  </div>
  </div>
  )}
  {care_team?.caregiver && (
- <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+ <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--card-bg)] border border-slate-100">
  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white font-bold text-base shadow-sm flex-shrink-0">
  {care_team.caregiver.name[0]}
  </div>
  <div className="min-w-0">
- <p className="font-semibold text-slate-800 text-sm truncate">{care_team.caregiver.name}</p>
- <p className="text-xs text-slate-500 mt-0.5">Caregiver</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm truncate">{care_team.caregiver.name}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Caregiver</p>
  </div>
  </div>
  )}
@@ -409,13 +409,13 @@ export default function PatientPortal() {
  <Calendar size={15} />
  <span className="text-xs font-bold uppercase tracking-wide">Next Visit</span>
  </div>
- <p className="font-bold text-slate-800 text-sm">
+ <p className="font-bold text-[var(--text-800)] text-sm">
  {new Date(care_team.next_appointment.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
  </p>
- <p className="text-sm text-slate-600 mt-0.5">
+ <p className="text-sm text-[var(--text-600)] mt-0.5">
  {care_team.next_appointment.type} with {care_team.next_appointment.with}
  </p>
- <p className="text-xs text-slate-400 flex items-center gap-1 mt-1.5">
+ <p className="text-xs text-[var(--text-400)] flex items-center gap-1 mt-1.5">
  <Clock size={11} />
  {new Date(care_team.next_appointment.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
  </p>
@@ -444,9 +444,9 @@ export default function PatientPortal() {
  )}
  {/* ESAS mini-trend if data available */}
  {esasTrends && esasTrends.count > 0 && (
- <div className="mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+ <div className="mb-4 p-3 bg-[var(--card-bg)] rounded-xl border border-slate-200">
  <div className="flex items-center justify-between mb-2">
- <p className="text-[11px] font-bold text-slate-500 ">
+ <p className="text-[11px] font-bold text-[var(--text-500)] ">
  Symptom Trends -- Last {esasTrends.period_days} days
  </p>
  <span className="text-[10px] text-slate-400">{esasTrends.count} check-in{esasTrends.count !== 1 ? 's' : ''}</span>
@@ -474,7 +474,7 @@ export default function PatientPortal() {
  return `${x},${y}`;
  }).join(' ');
  return (
- <div key={key} className="flex items-center gap-2 bg-slate-50 rounded-lg border border-slate-100 px-2.5 py-2">
+ <div key={key} className="flex items-center gap-2 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)]/50 px-2.5 py-2">
  <div className="flex-1 min-w-0">
  <p className="text-[10px] text-slate-500">{label}</p>
  <p className="text-sm font-bold tabular-nums" style={{ color }}>
@@ -536,11 +536,11 @@ export default function PatientPortal() {
  ].map(({ label, icon: Icon, color, nav, action }) => (
  <button key={label} onClick={() => action ? action() : navigate(nav)}
  data-tip={label}
- className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all duration-150 group text-left">
+ className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--card-bg)] border border-transparent hover:border-[var(--card-border)] transition-all duration-150 group text-left">
  <div className={`w-8 h-8 rounded-lg ${color} flex items-center justify-center flex-shrink-0`}>
  <Icon size={15} className="text-white" strokeWidth={2.5} />
  </div>
- <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">{label}</span>
+ <span className="text-sm font-medium text-[var(--text-700)] group-hover:text-slate-900">{label}</span>
  <ArrowRight size={13} className="ml-auto text-slate-300 group-hover:text-slate-500" />
  </button>
  ))}

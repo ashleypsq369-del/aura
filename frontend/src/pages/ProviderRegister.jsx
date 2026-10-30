@@ -128,11 +128,11 @@ function CountrySelector({ selected, onChange }) {
   return (
     <div className="relative flex-shrink-0" ref={wrapRef}>
       <button type="button" onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1.5 h-11 px-3 border-2 border-slate-200 rounded-xl bg-white hover:border-teal-400 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
+        className="flex items-center gap-1.5 h-11 px-3 border-2 border-[var(--card-border)] rounded-xl bg-white hover:border-teal-400 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
         aria-label={`Phone country: ${selected.name} ${selected.dial}`}>
         <span className="text-lg leading-none">{selected.flag}</span>
-        <span className="text-sm font-semibold text-slate-700 font-mono tracking-tight">{selected.dial}</span>
-        <ChevronDown size={13} className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}/>
+        <span className="text-sm font-semibold text-[var(--text-700)] font-mono tracking-tight">{selected.dial}</span>
+        <ChevronDown size={13} className={`text-[var(--text-400)] transition-transform ${open ? 'rotate-180' : ''}`}/>
       </button>
 
       <AnimatePresence>
@@ -142,16 +142,16 @@ function CountrySelector({ selected, onChange }) {
             animate={{ opacity:1, y:0, scale:1 }}
             exit={{ opacity:0, y:-6, scale:0.97 }}
             transition={{ duration:0.15 }}
-            className="absolute top-full left-0 mt-1.5 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl z-[200] overflow-hidden">
+            className="absolute top-full left-0 mt-1.5 w-72 bg-white border border-[var(--card-border)] rounded-2xl shadow-2xl z-[200] overflow-hidden">
             <div className="p-2.5 border-b border-slate-100">
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
                 <input ref={inputRef} type="text" value={query} onChange={e => setQuery(e.target.value)}
                   placeholder="Search country..."
-                  className="w-full pl-9 pr-8 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-teal-400 bg-white text-slate-800"
+                  className="w-full pl-9 pr-8 py-2 text-sm border border-[var(--card-border)] rounded-lg focus:outline-none focus:border-teal-400 bg-white text-slate-800"
                   autoComplete="off"/>
                 {query && (
-                  <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5">
+                  <button onClick={() => setQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-400)] hover:text-[var(--text-600)] p-0.5">
                     <X size={12}/>
                   </button>
                 )}
@@ -159,7 +159,7 @@ function CountrySelector({ selected, onChange }) {
             </div>
             <div className="max-h-52 overflow-y-auto overscroll-contain">
               {list.length === 0
-                ? <p className="text-center text-sm text-slate-400 py-6">No results</p>
+                ? <p className="text-center text-sm text-[var(--text-400)] py-6">No results</p>
                 : list.map(c => (
                   <button key={c.code} type="button"
                     onClick={() => { onChange(c); setOpen(false); setQuery(''); }}
@@ -168,7 +168,7 @@ function CountrySelector({ selected, onChange }) {
                     }`}>
                     <span className="text-xl leading-none w-7 text-center flex-shrink-0">{c.flag}</span>
                     <span className={`flex-1 truncate font-medium ${c.code === selected.code ? 'text-teal-700' : 'text-slate-700'}`}>{c.name}</span>
-                    <span className="font-mono text-xs text-slate-400 flex-shrink-0">{c.dial}</span>
+                    <span className="font-mono text-xs text-[var(--text-400)] flex-shrink-0">{c.dial}</span>
                     {c.code === selected.code && <CheckCircle size={14} className="text-teal-500 flex-shrink-0"/>}
                   </button>
                 ))
@@ -219,7 +219,7 @@ const VALIDATORS = {
 function InputGroup({ id, label, required, error, success, hint, children }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-slate-700 leading-none">
+      <label htmlFor={id} className="block text-sm font-semibold text-[var(--text-700)] leading-none">
         {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {children}
@@ -247,7 +247,7 @@ function InputGroup({ id, label, required, error, success, hint, children }) {
 const inputBorder = err =>
   err
     ? 'border-red-400 focus-within:border-red-400 focus-within:ring-2 focus-within:ring-red-500/15'
-    : 'border-slate-200 focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/15';
+    : 'border-[var(--card-border)] focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/15';
 
 const inputWrap = err =>
   `flex items-center border-2 rounded-xl overflow-hidden bg-white transition-all ${inputBorder(err)}`;
@@ -255,7 +255,7 @@ const inputWrap = err =>
 function IconSlot({ err, children }) {
   return (
     <span className={`flex items-center justify-center w-10 h-11 flex-shrink-0 border-r transition-colors ${
-      err ? 'border-red-200 bg-red-50/60 text-red-400' : 'border-slate-100 bg-slate-50 text-slate-400'
+      err ? 'border-red-200 bg-red-50/60 text-red-400' : 'border-[var(--card-border)]/50 bg-slate-50 text-slate-400'
     }`}>{children}</span>
   );
 }
@@ -282,7 +282,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             value={form.full_name}
             onChange={e => set('full_name', e.target.value.replace(/\d/g,''))}
             onBlur={() => onBlur('full_name')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
             placeholder="e.g., Dr. Abena Mensah"
             maxLength={100} spellCheck={false} aria-invalid={!!errors.full_name} />
         </div>
@@ -298,7 +298,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             value={form.username}
             onChange={e => set('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,''))}
             onBlur={() => onBlur('username')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
             placeholder="e.g., abena_mensah"
             maxLength={50} aria-invalid={!!errors.username} />
         </div>
@@ -312,7 +312,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             value={form.email}
             onChange={e => set('email', e.target.value)}
             onBlur={() => onBlur('email')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
             placeholder="your@email.com"
             maxLength={100} aria-invalid={!!errors.email} />
         </div>
@@ -329,7 +329,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
               value={form.phone}
               onChange={e => handlePhone(e.target.value)}
               onBlur={() => onBlur('phone')}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent font-mono placeholder:text-slate-400 placeholder:font-sans"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent font-mono placeholder:text-[var(--text-400)] placeholder:font-sans"
               placeholder={`${country.max} digit number`}
               maxLength={country.max}
               pattern="[0-9]*"/>
@@ -346,11 +346,11 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             value={form.password}
             onChange={e => set('password', e.target.value)}
             onBlur={() => onBlur('password')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
             placeholder="Create a secure password"
             maxLength={72} aria-invalid={!!errors.password} />
           <button type="button" onClick={() => setShowPw(v => !v)}
-            className="w-10 h-11 flex items-center justify-center text-slate-400 hover:text-teal-600 border-l border-slate-100 transition-colors">
+            className="w-10 h-11 flex items-center justify-center text-[var(--text-400)] hover:text-teal-600 border-l border-[var(--card-border)]/50 transition-colors">
             {showPw ? <EyeOff size={15}/> : <Eye size={15}/>}
           </button>
         </div>
@@ -366,11 +366,11 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             value={form.confirm_password}
             onChange={e => set('confirm_password', e.target.value)}
             onBlur={() => onBlur('confirm_password')}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
             placeholder="Re-enter your password"
             maxLength={72} aria-invalid={!!errors.confirm_password} />
           <button type="button" onClick={() => setShowCpw(v => !v)}
-            className="w-10 h-11 flex items-center justify-center text-slate-400 hover:text-teal-600 border-l border-slate-100 transition-colors">
+            className="w-10 h-11 flex items-center justify-center text-[var(--text-400)] hover:text-teal-600 border-l border-[var(--card-border)]/50 transition-colors">
             {showCpw ? <EyeOff size={15}/> : <Eye size={15}/>}
           </button>
         </div>
@@ -381,13 +381,13 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
         <div className={inputWrap(false)}>
           <IconSlot err={false}><span className="text-[10px] font-bold text-slate-400">Sex</span></IconSlot>
           <select id="gender" value={form.gender} onChange={e => set('gender', e.target.value)}
-            className="flex-1 h-11 px-3 text-sm text-slate-700 outline-none bg-transparent appearance-none cursor-pointer">
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-700)] outline-none bg-transparent appearance-none cursor-pointer">
             <option value="">Prefer not to say</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other / Non-binary</option>
           </select>
-          <span className="w-10 h-11 flex items-center justify-center text-slate-400 border-l border-slate-100 flex-shrink-0 pointer-events-none">
+          <span className="w-10 h-11 flex items-center justify-center text-[var(--text-400)] border-l border-[var(--card-border)]/50 flex-shrink-0 pointer-events-none">
             <ChevronDown size={14}/>
           </span>
         </div>
@@ -402,7 +402,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             onChange={e => set('date_of_birth', e.target.value)}
             max={new Date(Date.now() - 18*365.25*24*3600000).toISOString().split('T')[0]}
             min={new Date(Date.now() - 80*365.25*24*3600000).toISOString().split('T')[0]}
-            className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent" />
+            className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent" />
         </div>
       </InputGroup>
 
@@ -414,7 +414,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             <input id="location" type="text"
               value={form.location}
               onChange={e => set('location', e.target.value)}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
               placeholder="Accra, Greater Accra"
               maxLength={100} />
           </div>
@@ -425,7 +425,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
             <input id="address" type="text"
               value={form.address}
               onChange={e => set('address', e.target.value)}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
               placeholder="Street, Area, City"
               maxLength={200} />
           </div>
@@ -467,8 +467,8 @@ function StepServiceType({ form, set, types }) {
                   </div>
                   {sel && <CheckCircle size={14} style={{ color: t.color }} className="ml-auto"/>}
                 </div>
-                <p className="font-bold text-sm text-slate-900 leading-tight">{t.label}</p>
-                <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">{t.description}</p>
+                <p className="font-bold text-sm text-[var(--text-900)] leading-tight">{t.label}</p>
+                <p className="text-[11px] text-[var(--text-600)] mt-0.5 leading-snug">{t.description}</p>
                 <div className="mt-2 flex flex-wrap gap-1">
                   <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                     Min pass: {t.min_pass_score}%
@@ -516,7 +516,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
             onBlur={() => onBlur('bio')}
             rows={3} maxLength={500}
             placeholder="I am a registered palliative nurse with 5 years experience in home-based care..."
-            className={`w-full border-2 rounded-xl px-4 py-2.5 text-sm text-slate-800 outline-none resize-none transition-all ${inputBorder(errors.bio)}`}
+            className={`w-full border-2 rounded-xl px-4 py-2.5 text-sm text-[var(--text-800)] outline-none resize-none transition-all ${inputBorder(errors.bio)}`}
           />
           <span className="absolute bottom-2 right-3 text-[10px] text-slate-400">{(form.bio||'').length}/500</span>
         </div>
@@ -531,7 +531,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
               value={form.years_experience}
               onChange={e => set('years_experience', Math.min(50, Math.max(0, parseInt(e.target.value)||0)))}
               onBlur={() => onBlur('years_experience')}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent"
               placeholder="5" />
           </div>
         </InputGroup>
@@ -539,7 +539,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
         <InputGroup id="region" label="Region" required error={errors.region}>
           <select id="region" value={form.region} onChange={e => set('region', e.target.value)}
             onBlur={() => onBlur('region')}
-            className={`w-full h-11 px-3 border-2 rounded-xl text-sm text-slate-800 outline-none bg-white transition-all ${inputBorder(errors.region)}`}>
+            className={`w-full h-11 px-3 border-2 rounded-xl text-sm text-[var(--text-800)] outline-none bg-white transition-all ${inputBorder(errors.region)}`}>
             <option value="">Select region</option>
             {GHANA_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
@@ -554,7 +554,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
             <input id="facility" type="text"
               value={form.facility_name}
               onChange={e => set('facility_name', e.target.value)}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
               placeholder="Korle Bu Teaching Hospital"
               maxLength={200} />
           </div>
@@ -566,7 +566,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
             <input id="spec" type="text"
               value={form.specialisation}
               onChange={e => set('specialisation', e.target.value)}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
               placeholder="Oncology, Paediatrics..."
               maxLength={100} />
           </div>
@@ -583,7 +583,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
               value={form.license_number}
               onChange={e => set('license_number', e.target.value)}
               onBlur={() => onBlur('license_number')}
-              className="flex-1 h-11 px-3 text-sm text-slate-800 outline-none bg-transparent placeholder:text-slate-400"
+              className="flex-1 h-11 px-3 text-sm text-[var(--text-800)] outline-none bg-transparent placeholder:text-slate-400"
               placeholder="NMC/GCMC registration number"
               maxLength={50} />
           </div>
@@ -607,15 +607,15 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
               <input value={q.title} onChange={e => updateQual(i,'title',e.target.value)}
                 placeholder="e.g. RGN"
                 maxLength={100}
-                className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
+                className="border border-[var(--card-border)] rounded-lg px-3 py-2 text-sm bg-white text-[var(--text-800)] focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
               <input value={q.institution} onChange={e => updateQual(i,'institution',e.target.value)}
                 placeholder="Institution"
                 maxLength={100}
-                className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
+                className="border border-[var(--card-border)] rounded-lg px-3 py-2 text-sm bg-white text-[var(--text-800)] focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
               <div className="flex gap-1">
                 <input value={q.year} onChange={e => updateQual(i,'year',e.target.value)}
                   placeholder="Year" type="number" min="1950" max="2030"
-                  className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
+                  className="flex-1 border border-[var(--card-border)] rounded-lg px-3 py-2 text-sm bg-white text-[var(--text-800)] focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500" />
                 {quals.length > 1 && (
                   <button type="button" onClick={() => removeQual(i)}
                     className="p-2 rounded-lg text-red-400 hover:bg-red-50 transition-colors">
@@ -626,7 +626,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
             </div>
           ))}
         </div>
-        <p className="text-xs text-slate-400 mt-1">Add your degrees, certificates, and professional qualifications</p>
+        <p className="text-xs text-[var(--text-400)] mt-1">Add your degrees, certificates, and professional qualifications</p>
       </div>
     </div>
   );
@@ -674,7 +674,7 @@ function StepAssessment({ form, set, questions, serviceColor }) {
     <div className="space-y-4">
       {/* Progress */}
       <div>
-        <div className="flex justify-between text-xs text-slate-500 mb-1">
+        <div className="flex justify-between text-xs text-[var(--text-500)] mb-1">
           <span>Question {current + 1} of {questions.length}</span>
           <span>{answered} answered - Preview: {previewScore()}%</span>
         </div>
@@ -691,11 +691,11 @@ function StepAssessment({ form, set, questions, serviceColor }) {
           exit={{ opacity:0, x:-10 }} transition={{ duration:0.15 }}
           className="space-y-3">
           {q.scenario_context && (
-            <div className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2 border border-slate-100 italic">
+            <div className="text-xs text-[var(--text-500)] bg-slate-50 rounded-lg px-3 py-2 border border-[var(--card-border)]/50 italic">
               Scenario: {q.scenario_context}
             </div>
           )}
-          <p className="font-semibold text-slate-800 text-sm leading-relaxed">{q.question}</p>
+          <p className="font-semibold text-[var(--text-800)] text-sm leading-relaxed">{q.question}</p>
           <div className="space-y-2">
             {(q.options||[]).map((opt, oi) => {
               const sel = answers[String(q.id)] === oi;
@@ -721,7 +721,7 @@ function StepAssessment({ form, set, questions, serviceColor }) {
       {/* Question nav */}
       <div className="flex items-center justify-between pt-1">
         <button type="button" onClick={() => setCurrent(c => Math.max(0,c-1))} disabled={current===0}
-          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 disabled:opacity-30 font-semibold">
+          className="flex items-center gap-1 text-xs text-[var(--text-500)] hover:text-[var(--text-700)] disabled:opacity-30 font-semibold">
           <ChevronLeft size={14}/> Prev
         </button>
         <div className="flex gap-1">
@@ -738,7 +738,7 @@ function StepAssessment({ form, set, questions, serviceColor }) {
         </div>
         <button type="button" onClick={() => setCurrent(c => Math.min(questions.length-1,c+1))}
           disabled={current===questions.length-1}
-          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 disabled:opacity-30 font-semibold">
+          className="flex items-center gap-1 text-xs text-[var(--text-500)] hover:text-[var(--text-700)] disabled:opacity-30 font-semibold">
           Next <ChevronRight size={14}/>
         </button>
       </div>
@@ -781,7 +781,7 @@ function StepDocuments({ form, set }) {
         className="border-2 border-dashed border-teal-300 rounded-xl p-6 text-center cursor-pointer hover:border-teal-500 hover:bg-teal-50/30 transition-all">
         <Upload size={28} className="text-teal-400 mx-auto mb-2"/>
         <p className="font-semibold text-sm text-slate-700">Click to upload documents</p>
-        <p className="text-xs text-slate-400 mt-1">NMC licence, degree certificate, DBS/police clearance</p>
+        <p className="text-xs text-[var(--text-400)] mt-1">NMC licence, degree certificate, DBS/police clearance</p>
         <input ref={fileRef} type="file" multiple accept=".pdf,.jpg,.jpeg,.png"
           className="hidden" onChange={handleFiles}/>
       </div>
@@ -791,9 +791,9 @@ function StepDocuments({ form, set }) {
           {docs.map((name,i) => (
             <div key={i} className="flex items-center gap-2 px-3 py-2 bg-teal-50 rounded-lg border border-teal-100">
               <FileText size={14} className="text-teal-600 flex-shrink-0"/>
-              <span className="text-xs text-slate-700 flex-1 truncate">{name}</span>
+              <span className="text-xs text-[var(--text-700)] flex-1 truncate">{name}</span>
               <button type="button" onClick={() => removeDoc(i)}
-                className="text-slate-400 hover:text-red-500 transition-colors">
+                className="text-[var(--text-400)] hover:text-red-500 transition-colors">
                 <X size={13}/>
               </button>
             </div>
@@ -805,11 +805,11 @@ function StepDocuments({ form, set }) {
         <strong>Note:</strong> In this demo, file names are recorded. In production, files would be securely encrypted and stored.
       </div>
 
-      <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-slate-200 hover:border-teal-300 cursor-pointer transition-colors bg-white">
+      <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-300 cursor-pointer transition-colors bg-white">
         <input type="checkbox" checked={terms}
           onChange={e => { setTerms(e.target.checked); set('terms', e.target.checked); }}
           className="mt-0.5 w-4 h-4 rounded accent-teal-600"/>
-        <p className="text-xs text-slate-600 leading-relaxed">
+        <p className="text-xs text-[var(--text-600)] leading-relaxed">
           I declare that all information provided is accurate and truthful. I agree to the{' '}
           <span className="text-teal-600 font-semibold">Terms of Service</span>,{' '}
           <span className="text-teal-600 font-semibold">Privacy Policy</span>, and the
@@ -1007,8 +1007,8 @@ export default function ProviderRegister() {
               : <AlertCircle size={44} className="text-amber-500"/>
             }
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Application Submitted!</h2>
-          <p className="text-slate-600 text-sm mb-5 leading-relaxed">
+          <h2 className="text-2xl font-bold text-[var(--text-900)] mb-2">Application Submitted!</h2>
+          <p className="text-[var(--text-600)] text-sm mb-5 leading-relaxed">
             Your application as a <strong>{selectedType?.label}</strong> has been received.
             Our team reviews all applications within <strong>2 business days</strong>.
             You will receive a notification on your registered email once approved.
@@ -1031,7 +1031,7 @@ export default function ProviderRegister() {
             style={{ background:'#0d9488' }}>
             Go to Login
           </button>
-          <p className="text-xs text-slate-400 mt-3">
+          <p className="text-xs text-[var(--text-400)] mt-3">
             Questions? Contact us at <span className="text-teal-600 font-semibold">support@projectaura.health</span>
           </p>
         </motion.div>
@@ -1139,7 +1139,7 @@ export default function ProviderRegister() {
           <div className="px-7 pb-6 pt-2 flex gap-3 border-t border-slate-100">
             {step > 0 && (
               <button onClick={() => { setStep(s => s-1); setServerErr(''); }}
-                className="flex items-center gap-1.5 px-5 py-3 border-2 border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-teal-400 hover:text-teal-700 transition-all">
+                className="flex items-center gap-1.5 px-5 py-3 border-2 border-[var(--card-border)] rounded-xl text-sm font-semibold text-[var(--text-600)] hover:border-teal-400 hover:text-teal-700 transition-all">
                 <ChevronLeft size={15}/> Back
               </button>
             )}

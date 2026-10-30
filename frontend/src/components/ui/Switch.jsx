@@ -24,7 +24,7 @@ export default function Switch({
  {label && (
  <label
  htmlFor={switchId}
- className="text-sm text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+ className="text-sm text-[var(--text-700)] cursor-pointer select-none"
  >
  {label}
  </label>

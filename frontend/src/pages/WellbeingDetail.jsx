@@ -61,7 +61,7 @@ export default function WellbeingDetail() {
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
  <button onClick={() => navigate(-1)}
- className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mt-4 mb-2 group">
+ className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mt-4 mb-2 group">
  <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" /> Back
  </button>
 
@@ -85,11 +85,11 @@ export default function WellbeingDetail() {
  const val = latest[key] ?? 0;
  return (
  <motion.div key={key} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-3 text-center">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-3 text-center">
  <div className="w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
  <Icon size={14} style={{ color }} />
  </div>
- <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide leading-tight">{label}</p>
+ <p className="text-[10px] font-bold text-[var(--text-500)] uppercase tracking-wide leading-tight">{label}</p>
  <p className="text-xl font-bold tabular-nums mt-1" style={{ color: val >= 7 ? '#ef4444' : val >= 4 ? '#f59e0b' : '#10b981' }}>
  {val}
  </p>
@@ -105,10 +105,10 @@ export default function WellbeingDetail() {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
  {/* Radar */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden">
  <div className="px-5 py-4 border-b border-slate-200">
  <h2 className="text-sm font-bold text-slate-900">Symptom Profile</h2>
- <p className="text-xs text-slate-500 dark:text-slate-400">Latest assessment overview</p>
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">Latest assessment overview</p>
  </div>
  <div className="p-4">
  <ResponsiveContainer width="100%" height={240}>
@@ -124,10 +124,10 @@ export default function WellbeingDetail() {
  {/* Trend */}
  {trendData.length > 1 && (
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden">
  <div className="px-5 py-4 border-b border-slate-200">
  <h2 className="text-sm font-bold text-slate-900">Key Trends</h2>
- <p className="text-xs text-slate-500 dark:text-slate-400">Pain, anxiety & wellbeing over time</p>
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">Pain, anxiety & wellbeing over time</p>
  </div>
  <div className="p-4">
  <ResponsiveContainer width="100%" height={240}>
@@ -150,17 +150,17 @@ export default function WellbeingDetail() {
 
  {/* History table */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6 mb-8">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6 mb-8">
  <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
  <h2 className="text-base font-bold text-slate-900">Assessment History</h2>
- <p className="text-slate-500 text-sm">Complete record of wellbeing assessments</p>
+ <p className="text-[var(--text-500)] text-sm">Complete record of wellbeing assessments</p>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
  {['Date', 'Overall', 'Pain', 'Tiredness', 'Anxiety', 'Depression', 'Wellbeing', 'Total'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
+ <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
  </tr>
  </thead>
@@ -168,8 +168,8 @@ export default function WellbeingDetail() {
  {assessments.map((a) => {
  const total = ESAS_FIELDS.reduce((s, f) => s + (a[f.key] ?? 0), 0);
  return (
- <tr key={a.id} className="hover:bg-slate-50 transition-colors h-[48px]">
- <td className="py-3 px-4 text-sm text-slate-700 dark:text-slate-300">
+ <tr key={a.id} className="hover:bg-[var(--card-bg)] transition-colors h-[48px]">
+ <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">
  {new Date(a.assessed_at || a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
  </td>
  <td className="py-3 px-4">
@@ -191,7 +191,7 @@ export default function WellbeingDetail() {
  {assessments.length === 0 && (
  <div className="py-12 text-center">
  <Heart className="w-12 h-12 mx-auto mb-3 text-slate-300" />
- <p className="text-slate-500 font-medium">No assessments recorded</p>
+ <p className="text-[var(--text-500)] font-medium">No assessments recorded</p>
  </div>
  )}
  </div>

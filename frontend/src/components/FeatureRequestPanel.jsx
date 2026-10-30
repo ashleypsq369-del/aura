@@ -75,21 +75,21 @@ export default function FeatureRequestPanel() {
  if (hiddenFeatures.length === 0) return null;
 
  return (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
  {/* Header */}
  <button
  onClick={() => setExpanded(!expanded)}
- className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+ className="w-full flex items-center justify-between px-5 py-4 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700/50 transition-colors"
  >
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
  <Lock size={16} className="text-amber-600" />
  </div>
  <div className="text-left">
- <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">
+ <p className="font-semibold text-[var(--text-800)] text-sm">
  Request Feature Access
  </p>
- <p className="text-xs text-slate-500 dark:text-slate-400">
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">
  {hiddenFeatures.length} feature{hiddenFeatures.length !== 1 ? 's' : ''} hidden for your care setting
  </p>
  </div>
@@ -104,10 +104,10 @@ export default function FeatureRequestPanel() {
  animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="border-t border-slate-100 dark:border-slate-700 overflow-hidden"
+ className="border-t border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden"
  >
  <div className="px-5 py-4 space-y-3">
- <p className="text-xs text-slate-500 dark:text-slate-400">
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">
  These features are not included in your current care setting. If you believe you need access, you can request it below. An admin will review your request.
  </p>
 
@@ -118,7 +118,7 @@ export default function FeatureRequestPanel() {
  const StatusIcon = sc?.icon;
 
  return (
- <div key={path} className="bg-slate-50 dark:bg-slate-700/40 rounded-xl p-4">
+ <div key={path} className="bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-xl p-4">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-2 flex-1 min-w-0">
  {locked
@@ -126,7 +126,7 @@ export default function FeatureRequestPanel() {
  : <Unlock size={15} className="text-amber-500 flex-shrink-0" />
  }
  <div className="min-w-0">
- <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{name}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{name}</p>
  {locked && (
  <p className="text-xs text-red-500 mt-0.5">This feature has been locked by your care administrator.</p>
  )}
@@ -136,7 +136,7 @@ export default function FeatureRequestPanel() {
  </span>
  )}
  {req?.admin_note && (
- <p className="text-xs text-slate-400 mt-1 italic">Note: {req.admin_note}</p>
+ <p className="text-xs text-[var(--text-400)] mt-1 italic">Note: {req.admin_note}</p>
  )}
  </div>
  </div>
@@ -165,12 +165,12 @@ export default function FeatureRequestPanel() {
  onChange={e => setReason(e.target.value)}
  rows={2}
  placeholder="Why do you need access to this feature? (e.g. My doctor recommended I use the Memory Vault)"
- className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 resize-none"
+ className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)] resize-none"
  />
  <div className="flex gap-2">
  <button
  onClick={() => { setRequesting(null); setReason(''); }}
- className="flex-1 py-2 border border-slate-300 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+ className="flex-1 py-2 border border-slate-300 text-[var(--text-600)] rounded-xl text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition"
  >
  Cancel
  </button>

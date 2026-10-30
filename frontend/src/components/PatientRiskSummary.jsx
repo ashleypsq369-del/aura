@@ -10,7 +10,7 @@ import { Heart, Activity, AlertCircle, CheckCircle } from 'lucide-react';
 export default function PatientRiskSummary({ prediction }) {
   if (!prediction) {
     return (
-      <div className="bg-slate-50 rounded-lg p-6 shadow-md border-2 border-gray-200 text-center">
+      <div className="bg-[var(--card-bg)] rounded-lg p-6 shadow-md border-2 border-gray-200 text-center">
         <Heart className="w-12 h-12 text-gray-400 mx-auto mb-3" />
         <p className="text-gray-600">No health insights available at this time</p>
       </div>
@@ -70,7 +70,7 @@ export default function PatientRiskSummary({ prediction }) {
       </div>
 
       {/* Main Message */}
-      <div className={`bg-slate-50 rounded-lg p-4 mb-4 border-2 border-${config.color}-200`}>
+      <div className={`bg-[var(--card-bg)] rounded-lg p-4 mb-4 border-2 border-${config.color}-200`}>
         <p className="text-gray-800 font-medium leading-relaxed">
           {config.message}
         </p>
@@ -78,7 +78,7 @@ export default function PatientRiskSummary({ prediction }) {
 
       {/* Key Points */}
       {explanationPoints.length > 0 && (
-        <div className="bg-slate-50 rounded-lg p-4 mb-4 space-y-2">
+        <div className="bg-[var(--card-bg)] rounded-lg p-4 mb-4 space-y-2">
           <h4 className="text-sm font-bold text-gray-900 mb-2">What This Means:</h4>
           {explanationPoints.map((point, idx) => (
             <div key={idx} className="flex items-start space-x-2">

@@ -100,7 +100,7 @@ export function ProStatCard({
  whileHover={onClick ? { y: -3 } : undefined}
  onClick={onClick}
  className={[
- 'relative bg-slate-50 rounded-xl overflow-hidden',
+ 'relative bg-[var(--card-bg)] rounded-xl overflow-hidden',
  'border border-black/[0.06]',
  'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_3px_8px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.9)]',
  'transition-all duration-200',
@@ -142,7 +142,7 @@ export function ProStatCard({
  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800'
  : trendDown
  ? 'bg-red-50 text-red-600 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
- : 'bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
+ : 'bg-slate-100 text-[var(--text-500)] border border-[var(--card-border)] dark:text-[var(--text-400)] dark:border-slate-700',
  ].join(' ')}>
  {trendUp && '↑'}{trendDown && '↓'}
  {trend !== 0 ? `${Math.abs(trend)}%` : ' - '}
@@ -152,20 +152,20 @@ export function ProStatCard({
 
  {/* Value */}
  <p
- className="text-2xl font-bold text-slate-900 dark:text-white leading-none tracking-tight mb-1"
+ className="text-2xl font-bold text-[var(--text-900)] leading-none tracking-tight mb-1"
  style={{ fontVariantNumeric: 'tabular-nums' }}
  >
  {value}
  </p>
 
  {/* Label */}
- <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 leading-tight">
+ <p className="text-[11px] font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] leading-tight">
  {label}
  </p>
 
  {/* Sub-line */}
  {(subtitle || (trend !== undefined && trend !== null)) && (
- <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
+ <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
  {subtitle || trendLabel}
  </p>
  )}
@@ -229,11 +229,11 @@ export function SectionCard({ title, subtitle, icon: Icon, children, actions, ac
  </div>
  )}
  <div>
- <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight">
+ <h2 className="text-sm font-semibold text-[var(--text-800)] leading-tight">
  {title}
  </h2>
  {subtitle && (
- <p className="text-[11px] text-slate-500 dark:text-slate-400">{subtitle}</p>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-slate-400">{subtitle}</p>
  )}
  </div>
  </div>
@@ -264,7 +264,7 @@ export function InfoCard({ title, children, variant = 'info', className = '' }) 
  {title && (
  <h4 className={`font-semibold text-sm mb-1.5 ${cfg.title}`}>{title}</h4>
  )}
- <div className="text-sm text-slate-700 dark:text-slate-300">{children}</div>
+ <div className="text-sm text-[var(--text-700)] dark:text-slate-300">{children}</div>
  </div>
  );
 }
@@ -284,8 +284,8 @@ export function StatCard({ title, value, icon: Icon, color = 'bg-teal-500', tren
  </span>
  )}
  </div>
- <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-0.5">{title}</h3>
- <p className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{value}</p>
+ <h3 className="text-xs font-medium text-[var(--text-500)] dark:text-[var(--text-400)] mb-0.5">{title}</h3>
+ <p className="text-2xl font-bold text-[var(--text-900)] tracking-tight">{value}</p>
  </div>
  </ModernCard>
  );

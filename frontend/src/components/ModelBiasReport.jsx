@@ -69,7 +69,7 @@ export default function ModelBiasReport() {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <div className="animate-spin w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-slate-600 font-semibold">Analyzing Model Fairness...</p>
+          <p className="text-[var(--text-600)] font-semibold">Analyzing Model Fairness...</p>
         </div>
       </div>
     );
@@ -98,27 +98,27 @@ export default function ModelBiasReport() {
 
       {/* Overall Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
-          <p className="text-xs text-slate-600 font-semibold mb-1">Total Predictions</p>
+        <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4">
+          <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Total Predictions</p>
           <p className="text-3xl font-bold text-slate-900">{biasData.overall.total_predictions || 0}</p>
         </div>
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
-          <p className="text-xs text-slate-600 font-semibold mb-1">Average Risk Score</p>
+        <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4">
+          <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Average Risk Score</p>
           <p className="text-3xl font-bold text-slate-900">{(biasData.overall.mean_risk_score || 0).toFixed(2)}</p>
         </div>
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
-          <p className="text-xs text-slate-600 font-semibold mb-1">Std Deviation</p>
+        <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4">
+          <p className="text-xs text-[var(--text-600)] font-semibold mb-1">Std Deviation</p>
           <p className="text-3xl font-bold text-slate-900">{(biasData.overall.std_risk_score || 0).toFixed(2)}</p>
         </div>
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
-          <p className="text-xs text-slate-600 font-semibold mb-1">High Risk Count</p>
+        <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4">
+          <p className="text-xs text-[var(--text-600)] font-semibold mb-1">High Risk Count</p>
           <p className="text-3xl font-bold text-red-600">{biasData.overall.high_risk_count || 0}</p>
         </div>
       </div>
 
       {/* Category Selector */}
-      <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4">
-        <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+      <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4">
+        <h3 className="font-bold text-[var(--text-900)] mb-3 flex items-center gap-2">
           <Filter size={20} />
           Analyze By Category
         </h3>
@@ -132,7 +132,7 @@ export default function ModelBiasReport() {
                 className={`p-3 rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
                   selectedCategory === cat.value
                     ? 'bg-gradient-to-r bg-teal-600 text-white border-2 border-teal-600'
-                    : 'bg-slate-100 text-slate-700 border-2 border-slate-300 hover:border-purple-400'
+                    : 'bg-slate-100 text-[var(--text-700)] border-2 border-slate-300 hover:border-purple-400'
                 }`}
               >
                 <Icon size={16} />
@@ -168,8 +168,8 @@ export default function ModelBiasReport() {
 
       {/* Category Breakdown */}
       {categoryData && (
-        <div className="bg-slate-50 border-2 border-slate-300 rounded-xl p-6">
-          <h3 className="font-bold text-slate-900 text-lg mb-4">
+        <div className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-6">
+          <h3 className="font-bold text-[var(--text-900)] text-lg mb-4">
             {categories.find((c) => c.value === selectedCategory)?.label} Analysis
           </h3>
 
@@ -194,7 +194,7 @@ export default function ModelBiasReport() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <h4 className="font-bold text-slate-900 text-base mb-1">{group}</h4>
+                      <h4 className="font-bold text-[var(--text-900)] text-base mb-1">{group}</h4>
                       <div className="flex items-center gap-2">
                         <StatusIcon
                           size={16}
@@ -227,15 +227,15 @@ export default function ModelBiasReport() {
 
                   <div className="grid grid-cols-3 gap-4 text-xs">
                     <div>
-                      <p className="text-slate-600 font-semibold">Sample Size</p>
+                      <p className="text-[var(--text-600)] font-semibold">Sample Size</p>
                       <p className="font-bold text-slate-900">{data.count}</p>
                     </div>
                     <div>
-                      <p className="text-slate-600 font-semibold">Std Dev</p>
+                      <p className="text-[var(--text-600)] font-semibold">Std Dev</p>
                       <p className="font-bold text-slate-900">{data.std_risk_score.toFixed(2)}</p>
                     </div>
                     <div>
-                      <p className="text-slate-600 font-semibold">Disparity</p>
+                      <p className="text-[var(--text-600)] font-semibold">Disparity</p>
                       <p
                         className={`font-bold ${
                           Math.abs(disparity) > threshold

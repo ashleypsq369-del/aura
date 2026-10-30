@@ -23,7 +23,7 @@ export default function SummaryCard({
   badgeColor = 'bg-blue-100 text-teal-700 border-blue-300'
 }) {
   const statusColors = {
-    normal: 'border-slate-200 hover:border-teal-400',
+    normal: 'border-[var(--card-border)] hover:border-teal-400',
     warning: 'border-amber-300 hover:border-amber-500',
     critical: 'border-red-300 hover:border-red-500',
     success: 'border-green-300 hover:border-green-500'
@@ -41,7 +41,7 @@ export default function SummaryCard({
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`bg-slate-50 rounded-2xl p-6 border-3 ${statusColors[status]} hover:shadow-xl transition-all cursor-pointer group`}
+      className={`bg-[var(--card-bg)] rounded-2xl p-6 border-3 ${statusColors[status]} hover:shadow-xl transition-all cursor-pointer group`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

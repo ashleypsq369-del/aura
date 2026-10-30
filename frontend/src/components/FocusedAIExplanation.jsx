@@ -87,11 +87,11 @@ export default function FocusedAIExplanation({ data, onClose }) {
  <div className="space-y-4">
 
  {/* ── § 1 Finding summary ledger ────────────────────────── */}
- <div className="rounded-lg border border-slate-200 overflow-hidden">
- <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+ <div className="rounded-lg border border-[var(--card-border)] overflow-hidden">
+ <div className="flex items-center gap-2.5 px-4 py-2.5 bg-[var(--card-bg)] border-b border-slate-200">
  <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
- <Activity size={12} className="text-slate-500 flex-shrink-0" />
- <span className="text-[11px] font-bold text-slate-500 select-none">Clinical Finding</span>
+ <Activity size={12} className="text-[var(--text-500)] flex-shrink-0" />
+ <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Clinical Finding</span>
  </div>
  <div className="px-4 py-3 bg-slate-50">
  <InfoGrid cols={2} items={[
@@ -117,10 +117,10 @@ export default function FocusedAIExplanation({ data, onClose }) {
  ? <TrendingUp size={14} className="text-red-500 flex-shrink-0" />
  : ['decreasing','improving'].includes(data.trend)
  ? <TrendingDown size={14} className="text-emerald-500 flex-shrink-0" />
- : <Minus size={14} className="text-slate-400 flex-shrink-0" />}
- <p className="text-sm font-semibold text-slate-800 capitalize">{data.trend} trend</p>
+ : <Minus size={14} className="text-[var(--text-400)] flex-shrink-0" />}
+ <p className="text-sm font-semibold text-[var(--text-800)] capitalize">{data.trend} trend</p>
  {data.baseline_value && (
- <p className="text-xs text-slate-500 ml-auto">Baseline: {formatVal(data.baseline_value)}</p>
+ <p className="text-xs text-[var(--text-500)] ml-auto">Baseline: {formatVal(data.baseline_value)}</p>
  )}
  </div>
  </div>
@@ -135,10 +135,10 @@ export default function FocusedAIExplanation({ data, onClose }) {
  </div>
  <div className="px-5 py-4 bg-slate-50">
  <div className="pl-4 border-l-2 border-teal-200">
- <p className="text-sm text-slate-800 leading-7">{data?.explanation || 'No explanation available.'}</p>
+ <p className="text-sm text-[var(--text-800)] leading-7">{data?.explanation || 'No explanation available.'}</p>
  </div>
  {data?.confidence && (
- <p className="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">
+ <p className="text-[11px] text-[var(--text-400)] mt-3 pt-2 border-t border-slate-100">
  AI Confidence: <span className="font-bold text-slate-600">{Math.round(data.confidence * 100)}%</span>
  </p>
  )}
@@ -147,12 +147,12 @@ export default function FocusedAIExplanation({ data, onClose }) {
 
  {/* ── § 4 Contributing factors (SHAP-like bars) ─────────── */}
  {data?.relevant_factors?.length > 0 && (
- <div className="rounded-lg border border-slate-200 overflow-hidden">
- <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+ <div className="rounded-lg border border-[var(--card-border)] overflow-hidden">
+ <div className="flex items-center gap-2.5 px-4 py-2.5 bg-[var(--card-bg)] border-b border-slate-200">
  <span className="w-1 h-4 rounded-full bg-slate-400 flex-shrink-0" />
- <span className="text-[11px] font-bold text-slate-500 select-none">Contributing Factors</span>
+ <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Contributing Factors</span>
  </div>
- <div className="px-4 py-3 bg-slate-50 space-y-2">
+ <div className="px-4 py-3 bg-[var(--card-bg)] space-y-2">
  {data.relevant_factors.map((f, i) => (
  <SHAPRow key={i} rank={i + 1}
  feature={f.feature_name}
@@ -172,12 +172,12 @@ export default function FocusedAIExplanation({ data, onClose }) {
  <Pill size={12} className="text-amber-600 flex-shrink-0" />
  <span className="text-[11px] font-bold text-amber-700 select-none">Drug Interactions Detected</span>
  </div>
- <div className="px-4 py-3 bg-slate-50 space-y-2">
+ <div className="px-4 py-3 bg-[var(--card-bg)] space-y-2">
  {data.interactions.map((ix, i) => (
  <div key={i} className="flex items-start gap-3 pl-3 border-l-2 border-amber-300">
  <div className="flex-1 min-w-0">
  <p className="text-sm font-semibold text-slate-800">{ix.medication}</p>
- <p className="text-xs text-slate-600 mt-0.5">{ix.interaction}</p>
+ <p className="text-xs text-[var(--text-600)] mt-0.5">{ix.interaction}</p>
  </div>
  <InfoBadge label={ix.severity}
  variant={ix.severity === 'high' ? 'danger' : ix.severity === 'moderate' ? 'warning' : 'info'} size="xs" />
@@ -195,11 +195,11 @@ export default function FocusedAIExplanation({ data, onClose }) {
  <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />
  <span className="text-[11px] font-bold text-teal-700 select-none">Recommended Actions</span>
  </div>
- <div className="px-4 py-3 bg-slate-50 space-y-2">
+ <div className="px-4 py-3 bg-[var(--card-bg)] space-y-2">
  {data.recommendations.map((r, i) => (
  <div key={i} className="flex items-start gap-3">
  <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
- <p className="text-sm text-slate-700 leading-relaxed">{r}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">{r}</p>
  </div>
  ))}
  </div>
@@ -207,17 +207,17 @@ export default function FocusedAIExplanation({ data, onClose }) {
  )}
 
  {data?.history_count !== undefined && (
- <p className="text-xs text-slate-400 text-center">
+ <p className="text-xs text-[var(--text-400)] text-center">
  Based on analysis of {data.history_count} historical readings
  </p>
  )}
 
  {/* ── § 7 Clinician feedback ─────────────────────────────── */}
- <div className="rounded-lg border border-slate-200 overflow-hidden">
- <div className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+ <div className="rounded-lg border border-[var(--card-border)] overflow-hidden">
+ <div className="flex items-center gap-2.5 px-4 py-2.5 bg-[var(--card-bg)] border-b border-slate-200">
  <span className="w-1 h-4 rounded-full bg-slate-300 flex-shrink-0" />
- <MessageSquare size={12} className="text-slate-500 flex-shrink-0" />
- <span className="text-[11px] font-bold text-slate-500 select-none">Was this explanation helpful?</span>
+ <MessageSquare size={12} className="text-[var(--text-500)] flex-shrink-0" />
+ <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Was this explanation helpful?</span>
  </div>
  <div className="px-4 py-3 bg-slate-50">
  {!submitted ? (
@@ -231,7 +231,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
  ].map(({ type, label, Icon, active, passive }) => (
  <button key={type} onClick={() => setFeedback(type)}
  className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 text-xs font-semibold transition-all
- ${feedbackType === type ? active : `bg-slate-50 ${passive} hover:opacity-80`}`}>
+ ${feedbackType === type ? active : `bg-[var(--card-bg)] ${passive} hover:opacity-80`}`}>
  <Icon size={16} />{label}
  </button>
  ))}

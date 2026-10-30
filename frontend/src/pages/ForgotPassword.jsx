@@ -47,7 +47,7 @@ export default function ForgotPassword() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md"
         >
-          <div className="bg-slate-50 rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10 text-center">
+          <div className="bg-[var(--card-bg)] rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1, rotate: 360 }}
@@ -65,8 +65,8 @@ export default function ForgotPassword() {
                 <p className="text-sm text-[#8E8D8A]">
                   Email is not configured on this server. Copy the reset link below and open it in your browser:
                 </p>
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
-                  <p className="text-xs font-mono text-slate-600 break-all">{tempToken}</p>
+                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg p-3">
+                  <p className="text-xs font-mono text-[var(--text-600)] break-all">{tempToken}</p>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(tempToken);
@@ -122,7 +122,7 @@ export default function ForgotPassword() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="w-full max-w-md"
       >
-        <div className="bg-slate-50 rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10">
+        <div className="bg-[var(--card-bg)] rounded-3xl shadow-xl shadow-slate-200 border border-[#EAEAE8] p-8 sm:p-10">
           
           {/* Header */}
           <div className="text-center mb-8">

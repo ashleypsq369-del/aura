@@ -207,9 +207,9 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center gap-2">
             <Zap size={20} className="text-rose-500 flex-shrink-0" /> Pain Severity
           </h2>
 
@@ -305,9 +305,9 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
             <MapPin className="w-6 h-6 mr-2" /> Pain Location
           </h2>
           
@@ -331,7 +331,7 @@ export default function BriefPainInventoryForm() {
             />
           </div>
           
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-[var(--text-500)] mt-2">
             ?? Click the microphone button to use voice input
           </p>
         </motion.div>
@@ -341,9 +341,9 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">
             Pain Type (Select all that apply)
           </h2>
           <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
@@ -355,7 +355,7 @@ export default function BriefPainInventoryForm() {
                 className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
                   painType.includes(type)
                     ? 'border-red-500 bg-red-50 text-red-700'
-                    : 'border-slate-200 text-slate-700 hover:border-red-300'
+                    : 'border-[var(--card-border)] text-[var(--text-700)] hover:border-red-300'
                 }`}
               >
                 {type}
@@ -363,7 +363,7 @@ export default function BriefPainInventoryForm() {
             ))}
           </div>
           {painType.length > 0 && (
-            <p className="text-sm text-slate-600 mt-3">
+            <p className="text-sm text-[var(--text-600)] mt-3">
               Selected: <span className="font-semibold">{painType.join(', ')}</span>
             </p>
           )}
@@ -374,12 +374,12 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">
             Pain Interference with Daily Life
           </h2>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-[var(--text-600)] mb-4">
             Rate how much pain has interfered with each area (0 = does not interfere, 10 = completely interferes)
           </p>
 
@@ -388,7 +388,7 @@ export default function BriefPainInventoryForm() {
               <div key={item.key}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-2">
-                    <item.Icon size={18} className="text-slate-500 flex-shrink-0" />
+                    <item.Icon size={18} className="text-[var(--text-500)] flex-shrink-0" />
                     <label className="font-semibold text-slate-900">{item.label}</label>
                   </div>
                   <span className="text-2xl font-bold text-slate-700">
@@ -410,7 +410,7 @@ export default function BriefPainInventoryForm() {
           {/* Average Interference */}
           <div className={`mt-6 p-4 rounded-lg ${interferenceSeverity.bg}`}>
             <div className="text-center">
-              <div className="text-sm text-slate-600 mb-1">Average Interference</div>
+              <div className="text-sm text-[var(--text-600)] mb-1">Average Interference</div>
               <div className="text-4xl font-bold mb-2">{avgInterference} / 10</div>
               <div className={`text-lg font-bold ${interferenceSeverity.color}`}>
                 {interferenceSeverity.label}
@@ -424,15 +424,15 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h2 className="text-xl font-bold text-slate-900 mb-4">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">
             ?? Current Pain Management
           </h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Current Medications
               </label>
               <textarea
@@ -474,9 +474,9 @@ export default function BriefPainInventoryForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           
@@ -499,7 +499,7 @@ export default function BriefPainInventoryForm() {
             />
           </div>
           
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-[var(--text-500)] mt-2">
             ?? Use voice input to quickly add observations
           </p>
         </motion.div>
@@ -541,7 +541,7 @@ export default function BriefPainInventoryForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>

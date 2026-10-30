@@ -296,12 +296,12 @@ export default function ReminderCenter() {
  <div className="flex gap-2">
  {/* Remind before */}
  <select value={before} onChange={e => setBefore(e.target.value)}
- className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-400">
+ className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
  {BEFORE.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
  </select>
  {/* Repeat */}
  <select value={repeat} onChange={e => setRepeat(e.target.value)}
- className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-400">
+ className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
  {REPEATS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
  </select>
  </div>
@@ -335,7 +335,7 @@ export default function ReminderCenter() {
  <>
  {upcoming.length > 0 && (
  <div>
- <div className="px-4 py-1.5 bg-gray-50 border-b border-gray-100">
+ <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
  <p className="text-[10px] font-bold text-gray-500">Upcoming</p>
  </div>
  {upcoming.map(r => (
@@ -345,7 +345,7 @@ export default function ReminderCenter() {
  )}
  {past.length > 0 && (
  <div>
- <div className="px-4 py-1.5 bg-gray-50 border-b border-gray-100">
+ <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
  <p className="text-[10px] font-bold text-gray-500">Past</p>
  </div>
  {past.slice(0, 5).map(r => (

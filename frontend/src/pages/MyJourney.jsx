@@ -84,9 +84,9 @@ export default function MyJourney() {
   if (!patientId && !patientLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="bg-slate-50 rounded-lg border border-slate-200 p-8 max-w-sm text-center">
+        <div className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-8 max-w-sm text-center">
           <MapPin className="w-10 h-10 mx-auto mb-3 text-teal-400 opacity-60" />
-          <h2 className="text-sm font-bold text-slate-900 mb-2">No Patient Linked</h2>
+          <h2 className="text-sm font-bold text-[var(--text-900)] mb-2">No Patient Linked</h2>
           <p className="text-xs text-slate-500">Your care journey timeline will appear here once your account is linked to a patient record.</p>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function MyJourney() {
               return (
                 <button key={type.value} onClick={() => setSelectedEventType(type.value)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
-                    active ? 'text-white border-transparent shadow-sm' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-teal-300'
+                    active ? 'text-white border-transparent shadow-sm' : 'bg-[var(--card-bg)] text-[var(--text-600)] border-[var(--card-border)] hover:border-teal-300'
                   }`}
                   style={active ? { background: grads[i % grads.length] } : {}}
                 >
@@ -142,7 +142,7 @@ export default function MyJourney() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                   dateRange === r.value
                     ? 'bg-teal-600 text-white border-teal-600'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-teal-300'
+                    : 'bg-[var(--card-bg)] text-[var(--text-600)] border-[var(--card-border)] hover:border-teal-300'
                 }`}
               >
                 {r.label}
@@ -157,9 +157,9 @@ export default function MyJourney() {
             <Loader2 className="w-10 h-10 animate-spin text-teal-600" />
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="bg-slate-50 rounded-lg border border-slate-200 p-10 text-center">
+          <div className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-10 text-center">
             <MapPin className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-sm font-semibold text-slate-700 mb-1">No events found</h3>
+            <h3 className="text-sm font-semibold text-[var(--text-700)] mb-1">No events found</h3>
             <p className="text-xs text-slate-400">
               {selectedEventType !== 'all'
                 ? 'No events of this type in the selected period'
@@ -175,7 +175,7 @@ export default function MyJourney() {
                   <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center flex-shrink-0">
                     <Calendar size={14} className="text-teal-600" />
                   </div>
-                  <span className="text-xs font-bold text-slate-500 ">{date}</span>
+                  <span className="text-xs font-bold text-[var(--text-500)] ">{date}</span>
                   <div className="flex-1 h-px bg-slate-200" />
                 </div>
 
@@ -199,12 +199,12 @@ export default function MyJourney() {
           <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
             <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               onClick={() => setSelectedEventType('all')}
-              className="stat-card-blue rounded-xl border border-slate-200 px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
+              className="stat-card-blue rounded-xl border border-[var(--card-border)] px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500  mb-1">Total Events</p>
-                  <p className="text-2xl font-bold text-slate-800 tabular-nums">{filteredEvents.length}</p>
+                  <p className="text-xs font-semibold text-[var(--text-500)]  mb-1">Total Events</p>
+                  <p className="text-2xl font-bold text-[var(--text-800)] tabular-nums">{filteredEvents.length}</p>
                 </div>
                 <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
                   <Activity size={18} className="text-teal-600" />
@@ -214,12 +214,12 @@ export default function MyJourney() {
 
             <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
               onClick={() => setSelectedEventType('pathway_change')}
-              className="stat-card-amber rounded-xl border border-slate-200 px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
+              className="stat-card-amber rounded-xl border border-[var(--card-border)] px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500  mb-1">Milestones</p>
-                  <p className="text-2xl font-bold text-slate-800 tabular-nums">
+                  <p className="text-xs font-semibold text-[var(--text-500)]  mb-1">Milestones</p>
+                  <p className="text-2xl font-bold text-[var(--text-800)] tabular-nums">
                     {filteredEvents.filter(e => e.is_milestone).length}
                   </p>
                 </div>
@@ -231,12 +231,12 @@ export default function MyJourney() {
 
             <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
               onClick={() => navigate('/alerts')}
-              className="stat-card-rose rounded-xl border border-slate-200 px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
+              className="stat-card-rose rounded-xl border border-[var(--card-border)] px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500  mb-1">Critical Alerts</p>
-                  <p className="text-2xl font-bold text-slate-800 tabular-nums">
+                  <p className="text-xs font-semibold text-[var(--text-500)]  mb-1">Critical Alerts</p>
+                  <p className="text-2xl font-bold text-[var(--text-800)] tabular-nums">
                     {filteredEvents.filter(e => e.event_type === 'high_alert').length}
                   </p>
                 </div>
@@ -248,12 +248,12 @@ export default function MyJourney() {
 
             <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
               onClick={() => navigate('/appointments')}
-              className="stat-card-emerald rounded-xl border border-slate-200 px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
+              className="stat-card-emerald rounded-xl border border-[var(--card-border)] px-4 py-3 hover:shadow-sm transition-all text-left w-full cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-slate-500  mb-1">Appointments</p>
-                  <p className="text-2xl font-bold text-slate-800 tabular-nums">
+                  <p className="text-xs font-semibold text-[var(--text-500)]  mb-1">Appointments</p>
+                  <p className="text-2xl font-bold text-[var(--text-800)] tabular-nums">
                     {filteredEvents.filter(e => e.event_type === 'appointment').length}
                   </p>
                 </div>
@@ -314,7 +314,7 @@ function EventCard({ event }) {
       <div className={`absolute -left-[33px] w-5 h-5 rounded-full border-4 border-white shadow-lg z-10`}
         style={{ backgroundColor: event.is_milestone ? '#f59e0b' : color }} />
 
-      <div className={`bg-slate-50 rounded-lg border border-slate-200 border-l-4 hover:shadow-sm transition-all ${
+      <div className={`bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] border-l-4 hover:shadow-sm transition-all ${
         event.is_milestone ? 'border-l-amber-400' : eventTypeGrad(event.event_type)
       } p-3`}>
         <div className="flex items-start gap-3">
@@ -326,11 +326,11 @@ function EventCard({ event }) {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-sm font-semibold text-slate-900 leading-tight truncate">{event.event_title}</h3>
+              <h3 className="text-sm font-semibold text-[var(--text-900)] leading-tight truncate">{event.event_title}</h3>
               {event.is_milestone && <Star size={13} className="text-amber-400 fill-amber-400 flex-shrink-0" />}
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-slate-400 flex items-center gap-0.5">
+              <span className="text-[10px] text-[var(--text-400)] flex items-center gap-0.5">
                 <Clock size={10} /> {formatTime(event.created_at)}
               </span>
               <span className="chip-teal">
@@ -338,7 +338,7 @@ function EventCard({ event }) {
               </span>
             </div>
             {event.event_detail && (
-              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed line-clamp-2">{event.event_detail}</p>
+              <p className="text-xs text-[var(--text-600)] mt-1.5 leading-relaxed line-clamp-2">{event.event_detail}</p>
             )}
           </div>
         </div>

@@ -1,0 +1,468 @@
+# Changelog
+
+## [0.39.2] - 2026-10-11
+
+Radii named without the word radius match again.
+
+### Fixed
+- 0.39.1 matched radii only against tokens whose name says radius, rounded or corner, so a file naming them `shape.md` or `border.sm` lost every radius match. Unnamed dimensions now stand in for a kind that has no tokens of its own, never for one that has (#274)
+
+### Upgrading
+Output contract unchanged.
+
+## [0.39.1] - 2026-10-11
+
+Two findings from the first pipeline run of the token check.
+
+### Fixed
+- `--tokens` matched font sizes against radius tokens when the file had no font-size tokens. Dimension tokens now carry a kind from their type or name: font sizes match only font-size tokens, radii only radius tokens, and the report counts the tokens of each kind and says when there are none (#273)
+- `--login` with a piped stdin fell through to the sign-in page and saved nothing. It now exits 2 before the browser opens and names the reuse path: sign in once in a terminal with `--save-storage-state`, then `--cookie-file` (#273)
+
+### Upgrading
+Output contract unchanged. `tokenConformance.categories.*` gains `tokens` and `tokenConformance.tokens` splits dimensions into `radius`, `fontSize` and `dimension`; both additive, nothing else reads them.
+
+## [0.39.0] - 2026-10-11
+
+The run shows its evidence, and it reaches the pages behind a sign-in.
+
+### Added
+- `colors.semanticEvidence.primary` records how the primary was decided: `elected` with the rule, reason, declaring tokens and runners-up, or `refused` with the candidates that lost. The terminal, the HTML report and DESIGN.md say which (#261)
+- `colors.occurrences` counts every colour per paint (fill, text, border) with summed fill area and the declaring custom property; summed across a crawl (#263, #267)
+- `meta.context` records the browser context the main pass was measured under; drift warns when two snapshots differ in a rendering dial. `--header` repeats (#262)
+- A crawl tags every merged value with `pageCount` and `scope` (site, section, page) and carries `coverage`: a 0-100 agreement score, per-family means and the page-local outliers. Terminal and HTML show it (#264)
+- `--cookie-file` (JSON cookies, Playwright storageState with a sessionStorage block of our own, Netscape cookies.txt), `--basic-auth`, and `--login` with `--save-storage-state` for a one-off sign-in whose session later runs and CI reuse; `meta.sessionWarnings` reports a lapsed or rejected session (#265)
+- `--tokens` checks every rendered colour, radius and font size against a W3C Design Tokens file; `--max-off-token` gates on the count, `--tokens-report` writes a plain-table Markdown page, `--annotations github|azure` prints CI log commands for off-token values and drift (#270)
+- `--no-headed-fallback` keeps a failed navigation from opening a visible browser, for batch runs (#269)
+- The HTML report states the share of the page a framework renders (#258)
+- Drift compares `frameworks` and `iconSystem` as a `tech` category: a technology added or removed, or a major version, raises the score; a minor or patch version is listed only. Skipped unless both snapshots are 1.18.0 or later from the same CLI version (#259)
+- `colors.cssVariables` entries carry `scope` (`root` or `body`) and the map is complete: alias tokens and dark-mode values keep their names, and `palette.tokens` names every colour merged into an entry (#260)
+- The MCP server is published to the MCP Registry with each release (#268)
+
+### Fixed
+- Off-grid spacing findings never fired because sizes arrive as strings; DTCG and DESIGN.md read letter spacing from the field the extractor writes; DESIGN.md names heading tokens by level; the HTML report keeps role labels, grades contrast by text size and draws inputs from their default state; a button bordered on one side is kept; the palette `role` is read after the usage cap (#267)
+- A dark-mode pass that refused a primary no longer overwrites the light pass's evidence; a crawl's evidence follows the page that supplied the value; a typography style counts a page once however many contexts carry it (#267)
+
+### Changed
+- Playwright 1.63.0, eslint 10.10.0, typescript-eslint 8.70.0 (#266)
+
+### Upgrading
+Output contract 1.18.0 to 1.19.0, additive. Measured against a same-day 0.38.0 control over 175 corpus sites: 158 identical, three primaries moved, two of them bot walls and one a site that moves between control days too. The palette `role` of a colour seen under three times reads `supporting` where it read `accent`; drift weights the two differently, so a baseline from 0.38.0 may score a small move on such colours once. Nothing else in the drift engine reads the new fields. Primary accuracy on the 141-site labelled corpus: 106 correct on 0.39.0 against 105 on a same-day 0.38.0 control.
+
+## [0.38.0] - 2026-10-03
+
+Detection now names what builds the page, with versions.
+
+### Added
+- `frameworks` names what builds the UI: JS and meta frameworks, CSS frameworks, component libraries, web components, CSS-in-JS and site builders. Entries carry `category`, a `version` where the page states one, and `coverage`, the share of the page under that framework's mount points (#256)
+- `iconSystem` entries carry `version`, and more icon sets are named
+- The terminal and the HTML report show the versions
+
+### Changed
+- Every run installs an inert React devtools hook before the page loads and reads the script and stylesheet responses the page fetched, capped at 4 MB a file and 40 MB a page. Versions come from what the page states: a global, a licence banner, a constant that survives minification, the renderer's hook
+- A match on weak evidence alone is reported with medium confidence, and `evidence` quotes the marker that matched
+- The generic `SVG Icons` entry is reported only when no icon set was named
+- Across crawled pages the more confident reading of a framework is kept, with any version another page stated
+
+### Fixed
+- Consent dismissal could click a link to another origin and carry the run to a different site. It no longer clicks such a link
+- A frame that never answers no longer hangs consent dismissal
+
+### Upgrading
+Output contract 1.17.0 to 1.18.0, additive. Baseline churn on `dembrandt.com` against 0.37.0: stable 0, and the drift engine reads neither field. A consumer that compares `frameworks` or `iconSystem` names across snapshots will see them differ once: more is named, and `SVG Icons` drops out where a set was named.
+
+## [0.37.0] - 2026-09-29
+
+What the page declares now reaches the output: token names, font families, a monochrome primary.
+
+### Fixed
+- `typography.sources.customFonts` names families. The extractor collected @font-face families and never returned them, so the field fell back to fetched file names. When cross-origin stylesheets hide the rules it lists the families set on text that document.fonts reports as loaded. `selfHostedFonts` keeps the file names and `sources.fontDisplay` is emitted for the first time (#240)
+- A site whose every button is black or white elected no primary while accents of equal count sat in the palette. Black and white CTA fills are counted apart, never compete with a chromatic candidate, and become the primary only when nothing chromatic was elected and two or more buttons share the fill (#245)
+- A crawl's merged palette kept the most counted shade of a cluster and could drop the homepage primary while `semantic.primary` still named it. The elected primary stays canonical for its cluster (#238)
+- Headless UI was reported on any Tailwind site with three or more accessible toggles. Detection matches only the markers the library emits (#236)
+
+### Added
+- Palette entries carry `tokens`: the custom property names that declare that exact colour. Tokens are read from html and body, gated on the value being a colour rather than on the property name, and color-mix() values resolve, so shadcn-style semantic tokens and page-builder palettes count as provenance (#237)
+
+### Changed
+- README export flags are ordered by how people reach for them: token and agent formats first, framework themes, then reports and raw output (#241)
+
+### Upgrading
+Output contract 1.16.0 to 1.17.0, additive. Baseline churn on `dembrandt.com` against 0.36.0: stable 0. `semantic.primary` moves on sites that theme through unprefixed tokens and on monochrome sites that previously reported none; a baseline that recorded a null primary there drifts on that role once. Re-approve with `--compare <baseline> --approve` once, or regenerate the baseline.
+
+## [0.36.0] - 2026-09-22
+
+What the tool reports now matches what is actually on the page.
+
+### Fixed
+- A colour was read off any element that had one, and `color` and `border-color` both resolve to `currentColor` when unset, so every wrapper reported a value it never drew. On an unstyled anchor that value is the browser's own link blue, and `rgb(0, 0, 238)` was the most frequent `semantic.primary` across a 174-site corpus. Both are read only off elements that paint text or draw a border now, so palettes come out smaller and carry fewer invisible greys (#231)
+- A baseline that parsed but was not an extraction read as an empty one, so every token counted as added and the run reported total drift and exited 1, the code reserved for a real design change. A truncated download or a typo onto another JSON file now exits 2 and names what is missing (#230)
+- `--compare` advertised an App baseline id in the help and both docs pages. That route's branch was deleted as dead code 86 days ago with this CLI as its only caller, so the docs describe what works today (#230)
+
+### Added
+- `meta.crawl.pages` carries the landed URL of every page merged into a crawl, in merge order. A count cannot be checked or re-read, and a merged palette is not interpretable without knowing which pages produced it (#231)
+- Six MCP tools an agent could not reach before: `export_tailwind`, `export_shadcn`, `get_motion`, `validate_dtcg`, `check_contrast` and `check_robots`. `--shadcn` shipped in 0.34.0 and stayed unreachable over MCP for two releases. `darkMode` moves into the shared parameter set, and a surface-parity test now fails when a CLI flag has neither a tool, a parameter, nor a written reason for being CLI-only (#228)
+
+### Changed
+- The MCP server is typed rather than cast. All 21 tool registrations went through `(server.tool as any)`, which turned off checking across the whole surface (#228)
+
+### Upgrading
+Output contract 1.15.0 to 1.16.0. Baseline churn measured against 0.35.0 on two reference sites: `dembrandt.com` stable 0, `stripe.com` stable 5 against a threshold of 10, with six colours removed from the palette.
+
+Palettes shrink on most sites and `semantic.primary` moves on some, because a colour the page never painted can no longer win. Re-approve with `--compare <baseline> --approve` once, or regenerate the baseline.
+
+## [0.35.0] - 2026-09-20
+
+Three scoring checks that were quietly returning a pass.
+
+### Fixed
+- The drift gate could not fail on a changed brand colour. The semantic map shared the palette's denominator, so a moved `primary` was divided by every stable palette entry: a real stripe.com baseline with `semantic.primary` turned magenta reported delta 49.8, scored `stable 0` and exited 0. Palette and semantic are scored apart now and the worse one stands, so a moved role reaches the threshold while the palette keeps its churn tolerance (DEM-376)
+- Off-scale spacing never fired. The check compared `spacing.scaleType` to `base-8`/`base-4` while the extractor has written `8px`/`4px` since 1.14.0, so the base was always 0 and every site reported zero off-grid values. Both spellings are read through one helper now, shared with the Tailwind emitter, which had its own copy of the same regex (DEM-379)
+- A colour swatch beside the hex that names it entered the palette as brand colour. The sample filter only recognised a strip of four or more equal siblings under one parent, while documentation far more often lists one swatch per row next to its value. Any page documenting a palette scored its own samples as brand evidence (DEM-253)
+
+### Upgrading
+Baseline churn measured against 0.34.2 on two reference sites, twice each: `dembrandt.com` stable 0, `stripe.com` stable 4 against a threshold of 10. No gate flips on an unchanged site.
+
+A site whose brand colour genuinely moved will now fail a gate that passed before. That is the fix. Re-approve with `--compare <baseline> --approve` once, or regenerate the baseline.
+
+## [0.34.2] - 2026-09-19
+
+A colour's alpha can be an alias, the way its components already could.
+
+### Fixed
+- The DTCG validator rejected a property-level `$ref` in a colour's `alpha`, although §7.3.1 allows one and the same colour's `components` already accepted it. A token set that aliases one opacity across a palette failed validation. The reference resolves now, and the resolved value is type-checked and range-checked like a literal (#224)
+
+## [0.34.1] - 2026-09-19
+
+The shadcn radius was the smallest one on the page, not the one the page uses.
+
+### Fixed
+- `--shadcn` wrote `--radius: 1px` for a site whose buttons and inputs are 4px. The radius list arrives sorted by length and the emitter took the first entry, so a 31-use hairline outranked the 141-use value. It takes the highest count now (#222)
+- The `--radius-sm` and `--radius-md` rungs were emitted as a bare `calc()`, so a small base produced `calc(1px - 4px)`: a negative radius the browser drops. Both are clamped with `max(0px, ...)` (#222)
+- The release workflow's downstream sync read npm before the publish had propagated and failed on `ETARGET`, leaving the dembrandt-next bump PR unopened. It waits for the version to resolve first
+
+## [0.34.0] - 2026-09-19
+
+Three heuristics stopped deciding a whole page from a single observation.
+
+### Fixed
+- `spacing.scaleType` called a page an 8px system if any one value divided by 8, so almost every site claimed a grid it did not have. The verdict is weighted by how much of the observed spacing lands on the step, and a site reads `custom` below 60%. Two large public sites with 20% and 3% on the 8 grid both move (#218)
+- `spacing.commonValues[].rem` was computed against a hardcoded 16, so the rem column was wrong on any site that sets `html { font-size }`. It reads the document's root size now (#218)
+- Swatch strips, colour labels and code samples were scored as painted brand colour, so any page documenting a palette poisoned its own extraction. A run of four or more equal-size siblings with distinct opaque fills, an element whose whole text is its own colour value, and anything inside `code`/`pre`/`samp`/`kbd` are out. A row of cards shares one fill and is untouched (#218)
+- The neutral-primary rescue only woke below 0.12 chroma, so brands whose real colour sat in the palette kept a grey primary. The gate is 0.20; the bar a replacement must clear is unchanged at 0.25, so a deliberately neutral identity is protected exactly as before (#218)
+
+### Added
+- `--shadcn` writes a shadcn/ui theme: the `:root` block and the `@theme inline` mapping Tailwind v4 needs. A slot is written only when the page supplied it, and the rest are named in the file header and left to shadcn's own defaults, so a theme is never padded with plausible values that read as measured. Measured over 206 extractions: background, foreground, primary, border and radius land on almost every site; popover and destructive on none. `--dark-mode` produces the `.dark` block (#217)
+
+### Changed
+- Schema 1.14.0. Values move for an unchanged site: `spacing.scaleType`, `spacing.commonValues[].rem`, `colors.palette` and `colors.semantic.primary`. No field is added or removed, and a consumer re-approves one baseline rather than four. The neutral-primary change was measured over the 29 corpus sites that can change at all: two improved, none regressed. The drift gate scores this release `stable 0` on dembrandt.com and `stable 4` on stripe.com because it does not read `scaleType`: the movement is real and the gate is blind to it (#218)
+
+## [0.33.0] - 2026-09-13
+
+The artifact is correct on its own.
+
+### Fixed
+- The contrast check graded every pair at 4.5:1 regardless of text size, and a pair that failed it was still labelled AA-Large. Each pair now carries the size its text actually had and is graded at the threshold WCAG 1.4.3 gives that size, through one shared verdict every surface calls (#211)
+- Logotypes, disabled controls and `aria-hidden` text were reported as contrast failures, and a wrapper was counted again for text its child renders. Both are out; `[class*=logo]` no longer exempts a container merely named after the mark (#211)
+- A saved HTML report loaded the audited site's logo and favicons over the network, which a `file://` origin cannot do against any site sending `Cross-Origin-Resource-Policy: same-origin` — the images simply did not appear. Assets are inlined at extraction, and one that cannot be inlined is dropped instead of left broken (#211)
+- An `og:image` pointing at the site root was recorded as an image and rendered as a 24px icon (#211)
+- The SVG-colour fetch had no timeout, so one stalled asset held a run for that asset's full response time. Every asset fetch is now bounded, with a budget over the phase (#211)
+
+### Added
+- Drift compares the logo, at the strongest identity both snapshots carry: inline markup, then inlined bytes, then a URL normalised of the `w`/`q`/`dpl`/`dpr`/`s` params an image optimizer rewrites on every deploy (#211)
+- `wcag` pairs carry `fontSize`, `fontWeight`, `large`, `requiredAA`, `passAA` and `passAAA`. `aa`, `aaLarge` and `aaa` still ship, deprecated, and go in 2.0.0 (#211)
+
+### Changed
+- Schema 1.13.0. The same site reports different contrast numbers than it did on 0.32.2: one colour pair can now appear twice, once per size class. Measured on dembrandt.com against a 0.32.2 extraction, static pairs went 47 to 43 and AA passes 38 to 39, with no verdict reversed. The drift gate does not read `wcag`, so it scores this release `stable 0` — the movement is real and the gate is blind to it (#211)
+- MCP responses replace inlined asset bytes with a marker. An agent cannot use base64 pixels and they would cost it hundreds of kilobytes of context (#211)
+
+## [0.32.2] - 2026-09-10
+
+The robots decision follows the page.
+
+### Fixed
+- A redirect to another origin was extracted against the entry origin's rules. The decision now runs after navigation, on the URL the run landed on: an enforcing run exits `4` there instead of keeping a result the site refused (#210)
+- The crawl filter allowed every discovered page through whenever robots.txt could not be read, including under `DEMBRANDT_ENFORCE_ROBOTS=1`. It now follows the same rules as the entry check (#210)
+- The MCP server matched the `*` group even when the browser announced itself, so a site could refuse it by name with no effect (#210)
+
+## [0.32.1] - 2026-09-09
+
+A missing robots.txt is not a refusal.
+
+### Fixed
+- `DEMBRANDT_ENFORCE_ROBOTS=1` skipped a site that has no `robots.txt` at all. A `404` or `410` means there are no rules to honour and the run proceeds; a refusal, a rate limit, a bot wall or a `5xx` is an answer we could not read and still skips (#209)
+
+## [0.32.0] - 2026-09-08
+
+Token accuracy fixes.
+
+### Fixed
+- Shadows were parsed by splitting the string on whitespace, so a computed shadow's leading colour was read as its `offsetX` and every multi-layer shadow was folded into one. A shared parser now reads both colour positions, `inset`, and omitted blur/spread (#200)
+- Pill radii reached every output as `3.35544e+07px` and outranked the real radius scale. Normalised to `9999px`, with the counts merged when two spellings collapse (#204)
+- `isFluid` tested the computed font size, already resolved to px at the capture viewport, so `clamp()` and viewport-relative ramps were never detected. Read from the authored declaration, including one level of `var()` indirection, which is how a fluid scale is normally written (#200, #205)
+- Colour dominance counted elements, so many small glyphs outranked a hero fill. Painted background area is tracked alongside the count and exposed as `areaFrac` (#200)
+- Typography reported the first family in the stack, which on a site with a numerals-only face is not the family that rendered the text. The first family whose `@font-face` covers Latin letters is reported instead; the skipped one stays in `fallbacks` (#205)
+- A class where a rendering role qualifies "primary" (`foreground-primary`, `text-primary`) could claim `colors.semantic.primary`, last write winning (#205)
+- The robots.txt check matched the `Dembrandt` group while the browser sent a plain Chrome User-Agent, so a site could allow or disallow by name with no effect. Every refusal also read as permission: an unreachable file was fail-open, and a bot wall answering 200 with HTML parsed into zero rules (#202)
+- `colors._raw`, an internal scratch set, shipped in every extraction. Removed from the output and dropped at ingest, so stored snapshots stop carrying it (#203)
+- Version stamps reported the renderer rather than the release that extracted, which is the release a value came from (#199)
+- The compiled test suite was published inside the npm package: 172 files and 1.5 MB of a 3.4 MB install (#207)
+
+### Added
+- `code`, `pre`, `kbd` and `samp` are extracted under a `mono` context, so a mono face used only in code blocks is no longer invisible (#205)
+- `DEMBRANDT_ENFORCE_ROBOTS=1` makes a disallow, or an unreadable robots.txt, skip the target with exit `4`. For scheduled jobs and server-side use, where nobody is deciding what may be fetched. The default stays advisory (#202)
+- A crawl names the pages it took instead of reporting a count (#204)
+
+### Changed
+- robots.txt is read once per origin instead of up to four times per `--sitemap` run (#202)
+- The Tailwind shadow ladder orders by depth (blur, offset, spread) rather than blur alone, so `--shadow-sm/md/lg/xl` can move for an unchanged site (#200)
+- A DTCG shadow token's `$value` is an array when the shadow has more than one layer. A consumer reading `$value.offsetX` must branch on `Array.isArray` (#200)
+- Schema 1.12.0. Measured churn against 0.31.1 is 7 and 6 against a threshold of 10 on two reference sites, the only difference being the added `mono` context, so no baseline needs re-approval
+
+## [0.31.1] - 2026-09-02
+
+### Fixed
+- `ExtractionMeta` was missing `requestedUrl`, `contentLength`, `timeouts` and `crawl` in the TypeScript type, even though they've been in the actual JSON output since 1.9.0. A strict consumer importing `dembrandt/types` had no way to read them without a cast. Type-only change, no schema or runtime shape change (#194)
+
+## [0.31.0] - 2026-09-02
+
+Stability pass: colour math, hydration timing, and robots.txt coverage.
+
+### Added
+- `colors.palette` entries gain `contrastAgainst`, the observed WCAG pairs each colour was measured against, deduped by the other colour and sorted by ratio (#186)
+- `meta` gains `requestedUrl`, `contentLength`, `timeouts` and `crawl` (technique, pages requested, pages found) for `--crawl`, `--sitemap` and explicit paths (#178)
+- `meta` gains `robotsWarnings`. robots.txt is now checked for every page a multi-page crawl discovers, in both the CLI and the MCP server, not just the entry URL. A disallowed page is skipped and named here instead of extracted without a trace (#193)
+- Typography sources gain resolved font asset and webfont stylesheet URLs (#180)
+
+### Fixed
+- WCAG contrast pairs and `contrastAgainst` now reflect the colour a viewer actually sees, alpha composited against the layers behind it, instead of the raw declared value. A translucent background or text colour was read as opaque before this (#188)
+- The page-context deltaE implementation, hand duplicated because it runs inside `page.evaluate()`, carried a rounded threshold constant that put it slightly out of step with the canonical Lab conversion (#187)
+- `pagesRequested` was null for `--sitemap` without `--crawl`, instead of the actual page count (#178)
+- `hasRenderedContent` no longer counts a hidden or fully collapsed element as rendered content during SPA hydration checks (#179)
+- A below-fold footer logo that names its own brand in alt text or filename is recognised even without a home link, without over-matching short or hyphenated domain roots (#177, #184)
+- Motion durations are read before the reduced-motion freeze is applied, instead of after (#174)
+- Voice collection no longer silently drops thin pages with no way to tell why (#176)
+
+### Changed
+- Dependency updates: `@modelcontextprotocol/sdk`, `tailwindcss`, `@tailwindcss/cli`, `@google/design.md` (#185)
+
+### If you run `--crawl`, `--sitemap`, or MCP `pages` in a CI drift gate
+
+The robots.txt fix above can shrink a merged multi-page result by one page if the target site disallows something that was previously crawled without complaint. A page a site owner has explicitly excluded is usually not representative of the general design system anyway, so this is a one-time correction, not a regression. If a committed baseline includes such a page, the next run may report drift against it. Remedy: `dembrandt URL --compare baseline.json --approve` once, or regenerate the baseline.
+
+The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a translucent surface that previously reported a wrong, better-looking contrast ratio now reports the real one. A CI gate keyed on `--wcag` output may see new failures that reflect an existing accessibility issue this release now measures correctly.
+
+`release:churn` against dembrandt.com and stripe.com (single-page, no `--crawl`) shows no churn past threshold from either fix.
+
+## [0.30.0] - 2026-08-26
+
+### Fixed
+- An extraction that finds no browser binary installs the matching one and carries on, instead of failing with `browser engine not available` and naming a second command to run. Since 0.27.1 pinned `playwright-core` to an exact version, the documented `npx playwright-core install chromium` installed whatever revision the registry served, which the pinned driver could not find; before the pin the range floated to the same version and the two matched by accident. `dembrandt install-browser` still exists for anyone who would rather pay the download up front
+
+## [0.29.0] - 2026-08-25
+
+### Added
+- MCP extraction tools take `pages`, `paths` and `sitemap`, crawling and merging several pages over the same path as the CLI. `sitemap` alone takes up to 20 pages; `pages` caps it. A page that fails to load is dropped and the merge carries the rest (#172)
+- MCP extraction tools take `noSandbox` (also `DEMBRANDT_NO_SANDBOX`) for Docker and CI containers, plus `header` and `userAgent`. A launch failure names `noSandbox` as the remedy (#172)
+- `compute_drift`, `get_findings`, `export_dtcg`, `generate_design_md` and `render_report` accept the `job_id` of a completed extraction in place of an inline one. They previously took the whole extraction as a tool argument, so an agent had to resend a result it had just received, which is prohibitive at real extraction sizes. An inline extraction still wins when both are given (#172)
+
+- npm tarballs are published from CI with provenance, via npm trusted publishing (OIDC). The release workflow's publish guard now separates "already published" from a registry error and fails closed on the latter, instead of skipping the publish and reporting success (#167)
+
+### Changed
+- `--key` sync exits 3 (`SYNC_FAILED`) when the snapshot did not reach the cloud, instead of printing a warning and exiting 0. A run that was asked to record drift and did not is a failed run, and in CI the old warning scrolled past in a log nobody reads while the build stayed green. Drift (exit 1) still takes precedence, and the messages name the remedy: a size overrun suggests a page count derived from the measured payload, a 401 points at the key page (#169)
+- The cloud sync payload limit is the API's to enforce. The CLI sent its own copy of the cap, so raising the server limit still needed a CLI release and lowering it produced a rejected payload the CLI could have explained up front. A 413 now carries the same page-count advice, derived from the run (#170)
+
+### Fixed
+- MCP: two concurrent extractions restored each other's console handlers, so the second job's output could land in the JSON-RPC stream. Console is silenced once per process instead (#172)
+- MCP: `meta.dembrandtVersion` and the DTCG `toolVersion` were null on every extraction, because the server never passed the tool version to the extractor (#172)
+- MCP: the job cleanup interval kept the event loop alive, so the process outlived its transport by minutes (#172)
+- `BrandingResult._discoveredLinks` is typed `string[]`. `discoverLinks` has always returned href strings, which the crawl path feeds straight to `new URL()` (#172)
+- Drift compares `colors.semantic` role by role. The engine read that map only to attach role labels to palette entries, so a changed brand primary produced no drift at all: a rebrand that promotes a colour the page already used leaves the palette set identical and reported stable (DEM-208). Changes now appear as `semantic.<role>`, and `docs/FLAGS.md` no longer describes `--ai` primary drift the engine could not see
+
+### Changed
+- Output contract at schema 1.8.0. No shape change; colour scores rise wherever a semantic role moved, so a baseline whose primary differs from the candidate's starts reporting it on upgrade. Measured churn on upgrade is 0 for dembrandt.com and stripe.com (threshold 10), because an unchanged role contributes neither penalty nor weight. One case does move without any role moving: semantic colours authored in oklch/lch previously attached no role to their palette entry at all, and now do, so those entries carry their ROLE_WEIGHT and the same palette shift scores higher than it used to. Sites that author colours in hex or rgb, which is both reference sites, are unaffected. If an existing baseline does flip your gate red, the role really did change: read it in the report and re-approve once with `--compare <baseline> --approve`
+
+## [0.28.0] - 2026-08-13
+
+### Added
+- `--color-format=hex|rgb|lch|oklch|source` selects the notation for displayed colors. Presentational: it covers the palette, borders and every component section in the terminal, and leaves the JSON payload alone, which carries every notation regardless. `source` prints a declared token as it was authored. Export paths ignore it and the CLI says so (#155)
+- `typography.styles` entries carry `count`, the number of elements rendering that exact style
+- `typography.sources.filteredFamilies` lists families dropped by the usage floor
+- `typography.sources.urls` lists the resolved http(s) font asset and webfont-provider stylesheet URLs seen during extraction, sorted and deduped, so a consumer can re-fetch or verify the real font files (#147)
+- `--tailwind [path]` writes a Tailwind v4 `@theme` CSS file. Observed values only: no shade ramps, no interpolated scale steps, no derived states. Colors keep their semantic role or the page's own custom property name; spacing collapses to v4's `--spacing` multiplier when the page has a base-N rhythm
+- `npm run tailwind:check` and a weekly `Tailwind Watch` workflow open an issue when a new Tailwind major is published, which is the only event that can invalidate the emitted theme namespaces
+
+### Changed
+- Output contract at schema 1.7.0. 1.6.0 added `typography.sources.urls`, which no consumer had to adapt to; 1.7.0 moves existing values (see Fixed)
+- Merged multi-page runs sort the font URL union, so page order cannot reach the output
+
+### Fixed
+- Palette confidence has a usage floor, as spacing and radii always had. A color seen once caps at low, twice at medium, and high needs three occurrences whatever its context score. Hover and focus colors keep medium: their single occurrence is provenance, not a usage claim
+- `body` ends at the 24px reading range. Non-heading text above it takes the existing `text` role, so hero copy stops landing on the body token
+- A font family covering under 2% of counted text (minimum 3 elements) is dropped from `styles` and listed in `sources.filteredFamilies`, which removes faces that third-party embeds drag onto a page. dembrandt.com goes from six families to the two it uses
+
+### Upgrading
+- **Baselines churn once.** The three fixes above move colour and typography values. Measured on dembrandt.com against a 0.27.1 extraction: drift 15 against a threshold of 10. Re-approve with `--compare <baseline> --approve`, or regenerate baselines, on first run after upgrading
+
+## [0.25.1] - 2026-07-28
+
+### Fixed
+- The main entry and the `./dtcg` and `./normalize` subpaths now declare their type definitions. `dist` already shipped the `.d.ts` files, but without a `types` condition consumers importing `dembrandt` resolved no types at all
+
+### Changed
+- `no-explicit-any` is an eslint error with an explicit allowlist of pre-existing files, and `npm run lint` runs with `--max-warnings 0`, so no new file can introduce one
+- `release.yml` installs chromium before the unit suite. The consent tests drive a real page, so the v0.25.0 release job failed and skipped downstream sync
+- Dependabot ignores TypeScript majors until typescript-eslint accepts them, so one blocked package no longer fails the whole group
+
+## [0.25.0] - 2026-07-26
+
+### Added
+- Consent dismissal now sweeps child iframes and pierces open shadow roots, reaching iframe-hosted CMPs (Sourcepoint, TrustArc, Quantcast, Cookiebot) and shadow-DOM CMPs (Usercentrics, Osano, CookieYes) that the main-document pass could not (#129)
+
+### Changed
+- Framework detection anchors class-prefix selectors (`fa-`, `uk-`, `p-`, `ms-`, `q-`, `el-`) instead of substring matching, and requires real `data-radix-*` markers; removes false positives from Tailwind and unrelated utility classes (#125)
+- Cloud hint is a single line with a clickable recipe link (#126)
+- Dependencies upgraded: commander 15, ora 9, @types/node 26, and the GitHub Actions used by CI. `--help` grouping now uses commander's own item formatter after `Help.wrap` was removed in commander 15; rendered output is unchanged
+- Dependabot groups every update into one PR per ecosystem, monthly, instead of one PR per package
+
+### Security
+- All 8 reported advisories cleared (5 high). The vulnerable packages are transitive under `@modelcontextprotocol/sdk` (hono, @hono/node-server, fast-uri, body-parser) and `onnxruntime-node` (adm-zip), both already at their latest release, so patched versions are pinned via npm `overrides` rather than by downgrading the roots. `npm audit` reports 0 vulnerabilities
+
+### Removed
+- Golden-baseline `qa.mjs` and `gold:*` harness layers; replaced by a minimal liveness smoke and `release:churn`. Accuracy ground truth lives in dembrandt-ml (#127)
+
+## [0.24.0] - 2026-07-18
+
+### Changed
+- Drift comparison: validity warnings, scoring calibration, meta provenance (schema 1.3.0) (#123)
+
+### Fixed
+- `install-browser` installs the Playwright version matched to the resolved CLI; corrected CI docs (#124)
+
+### Refactored
+- Brand-guide: split the HTML builder from the PDF generator (#122)
+
+## [0.23.1] - 2026-07-10
+
+### Fixed
+- MCP server: `@modelcontextprotocol/sdk` and `zod` ship as regular dependencies. As optional peers they broke the documented install — `npx -y --package dembrandt dembrandt-mcp` exited with McpDepsMissingError on every clean machine (0.21.0–0.23.0), and npx never installs optional peers (#120)
+
+## [0.23.0] - 2026-07-10
+
+### Changed
+- Logo extraction reworked for recall and precision, measured against 103 human-judged sites: recall 0.64 -> 0.67, and known non-logos proposed cut from 11/21 to 4/21 (total proposals 206 -> 178). Concretely: header-zone selection no longer loses to cookie-dialog/modal `[class*=header]` elements; inline-`<svg>` logos wrapped in a home link are found (previously only `<img>` was); below-fold and footer logos that link home now qualify; symbol+wordmark lockups are kept as separate instances instead of collapsing to one; customer/partner-wall logos (detected structurally as a group of >=3 sizable marks in one content container) and 16-20px UI icons are no longer proposed; logos linking to a localized homepage (/en, /de) are recognized as the site's own
+- Each logo instance now reports a `rect` (the painted on-screen box, correct for `object-fit`/`preserveAspectRatio` letterboxing, padding, border and transforms) alongside the existing intrinsic `width`/`height`; a `natural` field carries the asset's intrinsic size
+
+### Added
+- `lib/extractors/logo-heuristics.ts`: the pure, DOM-free logo decisions (home-link, position→context, third-party-brand detection, painted-box geometry, minimum logo size), serialized into the page so the browser runs the exact same code, with 30 unit tests
+- MCP server: three pure analysis tools — `get_findings` (design-system lint: contrast, consistency, duplication), `export_dtcg` (W3C Design Tokens export), `generate_design_md` (DESIGN.md brand guide) — plus `list_jobs` for the async queue
+- MCP extraction tools accept `mobile`, `cookie` (authenticated pages), and `wcag` (contrast analysis) options; `get_design_tokens` gains `darkMode`
+- Official GitHub Action for the CI drift gate (DEM-151, #116)
+- Flag orthogonality: multi-page propagation, wcag merge, save/dtcg split (`--save-output`), compatibility docs (#113)
+
+### Fixed
+- Removed an accidentally committed `node_modules` symlink and hardened `.gitignore` against symlinks (#119)
+
+## [0.21.0] - 2026-06-29
+
+### Changed
+- Hidden-content reveal (open click-toggle menus/dropdowns, advance carousels, then re-scan) is now standard and on by default. Closed panels and off-screen slides hold brand colours that the static scan never sees, so this materially improves colour recall. Set `DEMBRANDT_DISABLE_REVEAL=1` to skip it, which QA baselines do to stay deterministic
+- Colour extraction recovers card/section/input/badge colours previously lost to structural filtering, and lifts colours from ancestor context, footers, and carousel-revealed panels (DEM-68)
+
+### Added
+- `./findings` subpath export exposes the high-recall detected colour set for the ML pipeline, separate from the scored brand palette
+
+### Removed
+- `--menus` opt-in flag. The reveal pass it gated is now the default, so the flag is redundant
+
+## [0.20.1] - 2026-06-26
+
+### Added
+- `--stealth` spoofs the WebGL renderer and audio fingerprint so extraction survives stricter bot detection (#100)
+
+### Fixed
+- Near-white primary and transparent secondary colours are guarded against, so washed-out or invisible picks no longer surface as brand colours (DEM-112, DEM-113, #103)
+- Cloud upload targets `www.dembrandt.com` and is overridable via the `DEMBRANDT_API_URL` env var
+
+## [0.20.0] - 2026-06-23
+
+### Added
+- `--key` pushes each extraction to your Dembrandt account and auto-scores it against the previous snapshot for that domain (#105)
+- `--ai` predicts the brand primary colour with a trained ML model, replacing the heuristic when enabled (roughly 2x accuracy)
+- Platform-specific colour hints: `theme-color`, `mask-icon`, and `msapplication` meta values now feed the palette (#101)
+
+### Fixed
+- SVG logo fill/stroke colours are extracted from the logo's own elements (DEM-111, #102)
+- Core hardening and internal refinements across extraction (#99)
+
+## [0.19.5] - 2026-06-14
+
+### Fixed
+- Drift comparison now ignores `confidence: "low"` radius and shadow tokens — single-use, margin-of-detection elements the extractor is unsure about that surfaced inconsistently between extractions and produced phantom drift
+
+### Added
+- The CLI run summary now reflects the active flags and explicit paths of the run (DEM-99)
+
+## [0.19.4] - 2026-06-14
+
+### Fixed
+- Self-hosted font lists (`selfHostedFonts`, `customFonts`) are now deduped and sorted, so two extractions of the same page no longer differ by font order — eliminating phantom design drift
+
+### Added
+- `--approve` accepts the current extraction as the new baseline: with `--compare <file>`, it overwrites that local baseline and passes instead of failing. App baseline ids are read-only
+- `--compare` combined with `--json-only` now attaches the full drift report (score, status, summary, per-token changes) under a `drift` key, so CI gates can render what changed from structured data instead of scraping the HTML report
+
+## [0.17.1] - 2026-06-10
+
+### Fixed
+- Colour-valued `:root` custom properties are now captured regardless of their name, so brand tokens not named with `color`/`bg`/`text`/`brand` are no longer silently dropped
+- Framework default-theme palettes exposed as `--colors-<hue>-<shade>` custom properties no longer flood the extracted CSS variables
+- Status/utility-only colours (error/danger, framework warm utilities) no longer leak into the brand palette unless declared as a token or used as a recurring CTA background
+- `:root` custom-property colours are treated as brand tokens: never dropped as structural, always considered for the palette, and preferred when selecting the primary colour as a bonus over usage rather than an override
+
+## [0.12.0] - 2026-05-10
+
+### Fixed
+- Link and text colors (e.g. `#0070e0`) were incorrectly filtered out when they never appeared as background colors — chromatic text-only colors with sufficient semantic context are now retained
+- Header and single-instance brand background colors were dropped on large sites where element count pushed the frequency threshold too high — high-scoring colors now bypass the count threshold
+- Modern CSS color functions (`oklab`, `oklch`, `lch`, `lab`, `color()`) were leaking into the palette as unparseable strings — these are now rejected at all extraction paths including hover/focus state merging
+
+## [0.11.0] - 2026-04-11
+
+### Changed
+- Neutralized documentation terminology
+- Removed third-party brand examples from test fixtures
+- Added `.claudeignore` for AI tool safety
+
+### Removed
+- Brand challenge test suite (replaced with QA baseline tests)
+- Third-party brand screenshots and example outputs
+
+## [0.3.0] - 2025-11-24
+
+### Added
+- `--slow` flag for slow-loading sites with 3x longer timeouts
+- Tailwind CSS exporter (`lib/exporters.js`)
+- QA test suite for visual comparison and regression detection
+- GitHub Actions CI workflow for automated testing
+- Border detection with confidence scoring
+
+### Changed
+- Improved terminal output with tree structure
+- Enhanced retry logic for empty content
+- Better SPA hydration detection
+- Test suite refocused on SPA and interactive sites
+- Lowered content validation threshold from 500 to 100 chars for minimal-text sites
+- Clearer border style display with `(per-side)` label for shorthand values
+- Shadows now sorted by confidence and usage frequency (most confident first)
+- Button detection now includes outline/bordered buttons (previously skipped transparent backgrounds)
+
+## [0.2.0] - 2025-11-22
+
+### Added
+- `--dark-mode` and `--mobile` flags
+- Clickable terminal links
+- Enhanced bot detection avoidance
+
+## [0.1.0] - 2025-11-21
+
+Initial public release

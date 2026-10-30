@@ -46,8 +46,8 @@ export default function AdaptiveCareGuide() {
     return (
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-10 sm:py-16 text-center">
         <BookOpen size={48} className="mx-auto mb-4 text-slate-300"/>
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Care Guide Not Available</h2>
-        <p className="text-slate-600 mb-4">Unable to load care guidance for this patient.</p>
+        <h2 className="text-xl font-bold text-[var(--text-900)] mb-2">Care Guide Not Available</h2>
+        <p className="text-[var(--text-600)] mb-4">Unable to load care guidance for this patient.</p>
         <button onClick={() => navigate(-1)} className="px-5 py-2 bg-teal-600 text-white rounded-xl font-bold text-sm hover:bg-teal-700">
           † Back
         </button>
@@ -65,13 +65,13 @@ export default function AdaptiveCareGuide() {
     <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 space-y-6">
       {/* Back */}
       <button onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition group">
+        className="flex items-center gap-2 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition group">
         <span className="group-hover:-translate-x-1 transition-transform">†</span> Back
       </button>
 
       {/* Header */}
       <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}}
-        className="rounded-2xl p-5 border-l-4 border-slate-600 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        className="rounded-2xl p-5 border-l-4 border-slate-600 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700">
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-xl">
@@ -100,7 +100,7 @@ export default function AdaptiveCareGuide() {
           </div>
           <button
             onClick={() => navigate(`/patients/${patientId}/care-plan`)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 text-purple-700 rounded-xl font-bold text-sm hover:bg-purple-50 transition shadow-md"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[var(--card-bg)] text-purple-700 rounded-xl font-bold text-sm hover:bg-purple-50 transition shadow-md"
           >
             <FileText size={16}/> View Full Care Plan
           </button>
@@ -144,8 +144,8 @@ export default function AdaptiveCareGuide() {
       {/* Care Priorities */}
       {guideData.care_priorities && guideData.care_priorities.length > 0 && (
         <motion.div initial={{opacity:0,y:10}} animate={{opacity:1,y:0}}
-          className="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
-          <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+          className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-5 shadow-sm">
+          <h3 className="font-bold text-[var(--text-900)] mb-3 flex items-center gap-2">
             <Target size={18} className="text-teal-600"/> Priority Focus Areas
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -185,7 +185,7 @@ export default function AdaptiveCareGuide() {
       {/* Guide Sections */}
       {sortedProtocols.length > 0 ? (
         <div className="space-y-4">
-          <h2 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+          <h2 className="font-bold text-[var(--text-900)] text-lg flex items-center gap-2">
             <Sparkles size={18} className="text-purple-600"/> Disease-Specific Protocols
           </h2>
           {sortedProtocols.map((protocol, idx) => {
@@ -211,7 +211,7 @@ export default function AdaptiveCareGuide() {
                   {isExpanded && (
                     <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}}>
                       <div className="px-6 py-5 bg-slate-50">
-                        <div className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed">
+                        <div className="text-sm text-[var(--text-800)] whitespace-pre-wrap leading-relaxed">
                           {(protocol.content || '').split('\n').map((line, li) => {
                             const boldFormatted = line.split(/(\*\*[^*]+\*\*)/).map((part, pi) =>
                               part.startsWith('**') && part.endsWith('**')
@@ -230,10 +230,10 @@ export default function AdaptiveCareGuide() {
           })}
         </div>
       ) : (
-        <div className="text-center py-12 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300">
+        <div className="text-center py-12 bg-[var(--card-bg)] rounded-2xl border-2 border-dashed border-slate-300">
           <BookOpen size={48} className="mx-auto mb-4 text-slate-300"/>
-          <p className="text-slate-600 font-semibold">No specific protocols found for this diagnosis.</p>
-          <p className="text-sm text-slate-400 mt-2">Use the general Care Guide or generate a full care plan.</p>
+          <p className="text-[var(--text-600)] font-semibold">No specific protocols found for this diagnosis.</p>
+          <p className="text-sm text-[var(--text-400)] mt-2">Use the general Care Guide or generate a full care plan.</p>
           <div className="flex gap-3 justify-center mt-4">
             <button onClick={() => navigate('/care-guide')}
               className="px-4 py-2 bg-slate-600 text-white rounded-xl font-bold text-sm hover:bg-slate-700">
@@ -254,7 +254,7 @@ export default function AdaptiveCareGuide() {
           <h3 className="font-bold text-red-900 mb-3 flex items-center gap-2"><Phone size={18}/>Emergency Contacts</h3>
           <div className="space-y-2">
             {guideData.emergency_contacts.map((contact, i) => (
-              <div key={i} className="bg-slate-50 px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
+              <div key={i} className="bg-[var(--card-bg)] px-4 py-2.5 rounded-xl border-2 border-red-200 text-sm font-semibold text-slate-900">
                 {contact}
               </div>
             ))}
@@ -263,7 +263,7 @@ export default function AdaptiveCareGuide() {
       )}
 
       {/* Footer */}
-      <div className="text-center text-xs text-slate-400 bg-slate-50 rounded-xl p-3">
+      <div className="text-center text-xs text-[var(--text-400)] bg-[var(--card-bg)] rounded-xl p-3">
         This guide is AI-personalised for <strong>{guideData.patient_name}</strong> based on their diagnosis
         (<strong>{(guideData.disease_profile || '').replace(/_/g,' ')}</strong>) and assessment data.
       </div>

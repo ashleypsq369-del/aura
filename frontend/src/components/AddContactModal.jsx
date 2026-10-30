@@ -72,7 +72,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
     >
 
         {/* Search */}
-        <div className="px-6 py-4 border-b border-slate-100 flex-shrink-0">
+        <div className="px-6 py-4 border-b border-[var(--card-border)]/50 flex-shrink-0">
           <div className="search-wrap">
             <span className="search-icon"><Search size={16} /></span>
             <input
@@ -86,7 +86,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
             {searching && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-teal-500 animate-spin pointer-events-none" />}
           </div>
           {searchQuery.length === 1 && (
-            <p className="text-xs text-slate-400 mt-1.5 ml-1">Type at least 2 characters</p>
+            <p className="text-xs text-[var(--text-400)] mt-1.5 ml-1">Type at least 2 characters</p>
           )}
         </div>
 
@@ -113,7 +113,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
             </div>
           ) : (
             <div className="space-y-2">
-              <p className="text-xs font-bold text-slate-400  mb-3">
+              <p className="text-xs font-bold text-[var(--text-400)]  mb-3">
                 {users.length} result{users.length !== 1 ? 's' : ''}
               </p>
               {users.map((user, i) => {
@@ -127,8 +127,8 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
                     transition={{ delay: i * 0.04 }}
                     className={`flex items-center gap-3.5 p-3.5 rounded-xl border transition-all ${
                       user.is_contact
-                        ? 'bg-slate-50 border-slate-200 opacity-70'
-                        : 'bg-slate-50 border-slate-200 hover:border-teal-300 hover:shadow-sm'
+                        ? 'bg-[var(--card-bg)] border-[var(--card-border)] opacity-70'
+                        : 'bg-[var(--card-bg)] border-[var(--card-border)] hover:border-teal-300 hover:shadow-sm'
                     }`}
                   >
                     {/* Avatar */}
@@ -138,7 +138,7 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm truncate">{user.name}</p>
+                      <p className="font-semibold text-[var(--text-900)] text-sm truncate">{user.name}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${roleColor}`}>
                           {user.role}
@@ -173,10 +173,10 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between flex-shrink-0">
+        <div className="px-6 py-3.5 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 flex items-center justify-between flex-shrink-0">
           <p className="text-xs text-slate-400">Added contacts appear in your Messages tab</p>
           <button onClick={handleClose}
-            className="text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
+            className="text-xs font-semibold text-[var(--text-500)] hover:text-[var(--text-800)] transition">
             Close
           </button>
         </div>

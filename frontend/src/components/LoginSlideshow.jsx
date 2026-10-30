@@ -142,7 +142,7 @@ export default function LoginSlideshow() {
  {/* Header branding */}
  <div className="absolute top-0 left-0 right-0 p-6 z-20">
  <div className="flex items-center gap-3">
- <div className="w-9 h-9 bg-slate-50 rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
+ <div className="w-9 h-9 bg-[var(--card-bg)] rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
  <img src="/logo.png" alt="Project Aura" className="w-8 h-8 object-contain" />
  </div>
  <div>

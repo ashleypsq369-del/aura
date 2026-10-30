@@ -115,7 +115,7 @@ export default function TaskNudge() {
  transition={{ type: 'spring', damping: 22, stiffness: 300 }}
  className="fixed bottom-24 right-5 z-[9000] w-72 pointer-events-auto"
  >
- <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+ <div className="bg-[var(--card-bg)] rounded-2xl shadow-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden"
  style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)' }}>
 
  {/* Accent top bar */}
@@ -129,16 +129,16 @@ export default function TaskNudge() {
  <AlertCircle size={15} className="text-amber-600 dark:text-amber-400"/>
  </div>
  <div>
- <p className="text-[11px] font-bold text-slate-800 dark:text-slate-100 leading-tight">
+ <p className="text-[11px] font-bold text-[var(--text-800)] leading-tight">
  Hey {firstName} 👋
  </p>
- <p className="text-[10px] text-slate-500 dark:text-slate-400">
+ <p className="text-[10px] text-[var(--text-500)] dark:text-slate-400">
  Today's care tasks
  </p>
  </div>
  </div>
  <button onClick={handleDismiss}
- className="text-slate-300 hover:text-slate-500 dark:hover:text-slate-200 transition-colors mt-0.5 flex-shrink-0">
+ className="text-slate-300 hover:text-[var(--text-500)] dark:hover:text-slate-200 transition-colors mt-0.5 flex-shrink-0">
  <X size={14}/>
  </button>
  </div>
@@ -163,10 +163,10 @@ export default function TaskNudge() {
  </text>
  </svg>
  <div className="flex-1 min-w-0">
- <p className="text-xs font-semibold text-slate-800 leading-snug">
+ <p className="text-xs font-semibold text-[var(--text-800)] leading-snug">
  {message}
  </p>
- <p className="text-[10px] text-slate-500 mt-0.5">
+ <p className="text-[10px] text-[var(--text-500)] mt-0.5">
  {reqDone} of {reqTotal} required done
  </p>
  </div>
@@ -181,7 +181,7 @@ export default function TaskNudge() {
  </div>
  ))}
  {pendingTasks.length > 3 && (
- <p className="text-[10px] text-slate-500 pl-2">+{pendingTasks.length - 3} more tasks</p>
+ <p className="text-[10px] text-[var(--text-500)] pl-2">+{pendingTasks.length - 3} more tasks</p>
  )}
  </div>
 
@@ -192,7 +192,7 @@ export default function TaskNudge() {
  View My Tasks <ArrowRight size={11}/>
  </button>
  <button onClick={handleDismiss}
- className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+ className="px-3 py-2 rounded-xl border border-[var(--card-border)] dark:border-slate-600 text-[var(--text-500)] dark:text-[var(--text-400)] text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors">
  Later
  </button>
  </div>

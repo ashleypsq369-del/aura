@@ -59,7 +59,7 @@ function ScoreButton({ value, selected, color, onClick }) {
  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-bold border-2 transition-all flex-shrink-0 ${
  selected
  ? `${c.bg} text-white border-transparent shadow-md scale-110`
- : `bg-slate-50 ${c.text} ${c.border} hover:opacity-80`
+ : `bg-[var(--card-bg)] ${c.text} ${c.border} hover:opacity-80`
  }`}
  >
  {value}
@@ -164,13 +164,13 @@ export default function WellnessCheckin() {
  <motion.div
  initial={{ scale: 0.9, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="bg-slate-50 rounded-lg shadow-sm p-10 max-w-md w-full text-center border-2 border-emerald-200"
+ className="bg-[var(--card-bg)] rounded-lg shadow-sm p-10 max-w-md w-full text-center border-2 border-emerald-200"
  >
  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring' }}>
  <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
  </motion.div>
- <h2 className="text-base font-bold text-slate-900 mb-2">Check-in Recorded</h2>
- <p className="text-slate-600 mb-4">{msg}</p>
+ <h2 className="text-base font-bold text-[var(--text-900)] mb-2">Check-in Recorded</h2>
+ <p className="text-[var(--text-600)] mb-4">{msg}</p>
 
  {/* Today's score */}
  <div className="bg-emerald-50 rounded-xl p-4 mb-3 border border-emerald-100">
@@ -189,11 +189,11 @@ export default function WellnessCheckin() {
  <div className={`rounded-xl p-3 mb-4 border flex items-center gap-3 ${
  improved ? 'bg-green-50 border-green-200' :
  worsened ? 'bg-red-50 border-red-200' :
- 'bg-slate-50 border-slate-200'
+ 'bg-[var(--card-bg)] border-slate-200'
  }`}>
  {improved ? <TrendingDown size={18} className="text-green-600 flex-shrink-0" /> :
  worsened ? <TrendingUp size={18} className="text-red-600 flex-shrink-0" /> :
- <Minus size={18} className="text-slate-500 flex-shrink-0" />}
+ <Minus size={18} className="text-[var(--text-500)] flex-shrink-0" />}
  <div className="text-left">
  <p className={`text-xs font-bold ${improved ? 'text-green-700' : worsened ? 'text-red-700' : 'text-slate-600'}`}>
  {improved ? `Improved by ${Math.abs(delta).toFixed(1)} points` :
@@ -214,7 +214,7 @@ export default function WellnessCheckin() {
  high: { label: 'Worth keeping an eye on', color: 'bg-amber-50 border-amber-200', text: 'text-amber-800', dot: 'bg-amber-500', emoji: '🟡' },
  moderate: { label: 'Managing reasonably well', color: 'bg-blue-50 border-blue-200', text: 'text-blue-800', dot: 'bg-teal-400', emoji: '🔵' },
  low: { label: 'Feeling quite well today', color: 'bg-emerald-50 border-emerald-200', text: 'text-emerald-800', dot: 'bg-emerald-500', emoji: '🟢' },
- }[mlRisk.overall_level] || { label: 'Check-in recorded', color: 'bg-slate-50 border-slate-200', text: 'text-slate-700', dot: 'bg-slate-400', emoji: '⚪' };
+ }[mlRisk.overall_level] || { label: 'Check-in recorded', color: 'bg-[var(--card-bg)] border-slate-200', text: 'text-slate-700', dot: 'bg-slate-400', emoji: '⚪' };
 
  const actions = (mlRisk.recommended_actions || []).slice(0, 2);
 
@@ -236,7 +236,7 @@ export default function WellnessCheckin() {
  ))}
  </ul>
  )}
- <p className="text-[10px] text-slate-400 mt-2">🧠 Powered by AI health analysis · shared with your care team</p>
+ <p className="text-[10px] text-[var(--text-400)] mt-2">🧠 Powered by AI health analysis · shared with your care team</p>
  </div>
  );
  })()}
@@ -251,7 +251,7 @@ export default function WellnessCheckin() {
  </button>
  <button
  onClick={() => { setSubmitted(false); setScores(Object.fromEntries(ITEMS.map(i => [i.key, null]))); setNotes(''); }}
- className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition"
+ className="flex-1 px-4 py-3 border-2 border-slate-300 text-[var(--text-700)] font-semibold rounded-xl hover:bg-[var(--card-bg)] transition"
  >
  Log Again
  </button>
@@ -283,10 +283,10 @@ export default function WellnessCheckin() {
  if (!isEligible) {
  return (
  <div className="min-h-full flex items-center justify-center p-6">
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm p-10 max-w-md text-center">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-10 max-w-md text-center">
  <Heart className="w-12 h-12 text-teal-500 mx-auto mb-4" />
- <h2 className="text-base font-bold text-slate-900 mb-2">Patient Check-In Only</h2>
- <p className="text-slate-500 text-sm mb-6 leading-relaxed">
+ <h2 className="text-base font-bold text-[var(--text-900)] mb-2">Patient Check-In Only</h2>
+ <p className="text-[var(--text-500)] text-sm mb-6 leading-relaxed">
  The Daily Wellness Check-In is for patients to report their own symptoms.
  {user?.role === 'family' && ' As a family member, you can view your loved one\'s check-ins through the Continuity Bridge.'}
  </p>
@@ -334,14 +334,14 @@ export default function WellnessCheckin() {
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.04 }}
- className={`bg-slate-50 rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
+ className={`bg-[var(--card-bg)] rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
  >
  <div className="flex items-center gap-3 mb-3">
  <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
  <Icon size={18} className="text-white" strokeWidth={2.5} />
  </div>
  <div className="flex-1">
- <p className="font-bold text-slate-900 text-sm">{item.label}</p>
+ <p className="font-bold text-[var(--text-900)] text-sm">{item.label}</p>
  <p className="text-xs text-slate-500">{item.desc}</p>
  </div>
  {val !== null && (
@@ -362,8 +362,8 @@ export default function WellnessCheckin() {
  </div>
 
  <div className="flex justify-between mt-1.5 px-1">
- <span className="text-[10px] text-slate-400 font-medium">0 - None</span>
- <span className="text-[10px] text-slate-400 font-medium">10 - Worst</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">0 - None</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">10 - Worst</span>
  </div>
  </motion.div>
  );
@@ -374,10 +374,10 @@ export default function WellnessCheckin() {
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: ITEMS.length * 0.04 }}
- className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-5 shadow-sm"
+ className="bg-[var(--card-bg)] rounded-2xl border-2 border-[var(--card-border)] p-5 shadow-sm"
  >
- <label className="block text-sm font-bold text-slate-900 mb-2">
- Anything else to share? <span className="text-slate-400 font-normal">(optional)</span>
+ <label className="block text-sm font-bold text-[var(--text-900)] mb-2">
+ Anything else to share? <span className="text-[var(--text-400)] font-normal">(optional)</span>
  </label>
  <textarea
  value={notes}
@@ -385,9 +385,9 @@ export default function WellnessCheckin() {
  rows={3}
  maxLength={500}
  placeholder="Any concerns, changes, or messages for your care team..."
- className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition resize-none"
+ className="w-full px-3 py-2.5 border border-[var(--card-border)] rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition resize-none"
  />
- <p className="text-xs text-slate-400 text-right mt-1">{notes.length}/500</p>
+ <p className="text-xs text-[var(--text-400)] text-right mt-1">{notes.length}/500</p>
  </motion.div>
 
  {/* Submit */}

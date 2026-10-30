@@ -170,19 +170,19 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
             <Dumbbell className="w-6 h-6 mr-2 text-orange-600" />
             Grip Strength Test
           </h3>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-[var(--text-600)] mb-4">
             Measured in kilograms using a hand dynamometer
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Right Hand (kg)
               </label>
               <input
@@ -195,7 +195,7 @@ export default function MotorSkillsForm() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Left Hand (kg)
               </label>
               <input
@@ -210,7 +210,7 @@ export default function MotorSkillsForm() {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
               Interpretation
             </label>
             <select
@@ -231,19 +231,19 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
             <Timer className="w-6 h-6 mr-2 text-orange-600" />
             Timed Up & Go Test (TUG)
           </h3>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-[var(--text-600)] mb-4">
             Time taken to stand from chair, walk 3 meters, turn, walk back, and sit down
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Time (seconds)
               </label>
               <input
@@ -258,13 +258,13 @@ export default function MotorSkillsForm() {
                 className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
               />
               {tugTime && (
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[var(--text-500)] mt-1">
                   =10s: Low risk | 10-14s: Moderate | &gt;14s: High risk
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Assistance Used
               </label>
               <select
@@ -302,19 +302,19 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
             <Activity className="w-6 h-6 mr-2 text-orange-600" />
             6-Minute Walk Test (6MWT)
           </h3>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-[var(--text-600)] mb-4">
             Distance walked in 6 minutes with vitals monitoring
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Distance Walked (meters)
               </label>
               <input
@@ -326,14 +326,14 @@ export default function MotorSkillsForm() {
                 className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
               />
               {walkDistance && (
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-[var(--text-500)] mt-1">
                   Normal: 400-700m | Moderate impairment: 300-400m | Severe: &lt;300m
                 </p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Dyspnea Before (0-10)
               </label>
               <input
@@ -348,7 +348,7 @@ export default function MotorSkillsForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Dyspnea After (0-10)
               </label>
               <input
@@ -363,7 +363,7 @@ export default function MotorSkillsForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 O2 Saturation Before (%)
               </label>
               <input
@@ -378,7 +378,7 @@ export default function MotorSkillsForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 O2 Saturation After (%)
               </label>
               <input
@@ -406,15 +406,15 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-4">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4">
             Balance & Coordination
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Balance Score (0-10)
               </label>
               <input
@@ -426,13 +426,13 @@ export default function MotorSkillsForm() {
                 placeholder="0-10"
                 className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
               />
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[var(--text-500)] mt-1">
                 0 = Unable to stand | 10 = Perfect balance
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Coordination Score (0-10)
               </label>
               <input
@@ -444,7 +444,7 @@ export default function MotorSkillsForm() {
                 placeholder="0-10"
                 className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
               />
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-[var(--text-500)] mt-1">
                 0 = No coordination | 10 = Perfect coordination
               </p>
             </div>
@@ -455,9 +455,9 @@ export default function MotorSkillsForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           <textarea
@@ -505,7 +505,7 @@ export default function MotorSkillsForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>

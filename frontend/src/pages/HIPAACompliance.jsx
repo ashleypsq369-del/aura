@@ -25,12 +25,12 @@ const SEV_CFG = {
  critical: 'bg-red-100 text-red-700 border-red-200',
  high: 'bg-orange-100 text-orange-700 border-orange-200',
  medium: 'bg-amber-100 text-amber-700 border-amber-200',
- low: 'bg-slate-100 text-slate-600 border-slate-200',
+ low: 'bg-slate-100 text-[var(--text-600)] border-slate-200',
 };
 
 function KpiCard({ label, value, icon: Icon, color }) {
  return (
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm px-4 py-3 flex items-center gap-3">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm px-4 py-3 flex items-center gap-3">
  <Icon size={18} className={color}/>
  <div><p className="text-xs text-slate-500">{label}</p><p className={`text-2xl font-bold ${color}`}>{value ?? ' - '}</p></div>
  </div>
@@ -61,7 +61,7 @@ function IncidentRow({ incident, onUpdate }) {
  const overdue = daysLeft < 0;
 
  return (
- <div className={`border rounded-xl overflow-hidden ${incident.is_resolved ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-slate-50'}`}>
+ <div className={`border rounded-xl overflow-hidden ${incident.is_resolved ? 'border-emerald-200 bg-emerald-50/30' : 'border-[var(--card-border)] bg-slate-50'}`}>
  <div className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-slate-50/50 transition" onClick={() => setOpen(!open)}>
  <div className={`w-2 h-8 rounded-full flex-shrink-0 ${SEV_CFG[incident.severity]?.split(' ')[0] || 'bg-slate-300'}`}/>
  <div className="flex-1 min-w-0">
@@ -70,22 +70,22 @@ function IncidentRow({ incident, onUpdate }) {
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border capitalize ${SEV_CFG[incident.severity]}`}>{incident.severity}</span>
  {incident.is_resolved && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">Resolved</span>}
  {!incident.is_resolved && (
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${overdue ? 'bg-red-100 text-red-700 border-red-200' : daysLeft < 7 ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+ <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${overdue ? 'bg-red-100 text-red-700 border-red-200' : daysLeft < 7 ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-slate-100 text-[var(--text-600)] border-slate-200'}`}>
  {overdue ? `${Math.abs(daysLeft)}d OVERDUE` : `${daysLeft}d to HHS deadline`}
  </span>
  )}
  </div>
- <p className="text-xs text-slate-500 mt-0.5">{incident.affected_count} records · Discovered {discovered.toLocaleDateString('en-GB')}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">{incident.affected_count} records · Discovered {discovered.toLocaleDateString('en-GB')}</p>
  </div>
  {open ? <ChevronUp size={14} className="text-slate-400"/> : <ChevronDown size={14} className="text-slate-400"/>}
  </div>
  <AnimatePresence>
  {open && (
  <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
- className="border-t border-slate-200 px-4 py-4 space-y-3 bg-slate-50">
- {incident.description && <p className="text-sm text-slate-700 bg-slate-50 rounded-lg p-3">{incident.description}</p>}
+ className="border-t border-[var(--card-border)] px-4 py-4 space-y-3 bg-slate-50">
+ {incident.description && <p className="text-sm text-[var(--text-700)] bg-[var(--card-bg)] rounded-lg p-3">{incident.description}</p>}
  <div>
- <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Resolution Notes</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] uppercase mb-1">Resolution Notes</label>
  <textarea rows={3} value={form.resolution_notes} onChange={e => setForm(f => ({ ...f, resolution_notes: e.target.value }))}
  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm resize-none focus:border-teal-500 outline-none"/>
  </div>
@@ -178,7 +178,7 @@ export default function HIPAACompliance() {
  <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
  {TABS.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => setTab(id)}
- className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${tab===id ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-white/60'}`}>
+ className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${tab===id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-white/60'}`}>
  <Icon size={14}/>{label}
  </button>
  ))}
@@ -195,16 +195,16 @@ export default function HIPAACompliance() {
  </div>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {/* Score ring card */}
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col items-center justify-center gap-3">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-6 flex flex-col items-center justify-center gap-3">
  <ScoreRing score={score}/>
  <p className="text-sm font-bold text-slate-700">Overall Compliance</p>
- <div className="text-xs text-slate-500 text-center">
+ <div className="text-xs text-[var(--text-500)] text-center">
  Next review: {compliance?.next_review_date ? new Date(compliance.next_review_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : ' - '}
  </div>
  </div>
  {/* Live metrics */}
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
- <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><Users size={15} className="text-teal-600"/> Live System Metrics</h3>
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-5 space-y-3">
+ <h3 className="text-sm font-bold text-[var(--text-800)] flex items-center gap-2"><Users size={15} className="text-teal-600"/> Live System Metrics</h3>
  {[
  ['Total Users', compliance?.live_metrics?.total_users],
  ['Active Users', compliance?.live_metrics?.active_users],
@@ -219,8 +219,8 @@ export default function HIPAACompliance() {
  ))}
  </div>
  {/* Breach summary */}
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3">
- <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2"><AlertTriangle size={15} className="text-red-500"/> Breach Incidents</h3>
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-5 space-y-3">
+ <h3 className="text-sm font-bold text-[var(--text-800)] flex items-center gap-2"><AlertTriangle size={15} className="text-red-500"/> Breach Incidents</h3>
  {breachStats ? [
  ['Total', breachStats.total_incidents, 'text-slate-800'],
  ['Resolved', breachStats.resolved, 'text-emerald-600'],
@@ -232,7 +232,7 @@ export default function HIPAACompliance() {
  <span className="text-slate-600">{label}</span>
  <span className={`font-bold ${color}`}>{val}</span>
  </div>
- )) : <p className="text-slate-400 text-xs">No data</p>}
+ )) : <p className="text-[var(--text-400)] text-xs">No data</p>}
  </div>
  </div>
  </div>
@@ -244,28 +244,28 @@ export default function HIPAACompliance() {
  <div className="flex flex-wrap gap-2">
  {categories.map(cat => (
  <button key={cat} onClick={() => setCatFilter(cat)}
- className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${catFilter===cat ? 'bg-teal-600 text-white border-teal-600' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-teal-400'}`}>
+ className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${catFilter===cat ? 'bg-teal-600 text-white border-teal-600' : 'bg-[var(--card-bg)] text-[var(--text-600)] border-[var(--card-border)] hover:border-teal-400'}`}>
  {cat === 'all' ? 'All Categories' : cat}
  </button>
  ))}
  </div>
- <div className="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  {filtered.map((item, i) => {
  const cfg = STATUS_CFG[item.status] || STATUS_CFG.partial;
  const Icon = cfg.icon;
  return (
  <motion.div key={item.id} initial={{ opacity:0, x:-8 }} animate={{ opacity:1, x:0 }} transition={{ delay: i * 0.03 }}
- className="flex items-start gap-4 px-5 py-4 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition">
+ className="flex items-start gap-4 px-5 py-4 border-b border-[var(--card-border)]/50 last:border-0 hover:bg-[var(--card-bg)] transition">
  <Icon size={20} className={`${cfg.cls} flex-shrink-0 mt-0.5`}/>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
  <h3 className="text-sm font-semibold text-slate-900">{item.requirement}</h3>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase ${cfg.badge}`}>{cfg.label}</span>
- <span className="text-[10px] text-slate-400 font-medium">{item.category}</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">{item.category}</span>
  </div>
- <p className="text-xs text-slate-600 leading-relaxed">{item.notes}</p>
+ <p className="text-xs text-[var(--text-600)] leading-relaxed">{item.notes}</p>
  </div>
- <span className="text-[10px] text-slate-400 font-mono flex-shrink-0">#{item.id}</span>
+ <span className="text-[10px] text-[var(--text-400)] font-mono flex-shrink-0">#{item.id}</span>
  </motion.div>
  );
  })}
@@ -296,18 +296,18 @@ export default function HIPAACompliance() {
  onChange={v => setBreachForm(f => ({ ...f, severity: v||'medium' }))}
  options={['low','medium','high','critical'].map(v => ({ value:v, label:v.charAt(0).toUpperCase()+v.slice(1) }))}/>
  <div>
- <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Affected Records</label>
+ <label className="block text-xs font-bold text-[var(--text-600)] uppercase mb-1">Affected Records</label>
  <input type="number" min="0" value={breachForm.affected_count} onChange={e => setBreachForm(f => ({ ...f, affected_count: e.target.value }))}
  className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:border-red-500 outline-none"/>
  </div>
  <div>
- <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Discovery Date & Time</label>
+ <label className="block text-xs font-bold text-[var(--text-600)] uppercase mb-1">Discovery Date & Time</label>
  <input type="datetime-local" value={breachForm.discovered_at} onChange={e => setBreachForm(f => ({ ...f, discovered_at: e.target.value }))}
  className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:border-red-500 outline-none"/>
  </div>
  </div>
  <div>
- <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Description *</label>
+ <label className="block text-xs font-bold text-[var(--text-600)] uppercase mb-1">Description *</label>
  <textarea rows={4} value={breachForm.description} onChange={e => setBreachForm(f => ({ ...f, description: e.target.value }))}
  placeholder="Describe what happened, how discovered, what data was affected, and immediate actions taken..."
  className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm resize-none focus:border-red-500 outline-none"/>
@@ -317,15 +317,15 @@ export default function HIPAACompliance() {
  className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center gap-2">
  {createBreachMutation.isPending ? <Loader2 size={14} className="animate-spin"/> : <FileText size={14}/>} Log Incident
  </button>
- <button onClick={() => setShowBreachForm(false)} className="px-4 py-2 border border-slate-300 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition">Cancel</button>
+ <button onClick={() => setShowBreachForm(false)} className="px-4 py-2 border border-slate-300 text-[var(--text-700)] rounded-xl text-sm font-semibold hover:bg-[var(--card-bg)] transition">Cancel</button>
  </div>
  </motion.div>
  )}
  </AnimatePresence>
  {incidents.length === 0 ? (
- <div className="bg-slate-50 rounded-2xl border border-slate-200 p-12 text-center">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-12 text-center">
  <Shield size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="text-slate-600 font-semibold">No breach incidents recorded</p>
+ <p className="text-[var(--text-600)] font-semibold">No breach incidents recorded</p>
  </div>
  ) : (
  <div className="space-y-2">
@@ -338,12 +338,12 @@ export default function HIPAACompliance() {
  {/* DATA EXPORT TAB */}
  {tab === 'export' && isPatient && (
  <div className="space-y-4">
- <div className="bg-slate-50 rounded-2xl border border-teal-200 shadow-sm p-6">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-teal-200 shadow-sm p-6">
  <div className="flex items-start gap-4">
  <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0"><Lock size={24} className="text-teal-600"/></div>
  <div className="flex-1">
- <h3 className="text-base font-bold text-slate-900 mb-1">HIPAA Right of Access</h3>
- <p className="text-sm text-slate-600 leading-relaxed mb-3">Under HIPAA (45 CFR §164.524), you have the right to access and receive a copy of all your health information held by this system. This includes vitals, medications, assessments, AI predictions, and clinical notes.</p>
+ <h3 className="text-base font-bold text-[var(--text-900)] mb-1">HIPAA Right of Access</h3>
+ <p className="text-sm text-[var(--text-600)] leading-relaxed mb-3">Under HIPAA (45 CFR §164.524), you have the right to access and receive a copy of all your health information held by this system. This includes vitals, medications, assessments, AI predictions, and clinical notes.</p>
  <button onClick={exportData} className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition shadow-sm">
  <Download size={15}/> Download My Complete Health Record
  </button>
@@ -356,10 +356,10 @@ export default function HIPAACompliance() {
  </div>
  )}
  {tab === 'export' && !isPatient && (
- <div className="bg-slate-50 rounded-2xl border border-slate-200 p-12 text-center">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-12 text-center">
  <Shield size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="text-slate-600 font-semibold">Data Export for Patients</p>
- <p className="text-slate-400 text-sm mt-1">This feature allows patients to download their complete health record. Clinicians and admins access data through Reports.</p>
+ <p className="text-[var(--text-600)] font-semibold">Data Export for Patients</p>
+ <p className="text-[var(--text-400)] text-sm mt-1">This feature allows patients to download their complete health record. Clinicians and admins access data through Reports.</p>
  </div>
  )}
  </div>

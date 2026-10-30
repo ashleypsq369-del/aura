@@ -81,7 +81,7 @@ export default function SymptomsDetail() {
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
  <button onClick={() => navigate(-1)}
- className="flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mt-4 mb-2 group">
+ className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mt-4 mb-2 group">
  <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" /> Back
  </button>
 
@@ -107,14 +107,14 @@ export default function SymptomsDetail() {
  { label: 'Last 7 Days', value: symptoms.filter(s => (Date.now() - new Date(s.recorded_at)) < 7*86400000).length, icon: Activity, color: '#1d4ed8' },
  ].map(({ label, value, icon: Icon, color }, i) => (
  <motion.div key={label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
  <div className="flex items-center gap-2 mb-2">
  <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
  <Icon size={15} style={{ color }} />
  </div>
- <p className="text-xs font-bold text-slate-500 ">{label}</p>
+ <p className="text-xs font-bold text-[var(--text-500)] ">{label}</p>
  </div>
- <p className="text-2xl font-bold text-slate-900 tabular-nums">{value}</p>
+ <p className="text-2xl font-bold text-[var(--text-900)] tabular-nums">{value}</p>
  </motion.div>
  ))}
  </div>
@@ -123,7 +123,7 @@ export default function SymptomsDetail() {
  {chartData.length > 1 && (
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
  className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
- <div className="lg:col-span-2 bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+ <div className="lg:col-span-2 bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden">
  <div className="px-5 py-4 border-b border-slate-200">
  <h2 className="text-sm font-bold text-slate-900">Pain Level Trend</h2>
  </div>
@@ -140,7 +140,7 @@ export default function SymptomsDetail() {
  </div>
  </div>
 
- <div className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden">
  <div className="px-5 py-4 border-b border-slate-200">
  <h2 className="text-sm font-bold text-slate-900">Symptom Frequency</h2>
  </div>
@@ -161,18 +161,18 @@ export default function SymptomsDetail() {
 
  {/* History table */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
- className="bg-slate-50 rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
  <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
  <h2 className="text-base font-bold text-slate-900">Symptom History</h2>
- <p className="text-slate-500 text-sm">Complete log of patient-reported symptoms</p>
+ <p className="text-[var(--text-500)] text-sm">Complete log of patient-reported symptoms</p>
  </div>
 
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
  {['Date & Time','Pain Level','Symptoms','Severity','Notes','AI Explain'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">{h}</th>
+ <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
  </tr>
  </thead>
@@ -186,8 +186,8 @@ export default function SymptomsDetail() {
  s.dyspnea && 'Dyspnea',
  ].filter(Boolean);
  return (
- <tr key={s.id} className="hover:bg-slate-50 transition-colors h-[52px]">
- <td className="py-3 px-4 text-sm font-medium text-slate-900 dark:text-white">
+ <tr key={s.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
+ <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)] dark:text-white">
  {new Date(s.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </td>
  <td className="py-3 px-4">
@@ -206,7 +206,7 @@ export default function SymptomsDetail() {
  <td className="py-3 px-4">
  <span className={sev.cls}>{sev.label}</span>
  </td>
- <td className="py-3 px-4 text-xs text-slate-500 max-w-[160px] truncate">{s.notes || '--'}</td>
+ <td className="py-3 px-4 text-xs text-[var(--text-500)] max-w-[160px] truncate">{s.notes || '--'}</td>
  <td className="py-3 px-4">
  {(s.pain_level ?? 0) >= 7 && (
  <button onClick={() => explainSymptom('pain', s.pain_level)} disabled={loadingAI}
@@ -223,8 +223,8 @@ export default function SymptomsDetail() {
  {symptoms.length === 0 && (
  <div className="py-12 text-center">
  <AlertCircle className="w-12 h-12 mx-auto mb-3 text-slate-300" />
- <p className="text-slate-500 font-medium">No symptoms recorded</p>
- <p className="text-sm text-slate-400 mt-1">Symptom tracking helps monitor patient wellbeing</p>
+ <p className="text-[var(--text-500)] font-medium">No symptoms recorded</p>
+ <p className="text-sm text-[var(--text-400)] mt-1">Symptom tracking helps monitor patient wellbeing</p>
  </div>
  )}
  </div>

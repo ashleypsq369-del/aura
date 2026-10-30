@@ -147,7 +147,7 @@ export default function LegacySetup() {
     }
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">No Patient Linked</h2>
           <p className="text-gray-600 mb-4">
@@ -228,7 +228,7 @@ export default function LegacySetup() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-slate-50 rounded-lg border border-slate-200 p-8 shadow-lg space-y-6"
+          className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-8 shadow-lg space-y-6"
         >
           <h2 className="text-base font-semibold" className="text-purple-700">
             Consent & Permissions
@@ -265,7 +265,7 @@ export default function LegacySetup() {
                 </p>
 
                 <div className="space-y-3">
-                  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
                     <div>
                       <p className="font-medium text-gray-900">Memory Vault</p>
                       <p className="text-sm text-gray-600">Stories, photos, and memories you've preserved</p>
@@ -279,7 +279,7 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
                     <div>
                       <p className="font-medium text-gray-900">Photos & Media</p>
                       <p className="text-sm text-gray-600">Photo collections and media files</p>
@@ -293,7 +293,7 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
                     <div>
                       <p className="font-medium text-gray-900">Messages</p>
                       <p className="text-sm text-gray-600">Message history and communications</p>
@@ -307,7 +307,7 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
                     <div>
                       <p className="font-medium text-gray-900">Grief Journal</p>
                       <p className="text-sm text-gray-600">Your private journal entries</p>
@@ -321,7 +321,7 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
                     <div>
                       <p className="font-medium text-gray-900">Medical Records</p>
                       <p className="text-sm text-gray-600">Healthcare information and records</p>
@@ -391,7 +391,7 @@ export default function LegacySetup() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-slate-50 rounded-lg border border-slate-200 p-8 shadow-lg"
+            className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-8 shadow-lg"
           >
             <h2 className="text-base font-semibold mb-6" className="text-purple-700">
               Next Steps

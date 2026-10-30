@@ -321,7 +321,7 @@ export default function AuraOnboarding() {
  pointerEvents: 'auto',
  }}
  >
- <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700"
+ <div className="rounded-2xl overflow-hidden border border-[var(--card-border)] dark:border-slate-700"
  style={{
  background: 'var(--card-bg, #e8fafa)',
  boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)',
@@ -426,21 +426,21 @@ export default function AuraOnboarding() {
  <div className="flex-shrink-0 mb-1">
  <AuraMascot size={48} pose={hint.pose} showShadow={false}/>
  </div>
- <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto border border-slate-200 dark:border-slate-600"
+ <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto border border-[var(--card-border)] dark:border-slate-600"
  style={{
  background: 'var(--card-bg, #e8fafa)',
  boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
  }}>
  <div className="flex items-start gap-2">
  <HelpCircle size={12} className="text-teal-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[11px] font-medium text-slate-700 dark:text-slate-200 leading-snug pr-4">{hint.hint}</p>
+ <p className="text-[11px] font-medium text-[var(--text-700)] leading-snug pr-4">{hint.hint}</p>
  </div>
  <button onClick={() => setShowHint(false)}
- className="absolute top-2 right-2 text-slate-300 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 transition-colors pointer-events-auto">
+ className="absolute top-2 right-2 text-slate-300 dark:text-[var(--text-500)] hover:text-[var(--text-500)] dark:hover:text-slate-300 transition-colors pointer-events-auto">
  <X size={10}/>
  </button>
  {/* Tail */}
- <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-slate-50 dark:bg-slate-800 border-r border-b border-slate-200 dark:border-slate-600"/>
+ <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-[var(--card-bg)] border-r border-b border-[var(--card-border)] dark:border-slate-600"/>
  </div>
  </motion.div>
  )}

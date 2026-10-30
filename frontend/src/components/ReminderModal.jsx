@@ -45,7 +45,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition"
+            className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition"
           >
             Cancel
           </button>
@@ -69,7 +69,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Time *
             </label>
             <input
@@ -82,7 +82,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
           </div>
           
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Date (Optional)
             </label>
             <input
@@ -96,7 +96,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Repeat
             </label>
             <select
@@ -112,7 +112,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Remind Before
             </label>
             <select
@@ -132,7 +132,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Notify Via
             </label>
             <select
@@ -148,7 +148,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
               Assigned To
             </label>
             <select
@@ -165,7 +165,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
             Action Required
           </label>
           <div className="flex gap-3">
@@ -181,7 +181,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
                 className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition ${
                   actionRequired === act.id
                     ? 'border-teal-600 bg-teal-50 text-teal-700'
-                    : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300'
+                    : 'border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-500)] hover:border-slate-300'
                 }`}
               >
                 {act.label}
@@ -191,7 +191,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
             Priority
           </label>
           <div className="flex gap-3">
@@ -205,7 +205,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
                   className={`flex-1 py-2 rounded-xl text-sm font-bold border-2 transition ${
                     priority === lower
                       ? 'border-teal-600 bg-teal-50 text-teal-700'
-                      : 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-300'
+                      : 'border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-500)] hover:border-slate-300'
                   }`}
                 >
                   {p}
@@ -216,7 +216,7 @@ export default function ReminderModal({ isOpen, onClose, onSave, itemType, itemN
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+          <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
             Clinical Notes (Optional)
           </label>
           <textarea

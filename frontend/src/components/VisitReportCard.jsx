@@ -30,9 +30,9 @@ function VitalsGrid({ vitals }) {
  return (
  <div className="grid grid-cols-2 gap-2">
  {rows.map(r => (
- <div key={r.label} className="bg-slate-50 dark:bg-slate-700/40 rounded-lg px-3 py-2">
- <div className="text-[10px] text-slate-500 dark:text-slate-400">{r.label}</div>
- <div className="font-semibold text-slate-800 dark:text-white text-sm">
+ <div key={r.label} className="bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-lg px-3 py-2">
+ <div className="text-[10px] text-[var(--text-500)] dark:text-slate-400">{r.label}</div>
+ <div className="font-semibold text-[var(--text-800)] text-sm">
  {r.value} <span className="text-xs font-normal text-slate-400">{r.unit}</span>
  </div>
  </div>
@@ -53,7 +53,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
 
  if (isLoading) {
  return (
- <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 animate-pulse">
+ <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] p-4 animate-pulse">
  <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-2/3 mb-2" />
  <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-1/2" />
  </div>
@@ -66,7 +66,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  const CondIcon = meta.icon;
 
  return (
- <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden">
+ <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] overflow-hidden">
  {/* Header */}
  <div
  className="px-4 py-3 flex items-center justify-between cursor-pointer"
@@ -81,8 +81,8 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  <FileText size={15} />
  </div>
  <div>
- <p className="font-semibold text-slate-800 dark:text-white text-sm">Visit Report</p>
- <p className="text-[11px] text-slate-500 dark:text-slate-400">
+ <p className="font-semibold text-[var(--text-800)] text-sm">Visit Report</p>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-slate-400">
  {visitDate ? new Date(visitDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Completed'}
  {report.nurse_name ? ` · ${report.nurse_name}` : nurseName ? ` · ${nurseName}` : ''}
  </p>
@@ -109,12 +109,12 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  transition={{ duration: 0.25, ease: 'easeInOut' }}
  className="overflow-hidden"
  >
- <div className="p-4 space-y-4 border-t border-slate-100 dark:border-slate-700">
+ <div className="p-4 space-y-4 border-t border-[var(--card-border)]/50 dark:border-slate-700">
  {/* Pain score */}
  {report.pain_score != null && (
  <div className="flex items-center gap-2">
  <Heart size={14} className="text-rose-400" />
- <span className="text-sm text-slate-700 dark:text-slate-200">
+ <span className="text-sm text-[var(--text-700)] dark:text-slate-200">
  Pain score: <strong>{report.pain_score}/10</strong>
  </span>
  </div>
@@ -123,7 +123,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  {/* Vitals */}
  {report.vitals_summary && Object.keys(report.vitals_summary).length > 0 && (
  <div>
- <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Vitals</p>
+ <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] mb-2">Vitals</p>
  <VitalsGrid vitals={report.vitals_summary} />
  </div>
  )}
@@ -131,12 +131,12 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  {/* Medications given */}
  {report.medications_given?.length > 0 && (
  <div>
- <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1">
+ <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] mb-1 flex items-center gap-1">
  <Pill size={12} /> Medications Given
  </p>
  <ul className="space-y-1">
  {report.medications_given.map((m, i) => (
- <li key={i} className="text-xs text-slate-600 dark:text-slate-300 flex gap-1">
+ <li key={i} className="text-xs text-[var(--text-600)] flex gap-1">
  <span className="text-teal-600 font-medium">{m.name}</span>
  {m.dose && <span> - {m.dose}</span>}
  {m.route && <span className="text-slate-400">({m.route})</span>}
@@ -149,16 +149,16 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  {/* Nurse notes */}
  {report.nurse_notes && (
  <div>
- <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Nurse Notes</p>
- <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{report.nurse_notes}</p>
+ <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] mb-1">Nurse Notes</p>
+ <p className="text-xs text-[var(--text-600)] leading-relaxed">{report.nurse_notes}</p>
  </div>
  )}
 
  {/* Wound observations */}
  {report.wound_observations && (
  <div>
- <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Wound Observations</p>
- <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{report.wound_observations}</p>
+ <p className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] mb-1">Wound Observations</p>
+ <p className="text-xs text-[var(--text-600)] leading-relaxed">{report.wound_observations}</p>
  </div>
  )}
 
@@ -173,7 +173,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  )}
 
  {report.sent_to_family && (
- <p className="text-[10px] text-slate-400 flex items-center gap-1">
+ <p className="text-[10px] text-[var(--text-400)] flex items-center gap-1">
  <CheckCircle size={10} className="text-teal-500" />
  Report sent to family
  </p>

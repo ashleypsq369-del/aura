@@ -147,7 +147,7 @@ export default function HeirManagement() {
   if (!patientId && !isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Users className="w-16 h-16 mx-auto mb-6" className="text-purple-400" />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             No Patient Linked
@@ -163,7 +163,7 @@ export default function HeirManagement() {
   if (!hasConsent) {
     return (
       <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-slate-50 rounded-lg p-8 max-w-sm text-center border border-slate-200">
+        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" className="text-purple-400" />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Consent Required
@@ -234,7 +234,7 @@ export default function HeirManagement() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-slate-50 rounded-lg border border-slate-200 p-6 shadow-md hover:shadow-lg transition relative group"
+                className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-6 shadow-md hover:shadow-lg transition relative group"
               >
                 {/* Delete Button */}
                 <button
@@ -325,7 +325,7 @@ export default function HeirManagement() {
               <button
                 type="button"
                 onClick={() => { setShowModal(false); resetForm(); }}
-                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-gray-50 transition"
+                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-[var(--card-bg)] transition"
                 style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
               >
                 Cancel
@@ -345,13 +345,13 @@ export default function HeirManagement() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Search User */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
+              <label className="block text-sm font-semibold text-[var(--text-700)] mb-1">
                 Search Person *
               </label>
               <select
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               >
@@ -366,7 +366,7 @@ export default function HeirManagement() {
 
             {/* Relationship */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Relationship *
               </label>
               <input
@@ -374,7 +374,7 @@ export default function HeirManagement() {
                 value={relationship}
                 onChange={(e) => setRelationship(e.target.value)}
                 placeholder="e.g., daughter, son, spouse, best friend, sister..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -382,13 +382,13 @@ export default function HeirManagement() {
 
             {/* Access Level */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Access Level
               </label>
               <select
                 value={accessLevel}
                 onChange={(e) => setAccessLevel(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
               >
                 <option value="full">Full Access - All content and memories</option>
@@ -398,7 +398,7 @@ export default function HeirManagement() {
             </div>
 
             {/* Can Access Private */}
-            <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4">
+            <div className="bg-[var(--card-bg)] rounded-xl p-4">
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -418,7 +418,7 @@ export default function HeirManagement() {
 
             {/* Personal Note */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Personal Message (Optional)
               </label>
               <textarea
@@ -426,7 +426,7 @@ export default function HeirManagement() {
                 onChange={(e) => setPersonalNote(e.target.value)}
                 rows={4}
                 placeholder="A personal message for this person that they'll see when they access your legacy..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:border-slate-600 dark:text-slate-200"
                 style={{ borderColor: '#6B4F7A40' }}
               />
             </div>

@@ -106,7 +106,7 @@ export default function CrisisInterventionOverlay({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-slate-50 rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
+              className="bg-[var(--card-bg)] rounded-2xl shadow-2xl max-w-3xl w-full border-4 border-red-500 my-8"
             >
               {/* Header - Urgent */}
               <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-5 relative">
@@ -165,7 +165,7 @@ export default function CrisisInterventionOverlay({
                   </p>
                   <button
                     onClick={onTalkToHuman}
-                    className="w-full bg-slate-50 text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
+                    className="w-full bg-[var(--card-bg)] text-teal-700 font-bold py-4 rounded-lg hover:bg-teal-50 transition-all flex items-center justify-center gap-3 text-lg shadow-lg border-3 border-white"
                   >
                     <MessageCircle size={24} strokeWidth={2.5} />
                     Connect with Your Care Team
@@ -174,7 +174,7 @@ export default function CrisisInterventionOverlay({
 
                 {/* Emergency Contacts */}
                 <div>
-                  <h4 className="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
+                  <h4 className="font-bold text-[var(--text-900)] text-lg mb-4 flex items-center gap-2">
                     <Phone size={22} />
                     Emergency Contacts (Ghana)
                   </h4>
@@ -216,7 +216,7 @@ export default function CrisisInterventionOverlay({
 
                 {/* Professional Support Resources */}
                 <div>
-                  <h4 className="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                  <h4 className="font-bold text-[var(--text-900)] text-base mb-3 flex items-center gap-2">
                     <Heart size={20} />
                     Professional Support Resources
                   </h4>
@@ -224,13 +224,13 @@ export default function CrisisInterventionOverlay({
                     {supportResources.map((resource, index) => (
                       <div
                         key={index}
-                        className="bg-slate-50 border-2 border-slate-300 rounded-xl p-4"
+                        className="bg-[var(--card-bg)] border-2 border-slate-300 rounded-xl p-4"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h5 className="font-bold text-sm text-slate-900 mb-1">{resource.title}</h5>
-                            <p className="text-xs text-slate-600 mb-1">{resource.description}</p>
-                            <p className="text-xs text-slate-500 italic">{resource.hours}</p>
+                            <h5 className="font-bold text-sm text-[var(--text-900)] mb-1">{resource.title}</h5>
+                            <p className="text-xs text-[var(--text-600)] mb-1">{resource.description}</p>
+                            <p className="text-xs text-[var(--text-500)] italic">{resource.hours}</p>
                           </div>
                           <div className="text-right">
                             <p className="font-bold text-teal-700 text-sm mb-1">{resource.contact}</p>
@@ -250,8 +250,8 @@ export default function CrisisInterventionOverlay({
 
                 {/* International Resources (if needed) */}
                 <div className="bg-slate-100 border-2 border-slate-300 rounded-xl p-4">
-                  <h5 className="font-bold text-slate-900 text-sm mb-2"> International Support</h5>
-                  <p className="text-xs text-slate-700 mb-2">
+                  <h5 className="font-bold text-[var(--text-900)] text-sm mb-2"> International Support</h5>
+                  <p className="text-xs text-[var(--text-700)] mb-2">
                     If you're outside Ghana, find crisis support in your country:
                   </p>
                   <a
@@ -275,19 +275,19 @@ export default function CrisisInterventionOverlay({
               </div>
 
               {/* Footer */}
-              <div className="bg-slate-50 px-6 py-4 border-t-2 border-slate-200 flex items-center justify-between">
-                <p className="text-xs text-slate-600 italic">
+              <div className="bg-[var(--card-bg)] px-6 py-4 border-t-2 border-[var(--card-border)] flex items-center justify-between">
+                <p className="text-xs text-[var(--text-600)] italic">
                    You matter. Help is available.
                 </p>
                 {canClose ? (
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 border-2 border-slate-400 text-slate-700 font-bold rounded-lg hover:bg-slate-100 transition-all text-sm"
+                    className="px-4 py-2 border-2 border-slate-400 text-[var(--text-700)] font-bold rounded-lg hover:bg-slate-100 transition-all text-sm"
                   >
                     Close This Message
                   </button>
                 ) : (
-                  <span className="text-xs text-slate-500 font-bold">
+                  <span className="text-xs text-[var(--text-500)] font-bold">
                     Please read carefully ({secondsRemaining}s remaining)
                   </span>
                 )}

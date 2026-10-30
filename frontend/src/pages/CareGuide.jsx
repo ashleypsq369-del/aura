@@ -700,15 +700,15 @@ function RichText({ content }) {
  i++;
  }
  elements.push(
- <div key={`t${i}`} className="overflow-x-auto my-4 rounded-lg border border-slate-200 shadow-sm">
+ <div key={`t${i}`} className="overflow-x-auto my-4 rounded-lg border border-[var(--card-border)] shadow-sm">
  <table className="min-w-full text-xs">
  <tbody>
  {rows.map((row, ri) => {
  const cells = row.split('|').filter(c => c.trim());
  return (
- <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-slate-50 even:bg-slate-50'}>
+ <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[var(--card-bg)] even:bg-slate-50'}>
  {cells.map((cell, ci) => (
- <td key={ci} className={`px-4 py-2.5 border-b border-slate-100 ${ri === 0 ? 'font-semibold text-slate-800' : 'text-slate-700'}`}>
+ <td key={ci} className={`px-4 py-2.5 border-b border-[var(--card-border)]/50 ${ri === 0 ? 'font-semibold text-slate-800' : 'text-slate-700'}`}>
  {cell.trim()}
  </td>
  ))}
@@ -728,7 +728,7 @@ function RichText({ content }) {
  elements.push(
  <div key={i} className="flex items-start gap-2.5 py-0.5">
  <span className="text-teal-500 font-bold flex-shrink-0 mt-0.5 text-sm">-</span>
- <span className="text-sm text-slate-700 leading-relaxed">{renderInline(line.trim().slice(1).trim())}</span>
+ <span className="text-sm text-[var(--text-700)] leading-relaxed">{renderInline(line.trim().slice(1).trim())}</span>
  </div>
  );
  i++; continue;
@@ -739,14 +739,14 @@ function RichText({ content }) {
  elements.push(
  <div key={i} className="flex items-start gap-2.5 py-0.5">
  <span className="text-teal-600 font-bold flex-shrink-0 min-w-[1.4rem] text-sm mt-0.5">{num[1]}.</span>
- <span className="text-sm text-slate-700 leading-relaxed">{renderInline(num[2])}</span>
+ <span className="text-sm text-[var(--text-700)] leading-relaxed">{renderInline(num[2])}</span>
  </div>
  );
  i++; continue;
  }
 
  elements.push(
- <div key={i} className="py-0.5 text-sm text-slate-700 leading-relaxed">{renderInline(line)}</div>
+ <div key={i} className="py-0.5 text-sm text-[var(--text-700)] leading-relaxed">{renderInline(line)}</div>
  );
  i++;
  }
@@ -789,12 +789,12 @@ function ProtocolModalContent({ protocol }) {
  </div>
  </div>
  {/* Contents list - like a book's chapter contents page */}
- <div className="bg-slate-50 border-t border-slate-200 px-5 py-3">
- <p className="text-[10px] font-bold text-slate-400 mb-2 select-none">Contents</p>
+ <div className="bg-[var(--card-bg)] border-t border-[var(--card-border)] px-5 py-3">
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-2 select-none">Contents</p>
  <div className="flex flex-wrap gap-x-4 gap-y-1">
  {protocol.sections.map((s, i) => (
  <button key={i} onClick={() => { setOpenSections(p => ({...p, [i]: true})); }}
- className="text-[11px] text-slate-500 hover:text-teal-700 transition-colors flex items-center gap-1">
+ className="text-[11px] text-[var(--text-500)] hover:text-teal-700 transition-colors flex items-center gap-1">
  <span className="text-slate-300">§{i + 1}</span> {s.title}
  </button>
  ))}
@@ -805,12 +805,12 @@ function ProtocolModalContent({ protocol }) {
  {/* ── Controls ─────────────────────────────────────────────────── */}
  <div className="flex items-center justify-between px-1">
  <button onClick={toggleAll}
- className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-teal-700 transition">
+ className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--text-400)] hover:text-teal-700 transition">
  {allOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
  {allOpen ? 'Collapse all sections' : 'Expand all sections'}
  </button>
  <button onClick={() => window.print()}
- className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-teal-700 transition">
+ className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--text-400)] hover:text-teal-700 transition">
  Print / Export
  </button>
  </div>
@@ -820,22 +820,22 @@ function ProtocolModalContent({ protocol }) {
  {protocol.sections.map((section, i) => {
  const isOpen = openSections[i] !== false;
  return (
- <div key={i} className="rounded-lg border border-slate-200 overflow-hidden">
+ <div key={i} className="rounded-lg border border-[var(--card-border)] overflow-hidden">
  {/* Section header */}
  <button
  onClick={() => toggleSection(i)}
- className="w-full flex items-center gap-3 px-4 py-3 bg-slate-50 hover:bg-slate-100 text-left transition-colors"
+ className="w-full flex items-center gap-3 px-4 py-3 bg-[var(--card-bg)] hover:bg-slate-100 text-left transition-colors"
  >
  {/* Chapter number */}
- <span className="w-6 h-6 rounded flex items-center justify-center bg-slate-50 border border-slate-200 text-[11px] font-bold text-slate-500 flex-shrink-0 shadow-sm">
+ <span className="w-6 h-6 rounded flex items-center justify-center bg-[var(--card-bg)] border border-[var(--card-border)] text-[11px] font-bold text-[var(--text-500)] flex-shrink-0 shadow-sm">
  {i + 1}
  </span>
  {/* Left accent bar in protocol colour */}
  <span className={`w-0.5 h-5 rounded-full flex-shrink-0 bg-gradient-to-b ${conf.gradient}`} />
- <h4 className="flex-1 text-sm font-semibold text-slate-800 leading-snug text-left">{section.title}</h4>
+ <h4 className="flex-1 text-sm font-semibold text-[var(--text-800)] leading-snug text-left">{section.title}</h4>
  {isOpen
- ? <ChevronUp size={14} className="text-slate-400 flex-shrink-0" />
- : <ChevronDown size={14} className="text-slate-400 flex-shrink-0" />}
+ ? <ChevronUp size={14} className="text-[var(--text-400)] flex-shrink-0" />
+ : <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0" />}
  </button>
 
  {/* Section body */}
@@ -848,7 +848,7 @@ function ProtocolModalContent({ protocol }) {
  transition={{ duration: 0.18 }}
  className="overflow-hidden"
  >
- <div className="px-5 py-4 bg-slate-50 border-t border-slate-100">
+ <div className="px-5 py-4 bg-[var(--card-bg)] border-t border-slate-100">
  <RichText content={section.content} />
  </div>
  </motion.div>
@@ -862,7 +862,7 @@ function ProtocolModalContent({ protocol }) {
  {/* ── Footnote ─────────────────────────────────────────────────── */}
  <div className="flex items-start gap-2 px-1 pt-2 border-t border-slate-100">
  <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
- <p className="text-[10.5px] text-slate-400 leading-relaxed">
+ <p className="text-[10.5px] text-[var(--text-400)] leading-relaxed">
  Evidence-based protocols adapted for the Ghanaian healthcare context.
  Always consult senior clinicians for complex cases and follow institutional protocols.
  </p>
@@ -910,18 +910,18 @@ export default function CareGuide() {
  <div className="w-full lg:w-72 lg:flex-shrink-0 flex flex-col gap-3 lg:sticky lg:top-4 lg:self-start">
  {/* Search */}
  <div className="relative">
- <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+ <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  <input type="text" value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search protocols…"
- className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+ className="w-full pl-9 pr-3 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
  </div>
 
  {/* Index */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
- <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden flex-1">
+ <div className="px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)] flex items-center justify-between">
  <div className="flex items-center gap-2">
  <BookOpen size={13} className="text-slate-400"/>
- <span className="text-[11px] font-bold text-slate-500 select-none">Protocols</span>
+ <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Protocols</span>
  </div>
  <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
  </div>
@@ -938,7 +938,7 @@ export default function CareGuide() {
  const isActive = activeId === p.id;
  return (
  <button key={p.id} onClick={() => setActiveId(p.id)}
- className={`w-full text-left flex items-center gap-3 px-4 py-3 border-b border-slate-100 last:border-0 transition-colors ${
+ className={`w-full text-left flex items-center gap-3 px-4 py-3 border-b border-[var(--card-border)]/50 last:border-0 transition-colors ${
  isActive ? `${conf.bg} border-l-2 ${conf.border}` : 'hover:bg-slate-50'
  }`}>
  <div className={`w-8 h-8 rounded-lg ${conf.icon} flex items-center justify-center flex-shrink-0`}>
@@ -946,7 +946,7 @@ export default function CareGuide() {
  </div>
  <div className="flex-1 min-w-0">
  <p className={`text-sm font-semibold truncate ${isActive ? conf.text : 'text-slate-700'}`}>{p.title}</p>
- <p className="text-[10px] text-slate-400 mt-0.5">{p.sections.length} sections</p>
+ <p className="text-[10px] text-[var(--text-400)] mt-0.5">{p.sections.length} sections</p>
  </div>
  {isActive && <ChevronRight size={13} className={conf.text}/>}
  </button>
@@ -956,10 +956,10 @@ export default function CareGuide() {
  </div>
 
  {/* Advisory footer */}
- <div className="border-t border-slate-200 px-4 py-3 bg-slate-50">
+ <div className="border-t border-[var(--card-border)] px-4 py-3 bg-slate-50">
  <div className="flex items-start gap-2">
  <Activity size={11} className="text-teal-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[10px] text-slate-400 leading-relaxed">
+ <p className="text-[10px] text-[var(--text-400)] leading-relaxed">
  Evidence-based · adapted for the Ghanaian context. Always consult senior clinicians for complex cases.
  </p>
  </div>
@@ -972,14 +972,14 @@ export default function CareGuide() {
  <AnimatePresence mode="wait">
  {!protocol ? (
  <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
- className="h-full flex flex-col items-center justify-center py-24 bg-slate-50 rounded-xl border border-slate-200 border-dashed text-slate-400">
+ className="h-full flex flex-col items-center justify-center py-24 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] border-dashed text-slate-400">
  <BookOpen size={40} className="opacity-20 mb-3"/>
  <p className="font-semibold text-slate-500">Select a protocol from the index</p>
  <p className="text-sm mt-1">Click any entry on the left to read the full clinical guide</p>
  </motion.div>
  ) : (
  <motion.div key={protocol.id} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  <div className="p-5">
  <ProtocolModalContent protocol={protocol}/>
  </div>

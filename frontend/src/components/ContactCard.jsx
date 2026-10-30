@@ -100,7 +100,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  <motion.div
  initial={{ opacity: 0, y: 6 }}
  animate={{ opacity: 1, y: 0 }}
- className="relative bg-slate-50 rounded-2xl border border-slate-200 hover:border-teal-300 hover:shadow-md transition-all group"
+ className="relative bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] hover:border-teal-300 hover:shadow-md transition-all group"
  >
  <div className="flex items-center gap-3.5 p-4">
  {/* Avatar */}
@@ -120,9 +120,9 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  {/* Info */}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5 mb-0.5">
- <p className="font-semibold text-slate-900 text-sm truncate">{displayName}</p>
+ <p className="font-semibold text-[var(--text-900)] text-sm truncate">{displayName}</p>
  {contact.nickname && (
- <span className="text-[9px] text-slate-400 font-medium truncate hidden sm:inline">
+ <span className="text-[9px] text-[var(--text-400)] font-medium truncate hidden sm:inline">
  ({contact.name})
  </span>
  )}
@@ -189,7 +189,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  <div className="relative">
  <button
  onClick={e => { e.stopPropagation(); setMenuOpen(!menuOpen); setConfirmRemove(false); }}
- className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+ className="p-1.5 rounded-lg hover:bg-slate-100 text-[var(--text-400)] hover:text-[var(--text-600)] transition-colors"
  title="More actions"
  >
  <MoreVertical size={14}/>
@@ -205,19 +205,19 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: -4 }}
  transition={{ duration: 0.12 }}
- className="absolute right-0 top-8 z-50 w-44 bg-slate-50 rounded-xl shadow-xl border border-slate-200 overflow-hidden"
+ className="absolute right-0 top-8 z-50 w-44 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] overflow-hidden"
  onClick={e => e.stopPropagation()}
  >
  <button
  onClick={() => { onMessage?.(contact); setMenuOpen(false); }}
- className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-slate-700 hover:bg-teal-50 hover:text-teal-700 transition-colors"
+ className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-[var(--text-700)] hover:bg-teal-50 hover:text-teal-700 transition-colors"
  >
  <MessageCircle size={14}/> Message
  </button>
 
  <button
  onClick={() => { onFavorite?.(contact); setMenuOpen(false); }}
- className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors"
+ className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-[var(--text-700)] hover:bg-amber-50 hover:text-amber-700 transition-colors"
  >
  <Star size={14} className={contact.is_favorite ? 'fill-amber-400 text-amber-400' : ''} />
  {contact.is_favorite ? 'Remove favourite' : 'Add to favourites'}
@@ -225,7 +225,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
 
  {contact.phone && (
  <a href={`tel:${contact.phone}`}
- className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-slate-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+ className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-[var(--text-700)] hover:bg-green-50 hover:text-green-700 transition-colors"
  onClick={() => setMenuOpen(false)}
  >
  <Phone size={14}/> Call {contact.phone}
@@ -262,7 +262,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  </button>
  <button
  onClick={() => setConfirmRemove(false)}
- className="flex-1 py-1 bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-semibold rounded-lg hover:bg-slate-50 transition"
+ className="flex-1 py-1 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-600)] text-[11px] font-semibold rounded-lg hover:bg-[var(--card-bg)] transition"
  >
  Cancel
  </button>

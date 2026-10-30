@@ -139,9 +139,9 @@ export default function Resources() {
           {/* ── Left sidebar: search + category filter ── */}
           <div className="w-full lg:w-52 lg:flex-shrink-0 lg:sticky lg:top-4 space-y-3">
             {/* Search */}
-            <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-3">
+            <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-3">
               <div className="relative">
-                <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -153,9 +153,9 @@ export default function Resources() {
             </div>
 
             {/* Category filter */}
-            <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
               <div className="px-3 py-2.5 border-b border-slate-100">
-                <p className="text-[10px] font-bold text-slate-400 ">Categories</p>
+                <p className="text-[10px] font-bold text-[var(--text-400)] ">Categories</p>
               </div>
               <div className="p-1.5 space-y-0.5">
                 {CATEGORIES.map(({ value, label, icon: Icon }, i) => {
@@ -165,7 +165,7 @@ export default function Resources() {
                   return (
                     <button key={value} onClick={() => setSelectedCategory(value)}
                       className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-left transition-all ${
-                        active ? 'text-white' : 'text-slate-600 hover:bg-slate-50'
+                        active ? 'text-white' : 'text-[var(--text-600)] hover:bg-slate-50'
                       }`}
                       style={active ? { backgroundColor: c } : {}}>
                       <Icon size={13} style={{ color: active ? '#fff' : c }} />
@@ -193,12 +193,12 @@ export default function Resources() {
             {/* ML-powered personalised recommendations */}
             {mlRecommended?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-                className="mb-5 bg-slate-50 dark:bg-slate-800 border border-teal-200 dark:border-teal-800 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2" style={{borderLeft:'4px solid #0d9488'}}>
+                className="mb-5 bg-[var(--card-bg)] border border-teal-200 dark:border-teal-800 rounded-xl overflow-hidden shadow-sm">
+                <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center gap-2" style={{borderLeft:'4px solid #0d9488'}}>
                   <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-teal-600 dark:text-teal-400" />
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 flex-1">AI-Recommended for You</h3>
+                  <h3 className="text-sm font-semibold text-[var(--text-800)] flex-1">AI-Recommended for You</h3>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-700">
                     {mlRecommended.length} match{mlRecommended.length !== 1 ? 'es' : ''}
                   </span>
@@ -209,15 +209,15 @@ export default function Resources() {
                     return (
                       <button key={r.id}
                         onClick={() => handleViewResource(r.id)}
-                        className="text-left flex items-start gap-3 p-3 bg-slate-50 hover:bg-teal-50 rounded-xl border border-slate-200 hover:border-teal-300 transition-all group shadow-sm">
+                        className="text-left flex items-start gap-3 p-3 bg-[var(--card-bg)] hover:bg-teal-50 rounded-xl border border-[var(--card-border)] hover:border-teal-300 transition-all group shadow-sm">
                         <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
                           <TrendingUp size={13} className="text-teal-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-slate-900 group-hover:text-teal-700 truncate">{r.title}</p>
-                          <p className="text-[10px] text-slate-500 truncate mt-0.5">{r.summary}</p>
+                          <p className="text-xs font-semibold text-[var(--text-900)] group-hover:text-teal-700 truncate">{r.title}</p>
+                          <p className="text-[10px] text-[var(--text-500)] truncate mt-0.5">{r.summary}</p>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 border border-teal-400 text-teal-700 uppercase tracking-wide">
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 uppercase tracking-wide">
                               {r.category?.replace(/_/g, ' ')}
                             </span>
                             {r.is_ghana_specific && <span className="text-[9px]">🇬🇭</span>}
@@ -251,14 +251,14 @@ export default function Resources() {
                 <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
               </div>
             ) : !resources || resources.length === 0 ? (
-              <div className="bg-slate-50 rounded-xl border border-slate-200 p-12 text-center">
+              <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-12 text-center">
                 <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                <h3 className="text-base font-semibold text-slate-700 mb-1">No resources found</h3>
+                <h3 className="text-base font-semibold text-[var(--text-700)] mb-1">No resources found</h3>
                 <p className="text-sm text-slate-500">{searchQuery ? 'Try adjusting your search terms' : 'Resources will appear here'}</p>
               </div>
             ) : (
               <>
-                <p className="text-xs text-slate-400 mb-3 font-semibold">{resources.length} resource{resources.length !== 1 ? 's' : ''}</p>
+                <p className="text-xs text-[var(--text-400)] mb-3 font-semibold">{resources.length} resource{resources.length !== 1 ? 's' : ''}</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {resources.map(resource => (
                     <ResourceCard key={resource.id} resource={resource}
@@ -324,7 +324,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
   return (
     <div
       onClick={onView}
-      className="bg-slate-50 rounded-lg border border-slate-200 hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer flex flex-col overflow-hidden"
+      className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] hover:border-teal-300 hover:shadow-sm transition-all cursor-pointer flex flex-col overflow-hidden"
     >
       <div
         className="h-1 flex-shrink-0"
@@ -363,8 +363,8 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
           </button>
         </div>
 
-        <h3 className="text-sm font-semibold text-slate-900 mb-1 line-clamp-2 leading-snug">{resource.title}</h3>
-        <p className="text-xs text-slate-500 mb-3 line-clamp-2 leading-relaxed flex-1">{resource.summary}</p>
+        <h3 className="text-sm font-semibold text-[var(--text-900)] mb-1 line-clamp-2 leading-snug">{resource.title}</h3>
+        <p className="text-xs text-[var(--text-500)] mb-3 line-clamp-2 leading-relaxed flex-1">{resource.summary}</p>
 
         <div className="flex items-center justify-between mb-3">
           <span className={categoryChip}>
@@ -409,7 +409,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
                 data-tip="View source"
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-slate-600 bg-slate-50 border border-slate-200 rounded-md hover:bg-slate-100 transition-colors"
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-[var(--text-600)] bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md hover:bg-slate-100 transition-colors"
               >
                 <ExternalLink size={11} /> Source
               </a>
@@ -442,7 +442,7 @@ function PdfViewer({ pdfState, blobUrl, pdfFilename, title, externalUrl }) {
           aria-label={title}
         >
           {/* Browser fallback - shown when <object> can't render PDF */}
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-400 p-8 text-center">
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-[var(--text-400)] p-8 text-center">
             <FileText size={44} strokeWidth={1.5} className="opacity-25" />
             <p className="text-sm font-medium text-slate-600">Your browser cannot display this PDF inline.</p>
             <a
@@ -460,7 +460,7 @@ function PdfViewer({ pdfState, blobUrl, pdfFilename, title, externalUrl }) {
 
   // error state
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-4 text-slate-400 p-8 text-center">
+    <div className="flex-1 flex flex-col items-center justify-center gap-4 text-[var(--text-400)] p-8 text-center">
       <FileText size={44} strokeWidth={1.5} className="opacity-25" />
       <p className="text-sm font-medium text-slate-600">Could not load this PDF.</p>
       {externalUrl && (
@@ -532,7 +532,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
             <button onClick={onBookmark}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white text-xs font-semibold text-slate-600 transition-colors">
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--card-border)] hover:bg-white text-xs font-semibold text-[var(--text-600)] transition-colors">
               <Star size={12} className={is_bookmarked ? 'fill-amber-400 text-amber-400' : 'text-slate-400'} />
               {is_bookmarked ? 'Bookmarked' : 'Bookmark'}
             </button>
@@ -544,7 +544,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
             )}
             {res?.external_url && (
               <a href={res.external_url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 text-xs font-semibold hover:bg-slate-50 transition-colors">
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-600)] text-xs font-semibold hover:bg-[var(--card-bg)] transition-colors">
                 <ExternalLink size={12} /> Source
               </a>
             )}
@@ -553,13 +553,13 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
             <span className="text-[11px] text-slate-400">Helpful?</span>
             <button onClick={() => onFeedback(true)} disabled={user_feedback === 'helpful'}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                user_feedback === 'helpful' ? 'bg-green-100 text-green-700' : 'border border-slate-200 text-slate-500 hover:bg-green-50'
+                user_feedback === 'helpful' ? 'bg-green-100 text-green-700' : 'border border-[var(--card-border)] text-[var(--text-500)] hover:bg-green-50'
               }`}>
               <ThumbsUp size={11} /> Yes
             </button>
             <button onClick={() => onFeedback(false)} disabled={user_feedback === 'not_helpful'}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                user_feedback === 'not_helpful' ? 'bg-red-100 text-red-700' : 'border border-slate-200 text-slate-500 hover:bg-red-50'
+                user_feedback === 'not_helpful' ? 'bg-red-100 text-red-700' : 'border border-[var(--card-border)] text-[var(--text-500)] hover:bg-red-50'
               }`}>
               <ThumbsDown size={11} /> No
             </button>
@@ -571,7 +571,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
       <div className="flex items-center gap-2 mb-3">
         {res?.is_ghana_specific && <span>🇬🇭</span>}
         {res?.source && (
-          <span className="text-[11px] font-semibold text-slate-400 ">{res.source}</span>
+          <span className="text-[11px] font-semibold text-[var(--text-400)] ">{res.source}</span>
         )}
       </div>
 
@@ -596,7 +596,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
               </span>
             )}
             {res?.source && (
-              <span className="text-[11px] font-semibold text-slate-400 ">{res.source}</span>
+              <span className="text-[11px] font-semibold text-[var(--text-400)] ">{res.source}</span>
             )}
             {res?.category && (
               <span className="text-[11px] italic text-slate-400">{res.category.replace(/_/g, ' ')}</span>
@@ -616,13 +616,13 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
 
               {/* Content body with good reading typography */}
               <div className="pl-4 border-l-2 border-slate-200">
-                <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">
+                <p className="text-sm text-[var(--text-700)] leading-7 whitespace-pre-wrap">
                   {res.content}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-48 text-center text-slate-400 gap-3">
+            <div className="flex flex-col items-center justify-center h-48 text-center text-[var(--text-400)] gap-3">
               <FileText size={40} strokeWidth={1.5} className="opacity-30" />
               <p className="text-sm font-medium">No preview available.</p>
             </div>

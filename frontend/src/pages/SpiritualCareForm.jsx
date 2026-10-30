@@ -120,13 +120,13 @@ export default function SpiritualCareForm() {
  });
  };
 
- const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
+ const inputCls = "w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-[var(--card-bg)] text-[var(--text-900)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500";
  const textareaCls = `${inputCls} resize-none`;
  const selectCls = inputCls;
 
  const Section = ({ title, icon: Icon, color = 'violet', children }) => (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
- <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2`}>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className={`px-5 py-3 bg-${color}-50 dark:bg-${color}-900/20 border-b border-[var(--card-border)] dark:border-slate-700 flex items-center gap-2`}>
  <Icon className={`w-4 h-4 text-${color}-600 dark:text-${color}-400`} />
  <h3 className={`font-semibold text-${color}-900 dark:text-${color}-100 text-sm`}>{title}</h3>
  </div>
@@ -136,8 +136,8 @@ export default function SpiritualCareForm() {
 
  const Field = ({ label, hint, children }) => (
  <div>
- <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{label}</label>
- {hint && <p className="text-xs text-slate-500 dark:text-slate-400 mb-1.5">{hint}</p>}
+ <label className="block text-sm font-medium text-[var(--text-700)] mb-1">{label}</label>
+ {hint && <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] mb-1.5">{hint}</p>}
  {children}
  </div>
  );
@@ -147,14 +147,14 @@ export default function SpiritualCareForm() {
  {/* Header */}
  <div className="flex items-center gap-3">
  <button onClick={() => navigate(`/assessments/${patientId}`)} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition">
- <ArrowLeft className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+ <ArrowLeft className="w-5 h-5 text-[var(--text-600)] dark:text-slate-300" />
  </button>
  <div>
- <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-900)] flex items-center gap-2">
  <Heart className="w-6 h-6 text-teal-600" />
  Spiritual & Wellbeing Care Note
  </h1>
- {patient && <p className="text-slate-500 dark:text-slate-400 text-sm">{patient.full_name}</p>}
+ {patient && <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm">{patient.full_name}</p>}
  </div>
  </div>
 
@@ -167,11 +167,11 @@ export default function SpiritualCareForm() {
  <Section title={`Previous Visits (${history.length})`} icon={Heart} color="slate">
  <div className="space-y-2">
  {history.map(h => (
- <div key={h.id} className="border border-slate-200 dark:border-slate-600 rounded-xl overflow-hidden">
+ <div key={h.id} className="border border-[var(--card-border)] dark:border-slate-600 rounded-xl overflow-hidden">
  <button type="button" onClick={() => setExpandedHistory(expandedHistory === h.id ? null : h.id)}
- className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-left">
+ className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition text-left">
  <div className="flex items-center gap-3">
- <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+ <span className="text-sm font-medium text-[var(--text-900)] dark:text-slate-100">
  {new Date(h.visit_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
  </span>
  <span className="px-2 py-0.5 rounded-full text-xs bg-violet-100 text-teal-700 dark:bg-violet-900/30 dark:text-violet-300">{h.visit_type}</span>
@@ -183,10 +183,10 @@ export default function SpiritualCareForm() {
  {expandedHistory === h.id && (
  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
- className="border-t border-slate-200 dark:border-slate-600 px-4 py-3 bg-slate-50 dark:bg-slate-750 text-sm space-y-1">
- {h.spiritual_needs && <div><span className="font-medium text-slate-600 dark:text-slate-300">Needs: </span><span className="text-slate-700 dark:text-slate-200">{h.spiritual_needs}</span></div>}
- {h.interventions && <div><span className="font-medium text-slate-600 dark:text-slate-300">Interventions: </span><span className="text-slate-700 dark:text-slate-200">{h.interventions}</span></div>}
- {h.notes && <div><span className="font-medium text-slate-600 dark:text-slate-300">Notes: </span><span className="text-slate-700 dark:text-slate-200">{h.notes}</span></div>}
+ className="border-t border-[var(--card-border)] dark:border-slate-600 px-4 py-3 bg-[var(--card-bg)] dark:bg-slate-750 text-sm space-y-1">
+ {h.spiritual_needs && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Needs: </span><span className="text-[var(--text-700)] dark:text-slate-200">{h.spiritual_needs}</span></div>}
+ {h.interventions && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Interventions: </span><span className="text-[var(--text-700)] dark:text-slate-200">{h.interventions}</span></div>}
+ {h.notes && <div><span className="font-medium text-[var(--text-600)] dark:text-slate-300">Notes: </span><span className="text-[var(--text-700)] dark:text-slate-200">{h.notes}</span></div>}
  </motion.div>
  )}
  </AnimatePresence>
@@ -223,7 +223,7 @@ export default function SpiritualCareForm() {
  className={`text-left px-3 py-2 rounded-lg border-2 text-xs transition ${
  form.visit_type === t.value
  ? 'border-teal-500 bg-violet-50 dark:bg-violet-900/30'
- : 'border-slate-200 dark:border-slate-600 hover:border-violet-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 hover:border-violet-300'
  }`}>
  {t.label}
  </button>
@@ -232,13 +232,13 @@ export default function SpiritualCareForm() {
  </Field>
  <div className="flex items-center gap-3">
  <input type="checkbox" id="fam" checked={form.family_present} onChange={e => set('family_present', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
- <label htmlFor="fam" className="text-sm text-slate-700 dark:text-slate-300">Family member(s) present during visit</label>
+ <label htmlFor="fam" className="text-sm text-[var(--text-700)] dark:text-slate-300">Family member(s) present during visit</label>
  </div>
  </Section>
 
  {/* Faith / Tradition (patient-identified) */}
  <Section title="Patient's Spiritual Background" icon={Heart} color="blue">
- <p className="text-xs text-slate-500 dark:text-slate-400 -mt-2">Always based on what the patient identifies - never assumed.</p>
+ <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] -mt-2">Always based on what the patient identifies - never assumed.</p>
  <Field label="Faith Tradition (as identified by patient)">
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
  {FAITH_TRADITIONS.map(t => (
@@ -246,10 +246,10 @@ export default function SpiritualCareForm() {
  className={`text-left px-3 py-2 rounded-lg border-2 text-sm transition ${
  form.faith_tradition === t.value
  ? 'border-teal-500 bg-blue-50 dark:bg-blue-900/30'
- : 'border-slate-200 dark:border-slate-600 hover:border-blue-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 hover:border-blue-300'
  }`}>
- <div className="font-medium text-slate-900 dark:text-slate-100">{t.label}</div>
- {t.detail && <div className="text-xs text-slate-400 mt-0.5">{t.detail}</div>}
+ <div className="font-medium text-[var(--text-900)] dark:text-slate-100">{t.label}</div>
+ {t.detail && <div className="text-xs text-[var(--text-400)] mt-0.5">{t.detail}</div>}
  </button>
  ))}
  </div>
@@ -269,7 +269,7 @@ export default function SpiritualCareForm() {
  <Field label={`Spiritual Distress Level: ${form.spiritual_distress_level}/10`} hint="0 = No distress, 10 = Severe existential / spiritual distress">
  <input type="range" min="0" max="10" step="1" className="w-full accent-indigo-600"
  value={form.spiritual_distress_level} onChange={e => set('spiritual_distress_level', parseInt(e.target.value))} />
- <div className="flex justify-between text-xs text-slate-400 mt-1">
+ <div className="flex justify-between text-xs text-[var(--text-400)] mt-1">
  <span>No distress</span><span>Moderate</span><span>Severe</span>
  </div>
  </Field>
@@ -280,7 +280,7 @@ export default function SpiritualCareForm() {
  className={`px-3 py-1.5 rounded-full text-xs border-2 transition ${
  selectedNeeds.includes(n)
  ? 'border-teal-500 bg-indigo-50 dark:bg-indigo-900/30 text-teal-700 dark:text-indigo-300'
- : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-indigo-300'
+ : 'border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] hover:border-indigo-300'
  }`}>{n}
  </button>
  ))}
@@ -300,7 +300,7 @@ export default function SpiritualCareForm() {
  </Field>
  <div className="flex items-center gap-3">
  <input type="checkbox" id="ref" checked={form.referral_to_community_leader} onChange={e => set('referral_to_community_leader', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
- <label htmlFor="ref" className="text-sm text-slate-700 dark:text-slate-300">Referral made to community / religious leader</label>
+ <label htmlFor="ref" className="text-sm text-[var(--text-700)] dark:text-slate-300">Referral made to community / religious leader</label>
  </div>
  {form.referral_to_community_leader && (
  <Field label="Community Leader Name">
@@ -320,11 +320,11 @@ export default function SpiritualCareForm() {
  value={form.comfort_level_after} onChange={e => set('comfort_level_after', parseInt(e.target.value))} />
  </Field>
  <div className="flex gap-4 flex-wrap">
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] dark:text-slate-300">
  <input type="checkbox" checked={form.meaning_making_supported} onChange={e => set('meaning_making_supported', e.target.checked)} className="w-4 h-4 rounded text-green-600" />
  Meaning-making supported
  </label>
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] dark:text-slate-300">
  <input type="checkbox" checked={form.reconciliation_facilitated} onChange={e => set('reconciliation_facilitated', e.target.checked)} className="w-4 h-4 rounded text-green-600" />
  Reconciliation facilitated
  </label>
@@ -343,14 +343,14 @@ export default function SpiritualCareForm() {
  <Section title="Confidentiality & Follow-up" icon={Shield} color="slate">
  <div className="flex items-center gap-3">
  {form.confidential ? <Shield className="w-4 h-4 text-teal-600" /> : <Eye className="w-4 h-4 text-amber-600" />}
- <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer">
+ <label className="flex items-center gap-2 text-sm text-[var(--text-700)] cursor-pointer">
  <input type="checkbox" checked={form.confidential} onChange={e => set('confidential', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
  Mark as confidential (spiritual notes are confidential by default)
  </label>
  </div>
  <div className="flex items-center gap-3">
  <input type="checkbox" id="fu" checked={form.follow_up_needed} onChange={e => set('follow_up_needed', e.target.checked)} className="w-4 h-4 rounded text-teal-600" />
- <label htmlFor="fu" className="text-sm text-slate-700 dark:text-slate-300">Follow-up visit needed</label>
+ <label htmlFor="fu" className="text-sm text-[var(--text-700)] dark:text-slate-300">Follow-up visit needed</label>
  </div>
  {form.follow_up_needed && (
  <Field label="Follow-up Date">
@@ -364,7 +364,7 @@ export default function SpiritualCareForm() {
 
  <div className="flex items-center gap-3 justify-end">
  <button type="button" onClick={() => navigate(`/assessments/${patientId}`)}
- className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition text-sm font-medium">
+ className="px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 text-[var(--text-700)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition text-sm font-medium">
  Cancel
  </button>
  <button type="submit" disabled={mutation.isLoading}

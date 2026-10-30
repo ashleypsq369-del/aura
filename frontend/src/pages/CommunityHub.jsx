@@ -175,7 +175,7 @@ export default function CommunityHub() {
  <input type="text" value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search groups by name or topic..."
  data-tip="Search community groups"
- className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-slate-50 shadow-sm" />
+ className="w-full py-3 pr-4 border-2 border-slate-300 rounded-2xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[var(--card-bg)] shadow-sm" />
  </div>
 
  {/* Tabs - filtered by personalisation (spiritual hidden if opted out) */}
@@ -192,11 +192,11 @@ export default function CommunityHub() {
  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap border transition-all flex-shrink-0 ${
  activeTab === tab.id
  ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
- : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
+ : 'bg-[var(--card-bg)] text-[var(--text-600)] dark:text-[var(--text-400)] border-[var(--card-border)] dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
  }`}>
  <Icon size={14} />
  {tab.label}
- <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}`}>{count}</span>
+ <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 text-[var(--text-500)] dark:text-slate-400'}`}>{count}</span>
  </button>
  );
  })}
@@ -216,19 +216,19 @@ export default function CommunityHub() {
  {/* ML/signal-driven smart recommendations */}
  {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
  <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
- className="bg-slate-50 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
- <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+ className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
+ <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center gap-2">
  <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
  <Brain size={14} className="text-teal-600" />
  </div>
- <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex-1">Smart Group Recommendations</h3>
+ <h3 className="text-sm font-semibold text-[var(--text-800)] flex-1">Smart Group Recommendations</h3>
  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
  {mlRecommendedGroups.length} for you
  </span>
  </div>
  {(signals?.communityTags?.length > 0 || signals?.condition) && (
  <div className="px-4 pt-2 pb-1">
- <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 flex-wrap">
+ <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] flex items-center gap-1.5 flex-wrap">
  <Sparkles size={11} className="text-teal-500" />
  Matched to your profile:
  {signals.condition && <span className="font-semibold text-slate-700"> {signals.condition}</span>}
@@ -244,19 +244,19 @@ export default function CommunityHub() {
  return (
  <button key={g.id}
  onClick={() => navigate(`/community/${g.id}`)}
- className="text-left flex items-start gap-3 p-3 bg-slate-50 hover:bg-teal-50 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl border border-slate-200 hover:border-teal-300 dark:border-slate-600 transition-all group shadow-sm">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-200">
+ className="text-left flex items-start gap-3 p-3 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-[var(--card-border)] hover:border-teal-300 dark:border-slate-600 transition-all group shadow-sm">
+ <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 dark:bg-slate-600 text-[var(--text-700)] dark:text-slate-200">
  {groupInitials(g.name)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-teal-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
- <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{g.description || 'Supportive community group'}</p>
+ <p className="text-xs font-bold text-[var(--text-900)] group-hover:text-teal-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
+ <p className="text-[10px] text-[var(--text-500)] dark:text-[var(--text-400)] truncate mt-0.5">{g.description || 'Supportive community group'}</p>
  <div className="flex items-center gap-1.5 mt-1">
- <span className="text-[9px] text-slate-400 dark:text-slate-500 flex items-center gap-0.5">
+ <span className="text-[9px] text-[var(--text-400)] dark:text-[var(--text-500)] flex items-center gap-0.5">
  <Users size={9} /> {g.member_count ?? 0}
  </span>
  {g.condition_tags?.slice(0,2).map(t => (
- <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
+ <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
  ))}
  </div>
  </div>
@@ -295,7 +295,7 @@ export default function CommunityHub() {
  )}
  {others.length > 0 && (
  <div>
- {recommended.length > 0 && <p className="text-xs font-bold text-slate-400 mb-3 mt-5">All Groups</p>}
+ {recommended.length > 0 && <p className="text-xs font-bold text-[var(--text-400)] mb-3 mt-5">All Groups</p>}
  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
  {others.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
  </div>
@@ -493,7 +493,7 @@ function CreateGroupModal({ onClose, onSubmit, pending }) {
  size="md"
  footer={
  <div className="flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition">Cancel</button>
+ <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition">Cancel</button>
  <button
  onClick={() => { if (!form.name.trim()) { toast.error('Name is required'); return; } onSubmit({ name: form.name.trim(), description: form.description.trim(), condition_tags: form.tags }); }}
  disabled={pending || !form.name.trim()}
@@ -507,24 +507,24 @@ function CreateGroupModal({ onClose, onSubmit, pending }) {
  >
  <div className="space-y-4">
  <div>
- <label className="block text-sm font-bold text-slate-700 mb-1.5">Group Name <span className="text-red-500">*</span></label>
+ <label className="block text-sm font-bold text-[var(--text-700)] mb-1.5">Group Name <span className="text-red-500">*</span></label>
  <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
  placeholder="e.g. Chronic Pain Warriors Ghana"
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition" />
  </div>
  <div>
- <label className="block text-sm font-bold text-slate-700 mb-1.5">Description</label>
+ <label className="block text-sm font-bold text-[var(--text-700)] mb-1.5">Description</label>
  <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
  rows={3} placeholder="What is this group about? Who is it for?"
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition resize-none" />
  </div>
  <div>
- <label className="block text-sm font-bold text-slate-700 mb-2">Categories</label>
+ <label className="block text-sm font-bold text-[var(--text-700)] mb-2">Categories</label>
  <div className="flex flex-wrap gap-2">
  {CATEGORY_TAGS.map(t => (
  <button key={t.value} type="button" onClick={() => toggleTag(t.value)}
  className={`px-3 py-1.5 rounded-full text-xs font-bold border-2 transition ${
- form.tags.includes(t.value) ? 'bg-teal-600 text-white border-teal-600' : 'bg-slate-50 text-slate-600 border-slate-300 hover:border-teal-400'
+ form.tags.includes(t.value) ? 'bg-teal-600 text-white border-teal-600' : 'bg-[var(--card-bg)] text-[var(--text-600)] border-slate-300 hover:border-teal-400'
  }`}>
  {t.label}
  </button>

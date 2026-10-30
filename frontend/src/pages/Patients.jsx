@@ -187,7 +187,7 @@ export default function Patients() {
 
  {/* Search and Filter Bar */}
  <div className="px-3 sm:px-4 space-y-3">
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
  {/* Active filter banner */}
  {location.state?.filterStatus && filterStatus !== 'all' && (
  <div className={`flex items-center justify-between mb-3 px-4 py-2.5 rounded-xl border text-sm font-semibold ${
@@ -201,7 +201,7 @@ export default function Patients() {
  'Showing Stable Patients -- Maintaining good health'}
  </span>
  <button onClick={() => { setFilterStatus('all'); navigate('/patients', { replace: true, state: {} }); }}
- className="ml-3 px-2.5 py-1 bg-slate-50 rounded-lg border text-xs font-bold hover:bg-slate-50 transition">
+ className="ml-3 px-2.5 py-1 bg-[var(--card-bg)] rounded-lg border text-xs font-bold hover:bg-[var(--card-bg)] transition">
  Clear
  </button>
  </div>
@@ -210,7 +210,7 @@ export default function Patients() {
  <div className="flex flex-col sm:flex-row gap-3 items-center">
  {/* Search */}
  <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+ <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
  <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
  placeholder="Search by name, diagnosis or code..."
  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none" />
@@ -227,7 +227,7 @@ export default function Patients() {
  ].map(({ value, label, color }) => (
  <button key={value} onClick={() => setFilterStatus(value)}
  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterStatus === value ? 'text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
+ filterStatus === value ? 'text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
  }`}
  style={filterStatus === value ? { backgroundColor: color } : {}}>
  {label}
@@ -238,7 +238,7 @@ export default function Patients() {
 
  {/* Care setting filter row */}
  <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
- <span className="text-[10px] font-bold text-slate-400 ">Care Setting:</span>
+ <span className="text-[10px] font-bold text-[var(--text-400)] ">Care Setting:</span>
  {CARE_SETTING_FILTERS.map(({ value, label, icon: Icon, color }) => {
  const active = filterCareSetting === value;
  return (
@@ -246,7 +246,7 @@ export default function Patients() {
  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
  active
  ? 'text-white border-transparent shadow-sm'
- : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
+ : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-600)] hover:border-slate-300'
  }`}
  style={active ? { backgroundColor: color || '#475569' } : {}}>
  {Icon && <Icon size={10}/>}
@@ -263,7 +263,7 @@ export default function Patients() {
  </div>
 
  <div className="flex items-center justify-between flex-wrap gap-2 py-1 px-1">
- <p className="text-sm text-slate-500 font-medium">
+ <p className="text-sm text-[var(--text-500)] font-medium">
  Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
  {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">· {filterStatus}</span>}
  {filterCareSetting !== 'all' && (
@@ -279,7 +279,7 @@ export default function Patients() {
  </button>
  )}
  {searchTerm && (
- <button onClick={() => setSearchTerm('')} className="text-xs text-slate-400 hover:text-red-500 font-semibold flex items-center gap-1">
+ <button onClick={() => setSearchTerm('')} className="text-xs text-[var(--text-400)] hover:text-red-500 font-semibold flex items-center gap-1">
  Clear search ×
  </button>
  )}
@@ -307,7 +307,7 @@ export default function Patients() {
  size="xl"
  closeOnBackdrop={false}
  >
- <p className="text-sm text-slate-500 mb-4">Complete all steps to register a new patient with full clinical and contact details.</p>
+ <p className="text-sm text-[var(--text-500)] mb-4">Complete all steps to register a new patient with full clinical and contact details.</p>
  <PatientIntakeForm
  onSubmit={onSubmitAdd}
  onCancel={() => { setShowAddModal(false); resetAdd(); }}
@@ -327,7 +327,7 @@ export default function Patients() {
  <button
  type="button"
  onClick={() => { setShowEditModal(false); setEditingPatient(null); resetEdit(); }}
- className="px-4 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition-all duration-150"
+ className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition-all duration-150"
  >
  Cancel
  </button>
@@ -345,18 +345,18 @@ export default function Patients() {
  >
  <form id="edit-patient-form" onSubmit={handleSubmitEdit(onSubmitEdit)} className="space-y-4">
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Patient Code *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Patient Code *</label>
  <input
  type="text"
  {...registerEdit('patient_code')}
  disabled
- className="w-full px-3 py-2.5 border border-slate-200 rounded-xl bg-slate-100 cursor-not-allowed text-slate-500"
+ className="w-full px-3 py-2.5 border border-[var(--card-border)] rounded-xl bg-slate-100 cursor-not-allowed text-slate-500"
  />
- <p className="text-xs text-slate-400 mt-1">Patient code cannot be changed</p>
+ <p className="text-xs text-[var(--text-400)] mt-1">Patient code cannot be changed</p>
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Full Name *</label>
  <input
  type="text"
  {...registerEdit('full_name', patientValidation.full_name)}
@@ -367,7 +367,7 @@ export default function Patients() {
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Date of Birth *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Date of Birth *</label>
  <input
  type="date"
  {...registerEdit('date_of_birth', patientValidation.date_of_birth)}
@@ -376,7 +376,7 @@ export default function Patients() {
  {errorsEdit.date_of_birth && <p className="text-red-600 text-xs mt-1">{errorsEdit.date_of_birth.message}</p>}
  </div>
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Gender *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Gender *</label>
  <select
  {...registerEdit('gender', patientValidation.gender)}
  className={`w-full px-3 py-2.5 border-2 rounded-xl focus:ring-2 focus:outline-none transition ${errorsEdit.gender ? 'border-red-400 focus:ring-red-200' : 'border-slate-300 focus:border-teal-500 focus:ring-teal-100'}`}
@@ -390,7 +390,7 @@ export default function Patients() {
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Primary Diagnosis *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Primary Diagnosis *</label>
  <input
  type="text"
  {...registerEdit('primary_diagnosis', patientValidation.primary_diagnosis)}
@@ -400,7 +400,7 @@ export default function Patients() {
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Admission Date (Optional)</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Admission Date (Optional)</label>
  <input
  type="date"
  {...registerEdit('admission_date', patientValidation.admission_date)}

@@ -119,12 +119,12 @@ export default function GriefProgressTracker({ screeningData }) {
   return (
     <div className="space-y-6">
       {/* Grief Stages Timeline */}
-      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
+      <div className="bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+        <h3 className="font-bold text-[var(--text-900)] text-xl mb-4 flex items-center gap-2">
           <Heart size={24} className="text-purple-600" />
           Understanding Your Grief Journey
         </h3>
-        <p className="text-slate-700 text-sm mb-6">
+        <p className="text-[var(--text-700)] text-sm mb-6">
           Grief is not linear. You may move through these stages in any order, revisit stages, or experience multiple stages at once. 
           There is no "right" way to grieve.
         </p>
@@ -143,14 +143,14 @@ export default function GriefProgressTracker({ screeningData }) {
                 className={`p-5 rounded-xl border-2 transition-all ${
                   isCurrentStage
                     ? `bg-${stage.color}-50 border-${stage.color}-400`
-                    : 'bg-slate-50 border-slate-200'
+                    : 'bg-[var(--card-bg)] border-slate-200'
                 }`}
               >
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-full ${
                     isCurrentStage
                       ? `bg-${stage.color}-100 border-2 border-${stage.color}-400`
-                      : 'bg-slate-50 border-2 border-slate-300'
+                      : 'bg-[var(--card-bg)] border-2 border-slate-300'
                   }`}>
                     <Icon 
                       size={24} 
@@ -191,8 +191,8 @@ export default function GriefProgressTracker({ screeningData }) {
       </div>
 
       {/* Grief Screening */}
-      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
+      <div className="bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+        <h3 className="font-bold text-[var(--text-900)] text-xl mb-4 flex items-center gap-2">
           <Calendar size={24} className="text-purple-600" />
           Grief Check-In
         </h3>
@@ -257,20 +257,20 @@ export default function GriefProgressTracker({ screeningData }) {
       </div>
 
       {/* Journaling Section */}
-      <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-xl mb-4 flex items-center gap-2">
+      <div className="bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+        <h3 className="font-bold text-[var(--text-900)] text-xl mb-4 flex items-center gap-2">
           <BookOpen size={24} className="text-purple-600" />
           Grief Journal
         </h3>
 
-        <div className="mb-6 p-4 bg-gradient-to-br bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div className="mb-6 p-4 bg-gradient-to-br bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700">
           <p className="text-purple-900 font-semibold mb-2">Today's Prompt:</p>
           <p className="text-purple-800 italic">"{selectedPrompt}"</p>
         </div>
 
         <form onSubmit={handleSaveJournal} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">
+            <label className="block text-sm font-bold text-[var(--text-700)] mb-2">
               Your Thoughts
             </label>
             <textarea
@@ -280,7 +280,7 @@ export default function GriefProgressTracker({ screeningData }) {
               placeholder="Write freely... Your entries are private and confidential."
               className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none text-slate-900"
             />
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-[var(--text-500)] mt-2">
               🔒 Your journal entries are private and only visible to you
             </p>
           </div>
@@ -307,11 +307,11 @@ export default function GriefProgressTracker({ screeningData }) {
         {/* Recent Journal Entries */}
         {journeyData?.recent_entries && journeyData.recent_entries.length > 0 && (
           <div className="mt-6 pt-6 border-t-2 border-slate-200">
-            <h4 className="font-bold text-slate-900 mb-4">Recent Entries</h4>
+            <h4 className="font-bold text-[var(--text-900)] mb-4">Recent Entries</h4>
             <div className="space-y-3">
               {journeyData.recent_entries.slice(0, 3).map((entry, idx) => (
-                <div key={idx} className="p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
-                  <p className="text-xs text-slate-500 mb-2">
+                <div key={idx} className="p-4 bg-[var(--card-bg)] rounded-lg border-2 border-slate-200">
+                  <p className="text-xs text-[var(--text-500)] mb-2">
                     {new Date(entry.created_at).toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -319,7 +319,7 @@ export default function GriefProgressTracker({ screeningData }) {
                       day: 'numeric'
                     })}
                   </p>
-                  <p className="text-slate-800 text-sm line-clamp-3">{entry.content}</p>
+                  <p className="text-[var(--text-800)] text-sm line-clamp-3">{entry.content}</p>
                 </div>
               ))}
             </div>
@@ -357,7 +357,7 @@ export default function GriefProgressTracker({ screeningData }) {
 
 function SelfCareCard({ title, description }) {
   return (
-    <div className="p-4 bg-slate-50 rounded-lg border-2 border-teal-200">
+    <div className="p-4 bg-[var(--card-bg)] rounded-lg border-2 border-teal-200">
       <p className="font-bold text-teal-900 mb-1">{title}</p>
       <p className="text-teal-700 text-sm">{description}</p>
     </div>

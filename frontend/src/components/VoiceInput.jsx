@@ -133,7 +133,7 @@ export default function VoiceInput({
             exit={{ opacity: 0, y: -10 }}
             className="absolute top-full mt-2 left-0 right-0 z-50"
           >
-            <div className="bg-slate-50 rounded-lg shadow-lg border-2 border-slate-200 p-4">
+            <div className="bg-[var(--card-bg)] rounded-lg shadow-lg border-2 border-[var(--card-border)] p-4">
               {/* Listening State */}
               {isListening && !error && (
                 <div className="flex items-center space-x-2">
@@ -146,7 +146,7 @@ export default function VoiceInput({
 
               {/* Interim Transcript */}
               {interimTranscript && (
-                <p className="text-sm text-slate-500 italic mt-2">
+                <p className="text-sm text-[var(--text-500)] italic mt-2">
                   "{interimTranscript}"
                 </p>
               )}
@@ -154,8 +154,8 @@ export default function VoiceInput({
               {/* Final Transcript */}
               {transcript && !isListening && (
                 <div className="mt-2">
-                  <p className="text-xs text-slate-500 mb-1">Recognized:</p>
-                  <p className="text-sm text-slate-900 font-medium">
+                  <p className="text-xs text-[var(--text-500)] mb-1">Recognized:</p>
+                  <p className="text-sm text-[var(--text-900)] font-medium">
                     "{transcript}"
                   </p>
                 </div>
@@ -170,7 +170,7 @@ export default function VoiceInput({
 
               {/* Instructions */}
               {isListening && !error && (
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="text-xs text-[var(--text-500)] mt-2">
                   Speak clearly into your microphone. Click the button again to stop.
                 </p>
               )}

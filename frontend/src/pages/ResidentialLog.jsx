@@ -113,11 +113,11 @@ export default function ResidentialLog() {
 
  <form onSubmit={handleSubmit} className="space-y-5">
  {/* Activities */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Activity size={16} />Daily Activities</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3 flex items-center gap-2"><Activity size={16} />Daily Activities</h3>
  <div className="grid grid-cols-1 gap-1.5">
  {ACTIVITIES.map(a => (
- <label key={a} className={`flex items-center gap-3 p-2.5 rounded-xl border-2 cursor-pointer transition ${completedActivities.includes(a) ? 'border-purple-400 bg-purple-50' : 'border-slate-200 hover:border-purple-300'}`}>
+ <label key={a} className={`flex items-center gap-3 p-2.5 rounded-xl border-2 cursor-pointer transition ${completedActivities.includes(a) ? 'border-purple-400 bg-purple-50' : 'border-[var(--card-border)] hover:border-purple-300'}`}>
  <input type="checkbox" checked={completedActivities.includes(a)} onChange={() => toggle(a)} className="w-4 h-4 accent-purple-600 flex-shrink-0" />
  <span className={`text-sm ${completedActivities.includes(a) ? 'text-purple-800 line-through opacity-60' : 'text-slate-700'}`}>{a}</span>
  </label>
@@ -126,12 +126,12 @@ export default function ResidentialLog() {
  </div>
 
  {/* Wellbeing */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2"><Heart size={16} />Resident Wellbeing Today</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3 flex items-center gap-2"><Heart size={16} />Resident Wellbeing Today</h3>
  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
  {WELLBEING_OPTIONS.map(opt => (
  <button key={opt.value} type="button" onClick={() => setWellbeing(opt.value)}
- className={`py-2.5 px-2 rounded-xl border-2 text-xs font-bold transition ${wellbeing === opt.value ? opt.color + ' border-current' : 'border-slate-200 text-slate-600 hover:border-slate-400'}`}>
+ className={`py-2.5 px-2 rounded-xl border-2 text-xs font-bold transition ${wellbeing === opt.value ? opt.color + ' border-current' : 'border-[var(--card-border)] text-[var(--text-600)] hover:border-slate-400'}`}>
  {opt.label}
  </button>
  ))}
@@ -139,8 +139,8 @@ export default function ResidentialLog() {
  </div>
 
  {/* Food & fluid intake */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3">Food & Fluid Intake</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3">Food & Fluid Intake</h3>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  {['breakfast', 'lunch', 'dinner', 'fluids'].map(meal => {
  const baseOpts = [
@@ -173,23 +173,23 @@ export default function ResidentialLog() {
  </div>
 
  {/* Notes */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
- <h3 className="text-sm font-bold text-slate-700 mb-3">Care Notes</h3>
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="text-sm font-bold text-[var(--text-700)] mb-3">Care Notes</h3>
  <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
  placeholder="Any observations, mood changes, visitor notes, or care team communications..."
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-purple-400 outline-none resize-none" />
  </div>
 
  {/* Incident report */}
- <div className="bg-slate-50 rounded-xl border-2 border-slate-200 p-5">
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)] p-5">
  <label className="flex items-center gap-3 cursor-pointer mb-3">
  <input type="checkbox" checked={incident} onChange={e => setIncident(e.target.checked)} className="w-5 h-5 accent-red-600" />
- <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2"><AlertTriangle size={16} className="text-red-500" />Report an Incident</h3>
+ <h3 className="text-sm font-bold text-[var(--text-700)] flex items-center gap-2"><AlertTriangle size={16} className="text-red-500" />Report an Incident</h3>
  </label>
  {incident && (
  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-3 mt-2">
  <div>
- <label className="text-xs font-semibold text-slate-600 mb-1.5 block">Incident Type</label>
+ <label className="text-xs font-semibold text-[var(--text-600)] mb-1.5 block">Incident Type</label>
  <SearchableSelect
  accent="rose"
  value={incidentType || null}

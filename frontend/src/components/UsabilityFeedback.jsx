@@ -112,7 +112,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
               initial={{ opacity: 0, x: -100, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -100, scale: 0.9 }}
-              className="fixed bottom-6 left-6 w-96 bg-slate-50 rounded-2xl shadow-2xl z-50 border-3 border-purple-500"
+              className="fixed bottom-6 left-6 w-96 bg-[var(--card-bg)] rounded-2xl shadow-2xl z-50 border-3 border-purple-500"
             >
               {/* Header */}
               <div className="bg-gradient-to-r bg-teal-600 dark:bg-teal-700 text-white px-5 py-3 rounded-t-2xl flex items-center justify-between">
@@ -144,7 +144,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
 
                   {/* Star Rating */}
                   <div>
-                    <label className="block text-sm font-bold text-slate-800 mb-2">
+                    <label className="block text-sm font-bold text-[var(--text-800)] mb-2">
                       How useful is this page?
                     </label>
                     <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
                       ))}
                     </div>
                     {rating > 0 && (
-                      <p className="text-xs text-slate-600 mt-2">
+                      <p className="text-xs text-[var(--text-600)] mt-2">
                         {rating === 5 && '⭐ Excellent!'}
                         {rating === 4 && '😊 Good'}
                         {rating === 3 && '😐 Okay'}
@@ -182,8 +182,8 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
 
                   {/* Comment (Optional) */}
                   <div>
-                    <label className="block text-sm font-bold text-slate-800 mb-2">
-                      Any suggestions? <span className="text-slate-500 font-normal">(Optional)</span>
+                    <label className="block text-sm font-bold text-[var(--text-800)] mb-2">
+                      Any suggestions? <span className="text-[var(--text-500)] font-normal">(Optional)</span>
                     </label>
                     <textarea
                       value={comment}
@@ -193,7 +193,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
                       rows={3}
                       maxLength={500}
                     />
-                    <p className="text-xs text-slate-500 mt-1">{comment.length}/500</p>
+                    <p className="text-xs text-[var(--text-500)] mt-1">{comment.length}/500</p>
                   </div>
 
                   {/* Submit Button */}
@@ -203,7 +203,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
                     className={`w-full py-3 font-bold rounded-lg text-sm transition-all flex items-center justify-center gap-2 ${
                       rating > 0 && !isSubmitting
                         ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-lg border-2 border-purple-500'
-                        : 'bg-slate-300 text-slate-500 cursor-not-allowed border-2 border-slate-400'
+                        : 'bg-slate-300 text-[var(--text-500)] cursor-not-allowed border-2 border-slate-400'
                     }`}
                   >
                     {isSubmitting ? (
@@ -225,7 +225,7 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
                   </button>
 
                   {/* Privacy Note */}
-                  <p className="text-xs text-slate-500 text-center leading-relaxed">
+                  <p className="text-xs text-[var(--text-500)] text-center leading-relaxed">
                     🔒 Your feedback is anonymous and helps us improve the platform
                   </p>
                 </form>
@@ -239,8 +239,8 @@ export default function UsabilityFeedback({ pageName, userId, userRole }) {
                   >
                     <Check className="text-green-600" size={32} strokeWidth={2.5} />
                   </motion.div>
-                  <h4 className="font-bold text-lg text-slate-900 mb-2">Thank You!</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <h4 className="font-bold text-lg text-[var(--text-900)] mb-2">Thank You!</h4>
+                  <p className="text-sm text-[var(--text-600)] leading-relaxed">
                     Your feedback helps us make ProjectAura better for everyone.
                   </p>
                 </div>

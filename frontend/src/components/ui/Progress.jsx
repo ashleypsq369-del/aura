@@ -56,7 +56,7 @@ export default function Progress({
         <div className="flex items-center justify-between">
           {label && <span className="text-xs font-semibold text-slate-600">{label}</span>}
           {showValue && (
-            <span className="text-xs font-bold text-slate-800 tabular-nums">
+            <span className="text-xs font-bold text-[var(--text-800)] tabular-nums">
               {value}/{max}
             </span>
           )}

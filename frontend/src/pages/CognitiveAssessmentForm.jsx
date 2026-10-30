@@ -211,9 +211,9 @@ export default function CognitiveAssessmentForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+        className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
       >
-        <label className="block text-sm font-medium text-slate-700 mb-3">
+        <label className="block text-sm font-medium text-[var(--text-700)] mb-3">
           Select Assessment Type
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -223,12 +223,12 @@ export default function CognitiveAssessmentForm() {
             className={`p-4 rounded-lg border-2 transition-all ${
               assessmentType === 'MMSE'
                 ? 'border-purple-500 bg-purple-50'
-                : 'border-slate-200 hover:border-purple-300'
+                : 'border-[var(--card-border)] hover:border-purple-300'
             }`}
           >
             <div className="font-bold text-lg text-slate-900">MMSE</div>
             <div className="text-sm text-slate-600">Mini-Mental State Examination</div>
-            <div className="text-xs text-slate-500 mt-1">Most widely used, 7 components</div>
+            <div className="text-xs text-[var(--text-500)] mt-1">Most widely used, 7 components</div>
           </button>
           
           <button
@@ -237,12 +237,12 @@ export default function CognitiveAssessmentForm() {
             className={`p-4 rounded-lg border-2 transition-all ${
               assessmentType === 'MoCA'
                 ? 'border-purple-500 bg-purple-50'
-                : 'border-slate-200 hover:border-purple-300'
+                : 'border-[var(--card-border)] hover:border-purple-300'
             }`}
           >
             <div className="font-bold text-lg text-slate-900">MoCA</div>
             <div className="text-sm text-slate-600">Montreal Cognitive Assessment</div>
-            <div className="text-xs text-slate-500 mt-1">More sensitive, 7 components</div>
+            <div className="text-xs text-[var(--text-500)] mt-1">More sensitive, 7 components</div>
           </button>
         </div>
       </motion.div>
@@ -270,9 +270,9 @@ export default function CognitiveAssessmentForm() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+        className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
       >
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+        <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
           Patient's Years of Education {assessmentType === 'MoCA' && <span className="text-red-500">*</span>}
         </label>
         <input
@@ -300,13 +300,13 @@ export default function CognitiveAssessmentForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 + idx * 0.05 }}
-            className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-900">{component.label}</h3>
                 <p className="text-sm text-slate-600">{component.desc}</p>
-                <p className="text-xs text-slate-500 mt-1">Maximum: {component.max} points</p>
+                <p className="text-xs text-[var(--text-500)] mt-1">Maximum: {component.max} points</p>
               </div>
               {currentScores[component.key] !== '' && (
                 <div className="text-3xl font-bold text-purple-600">
@@ -345,10 +345,10 @@ export default function CognitiveAssessmentForm() {
             className={`${currentInterpretation.bg} rounded-xl p-6 border-2 border-slate-300`}
           >
             <div className="text-center">
-              <div className="text-sm text-slate-600 mb-2">{assessmentType} Total Score</div>
+              <div className="text-sm text-[var(--text-600)] mb-2">{assessmentType} Total Score</div>
               <div className="text-5xl font-bold mb-2">{currentTotal} / 30</div>
               {assessmentType === 'MoCA' && parseInt(educationYears) <= 12 && parseInt(educationYears) > 0 && (
-                <div className="text-xs text-slate-600 mb-2">
+                <div className="text-xs text-[var(--text-600)] mb-2">
                   (Base: {mocaTotal - 1} + Education adjustment: +1)
                 </div>
               )}
@@ -372,9 +372,9 @@ export default function CognitiveAssessmentForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Clinical Notes (Optional)
           </label>
           <textarea
@@ -423,7 +423,7 @@ export default function CognitiveAssessmentForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>

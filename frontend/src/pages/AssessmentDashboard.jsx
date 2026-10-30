@@ -67,10 +67,10 @@ export default function AssessmentDashboard() {
   if (patientError || !patient) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 sm:py-12 text-center">
-        <div className="bg-slate-50 rounded-xl p-8 shadow-lg border-2 border-red-200">
+        <div className="bg-[var(--card-bg)] rounded-xl p-8 shadow-lg border-2 border-red-200">
           <ClipboardList className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Patient Not Found</h2>
-          <p className="text-slate-600 mb-6">Could not load patient with ID {patientId}.</p>
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-2">Patient Not Found</h2>
+          <p className="text-[var(--text-600)] mb-6">Could not load patient with ID {patientId}.</p>
           <button
             onClick={() => navigate('/patients')}
             className="px-6 py-2.5 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition"
@@ -248,13 +248,13 @@ export default function AssessmentDashboard() {
       {/* Back button */}
       <button
         onClick={() => navigate(`/patients/${patientId}`)}
-        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-teal-700 transition-colors mt-4"
+        className="flex items-center gap-1.5 text-xs font-semibold text-[var(--text-500)] hover:text-teal-700 transition-colors mt-4"
       >
         ? Back to Patient
       </button>
 
       {/* Header */}
-      <div className="rounded-lg border border-slate-200 px-5 py-4 flex items-center justify-between overflow-hidden relative"
+      <div className="rounded-lg border border-[var(--card-border)] px-5 py-4 flex items-center justify-between overflow-hidden relative"
         style={{ background: 'linear-gradient(135deg, #7c3aed, #4338ca)' }}>
         <div>
           <h1 className="text-base font-bold text-white">Clinical Assessments</h1>
@@ -288,7 +288,7 @@ export default function AssessmentDashboard() {
         <div>
           <div className="flex items-center gap-3 mb-3">
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400  px-2">Palliative Care Modules</span>
+            <span className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)]  px-2">Palliative Care Modules</span>
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -353,7 +353,7 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       onClick={onClick}
-      className="bg-slate-50 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden group"
+      className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] hover:border-slate-300 hover:shadow-sm transition-all cursor-pointer overflow-hidden group"
       style={{ borderLeft: `4px solid ${accent.border}` }}
     >
       <div className="px-4 py-3 flex items-start gap-3">
@@ -367,12 +367,12 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
           <div className="flex items-start justify-between gap-2 mb-1">
             <div>
               <span className="text-sm font-bold text-slate-900">{assessment.name}</span>
-              <span className="text-xs text-slate-400 ml-2">{assessment.fullName}</span>
+              <span className="text-xs text-[var(--text-400)] ml-2">{assessment.fullName}</span>
             </div>
-            <ArrowRight size={14} className="text-slate-300 group-hover:text-slate-600 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
+            <ArrowRight size={14} className="text-slate-300 group-hover:text-[var(--text-600)] group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
           </div>
 
-          <p className="text-xs text-slate-500 mb-2">{assessment.description}</p>
+          <p className="text-xs text-[var(--text-500)] mb-2">{assessment.description}</p>
 
           <div className="flex items-center gap-2 flex-wrap">
             <span className={status.cls}>{status.label}</span>

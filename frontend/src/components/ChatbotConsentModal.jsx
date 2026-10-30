@@ -18,12 +18,12 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
       footer={
         <div className="flex items-center justify-between gap-3">
           <button onClick={onDecline}
-            className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900 border border-slate-300 dark:border-slate-600 dark:text-slate-300 rounded-xl hover:bg-white dark:hover:bg-slate-700 transition-all">
+            className="px-4 py-2 text-sm font-semibold text-[var(--text-600)] hover:text-[var(--text-900)] border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 transition-all">
             Use Human Support
           </button>
           <button onClick={onAccept} disabled={!agreed}
             className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2 ${
-              agreed ? 'bg-teal-700 hover:bg-teal-800 text-white shadow-md' : 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
+              agreed ? 'bg-teal-700 hover:bg-teal-800 text-white shadow-md' : 'bg-slate-200 text-[var(--text-400)] cursor-not-allowed'
             }`}>
             <Sparkles size={15}/> Start Chatting with Aura
           </button>
@@ -67,9 +67,9 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         </div>
 
         {/* Privacy */}
-        <div className="flex gap-3 p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-          <ShieldCheck size={16} className="text-slate-500 flex-shrink-0 mt-0.5"/>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        <div className="flex gap-3 p-3.5 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl">
+          <ShieldCheck size={16} className="text-[var(--text-500)] flex-shrink-0 mt-0.5"/>
+          <p className="text-xs text-[var(--text-600)] dark:text-[var(--text-400)] leading-relaxed">
             Conversations are securely stored and may be reviewed by your care team. Aura has <strong>read-only</strong> access to your health data. All data is HIPAA-compliant and encrypted.
           </p>
         </div>
@@ -85,10 +85,10 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         </div>
 
         {/* Consent checkbox */}
-        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-slate-200 dark:border-slate-600 hover:border-teal-400 transition-colors bg-slate-50 dark:bg-slate-800">
+        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--card-border)] dark:border-slate-600 hover:border-teal-400 transition-colors bg-[var(--card-bg)] dark:bg-slate-800">
           <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded text-teal-600 border-slate-400 focus:ring-teal-500 cursor-pointer accent-teal-600"/>
-          <span className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          <span className="text-sm text-[var(--text-700)] leading-relaxed">
             I understand Aura is an AI assistant. For medical concerns I will contact my care team or emergency services.
           </span>
         </label>

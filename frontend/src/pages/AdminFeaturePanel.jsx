@@ -26,7 +26,7 @@ const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token
 
 const STATE_CFG = {
  enabled: { label: 'Enabled', icon: Eye, cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
- disabled: { label: 'Disabled', icon: EyeOff, cls: 'bg-slate-100 text-slate-600 border-slate-200' },
+ disabled: { label: 'Disabled', icon: EyeOff, cls: 'bg-slate-100 text-[var(--text-600)] border-slate-200' },
  locked: { label: 'Locked', icon: Lock, cls: 'bg-red-100 text-red-700 border-red-200' },
 };
 const SOURCE_CFG = {
@@ -139,7 +139,7 @@ export default function AdminFeaturePanel() {
  { label: 'Active Overrides', value: (usersData?.users || []).reduce((s, u) => s + u.override_count, 0), icon: Shield, color: 'text-teal-600' },
  { label: 'Locked Features', value: (usersData?.users || []).reduce((s, u) => s + u.overrides.filter(o => o.state === 'locked').length, 0), icon: Lock, color: 'text-red-500' },
  ].map(({ label, value, icon: Icon, color }) => (
- <div key={label} className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3 flex items-center gap-3">
+ <div key={label} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] px-4 py-3 flex items-center gap-3">
  <Icon size={18} className={color} />
  <div>
  <p className="text-xs text-slate-500">{label}</p>
@@ -150,7 +150,7 @@ export default function AdminFeaturePanel() {
  </div>
 
  {/* Tab bar */}
- <div className="flex gap-2 border-b border-slate-200 pb-0">
+ <div className="flex gap-2 border-b border-[var(--card-border)] pb-0">
  {[
  { id: 'users', label: 'Users & Overrides', icon: Users },
  { id: 'requests', label: `Access Requests${pendingCount > 0 ? ` (${pendingCount})` : ''}`, icon: Clock },
@@ -159,7 +159,7 @@ export default function AdminFeaturePanel() {
  className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold border-b-2 transition-all ${
  activeTab === id
  ? 'border-teal-600 text-teal-700'
- : 'border-transparent text-slate-500 hover:text-slate-700'
+ : 'border-transparent text-[var(--text-500)] hover:text-slate-700'
  }`}>
  <Icon size={15} />{label}
  </button>
@@ -183,16 +183,16 @@ export default function AdminFeaturePanel() {
  ) : (
  <div className="space-y-2">
  {users.map(u => (
- <div key={u.id} className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
+ <div key={u.id} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
  {/* User row */}
- <div className="flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-slate-50 transition-colors"
+ <div className="flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-[var(--card-bg)] transition-colors"
  onClick={() => setExpandedUser(expandedUser === u.id ? null : u.id)}>
  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
  {u.name?.split(' ').map(n => n[0]).join('').slice(0,2)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 text-sm truncate">{u.name}</p>
- <p className="text-xs text-slate-500 capitalize">{u.role} · {u.care_setting || 'No setting'}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm truncate">{u.name}</p>
+ <p className="text-xs text-[var(--text-500)] capitalize">{u.role} · {u.care_setting || 'No setting'}</p>
  </div>
  <div className="flex items-center gap-2 flex-shrink-0">
  {u.override_count > 0 && (
@@ -214,11 +214,11 @@ export default function AdminFeaturePanel() {
  {expandedUser === u.id && (
  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
- className="border-t border-slate-100 overflow-hidden">
+ className="border-t border-[var(--card-border)]/50 overflow-hidden">
  <div className="px-5 py-4 space-y-3">
- <p className="text-xs font-bold text-slate-400 ">Active Overrides</p>
+ <p className="text-xs font-bold text-[var(--text-400)] ">Active Overrides</p>
  {u.overrides.length === 0 ? (
- <p className="text-sm text-slate-400 italic">No overrides - all features follow care-setting defaults</p>
+ <p className="text-sm text-[var(--text-400)] italic">No overrides - all features follow care-setting defaults</p>
  ) : (
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
  {u.overrides.map(o => {
@@ -271,7 +271,7 @@ export default function AdminFeaturePanel() {
  {['pending', 'approved', 'denied', 'all'].map(s => (
  <button key={s} onClick={() => setStatusFilter(s)}
  className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
- statusFilter === s ? 'bg-teal-600 text-white' : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-50'
+ statusFilter === s ? 'bg-teal-600 text-white' : 'bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-600)] hover:bg-slate-50'
  }`}>
  {s === 'all' ? 'All' : s}
  </button>
@@ -283,9 +283,9 @@ export default function AdminFeaturePanel() {
  <Loader2 size={24} className="animate-spin mr-2" /> Loading requests...
  </div>
  ) : requests.length === 0 ? (
- <div className="bg-slate-50 rounded-xl border border-slate-200 p-12 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-12 text-center">
  <Clock size={36} className="mx-auto text-slate-300 mb-3" />
- <p className="text-slate-500 text-sm">No {statusFilter === 'all' ? '' : statusFilter} requests</p>
+ <p className="text-[var(--text-500)] text-sm">No {statusFilter === 'all' ? '' : statusFilter} requests</p>
  </div>
  ) : (
  <div className="space-y-2">
@@ -293,13 +293,13 @@ export default function AdminFeaturePanel() {
  const sc = STATUS_CFG[r.status] || STATUS_CFG.pending;
  const Icon = sc.icon;
  return (
- <div key={r.id} className="bg-slate-50 rounded-xl border border-slate-200 px-5 py-4">
+ <div key={r.id} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] px-5 py-4">
  <div className="flex items-start gap-4">
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
- <p className="font-semibold text-slate-800 text-sm">{r.user?.name || `User #${r.user_id || ''}`}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{r.user?.name || `User #${r.user_id || ''}`}</p>
  <span className="text-xs text-slate-400">·</span>
- <p className="text-xs text-slate-500 capitalize">{r.user?.role}</p>
+ <p className="text-xs text-[var(--text-500)] capitalize">{r.user?.role}</p>
  <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${sc.cls}`}>
  <Icon size={10} />{sc.label}
  </span>
@@ -309,9 +309,9 @@ export default function AdminFeaturePanel() {
  </p>
  <p className="text-sm text-slate-600">{r.reason}</p>
  {r.admin_note && (
- <p className="text-xs text-slate-400 mt-1 italic">Admin note: {r.admin_note}</p>
+ <p className="text-xs text-[var(--text-400)] mt-1 italic">Admin note: {r.admin_note}</p>
  )}
- <p className="text-xs text-slate-400 mt-1.5">
+ <p className="text-xs text-[var(--text-400)] mt-1.5">
  {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
  </p>
  </div>
@@ -339,12 +339,12 @@ export default function AdminFeaturePanel() {
  onClick={() => setReviewModal(null)}>
  <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
  onClick={e => e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
  <h2 className="text-base font-bold text-slate-800">Review Feature Request</h2>
- <div className="bg-slate-50 rounded-xl p-4">
+ <div className="bg-[var(--card-bg)] rounded-xl p-4">
  <p className="text-sm font-semibold text-slate-700">{reviewModal.user?.name}</p>
  <p className="text-sm text-teal-700 font-medium mt-1">Requesting: {reviewModal.feature_name}</p>
- <p className="text-sm text-slate-600 mt-1">{reviewModal.reason}</p>
+ <p className="text-sm text-[var(--text-600)] mt-1">{reviewModal.reason}</p>
  </div>
  <div>
  <label className="block text-xs font-semibold text-slate-600r mb-1.5">Admin Note (optional)</label>
@@ -377,7 +377,7 @@ export default function AdminFeaturePanel() {
  onClick={() => setOverrideModal(null)}>
  <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
  onClick={e => e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
  <h2 className="text-base font-bold text-slate-800">
  {overrideModal.overrideId ? 'Update' : 'Add'} Feature Override
  </h2>
@@ -415,14 +415,14 @@ export default function AdminFeaturePanel() {
  className={`flex flex-col items-center gap-1 py-3 rounded-xl border-2 text-xs font-bold transition-all ${
  overrideModal.current === s
  ? `${cfg.cls} border-current`
- : 'border-slate-200 text-slate-500 hover:bg-slate-50'
+ : 'border-[var(--card-border)] text-[var(--text-500)] hover:bg-slate-50'
  }`}>
  <Icon size={16} /> {cfg.label}
  </button>
  );
  })}
  </div>
- <p className="text-xs text-slate-400 mt-2">
+ <p className="text-xs text-[var(--text-400)] mt-2">
  {overrideModal.current === 'enabled' && 'Feature will be shown even if care setting hides it.'}
  {overrideModal.current === 'disabled' && 'Feature will be hidden regardless of care setting.'}
  {overrideModal.current === 'locked' && 'Feature is hidden and the user cannot request access to it.'}
@@ -438,7 +438,7 @@ export default function AdminFeaturePanel() {
 
  <div className="flex gap-3">
  <button onClick={() => setOverrideModal(null)}
- className="flex-1 py-2.5 border border-slate-300 text-slate-600 font-semibold rounded-xl text-sm hover:bg-slate-50 transition">
+ className="flex-1 py-2.5 border border-slate-300 text-[var(--text-600)] font-semibold rounded-xl text-sm hover:bg-[var(--card-bg)] transition">
  Cancel
  </button>
  <button

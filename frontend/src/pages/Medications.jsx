@@ -85,7 +85,7 @@ function KpiCard({ label, value, icon: Icon, color, selected, onClick, subtitle 
  return (
  <button onClick={onClick}
  className={`relative rounded-xl border-2 px-4 py-3 text-left w-full transition-all duration-150 ${
- selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-slate-50 border-slate-200 hover:border-slate-300 hover:shadow-sm'
+ selected ? `${color} border-current shadow-md scale-[1.01]` : 'bg-[var(--card-bg)] border-[var(--card-border)] hover:border-slate-300 hover:shadow-sm'
  }`}>
  {selected && <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor:'currentColor' }}/>}
  <div className="flex items-center gap-2 mb-1.5">
@@ -114,8 +114,8 @@ function MedModal({ initial, onClose, onSave, pending }) {
  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
  <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
  onClick={e=>e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
- <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100">
+ <div className="px-6 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center"><Pill size={15}/></div>
  <h2 className="font-bold text-slate-800">{initial ? 'Edit Medication' : 'Add Medication'}</h2>
@@ -124,18 +124,18 @@ function MedModal({ initial, onClose, onSave, pending }) {
  </div>
  <div className="p-6 space-y-4">
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Medication Name *</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Medication Name *</label>
  <input value={f.name} onChange={up('name')} placeholder="e.g. Morphine Sulfate"
  className="w-full border border-slate-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
  </div>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Dose *</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Dose *</label>
  <input value={f.dose} onChange={up('dose')} placeholder="e.g. 10mg"
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
  </div>
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Start Date</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Start Date</label>
  <input type="date" value={f.start_date} onChange={up('start_date')}
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
  </div>
@@ -161,13 +161,13 @@ function MedModal({ initial, onClose, onSave, pending }) {
  />
  </div>
  <div>
- <label className="block text-xs font-bold text-slate-500 mb-1.5">Indication</label>
+ <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Indication</label>
  <input value={f.indication} onChange={up('indication')} placeholder="e.g. Pain management"
  className="w-full border border-slate-300 focus:border-teal-500 rounded-xl px-3.5 py-2.5 text-sm outline-none"/>
  </div>
  </div>
- <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-slate-600 rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 flex gap-3">
+ <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-white">Cancel</button>
  <button onClick={() => onSave(f)} disabled={!valid||pending}
  className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
  {pending?<Loader2 size={13} className="animate-spin"/>:<CheckCircle size={13}/>}
@@ -186,13 +186,13 @@ function StopModal({ med, onClose, onConfirm, pending }) {
  className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
  <motion.div initial={{scale:.95,y:20}} animate={{scale:1,y:0}} exit={{scale:.95,y:20}}
  onClick={e=>e.stopPropagation()}
- className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
+ className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-sm border border-slate-100">
  <div className="p-6 text-center">
  <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4"><Ban size={22} className="text-red-600"/></div>
- <h3 className="font-bold text-slate-900 text-lg mb-2">Discontinue {med?.name}?</h3>
- <p className="text-slate-500 text-sm mb-6">This marks <strong>{med?.dose}</strong> as inactive and logs it in the patient's history.</p>
+ <h3 className="font-bold text-[var(--text-900)] text-lg mb-2">Discontinue {med?.name}?</h3>
+ <p className="text-[var(--text-500)] text-sm mb-6">This marks <strong>{med?.dose}</strong> as inactive and logs it in the patient's history.</p>
  <div className="flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-slate-600 rounded-xl font-semibold text-sm hover:bg-slate-50">Keep Active</button>
+ <button onClick={onClose} className="flex-1 py-2.5 border border-slate-300 text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-slate-50">Keep Active</button>
  <button onClick={onConfirm} disabled={pending}
  className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm disabled:opacity-50 flex items-center justify-center gap-2">
  {pending?<Loader2 size={13} className="animate-spin"/>:<Ban size={13}/>}
@@ -211,7 +211,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  const dose = nextDose(med);
  return (
  <motion.div layout initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}
- className="group rounded-lg border bg-slate-50 transition-shadow hover:shadow-sm"
+ className="group rounded-lg border bg-[var(--card-bg)] transition-shadow hover:shadow-sm"
  style={{ borderLeft:`3px solid ${isActive?'#0d9488':'#cbd5e1'}`, borderColor:'#c8d0da' }}>
  <div className="flex items-center gap-3 px-3 py-2.5">
  {/* Icon */}
@@ -222,8 +222,8 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  {/* Left: name + dose info */}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <span className="font-semibold text-slate-800 text-sm truncate">{med.name}</span>
- <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-slate-500 border border-slate-200'}`}>
+ <span className="font-semibold text-[var(--text-800)] text-sm truncate">{med.name}</span>
+ <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-[var(--text-500)] border border-slate-200'}`}>
  {isActive ? 'Active' : 'Stopped'}
  </span>
  {med.frequency === 'prn' && (
@@ -231,7 +231,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  )}
  {dose && (
  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${
- dose.hoursUntil < 1 ? 'bg-red-50 text-red-600' : dose.hoursUntil < 4 ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-slate-500'
+ dose.hoursUntil < 1 ? 'bg-red-50 text-red-600' : dose.hoursUntil < 4 ? 'bg-amber-50 text-amber-600' : 'bg-[var(--card-bg)] text-slate-500'
  }`}>
  <Bell size={8}/> {dose.hoursUntil < 1 ? 'Due now' : dose.next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
  </span>
@@ -247,7 +247,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  </span>
  )}
  </div>
- <p className="text-xs text-slate-500 mt-0.5">
+ <p className="text-xs text-[var(--text-500)] mt-0.5">
  {med.dose} · {freqLabel(med.frequency)}{med.route ? ` · ${med.route}` : ''}
  {med.indication ? <> · <span className="text-slate-400">{med.indication}</span></> : null}
  </p>
@@ -255,7 +255,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
 
  {/* Right: date + actions */}
  <div className="flex items-center gap-2 flex-shrink-0">
- <span className="text-[11px] text-slate-400 hidden sm:flex items-center gap-1">
+ <span className="text-[11px] text-[var(--text-400)] hidden sm:flex items-center gap-1">
  <Clock size={10}/>
  {med.start_date ? new Date(med.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : ' - '}
  </span>
@@ -271,7 +271,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  {canEdit && isActive && (
  <div className="flex items-center gap-1">
  <button onClick={() => onEdit(med)}
- className="flex items-center gap-1 px-2 py-1 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-md text-[11px] font-medium transition">
+ className="flex items-center gap-1 px-2 py-1 text-[var(--text-500)] hover:text-[var(--text-700)] hover:bg-slate-100 rounded-md text-[11px] font-medium transition">
  <Edit2 size={10}/> Edit
  </button>
  <button onClick={() => onStop(med)}
@@ -460,14 +460,14 @@ export default function Medications() {
  selected={filterTab==='active'} onClick={() => setFilterTab('active')}
  subtitle="Currently prescribed"/>
  <KpiCard label="Discontinued" value={inactive.length} icon={Ban}
- color="bg-slate-100 text-slate-600 border-slate-400"
+ color="bg-slate-100 text-[var(--text-600)] border-slate-400"
  selected={filterTab==='inactive'} onClick={() => setFilterTab('inactive')}
  subtitle="Stopped medications"/>
  <KpiCard label="Dose Reminders" value={reminders.length} icon={Bell}
  color="bg-amber-50 text-amber-700 border-amber-400"
  selected={false} onClick={() => {}} subtitle="Due in next 24h"/>
  <KpiCard label="Drug Interactions" value={severeInts.length} icon={AlertTriangle}
- color={severeInts.length > 0 ? "bg-red-50 text-red-700 border-red-400" : "bg-slate-50 text-slate-500 border-slate-300"}
+ color={severeInts.length > 0 ? "bg-red-50 text-red-700 border-red-400" : "bg-[var(--card-bg)] text-[var(--text-500)] border-slate-300"}
  selected={false} onClick={() => {}} subtitle={severeInts.length > 0 ? "Severe/major flags" : "None detected"}/>
  </div>
  </div>
@@ -504,10 +504,10 @@ export default function Medications() {
  {/* Dose reminders */}
  {reminders.length > 0 && (
  <div className="px-6">
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
  <div className="flex items-center gap-2 mb-3">
  <Bell size={15} className="text-amber-600"/>
- <h3 className="font-bold text-slate-800 text-sm">Upcoming Doses - Next 24 Hours</h3>
+ <h3 className="font-bold text-[var(--text-800)] text-sm">Upcoming Doses - Next 24 Hours</h3>
  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{reminders.length}</span>
  </div>
  <div className="space-y-2">
@@ -538,7 +538,7 @@ export default function Medications() {
 
  {/* Filter bar */}
  <div className="px-6">
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 space-y-3">
  <div className="flex flex-col md:flex-row gap-3 items-center">
  {/* Patient search (staff) */}
  {isStaff && (
@@ -559,7 +559,7 @@ export default function Medications() {
  )}
  {/* Text search */}
  <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+ <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  <input value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search medications or indication…"
  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"/>
@@ -569,7 +569,7 @@ export default function Medications() {
  {[['active','Active',active.length],['inactive','History',inactive.length]].map(([v,l,n])=>(
  <button key={v} onClick={() => setFilterTab(v)}
  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterTab===v ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200'
+ filterTab===v ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
  }`}>
  {l} ({n})
  </button>
@@ -585,20 +585,20 @@ export default function Medications() {
  <div className="flex items-center justify-center h-40">
  <div className="flex flex-col items-center gap-3">
  <Loader2 size={28} className="animate-spin text-teal-600"/>
- <p className="text-sm text-slate-500 font-medium">Loading medications…</p>
+ <p className="text-sm text-[var(--text-500)] font-medium">Loading medications…</p>
  </div>
  </div>
  ) : !patientId ? (
- <div className="bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 p-14 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border-2 border-dashed border-[var(--card-border)] p-14 text-center">
  <Search size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="font-bold text-slate-600 text-base mb-1">Search for a patient</p>
- <p className="text-slate-400 text-sm">Select a patient above to view their medications.</p>
+ <p className="font-bold text-[var(--text-600)] text-base mb-1">Search for a patient</p>
+ <p className="text-[var(--text-400)] text-sm">Select a patient above to view their medications.</p>
  </div>
  ) : filtered.length === 0 ? (
- <div className="bg-slate-50 rounded-xl border border-slate-200 p-12 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-12 text-center">
  <Pill size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="font-bold text-slate-600 mb-1">{filterTab==='active' ? 'No active medications' : 'No medication history'}</p>
- <p className="text-slate-400 text-sm mb-4">{filterTab==='active' ? 'No medications currently prescribed.' : 'No discontinued medications on record.'}</p>
+ <p className="font-bold text-[var(--text-600)] mb-1">{filterTab==='active' ? 'No active medications' : 'No medication history'}</p>
+ <p className="text-[var(--text-400)] text-sm mb-4">{filterTab==='active' ? 'No medications currently prescribed.' : 'No discontinued medications on record.'}</p>
  {isStaff && filterTab==='active' && (
  <button onClick={() => setShowAddModal(true)}
  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm">

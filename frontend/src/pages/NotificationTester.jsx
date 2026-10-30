@@ -144,7 +144,7 @@ export default function NotificationTester() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-slate-50 rounded-xl shadow-md border-2 border-slate-200 overflow-hidden hover:shadow-lg transition-all"
+                className="bg-[var(--card-bg)] rounded-xl shadow-md border-2 border-[var(--card-border)] overflow-hidden hover:shadow-lg transition-all"
               >
                 <div className={`h-2 bg-gradient-to-r ${notif.color}`} />
                 
@@ -155,14 +155,14 @@ export default function NotificationTester() {
                         <Icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 text-lg">{notif.title}</h3>
+                        <h3 className="font-bold text-[var(--text-900)] text-lg">{notif.title}</h3>
                         <p className="text-sm text-slate-600">{notif.description}</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mb-4 p-3 bg-slate-50 rounded-lg">
-                    <p className="text-xs text-slate-500 font-mono">
+                  <div className="mb-4 p-3 bg-[var(--card-bg)] rounded-lg">
+                    <p className="text-xs text-[var(--text-500)] font-mono">
                       Type: <span className="text-teal-600 font-semibold">{notif.type}</span>
                     </p>
                   </div>
@@ -185,9 +185,9 @@ export default function NotificationTester() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-8 p-6 bg-slate-50 rounded-xl shadow-md border-2 border-teal-200"
+          className="mt-8 p-6 bg-[var(--card-bg)] rounded-xl shadow-md border-2 border-teal-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center gap-2">
             <Bell className="w-5 h-5 text-teal-600" />
             How to Test
           </h3>

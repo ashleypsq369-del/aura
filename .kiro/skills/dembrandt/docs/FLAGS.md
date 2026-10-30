@@ -1,0 +1,64 @@
+# Flag compatibility
+
+Default rule: every flag combines freely with every other flag. Extraction modifiers (`--dark-mode`, `--mobile`, `--slow`, `--stealth`, fingerprint flags) change what is extracted; export flags (`--save-output`, `--dtcg`, `--brand-guide`, `--design-md`, `--html`, `--screenshot`) each write their own artifact from the same result; analysis flags (`--wcag`, `--compare`, `--ai`) run on top. Stack as many as you want.
+
+The tables below list the only exceptions: combinations that change each other's behavior, combinations that are ignored, and flags that do not propagate to multi-page runs.
+
+## Combinations that change behavior
+
+| Combination | Behavior |
+|---|---|
+| `--compare` + `--approve` | The current extraction overwrites the baseline file and the run passes regardless of drift. |
+| `--compare` + `--html` | The drift report is embedded in the HTML report. |
+| `--compare` + `--json-only` | A `drift` object is attached to the stdout JSON. Saved files (`--save-output`, baselines) stay pure extractions. |
+| `--tokens` + `--json-only` / `--save-output` | A `tokenConformance` object is attached to the result: date, url, commit, counts per category and the off-token list, one object per run so a pipeline can append and trend. |
+| `--tokens` + `--compare` | Independent checks. Either one failing exits 1; a token check that cannot read its file exits 2 like an unreadable baseline. |
+| `--tokens` + `--login` or `--cookie-file` + extra paths | The signed-in context is shared by every path, so one run checks several routes behind a sign-in. |
+| `--crawl` + `--sitemap` | Sitemap discovery is used, `--crawl N` sets the page limit (N pages total). `--sitemap` alone discovers up to 20 additional pages. |
+| `--dtcg` + `--save-output` | Two files: the raw extraction (`.json`, from `--save-output`) and the DTCG tokens (`.tokens.json`, from `--dtcg`), same timestamp. Each flag alone writes only its own file. |
+| `--json-only` + `--dtcg` | stdout is the DTCG document. `--wcag`, `--raw-colors`, and `pages` data exist only in the raw extraction: drop `--dtcg` or add `--save-output` to get them. |
+| `--json-only` + any export flag | Exports still write. All status output moves to stderr so stdout stays parseable JSON. |
+| `--ai` + `--compare` | ML overwrites `colors.semantic.primary` before the compare runs, and the drift engine compares the semantic map role by role, so an `--ai` run against a non-`--ai` baseline (or vice versa) reports primary-color drift that reflects the flag rather than the site. Use the same flag on both sides. Older baselines predate this: the semantic map used to be left out of the comparison entirely, so the same mismatch was silently invisible rather than reported. |
+| `--key` + `--crawl` / `--sitemap` / extra paths | Merged multi-page results can exceed the 150 KB sync cap; the upload is then skipped with a warning. |
+
+## Combinations that are ignored or fail
+
+| Combination | Behavior |
+|---|---|
+| `--approve` without `--compare` | No effect. A warning is printed. |
+| `--max-off-token` or `--tokens-report` without `--tokens` | No effect. |
+| `--login` without a terminal (piped stdin, CI, an agent's shell) | Exit 2 before the browser opens; nobody could press Enter. Sign in once in a terminal with `--save-storage-state`, reuse the file with `--cookie-file`. |
+| `--tokens` with a file that has no tokens of a kind | Font sizes match only font-size tokens (`$type` fontSize, a typography composite, or a name with font, text, type, heading, body, caption, display), radii only radius tokens (radius, rounded, corner); other dimensions stand in only for a kind that has no named tokens of its own. A kind with nothing to match lists every rendered value as off token with no nearest, and the report says "none of this type". |
+| `--annotations` + `--json-only` | No annotations: stdout is the JSON document. Drop `--json-only` on the runner or read `tokenConformance` and `drift` from the saved file. |
+| Explicit `[paths...]` arguments + `--crawl` or `--sitemap` | Explicit paths win; link and sitemap discovery are skipped entirely. |
+| `--color-format` + `--json-only` / `--save-output` / `--dtcg` / `--design-md` / `--html` / `--brand-guide` | Ignored by those paths. The flag is presentational and covers terminal output only; the payload carries hex, rgb, lch and oklch for every color. A warning names the paths it misses. |
+| `--no-sandbox` + `--browser firefox` | Ignored. Sandbox flags are Chromium-only. |
+| `BROWSER_CDP_ENDPOINT` (env) + `--browser firefox` | Error. CDP connect is Chromium-only. CDP mode also disables the visible-browser retry on navigation failure. |
+| `--save-storage-state` without `--login` | No effect. A warning is printed. |
+| `--login`, Enter pressed while the browser is still on the sign-in host | A second prompt names both hosts; Enter again extracts the page as it stands. |
+| `--save-storage-state` with a single-page app that keeps its tokens in sessionStorage | Saved per origin under a `sessionStorage` key next to Playwright's state; `--cookie-file` seeds it before the first script runs, existing keys win. |
+| `--login` + `--crawl` / `--sitemap` / extra paths | Login pause runs on the first page only. A warning names the reuse path (`--save-storage-state` then `--cookie-file`). |
+
+## Multi-page runs: which flags reach every page
+
+In a multi-page run (`--crawl`, `--sitemap`, or extra `[paths...]`), some flags apply to every extracted page and some apply only to the first page.
+
+| Applied to every page | First page only |
+|---|---|
+| `--dark-mode` | `--screenshot` |
+| `--mobile` | |
+| `--slow` | |
+| `--stealth` | |
+| `--cookie` | |
+| `--cookie-file` | |
+| `--basic-auth` | |
+| `--header` | |
+| `--user-agent` | |
+| `--locale` | |
+| `--timezone` | |
+| `--accept-language` | |
+| `--screen-size` | |
+| `--wcag` | |
+| `--raw-colors` | |
+
+`--wcag` results are merged across pages: static pairs are deduped order-insensitively by color pair with counts summed (top 50 kept), interactive state pairs appended after. `--raw-colors` stays per page by design, since it is a diagnostic view of the pre-filter color pipeline that runs before merge: each page's raw colors sit on its entry in the `pages` array, and `colors.rawColors` remains the first page's set for backward compatibility.

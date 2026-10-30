@@ -75,7 +75,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/20'
  : isReq
  ? 'bg-red-50/60 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
- : 'bg-slate-50 dark:bg-slate-700/30 border-slate-100 dark:border-slate-700/50'
+ : 'bg-[var(--card-bg)] dark:bg-slate-700/30 border-[var(--card-border)]/50 dark:border-slate-700/50'
  }`}
  >
  {/* Status icon */}
@@ -95,11 +95,11 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  {/* Text */}
  <div className="flex-1 min-w-0">
  <p className={`text-xs font-semibold leading-tight truncate
- ${task.done ? 'text-slate-400 line-through' : 'text-slate-700 dark:text-slate-100'}`}>
+ ${task.done ? 'text-[var(--text-400)] line-through' : 'text-[var(--text-700)] dark:text-slate-100'}`}>
  {task.name}
  </p>
  {task.description && !task.done && (
- <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate mt-0.5">{task.description}</p>
+ <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">{task.description}</p>
  )}
  </div>
 
@@ -127,7 +127,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  <button
  onClick={() => onAcknowledge(task.id)}
  disabled={acknowledging === task.id}
- className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-40"
+ className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-40"
  >
  {acknowledging === task.id ? '…' : 'Mark Done'}
  </button>
@@ -235,13 +235,13 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
  return (
  <div
- className="rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm"
+ className="rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden shadow-sm"
  style={{ borderLeft: `4px solid ${accentColor}`, background: 'var(--card-bg, #e8fafa)' }}
  >
  {/* ── Collapsed header (always visible) ── */}
  <button
  onClick={() => setExpanded(!expanded)}
- className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors"
+ className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--card-bg)] dark:hover:bg-slate-700/40 transition-colors"
  >
  {/* Ring */}
  {isLoading
@@ -252,7 +252,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {/* Summary text */}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2">
- <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+ <p className="text-sm font-bold text-[var(--text-800)] truncate">
  {allDone ? 'All tasks complete for today ✓' : "Today's Care Tasks"}
  </p>
  {!allDone && pendingCount > 0 && (
@@ -261,7 +261,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  </span>
  )}
  </div>
- <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+ <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">
  {reqDone} of {reqTotal} required done
  {optionalTasks.length > 0 && ` · ${optionalTasks.filter(t=>t.done).length}/${optionalTasks.length} optional`}
  </p>
@@ -278,7 +278,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  <div className="flex items-center gap-2 flex-shrink-0">
  <button
  onClick={(e) => { e.stopPropagation(); refetch(); }}
- className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-teal-600 transition-colors"
+ className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-[var(--text-400)] hover:text-teal-600 transition-colors"
  title="Refresh"
  >
  <RefreshCw size={12}/>
@@ -300,12 +300,12 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  className="overflow-hidden"
  >
  <div className="px-4 pb-4 space-y-2">
- <div className="h-px bg-slate-100 dark:bg-slate-700 mb-3"/>
+ <div className="h-px bg-slate-100 mb-3"/>
 
  {/* Required tasks */}
  {requiredTasks.length > 0 && (
  <div className="space-y-2">
- <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 ">
+ <p className="text-[10px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] ">
  Required Today - {reqDone}/{reqTotal}
  </p>
  {requiredTasks.map(task => (
@@ -321,7 +321,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {/* Optional tasks */}
  {optionalTasks.length > 0 && (
  <div className="space-y-2 mt-3">
- <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1">
+ <p className="text-[10px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
  Optional
  </p>
  {optionalTasks.map(task => (

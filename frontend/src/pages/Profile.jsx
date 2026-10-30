@@ -185,7 +185,7 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Profile Summary Card */}
           <div className="lg:col-span-1">
-            <div className="bg-slate-50 rounded-lg border border-slate-200 p-5 sticky top-6">
+            <div className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-5 sticky top-6">
               <div className="text-center">
                 <div className="relative inline-block mb-3">
                   <AvatarDisplay size={72} showRing className="mx-auto" />
@@ -199,27 +199,27 @@ export default function Profile() {
                     {avatarUploading ? <Loader2 size={11} className="animate-spin"/> : <Camera size={11}/>}
                   </button>
                 </div>
-                <h2 className="text-sm font-bold text-slate-900 mb-1">
+                <h2 className="text-sm font-bold text-[var(--text-900)] mb-1">
                   {profile?.full_name || user.full_name}
                 </h2>
-                <p className="text-xs text-slate-500 mb-3">@{user.username}</p>
+                <p className="text-xs text-[var(--text-500)] mb-3">@{user.username}</p>
                 <span className={getRoleBadge(user.role)}>
                   {user.role}
                 </span>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-slate-100 space-y-2">
-                <div className="flex items-center gap-2 text-xs bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+              <div className="mt-5 pt-4 border-t border-[var(--card-border)]/50 space-y-2">
+                <div className="flex items-center gap-2 text-xs bg-[var(--card-bg)] px-3 py-2 rounded-lg border border-slate-100">
                   <Mail size={13} className="text-teal-600 flex-shrink-0" />
-                  <span className="text-slate-600 truncate">{profile?.email || user.email}</span>
+                  <span className="text-[var(--text-600)] truncate">{profile?.email || user.email}</span>
                 </div>
                 {profile?.phone && (
-                  <div className="flex items-center gap-2 text-xs bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+                  <div className="flex items-center gap-2 text-xs bg-[var(--card-bg)] px-3 py-2 rounded-lg border border-slate-100">
                     <Phone size={13} className="text-teal-600 flex-shrink-0" />
                     <span className="text-slate-600">{profile.phone}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs bg-slate-50 px-3 py-2 rounded-lg border border-slate-100">
+                <div className="flex items-center gap-2 text-xs bg-[var(--card-bg)] px-3 py-2 rounded-lg border border-slate-100">
                   <Shield size={13} className="text-teal-600 flex-shrink-0" />
                   <span className="text-slate-600">Account active</span>
                 </div>
@@ -231,8 +231,8 @@ export default function Profile() {
           <div className="lg:col-span-2 space-y-5">
             
             {/* Personal Information */}
-            <div className="bg-slate-50 rounded-lg border border-slate-200">
-              <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+            <div className="bg-[var(--card-bg)] rounded-lg border border-slate-200">
+              <div className="px-5 py-3 border-b border-[var(--card-border)]/50 flex items-center justify-between">
                 <h2 className="text-sm font-bold text-slate-900">Personal Information</h2>
                 {!editMode && (
                   <button onClick={() => setEditMode(true)} data-tip="Edit profile"
@@ -277,7 +277,7 @@ export default function Profile() {
                   { label: 'Phone',         type: 'tel',   key: 'phone',      val: profile?.phone || '',                    placeholder: '+233 XX XXX XXXX' },
                 ].map(f => (
                   <div key={f.key}>
-                    <label className="block text-xs font-bold text-slate-500  mb-1.5">{f.label}</label>
+                    <label className="block text-xs font-bold text-[var(--text-500)]  mb-1.5">{f.label}</label>
                     {editMode ? (
                       <input type={f.type} value={profileData[f.key]}
                         onChange={e => setProfileData({ ...profileData, [f.key]: e.target.value })}
@@ -292,15 +292,15 @@ export default function Profile() {
                 ))}
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500  mb-1.5">Username</label>
+                  <label className="block text-xs font-bold text-[var(--text-500)]  mb-1.5">Username</label>
                   <p className="text-sm font-semibold text-slate-800">@{user.username}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Cannot be changed</p>
+                  <p className="text-xs text-[var(--text-400)] mt-0.5">Cannot be changed</p>
                 </div>
 
                 {editMode && (
                   <div className="flex gap-2 pt-3 border-t border-slate-100">
                     <button type="button" onClick={() => { setEditMode(false); setProfileData({ full_name: profile?.full_name || user.full_name || '', email: profile?.email || user.email || '', phone: profile?.phone || user.phone || '' }); }}
-                      className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
+                      className="flex-1 px-4 py-2 border border-slate-300 text-[var(--text-700)] rounded-lg text-sm font-semibold hover:bg-[var(--card-bg)] transition-colors">
                       Cancel
                     </button>
                     <button type="submit" disabled={updateProfileMutation.isPending} data-tip="Save changes"
@@ -313,8 +313,8 @@ export default function Profile() {
             </div>
 
             {/* Change Password */}
-            <div className="bg-slate-50 rounded-lg border border-slate-200">
-              <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+            <div className="bg-[var(--card-bg)] rounded-lg border border-slate-200">
+              <div className="px-5 py-3 border-b border-[var(--card-border)]/50 flex items-center justify-between">
                 <div>
                   <h2 className="text-sm font-bold text-slate-900">Password</h2>
                   <p className="text-xs text-slate-400">Keep your account secure</p>
@@ -335,7 +335,7 @@ export default function Profile() {
                     { label: 'Confirm Password',  key: 'confirm_password', ph: 'Confirm new password'   },
                   ].map(f => (
                     <div key={f.key}>
-                      <label className="block text-xs font-bold text-slate-500  mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-bold text-[var(--text-500)]  mb-1.5">{f.label}</label>
                       <PasswordInput
                         value={passwordData[f.key]}
                         onChange={e => setPasswordData({ ...passwordData, [f.key]: e.target.value })}
@@ -354,7 +354,7 @@ export default function Profile() {
                   <div className="flex gap-2 pt-3 border-t border-slate-100">
                     <button type="button"
                       onClick={() => { setShowPasswordSection(false); setPasswordData({ current_password: '', new_password: '', confirm_password: '' }); }}
-                      className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
+                      className="flex-1 px-4 py-2 border border-slate-300 text-[var(--text-700)] rounded-lg text-sm font-semibold hover:bg-[var(--card-bg)] transition-colors">
                       Cancel
                     </button>
                     <button type="submit"
@@ -372,13 +372,13 @@ export default function Profile() {
             </div>
 
             {/* Preferences */}
-            <div className="bg-slate-50 rounded-lg border border-slate-200">
+            <div className="bg-[var(--card-bg)] rounded-lg border border-slate-200">
               <div className="px-5 py-3 border-b border-slate-100">
                 <h2 className="text-sm font-bold text-slate-900">Preferences</h2>
               </div>
               <div className="p-4 space-y-3">
                 {/* Notifications */}
-                <div className="flex items-center justify-between px-3 py-2.5 bg-slate-50 rounded-lg border border-slate-100">
+                <div className="flex items-center justify-between px-3 py-2.5 bg-[var(--card-bg)] rounded-lg border border-slate-100">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center flex-shrink-0">
                       <Bell size={13} className="text-teal-600" />
@@ -390,11 +390,11 @@ export default function Profile() {
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:bg-teal-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-50 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
+                    <div className="w-10 h-5 bg-slate-200 rounded-full peer peer-checked:bg-teal-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--card-bg)] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
                   </label>
                 </div>
                 {/* Language */}
-                <div className="flex items-center justify-between px-3 py-2.5 bg-slate-50 rounded-lg border border-slate-100">
+                <div className="flex items-center justify-between px-3 py-2.5 bg-[var(--card-bg)] rounded-lg border border-slate-100">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-md bg-cyan-50 flex items-center justify-center flex-shrink-0">
                       <Globe size={13} className="text-cyan-600" />
@@ -404,7 +404,7 @@ export default function Profile() {
                       <p className="text-[10px] text-slate-400">Interface language</p>
                     </div>
                   </div>
-                  <select className="px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold bg-slate-50 text-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
+                  <select className="px-2.5 py-1.5 border border-[var(--card-border)] rounded-lg text-xs font-semibold bg-[var(--card-bg)] text-[var(--text-700)] focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
                     <option value="en">English</option>
                     <option value="twi">Twi</option>
                     <option value="ga">Ga</option>

@@ -62,12 +62,12 @@ function ColorSwatch({ items, selected, onSelect }) {
  animate={{ scale: 1 }}
  className="absolute inset-0 flex items-center justify-center"
  >
- <span className="w-3 h-3 rounded-full bg-slate-50 shadow-sm opacity-90" />
+ <span className="w-3 h-3 rounded-full bg-[var(--card-bg)] shadow-sm opacity-90" />
  </motion.span>
  )}
  </button>
  {/* Label fades in on hover */}
- <span className="text-[10px] font-medium text-slate-400 group-hover:text-slate-600 transition-colors leading-none max-w-[44px] text-center truncate">
+ <span className="text-[10px] font-medium text-[var(--text-400)] group-hover:text-[var(--text-600)] transition-colors leading-none max-w-[44px] text-center truncate">
  {item.label}
  </span>
  </div>
@@ -91,7 +91,7 @@ function AccessoryCard({ item, selected, onSelect, accentColor }) {
  focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500
  ${active
  ? 'border-teal-500 bg-teal-50 shadow-sm'
- : 'border-slate-100 bg-slate-50 hover:border-slate-200 hover:shadow-sm'
+ : 'border-[var(--card-border)]/50 bg-[var(--card-bg)] hover:border-[var(--card-border)] hover:shadow-sm'
  }
  `}
  >
@@ -120,7 +120,7 @@ function BackdropCard({ item, selected, onSelect }) {
  className={`
  relative w-full aspect-[4/3] rounded-2xl border-2 overflow-hidden transition-all duration-150
  focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-teal-500
- ${active ? 'border-teal-500 shadow-md' : 'border-transparent hover:border-slate-200 hover:shadow-sm'}
+ ${active ? 'border-teal-500 shadow-md' : 'border-transparent hover:border-[var(--card-border)] hover:shadow-sm'}
  `}
  style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
  >
@@ -147,8 +147,8 @@ function BackdropCard({ item, selected, onSelect }) {
 function SectionTitle({ title, subtitle }) {
  return (
  <div className="mb-4">
- <h3 className="text-sm font-bold text-slate-800 leading-none">{title}</h3>
- {subtitle && <p className="text-xs text-slate-400 mt-1 leading-snug">{subtitle}</p>}
+ <h3 className="text-sm font-bold text-[var(--text-800)] leading-none">{title}</h3>
+ {subtitle && <p className="text-xs text-[var(--text-400)] mt-1 leading-snug">{subtitle}</p>}
  </div>
  );
 }
@@ -196,7 +196,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
  const displayName = user?.full_name?.split(' ')[0] || user?.username || 'Your';
 
  return (
- <div className="flex flex-col h-full bg-slate-50 rounded-2xl overflow-hidden shadow-xl">
+ <div className="flex flex-col h-full bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-xl">
 
  {/* ── Preview panel ────────────────────────────────────────────────── */}
  <div
@@ -227,7 +227,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
  {/* ── Tab bar ──────────────────────────────────────────────────────── */}
  <div
  ref={tabBarRef}
- className="relative flex border-b border-slate-100 bg-slate-50 overflow-x-auto flex-shrink-0 scrollbar-none"
+ className="relative flex border-b border-[var(--card-border)]/50 bg-[var(--card-bg)] overflow-x-auto flex-shrink-0 scrollbar-none"
  role="tablist"
  aria-label="Customise category"
  >
@@ -243,7 +243,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
  relative flex flex-col items-center gap-1 px-5 pt-3 pb-2.5 text-[11px] font-semibold
  whitespace-nowrap transition-colors flex-1 min-w-0
  focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-teal-500
- ${active ? 'text-teal-700' : 'text-slate-400 hover:text-slate-600'}
+ ${active ? 'text-teal-700' : 'text-[var(--text-400)] hover:text-slate-600'}
  `}
  >
  <t.Icon size={15} strokeWidth={active ? 2.5 : 1.8} />
@@ -356,14 +356,14 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
  </div>
 
  {/* ── Footer actions ────────────────────────────────────────────────── */}
- <div className="flex-shrink-0 px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center gap-2.5">
+ <div className="flex-shrink-0 px-4 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 flex items-center gap-2.5">
 
  {/* Reset - subtle tonal */}
  <button
  onClick={reset}
  aria-label="Reset to default"
  title="Reset to default"
- className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+ className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[var(--text-500)] bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
  >
  <RefreshCw size={13} />
  Reset
@@ -373,7 +373,7 @@ export default function AvatarBuilder({ initialConfig, onSave, onCancel }) {
  {onCancel && (
  <button
  onClick={onCancel}
- className="flex-1 py-2.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+ className="flex-1 py-2.5 text-xs font-semibold text-[var(--text-600)] border border-[var(--card-border)] rounded-xl hover:bg-[var(--card-bg)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
  >
  Cancel
  </button>

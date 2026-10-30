@@ -96,7 +96,7 @@ function Sel({ value, onChange, opts, className = '' }) {
  return (
  <div className={`relative ${className}`}>
  <select value={value} onChange={e => onChange(e.target.value)}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-slate-50 focus:outline-none focus:border-teal-400 appearance-none pr-6">
+ className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 appearance-none pr-6">
  {opts.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
  </select>
  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"/>
@@ -315,14 +315,14 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <FL>Title</FL>
  <input type="text" value={title} onChange={e => setTitle(e.target.value)}
  placeholder="Reminder title..."
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/20"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/20"/>
  </div>
 
  {/* 2. Date & Time */}
  <div>
  <FL><Clock size={9} className="inline mr-1"/>Date &amp; Time *</FL>
  <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-teal-400"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400"/>
  </div>
 
  {/* 3+4. Notify Before + Repeat */}
@@ -409,7 +409,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <textarea value={notes} onChange={e => setNotes(e.target.value)}
  placeholder="Instructions, context, or clinical notes..."
  rows={2}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-teal-400 resize-none"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 resize-none"/>
  </div>
 
  {hasReminder && (

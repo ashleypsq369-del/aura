@@ -71,11 +71,11 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
 /* ─── Section card wrapper ───────────────────────────────────────────────── */
 function Section({ title, children }) {
  return (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
  {title && (
- <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700"
+ <div className="px-5 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700"
  style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
- <h3 className="font-bold text-slate-800 dark:text-white text-sm">{title}</h3>
+ <h3 className="font-bold text-[var(--text-800)] text-sm">{title}</h3>
  </div>
  )}
  <div className="p-5">{children}</div>
@@ -219,13 +219,13 @@ export default function PatientMonitor() {
 
  {/* ── Tab bar ── */}
  <div className="px-6">
- <div className="flex gap-0 border-b border-slate-200 dark:border-slate-700 overflow-x-auto bg-slate-50 dark:bg-slate-800 rounded-t-xl">
+ <div className="flex gap-0 border-b border-[var(--card-border)] dark:border-slate-700 overflow-x-auto bg-[var(--card-bg)] rounded-t-xl">
  {TABS.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => setActiveTab(id)}
  className={`flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-all whitespace-nowrap flex-shrink-0
  ${activeTab === id
  ? 'border-teal-600 text-teal-700 dark:text-teal-400'
- : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
+ : 'border-transparent text-[var(--text-500)] hover:text-[var(--text-700)] dark:hover:text-slate-300'}`}>
  <Icon size={14} />{label}
  </button>
  ))}
@@ -261,7 +261,7 @@ export default function PatientMonitor() {
  </LineChart>
  </ResponsiveContainer>
  ) : (
- <p className="text-center text-slate-400 py-8 text-sm">No vitals data recorded yet</p>
+ <p className="text-center text-[var(--text-400)] py-8 text-sm">No vitals data recorded yet</p>
  )}
  </Section>
 
@@ -269,30 +269,30 @@ export default function PatientMonitor() {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
- <tr className="border-b border-slate-100 dark:border-slate-700">
+ <tr className="border-b border-[var(--card-border)]/50 dark:border-slate-700">
  {['Time','HR','BP','O₂ Sat','Temp'].map(h => (
- <th key={h} className="pb-2 text-left text-xs font-semibold text-slate-400 pr-4">{h}</th>
+ <th key={h} className="pb-2 text-left text-xs font-semibold text-[var(--text-400)] pr-4">{h}</th>
  ))}
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
  {(vitals?.slice(0, 12) || []).map(v => (
- <tr key={v.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
- <td className="py-2 pr-4 text-xs text-slate-500 whitespace-nowrap">
+ <tr key={v.id} className="hover:bg-[var(--card-bg)] dark:hover:bg-slate-700/30 transition-colors">
+ <td className="py-2 pr-4 text-xs text-[var(--text-500)] whitespace-nowrap">
  {new Date(v.recorded_at).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}
  </td>
- <td className="py-2 pr-4 font-medium text-slate-700 dark:text-slate-200">{Math.round(v.heart_rate ?? 0)}</td>
- <td className="py-2 pr-4 font-medium text-slate-700 dark:text-slate-200">
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">{Math.round(v.heart_rate ?? 0)}</td>
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">
  {Math.round(v.blood_pressure_sys ?? v.blood_pressure_systolic ?? 0)}/{Math.round(v.blood_pressure_dia ?? v.blood_pressure_diastolic ?? 0)}
  </td>
- <td className="py-2 pr-4 font-medium text-slate-700 dark:text-slate-200">{(v.oxygen_saturation ?? 0).toFixed(1)}%</td>
- <td className="py-2 font-medium text-slate-700 dark:text-slate-200">{(v.temperature ?? 0).toFixed(1)}°C</td>
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">{(v.oxygen_saturation ?? 0).toFixed(1)}%</td>
+ <td className="py-2 font-medium text-[var(--text-700)] dark:text-slate-200">{(v.temperature ?? 0).toFixed(1)}°C</td>
  </tr>
  ))}
  </tbody>
  </table>
  {(!vitals || vitals.length === 0) && (
- <p className="text-center text-slate-400 py-6 text-sm">No vitals recorded</p>
+ <p className="text-center text-[var(--text-400)] py-6 text-sm">No vitals recorded</p>
  )}
  </div>
  </Section>
@@ -312,10 +312,10 @@ export default function PatientMonitor() {
  className="border-l-4 border-teal-400 pl-4 py-2">
  <div className="flex items-start justify-between gap-2 flex-wrap">
  <div>
- <p className="font-semibold text-slate-800 dark:text-white text-sm">
+ <p className="font-semibold text-[var(--text-800)] text-sm">
  Pain: <span className="text-rose-600">{s.pain_level ?? ' - '}/10</span>
  </p>
- <p className="text-xs text-slate-500 mt-0.5">
+ <p className="text-xs text-[var(--text-500)] mt-0.5">
  {new Date(s.recorded_at).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}
  </p>
  </div>
@@ -327,12 +327,12 @@ export default function PatientMonitor() {
  {s.confusion && <SymBadge label="Confusion" color="#7c3aed" />}
  </div>
  </div>
- {s.notes && <p className="text-xs text-slate-500 italic mt-1">"{s.notes}"</p>}
+ {s.notes && <p className="text-xs text-[var(--text-500)] italic mt-1">"{s.notes}"</p>}
  </motion.div>
  ))}
  </div>
  ) : (
- <p className="text-center text-slate-400 py-8 text-sm">No symptoms recorded</p>
+ <p className="text-center text-[var(--text-400)] py-8 text-sm">No symptoms recorded</p>
  )}
  </Section>
  )}
@@ -344,24 +344,24 @@ export default function PatientMonitor() {
  <motion.div key={m.id}
  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.04 }}
- className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4">
  <div className="flex items-start justify-between gap-2 mb-2">
- <p className="font-bold text-slate-800 dark:text-white text-sm">{m.name}</p>
+ <p className="font-bold text-[var(--text-800)] text-sm">{m.name}</p>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0
  ${m.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
  {m.is_active ? 'Active' : 'Stopped'}
  </span>
  </div>
- <div className="space-y-0.5 text-xs text-slate-500 dark:text-slate-400">
- {m.dose && <p>Dose: <span className="font-medium text-slate-700 dark:text-slate-200">{m.dose}</span></p>}
- {m.frequency && <p>Frequency: <span className="font-medium text-slate-700 dark:text-slate-200">{m.frequency}</span></p>}
- {m.route && <p>Route: <span className="font-medium text-slate-700 dark:text-slate-200">{m.route}</span></p>}
- {m.indication && <p>For: <span className="font-medium text-slate-700 dark:text-slate-200">{m.indication}</span></p>}
+ <div className="space-y-0.5 text-xs text-[var(--text-500)] dark:text-slate-400">
+ {m.dose && <p>Dose: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.dose}</span></p>}
+ {m.frequency && <p>Frequency: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.frequency}</span></p>}
+ {m.route && <p>Route: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.route}</span></p>}
+ {m.indication && <p>For: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.indication}</span></p>}
  </div>
  </motion.div>
  )) : (
- <div className="col-span-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
- <p className="text-slate-400 text-sm">No medications prescribed</p>
+ <div className="col-span-2 bg-[var(--card-bg)] rounded-xl border border-dashed border-slate-300 p-10 text-center">
+ <p className="text-[var(--text-400)] text-sm">No medications prescribed</p>
  </div>
  )}
  </div>
@@ -374,20 +374,20 @@ export default function PatientMonitor() {
  <motion.div key={a.id}
  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.04 }}
- className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4 flex items-start gap-3">
  <div className="w-9 h-9 rounded-lg bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 flex-shrink-0">
  <Calendar size={16} />
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 dark:text-white text-sm">{a.appointment_type || 'Consultation'}</p>
- <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1">
+ <p className="font-semibold text-[var(--text-800)] text-sm">{a.appointment_type || 'Consultation'}</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5 flex items-center gap-1">
  <Clock size={10} />
  {a.scheduled_at ? new Date(a.scheduled_at).toLocaleString('en-GB', {
  weekday:'short', day:'numeric', month:'short', year:'numeric',
  hour:'2-digit', minute:'2-digit',
  }) : 'Date TBC'}
  </p>
- {a.location && <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1"><MapPin size={9} />{a.location}</p>}
+ {a.location && <p className="text-xs text-[var(--text-400)] mt-0.5 flex items-center gap-1"><MapPin size={9} />{a.location}</p>}
  </div>
  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
  a.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
@@ -396,8 +396,8 @@ export default function PatientMonitor() {
  }`}>{a.status || 'scheduled'}</span>
  </motion.div>
  )) : (
- <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 p-10 text-center">
- <p className="text-slate-400 text-sm">No appointments scheduled</p>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-dashed border-slate-300 p-10 text-center">
+ <p className="text-[var(--text-400)] text-sm">No appointments scheduled</p>
  </div>
  )}
  </div>
@@ -411,7 +411,7 @@ export default function PatientMonitor() {
  <p className="font-bold text-teal-800 dark:text-teal-300 capitalize">
  {patient?.care_pathway?.replace(/_/g, ' ') || 'Standard Palliative Care'}
  </p>
- <p className="text-xs text-slate-500 mt-1">
+ <p className="text-xs text-[var(--text-500)] mt-1">
  Risk score: {patient?.risk_score ? `${Math.round(patient.risk_score * 100)}%` : ' - '}
  {' · '}Level: {patient?.risk_level || ' - '}
  </p>
@@ -428,9 +428,9 @@ export default function PatientMonitor() {
  { l: 'Language', v: patient?.preferred_language },
  { l: 'Facility', v: patient?.facility_name },
  ].filter(r => r.v).map(({ l, v }) => (
- <div key={l} className="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-lg">
- <p className="text-[10px] text-slate-400 font-medium mb-0.5">{l}</p>
- <p className="font-semibold text-slate-800 dark:text-slate-200 text-xs capitalize">{v}</p>
+ <div key={l} className="p-3 bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-lg">
+ <p className="text-[10px] text-[var(--text-400)] font-medium mb-0.5">{l}</p>
+ <p className="font-semibold text-[var(--text-800)] text-xs capitalize">{v}</p>
  </div>
  ))}
  </div>
@@ -438,14 +438,14 @@ export default function PatientMonitor() {
 
  {patient?.secondary_diagnoses && (
  <Section title="Secondary Diagnoses">
- <p className="text-sm text-slate-600 dark:text-slate-300">{patient.secondary_diagnoses}</p>
+ <p className="text-sm text-[var(--text-600)] dark:text-slate-300">{patient.secondary_diagnoses}</p>
  </Section>
  )}
 
  {patient?.emergency_contact_name && (
  <Section title="Emergency Contact">
  <div className="space-y-1 text-sm">
- <p className="font-semibold text-slate-800 dark:text-white">{patient.emergency_contact_name}</p>
+ <p className="font-semibold text-[var(--text-800)] dark:text-white">{patient.emergency_contact_name}</p>
  {patient.emergency_contact_relationship && (
  <p className="text-slate-500">{patient.emergency_contact_relationship}</p>
  )}

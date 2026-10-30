@@ -119,7 +119,7 @@ function MsgContent({ text, streaming, isUser=false }) {
  </p>
  );
  return (
- <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-sky-700 prose-strong:text-slate-900 prose-code:text-sky-700 prose-code:bg-sky-50 prose-code:px-1 prose-code:rounded text-slate-800">
+ <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:text-sky-700 prose-strong:text-[var(--text-900)] prose-code:text-sky-700 prose-code:bg-sky-50 prose-code:px-1 prose-code:rounded text-slate-800">
  <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
  code({node,inline,className,children,...props}){
  const m=/language-(\w+)/.exec(className||'');
@@ -253,7 +253,7 @@ export default function AIAssistant() {
  <span className="font-semibold text-sm" style={{color:T.nameText}}>Clinical Copilot</span>
  {hasUrgent&&(
  <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-white bg-red-500">
- <span className="w-1.5 h-1.5 bg-slate-50 rounded-full animate-pulse"/>{critical} urgent
+ <span className="w-1.5 h-1.5 bg-[var(--card-bg)] rounded-full animate-pulse"/>{critical} urgent
  </span>
  )}
  {provider&&(
@@ -308,7 +308,7 @@ export default function AIAssistant() {
  <div className="space-y-1.5">
  {topActions.map((a,i)=>(
  <button key={i} onClick={()=>sendMessage(`Tell me about ${a.patient}: ${a.action}`)}
- className="w-full text-left px-3 py-1.5 rounded-lg text-xs transition-all bg-slate-50 border border-amber-200 hover:border-amber-400 hover:bg-amber-50">
+ className="w-full text-left px-3 py-1.5 rounded-lg text-xs transition-all bg-[var(--card-bg)] border border-amber-200 hover:border-amber-400 hover:bg-amber-50">
  <span className="font-semibold text-amber-800">{a.patient}:</span> <span className="text-amber-700">{a.action}</span>
  <span className="float-right text-amber-500 font-semibold">Ask AI →</span>
  </button>

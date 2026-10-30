@@ -71,7 +71,7 @@ const PRIORITY_COLORS = {
  critical: 'bg-red-100 text-red-700 border-red-200',
  high: 'bg-orange-100 text-orange-700 border-orange-200',
  medium: 'bg-amber-100 text-amber-700 border-amber-200',
- low: 'bg-slate-100 text-slate-600 border-slate-200',
+ low: 'bg-slate-100 text-[var(--text-600)] border-slate-200',
 };
 
 const ROLE_LABELS = {
@@ -222,8 +222,8 @@ export default function CareSettings() {
  onClick={() => setActiveTab(tab.id)}
  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap transition-all ${
  activeTab === tab.id
- ? 'bg-slate-50 text-teal-700 shadow-md'
- : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+ ? 'bg-[var(--card-bg)] text-teal-700 shadow-md'
+ : 'text-[var(--text-600)] hover:text-[var(--text-900)] hover:bg-white/60'
  }`}
  >
  <Icon size={16} />
@@ -247,8 +247,8 @@ export default function CareSettings() {
  </div>
 
  {/* Distribution */}
- <div className="bg-slate-50 rounded-2xl p-6 border-2 border-slate-200 shadow-sm">
- <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl p-6 border-2 border-[var(--card-border)] shadow-sm">
+ <h2 className="text-lg font-bold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <BarChart3 size={20} className="text-teal-600" />
  Patient Distribution Across Settings
  </h2>
@@ -278,7 +278,7 @@ export default function CareSettings() {
  className={`h-full rounded-full ${c.dot}`}
  />
  </div>
- <p className="text-xs text-slate-500 mt-1.5">{item.focus}</p>
+ <p className="text-xs text-[var(--text-500)] mt-1.5">{item.focus}</p>
  </div>
  );
  })}
@@ -344,7 +344,7 @@ export default function CareSettings() {
  <button
  type="button"
  onClick={() => setSelectedTemplate(null)}
- className="px-5 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition"
+ className="px-5 py-2 text-sm font-semibold text-[var(--text-700)] border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition"
  >
  Close
  </button>
@@ -367,9 +367,9 @@ export default function CareSettings() {
  ---------------------------------------------------------------------- */}
  {activeTab === 'matrix' && (
  <div className="space-y-5">
- <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 shadow-sm p-5">
+ <div className="bg-[var(--card-bg)] rounded-2xl border-2 border-[var(--card-border)] shadow-sm p-5">
  <div className="flex items-center justify-between mb-4">
- <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+ <h2 className="text-lg font-bold text-[var(--text-900)] flex items-center gap-2">
  <Users size={20} className="text-teal-600" />
  How Every User Interacts with Each Care Setting
  </h2>
@@ -382,7 +382,7 @@ export default function CareSettings() {
  className={`px-3 py-1 rounded-full text-xs font-bold border transition ${
  filterRole === r
  ? 'bg-teal-600 text-white border-teal-600'
- : 'border-slate-300 text-slate-600 hover:border-teal-400 hover:text-teal-700'
+ : 'border-slate-300 text-[var(--text-600)] hover:border-teal-400 hover:text-teal-700'
  }`}
  >
  {r === 'all' ? 'All Roles' : ROLE_LABELS[r]}
@@ -506,14 +506,14 @@ export default function CareSettings() {
  )}
  </>
  ) : (
- <div className="bg-slate-50 rounded-2xl p-12 border border-slate-200 text-center">
+ <div className="bg-[var(--card-bg)] rounded-2xl p-12 border border-[var(--card-border)] text-center">
  <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
  <Stethoscope size={28} className="text-slate-400" />
  </div>
- <h3 className="text-lg font-bold text-slate-700 mb-2">
+ <h3 className="text-lg font-bold text-[var(--text-700)] mb-2">
  {isFamily ? 'No Care Setting Assigned Yet' : 'No Care Setting Assigned Yet'}
  </h3>
- <p className="text-slate-500 text-sm max-w-sm mx-auto mb-5 leading-relaxed">
+ <p className="text-[var(--text-500)] text-sm max-w-sm mx-auto mb-5 leading-relaxed">
  {isFamily
  ? 'Your loved one has not yet been assigned to a care setting. Their clinical team will do this shortly.'
  : 'Your clinical team will assign you to the most appropriate care setting. Browse all 5 settings to understand what each involves.'
@@ -545,7 +545,7 @@ export default function CareSettings() {
  footerContent={
  <ModalFooter>
  <button type="button" onClick={() => setShowRequestModal(false)}
- className="px-4 py-2 text-sm font-semibold text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-slate-50 transition">
+ className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition">
  Cancel
  </button>
  <button type="button"
@@ -558,11 +558,11 @@ export default function CareSettings() {
  }
  >
  <div className="space-y-4">
- <p className="text-sm text-slate-600 leading-relaxed">
+ <p className="text-sm text-[var(--text-600)] leading-relaxed">
  Select the care setting that best describes your current situation. An admin will review your request and update your setting.
  </p>
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">Requested Care Setting *</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">Requested Care Setting *</label>
  <div className="space-y-2">
  {[
  { key: 'hospital_based', Icon: Building2, label: 'Hospital-Based Palliative Care' },
@@ -572,7 +572,7 @@ export default function CareSettings() {
  { key: 'long_term_residential',Icon: BedDouble, label: 'Long-Term Residential' },
  ].map(s => (
  <button key={s.key} type="button" onClick={() => setRequestedSetting(s.key)}
- className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition ${requestedSetting === s.key ? 'border-amber-500 bg-amber-50' : 'border-slate-200 hover:border-amber-300'}`}>
+ className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition ${requestedSetting === s.key ? 'border-amber-500 bg-amber-50' : 'border-[var(--card-border)] hover:border-amber-300'}`}>
  <s.Icon size={18} className="flex-shrink-0 text-slate-600" />
  <span className="text-sm font-semibold text-slate-800">{s.label}</span>
  {requestedSetting === s.key && <CheckCircle2 size={16} className="text-amber-600 ml-auto flex-shrink-0" />}
@@ -581,7 +581,7 @@ export default function CareSettings() {
  </div>
  </div>
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Reason for Change (optional)</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Reason for Change (optional)</label>
  <textarea value={requestReason} onChange={e => setRequestReason(e.target.value)} rows={3}
  placeholder="e.g., My condition has changed and I am now receiving care at home..."
  className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-amber-500 focus:ring-2 focus:ring-amber-100 outline-none text-sm resize-none" />
@@ -714,7 +714,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
  </div>
 
  {/* Section tabs */}
- <div className="flex gap-1 px-5 pt-4 border-b border-slate-200 overflow-x-auto">
+ <div className="flex gap-1 px-5 pt-4 border-b border-[var(--card-border)] overflow-x-auto">
  {[
  { id: 'overview', label: 'Overview', icon: Info },
  { id: 'interventions', label: 'Interventions', icon: ClipboardList },
@@ -729,7 +729,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
  className={`flex items-center gap-1.5 px-3 pb-2.5 text-sm font-semibold border-b-2 transition whitespace-nowrap ${
  activeSection === sec.id
  ? `border-${t.color}-500 ${c.text}`
- : 'border-transparent text-slate-500 hover:text-slate-700'
+ : 'border-transparent text-[var(--text-500)] hover:text-slate-700'
  }`}
  >
  <SecIcon size={14} />
@@ -743,7 +743,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
  {/* Overview */}
  {activeSection === 'overview' && (
  <div className="space-y-5">
- <p className="text-slate-700 leading-relaxed">{t.description}</p>
+ <p className="text-[var(--text-700)] leading-relaxed">{t.description}</p>
 
  <div className="grid md:grid-cols-2 gap-4">
  <InfoBlock title="Who It Serves" icon={Users} color={c}>
@@ -760,7 +760,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
  <InfoBlock title="Expected Duration" icon={Clock} color={c}>
  <p className="text-sm text-slate-700">{t.typical_duration}</p>
  <div className="mt-3 pt-3 border-t border-slate-200">
- <p className="text-xs font-bold text-slate-500 mb-1.5">Outcome Focus</p>
+ <p className="text-xs font-bold text-[var(--text-500)] mb-1.5">Outcome Focus</p>
  <p className="text-sm text-slate-700">{t.outcome_focus}</p>
  </div>
  </InfoBlock>
@@ -798,7 +798,7 @@ function SettingDetailPanel({ detail: t, userRole }) {
  {activeSection === 'my-role' && (
  <div className="space-y-3">
  {roleInteractions.length === 0 ? (
- <p className="text-sm text-slate-500 text-center py-6">
+ <p className="text-sm text-[var(--text-500)] text-center py-6">
  No specific interactions defined for your role in this setting.
  </p>
  ) : roleInteractions.map((ix, i) => (
@@ -827,19 +827,19 @@ function InfoBlock({ title, icon: Icon, color, children }) {
 function InteractionRow({ ix }) {
  const pCls = PRIORITY_COLORS[ix.priority] || PRIORITY_COLORS.medium;
  return (
- <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border border-slate-200">
  <div className="flex items-start justify-between gap-2 mb-1.5">
  <p className="font-semibold text-sm text-slate-900">{ix.interaction_type}</p>
  <div className="flex items-center gap-1.5 flex-shrink-0">
  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${pCls}`}>
  {ix.priority}
  </span>
- <span className="px-2 py-0.5 bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold">
+ <span className="px-2 py-0.5 bg-slate-200 text-[var(--text-600)] rounded-full text-[10px] font-bold">
  {ix.frequency}
  </span>
  </div>
  </div>
- <p className="text-xs text-slate-600 leading-relaxed">{ix.description}</p>
+ <p className="text-xs text-[var(--text-600)] leading-relaxed">{ix.description}</p>
  {ix.system_features_used?.length > 0 && (
  <div className="flex flex-wrap gap-1 mt-2">
  {ix.system_features_used.map(f => (
@@ -959,7 +959,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
  <div className="flex gap-2 mt-5">
  {actions.map(({ label, icon: AIcon, path }) => (
  <button key={path} onClick={() => navigate(path)}
- className="flex items-center gap-1.5 bg-slate-50 text-slate-800 font-semibold text-xs px-4 py-2 rounded-lg hover:bg-slate-50 transition-colors shadow-sm">
+ className="flex items-center gap-1.5 bg-[var(--card-bg)] text-[var(--text-800)] font-semibold text-xs px-4 py-2 rounded-lg hover:bg-[var(--card-bg)] transition-colors shadow-sm">
  <AIcon size={13} />{label}
  </button>
  ))}
@@ -970,8 +970,8 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
 
  {/* What to expect */}
  {bullets.length > 0 && (
- <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
- <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-5">
+ <h3 className="text-sm font-semibold text-[var(--text-700)] mb-3 flex items-center gap-2">
  <Info size={15} className="text-teal-500" /> What to expect in this setting
  </h3>
  <div className="space-y-2">
@@ -980,7 +980,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
  <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${c.header} flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm`}>
  <CheckCircle2 size={11} className="text-white" />
  </div>
- <p className="text-sm text-slate-700 leading-relaxed">{b}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">{b}</p>
  </div>
  ))}
  </div>
@@ -992,8 +992,8 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
 
 function SettingHistory({ history }) {
  return (
- <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 p-5">
- <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border-2 border-[var(--card-border)] p-5">
+ <h3 className="font-bold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <Clock size={18} className="text-teal-600" />
  Care Setting History
  </h3>
@@ -1011,7 +1011,7 @@ function SettingHistory({ history }) {
  <div className="w-3 h-3 bg-slate-400 rounded-full" />
  )}
  </div>
- <div className={`flex-1 p-3.5 rounded-xl border-2 ${item.is_current ? `${c.bg} ${c.border}` : 'bg-slate-50 border-slate-200'}`}>
+ <div className={`flex-1 p-3.5 rounded-xl border-2 ${item.is_current ? `${c.bg} ${c.border}` : 'bg-[var(--card-bg)] border-slate-200'}`}>
  <div className="flex items-center justify-between mb-1">
  <p className={`font-bold text-sm ${item.is_current ? c.text : 'text-slate-600'}`}>
  {item.setting_label}
@@ -1025,7 +1025,7 @@ function SettingHistory({ history }) {
  {item.ended_at && ` → ${new Date(item.ended_at).toLocaleDateString()}`}
  </p>
  {item.transition_reason && (
- <p className="text-xs text-slate-600 mt-1 italic">"{item.transition_reason}"</p>
+ <p className="text-xs text-[var(--text-600)] mt-1 italic">"{item.transition_reason}"</p>
  )}
  </div>
  </div>
@@ -1039,8 +1039,8 @@ function SettingHistory({ history }) {
 
 function AssignPatientPanel({ patients, templates, assignForm, setAssignForm, assignPatientId, setAssignPatientId, onSubmit, isPending }) {
  return (
- <div className="bg-slate-50 rounded-2xl border-2 border-teal-200 shadow-sm p-6">
- <h2 className="text-lg font-bold text-slate-900 mb-5 flex items-center gap-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border-2 border-teal-200 shadow-sm p-6">
+ <h2 className="text-lg font-bold text-[var(--text-900)] mb-5 flex items-center gap-2">
  <UserCheck size={20} className="text-teal-600" />
  Assign Patient to Care Setting
  </h2>
@@ -1105,7 +1105,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
 
  <div className="grid md:grid-cols-2 gap-4">
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Facility Name</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Facility Name</label>
  <input
  type="text"
  value={f.facility_name}
@@ -1115,7 +1115,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
  />
  </div>
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Visit Frequency</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Visit Frequency</label>
  <input
  type="text"
  value={f.visit_frequency}
@@ -1127,7 +1127,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Primary Care Contact</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Primary Care Contact</label>
  <input
  type="text"
  value={f.primary_contact}
@@ -1138,7 +1138,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Reason for Transition</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Reason for Transition</label>
  <input
  type="text"
  value={f.transition_reason}
@@ -1149,7 +1149,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-1.5">Clinical Notes</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">Clinical Notes</label>
  <textarea
  value={f.notes}
  onChange={e => set('notes', e.target.value)}
@@ -1208,7 +1208,7 @@ function ChangeRequestsPanel({ templates }) {
  };
 
  return (
- <div className="bg-slate-50 rounded-2xl border-2 border-slate-200 shadow-sm p-6">
+ <div className="bg-[var(--card-bg)] rounded-2xl border-2 border-[var(--card-border)] shadow-sm p-6">
  <div className="flex items-center gap-2 mb-5">
  <Bell size={20} className="text-amber-500" />
  <h2 className="text-lg font-bold text-slate-900">Care Setting Change Requests</h2>
@@ -1236,18 +1236,18 @@ function ChangeRequestsPanel({ templates }) {
  {(u.full_name || 'U')[0].toUpperCase()}
  </span>
  <div>
- <p className="font-semibold text-slate-800 text-sm">{u.full_name}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{u.full_name}</p>
  <p className="text-xs text-slate-500">{u.role} · @{u.username}</p>
  </div>
  </div>
  <div className="flex items-center gap-2 mt-2 ml-10">
  <span className="text-xs text-slate-500">Requesting:</span>
- <span className="text-xs font-semibold text-amber-700 bg-slate-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+ <span className="text-xs font-semibold text-amber-700 bg-[var(--card-bg)] border border-amber-200 px-2 py-0.5 rounded-lg">
  {settingLabel(u.care_setting_change_request)}
  </span>
  </div>
  {u.care_setting_change_reason && (
- <p className="text-xs text-slate-500 italic mt-1.5 ml-10">"{u.care_setting_change_reason}"</p>
+ <p className="text-xs text-[var(--text-500)] italic mt-1.5 ml-10">"{u.care_setting_change_reason}"</p>
  )}
  </div>
  <div className="flex gap-2 flex-shrink-0">
@@ -1260,7 +1260,7 @@ function ChangeRequestsPanel({ templates }) {
  <button
  onClick={() => dismissMutation.mutate(u.id)}
  disabled={approveMutation.isPending || dismissMutation.isPending}
- className="flex items-center gap-1.5 px-3 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-300 transition disabled:opacity-50">
+ className="flex items-center gap-1.5 px-3 py-2 bg-slate-200 text-[var(--text-700)] text-xs font-semibold rounded-lg hover:bg-slate-300 transition disabled:opacity-50">
  <XCircle size={13} /> Dismiss
  </button>
  </div>

@@ -66,13 +66,13 @@ function CareSettingBanner({ setting }) {
  <p className="text-xs font-bold" style={{ color: cfg.color }}>
  Care Setting: {cfg.label}
  </p>
- <p className="text-[11px] text-slate-500 truncate mt-0.5">{cfg.clinical_notes}</p>
+ <p className="text-[11px] text-[var(--text-500)] truncate mt-0.5">{cfg.clinical_notes}</p>
  </div>
- <Info size={14} className="text-slate-400 flex-shrink-0"/>
+ <Info size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {expanded && (
  <div className="px-4 pb-3 border-t" style={{ borderColor: cfg.color + '20' }}>
- <p className="text-[10px] font-bold text-slate-400 mt-2 mb-1.5">Key Clinical Tasks</p>
+ <p className="text-[10px] font-bold text-[var(--text-400)] mt-2 mb-1.5">Key Clinical Tasks</p>
  <div className="flex flex-wrap gap-1.5">
  {cfg.key_tasks.map(t => (
  <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -299,10 +299,10 @@ export default function PatientDetail() {
  return (
  <PageTransition>
  <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6">
- <div className="bg-slate-50 rounded-lg border border-red-200 p-8 text-center">
+ <div className="bg-[var(--card-bg)] rounded-lg border border-red-200 p-8 text-center">
  <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
- <h2 className="text-base font-bold text-slate-900 mb-1">Patient Not Found</h2>
- <p className="text-sm text-slate-500 mb-4">Unable to load patient information</p>
+ <h2 className="text-base font-bold text-[var(--text-900)] mb-1">Patient Not Found</h2>
+ <p className="text-sm text-[var(--text-500)] mb-4">Unable to load patient information</p>
  <button onClick={() => navigate('/patients')}
  className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors">
  Back to Patients
@@ -381,7 +381,7 @@ export default function PatientDetail() {
 
  {/* Patient info strip */}
  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
- className="rounded-xl border border-slate-200 shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-slate-50">
+ className="rounded-xl border border-[var(--card-border)] shadow-sm px-5 py-3 flex items-center gap-6 flex-wrap text-sm overflow-hidden bg-slate-50">
  <div className="flex items-center gap-2 text-slate-700">
  <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
  <User size={13} className="text-teal-600" />
@@ -422,10 +422,10 @@ export default function PatientDetail() {
  className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">
  <ClipboardList size={13} /> Assessments
  </button>
- <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Call">
+ <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-[var(--card-bg)] transition" title="Call">
  <Phone size={15} className="text-slate-600" />
  </button>
- <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-slate-50 transition" title="Email">
+ <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-[var(--card-bg)] transition" title="Email">
  <Mail size={15} className="text-slate-600" />
  </button>
  </div>
@@ -433,8 +433,8 @@ export default function PatientDetail() {
 
  {/* Vitals ribbon */}
  {lastVital && (
- <div className="flex items-center gap-2 flex-wrap bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
- <span className="text-[10px] font-bold text-slate-400 mr-1">Latest Vitals</span>
+ <div className="flex items-center gap-2 flex-wrap bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl px-4 py-2.5 shadow-sm">
+ <span className="text-[10px] font-bold text-[var(--text-400)] mr-1">Latest Vitals</span>
  {[
  { label: 'HR', value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--', ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
  { label: 'SpO2', value: lastVital.oxygen_saturation ? `${lastVital.oxygen_saturation.toFixed(1)}%` : '--', ok: !lastVital.oxygen_saturation || lastVital.oxygen_saturation >= 95 },
@@ -447,12 +447,12 @@ export default function PatientDetail() {
  <div key={label} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-bold ${
  ok ? 'bg-teal-50 border-teal-200 text-teal-700' : 'bg-red-50 border-red-200 text-red-700 animate-pulse'
  }`}>
- <span className="text-slate-500 font-semibold">{label}</span>
+ <span className="text-[var(--text-500)] font-semibold">{label}</span>
  <span className="tabular-nums font-black">{value}</span>
  {!ok && <span className="ml-0.5 text-red-600 font-black">!</span>}
  </div>
  ))}
- <span className="text-[10px] text-slate-400 ml-auto">
+ <span className="text-[10px] text-[var(--text-400)] ml-auto">
  {new Date(lastVital.recorded_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </span>
  </div>
@@ -464,9 +464,9 @@ export default function PatientDetail() {
  {/* Caregiver Assignment */}
  {canAssignCaregiver && caregiverMatches?.recommendations?.length > 0 && (
  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
- className="bg-slate-50 rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
+ className="bg-[var(--card-bg)] rounded-lg border border-purple-200 border-l-4 border-l-purple-500 p-4">
  <div className="flex items-center justify-between mb-3">
- <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+ <h3 className="text-sm font-bold text-[var(--text-900)] flex items-center gap-2">
  <HeartHandshake size={15} className="text-purple-600" />
  Caregiver Assignment
  </h3>
@@ -478,9 +478,9 @@ export default function PatientDetail() {
  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
  {caregiverMatches.recommendations.slice(0, 3).map((rec) => (
  <div key={rec.caregiver_id}
- className={`bg-slate-50 rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
- <p className="font-bold text-slate-900 text-sm">{rec.caregiver_name}</p>
- <p className="text-xs text-slate-600 mb-2">Match: {rec.match_score}% · {rec.workload?.capacity_status}</p>
+ className={`bg-[var(--card-bg)] rounded-lg p-3 border-2 ${rec.already_assigned ? 'border-green-400 bg-green-50' : 'border-slate-200'}`}>
+ <p className="font-bold text-[var(--text-900)] text-sm">{rec.caregiver_name}</p>
+ <p className="text-xs text-[var(--text-600)] mb-2">Match: {rec.match_score}% · {rec.workload?.capacity_status}</p>
  {rec.already_assigned
  ? <span className="text-xs font-bold text-green-700">Currently Assigned</span>
  : <button onClick={() => caregiverIntelligenceAPI.assign(patientId, { caregiver_id: rec.caregiver_id }).then(() => { toast.success('Caregiver assigned'); queryClient.invalidateQueries(['caregiver-matches', patientId]); })}
@@ -494,7 +494,7 @@ export default function PatientDetail() {
 
  {/* Quick Actions grid */}
  <div>
- <p className="text-[10px] font-bold text-slate-400 mb-3 flex items-center gap-1.5">
+ <p className="text-[10px] font-bold text-[var(--text-400)] mb-3 flex items-center gap-1.5">
  <Stethoscope size={10}/> Clinical Tools
  </p>
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -528,7 +528,7 @@ export default function PatientDetail() {
  footer={
  <div className="flex gap-3">
  <button onClick={() => setShowStatusModal(false)}
- className="flex-1 py-2.5 border border-slate-300 text-slate-700 dark:text-slate-300 rounded-xl font-semibold text-sm hover:bg-slate-50">
+ className="flex-1 py-2.5 border border-slate-300 text-[var(--text-700)] rounded-xl font-semibold text-sm hover:bg-slate-50">
  Cancel
  </button>
  <button onClick={() => statusMutation.mutate(selectedStatus)} disabled={statusMutation.isPending}
@@ -541,7 +541,7 @@ export default function PatientDetail() {
  {['active','stable','deteriorating','critical','deceased','discharged'].map(s => (
  <button key={s} onClick={() => setSelectedStatus(s)}
  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition capitalize ${
- selectedStatus === s ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-teal-300'
+ selectedStatus === s ? 'border-teal-500 bg-teal-50' : 'border-[var(--card-border)] hover:border-teal-300'
  }`}>
  <span className={getStatusBadgeColor(s)}>{s}</span>
  </button>

@@ -1306,13 +1306,13 @@ export default function PersonalisationQuest() {
  <CheckCircle className="w-11 h-11 text-white" />
  </div>
  </motion.div>
- <h1 className="text-2xl font-bold text-slate-800 mb-2">All set, {user.full_name?.split(' ')[0] || 'there'}!</h1>
+ <h1 className="text-2xl font-bold text-[var(--text-800)] mb-2">All set, {user.full_name?.split(' ')[0] || 'there'}!</h1>
  <p className="text-teal-700 mb-2 font-semibold text-sm">
  {user.role === 'family'
  ? 'Your family profile is being set up.'
  : 'Your personalised care experience is being created.'}
  </p>
- <p className="text-slate-500 text-sm mb-6">
+ <p className="text-[var(--text-500)] text-sm mb-6">
  {user.role === 'family'
  ? 'We\'ll personalise your dashboard with the resources, updates, and support tools that matter most to your family.'
  : 'The AI is generating your care plan, personalised resources, and recommendations based on your answers.'}
@@ -1401,8 +1401,8 @@ export default function PersonalisationQuest() {
 
  {/* Step heading */}
  <div className="mb-5 pb-4 border-b border-slate-100">
- <h2 className="text-xl font-bold text-slate-800 mb-1">{stepData.title}</h2>
- <p className="text-sm text-slate-500 leading-relaxed">{stepData.subtitle}</p>
+ <h2 className="text-xl font-bold text-[var(--text-800)] mb-1">{stepData.title}</h2>
+ <p className="text-sm text-[var(--text-500)] leading-relaxed">{stepData.subtitle}</p>
  </div>
 
  <div className="space-y-5 flex-1">
@@ -1417,11 +1417,11 @@ export default function PersonalisationQuest() {
  </div>
 
  {/* Navigation footer */}
- <div className="px-6 py-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] flex justify-between items-center">
  <button onClick={handleBack} disabled={currentStep === 1}
  className={`flex items-center gap-2 px-5 py-2 rounded-xl font-semibold text-sm transition-all ${
  currentStep === 1 ? 'opacity-0 cursor-not-allowed' :
- 'bg-slate-50 text-slate-600 border border-slate-300 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50/50 shadow-sm'
+ 'bg-[var(--card-bg)] text-[var(--text-600)] border border-slate-300 hover:border-teal-400 hover:text-teal-700 hover:bg-teal-50/50 shadow-sm'
  }`}>
  <ArrowLeft size={15} /> Back
  </button>
@@ -1434,7 +1434,7 @@ export default function PersonalisationQuest() {
  </div>
  </div>
 
- <p className="text-center text-xs text-slate-400 mt-4">
+ <p className="text-center text-xs text-[var(--text-400)] mt-4">
  Your answers are private and stored securely. You can update them anytime in Settings.
  </p>
  </motion.div>
@@ -1454,18 +1454,18 @@ function FieldRenderer({ field, value, onChange }) {
  const ringColor = val >= 7 ? 'ring-red-300' : val >= 4 ? 'ring-amber-300' : 'ring-teal-300';
  return (
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">{field.label}</label>
- <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{field.label}</label>
+ <div className="bg-[var(--card-bg)] rounded-xl p-4 border border-slate-200">
  <input type="range" min={field.min} max={field.max} value={val}
  onChange={e => onChange(parseInt(e.target.value))}
  className="w-full h-1.5 rounded-full accent-teal-600 mb-3"
  style={{ background: `linear-gradient(to right, #0f766e 0%, #0f766e ${val * 10}%, #e2e8f0 ${val * 10}%, #e2e8f0 100%)` }} />
  <div className="flex items-center justify-between">
- <span className="text-xs text-slate-400 font-medium">{field.labels[0]}</span>
+ <span className="text-xs text-[var(--text-400)] font-medium">{field.labels[0]}</span>
  <div className={`w-9 h-9 rounded-full ${color} ring-2 ${ringColor} flex items-center justify-center shadow`}>
  <span className="text-white text-xs font-bold">{val}</span>
  </div>
- <span className="text-xs text-slate-400 font-medium">{field.labels[10]}</span>
+ <span className="text-xs text-[var(--text-400)] font-medium">{field.labels[10]}</span>
  </div>
  {val >= 7 && (
  <p className="text-xs text-red-600 font-semibold mt-2.5 text-center bg-red-50 rounded-lg py-1.5 border border-red-200">
@@ -1480,7 +1480,7 @@ function FieldRenderer({ field, value, onChange }) {
  if (field.type === 'radio') {
  return (
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">{field.label}</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{field.label}</label>
  <div className="grid grid-cols-1 gap-2">
  {field.options.map(opt => {
  const v = typeof opt === 'object' ? opt.value : opt;
@@ -1491,7 +1491,7 @@ function FieldRenderer({ field, value, onChange }) {
  className={`relative px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
  sel
  ? 'border-teal-600 bg-teal-50/80 shadow-sm ring-1 ring-teal-500/30'
- : 'border-slate-200 bg-slate-50 hover:border-teal-300 hover:bg-teal-50/30'
+ : 'border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-300 hover:bg-teal-50/30'
  }`}>
  <div className="flex items-center gap-3">
  <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
@@ -1499,7 +1499,7 @@ function FieldRenderer({ field, value, onChange }) {
  }`}>
  {sel && <div className="w-1.5 h-1.5 rounded-full bg-slate-50" />}
  </div>
- <span className={`text-sm ${sel ? 'text-teal-900 font-semibold' : 'text-slate-600 font-medium'}`}>{l}</span>
+ <span className={`text-sm ${sel ? 'text-teal-900 font-semibold' : 'text-[var(--text-600)] font-medium'}`}>{l}</span>
  </div>
  {sel && (
  <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-teal-600 rounded-full flex items-center justify-center shadow-sm">
@@ -1517,7 +1517,7 @@ function FieldRenderer({ field, value, onChange }) {
  if (field.type === 'multi-select') {
  return (
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">{field.label}</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{field.label}</label>
  <div className="flex flex-wrap gap-2">
  {field.options.map(opt => {
  const sel = (value || []).includes(opt);
@@ -1530,7 +1530,7 @@ function FieldRenderer({ field, value, onChange }) {
  className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-all duration-150 ${
  sel
  ? 'border-teal-600 bg-teal-600 text-white shadow-sm'
- : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-teal-400 hover:text-teal-700'
+ : 'border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-600)] hover:border-teal-400 hover:text-teal-700'
  }`}>
  {opt}
  </button>
@@ -1545,18 +1545,18 @@ function FieldRenderer({ field, value, onChange }) {
  const val = value ?? 5;
  return (
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">{field.label}</label>
- <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{field.label}</label>
+ <div className="bg-[var(--card-bg)] rounded-xl p-4 border border-slate-200">
  <input type="range" min={field.min} max={field.max} value={val}
  onChange={e => onChange(parseInt(e.target.value))}
  className="w-full h-1.5 rounded-full accent-teal-600 mb-3"
  style={{ background: `linear-gradient(to right, #0f766e 0%, #0f766e ${(val - 1) / 9 * 100}%, #e2e8f0 ${(val - 1) / 9 * 100}%, #e2e8f0 100%)` }} />
  <div className="flex items-center justify-between">
- <span className="text-xs text-slate-400 font-medium">{field.labels?.[field.min] || field.min}</span>
+ <span className="text-xs text-[var(--text-400)] font-medium">{field.labels?.[field.min] || field.min}</span>
  <div className="w-9 h-9 rounded-full bg-teal-600 ring-2 ring-teal-200 flex items-center justify-center shadow">
  <span className="text-white text-xs font-bold">{val}</span>
  </div>
- <span className="text-xs text-slate-400 font-medium">{field.labels?.[field.max] || field.max}</span>
+ <span className="text-xs text-[var(--text-400)] font-medium">{field.labels?.[field.max] || field.max}</span>
  </div>
  </div>
  </div>
@@ -1612,12 +1612,12 @@ function ConditionSelectField({ label, value, onChange }) {
 
  return (
  <div>
- <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>
+ <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{label}</label>
  <div className="relative mb-3">
  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
  <input type="text" placeholder="Search your condition..." value={search}
  onChange={e => setSearch(e.target.value)}
- className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none bg-slate-50 transition-all" />
+ className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none bg-[var(--card-bg)] transition-all" />
  </div>
  {loading ? (
  <div className="text-center py-6"><Loader2 size={20} className="animate-spin mx-auto text-teal-500" /></div>
@@ -1630,7 +1630,7 @@ function ConditionSelectField({ label, value, onChange }) {
  className={`px-3 py-2 rounded-xl border text-left text-sm font-medium transition-all duration-150 ${
  sel
  ? 'border-teal-600 bg-teal-50 text-teal-900 shadow-sm ring-1 ring-teal-500/30'
- : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-teal-300 hover:bg-slate-50'
+ : 'border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-600)] hover:border-teal-300 hover:bg-slate-50'
  }`}>
  <span className="flex items-center gap-1.5">
  {sel && <CheckCircle size={12} className="text-teal-600 flex-shrink-0" />}
@@ -1639,7 +1639,7 @@ function ConditionSelectField({ label, value, onChange }) {
  </button>
  );
  })}
- {filtered.length === 0 && <p className="col-span-2 text-center text-slate-400 text-sm py-4">No conditions match your search</p>}
+ {filtered.length === 0 && <p className="col-span-2 text-center text-[var(--text-400)] text-sm py-4">No conditions match your search</p>}
  </div>
  )}
  {value && (

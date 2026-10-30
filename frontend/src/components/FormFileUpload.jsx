@@ -66,16 +66,16 @@ export default function FormFileUpload({
 
       {/* Upload Section */}
       {showUpload && (
-        <div className="p-4 bg-slate-50 rounded-lg border-2 border-slate-200">
+        <div className="p-4 bg-[var(--card-bg)] rounded-lg border-2 border-slate-200">
           <div className="flex items-center justify-between mb-3">
             <div>
               <h4 className="text-sm font-bold text-slate-900">{label}</h4>
-              <p className="text-xs text-slate-600 mt-0.5">{description}</p>
+              <p className="text-xs text-[var(--text-600)] mt-0.5">{description}</p>
             </div>
             <button
               type="button"
               onClick={() => setShowUpload(false)}
-              className="p-1 text-slate-500 hover:text-slate-700 hover:bg-slate-200 rounded transition-colors"
+              className="p-1 text-[var(--text-500)] hover:text-[var(--text-700)] hover:bg-slate-200 rounded transition-colors"
               title="Close"
             >
               <X size={18} />
@@ -94,7 +94,7 @@ export default function FormFileUpload({
           {/* Attached Files List */}
           {attachedFiles.length > 0 && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs font-bold text-slate-700 uppercase">
+              <p className="text-xs font-bold text-[var(--text-700)] uppercase">
                 Attached Files ({attachedFiles.length})
               </p>
               {attachedFiles.map((file) => {
@@ -102,12 +102,12 @@ export default function FormFileUpload({
                 return (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between p-2 bg-slate-50 rounded border border-slate-200"
+                    className="flex items-center justify-between p-2 bg-[var(--card-bg)] rounded border border-slate-200"
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <FileIcon size={16} className="text-teal-600 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-900 truncate">
+                        <p className="text-sm font-medium text-[var(--text-900)] truncate">
                           {file.original_filename}
                         </p>
                         <p className="text-xs text-slate-500">

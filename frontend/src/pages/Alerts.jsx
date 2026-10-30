@@ -139,7 +139,7 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
  </button>
  )}
  <button onClick={() => onExplain(alert)} disabled={explainLoading}
- className="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-md text-[10px] font-semibold transition disabled:opacity-50"
+ className="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[var(--text-600)] rounded-md text-[10px] font-semibold transition disabled:opacity-50"
  style={{ color: isDark ? '#94a3b8' : undefined, background: isDark ? 'rgba(255,255,255,0.08)' : undefined }}>
  <Brain size={10} /> Explain
  </button>

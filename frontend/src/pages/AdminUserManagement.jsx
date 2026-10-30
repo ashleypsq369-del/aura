@@ -30,7 +30,7 @@ const CARE_SETTINGS = {
 
 const ROLE_BADGE = {
  admin: 'bg-red-100 text-red-700 border-red-200',
- clinician: 'bg-slate-100 text-slate-600 border-slate-200',
+ clinician: 'bg-slate-100 text-[var(--text-600)] border-slate-200',
  caregiver: 'bg-green-100 text-green-700 border-green-200',
  patient: 'bg-amber-100 text-amber-700 border-amber-200',
  family: 'bg-pink-100 text-pink-700 border-pink-200',
@@ -43,8 +43,8 @@ function KpiCard({ label, value, icon: Icon, color, onClick, active }) {
  return (
  <button
  onClick={onClick}
- className={`bg-slate-50 rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
- active ? 'border-teal-500 shadow-md' : 'border-slate-200 hover:border-slate-300'
+ className={`bg-[var(--card-bg)] rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
+ active ? 'border-teal-500 shadow-md' : 'border-[var(--card-border)] hover:border-slate-300'
  }`}
  >
  <div className="flex items-center gap-2 mb-1">
@@ -76,7 +76,7 @@ function TempPasswordModal({ password, onClose }) {
  </button>
  }
  >
- <p className="text-sm text-slate-600 mb-3">
+ <p className="text-sm text-[var(--text-600)] mb-3">
  Share this temporary password securely. The user must change it on next login.
  </p>
  <div className="flex items-center gap-2 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl">
@@ -252,7 +252,7 @@ function InlineConfirm({ message, onConfirm, onCancel, confirmLabel = 'Confirm',
  <div className="flex items-center gap-2 flex-shrink-0">
  <button
  onClick={onCancel}
- className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-50 border border-slate-300 hover:bg-slate-50 text-slate-700 transition"
+ className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--card-bg)] border border-slate-300 hover:bg-[var(--card-bg)] text-[var(--text-700)] transition"
  >
  Cancel
  </button>
@@ -321,7 +321,7 @@ function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPendi
  <button
  onClick={() => { setOpen((o) => !o); setConfirm(null); }}
  disabled={togglePending || resetPending}
- className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition disabled:opacity-40"
+ className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-[var(--text-500)] hover:text-[var(--text-700)] transition disabled:opacity-40"
  aria-label="Actions"
  >
  {(togglePending || resetPending)
@@ -338,21 +338,21 @@ function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPendi
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: -6 }}
  transition={{ duration: 0.12, ease: 'easeOut' }}
- className="absolute right-0 top-9 z-50 w-52 bg-slate-50 border border-slate-200 rounded-xl shadow-xl overflow-hidden"
+ className="absolute right-0 top-9 z-50 w-52 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl overflow-hidden"
  >
  <button
  onClick={handleEdit}
- className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition text-left"
+ className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-700)] hover:bg-[var(--card-bg)] transition text-left"
  >
  <span>✏️</span> Edit User
  </button>
  <button
  onClick={handleResetClick}
- className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-amber-50 transition text-left"
+ className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-700)] hover:bg-amber-50 transition text-left"
  >
  <span>🔑</span> Reset Password
  </button>
- <div className="border-t border-slate-100 my-0.5" />
+ <div className="border-t border-[var(--card-border)]/50 my-0.5" />
  <button
  onClick={handleToggleClick}
  className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition text-left ${
@@ -548,14 +548,14 @@ export default function AdminUserManagement() {
  </div>
 
  {/* ── Filters ─────────────────────────────── */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col md:flex-row gap-3">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 flex flex-col md:flex-row gap-3">
  <div className="flex-1 relative">
  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
  <input
  value={search}
  onChange={(e) => setSearch(e.target.value)}
  placeholder="Search name, email, username…"
- className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:border-teal-500 outline-none"
+ className="w-full pl-9 pr-4 py-2.5 border border-[var(--card-border)] rounded-xl text-sm focus:border-teal-500 outline-none"
  />
  </div>
  <SearchableSelect
@@ -593,7 +593,7 @@ export default function AdminUserManagement() {
  <button
  onClick={() => dismissSettingMutation.mutate(u.id)}
  disabled={dismissSettingMutation.isPending}
- className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-50"
+ className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-[var(--text-700)] text-xs font-bold rounded-lg transition disabled:opacity-50"
  >
  Dismiss
  </button>
@@ -603,24 +603,24 @@ export default function AdminUserManagement() {
  )}
 
  {/* ── Users Table ─────────────────────────── */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  {isLoading ? (
  <div className="p-12 text-center">
  <Loader2 size={28} className="animate-spin text-teal-600 mx-auto mb-3" />
- <p className="text-slate-500 text-sm">Loading users…</p>
+ <p className="text-[var(--text-500)] text-sm">Loading users…</p>
  </div>
  ) : users.length === 0 ? (
  <div className="p-12 text-center">
  <Users size={36} className="mx-auto text-slate-300 mb-3" />
- <p className="text-slate-600 font-semibold">No users found</p>
+ <p className="text-[var(--text-600)] font-semibold">No users found</p>
  </div>
  ) : (
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
- <thead className="bg-slate-50 border-b-2 border-slate-200">
+ <thead className="bg-[var(--card-bg)] border-b-2 border-slate-200">
  <tr>
  {['User', 'Role', 'Care Setting', 'Status', 'Last Login', 'Actions'].map((h) => (
- <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-slate-500 ">
+ <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-[var(--text-500)] ">
  {h}
  </th>
  ))}
@@ -658,7 +658,7 @@ export default function AdminUserManagement() {
  {/* Role cell */}
  <td className="px-4 py-3">
  <span className={`text-xs font-bold px-2 py-1 rounded-full border capitalize ${
- ROLE_BADGE[u.role] || 'bg-slate-100 text-slate-600 border-slate-200'
+ ROLE_BADGE[u.role] || 'bg-slate-100 text-[var(--text-600)] border-slate-200'
  }`}>
  {u.role}
  </span>

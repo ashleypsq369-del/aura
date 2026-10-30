@@ -209,7 +209,7 @@ export default function BarthelIndexForm() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
+      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -262,7 +262,7 @@ export default function BarthelIndexForm() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+            className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
           >
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center flex-shrink-0">
@@ -288,7 +288,7 @@ export default function BarthelIndexForm() {
                   className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-all ${
                     scores[item.key] === option.value
                       ? 'border-teal-500 bg-blue-50 shadow-md'
-                      : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50'
+                      : 'border-[var(--card-border)] hover:border-blue-300 hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -353,9 +353,9 @@ export default function BarthelIndexForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           <textarea
@@ -405,7 +405,7 @@ export default function BarthelIndexForm() {
             <button
               type="button"
               onClick={() => navigate(`/assessments/${patientId}`)}
-              className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+              className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
             >
               Cancel
             </button>
@@ -443,7 +443,7 @@ export default function BarthelIndexForm() {
                   <p className="text-[10px] font-bold text-cyan-600 ">Key Drivers</p>
                   {mlResult.top_features.slice(0, 3).map((feature, i) => (
                     <div key={i}>
-                      <p className="text-xs text-slate-700 mb-0.5">{feature.display_name}</p>
+                      <p className="text-xs text-[var(--text-700)] mb-0.5">{feature.display_name}</p>
                       <div className="w-full h-1.5 bg-slate-100 rounded-full">
                         <div
                           className="h-full rounded-full"

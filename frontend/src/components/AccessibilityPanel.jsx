@@ -13,10 +13,10 @@ const FONT_SIZE_LABELS = { small: 'S', medium: 'M', large: 'L', xlarge: 'XL', xx
 // Reusable toggle row for the modal
 function ToggleRow({ id, label, desc, value, onChange }) {
  return (
- <div className="flex items-start justify-between p-4 bg-slate-50 rounded-xl border border-slate-200">
+ <div className="flex items-start justify-between p-4 bg-[var(--card-bg)] rounded-xl border border-slate-200">
  <div className="flex-1 pr-4">
- <label htmlFor={id} className="font-medium text-slate-800 cursor-pointer">{label}</label>
- {desc && <p className="text-sm text-slate-600 mt-0.5">{desc}</p>}
+ <label htmlFor={id} className="font-medium text-[var(--text-800)] cursor-pointer">{label}</label>
+ {desc && <p className="text-sm text-[var(--text-600)] mt-0.5">{desc}</p>}
  </div>
  <Switch
  id={id}
@@ -153,13 +153,13 @@ export default function AccessibilityPanel() {
  <Brain className={`w-7 h-7 ${settings.assistedMode ? 'text-white' : 'text-purple-600'}`} />
  </div>
  <div>
- <h3 id="assisted-mode-section" className="text-lg font-bold text-slate-800 flex items-center gap-2">
+ <h3 id="assisted-mode-section" className="text-lg font-bold text-[var(--text-800)] flex items-center gap-2">
  Assisted Mode
  {settings.assistedMode && (
  <span className="px-2 py-0.5 bg-teal-600 text-white text-xs font-bold rounded-full">ON</span>
  )}
  </h3>
- <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+ <p className="text-sm text-[var(--text-600)] mt-1 leading-relaxed">
  Designed for patients with <strong>dementia</strong>, cognitive impairment, or motor difficulties.
  </p>
  </div>
@@ -175,7 +175,7 @@ export default function AccessibilityPanel() {
 
  {/* Vision & Display */}
  <section aria-labelledby="vision-settings">
- <h3 id="vision-settings" className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+ <h3 id="vision-settings" className="text-lg font-semibold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <Eye className="w-5 h-5 text-primary" aria-hidden="true" />
  Vision & Display
  </h3>
@@ -184,15 +184,15 @@ export default function AccessibilityPanel() {
  value={settings.highContrast} onChange={() => updateSetting('highContrast', !settings.highContrast)} />
 
  {/* Visual Impairments */}
- <div className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
- <label className="font-medium text-slate-900 flex items-center gap-2 mb-2">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-2">
  <Eye className="w-5 h-5" aria-hidden="true" />
  Visual Impairments
  </label>
  <select
  value={settings.colorBlindMode || 'none'}
  onChange={e => updateSetting('colorBlindMode', e.target.value)}
- className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-slate-50 text-gray-700 focus:outline-none focus:border-teal-500"
+ className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-[var(--card-bg)] text-gray-700 focus:outline-none focus:border-teal-500"
  aria-label="Visual impairment filter"
  >
  <option value="none">No Filter - Normal Vision</option>
@@ -206,8 +206,8 @@ export default function AccessibilityPanel() {
  </div>
 
  {/* Font Size */}
- <div className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
- <label className="font-medium text-slate-900 flex items-center gap-2 mb-3">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-3">
  <ZoomIn className="w-5 h-5" aria-hidden="true" />
  Font Size
  </label>
@@ -243,7 +243,7 @@ export default function AccessibilityPanel() {
 
  {/* Assistive Technology */}
  <section aria-labelledby="assistive-settings">
- <h3 id="assistive-settings" className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+ <h3 id="assistive-settings" className="text-lg font-semibold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <Headphones className="w-5 h-5 text-primary" aria-hidden="true" />
  Assistive Technology
  </h3>
@@ -257,7 +257,7 @@ export default function AccessibilityPanel() {
 
  {/* Navigation */}
  <section aria-labelledby="navigation-settings">
- <h3 id="navigation-settings" className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+ <h3 id="navigation-settings" className="text-lg font-semibold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <Keyboard className="w-5 h-5 text-primary" aria-hidden="true" />
  Navigation
  </h3>
@@ -273,7 +273,7 @@ export default function AccessibilityPanel() {
 
  {/* Reading & Typography */}
  <section aria-labelledby="reading-settings">
- <h3 id="reading-settings" className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+ <h3 id="reading-settings" className="text-lg font-semibold text-[var(--text-900)] mb-4 flex items-center gap-2">
  <Type className="w-5 h-5 text-primary" aria-hidden="true" />
  Reading & Typography
  </h3>
@@ -286,8 +286,8 @@ export default function AccessibilityPanel() {
  value={settings.dyslexiaFont} onChange={() => updateSetting('dyslexiaFont', !settings.dyslexiaFont)} />
 
  {/* Text Spacing */}
- <div className="p-4 bg-gray-50 rounded-xl border-2 border-gray-200">
- <label className="font-medium text-slate-900 flex items-center gap-2 mb-3">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-3">
  <AlignLeft className="w-5 h-5" aria-hidden="true" />
  Text Spacing
  </label>
@@ -310,7 +310,7 @@ export default function AccessibilityPanel() {
 
  {/* Keyboard Shortcuts */}
  <section aria-labelledby="shortcuts-info" className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
- <h3 id="shortcuts-info" className="text-md font-semibold text-slate-900 mb-3">Keyboard Shortcuts</h3>
+ <h3 id="shortcuts-info" className="text-md font-semibold text-[var(--text-900)] mb-3">Keyboard Shortcuts</h3>
  <ul className="space-y-1.5 text-sm text-gray-700">
  {[
  ['Alt + 1', 'Skip to main content'],
@@ -331,7 +331,7 @@ export default function AccessibilityPanel() {
  ['Esc', 'Close dialogs/modals'],
  ].map(([key, desc]) => (
  <li key={key}>
- <kbd className="px-2 py-0.5 bg-slate-50 rounded border border-gray-300 text-xs">{key}</kbd>
+ <kbd className="px-2 py-0.5 bg-[var(--card-bg)] rounded border border-gray-300 text-xs">{key}</kbd>
  <span className="ml-2">{desc}</span>
  </li>
  ))}

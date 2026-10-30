@@ -111,16 +111,16 @@ export default function VisitRatingModal({
  transition={{ type: 'spring', stiffness: 300, damping: 28 }}
  >
  <div
- className="w-full max-w-sm rounded-2xl bg-slate-50 dark:bg-slate-800 shadow-2xl overflow-hidden"
+ className="w-full max-w-sm rounded-2xl bg-[var(--card-bg)] shadow-2xl overflow-hidden"
  onClick={e => e.stopPropagation()}
  >
  {/* Header */}
- <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between"
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
  style={{ background: 'linear-gradient(to right, #0d948810, transparent)' }}>
  <div>
- <p className="font-bold text-slate-800 dark:text-white text-sm">Rate Your Visit</p>
+ <p className="font-bold text-[var(--text-800)] text-sm">Rate Your Visit</p>
  {caregiverName && (
- <p className="text-[11px] text-slate-500 dark:text-slate-400">with {caregiverName}</p>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-slate-400">with {caregiverName}</p>
  )}
  </div>
  <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400">
@@ -131,22 +131,22 @@ export default function VisitRatingModal({
  {submitted ? (
  <div className="flex flex-col items-center justify-center py-10 gap-3">
  <CheckCircle size={40} className="text-teal-500" />
- <p className="font-semibold text-slate-700 dark:text-white">Thank you for your feedback!</p>
+ <p className="font-semibold text-[var(--text-700)] dark:text-white">Thank you for your feedback!</p>
  </div>
  ) : (
  <div className="p-5 space-y-5">
  {/* Overall */}
  <div>
- <p className="text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">Overall rating</p>
+ <p className="text-xs font-semibold text-[var(--text-600)] mb-2">Overall rating</p>
  <StarPicker value={overall} onChange={setOverall} />
  </div>
 
  {/* Category scores */}
  <div className="space-y-2">
- <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Rate by category</p>
+ <p className="text-xs font-semibold text-[var(--text-600)] dark:text-slate-300">Rate by category</p>
  {CATEGORIES.map(cat => (
  <div key={cat.key} className="flex items-center justify-between">
- <span className="text-xs text-slate-500 dark:text-slate-400 w-28">{cat.label}</span>
+ <span className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] w-28">{cat.label}</span>
  <div className="flex gap-0.5">
  {[1,2,3,4,5].map(n => (
  <button
@@ -173,7 +173,7 @@ export default function VisitRatingModal({
 
  {/* Comment */}
  <div>
- <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1">
+ <label className="text-xs font-semibold text-[var(--text-600)] block mb-1">
  Comment (optional)
  </label>
  <textarea
@@ -181,7 +181,7 @@ export default function VisitRatingModal({
  onChange={e => setComment(e.target.value)}
  rows={3}
  placeholder="How was your experience?"
- className="w-full border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-slate-50 dark:bg-slate-700 text-slate-800 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-[var(--card-bg)] text-[var(--text-800)] resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
  />
  </div>
 

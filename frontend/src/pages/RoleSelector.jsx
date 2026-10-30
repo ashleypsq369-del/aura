@@ -84,7 +84,7 @@ function RoleCard({ role, idx, onClick }) {
       whileHover={{ y: -3, transition: { duration: 0.15 } }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(role)}
-      className="w-full text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 bg-white border border-slate-200 group"
+      className="w-full text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 bg-white border border-[var(--card-border)] group"
     >
       {/* Gradient top bar */}
       <div className="h-1.5" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
@@ -101,9 +101,9 @@ function RoleCard({ role, idx, onClick }) {
         {/* Text */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <p className="font-bold text-slate-900 text-sm leading-tight">{role.label}</p>
+            <p className="font-bold text-[var(--text-900)] text-sm leading-tight">{role.label}</p>
             {role.adminOnly
-              ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 flex-shrink-0">Admin only</span>
+              ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)] flex-shrink-0">Admin only</span>
               : role.highlight
                 ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
                     style={{ background: `${g1}18`, color: g1 }}>New</span>
@@ -111,7 +111,7 @@ function RoleCard({ role, idx, onClick }) {
             }
           </div>
           <p className="text-[11px] font-semibold mt-0.5" style={{ color: g1 }}>{role.sublabel}</p>
-          <p className="text-xs text-slate-500 mt-1 leading-relaxed line-clamp-2">{role.description}</p>
+          <p className="text-xs text-[var(--text-500)] mt-1 leading-relaxed line-clamp-2">{role.description}</p>
         </div>
       </div>
     </motion.button>
@@ -150,7 +150,7 @@ export default function RoleSelector() {
           >
             <img src="/logo.png" alt="Project Aura" className="w-10 h-10 rounded-xl mx-auto mb-3 shadow-md" />
             <h1 className="text-xl font-bold text-slate-900">Welcome to Project Aura</h1>
-            <p className="text-sm text-slate-600 mt-1">How will you be using the platform?</p>
+            <p className="text-sm text-[var(--text-600)] mt-1">How will you be using the platform?</p>
           </motion.div>
 
           {/* Role cards */}
@@ -165,9 +165,9 @@ export default function RoleSelector() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="rounded-xl border border-slate-200 bg-white/80 px-4 py-3"
+            className="rounded-xl border border-[var(--card-border)] bg-white/80 px-4 py-3"
           >
-            <p className="text-xs text-slate-500 text-center leading-relaxed">
+            <p className="text-xs text-[var(--text-500)] text-center leading-relaxed">
               <span className="font-semibold text-slate-700">Clinician or admin?</span>{' '}
               Accounts are created by your organisation's administrator.
               Contact your system admin or{' '}
@@ -179,7 +179,7 @@ export default function RoleSelector() {
           {/* Back to login */}
           <div className="text-center">
             <Link to="/login"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-teal-600 font-semibold transition-colors">
+              className="inline-flex items-center gap-1.5 text-xs text-[var(--text-500)] hover:text-teal-600 font-semibold transition-colors">
               <ArrowLeft size={12} /> Back to sign in
             </Link>
           </div>

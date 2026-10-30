@@ -73,22 +73,22 @@ export default function CriticalAlertModal({ alert, onClose }) {
  {/* SHAP drivers */}
  {alert.top_shap_features?.length > 0 && (
  <div>
- <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-3 flex items-center gap-2">
+ <h3 className="text-sm font-bold text-[var(--text-800)] mb-3 flex items-center gap-2">
  <span className="w-2 h-2 bg-red-600 rounded-full"/> Top Risk Drivers (SHAP Analysis)
  </h3>
  <div className="space-y-2">
  {alert.top_shap_features.map((feature, idx) => (
  <motion.div key={idx} initial={{ opacity:0, x:-16 }} animate={{ opacity:1, x:0 }} transition={{ delay: 0.08*idx }}
- className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+ className="flex items-center justify-between px-4 py-3 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700">
  <div className="flex items-center gap-3 flex-1 min-w-0">
  <div className="w-7 h-7 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">{idx+1}</div>
  <div className="min-w-0">
- <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm truncate">{feature.feature}</p>
+ <p className="font-semibold text-[var(--text-900)] text-sm truncate">{feature.feature}</p>
  <p className="text-xs text-slate-500">Value: <span className="font-medium">{feature.value}</span></p>
  </div>
  </div>
  <div className="flex items-center gap-2 flex-shrink-0">
- <div className="w-20 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+ <div className="w-20 h-1.5 bg-slate-200 rounded-full overflow-hidden">
  <motion.div className="h-full bg-gradient-to-r from-orange-500 to-red-600 rounded-full"
  initial={{ width:0 }} animate={{ width:`${feature.impact*100}%` }} transition={{ delay:0.1*idx, duration:0.5 }}/>
  </div>
@@ -107,8 +107,8 @@ export default function CriticalAlertModal({ alert, onClose }) {
  <Brain size={17} className="text-white"/>
  </div>
  <div>
- <p className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-1">AI Clinical Assessment</p>
- <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">{alert.explanation}</p>
+ <p className="font-bold text-[var(--text-900)] text-sm mb-1">AI Clinical Assessment</p>
+ <p className="text-[var(--text-700)] text-sm leading-relaxed">{alert.explanation}</p>
  </div>
  </div>
  )}

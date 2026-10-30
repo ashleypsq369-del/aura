@@ -128,7 +128,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-slate-50 rounded-2xl shadow-2xl z-[70] flex flex-col"
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[700px] bg-[var(--card-bg)] rounded-2xl shadow-2xl z-[70] flex flex-col"
           >
             {/* Header */}
             <div className={`${
@@ -205,15 +205,15 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
                       <span className="text-sm font-medium text-gray-700">Username</span>
                       <span className="text-sm text-gray-900">{user?.username}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
                       <span className="text-sm font-medium text-gray-700">Phone</span>
                       <span className="text-sm text-gray-900">{user?.phone || 'Not set'}</span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
                       <span className="text-sm font-medium text-gray-700">User ID</span>
                       <span className="text-sm text-gray-900">{user?.id}</span>
                     </div>
@@ -238,7 +238,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Appearance</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
                           <div>
@@ -262,7 +262,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Language & Region</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           <Globe size={20} />
                           <div>
@@ -287,7 +287,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Audio</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                           <div>
@@ -309,7 +309,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {/* Notifications Tab */}
               {activeTab === 'notifications' && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                     <div className="flex items-center gap-3">
                       <Bell size={20} />
                       <div>

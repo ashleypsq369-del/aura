@@ -156,7 +156,7 @@ export default function QualityOfLifeForm() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
+      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -272,9 +272,9 @@ export default function QualityOfLifeForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           <textarea
@@ -322,7 +322,7 @@ export default function QualityOfLifeForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>
@@ -337,10 +337,10 @@ function DomainSection({ title, icon, questions, scores, setScores, domainScore,
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+      className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
     >
       <div className={`flex items-center justify-between mb-4 pb-3 border-b-2`}>
-        <h3 className="text-xl font-bold text-slate-900 flex items-center">
+        <h3 className="text-xl font-bold text-[var(--text-900)] flex items-center">
           <span className="text-3xl mr-3">{icon}</span>
           {title}
         </h3>
@@ -351,8 +351,8 @@ function DomainSection({ title, icon, questions, scores, setScores, domainScore,
 
       <div className="space-y-4">
         {questions.map((question, idx) => (
-          <div key={question.key} className="border-b border-slate-100 pb-4 last:border-0">
-            <p className="text-sm font-medium text-slate-900 mb-3">
+          <div key={question.key} className="border-b border-[var(--card-border)]/50 pb-4 last:border-0">
+            <p className="text-sm font-medium text-[var(--text-900)] mb-3">
               {idx + 1}. {question.text}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -365,7 +365,7 @@ function DomainSection({ title, icon, questions, scores, setScores, domainScore,
                     px-4 py-2 rounded-lg text-sm font-medium transition-all
                     ${scores[question.key] === option.value
                       ? 'bg-green-500 text-white border-2 border-green-600'
-                      : 'bg-slate-100 text-slate-700 border-2 border-slate-200 hover:border-green-300'
+                      : 'bg-slate-100 text-[var(--text-700)] border-2 border-[var(--card-border)] hover:border-green-300'
                     }
                   `}
                 >
@@ -390,7 +390,7 @@ function ScorePill({ label, score, max, highlight }) {
 
   return (
     <div className={`text-center p-3 rounded-lg border-2 ${highlight ? 'border-green-500 bg-green-100' : getColor()}`}>
-      <div className="text-xs font-semibold text-slate-600 mb-1">{label}</div>
+      <div className="text-xs font-semibold text-[var(--text-600)] mb-1">{label}</div>
       <div className="text-2xl font-bold">{score}</div>
       <div className="text-xs text-slate-600">/ {max}</div>
     </div>

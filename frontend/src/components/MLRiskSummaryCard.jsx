@@ -84,7 +84,7 @@ export default function MLRiskSummaryCard({ patientId }) {
  whileHover={{ y: -1, boxShadow: '0 8px 24px rgba(0,0,0,0.10)' }}
  whileTap={{ scale: 0.99 }}
  onClick={() => navigate(`/patients/${patientId}/ml-risk`)}
- className={`w-full text-left rounded-2xl border border-slate-200 border-l-4 ${cfg.borderL} bg-slate-50 overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
+ className={`w-full text-left rounded-2xl border border-[var(--card-border)] border-l-4 ${cfg.borderL} bg-[var(--card-bg)] overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
  >
  {/* Top strip for critical/high */}
  {(level === 'critical' || level === 'high') && (
@@ -98,13 +98,13 @@ export default function MLRiskSummaryCard({ patientId }) {
  <Brain size={16} className="text-teal-700" />
  </div>
  <div>
- <p className="text-sm font-bold text-slate-900 leading-tight">ML Risk Assessment</p>
+ <p className="text-sm font-bold text-[var(--text-900)] leading-tight">ML Risk Assessment</p>
  <p className="text-[11px] text-slate-400">XGBoost · SHAP · 8 models</p>
  </div>
  </div>
 
  {isLoading ? (
- <Loader2 size={16} className="animate-spin text-slate-400 flex-shrink-0" />
+ <Loader2 size={16} className="animate-spin text-[var(--text-400)] flex-shrink-0" />
  ) : (
  <div className="flex items-center gap-2 flex-shrink-0">
  <span className="text-2xl font-black tabular-nums text-slate-900">{pct}%</span>
@@ -152,7 +152,7 @@ export default function MLRiskSummaryCard({ patientId }) {
  )}
 
  {/* Footer */}
- <div className="px-4 py-2 border-t border-slate-100 flex items-center gap-1 text-[10px] text-slate-400 font-medium bg-slate-50">
+ <div className="px-4 py-2 border-t border-[var(--card-border)]/50 flex items-center gap-1 text-[10px] text-[var(--text-400)] font-medium bg-slate-50">
  <Brain size={9} className="text-teal-400" />
  Tap for full SHAP breakdown &amp; clinical analysis
  <ChevronRight size={10} className="ml-auto text-slate-300" />

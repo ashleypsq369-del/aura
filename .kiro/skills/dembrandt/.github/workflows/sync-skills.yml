@@ -1,0 +1,137 @@
+name: Sync downstream repos
+
+on:
+  # Secrets are declared rather than inherited. `secrets: inherit` hands a
+  # reusable workflow every secret the caller holds, including the ones it has
+  # no business seeing; naming them keeps the blast radius of this file to the
+  # two cross-repo tokens it actually uses.
+  workflow_call:
+    secrets:
+      SKILLS_REPO_PAT:
+        required: true
+      NEXT_REPO_PAT:
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag to simulate (e.g. v0.12.0)"
+        required: true
+        default: "v0.12.0"
+
+# Cross-repo writes use SKILLS_REPO_PAT / NEXT_REPO_PAT, not GITHUB_TOKEN, so
+# the default token stays read-only.
+permissions:
+  contents: read
+
+jobs:
+  sync-skills:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dembrandt-skills
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: dembrandt/dembrandt-skills
+          token: ${{ secrets.SKILLS_REPO_PAT }}
+          path: dembrandt-skills
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Bump skills version and update SKILL.md
+        env:
+          DEMBRANDT_VERSION: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+        run: |
+          cd dembrandt-skills
+          VERSION="${DEMBRANDT_VERSION#v}"
+          npm version patch --no-git-tag-version
+          find skills -name "SKILL.md" -exec \
+            sed -i "s/dembrandt@[0-9][0-9.]*/dembrandt@${VERSION}/g" {} \;
+
+      - name: Create PR in dembrandt-skills
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.SKILLS_REPO_PAT }}
+          path: dembrandt-skills
+          commit-message: "chore: sync with dembrandt ${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          branch: "sync/dembrandt-${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          title: "chore: sync with dembrandt ${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          body: |
+            Automated sync triggered by [dembrandt ${{ github.event.release.tag_name || github.event.inputs.tag }}](${{ github.event.release.html_url || 'manual trigger' }}).
+
+            - Bumped `dembrandt-skills` patch version
+            - Updated CLI version references in skill files
+
+            **⚠ Manual check required before merging**
+            This automation only updates version numbers. Read the release notes above, then update `skills/extract-design/SKILL.md` by hand if the release changed any of:
+            - CLI flags, or an environment variable that changes behaviour
+            - The JSON output shape: new keys, renamed keys, or values that moved
+            - MCP tools or their parameters
+            - Anti-bot behaviour
+
+            A release with no new flags can still need every one of these.
+          labels: automated
+
+  sync-next:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dembrandt-next
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: dembrandt/dembrandt-next
+          token: ${{ secrets.NEXT_REPO_PAT }}
+          path: dembrandt-next
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Update dembrandt version references
+        env:
+          DEMBRANDT_VERSION: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+        run: |
+          cd dembrandt-next
+          VERSION="${DEMBRANDT_VERSION#v}"
+
+          # npm answers "being processed" for up to a few minutes after publish,
+          # so this job raced its own release and died on ETARGET (v0.34.0).
+          for i in $(seq 1 30); do
+            npm view "dembrandt@${VERSION}" version >/dev/null 2>&1 && break
+            echo "dembrandt@${VERSION} not on the registry yet, waiting ($i/30)"
+            sleep 20
+          done
+          npm view "dembrandt@${VERSION}" version
+
+          npm pkg set dependencies.dembrandt="${VERSION}"
+          # Keep package-lock.json in sync with package.json. Without this the
+          # lock still pins the old version and `npm ci` (CI, the drift gate)
+          # fails before anyone can run `npm install`.
+          npm install --package-lock-only
+          # schema.org softwareVersion always tracks the CLI version (deterministic)
+          sed -i "s/\"softwareVersion\": \"[0-9][0-9.]*\"/\"softwareVersion\": \"${VERSION}\"/" app/layout.tsx
+
+      - name: Create PR in dembrandt-next
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.NEXT_REPO_PAT }}
+          path: dembrandt-next
+          commit-message: "chore: bump dembrandt to ${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          branch: "sync/dembrandt-${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          title: "chore: bump dembrandt to ${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          body: |
+            Automated bump triggered by [dembrandt ${{ github.event.release.tag_name || github.event.inputs.tag }}](${{ github.event.release.html_url || 'manual trigger' }}).
+
+            Updates `dembrandt` npm dependency to latest release (package.json + package-lock.json) and bumps `app/layout.tsx` schema.org `softwareVersion`.
+
+            **⚠ Manual check required before merging**
+            This automation bumps the npm version in `package.json` and the schema.org `softwareVersion`. Read the release notes above: if the release changed CLI flags, an environment variable, or the JSON output shape, these need updating by hand.
+            - `app/getting-started/page.tsx` — flags list
+            - `app/blackpaper/page.tsx` — flags list
+            - `app/page.tsx` — landing page flags (`new: true` for new ones)
+            - Consumers of `dembrandt/types` — if the output shape changed. Grep for the type you are reading; there is no single types file
+            - `app/api/extractions/route.ts` — if field access needs updating
+
+            A release with no new flags can still need every one of these.
+          labels: automated

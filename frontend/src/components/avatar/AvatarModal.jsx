@@ -21,7 +21,7 @@ export default function AvatarModal({ isOpen, onClose, onSave }) {
             exit={{ scale: 0.92, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             onClick={e => e.stopPropagation()}
-            className="bg-slate-50 rounded-2xl shadow-2xl overflow-hidden"
+            className="bg-[var(--card-bg)] rounded-2xl shadow-2xl overflow-hidden"
             style={{ width: '680px', maxWidth: '96vw', height: '88vh', maxHeight: '700px' }}
           >
             <AvatarBuilder

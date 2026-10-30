@@ -30,7 +30,7 @@ const TONE_CONFIG = {
   love:       { emoji: '💜', label: 'Love',       color: 'bg-purple-50 text-purple-700',      border: 'border-purple-200' },
   sadness:    { emoji: '🌧️', label: 'Sadness',    color: 'bg-blue-50 text-teal-700',          border: 'border-blue-200' },
   acceptance: { emoji: '🕊️', label: 'Acceptance', color: 'bg-teal-50 text-teal-700',          border: 'border-teal-200' },
-  neutral:    { emoji: '📝', label: 'Reflection', color: 'bg-slate-50 text-slate-500',        border: 'border-slate-100' },
+  neutral:    { emoji: '📝', label: 'Reflection', color: 'bg-[var(--card-bg)] text-slate-500',        border: 'border-slate-100' },
 };
 
 function analyseJournalTone(text) {
@@ -243,7 +243,7 @@ export default function Journal() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 shadow-md text-center"
+          className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] dark:border-slate-700 p-8 shadow-md text-center"
         >
           <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.7 }} />
           <p className="text-xl italic text-gray-700 dark:text-slate-200">
@@ -274,7 +274,7 @@ export default function Journal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-slate-50 dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
+                className="bg-[var(--card-bg)] rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
                 style={{ borderColor: ['#e9d5ff','#dbeafe','#d1fae5','#fce7f3','#fef3c7','#cffafe'][index % 6] }}
               >
                 {/* Top accent */}
@@ -382,7 +382,7 @@ export default function Journal() {
           footer={
             <div className="flex gap-3">
               <button type="button" onClick={() => { setShowModal(false); setNewEntry(''); }}
-                className="flex-1 py-2.5 border-2 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-xl font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+                className="flex-1 py-2.5 border-2 border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
                 Cancel
               </button>
               <button type="submit" form="journal-form" disabled={createMutation.isPending}
@@ -395,19 +395,19 @@ export default function Journal() {
         >
           {/* Prompt */}
           <div className="mb-5 p-4 rounded-xl" style={{ backgroundColor:'#6B4F7A15' }}>
-            <p className="text-sm italic text-slate-700 dark:text-slate-300">"{selectedPrompt}"</p>
+            <p className="text-sm italic text-[var(--text-700)] dark:text-slate-300">"{selectedPrompt}"</p>
           </div>
           <form id="journal-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-slate-500  mb-2">Your Reflection</label>
+              <label className="block text-xs font-bold text-[var(--text-500)]  mb-2">Your Reflection</label>
               <textarea value={newEntry} onChange={e => setNewEntry(e.target.value)}
                 rows={10} required autoFocus
                 placeholder="Let your thoughts flow... This is your private space."
-                className="w-full px-4 py-3 border-2 border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-white rounded-xl focus:outline-none resize-none text-sm"
+                className="w-full px-4 py-3 border-2 border-[var(--card-border)] dark:border-slate-600 rounded-xl focus:outline-none resize-none text-sm"
               />
             </div>
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3.5 flex items-center gap-3">
-              <Lock className="w-4 h-4 text-slate-500 flex-shrink-0"/>
+            <div className="bg-[var(--card-bg)] rounded-xl p-3.5 flex items-center gap-3">
+              <Lock className="w-4 h-4 text-[var(--text-500)] flex-shrink-0"/>
               <p className="text-xs text-slate-500">This entry will be kept completely private. Only you can see it.</p>
             </div>
             <FormFileUpload category="memories" label="Journal Attachments"

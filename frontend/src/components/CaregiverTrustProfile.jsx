@@ -19,7 +19,7 @@ function StarRating({ value, total }) {
         />
       ))}
       {value != null && (
-        <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 ml-1">
+        <span className="text-xs font-semibold text-[var(--text-700)] ml-1">
           {value.toFixed(1)}
         </span>
       )}
@@ -79,16 +79,16 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
 
   // Full card
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 overflow-hidden">
+    <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700"
+      <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700"
         style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-700 dark:text-teal-300 font-bold text-sm">
             {profile.full_name?.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-slate-800 dark:text-white text-sm truncate">
+            <p className="font-semibold text-[var(--text-800)] text-sm truncate">
               {profile.full_name}
             </p>
             {profile.professional_title && (
@@ -115,15 +115,15 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
         {/* Rating */}
         {profile.average_rating != null ? (
           <div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mb-1">Service Rating</p>
+            <p className="text-[10px] text-[var(--text-500)] dark:text-[var(--text-400)] mb-1">Service Rating</p>
             <StarRating value={profile.average_rating} total={profile.total_reviews} />
           </div>
         ) : (
-          <p className="text-[11px] text-slate-400 italic">No reviews yet</p>
+          <p className="text-[11px] text-[var(--text-400)] italic">No reviews yet</p>
         )}
 
         {/* Meta row */}
-        <div className="flex flex-wrap gap-3 text-[11px] text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap gap-3 text-[11px] text-[var(--text-500)] dark:text-slate-400">
           {profile.specialisation && (
             <span className="flex items-center gap-1">
               <Stethoscope size={11} /> {profile.specialisation}

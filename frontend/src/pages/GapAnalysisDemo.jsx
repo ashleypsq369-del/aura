@@ -166,7 +166,7 @@ export default function GapAnalysisDemo() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedPriority(priority)}
-                className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 hover:border-purple-400 hover:shadow-xl transition-all cursor-pointer group"
+                className="bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] hover:border-purple-400 hover:shadow-xl transition-all cursor-pointer group"
               >
                 <div className={`bg-gradient-to-r ${priority.color} p-6 rounded-t-xl`}>
                   <div className="flex items-center justify-between mb-3">
@@ -185,7 +185,7 @@ export default function GapAnalysisDemo() {
 
                 <div className="p-6">
                   <div className="mb-4">
-                    <p className="text-xs font-bold text-slate-500 uppercase mb-2">
+                    <p className="text-xs font-bold text-[var(--text-500)] uppercase mb-2">
                       Status
                     </p>
                     <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export default function GapAnalysisDemo() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-600 mb-4">
+                  <p className="text-xs text-[var(--text-600)] mb-4">
                     <strong>Citation:</strong> {priority.citation}
                   </p>
 
@@ -215,7 +215,7 @@ export default function GapAnalysisDemo() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-slate-50 rounded-2xl shadow-2xl border-2 border-purple-300 p-8 mb-8"
+            className="bg-[var(--card-bg)] rounded-2xl shadow-2xl border-2 border-purple-300 p-8 mb-8"
           >
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -223,7 +223,7 @@ export default function GapAnalysisDemo() {
                   <selectedPriority.icon size={32} className="text-white" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                  <h2 className="text-3xl font-bold text-[var(--text-900)] mb-2">
                     {selectedPriority.name}
                   </h2>
                   <p className="text-slate-600">
@@ -233,7 +233,7 @@ export default function GapAnalysisDemo() {
               </div>
               <button
                 onClick={() => setSelectedPriority(null)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-semibold"
+                className="text-[var(--text-400)] hover:text-[var(--text-600)] text-sm font-semibold"
               >
                 Close
               </button>
@@ -241,14 +241,14 @@ export default function GapAnalysisDemo() {
 
             {/* Features */}
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">
                 ? Key Features Implemented
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {selectedPriority.features.map((feature, idx) => (
                   <div
                     key={idx}
-                    className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200"
+                    className="flex items-start gap-3 p-3 bg-[var(--card-bg)] rounded-lg border border-slate-200"
                   >
                     <CheckCircle size={20} className="text-green-600 flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-slate-700">{feature}</span>
@@ -259,7 +259,7 @@ export default function GapAnalysisDemo() {
 
             {/* Links */}
             <div>
-              <h3 className="text-lg font-bold text-slate-900 mb-4">
+              <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">
                 ?? Access Points
               </h3>
               <div className="space-y-3">
@@ -310,11 +310,11 @@ export default function GapAnalysisDemo() {
 
 function StatCard({ label, value, color }) {
   return (
-    <div className="bg-slate-50 rounded-xl shadow-lg border-2 border-slate-200 p-6 text-center">
+    <div className="bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6 text-center">
       <div className={`${color} w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3`}>
         <CheckCircle size={24} className="text-white" />
       </div>
-      <p className="text-3xl font-bold text-slate-900 mb-1">{value}</p>
+      <p className="text-3xl font-bold text-[var(--text-900)] mb-1">{value}</p>
       <p className="text-sm text-slate-600">{label}</p>
     </div>
   );

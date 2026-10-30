@@ -58,7 +58,7 @@ export default function ExplainabilityPanel({
 
   if (!prediction) {
     return (
-      <div className="bg-slate-50 rounded-lg p-8 shadow-md border-2 border-gray-200 text-center">
+      <div className="bg-[var(--card-bg)] rounded-lg p-8 shadow-md border-2 border-gray-200 text-center">
         <Brain className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <p className="text-gray-600 mb-4">No AI prediction available</p>
         {onRequestNewPrediction && (
@@ -131,7 +131,7 @@ export default function ExplainabilityPanel({
       </motion.div>
 
       {/* Tabs */}
-      <div className="bg-slate-50 rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
+      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
         <div className="flex border-b-2 border-gray-200">
           {[
             { id: 'explanation', label: 'Plain English', icon: MessageSquare },
@@ -144,7 +144,7 @@ export default function ExplainabilityPanel({
               className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 font-semibold transition ${
                 activeTab === tab.id
                   ? 'bg-purple-600 text-white'
-                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  : 'bg-[var(--card-bg)] text-gray-600 hover:bg-gray-100'
               }`}
             >
               <tab.icon size={18} />
@@ -206,10 +206,10 @@ export default function ExplainabilityPanel({
       </div>
 
       {/* Clinician Feedback Section */}
-      <div className="bg-slate-50 rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
+      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
         <button
           onClick={() => setFeedbackExpanded(!feedbackExpanded)}
-          className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition"
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-[var(--card-bg)] transition"
         >
           <div className="flex items-center space-x-3">
             <TrendingUp className="text-purple-600" size={20} />

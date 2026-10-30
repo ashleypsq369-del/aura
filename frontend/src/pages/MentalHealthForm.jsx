@@ -155,7 +155,7 @@ export default function MentalHealthForm() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
+      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -223,7 +223,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-3 border-purple-300"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-3 border-purple-300"
         >
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -259,7 +259,7 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-3 border-amber-300"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-3 border-amber-300"
         >
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -294,9 +294,9 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-3">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-3">
             If you checked off any problems, how <strong>difficult</strong> have these problems made it for you to do your work, take care of things at home, or get along with other people?
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -308,7 +308,7 @@ export default function MentalHealthForm() {
                 className={`px-4 py-3 rounded-lg font-semibold transition-all ${
                   difficulty === level
                     ? 'bg-purple-600 text-white shadow-lg'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    : 'bg-slate-100 text-[var(--text-700)] hover:bg-slate-200'
                 }`}
               >
                 {level.replace(/_/g, ' ')}
@@ -322,9 +322,9 @@ export default function MentalHealthForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Clinical Notes (Optional)
           </label>
           <textarea
@@ -375,7 +375,7 @@ export default function MentalHealthForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>
@@ -387,12 +387,12 @@ export default function MentalHealthForm() {
 
 function QuestionItem({ question, value, onChange, isHighAlert, questionNumber }) {
   return (
-    <div className={`p-4 rounded-lg border-2 ${isHighAlert ? 'bg-red-50 border-red-300' : 'bg-slate-50 border-slate-200'}`}>
+    <div className={`p-4 rounded-lg border-2 ${isHighAlert ? 'bg-red-50 border-red-300' : 'bg-[var(--card-bg)] border-slate-200'}`}>
       <div className="flex items-start space-x-3 mb-3">
         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600 text-white text-xs font-bold flex items-center justify-center">
           {questionNumber}
         </span>
-        <p className="text-sm text-slate-900 flex-1">
+        <p className="text-sm text-[var(--text-900)] flex-1">
           {question}
           {isHighAlert && (
             <span className="ml-2 px-2 py-1 bg-red-600 text-white text-xs rounded font-bold">
@@ -413,7 +413,7 @@ function QuestionItem({ question, value, onChange, isHighAlert, questionNumber }
                 ? isHighAlert
                   ? 'bg-red-600 text-white shadow-lg'
                   : 'bg-purple-600 text-white shadow-lg'
-                : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-300'
+                : 'bg-[var(--card-bg)] text-[var(--text-700)] hover:bg-slate-100 border border-slate-300'
             }`}
           >
             {option.label}

@@ -137,7 +137,7 @@ export default function FileUpload({
             <p className="text-sm font-medium text-slate-700">
               {multiple ? 'Click to select files' : 'Click to select a file'}
             </p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-[var(--text-500)] mt-1">
               Max size: {maxSizeMB}MB
             </p>
           </div>
@@ -162,12 +162,12 @@ export default function FileUpload({
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200"
+                  className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg border border-slate-200"
                 >
                   <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    <FileIcon className="w-5 h-5 text-slate-500 flex-shrink-0" />
+                    <FileIcon className="w-5 h-5 text-[var(--text-500)] flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">
+                      <p className="text-sm font-medium text-[var(--text-900)] truncate">
                         {file.name}
                       </p>
                       <p className="text-xs text-slate-500">
@@ -194,7 +194,7 @@ export default function FileUpload({
       {uploading && (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-700 font-medium">Uploading...</span>
+            <span className="text-[var(--text-700)] font-medium">Uploading...</span>
             <span className="text-slate-600">{uploadProgress}%</span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">

@@ -189,9 +189,9 @@ export default function Dashboard() {
  )}
  {/* ML Proactive Scan Widget */}
  {(user.role === 'clinician' || user.role === 'admin') && (
- <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 mb-3">
- <Brain size={13} className="text-slate-500 flex-shrink-0" />
- <p className="text-xs text-slate-600 flex-1 min-w-0">
+ <div className="flex items-center gap-3 px-3 py-2 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] mb-3">
+ <Brain size={13} className="text-[var(--text-500)] flex-shrink-0" />
+ <p className="text-xs text-[var(--text-600)] flex-1 min-w-0">
  <span className="font-semibold text-slate-700">ML Risk</span>
  {' - '}{batchRisk
  ? `${batchRisk.patients?.filter(p => p.risk_level === 'critical' || p.risk_level === 'high').length ?? 0} at high/critical risk`
@@ -211,20 +211,20 @@ export default function Dashboard() {
  <div className="kente-strip" />
  <div className="px-5 py-3.5 border-b border-[#dde3ea] dark:border-white/[0.08] flex items-center justify-between">
  <div>
- <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Recent Patients</h2>
- <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Click any row to open the patient record</p>
+ <h2 className="text-sm font-semibold text-[var(--text-800)] dark:text-slate-100">Recent Patients</h2>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">Click any row to open the patient record</p>
  </div>
  <span className="chip-teal text-[10px]">Live</span>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Patient</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Age</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Risk Level</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Last Contact</th>
- <th className="text-right py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Action</th>
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Patient</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Age</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Risk Level</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Last Contact</th>
+ <th className="text-right py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Action</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
@@ -232,7 +232,7 @@ export default function Dashboard() {
  <motion.tr key={patient.id}
  initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
  onClick={() => navigate(`/patients/${patient.patient_id || patient.id}`)}
- className="bg-slate-50 dark:bg-slate-900 hover:bg-teal-50 dark:hover:bg-slate-800 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
+ className="bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-800 cursor-pointer transition-all duration-150 border-l-4 border-transparent hover:border-teal-600 h-[56px]">
  <td className="py-3 px-6">
  <div className="flex items-center space-x-2.5">
  <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -240,18 +240,18 @@ export default function Dashboard() {
  {patient.full_name?.charAt(0)}
  </div>
  <div>
- <div className="text-sm font-bold text-slate-900 dark:text-white">{patient.full_name}</div>
- <div className="text-xs text-slate-500 dark:text-slate-400">{patient.patient_code}</div>
+ <div className="text-sm font-bold text-[var(--text-900)] dark:text-white">{patient.full_name}</div>
+ <div className="text-xs text-[var(--text-500)] dark:text-slate-400">{patient.patient_code}</div>
  </div>
  </div>
  </td>
- <td className="py-3 px-6 text-sm text-slate-700 dark:text-slate-300 font-medium">{patient.age}</td>
+ <td className="py-3 px-6 text-sm text-[var(--text-700)] font-medium">{patient.age}</td>
  <td className="py-3 px-6">
  <span className={patient.risk_level === 'Crisis' ? 'badge-critical' : patient.risk_level === 'High' ? 'badge-high' : patient.risk_level === 'Medium' ? 'badge-moderate' : 'badge-low'}>
  {patient.risk_level || 'Low'}
  </span>
  </td>
- <td className="py-3 px-6 text-sm text-slate-600 dark:text-slate-400">
+ <td className="py-3 px-6 text-sm text-[var(--text-600)] dark:text-slate-400">
  {patient.last_contact ? new Date(patient.last_contact).toLocaleDateString() : 'N/A'}
  </td>
  <td className="py-3 px-6 text-right">
@@ -264,9 +264,9 @@ export default function Dashboard() {
  ))}
  </tbody>
  </table>
- <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] dark:border-slate-700 text-center">
  <button onClick={() => navigate('/patients')}
- className="inline-flex items-center space-x-2 px-5 py-2.5 bg-slate-50 dark:bg-slate-700 border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+ className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[var(--card-bg)] border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
  <span>View All Patients</span>
  </button>
  </div>
@@ -306,23 +306,23 @@ export default function Dashboard() {
  <div className="mb-6">
  <TaskStatusBar />
  </div>
- <div className="bg-slate-50 rounded-xl shadow-xl border border-slate-200 overflow-hidden">
- <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-6 py-4 border-b border-[var(--card-border)] flex items-center justify-between">
  <div>
- <h2 className="text-base font-bold text-slate-800 mb-0.5">Your Patients</h2>
- <p className="text-slate-500 text-xs">Click any row to view care details</p>
+ <h2 className="text-base font-bold text-[var(--text-800)] mb-0.5">Your Patients</h2>
+ <p className="text-[var(--text-500)] text-xs">Click any row to view care details</p>
  </div>
  <span className="chip-violet">Assigned</span>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 dark:bg-slate-800 border-b-2 border-slate-200 dark:border-slate-700">
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Patient</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Age</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Status</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Next Task</th>
- <th className="text-right py-3 px-6 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Action</th>
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Patient</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Age</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Status</th>
+ <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Next Task</th>
+ <th className="text-right py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Action</th>
  </tr>
  </thead>
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
@@ -332,7 +332,7 @@ export default function Dashboard() {
  <motion.tr key={pid}
  initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
  onClick={() => navigate(`/patients/${pid}`)}
- className="bg-slate-50 dark:bg-slate-900 hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
+ className="bg-[var(--card-bg)] hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
  <td className="py-3 px-6">
  <div className="flex items-center space-x-2.5">
  <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
@@ -340,14 +340,14 @@ export default function Dashboard() {
  {patient.full_name?.charAt(0)}
  </div>
  <div>
- <div className="text-sm font-bold text-slate-900 dark:text-white">{patient.full_name}</div>
- <div className="text-xs text-slate-500 dark:text-slate-400">{patient.primary_diagnosis || patient.patient_code}</div>
+ <div className="text-sm font-bold text-[var(--text-900)] dark:text-white">{patient.full_name}</div>
+ <div className="text-xs text-[var(--text-500)] dark:text-slate-400">{patient.primary_diagnosis || patient.patient_code}</div>
  </div>
  </div>
  </td>
- <td className="py-3 px-6 text-sm text-slate-700 dark:text-slate-300 font-medium">{patient.age}</td>
+ <td className="py-3 px-6 text-sm text-[var(--text-700)] font-medium">{patient.age}</td>
  <td className="py-3 px-6"><span className="badge-low">{patient.status || 'Active'}</span></td>
- <td className="py-3 px-6 text-sm text-slate-600 dark:text-slate-400">
+ <td className="py-3 px-6 text-sm text-[var(--text-600)] dark:text-slate-400">
  {patient.active_alerts > 0 ? `${patient.active_alerts} active alert(s)` : 'No pending alerts'}
  </td>
  <td className="py-3 px-6 text-right">
@@ -361,9 +361,9 @@ export default function Dashboard() {
  })}
  </tbody>
  </table>
- <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] dark:border-slate-700 text-center">
  <button onClick={() => navigate('/patients')}
- className="inline-flex items-center px-5 py-2.5 bg-slate-50 dark:bg-slate-700 border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
+ className="inline-flex items-center px-5 py-2.5 bg-[var(--card-bg)] border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
  View All Patients
  </button>
  </div>
@@ -382,7 +382,7 @@ export default function Dashboard() {
  return (
  <div className="max-w-4xl mx-auto p-8">
  <h1 className="text-xl font-semibold text-teal-800 mb-4">Welcome back, {user?.full_name}</h1>
- <div className="bg-slate-50 rounded-lg shadow-md p-8 text-center">
+ <div className="bg-[var(--card-bg)] rounded-lg shadow-md p-8 text-center">
  <p className="text-slate-500">Your dashboard is ready.</p>
  </div>
  </div>
@@ -455,11 +455,11 @@ function FamilyDashboard({ user, summary, navigate }) {
 
  {/* Daily task checklist for family - shows appointments + optional tasks */}
  <TaskStatusBar />
- <div className="bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
- <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between">
  <div>
- <h2 className="text-base font-bold text-slate-800 dark:text-white">Recent Care Updates</h2>
- <p className="text-xs text-slate-500 dark:text-slate-400">Live events from your loved one's care journey</p>
+ <h2 className="text-base font-bold text-[var(--text-800)] dark:text-white">Recent Care Updates</h2>
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">Live events from your loved one's care journey</p>
  </div>
  <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700">
  Full timeline →
@@ -478,22 +478,22 @@ function FamilyDashboard({ user, summary, navigate }) {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-0.5">
- <span className="text-[10px] font-bold text-slate-500 ">{cfg.label}</span>
+ <span className="text-[10px] font-bold text-[var(--text-500)] ">{cfg.label}</span>
  </div>
- <p className="text-sm font-semibold text-slate-900 truncate">{ev.event_title}</p>
- {ev.event_detail && <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{ev.event_detail}</p>}
+ <p className="text-sm font-semibold text-[var(--text-900)] truncate">{ev.event_title}</p>
+ {ev.event_detail && <p className="text-xs text-[var(--text-500)] line-clamp-1 mt-0.5">{ev.event_detail}</p>}
  </div>
- <span className="text-[11px] text-slate-400 flex-shrink-0 whitespace-nowrap">{formatTime(ev.created_at)}</span>
+ <span className="text-[11px] text-[var(--text-400)] flex-shrink-0 whitespace-nowrap">{formatTime(ev.created_at)}</span>
  </motion.div>
  );
  }) : (
  <div className="px-5 py-8 text-center">
- <p className="text-slate-400 text-sm">No care updates yet.</p>
+ <p className="text-[var(--text-400)] text-sm">No care updates yet.</p>
  </div>
  )}
  </div>
  {events.length > 8 && (
- <div className="px-5 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 text-center">
+ <div className="px-5 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 dark:border-slate-700 text-center">
  <button onClick={() => navigate('/continuity-bridge')} className="text-sm font-semibold text-rose-600 hover:text-rose-700">
  View all {events.length} updates →
  </button>

@@ -44,20 +44,20 @@ export default function Accordion({
   });
 
   return (
-    <div className={`bg-slate-50 rounded-2xl border border-slate-200 shadow-sm overflow-hidden ${className}`}>
+    <div className={`bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden ${className}`}>
       {/* Header - clickable trigger */}
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
-        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-inset"
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[var(--card-bg)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-inset"
       >
         {Icon && (
           <div className={`w-8 h-8 rounded-lg ${iconBg} flex items-center justify-center flex-shrink-0`}>
             <Icon size={16} className={iconColor} />
           </div>
         )}
-        <span className="flex-1 font-semibold text-slate-900 text-sm">{title}</span>
+        <span className="flex-1 font-semibold text-[var(--text-900)] text-sm">{title}</span>
         {badge != null && (
           <span className="px-2 py-0.5 bg-teal-100 text-teal-800 text-[11px] font-bold rounded-full">
             {badge}

@@ -104,7 +104,7 @@ export default function CarePathwaySelector() {
  </div>
  ))}
  </div>
- <p className="text-[11px] text-slate-500 text-center">{STEPS[step]}</p>
+ <p className="text-[11px] text-[var(--text-500)] text-center">{STEPS[step]}</p>
  </div>
  )}
 
@@ -116,8 +116,8 @@ export default function CarePathwaySelector() {
  className="space-y-4"
  >
  <div className="text-center mb-2">
- <h1 className="text-xl font-bold text-slate-800 dark:text-white">What does your loved one need?</h1>
- <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+ <h1 className="text-xl font-bold text-[var(--text-800)] dark:text-white">What does your loved one need?</h1>
+ <p className="text-sm text-[var(--text-500)] dark:text-[var(--text-400)] mt-1">
  Choose the care pathway that best fits their situation.
  </p>
  </div>
@@ -125,7 +125,7 @@ export default function CarePathwaySelector() {
  {loadingOptions ? (
  <div className="space-y-3">
  {[1,2,3].map(i => (
- <div key={i} className="h-20 bg-slate-50 dark:bg-slate-800 rounded-xl animate-pulse border border-slate-200 dark:border-slate-700" />
+ <div key={i} className="h-20 bg-[var(--card-bg)] rounded-xl animate-pulse border border-[var(--card-border)] dark:border-slate-700" />
  ))}
  </div>
  ) : (
@@ -151,8 +151,8 @@ export default function CarePathwaySelector() {
  <Icon size={18} />
  </div>
  <div className="flex-1 min-w-0">
- <p className="font-semibold text-slate-800 text-sm">{p.title}</p>
- <p className="text-xs text-slate-500 leading-tight">{p.description}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{p.title}</p>
+ <p className="text-xs text-[var(--text-500)] leading-tight">{p.description}</p>
  </div>
  {isSelected && <CheckCircle size={18} style={{ color: p.color }} />}
  </button>
@@ -204,7 +204,7 @@ export default function CarePathwaySelector() {
  >
  {checked && <CheckCircle size={12} color="white" strokeWidth={3} />}
  </div>
- <span className="text-sm text-slate-700 capitalize">{svc.replace(/_/g, ' ')}</span>
+ <span className="text-sm text-[var(--text-700)] capitalize">{svc.replace(/_/g, ' ')}</span>
  </button>
  );
  })}
@@ -212,7 +212,7 @@ export default function CarePathwaySelector() {
 
  <div className="flex gap-2">
  <button onClick={() => setStep(0)}
- className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 border border-slate-200 flex items-center gap-1">
+ className="px-4 py-2.5 rounded-xl text-sm font-medium text-[var(--text-600)] border border-[var(--card-border)] flex items-center gap-1">
  <ChevronLeft size={14} /> Back
  </button>
  <button onClick={() => setStep(2)}
@@ -250,7 +250,7 @@ export default function CarePathwaySelector() {
  >
  <div className="flex items-center justify-between">
  <div>
- <p className="font-semibold text-slate-800 text-sm">{lvl.label}</p>
+ <p className="font-semibold text-[var(--text-800)] text-sm">{lvl.label}</p>
  <p className="text-xs text-slate-500">{lvl.desc}</p>
  </div>
  {isSelected && <CheckCircle size={18} className="text-teal-600" />}
@@ -261,7 +261,7 @@ export default function CarePathwaySelector() {
  </div>
 
  <div className="flex gap-2">
- <button onClick={() => setStep(1)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 border border-slate-200 flex items-center gap-1">
+ <button onClick={() => setStep(1)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-[var(--text-600)] border border-[var(--card-border)] flex items-center gap-1">
  <ChevronLeft size={14} /> Back
  </button>
  <button onClick={() => setStep(3)} className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-1" style={{ background: '#0d9488' }}>
@@ -289,11 +289,11 @@ export default function CarePathwaySelector() {
  onChange={e => setSelected(s => ({ ...s, primary_concern: e.target.value }))}
  rows={4}
  placeholder="e.g. My father has severe pain and difficulty moving. We need help with wound care and daily medication…"
- className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
+ className="w-full border border-[var(--card-border)] rounded-xl px-4 py-3 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
  />
 
  <div className="flex gap-2">
- <button onClick={() => setStep(2)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 border border-slate-200 flex items-center gap-1">
+ <button onClick={() => setStep(2)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-[var(--text-600)] border border-[var(--card-border)] flex items-center gap-1">
  <ChevronLeft size={14} /> Back
  </button>
  <button

@@ -58,9 +58,9 @@ function RichText({ content }) {
  {rows.map((row, ri) => {
  const cells = row.split('|').filter(c => c.trim());
  return (
- <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-slate-50 even:bg-slate-50'}>
+ <tr key={ri} className={ri === 0 ? 'bg-slate-100' : 'odd:bg-[var(--card-bg)] even:bg-slate-50'}>
  {cells.map((cell, ci) => (
- <td key={ci} className={`px-3 py-2 border-b border-slate-100 ${ri===0?'font-semibold text-slate-800':'text-slate-700'}`}>{cell.trim()}</td>
+ <td key={ci} className={`px-3 py-2 border-b border-[var(--card-border)]/50 ${ri===0?'font-semibold text-slate-800':'text-slate-700'}`}>{cell.trim()}</td>
  ))}
  </tr>
  );
@@ -75,7 +75,7 @@ function RichText({ content }) {
  elements.push(
  <div key={i} className="flex items-start gap-2 py-0.5 text-sm">
  <span className="text-teal-500 font-bold flex-shrink-0 mt-0.5">•</span>
- <span className="text-slate-700 leading-relaxed">{renderInline(line.trim().slice(1).trim())}</span>
+ <span className="text-[var(--text-700)] leading-relaxed">{renderInline(line.trim().slice(1).trim())}</span>
  </div>
  );
  i++; continue;
@@ -85,12 +85,12 @@ function RichText({ content }) {
  elements.push(
  <div key={i} className="flex items-start gap-2 py-0.5 text-sm">
  <span className="text-teal-600 font-bold flex-shrink-0 min-w-[1.2rem] mt-0.5">{num[1]}.</span>
- <span className="text-slate-700 leading-relaxed">{renderInline(num[2])}</span>
+ <span className="text-[var(--text-700)] leading-relaxed">{renderInline(num[2])}</span>
  </div>
  );
  i++; continue;
  }
- elements.push(<div key={i} className="py-0.5 text-sm text-slate-700 leading-relaxed">{renderInline(line)}</div>);
+ elements.push(<div key={i} className="py-0.5 text-sm text-[var(--text-700)] leading-relaxed">{renderInline(line)}</div>);
  i++;
  }
  return <div className="space-y-0.5">{elements}</div>;
@@ -99,11 +99,11 @@ function RichText({ content }) {
 // ── BookSection wrapper ───────────────────────────────────────────────────
 function BookSection({ icon: Icon, label, accent = 'slate', children }) {
  const A = {
- slate: { bar:'bg-slate-50 border-slate-200', left:'bg-slate-400', lbl:'text-slate-600', border:'border-slate-200' },
+ slate: { bar:'bg-[var(--card-bg)] border-slate-200', left:'bg-slate-400', lbl:'text-slate-600', border:'border-slate-200' },
  red: { bar:'bg-red-50 border-red-200', left:'bg-red-500', lbl:'text-red-700', border:'border-red-200' },
  teal: { bar:'bg-teal-50 border-teal-200', left:'bg-teal-500', lbl:'text-teal-700', border:'border-teal-200' },
  amber: { bar:'bg-amber-50 border-amber-200', left:'bg-amber-500', lbl:'text-amber-700', border:'border-amber-200' },
- }[accent] || { bar:'bg-slate-50 border-slate-200', left:'bg-slate-400', lbl:'text-slate-600', border:'border-slate-200' };
+ }[accent] || { bar:'bg-[var(--card-bg)] border-slate-200', left:'bg-slate-400', lbl:'text-slate-600', border:'border-slate-200' };
  return (
  <div className={`rounded-lg border ${A.border} overflow-hidden`}>
  <div className={`flex items-center gap-2.5 px-4 py-2.5 border-b ${A.bar}`}>
@@ -140,9 +140,9 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  {/* Header */}
  <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
  <div>
- <h2 className="text-lg font-bold text-slate-900 leading-tight">{condition.condition_name}</h2>
+ <h2 className="text-lg font-bold text-[var(--text-900)] leading-tight">{condition.condition_name}</h2>
  {condition.keywords?.length > 0 && (
- <p className="text-[12px] text-slate-400 italic mt-0.5">
+ <p className="text-[12px] text-[var(--text-400)] italic mt-0.5">
  Also known as: {condition.keywords.slice(0,8).join(', ')}
  </p>
  )}
@@ -157,7 +157,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
 
  {condition.plain_language_summary && (
  <BookSection icon={BookOpen} label="In Plain Language" accent="teal">
- <p className="text-sm text-slate-700 leading-relaxed">{condition.plain_language_summary}</p>
+ <p className="text-sm text-[var(--text-700)] leading-relaxed">{condition.plain_language_summary}</p>
  </BookSection>
  )}
 
@@ -167,7 +167,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  {condition.red_flag_symptoms.map((f,i) => (
  <li key={i} className="flex items-start gap-3">
  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0"/>
- <span className="text-sm text-slate-800 leading-snug">{f}</span>
+ <span className="text-sm text-[var(--text-800)] leading-snug">{f}</span>
  </li>
  ))}
  </ul>
@@ -189,14 +189,14 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
 
  {/* Tabs */}
  <div className="pt-1">
- <div className="flex border border-slate-200 rounded-t-lg overflow-hidden bg-slate-50">
+ <div className="flex border border-[var(--card-border)] rounded-t-lg overflow-hidden bg-slate-50">
  {TABS.map((t, idx) => {
  const Icon = t.icon;
  const active = activeTab === t.id;
  return (
  <button key={t.id} onClick={() => setActiveTab(t.id)}
- className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-[12px] font-semibold transition-all border-r border-slate-200 last:border-r-0 ${
- active ? 'bg-slate-50 text-slate-900 shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-slate-500 hover:bg-white/70 hover:text-slate-700'
+ className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-[12px] font-semibold transition-all border-r border-[var(--card-border)] last:border-r-0 ${
+ active ? 'bg-[var(--card-bg)] text-[var(--text-900)] shadow-[inset_0_-2px_0_0_#0d9488]' : 'text-[var(--text-500)] hover:bg-white/70 hover:text-slate-700'
  }`}>
  <Icon size={12} className={active?'text-teal-600':''}/>
  <span className="hidden sm:inline">{t.label}</span>
@@ -205,7 +205,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  );
  })}
  </div>
- <div className="border border-t-0 border-slate-200 rounded-b-lg bg-slate-50 overflow-hidden">
+ <div className="border border-t-0 border-[var(--card-border)] rounded-b-lg bg-[var(--card-bg)] overflow-hidden">
  <AnimatePresence mode="wait">
  <motion.div key={activeTab} initial={{opacity:0,y:4}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.14}} className="p-5 space-y-5">
  {tab?.fields.map((field, fi) => {
@@ -213,16 +213,16 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  return (
  <div key={field}>
  <div className="flex items-center gap-2.5 mb-3">
- <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[10px] font-bold text-slate-500 flex-shrink-0">{fi+1}</span>
- <h4 className="text-[11px] font-bold text-slate-500 select-none">{FIELD_LABELS[field]}</h4>
+ <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[10px] font-bold text-[var(--text-500)] flex-shrink-0">{fi+1}</span>
+ <h4 className="text-[11px] font-bold text-[var(--text-500)] select-none">{FIELD_LABELS[field]}</h4>
  <div className="flex-1 h-px bg-slate-100"/>
  </div>
- <div className="pl-7 text-sm text-slate-700 leading-relaxed"><RichText content={condition[field]}/></div>
+ <div className="pl-7 text-sm text-[var(--text-700)] leading-relaxed"><RichText content={condition[field]}/></div>
  </div>
  );
  })}
  {tab?.fields.every(f => !condition[f]) && (
- <div className="flex flex-col items-center py-8 text-slate-400 gap-2">
+ <div className="flex flex-col items-center py-8 text-[var(--text-400)] gap-2">
  <BookOpen size={22} className="opacity-30"/>
  <p className="text-sm italic">No clinical content available for this section.</p>
  </div>
@@ -234,7 +234,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
 
  <div className="flex items-start gap-2 px-1 pt-2 border-t border-slate-100">
  <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
- <p className="text-[10.5px] text-slate-400 leading-relaxed">
+ <p className="text-[10.5px] text-[var(--text-400)] leading-relaxed">
  <span className="font-semibold text-slate-500">Clinical Grade · 🇬🇭 Ghana Palliative Care Context</span><br/>
  Sources: WHO Cancer Pain Guidelines · IAHPC Handbook · Oxford Handbook of Palliative Medicine · NHS Clinical Guidelines · Ghana National Treatment Protocols
  </p>
@@ -268,21 +268,21 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
  {(form[field]||[]).map((t,i) => (
  <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 rounded text-[11px] font-medium text-slate-700">
  {t}
- <button type="button" onClick={()=>removeTag(field,i)} className="text-slate-400 hover:text-red-500"><X size={9}/></button>
+ <button type="button" onClick={()=>removeTag(field,i)} className="text-[var(--text-400)] hover:text-red-500"><X size={9}/></button>
  </span>
  ))}
  </div>
  <div className="flex gap-2">
  <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();addTag(field,input,setInput);}}}
  placeholder={placeholder} className="flex-1 border border-slate-300 rounded-lg px-3 py-1.5 text-xs focus:border-teal-500 outline-none"/>
- <button type="button" onClick={()=>addTag(field,input,setInput)} className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-600 transition">Add</button>
+ <button type="button" onClick={()=>addTag(field,input,setInput)} className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-[var(--text-600)] transition">Add</button>
  </div>
  </div>
  );
 
  const textarea = (field, label, rows=3) => (
  <div>
- <label className="block text-[11px] font-bold text-slate-500 mb-1 select-none">{label}</label>
+ <label className="block text-[11px] font-bold text-[var(--text-500)] mb-1 select-none">{label}</label>
  <textarea value={form[field]||''} onChange={e=>set(field,e.target.value)} rows={rows} placeholder={`Enter ${label.toLowerCase()}...`}
  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:border-teal-500 outline-none resize-none leading-relaxed"/>
  </div>
@@ -291,20 +291,20 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
  return (
  <div className="space-y-4">
  <div>
- <label className="block text-[11px] font-bold text-slate-500 mb-1 select-none">Condition Name *</label>
+ <label className="block text-[11px] font-bold text-[var(--text-500)] mb-1 select-none">Condition Name *</label>
  <input value={form.condition_name} onChange={e=>set('condition_name',e.target.value)}
  className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold focus:border-teal-500 outline-none" placeholder="e.g. Advanced Heart Failure"/>
  </div>
 
  <div>
- <label className="block text-[11px] font-bold text-slate-500 mb-1 select-none">Keywords / Synonyms</label>
+ <label className="block text-[11px] font-bold text-[var(--text-500)] mb-1 select-none">Keywords / Synonyms</label>
  <TagInput field="keywords" input={kwInput} setInput={setKwInput} placeholder="Add a keyword, press Enter"/>
  </div>
 
  {textarea('plain_language_summary', 'Plain Language Summary', 3)}
 
- <div className="border-t border-slate-100 pt-4">
- <p className="text-[11px] font-bold text-slate-400 mb-3 select-none">Clinical Sections</p>
+ <div className="border-t border-[var(--card-border)]/50 pt-4">
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-3 select-none">Clinical Sections</p>
  <div className="space-y-4">
  {textarea('goals_of_care', 'Goals of Care', 4)}
  {textarea('pain_management_plan', 'Pain & Symptom Management', 5)}
@@ -314,9 +314,9 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
  </div>
  </div>
 
- <div className="border-t border-slate-100 pt-4 space-y-4">
+ <div className="border-t border-[var(--card-border)]/50 pt-4 space-y-4">
  <div>
- <label className="block text-[11px] font-bold text-slate-500 mb-1 select-none">Key Symptoms to Monitor</label>
+ <label className="block text-[11px] font-bold text-[var(--text-500)] mb-1 select-none">Key Symptoms to Monitor</label>
  <TagInput field="key_symptoms_to_monitor" input={symInput} setInput={setSymInput} placeholder="Add symptom, press Enter"/>
  </div>
  <div>
@@ -330,7 +330,7 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
  className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold disabled:opacity-50 transition">
  <Save size={13}/>{isSaving?'Saving…':'Save Condition'}
  </button>
- <button onClick={onCancel} className="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-600 rounded-lg text-sm font-semibold transition">Cancel</button>
+ <button onClick={onCancel} className="px-4 py-2 border border-slate-300 hover:bg-[var(--card-bg)] text-[var(--text-600)] rounded-lg text-sm font-semibold transition">Cancel</button>
  </div>
  </div>
  );
@@ -445,19 +445,19 @@ export default function MedicalKnowledge() {
  <div className="w-full lg:w-72 lg:flex-shrink-0 flex flex-col gap-3 lg:sticky lg:top-4 lg:self-start">
  {/* Search */}
  <div className="relative">
- <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+ <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  <input type="text" value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search conditions…"
- className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
+ className="w-full pl-9 pr-3 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none shadow-sm"/>
  </div>
 
  {/* Index list */}
- <div className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden flex-1">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden flex-1">
  {/* Index header */}
- <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+ <div className="px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)] flex items-center justify-between">
  <div className="flex items-center gap-2">
  <BookOpen size={13} className="text-slate-400"/>
- <span className="text-[11px] font-bold text-slate-500 select-none">Index</span>
+ <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Index</span>
  </div>
  <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
  </div>
@@ -479,7 +479,7 @@ export default function MedicalKnowledge() {
  return (
  <button key={c.id || c.condition_name}
  onClick={() => { setActiveId(c.condition_name); setMode('read'); }}
- className={`w-full text-left flex items-center gap-3 px-4 py-3 border-b border-slate-100 last:border-0 transition-colors ${
+ className={`w-full text-left flex items-center gap-3 px-4 py-3 border-b border-[var(--card-border)]/50 last:border-0 transition-colors ${
  isActive ? `${pal.active} border-l-2` : 'hover:bg-slate-50'
  }`}>
  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${pal.dot}`}/>
@@ -488,7 +488,7 @@ export default function MedicalKnowledge() {
  {c.condition_name}
  </p>
  {(c.keywords||[]).length > 0 && (
- <p className="text-[10px] text-slate-400 truncate mt-0.5">
+ <p className="text-[10px] text-[var(--text-400)] truncate mt-0.5">
  {c.keywords.slice(0,3).join(', ')}
  </p>
  )}
@@ -503,7 +503,7 @@ export default function MedicalKnowledge() {
 
  {/* Add button at bottom of index */}
  {canEdit && (
- <div className="border-t border-slate-200 p-2">
+ <div className="border-t border-[var(--card-border)] p-2">
  <button onClick={() => { setActiveId(null); setMode('add'); }}
  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-bold transition border border-teal-200">
  <Plus size={12}/> Add New Condition
@@ -518,13 +518,13 @@ export default function MedicalKnowledge() {
  <AnimatePresence mode="wait">
  {mode === 'add' && (
  <motion.div key="add" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  <div className="flex items-center gap-3 px-5 py-4 bg-teal-50 border-b border-teal-200">
  <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center flex-shrink-0">
  <Plus size={16} className="text-white"/>
  </div>
  <div>
- <h2 className="font-bold text-slate-900 text-sm">Add New Condition</h2>
+ <h2 className="font-bold text-[var(--text-900)] text-sm">Add New Condition</h2>
  <p className="text-[11px] text-slate-500">Clinician-authored entry for the knowledge base</p>
  </div>
  </div>
@@ -540,13 +540,13 @@ export default function MedicalKnowledge() {
 
  {mode === 'edit' && detail && (
  <motion.div key="edit" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  <div className="flex items-center gap-3 px-5 py-4 bg-amber-50 border-b border-amber-200">
  <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
  <Edit2 size={15} className="text-white"/>
  </div>
  <div className="flex-1">
- <h2 className="font-bold text-slate-900 text-sm">Editing: {detail.condition_name}</h2>
+ <h2 className="font-bold text-[var(--text-900)] text-sm">Editing: {detail.condition_name}</h2>
  <p className="text-[11px] text-slate-500">Changes are saved to the knowledge base</p>
  </div>
  {user?.role === 'admin' && (
@@ -580,7 +580,7 @@ export default function MedicalKnowledge() {
 
  {mode === 'read' && !activeId && (
  <motion.div key="empty" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
- className="h-full flex flex-col items-center justify-center py-24 text-slate-400 bg-slate-50 rounded-xl border border-slate-200 border-dashed">
+ className="h-full flex flex-col items-center justify-center py-24 text-[var(--text-400)] bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] border-dashed">
  <BookOpen size={40} className="opacity-20 mb-3"/>
  <p className="font-semibold text-slate-500">Select a condition from the index</p>
  <p className="text-sm mt-1">Click any entry on the left to read its clinical reference</p>
@@ -595,7 +595,7 @@ export default function MedicalKnowledge() {
 
  {mode === 'read' && activeId && (
  <motion.div key={activeId} initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} transition={{duration:0.15}}
- className="bg-slate-50 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  {loadingDetail || !detail ? (
  <div className="flex flex-col items-center justify-center py-24">
  <RefreshCw size={28} className="animate-spin text-teal-500 mb-3"/>

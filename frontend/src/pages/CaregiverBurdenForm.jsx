@@ -165,7 +165,7 @@ export default function CaregiverBurdenForm() {
 
   return (
     <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
+      <button onClick={() => window.history.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--text-600)] hover:text-teal-700 transition-colors mb-4 group"><span className="group-hover:-translate-x-1 transition-transform">?</span> Back</button>
 {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -212,17 +212,17 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center">
+          <h3 className="text-xl font-bold text-[var(--text-900)] mb-6 flex items-center">
             <Heart className="w-6 h-6 mr-2 text-purple-600" />
             How often do you feel this way?
           </h3>
 
           <div className="space-y-6">
             {questions.map((question, idx) => (
-              <div key={question.key} className="border-b border-slate-100 pb-5 last:border-0">
-                <p className="text-sm font-medium text-slate-900 mb-3">
+              <div key={question.key} className="border-b border-[var(--card-border)]/50 pb-5 last:border-0">
+                <p className="text-sm font-medium text-[var(--text-900)] mb-3">
                   {idx + 1}. {question.text}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ export default function CaregiverBurdenForm() {
                         px-4 py-2 rounded-lg text-sm font-medium transition-all
                         ${scores[question.key] === option.value
                           ? `${option.color} text-white border-2 border-slate-900`
-                          : 'bg-slate-100 text-slate-700 border-2 border-slate-200 hover:border-purple-300'
+                          : 'bg-slate-100 text-[var(--text-700)] border-2 border-[var(--card-border)] hover:border-purple-300'
                         }
                       `}
                     >
@@ -263,7 +263,7 @@ export default function CaregiverBurdenForm() {
                   {burdenLevel}
                 </div>
               </div>
-              <div className="text-sm text-slate-700 space-y-1">
+              <div className="text-sm text-[var(--text-700)] space-y-1">
                 <div>- 0-10: Little or no burden</div>
                 <div>- 10-20: Mild to moderate burden</div>
                 <div>- 20+: High burden</div>
@@ -283,10 +283,10 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Support Needs (Optional)</h3>
-          <p className="text-sm text-slate-600 mb-4">
+          <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">Support Needs (Optional)</h3>
+          <p className="text-sm text-[var(--text-600)] mb-4">
             Select any support services you would like to learn more about:
           </p>
           <div className="space-y-3">
@@ -330,9 +330,9 @@ export default function CaregiverBurdenForm() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-50 rounded-xl p-6 shadow-md border-2 border-slate-200"
+          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
             Additional Notes (Optional)
           </label>
           <textarea
@@ -380,7 +380,7 @@ export default function CaregiverBurdenForm() {
           <button
             type="button"
             onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-slate-900 rounded-xl font-bold hover:bg-slate-300 transition-colors"
+            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
           >
             Cancel
           </button>
