@@ -67,10 +67,10 @@ function IncidentRow({ incident, onUpdate }) {
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
  <p className="text-sm font-semibold text-slate-800">{(incident.breach_type||'').replace(/_/g,' ')}</p>
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border capitalize ${SEV_CFG[incident.severity]}`}>{incident.severity}</span>
- {incident.is_resolved && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">Resolved</span>}
+ <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border capitalize ${SEV_CFG[incident.severity]}`}>{incident.severity}</span>
+ {incident.is_resolved && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">Resolved</span>}
  {!incident.is_resolved && (
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${overdue ? 'bg-red-100 text-red-700 border-red-200' : daysLeft < 7 ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-slate-100 text-[var(--text-600)] border-slate-200'}`}>
+ <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${overdue ? 'bg-red-100 text-red-700 border-red-200' : daysLeft < 7 ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-slate-100 text-[var(--text-600)] border-slate-200'}`}>
  {overdue ? `${Math.abs(daysLeft)}d OVERDUE` : `${daysLeft}d to HHS deadline`}
  </span>
  )}
@@ -260,12 +260,12 @@ export default function HIPAACompliance() {
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
  <h3 className="text-sm font-semibold text-slate-900">{item.requirement}</h3>
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase ${cfg.badge}`}>{cfg.label}</span>
- <span className="text-[10px] text-[var(--text-400)] font-medium">{item.category}</span>
+ <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border uppercase ${cfg.badge}`}>{cfg.label}</span>
+ <span className="text-[11px] text-[var(--text-400)] font-medium">{item.category}</span>
  </div>
  <p className="text-xs text-[var(--text-600)] leading-relaxed">{item.notes}</p>
  </div>
- <span className="text-[10px] text-[var(--text-400)] font-mono flex-shrink-0">#{item.id}</span>
+ <span className="text-[11px] text-[var(--text-400)] font-mono flex-shrink-0">#{item.id}</span>
  </motion.div>
  );
  })}

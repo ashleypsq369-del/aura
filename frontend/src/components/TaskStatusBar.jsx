@@ -75,7 +75,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/20'
  : isReq
  ? 'bg-red-50/60 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
- : 'bg-[var(--card-bg)] dark:bg-slate-700/30 border-[var(--card-border)]/50 dark:border-slate-700/50'
+ : 'bg-[var(--card-bg)]/30 border-[var(--card-border)]/50/50'
  }`}
  >
  {/* Status icon */}
@@ -88,37 +88,37 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
 
  {/* Feature icon */}
  <div className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
- ${task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : isAppt ? 'bg-blue-100 dark:bg-blue-900/30' : isReq ? 'bg-red-50 dark:bg-red-900/20' : 'bg-slate-100 dark:bg-slate-700'}`}>
+ ${task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : isAppt ? 'bg-blue-100 dark:bg-blue-900/30' : isReq ? 'bg-red-50 dark:bg-red-900/20' : 'bg-slate-100'}`}>
  <Icon size={13} className={task.done ? 'text-emerald-600' : isAppt ? 'text-teal-600' : isReq ? 'text-red-500' : 'text-slate-500'}/>
  </div>
 
  {/* Text */}
  <div className="flex-1 min-w-0">
  <p className={`text-xs font-semibold leading-tight truncate
- ${task.done ? 'text-[var(--text-400)] line-through' : 'text-[var(--text-700)] dark:text-slate-100'}`}>
+ ${task.done ? 'text-[var(--text-400)] line-through' : 'text-[var(--text-700)]'}`}>
  {task.name}
  </p>
  {task.description && !task.done && (
- <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">{task.description}</p>
+ <p className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">{task.description}</p>
  )}
  </div>
 
  {/* Badges + action */}
  <div className="flex items-center gap-1.5 flex-shrink-0">
  {isReq && !task.done && (
- <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white ">
+ <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white ">
  Required
  </span>
  )}
  {isAppt && (
- <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-teal-600 ">
+ <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-teal-600 ">
  Appt
  </span>
  )}
  {!task.done && task.link && (
  <button
  onClick={() => navigate(task.link.replace('{patient_id}', ''))}
- className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
+ className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
  >
  Do Now
  </button>
@@ -127,7 +127,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  <button
  onClick={() => onAcknowledge(task.id)}
  disabled={acknowledging === task.id}
- className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-40"
+ className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
  >
  {acknowledging === task.id ? '…' : 'Mark Done'}
  </button>
@@ -235,7 +235,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
  return (
  <div
- className="rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden shadow-sm"
+ className="rounded-2xl border border-[var(--card-border)] overflow-hidden shadow-sm"
  style={{ borderLeft: `4px solid ${accentColor}`, background: 'var(--card-bg, #e8fafa)' }}
  >
  {/* ── Collapsed header (always visible) ── */}
@@ -256,7 +256,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {allDone ? 'All tasks complete for today ✓' : "Today's Care Tasks"}
  </p>
  {!allDone && pendingCount > 0 && (
- <span className="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+ <span className="flex-shrink-0 text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
  {pendingCount} pending
  </span>
  )}
@@ -266,7 +266,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {optionalTasks.length > 0 && ` · ${optionalTasks.filter(t=>t.done).length}/${optionalTasks.length} optional`}
  </p>
  {/* Thin progress bar */}
- <div className="mt-1.5 h-1 rounded-full bg-slate-200 dark:bg-slate-600 overflow-hidden">
+ <div className="mt-1.5 h-1 rounded-full bg-slate-200 overflow-hidden">
  <div
  className="h-1 rounded-full transition-all duration-700"
  style={{ width: `${pct}%`, backgroundColor: accentColor }}
@@ -305,7 +305,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {/* Required tasks */}
  {requiredTasks.length > 0 && (
  <div className="space-y-2">
- <p className="text-[10px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] ">
+ <p className="text-[11px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] ">
  Required Today - {reqDone}/{reqTotal}
  </p>
  {requiredTasks.map(task => (
@@ -321,7 +321,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {/* Optional tasks */}
  {optionalTasks.length > 0 && (
  <div className="space-y-2 mt-3">
- <p className="text-[10px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
+ <p className="text-[11px] font-bold text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
  Optional
  </p>
  {optionalTasks.map(task => (

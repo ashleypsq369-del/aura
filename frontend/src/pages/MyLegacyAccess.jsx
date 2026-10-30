@@ -157,14 +157,14 @@ function ListView({ legacyAccess, onSelect }) {
  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.07 }}
  onClick={() => onSelect(item.patient_id)}
- className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
+ className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-sm hover:shadow-md hover:border-purple-300 dark:hover:border-purple-600 transition-all cursor-pointer overflow-hidden group">
 
  {/* Semantic colour strip: amber = pending, teal = active */}
  <div className={`h-1 w-full ${isPending ? 'bg-amber-400' : 'bg-teal-500'}`} />
 
  <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-start gap-5">
  {/* Avatar */}
- <div className="w-14 h-14 rounded-xl flex items-center justify-center text-[var(--text-600)] text-xl font-bold flex-shrink-0 bg-slate-100 border border-[var(--card-border)] dark:border-slate-600">
+ <div className="w-14 h-14 rounded-xl flex items-center justify-center text-[var(--text-600)] text-xl font-bold flex-shrink-0 bg-slate-100 border border-[var(--card-border)]">
  {initials}
  </div>
 
@@ -172,9 +172,9 @@ function ListView({ legacyAccess, onSelect }) {
  {/* Name + badges */}
  <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
  <div>
- <h2 className="text-lg font-bold text-[var(--text-900)] dark:text-white">{item.patient_name}</h2>
+ <h2 className="text-lg font-bold text-[var(--text-900)]">{item.patient_name}</h2>
  <p className="text-sm text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">
- Your <span className="font-medium text-[var(--text-700)] dark:text-slate-300">{item.relationship}</span>
+ Your <span className="font-medium text-[var(--text-700)]">{item.relationship}</span>
  </p>
  {item.deceased_at && (
  <p className="text-xs text-[var(--text-400)] flex items-center gap-1 mt-1">
@@ -188,7 +188,7 @@ function ListView({ legacyAccess, onSelect }) {
  {isPending ? <Clock size={11} /> : <Unlock size={11} />}
  {isPending ? 'Pending' : 'Active Access'}
  </span>
- <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-[var(--text-600)] border border-[var(--card-border)] dark:border-slate-600">
+ <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-[var(--text-600)] border border-[var(--card-border)]">
  {item.access_level === 'full' ? 'Full Access' : item.access_level === 'memories_only' ? 'Memories Only' : 'Messages Only'}
  </span>
  </div>
@@ -292,7 +292,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  });
 
  return (
- <div className="min-h-full bg-[var(--card-bg)] dark:bg-slate-900">
+ <div className="min-h-full bg-[var(--card-bg)]">
  {/* Header */}
  <PageHeader
  image="/resources/african/african-family-support.jpg"
@@ -307,7 +307,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  </PageHeader>
 
  {/* Sticky tabs */}
- <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] dark:border-slate-700 shadow-sm">
+ <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-sm">
  <div className="max-w-5xl mx-auto px-4">
  <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
  {tabs.map(({ id, label, icon: Icon }) => (
@@ -331,10 +331,10 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  <p className="text-sm text-slate-500">Letters and messages left especially for you.</p>
  {loadingContent ? <Loader2 className="w-6 h-6 animate-spin text-purple-400 mx-auto mt-8" /> :
  contentItems.length > 0 ? contentItems.map(item => (
- <div key={item.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl p-5">
+ <div key={item.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-5">
  <div className="flex items-start justify-between gap-3 mb-3">
  <div>
- <h3 className="font-semibold text-[var(--text-800)] dark:text-white">{item.title || 'Untitled'}</h3>
+ <h3 className="font-semibold text-[var(--text-800)]">{item.title || 'Untitled'}</h3>
  <p className="text-xs text-[var(--text-400)] dark:text-[var(--text-500)] mt-0.5">{item.content_type?.replace('_',' ')} · {fmtShort(item.delivered_at)}</p>
  </div>
  <FileText size={16} className="text-slate-300 flex-shrink-0 mt-1" />
@@ -358,7 +358,7 @@ function DetailActivatedView({ info, contentItems, memories, journalEntries, loa
  memories.length > 0 ? (
  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
  {memories.map(m => (
- <div key={m.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl p-4">
+ <div key={m.id} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4">
  <p className="text-xs text-[var(--text-400)] dark:text-[var(--text-500)] mb-1.5">{fmtShort(m.created_at)}</p>
  <p className="text-[var(--text-700)] text-sm line-clamp-5 leading-relaxed">{m.content}</p>
  </div>

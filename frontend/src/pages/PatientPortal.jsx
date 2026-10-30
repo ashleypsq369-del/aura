@@ -36,9 +36,9 @@ function Section({ icon: Icon, iconColor = 'text-teal-600', iconBg = 'bg-teal-50
  <motion.div
  initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  >
- <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: `linear-gradient(to right, ${accentColor}12, transparent)` }}>
  <div className="flex items-center gap-3">
  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -321,7 +321,7 @@ export default function PatientPortal() {
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-1">
  <Sparkles size={12} className="text-purple-600 flex-shrink-0" />
- <span className="text-[10px] font-bold text-purple-600 ">Picked for you</span>
+ <span className="text-[11px] font-bold text-purple-600 ">Picked for you</span>
  </div>
  <h5 className="font-semibold text-sm text-slate-800">{resource.title}</h5>
  <p className="text-xs text-[var(--text-600)] mt-0.5 line-clamp-2">{resource.reason}</p>
@@ -338,9 +338,9 @@ export default function PatientPortal() {
  <h5 className="font-semibold text-sm text-[var(--text-800)] group-hover:text-teal-700 truncate">{resource.title}</h5>
  <p className="text-xs text-[var(--text-500)] mt-0.5 line-clamp-1">{resource.summary}</p>
  <div className="flex items-center gap-2 mt-1.5">
- <span className="text-[10px] font-bold text-[var(--text-400)] uppercase">{resource.format}</span>
+ <span className="text-[11px] font-bold text-[var(--text-400)] uppercase">{resource.format}</span>
  <span className="text-slate-300">·</span>
- <span className="text-[10px] text-[var(--text-400)] capitalize">{resource.category?.replace('_', ' ')}</span>
+ <span className="text-[11px] text-[var(--text-400)] capitalize">{resource.category?.replace('_', ' ')}</span>
  </div>
  </div>
  <ArrowRight size={14} className="text-slate-300 group-hover:text-teal-500 flex-shrink-0 mt-1" />
@@ -449,7 +449,7 @@ export default function PatientPortal() {
  <p className="text-[11px] font-bold text-[var(--text-500)] ">
  Symptom Trends -- Last {esasTrends.period_days} days
  </p>
- <span className="text-[10px] text-slate-400">{esasTrends.count} check-in{esasTrends.count !== 1 ? 's' : ''}</span>
+ <span className="text-[11px] text-slate-400">{esasTrends.count} check-in{esasTrends.count !== 1 ? 's' : ''}</span>
  </div>
  <div className="grid grid-cols-2 gap-2">
  {[
@@ -476,7 +476,7 @@ export default function PatientPortal() {
  return (
  <div key={key} className="flex items-center gap-2 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)]/50 px-2.5 py-2">
  <div className="flex-1 min-w-0">
- <p className="text-[10px] text-slate-500">{label}</p>
+ <p className="text-[11px] text-slate-500">{label}</p>
  <p className="text-sm font-bold tabular-nums" style={{ color }}>
  {latest}/10
  </p>
@@ -511,7 +511,7 @@ export default function PatientPortal() {
  className={`rounded-xl border-2 p-3.5 ${colorMap[level] || colorMap.low}`}>
  <div className="flex items-center gap-2 mb-2">
  <Brain size={15} className="text-teal-600 flex-shrink-0" />
- <span className="text-[10px] font-bold text-teal-700">AI Health Check</span>
+ <span className="text-[11px] font-bold text-teal-700">AI Health Check</span>
  </div>
  <div className="flex items-center gap-2 mb-2">
  <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotMap[level] || dotMap.low}`} />

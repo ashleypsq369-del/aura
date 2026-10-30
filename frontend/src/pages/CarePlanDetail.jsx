@@ -80,7 +80,7 @@ function GoalCard({ goal, patientId, onUpdate }) {
  </div>
 
  <div className="flex items-center gap-2">
- <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${cfg.bg} ${cfg.color}`}>
+ <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${cfg.bg} ${cfg.color}`}>
  <CatIcon size={10} />
  {cfg.label}
  </div>

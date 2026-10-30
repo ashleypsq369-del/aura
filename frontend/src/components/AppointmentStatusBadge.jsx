@@ -81,7 +81,7 @@ export default function AppointmentStatusBadge({ status = 'scheduled', compact =
                 <Icon size={13} color="#fff" strokeWidth={2.5} />
               </div>
               <span
-                className="mt-1 text-[9px] font-medium text-center leading-tight whitespace-nowrap"
+                className="mt-1 text-[11px] font-medium text-center leading-tight whitespace-nowrap"
                 style={{ color: textColor }}
               >
                 {step.label}

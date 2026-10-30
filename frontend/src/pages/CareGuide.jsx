@@ -783,14 +783,14 @@ function ProtocolModalContent({ protocol }) {
  <p className="text-white font-bold text-base leading-snug">{protocol.title}</p>
  <p className="text-white/80 text-xs mt-0.5 leading-relaxed">{protocol.summary}</p>
  </div>
- <span className="flex-shrink-0 px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-white/25 text-white uppercase tracking-wide self-start">
+ <span className="flex-shrink-0 px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-white/25 text-white uppercase tracking-wide self-start">
  {protocol.badge}
  </span>
  </div>
  </div>
  {/* Contents list - like a book's chapter contents page */}
  <div className="bg-[var(--card-bg)] border-t border-[var(--card-border)] px-5 py-3">
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-2 select-none">Contents</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-2 select-none">Contents</p>
  <div className="flex flex-wrap gap-x-4 gap-y-1">
  {protocol.sections.map((s, i) => (
  <button key={i} onClick={() => { setOpenSections(p => ({...p, [i]: true})); }}
@@ -923,7 +923,7 @@ export default function CareGuide() {
  <BookOpen size={13} className="text-slate-400"/>
  <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Protocols</span>
  </div>
- <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
+ <span className="text-[11px] font-semibold text-slate-400">{filtered.length} entries</span>
  </div>
 
  <div className="overflow-y-auto max-h-[60vh]">
@@ -946,7 +946,7 @@ export default function CareGuide() {
  </div>
  <div className="flex-1 min-w-0">
  <p className={`text-sm font-semibold truncate ${isActive ? conf.text : 'text-slate-700'}`}>{p.title}</p>
- <p className="text-[10px] text-[var(--text-400)] mt-0.5">{p.sections.length} sections</p>
+ <p className="text-[11px] text-[var(--text-400)] mt-0.5">{p.sections.length} sections</p>
  </div>
  {isActive && <ChevronRight size={13} className={conf.text}/>}
  </button>
@@ -959,7 +959,7 @@ export default function CareGuide() {
  <div className="border-t border-[var(--card-border)] px-4 py-3 bg-slate-50">
  <div className="flex items-start gap-2">
  <Activity size={11} className="text-teal-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[10px] text-[var(--text-400)] leading-relaxed">
+ <p className="text-[11px] text-[var(--text-400)] leading-relaxed">
  Evidence-based · adapted for the Ghanaian context. Always consult senior clinicians for complex cases.
  </p>
  </div>

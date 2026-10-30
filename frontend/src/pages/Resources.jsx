@@ -155,7 +155,7 @@ export default function Resources() {
             {/* Category filter */}
             <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
               <div className="px-3 py-2.5 border-b border-slate-100">
-                <p className="text-[10px] font-bold text-[var(--text-400)] ">Categories</p>
+                <p className="text-[11px] font-bold text-[var(--text-400)] ">Categories</p>
               </div>
               <div className="p-1.5 space-y-0.5">
                 {CATEGORIES.map(({ value, label, icon: Icon }, i) => {
@@ -194,12 +194,12 @@ export default function Resources() {
             {mlRecommended?.length > 0 && (
               <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                 className="mb-5 bg-[var(--card-bg)] border border-teal-200 dark:border-teal-800 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center gap-2" style={{borderLeft:'4px solid #0d9488'}}>
+                <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center gap-2" style={{borderLeft:'4px solid #0d9488'}}>
                   <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0">
                     <Brain size={14} className="text-teal-600 dark:text-teal-400" />
                   </div>
                   <h3 className="text-sm font-semibold text-[var(--text-800)] flex-1">AI-Recommended for You</h3>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-700">
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-700">
                     {mlRecommended.length} match{mlRecommended.length !== 1 ? 'es' : ''}
                   </span>
                 </div>
@@ -215,12 +215,12 @@ export default function Resources() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-[var(--text-900)] group-hover:text-teal-700 truncate">{r.title}</p>
-                          <p className="text-[10px] text-[var(--text-500)] truncate mt-0.5">{r.summary}</p>
+                          <p className="text-[11px] text-[var(--text-500)] truncate mt-0.5">{r.summary}</p>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 uppercase tracking-wide">
+                            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 uppercase tracking-wide">
                               {r.category?.replace(/_/g, ' ')}
                             </span>
-                            {r.is_ghana_specific && <span className="text-[9px]">🇬🇭</span>}
+                            {r.is_ghana_specific && <span className="text-[11px]">🇬🇭</span>}
                           </div>
                         </div>
                       </button>
@@ -342,7 +342,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2">
             <div
-              className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+              className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: formatColor.bg }}
             >
               <FormatIcon size={14} style={{ color: formatColor.color }} />
@@ -370,7 +370,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
           <span className={categoryChip}>
             {resource.category?.replace('_', ' ')}
           </span>
-          <div className="flex items-center gap-2 text-[10px] text-slate-400">
+          <div className="flex items-center gap-2 text-[11px] text-slate-400">
             <span className="flex items-center gap-0.5">
               <ThumbsUp size={10} className="text-green-500" /> {resource.helpful_count || 0}
             </span>
@@ -381,7 +381,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
         <button
           onClick={onView}
           data-tip="Open this resource"
-          className="w-full py-1.5 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors font-semibold text-xs"
+          className="w-full py-1.5 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold text-xs"
         >
           {resource.pdf_path ? 'Read PDF' : 'View Resource'}
         </button>
@@ -397,7 +397,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
                 download
                 onClick={e => e.stopPropagation()}
                 data-tip="Download PDF"
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-md hover:bg-teal-100 transition-colors"
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition-colors"
               >
                 <Download size={11} /> Download
               </a>
@@ -409,7 +409,7 @@ function ResourceCard({ resource, isBookmarked, onView, onBookmark }) {
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
                 data-tip="View source"
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-[var(--text-600)] bg-[var(--card-bg)] border border-[var(--card-border)] rounded-md hover:bg-slate-100 transition-colors"
+                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[11px] font-semibold text-[var(--text-600)] bg-[var(--card-bg)] border border-[var(--card-border)] rounded-lg hover:bg-slate-100 transition-colors"
               >
                 <ExternalLink size={11} /> Source
               </a>
@@ -610,7 +610,7 @@ function ResourceModal({ resource, onClose, onBookmark, onFeedback }) {
               <div className="flex items-center gap-2 mb-3">
                 <BookOpen size={12} className="text-teal-500 flex-shrink-0" />
                 <div className="flex-1 h-px bg-slate-100" />
-                <span className="text-[10px] text-slate-300 font-medium select-none">READING</span>
+                <span className="text-[11px] text-slate-300 font-medium select-none">READING</span>
                 <div className="flex-1 h-px bg-slate-100" />
               </div>
 

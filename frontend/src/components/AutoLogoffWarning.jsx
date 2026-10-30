@@ -30,7 +30,7 @@ export default function AutoLogoffWarning({ show, remainingSeconds, onStayActive
  <Activity size={16}/> I'm Still Here
  </button>
  <button onClick={onLogout}
- className="py-3 bg-[var(--card-bg)] border-2 border-slate-300 dark:border-slate-600 text-[var(--text-700)] rounded-xl font-semibold hover:bg-[var(--card-bg)] transition-all">
+ className="py-3 bg-[var(--card-bg)] border-2 border-slate-300 text-[var(--text-700)] rounded-xl font-semibold hover:bg-[var(--card-bg)] transition-all">
  Logout Now
  </button>
  </div>
@@ -47,7 +47,7 @@ export default function AutoLogoffWarning({ show, remainingSeconds, onStayActive
  </p>
  </div>
  </div>
- <p className="text-base font-semibold text-[var(--text-800)] dark:text-slate-200">
+ <p className="text-base font-semibold text-[var(--text-800)]">
  Auto-logout in <span className="text-amber-600 font-black">{remainingSeconds}s</span>
  </p>
  </div>

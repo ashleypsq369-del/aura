@@ -257,7 +257,7 @@ export default function MemoryVault() {
                       <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border mb-3 bg-gradient-to-r ${themeConfig.color} ${themeConfig.border}`}>
                         <span className="text-lg">{themeConfig.emoji}</span>
                         <h3 className="font-bold text-[var(--text-800)] text-sm">{themeConfig.label}</h3>
-                        <span className={`ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold ${themeConfig.badge}`}>{group.length}</span>
+                        <span className={`ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold ${themeConfig.badge}`}>{group.length}</span>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {group.map((memory, index) => (
@@ -266,7 +266,7 @@ export default function MemoryVault() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.04, duration: 0.2 }}
-                            className="bg-[var(--card-bg)] rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                            className="bg-[var(--card-bg)] rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                             style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                           >
                             <div className="h-1 w-full" style={{
@@ -284,12 +284,12 @@ export default function MemoryVault() {
                                 <Heart className="w-4 h-4 flex-shrink-0 text-purple-700" />
                                 <div className="flex items-center gap-1">
                                   {memory.is_private ? (
-                                    <div className="p-1 bg-slate-100 rounded-md"><Lock className="w-3 h-3 text-slate-500" /></div>
+                                    <div className="p-1 bg-slate-100 rounded-lg"><Lock className="w-3 h-3 text-slate-500" /></div>
                                   ) : (
-                                    <div className="p-1 bg-purple-50 rounded-md"><Globe className="w-3 h-3 text-purple-700" /></div>
+                                    <div className="p-1 bg-purple-50 rounded-lg"><Globe className="w-3 h-3 text-purple-700" /></div>
                                   )}
                                   {memory.user_id === user?.id && (
-                                    <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100">
+                                    <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100">
                                       <Trash2 className="w-3 h-3 text-red-500" />
                                     </button>
                                   )}
@@ -312,7 +312,7 @@ export default function MemoryVault() {
                     <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border mb-3 bg-[var(--card-bg)] border-slate-200">
                       <span className="text-lg">📦</span>
                       <h3 className="font-bold text-[var(--text-700)] text-sm">Other Memories</h3>
-                      <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">{clustered.other.length}</span>
+                      <span className="ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600">{clustered.other.length}</span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {clustered.other.map((memory, index) => (
@@ -324,8 +324,8 @@ export default function MemoryVault() {
                             <div className="flex items-center justify-between mb-3">
                               <Heart className="w-4 h-4 text-purple-700" />
                               <div className="flex items-center gap-1">
-                                {memory.is_private ? <div className="p-1 bg-slate-100 rounded-md"><Lock className="w-3 h-3 text-slate-500" /></div> : <div className="p-1 bg-purple-50 rounded-md"><Globe className="w-3 h-3 text-purple-700" /></div>}
-                                {memory.user_id === user?.id && <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"><Trash2 className="w-3 h-3 text-red-500" /></button>}
+                                {memory.is_private ? <div className="p-1 bg-slate-100 rounded-lg"><Lock className="w-3 h-3 text-slate-500" /></div> : <div className="p-1 bg-purple-50 rounded-lg"><Globe className="w-3 h-3 text-purple-700" /></div>}
+                                {memory.user_id === user?.id && <button onClick={() => handleDelete(memory.id)} className="p-1 bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"><Trash2 className="w-3 h-3 text-red-500" /></button>}
                               </div>
                             </div>
                             <p className="text-[var(--text-700)] text-sm whitespace-pre-wrap leading-relaxed mb-3">{memory.content}</p>
@@ -348,7 +348,7 @@ export default function MemoryVault() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.04, duration: 0.2 }}
-                    className="bg-[var(--card-bg)] rounded-xl border dark:border-slate-700 shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
+                    className="bg-[var(--card-bg)] rounded-xl border shadow-sm hover:shadow-md transition-all relative group overflow-hidden"
                     style={{ borderColor: ['#e9d5ff','#fce7f3','#dbeafe','#d1fae5','#fef3c7','#ffe4e6'][index % 6] }}
                   >
                     {/* Top accent - cycles through memory colors */}
@@ -369,11 +369,11 @@ export default function MemoryVault() {
                         <Heart className="w-4 h-4 flex-shrink-0 text-purple-700" />
                         <div className="flex items-center gap-1">
                           {memory.is_private ? (
-                            <div className="p-1 bg-slate-100 rounded-md" title="Private">
+                            <div className="p-1 bg-slate-100 rounded-lg" title="Private">
                               <Lock className="w-3 h-3 text-slate-500" />
                             </div>
                           ) : (
-                            <div className="p-1 bg-purple-50 rounded-md" title="Shared">
+                            <div className="p-1 bg-purple-50 rounded-lg" title="Shared">
                               <Globe className="w-3 h-3 text-purple-700" />
                             </div>
                           )}
@@ -381,7 +381,7 @@ export default function MemoryVault() {
                             <button
                               onClick={() => handleDelete(memory.id)}
                               data-tip="Delete this memory"
-                              className="p-1 bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
+                              className="p-1 bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
                             >
                               <Trash2 className="w-3 h-3 text-red-500" />
                             </button>
@@ -403,7 +403,7 @@ export default function MemoryVault() {
           </>
         ) : (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="bg-[var(--card-bg)] rounded-xl border border-purple-100 dark:border-slate-700 p-10 text-center">
+            className="bg-[var(--card-bg)] rounded-xl border border-purple-100 p-10 text-center">
             <Heart className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.3 }} />
             <h3 className="text-lg font-semibold mb-2 text-purple-700">Your Memory Vault is Empty</h3>
             <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm mb-5">Start preserving the precious moments, stories, and reflections you want to keep forever.</p>

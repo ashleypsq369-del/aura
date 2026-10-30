@@ -71,7 +71,7 @@ export default function AdaptiveCareGuide() {
 
       {/* Header */}
       <motion.div initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}}
-        className="rounded-2xl p-5 border-l-4 border-slate-600 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700">
+        className="rounded-2xl p-5 border-l-4 border-slate-600 bg-[var(--card-bg)] border border-[var(--card-border)]">
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-white/20 rounded-xl">

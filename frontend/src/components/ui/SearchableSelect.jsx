@@ -106,7 +106,7 @@ export default function SearchableSelect({
  return (
  <div ref={wrapRef} className={`relative ${className}`} onKeyDown={handleKeyDown}>
  {label && (
- <label className="block text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider mb-1">
+ <label className="block text-[11px] font-bold text-[var(--text-400)] uppercase tracking-wider mb-1">
  {label}
  </label>
  )}
@@ -117,17 +117,17 @@ export default function SearchableSelect({
  disabled={disabled}
  onClick={() => { if (!disabled) { setQ(''); setOpen(!open); } }}
  className={`w-full flex items-center gap-2 border-2 rounded-xl px-3 ${py} text-left transition-all
- bg-[var(--card-bg)] dark:bg-slate-800
+ bg-[var(--card-bg)]
  ${open
  ? `${a.border} ring-2 ${a.ring} shadow-sm`
- : 'border-[var(--card-border)] dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
+ : 'border-[var(--card-border)] hover:border-slate-300 dark:hover:border-slate-500'
  }
  ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
  `}
  >
  {/* Avatar dot */}
  {sel?.avatar && (
- <div className="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center text-white text-[10px] font-bold"
+ <div className="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center text-white text-[11px] font-bold"
  style={{ background: sel.avatar }}>
  {String(sel.label || '?')[0]}
  </div>
@@ -135,14 +135,14 @@ export default function SearchableSelect({
 
  {/* Label */}
  <span className={`flex-1 truncate ${textSz} font-medium ${
- sel ? 'text-[var(--text-800)] dark:text-slate-100' : 'text-[var(--text-400)] dark:text-slate-500'
+ sel ? 'text-[var(--text-800)]' : 'text-[var(--text-400)] dark:text-slate-500'
  }`}>
  {sel ? sel.label : placeholder}
  </span>
 
  {/* Sublabel pill */}
  {sel?.sublabel && (
- <span className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] flex-shrink-0 truncate max-w-[80px]">
+ <span className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] flex-shrink-0 truncate max-w-[80px]">
  {sel.sublabel}
  </span>
  )}
@@ -175,12 +175,12 @@ export default function SearchableSelect({
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: -6, scale: 0.98 }}
  transition={{ duration: 0.13, ease: 'easeOut' }}
- className="absolute z-[200] top-full left-0 right-0 mt-1.5 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 rounded-xl shadow-2xl overflow-hidden"
+ className="absolute z-[200] top-full left-0 right-0 mt-1.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-2xl overflow-hidden"
  style={{ maxHeight: '16rem' }}
  >
  {/* Search input */}
- <div className="sticky top-0 p-2 border-b border-[var(--card-border)]/50 dark:border-slate-700 bg-[var(--card-bg)] dark:bg-slate-800">
- <div className="flex items-center gap-2 px-2.5 py-1.5 border border-[var(--card-border)] dark:border-slate-600 rounded-lg bg-[var(--card-bg)] dark:bg-slate-700">
+ <div className="sticky top-0 p-2 border-b border-[var(--card-border)]/50 bg-[var(--card-bg)]">
+ <div className="flex items-center gap-2 px-2.5 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)]">
  <Search size={13} className="text-[var(--text-400)] flex-shrink-0" />
  <input
  ref={inputRef}
@@ -204,7 +204,7 @@ export default function SearchableSelect({
  <button
  type="button"
  onClick={() => handleSelect(null)}
- className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs text-[var(--text-400)] dark:text-[var(--text-500)] ${a.hover} dark:hover:bg-slate-700/50 border-b border-slate-50 dark:border-slate-700 transition-colors`}
+ className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-xs text-[var(--text-400)] dark:text-[var(--text-500)] ${a.hover} dark:hover:bg-slate-700/50 border-b border-slate-50 transition-colors`}
  >
  <span className="flex-1 text-left"> - {nullLabel}</span>
  {value === null && <Check size={13} className={a.check} />}
@@ -221,8 +221,8 @@ export default function SearchableSelect({
  key={opt.value}
  type="button"
  onClick={() => handleSelect(opt.value)}
- className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 ${a.hover} dark:hover:bg-slate-700/50 border-b border-slate-50 dark:border-slate-700/50 last:border-0 transition-colors text-left
- ${isSelected ? 'bg-[var(--card-bg)] dark:bg-slate-700/30' : ''}`}
+ className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 ${a.hover} dark:hover:bg-slate-700/50 border-b border-slate-50/50 last:border-0 transition-colors text-left
+ ${isSelected ? 'bg-[var(--card-bg)]/30' : ''}`}
  >
  {/* Avatar */}
  {opt.avatar && (
@@ -240,7 +240,7 @@ export default function SearchableSelect({
  {opt.label}
  </p>
  {opt.sublabel && (
- <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">
+ <p className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">
  {opt.sublabel}
  </p>
  )}
@@ -256,8 +256,8 @@ export default function SearchableSelect({
 
  {/* Count footer when filtered */}
  {q && filtered.length > 0 && (
- <div className="px-3 py-1.5 bg-[var(--card-bg)] dark:bg-slate-700/50 border-t border-[var(--card-border)]/50 dark:border-slate-700">
- <p className="text-[10px] text-slate-400">{filtered.length} result{filtered.length !== 1 ? 's' : ''}</p>
+ <div className="px-3 py-1.5 bg-[var(--card-bg)]/50 border-t border-[var(--card-border)]/50">
+ <p className="text-[11px] text-slate-400">{filtered.length} result{filtered.length !== 1 ? 's' : ''}</p>
  </div>
  )}
  </motion.div>

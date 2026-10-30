@@ -103,9 +103,9 @@ function RoleCard({ role, idx, onClick }) {
           <div className="flex items-center justify-between gap-2">
             <p className="font-bold text-[var(--text-900)] text-sm leading-tight">{role.label}</p>
             {role.adminOnly
-              ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)] flex-shrink-0">Admin only</span>
+              ? <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)] flex-shrink-0">Admin only</span>
               : role.highlight
-                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                ? <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
                     style={{ background: `${g1}18`, color: g1 }}>New</span>
                 : <ChevronRight size={16} className="text-slate-300 group-hover:text-teal-500 flex-shrink-0 transition-colors" />
             }

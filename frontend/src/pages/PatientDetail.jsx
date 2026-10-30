@@ -72,10 +72,10 @@ function CareSettingBanner({ setting }) {
  </button>
  {expanded && (
  <div className="px-4 pb-3 border-t" style={{ borderColor: cfg.color + '20' }}>
- <p className="text-[10px] font-bold text-[var(--text-400)] mt-2 mb-1.5">Key Clinical Tasks</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mt-2 mb-1.5">Key Clinical Tasks</p>
  <div className="flex flex-wrap gap-1.5">
  {cfg.key_tasks.map(t => (
- <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+ <span key={t} className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
  style={{ backgroundColor: cfg.color + '18', color: cfg.color }}>
  {t}
  </span>
@@ -434,7 +434,7 @@ export default function PatientDetail() {
  {/* Vitals ribbon */}
  {lastVital && (
  <div className="flex items-center gap-2 flex-wrap bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl px-4 py-2.5 shadow-sm">
- <span className="text-[10px] font-bold text-[var(--text-400)] mr-1">Latest Vitals</span>
+ <span className="text-[11px] font-bold text-[var(--text-400)] mr-1">Latest Vitals</span>
  {[
  { label: 'HR', value: lastVital.heart_rate ? `${Math.round(lastVital.heart_rate)} bpm` : '--', ok: !lastVital.heart_rate || (lastVital.heart_rate >= 60 && lastVital.heart_rate <= 100) },
  { label: 'SpO2', value: lastVital.oxygen_saturation ? `${lastVital.oxygen_saturation.toFixed(1)}%` : '--', ok: !lastVital.oxygen_saturation || lastVital.oxygen_saturation >= 95 },
@@ -452,7 +452,7 @@ export default function PatientDetail() {
  {!ok && <span className="ml-0.5 text-red-600 font-black">!</span>}
  </div>
  ))}
- <span className="text-[10px] text-[var(--text-400)] ml-auto">
+ <span className="text-[11px] text-[var(--text-400)] ml-auto">
  {new Date(lastVital.recorded_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </span>
  </div>
@@ -484,7 +484,7 @@ export default function PatientDetail() {
  {rec.already_assigned
  ? <span className="text-xs font-bold text-green-700">Currently Assigned</span>
  : <button onClick={() => caregiverIntelligenceAPI.assign(patientId, { caregiver_id: rec.caregiver_id }).then(() => { toast.success('Caregiver assigned'); queryClient.invalidateQueries(['caregiver-matches', patientId]); })}
- className="text-xs px-2 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">Assign</button>
+ className="text-xs px-2 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Assign</button>
  }
  </div>
  ))}
@@ -494,7 +494,7 @@ export default function PatientDetail() {
 
  {/* Quick Actions grid */}
  <div>
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-3 flex items-center gap-1.5">
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-3 flex items-center gap-1.5">
  <Stethoscope size={10}/> Clinical Tools
  </p>
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

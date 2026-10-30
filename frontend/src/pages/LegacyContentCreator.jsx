@@ -423,11 +423,11 @@ export default function LegacyContentCreator() {
                       className={`p-4 rounded-xl border-2 text-left transition ${
                         contentType === type.value
                           ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30'
-                          : 'border-gray-200 dark:border-slate-600 hover:border-purple-300'
+                          : 'border-gray-200 hover:border-purple-300'
                       } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                       <TypeIcon className="w-6 h-6 mb-2 text-purple-700 dark:text-purple-400" />
-                      <p className="font-medium text-sm text-gray-900 dark:text-white">{type.label}</p>
+                      <p className="font-medium text-sm text-gray-900">{type.label}</p>
                       <p className="text-xs text-gray-500 dark:text-slate-400">{type.description}</p>
                     </button>
                   );
@@ -443,7 +443,7 @@ export default function LegacyContentCreator() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., To My Dearest Daughter, Thank You Letter, Final Words..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -457,7 +457,7 @@ export default function LegacyContentCreator() {
                 onChange={(e) => setContent(e.target.value)}
                 rows={10}
                 placeholder="Write your message here..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -471,7 +471,7 @@ export default function LegacyContentCreator() {
                   <input type="radio" name="recipient" value="all_heirs" checked={recipientType === 'all_heirs'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3">
-                    <p className="font-medium text-gray-900 dark:text-white">All Heirs</p>
+                    <p className="font-medium text-gray-900">All Heirs</p>
                     <p className="text-sm text-gray-600 dark:text-slate-400">Everyone you've designated as an heir</p>
                   </div>
                 </label>
@@ -482,7 +482,7 @@ export default function LegacyContentCreator() {
                     <p className="font-medium text-gray-900 mb-2">Specific Heir</p>
                     {recipientType === 'specific_heir' && (
                       <select value={recipientHeirId} onChange={(e) => setRecipientHeirId(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500"
                         style={{ borderColor: '#6B4F7A40' }}>
                         <option value="">Search an heir...</option>
                         {heirs.map((heir) => <option key={heir.id} value={heir.id}>{heir.heir_name} ({heir.relationship})</option>)}
@@ -497,7 +497,7 @@ export default function LegacyContentCreator() {
                     <p className="font-medium text-gray-900 mb-2">Specific Person</p>
                     {recipientType === 'specific_person' && (
                       <select value={recipientUserId} onChange={(e) => setRecipientUserId(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500"
                         style={{ borderColor: '#6B4F7A40' }}>
                         <option value="">Search a person...</option>
                         {users.map((u) => <option key={u.id} value={u.id}>{u.full_name} ({u.role})</option>)}
@@ -518,7 +518,7 @@ export default function LegacyContentCreator() {
                       onChange={(e) => setDeliveryTrigger(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                     <div className="ml-3 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-gray-900 dark:text-white">{trigger.label}</p>
+                        <p className="font-medium text-gray-900">{trigger.label}</p>
                         {trigger.value === 'after_death' && (
                           <span className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Recommended</span>
                         )}
@@ -527,7 +527,7 @@ export default function LegacyContentCreator() {
                       {trigger.value === 'specific_date' && deliveryTrigger === 'specific_date' && (
                         <input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)}
                           min={new Date().toISOString().split('T')[0]}
-                          className="mt-2 px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500 dark:text-white"
+                          className="mt-2 px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500"
                           style={{ borderColor: '#6B4F7A40' }} />
                       )}
                     </div>

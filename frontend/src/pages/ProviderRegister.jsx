@@ -379,7 +379,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
       {/* Gender - compact dropdown */}
       <InputGroup id="gender" label="Gender" hint="Optional">
         <div className={inputWrap(false)}>
-          <IconSlot err={false}><span className="text-[10px] font-bold text-slate-400">Sex</span></IconSlot>
+          <IconSlot err={false}><span className="text-[11px] font-bold text-slate-400">Sex</span></IconSlot>
           <select id="gender" value={form.gender} onChange={e => set('gender', e.target.value)}
             className="flex-1 h-11 px-3 text-sm text-[var(--text-700)] outline-none bg-transparent appearance-none cursor-pointer">
             <option value="">Prefer not to say</option>
@@ -470,7 +470,7 @@ function StepServiceType({ form, set, types }) {
                 <p className="font-bold text-sm text-[var(--text-900)] leading-tight">{t.label}</p>
                 <p className="text-[11px] text-[var(--text-600)] mt-0.5 leading-snug">{t.description}</p>
                 <div className="mt-2 flex flex-wrap gap-1">
-                  <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                  <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
                     Min pass: {t.min_pass_score}%
                   </span>
                 </div>
@@ -518,7 +518,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
             placeholder="I am a registered palliative nurse with 5 years experience in home-based care..."
             className={`w-full border-2 rounded-xl px-4 py-2.5 text-sm text-[var(--text-800)] outline-none resize-none transition-all ${inputBorder(errors.bio)}`}
           />
-          <span className="absolute bottom-2 right-3 text-[10px] text-slate-400">{(form.bio||'').length}/500</span>
+          <span className="absolute bottom-2 right-3 text-[11px] text-slate-400">{(form.bio||'').length}/500</span>
         </div>
       </InputGroup>
 
@@ -578,7 +578,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
         <InputGroup id="licence" label="Licence / NMC PIN" required error={errors.license_number}
           hint="Your professional registration number">
           <div className={inputWrap(errors.license_number)}>
-            <IconSlot err={errors.license_number}><span className="text-[10px] font-bold">ID</span></IconSlot>
+            <IconSlot err={errors.license_number}><span className="text-[11px] font-bold">ID</span></IconSlot>
             <input id="licence" type="text"
               value={form.license_number}
               onChange={e => set('license_number', e.target.value)}
@@ -1068,7 +1068,7 @@ export default function ProviderRegister() {
         {/* Header badge */}
         <div className="flex items-center justify-center mb-4">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full">
-            <img src="/logo.png" alt="Project Aura" className="w-5 h-5 rounded-md"/>
+            <img src="/logo.png" alt="Project Aura" className="w-5 h-5 rounded-lg"/>
             <span className="text-xs font-bold tracking-wide" style={{ color: '#ffffff' }}>Project Aura</span>
             <span style={{ color: 'rgba(255,255,255,0.35)' }}>|</span>
             <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#D4A017' }}>Provider Registration</span>
@@ -1145,7 +1145,7 @@ export default function ProviderRegister() {
             )}
             <button onClick={handleNext}
               disabled={!canNext() || submitMutation.isPending}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white disabled:opacity-40 transition-all active:scale-[0.98] shadow-md"
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all active:scale-[0.98] shadow-md"
               style={{ background: selectedType?.color || '#0d9488' }}>
               {submitMutation.isPending
                 ? <><Loader2 size={15} className="animate-spin"/> Submitting...</>

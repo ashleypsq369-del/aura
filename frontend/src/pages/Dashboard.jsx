@@ -200,7 +200,7 @@ export default function Dashboard() {
  <button
  onClick={() => triggerScanMutation.mutate()}
  disabled={triggerScanMutation.isPending}
- className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-md text-[11px] font-semibold transition-all flex-shrink-0">
+ className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-lg text-[11px] font-semibold transition-all flex-shrink-0">
  <RefreshCw size={10} className={triggerScanMutation.isPending ? 'animate-spin' : ''} />
  {triggerScanMutation.isPending ? 'Scanning…' : 'Scan Now'}
  </button>
@@ -211,15 +211,15 @@ export default function Dashboard() {
  <div className="kente-strip" />
  <div className="px-5 py-3.5 border-b border-[#dde3ea] dark:border-white/[0.08] flex items-center justify-between">
  <div>
- <h2 className="text-sm font-semibold text-[var(--text-800)] dark:text-slate-100">Recent Patients</h2>
+ <h2 className="text-sm font-semibold text-[var(--text-800)]">Recent Patients</h2>
  <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">Click any row to open the patient record</p>
  </div>
- <span className="chip-teal text-[10px]">Live</span>
+ <span className="chip-teal text-[11px]">Live</span>
  </div>
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Patient</th>
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Age</th>
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Risk Level</th>
@@ -240,7 +240,7 @@ export default function Dashboard() {
  {patient.full_name?.charAt(0)}
  </div>
  <div>
- <div className="text-sm font-bold text-[var(--text-900)] dark:text-white">{patient.full_name}</div>
+ <div className="text-sm font-bold text-[var(--text-900)]">{patient.full_name}</div>
  <div className="text-xs text-[var(--text-500)] dark:text-slate-400">{patient.patient_code}</div>
  </div>
  </div>
@@ -264,7 +264,7 @@ export default function Dashboard() {
  ))}
  </tbody>
  </table>
- <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] dark:border-slate-700 text-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] text-center">
  <button onClick={() => navigate('/patients')}
  className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[var(--card-bg)] border-2 border-teal-600 text-teal-700 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
  <span>View All Patients</span>
@@ -317,7 +317,7 @@ export default function Dashboard() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Patient</th>
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Age</th>
  <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Status</th>
@@ -340,7 +340,7 @@ export default function Dashboard() {
  {patient.full_name?.charAt(0)}
  </div>
  <div>
- <div className="text-sm font-bold text-[var(--text-900)] dark:text-white">{patient.full_name}</div>
+ <div className="text-sm font-bold text-[var(--text-900)]">{patient.full_name}</div>
  <div className="text-xs text-[var(--text-500)] dark:text-slate-400">{patient.primary_diagnosis || patient.patient_code}</div>
  </div>
  </div>
@@ -361,7 +361,7 @@ export default function Dashboard() {
  })}
  </tbody>
  </table>
- <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] dark:border-slate-700 text-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] text-center">
  <button onClick={() => navigate('/patients')}
  className="inline-flex items-center px-5 py-2.5 bg-[var(--card-bg)] border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
  View All Patients
@@ -455,10 +455,10 @@ function FamilyDashboard({ user, summary, navigate }) {
 
  {/* Daily task checklist for family - shows appointments + optional tasks */}
  <TaskStatusBar />
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
  <div>
- <h2 className="text-base font-bold text-[var(--text-800)] dark:text-white">Recent Care Updates</h2>
+ <h2 className="text-base font-bold text-[var(--text-800)]">Recent Care Updates</h2>
  <p className="text-xs text-[var(--text-500)] dark:text-slate-400">Live events from your loved one's care journey</p>
  </div>
  <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700">
@@ -478,7 +478,7 @@ function FamilyDashboard({ user, summary, navigate }) {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-0.5">
- <span className="text-[10px] font-bold text-[var(--text-500)] ">{cfg.label}</span>
+ <span className="text-[11px] font-bold text-[var(--text-500)] ">{cfg.label}</span>
  </div>
  <p className="text-sm font-semibold text-[var(--text-900)] truncate">{ev.event_title}</p>
  {ev.event_detail && <p className="text-xs text-[var(--text-500)] line-clamp-1 mt-0.5">{ev.event_detail}</p>}
@@ -493,7 +493,7 @@ function FamilyDashboard({ user, summary, navigate }) {
  )}
  </div>
  {events.length > 8 && (
- <div className="px-5 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 dark:border-slate-700 text-center">
+ <div className="px-5 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 text-center">
  <button onClick={() => navigate('/continuity-bridge')} className="text-sm font-semibold text-rose-600 hover:text-rose-700">
  View all {events.length} updates →
  </button>

@@ -198,7 +198,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
  <div className="px-4 py-3 bg-[var(--card-bg)] space-y-2">
  {data.recommendations.map((r, i) => (
  <div key={i} className="flex items-start gap-3">
- <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+ <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[11px] font-bold mt-0.5">{i+1}</span>
  <p className="text-sm text-[var(--text-700)] leading-relaxed">{r}</p>
  </div>
  ))}

@@ -440,7 +440,7 @@ export default function BarthelIndexForm() {
 
               {mlResult.top_features?.length > 0 && (
                 <div className="mb-4 space-y-2">
-                  <p className="text-[10px] font-bold text-cyan-600 ">Key Drivers</p>
+                  <p className="text-[11px] font-bold text-cyan-600 ">Key Drivers</p>
                   {mlResult.top_features.slice(0, 3).map((feature, i) => (
                     <div key={i}>
                       <p className="text-xs text-[var(--text-700)] mb-0.5">{feature.display_name}</p>

@@ -92,7 +92,7 @@ function CopyBtn({ text }) {
  const [copied, setCopied] = useState(false);
  return (
  <button onClick={()=>{navigator.clipboard.writeText(text).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),1800);});}}
- className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium transition-all"
+ className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-all"
  style={{background:copied?'#d1fae5':'#f3f4f6',color:copied?'#059669':'#9ca3af',border:'1px solid #e5e7eb'}}>
  {copied?<Check size={10}/>:<Copy size={10}/>}{copied?'Copied':'Copy'}
  </button>
@@ -252,12 +252,12 @@ export default function AIAssistant() {
  <div className="flex items-center gap-2 flex-wrap">
  <span className="font-semibold text-sm" style={{color:T.nameText}}>Clinical Copilot</span>
  {hasUrgent&&(
- <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-white bg-red-500">
+ <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-bold text-white bg-red-500">
  <span className="w-1.5 h-1.5 bg-[var(--card-bg)] rounded-full animate-pulse"/>{critical} urgent
  </span>
  )}
  {provider&&(
- <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+ <span className="flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
  <Zap size={9}/>{provider}
  </span>
  )}
@@ -275,7 +275,7 @@ export default function AIAssistant() {
  {/* Disclaimer */}
  <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
  <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[10px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>AI suggestions only - always apply clinical judgement · Emergency: <strong>193</strong></p>
+ <p className="text-[11px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>AI suggestions only - always apply clinical judgement · Emergency: <strong>193</strong></p>
  </div>
 
  {/* Conversation area */}
@@ -289,7 +289,7 @@ export default function AIAssistant() {
  </div>
  <div className="flex-1 min-w-0">
  <p className="text-xs font-bold truncate" style={{color:T.nameText}}>{patientData.full_name||patientData.name}</p>
- <p className="text-[10px] truncate" style={{color:T.subText}}>
+ <p className="text-[11px] truncate" style={{color:T.subText}}>
  {patientData.primary_diagnosis||' - '} · {patientData.age||' - '}y ·
  <span className={`ml-1 font-bold ${patientData.risk_level==='Crisis'||patientData.risk_level==='critical'?'text-red-500':patientData.risk_level==='High'||patientData.risk_level==='high'?'text-amber-500':'text-emerald-600'}`}>{patientData.risk_level||' - '} risk</span>
  </p>
@@ -340,7 +340,7 @@ export default function AIAssistant() {
  ].map(s=>(
  <div key={s.label} className="flex items-center gap-1.5 px-3 py-2 rounded-lg shadow-sm" style={{background:T.statsBg,border:`1px solid ${T.statsBdr}`}}>
  <span className="text-sm font-black tabular-nums" style={{color:s.color}}>{s.value}</span>
- <span className="text-[10px] font-medium" style={{color:T.subText}}>{s.label}</span>
+ <span className="text-[11px] font-medium" style={{color:T.subText}}>{s.label}</span>
  </div>
  ))}
  </div>
@@ -367,7 +367,7 @@ export default function AIAssistant() {
  <button key={h.label} onClick={()=>sendMessage(h.q)}
  className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all shadow-sm" style={{background:T.hintBg,border:`1px solid ${T.hintBdr}`}}>
  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 bg-sky-50"><Icon size={13} style={{color:C.accent}}/></div>
- <div className="min-w-0"><p className="text-[11px] font-semibold truncate" style={{color:T.hintTitle}}>{h.label}</p><p className="text-[10px] truncate" style={{color:T.subText}}>{h.desc}</p></div>
+ <div className="min-w-0"><p className="text-[11px] font-semibold truncate" style={{color:T.hintTitle}}>{h.label}</p><p className="text-[11px] truncate" style={{color:T.subText}}>{h.desc}</p></div>
  </button>
  );
  })}
@@ -394,13 +394,13 @@ export default function AIAssistant() {
  <MsgContent text={msg.content} streaming={msg.streaming} isUser={isUser}/>
  </div>
  <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
- <span className="text-[10px] text-slate-400">{msg.ts?.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+ <span className="text-[11px] text-slate-400">{msg.ts?.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
  {!isUser&&msg.content&&!msg.streaming&&<CopyBtn text={msg.content}/>}
  {!isUser&&msg.content&&!msg.streaming&&<Feedback/>}
  </div>
  </div>
  {isUser&&(
- <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[10px] font-bold" style={{background:T.userBubble}}>
+ <div className="w-7 h-7 rounded-full flex-shrink-0 mb-6 flex items-center justify-center text-white text-[11px] font-bold" style={{background:T.userBubble}}>
  {user?.full_name?.[0]||'U'}
  </div>
  )}

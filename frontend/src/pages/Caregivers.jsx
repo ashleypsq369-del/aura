@@ -52,14 +52,14 @@ function Stars({ value, count }) {
  className={n <= Math.round(value) ? 'text-amber-400 fill-amber-400' : 'text-slate-200'} />
  ))}
  <span className="ml-1 text-xs font-semibold text-slate-700">{value.toFixed(1)}</span>
- {count > 0 && <span className="text-[10px] text-slate-400">({count})</span>}
+ {count > 0 && <span className="text-[11px] text-slate-400">({count})</span>}
  </span>
  );
 }
 
 function VerifyBadge({ icon: Icon, label, color = '#0d9488' }) {
  return (
- <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-bold"
+ <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[11px] font-bold"
  style={{ background: `${color}15`, color }}>
  <Icon size={9} strokeWidth={2.5} />{label}
  </span>
@@ -68,10 +68,10 @@ function VerifyBadge({ icon: Icon, label, color = '#0d9488' }) {
 
 function BurnoutDot({ level }) {
  const l = String(level || 'low').toLowerCase();
- if (l === 'critical') return <span className="flex items-center gap-1 text-[10px] font-bold text-red-600"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"/>Critical burnout</span>;
- if (l === 'high') return <span className="flex items-center gap-1 text-[10px] font-bold text-orange-600"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"/>High risk</span>;
- if (l === 'moderate') return <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"/>Moderate</span>;
- return <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>Healthy</span>;
+ if (l === 'critical') return <span className="flex items-center gap-1 text-[11px] font-bold text-red-600"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"/>Critical burnout</span>;
+ if (l === 'high') return <span className="flex items-center gap-1 text-[11px] font-bold text-orange-600"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"/>High risk</span>;
+ if (l === 'moderate') return <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"/>Moderate</span>;
+ return <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>Healthy</span>;
 }
 
 /* ─── Worker Profile Card (HomeCare Ghana style) ─────────────────────────── */
@@ -116,13 +116,13 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  <p className="font-bold text-[var(--text-900)] text-sm leading-tight truncate">{cg.full_name}</p>
  <p className="text-[11px] text-[var(--text-500)] capitalize">{cg.role || 'Caregiver'}</p>
  {trust?.specialisation && (
- <p className="text-[10px] text-teal-600 font-medium truncate">{trust.specialisation}</p>
+ <p className="text-[11px] text-teal-600 font-medium truncate">{trust.specialisation}</p>
  )}
  </div>
 
  {/* Availability dot */}
  <span
- className="flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
+ className="flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold"
  style={{ background: capInfo.bg, color: capInfo.text }}
  >
  <span className="w-1.5 h-1.5 rounded-full" style={{ background: capInfo.dot }} />
@@ -136,7 +136,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  {trust?.ghana_card_verified && <VerifyBadge icon={Shield} label="Ghana Card" color="#0891b2" />}
  {trust?.is_professional && <VerifyBadge icon={BadgeCheck} label="Verified Pro" color="#059669" />}
  {!trust?.nmc_pin && !trust?.ghana_card_verified && (
- <span className="text-[10px] text-[var(--text-400)] italic">Badges loading…</span>
+ <span className="text-[11px] text-[var(--text-400)] italic">Badges loading…</span>
  )}
  </div>
 
@@ -146,8 +146,8 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  {/* Workload bar */}
  <div>
  <div className="flex justify-between mb-1">
- <span className="text-[10px] text-[var(--text-400)] font-semibold">Workload</span>
- <span className="text-[10px] font-bold tabular-nums" style={{ color: workloadPct > 75 ? '#ef4444' : workloadPct >= 50 ? '#f59e0b' : '#10b981' }}>
+ <span className="text-[11px] text-[var(--text-400)] font-semibold">Workload</span>
+ <span className="text-[11px] font-bold tabular-nums" style={{ color: workloadPct > 75 ? '#ef4444' : workloadPct >= 50 ? '#f59e0b' : '#10b981' }}>
  {activePatients} patients · {workloadPct}%
  </span>
  </div>
@@ -172,7 +172,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  <div className="flex items-center justify-between">
  <BurnoutDot level={burnoutLevel} />
  {trust?.region && (
- <span className="flex items-center gap-1 text-[10px] text-slate-400">
+ <span className="flex items-center gap-1 text-[11px] text-slate-400">
  <MapPin size={9} /> {trust.region}
  </span>
  )}
@@ -196,7 +196,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  <div className="grid grid-cols-3 gap-1.5 pt-1">
  <button
  onClick={onMessage}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-bold transition-all"
+ className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
  style={{ background: '#0d948812', color: '#0d9488' }}
  >
  <MessageCircle size={14} />
@@ -204,7 +204,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  </button>
  <button
  onClick={onViewProfile}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-bold transition-all"
+ className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
  style={{ background: '#0891b212', color: '#0891b2' }}
  >
  <Shield size={14} />
@@ -212,7 +212,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
  </button>
  <button
  onClick={onBurnoutClick}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[10px] font-bold transition-all"
+ className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
  style={{ background: '#7c3aed12', color: '#7c3aed' }}
  >
  <Brain size={14} />
@@ -269,7 +269,7 @@ function TrustProfileModal({ cg, onClose }) {
  <>
  {/* Verification badges */}
  <div>
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Verification</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Verification</p>
  <div className="flex flex-wrap gap-2">
  {trust.nmc_pin
  ? <VerifyBadge icon={Award} label={`NMC PIN: ${trust.nmc_pin}`} color="#0d9488" />
@@ -285,7 +285,7 @@ function TrustProfileModal({ cg, onClose }) {
 
  {/* Rating */}
  <div>
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-1">Service Rating</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-1">Service Rating</p>
  <Stars value={trust.average_rating} count={trust.total_reviews} />
  </div>
 
@@ -386,7 +386,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
 
  {data.signals?.length > 0 && (
  <div>
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Risk Signals</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Risk Signals</p>
  <div className="space-y-1.5">
  {data.signals.map((s, i) => (
  <div key={i} className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-100 rounded-lg text-xs">
@@ -408,7 +408,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
 
  {data.recommendations?.filter(Boolean).length > 0 && (
  <div>
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Recommendations</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Recommendations</p>
  <div className="space-y-1.5">
  {data.recommendations.filter(Boolean).map((rec, i) => (
  <div key={i} className="flex items-start gap-2 p-2.5 bg-teal-50 border border-teal-100 rounded-lg text-xs text-teal-800">
@@ -539,11 +539,11 @@ function FeatureShowcase({ navigate }) {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-0.5">
- <span className="text-[10px] font-bold text-slate-400">{f.num}</span>
+ <span className="text-[11px] font-bold text-slate-400">{f.num}</span>
  <p className="font-bold text-[var(--text-800)] text-sm">{f.title}</p>
  </div>
  <p className="text-[11px] text-[var(--text-500)] leading-relaxed mb-2">{f.desc}</p>
- <div className="flex items-center gap-1 text-[10px] text-[var(--text-400)] border-t border-[var(--card-border)]/50 pt-2">
+ <div className="flex items-center gap-1 text-[11px] text-[var(--text-400)] border-t border-[var(--card-border)]/50 pt-2">
  <Info size={9} />
  <span className="truncate">{f.where}</span>
  <CRight size={10} className="ml-auto text-slate-300 group-hover:text-teal-500 transition-colors flex-shrink-0" />
@@ -713,12 +713,12 @@ export default function Caregivers() {
  <Icon size={14} />
  {label}
  {id === 'team' && (
- <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full tabular-nums ${tab === id ? 'bg-teal-100 text-teal-700' : 'bg-slate-100 text-slate-500'}`}>
+ <span className={`text-[11px] font-black px-1.5 py-0.5 rounded-full tabular-nums ${tab === id ? 'bg-teal-100 text-teal-700' : 'bg-slate-100 text-slate-500'}`}>
  {caregivers.length}
  </span>
  )}
  {id === 'whats-new' && (
- <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-teal-500 text-white">8</span>
+ <span className="text-[11px] font-black px-1.5 py-0.5 rounded-full bg-teal-500 text-white">8</span>
  )}
  </button>
  ))}
@@ -749,7 +749,7 @@ export default function Caregivers() {
  ? 'bg-teal-600 text-white shadow-sm'
  : 'text-[var(--text-600)] hover:bg-slate-100'}`}>
  {f.label}
- <span className={`text-[10px] font-black px-1 rounded-full tabular-nums
+ <span className={`text-[11px] font-black px-1 rounded-full tabular-nums
  ${filter === f.id ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-500'}`}>
  {f.count}
  </span>
@@ -795,7 +795,7 @@ export default function Caregivers() {
  <p className="text-xs text-slate-400">{filtered.length} workers · page {page + 1} of {pageCount}</p>
  <div className="flex items-center gap-1.5">
  <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
- className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
+ className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-50 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
  <ChevronLeft size={14} />
  </button>
  {Array.from({ length: pageCount }, (_, idx) => (
@@ -803,7 +803,7 @@ export default function Caregivers() {
  className={`h-2 rounded-full transition-all duration-200 ${idx === page ? 'w-6 bg-teal-600' : 'w-2 bg-slate-300 hover:bg-teal-400'}`} />
  ))}
  <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
- className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-40 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
+ className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-50 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
  <ChevronRight size={14} />
  </button>
  </div>
@@ -882,7 +882,7 @@ export default function Caregivers() {
  </div>
  <span className="text-xs font-black tabular-nums w-9 text-right flex-shrink-0"
  style={{ color: pct > 75 ? '#ef4444' : pct >= 50 ? '#f59e0b' : '#10b981' }}>{pct}%</span>
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 capitalize"
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 capitalize"
  style={{ background: ci.bg, color: ci.text }}>{cap.replace('_', ' ')}</span>
  </div>
  );
@@ -921,7 +921,7 @@ export default function Caregivers() {
  </div>
  <div className="p-5 space-y-3">
  <div>
- <label className="text-[10px] font-bold text-[var(--text-400)] block mb-1">Caregiver</label>
+ <label className="text-[11px] font-bold text-[var(--text-400)] block mb-1">Caregiver</label>
  <SearchableSelect accent="teal"
  value={manualCg ? String(manualCg) : null}
  onChange={v => setManualCg(v || '')}
@@ -930,7 +930,7 @@ export default function Caregivers() {
  />
  </div>
  <div>
- <label className="text-[10px] font-bold text-[var(--text-400)] block mb-1">Patient</label>
+ <label className="text-[11px] font-bold text-[var(--text-400)] block mb-1">Patient</label>
  <SearchableSelect accent="teal"
  value={manualPt ? String(manualPt) : null}
  onChange={v => setManualPt(v || '')}
@@ -953,7 +953,7 @@ export default function Caregivers() {
  <div className="flex items-center gap-2">
  <Zap size={13} className="text-teal-500" />
  <h4 className="font-bold text-[var(--text-700)] text-sm">AI Auto-Assign</h4>
- <span className="ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">ML</span>
+ <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">ML</span>
  </div>
  <p className="text-xs text-slate-500">ML selects the best available caregiver based on workload and patient complexity.</p>
  <SearchableSelect accent="teal"
@@ -980,7 +980,7 @@ export default function Caregivers() {
  <ListChecks size={15} className="text-teal-600" />
  <h3 className="font-bold text-[var(--text-800)] text-sm">Current Assignments</h3>
  </div>
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700">{assignments.length}</span>
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700">{assignments.length}</span>
  </div>
  <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
  {assignments.length === 0 ? (
@@ -990,12 +990,12 @@ export default function Caregivers() {
  </div>
  ) : assignments.map(a => (
  <div key={a.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50">
- <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-[10px] flex-shrink-0">
+ <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-[11px] flex-shrink-0">
  {getInitials(a.caregiver_name)}
  </div>
  <div className="flex-1 min-w-0">
  <p className="font-semibold text-[var(--text-800)] text-xs truncate">{a.caregiver_name}</p>
- <p className="text-[10px] text-[var(--text-500)] truncate">→ {a.patient_name}</p>
+ <p className="text-[11px] text-[var(--text-500)] truncate">→ {a.patient_name}</p>
  </div>
  {isStaff && (
  <button onClick={() => removeMutation.mutate(a.id)}

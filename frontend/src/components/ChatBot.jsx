@@ -119,7 +119,7 @@ function ProviderBadge({ status }) {
   };
   const c = cfg[status.provider] || cfg.fallback;
   return (
-    <span className={`flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${c.color}`}>
+    <span className={`flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${c.color}`}>
       {c.icon} {c.label}
     </span>
   );
@@ -180,11 +180,11 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
 
         {/* Timestamp + actions */}
         <div className={`flex items-center gap-2 mt-1 px-1 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[11px] text-gray-400">
             {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
           {message.model_used && (
-            <span className="text-[10px] text-gray-400">{message.model_used}</span>
+            <span className="text-[11px] text-gray-400">{message.model_used}</span>
           )}
 
           {/* Action buttons - appear on hover */}
@@ -748,7 +748,7 @@ export default function ChatBot() {
                             >
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium text-gray-900 truncate">{conv.title}</p>
-                                <p className="text-[10px] text-gray-400 mt-0.5">
+                                <p className="text-[11px] text-gray-400 mt-0.5">
                                   {new Date(conv.updatedAt).toLocaleDateString()} · {conv.messages.length} messages
                                 </p>
                               </div>
@@ -889,15 +889,15 @@ export default function ChatBot() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading || isStreaming}
-                  className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-violet-600 to-blue-600 text-white rounded-xl hover:shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-violet-600 to-blue-600 text-white rounded-xl hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   <Send size={16} />
                 </button>
               </form>
 
               <div className="flex items-center justify-between mt-1.5">
-                <p className="text-[10px] text-gray-400">{input.length}/2000</p>
-                <p className="text-[10px] text-gray-400">Enter to send · Shift+Enter for new line</p>
+                <p className="text-[11px] text-gray-400">{input.length}/2000</p>
+                <p className="text-[11px] text-gray-400">Enter to send · Shift+Enter for new line</p>
               </div>
             </div>
           </motion.div>

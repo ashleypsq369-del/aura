@@ -56,7 +56,7 @@ function Section({ title, children }) {
  {title && (
  <p className="text-xs font-semibold text-gray-400 px-1 mb-2">{title}</p>
  )}
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
  {children}
  </div>
  </div>
@@ -165,7 +165,7 @@ export default function Settings() {
  </motion.div>
 
  {/* -- Tab bar - teal, compact ------------------------------------ */}
- <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 mb-5 overflow-hidden"
+ <div className="rounded-xl border border-[var(--card-border)] mb-5 overflow-hidden"
  style={{ background: 'var(--card-bg, #e8fafa)' }}>
  <div className="flex overflow-x-auto">
  {tabs.map(({ id, label, icon: Icon, tip }) => (
@@ -320,7 +320,7 @@ export default function Settings() {
  </p>
  <button
  onClick={() => setShowAvatarModal(true)}
- className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-semibold transition-colors shadow-sm"
+ className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
  >
  <Smile size={16} />
  Open Avatar Builder
@@ -440,14 +440,14 @@ export default function Settings() {
  <p className={`text-xs font-bold ${profileKey === key ? 'text-teal-700' : 'text-slate-700'}`}>
  {meta.label}
  </p>
- <p className="text-[10px] text-[var(--text-400)] mt-0.5 leading-tight">{meta.description}</p>
+ <p className="text-[11px] text-[var(--text-400)] mt-0.5 leading-tight">{meta.description}</p>
  {profileKey === key && (
- <span className="mt-1 inline-block text-[9px] font-bold text-teal-600 uppercase tracking-wide">Active</span>
+ <span className="mt-1 inline-block text-[11px] font-bold text-teal-600 uppercase tracking-wide">Active</span>
  )}
  </button>
  ))}
  </div>
- <p className="text-[10px] text-[var(--text-400)] flex items-start gap-1">
+ <p className="text-[11px] text-[var(--text-400)] flex items-start gap-1">
  <Info size={11} className="flex-shrink-0 mt-0.5" />
  Switching profile applies larger text, adjusted touch targets, and layout changes immediately. Based on W3C WCAG 2.2 and COGA guidelines.
  </p>
@@ -651,7 +651,7 @@ export default function Settings() {
  <p className="text-sm font-medium text-gray-900">
  Assisted Mode
  {a11y.assistedMode && (
- <span className="ml-2 inline-block px-1.5 py-0.5 bg-teal-50 text-teal-700 text-[10px] font-bold rounded">ON</span>
+ <span className="ml-2 inline-block px-1.5 py-0.5 bg-teal-50 text-teal-700 text-[11px] font-bold rounded">ON</span>
  )}
  </p>
  <Toggle on={a11y.assistedMode} onToggle={() => a11y.assistedMode ? disableAssistedMode() : enableAssistedMode()} color="#0d9488" />
@@ -681,13 +681,13 @@ export default function Settings() {
  className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${active ? 'border-current shadow-sm' : 'border-gray-200 hover:border-gray-300'}`}
  style={active ? { borderColor: color, background: bg } : {}}
  >
- <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5"
+ <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
  style={{ background: active ? color : '#f3f4f6' }}>
  <Icon size={13} color={active ? '#fff' : '#6b7280'} />
  </div>
  <div>
  <p className="text-xs font-semibold leading-tight" style={{ color: active ? color : '#111827' }}>{label}</p>
- <p className="text-[10px] text-gray-500 leading-snug mt-0.5">{desc}</p>
+ <p className="text-[11px] text-gray-500 leading-snug mt-0.5">{desc}</p>
  </div>
  </button>
  );
@@ -740,7 +740,7 @@ export default function Settings() {
  }`}
  >
  <p className={`text-xs font-bold ${active ? 'text-amber-800' : 'text-gray-800'}`}>{opt.label}</p>
- <p className={`text-[10px] mt-0.5 ${active ? 'text-amber-600' : 'text-gray-400'}`}>{opt.desc}</p>
+ <p className={`text-[11px] mt-0.5 ${active ? 'text-amber-600' : 'text-gray-400'}`}>{opt.desc}</p>
  </button>
  );
  })}

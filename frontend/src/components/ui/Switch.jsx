@@ -8,6 +8,7 @@
  * WCAG 2.1 AA: role="switch" + aria-checked + Space key.
  */
 import * as RadixSwitch from '@radix-ui/react-switch';
+import { useId } from 'react';
 
 export default function Switch({
  checked,
@@ -17,7 +18,8 @@ export default function Switch({
  color = '#0d9488',
  id,
 }) {
- const switchId = id || `sw-${Math.random().toString(36).slice(2, 7)}`;
+ const autoId  = useId();
+ const switchId = id || autoId;
 
  return (
  <div className="flex items-center gap-2">
@@ -37,29 +39,20 @@ export default function Switch({
  disabled={disabled}
  aria-label={label}
  className={[
- /* pill shape */
  'relative inline-flex items-center shrink-0 cursor-pointer select-none',
  'w-[52px] h-[26px] rounded-full px-[3px]',
- /* transition background color */
  'transition-colors duration-200 ease-in-out',
- /* color when checked vs unchecked */
  'data-[state=unchecked]:bg-slate-300 dark:data-[state=unchecked]:bg-slate-600',
- /* keyboard focus ring */
+ 'hover:brightness-95',
  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-teal-500',
- /* disabled */
- 'disabled:opacity-40 disabled:cursor-not-allowed',
+ 'disabled:opacity-50 disabled:cursor-not-allowed',
  ].join(' ')}
- style={{
- /* checked color driven by prop so it stays dynamic */
- backgroundColor: checked ? color : undefined,
- }}
+ style={{ backgroundColor: checked ? color : undefined }}
  >
- {/* ── Thumb - slides using CSS translate ── */}
  <RadixSwitch.Thumb
  className={[
  'block rounded-full bg-white shadow-md',
  'w-[20px] h-[20px]',
- /* THE SLIDE - pure CSS transform, no JS needed */
  'transition-transform duration-200 ease-in-out',
  'data-[state=unchecked]:translate-x-0',
  'data-[state=checked]:translate-x-[26px]',

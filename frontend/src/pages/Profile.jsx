@@ -304,7 +304,7 @@ export default function Profile() {
                       Cancel
                     </button>
                     <button type="submit" disabled={updateProfileMutation.isPending} data-tip="Save changes"
-                      className="flex-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5">
+                      className="flex-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5">
                       {updateProfileMutation.isPending ? <><Loader2 size={14} className="animate-spin" /> Saving...</> : <><Save size={14} /> Save Changes</>}
                     </button>
                   </div>
@@ -359,7 +359,7 @@ export default function Profile() {
                     </button>
                     <button type="submit"
                       disabled={changePasswordMutation.isPending || passwordData.new_password !== passwordData.confirm_password}
-                      className="flex-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-semibold disabled:opacity-50 flex items-center justify-center gap-1.5 transition-colors">
+                      className="flex-1 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold disabled:opacity-50 flex items-center justify-center gap-1.5 transition-colors">
                       {changePasswordMutation.isPending ? <><Loader2 size={14} className="animate-spin" /> Updating...</> : <><CheckCircle size={14} /> Update Password</>}
                     </button>
                   </div>
@@ -380,12 +380,12 @@ export default function Profile() {
                 {/* Notifications */}
                 <div className="flex items-center justify-between px-3 py-2.5 bg-[var(--card-bg)] rounded-lg border border-slate-100">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center flex-shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
                       <Bell size={13} className="text-teal-600" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-slate-800">Notifications</p>
-                      <p className="text-[10px] text-slate-400">Receive alerts for important updates</p>
+                      <p className="text-[11px] text-slate-400">Receive alerts for important updates</p>
                     </div>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -396,12 +396,12 @@ export default function Profile() {
                 {/* Language */}
                 <div className="flex items-center justify-between px-3 py-2.5 bg-[var(--card-bg)] rounded-lg border border-slate-100">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-md bg-cyan-50 flex items-center justify-center flex-shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-cyan-50 flex items-center justify-center flex-shrink-0">
                       <Globe size={13} className="text-cyan-600" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold text-slate-800">Language</p>
-                      <p className="text-[10px] text-slate-400">Interface language</p>
+                      <p className="text-[11px] text-slate-400">Interface language</p>
                     </div>
                   </div>
                   <select className="px-2.5 py-1.5 border border-[var(--card-border)] rounded-lg text-xs font-semibold bg-[var(--card-bg)] text-[var(--text-700)] focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">

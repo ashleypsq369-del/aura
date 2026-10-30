@@ -321,7 +321,7 @@ function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPendi
  <button
  onClick={() => { setOpen((o) => !o); setConfirm(null); }}
  disabled={togglePending || resetPending}
- className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-[var(--text-500)] hover:text-[var(--text-700)] transition disabled:opacity-40"
+ className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-[var(--text-500)] hover:text-[var(--text-700)] transition disabled:opacity-50"
  aria-label="Actions"
  >
  {(togglePending || resetPending)
@@ -644,13 +644,13 @@ export default function AdminUserManagement() {
  <div className="flex items-center gap-1.5">
  <p className="font-semibold text-slate-900">{u.full_name}</p>
  {u.is_professional && (
- <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-700">
+ <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-700">
  Verified
  </span>
  )}
  </div>
  <p className="text-xs text-slate-500">{u.email}</p>
- <p className="text-[10px] text-slate-400">@{u.username}</p>
+ <p className="text-[11px] text-slate-400">@{u.username}</p>
  </div>
  </div>
  </td>

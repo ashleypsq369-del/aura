@@ -68,7 +68,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
 
  return (
  <button onClick={onClick}
- className="relative rounded-lg text-left w-full transition-all duration-150 bg-[var(--card-bg)] hover:shadow-md"
+ className="relative rounded-xl text-left w-full transition-all duration-150 bg-[var(--card-bg)] hover:shadow-md"
  style={{
  border: selected ? `2px solid ${a.active}` : '1px solid #c8d0da',
  boxShadow: selected ? `0 0 0 1px ${a.active}20, 0 2px 8px rgba(0,0,0,0.08)` : '0 1px 3px rgba(0,0,0,0.06)',
@@ -79,7 +79,7 @@ function KpiCard({ label, value, icon:Icon, color, selected, onClick, subtitle }
  style={{ backgroundColor: a.active }} />
  )}
  <div className="flex items-center gap-2 mb-1">
- <div className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0"
+ <div className="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0"
  style={{ background: selected ? `${a.active}18` : '#f1f5f9' }}>
  <Icon size={12} style={{ color: selected ? a.active : '#64748b' }} />
  </div>
@@ -186,7 +186,7 @@ function AppointmentCard({ appt, canSchedule, onComplete, onCancel, patientId, u
  <span className="font-bold text-[var(--text-900)] text-sm">{appt.appointment_type}</span>
  <AppointmentStatusBadge status={appt.status || 'scheduled'} compact />
  {until && (
- <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 flex items-center gap-0.5">
+ <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 flex items-center gap-0.5">
  <Clock size={9}/> {until}
  </span>
  )}
@@ -560,7 +560,7 @@ export default function Appointments() {
  </p>
  {canSchedule && !appointmentsHidden && (
  <button onClick={() => setShowModal(true)}
- className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-semibold">
+ className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold">
  <Plus size={14}/> Schedule First Appointment
  </button>
  )}

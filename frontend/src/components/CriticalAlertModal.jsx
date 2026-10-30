@@ -79,7 +79,7 @@ export default function CriticalAlertModal({ alert, onClose }) {
  <div className="space-y-2">
  {alert.top_shap_features.map((feature, idx) => (
  <motion.div key={idx} initial={{ opacity:0, x:-16 }} animate={{ opacity:1, x:0 }} transition={{ delay: 0.08*idx }}
- className="flex items-center justify-between px-4 py-3 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700">
+ className="flex items-center justify-between px-4 py-3 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)]">
  <div className="flex items-center gap-3 flex-1 min-w-0">
  <div className="w-7 h-7 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">{idx+1}</div>
  <div className="min-w-0">

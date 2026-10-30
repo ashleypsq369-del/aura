@@ -140,10 +140,10 @@ export default function AddContactModal({ isOpen, onClose, onContactAdded }) {
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-[var(--text-900)] text-sm truncate">{user.name}</p>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${roleColor}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide ${roleColor}`}>
                           {user.role}
                         </span>
-                        <span className="text-[10px] text-slate-400">@{user.username}</span>
+                        <span className="text-[11px] text-slate-400">@{user.username}</span>
                       </div>
                     </div>
 

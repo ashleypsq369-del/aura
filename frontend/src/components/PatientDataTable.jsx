@@ -38,10 +38,10 @@ const SETTING_CFG = {
 
 function CareSettingBadge({ setting }) {
  const cfg = SETTING_CFG[setting];
- if (!cfg) return <span className="text-[10px] text-slate-400"> - </span>;
+ if (!cfg) return <span className="text-[11px] text-slate-400"> - </span>;
  const Icon = cfg.icon;
  return (
- <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+ <span className="inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full"
  style={{ backgroundColor: cfg.bg, color: cfg.color }}>
  <Icon size={9}/>{cfg.label}
  </span>
@@ -99,7 +99,7 @@ const columns = [
  accessorFn: (row) => row.age ?? '',
  id: 'age',
  header: 'Age',
- cell: ({ getValue }) => <span className="text-sm font-medium text-[var(--text-800)] dark:text-slate-200">{getValue()}</span>,
+ cell: ({ getValue }) => <span className="text-sm font-medium text-[var(--text-800)]">{getValue()}</span>,
  },
  {
  accessorKey: 'primary_diagnosis',
@@ -214,9 +214,9 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
  const totalFiltered = table.getFilteredRowModel().rows.length;
 
  return (
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 shadow-sm overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  {/* Toolbar - table-level filter for quick in-grid search */}
- <div className="px-4 py-2.5 border-b border-[var(--card-border)] dark:border-slate-700 flex items-center justify-between gap-3 bg-[var(--card-bg)] dark:bg-slate-900">
+ <div className="px-4 py-2.5 border-b border-[var(--card-border)] flex items-center justify-between gap-3 bg-[var(--card-bg)]">
  <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] font-medium" aria-live="polite" aria-atomic="true">
  {loading ? 'Loading...' : `${totalFiltered} patient${totalFiltered !== 1 ? 's' : ''}`}
  </p>
@@ -227,14 +227,14 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
  onChange={e => setGlobalFilter(e.target.value)}
  placeholder="Search patients..."
  aria-label="Search patients by name, diagnosis or code"
- className="hidden sm:block px-3 py-1.5 text-sm border border-slate-300 dark:border-slate-600 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-44"
+ className="hidden sm:block px-3 py-1.5 text-sm border border-slate-300 dark:placeholder-slate-400 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 w-44"
  />
  </div>
 
  {/* Table */}
  <div className="overflow-x-auto">
  <table className="w-full text-sm" role="grid" aria-label="Patient list">
- <thead className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <thead className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  {table.getHeaderGroups().map(hg => (
  <tr key={hg.id}>
  {hg.headers.map(header => (
@@ -265,7 +265,7 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60">
  {loading ? (
  [...Array(5)].map((_, i) => (
- <tr key={i} className="bg-[var(--card-bg)] dark:bg-slate-900">
+ <tr key={i} className="bg-[var(--card-bg)]">
  {columns.map((_, j) => (
  <td key={j} className="px-4 py-3">
  <div className="h-4 bg-slate-200 rounded skeleton" />
@@ -316,19 +316,19 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
  </div>
 
  {/* Pagination */}
- <div className="px-5 py-3 border-t border-[var(--card-border)] dark:border-slate-700 flex items-center justify-between gap-3 flex-wrap bg-[var(--card-bg)] dark:bg-slate-800">
- <div className="flex items-center gap-2 text-xs text-[var(--text-600)] dark:text-slate-300">
+ <div className="px-5 py-3 border-t border-[var(--card-border)] flex items-center justify-between gap-3 flex-wrap bg-[var(--card-bg)]">
+ <div className="flex items-center gap-2 text-xs text-[var(--text-600)]">
  <span>Rows per page:</span>
  <select
  value={pagination.pageSize}
  onChange={e => table.setPageSize(Number(e.target.value))}
- className="border border-slate-300 dark:border-slate-600 rounded px-2 py-1 text-xs focus:outline-none focus:border-teal-500"
+ className="border border-slate-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-teal-500"
  aria-label="Rows per page"
  >
  {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
  </select>
  </div>
- <div className="flex items-center gap-1 text-xs text-[var(--text-600)] dark:text-slate-300">
+ <div className="flex items-center gap-1 text-xs text-[var(--text-600)]">
  <span>
  {pagination.pageIndex * pagination.pageSize + 1}-
  {Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalFiltered)} of {totalFiltered}
@@ -337,12 +337,12 @@ export default function PatientDataTable({ patients = [], onViewPatient, loading
  <div className="flex items-center gap-1">
  <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}
  aria-label="Previous page"
- className="p-1.5 rounded-lg text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+ className="p-1.5 rounded-lg text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
  <ChevronLeft size={16} />
  </button>
  <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}
  aria-label="Next page"
- className="p-1.5 rounded-lg text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+ className="p-1.5 rounded-lg text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
  <ChevronRight size={16} />
  </button>
  </div>

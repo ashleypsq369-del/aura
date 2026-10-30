@@ -236,7 +236,7 @@ export default function WellnessCheckin() {
  ))}
  </ul>
  )}
- <p className="text-[10px] text-[var(--text-400)] mt-2">🧠 Powered by AI health analysis · shared with your care team</p>
+ <p className="text-[11px] text-[var(--text-400)] mt-2">🧠 Powered by AI health analysis · shared with your care team</p>
  </div>
  );
  })()}
@@ -362,8 +362,8 @@ export default function WellnessCheckin() {
  </div>
 
  <div className="flex justify-between mt-1.5 px-1">
- <span className="text-[10px] text-[var(--text-400)] font-medium">0 - None</span>
- <span className="text-[10px] text-[var(--text-400)] font-medium">10 - Worst</span>
+ <span className="text-[11px] text-[var(--text-400)] font-medium">0 - None</span>
+ <span className="text-[11px] text-[var(--text-400)] font-medium">10 - Worst</span>
  </div>
  </motion.div>
  );

@@ -210,13 +210,13 @@ export default function NotificationCenter() {
               {unreadCount} unread
             </span>
           ) : (
-            <span className="text-[10px] font-medium text-white/70">All caught up</span>
+            <span className="text-[11px] font-medium text-white/70">All caught up</span>
           )}
         </div>
         <div className="flex items-center gap-1">
           {unreadCount > 0 && (
             <button onClick={() => markAllRead.mutate()}
-              className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-white/15">
+              className="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-lg transition-colors text-white/80 hover:text-white hover:bg-white/15">
               <Check size={10} strokeWidth={2.5} /> Mark all read
             </button>
           )}
@@ -273,7 +273,7 @@ export default function NotificationCenter() {
           previewGroups.map(group => (
             <div key={group.label}>
               <div className="flex items-center gap-1.5 px-3 py-1" style={{ borderBottom: `1px solid ${T.rowBdr}` }}>
-                <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: T.grpLabel }}>
+                <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: T.grpLabel }}>
                   {group.label}
                 </span>
               </div>
@@ -287,7 +287,7 @@ export default function NotificationCenter() {
         )}
         {filtered.length > 10 && (
           <button onClick={() => { setOpen(false); navigate('/notifications'); }}
-            className="w-full py-2 text-[10px] font-semibold transition text-center"
+            className="w-full py-2 text-[11px] font-semibold transition text-center"
             style={{ color: T.link, borderTop: `1px solid ${T.rowBdr}` }}>
             +{filtered.length - 10} more →
           </button>
@@ -298,11 +298,11 @@ export default function NotificationCenter() {
       <div className="flex items-center justify-between px-3 py-2 flex-shrink-0"
         style={{ background: T.footBg, borderTop: `1px solid ${T.footBdr}` }}>
         <button onClick={() => { setOpen(false); navigate('/notifications'); }}
-          className="text-[10px] font-semibold transition" style={{ color: T.link }}>
+          className="text-[11px] font-semibold transition" style={{ color: T.link }}>
           Open inbox →
         </button>
         <button onClick={() => clearRead.mutate()}
-          className="flex items-center gap-1 text-[10px] transition" style={{ color: T.clear }}>
+          className="flex items-center gap-1 text-[11px] transition" style={{ color: T.clear }}>
           <Trash2 size={9} /> Clear read
         </button>
       </div>
@@ -429,7 +429,7 @@ function NotifRow({ n, T, isDark, onClick, onDelete }) {
         style={{ background: unread ? sev.bar : 'transparent' }} />
 
       {/* Icon */}
-      <div className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+      <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
         style={{ background: sev.bar }}>
         <Icon size={11} color="#ffffff" strokeWidth={2.5} />
       </div>
@@ -440,14 +440,14 @@ function NotifRow({ n, T, isDark, onClick, onDelete }) {
           style={{ color: T.title, fontWeight: unread ? 600 : 400 }}>
           {formatTitle(n.title, n.notification_type)}
         </p>
-        <p className="text-[10px] truncate" style={{ color: isDark ? '#64748b' : '#6b7280' }}>
+        <p className="text-[11px] truncate" style={{ color: isDark ? '#64748b' : '#6b7280' }}>
           {n.body}
         </p>
       </div>
 
       {/* Time + dismiss */}
       <div className="flex flex-col items-end gap-1 flex-shrink-0 ml-1">
-        <span className="text-[9px] whitespace-nowrap" style={{ color: T.time }}>{relTime(n.created_at)}</span>
+        <span className="text-[11px] whitespace-nowrap" style={{ color: T.time }}>{relTime(n.created_at)}</span>
         <button onClick={e => { e.stopPropagation(); onDelete(); }}
           className="opacity-0 group-hover:opacity-100 transition-opacity"
           style={{ color: T.body }}>

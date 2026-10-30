@@ -118,7 +118,7 @@ function CopyBtn({ text }) {
  const [copied, setCopied] = useState(false);
  return (
  <button onClick={() => { navigator.clipboard.writeText(text).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),1800);}); }}
- className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium transition-all"
+ className="flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-all"
  style={{ background: copied?'#d1fae5':'#f3f4f6', color: copied?'#059669':'#9ca3af', border:'1px solid #e5e7eb' }}>
  {copied?<Check size={10}/>:<Copy size={10}/>}{copied?'Copied':'Copy'}
  </button>
@@ -138,9 +138,9 @@ function Feedback() {
 }
 
 function LLMBadge({ provider, offline }) {
- if (offline) return <span className="flex items-center gap-1 text-[10px] font-semibold text-orange-500"><WifiOff size={9}/>Offline</span>;
+ if (offline) return <span className="flex items-center gap-1 text-[11px] font-semibold text-orange-500"><WifiOff size={9}/>Offline</span>;
  const map = { openrouter:'Nemotron 550B', gemini:'Gemini 2.0', groq:'Groq Llama' };
- return <span className="flex items-center gap-1 text-[10px] font-semibold text-teal-600"><Zap size={9}/>{map[provider]||'AI'}</span>;
+ return <span className="flex items-center gap-1 text-[11px] font-semibold text-teal-600"><Zap size={9}/>{map[provider]||'AI'}</span>;
 }
 
 function MsgContent({ content, streaming=false, isUser=false }) {
@@ -355,7 +355,7 @@ export default function AuraChat() {
  {/* Safety bar */}
  <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
  <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[10px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
+ <p className="text-[11px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
  </div>
 
  {/* History panel */}
@@ -371,7 +371,7 @@ export default function AuraChat() {
  <div className="flex-1 min-w-0">
  <p className="text-xs font-semibold truncate" style={{color:T.nameText}}>{conv.has_crisis&&<span className="text-red-500 mr-1">[Crisis]</span>}{conv.title}</p>
  <p className="text-[11px] truncate mt-0.5" style={{color:T.subText}}>{conv.last_message}</p>
- <p className="text-[10px] mt-1" style={{color:T.footerNote}}>{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
+ <p className="text-[11px] mt-1" style={{color:T.footerNote}}>{conv.message_count} messages · {new Date(conv.updated_at||conv.created_at).toLocaleDateString()}</p>
  </div>
  <button onClick={e=>{e.stopPropagation();delConv(conv.id);}} className="opacity-0 group-hover:opacity-100 p-1 rounded text-[var(--text-400)] hover:text-red-500 transition-all"><Trash2 size={12}/></button>
  </div>
@@ -419,7 +419,7 @@ export default function AuraChat() {
  <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
  className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl transition-all" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`}}>
  <span className="text-2xl">{f.emoji}</span>
- <span className="text-[10px] font-semibold" style={{color:T.subText}}>{f.label}</span>
+ <span className="text-[11px] font-semibold" style={{color:T.subText}}>{f.label}</span>
  </button>
  ))}
  </div>
@@ -430,7 +430,7 @@ export default function AuraChat() {
  <div className="flex flex-wrap gap-2">
  {prompts.map((p,i)=>(
  <button key={i} onClick={()=>sendMessage(p)} disabled={loading}
- className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-40" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`,color:T.emptyChipText}}>
+ className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`,color:T.emptyChipText}}>
  {p}
  </button>
  ))}
@@ -463,7 +463,7 @@ export default function AuraChat() {
  <MsgContent content={msg.content} streaming={msg.streaming} isUser={isUser}/>
  </div>
  <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
- <span className="text-[10px] text-slate-400">{new Date(msg.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+ <span className="text-[11px] text-slate-400">{new Date(msg.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
  {isUser&&!msg.streaming&&<CheckCheck size={10} style={{color:C.accent}}/>}
  {!isUser&&msg.content&&!msg.streaming&&<CopyBtn text={msg.content}/>}
  {!isUser&&msg.content&&!msg.streaming&&<Feedback/>}
@@ -528,7 +528,7 @@ export default function AuraChat() {
  </motion.button>
  </div>
  </div>
- <p className="text-[10px] text-center mt-1" style={{color:T.footerNote}}>{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
+ <p className="text-[11px] text-center mt-1" style={{color:T.footerNote}}>{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
  </form>
  </div>
  </>

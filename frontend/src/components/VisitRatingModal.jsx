@@ -115,7 +115,7 @@ export default function VisitRatingModal({
  onClick={e => e.stopPropagation()}
  >
  {/* Header */}
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
+ <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: 'linear-gradient(to right, #0d948810, transparent)' }}>
  <div>
  <p className="font-bold text-[var(--text-800)] text-sm">Rate Your Visit</p>
@@ -131,7 +131,7 @@ export default function VisitRatingModal({
  {submitted ? (
  <div className="flex flex-col items-center justify-center py-10 gap-3">
  <CheckCircle size={40} className="text-teal-500" />
- <p className="font-semibold text-[var(--text-700)] dark:text-white">Thank you for your feedback!</p>
+ <p className="font-semibold text-[var(--text-700)]">Thank you for your feedback!</p>
  </div>
  ) : (
  <div className="p-5 space-y-5">
@@ -143,7 +143,7 @@ export default function VisitRatingModal({
 
  {/* Category scores */}
  <div className="space-y-2">
- <p className="text-xs font-semibold text-[var(--text-600)] dark:text-slate-300">Rate by category</p>
+ <p className="text-xs font-semibold text-[var(--text-600)]">Rate by category</p>
  {CATEGORIES.map(cat => (
  <div key={cat.key} className="flex items-center justify-between">
  <span className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] w-28">{cat.label}</span>
@@ -181,7 +181,7 @@ export default function VisitRatingModal({
  onChange={e => setComment(e.target.value)}
  rows={3}
  placeholder="How was your experience?"
- className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-[var(--card-bg)] text-[var(--text-800)] resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] rounded-lg px-3 py-2 text-sm bg-[var(--card-bg)] text-[var(--text-800)] resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
  />
  </div>
 

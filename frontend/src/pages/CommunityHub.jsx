@@ -192,11 +192,11 @@ export default function CommunityHub() {
  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap border transition-all flex-shrink-0 ${
  activeTab === tab.id
  ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
- : 'bg-[var(--card-bg)] text-[var(--text-600)] dark:text-[var(--text-400)] border-[var(--card-border)] dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
+ : 'bg-[var(--card-bg)] text-[var(--text-600)] dark:text-[var(--text-400)] border-[var(--card-border)] hover:border-teal-300 dark:hover:border-teal-700 hover:text-teal-700 dark:hover:text-teal-400'
  }`}>
  <Icon size={14} />
  {tab.label}
- <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 text-[var(--text-500)] dark:text-slate-400'}`}>{count}</span>
+ <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/25 text-white' : 'bg-slate-100 text-[var(--text-500)] dark:text-slate-400'}`}>{count}</span>
  </button>
  );
  })}
@@ -216,13 +216,13 @@ export default function CommunityHub() {
  {/* ML/signal-driven smart recommendations */}
  {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
  <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
- className="bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
- <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center gap-2">
+ className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl overflow-hidden shadow-sm">
+ <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center gap-2">
  <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
  <Brain size={14} className="text-teal-600" />
  </div>
  <h3 className="text-sm font-semibold text-[var(--text-800)] flex-1">Smart Group Recommendations</h3>
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
  {mlRecommendedGroups.length} for you
  </span>
  </div>
@@ -233,7 +233,7 @@ export default function CommunityHub() {
  Matched to your profile:
  {signals.condition && <span className="font-semibold text-slate-700"> {signals.condition}</span>}
  {signals.communityTags?.slice(0,3).map(t => (
- <span key={t} className="px-1.5 py-0.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-[10px] font-semibold">{t}</span>
+ <span key={t} className="px-1.5 py-0.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-[11px] font-semibold">{t}</span>
  ))}
  </p>
  </div>
@@ -244,19 +244,19 @@ export default function CommunityHub() {
  return (
  <button key={g.id}
  onClick={() => navigate(`/community/${g.id}`)}
- className="text-left flex items-start gap-3 p-3 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-[var(--card-border)] hover:border-teal-300 dark:border-slate-600 transition-all group shadow-sm">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 dark:bg-slate-600 text-[var(--text-700)] dark:text-slate-200">
+ className="text-left flex items-start gap-3 p-3 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-[var(--card-border)] hover:border-teal-300 transition-all group shadow-sm">
+ <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 text-[var(--text-700)]">
  {groupInitials(g.name)}
  </div>
  <div className="flex-1 min-w-0">
  <p className="text-xs font-bold text-[var(--text-900)] group-hover:text-teal-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
- <p className="text-[10px] text-[var(--text-500)] dark:text-[var(--text-400)] truncate mt-0.5">{g.description || 'Supportive community group'}</p>
+ <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] truncate mt-0.5">{g.description || 'Supportive community group'}</p>
  <div className="flex items-center gap-1.5 mt-1">
- <span className="text-[9px] text-[var(--text-400)] dark:text-[var(--text-500)] flex items-center gap-0.5">
+ <span className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] flex items-center gap-0.5">
  <Users size={9} /> {g.member_count ?? 0}
  </span>
  {g.condition_tags?.slice(0,2).map(t => (
- <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
+ <span key={t} className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
  ))}
  </div>
  </div>

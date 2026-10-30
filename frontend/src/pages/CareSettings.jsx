@@ -831,10 +831,10 @@ function InteractionRow({ ix }) {
  <div className="flex items-start justify-between gap-2 mb-1.5">
  <p className="font-semibold text-sm text-slate-900">{ix.interaction_type}</p>
  <div className="flex items-center gap-1.5 flex-shrink-0">
- <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${pCls}`}>
+ <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold border ${pCls}`}>
  {ix.priority}
  </span>
- <span className="px-2 py-0.5 bg-slate-200 text-[var(--text-600)] rounded-full text-[10px] font-bold">
+ <span className="px-2 py-0.5 bg-slate-200 text-[var(--text-600)] rounded-full text-[11px] font-bold">
  {ix.frequency}
  </span>
  </div>
@@ -843,7 +843,7 @@ function InteractionRow({ ix }) {
  {ix.system_features_used?.length > 0 && (
  <div className="flex flex-wrap gap-1 mt-2">
  {ix.system_features_used.map(f => (
- <span key={f} className="px-2 py-0.5 bg-teal-50 text-teal-700 border border-teal-200 rounded text-[10px] font-bold">
+ <span key={f} className="px-2 py-0.5 bg-teal-50 text-teal-700 border border-teal-200 rounded text-[11px] font-bold">
  {f}
  </span>
  ))}
@@ -928,19 +928,19 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
  <div className="flex flex-wrap gap-3 mt-5 pt-5 border-t border-white/20">
  {setting.facility_name && (
  <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
- <p className="text-white/60 text-[10px] ">Facility</p>
+ <p className="text-white/60 text-[11px] ">Facility</p>
  <p className="text-white font-semibold text-sm">{setting.facility_name}</p>
  </div>
  )}
  {setting.visit_frequency && (
  <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
- <p className="text-white/60 text-[10px] ">Visit Frequency</p>
+ <p className="text-white/60 text-[11px] ">Visit Frequency</p>
  <p className="text-white font-semibold text-sm">{setting.visit_frequency}</p>
  </div>
  )}
  {setting.primary_contact && (
  <div className="bg-white/15 backdrop-blur rounded-xl px-4 py-2.5 border border-white/20">
- <p className="text-white/60 text-[10px] ">Care Contact</p>
+ <p className="text-white/60 text-[11px] ">Care Contact</p>
  <p className="text-white font-semibold text-sm">{setting.primary_contact}</p>
  </div>
  )}
@@ -1017,7 +1017,7 @@ function SettingHistory({ history }) {
  {item.setting_label}
  </p>
  {item.is_current && (
- <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${c.badge}`}>Current</span>
+ <span className={`px-2 py-0.5 text-[11px] font-bold rounded-full ${c.badge}`}>Current</span>
  )}
  </div>
  <p className="text-xs text-slate-500">

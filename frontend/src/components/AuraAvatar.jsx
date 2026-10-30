@@ -335,7 +335,7 @@ export default function AuraAvatar() {
  onPointerDown={e => dragControls.start(e)}
  >
  <div className="flex items-center gap-2">
- <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center flex-shrink-0">
+ <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
  <AuraMascot size={22} />
  </div>
  <span className="text-sm font-bold text-white">
@@ -363,7 +363,7 @@ export default function AuraAvatar() {
  className="flex items-center gap-1 text-xs font-bold text-amber-600 hover:text-amber-800 transition-colors">
  Next tip <ChevronRight size={12} />
  </button>
- <span className="text-[10px] text-slate-400">{tipIdx + 1}/{getTips().length}</span>
+ <span className="text-[11px] text-slate-400">{tipIdx + 1}/{getTips().length}</span>
  </div>
  </div>
  )}
@@ -422,7 +422,7 @@ export default function AuraAvatar() {
  }}
  >
  <span className="text-2xl">{m.emoji}</span>
- <span className="text-[10px] font-bold" style={{ color: m.color }}>{m.label}</span>
+ <span className="text-[11px] font-bold" style={{ color: m.color }}>{m.label}</span>
  </motion.button>
  ))}
  </div>
@@ -471,7 +471,7 @@ export default function AuraAvatar() {
  <Sparkles size={15} className="text-white flex-shrink-0" />
  <div>
  <p className="text-xs font-bold text-white">Take the tour again</p>
- <p className="text-[10px] text-white/70">Aura will guide you through everything</p>
+ <p className="text-[11px] text-white/70">Aura will guide you through everything</p>
  </div>
  <ChevronRight size={12} className="ml-auto text-white/60" />
  </motion.button>
@@ -496,7 +496,7 @@ export default function AuraAvatar() {
  <t.Icon size={16} className="text-[var(--text-500)] flex-shrink-0" />
  <div>
  <p className="text-xs font-bold text-slate-800">{t.label}</p>
- <p className="text-[10px] text-slate-400">{t.desc}</p>
+ <p className="text-[11px] text-slate-400">{t.desc}</p>
  </div>
  <ChevronRight size={12} className="ml-auto text-slate-300" />
  </motion.button>
@@ -588,7 +588,7 @@ export default function AuraAvatar() {
 
  {!minimized && <SunflowerRow />}
  {!minimized && (
- <div className="mt-0.5 px-2 py-0.5 text-white text-[9px] font-bold rounded-full shadow-sm"
+ <div className="mt-0.5 px-2 py-0.5 text-white text-[11px] font-bold rounded-full shadow-sm"
  style={{ background: 'linear-gradient(to right, #d97706, #fbbf24)' }}>
  Aura 🌻
  </div>

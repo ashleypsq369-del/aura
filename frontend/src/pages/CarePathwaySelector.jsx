@@ -90,7 +90,7 @@ export default function CarePathwaySelector() {
  {STEPS.map((label, idx) => (
  <div key={idx} className="flex items-center flex-1">
  <div
- className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all"
+ className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold transition-all"
  style={{
  background: idx <= step ? '#0d9488' : '#cbd5e1',
  color: '#fff',
@@ -116,7 +116,7 @@ export default function CarePathwaySelector() {
  className="space-y-4"
  >
  <div className="text-center mb-2">
- <h1 className="text-xl font-bold text-[var(--text-800)] dark:text-white">What does your loved one need?</h1>
+ <h1 className="text-xl font-bold text-[var(--text-800)]">What does your loved one need?</h1>
  <p className="text-sm text-[var(--text-500)] dark:text-[var(--text-400)] mt-1">
  Choose the care pathway that best fits their situation.
  </p>
@@ -125,7 +125,7 @@ export default function CarePathwaySelector() {
  {loadingOptions ? (
  <div className="space-y-3">
  {[1,2,3].map(i => (
- <div key={i} className="h-20 bg-[var(--card-bg)] rounded-xl animate-pulse border border-[var(--card-border)] dark:border-slate-700" />
+ <div key={i} className="h-20 bg-[var(--card-bg)] rounded-xl animate-pulse border border-[var(--card-border)]" />
  ))}
  </div>
  ) : (
@@ -164,7 +164,7 @@ export default function CarePathwaySelector() {
  <button
  onClick={() => setStep(1)}
  disabled={!selected.pathway_type}
- className="w-full py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-40"
+ className="w-full py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50"
  style={{ background: '#0d9488' }}
  >
  Continue <ChevronRight size={16} />

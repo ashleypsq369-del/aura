@@ -165,7 +165,7 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
  </div>
 
  {/* Quote */}
- <div className="relative bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-2xl p-6 overflow-hidden">
+ <div className="relative bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-6 overflow-hidden">
  <div className="absolute top-3 right-5 opacity-15"><Quote size={44} className="text-white" /></div>
  <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
  "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity, the price you pay for love."

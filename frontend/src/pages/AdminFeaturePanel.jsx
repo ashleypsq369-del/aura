@@ -230,7 +230,7 @@ export default function AdminFeaturePanel() {
  <Icon size={14} className="flex-shrink-0" />
  <div className="flex-1 min-w-0">
  <p className="font-semibold truncate">{o.feature_name}</p>
- <p className={`text-[10px] ${src.cls}`}>{src.label}</p>
+ <p className={`text-[11px] ${src.cls}`}>{src.label}</p>
  </div>
  <div className="flex gap-1.5 flex-shrink-0">
  <button onClick={() => { setOverrideModal({ userId: u.id, featurePath: o.feature_path, current: o.state, overrideId: o.id }); setOverrideNote(o.note || ''); }}
@@ -317,7 +317,7 @@ export default function AdminFeaturePanel() {
  </div>
  {r.status === 'pending' && (
  <button onClick={() => { setReviewModal(r); setReviewNote(''); }}
- className="flex-shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-semibold transition">
+ className="flex-shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition">
  Review
  </button>
  )}

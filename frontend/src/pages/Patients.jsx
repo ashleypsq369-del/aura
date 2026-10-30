@@ -238,12 +238,12 @@ export default function Patients() {
 
  {/* Care setting filter row */}
  <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
- <span className="text-[10px] font-bold text-[var(--text-400)] ">Care Setting:</span>
+ <span className="text-[11px] font-bold text-[var(--text-400)] ">Care Setting:</span>
  {CARE_SETTING_FILTERS.map(({ value, label, icon: Icon, color }) => {
  const active = filterCareSetting === value;
  return (
  <button key={value} onClick={() => setFilterCareSetting(value)}
- className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+ className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
  active
  ? 'text-white border-transparent shadow-sm'
  : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-600)] hover:border-slate-300'

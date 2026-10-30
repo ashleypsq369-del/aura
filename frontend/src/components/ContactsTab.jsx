@@ -65,7 +65,7 @@ export default function ContactsTab({ onContactMessage }) {
             <h2 className="font-bold text-[var(--text-900)] text-sm flex items-center gap-2">
               <Users size={16} className="text-teal-600" /> Contacts
             </h2>
-            <p className="text-[10px] text-[var(--text-400)] mt-0.5">
+            <p className="text-[11px] text-[var(--text-400)] mt-0.5">
               {contacts.length} total &middot; {onlineCount} online
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function ContactsTab({ onContactMessage }) {
 function Section({ icon: Icon, label, iconClass = 'text-slate-400', children }) {
   return (
     <div>
-      <p className="text-[10px] font-bold text-[var(--text-400)]  mb-2 flex items-center gap-1.5">
+      <p className="text-[11px] font-bold text-[var(--text-400)]  mb-2 flex items-center gap-1.5">
         <Icon size={11} className={iconClass} /> {label}
       </p>
       <div className="space-y-2">{children}</div>

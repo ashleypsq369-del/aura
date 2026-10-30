@@ -192,7 +192,7 @@ export default function CommunityGroupPage() {
   const color = group ? groupColor(group.name) : '#0d9488';
 
   return (
-    <div className="flex flex-col bg-[var(--card-bg)] dark:bg-slate-900" style={{ height: 'calc(100vh - 60px)' }}>
+    <div className="flex flex-col bg-[var(--card-bg)]" style={{ height: 'calc(100vh - 60px)' }}>
 
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0 shadow-md"
@@ -239,12 +239,12 @@ export default function CommunityGroupPage() {
       <AnimatePresence>
         {showSearch && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }} className="flex-shrink-0 bg-[var(--card-bg)] border-b border-[var(--card-border)] dark:border-slate-700 px-4 py-2">
+            exit={{ height: 0, opacity: 0 }} className="flex-shrink-0 bg-[var(--card-bg)] border-b border-[var(--card-border)] px-4 py-2">
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input autoFocus value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search messages..."
-                className="w-full pl-8 pr-8 py-2 text-sm rounded-xl border border-[var(--card-border)] dark:border-slate-600 bg-[var(--card-bg)] text-[var(--text-900)] focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                className="w-full pl-8 pr-8 py-2 text-sm rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--text-900)] focus:outline-none focus:ring-2 focus:ring-teal-500" />
               {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-400)] hover:text-slate-600"><X size={14} /></button>}
             </div>
             {searchQuery && <p className="text-xs text-[var(--text-400)] mt-1">{posts.length} result{posts.length !== 1 ? 's' : ''} for "{searchQuery}"</p>}
@@ -286,11 +286,11 @@ export default function CommunityGroupPage() {
                   <div key={post.id}>
                     {showDateDivider && (
                       <div className="flex items-center gap-2 my-4">
-                        <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
-                        <span className="text-[10px] font-semibold text-[var(--text-400)] px-2">
+                        <div className="h-px flex-1 bg-slate-200" />
+                        <span className="text-[11px] font-semibold text-[var(--text-400)] px-2">
                           {new Date(post.created_at).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
                         </span>
-                        <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+                        <div className="h-px flex-1 bg-slate-200" />
                       </div>
                     )}
                     <PostBubble
@@ -313,7 +313,7 @@ export default function CommunityGroupPage() {
             {showScrollBtn && (
               <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
                 onClick={() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="absolute bottom-20 right-4 w-9 h-9 rounded-full bg-[var(--card-bg)] shadow-lg border border-[var(--card-border)] dark:border-slate-600 flex items-center justify-center text-[var(--text-600)] hover:bg-[var(--card-bg)] transition z-10">
+                className="absolute bottom-20 right-4 w-9 h-9 rounded-full bg-[var(--card-bg)] shadow-lg border border-[var(--card-border)] flex items-center justify-center text-[var(--text-600)] hover:bg-[var(--card-bg)] transition z-10">
                 <ChevronDown size={16} />
               </motion.button>
             )}
@@ -321,15 +321,15 @@ export default function CommunityGroupPage() {
 
           {/* Compose */}
           {group?.joined && (
-            <div className="flex-shrink-0 bg-[var(--card-bg)] border-t border-[var(--card-border)] dark:border-slate-700">
+            <div className="flex-shrink-0 bg-[var(--card-bg)] border-t border-[var(--card-border)]">
               {/* Reply preview */}
               <AnimatePresence>
                 {replyingTo && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    className="flex items-center gap-2 px-4 py-2 bg-[var(--card-bg)] dark:bg-slate-750 border-b border-[var(--card-border)] dark:border-slate-700">
+                    className="flex items-center gap-2 px-4 py-2 bg-[var(--card-bg)] dark:bg-slate-750 border-b border-[var(--card-border)]">
                     <Reply size={13} className="text-teal-500 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-bold text-teal-600">{replyingTo.display_name}</p>
+                      <p className="text-[11px] font-bold text-teal-600">{replyingTo.display_name}</p>
                       <p className="text-xs text-[var(--text-500)] truncate">{replyingTo.content.slice(0, 80)}</p>
                     </div>
                     <button onClick={() => setReplyingTo(null)} className="text-[var(--text-400)] hover:text-slate-600"><X size={13} /></button>
@@ -341,7 +341,7 @@ export default function CommunityGroupPage() {
               <AnimatePresence>
                 {showEmojiPicker && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    className="px-3 py-2 bg-[var(--card-bg)] dark:bg-slate-750 border-b border-[var(--card-border)] dark:border-slate-700">
+                    className="px-3 py-2 bg-[var(--card-bg)] dark:bg-slate-750 border-b border-[var(--card-border)]">
                     <div className="grid grid-cols-10 gap-1">
                       {EMOJI_GRID.map(e => (
                         <button key={e} onClick={() => insertEmoji(e)}
@@ -367,18 +367,18 @@ export default function CommunityGroupPage() {
                   maxLength={280}
                   rows={1}
                   placeholder="Share anonymously… (Enter to send, Shift+Enter for new line)"
-                  className="flex-1 px-4 py-2.5 border-2 border-[var(--card-border)] dark:border-slate-600 rounded-2xl text-sm resize-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[var(--card-bg)] text-[var(--text-900)] dark:text-slate-100"
+                  className="flex-1 px-4 py-2.5 border-2 border-[var(--card-border)] rounded-2xl text-sm resize-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[var(--card-bg)] text-[var(--text-900)]"
                   style={{ maxHeight: '96px', overflowY: 'auto' }}
                 />
                 <button
                   onClick={handleSubmit}
                   disabled={createPostMutation.isPending || !postContent.trim()}
-                  className="w-10 h-10 flex items-center justify-center rounded-2xl text-white flex-shrink-0 transition disabled:opacity-40 hover:opacity-90"
+                  className="w-10 h-10 flex items-center justify-center rounded-2xl text-white flex-shrink-0 transition disabled:opacity-50 hover:opacity-90"
                   style={{ backgroundColor: color }}>
                   {createPostMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 </button>
               </div>
-              <p className="text-[10px] text-[var(--text-400)] pb-2 pl-4 flex items-center gap-1">
+              <p className="text-[11px] text-[var(--text-400)] pb-2 pl-4 flex items-center gap-1">
                 🔒 Your identity is protected · <span className={postContent.length > 250 ? 'text-red-500 font-bold' : ''}>{postContent.length}/280</span>
               </p>
             </div>
@@ -390,8 +390,8 @@ export default function CommunityGroupPage() {
           {showInfo && (
             <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 280, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-              className="flex-shrink-0 bg-[var(--card-bg)] border-l border-[var(--card-border)] dark:border-slate-700 overflow-hidden flex flex-col">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)] dark:border-slate-700">
+              className="flex-shrink-0 bg-[var(--card-bg)] border-l border-[var(--card-border)] overflow-hidden flex flex-col">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)]">
                 <span className="font-bold text-[var(--text-800)] text-sm">Group Info</span>
                 <button onClick={() => setShowInfo(false)} className="text-[var(--text-400)] hover:text-slate-600"><X size={16} /></button>
               </div>
@@ -402,48 +402,48 @@ export default function CommunityGroupPage() {
                   </div>
                   {editingGroup
                     ? <input value={editForm.name ?? group?.name ?? ''} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                        className="text-center font-bold border-2 border-teal-400 rounded-xl px-3 py-1 text-sm w-full outline-none dark:text-white" />
+                        className="text-center font-bold border-2 border-teal-400 rounded-xl px-3 py-1 text-sm w-full outline-none" />
                     : <p className="font-bold text-[var(--text-900)] text-center">{group?.name}</p>}
                   <p className="text-xs text-[var(--text-500)] dark:text-slate-400">{group?.member_count ?? 0} members</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-[var(--text-400)]  mb-1">About</p>
+                  <p className="text-[11px] font-bold text-[var(--text-400)]  mb-1">About</p>
                   {editingGroup
                     ? <textarea value={editForm.description ?? group?.description ?? ''} onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
-                        rows={3} className="w-full border-2 border-teal-400 rounded-xl px-3 py-2 text-xs outline-none resize-none dark:text-white" />
-                    : <p className="text-sm text-[var(--text-600)] dark:text-slate-300">{group?.description || 'No description'}</p>}
+                        rows={3} className="w-full border-2 border-teal-400 rounded-xl px-3 py-2 text-xs outline-none resize-none" />
+                    : <p className="text-sm text-[var(--text-600)]">{group?.description || 'No description'}</p>}
                 </div>
                 {group?.condition_tags?.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-bold text-[var(--text-400)]  mb-1.5">Topics</p>
+                    <p className="text-[11px] font-bold text-[var(--text-400)]  mb-1.5">Topics</p>
                     <div className="flex flex-wrap gap-1.5">
                       {group.condition_tags.map(t => (
-                        <span key={t} className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                        <span key={t} className="px-2 py-0.5 rounded-full text-[11px] font-semibold"
                           style={{ background: `${color}18`, color, border: `1px solid ${color}40` }}>{t}</span>
                       ))}
                     </div>
                   </div>
                 )}
                 <div>
-                  <p className="text-[10px] font-bold text-[var(--text-400)]  mb-2">Members ({membersData?.total ?? group?.member_count ?? 0})</p>
+                  <p className="text-[11px] font-bold text-[var(--text-400)]  mb-2">Members ({membersData?.total ?? group?.member_count ?? 0})</p>
                   {membersData?.members?.map((m, i) => (
                     <div key={i} className="flex items-center gap-2 py-1.5">
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-black" style={{ backgroundColor: color }}>
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-black" style={{ backgroundColor: color }}>
                         {m.display_name?.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-[var(--text-700)] truncate">{m.display_name}</p>
-                        {m.is_creator && <p className="text-[10px] text-teal-600 font-bold">Creator</p>}
+                        {m.is_creator && <p className="text-[11px] text-teal-600 font-bold">Creator</p>}
                       </div>
                     </div>
                   )) ?? <p className="text-xs text-slate-400">Loading…</p>}
                 </div>
               </div>
               {isCreator && (
-                <div className="px-4 py-3 border-t border-[var(--card-border)] dark:border-slate-700 flex gap-2">
+                <div className="px-4 py-3 border-t border-[var(--card-border)] flex gap-2">
                   {editingGroup ? (
                     <>
-                      <button onClick={() => setEditingGroup(false)} className="flex-1 py-2 text-xs font-semibold border border-slate-300 rounded-xl hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 dark:text-slate-300">Cancel</button>
+                      <button onClick={() => setEditingGroup(false)} className="flex-1 py-2 text-xs font-semibold border border-slate-300 rounded-xl hover:bg-[var(--card-bg)] dark:hover:bg-slate-700">Cancel</button>
                       <button onClick={() => updateGroupMutation.mutate(editForm)} disabled={updateGroupMutation.isPending}
                         className="flex-1 py-2 text-xs font-bold bg-teal-600 text-white rounded-xl hover:bg-teal-700 flex items-center justify-center gap-1">
                         <Check size={12} /> Save
@@ -489,21 +489,21 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
     <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
       className={`flex items-end gap-2 max-w-[88%] mb-2 ${post.is_hidden ? 'opacity-40' : ''}`}>
       {/* Avatar */}
-      <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-white font-black text-[10px] mb-0.5"
+      <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-white font-black text-[11px] mb-0.5"
         style={{ background: `linear-gradient(135deg, #0d9488, #0891b2)` }}>
         {post.display_name?.charAt(0)?.toUpperCase() || 'A'}
       </div>
 
       <div className="flex-1 min-w-0">
         {/* Name + time */}
-        <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] font-semibold mb-1 ml-1">
-          <span className="text-[var(--text-600)] dark:text-slate-300">{post.display_name}</span>
+        <p className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] font-semibold mb-1 ml-1">
+          <span className="text-[var(--text-600)]">{post.display_name}</span>
           <span className="mx-1">·</span>
           <span>{fmt(post.created_at)}</span>
         </p>
 
         {/* Bubble */}
-        <div className="bg-[var(--card-bg)] rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-[var(--card-border)] dark:border-slate-700">
+        <div className="bg-[var(--card-bg)] rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-[var(--card-border)]">
           {/* Quote block */}
           {quoteText && (
             <div className="mb-2 pl-3 border-l-2 border-teal-400 text-xs text-[var(--text-500)] dark:text-[var(--text-400)] italic line-clamp-2">
@@ -518,9 +518,9 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
           <div className="flex items-center gap-1 mt-1 ml-1 flex-wrap">
             {REACTIONS.filter(r => reactions[r.type] > 0).map(r => (
               <button key={r.type} onClick={() => onReact(r.type)} title={r.label}
-                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 hover:border-teal-300 transition shadow-sm">
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-teal-300 transition shadow-sm">
                 <span className="text-sm leading-none">{r.emoji}</span>
-                <span className="text-[10px] font-bold text-[var(--text-500)] dark:text-slate-400">{reactions[r.type]}</span>
+                <span className="text-[11px] font-bold text-[var(--text-500)] dark:text-slate-400">{reactions[r.type]}</span>
               </button>
             ))}
           </div>
@@ -532,13 +532,13 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
           <div className="relative">
             <button onClick={onToggleReactionPicker}
               className="flex items-center gap-0.5 px-2 py-1 rounded-full text-xs text-[var(--text-400)] hover:text-teal-500 hover:bg-white dark:hover:bg-slate-700 transition border border-transparent hover:border-slate-200">
-              <Smile size={12} /> <span className="hidden sm:inline text-[10px]">React</span>
+              <Smile size={12} /> <span className="hidden sm:inline text-[11px]">React</span>
             </button>
             <AnimatePresence>
               {isActiveReactionPicker && (
                 <motion.div initial={{ opacity: 0, scale: 0.9, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute bottom-8 left-0 bg-[var(--card-bg)] rounded-2xl shadow-xl border border-[var(--card-border)] dark:border-slate-700 p-2 z-20 flex gap-1">
+                  className="absolute bottom-8 left-0 bg-[var(--card-bg)] rounded-2xl shadow-xl border border-[var(--card-border)] p-2 z-20 flex gap-1">
                   {REACTIONS.map(r => (
                     <button key={r.type} onClick={() => onReact(r.type)} title={r.label}
                       className="w-9 h-9 flex items-center justify-center text-xl hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition hover:scale-125">
@@ -553,7 +553,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
           {/* Reply */}
           <button onClick={onReply}
             className="flex items-center gap-0.5 px-2 py-1 rounded-full text-xs text-[var(--text-400)] hover:text-teal-500 hover:bg-white dark:hover:bg-slate-700 transition border border-transparent hover:border-slate-200">
-            <Reply size={12} /> <span className="hidden sm:inline text-[10px]">Reply</span>
+            <Reply size={12} /> <span className="hidden sm:inline text-[11px]">Reply</span>
           </button>
 
           {/* Flag */}
@@ -567,13 +567,13 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
                 {showFlag && (
                   <motion.div initial={{ opacity: 0, scale: 0.95, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute right-0 bottom-7 w-36 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] dark:border-slate-700 p-2.5 z-10">
+                    className="absolute right-0 bottom-7 w-36 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] p-2.5 z-10">
                     <p className="text-xs font-semibold text-[var(--text-700)] mb-2">Report this post?</p>
                     <div className="flex gap-1.5">
                       <button onClick={() => { onFlag(); setShowFlag(false); }}
                         className="flex-1 py-1.5 bg-red-600 text-white text-[11px] font-bold rounded-lg hover:bg-red-700">Report</button>
                       <button onClick={() => setShowFlag(false)}
-                        className="flex-1 py-1.5 border border-[var(--card-border)] dark:border-slate-600 text-[11px] rounded-lg hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 dark:text-slate-300">Cancel</button>
+                        className="flex-1 py-1.5 border border-[var(--card-border)] text-[11px] rounded-lg hover:bg-[var(--card-bg)] dark:hover:bg-slate-700">Cancel</button>
                     </div>
                   </motion.div>
                 )}
@@ -582,7 +582,7 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
           )}
 
           {post.is_hidden && (
-            <span className="ml-1 px-2 py-0.5 bg-red-50 border border-red-200 rounded-full text-[10px] text-red-600 font-semibold flex items-center gap-1">
+            <span className="ml-1 px-2 py-0.5 bg-red-50 border border-red-200 rounded-full text-[11px] text-red-600 font-semibold flex items-center gap-1">
               <AlertTriangle size={9} /> Under review
             </span>
           )}

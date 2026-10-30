@@ -287,9 +287,9 @@ export default function AssessmentDashboard() {
         {/* Palliative Care Modules */}
         <div>
           <div className="flex items-center gap-3 mb-3">
-            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+            <div className="h-px flex-1 bg-slate-200" />
             <span className="text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)]  px-2">Palliative Care Modules</span>
-            <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+            <div className="h-px flex-1 bg-slate-200" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {assessmentTypes.filter(a => a.isPalliative).map((assessment, idx) => (
@@ -376,7 +376,7 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
 
           <div className="flex items-center gap-2 flex-wrap">
             <span className={status.cls}>{status.label}</span>
-            <span className="text-[10px] text-slate-400">every {assessment.frequency}</span>
+            <span className="text-[11px] text-slate-400">every {assessment.frequency}</span>
           </div>
 
           {/* Latest scores */}
@@ -408,7 +408,7 @@ function AssessmentCard({ assessment, onClick, onXaiClick, loadingXai, delay }) 
                   <button
                     onClick={e => { e.stopPropagation(); onXaiClick('ESAS', assessment.data.esas_total, e); }}
                     disabled={loadingXai}
-                    className="p-1.5 rounded-md bg-purple-50 hover:bg-purple-100 transition-colors disabled:opacity-50 flex-shrink-0"
+                    className="p-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors disabled:opacity-50 flex-shrink-0"
                     title="AI explanation"
                   >
                     <Brain size={14} className="text-purple-600" />

@@ -133,7 +133,7 @@ export default function RealTimeAlerts() {
  <div className="flex items-center gap-2">
  <Activity size={13} color="#fff" />
  <span className="font-bold text-white text-xs">Active Alerts</span>
- <span className="text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-bold">{totalCount}</span>
+ <span className="text-[11px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-bold">{totalCount}</span>
  </div>
  <button onClick={() => setIsOpen(false)} className="w-6 h-6 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/15">
  <X size={12} strokeWidth={2.5} />
@@ -150,7 +150,7 @@ export default function RealTimeAlerts() {
  )}
  </div>
  <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0" style={{ borderTop: `1px solid ${panel.sep}`, background: panel.bg }}>
- {totalCount > 5 && <span className="text-[10px] font-semibold" style={{ color: '#ef4444' }}>+{totalCount - 5} more</span>}
+ {totalCount > 5 && <span className="text-[11px] font-semibold" style={{ color: '#ef4444' }}>+{totalCount - 5} more</span>}
  <button onClick={() => { navigate('/alerts'); setIsOpen(false); }} className="ml-auto text-[11px] font-semibold" style={{ color: isDark ? '#34d399' : '#0d9488' }}>All alerts →</button>
  </div>
  </motion.div>
@@ -177,7 +177,7 @@ export default function RealTimeAlerts() {
  <div className="flex items-center gap-2">
  <Activity size={13} color="#fff" />
  <span className="font-bold text-white text-xs">Active Alerts</span>
- <span className="text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-bold">
+ <span className="text-[11px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-bold">
  {totalCount}
  </span>
  </div>
@@ -206,7 +206,7 @@ export default function RealTimeAlerts() {
  <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0"
  style={{ borderTop: `1px solid ${panel.sep}`, background: panel.bg }}>
  {totalCount > 5 && (
- <span className="text-[10px] font-semibold" style={{ color: '#ef4444' }}>
+ <span className="text-[11px] font-semibold" style={{ color: '#ef4444' }}>
  +{totalCount - 5} more
  </span>
  )}
@@ -261,13 +261,13 @@ function AlertRow({ alert, panel, onClose }) {
  {alert.severity}
  </span>
  </div>
- <p className="text-[10px] truncate" style={{ color: panel.sub }}>
+ <p className="text-[11px] truncate" style={{ color: panel.sub }}>
  {alert.patient_name ? `${alert.patient_name} · ` : ''}{alert.message?.slice(0, 55)}
  </p>
  </div>
 
  {/* Time */}
- <span className="text-[9px] flex-shrink-0 mt-0.5" style={{ color: panel.sub }}>
+ <span className="text-[11px] flex-shrink-0 mt-0.5" style={{ color: panel.sub }}>
  {new Date(alert.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
  </span>
  </motion.div>

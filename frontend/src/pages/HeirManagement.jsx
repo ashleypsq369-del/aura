@@ -351,7 +351,7 @@ export default function HeirManagement() {
               <select
                 value={selectedUserId}
                 onChange={(e) => setSelectedUserId(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               >
@@ -374,7 +374,7 @@ export default function HeirManagement() {
                 value={relationship}
                 onChange={(e) => setRelationship(e.target.value)}
                 placeholder="e.g., daughter, son, spouse, best friend, sister..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
                 style={{ borderColor: '#6B4F7A40' }}
                 required
               />
@@ -388,7 +388,7 @@ export default function HeirManagement() {
               <select
                 value={accessLevel}
                 onChange={(e) => setAccessLevel(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
                 style={{ borderColor: '#6B4F7A40' }}
               >
                 <option value="full">Full Access - All content and memories</option>
@@ -408,7 +408,7 @@ export default function HeirManagement() {
                   style={{ accentColor: '#6B4F7A' }}
                 />
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">Allow access to private content</p>
+                  <p className="font-medium text-gray-900">Allow access to private content</p>
                   <p className="text-sm text-gray-600 dark:text-slate-400">
                     They can see entries you marked as "private". Uncheck to only show shared content.
                   </p>
@@ -426,7 +426,7 @@ export default function HeirManagement() {
                 onChange={(e) => setPersonalNote(e.target.value)}
                 rows={4}
                 placeholder="A personal message for this person that they'll see when they access your legacy..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none dark:border-slate-600 dark:text-slate-200"
+                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none"
                 style={{ borderColor: '#6B4F7A40' }}
               />
             </div>

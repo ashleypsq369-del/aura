@@ -138,7 +138,7 @@ function TaskGrid({ tasks }) {
  : ['#f8fafc', '#64748b', '#e2e8f0'];
  return (
  <span key={key}
- className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold"
+ className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-semibold"
  style={{ background: bg, color: txt, border: `1px solid ${borderC}` }}>
  {TASK_SHORT[key] || key}
  <span className="font-bold opacity-80">{pct}%</span>
@@ -169,14 +169,14 @@ function ShapBars({ features, shapAvailable }) {
  <div className="space-y-2.5">
  {/* Mode indicator */}
  <div className="flex items-center gap-2 pb-1">
- <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
  shapAvailable
  ? 'bg-teal-600 text-white'
  : 'bg-amber-500 text-white'
  }`}>
  {shapAvailable ? 'XGBoost SHAP' : 'Feature Importance'}
  </span>
- <span className="text-[10px] text-slate-500">
+ <span className="text-[11px] text-slate-500">
  {shapAvailable
  ? 'Real SHAP values · mathematically precise feature contributions'
  : 'Fallback: XGBoost feature importance (SHAP computation unavailable)'
@@ -232,7 +232,7 @@ function ShapBars({ features, shapAvailable }) {
  </p>
  {/* Clinical measurement value */}
  {f.feature_value !== undefined && f.feature_value !== 0 && (
- <p className="text-[10px] text-[var(--text-500)] mt-0.5">
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5">
  Value: <span className="font-bold text-slate-700">{
  typeof f.feature_value === 'number'
  ? f.feature_value % 1 === 0
@@ -247,7 +247,7 @@ function ShapBars({ features, shapAvailable }) {
  {/* SHAP / importance badges */}
  <div className="flex flex-col items-end gap-1 flex-shrink-0">
  {/* Importance % badge */}
- <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
  neutral
  ? 'bg-slate-100 text-slate-600'
  : risk
@@ -258,7 +258,7 @@ function ShapBars({ features, shapAvailable }) {
  </span>
  {/* SHAP value (only if real SHAP, not zero) */}
  {shapAvailable && f.shap_value !== 0 && (
- <span className="text-[9px] text-[var(--text-400)] font-mono">
+ <span className="text-[11px] text-[var(--text-400)] font-mono">
  SHAP: {f.shap_value > 0 ? '+' : ''}{f.shap_value.toFixed(4)}
  </span>
  )}
@@ -279,13 +279,13 @@ function ShapBars({ features, shapAvailable }) {
  })}
 
  <div className="flex gap-4 pt-1 border-t border-slate-100">
- <span className="flex items-center gap-1.5 text-[10px] text-slate-400">
+ <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
  <span className="w-2.5 h-2.5 rounded-full bg-red-500" />Increases risk
  </span>
- <span className="flex items-center gap-1.5 text-[10px] text-slate-400">
+ <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />Decreases risk
  </span>
- <span className="flex items-center gap-1.5 text-[10px] text-[var(--text-400)] ml-auto">
+ <span className="flex items-center gap-1.5 text-[11px] text-[var(--text-400)] ml-auto">
  Bar width = relative importance
  </span>
  </div>
@@ -342,7 +342,7 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
  <span className="font-bold text-[var(--text-900)] text-sm leading-tight truncate">{name}</span>
- <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${tok.badge}`}>
+ <span className={`text-[11px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${tok.badge}`}>
  {tok.label}
  </span>
  </div>
@@ -373,7 +373,7 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
  {p.key_concerns?.[0] && (
  <div className="flex items-start gap-1.5 mb-2.5 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
  <AlertTriangle size={10} className="text-amber-500 flex-shrink-0 mt-0.5" />
- <p className="text-[10px] text-amber-800 dark:text-amber-300 leading-snug line-clamp-1">{p.key_concerns[0]}</p>
+ <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-snug line-clamp-1">{p.key_concerns[0]}</p>
  </div>
  )}
 
@@ -385,7 +385,7 @@ function PatientCard({ p, isSelected, onSelect, onNavigate }) {
  )}
 
  {/* Action buttons */}
- <div className="flex items-center gap-2 pt-2.5 border-t border-[var(--card-border)]/50 dark:border-slate-700/50">
+ <div className="flex items-center gap-2 pt-2.5 border-t border-[var(--card-border)]/50/50">
  <button
  onClick={e => { e.stopPropagation(); onNavigate(p.id || p.patient_id); }}
  className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-[var(--text-700)] rounded-lg text-xs font-bold transition"
@@ -487,7 +487,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  <motion.div key={pid}
  initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }}
  transition={{ type: 'spring', damping: 28, stiffness: 320 }}
- className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] dark:bg-slate-900"
+ className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-[var(--card-border)] bg-[var(--card-bg)]"
  style={{ height: 'calc(100vh - 200px)', minHeight: 520 }}
  >
  {/* -- Header -- */}
@@ -503,13 +503,13 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  <p className="font-bold text-white text-base leading-tight truncate">{patient.full_name || patient.patient_name}</p>
  <p className="text-white/60 text-xs mt-0.5 truncate">{patient.patient_code} · {patient.primary_diagnosis?.split('(')[0]?.trim() || ' - '}</p>
  <div className="flex items-center gap-2 mt-2">
- <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">{tok.label}</span>
- {patient.age && <span className="text-[10px] text-white/50">{patient.age}y</span>}
+ <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">{tok.label}</span>
+ {patient.age && <span className="text-[11px] text-white/50">{patient.age}y</span>}
  </div>
  </div>
  <div className="flex flex-col items-center flex-shrink-0">
  <span className="text-3xl font-black text-white tabular-nums leading-none">{riskPct}%</span>
- <span className="text-[9px] text-white/50 font-bold uppercase mt-0.5">risk</span>
+ <span className="text-[11px] text-white/50 font-bold uppercase mt-0.5">risk</span>
  </div>
  <button onClick={onClose}
  className="w-8 h-8 rounded-xl flex items-center justify-center text-white transition flex-shrink-0 self-start"
@@ -533,8 +533,8 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  )}
 
  {/* -- Pill tab bar -- */}
- <div className="flex-shrink-0 px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50 dark:border-slate-700">
- <div className="flex gap-1 bg-[var(--card-bg)] rounded-xl p-1 shadow-sm border border-[var(--card-border)]/50 dark:border-slate-600">
+ <div className="flex-shrink-0 px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50">
+ <div className="flex gap-1 bg-[var(--card-bg)] rounded-xl p-1 shadow-sm border border-[var(--card-border)]/50">
  {TABS.map(({ id, label, Icon: Ic }) => (
  <button key={id} onClick={() => setInnerTab(id)}
  className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-bold transition-all"
@@ -568,24 +568,24 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  { label:'Drug Flags', value: severeInts.length||(drugData?.interactions?.length??0), sub:'interactions',
  color: severeInts.length>0?'#ef4444':'#10b981' },
  ].map(s => (
- <div key={s.label} className="rounded-xl p-3 text-center bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700">
+ <div key={s.label} className="rounded-xl p-3 text-center bg-[var(--card-bg)] border border-[var(--card-border)]/50">
  <p className="text-xl font-black tabular-nums leading-none" style={{ color: s.color }}>{s.value}</p>
- <p className="text-[9px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">{s.sub}</p>
- <p className="text-[10px] text-[var(--text-500)] font-semibold mt-0.5">{s.label}</p>
+ <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">{s.sub}</p>
+ <p className="text-[11px] text-[var(--text-500)] font-semibold mt-0.5">{s.label}</p>
  </div>
  ))}
  </div>
  {/* Key concerns */}
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
+ <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
  <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)] dark:text-slate-300">Key Concerns</p>
- {mlRisk?.key_concerns?.length > 0 && <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{mlRisk.key_concerns.length}</span>}
+ <p className="text-xs font-bold text-[var(--text-700)]">Key Concerns</p>
+ {mlRisk?.key_concerns?.length > 0 && <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{mlRisk.key_concerns.length}</span>}
  </div>
  <div className="p-3 space-y-2">
  {mlRisk?.key_concerns?.length ? mlRisk.key_concerns.slice(0,5).map((c,i) => (
  <div key={i} className="flex items-start gap-2.5">
- <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-black">{i+1}</span>
+ <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-black">{i+1}</span>
  <p className="text-xs text-[var(--text-700)] leading-relaxed">{c}</p>
  </div>
  )) : (
@@ -598,10 +598,10 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  </div>
 
  {/* Recommended actions */}
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
+ <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
  <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)] dark:text-slate-300">Recommended Actions</p>
+ <p className="text-xs font-bold text-[var(--text-700)]">Recommended Actions</p>
  </div>
  <div className="p-3 space-y-2">
  {mlRisk?.recommended_actions?.length ? mlRisk.recommended_actions.slice(0,4).map((a,i) => (
@@ -615,19 +615,19 @@ function DeepDivePanel({ patient, navigate, onClose }) {
 
  {/* Drug interactions */}
  {drugData?.interactions?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
+ <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
  <Pill size={13} className="text-red-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)] dark:text-slate-300">Drug Interactions</p>
- <span className="ml-auto text-[10px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700">{drugData.interactions.length}</span>
+ <p className="text-xs font-bold text-[var(--text-700)]">Drug Interactions</p>
+ <span className="ml-auto text-[11px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700">{drugData.interactions.length}</span>
  </div>
  <div className="divide-y divide-slate-100 dark:divide-slate-700">
  {drugData.interactions.slice(0,4).map((it,i) => {
  const sev=['severe','SEVERE','major'].includes(it.severity);
  return (
  <div key={i} className="px-4 py-2.5 flex items-center gap-3">
- <span className={`text-[9px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${sev?'bg-red-600 text-white':'bg-amber-500 text-white'}`}>{it.severity}</span>
- <p className="text-xs font-semibold flex-1 min-w-0 truncate text-[var(--text-800)] dark:text-slate-200">{it.drug1} + {it.drug2}</p>
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${sev?'bg-red-600 text-white':'bg-amber-500 text-white'}`}>{it.severity}</span>
+ <p className="text-xs font-semibold flex-1 min-w-0 truncate text-[var(--text-800)]">{it.drug1} + {it.drug2}</p>
  </div>
  );
  })}
@@ -645,10 +645,10 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  {/* -- AI EXPLANATION -- */}
  {innerTab === 'shap' && (<>
  <div className="flex items-center gap-2 px-1">
- <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-teal-600 text-white':'bg-amber-500 text-white'}`}>
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-teal-600 text-white':'bg-amber-500 text-white'}`}>
  {sortedTasks.some(([,t])=>t.shap_available)?'XGBoost SHAP':'Feature Importance'}
  </span>
- <p className="text-[10px] text-slate-400">Factors driving this risk prediction</p>
+ <p className="text-[11px] text-slate-400">Factors driving this risk prediction</p>
  </div>
  <ShapBars features={shapFeatures} shapAvailable={sortedTasks.some(([,t])=>t.shap_available)} />
  </>)}
@@ -659,15 +659,15 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  const display = nonZero.length>0?nonZero:sortedTasks;
  return (
  <div className="space-y-2">
- <p className="text-[10px] text-[var(--text-400)] px-1">Risk probability across XGBoost clinical domains</p>
+ <p className="text-[11px] text-[var(--text-400)] px-1">Risk probability across XGBoost clinical domains</p>
  {display.slice(0,8).map(([key,task]) => {
  const pct = Math.round((task.probability||0)*100);
  const barC = pct>70?'#ef4444':pct>40?'#f97316':pct>15?'#f59e0b':'#10b981';
  const valC = pct>70?'text-red-600 dark:text-red-400':pct>40?'text-orange-600 dark:text-orange-400':pct>15?'text-amber-600 dark:text-amber-400':'text-emerald-600 dark:text-emerald-400';
  return (
- <div key={key} className="rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 px-4 py-3">
+ <div key={key} className="rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 px-4 py-3">
  <div className="flex items-center justify-between mb-2">
- <p className="text-xs font-bold text-[var(--text-800)] dark:text-slate-200">{TASK_SHORT[key]||key}</p>
+ <p className="text-xs font-bold text-[var(--text-800)]">{TASK_SHORT[key]||key}</p>
  <span className={`text-xs font-black tabular-nums ${valC}`}>{pct}%</span>
  </div>
  <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
@@ -676,7 +676,7 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  transition={{ duration: 0.5, ease: 'easeOut' }} />
  </div>
  {task.top_features?.[0] && (
- <p className="text-[10px] text-[var(--text-400)] mt-1.5 truncate">Top factor: {task.top_features[0].display_name}</p>
+ <p className="text-[11px] text-[var(--text-400)] mt-1.5 truncate">Top factor: {task.top_features[0].display_name}</p>
  )}
  </div>
  );
@@ -702,27 +702,27 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  const trend = deterioration.trend_direction||'stable';
  const tC = trend==='worsening'?'#ef4444':trend==='improving'?'#10b981':'#94a3b8';
  return (<>
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 p-4 text-center">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 p-4 text-center">
  <p className="text-3xl font-black tabular-nums leading-none" style={{color:drC}}>{drPct}%</p>
- <p className="text-[10px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">Deterioration Risk</p>
+ <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">Deterioration Risk</p>
  </div>
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 p-4 text-center">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 p-4 text-center">
  <p className="text-xl font-black capitalize leading-none mt-1" style={{color:tC}}>{trend}</p>
- <p className="text-[10px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">30-Day Trend</p>
+ <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">30-Day Trend</p>
  </div>
  </>);
  })()}
  </div>
  {deterioration.top_drivers?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
+ <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
  <TrendingDown size={13} className="text-amber-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)] dark:text-slate-300">Top Deterioration Drivers</p>
+ <p className="text-xs font-bold text-[var(--text-700)]">Top Deterioration Drivers</p>
  </div>
  <div className="p-3 space-y-2">
  {deterioration.top_drivers.slice(0,4).map((d,i) => (
  <div key={i} className="flex items-start gap-2.5">
- <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-black">{i+1}</span>
+ <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-black">{i+1}</span>
  <p className="text-xs text-[var(--text-700)] leading-relaxed">{d.reason||d}</p>
  </div>
  ))}
@@ -739,10 +739,10 @@ function DeepDivePanel({ patient, navigate, onClose }) {
  </div>
  )}
  {deterioration.recommendations?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
+ <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
  <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)] dark:text-slate-300">Recommendations</p>
+ <p className="text-xs font-bold text-[var(--text-700)]">Recommendations</p>
  </div>
  <div className="p-3 space-y-2">
  {deterioration.recommendations.slice(0,3).map((r,i) => (
@@ -813,7 +813,7 @@ function DrugInteractionsTab() {
  <Ico size={15} style={{ color: iconColor }} />
  </div>
  <div className="min-w-0">
- <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{label}</p>
+ <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{label}</p>
  <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{value}</p>
  </div>
  </div>
@@ -837,12 +837,12 @@ function DrugInteractionsTab() {
  <div className="flex items-start justify-between gap-3">
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap mb-1">
- <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase ${sev ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}`}>{it.severity}</span>
- <span className="text-xs font-bold text-[var(--text-800)] dark:text-white">{it.drug1} + {it.drug2}</span>
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase ${sev ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}`}>{it.severity}</span>
+ <span className="text-xs font-bold text-[var(--text-800)]">{it.drug1} + {it.drug2}</span>
  </div>
  {it.description && <p className="text-[11px] text-[var(--text-600)] dark:text-slate-400">{it.description}</p>}
  </div>
- {it.patient_name && <span className="text-[10px] text-[var(--text-400)] flex-shrink-0">{it.patient_name}</span>}
+ {it.patient_name && <span className="text-[11px] text-[var(--text-400)] flex-shrink-0">{it.patient_name}</span>}
  </div>
  </motion.div>
  );
@@ -893,7 +893,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
  <BarChart2 size={14} style={{ color: iconColor }} />
  </div>
  <div className="min-w-0">
- <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{l}</p>
+ <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{l}</p>
  <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{v}</p>
  </div>
  </div>
@@ -901,7 +901,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
  </div>
 
  {distData.length > 0 && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-4">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-4">
  <p className="text-xs font-bold text-[var(--text-500)] mb-3 flex items-center gap-1">
  <BarChart2 size={12} className="text-teal-500" /> Patient Risk Distribution
  </p>
@@ -920,7 +920,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
  )}
 
  {mlStatus && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-4">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-4">
  <p className="text-xs font-bold text-[var(--text-500)] mb-3 flex items-center gap-1">
  <Cpu size={12} className="text-teal-500" /> Model Health
  </p>
@@ -930,15 +930,15 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
  { label: 'Loaded Tasks', value: `${(mlStatus.loaded_tasks?.length || 0) + 4} / ${(mlStatus.total_tasks || 8) + 4} (8 XGBoost + 4 Advanced)` },
  { label: 'SHAP Explanations', value: mlStatus.shap_enabled ? '? Active' : '? Disabled' },
  ].map(({ label, value }) => (
- <div key={label} className="flex items-center justify-between py-1.5 border-b border-[var(--card-border)]/50 dark:border-slate-700 last:border-0">
+ <div key={label} className="flex items-center justify-between py-1.5 border-b border-[var(--card-border)]/50 last:border-0">
  <span className="text-xs text-slate-500">{label}</span>
- <span className="text-xs font-bold text-[var(--text-800)] dark:text-white">{value}</span>
+ <span className="text-xs font-bold text-[var(--text-800)]">{value}</span>
  </div>
  ))}
  {mlStatus.loaded_tasks?.length > 0 && (
  <div className="flex flex-wrap gap-1 pt-1">
  {mlStatus.loaded_tasks.map(t => (
- <span key={t} className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-teal-700 border border-violet-100">
+ <span key={t} className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-teal-700 border border-violet-100">
  {TASK_SHORT[t] || t}
  </span>
  ))}
@@ -948,7 +948,7 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
  </div>
  )}
 
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
  <div className="flex items-center gap-3 mb-3">
  <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
  <Beaker size={15} className="text-teal-600" />
@@ -1100,7 +1100,7 @@ export default function AIInsights() {
  </PageHeader>
 
  {/* -- KPI pills + tab bar -- */}
- <div className="bg-[var(--card-bg)] border-b border-[var(--card-border)] dark:border-slate-700 px-6 py-3">
+ <div className="bg-[var(--card-bg)] border-b border-[var(--card-border)] px-6 py-3">
  {/* Compact KPI row */}
  <div className="flex items-center gap-2 flex-wrap mb-3">
  {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
@@ -1108,11 +1108,11 @@ export default function AIInsights() {
  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
  filterRisk === v && activeTab === 'risk'
  ? `bg-gradient-to-r ${grad} text-white border-transparent shadow-sm`
- : 'bg-[var(--card-bg)] text-[var(--text-700)] border-[var(--card-border)] dark:border-slate-600 hover:border-slate-300'
+ : 'bg-[var(--card-bg)] text-[var(--text-700)] border-[var(--card-border)] hover:border-slate-300'
  }`}>
  <Ico size={12} />
  <span>{count}</span>
- <span className="text-[10px] uppercase tracking-wide opacity-80">{label}</span>
+ <span className="text-[11px] uppercase tracking-wide opacity-80">{label}</span>
  {v === 'critical' && count > 0 && filterRisk !== 'critical' && (
  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse ml-0.5" />
  )}
@@ -1149,7 +1149,7 @@ export default function AIInsights() {
  <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
  <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
  placeholder="Search patients, diagnoses, concerns - "
- className="w-full pl-10 pr-4 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
+ className="w-full pl-10 pr-4 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
  </div>
  <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 flex-shrink-0">
  <ListFilter size={12} className="text-[var(--text-400)] ml-1" />
@@ -1184,7 +1184,7 @@ export default function AIInsights() {
  </div>
  </div>
  <div className="text-center">
- <p className="font-bold text-[var(--text-700)] dark:text-slate-300">Running ML analysis - </p>
+ <p className="font-bold text-[var(--text-700)]">Running ML analysis - </p>
  <p className="text-xs text-[var(--text-400)] mt-1">XGBoost · 8 models · Real SHAP</p>
  </div>
  </div>
@@ -1200,18 +1200,18 @@ export default function AIInsights() {
  <span className="px-2 py-0.5 bg-slate-100 text-[var(--text-600)] rounded-full text-xs font-semibold">{visiblePatients.length}</span>
  </h2>
  {batchRisk?.ml_available === false && (
- <span className="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
+ <span className="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
  ? ML offline · rule-based fallback
  </span>
  )}
  </div>
 
  {visiblePatients.length === 0 ? (
- <div className="flex flex-col items-center justify-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 py-20 gap-4">
+ <div className="flex flex-col items-center justify-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 py-20 gap-4">
  <CheckCircle className="w-14 h-14 text-emerald-400 opacity-50" />
  <p className="font-bold text-[var(--text-600)] dark:text-slate-400">No patients match current filters</p>
  <button onClick={() => { setFilterRisk('all'); setSearchTerm(''); }}
- className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-semibold transition">
+ className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold transition">
  Show All Patients
  </button>
  </div>

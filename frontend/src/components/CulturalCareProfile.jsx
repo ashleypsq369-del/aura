@@ -48,8 +48,8 @@ export default function CulturalCareProfile({ patientId, editable = false }) {
 
  if (isLoading) return (
  <div className="animate-pulse space-y-2 p-4">
- <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-2/3" />
- <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-1/2" />
+ <div className="h-4 bg-slate-200 rounded w-2/3" />
+ <div className="h-4 bg-slate-200 rounded w-1/2" />
  </div>
  );
 
@@ -57,8 +57,8 @@ export default function CulturalCareProfile({ patientId, editable = false }) {
  const langLabel = LANGUAGES.find(l => l.value === profile.preferred_language)?.label || profile.preferred_language || ' - ';
 
  return (
- <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] overflow-hidden">
- <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
+ <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] overflow-hidden">
+ <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
  <div className="flex items-center gap-2">
  <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-teal-600">
@@ -130,7 +130,7 @@ function EditForm({ form, setForm }) {
  <select
  value={form.preferred_language || 'en'}
  onChange={e => set('preferred_language', e.target.value)}
- className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
  >
  {LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
  </select>
@@ -141,7 +141,7 @@ function EditForm({ form, setForm }) {
  <select
  value={form.religious_preference || ''}
  onChange={e => set('religious_preference', e.target.value)}
- className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
  >
  <option value="">Select…</option>
  {RELIGIONS.map(r => <option key={r} value={r}>{r}</option>)}
@@ -155,7 +155,7 @@ function EditForm({ form, setForm }) {
  value={form.cultural_practices || ''}
  onChange={e => set('cultural_practices', e.target.value)}
  placeholder="e.g. Libation, Prayer at meals, Family elder involvement"
- className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500"
  />
  </div>
 
@@ -167,7 +167,7 @@ function EditForm({ form, setForm }) {
  onChange={e => set('wants_spiritual_care', e.target.checked)}
  className="rounded border-slate-300 text-teal-600 focus:ring-teal-500"
  />
- <label htmlFor="spiritual-care" className="text-xs text-[var(--text-600)] dark:text-slate-300">
+ <label htmlFor="spiritual-care" className="text-xs text-[var(--text-600)]">
  Patient requests spiritual / faith care
  </label>
  </div>
@@ -179,7 +179,7 @@ function EditForm({ form, setForm }) {
  onChange={e => set('cultural_notes', e.target.value)}
  rows={2}
  placeholder="Any additional cultural or personal context for care…"
- className="w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+ className="w-full border border-[var(--card-border)] rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
  />
  </div>
  </div>

@@ -701,7 +701,7 @@ export default function Register() {
  </button>
  <button type="submit"
  disabled={registerMutation.isPending || !terms || !form.care_setting}
- className="flex-[2] h-12 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm shadow-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2">
+ className="flex-[2] h-12 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] flex items-center justify-center gap-2">
  {registerMutation.isPending
  ? <><Loader2 size={15} className="animate-spin"/>Creating account…</>
  : 'Create account'}
@@ -714,7 +714,7 @@ export default function Register() {
  </div>
  </div>
 
- <p className="text-center text-[10px] text-white/60 lg:text-[var(--text-400)] mt-3 drop-shadow-sm select-none">
+ <p className="text-center text-[11px] text-white/60 lg:text-[var(--text-400)] mt-3 drop-shadow-sm select-none">
  © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved
  </p>
  </motion.div>

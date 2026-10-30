@@ -100,7 +100,7 @@ export default function Select({
                   ))
                 ) : (
                   <RadixSelect.Group key={groupName}>
-                    <RadixSelect.Label className="px-3 py-1.5 text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider">
+                    <RadixSelect.Label className="px-3 py-1.5 text-[11px] font-bold text-[var(--text-400)] uppercase tracking-wider">
                       {groupName}
                     </RadixSelect.Label>
                     {groupOpts.map((opt) => (

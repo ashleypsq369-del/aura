@@ -106,7 +106,7 @@ function Sel({ value, onChange, opts, className = '' }) {
 
 /* ── Label helper ────────────────────────────────────────────────────────── */
 function FL({ children }) {
- return <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1">{children}</label>;
+ return <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">{children}</label>;
 }
 
 /* ══ Main Component ════════════════════════════════════════════════════════ */
@@ -343,7 +343,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <div className="flex gap-1.5">
  {PRIORITY_OPTS.map(p => (
  <button key={p.id} onClick={() => setPriority(p.id)}
- className="flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all border"
+ className="flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all border"
  style={{
  background: priority === p.id ? `${p.color}15` : '#f8fafc',
  borderColor: priority === p.id ? p.color : '#e2e8f0',
@@ -363,7 +363,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  const Icon = a.Icon;
  return (
  <button key={a.id} onClick={() => setAction(a.id)}
- className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[10px] font-semibold transition-all border"
+ className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-semibold transition-all border"
  style={{
  background: action === a.id ? `${accent}12` : '#f8fafc',
  borderColor: action === a.id ? accent : '#e2e8f0',
@@ -384,7 +384,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  const Icon = n.Icon;
  return (
  <button key={n.id} onClick={() => setNotifyVia(n.id)}
- className="flex-1 flex flex-col items-center py-1.5 rounded-lg text-[10px] font-semibold transition-all border gap-0.5"
+ className="flex-1 flex flex-col items-center py-1.5 rounded-lg text-[11px] font-semibold transition-all border gap-0.5"
  style={{
  background: notifyVia === n.id ? `${accent}12` : '#f8fafc',
  borderColor: notifyVia === n.id ? accent : '#e2e8f0',
@@ -413,7 +413,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  </div>
 
  {hasReminder && (
- <p className="text-[10px] text-amber-600 font-medium flex items-center gap-1">
+ <p className="text-[11px] text-amber-600 font-medium flex items-center gap-1">
  <AlertTriangle size={10}/> A reminder already exists for this item
  </p>
  )}
@@ -429,7 +429,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  Cancel
  </button>
  <button onClick={save} disabled={!datetime}
- className="flex-1 py-2 rounded-xl text-xs font-bold text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+ className="flex-1 py-2 rounded-xl text-xs font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
  style={{ background: `linear-gradient(135deg,${accent},${accent}cc)` }}>
  Set Reminder
  </button>

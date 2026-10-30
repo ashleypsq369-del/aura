@@ -75,7 +75,7 @@ export default function FeatureRequestPanel() {
  if (hiddenFeatures.length === 0) return null;
 
  return (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] overflow-hidden">
  {/* Header */}
  <button
  onClick={() => setExpanded(!expanded)}
@@ -104,7 +104,7 @@ export default function FeatureRequestPanel() {
  animate={{ height: 'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="border-t border-[var(--card-border)]/50 dark:border-slate-700 overflow-hidden"
+ className="border-t border-[var(--card-border)]/50 overflow-hidden"
  >
  <div className="px-5 py-4 space-y-3">
  <p className="text-xs text-[var(--text-500)] dark:text-slate-400">
@@ -118,7 +118,7 @@ export default function FeatureRequestPanel() {
  const StatusIcon = sc?.icon;
 
  return (
- <div key={path} className="bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-xl p-4">
+ <div key={path} className="bg-[var(--card-bg)]/40 rounded-xl p-4">
  <div className="flex items-start justify-between gap-3">
  <div className="flex items-center gap-2 flex-1 min-w-0">
  {locked
@@ -165,7 +165,7 @@ export default function FeatureRequestPanel() {
  onChange={e => setReason(e.target.value)}
  rows={2}
  placeholder="Why do you need access to this feature? (e.g. My doctor recommended I use the Memory Vault)"
- className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)] resize-none"
+ className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)] resize-none"
  />
  <div className="flex gap-2">
  <button

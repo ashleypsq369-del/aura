@@ -94,7 +94,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  </div>
  <div className="text-right flex-shrink-0">
  <p className="text-3xl font-black tabular-nums leading-none text-slate-900">{pct}<span className="text-base font-semibold text-slate-400">%</span></p>
- <p className="text-[10px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">overall risk</p>
+ <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">overall risk</p>
  </div>
  </div>
  {/* Animated bar - reading gauge */}
@@ -116,7 +116,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  }`}>
  <Icon size={11} className={tab === id ? 'text-teal-600' : ''} />
  <span className="hidden sm:inline">{label}</span>
- <span className={`ml-auto hidden md:inline text-[9px] font-normal ${tab === id ? 'text-slate-300' : 'text-slate-200'}`}>
+ <span className={`ml-auto hidden md:inline text-[11px] font-normal ${tab === id ? 'text-slate-300' : 'text-slate-200'}`}>
  §{idx + 2}
  </span>
  </button>
@@ -132,7 +132,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {tab === 'shap' && (
  <div className="p-4 space-y-3">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
- <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-teal-600">§</span>
+ <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[11px] font-bold text-teal-600">§</span>
  <p className="text-[11px] font-bold text-[var(--text-500)] select-none">SHAP Feature Drivers</p>
  </div>
 
@@ -142,7 +142,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <span className="text-emerald-600 text-base flex-shrink-0">✓</span>
  <div>
  <p className="text-xs font-bold text-emerald-800">All clinical indicators within healthy range</p>
- <p className="text-[10px] text-emerald-600 mt-0.5">The features below are PROTECTING this patient from risk. Green bars = risk-reducing factors. Continue monitoring - low risk today does not mean zero risk tomorrow.</p>
+ <p className="text-[11px] text-emerald-600 mt-0.5">The features below are PROTECTING this patient from risk. Green bars = risk-reducing factors. Continue monitoring - low risk today does not mean zero risk tomorrow.</p>
  </div>
  </div>
  )}
@@ -162,7 +162,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <>
  {riskIncreasing.length > 0 && (
  <>
- <p className="text-[10px] font-bold text-red-500 mt-1">Risk-Increasing Factors</p>
+ <p className="text-[11px] font-bold text-red-500 mt-1">Risk-Increasing Factors</p>
  {riskIncreasing.slice(0, 5).map((exp, i) => (
  <SHAPRow key={'r'+i} rank={i + 1}
  feature={exp.feature_name || exp.display_name}
@@ -174,7 +174,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  )}
  {riskDecreasing.length > 0 && (
  <>
- <p className="text-[10px] font-bold text-emerald-600 mt-2">Protective Factors</p>
+ <p className="text-[11px] font-bold text-emerald-600 mt-2">Protective Factors</p>
  {riskDecreasing.slice(0, 5).map((exp, i) => (
  <SHAPRow key={'d'+i} rank={i + 1}
  feature={exp.feature_name || exp.display_name}
@@ -194,13 +194,13 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {/* Task-level probability summary */}
  {data?.tasks && Object.keys(data.tasks).length > 0 && (
  <div className="mt-3 pt-3 border-t border-slate-100">
- <p className="text-[10px] font-bold text-[var(--text-400)] mb-2">Model Scores by Clinical Domain</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Model Scores by Clinical Domain</p>
  <div className="grid grid-cols-2 gap-1.5">
  {Object.entries(data.tasks).map(([key, task]) => {
  const prob = Math.round((task.probability || 0) * 100);
  const color = prob > 70 ? 'text-red-600 bg-red-50 border-red-200' : prob > 40 ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-emerald-600 bg-emerald-50 border-emerald-200';
  return (
- <div key={key} className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-[10px] font-semibold ${color}`}>
+ <div key={key} className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold ${color}`}>
  <span className="truncate">{key.replace(/_/g,' ').replace(/\b\w/g, c=>c.toUpperCase())}</span>
  <span className="font-bold ml-1 flex-shrink-0">{prob}%</span>
  </div>
@@ -216,7 +216,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {tab === 'breakdown' && (
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
- <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[9px] font-bold text-teal-600">§</span>
+ <span className="w-4 h-4 rounded bg-violet-100 flex items-center justify-center text-[11px] font-bold text-teal-600">§</span>
  <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Risk Component Breakdown</p>
  </div>
  <InfoGrid cols={2} items={[
@@ -242,7 +242,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {tab === 'action' && (
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
- <span className="w-4 h-4 rounded bg-amber-100 flex items-center justify-center text-[9px] font-bold text-amber-600">§</span>
+ <span className="w-4 h-4 rounded bg-amber-100 flex items-center justify-center text-[11px] font-bold text-amber-600">§</span>
  <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Clinical Concerns & Actions</p>
  </div>
  {(data?.key_concerns?.length > 0) ? (
@@ -255,7 +255,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="px-5 py-3 bg-[var(--card-bg)] space-y-2">
  {data.key_concerns.map((c, i) => (
  <div key={i} className="flex items-start gap-3">
- <span className="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+ <span className="w-5 h-5 rounded bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 text-[11px] font-bold mt-0.5">{i+1}</span>
  <p className="text-sm text-[var(--text-700)] leading-relaxed">{c}</p>
  </div>
  ))}
@@ -274,7 +274,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  <div className="px-5 py-3 bg-[var(--card-bg)] space-y-2">
  {(data?.recommended_actions || data?.recommendations || []).map((r, i) => (
  <div key={i} className="flex items-start gap-3">
- <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5">{i+1}</span>
+ <span className="w-5 h-5 rounded bg-teal-100 text-teal-700 flex items-center justify-center flex-shrink-0 text-[11px] font-bold mt-0.5">{i+1}</span>
  <p className="text-sm text-[var(--text-700)] leading-relaxed">{r}</p>
  </div>
  ))}
@@ -287,7 +287,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {tab === 'feedback' && (
  <div className="p-4 space-y-4">
  <div className="flex items-center gap-2 mb-1 pb-2 border-b border-slate-100">
- <span className="w-4 h-4 rounded bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500">§</span>
+ <span className="w-4 h-4 rounded bg-slate-100 flex items-center justify-center text-[11px] font-bold text-slate-500">§</span>
  <p className="text-[11px] font-bold text-[var(--text-500)] select-none">Clinician Feedback</p>
  </div>
  <InfoAlert type="info">
@@ -330,7 +330,7 @@ export default function RiskExplanationPanel({ data, onClose, onFeedbackSubmitte
  {/* ── Model footnote ────────────────────────────────────────── */}
  <div className="flex items-start gap-2 px-1 border-t border-[var(--card-border)]/50 pt-3">
  <span className="text-slate-300 text-base leading-none select-none mt-0.5">§</span>
- <p className="text-[10px] text-[var(--text-400)] leading-relaxed">
+ <p className="text-[11px] text-[var(--text-400)] leading-relaxed">
  <span className="font-semibold text-slate-500">XGBoost v1.0 · SHAP TreeExplainer</span> ·
  Trained on clinically-parameterised synthetic data · Results should be reviewed by a qualified clinician
  </p>

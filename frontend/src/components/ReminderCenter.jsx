@@ -77,11 +77,11 @@ function ReminderRow({ r, onDelete, onComplete }) {
  <div className="flex-1 min-w-0">
  <p className="text-xs font-semibold text-gray-900 truncate">{r.label}</p>
  <div className="flex items-center gap-2 mt-0.5">
- <span className="text-[10px] text-gray-500 flex items-center gap-1">
+ <span className="text-[11px] text-gray-500 flex items-center gap-1">
  <Clock size={9}/>{formatTime(r.datetime)}
  </span>
  {r.repeat !== 'none' && (
- <span className="text-[10px] text-gray-400 flex items-center gap-1">
+ <span className="text-[11px] text-gray-400 flex items-center gap-1">
  <Repeat size={9}/>{r.repeat}
  </span>
  )}
@@ -216,7 +216,7 @@ export default function ReminderCenter() {
  >
  <BellRing size={18} className="text-white" strokeWidth={2}/>
  {upcoming.length > 0 && (
- <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] bg-amber-400 text-white rounded-full text-[9px] font-bold flex items-center justify-center px-0.5">
+ <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] bg-amber-400 text-white rounded-full text-[11px] font-bold flex items-center justify-center px-0.5">
  {upcoming.length > 9 ? '9+' : upcoming.length}
  </span>
  )}
@@ -242,7 +242,7 @@ export default function ReminderCenter() {
  <BellRing size={15} className="text-white"/>
  <span className="font-bold text-white text-sm">Reminders</span>
  {upcoming.length > 0 && (
- <span className="text-[10px] bg-white/25 text-white px-1.5 py-0.5 rounded-full font-bold">
+ <span className="text-[11px] bg-white/25 text-white px-1.5 py-0.5 rounded-full font-bold">
  {upcoming.length} active
  </span>
  )}
@@ -307,7 +307,7 @@ export default function ReminderCenter() {
  </div>
 
  <button onClick={addReminder} disabled={!label.trim() || !datetime}
- className="w-full py-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+ className="w-full py-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
  style={{ background: 'linear-gradient(135deg,#d97706,#f59e0b)' }}>
  Set Reminder
  </button>
@@ -336,7 +336,7 @@ export default function ReminderCenter() {
  {upcoming.length > 0 && (
  <div>
  <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
- <p className="text-[10px] font-bold text-gray-500">Upcoming</p>
+ <p className="text-[11px] font-bold text-gray-500">Upcoming</p>
  </div>
  {upcoming.map(r => (
  <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>
@@ -346,7 +346,7 @@ export default function ReminderCenter() {
  {past.length > 0 && (
  <div>
  <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
- <p className="text-[10px] font-bold text-gray-500">Past</p>
+ <p className="text-[11px] font-bold text-gray-500">Past</p>
  </div>
  {past.slice(0, 5).map(r => (
  <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>

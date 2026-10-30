@@ -69,7 +69,7 @@ export default function ContinuityBridge() {
  />
 
  {/* -- Sticky tabs --------------------------------------------- */}
- <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] dark:border-slate-700 shadow-sm">
+ <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-sm">
  <div className="max-w-6xl mx-auto px-4">
  <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
  {TABS.map(({ id, label, icon: Icon }) => (

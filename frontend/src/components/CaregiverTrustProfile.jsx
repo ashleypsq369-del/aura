@@ -52,8 +52,8 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-2">
-        <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-1/2" />
-        <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-2/3" />
+        <div className="h-4 bg-slate-200 rounded w-1/2" />
+        <div className="h-3 bg-slate-200 rounded w-2/3" />
       </div>
     );
   }
@@ -79,9 +79,9 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
 
   // Full card
   return (
-    <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] overflow-hidden">
+    <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700"
+      <div className="px-4 py-3 border-b border-[var(--card-border)]/50"
         style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-700 dark:text-teal-300 font-bold text-sm">
@@ -115,7 +115,7 @@ export default function CaregiverTrustProfile({ userId, inline = false }) {
         {/* Rating */}
         {profile.average_rating != null ? (
           <div>
-            <p className="text-[10px] text-[var(--text-500)] dark:text-[var(--text-400)] mb-1">Service Rating</p>
+            <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] mb-1">Service Rating</p>
             <StarRating value={profile.average_rating} total={profile.total_reviews} />
           </div>
         ) : (

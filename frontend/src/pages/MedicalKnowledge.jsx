@@ -200,7 +200,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  }`}>
  <Icon size={12} className={active?'text-teal-600':''}/>
  <span className="hidden sm:inline">{t.label}</span>
- <span className={`ml-auto hidden md:inline text-[10px] font-normal ${active?'text-slate-400':'text-slate-300'}`}>§{idx+4}</span>
+ <span className={`ml-auto hidden md:inline text-[11px] font-normal ${active?'text-slate-400':'text-slate-300'}`}>§{idx+4}</span>
  </button>
  );
  })}
@@ -213,7 +213,7 @@ function ConditionDetail({ condition, canEdit, onEdit }) {
  return (
  <div key={field}>
  <div className="flex items-center gap-2.5 mb-3">
- <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[10px] font-bold text-[var(--text-500)] flex-shrink-0">{fi+1}</span>
+ <span className="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-[11px] font-bold text-[var(--text-500)] flex-shrink-0">{fi+1}</span>
  <h4 className="text-[11px] font-bold text-[var(--text-500)] select-none">{FIELD_LABELS[field]}</h4>
  <div className="flex-1 h-px bg-slate-100"/>
  </div>
@@ -459,7 +459,7 @@ export default function MedicalKnowledge() {
  <BookOpen size={13} className="text-slate-400"/>
  <span className="text-[11px] font-bold text-[var(--text-500)] select-none">Index</span>
  </div>
- <span className="text-[10px] font-semibold text-slate-400">{filtered.length} entries</span>
+ <span className="text-[11px] font-semibold text-slate-400">{filtered.length} entries</span>
  </div>
 
  {isLoading ? (
@@ -488,7 +488,7 @@ export default function MedicalKnowledge() {
  {c.condition_name}
  </p>
  {(c.keywords||[]).length > 0 && (
- <p className="text-[10px] text-[var(--text-400)] truncate mt-0.5">
+ <p className="text-[11px] text-[var(--text-400)] truncate mt-0.5">
  {c.keywords.slice(0,3).join(', ')}
  </p>
  )}

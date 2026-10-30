@@ -60,7 +60,7 @@ export default function VoiceCommandOverlay() {
  {listening ? 'Listening…' : 'Voice off'}
  </span>
  {listening && (
- <span className="text-[10px] text-white/60 hidden sm:inline">
+ <span className="text-[11px] text-white/60 hidden sm:inline">
  Say &quot;help&quot; for commands
  </span>
  )}

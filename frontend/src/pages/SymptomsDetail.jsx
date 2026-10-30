@@ -170,7 +170,7 @@ export default function SymptomsDetail() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  {['Date & Time','Pain Level','Symptoms','Severity','Notes','AI Explain'].map(h => (
  <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
@@ -187,7 +187,7 @@ export default function SymptomsDetail() {
  ].filter(Boolean);
  return (
  <tr key={s.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
- <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)] dark:text-white">
+ <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)]">
  {new Date(s.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </td>
  <td className="py-3 px-4">
@@ -198,7 +198,7 @@ export default function SymptomsDetail() {
  <td className="py-3 px-4">
  <div className="flex flex-wrap gap-1">
  {flags.map(f => (
- <span key={f} className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-[10px] font-bold">{f}</span>
+ <span key={f} className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full text-[11px] font-bold">{f}</span>
  ))}
  {flags.length === 0 && <span className="text-xs text-slate-400">None reported</span>}
  </div>

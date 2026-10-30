@@ -137,12 +137,12 @@ export function ProStatCard({
 
  {trend !== undefined && trend !== null && (
  <span className={[
- 'flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full',
+ 'flex items-center gap-0.5 text-[11px] font-bold px-1.5 py-0.5 rounded-full',
  trendUp
  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800'
  : trendDown
  ? 'bg-red-50 text-red-600 border border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
- : 'bg-slate-100 text-[var(--text-500)] border border-[var(--card-border)] dark:text-[var(--text-400)] dark:border-slate-700',
+ : 'bg-slate-100 text-[var(--text-500)] border border-[var(--card-border)] dark:text-[var(--text-400)]',
  ].join(' ')}>
  {trendUp && '↑'}{trendDown && '↓'}
  {trend !== 0 ? `${Math.abs(trend)}%` : ' - '}
@@ -165,7 +165,7 @@ export function ProStatCard({
 
  {/* Sub-line */}
  {(subtitle || (trend !== undefined && trend !== null)) && (
- <p className="text-[10px] text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
+ <p className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] mt-1">
  {subtitle || trendLabel}
  </p>
  )}
@@ -264,7 +264,7 @@ export function InfoCard({ title, children, variant = 'info', className = '' }) 
  {title && (
  <h4 className={`font-semibold text-sm mb-1.5 ${cfg.title}`}>{title}</h4>
  )}
- <div className="text-sm text-[var(--text-700)] dark:text-slate-300">{children}</div>
+ <div className="text-sm text-[var(--text-700)]">{children}</div>
  </div>
  );
 }

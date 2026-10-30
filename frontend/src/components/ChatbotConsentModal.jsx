@@ -18,7 +18,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
       footer={
         <div className="flex items-center justify-between gap-3">
           <button onClick={onDecline}
-            className="px-4 py-2 text-sm font-semibold text-[var(--text-600)] hover:text-[var(--text-900)] border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 transition-all">
+            className="px-4 py-2 text-sm font-semibold text-[var(--text-600)] hover:text-[var(--text-900)] border border-slate-300 rounded-xl hover:bg-white dark:hover:bg-slate-700 transition-all">
             Use Human Support
           </button>
           <button onClick={onAccept} disabled={!agreed}
@@ -67,7 +67,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         </div>
 
         {/* Privacy */}
-        <div className="flex gap-3 p-3.5 bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-700 rounded-xl">
+        <div className="flex gap-3 p-3.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl">
           <ShieldCheck size={16} className="text-[var(--text-500)] flex-shrink-0 mt-0.5"/>
           <p className="text-xs text-[var(--text-600)] dark:text-[var(--text-400)] leading-relaxed">
             Conversations are securely stored and may be reviewed by your care team. Aura has <strong>read-only</strong> access to your health data. All data is HIPAA-compliant and encrypted.
@@ -85,7 +85,7 @@ export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userN
         </div>
 
         {/* Consent checkbox */}
-        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--card-border)] dark:border-slate-600 hover:border-teal-400 transition-colors bg-[var(--card-bg)] dark:bg-slate-800">
+        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-400 transition-colors bg-[var(--card-bg)]">
           <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded text-teal-600 border-slate-400 focus:ring-teal-500 cursor-pointer accent-teal-600"/>
           <span className="text-sm text-[var(--text-700)] leading-relaxed">

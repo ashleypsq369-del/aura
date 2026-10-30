@@ -74,7 +74,7 @@ function KpiGrid({items}) {
  <div key={label} className="bg-[var(--card-bg)] rounded-xl p-3 text-center border border-slate-100">
  <p className="text-xl font-bold" style={{color:warn&&value>0?'#dc2626':color}}>{value??' - '}</p>
  <p className="text-[11px] text-[var(--text-500)] mt-0.5 leading-tight">{label}</p>
- {subtitle&&<p className="text-[9px] text-[var(--text-400)] mt-0.5">{subtitle}</p>}
+ {subtitle&&<p className="text-[11px] text-[var(--text-400)] mt-0.5">{subtitle}</p>}
  </div>
  ))}
  </div>
@@ -86,7 +86,7 @@ function Tbl({headers,rows}) {
  <div className="overflow-x-auto">
  <table className="w-full text-xs">
  <thead><tr className="border-b border-slate-200">
- {headers.map(h=><th key={h} className="text-left py-2 px-2 text-[var(--text-500)] font-semibold uppercase tracking-wide text-[10px] whitespace-nowrap">{h}</th>)}
+ {headers.map(h=><th key={h} className="text-left py-2 px-2 text-[var(--text-500)] font-semibold uppercase tracking-wide text-[11px] whitespace-nowrap">{h}</th>)}
  </tr></thead>
  <tbody>{rows.map((row,i)=>(
  <tr key={i} className="border-b border-[var(--card-border)]/50 hover:bg-slate-50">
@@ -122,19 +122,19 @@ function PatientPicker({value,onChange}) {
  const filtered=pts.filter(p=>!q||p.full_name?.toLowerCase().includes(q.toLowerCase())||String(p.id).includes(q)||(p.patient_code||'').toLowerCase().includes(q.toLowerCase()));
  return (
  <div className="relative">
- <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">Patient</label>
- <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
- <span className={sel?'text-[var(--text-800)] dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
+ <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">Patient</label>
+ <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
+ <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
  <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
- <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
- <div className="p-2 border-b border-[var(--card-border)]/50 dark:border-slate-700">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] dark:border-slate-600 rounded-lg bg-[var(--card-bg)] outline-none"/>
+ <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
+ <div className="p-2 border-b border-[var(--card-border)]/50">
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
  {filtered.slice(0,30).map(p=>(
  <button key={p.id} type="button" onClick={()=>{onChange(p.id);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 flex items-center justify-between">
- <span className="font-medium text-[var(--text-800)] dark:text-slate-100">{p.full_name}</span>
+ <span className="font-medium text-[var(--text-800)]">{p.full_name}</span>
  <span className="text-slate-400">{p.patient_code||'#'+p.id}</span>
  </button>
  ))}
@@ -152,20 +152,20 @@ function UserPicker({value,onChange,label='User',roles}) {
  const sel=users.find(u=>u.id===value);
  return (
  <div className="relative">
- <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">{label}</label>
- <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
- <span className={sel?'text-[var(--text-800)] dark:text-slate-100':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
+ <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">{label}</label>
+ <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
+ <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
  <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
- <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] dark:border-slate-600 rounded-xl shadow-xl max-h-60 overflow-y-auto">
- <div className="p-2 border-b border-[var(--card-border)]/50 dark:border-slate-700">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] dark:border-slate-600 rounded-lg bg-[var(--card-bg)] outline-none"/>
+ <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
+ <div className="p-2 border-b border-[var(--card-border)]/50">
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
- <button type="button" onClick={()=>{onChange(null);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs text-[var(--text-400)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 border-b border-[var(--card-border)]/50 dark:border-slate-700"> - All {label.toLowerCase()}s</button>
+ <button type="button" onClick={()=>{onChange(null);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs text-[var(--text-400)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 border-b border-[var(--card-border)]/50"> - All {label.toLowerCase()}s</button>
  {filtered.slice(0,30).map(u=>(
  <button key={u.id} type="button" onClick={()=>{onChange(u.id);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 flex items-center justify-between">
- <span className="font-medium text-[var(--text-800)] dark:text-slate-100">{u.full_name}</span>
+ <span className="font-medium text-[var(--text-800)]">{u.full_name}</span>
  <span className="text-[var(--text-400)] capitalize">{u.role} #{u.id}</span>
  </button>
  ))}
@@ -188,7 +188,7 @@ function PatientSummaryBody({data}) {
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
  {[['Name',p.full_name],['Code',p.patient_code],['Age',p.age],['Gender',p.gender],['Diagnosis',p.primary_diagnosis],['Risk Level',p.risk_level],['Status',p.status],['Care Setting',(p.care_setting||' - ').replace(/_/g,' ')]].map(([k,v])=>(
  <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5">
- <p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p>
+ <p className="text-[11px] text-[var(--text-400)] font-semibold uppercase">{k}</p>
  <p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v||' - '}</p>
  </div>
  ))}
@@ -249,14 +249,14 @@ function MdtHandoverBody({data}) {
  <div key={p.patient_id} className="mb-3 p-3 rounded-xl border border-red-200 bg-red-50">
  <div className="flex items-center gap-2 mb-1.5">
  <span className="font-bold text-sm text-slate-800">{p.full_name}</span>
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{p.risk_level}</span>
- <span className="text-[10px] text-slate-500">{p.diagnosis}</span>
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{p.risk_level}</span>
+ <span className="text-[11px] text-slate-500">{p.diagnosis}</span>
  </div>
  {p.recent_alerts.map((a,i)=>(
  <p key={i} className="text-xs text-red-700">⚠ {a.severity.toUpperCase()} - {a.message}</p>
  ))}
  {p.outstanding?.esas_overdue&&<p className="text-xs text-amber-700 mt-0.5">ESAS overdue ({p.last_esas_days!=null?`${p.last_esas_days}d ago`:'never done'})</p>}
- {p.assigned_caregivers?.length>0&&<p className="text-[10px] text-[var(--text-500)] mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
+ {p.assigned_caregivers?.length>0&&<p className="text-[11px] text-[var(--text-500)] mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
  </div>
  ))}
  </Sec>
@@ -284,18 +284,18 @@ function AdvanceCarePlanBody({data}) {
  <div className="space-y-5">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  <div className={`p-4 rounded-xl border-2 ${ad.dnr_status?'border-red-400 bg-red-50':'border-green-400 bg-green-50'}`}>
- <p className="text-[10px] font-bold text-slate-500">DNR / DNACPR Status</p>
+ <p className="text-[11px] font-bold text-slate-500">DNR / DNACPR Status</p>
  <p className={`text-xl font-bold mt-1 ${ad.dnr_status?'text-red-700':'text-green-700'}`}>{ad.dnr_status?'DNR - Do Not Resuscitate':'Full Resuscitation'}</p>
  </div>
  <div className={`p-4 rounded-xl border-2 ${ad.has_advance_directive?'border-teal-400 bg-blue-50':'border-slate-300 bg-slate-50'}`}>
- <p className="text-[10px] font-bold text-slate-500">Advance Directive</p>
+ <p className="text-[11px] font-bold text-slate-500">Advance Directive</p>
  <p className={`text-xl font-bold mt-1 ${ad.has_advance_directive?'text-teal-700':'text-slate-500'}`}>{ad.has_advance_directive?'Document on File':'Not Documented'}</p>
  </div>
  </div>
  <Sec title="Patient Wishes & Preferences" icon={Heart} color="#be123c">
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
  {[['Language Preference',ad.preferred_language||' - '],['Religious/Spiritual',ad.religious_preference||' - ']].map(([k,v])=>(
- <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v}</p></div>
+ <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[11px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v}</p></div>
  ))}
  </div>
  </Sec>
@@ -303,14 +303,14 @@ function AdvanceCarePlanBody({data}) {
  {cp&&(
  <Sec title="Care Plan" icon={FileText} color="#0369a1" collapsible>
  {[['Goals of Care',cp.goals_of_care],['Pain Management',cp.pain_management_plan],['Psychological Support',cp.psychological_support],['Spiritual Care',cp.spiritual_care],['Family Support',cp.family_support_plan],['Bereavement Plan',cp.bereavement_plan],['Advance Directives Notes',cp.advance_directives_notes]].filter(([,v])=>v).map(([k,v])=>(
- <div key={k} className="mb-3"><p className="text-[10px] font-bold text-[var(--text-400)] mb-1">{k}</p><p className="text-xs text-[var(--text-600)] bg-[var(--card-bg)] rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
+ <div key={k} className="mb-3"><p className="text-[11px] font-bold text-[var(--text-400)] mb-1">{k}</p><p className="text-xs text-[var(--text-600)] bg-[var(--card-bg)] rounded-lg p-2.5 whitespace-pre-wrap">{v}</p></div>
  ))}
  </Sec>
  )}
  <Sec title="Emergency Contact" icon={AlertCircle} color="#dc2626">
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
  {[['Name',data.emergency_contact?.name],['Relationship',data.emergency_contact?.relationship],['Phone',data.emergency_contact?.phone]].map(([k,v])=>(
- <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[10px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v||' - '}</p></div>
+ <div key={k} className="bg-[var(--card-bg)] rounded-lg p-2.5"><p className="text-[11px] text-[var(--text-400)] font-semibold uppercase">{k}</p><p className="font-semibold text-[var(--text-800)] text-xs mt-0.5">{v||' - '}</p></div>
  ))}
  </div>
  </Sec>
@@ -433,7 +433,7 @@ function MedicationAdherenceBody({data}) {
  return (
  <div className="space-y-5">
  <div className="p-4 rounded-xl border-2" style={{borderColor: statusColor, backgroundColor: statusColor+'14'}}>
- <p className="text-[10px] font-bold uppercase text-[var(--text-500)] mb-1">Overall Adherence Rate</p>
+ <p className="text-[11px] font-bold uppercase text-[var(--text-500)] mb-1">Overall Adherence Rate</p>
  <p className="text-3xl font-bold" style={{color: statusColor}}>
  {s.overall_adherence_pct != null ? s.overall_adherence_pct + '%' : 'No data'}
  </p>
@@ -750,7 +750,7 @@ function ReportViewer({data,onClose}) {
  {data.confidentiality&&(
  <div className="mx-6 mt-4 flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
  <Lock size={12} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[10px] font-bold text-amber-800">{data.confidentiality}</p>
+ <p className="text-[11px] font-bold text-amber-800">{data.confidentiality}</p>
  </div>
  )}
 
@@ -772,7 +772,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  const blocked=(meta.needsPatient&&!patientId)||(meta.needsCaregiver&&!caregiverId);
  return (
  <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
- className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] overflow-hidden shadow-sm hover:shadow-md transition-shadow"
  style={{borderLeft:`4px solid ${color}`}}>
  <div className="p-4">
  <div className="flex items-start gap-3 mb-3">
@@ -788,17 +788,17 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  {blocked&&(
  <div className="flex items-center gap-1.5 px-2.5 py-1.5 mb-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 rounded-lg">
  <AlertTriangle size={11} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[10px] text-amber-700 dark:text-amber-300">{meta.needsPatient?'Select a patient first.':'Select a caregiver first.'}</p>
+ <p className="text-[11px] text-amber-700 dark:text-amber-300">{meta.needsPatient?'Select a patient first.':'Select a caregiver first.'}</p>
  </div>
  )}
  <div className="flex gap-2">
  <button onClick={()=>onGenerate(report.id)} disabled={generating===report.id||blocked}
- className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-xs text-white transition-all disabled:opacity-40 active:scale-95"
+ className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-xs text-white transition-all disabled:opacity-50 active:scale-95"
  style={{backgroundColor:color}}>
  {generating===report.id?<><Loader2 size={12} className="animate-spin"/> Generating…</>:<><FileText size={12}/> Generate</>}
  </button>
  <button onClick={()=>setExpanded(!expanded)}
- className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] dark:border-slate-600 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
+ className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
  {expanded?<ChevronUp size={13}/>:<ChevronDown size={13}/>}
  </button>
  </div>
@@ -806,14 +806,14 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  {expanded&&(
  <motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}}
  exit={{height:0,opacity:0}} className="overflow-hidden">
- <div className="mt-3 pt-3 border-t border-[var(--card-border)]/50 dark:border-slate-700 space-y-2">
+ <div className="mt-3 pt-3 border-t border-[var(--card-border)]/50 space-y-2">
  <div>
- <p className="text-[9px] text-[var(--text-400)] font-bold ">Use For</p>
- <div className="flex flex-wrap gap-1 mt-1">{(report.uses||[]).map(u=><span key={u} className="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-[var(--text-600)] dark:text-slate-300">{u}</span>)}</div>
+ <p className="text-[11px] text-[var(--text-400)] font-bold ">Use For</p>
+ <div className="flex flex-wrap gap-1 mt-1">{(report.uses||[]).map(u=><span key={u} className="text-[11px] px-1.5 py-0.5 rounded-full bg-slate-100 text-[var(--text-600)]">{u}</span>)}</div>
  </div>
  <div>
- <p className="text-[9px] text-[var(--text-400)] font-bold ">Standard</p>
- <p className="text-[10px] text-[var(--text-500)] mt-0.5">{report.standard}</p>
+ <p className="text-[11px] text-[var(--text-400)] font-bold ">Standard</p>
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5">{report.standard}</p>
  </div>
  </div>
  </motion.div>
@@ -906,7 +906,7 @@ export default function Reports() {
  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
  {/* ── Tab navigation ── */}
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-1.5 flex gap-1">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-1.5 flex gap-1">
  {TABS.map(tab=>{
  const Icon=tab.icon;
  const count=allReports.filter(r=>(REPORT_META[r.id]?.tab||'clinical')===tab.id).length;
@@ -915,7 +915,7 @@ export default function Reports() {
  <button key={tab.id} onClick={()=>setActiveTab(tab.id)}
  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all ${active?'bg-teal-600 text-white shadow-sm':'text-[var(--text-600)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700/50'}`}>
  <Icon size={15}/><span className="hidden sm:inline">{tab.label}</span>
- {count>0&&<span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${active?'bg-white/30 text-white':'bg-slate-200 dark:bg-slate-600 text-[var(--text-600)] dark:text-slate-300'}`}>{count}</span>}
+ {count>0&&<span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${active?'bg-white/30 text-white':'bg-slate-200 text-[var(--text-600)]'}`}>{count}</span>}
  </button>
  );
  })}
@@ -923,7 +923,7 @@ export default function Reports() {
 
  {/* ── Parameters panel (only when tab has reports needing selection) ── */}
  {showParams&&(
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-5">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-5">
  <h2 className="text-xs font-bold text-[var(--text-500)] mb-4 flex items-center gap-2">
  <Filter size={13} className="text-teal-600"/> Report Parameters
  </h2>
@@ -935,12 +935,12 @@ export default function Reports() {
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 items-end">
  {[{label:'Date From',value:dateFrom,set:setDateFrom},{label:'Date To',value:dateTo,set:setDateTo}].map(({label,value,set})=>(
  <div key={label}>
- <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">{label}</label>
- <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)] dark:text-slate-100"/>
+ <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">{label}</label>
+ <input type="date" value={value} onChange={e=>set(e.target.value)} className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 bg-[var(--card-bg)]"/>
  </div>
  ))}
  <div>
- <label className="block text-[10px] font-bold text-[var(--text-400)] mb-1">Min Severity</label>
+ <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">Min Severity</label>
  <SearchableSelect
  accent="teal"
  size="sm"
@@ -952,17 +952,17 @@ export default function Reports() {
  />
  </div>
  <button onClick={()=>{setPatientId(null);setUserId(null);setCaregiverId(null);setDateFrom('');setDateTo('');}}
- className="px-3 py-2 text-xs font-semibold text-[var(--text-500)] hover:text-red-600 border border-[var(--card-border)] dark:border-slate-600 rounded-xl hover:border-red-300 transition">
+ className="px-3 py-2 text-xs font-semibold text-[var(--text-500)] hover:text-red-600 border border-[var(--card-border)] rounded-xl hover:border-red-300 transition">
  Clear
  </button>
  </div>
  {/* Active filter chips */}
  <div className="flex flex-wrap gap-2 mt-3">
- {patientId&&<span className="text-[10px] px-2.5 py-1 bg-teal-50 text-teal-700 rounded-full border border-teal-200 font-medium">Patient #{patientId}</span>}
- {userId&&<span className="text-[10px] px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200 font-medium">User #{userId}</span>}
- {caregiverId&&<span className="text-[10px] px-2.5 py-1 bg-blue-50 text-teal-700 rounded-full border border-blue-200 font-medium">Caregiver #{caregiverId}</span>}
- {dateFrom&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">From: {dateFrom}</span>}
- {dateTo&&<span className="text-[10px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">To: {dateTo}</span>}
+ {patientId&&<span className="text-[11px] px-2.5 py-1 bg-teal-50 text-teal-700 rounded-full border border-teal-200 font-medium">Patient #{patientId}</span>}
+ {userId&&<span className="text-[11px] px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200 font-medium">User #{userId}</span>}
+ {caregiverId&&<span className="text-[11px] px-2.5 py-1 bg-blue-50 text-teal-700 rounded-full border border-blue-200 font-medium">Caregiver #{caregiverId}</span>}
+ {dateFrom&&<span className="text-[11px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">From: {dateFrom}</span>}
+ {dateTo&&<span className="text-[11px] px-2.5 py-1 bg-slate-100 text-[var(--text-600)] rounded-full border border-slate-200">To: {dateTo}</span>}
  </div>
  </div>
  )}

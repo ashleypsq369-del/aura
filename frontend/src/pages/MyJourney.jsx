@@ -172,7 +172,7 @@ export default function MyJourney() {
               <div key={date}>
                 {/* Date Header */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-7 h-7 rounded-md bg-teal-50 flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
                     <Calendar size={14} className="text-teal-600" />
                   </div>
                   <span className="text-xs font-bold text-[var(--text-500)] ">{date}</span>
@@ -318,7 +318,7 @@ function EventCard({ event }) {
         event.is_milestone ? 'border-l-amber-400' : eventTypeGrad(event.event_type)
       } p-3`}>
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0"
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: bg, color }}>
             <Icon size={15} />
           </div>
@@ -330,7 +330,7 @@ function EventCard({ event }) {
               {event.is_milestone && <Star size={13} className="text-amber-400 fill-amber-400 flex-shrink-0" />}
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-[var(--text-400)] flex items-center gap-0.5">
+              <span className="text-[11px] text-[var(--text-400)] flex items-center gap-0.5">
                 <Clock size={10} /> {formatTime(event.created_at)}
               </span>
               <span className="chip-teal">

@@ -103,7 +103,7 @@ export default function AuditLog() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  {['Timestamp','User','Action','Resource','IP Address','Details'].map(h => (
  <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
@@ -131,7 +131,7 @@ export default function AuditLog() {
  </div>
  <div>
  <p className="text-xs font-semibold text-slate-800">{log.user_name || log.username || 'System'}</p>
- <p className="text-[10px] text-[var(--text-400)] capitalize">{log.user_role || ''}</p>
+ <p className="text-[11px] text-[var(--text-400)] capitalize">{log.user_role || ''}</p>
  </div>
  </div>
  </td>

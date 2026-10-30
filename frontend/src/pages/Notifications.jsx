@@ -70,7 +70,7 @@ function NotifRow({ n, onRead, onDelete }) {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
  transition={{ duration: 0.15 }}
- className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 dark:border-slate-700 last:border-0 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors"
+ className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 last:border-0 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors"
  >
  {/* Unread left bar */}
  {unread && (
@@ -87,7 +87,7 @@ function NotifRow({ n, onRead, onDelete }) {
  {/* Text block */}
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-1.5 mb-0.5">
- <span className="text-[9px] font-bold px-1 py-0.5 rounded"
+ <span className="text-[11px] font-bold px-1 py-0.5 rounded"
  style={{ background: cfg.bg, color: cfg.color }}>
  {cfg.label}
  </span>
@@ -102,7 +102,7 @@ function NotifRow({ n, onRead, onDelete }) {
 
  {/* Right - time + actions */}
  <div className="flex flex-col items-end gap-1 flex-shrink-0">
- <span className="text-[10px] text-gray-400 flex items-center gap-0.5 whitespace-nowrap">
+ <span className="text-[11px] text-gray-400 flex items-center gap-0.5 whitespace-nowrap">
  <Clock size={9} />{relTime(n.created_at)}
  </span>
  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -231,19 +231,19 @@ export default function Notifications() {
  <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
  {unreadCount > 0 && (
  <button onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}
- className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm disabled:opacity-50">
+ className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 transition shadow-sm disabled:opacity-50">
  <CheckCheck size={13} /> Mark all read
  </button>
  )}
  <button onClick={() => clearRead.mutate()}
- className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-[var(--text-400)] bg-[var(--card-bg)] hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 dark:border-slate-600 transition shadow-sm">
+ className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-[var(--text-400)] bg-[var(--card-bg)] hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 transition shadow-sm">
  <BellOff size={13} /> Clear read
  </button>
  </div>
  </div>
 
  {/* ── Filters ── */}
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm p-4 mb-4">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm p-4 mb-4">
  <div className="flex items-start gap-2 flex-wrap">
  {/* Search - full width on mobile */}
  <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
@@ -306,7 +306,7 @@ export default function Notifications() {
  {todayItems.length > 0 && (
  <>
  <SectionLabel label="Today" count={todayItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {todayItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>
@@ -316,7 +316,7 @@ export default function Notifications() {
  {weekItems.length > 0 && (
  <>
  <SectionLabel label="Earlier this week" count={weekItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {weekItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>
@@ -326,7 +326,7 @@ export default function Notifications() {
  {olderItems.length > 0 && (
  <>
  <SectionLabel label="Older" count={olderItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {olderItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>

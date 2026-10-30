@@ -115,7 +115,7 @@ export default function TaskNudge() {
  transition={{ type: 'spring', damping: 22, stiffness: 300 }}
  className="fixed bottom-24 right-5 z-[9000] w-72 pointer-events-auto"
  >
- <div className="bg-[var(--card-bg)] rounded-2xl shadow-2xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden"
+ <div className="bg-[var(--card-bg)] rounded-2xl shadow-2xl border border-[var(--card-border)] overflow-hidden"
  style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)' }}>
 
  {/* Accent top bar */}
@@ -132,7 +132,7 @@ export default function TaskNudge() {
  <p className="text-[11px] font-bold text-[var(--text-800)] leading-tight">
  Hey {firstName} 👋
  </p>
- <p className="text-[10px] text-[var(--text-500)] dark:text-slate-400">
+ <p className="text-[11px] text-[var(--text-500)] dark:text-slate-400">
  Today's care tasks
  </p>
  </div>
@@ -166,7 +166,7 @@ export default function TaskNudge() {
  <p className="text-xs font-semibold text-[var(--text-800)] leading-snug">
  {message}
  </p>
- <p className="text-[10px] text-[var(--text-500)] mt-0.5">
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5">
  {reqDone} of {reqTotal} required done
  </p>
  </div>
@@ -181,7 +181,7 @@ export default function TaskNudge() {
  </div>
  ))}
  {pendingTasks.length > 3 && (
- <p className="text-[10px] text-[var(--text-500)] pl-2">+{pendingTasks.length - 3} more tasks</p>
+ <p className="text-[11px] text-[var(--text-500)] pl-2">+{pendingTasks.length - 3} more tasks</p>
  )}
  </div>
 
@@ -192,7 +192,7 @@ export default function TaskNudge() {
  View My Tasks <ArrowRight size={11}/>
  </button>
  <button onClick={handleDismiss}
- className="px-3 py-2 rounded-xl border border-[var(--card-border)] dark:border-slate-600 text-[var(--text-500)] dark:text-[var(--text-400)] text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors">
+ className="px-3 py-2 rounded-xl border border-[var(--card-border)] text-[var(--text-500)] dark:text-[var(--text-400)] text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors">
  Later
  </button>
  </div>

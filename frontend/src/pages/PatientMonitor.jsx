@@ -52,7 +52,7 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
  style={{ background: `${s.border}60`, color: s.text }}>
  <Icon size={16} />
  </div>
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
  style={{ background: `${s.text}15`, color: s.text }}>
  {s.badge}
  </span>
@@ -63,7 +63,7 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
  {value ?? ' - '} <span className="text-sm font-normal text-slate-400">{unit}</span>
  </p>
  </div>
- <p className="text-[10px] text-slate-400">Normal: {normalRange}</p>
+ <p className="text-[11px] text-slate-400">Normal: {normalRange}</p>
  </motion.div>
  );
 }
@@ -71,9 +71,9 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
 /* ─── Section card wrapper ───────────────────────────────────────────────── */
 function Section({ title, children }) {
  return (
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
  {title && (
- <div className="px-5 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700"
+ <div className="px-5 py-3 border-b border-[var(--card-border)]/50"
  style={{ background: 'linear-gradient(to right, #0d948808, transparent)' }}>
  <h3 className="font-bold text-[var(--text-800)] text-sm">{title}</h3>
  </div>
@@ -86,7 +86,7 @@ function Section({ title, children }) {
 /* ─── Symptom badge ──────────────────────────────────────────────────────── */
 function SymBadge({ label, color = '#0d9488' }) {
  return (
- <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold"
+ <span className="px-2 py-0.5 rounded-lg text-[11px] font-semibold"
  style={{ background: `${color}18`, color }}>
  {label}
  </span>
@@ -219,7 +219,7 @@ export default function PatientMonitor() {
 
  {/* ── Tab bar ── */}
  <div className="px-6">
- <div className="flex gap-0 border-b border-[var(--card-border)] dark:border-slate-700 overflow-x-auto bg-[var(--card-bg)] rounded-t-xl">
+ <div className="flex gap-0 border-b border-[var(--card-border)] overflow-x-auto bg-[var(--card-bg)] rounded-t-xl">
  {TABS.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => setActiveTab(id)}
  className={`flex items-center gap-1.5 px-4 py-3 text-sm font-semibold border-b-2 transition-all whitespace-nowrap flex-shrink-0
@@ -269,7 +269,7 @@ export default function PatientMonitor() {
  <div className="overflow-x-auto">
  <table className="w-full text-sm">
  <thead>
- <tr className="border-b border-[var(--card-border)]/50 dark:border-slate-700">
+ <tr className="border-b border-[var(--card-border)]/50">
  {['Time','HR','BP','O₂ Sat','Temp'].map(h => (
  <th key={h} className="pb-2 text-left text-xs font-semibold text-[var(--text-400)] pr-4">{h}</th>
  ))}
@@ -281,12 +281,12 @@ export default function PatientMonitor() {
  <td className="py-2 pr-4 text-xs text-[var(--text-500)] whitespace-nowrap">
  {new Date(v.recorded_at).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}
  </td>
- <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">{Math.round(v.heart_rate ?? 0)}</td>
- <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)]">{Math.round(v.heart_rate ?? 0)}</td>
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)]">
  {Math.round(v.blood_pressure_sys ?? v.blood_pressure_systolic ?? 0)}/{Math.round(v.blood_pressure_dia ?? v.blood_pressure_diastolic ?? 0)}
  </td>
- <td className="py-2 pr-4 font-medium text-[var(--text-700)] dark:text-slate-200">{(v.oxygen_saturation ?? 0).toFixed(1)}%</td>
- <td className="py-2 font-medium text-[var(--text-700)] dark:text-slate-200">{(v.temperature ?? 0).toFixed(1)}°C</td>
+ <td className="py-2 pr-4 font-medium text-[var(--text-700)]">{(v.oxygen_saturation ?? 0).toFixed(1)}%</td>
+ <td className="py-2 font-medium text-[var(--text-700)]">{(v.temperature ?? 0).toFixed(1)}°C</td>
  </tr>
  ))}
  </tbody>
@@ -344,19 +344,19 @@ export default function PatientMonitor() {
  <motion.div key={m.id}
  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.04 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
  <div className="flex items-start justify-between gap-2 mb-2">
  <p className="font-bold text-[var(--text-800)] text-sm">{m.name}</p>
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0
+ <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0
  ${m.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
  {m.is_active ? 'Active' : 'Stopped'}
  </span>
  </div>
  <div className="space-y-0.5 text-xs text-[var(--text-500)] dark:text-slate-400">
- {m.dose && <p>Dose: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.dose}</span></p>}
- {m.frequency && <p>Frequency: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.frequency}</span></p>}
- {m.route && <p>Route: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.route}</span></p>}
- {m.indication && <p>For: <span className="font-medium text-[var(--text-700)] dark:text-slate-200">{m.indication}</span></p>}
+ {m.dose && <p>Dose: <span className="font-medium text-[var(--text-700)]">{m.dose}</span></p>}
+ {m.frequency && <p>Frequency: <span className="font-medium text-[var(--text-700)]">{m.frequency}</span></p>}
+ {m.route && <p>Route: <span className="font-medium text-[var(--text-700)]">{m.route}</span></p>}
+ {m.indication && <p>For: <span className="font-medium text-[var(--text-700)]">{m.indication}</span></p>}
  </div>
  </motion.div>
  )) : (
@@ -374,7 +374,7 @@ export default function PatientMonitor() {
  <motion.div key={a.id}
  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
  transition={{ delay: i * 0.04 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4 flex items-start gap-3">
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4 flex items-start gap-3">
  <div className="w-9 h-9 rounded-lg bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 flex-shrink-0">
  <Calendar size={16} />
  </div>
@@ -389,7 +389,7 @@ export default function PatientMonitor() {
  </p>
  {a.location && <p className="text-xs text-[var(--text-400)] mt-0.5 flex items-center gap-1"><MapPin size={9} />{a.location}</p>}
  </div>
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
+ <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
  a.status === 'completed' ? 'bg-emerald-100 text-emerald-700' :
  a.status === 'cancelled' ? 'bg-red-100 text-red-700' :
  'bg-teal-50 text-teal-700'
@@ -428,8 +428,8 @@ export default function PatientMonitor() {
  { l: 'Language', v: patient?.preferred_language },
  { l: 'Facility', v: patient?.facility_name },
  ].filter(r => r.v).map(({ l, v }) => (
- <div key={l} className="p-3 bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-lg">
- <p className="text-[10px] text-[var(--text-400)] font-medium mb-0.5">{l}</p>
+ <div key={l} className="p-3 bg-[var(--card-bg)]/40 rounded-lg">
+ <p className="text-[11px] text-[var(--text-400)] font-medium mb-0.5">{l}</p>
  <p className="font-semibold text-[var(--text-800)] text-xs capitalize">{v}</p>
  </div>
  ))}
@@ -438,14 +438,14 @@ export default function PatientMonitor() {
 
  {patient?.secondary_diagnoses && (
  <Section title="Secondary Diagnoses">
- <p className="text-sm text-[var(--text-600)] dark:text-slate-300">{patient.secondary_diagnoses}</p>
+ <p className="text-sm text-[var(--text-600)]">{patient.secondary_diagnoses}</p>
  </Section>
  )}
 
  {patient?.emergency_contact_name && (
  <Section title="Emergency Contact">
  <div className="space-y-1 text-sm">
- <p className="font-semibold text-[var(--text-800)] dark:text-white">{patient.emergency_contact_name}</p>
+ <p className="font-semibold text-[var(--text-800)]">{patient.emergency_contact_name}</p>
  {patient.emergency_contact_relationship && (
  <p className="text-slate-500">{patient.emergency_contact_relationship}</p>
  )}

@@ -113,14 +113,14 @@ function SHAPBar({ feature, maxImp }) {
  return (
  <div className="mb-2">
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[10px] font-semibold text-gray-600 truncate max-w-[55%]">
+ <span className="text-[11px] font-semibold text-gray-600 truncate max-w-[55%]">
  {feature.display_name}
  </span>
  <div className="flex items-center gap-1.5 flex-shrink-0">
- <span className="text-[10px] text-gray-400 tabular-nums">
+ <span className="text-[11px] text-gray-400 tabular-nums">
  {typeof feature.value === 'number' ? feature.value.toFixed(1) : feature.value}
  </span>
- <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border tabular-nums ${chipColor}`}>
+ <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full border tabular-nums ${chipColor}`}>
  {isUp ? '+' : ''}{feature.pct?.toFixed(1) ?? Math.abs(feature.shap_value).toFixed(3)}%
  </span>
  </div>
@@ -168,7 +168,7 @@ function TaskCard({ taskKey, task }) {
  <div className="flex-1 min-w-0">
  {/* title text-xs font-semibold */}
  <p className="text-xs font-semibold text-gray-800 truncate">{meta.label}</p>
- <p className="text-[10px] text-gray-400">
+ <p className="text-[11px] text-gray-400">
  {task.shap_available ? 'SHAP values' : 'Feature importance'} · {task.top_features?.length ?? 0} factors
  </p>
  </div>
@@ -179,7 +179,7 @@ function TaskCard({ taskKey, task }) {
  <p className="text-sm font-bold tabular-nums" style={{ color: textCol }}>
  {(task.probability * 100).toFixed(0)}%
  </p>
- <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: textCol }}>
+ <p className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: textCol }}>
  {task.risk_level}
  </p>
  </div>
@@ -214,11 +214,11 @@ function TaskCard({ taskKey, task }) {
  <div className="px-4 pb-3 border-t border-gray-100">
  <div className="flex items-center gap-1.5 pt-2 pb-1.5">
  <Zap size={10} className="text-gray-400"/>
- <p className="text-[10px] font-bold text-gray-400 ">
+ <p className="text-[11px] font-bold text-gray-400 ">
  {task.shap_available ? 'SHAP Feature Impact' : 'Feature Importance'}
  </p>
  {task.shap_available && (
- <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+ <span className="ml-auto text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
  SHAP
  </span>
  )}
@@ -227,15 +227,15 @@ function TaskCard({ taskKey, task }) {
  <SHAPBar key={f.feature} feature={f} maxImp={maxImp} />
  ))}
  <div className="flex items-center gap-4 pt-1 border-t border-gray-100 mt-1">
- <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+ <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
  <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"/>Increases risk
  </span>
- <span className="flex items-center gap-1.5 text-[10px] text-gray-500">
+ <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
  <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"/>Decreases risk
  </span>
  </div>
  {task.metrics?.auc && (
- <p className="text-[10px] text-gray-400 mt-2 text-right">
+ <p className="text-[11px] text-gray-400 mt-2 text-right">
  Model AUC: {task.metrics.auc.toFixed(3)}
  </p>
  )}
@@ -265,7 +265,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  </div>
  <div>
  <p className="text-xs font-semibold text-gray-700">Running ML Risk Models...</p>
- <p className="text-[10px] text-gray-400">XGBoost + SHAP analysis</p>
+ <p className="text-[11px] text-gray-400">XGBoost + SHAP analysis</p>
  </div>
  </div>
  );
@@ -302,7 +302,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <p className="text-xs font-semibold" style={{ color: overallC.text }}>
  {overallLvl.toUpperCase()} RISK
  </p>
- <p className="text-[10px] text-gray-500 truncate">
+ <p className="text-[11px] text-gray-500 truncate">
  {data?.highest_task?.replace(/_/g, ' ')?.replace(/\b\w/g, c => c.toUpperCase())} is highest
  </p>
  </div>
@@ -328,17 +328,17 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  </div>
  <div className="flex items-center gap-2 flex-wrap">
  <p className="text-xs font-semibold text-gray-800 leading-none">ML Risk Assessment</p>
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
  XGBoost
  </span>
  {data?.tasks && Object.values(data.tasks).some(t => t.shap_available) && (
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"/>
  SHAP Live
  </span>
  )}
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
  {(data?.models_available ?? 0) + 4}/12 models
  </span>
@@ -355,7 +355,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  {/* Gauge */}
  <div className="flex flex-col items-center flex-shrink-0">
  <RiskGauge value={overallRisk} level={overallLvl} size={70}/>
- <span className="text-[10px] font-bold uppercase tracking-wide mt-0.5" style={{ color: overallC.text }}>
+ <span className="text-[11px] font-bold uppercase tracking-wide mt-0.5" style={{ color: overallC.text }}>
  {overallLvl} risk
  </span>
  </div>
@@ -364,22 +364,22 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div className="flex-1 min-w-0 space-y-2">
  {(data?.key_concerns?.length ?? 0) > 0 && (
  <div>
- <p className="text-[10px] font-bold text-gray-400 mb-1">Key Concerns</p>
+ <p className="text-[11px] font-bold text-gray-400 mb-1">Key Concerns</p>
  {data.key_concerns.slice(0, 3).map((c, i) => (
  <div key={i} className="flex items-start gap-1.5 mb-0.5">
  <AlertTriangle size={9} className="text-amber-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[10px] text-gray-700 leading-snug">{c}</p>
+ <p className="text-[11px] text-gray-700 leading-snug">{c}</p>
  </div>
  ))}
  </div>
  )}
  {(data?.recommended_actions?.length ?? 0) > 0 && (
  <div>
- <p className="text-[10px] font-bold text-gray-400 mb-1">Actions</p>
+ <p className="text-[11px] font-bold text-gray-400 mb-1">Actions</p>
  {data.recommended_actions.slice(0, 2).map((a, i) => (
  <div key={i} className="flex items-start gap-1.5 mb-0.5">
  <CheckCircle size={9} className="text-teal-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[10px] text-gray-700 leading-snug">{a}</p>
+ <p className="text-[11px] text-gray-700 leading-snug">{a}</p>
  </div>
  ))}
  </div>
@@ -397,7 +397,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div key={key}
  className="bg-[var(--card-bg)] rounded-xl border border-gray-200 p-2 transition-colors hover:bg-gray-50"
  style={{ borderLeftWidth: 2, borderLeftColor: lbc }}>
- <p className="text-[10px] font-semibold text-gray-600 truncate leading-tight">
+ <p className="text-[11px] font-semibold text-gray-600 truncate leading-tight">
  {meta.label?.replace(' Risk', '').replace(' Burden', '') ?? key}
  </p>
  <div className="flex items-center justify-between mt-1.5">
@@ -405,7 +405,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div className="h-full rounded-full transition-all"
  style={{ width: `${t.probability * 100}%`, backgroundColor: meta.color }}/>
  </div>
- <span className="text-[10px] font-bold tabular-nums flex-shrink-0" style={{ color: tc }}>
+ <span className="text-[11px] font-bold tabular-nums flex-shrink-0" style={{ color: tc }}>
  {(t.probability * 100).toFixed(0)}%
  </span>
  </div>
@@ -417,7 +417,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
  {/* ── Task detail cards with SHAP (expandable) ── */}
  <div className="space-y-2">
- <p className="text-[10px] font-bold text-gray-400 px-1 flex items-center gap-1.5">
+ <p className="text-[11px] font-bold text-gray-400 px-1 flex items-center gap-1.5">
  <Brain size={10}/> SHAP Breakdown - tap any task to expand
  </p>
  {sortedTasks.map(([key, task]) => (

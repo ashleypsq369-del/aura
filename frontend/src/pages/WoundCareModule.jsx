@@ -40,9 +40,9 @@ function WoundCard({ log, idx }) {
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.05 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden"
  >
- <div className="px-4 py-3 border-b border-[var(--card-border)]/50 dark:border-slate-700 flex items-center justify-between"
+ <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center justify-between"
  style={{ background: `${meta.color}08` }}>
  <div>
  <p className="font-semibold text-[var(--text-800)] text-sm">{log.wound_site}</p>
@@ -57,7 +57,7 @@ function WoundCard({ log, idx }) {
  <Icon size={11} strokeWidth={2.5} /> {meta.label}
  </span>
  </div>
- <div className="p-4 space-y-2 text-sm text-[var(--text-600)] dark:text-slate-300">
+ <div className="p-4 space-y-2 text-sm text-[var(--text-600)]">
  {log.description && <p>{log.description}</p>}
  <div className="flex flex-wrap gap-3 text-[11px]">
  {log.size_cm && <span className="text-slate-500">Size: <b>{log.size_cm} cm</b></span>}
@@ -71,7 +71,7 @@ function WoundCard({ log, idx }) {
  <span className="text-teal-600 dark:text-teal-200">{log.treatment_applied}</span>
  </div>
  )}
- <p className="text-[10px] text-slate-400">
+ <p className="text-[11px] text-slate-400">
  {new Date(log.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </p>
  </div>
@@ -96,7 +96,7 @@ function AddWoundForm({ patientId, onClose }) {
  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
  return (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] dark:border-slate-700 p-5">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-5">
  <div className="flex items-center justify-between mb-4">
  <h3 className="font-bold text-[var(--text-800)] text-sm">New Wound Log</h3>
  <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400">
@@ -159,7 +159,7 @@ function AddWoundForm({ patientId, onClose }) {
  onChange={e => set('odour', e.target.checked)}
  className="rounded border-slate-300 text-teal-600 focus:ring-teal-500"
  />
- <label htmlFor="odour" className="text-xs text-[var(--text-600)] dark:text-slate-300">Odour present</label>
+ <label htmlFor="odour" className="text-xs text-[var(--text-600)]">Odour present</label>
  </div>
 
  <Field label="Treatment Applied">
@@ -182,7 +182,7 @@ function AddWoundForm({ patientId, onClose }) {
  {isPending ? 'Saving…' : 'Save Wound Log'}
  </button>
  <button onClick={onClose}
- className="px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-600)] border border-[var(--card-border)] dark:border-slate-600 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700">
+ className="px-4 py-2 rounded-xl text-sm font-medium text-[var(--text-600)] border border-[var(--card-border)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700">
  Cancel
  </button>
  </div>
@@ -191,7 +191,7 @@ function AddWoundForm({ patientId, onClose }) {
  );
 }
 
-const inputCls = 'w-full border border-[var(--card-border)] dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500';
+const inputCls = 'w-full border border-[var(--card-border)] rounded-lg px-3 py-1.5 text-sm bg-[var(--card-bg)] text-[var(--text-800)] focus:outline-none focus:ring-2 focus:ring-teal-500';
 
 function Field({ label, children }) {
  return (
@@ -251,14 +251,14 @@ export default function WoundCareModule() {
  {isLoading ? (
  <div className="space-y-3">
  {[1,2].map(i => (
- <div key={i} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700 p-4 animate-pulse">
- <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-1/2 mb-2" />
- <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-2/3" />
+ <div key={i} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4 animate-pulse">
+ <div className="h-4 bg-slate-200 rounded w-1/2 mb-2" />
+ <div className="h-3 bg-slate-200 rounded w-2/3" />
  </div>
  ))}
  </div>
  ) : logs.length === 0 ? (
- <div className="bg-[var(--card-bg)] rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-dashed border-slate-300 p-8 text-center">
  <Camera size={32} className="text-slate-300 dark:text-[var(--text-600)] mx-auto mb-2" />
  <p className="text-[var(--text-500)] dark:text-[var(--text-400)] text-sm">No wound logs recorded yet</p>
  </div>

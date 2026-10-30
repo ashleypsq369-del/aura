@@ -156,7 +156,7 @@ export default function Layout({ children }) {
  <img src="/logo.png" alt="Project Aura" className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5" />
  <div className="flex flex-col">
  <span className="font-bold text-sm leading-none" style={{ color: '#ffffff' }}>Project Aura</span>
- <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</span>
+ <span className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</span>
  </div>
  </div>
 
@@ -168,7 +168,7 @@ export default function Layout({ children }) {
  style={{ color: 'rgba(255,255,255,0.9)' }}
  >
  <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'}
- className="hover:bg-white/20 transition-colors px-2 py-1 rounded-md"
+ className="hover:bg-white/20 transition-colors px-2 py-1 rounded-lg"
  style={{ color: 'rgba(255,255,255,0.9)' }}>
  Home
  </Link>
@@ -181,9 +181,9 @@ export default function Layout({ children }) {
  <div key={to} className="flex items-center space-x-1.5">
  <ChevronRight size={14} strokeWidth={2.5} style={{ color: 'rgba(255,255,255,0.45)' }} />
  {isLast ? (
- <span className="font-bold px-2 py-1 rounded-md bg-white/20" style={{ color: '#ffffff' }}>{label}</span>
+ <span className="font-bold px-2 py-1 rounded-lg bg-white/20" style={{ color: '#ffffff' }}>{label}</span>
  ) : (
- <Link to={to} className="hover:bg-white/20 transition-colors px-2 py-1 rounded-md" style={{ color: 'rgba(255,255,255,0.8)' }}>
+ <Link to={to} className="hover:bg-white/20 transition-colors px-2 py-1 rounded-lg" style={{ color: 'rgba(255,255,255,0.8)' }}>
  {label}
  </Link>
  )}
@@ -283,10 +283,10 @@ export default function Layout({ children }) {
 
  {/* Breadcrumbs for Mobile View */}
  <div 
- className="md:hidden px-4 py-2 text-[10px] text-white/90 flex items-center space-x-1.5 overflow-x-auto whitespace-nowrap font-semibold border-b border-teal-700/30"
+ className="md:hidden px-4 py-2 text-[11px] text-white/90 flex items-center space-x-1.5 overflow-x-auto whitespace-nowrap font-semibold border-b border-teal-700/30"
  style={{ background: '#0f766e' }}
  >
- <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'} className="hover:text-white px-1.5 py-0.5 rounded-md hover:bg-white/20">Home</Link>
+ <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'} className="hover:text-white px-1.5 py-0.5 rounded-lg hover:bg-white/20">Home</Link>
  {pathnames.map((value, index) => {
  const label = getBreadcrumbName(value);
  if (!label) return null; // skip numeric IDs - fixes "Home > Patients > - " bug
@@ -296,9 +296,9 @@ export default function Layout({ children }) {
  <div key={to} className="flex items-center space-x-1.5">
  <ChevronRight size={10} className="text-white/50" strokeWidth={3} />
  {isLast ? (
- <span className="text-white font-bold px-1.5 py-0.5 rounded-md bg-white/20">{label}</span>
+ <span className="text-white font-bold px-1.5 py-0.5 rounded-lg bg-white/20">{label}</span>
  ) : (
- <Link to={to} className="hover:text-white px-1.5 py-0.5 rounded-md hover:bg-white/20 text-white/80">{label}</Link>
+ <Link to={to} className="hover:text-white px-1.5 py-0.5 rounded-lg hover:bg-white/20 text-white/80">{label}</Link>
  )}
  </div>
  );
@@ -342,7 +342,7 @@ export default function Layout({ children }) {
  </div>
  {/* Copyright footer - in document flow, never overlaps content */}
  <footer className="w-full text-center py-2 px-4 select-none pointer-events-none" aria-hidden="true">
- <p className="text-[10px] text-gray-400/50">
+ <p className="text-[11px] text-gray-400/50">
  © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
  </p>
  </footer>

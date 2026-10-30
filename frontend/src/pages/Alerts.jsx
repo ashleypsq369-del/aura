@@ -97,13 +97,13 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
  </span>
  <span className={cfg.badge}>{cfg.label}</span>
  {mlRisk && (
- <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5"
+ <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5"
  style={{ background: isDark ? 'rgba(124,58,237,0.2)' : '#ede9fe', color: isDark ? '#c4b5fd' : '#6d28d9' }}>
  <Zap size={8} /> ML {(mlRisk.overall_risk * 100).toFixed(0)}%
  </span>
  )}
  </div>
- <span className="text-[10px] flex items-center gap-1 flex-shrink-0"
+ <span className="text-[11px] flex items-center gap-1 flex-shrink-0"
  style={{ color: isDark ? '#64748b' : '#94a3b8' }}>
  <Clock size={10} />{timeAgo(alert.created_at)}
  </span>
@@ -117,7 +117,7 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
  {/* Actions row */}
  <div className="flex items-center justify-between gap-2 flex-wrap">
  {alert.patient_name && (
- <span className="text-[10px] font-semibold rounded-full px-2 py-0.5"
+ <span className="text-[11px] font-semibold rounded-full px-2 py-0.5"
  style={{
  color: isDark ? '#94a3b8' : '#475569',
  background: isDark ? 'rgba(255,255,255,0.06)' : '#ffffff',
@@ -134,17 +134,17 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
  />
  {alert.patient_id && (
  <button onClick={() => onNavigate(alert.patient_id)}
- className="flex items-center gap-1 px-2 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[10px] font-bold transition">
+ className="flex items-center gap-1 px-2 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50">
  <ExternalLink size={10} /> Patient
  </button>
  )}
  <button onClick={() => onExplain(alert)} disabled={explainLoading}
- className="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[var(--text-600)] rounded-md text-[10px] font-semibold transition disabled:opacity-50"
+ className="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-slate-200 text-[var(--text-600)] rounded-lg text-[11px] font-semibold transition disabled:opacity-50"
  style={{ color: isDark ? '#94a3b8' : undefined, background: isDark ? 'rgba(255,255,255,0.08)' : undefined }}>
  <Brain size={10} /> Explain
  </button>
  <button onClick={() => onAck(alert.id)} disabled={ackPending}
- className="flex items-center gap-1 px-2 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-[10px] font-semibold transition disabled:opacity-50">
+ className="flex items-center gap-1 px-2 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition disabled:opacity-50">
  <CheckCircle size={10} /> {ackPending ? '…' : 'Resolve'}
  </button>
  </div>
@@ -331,7 +331,7 @@ export default function Alerts() {
  {/* Severity pills */}
  <div className="flex items-center gap-1 rounded-xl p-1 flex-wrap flex-shrink-0"
  style={{ background: T.pill }}>
- <span className="text-[10px] font-bold uppercase px-1.5" style={{ color: T.faint }}>Severity</span>
+ <span className="text-[11px] font-bold uppercase px-1.5" style={{ color: T.faint }}>Severity</span>
  {['all', 'critical', 'high', 'medium', 'low'].map(s => {
  const isActive = filterSeverity === s;
  const activeBg = { critical: '#dc2626', high: '#f59e0b', medium: '#0d9488', low: '#64748b', all: '#334155' }[s];
@@ -479,16 +479,16 @@ export default function Alerts() {
  <div className="flex items-center gap-1.5 flex-wrap">
  <span className="font-semibold text-[11px]" style={{ color: T.txt }}>{alertLabel(a.alert_type)}</span>
  <span className={cfg.badge}>{cfg.label}</span>
- {a.patient_name && <span className="text-[10px]" style={{ color: T.faint }}>{a.patient_name}</span>}
+ {a.patient_name && <span className="text-[11px]" style={{ color: T.faint }}>{a.patient_name}</span>}
  </div>
- <p className="text-[10px] truncate" style={{ color: T.faint }}>{a.message}</p>
+ <p className="text-[11px] truncate" style={{ color: T.faint }}>{a.message}</p>
  </div>
- <span className="text-[10px] flex-shrink-0" style={{ color: T.faint }}>
+ <span className="text-[11px] flex-shrink-0" style={{ color: T.faint }}>
  {timeAgo(a.acknowledged_at || a.created_at)}
  </span>
  {a.patient_id && (
  <button onClick={() => navigate(`/patients/${a.patient_id}`)}
- className="flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded transition"
+ className="flex-shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded transition"
  style={{ color: '#0d9488' }}>
  View
  </button>

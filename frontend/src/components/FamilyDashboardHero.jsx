@@ -39,7 +39,7 @@ function QuickAction({ icon: Icon, label, onClick, accent = 'rgba(255,255,255,0.
  style={{ background: accent, border: '1px solid rgba(255,255,255,0.2)' }}
  >
  <Icon size={16} className="text-white" />
- <span className="text-[10px] font-semibold text-white/90 whitespace-nowrap">{label}</span>
+ <span className="text-[11px] font-semibold text-white/90 whitespace-nowrap">{label}</span>
  </button>
  );
 }
@@ -120,7 +120,7 @@ export default function FamilyDashboardHero({ patientId, patientName }) {
  <CheckCircle2 size={18} className="text-white" />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-white/60 text-[10px] font-semibold">Last visit</p>
+ <p className="text-white/60 text-[11px] font-semibold">Last visit</p>
  <p className="text-white font-bold text-sm">{lastVisitDate}</p>
  {lastVisit?.appointment_type && (
  <p className="text-white/60 text-[11px] truncate">{lastVisit.appointment_type}</p>
@@ -136,7 +136,7 @@ export default function FamilyDashboardHero({ patientId, patientName }) {
  <AlertCircle size={18} className="text-white/60" />
  </div>
  <div>
- <p className="text-white/60 text-[10px] font-semibold">Last visit</p>
+ <p className="text-white/60 text-[11px] font-semibold">Last visit</p>
  <p className="text-white/80 text-sm">No visits recorded yet</p>
  </div>
  </>

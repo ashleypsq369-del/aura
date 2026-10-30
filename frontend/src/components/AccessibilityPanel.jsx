@@ -72,7 +72,7 @@ export default function AccessibilityPanel() {
  </button>
 
  {/* Current size label */}
- <span className="text-white/60 text-[10px] font-bold uppercase w-5 text-center select-none">
+ <span className="text-white/60 text-[11px] font-bold uppercase w-5 text-center select-none">
  {fontSizeLabel}
  </span>
 

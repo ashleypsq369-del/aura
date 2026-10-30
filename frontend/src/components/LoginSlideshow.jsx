@@ -147,7 +147,7 @@ export default function LoginSlideshow() {
  </div>
  <div>
  <p className="font-bold text-white text-sm tracking-wide leading-none">Project Aura</p>
- <p className="text-white/55 text-[10px] mt-0.5">Palliative Care · Ghana</p>
+ <p className="text-white/55 text-[11px] mt-0.5">Palliative Care · Ghana</p>
  </div>
  </div>
  </div>
@@ -213,7 +213,7 @@ export default function LoginSlideshow() {
  }`} />
  ))}
  </div>
- <p className="text-white/35 text-[9px] font-medium tabular-nums">{current + 1} / {SLIDES.length}</p>
+ <p className="text-white/35 text-[11px] font-medium tabular-nums">{current + 1} / {SLIDES.length}</p>
  </div>
 
  {/* Service icon strip - right side */}

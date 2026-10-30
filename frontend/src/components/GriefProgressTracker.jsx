@@ -263,7 +263,7 @@ export default function GriefProgressTracker({ screeningData }) {
           Grief Journal
         </h3>
 
-        <div className="mb-6 p-4 bg-gradient-to-br bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] dark:border-slate-700">
+        <div className="mb-6 p-4 bg-gradient-to-br bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)]">
           <p className="text-purple-900 font-semibold mb-2">Today's Prompt:</p>
           <p className="text-purple-800 italic">"{selectedPrompt}"</p>
         </div>

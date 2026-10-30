@@ -67,7 +67,7 @@ function ColorSwatch({ items, selected, onSelect }) {
  )}
  </button>
  {/* Label fades in on hover */}
- <span className="text-[10px] font-medium text-[var(--text-400)] group-hover:text-[var(--text-600)] transition-colors leading-none max-w-[44px] text-center truncate">
+ <span className="text-[11px] font-medium text-[var(--text-400)] group-hover:text-[var(--text-600)] transition-colors leading-none max-w-[44px] text-center truncate">
  {item.label}
  </span>
  </div>
@@ -136,7 +136,7 @@ function BackdropCard({ item, selected, onSelect }) {
  </motion.span>
  )}
  {/* label */}
- <span className="absolute bottom-1.5 left-0 right-0 text-center text-[10px] font-semibold text-white/80 drop-shadow leading-none">
+ <span className="absolute bottom-1.5 left-0 right-0 text-center text-[11px] font-semibold text-white/80 drop-shadow leading-none">
  {item.label}
  </span>
  </motion.button>

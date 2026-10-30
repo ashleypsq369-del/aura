@@ -214,7 +214,7 @@ export function ConfirmModal({
  footerContent={
  <ModalFooter>
  <button type="button" onClick={onClose}
- className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border border-slate-300 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+ className="px-4 py-2 text-sm font-semibold text-[var(--text-700)] border border-slate-300 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
  {cancelLabel}
  </button>
  <button type="button" onClick={onConfirm} disabled={isLoading}

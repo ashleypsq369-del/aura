@@ -89,11 +89,11 @@ export default function WellbeingDetail() {
  <div className="w-8 h-8 rounded-lg mx-auto mb-1.5 flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
  <Icon size={14} style={{ color }} />
  </div>
- <p className="text-[10px] font-bold text-[var(--text-500)] uppercase tracking-wide leading-tight">{label}</p>
+ <p className="text-[11px] font-bold text-[var(--text-500)] uppercase tracking-wide leading-tight">{label}</p>
  <p className="text-xl font-bold tabular-nums mt-1" style={{ color: val >= 7 ? '#ef4444' : val >= 4 ? '#f59e0b' : '#10b981' }}>
  {val}
  </p>
- <p className="text-[9px] text-slate-400">/10</p>
+ <p className="text-[11px] text-slate-400">/10</p>
  </motion.div>
  );
  })}
@@ -158,7 +158,7 @@ export default function WellbeingDetail() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  {['Date', 'Overall', 'Pain', 'Tiredness', 'Anxiety', 'Depression', 'Wellbeing', 'Total'].map(h => (
  <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
@@ -169,7 +169,7 @@ export default function WellbeingDetail() {
  const total = ESAS_FIELDS.reduce((s, f) => s + (a[f.key] ?? 0), 0);
  return (
  <tr key={a.id} className="hover:bg-[var(--card-bg)] transition-colors h-[48px]">
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">
  {new Date(a.assessed_at || a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
  </td>
  <td className="py-3 px-4">

@@ -243,10 +243,10 @@ export default function Journal() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] dark:border-slate-700 p-8 shadow-md text-center"
+          className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-8 shadow-md text-center"
         >
           <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.7 }} />
-          <p className="text-xl italic text-gray-700 dark:text-slate-200">
+          <p className="text-xl italic text-gray-700">
             "{selectedPrompt}"
           </p>
           <button
@@ -274,7 +274,7 @@ export default function Journal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-[var(--card-bg)] rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border dark:border-slate-700"
+                className="bg-[var(--card-bg)] rounded-xl shadow-sm hover:shadow-md transition-all relative group overflow-hidden border"
                 style={{ borderColor: ['#e9d5ff','#dbeafe','#d1fae5','#fce7f3','#fef3c7','#cffafe'][index % 6] }}
               >
                 {/* Top accent */}
@@ -300,9 +300,9 @@ export default function Journal() {
                 )}
 
                 <div className="p-5">
-                <div className="flex items-center space-x-3 mb-4 pb-4 border-b-2 dark:border-slate-700" style={{ borderColor: '#6B4F7A20' }}>
+                <div className="flex items-center space-x-3 mb-4 pb-4 border-b-2" style={{ borderColor: '#6B4F7A20' }}>
                   <Calendar className="w-5 h-5" style={{ color: '#6B4F7A' }} />
-                  <time className="text-sm font-medium text-gray-600 dark:text-slate-300">
+                  <time className="text-sm font-medium text-gray-600">
                     {new Date(entry.created_at).toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -337,7 +337,7 @@ export default function Journal() {
                         <span>{cfg.emoji}</span>
                         {cfg.label}
                       </span>
-                      <span className="text-[10px] text-slate-400">Detected tone</span>
+                      <span className="text-[11px] text-slate-400">Detected tone</span>
                     </div>
                   );
                 })()}
@@ -382,7 +382,7 @@ export default function Journal() {
           footer={
             <div className="flex gap-3">
               <button type="button" onClick={() => { setShowModal(false); setNewEntry(''); }}
-                className="flex-1 py-2.5 border-2 border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
+                className="flex-1 py-2.5 border-2 border-[var(--card-border)] text-[var(--text-600)] rounded-xl font-semibold text-sm hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
                 Cancel
               </button>
               <button type="submit" form="journal-form" disabled={createMutation.isPending}
@@ -395,7 +395,7 @@ export default function Journal() {
         >
           {/* Prompt */}
           <div className="mb-5 p-4 rounded-xl" style={{ backgroundColor:'#6B4F7A15' }}>
-            <p className="text-sm italic text-[var(--text-700)] dark:text-slate-300">"{selectedPrompt}"</p>
+            <p className="text-sm italic text-[var(--text-700)]">"{selectedPrompt}"</p>
           </div>
           <form id="journal-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -403,7 +403,7 @@ export default function Journal() {
               <textarea value={newEntry} onChange={e => setNewEntry(e.target.value)}
                 rows={10} required autoFocus
                 placeholder="Let your thoughts flow... This is your private space."
-                className="w-full px-4 py-3 border-2 border-[var(--card-border)] dark:border-slate-600 rounded-xl focus:outline-none resize-none text-sm"
+                className="w-full px-4 py-3 border-2 border-[var(--card-border)] rounded-xl focus:outline-none resize-none text-sm"
               />
             </div>
             <div className="bg-[var(--card-bg)] rounded-xl p-3.5 flex items-center gap-3">

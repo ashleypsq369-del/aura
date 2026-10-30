@@ -178,7 +178,7 @@ export default function Login() {
                   />
                   {/* Character count hint */}
                   {username.length > 40 && (
-                    <span className="text-[10px] text-[var(--text-400)] pr-2 flex-shrink-0">{username.length}/50</span>
+                    <span className="text-[11px] text-[var(--text-400)] pr-2 flex-shrink-0">{username.length}/50</span>
                   )}
                 </div>
                 {fieldErrors.username && (
@@ -244,7 +244,7 @@ export default function Login() {
                     <AlertCircle size={11} />{fieldErrors.password}
                   </p>
                 )}
-                <p className="mt-1 text-[10px] text-slate-400">Min 8 characters · Max 128 characters</p>
+                <p className="mt-1 text-[11px] text-slate-400">Min 8 characters · Max 128 characters</p>
               </div>
 
               {/* Sign In button */}
@@ -273,7 +273,7 @@ export default function Login() {
 
             {/* Demo credentials */}
             <div className="mt-4 pt-4 border-t border-slate-200">
-              <p className="text-[10px] font-bold text-[var(--text-400)]  text-center mb-2.5">
+              <p className="text-[11px] font-bold text-[var(--text-400)]  text-center mb-2.5">
                 Demo Accounts
               </p>
               <div className="grid grid-cols-3 gap-2 text-xs text-center">
@@ -297,7 +297,7 @@ export default function Login() {
                                              'bg-purple-50 border-purple-200 hover:border-purple-400'}`}
                   >
                     <p className="font-bold text-[var(--text-800)] text-[11px]">{label}</p>
-                    <p className={`font-mono text-[10px] mt-0.5
+                    <p className={`font-mono text-[11px] mt-0.5
                       ${color === 'blue' ? 'text-teal-600' :
                         color === 'green' ? 'text-green-600' : 'text-purple-600'}`}>
                       {user}
@@ -305,12 +305,12 @@ export default function Login() {
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] text-center text-[var(--text-400)] mt-2">Click any card to auto-fill credentials</p>
+              <p className="text-[11px] text-center text-[var(--text-400)] mt-2">Click any card to auto-fill credentials</p>
             </div>
 
           </div>
 
-          <p className="text-center text-[10px] text-white/70 lg:text-[var(--text-400)] mt-3 drop-shadow">
+          <p className="text-center text-[11px] text-white/70 lg:text-[var(--text-400)] mt-3 drop-shadow">
             © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
           </p>
         </motion.div>

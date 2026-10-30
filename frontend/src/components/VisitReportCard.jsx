@@ -30,8 +30,8 @@ function VitalsGrid({ vitals }) {
  return (
  <div className="grid grid-cols-2 gap-2">
  {rows.map(r => (
- <div key={r.label} className="bg-[var(--card-bg)] dark:bg-slate-700/40 rounded-lg px-3 py-2">
- <div className="text-[10px] text-[var(--text-500)] dark:text-slate-400">{r.label}</div>
+ <div key={r.label} className="bg-[var(--card-bg)]/40 rounded-lg px-3 py-2">
+ <div className="text-[11px] text-[var(--text-500)] dark:text-slate-400">{r.label}</div>
  <div className="font-semibold text-[var(--text-800)] text-sm">
  {r.value} <span className="text-xs font-normal text-slate-400">{r.unit}</span>
  </div>
@@ -53,9 +53,9 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
 
  if (isLoading) {
  return (
- <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] p-4 animate-pulse">
- <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-2/3 mb-2" />
- <div className="h-3 bg-slate-200 dark:bg-slate-600 rounded w-1/2" />
+ <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-4 animate-pulse">
+ <div className="h-4 bg-slate-200 rounded w-2/3 mb-2" />
+ <div className="h-3 bg-slate-200 rounded w-1/2" />
  </div>
  );
  }
@@ -66,7 +66,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  const CondIcon = meta.icon;
 
  return (
- <div className="rounded-xl border border-[var(--card-border)] dark:border-slate-700 bg-[var(--card-bg)] overflow-hidden">
+ <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] overflow-hidden">
  {/* Header */}
  <div
  className="px-4 py-3 flex items-center justify-between cursor-pointer"
@@ -109,12 +109,12 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  transition={{ duration: 0.25, ease: 'easeInOut' }}
  className="overflow-hidden"
  >
- <div className="p-4 space-y-4 border-t border-[var(--card-border)]/50 dark:border-slate-700">
+ <div className="p-4 space-y-4 border-t border-[var(--card-border)]/50">
  {/* Pain score */}
  {report.pain_score != null && (
  <div className="flex items-center gap-2">
  <Heart size={14} className="text-rose-400" />
- <span className="text-sm text-[var(--text-700)] dark:text-slate-200">
+ <span className="text-sm text-[var(--text-700)]">
  Pain score: <strong>{report.pain_score}/10</strong>
  </span>
  </div>
@@ -173,7 +173,7 @@ export default function VisitReportCard({ appointmentId, nurseName, visitDate })
  )}
 
  {report.sent_to_family && (
- <p className="text-[10px] text-[var(--text-400)] flex items-center gap-1">
+ <p className="text-[11px] text-[var(--text-400)] flex items-center gap-1">
  <CheckCircle size={10} className="text-teal-500" />
  Report sent to family
  </p>

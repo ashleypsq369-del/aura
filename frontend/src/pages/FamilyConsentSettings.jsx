@@ -185,7 +185,7 @@ export default function FamilyConsentSettings() {
  <button
  type="button"
  onClick={() => setAll(false)}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-[var(--card-border)] dark:border-slate-600 text-[var(--text-600)] text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-[var(--card-border)] text-[var(--text-600)] text-xs font-semibold hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition"
  >
  <Lock className="w-3 h-3" /> Revoke all
  </button>
@@ -212,9 +212,9 @@ export default function FamilyConsentSettings() {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{cat.label}</p>
+ <p className="text-sm font-semibold text-gray-900">{cat.label}</p>
  <span
- className="px-2 py-0.5 rounded-full text-[10px] font-semibold border"
+ className="px-2 py-0.5 rounded-full text-[11px] font-semibold border"
  style={sens.style}
  >{sens.label}</span>
  </div>
@@ -227,7 +227,7 @@ export default function FamilyConsentSettings() {
  aria-label={`${granted ? 'Revoke' : 'Grant'} family access to ${cat.label}`}
  onClick={() => toggle(cat.key)}
  className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 ${
- granted ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-600'
+ granted ? 'bg-teal-600' : 'bg-slate-300'
  }`}
  >
  <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-md transition-transform ${
@@ -248,7 +248,7 @@ export default function FamilyConsentSettings() {
  </div>
  <div className="bg-[var(--card-bg)] rounded-xl px-4 py-3 text-center"
  style={{ border: '1px solid #d1d5db' }}>
- <div className="text-2xl font-bold text-[var(--text-700)] dark:text-slate-300">{CATEGORIES.length - grantedCount}</div>
+ <div className="text-2xl font-bold text-[var(--text-700)]">{CATEGORIES.length - grantedCount}</div>
  <div className="text-xs font-medium text-[var(--text-600)] dark:text-[var(--text-400)] mt-0.5">Categories private</div>
  </div>
  </div>

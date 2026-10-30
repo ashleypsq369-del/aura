@@ -58,17 +58,17 @@ function GroupCard({ group, data, threshold }) {
  <div className="flex items-center gap-4 ml-4">
  <div className="text-right hidden sm:block">
  <p className="text-lg font-bold text-slate-900">{data.mean_risk_score?.toFixed(3)}</p>
- <p className="text-[10px] text-slate-500">avg risk</p>
+ <p className="text-[11px] text-slate-500">avg risk</p>
  </div>
  <div className="text-right hidden sm:block">
  <p className="text-sm font-bold text-slate-700">{data.count}</p>
- <p className="text-[10px] text-slate-500">samples</p>
+ <p className="text-[11px] text-slate-500">samples</p>
  </div>
  {open ? <ChevronUp size={14} className="text-slate-400"/> : <ChevronDown size={14} className="text-slate-400"/>}
  </div>
  </div>
  <div className="mt-3">
- <div className="flex items-center justify-between text-[10px] text-[var(--text-500)] mb-1">
+ <div className="flex items-center justify-between text-[11px] text-[var(--text-500)] mb-1">
  <span>Risk Score</span><span>{((data.mean_risk_score||0)*100).toFixed(1)}%</span>
  </div>
  <div className="w-full h-2 bg-white/60 rounded-full overflow-hidden">
@@ -76,7 +76,7 @@ function GroupCard({ group, data, threshold }) {
  </div>
  </div>
  <div className="mt-2 flex items-center justify-between">
- <span className="text-[10px] text-slate-500">Disparity from mean</span>
+ <span className="text-[11px] text-slate-500">Disparity from mean</span>
  <DisparityBar value={disp} threshold={threshold}/>
  </div>
  </div>
@@ -88,7 +88,7 @@ function GroupCard({ group, data, threshold }) {
  <div className="bg-white/60 rounded-lg p-3">
  <p className="text-xs text-[var(--text-500)] font-semibold mb-1">Sample Size</p>
  <p className="font-bold text-[var(--text-900)] text-lg">{data.count}</p>
- {data.count < 20 && <p className="text-[10px] text-amber-600 mt-1">Small sample · results may be unreliable</p>}
+ {data.count < 20 && <p className="text-[11px] text-amber-600 mt-1">Small sample · results may be unreliable</p>}
  </div>
  <div className="bg-white/60 rounded-lg p-3">
  <p className="text-xs text-[var(--text-500)] font-semibold mb-1">Std Deviation</p>

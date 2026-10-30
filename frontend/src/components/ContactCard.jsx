@@ -122,7 +122,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  <div className="flex items-center gap-1.5 mb-0.5">
  <p className="font-semibold text-[var(--text-900)] text-sm truncate">{displayName}</p>
  {contact.nickname && (
- <span className="text-[9px] text-[var(--text-400)] font-medium truncate hidden sm:inline">
+ <span className="text-[11px] text-[var(--text-400)] font-medium truncate hidden sm:inline">
  ({contact.name})
  </span>
  )}
@@ -133,17 +133,17 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
 
  <div className="flex items-center gap-1.5 flex-wrap">
  {/* Role badge */}
- <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+ <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
  style={{ backgroundColor: roleStyle.bg, color: roleStyle.text, border: `1px solid ${roleStyle.border}` }}>
  {contact.role.charAt(0).toUpperCase() + contact.role.slice(1)}
  </span>
  {/* Online / last seen */}
  {contact.is_online ? (
- <span className="flex items-center gap-0.5 text-[10px] text-green-600 font-semibold">
+ <span className="flex items-center gap-0.5 text-[11px] text-green-600 font-semibold">
  <CheckCircle size={9}/> Online
  </span>
  ) : lastSeen && (
- <span className="flex items-center gap-0.5 text-[10px] text-slate-400">
+ <span className="flex items-center gap-0.5 text-[11px] text-slate-400">
  <Clock size={9}/> {lastSeen}
  </span>
  )}
@@ -152,7 +152,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  {/* Phone number if available */}
  {contact.phone && (
  <a href={`tel:${contact.phone}`} onClick={e => e.stopPropagation()}
- className="flex items-center gap-1 text-[10px] text-teal-600 hover:text-teal-800 font-medium mt-1 w-fit">
+ className="flex items-center gap-1 text-[11px] text-teal-600 hover:text-teal-800 font-medium mt-1 w-fit">
  <Phone size={9}/> {contact.phone}
  </a>
  )}
@@ -162,7 +162,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  <div className="flex items-center gap-1.5 flex-shrink-0">
  {/* Unread badge */}
  {contact.unread_count > 0 && (
- <span className="min-w-[20px] h-5 px-1 bg-teal-600 text-white rounded-full flex items-center justify-center text-[10px] font-bold">
+ <span className="min-w-[20px] h-5 px-1 bg-teal-600 text-white rounded-full flex items-center justify-center text-[11px] font-bold">
  {contact.unread_count > 9 ? '9+' : contact.unread_count}
  </span>
  )}
@@ -280,7 +280,7 @@ export default function ContactCard({ contact, onMessage, onFavorite, onRemove }
  {/* Message count footer */}
  {contact.message_count > 0 && (
  <div className="px-4 pb-3 -mt-1">
- <p className="text-[10px] text-slate-400">
+ <p className="text-[11px] text-slate-400">
  {contact.message_count} message{contact.message_count !== 1 ? 's' : ''} exchanged
  </p>
  </div>

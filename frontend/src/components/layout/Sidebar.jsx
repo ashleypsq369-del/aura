@@ -261,7 +261,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  {showLabels && (
  <div className="min-w-0">
  <p className="text-sm font-bold text-white leading-tight truncate">Project Aura</p>
- <p className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</p>
+ <p className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</p>
  </div>
  )}
  </div>
@@ -269,7 +269,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  {/* Desktop collapse/pin button */}
  <button
  onClick={() => updateSidebarSetting('defaultState', sidebarSettings.defaultState === 'expanded' ? 'icons' : 'expanded')}
- className="hidden md:flex items-center justify-center w-6 h-6 rounded-md hover:bg-white/20 text-white/60 hover:text-white transition-all flex-shrink-0"
+ className="hidden md:flex items-center justify-center w-6 h-6 rounded-lg hover:bg-white/20 text-white/60 hover:text-white transition-all flex-shrink-0"
  data-tip={sidebarSettings.defaultState === 'expanded' ? 'Collapse to icons' : 'Pin sidebar open'}
  >
  {sidebarSettings.defaultState === 'expanded'
@@ -293,7 +293,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  {/* Care Setting badge - shown when showLabels */}
  {careSetting && showLabels && meta && (
  <div className="mb-2 px-2 py-2 bg-white/10 rounded-lg border border-white/20">
- <p className="text-[9px] text-white/50 uppercase tracking-wider font-bold mb-0.5">Care Setting</p>
+ <p className="text-[11px] text-white/50 uppercase tracking-wider font-bold mb-0.5">Care Setting</p>
  <p className="text-[11px] text-teal-200 font-semibold leading-tight flex items-center gap-1">
  {meta.icon && <meta.icon size={11} className="flex-shrink-0" />}
  {meta.shortLabel}
@@ -345,7 +345,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
 
  {item.badge && unreadCount > 0 && (
  <span className={`
- bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg min-w-[16px] text-center
+ bg-red-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full shadow-lg min-w-[16px] text-center
  ${showLabels ? 'ml-auto' : 'absolute -top-0.5 -right-0.5'}
  `}>
  {unreadCount > 9 ? '9+' : unreadCount}
@@ -367,7 +367,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  <Link to="/settings" onClick={() => setIsOpen(false)}
  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 transition-colors">
  <span className="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0" />
- <span className="text-[10px] text-teal-200 font-medium truncate">
+ <span className="text-[11px] text-teal-200 font-medium truncate">
  {uiProfile?.label || profileKey} mode
  </span>
  </Link>

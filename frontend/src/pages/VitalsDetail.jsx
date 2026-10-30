@@ -224,7 +224,7 @@ export default function VitalsDetail() {
  <div className="overflow-x-auto">
  <table className="w-full">
  <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)] dark:border-slate-700">
+ <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
  {['Date & Time','BP (mmHg)','HR (bpm)','Temp (°C)','O₂ Sat (%)','Resp. Rate','Recorded By'].map(h => (
  <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
  ))}
@@ -234,16 +234,16 @@ export default function VitalsDetail() {
  <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
  {vitals.map((v) => (
  <tr key={v.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
- <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)] dark:text-white">
+ <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)]">
  {new Date(v.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
  </td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">
  {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia ?? 0)}` : '--'}
  </td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.temperature?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)] dark:text-slate-300">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.temperature?.toFixed(1) ?? '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
+ <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
  <td className="py-3 px-4 text-sm text-slate-500">{v.recorded_by || 'System'}</td>
  <td className="py-3 px-4 text-right">
  {v.heart_rate >= 100 || v.oxygen_saturation < 95 ? (

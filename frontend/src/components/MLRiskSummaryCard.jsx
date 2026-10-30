@@ -109,7 +109,7 @@ export default function MLRiskSummaryCard({ patientId }) {
  <div className="flex items-center gap-2 flex-shrink-0">
  <span className="text-2xl font-black tabular-nums text-slate-900">{pct}%</span>
  <div className="flex flex-col items-end gap-1">
- <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText} uppercase tracking-wide`}>
+ <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText} uppercase tracking-wide`}>
  {cfg.label}
  </span>
  <ChevronRight size={13} className="text-slate-300" />
@@ -136,7 +136,7 @@ export default function MLRiskSummaryCard({ patientId }) {
  : ['bg-slate-400', 'text-white'];
  return (
  <span key={key}
- className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black shadow-sm ${bg} ${txt}`}>
+ className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black shadow-sm ${bg} ${txt}`}>
  {TASK_SHORT[key] || key}
  <span className="bg-white/25 rounded-full px-1">{p}%</span>
  </span>
@@ -152,7 +152,7 @@ export default function MLRiskSummaryCard({ patientId }) {
  )}
 
  {/* Footer */}
- <div className="px-4 py-2 border-t border-[var(--card-border)]/50 flex items-center gap-1 text-[10px] text-[var(--text-400)] font-medium bg-slate-50">
+ <div className="px-4 py-2 border-t border-[var(--card-border)]/50 flex items-center gap-1 text-[11px] text-[var(--text-400)] font-medium bg-slate-50">
  <Brain size={9} className="text-teal-400" />
  Tap for full SHAP breakdown &amp; clinical analysis
  <ChevronRight size={10} className="ml-auto text-slate-300" />

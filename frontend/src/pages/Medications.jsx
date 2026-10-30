@@ -89,10 +89,10 @@ function KpiCard({ label, value, icon: Icon, color, selected, onClick, subtitle 
  }`}>
  {selected && <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor:'currentColor' }}/>}
  <div className="flex items-center gap-2 mb-1.5">
- <div className={`w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 ${selected?'bg-white/30':'bg-slate-100'}`}>
+ <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${selected?'bg-white/30':'bg-slate-100'}`}>
  <Icon size={13} className={selected?'text-current':'text-slate-500'}/>
  </div>
- <span className={`text-[10px] font-bold ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
+ <span className={`text-[11px] font-bold ${selected?'text-current opacity-80':'text-slate-500'}`}>{label}</span>
  </div>
  <p className={`text-2xl font-bold tabular-nums leading-none ${selected?'text-current':'text-slate-800'}`}>{value}</p>
  {subtitle && <p className={`text-[11px] mt-1 ${selected?'text-current opacity-70':'text-slate-400'}`}>{subtitle}</p>}
@@ -223,26 +223,26 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
  <span className="font-semibold text-[var(--text-800)] text-sm truncate">{med.name}</span>
- <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-[var(--text-500)] border border-slate-200'}`}>
+ <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-[var(--text-500)] border border-slate-200'}`}>
  {isActive ? 'Active' : 'Stopped'}
  </span>
  {med.frequency === 'prn' && (
- <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">PRN</span>
+ <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">PRN</span>
  )}
  {dose && (
- <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${
+ <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${
  dose.hoursUntil < 1 ? 'bg-red-50 text-red-600' : dose.hoursUntil < 4 ? 'bg-amber-50 text-amber-600' : 'bg-[var(--card-bg)] text-slate-500'
  }`}>
  <Bell size={8}/> {dose.hoursUntil < 1 ? 'Due now' : dose.next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
  </span>
  )}
  {isActive && todayTaken === true && (
- <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-0.5">
+ <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-0.5">
  <CheckCircle size={8}/> Taken
  </span>
  )}
  {isActive && todayTaken === false && (
- <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex items-center gap-0.5">
+ <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex items-center gap-0.5">
  <AlertTriangle size={8}/> Not confirmed
  </span>
  )}
@@ -263,7 +263,7 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  {/* Patient / Caregiver: Mark Taken */}
  {isActive && canLogAdherence && todayTaken !== true && (
  <button onClick={() => onMarkTaken(med.id)} disabled={isTakingLoading}
- className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-[11px] font-semibold transition disabled:opacity-50">
+ className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition disabled:opacity-50">
  {isTakingLoading ? <Loader2 size={10} className="animate-spin"/> : <CheckCircle size={10}/>} Taken
  </button>
  )}
@@ -271,11 +271,11 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  {canEdit && isActive && (
  <div className="flex items-center gap-1">
  <button onClick={() => onEdit(med)}
- className="flex items-center gap-1 px-2 py-1 text-[var(--text-500)] hover:text-[var(--text-700)] hover:bg-slate-100 rounded-md text-[11px] font-medium transition">
+ className="flex items-center gap-1 px-2 py-1 text-[var(--text-500)] hover:text-[var(--text-700)] hover:bg-slate-100 rounded-lg text-[11px] font-medium transition">
  <Edit2 size={10}/> Edit
  </button>
  <button onClick={() => onStop(med)}
- className="flex items-center gap-1 px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md text-[11px] font-medium transition">
+ className="flex items-center gap-1 px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-[11px] font-medium transition">
  <Ban size={10}/> Stop
  </button>
  </div>
@@ -526,7 +526,7 @@ export default function Medications() {
  </div>
  <div className="flex items-center gap-2">
  <span className="text-[11px] font-black">{badge}</span>
- {hoursUntil >= 1 && <span className="text-[10px] opacity-60">{hoursUntil.toFixed(1)}h</span>}
+ {hoursUntil >= 1 && <span className="text-[11px] opacity-60">{hoursUntil.toFixed(1)}h</span>}
  </div>
  </div>
  );

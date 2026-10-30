@@ -321,7 +321,7 @@ export default function AuraOnboarding() {
  pointerEvents: 'auto',
  }}
  >
- <div className="rounded-2xl overflow-hidden border border-[var(--card-border)] dark:border-slate-700"
+ <div className="rounded-2xl overflow-hidden border border-[var(--card-border)]"
  style={{
  background: 'var(--card-bg, #e8fafa)',
  boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)',
@@ -379,7 +379,7 @@ export default function AuraOnboarding() {
  {/* Footer controls */}
  <div className="flex items-center justify-between px-4 pb-3 gap-2">
  <div className="flex items-center gap-2">
- <span className="text-[10px] font-medium tabular-nums" style={{ color: 'var(--text-500)' }}>{step+1}/{steps.length}</span>
+ <span className="text-[11px] font-medium tabular-nums" style={{ color: 'var(--text-500)' }}>{step+1}/{steps.length}</span>
  {step > 0 && (
  <button onClick={goBack}
  className="flex items-center gap-0.5 text-[11px] transition-colors"
@@ -426,7 +426,7 @@ export default function AuraOnboarding() {
  <div className="flex-shrink-0 mb-1">
  <AuraMascot size={48} pose={hint.pose} showShadow={false}/>
  </div>
- <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto border border-[var(--card-border)] dark:border-slate-600"
+ <div className="relative px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-xl pointer-events-auto border border-[var(--card-border)]"
  style={{
  background: 'var(--card-bg, #e8fafa)',
  boxShadow: '0 6px 24px rgba(0,0,0,0.18)',
@@ -440,7 +440,7 @@ export default function AuraOnboarding() {
  <X size={10}/>
  </button>
  {/* Tail */}
- <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-[var(--card-bg)] border-r border-b border-[var(--card-border)] dark:border-slate-600"/>
+ <div className="absolute -bottom-1.5 left-4 w-3 h-3 rotate-45 bg-[var(--card-bg)] border-r border-b border-[var(--card-border)]"/>
  </div>
  </motion.div>
  )}
