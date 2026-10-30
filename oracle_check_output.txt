@@ -1,0 +1,149 @@
+============================================================
+ORACLE PROJECT HEALTH CHECK
+============================================================
+
+[1] DATABASE STATUS
+  oracle.db  63.0 MB
+  Tables (42):
+    acestar_learning                     60 rows
+    api_cache                             3 rows
+    completed_games                       0 rows *** EMPTY ***
+    contextual_weights                    6 rows
+    football_fixtures                     0 rows *** EMPTY ***
+    football_fixtures_2024_25             0 rows *** EMPTY ***
+    football_h2h                    113,910 rows
+    football_leagues                      7 rows
+    football_live_matches                 0 rows *** EMPTY ***
+    football_matches_2000_2026      113,916 rows
+    football_player_stats                 0 rows *** EMPTY ***
+    football_prediction_results           0 rows *** EMPTY ***
+    football_predictions                  0 rows *** EMPTY ***
+    football_team_current_stats           0 rows *** EMPTY ***
+    football_team_form               61,351 rows
+    football_team_news                    0 rows *** EMPTY ***
+    football_team_stats               6,142 rows
+    games                            14,907 rows
+    gate_performance                      0 rows *** EMPTY ***
+    injuries                            122 rows
+    injury_cache                          0 rows *** EMPTY ***
+    lineup_cache                          0 rows *** EMPTY ***
+    live_game_snapshots                   7 rows
+    live_learning_insights              404 rows
+    live_matches                          0 rows *** EMPTY ***
+    market_predictions                  920 rows
+    nba_games_2016_2026              29,706 rows
+    nba_games_complete                1,026 rows
+    nba_games_real                   43,570 rows
+    nba_player_stats_complete        11,184 rows
+    nba_team_stats_2016_2026            451 rows
+    nba_team_stats_real                 420 rows
+    odds_snapshots                        0 rows *** EMPTY ***
+    player_stats                          0 rows *** EMPTY ***
+    prediction_results                   74 rows
+    predictions                          52 rows
+    raw_matches                      59,852 rows
+    results                             164 rows
+    sqlite_sequence                      16 rows
+    team_params                         578 rows
+    team_stats                           30 rows
+    user_predictions                     92 rows
+
+[2] TRAINING DATA
+  oracle_training_data.csv  10.8 MB  ~73,719 rows
+  Columns: sport,league,season,date,home_team,away_team,home_score,away_score,result,home_win,draw,away_win,total_goals,btts,over_25,ht_home_score,ht_away_score,
+
+[3] TRAINED MODEL FILES
+  \acestar\rf_away_score_62params.pkl                         63.6 MB
+  \acestar\rf_home_score_62params.pkl                         63.6 MB
+  \acestar_v2\rf_away_score_62params.pkl                       0.2 MB
+  \acestar_v2\rf_home_score_62params.pkl                       0.2 MB
+  \all_markets\models.pkl                                      5.9 MB
+  \all_markets\scalers.pkl                                     0.0 MB
+  \betting_algorithm\models.pkl                                5.7 MB
+  \betting_algorithm\scalers.pkl                               0.0 MB
+  \complete_all_markets.pkl                                   47.1 MB
+  \complete_all_markets_21features.pkl                        53.1 MB
+  \comprehensive_historical.pkl                               37.4 MB
+  \form_h2h_contextual.pkl                                     3.4 MB
+  \ml_trained\rf_away_score.pkl                               13.9 MB
+  \ml_trained\rf_home_score.pkl                               13.6 MB
+  \ml_trained_all_params\rf_away_score_62params.pkl           63.6 MB
+  \ml_trained_all_params\rf_home_score_62params.pkl           63.6 MB
+  \professional_nba_system.pkl                                 0.0 MB
+  \simple_robust.pkl                                           5.2 MB
+
+[4] GATE WEIGHTS
+  injury_gate                    1.0
+  form_gate                      1.0
+  h2h_gate                       1.0
+  ucl_fatigue_gate               1.0
+  home_advantage_gate            1.15
+  motivation_gate                1.0
+  rest_days_gate                 1.0
+  weather_gate                   1.0
+
+[5] CORE MODULE IMPORTS
+  OK   model.engine
+  OK   model.markets
+  OK   model.monte_carlo
+  OK   model.gates
+  OK   model.kelly_criterion
+  OK   training.trainer
+  OK   training.validator
+  OK   training.historical_loader
+  OK   player_intelligence
+  OK   live_predictor
+  OK   nba_player_intelligence_complete
+
+[6] WEB APP
+  OK   app.py  (5930 lines, 98 routes)
+
+[7] PYTHON DEPENDENCIES
+  OK   flask                     3.1.3        NOT in requirements.txt
+  OK   flask-cors                6.0.2        NOT in requirements.txt
+  OK   numpy                     1.26.4       yes
+  OK   scipy                     1.17.1       yes
+  OK   pandas                    2.1.4        yes
+  OK   scikit-learn              1.4.2        NOT in requirements.txt
+  OK   anthropic                 0.26.0       yes
+  OK   requests                  2.34.2       yes
+  OK   beautifulsoup4            4.13.4       yes
+  OK   aiohttp                   3.9.1        yes
+  MISSING  apscheduler
+  OK   jinja2                    3.1.6        yes
+  OK   python-dotenv             1.0.1        yes
+
+============================================================
+ISSUES SUMMARY
+============================================================
+
+  Trained leagues: ['Super League Greece', 'Primeira Liga', 'Eredivisie', 'Scottish Premiership', 'Süper Lig', 'Ligue 1', 'Ligue 2', 'La Liga', 'La Liga 2', 'Serie B', 'Belgian Pro League', 'Premier League', 'Championship', 'Serie A', 'Bundesliga', 'Bundesliga 2']
+
+  1. CRITICAL: flask not in requirements.txt (server can't be installed from scratch)
+
+  2. CRITICAL: flask-cors not in requirements.txt
+
+  3. CRITICAL: scikit-learn not in requirements.txt
+
+  4. MISSING packages: apscheduler
+
+  5. WARNING: scripts/run_daily.py missing — no daily automation script
+
+  6. WARNING: scripts/backtest.py missing — no backtesting script
+
+============================================================
+WHAT YOU HAVE BUILT
+============================================================
+
+  Core Engine:      Dixon-Coles Poisson model (industry standard)
+  Gates System:     8 contextual adjustment gates (injuries, form, H2H,
+                    UCL fatigue, home advantage, motivation, rest, weather)
+  Markets:          1X2, BTTS, O/U 2.5, O/U 3.5, AH-1, Win to Nil, HT O0.5
+  Staking:          Kelly Criterion (quarter Kelly, max 5% per bet)
+  Monte Carlo:      10,000-simulation match outcome modelling
+  Self-learning:    Gate recalibration from tracked results
+  Web App:          Flask app with 80+ routes
+  Sports:           Football (Dixon-Coles) + NBA (separate ML model)
+  Data:             ESPN scrapers, live odds, injury feeds
+
+Done.
