@@ -307,3 +307,35 @@ html.dark {
 /* ── Services notification badges ── */
 .notif-services { --bar: #0d9488; --badge: #f0fdfa; --icon: #0d9488; }
 .notif-booking  { --bar: #7c3aed; --badge: #faf5ff; --icon: #7c3aed; }
+
+/* ── GLOBAL: remove teal ring/border on all focused inputs ─────────────────
+   Overrides all focus-within:ring-teal-* and focus:ring-teal-* Tailwind classes
+   across 27+ components — cleaner than editing each file individually.       */
+*:focus,
+*:focus-within {
+  --tw-ring-color: transparent !important;
+  --tw-ring-shadow: none !important;
+  --tw-ring-offset-shadow: none !important;
+}
+/* Keep red ring for error states */
+.focus-within\:ring-red-500\/15:focus-within,
+.focus\:ring-red-500\/15:focus {
+  --tw-ring-color: rgba(239,68,68,0.15) !important;
+}
+/* Remove teal ring utilities directly */
+.focus-within\:ring-teal-500\/15:focus-within,
+.focus\:ring-teal-500\/15:focus,
+.focus-within\:ring-teal-500\/20:focus-within,
+.focus\:ring-teal-500\/20:focus,
+.focus-within\:ring-2:focus-within,
+.focus\:ring-2:focus {
+  --tw-ring-shadow: none !important;
+  box-shadow: none !important;
+}
+/* Remove teal border on focus */
+.focus-within\:border-teal-500:focus-within,
+.focus\:border-teal-500:focus,
+.focus-within\:border-teal-400:focus-within,
+.focus\:border-teal-400:focus {
+  border-color: #94a3b8 !important;
+}
