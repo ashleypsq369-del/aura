@@ -50,9 +50,14 @@ export default function Profile() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       toast.success('Profile photo updated!');
-      // Invalidate so AvatarDisplay re-fetches
-      queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
-      queryClient.invalidateQueries({ queryKey: ['user-profile', user.id] });
+      // Remove stale cache entirely then refetch — ensures new URL is loaded
+      queryClient.removeQueries({ queryKey: ['profile-avatar'] });
+      queryClient.removeQueries({ queryKey: ['user-profile'] });
+      // Small delay so backend has committed before refetch
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
+        queryClient.refetchQueries({ queryKey: ['profile-avatar'] });
+      }, 300);
     } catch (e) {
       toast.error(e.response?.data?.detail || 'Photo upload failed');
     } finally {

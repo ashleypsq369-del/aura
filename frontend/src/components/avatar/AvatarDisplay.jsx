@@ -90,9 +90,10 @@ export default function AvatarDisplay({
 
   // ── 1. Real uploaded photo ──
   if (avatarUrl && !imgErr) {
-    // Add cache-busting param so browser doesn't serve the old 404'd image from cache
-    const base = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
-    const src  = `${base}?v=${Date.now()}`;
+    // Use the filename as cache-bust key — stable, changes only when a new photo is uploaded
+    const base    = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
+    const cbKey   = avatarUrl.split('/').pop()?.split('.')[0]?.slice(-8) || '1';
+    const src     = `${base}?v=${cbKey}`;
     return (
       <div style={wrap} className={className} onClick={onClick}>
         <img
