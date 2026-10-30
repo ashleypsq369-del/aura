@@ -30,18 +30,16 @@ export default function ModernCard({
  initial={{ opacity: 0, y: 14 }}
  animate={{ opacity: 1, y: 0 }}
  onClick={onClick}
- className={[
- `relative bg-slate-50 rounded-xl overflow-hidden`,
- 'border border-[#dde3ea]',
+  className={[
+ 'relative overflow-hidden',
  elevated
- ? 'shadow-[0_2px_4px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.07)]'
- : 'shadow-[0_1px_2px_rgba(0,0,0,0.04),0_2px_6px_rgba(0,0,0,0.04)]',
- hover ? 'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(13,115,119,0.10),0_8px_24px_rgba(0,0,0,0.06)]' : '',
+ ? 'shadow-[0_2px_4px_rgba(0,0,0,0.05),0_8px_28px_rgba(8,145,178,0.09)]'
+ : 'shadow-[0_1px_3px_rgba(0,0,0,0.04),0_2px_8px_rgba(0,0,0,0.05)]',
+ hover ? 'transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(8,145,178,0.12),0_8px_28px_rgba(0,0,0,0.07)]' : '',
  onClick ? 'cursor-pointer' : '',
- 'dark:bg-[#1a2332] dark:border-white/[0.06]',
- 'dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.04)]',
  className,
  ].filter(Boolean).join(' ')}
+ style={{ background:'var(--card-bg)', borderRadius:14, border:'1px solid var(--card-border)' }}
  {...props}
  >
  {/* Grain texture overlay - very subtle physical feel */}
