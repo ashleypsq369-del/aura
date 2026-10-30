@@ -13,7 +13,7 @@
 :root {
   --page-bg:     #c2dde8;
   --card-bg:     #e8fafa;
-  --card-border: #8ecfe0;
+  --card-border: #d1dfe8;
   --card-shadow: 0 2px 8px rgba(0,80,120,0.10);
 
   --text-900: #0f172a;
@@ -146,9 +146,9 @@ html.dark {
   .text-amber-600, .text-amber-700  { color: var(--c-warn) !important; }
   .text-rose-600, .text-rose-700    { color: var(--c-rose) !important; }
 
-  /* ── BORDERS ── */
-  .border-slate-200 { border-color: var(--card-border) !important; }
-  .border-slate-100 { border-color: color-mix(in srgb, var(--card-border) 50%, transparent) !important; }
+  /* ── BORDERS — neutral, no teal on inputs ── */
+  .border-slate-200 { border-color: #e2e8f0 !important; }
+  .border-slate-100 { border-color: #f1f5f9 !important; }
 
   /* ── INPUTS — white in light, dark navy in dark ── */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
@@ -156,7 +156,7 @@ html.dark {
     font-size: 13px;
     background-color: #ffffff !important;
     color: #0a1f2e !important;
-    border-color: #8ecfe0 !important;
+    border-color: #cbd5e1 !important;
   }
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
   select { height: 34px; }
@@ -170,8 +170,8 @@ html.dark {
     border-color: #1a3040 !important;
   }
   input:focus, textarea:focus, select:focus {
-    border-color: #0d9488 !important;
-    box-shadow: 0 0 0 2px rgba(13,148,136,0.18) !important;
+    border-color: #94a3b8 !important;
+    box-shadow: none !important;
     outline: none !important;
   }
 
