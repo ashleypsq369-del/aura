@@ -78,41 +78,35 @@ function RoleCard({ role, idx, onClick }) {
 
   return (
     <motion.button
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: idx * 0.07, duration: 0.3 }}
-      whileHover={{ y: -3, transition: { duration: 0.15 } }}
+      transition={{ delay: idx * 0.06, duration: 0.25 }}
+      whileHover={{ y: -2, transition: { duration: 0.12 } }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(role)}
-      className="w-full text-left rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 bg-white border border-[var(--card-border)] group"
+      className="w-full text-left rounded-xl overflow-hidden transition-all duration-150 bg-white border-2 group"
+      style={{ borderColor: 'var(--card-border)' }}
+      onMouseEnter={e => { if (!role.adminOnly) e.currentTarget.style.borderColor = g1; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; }}
     >
-      {/* Gradient top bar */}
-      <div className="h-1.5" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
-
-      <div className="p-4 flex items-start gap-3">
+      <div className="flex items-center gap-3 px-4 py-3.5">
         {/* Icon */}
-        <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-          style={{ background: `linear-gradient(135deg, ${g1}20, ${g2}20)` }}
-        >
-          <Icon size={20} style={{ color: g1 }} />
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: `linear-gradient(135deg,${g1}22,${g2}18)` }}>
+          <Icon size={18} style={{ color: g1 }}/>
         </div>
 
         {/* Text */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-bold text-[var(--text-900)] text-sm leading-tight">{role.label}</p>
-            {role.adminOnly
-              ? <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)] flex-shrink-0">Admin only</span>
-              : role.highlight
-                ? <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                    style={{ background: `${g1}18`, color: g1 }}>New</span>
-                : <ChevronRight size={16} className="text-slate-300 group-hover:text-teal-500 flex-shrink-0 transition-colors" />
-            }
-          </div>
-          <p className="text-[11px] font-semibold mt-0.5" style={{ color: g1 }}>{role.sublabel}</p>
-          <p className="text-xs text-[var(--text-500)] mt-1 leading-relaxed line-clamp-2">{role.description}</p>
+          <p className="font-bold text-sm text-[var(--text-900)] leading-tight">{role.label}</p>
+          <p className="text-[11px] font-medium mt-0.5" style={{ color: g1 }}>{role.sublabel}</p>
         </div>
+
+        {/* Right indicator */}
+        {role.adminOnly
+          ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)] flex-shrink-0">Admin only</span>
+          : <ChevronRight size={15} className="flex-shrink-0 transition-colors" style={{ color: 'var(--card-border)' }}/>
+        }
       </div>
     </motion.button>
   );

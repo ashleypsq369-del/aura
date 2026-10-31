@@ -614,7 +614,8 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Role */}
+ {/* Role — only show if NOT pre-selected from /get-started */}
+ {!preRole && (
  <InputGroup id="role" label="I am registering as"
  hint="Healthcare professionals are registered by your organisation's administrator">
  <select id="role" value={form.role} onChange={e => setField('role', e.target.value)}
@@ -623,6 +624,20 @@ export default function Register() {
  <option value="family">A family member (not a caregiver)</option>
  </select>
  </InputGroup>
+ )}
+ {/* Show role pill when pre-selected */}
+ {preRole && (
+ <div className="flex items-center gap-2 px-4 py-3 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)]">
+ <div className="w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"/>
+ <p className="text-sm font-semibold text-[var(--text-900)]">
+ Registering as: <span className="text-teal-600 capitalize">{preRole}</span>
+ </p>
+ <button type="button" onClick={() => window.location.href='/get-started'}
+ className="ml-auto text-xs text-[var(--text-400)] hover:text-teal-600 underline">
+ Change
+ </button>
+ </div>
+ )}
 
  <button type="submit"
  className="w-full h-12 bg-teal-600 hover:bg-teal-700 active:scale-[0.98] text-white rounded-xl font-semibold text-sm transition-all shadow-sm mt-2 flex items-center justify-center gap-2">

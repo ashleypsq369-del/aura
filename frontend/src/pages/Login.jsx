@@ -261,14 +261,10 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Register link */}
-            <p className="mt-4 text-center text-xs text-slate-600">
+            {/* Register link — single clean CTA */}
+            <p className="mt-4 text-center text-xs text-[var(--text-500)]">
               New to Project Aura?{' '}
-              <Link to="/get-started" className="text-teal-700 font-bold hover:underline">Create an account</Link>
-            </p>
-            <p className="mt-1 text-center text-xs text-slate-500">
-              Healthcare professional?{' '}
-              <Link to="/provider-register" className="text-teal-600 font-semibold hover:underline">Register as a provider</Link>
+              <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
             {/* Demo credentials */}
