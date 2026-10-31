@@ -6,6 +6,7 @@
  *   // To trigger: await confirm({ title, body, confirmLabel, variant })
  */
 import { useState, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 

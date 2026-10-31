@@ -75,6 +75,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Caregivers', path: '/caregivers', icon: HeartHandshake },
  { name: 'User Management', path: '/admin/users', icon: UserCog },
  { name: 'Feature Control', path: '/admin/features', icon: Shield },
+ { name: 'Feedback & Bugs', path: '/admin/feedback', icon: MessageCircle },
  { name: 'HIPAA Compliance', path: '/admin/hipaa-compliance', icon: Shield },
  { name: 'Model Bias Report',path: '/admin/model-bias-report', icon: Brain },
  { name: 'Audit Log', path: '/admin/audit', icon: Shield },

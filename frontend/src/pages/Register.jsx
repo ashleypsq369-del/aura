@@ -11,6 +11,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import LegalModal from '../components/LegalModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  Loader2, User as UserIcon, Mail, Phone, Lock,
@@ -302,6 +303,8 @@ export default function Register() {
  const [touched, setTouched] = useState({});
  const [serverErr, setServerErr] = useState('');
  const [country, setCountry] = useState(COUNTRIES[0]); // Ghana default
+ const [showTermsModal, setShowTermsModal] = useState(false);
+ const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
  const [form, setForm] = useState({
  full_name:'', username:'', email:'',
@@ -404,6 +407,7 @@ export default function Register() {
 
  // ── Render ────────────────────────────────────────────────────────────────
  return (
+ <>
  <div className="min-h-screen flex flex-col lg:flex-row">
 
  {/* Slideshow - fixed full-bg on mobile, left half on desktop */}
@@ -688,8 +692,8 @@ export default function Register() {
  className="mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer"/>
  <p className="text-xs text-[var(--text-600)] leading-relaxed">
  I agree to the{' '}
- <span className="text-teal-600 font-semibold">Terms of Service</span> and{' '}
- <span className="text-teal-600 font-semibold">Privacy Policy</span>, and consent to my health information being used for care coordination purposes.
+ <button type="button" onClick={() => setShowTermsModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Terms of Service</button>{' '}and{' '}
+ <button type="button" onClick={() => setShowPrivacyModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Privacy Policy</button>, and consent to my health information being used for care coordination purposes.
  </p>
  </label>
 
@@ -720,5 +724,10 @@ export default function Register() {
  </motion.div>
  </div>
  </div>
+
+ {/* Legal Modals — open without leaving the page */}
+ <LegalModal type="terms"   open={showTermsModal}   onClose={() => setShowTermsModal(false)}   onAccept={() => setTerms(true)} />
+ <LegalModal type="privacy" open={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} />
+ </>
  );
 }

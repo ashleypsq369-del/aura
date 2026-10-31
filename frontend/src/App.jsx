@@ -76,6 +76,7 @@ import PatientPortal from './pages/PatientPortal';
 import WellnessCheckin from './pages/WellnessCheckin';
 import AdminUserManagement from './pages/AdminUserManagement';
 import AdminFeaturePanel from './pages/AdminFeaturePanel';
+import AdminFeedback from './pages/AdminFeedback';
 import AuditLog from './pages/AuditLog';
 import HIPAACompliance from './pages/HIPAACompliance';
 import Reports from './pages/Reports';
@@ -89,6 +90,8 @@ import Notifications from './pages/Notifications';
 import NotificationTester from './pages/NotificationTester';
 import Settings from './pages/Settings';
 import TouchDemo from './pages/TouchDemo';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import Layout from './components/layout/Layout';
 import AuraChat from './components/AuraChat';
 import AIAssistant from './components/AIAssistant';
@@ -398,6 +401,9 @@ function AppRoutes() {
  <Route path="/reset-password" element={<ResetPassword />} />
  <Route path="/provider-register" element={<ProviderRegister />} />
  <Route path="/get-started" element={<RoleSelector />} />
+ {/* Legal pages — public, no auth needed */}
+ <Route path="/terms" element={<TermsOfService />} />
+ <Route path="/privacy" element={<PrivacyPolicy />} />
  {/* Chatbot redirect - public (catches pre-login visits), preserves ?userId= params */}
  <Route path="/chatbot" element={<RedirectWithSearch to="/messages" />} />
  
@@ -503,6 +509,7 @@ function AppRoutes() {
  <Route path="/services" element={<Services />} />
  <Route path="/admin/users" element={<AdminUserManagement />} />
  <Route path="/admin/features" element={<AdminFeaturePanel />} />
+ <Route path="/admin/feedback" element={<AdminFeedback />} />
  <Route path="/admin/audit" element={<AuditLog />} />
  <Route path="/admin/hipaa-compliance" element={<HIPAACompliance />} />
  <Route path="/admin/model-bias-report" element={<ModelBiasReportPage />} />

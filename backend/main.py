@@ -212,6 +212,10 @@ app.include_router(services_router.router, prefix="/api/services", tags=["servic
 app.include_router(ml_predictions.router, prefix="/api/ml", tags=["ml-predictions"])
 app.include_router(advanced_ml.router, prefix="/api/advanced-ml", tags=["advanced-ml"])
 
+# Feedback & bug reports
+from routers import feedback
+app.include_router(feedback.router, prefix="/api", tags=["feedback"])
+
 # Feature gates: per-user feature overrides + user access requests + admin control
 from routers import feature_gates
 app.include_router(feature_gates.router, prefix="/api/features", tags=["feature-gates"])

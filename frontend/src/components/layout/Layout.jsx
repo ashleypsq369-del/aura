@@ -21,6 +21,7 @@ import DropdownMenu from '../ui/DropdownMenu';
 import AvatarDisplay from '../avatar/AvatarDisplay';
 import AvatarModal from '../avatar/AvatarModal';
 import TaskStatusBar from '../TaskStatusBar';
+import FeedbackWidget from '../FeedbackWidget';
 
 export default function Layout({ children }) {
  const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -348,6 +349,7 @@ export default function Layout({ children }) {
  </footer>
  </motion.div>
  </main>
+      <FeedbackWidget />
  </div>
 
  {/* Logout Overlay State */}
