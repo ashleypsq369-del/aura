@@ -1016,7 +1016,13 @@ export default function PersonalisationQuest() {
  }).catch(() => {}); // non-fatal -- if API is down, let them complete
  }
  }, [navigate]);
- const [formData, setFormData] = useState({
+ const [formData, setFormData] = useState(() => {
+ // Restore autosaved draft from localStorage on mount
+ try {
+ const draft = localStorage.getItem('pq_draft');
+ if (draft) return JSON.parse(draft);
+ } catch (e) {}
+ return {
  language_pref: "en",
  emotional_states: [],
  physical_symptoms: [],
@@ -1057,6 +1063,7 @@ export default function PersonalisationQuest() {
  has_young_children: "",
  lives_with_patient: "",
  family_involvement_pref: "",
+ };
  });
  const [isComplete, setIsComplete] = useState(false);
  const TOTAL = QUESTIONNAIRE_STEPS.length;
@@ -1133,6 +1140,8 @@ export default function PersonalisationQuest() {
  return prefsResp;
  },
  onSuccess: (_, submittedData) => {
+ // Clear the autosaved draft on successful submission
+ try { localStorage.removeItem('pq_draft'); } catch {}
  const user = JSON.parse(localStorage.getItem('user') || '{}');
  const updated = { ...user, needs_questionnaire: false };
  localStorage.setItem('user', JSON.stringify(updated));
@@ -1285,7 +1294,12 @@ export default function PersonalisationQuest() {
  };
 
  const updateField = (name, value) => {
- setFormData(prev => ({ ...prev, [name]: value }));
+ setFormData(prev => {
+   const next = { ...prev, [name]: value };
+   // Autosave draft to localStorage on every field change
+   try { localStorage.setItem('pq_draft', JSON.stringify(next)); } catch {}
+   return next;
+ });
  };
 
  // -- Complete screen --------------------------------------------------------
