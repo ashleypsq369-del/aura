@@ -18,6 +18,7 @@ import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import { usePersonalisationFlags } from '../context/PersonalisationContext';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 // ── FIELD_LABELS ─────────────────────────────────────────────────────────
 const FIELD_LABELS = {
@@ -339,6 +340,7 @@ function ConditionForm({ initial, onSave, onCancel, isSaving }) {
 // ── Main page ─────────────────────────────────────────────────────────────
 export default function MedicalKnowledge() {
  const { user } = useAuth();
+  const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();
  const qc = useQueryClient();
  const canEdit = user?.role === 'admin' || user?.role === 'clinician';
 
@@ -615,6 +617,7 @@ export default function MedicalKnowledge() {
  </AnimatePresence>
  </div>
  </div>
+      <ConfirmDialog />
  </div>
  );
 }

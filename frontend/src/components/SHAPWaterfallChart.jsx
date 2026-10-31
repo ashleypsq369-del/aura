@@ -13,7 +13,7 @@ export default function SHAPWaterfallChart({
 }) {
   if (!shapFeatures || shapFeatures.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-[var(--text-500)]">
         <p>No SHAP values available</p>
       </div>
     );
@@ -62,12 +62,12 @@ export default function SHAPWaterfallChart({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold text-gray-900">Risk Contribution Waterfall</h3>
+      <h3 className="text-lg font-bold text-[var(--text-900)]">Risk Contribution Waterfall</h3>
       
       {/* Waterfall visualization */}
-      <div className="relative h-96 bg-gradient-to-b from-gray-50 to-white rounded-lg border-2 border-gray-200 p-4">
+      <div className="relative h-96 bg-gradient-to-b from-gray-50 to-white rounded-lg border-2 border-[var(--card-border)] p-4">
         {/* Y-axis labels */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 flex flex-col justify-between text-xs text-gray-500">
+        <div className="absolute left-0 top-0 bottom-0 w-12 flex flex-col justify-between text-xs text-[var(--text-500)]">
           <span>{(maxValue * 100).toFixed(0)}%</span>
           <span>{((maxValue + minValue) / 2 * 100).toFixed(0)}%</span>
           <span>{(minValue * 100).toFixed(0)}%</span>
@@ -79,7 +79,7 @@ export default function SHAPWaterfallChart({
           {[0, 25, 50, 75, 100].map(pct => (
             <div
               key={pct}
-              className="absolute w-full border-t border-gray-200 border-dashed"
+              className="absolute w-full border-t border-[var(--card-border)] border-dashed"
               style={{ top: `${pct}%` }}
             />
           ))}
@@ -97,7 +97,7 @@ export default function SHAPWaterfallChart({
                   {/* Connector arrow */}
                   {idx > 0 && idx < steps.length - 1 && (
                     <div 
-                      className="absolute left-0 w-full flex items-center justify-center text-gray-400"
+                      className="absolute left-0 w-full flex items-center justify-center text-[var(--text-400)]"
                       style={{ 
                         top: `${getYPosition(prevCumulative)}%`,
                         transform: 'translateY(-50%)'
@@ -138,7 +138,7 @@ export default function SHAPWaterfallChart({
                   >
                     <span className={
                       step.isBase 
-                        ? 'text-gray-700' 
+                        ? 'text-[var(--text-700)]' 
                         : step.isFinal
                         ? 'text-purple-700'
                         : step.isPositive
@@ -148,7 +148,7 @@ export default function SHAPWaterfallChart({
                       {(step.cumulative * 100).toFixed(0)}%
                     </span>
                     {!step.isBase && !step.isFinal && (
-                      <span className="ml-1 text-gray-500">
+                      <span className="ml-1 text-[var(--text-500)]">
                         ({step.value > 0 ? '+' : ''}{(step.value * 100).toFixed(1)}%)
                       </span>
                     )}
@@ -156,11 +156,11 @@ export default function SHAPWaterfallChart({
 
                   {/* Feature label */}
                   <div className="absolute bottom-0 transform translate-y-full mt-2 text-center">
-                    <p className="text-xs font-semibold text-gray-700 mt-1 max-w-20 break-words">
+                    <p className="text-xs font-semibold text-[var(--text-700)] mt-1 max-w-20 break-words">
                       {step.label}
                     </p>
                     {step.display && (
-                      <p className="text-xs text-gray-500">{step.display}</p>
+                      <p className="text-xs text-[var(--text-500)]">{step.display}</p>
                     )}
                   </div>
                 </div>
@@ -172,7 +172,7 @@ export default function SHAPWaterfallChart({
 
       {/* Explanation */}
       <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-[var(--text-700)]">
           <span className="font-semibold">How to read:</span> Starting from the base risk 
           ({(baseValue * 100).toFixed(0)}%), each feature either increases (↑ red) or 
           decreases (↓ green) the risk. The final prediction is {(finalPrediction * 100).toFixed(0)}%.

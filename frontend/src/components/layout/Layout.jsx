@@ -342,7 +342,7 @@ export default function Layout({ children }) {
  </div>
  {/* Copyright footer - in document flow, never overlaps content */}
  <footer className="w-full text-center py-2 px-4 select-none pointer-events-none" aria-hidden="true">
- <p className="text-[11px] text-gray-400/50">
+ <p className="text-[11px] text-[var(--text-400)]/50">
  © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
  </p>
  </footer>

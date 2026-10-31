@@ -8,9 +8,11 @@ import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 export default function LegacySetup() {
   const { user } = useAuth();
+  const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();
   const [patientId, setPatientId] = useState(null);
   const queryClient = useQueryClient();
 
@@ -132,8 +134,8 @@ export default function LegacySetup() {
     });
   };
 
-  const handleRevoke = () => {
-    if (window.confirm('Are you sure you want to revoke your digital legacy consent? This will prevent heirs from accessing your content.')) {
+  const handleRevoke = async () => {
+    if (await confirmAction({ title: 'Are you sure you want to revoke your digital legacy consent? This will prevent heirs from accessing your content.', confirmLabel: "Confirm", variant: "danger" })) {
       revokeConsentMutation.mutate();
     }
   };
@@ -150,10 +152,10 @@ export default function LegacySetup() {
         <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
           <Shield className="w-16 h-16 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.5 }} />
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">No Patient Linked</h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-[var(--text-600)] mb-4">
             Your account is not linked to a patient record. Digital legacy setup is available to patients and their family members.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-[var(--text-500)]">
             Please contact your care team to link your account to a patient record.
           </p>
         </div>
@@ -245,10 +247,10 @@ export default function LegacySetup() {
                 style={{ accentColor: '#6B4F7A' }}
               />
               <div className="flex-1">
-                <p className="font-medium text-gray-900 mb-2">
+                <p className="font-medium text-[var(--text-900)] mb-2">
                   I consent to creating a digital legacy plan
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-[var(--text-600)]">
                   I understand that people I designate as heirs will be able to access the content I choose to share after I pass away. This consent is witnessed by a healthcare provider and follows legal protocols. I can revoke this at any time.
                 </p>
               </div>
@@ -259,16 +261,16 @@ export default function LegacySetup() {
             <>
               {/* Sharing Permissions */}
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">What can your heirs access?</h3>
-                <p className="text-sm text-gray-600 -mt-2">
+                <h3 className="font-medium text-[var(--text-900)]">What can your heirs access?</h3>
+                <p className="text-sm text-[var(--text-600)] -mt-2">
                   Choose what content your designated heirs can see after you're gone
                 </p>
 
                 <div className="space-y-3">
-                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30">
                     <div>
-                      <p className="font-medium text-gray-900">Memory Vault</p>
-                      <p className="text-sm text-gray-600">Stories, photos, and memories you've preserved</p>
+                      <p className="font-medium text-[var(--text-900)]">Memory Vault</p>
+                      <p className="text-sm text-[var(--text-600)]">Stories, photos, and memories you've preserved</p>
                     </div>
                     <input
                       type="checkbox"
@@ -279,10 +281,10 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30">
                     <div>
-                      <p className="font-medium text-gray-900">Photos & Media</p>
-                      <p className="text-sm text-gray-600">Photo collections and media files</p>
+                      <p className="font-medium text-[var(--text-900)]">Photos & Media</p>
+                      <p className="text-sm text-[var(--text-600)]">Photo collections and media files</p>
                     </div>
                     <input
                       type="checkbox"
@@ -293,10 +295,10 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30">
                     <div>
-                      <p className="font-medium text-gray-900">Messages</p>
-                      <p className="text-sm text-gray-600">Message history and communications</p>
+                      <p className="font-medium text-[var(--text-900)]">Messages</p>
+                      <p className="text-sm text-[var(--text-600)]">Message history and communications</p>
                     </div>
                     <input
                       type="checkbox"
@@ -307,10 +309,10 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30">
                     <div>
-                      <p className="font-medium text-gray-900">Grief Journal</p>
-                      <p className="text-sm text-gray-600">Your private journal entries</p>
+                      <p className="font-medium text-[var(--text-900)]">Grief Journal</p>
+                      <p className="text-sm text-[var(--text-600)]">Your private journal entries</p>
                     </div>
                     <input
                       type="checkbox"
@@ -321,10 +323,10 @@ export default function LegacySetup() {
                     />
                   </label>
 
-                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100">
+                  <label className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30">
                     <div>
-                      <p className="font-medium text-gray-900">Medical Records</p>
-                      <p className="text-sm text-gray-600">Healthcare information and records</p>
+                      <p className="font-medium text-[var(--text-900)]">Medical Records</p>
+                      <p className="text-sm text-[var(--text-600)]">Healthcare information and records</p>
                     </div>
                     <input
                       type="checkbox"
@@ -339,8 +341,8 @@ export default function LegacySetup() {
 
               {/* Witness Selection */}
               <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">Witness (Required)</h3>
-                <p className="text-sm text-gray-600 -mt-2">
+                <h3 className="font-medium text-[var(--text-900)]">Witness (Required)</h3>
+                <p className="text-sm text-[var(--text-600)] -mt-2">
                   A healthcare provider must witness your consent for legal compliance
                 </p>
 
@@ -403,8 +405,8 @@ export default function LegacySetup() {
                 className="p-6 bg-purple-50 rounded-xl hover:shadow-md transition text-center"
               >
                 <Users className="w-12 h-12 mx-auto mb-3" className="text-purple-700" />
-                <h3 className="font-medium text-gray-900 mb-2">Designate Heirs</h3>
-                <p className="text-sm text-gray-600">Choose who can access your legacy</p>
+                <h3 className="font-medium text-[var(--text-900)] mb-2">Designate Heirs</h3>
+                <p className="text-sm text-[var(--text-600)]">Choose who can access your legacy</p>
               </Link>
 
               <Link
@@ -412,8 +414,8 @@ export default function LegacySetup() {
                 className="p-6 bg-purple-50 rounded-xl hover:shadow-md transition text-center"
               >
                 <FileText className="w-12 h-12 mx-auto mb-3" className="text-purple-700" />
-                <h3 className="font-medium text-gray-900 mb-2">Create Messages</h3>
-                <p className="text-sm text-gray-600">Leave final messages and notes</p>
+                <h3 className="font-medium text-[var(--text-900)] mb-2">Create Messages</h3>
+                <p className="text-sm text-[var(--text-600)]">Leave final messages and notes</p>
               </Link>
 
               <Link
@@ -421,8 +423,8 @@ export default function LegacySetup() {
                 className="p-6 bg-purple-50 rounded-xl hover:shadow-md transition text-center"
               >
                 <Shield className="w-12 h-12 mx-auto mb-3" className="text-purple-700" />
-                <h3 className="font-medium text-gray-900 mb-2">Add Memories</h3>
-                <p className="text-sm text-gray-600">Preserve your life stories</p>
+                <h3 className="font-medium text-[var(--text-900)] mb-2">Add Memories</h3>
+                <p className="text-sm text-[var(--text-600)]">Preserve your life stories</p>
               </Link>
             </div>
           </motion.div>
@@ -435,7 +437,7 @@ export default function LegacySetup() {
           transition={{ delay: 0.6 }}
           className="text-center py-6"
         >
-          <p className="text-sm text-gray-500 italic">
+          <p className="text-sm text-[var(--text-500)] italic">
             This digital legacy plan follows HIPAA, GDPR, and local data protection laws. Your consent is legally witnessed and can be revoked at any time.
           </p>
         </motion.div>
@@ -470,7 +472,7 @@ function AdminLegacyPicker({ onPatientSelected }) {
           <UserPlus size={32} className="text-amber-600" />
           <div>
             <h2 className="text-xl font-bold text-amber-900">Admin/Clinician View</h2>
-            <p className="text-gray-600 text-sm">Search a patient to manage their digital legacy</p>
+            <p className="text-[var(--text-600)] text-sm">Search a patient to manage their digital legacy</p>
           </div>
         </div>
         <div className="relative mb-4">
@@ -484,22 +486,23 @@ function AdminLegacyPicker({ onPatientSelected }) {
         </div>
 
         {loading ? (
-          <div className="text-center py-8 text-gray-400">Loading patients...</div>
+          <div className="text-center py-8 text-[var(--text-400)]">Loading patients...</div>
         ) : (
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {filtered.map(p => (
               <button key={p.id} onClick={() => onPatientSelected(p.id)}
                 className="w-full text-left px-4 py-3 rounded-xl border-2 border-purple-100 bg-purple-50 hover:border-purple-400 hover:bg-purple-100 transition">
-                <p className="font-semibold text-gray-900">{p.full_name}</p>
-                <p className="text-xs text-gray-500">{p.patient_code} · {p.primary_diagnosis} · {p.status}</p>
+                <p className="font-semibold text-[var(--text-900)]">{p.full_name}</p>
+                <p className="text-xs text-[var(--text-500)]">{p.patient_code} · {p.primary_diagnosis} · {p.status}</p>
               </button>
             ))}
             {filtered.length === 0 && (
-              <p className="text-center text-gray-400 py-6 text-sm">No patients found</p>
+              <p className="text-center text-[var(--text-400)] py-6 text-sm">No patients found</p>
             )}
           </div>
         )}
       </div>
+      <ConfirmDialog />
     </div>
   );
 }

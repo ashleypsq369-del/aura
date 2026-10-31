@@ -96,17 +96,17 @@ function Sel({ value, onChange, opts, className = '' }) {
  return (
  <div className={`relative ${className}`}>
  <select value={value} onChange={e => onChange(e.target.value)}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 appearance-none pr-6">
+ className="w-full px-2.5 py-1.5 text-xs border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 appearance-none pr-6">
  {opts.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
  </select>
- <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"/>
+ <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
  </div>
  );
 }
 
 /* ── Label helper ────────────────────────────────────────────────────────── */
 function FL({ children }) {
- return <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">{children}</label>;
+ return <label className="block text-[11px] font-bold text-[var(--text-500)] uppercase tracking-wide mb-1">{children}</label>;
 }
 
 /* ══ Main Component ════════════════════════════════════════════════════════ */
@@ -299,8 +299,8 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: `${accent}18` }}>
  <Check size={20} style={{ color: accent }}/>
  </div>
- <p className="font-bold text-gray-800 text-sm">Reminder saved!</p>
- <p className="text-[11px] text-gray-400">{title || label}</p>
+ <p className="font-bold text-[var(--text-800)] text-sm">Reminder saved!</p>
+ <p className="text-[11px] text-[var(--text-400)]">{title || label}</p>
  </div>
  ) : (
  <>
@@ -315,14 +315,14 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <FL>Title</FL>
  <input type="text" value={title} onChange={e => setTitle(e.target.value)}
  placeholder="Reminder title..."
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/20"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/20"/>
  </div>
 
  {/* 2. Date & Time */}
  <div>
  <FL><Clock size={9} className="inline mr-1"/>Date &amp; Time *</FL>
  <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400"/>
  </div>
 
  {/* 3+4. Notify Before + Repeat */}
@@ -409,7 +409,7 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
  <textarea value={notes} onChange={e => setNotes(e.target.value)}
  placeholder="Instructions, context, or clinical notes..."
  rows={2}
- className="w-full px-2.5 py-1.5 text-xs border border-gray-200 rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 resize-none"/>
+ className="w-full px-2.5 py-1.5 text-xs border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] focus:outline-none focus:border-teal-400 resize-none"/>
  </div>
 
  {hasReminder && (
@@ -423,9 +423,9 @@ export default function ReminderBell({ label, type = 'custom', defaultTime = '',
 
  {/* Footer */}
  {!saved && (
- <div className="flex-shrink-0 px-4 py-2.5 border-t border-gray-100 flex gap-2 rounded-b-[13px] bg-gray-50">
+ <div className="flex-shrink-0 px-4 py-2.5 border-t border-[var(--card-border)]/50 flex gap-2 rounded-b-[13px] bg-[var(--card-bg)]">
  <button onClick={() => setOpen(false)}
- className="flex-1 py-2 rounded-xl text-xs font-semibold text-gray-500 border border-gray-200 hover:bg-white transition-colors">
+ className="flex-1 py-2 rounded-xl text-xs font-semibold text-[var(--text-500)] border border-[var(--card-border)] hover:bg-white transition-colors">
  Cancel
  </button>
  <button onClick={save} disabled={!datetime}

@@ -9,9 +9,11 @@ import toast from '../utils/toast';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import ModalShell from '../components/ui/ModalShell';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 export default function HeirManagement() {
   const { user } = useAuth();
+  const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();
   const [patientId, setPatientId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const queryClient = useQueryClient();
@@ -130,8 +132,8 @@ export default function HeirManagement() {
     });
   };
 
-  const handleRemoveHeir = (heirId, heirName) => {
-    if (window.confirm(`Are you sure you want to remove ${heirName} as an heir? They will lose access to your legacy.`)) {
+  const handleRemoveHeir = async (heirId, heirName) => {
+    if (await confirmAction({ title: `Are you sure you want to remove ${heirName} as an heir? They will lose access to your legacy.`, confirmLabel: "Confirm", variant: "danger" })) {
       removeHeirMutation.mutate(heirId);
     }
   };
@@ -152,7 +154,7 @@ export default function HeirManagement() {
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             No Patient Linked
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[var(--text-600)]">
             Heir management is available to patients. Please contact your care team.
           </p>
         </div>
@@ -168,7 +170,7 @@ export default function HeirManagement() {
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Consent Required
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-[var(--text-600)] mb-6">
             You need to give consent for your digital legacy before designating heirs.
           </p>
           <Link
@@ -250,8 +252,8 @@ export default function HeirManagement() {
                     <Users className="w-6 h-6" className="text-purple-700" />
                   </div>
                   <div className="flex-1 pr-8">
-                    <h3 className="text-lg font-medium text-gray-900">{heir.heir_name}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{heir.relationship}</p>
+                    <h3 className="text-lg font-medium text-[var(--text-900)]">{heir.heir_name}</h3>
+                    <p className="text-sm text-[var(--text-600)] mb-3">{heir.relationship}</p>
 
                     {/* Access Level Badge */}
                     <div className="flex flex-wrap gap-2 mb-3">
@@ -261,7 +263,7 @@ export default function HeirManagement() {
                         {heir.access_level === 'messages_only' && 'Messages Only'}
                       </span>
                       {heir.can_access_private && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
+                        <span className="px-3 py-1 bg-[var(--card-border)]/30 text-[var(--text-700)] text-xs font-medium rounded-full">
                           Can View Private
                         </span>
                       )}
@@ -270,13 +272,13 @@ export default function HeirManagement() {
                     {/* Personal Note */}
                     {heir.notes_from_patient && (
                       <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-                        <p className="text-xs text-gray-500 mb-1">Your note to them:</p>
-                        <p className="text-sm text-gray-700 italic">"{heir.notes_from_patient}"</p>
+                        <p className="text-xs text-[var(--text-500)] mb-1">Your note to them:</p>
+                        <p className="text-sm text-[var(--text-700)] italic">"{heir.notes_from_patient}"</p>
                       </div>
                     )}
 
                     {/* Metadata */}
-                    <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500">
+                    <div className="mt-4 pt-4 border-t border-[var(--card-border)] flex items-center justify-between text-xs text-[var(--text-500)]">
                       <span>Designated {new Date(heir.designated_at).toLocaleDateString()}</span>
                       {heir.activated_at && (
                         <span className="text-green-600">
@@ -299,7 +301,7 @@ export default function HeirManagement() {
             <h3 className="text-base font-semibold mb-3" className="text-purple-700">
               No Heirs Designated Yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[var(--text-600)] mb-6">
               Start designating people who will be able to access your memories and messages after you're gone.
             </p>
             <button
@@ -366,7 +368,7 @@ export default function HeirManagement() {
 
             {/* Relationship */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Relationship *
               </label>
               <input
@@ -382,7 +384,7 @@ export default function HeirManagement() {
 
             {/* Access Level */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Access Level
               </label>
               <select
@@ -408,8 +410,8 @@ export default function HeirManagement() {
                   style={{ accentColor: '#6B4F7A' }}
                 />
                 <div>
-                  <p className="font-medium text-gray-900">Allow access to private content</p>
-                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                  <p className="font-medium text-[var(--text-900)]">Allow access to private content</p>
+                  <p className="text-sm text-[var(--text-600)] dark:text-slate-400">
                     They can see entries you marked as "private". Uncheck to only show shared content.
                   </p>
                 </div>
@@ -418,7 +420,7 @@ export default function HeirManagement() {
 
             {/* Personal Note */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
                 Personal Message (Optional)
               </label>
               <textarea
@@ -440,11 +442,12 @@ export default function HeirManagement() {
           transition={{ delay: 0.3 }}
           className="text-center py-6"
         >
-          <p className="text-sm text-gray-500 italic">
+          <p className="text-sm text-[var(--text-500)] italic">
             You can change or remove heirs at any time. Heirs will only get access after you pass away and a clinician activates the legacy system.
           </p>
         </motion.div>
       </motion.div>
+      <ConfirmDialog />
     </div>
   );
 }

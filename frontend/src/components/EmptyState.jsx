@@ -1,30 +1,98 @@
+/**
+ * EmptyState — premium empty state component
+ * Used when a list/table/section has no data.
+ * 
+ * Design: centered icon + title + description + optional CTA
+ * Follows ui-ux-pro-max healthcare "Soft/Calm" style.
+ */
 import { motion } from 'framer-motion';
+import {
+  Users, MessageCircle, Bell, Calendar, Pill,
+  FileText, Heart, Activity, BookOpen, Search,
+  Inbox, ClipboardList, Star,
+} from 'lucide-react';
 
-export default function EmptyState({ 
-  icon = '📭', 
-  title = 'No data found', 
-  description = 'There are no items to display at the moment.', 
-  action 
+const ICON_MAP = {
+  patients:      Users,
+  messages:      MessageCircle,
+  notifications: Bell,
+  appointments:  Calendar,
+  medications:   Pill,
+  documents:     FileText,
+  memories:      Heart,
+  vitals:        Activity,
+  resources:     BookOpen,
+  search:        Search,
+  default:       Inbox,
+  tasks:         ClipboardList,
+  reviews:       Star,
+};
+
+export function EmptyState({
+  icon,           // string key from ICON_MAP or a Lucide component
+  title,
+  description,
+  action,         // { label, onClick, icon: ActionIcon }
+  compact = false,
+  color = '#0d9488',
 }) {
+  const Icon = typeof icon === 'string' ? (ICON_MAP[icon] || ICON_MAP.default) : (icon || ICON_MAP.default);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center py-16 px-4"
+      transition={{ duration: 0.3 }}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        justifyContent: 'center', textAlign: 'center',
+        padding: compact ? '32px 24px' : '56px 32px',
+      }}
     >
-      <div className="text-7xl mb-6">{icon}</div>
-      <h3 className="text-2xl font-semibold text-gray-900 mb-3 text-center">
+      {/* Icon bubble */}
+      <div style={{
+        width: compact ? 52 : 68, height: compact ? 52 : 68,
+        borderRadius: compact ? 16 : 22,
+        background: `${color}12`,
+        border: `1.5px solid ${color}25`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginBottom: compact ? 14 : 20,
+      }}>
+        <Icon size={compact ? 22 : 28} style={{ color }} strokeWidth={1.5} />
+      </div>
+
+      {/* Title */}
+      <p style={{
+        fontSize: compact ? 14 : 16, fontWeight: 700,
+        color: 'var(--text-900)', marginBottom: 6, lineHeight: 1.3,
+      }}>
         {title}
-      </h3>
-      <p className="text-gray-600 mb-8 max-w-md text-center leading-relaxed">
-        {description}
       </p>
+
+      {/* Description */}
+      {description && (
+        <p style={{
+          fontSize: compact ? 12 : 13, color: 'var(--text-500)',
+          lineHeight: 1.6, maxWidth: 320, marginBottom: action ? 20 : 0,
+        }}>
+          {description}
+        </p>
+      )}
+
+      {/* CTA button */}
       {action && (
         <button
           onClick={action.onClick}
-          data-tip={action.label}
-          className="px-6 py-3 bg-teal-700 text-white rounded-lg font-medium hover:bg-teal-800 active:scale-[0.97] shadow-md hover:shadow-lg transition-[transform,box-shadow]"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 7,
+            padding: '10px 20px', borderRadius: 12, fontSize: 13, fontWeight: 700,
+            background: color, color: '#fff', border: 'none', cursor: 'pointer',
+            boxShadow: `0 4px 14px ${color}35`, transition: 'opacity 0.15s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}
         >
+          {action.icon && <action.icon size={14} />}
           {action.label}
         </button>
       )}
@@ -32,31 +100,15 @@ export default function EmptyState({
   );
 }
 
-// Pre-configured empty states for common scenarios
-export function EmptyPatients({ onAddClick }) {
+// Legacy named exports used across the codebase
+export function EmptyPatients({ onAdd }) {
   return (
     <EmptyState
-      icon="👥"
-      title="No patients yet"
-      description="Get started by adding your first patient to the system. Their information will appear here."
-      action={onAddClick ? {
-        label: 'Add Patient',
-        onClick: onAddClick
-      } : undefined}
-    />
-  );
-}
-
-export function EmptyResources({ onBrowseClick }) {
-  return (
-    <EmptyState
-      icon="📚"
-      title="No resources found"
-      description="We couldn't find any resources matching your criteria. Try adjusting your filters or browse all available resources."
-      action={onBrowseClick ? {
-        label: 'Browse All Resources',
-        onClick: onBrowseClick
-      } : undefined}
+      icon="patients"
+      title="No patients found"
+      description="No patients match your current filters. Try adjusting your search or add a new patient."
+      action={onAdd ? { label: 'Add Patient', onClick: onAdd, icon: Users } : undefined}
+      color="#0d9488"
     />
   );
 }
@@ -64,47 +116,24 @@ export function EmptyResources({ onBrowseClick }) {
 export function EmptyAlerts() {
   return (
     <EmptyState
-      icon="✅"
-      title="All clear!"
-      description="There are no pending alerts at the moment. Your patients are stable and within normal ranges."
+      icon="notifications"
+      title="No alerts"
+      description="All patients are stable. You'll be notified immediately if anything requires attention."
+      color="#059669"
     />
   );
 }
 
-export function EmptyAppointments({ onScheduleClick }) {
+export function EmptyMessages({ onNew }) {
   return (
     <EmptyState
-      icon="📅"
-      title="No appointments scheduled"
-      description="There are no upcoming appointments. Schedule a new appointment to get started."
-      action={onScheduleClick ? {
-        label: 'Schedule Appointment',
-        onClick: onScheduleClick
-      } : undefined}
+      icon="messages"
+      title="No conversations yet"
+      description="Start a conversation with your care team or a patient."
+      action={onNew ? { label: 'New Message', onClick: onNew, icon: MessageCircle } : undefined}
+      color="#0891b2"
     />
   );
 }
 
-export function EmptyCommunity() {
-  return (
-    <EmptyState
-      icon="💬"
-      title="No posts yet"
-      description="Be the first to share your thoughts and experiences with the community. Your story matters."
-      action={{
-        label: 'Create First Post',
-        onClick: () => {}
-      }}
-    />
-  );
-}
-
-export function EmptySearch({ query }) {
-  return (
-    <EmptyState
-      icon="🔍"
-      title="No results found"
-      description={`We couldn't find anything matching "${query}". Try different keywords or check your spelling.`}
-    />
-  );
-}
+export default EmptyState;

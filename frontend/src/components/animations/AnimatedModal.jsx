@@ -53,12 +53,12 @@ export default function AnimatedModal({ isOpen, onClose, children, size = 'md' }
  */
 export function ModalHeader({ title, onClose, className = '' }) {
   return (
-    <div className={`flex items-center justify-between p-6 border-b border-gray-200 ${className}`}>
-      <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+    <div className={`flex items-center justify-between p-6 border-b border-[var(--card-border)] ${className}`}>
+      <h2 className="text-2xl font-bold text-[var(--text-900)]">{title}</h2>
       {onClose && (
         <motion.button
           onClick={onClose}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          className="p-2 rounded-lg hover:bg-[var(--card-border)]/30 transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -87,7 +87,7 @@ export function ModalBody({ children, className = '' }) {
  */
 export function ModalFooter({ children, className = '' }) {
   return (
-    <div className={`flex items-center justify-end space-x-3 p-6 border-t border-gray-200 ${className}`}>
+    <div className={`flex items-center justify-end space-x-3 p-6 border-t border-[var(--card-border)] ${className}`}>
       {children}
     </div>
   );

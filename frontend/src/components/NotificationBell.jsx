@@ -53,7 +53,7 @@ export default function NotificationBell() {
             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
             <div>
               <p className="font-semibold text-sm">New Alert</p>
-              <p className="text-xs text-gray-600">You have {unreadCount - lastCountRef.current} new alert(s)</p>
+              <p className="text-xs text-[var(--text-600)]">You have {unreadCount - lastCountRef.current} new alert(s)</p>
             </div>
             <button onClick={() => toast.dismiss(t.id)} className="ml-2">
               <X size={16} />
@@ -93,7 +93,7 @@ export default function NotificationBell() {
       case 'high': return 'text-orange-600 bg-orange-50';
       case 'medium': return 'text-yellow-600 bg-yellow-50';
       case 'low': return 'text-teal-600 bg-blue-50';
-      default: return 'text-gray-600 bg-gray-50';
+      default: return 'text-[var(--text-600)] bg-[var(--card-bg)]';
     }
   };
 
@@ -113,10 +113,10 @@ export default function NotificationBell() {
       {/* Bell Button */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="relative p-2 rounded-lg hover:bg-[var(--card-border)]/30 transition-colors"
         aria-label="Notifications"
       >
-        <Bell className="w-5 h-5 text-gray-700" />
+        <Bell className="w-5 h-5 text-[var(--text-700)]" />
         
         {/* Badge */}
         {unreadCount > 0 && (
@@ -162,13 +162,13 @@ export default function NotificationBell() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-gray-200 z-40 overflow-hidden"
+              className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-[var(--card-bg)] rounded-xl shadow-2xl border border-[var(--card-border)] z-40 overflow-hidden"
             >
               {/* Header */}
-              <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 border-b border-gray-200 flex items-center justify-between">
+              <div className="px-4 py-3 bg-gradient-to-r from-red-50 to-orange-50 border-b border-[var(--card-border)] flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-gray-900">Notifications</h3>
-                  <p className="text-xs text-gray-600">{unreadCount} unread</p>
+                  <h3 className="font-semibold text-[var(--text-900)]">Notifications</h3>
+                  <p className="text-xs text-[var(--text-600)]">{unreadCount} unread</p>
                 </div>
                 <button
                   onClick={() => setShowDropdown(false)}
@@ -181,7 +181,7 @@ export default function NotificationBell() {
               {/* Alert List */}
               <div className="max-h-96 overflow-y-auto">
                 {isLoading ? (
-                  <div className="p-8 text-center text-gray-500">
+                  <div className="p-8 text-center text-[var(--text-500)]">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-aura-forest mx-auto mb-2"></div>
                     <p className="text-sm">Loading alerts...</p>
                   </div>
@@ -204,17 +204,17 @@ export default function NotificationBell() {
                             </span>
 
                             {/* Alert Type */}
-                            <p className="text-sm font-medium text-gray-900 mb-1">
+                            <p className="text-sm font-medium text-[var(--text-900)] mb-1">
                               {alert.alert_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                             </p>
 
                             {/* Message */}
-                            <p className="text-sm text-gray-600 mb-2">
+                            <p className="text-sm text-[var(--text-600)] mb-2">
                               {alert.message}
                             </p>
 
                             {/* Time */}
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-[var(--text-500)]">
                               {formatTime(alert.created_at)}
                             </p>
                           </div>
@@ -235,17 +235,17 @@ export default function NotificationBell() {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-gray-500">
+                  <div className="p-8 text-center text-[var(--text-500)]">
                     <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                     <p className="text-sm font-medium">No alerts</p>
-                    <p className="text-xs text-gray-400">You're all caught up!</p>
+                    <p className="text-xs text-[var(--text-400)]">You're all caught up!</p>
                   </div>
                 )}
               </div>
 
               {/* Footer */}
               {alerts && alerts.length > 0 && (
-                <div className="px-4 py-3 bg-[var(--card-bg)] border-t border-gray-200">
+                <div className="px-4 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]">
                   <button
                     onClick={() => {
                       setShowDropdown(false);

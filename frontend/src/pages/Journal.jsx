@@ -10,6 +10,7 @@ import toast from '../utils/toast';
 import FormFileUpload from '../components/FormFileUpload';
 import PageHeader from '../components/PageHeader';
 import ModalShell from '../components/ui/ModalShell';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 /* ── Client-side emotional tone classifier ────────────────────────────── */
 const TONE_WORDS = {
@@ -59,6 +60,7 @@ const compassionatePrompts = [
 
 export default function Journal() {
   const { user } = useAuth();
+  const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();
   const [searchParams] = useSearchParams();
   const paramPatientId = searchParams.get('patientId');
   const scope = searchParams.get('scope') || 'family';
@@ -164,8 +166,8 @@ export default function Journal() {
     }
   };
 
-  const handleDelete = (entryId) => {
-    if (window.confirm('Are you sure you want to delete this journal entry? This cannot be undone.')) {
+  const handleDelete = async (entryId) => {
+    if (await confirmAction({ title: 'Are you sure you want to delete this journal entry? This cannot be undone.', confirmLabel: "Confirm", variant: "danger" })) {
       deleteMutation.mutate(entryId);
     }
   };
@@ -184,7 +186,7 @@ export default function Journal() {
           <h2 className="text-base font-semibold mb-4" style={{ color: '#6B4F7A' }}>
             No Patient Linked
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[var(--text-600)]">
             The Grief Journal is available to family members and caregivers. Please contact your care team if you should have access.
           </p>
         </div>
@@ -201,7 +203,7 @@ export default function Journal() {
         className="max-w-4xl mx-auto px-3 sm:px-6 py-8 space-y-8"
       >
         {paramPatientId && (
-          <Link to="/continuity-bridge" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm">
+          <Link to="/continuity-bridge" className="inline-flex items-center gap-2 text-[var(--text-600)] hover:text-[var(--text-900)] text-sm">
             <ArrowLeft size={16} /> Back to Continuity Bridge
           </Link>
         )}
@@ -246,7 +248,7 @@ export default function Journal() {
           className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-8 shadow-md text-center"
         >
           <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#6B4F7A', opacity: 0.7 }} />
-          <p className="text-xl italic text-gray-700">
+          <p className="text-xl italic text-[var(--text-700)]">
             "{selectedPrompt}"
           </p>
           <button
@@ -302,7 +304,7 @@ export default function Journal() {
                 <div className="p-5">
                 <div className="flex items-center space-x-3 mb-4 pb-4 border-b-2" style={{ borderColor: '#6B4F7A20' }}>
                   <Calendar className="w-5 h-5" style={{ color: '#6B4F7A' }} />
-                  <time className="text-sm font-medium text-gray-600">
+                  <time className="text-sm font-medium text-[var(--text-600)]">
                     {new Date(entry.created_at).toLocaleDateString('en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -315,14 +317,14 @@ export default function Journal() {
                 {/* Show prompt if available */}
                 {entry.prompt_used && (
                   <div className="mb-4 p-3 rounded-lg bg-purple-50">
-                    <p className="text-sm italic text-gray-600">
+                    <p className="text-sm italic text-[var(--text-600)]">
                       "{entry.prompt_used}"
                     </p>
                   </div>
                 )}
 
                 <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                  <p className="text-[var(--text-800)] whitespace-pre-wrap leading-relaxed">
                     {entry.content}
                   </p>
                 </div>
@@ -355,10 +357,10 @@ export default function Journal() {
             <h3 className="text-base font-semibold mb-3" style={{ color: '#6B4F7A' }}>
               Your Journal Awaits
             </h3>
-            <p className="text-gray-600 mb-2">
+            <p className="text-[var(--text-600)] mb-2">
               This is your private, sacred space for reflection.
             </p>
-            <p className="text-gray-500 italic mb-6">
+            <p className="text-[var(--text-500)] italic mb-6">
               "{selectedPrompt}"
             </p>
             <button
@@ -422,11 +424,12 @@ export default function Journal() {
           transition={{ delay: 0.3 }}
           className="text-center py-6"
         >
-          <p className="text-sm text-gray-500 italic">
+          <p className="text-sm text-[var(--text-500)] italic">
             Your entries are private and for your eyes only. Write freely, without judgment.
           </p>
         </motion.div>
       </motion.div>
+      <ConfirmDialog />
     </div>
   );
 }

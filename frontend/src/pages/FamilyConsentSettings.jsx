@@ -212,13 +212,13 @@ export default function FamilyConsentSettings() {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-sm font-semibold text-gray-900">{cat.label}</p>
+ <p className="text-sm font-semibold text-[var(--text-900)]">{cat.label}</p>
  <span
  className="px-2 py-0.5 rounded-full text-[11px] font-semibold border"
  style={sens.style}
  >{sens.label}</span>
  </div>
- <p className="text-xs text-gray-500 dark:text-[var(--text-400)] mt-0.5">{cat.desc}</p>
+ <p className="text-xs text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5">{cat.desc}</p>
  </div>
  <button
  type="button"

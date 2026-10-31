@@ -113,11 +113,11 @@ function SHAPBar({ feature, maxImp }) {
  return (
  <div className="mb-2">
  <div className="flex items-center justify-between mb-0.5">
- <span className="text-[11px] font-semibold text-gray-600 truncate max-w-[55%]">
+ <span className="text-[11px] font-semibold text-[var(--text-600)] truncate max-w-[55%]">
  {feature.display_name}
  </span>
  <div className="flex items-center gap-1.5 flex-shrink-0">
- <span className="text-[11px] text-gray-400 tabular-nums">
+ <span className="text-[11px] text-[var(--text-400)] tabular-nums">
  {typeof feature.value === 'number' ? feature.value.toFixed(1) : feature.value}
  </span>
  <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full border tabular-nums ${chipColor}`}>
@@ -126,7 +126,7 @@ function SHAPBar({ feature, maxImp }) {
  </div>
  </div>
  {/* Bar - h-1.5 per spec */}
- <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+ <div className="h-1.5 bg-[var(--card-border)]/30 rounded-full overflow-hidden">
  <motion.div
  className={`h-full rounded-full ${barColor}`}
  initial={{ width: 0 }}
@@ -151,7 +151,7 @@ function TaskCard({ taskKey, task }) {
  return (
  <motion.div
  layout
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
  >
  {/* Header - px-4 py-2.5 */}
@@ -167,8 +167,8 @@ function TaskCard({ taskKey, task }) {
 
  <div className="flex-1 min-w-0">
  {/* title text-xs font-semibold */}
- <p className="text-xs font-semibold text-gray-800 truncate">{meta.label}</p>
- <p className="text-[11px] text-gray-400">
+ <p className="text-xs font-semibold text-[var(--text-800)] truncate">{meta.label}</p>
+ <p className="text-[11px] text-[var(--text-400)]">
  {task.shap_available ? 'SHAP values' : 'Feature importance'} · {task.top_features?.length ?? 0} factors
  </p>
  </div>
@@ -184,14 +184,14 @@ function TaskCard({ taskKey, task }) {
  </p>
  </div>
  {expanded
- ? <ChevronUp size={13} className="text-gray-400"/>
- : <ChevronDown size={13} className="text-gray-400"/>}
+ ? <ChevronUp size={13} className="text-[var(--text-400)]"/>
+ : <ChevronDown size={13} className="text-[var(--text-400)]"/>}
  </div>
  </button>
 
  {/* Progress bar */}
  <div className="px-4 pb-2">
- <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+ <div className="h-1 bg-[var(--card-border)]/30 rounded-full overflow-hidden">
  <motion.div className="h-full rounded-full"
  style={{ backgroundColor: meta.color }}
  initial={{ width: 0 }}
@@ -211,10 +211,10 @@ function TaskCard({ taskKey, task }) {
  transition={{ duration: 0.25 }}
  className="overflow-hidden"
  >
- <div className="px-4 pb-3 border-t border-gray-100">
+ <div className="px-4 pb-3 border-t border-[var(--card-border)]/50">
  <div className="flex items-center gap-1.5 pt-2 pb-1.5">
- <Zap size={10} className="text-gray-400"/>
- <p className="text-[11px] font-bold text-gray-400 ">
+ <Zap size={10} className="text-[var(--text-400)]"/>
+ <p className="text-[11px] font-bold text-[var(--text-400)] ">
  {task.shap_available ? 'SHAP Feature Impact' : 'Feature Importance'}
  </p>
  {task.shap_available && (
@@ -226,16 +226,16 @@ function TaskCard({ taskKey, task }) {
  {task.top_features.slice(0, 6).map(f => (
  <SHAPBar key={f.feature} feature={f} maxImp={maxImp} />
  ))}
- <div className="flex items-center gap-4 pt-1 border-t border-gray-100 mt-1">
- <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
+ <div className="flex items-center gap-4 pt-1 border-t border-[var(--card-border)]/50 mt-1">
+ <span className="flex items-center gap-1.5 text-[11px] text-[var(--text-500)]">
  <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"/>Increases risk
  </span>
- <span className="flex items-center gap-1.5 text-[11px] text-gray-500">
+ <span className="flex items-center gap-1.5 text-[11px] text-[var(--text-500)]">
  <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"/>Decreases risk
  </span>
  </div>
  {task.metrics?.auc && (
- <p className="text-[11px] text-gray-400 mt-2 text-right">
+ <p className="text-[11px] text-[var(--text-400)] mt-2 text-right">
  Model AUC: {task.metrics.auc.toFixed(3)}
  </p>
  )}
@@ -259,13 +259,13 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
  if (isLoading) {
  return (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-4 flex items-center gap-3">
  <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
  <Brain size={14} className="text-teal-600 animate-pulse" />
  </div>
  <div>
- <p className="text-xs font-semibold text-gray-700">Running ML Risk Models...</p>
- <p className="text-[11px] text-gray-400">XGBoost + SHAP analysis</p>
+ <p className="text-xs font-semibold text-[var(--text-700)]">Running ML Risk Models...</p>
+ <p className="text-[11px] text-[var(--text-400)]">XGBoost + SHAP analysis</p>
  </div>
  </div>
  );
@@ -295,14 +295,14 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
  if (compact) {
  return (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
  style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}>
  <RiskGauge value={overallRisk} level={overallLvl} size={60} />
  <div className="flex-1 min-w-0">
  <p className="text-xs font-semibold" style={{ color: overallC.text }}>
  {overallLvl.toUpperCase()} RISK
  </p>
- <p className="text-[11px] text-gray-500 truncate">
+ <p className="text-[11px] text-[var(--text-500)] truncate">
  {data?.highest_task?.replace(/_/g, ' ')?.replace(/\b\w/g, c => c.toUpperCase())} is highest
  </p>
  </div>
@@ -317,17 +317,17 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div className="space-y-3">
  {/* ── Overall Risk Hero Card - white bg, left border-l-4 ── */}
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
  >
  {/* Header bar - px-4 py-3 */}
- <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+ <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)]/50">
  <div className="flex items-center gap-2.5">
  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-violet-50">
  <Brain size={14} className="text-teal-600"/>
  </div>
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-xs font-semibold text-gray-800 leading-none">ML Risk Assessment</p>
+ <p className="text-xs font-semibold text-[var(--text-800)] leading-none">ML Risk Assessment</p>
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
  XGBoost
@@ -345,8 +345,8 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  </div>
  </div>
  <button onClick={() => refetch()} disabled={isFetching}
- className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors" title="Refresh">
- <RefreshCw size={12} className={`text-gray-400 ${isFetching ? 'animate-spin' : ''}`}/>
+ className="p-1.5 hover:bg-[var(--card-border)]/30 rounded-lg transition-colors" title="Refresh">
+ <RefreshCw size={12} className={`text-[var(--text-400)] ${isFetching ? 'animate-spin' : ''}`}/>
  </button>
  </div>
 
@@ -364,22 +364,22 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div className="flex-1 min-w-0 space-y-2">
  {(data?.key_concerns?.length ?? 0) > 0 && (
  <div>
- <p className="text-[11px] font-bold text-gray-400 mb-1">Key Concerns</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-1">Key Concerns</p>
  {data.key_concerns.slice(0, 3).map((c, i) => (
  <div key={i} className="flex items-start gap-1.5 mb-0.5">
  <AlertTriangle size={9} className="text-amber-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[11px] text-gray-700 leading-snug">{c}</p>
+ <p className="text-[11px] text-[var(--text-700)] leading-snug">{c}</p>
  </div>
  ))}
  </div>
  )}
  {(data?.recommended_actions?.length ?? 0) > 0 && (
  <div>
- <p className="text-[11px] font-bold text-gray-400 mb-1">Actions</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] mb-1">Actions</p>
  {data.recommended_actions.slice(0, 2).map((a, i) => (
  <div key={i} className="flex items-start gap-1.5 mb-0.5">
  <CheckCircle size={9} className="text-teal-500 flex-shrink-0 mt-0.5"/>
- <p className="text-[11px] text-gray-700 leading-snug">{a}</p>
+ <p className="text-[11px] text-[var(--text-700)] leading-snug">{a}</p>
  </div>
  ))}
  </div>
@@ -395,13 +395,13 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  const tc = riskColor(t.risk_level).text;
  return (
  <div key={key}
- className="bg-[var(--card-bg)] rounded-xl border border-gray-200 p-2 transition-colors hover:bg-gray-50"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-2 transition-colors hover:bg-[var(--card-bg)]"
  style={{ borderLeftWidth: 2, borderLeftColor: lbc }}>
- <p className="text-[11px] font-semibold text-gray-600 truncate leading-tight">
+ <p className="text-[11px] font-semibold text-[var(--text-600)] truncate leading-tight">
  {meta.label?.replace(' Risk', '').replace(' Burden', '') ?? key}
  </p>
  <div className="flex items-center justify-between mt-1.5">
- <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden mr-1.5">
+ <div className="flex-1 h-1 bg-[var(--card-border)]/30 rounded-full overflow-hidden mr-1.5">
  <div className="h-full rounded-full transition-all"
  style={{ width: `${t.probability * 100}%`, backgroundColor: meta.color }}/>
  </div>
@@ -417,7 +417,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
 
  {/* ── Task detail cards with SHAP (expandable) ── */}
  <div className="space-y-2">
- <p className="text-[11px] font-bold text-gray-400 px-1 flex items-center gap-1.5">
+ <p className="text-[11px] font-bold text-[var(--text-400)] px-1 flex items-center gap-1.5">
  <Brain size={10}/> SHAP Breakdown - tap any task to expand
  </p>
  {sortedTasks.map(([key, task]) => (

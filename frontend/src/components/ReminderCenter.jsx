@@ -69,19 +69,19 @@ function ReminderRow({ r, onDelete, onComplete }) {
  const Icon = type.icon;
  const past = isPast(r.datetime);
  return (
- <div className={`flex items-start gap-3 px-4 py-3 border-b border-gray-100 last:border-0 ${past ? 'opacity-50' : ''}`}>
+ <div className={`flex items-start gap-3 px-4 py-3 border-b border-[var(--card-border)]/50 last:border-0 ${past ? 'opacity-50' : ''}`}>
  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
  style={{ background: `${type.color}18` }}>
  <Icon size={13} style={{ color: type.color }}/>
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-xs font-semibold text-gray-900 truncate">{r.label}</p>
+ <p className="text-xs font-semibold text-[var(--text-900)] truncate">{r.label}</p>
  <div className="flex items-center gap-2 mt-0.5">
- <span className="text-[11px] text-gray-500 flex items-center gap-1">
+ <span className="text-[11px] text-[var(--text-500)] flex items-center gap-1">
  <Clock size={9}/>{formatTime(r.datetime)}
  </span>
  {r.repeat !== 'none' && (
- <span className="text-[11px] text-gray-400 flex items-center gap-1">
+ <span className="text-[11px] text-[var(--text-400)] flex items-center gap-1">
  <Repeat size={9}/>{r.repeat}
  </span>
  )}
@@ -263,7 +263,7 @@ export default function ReminderCenter() {
  <AnimatePresence>
  {view === 'add' && (
  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
- className="border-b border-gray-100 overflow-hidden flex-shrink-0">
+ className="border-b border-[var(--card-border)]/50 overflow-hidden flex-shrink-0">
  <div className="p-4 space-y-3">
  {/* Type selector */}
  <div className="flex gap-1.5 flex-wrap">
@@ -286,22 +286,22 @@ export default function ReminderCenter() {
  {/* Label */}
  <input type="text" value={label} onChange={e => setLabel(e.target.value)}
  placeholder="What do you need to be reminded about?"
- className="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
+ className="w-full px-3 py-2 text-xs border border-[var(--card-border)] rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
  onKeyDown={e => e.key === 'Enter' && addReminder()}/>
 
  {/* Date/time */}
  <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)}
- className="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 bg-slate-50"/>
+ className="w-full px-3 py-2 text-xs border border-[var(--card-border)] rounded-xl focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 bg-slate-50"/>
 
  <div className="flex gap-2">
  {/* Remind before */}
  <select value={before} onChange={e => setBefore(e.target.value)}
- className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
+ className="flex-1 px-2 py-2 text-xs border border-[var(--card-border)] rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
  {BEFORE.map(b => <option key={b.id} value={b.id}>{b.label}</option>)}
  </select>
  {/* Repeat */}
  <select value={repeat} onChange={e => setRepeat(e.target.value)}
- className="flex-1 px-2 py-2 text-xs border border-gray-200 rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
+ className="flex-1 px-2 py-2 text-xs border border-[var(--card-border)] rounded-xl bg-[var(--card-bg)] focus:outline-none focus:border-amber-400">
  {REPEATS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
  </select>
  </div>
@@ -323,8 +323,8 @@ export default function ReminderCenter() {
  <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mb-3">
  <BellRing size={22} className="text-amber-400"/>
  </div>
- <p className="text-sm font-semibold text-gray-700 mb-1">No reminders yet</p>
- <p className="text-xs text-gray-400">Tap + to set a reminder for medications, appointments, or anything else.</p>
+ <p className="text-sm font-semibold text-[var(--text-700)] mb-1">No reminders yet</p>
+ <p className="text-xs text-[var(--text-400)]">Tap + to set a reminder for medications, appointments, or anything else.</p>
  <button onClick={() => { setView('add'); setDatetime(defaultDt()); }}
  className="mt-3 flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white"
  style={{ background: 'linear-gradient(135deg,#d97706,#f59e0b)' }}>
@@ -335,8 +335,8 @@ export default function ReminderCenter() {
  <>
  {upcoming.length > 0 && (
  <div>
- <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
- <p className="text-[11px] font-bold text-gray-500">Upcoming</p>
+ <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50">
+ <p className="text-[11px] font-bold text-[var(--text-500)]">Upcoming</p>
  </div>
  {upcoming.map(r => (
  <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>
@@ -345,8 +345,8 @@ export default function ReminderCenter() {
  )}
  {past.length > 0 && (
  <div>
- <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-gray-100">
- <p className="text-[11px] font-bold text-gray-500">Past</p>
+ <div className="px-4 py-1.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50">
+ <p className="text-[11px] font-bold text-[var(--text-500)]">Past</p>
  </div>
  {past.slice(0, 5).map(r => (
  <ReminderRow key={r.id} r={r} onDelete={deleteReminder} onComplete={completeReminder}/>

@@ -52,14 +52,14 @@ function DeteriorationCard({ data }) {
 
  return (
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
  >
  {/* Header - px-4 py-3 */}
- <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+ <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)]/50">
  <div className="flex items-center gap-2">
  <TrendingDown size={14} style={{ color: barColor }} />
- <h4 className="text-xs font-semibold text-gray-800">
+ <h4 className="text-xs font-semibold text-[var(--text-800)]">
  Deterioration: <span style={{ color: barColor }}>{data.level?.toUpperCase()}</span>
  </h4>
  </div>
@@ -78,10 +78,10 @@ function DeteriorationCard({ data }) {
  {/* Velocity by dimension */}
  {Object.keys(data.velocity_by_dim || {}).length > 0 && (
  <div className="space-y-1.5">
- <p className="text-[11px] font-bold text-gray-400 ">Velocity (+ = worsening)</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] ">Velocity (+ = worsening)</p>
  {Object.entries(data.velocity_by_dim).slice(0, 5).map(([dim, vel]) => (
  <div key={dim} className="flex items-center justify-between">
- <span className="text-[11px] text-gray-500 capitalize">{dim.replace(/_/g, ' ')}</span>
+ <span className="text-[11px] text-[var(--text-500)] capitalize">{dim.replace(/_/g, ' ')}</span>
  <span className={`text-[11px] font-bold tabular-nums ${vel > 0 ? 'text-red-600' : 'text-green-600'}`}>
  {vel > 0 ? '+' : ''}{vel.toFixed(2)}/assessment
  </span>
@@ -93,17 +93,17 @@ function DeteriorationCard({ data }) {
  {/* Top drivers */}
  {data.top_drivers?.length > 0 && (
  <div className="space-y-1">
- <p className="text-[11px] font-bold text-gray-400 ">Key drivers</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] ">Key drivers</p>
  {data.top_drivers.map((d, i) => (
  <div key={i} className="flex items-start gap-1.5">
  <AlertTriangle size={9} className="text-red-400 mt-0.5 flex-shrink-0" />
- <p className="text-[11px] text-gray-700">{d.reason}</p>
+ <p className="text-[11px] text-[var(--text-700)]">{d.reason}</p>
  </div>
  ))}
  </div>
  )}
 
- <p className="text-[11px] text-gray-400">{data.data_points} assessment points analysed</p>
+ <p className="text-[11px] text-[var(--text-400)]">{data.data_points} assessment points analysed</p>
  </div>
  </div>
  );
@@ -122,14 +122,14 @@ function PrognosisCard({ data }) {
 
  return (
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: catColor }}
  >
  {/* Header - px-4 py-3 */}
- <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+ <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)]/50">
  <div className="flex items-center gap-2">
  <Calendar size={14} style={{ color: catColor }} />
- <h4 className="text-xs font-semibold text-gray-800">Prognosis Estimate</h4>
+ <h4 className="text-xs font-semibold text-[var(--text-800)]">Prognosis Estimate</h4>
  </div>
  <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full text-white"
  style={{ backgroundColor: catColor }}>
@@ -143,9 +143,9 @@ function PrognosisCard({ data }) {
  <p className="text-2xl font-bold tabular-nums" style={{ color: catColor }}>
  {data.months_display}
  </p>
- <p className="text-[11px] text-gray-500 mt-0.5">median estimated survival</p>
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5">median estimated survival</p>
  {data.range_weeks && (
- <p className="text-[11px] text-gray-400 mt-0.5">
+ <p className="text-[11px] text-[var(--text-400)] mt-0.5">
  Range: {data.range_weeks[0]} – {data.range_weeks[1]} weeks
  </p>
  )}
@@ -153,17 +153,17 @@ function PrognosisCard({ data }) {
 
  <div className="flex items-center gap-1.5">
  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${data.confidence === 'moderate' ? 'bg-amber-400' : 'bg-gray-300'}`} />
- <p className="text-[11px] text-gray-500 capitalize">
+ <p className="text-[11px] text-[var(--text-500)] capitalize">
  {data.confidence} confidence · {data.data_sources_used?.join(', ')}
  </p>
  </div>
 
  {data.key_factors?.length > 0 && (
  <div className="space-y-1">
- <p className="text-[11px] font-bold text-gray-400 ">Modifying factors</p>
+ <p className="text-[11px] font-bold text-[var(--text-400)] ">Modifying factors</p>
  {data.key_factors.map((f, i) => (
  <div key={i} className="flex items-center justify-between">
- <span className="text-[11px] text-gray-600">{f.factor}</span>
+ <span className="text-[11px] text-[var(--text-600)]">{f.factor}</span>
  <span className={`text-[11px] font-bold ${f.impact < 0 ? 'text-red-500' : 'text-green-500'}`}>
  {f.impact > 0 ? '+' : ''}{Math.round(f.impact * 100)}%
  </span>
@@ -172,7 +172,7 @@ function PrognosisCard({ data }) {
  </div>
  )}
 
- <p className="text-[11px] text-gray-400 italic">
+ <p className="text-[11px] text-[var(--text-400)] italic">
  Based on PPS score + ESAS burden + diagnosis factors.
  Not a clinical prognosis - discuss with care team.
  </p>
@@ -188,13 +188,13 @@ function DrugInteractionsCard({ interactions, medCount }) {
  if (!interactions?.length) {
  return (
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden flex items-center gap-3 px-4 py-3"
  style={{ borderLeftWidth: 4, borderLeftColor: '#16a34a' }}
  >
  <Pill size={14} className="text-green-600" />
  <div>
- <p className="text-xs font-semibold text-gray-800">No interactions detected</p>
- <p className="text-[11px] text-gray-500">{medCount} medications screened</p>
+ <p className="text-xs font-semibold text-[var(--text-800)]">No interactions detected</p>
+ <p className="text-[11px] text-[var(--text-500)]">{medCount} medications screened</p>
  </div>
  </div>
  );
@@ -205,40 +205,40 @@ function DrugInteractionsCard({ interactions, medCount }) {
 
  return (
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: lbColor }}
  >
  <button className="w-full flex items-center gap-3 px-4 py-3 text-left"
  onClick={() => setExpanded(e => !e)}>
  <Pill size={14} style={{ color: lbColor }} />
  <div className="flex-1 min-w-0">
- <p className="text-xs font-semibold text-gray-800">
+ <p className="text-xs font-semibold text-[var(--text-800)]">
  {severe.length > 0 ? `${severe.length} SEVERE` : `${interactions.length}`} Drug Interaction{interactions.length > 1 ? 's' : ''}
  </p>
- <p className="text-[11px] text-gray-500">{medCount} medications screened</p>
+ <p className="text-[11px] text-[var(--text-500)]">{medCount} medications screened</p>
  </div>
- {expanded ? <ChevronUp size={13} className="text-gray-400"/> : <ChevronDown size={13} className="text-gray-400"/>}
+ {expanded ? <ChevronUp size={13} className="text-[var(--text-400)]"/> : <ChevronDown size={13} className="text-[var(--text-400)]"/>}
  </button>
 
  <AnimatePresence>
  {expanded && (
  <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }}
  exit={{ height: 0 }} className="overflow-hidden">
- <div className="px-4 pb-3 space-y-2 border-t border-gray-100">
+ <div className="px-4 pb-3 space-y-2 border-t border-[var(--card-border)]/50">
  {interactions.map((ix, i) => {
  const sevColor = SEV_LEFT[ix.severity] || SEV_LEFT.LOW;
  return (
  <div
  key={i}
- className="bg-[var(--card-bg)] rounded-xl border border-gray-200 p-2.5"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-2.5"
  style={{ borderLeftWidth: 3, borderLeftColor: sevColor }}
  >
  <div className="flex items-start gap-2">
  <div className="flex-1 min-w-0">
- <p className="text-xs font-semibold text-gray-800">
+ <p className="text-xs font-semibold text-[var(--text-800)]">
  {ix.drug_a}{ix.drug_b ? ` + ${ix.drug_b}` : ''}
  </p>
- <p className="text-[11px] text-gray-600 mt-0.5">{ix.effect}</p>
+ <p className="text-[11px] text-[var(--text-600)] mt-0.5">{ix.effect}</p>
  <p className="text-[11px] font-bold mt-0.5" style={{ color: sevColor }}>
  {ix.severity} - {ix.action}
  </p>
@@ -267,9 +267,9 @@ export default function AdvancedMLPanel({ patientId }) {
 
  if (isLoading) {
  return (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm p-4 flex items-center gap-3">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-4 flex items-center gap-3">
  <Activity size={14} className="text-teal-500 animate-pulse" />
- <p className="text-xs text-gray-600">Running advanced analysis (deterioration, prognosis, drug interactions)...</p>
+ <p className="text-xs text-[var(--text-600)]">Running advanced analysis (deterioration, prognosis, drug interactions)...</p>
  </div>
  );
  }
@@ -288,11 +288,11 @@ export default function AdvancedMLPanel({ patientId }) {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
  <Activity size={14} className="text-teal-600" />
- <h3 className="text-xs font-semibold text-gray-800">Advanced Clinical Analysis</h3>
+ <h3 className="text-xs font-semibold text-[var(--text-800)]">Advanced Clinical Analysis</h3>
  </div>
  <button onClick={() => refetch()} disabled={isFetching}
- className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
- <RefreshCw size={12} className={`text-gray-400 ${isFetching ? 'animate-spin' : ''}`} />
+ className="p-1.5 hover:bg-[var(--card-border)]/30 rounded-lg transition-colors">
+ <RefreshCw size={12} className={`text-[var(--text-400)] ${isFetching ? 'animate-spin' : ''}`} />
  </button>
  </div>
 
@@ -311,13 +311,13 @@ export default function AdvancedMLPanel({ patientId }) {
  {/* Wellness check-in trends */}
  {data.checkin_trends && Object.keys(data.checkin_trends).length > 0 && (
  <div
- className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+ className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden"
  style={{ borderLeftWidth: 4, borderLeftColor: '#0d9488' }}
  >
  {/* Header - px-4 py-3 */}
- <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
+ <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--card-border)]/50">
  <Clock size={13} className="text-teal-600" />
- <h4 className="text-xs font-semibold text-gray-800">Daily Wellness Trends (14 days)</h4>
+ <h4 className="text-xs font-semibold text-[var(--text-800)]">Daily Wellness Trends (14 days)</h4>
  </div>
 
  {/* Grid - p-2 cells, text-[11px] labels, text-xs font-bold values */}
@@ -338,11 +338,11 @@ export default function AdvancedMLPanel({ patientId }) {
  return (
  <div
  key={key}
- className="bg-[var(--card-bg)] rounded-xl border border-gray-200 p-2"
+ className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-2"
  style={{ borderLeftWidth: 3, borderLeftColor: cellBorder }}
  >
  {/* text-[11px] label */}
- <p className="text-[11px] text-gray-500">{label}</p>
+ <p className="text-[11px] text-[var(--text-500)]">{label}</p>
  {/* text-xs font-bold value */}
  <p className={`text-xs font-bold tabular-nums ${isWorse ? 'text-red-600' : 'text-green-600'}`}>
  {v > 0 ? '+' : ''}{v.toFixed(2)}/day
@@ -352,7 +352,7 @@ export default function AdvancedMLPanel({ patientId }) {
  })}
  </div>
 
- <p className="text-[11px] text-gray-400 px-4 pb-3">
+ <p className="text-[11px] text-[var(--text-400)] px-4 pb-3">
  {data.checkin_trends.checkin_count_14d ?? 0} check-in{data.checkin_trends.checkin_count_14d !== 1 ? 's' : ''} recorded
  </p>
  </div>

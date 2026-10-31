@@ -184,7 +184,7 @@ export default function AccessibilityPanel() {
  value={settings.highContrast} onChange={() => updateSetting('highContrast', !settings.highContrast)} />
 
  {/* Visual Impairments */}
- <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)]">
  <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-2">
  <Eye className="w-5 h-5" aria-hidden="true" />
  Visual Impairments
@@ -192,7 +192,7 @@ export default function AccessibilityPanel() {
  <select
  value={settings.colorBlindMode || 'none'}
  onChange={e => updateSetting('colorBlindMode', e.target.value)}
- className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-[var(--card-bg)] text-gray-700 focus:outline-none focus:border-teal-500"
+ className="w-full text-sm border border-[var(--card-border)] rounded-lg px-3 py-2 bg-[var(--card-bg)] text-[var(--text-700)] focus:outline-none focus:border-teal-500"
  aria-label="Visual impairment filter"
  >
  <option value="none">No Filter - Normal Vision</option>
@@ -206,7 +206,7 @@ export default function AccessibilityPanel() {
  </div>
 
  {/* Font Size */}
- <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)]">
  <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-3">
  <ZoomIn className="w-5 h-5" aria-hidden="true" />
  Font Size
@@ -217,13 +217,13 @@ export default function AccessibilityPanel() {
  className={`w-full text-left p-3 rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary ${
  settings.fontSize === size.value
  ? 'border-primary bg-primary/10 text-primary font-semibold'
- : 'border-gray-200 hover:border-gray-300 hover:bg-gray-100'
+ : 'border-[var(--card-border)] hover:border-gray-300 hover:bg-[var(--card-border)]/30'
  }`}
  role="radio" aria-checked={settings.fontSize === size.value}>
  <div className="flex items-center justify-between">
  <div>
  <div className="font-medium">{size.label}</div>
- <div className="text-sm text-gray-600">{size.description}</div>
+ <div className="text-sm text-[var(--text-600)]">{size.description}</div>
  </div>
  {settings.fontSize === size.value && (
  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
@@ -286,7 +286,7 @@ export default function AccessibilityPanel() {
  value={settings.dyslexiaFont} onChange={() => updateSetting('dyslexiaFont', !settings.dyslexiaFont)} />
 
  {/* Text Spacing */}
- <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-gray-200">
+ <div className="p-4 bg-[var(--card-bg)] rounded-xl border-2 border-[var(--card-border)]">
  <label className="font-medium text-[var(--text-900)] flex items-center gap-2 mb-3">
  <AlignLeft className="w-5 h-5" aria-hidden="true" />
  Text Spacing
@@ -297,7 +297,7 @@ export default function AccessibilityPanel() {
  className={`flex-1 py-2 rounded-lg text-sm font-semibold border-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary ${
  settings.textSpacing === v
  ? 'border-primary bg-primary/10 text-primary'
- : 'border-gray-200 hover:border-gray-300 text-gray-700'
+ : 'border-[var(--card-border)] hover:border-gray-300 text-[var(--text-700)]'
  }`}
  role="radio" aria-checked={settings.textSpacing === v}>
  {lbl}
@@ -311,7 +311,7 @@ export default function AccessibilityPanel() {
  {/* Keyboard Shortcuts */}
  <section aria-labelledby="shortcuts-info" className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
  <h3 id="shortcuts-info" className="text-md font-semibold text-[var(--text-900)] mb-3">Keyboard Shortcuts</h3>
- <ul className="space-y-1.5 text-sm text-gray-700">
+ <ul className="space-y-1.5 text-sm text-[var(--text-700)]">
  {[
  ['Alt + 1', 'Skip to main content'],
  ['Alt + 2', 'Go to navigation'],
@@ -339,10 +339,10 @@ export default function AccessibilityPanel() {
  </section>
 
  {/* Reset */}
- <div className="pt-4 border-t-2 border-gray-200">
+ <div className="pt-4 border-t-2 border-[var(--card-border)]">
  <button
  onClick={() => { resetSettings(); setTimeout(() => setIsOpen(false), 500); }}
- className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl border-2 border-gray-300 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300"
+ className="w-full py-3 px-4 bg-[var(--card-border)]/30 hover:bg-gray-200 text-[var(--text-700)] font-medium rounded-xl border-2 border-gray-300 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300"
  >
  Reset to Defaults
  </button>

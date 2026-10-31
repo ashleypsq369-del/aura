@@ -70,7 +70,7 @@ function NotifRow({ n, onRead, onDelete }) {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
  transition={{ duration: 0.15 }}
- className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-gray-100 last:border-0 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors"
+ className="group relative flex items-center gap-3 px-4 py-2.5 border-b border-[var(--card-border)]/50 last:border-0 hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition-colors"
  >
  {/* Unread left bar */}
  {unread && (
@@ -96,23 +96,23 @@ function NotifRow({ n, onRead, onDelete }) {
  )}
  {unread && <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: cfg.bar }} />}
  </div>
- <p className="text-xs font-semibold text-gray-900 leading-tight truncate">{n.title}</p>
- {n.body && <p className="text-[11px] text-gray-500 dark:text-[var(--text-400)] mt-0.5 leading-snug truncate">{n.body}</p>}
+ <p className="text-xs font-semibold text-[var(--text-900)] leading-tight truncate">{n.title}</p>
+ {n.body && <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] mt-0.5 leading-snug truncate">{n.body}</p>}
  </div>
 
  {/* Right - time + actions */}
  <div className="flex flex-col items-end gap-1 flex-shrink-0">
- <span className="text-[11px] text-gray-400 flex items-center gap-0.5 whitespace-nowrap">
+ <span className="text-[11px] text-[var(--text-400)] flex items-center gap-0.5 whitespace-nowrap">
  <Clock size={9} />{relTime(n.created_at)}
  </span>
  <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
  {unread && (
  <button onClick={() => onRead(n.id)}
- className="w-5 h-5 rounded flex items-center justify-center text-gray-400 hover:text-teal-600 hover:bg-teal-50 transition-colors"
+ className="w-5 h-5 rounded flex items-center justify-center text-[var(--text-400)] hover:text-teal-600 hover:bg-teal-50 transition-colors"
  title="Mark read"><MailOpen size={11} /></button>
  )}
  <button onClick={() => onDelete(n.id)}
- className="w-5 h-5 rounded flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+ className="w-5 h-5 rounded flex items-center justify-center text-[var(--text-400)] hover:text-red-500 hover:bg-red-50 transition-colors"
  title="Delete"><Trash2 size={11} /></button>
  </div>
  </div>
@@ -124,9 +124,9 @@ function NotifRow({ n, onRead, onDelete }) {
 function SectionLabel({ label, count }) {
  return (
  <div className="flex items-center gap-2 px-1 mb-2 mt-5 first:mt-0">
- <p className="text-xs font-semibold text-gray-400 ">{label}</p>
+ <p className="text-xs font-semibold text-[var(--text-400)] ">{label}</p>
  <div className="h-px flex-1 bg-gray-200" />
- <span className="text-xs text-gray-400 font-medium">{count}</span>
+ <span className="text-xs text-[var(--text-400)] font-medium">{count}</span>
  </div>
  );
 }
@@ -211,7 +211,7 @@ export default function Notifications() {
  <Bell size={17} color="#0d9488" />
  </div>
  <div>
- <h1 className="text-base font-bold text-gray-900 leading-tight flex items-center gap-2">
+ <h1 className="text-base font-bold text-[var(--text-900)] leading-tight flex items-center gap-2">
  Notifications
  {unreadCount > 0 && (
  <span className="px-2 py-0.5 bg-teal-600 text-white text-[11px] font-bold rounded-full">
@@ -224,33 +224,33 @@ export default function Notifications() {
  </span>
  )}
  </h1>
- <p className="text-xs text-gray-500 dark:text-slate-400">{filtered.length} notification{filtered.length !== 1 ? 's' : ''}</p>
+ <p className="text-xs text-[var(--text-500)] dark:text-slate-400">{filtered.length} notification{filtered.length !== 1 ? 's' : ''}</p>
  </div>
  </div>
  </div>
  <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
  {unreadCount > 0 && (
  <button onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}
- className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-gray-200 transition shadow-sm disabled:opacity-50">
+ className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-teal-700 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-[var(--card-border)] transition shadow-sm disabled:opacity-50">
  <CheckCheck size={13} /> Mark all read
  </button>
  )}
  <button onClick={() => clearRead.mutate()}
- className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 dark:text-[var(--text-400)] bg-[var(--card-bg)] hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-gray-200 transition shadow-sm">
+ className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[var(--text-500)] dark:text-[var(--text-400)] bg-[var(--card-bg)] hover:bg-red-50 dark:hover:bg-slate-700 hover:text-red-600 rounded-xl border border-[var(--card-border)] transition shadow-sm">
  <BellOff size={13} /> Clear read
  </button>
  </div>
  </div>
 
  {/* ── Filters ── */}
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm p-4 mb-4">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-4 mb-4">
  <div className="flex items-start gap-2 flex-wrap">
  {/* Search - full width on mobile */}
  <div className="relative w-full sm:flex-1 sm:min-w-[160px]">
- <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+ <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
  <input type="search" value={search} onChange={e => setSearch(e.target.value)}
  placeholder="Search notifications…"
- className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 bg-gray-50" />
+ className="w-full pl-8 pr-3 py-2 border border-[var(--card-border)] rounded-xl text-xs text-[var(--text-800)] placeholder-gray-400 focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 bg-[var(--card-bg)]" />
  </div>
  {/* Type */}
  <SearchableSelect
@@ -264,11 +264,11 @@ export default function Notifications() {
  placeholder="Filter by type…"
  />
  {/* Status toggle */}
- <div className="flex items-center bg-gray-100 rounded-xl p-1 gap-0.5">
+ <div className="flex items-center bg-[var(--card-border)]/30 rounded-xl p-1 gap-0.5">
  {['all','unread','read'].map(s => (
  <button key={s} onClick={() => setSt(s)}
  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all capitalize ${
- statusFilter === s ? 'bg-[var(--card-bg)] text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+ statusFilter === s ? 'bg-[var(--card-bg)] text-[var(--text-900)] shadow-sm' : 'text-[var(--text-500)] hover:text-[var(--text-700)]'
  }`}>
  {s}
  </button>
@@ -279,25 +279,25 @@ export default function Notifications() {
 
  {/* ── List - wrapped in Settings-style white card ── */}
  {isLoading ? (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
  {[...Array(5)].map((_, i) => (
- <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b border-gray-100 last:border-0 animate-pulse">
- <div className="w-9 h-9 rounded-xl bg-gray-100 flex-shrink-0" />
+ <div key={i} className="flex items-center gap-4 px-5 py-3.5 border-b border-[var(--card-border)]/50 last:border-0 animate-pulse">
+ <div className="w-9 h-9 rounded-xl bg-[var(--card-border)]/30 flex-shrink-0" />
  <div className="flex-1 space-y-2">
- <div className="h-2 w-16 bg-gray-100 rounded-full" />
- <div className="h-3 w-3/4 bg-gray-100 rounded-full" />
- <div className="h-2.5 w-1/2 bg-gray-100 rounded-full" />
+ <div className="h-2 w-16 bg-[var(--card-border)]/30 rounded-full" />
+ <div className="h-3 w-3/4 bg-[var(--card-border)]/30 rounded-full" />
+ <div className="h-2.5 w-1/2 bg-[var(--card-border)]/30 rounded-full" />
  </div>
  </div>
  ))}
  </div>
  ) : filtered.length === 0 ? (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm p-14 text-center">
- <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-14 text-center">
+ <div className="w-12 h-12 rounded-2xl bg-[var(--card-border)]/30 flex items-center justify-center mx-auto mb-3">
  <Bell size={20} className="text-gray-300" />
  </div>
- <p className="text-sm font-semibold text-gray-700 mb-1">No notifications</p>
- <p className="text-xs text-gray-400">
+ <p className="text-sm font-semibold text-[var(--text-700)] mb-1">No notifications</p>
+ <p className="text-xs text-[var(--text-400)]">
  {search || typeFilter !== 'all' || statusFilter !== 'all' ? 'Try adjusting your filters' : "You're all caught up!"}
  </p>
  </div>
@@ -306,7 +306,7 @@ export default function Notifications() {
  {todayItems.length > 0 && (
  <>
  <SectionLabel label="Today" count={todayItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {todayItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>
@@ -316,7 +316,7 @@ export default function Notifications() {
  {weekItems.length > 0 && (
  <>
  <SectionLabel label="Earlier this week" count={weekItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {weekItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>
@@ -326,14 +326,14 @@ export default function Notifications() {
  {olderItems.length > 0 && (
  <>
  <SectionLabel label="Older" count={olderItems.length} />
- <div className="bg-[var(--card-bg)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-2">
+ <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden mb-2">
  <AnimatePresence initial={false}>
  {olderItems.map(n => <NotifRow key={n.id} n={n} onRead={id => markRead.mutate(id)} onDelete={id => del.mutate(id)} />)}
  </AnimatePresence>
  </div>
  </>
  )}
- <div className="flex items-center justify-between px-1 mt-3 text-xs text-gray-400 dark:text-slate-500">
+ <div className="flex items-center justify-between px-1 mt-3 text-xs text-[var(--text-400)] dark:text-slate-500">
  <span>{unreadCount} unread · {visibleNotifications.length} total</span>
  <button onClick={() => clearRead.mutate()}
  className="flex items-center gap-1 hover:text-red-500 font-medium transition">

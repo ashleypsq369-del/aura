@@ -1,103 +1,140 @@
-export function CardSkeleton({ count = 1 }) {
+/**
+ * LoadingSkeleton — reusable shimmer skeletons for every data surface
+ * Uses CSS vars so it works in both light and dark mode automatically.
+ *
+ * Exports:
+ *   Skeleton          — single block with shimmer
+ *   SkeletonCard      — card with header + lines
+ *   SkeletonList      — N rows of avatar + text
+ *   SkeletonTable     — table with N rows
+ *   SkeletonStats     — row of stat tiles
+ *   SkeletonPage      — full page loading state
+ */
+import { motion } from 'framer-motion';
+
+const shimmer = {
+  initial:  { opacity: 0.5 },
+  animate:  { opacity: 1   },
+  transition: { duration: 0.9, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' },
+};
+
+/* ── Base shimmer block ──────────────────────────────────────── */
+export function Skeleton({ className = '', style = {} }) {
   return (
-    <>
-      {[...Array(count)].map((_, i) => (
-        <div key={i} className="bg-[var(--card-bg)] rounded-xl shadow-md p-6 animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/3 mb-4" />
-          <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-full" />
-            <div className="h-4 bg-gray-200 rounded w-5/6" />
-            <div className="h-4 bg-gray-200 rounded w-4/6" />
-          </div>
-        </div>
-      ))}
-    </>
+    <motion.div
+      {...shimmer}
+      className={`rounded-lg ${className}`}
+      style={{
+        background: 'linear-gradient(90deg, var(--card-border) 25%, color-mix(in srgb,var(--card-border) 60%,var(--card-bg)) 50%, var(--card-border) 75%)',
+        backgroundSize: '200% 100%',
+        ...style,
+      }}
+    />
   );
 }
 
-export function TableSkeleton({ rows = 5, columns = 4 }) {
+/* ── Card skeleton ───────────────────────────────────────────── */
+export function SkeletonCard({ lines = 3 }) {
   return (
-    <div className="bg-[var(--card-bg)] rounded-xl shadow-md overflow-hidden">
-      {/* Header */}
-      <div className="bg-[var(--card-bg)] px-6 py-4 border-b border-gray-200">
-        <div className="flex space-x-4">
-          {[...Array(columns)].map((_, i) => (
-            <div key={i} className="h-5 bg-gray-200 rounded flex-1 animate-pulse" />
-          ))}
+    <div style={{ background: 'var(--card-bg)', borderRadius: 14, border: '1px solid var(--card-border)', padding: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+        <Skeleton style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0 }} />
+        <div style={{ flex: 1 }}>
+          <Skeleton style={{ height: 13, width: '60%', marginBottom: 6 }} />
+          <Skeleton style={{ height: 10, width: '40%' }} />
         </div>
       </div>
-      
-      {/* Rows */}
-      <div className="divide-y divide-gray-200">
-        {[...Array(rows)].map((_, i) => (
-          <div key={i} className="px-6 py-4 flex space-x-4">
-            {[...Array(columns)].map((_, j) => (
-              <div key={j} className="h-5 bg-gray-200 rounded flex-1 animate-pulse" />
-            ))}
+      {Array.from({ length: lines }).map((_, i) => (
+        <Skeleton key={i} style={{ height: 11, width: i === lines - 1 ? '70%' : '100%' }} />
+      ))}
+    </div>
+  );
+}
+
+/* ── List skeleton (avatar + text rows) ─────────────────────── */
+export function SkeletonList({ rows = 5 }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--card-border)' }}>
+          <Skeleton style={{ width: 40, height: 40, borderRadius: '50%', flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <Skeleton style={{ height: 12, width: '50%', marginBottom: 6 }} />
+            <Skeleton style={{ height: 10, width: '30%' }} />
           </div>
+          <Skeleton style={{ height: 28, width: 72, borderRadius: 8, flexShrink: 0 }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Table skeleton ──────────────────────────────────────────── */
+export function SkeletonTable({ rows = 6, cols = 5 }) {
+  return (
+    <div style={{ border: '1px solid var(--card-border)', borderRadius: 12, overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols},1fr)`, gap: 12, padding: '12px 16px', background: 'color-mix(in srgb,var(--card-bg) 50%,var(--page-bg))' }}>
+        {Array.from({ length: cols }).map((_, i) => (
+          <Skeleton key={i} style={{ height: 10, width: '70%' }} />
         ))}
       </div>
-    </div>
-  );
-}
-
-export function StatCardSkeleton({ count = 4 }) {
-  return (
-    <>
-      {[...Array(count)].map((_, i) => (
-        <div key={i} className="bg-[var(--card-bg)] rounded-xl shadow-md p-6 animate-pulse">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-5 bg-gray-200 rounded w-24" />
-            <div className="w-10 h-10 bg-gray-200 rounded-lg" />
-          </div>
-          <div className="h-8 bg-gray-200 rounded w-16 mb-2" />
-          <div className="h-3 bg-gray-200 rounded w-32" />
-        </div>
-      ))}
-    </>
-  );
-}
-
-export function ListSkeleton({ items = 5 }) {
-  return (
-    <div className="space-y-4">
-      {[...Array(items)].map((_, i) => (
-        <div key={i} className="flex items-center space-x-4 p-4 bg-[var(--card-bg)] rounded-lg shadow animate-pulse">
-          <div className="w-12 h-12 bg-gray-200 rounded-full" />
-          <div className="flex-1 space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4" />
-            <div className="h-3 bg-gray-200 rounded w-1/2" />
-          </div>
-          <div className="w-20 h-8 bg-gray-200 rounded" />
+      {/* Rows */}
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} style={{ display: 'grid', gridTemplateColumns: `repeat(${cols},1fr)`, gap: 12, padding: '12px 16px', borderTop: '1px solid var(--card-border)', background: r % 2 === 0 ? 'var(--card-bg)' : 'transparent' }}>
+          {Array.from({ length: cols }).map((_, c) => (
+            <Skeleton key={c} style={{ height: 11, width: c === 0 ? '80%' : '60%' }} />
+          ))}
         </div>
       ))}
     </div>
   );
 }
 
-export function PageSkeleton() {
+/* ── Stat tiles skeleton ─────────────────────────────────────── */
+export function SkeletonStats({ count = 4 }) {
   return (
-    <div className="space-y-6 animate-pulse">
-      {/* Header */}
-      <div className="space-y-2">
-        <div className="h-8 bg-gray-200 rounded w-1/4" />
-        <div className="h-4 bg-gray-200 rounded w-1/3" />
-      </div>
-      
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCardSkeleton count={4} />
-      </div>
-      
-      {/* Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <CardSkeleton count={2} />
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${count},1fr)`, gap: 12 }}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} style={{ background: 'var(--card-bg)', borderRadius: 12, border: '1px solid var(--card-border)', padding: '14px 16px' }}>
+          <Skeleton style={{ height: 10, width: '50%', marginBottom: 10 }} />
+          <Skeleton style={{ height: 24, width: '40%', marginBottom: 6 }} />
+          <Skeleton style={{ height: 9, width: '60%' }} />
         </div>
-        <div>
-          <CardSkeleton count={1} />
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
+
+/* ── Full page loading spinner with message ──────────────────── */
+export function SkeletonPage({ message = 'Loading...' }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 16 }}>
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        style={{ width: 36, height: 36, borderRadius: '50%', border: '3px solid var(--card-border)', borderTopColor: '#0d9488' }}
+      />
+      <p style={{ fontSize: 13, color: 'var(--text-500)', fontWeight: 600 }}>{message}</p>
+    </div>
+  );
+}
+
+/* ── Grid of skeleton cards ──────────────────────────────────── */
+export function SkeletonGrid({ count = 6, cols = 3 }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill,minmax(260px,1fr))`, gap: 16 }}>
+      {Array.from({ length: count }).map((_, i) => (
+        <SkeletonCard key={i} lines={2} />
+      ))}
+    </div>
+  );
+}
+
+export default Skeleton;
+
+/* ── Legacy aliases for existing imports ──────────────────────── */
+export const ListSkeleton = ({ items = 5 }) => <SkeletonList rows={items} />;
+export const PageSkeleton = ({ message }) => <SkeletonPage message={message} />;
+export const CardSkeleton = ({ lines }) => <SkeletonCard lines={lines} />;
+export const TableSkeleton = ({ rows, cols }) => <SkeletonTable rows={rows} cols={cols} />;

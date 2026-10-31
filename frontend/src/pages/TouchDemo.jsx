@@ -51,15 +51,15 @@ export default function TouchDemo() {
         </div>
 
         {/* Settings Toggle */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Settings</h2>
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">Settings</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Vibrate className="w-6 h-6 text-purple-600" />
                 <div>
-                  <p className="font-bold text-gray-900">Haptic Feedback</p>
-                  <p className="text-sm text-gray-600">Vibration on touch</p>
+                  <p className="font-bold text-[var(--text-900)]">Haptic Feedback</p>
+                  <p className="text-sm text-[var(--text-600)]">Vibration on touch</p>
                 </div>
               </div>
               <button
@@ -82,8 +82,8 @@ export default function TouchDemo() {
               <div className="flex items-center space-x-3">
                 <Volume2 className="w-6 h-6 text-teal-600" />
                 <div>
-                  <p className="font-bold text-gray-900">Sound Effects</p>
-                  <p className="text-sm text-gray-600">Audio feedback</p>
+                  <p className="font-bold text-[var(--text-900)]">Sound Effects</p>
+                  <p className="text-sm text-[var(--text-600)]">Audio feedback</p>
                 </div>
               </div>
               <button
@@ -105,8 +105,8 @@ export default function TouchDemo() {
         </div>
 
         {/* Haptic Feedback Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center space-x-2">
             <Vibrate className="w-6 h-6 text-purple-600" />
             <span>Haptic Feedback Patterns</span>
           </h2>
@@ -163,8 +163,8 @@ export default function TouchDemo() {
         </div>
 
         {/* Sound Effects Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center space-x-2">
             <Volume2 className="w-6 h-6 text-teal-600" />
             <span>Sound Effects</span>
           </h2>
@@ -221,8 +221,8 @@ export default function TouchDemo() {
         </div>
 
         {/* Button Sizes Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center space-x-2">
             <Hand className="w-6 h-6 text-teal-600" />
             <span>Touch Target Sizes (WCAG 2.5.5)</span>
           </h2>
@@ -231,32 +231,32 @@ export default function TouchDemo() {
               <TouchButton variant="primary" size="small">
                 Small (44px min)
               </TouchButton>
-              <span className="text-sm text-gray-600">Minimum WCAG size</span>
+              <span className="text-sm text-[var(--text-600)]">Minimum WCAG size</span>
             </div>
             <div className="flex items-center space-x-3">
               <TouchButton variant="primary" size="medium">
                 Medium (48px)
               </TouchButton>
-              <span className="text-sm text-gray-600">Recommended size</span>
+              <span className="text-sm text-[var(--text-600)]">Recommended size</span>
             </div>
             <div className="flex items-center space-x-3">
               <TouchButton variant="primary" size="large">
                 Large (56px)
               </TouchButton>
-              <span className="text-sm text-gray-600">Easy to tap</span>
+              <span className="text-sm text-[var(--text-600)]">Easy to tap</span>
             </div>
             <div className="flex items-center space-x-3">
               <TouchButton variant="primary" size="xl">
                 Extra Large (64px)
               </TouchButton>
-              <span className="text-sm text-gray-600">Very easy to tap</span>
+              <span className="text-sm text-[var(--text-600)]">Very easy to tap</span>
             </div>
           </div>
         </div>
 
         {/* Icon Buttons Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Icon Buttons</h2>
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">Icon Buttons</h2>
           <div className="flex items-center space-x-3">
             <TouchIconButton
               icon={Settings}
@@ -283,8 +283,8 @@ export default function TouchDemo() {
         </div>
 
         {/* Card Buttons Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Touch-Optimized Cards</h2>
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">Touch-Optimized Cards</h2>
           <div className="space-y-3">
             <TouchCardButton
               title="Download Resources"
@@ -302,8 +302,8 @@ export default function TouchDemo() {
         </div>
 
         {/* Gesture Detection Demo */}
-        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Gesture Detection</h2>
+        <div className="mb-6 bg-[var(--card-bg)] rounded-xl shadow-lg border-2 border-[var(--card-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4">Gesture Detection</h2>
           <div
             className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl p-8 mb-4 text-center border-2 border-teal-300"
             onTouchStart={(e) => {
@@ -323,16 +323,16 @@ export default function TouchDemo() {
           </div>
 
           {/* Gesture Log */}
-          <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-gray-200">
-            <p className="font-bold text-gray-900 mb-2">Gesture Log:</p>
+          <div className="bg-[var(--card-bg)] rounded-lg p-4 border-2 border-[var(--card-border)]">
+            <p className="font-bold text-[var(--text-900)] mb-2">Gesture Log:</p>
             {gestureLog.length === 0 ? (
-              <p className="text-sm text-gray-500">No gestures detected yet...</p>
+              <p className="text-sm text-[var(--text-500)]">No gestures detected yet...</p>
             ) : (
               <div className="space-y-1">
                 {gestureLog.map((log, index) => (
-                  <div key={index} className="text-sm text-gray-700 flex items-center justify-between">
+                  <div key={index} className="text-sm text-[var(--text-700)] flex items-center justify-between">
                     <span>{log.message}</span>
-                    <span className="text-xs text-gray-500">{log.time}</span>
+                    <span className="text-xs text-[var(--text-500)]">{log.time}</span>
                   </div>
                 ))}
               </div>
@@ -342,11 +342,11 @@ export default function TouchDemo() {
 
         {/* Offline Resources */}
         <div className="mb-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl shadow-lg border-2 border-green-200 p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+          <h2 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center space-x-2">
             <Download className="w-6 h-6 text-green-600" />
             <span>Offline Educational Resources</span>
           </h2>
-          <p className="text-gray-700 mb-4">
+          <p className="text-[var(--text-700)] mb-4">
             Download 10 educational resources for offline access. Includes palliative care guides,
             pain management, family support, and more.
           </p>

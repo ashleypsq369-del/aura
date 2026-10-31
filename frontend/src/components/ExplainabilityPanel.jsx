@@ -58,9 +58,9 @@ export default function ExplainabilityPanel({
 
   if (!prediction) {
     return (
-      <div className="bg-[var(--card-bg)] rounded-lg p-8 shadow-md border-2 border-gray-200 text-center">
-        <Brain className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600 mb-4">No AI prediction available</p>
+      <div className="bg-[var(--card-bg)] rounded-lg p-8 shadow-md border-2 border-[var(--card-border)] text-center">
+        <Brain className="w-16 h-16 text-[var(--text-400)] mx-auto mb-4" />
+        <p className="text-[var(--text-600)] mb-4">No AI prediction available</p>
         {onRequestNewPrediction && (
           <button
             onClick={onRequestNewPrediction}
@@ -99,10 +99,10 @@ export default function ExplainabilityPanel({
             </div>
             
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-1">
+              <h2 className="text-lg font-bold text-[var(--text-900)] mb-1">
                 {prediction.risk_level} Risk Patient
               </h2>
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-[var(--text-600)] mb-2">
                 <span className="font-semibold">Pathway:</span> {prediction.predicted_pathway}
               </p>
               <div className="flex items-center space-x-2">
@@ -131,8 +131,8 @@ export default function ExplainabilityPanel({
       </motion.div>
 
       {/* Tabs */}
-      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
-        <div className="flex border-b-2 border-gray-200">
+      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-[var(--card-border)] overflow-hidden">
+        <div className="flex border-b-2 border-[var(--card-border)]">
           {[
             { id: 'explanation', label: 'Plain English', icon: MessageSquare },
             { id: 'bar-chart', label: 'Feature Importance', icon: BarChart3 },
@@ -144,7 +144,7 @@ export default function ExplainabilityPanel({
               className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 font-semibold transition ${
                 activeTab === tab.id
                   ? 'bg-purple-600 text-white'
-                  : 'bg-[var(--card-bg)] text-gray-600 hover:bg-gray-100'
+                  : 'bg-[var(--card-bg)] text-[var(--text-600)] hover:bg-[var(--card-border)]/30'
               }`}
             >
               <tab.icon size={18} />
@@ -164,9 +164,9 @@ export default function ExplainabilityPanel({
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-4"
               >
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Clinical Explanation</h3>
+                <h3 className="text-lg font-bold text-[var(--text-900)] mb-3">Clinical Explanation</h3>
                 <div className="prose prose-sm max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  <p className="text-[var(--text-700)] leading-relaxed whitespace-pre-line">
                     {prediction.plain_english_explanation}
                   </p>
                 </div>
@@ -206,15 +206,15 @@ export default function ExplainabilityPanel({
       </div>
 
       {/* Clinician Feedback Section */}
-      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-gray-200 overflow-hidden">
+      <div className="bg-[var(--card-bg)] rounded-lg shadow-md border-2 border-[var(--card-border)] overflow-hidden">
         <button
           onClick={() => setFeedbackExpanded(!feedbackExpanded)}
           className="w-full flex items-center justify-between px-6 py-4 hover:bg-[var(--card-bg)] transition"
         >
           <div className="flex items-center space-x-3">
             <TrendingUp className="text-purple-600" size={20} />
-            <span className="font-semibold text-gray-900">Clinician Feedback</span>
-            <span className="text-sm text-gray-500">(Help improve AI accuracy)</span>
+            <span className="font-semibold text-[var(--text-900)]">Clinician Feedback</span>
+            <span className="text-sm text-[var(--text-500)]">(Help improve AI accuracy)</span>
           </div>
           {feedbackExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
@@ -225,9 +225,9 @@ export default function ExplainabilityPanel({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="border-t-2 border-gray-200 p-6 space-y-4"
+              className="border-t-2 border-[var(--card-border)] p-6 space-y-4"
             >
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-[var(--text-600)] mb-4">
                 Do you agree with this AI prediction? Your feedback helps improve model accuracy.
               </p>
 
@@ -273,7 +273,7 @@ export default function ExplainabilityPanel({
               {/* Optional Note */}
               {feedbackType && (
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">
                     Additional Comments (Optional)
                   </label>
                   <textarea

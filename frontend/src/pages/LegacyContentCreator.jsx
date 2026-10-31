@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import FormFileUpload from '../components/FormFileUpload';
 import PageHeader from '../components/PageHeader';
 import ModalShell from '../components/ui/ModalShell';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 const CONTENT_TYPES = [
   { value: 'final_message', label: 'Final Message', icon: Mail, description: 'A heartfelt final message to loved ones' },
@@ -24,7 +25,8 @@ const DELIVERY_TRIGGERS = [
 ];
 
 export default function LegacyContentCreator() {
-  // const { user } = useAuth();  // Removed unused variable
+  // const { user } = useAuth();
+  const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();  // Removed unused variable
   const [patientId, setPatientId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const queryClient = useQueryClient();
@@ -161,8 +163,8 @@ export default function LegacyContentCreator() {
     });
   };
 
-  const handleDelete = (contentId, title) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"? This cannot be undone.`)) {
+  const handleDelete = async (contentId, title) => {
+    if (await confirmAction({ title: `Are you sure you want to delete "${title}"? This cannot be undone.`, confirmLabel: "Confirm", variant: "danger" })) {
       deleteContentMutation.mutate(contentId);
     }
   };
@@ -184,7 +186,7 @@ export default function LegacyContentCreator() {
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             No Patient Linked
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[var(--text-600)]">
             Legacy content creation is available to patients.
           </p>
         </div>
@@ -200,7 +202,7 @@ export default function LegacyContentCreator() {
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Consent Required
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-[var(--text-600)] mb-6">
             You need to give consent for your digital legacy before creating content.
           </p>
           <Link
@@ -223,7 +225,7 @@ export default function LegacyContentCreator() {
           <h2 className="text-base font-semibold mb-4" className="text-purple-700">
             Designate Heirs First
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-[var(--text-600)] mb-6">
             You need to designate at least one heir before creating legacy content.
           </p>
           <Link
@@ -298,7 +300,7 @@ export default function LegacyContentCreator() {
                     </div>
                     <div className="flex-1 pr-8">
                       <div className="flex items-center space-x-2 mb-2">
-                        <h3 className="text-lg font-medium text-gray-900">{item.title}</h3>
+                        <h3 className="text-lg font-medium text-[var(--text-900)]">{item.title}</h3>
                         {item.is_delivered && (
                           <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                             " Delivered
@@ -306,7 +308,7 @@ export default function LegacyContentCreator() {
                         )}
                       </div>
                       
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-3">{item.content}</p>
+                      <p className="text-sm text-[var(--text-600)] mb-3 line-clamp-3">{item.content}</p>
 
                       {/* Recipient Badge */}
                       <div className="flex flex-wrap gap-2 mb-3">
@@ -331,7 +333,7 @@ export default function LegacyContentCreator() {
                       </div>
 
                       {/* Delivery Info */}
-                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                      <div className="flex items-center space-x-2 text-xs text-[var(--text-500)]">
                         <Send className="w-3 h-3" />
                         <span>
                           {item.delivery_trigger === 'after_death' && 'After passing'}
@@ -361,7 +363,7 @@ export default function LegacyContentCreator() {
             <h3 className="text-base font-semibold mb-3" className="text-purple-700">
               No Legacy Content Yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[var(--text-600)] mb-6">
               Start creating final messages, letters, or notes to be delivered to your heirs.
             </p>
             <button
@@ -407,7 +409,7 @@ export default function LegacyContentCreator() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Content Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-3">
                 Content Type
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -423,12 +425,12 @@ export default function LegacyContentCreator() {
                       className={`p-4 rounded-xl border-2 text-left transition ${
                         contentType === type.value
                           ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30'
-                          : 'border-gray-200 hover:border-purple-300'
+                          : 'border-[var(--card-border)] hover:border-purple-300'
                       } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     >
                       <TypeIcon className="w-6 h-6 mb-2 text-purple-700 dark:text-purple-400" />
-                      <p className="font-medium text-sm text-gray-900">{type.label}</p>
-                      <p className="text-xs text-gray-500 dark:text-slate-400">{type.description}</p>
+                      <p className="font-medium text-sm text-[var(--text-900)]">{type.label}</p>
+                      <p className="text-xs text-[var(--text-500)] dark:text-slate-400">{type.description}</p>
                     </button>
                   );
                 })}
@@ -437,7 +439,7 @@ export default function LegacyContentCreator() {
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">Title *</label>
               <input
                 type="text"
                 value={title}
@@ -451,7 +453,7 @@ export default function LegacyContentCreator() {
 
             {/* Content */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">Content *</label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -465,21 +467,21 @@ export default function LegacyContentCreator() {
 
             {/* Recipient */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Who should receive this?</label>
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-3">Who should receive this?</label>
               <div className="space-y-3">
-                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="all_heirs" checked={recipientType === 'all_heirs'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3">
-                    <p className="font-medium text-gray-900">All Heirs</p>
-                    <p className="text-sm text-gray-600 dark:text-slate-400">Everyone you've designated as an heir</p>
+                    <p className="font-medium text-[var(--text-900)]">All Heirs</p>
+                    <p className="text-sm text-[var(--text-600)] dark:text-slate-400">Everyone you've designated as an heir</p>
                   </div>
                 </label>
-                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="specific_heir" checked={recipientType === 'specific_heir'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3 flex-1">
-                    <p className="font-medium text-gray-900 mb-2">Specific Heir</p>
+                    <p className="font-medium text-[var(--text-900)] mb-2">Specific Heir</p>
                     {recipientType === 'specific_heir' && (
                       <select value={recipientHeirId} onChange={(e) => setRecipientHeirId(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500"
@@ -490,11 +492,11 @@ export default function LegacyContentCreator() {
                     )}
                   </div>
                 </label>
-                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                <label className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30 dark:hover:bg-slate-700">
                   <input type="radio" name="recipient" value="specific_person" checked={recipientType === 'specific_person'}
                     onChange={(e) => setRecipientType(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                   <div className="ml-3 flex-1">
-                    <p className="font-medium text-gray-900 mb-2">Specific Person</p>
+                    <p className="font-medium text-[var(--text-900)] mb-2">Specific Person</p>
                     {recipientType === 'specific_person' && (
                       <select value={recipientUserId} onChange={(e) => setRecipientUserId(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg focus:outline-none dark:border-slate-500"
@@ -510,20 +512,20 @@ export default function LegacyContentCreator() {
 
             {/* Delivery Trigger */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">When should this be delivered?</label>
+              <label className="block text-sm font-medium text-[var(--text-700)] mb-3">When should this be delivered?</label>
               <div className="space-y-3">
                 {DELIVERY_TRIGGERS.map((trigger) => (
-                  <label key={trigger.value} className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <label key={trigger.value} className="flex items-center p-4 bg-[var(--card-bg)] rounded-lg cursor-pointer hover:bg-[var(--card-border)]/30 dark:hover:bg-slate-700">
                     <input type="radio" name="delivery" value={trigger.value} checked={deliveryTrigger === trigger.value}
                       onChange={(e) => setDeliveryTrigger(e.target.value)} className="w-4 h-4" style={{ accentColor: '#6B4F7A' }} />
                     <div className="ml-3 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-gray-900">{trigger.label}</p>
+                        <p className="font-medium text-[var(--text-900)]">{trigger.label}</p>
                         {trigger.value === 'after_death' && (
                           <span className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">Recommended</span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-slate-400">{trigger.description}</p>
+                      <p className="text-sm text-[var(--text-600)] dark:text-slate-400">{trigger.description}</p>
                       {trigger.value === 'specific_date' && deliveryTrigger === 'specific_date' && (
                         <input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)}
                           min={new Date().toISOString().split('T')[0]}
@@ -554,11 +556,12 @@ export default function LegacyContentCreator() {
           transition={{ delay: 0.3 }}
           className="text-center py-6"
         >
-          <p className="text-sm text-gray-500 italic">
+          <p className="text-sm text-[var(--text-500)] italic">
             Your content will be safely stored and delivered according to your wishes. You can edit or delete content before it's delivered.
           </p>
         </motion.div>
       </motion.div>
+      <ConfirmDialog />
     </div>
   );
 }

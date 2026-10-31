@@ -9,7 +9,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 export default function SHAPBarChart({ shapFeatures, title = "Feature Importance" }) {
  if (!shapFeatures || shapFeatures.length === 0) {
  return (
- <div className="text-center py-8 text-gray-500">
+ <div className="text-center py-8 text-[var(--text-500)]">
  <p>No SHAP values available</p>
  </div>
  );
@@ -23,7 +23,7 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
 
  return (
  <div className="space-y-3">
- <h3 className="text-lg font-bold text-gray-900 mb-4">{title}</h3>
+ <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">{title}</h3>
  
  <div className="space-y-2">
  {topFeatures.map((feature, idx) => {
@@ -41,10 +41,10 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
  {/* Feature name and value */}
  <div className="flex items-center justify-between mb-1">
  <div className="flex items-center space-x-2">
- <span className="text-sm font-semibold text-gray-700">
+ <span className="text-sm font-semibold text-[var(--text-700)]">
  {feature.feature_name}
  </span>
- <span className="text-xs text-gray-500">
+ <span className="text-xs text-[var(--text-500)]">
  ({feature.display_value || feature.feature_value})
  </span>
  </div>
@@ -63,7 +63,7 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
  </div>
 
  {/* Bar */}
- <div className="relative h-6 bg-gray-100 rounded-full overflow-hidden">
+ <div className="relative h-6 bg-[var(--card-border)]/30 rounded-full overflow-hidden">
  <motion.div
  initial={{ width: 0 }}
  animate={{ width: `${percentage}%` }}
@@ -80,7 +80,7 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
  </div>
 
  {/* Impact description */}
- <p className="text-xs text-gray-600 mt-1 pl-2">
+ <p className="text-xs text-[var(--text-600)] mt-1 pl-2">
  {isPositive ? 'Increases' : 'Decreases'} risk - {(feature.pct ?? Math.abs(feature.shap_value) * 100).toFixed(1)}% of total impact
  </p>
  </motion.div>
@@ -89,14 +89,14 @@ export default function SHAPBarChart({ shapFeatures, title = "Feature Importance
  </div>
 
  {/* Legend */}
- <div className="flex items-center justify-center space-x-6 mt-4 pt-4 border-t border-gray-200">
+ <div className="flex items-center justify-center space-x-6 mt-4 pt-4 border-t border-[var(--card-border)]">
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 bg-red-500 rounded"></div>
- <span className="text-xs text-gray-600">Increases Risk</span>
+ <span className="text-xs text-[var(--text-600)]">Increases Risk</span>
  </div>
  <div className="flex items-center space-x-2">
  <div className="w-4 h-4 bg-green-500 rounded"></div>
- <span className="text-xs text-gray-600">Decreases Risk</span>
+ <span className="text-xs text-[var(--text-600)]">Decreases Risk</span>
  </div>
  </div>
  </div>

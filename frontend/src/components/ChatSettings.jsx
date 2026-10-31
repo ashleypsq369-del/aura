@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import Switch from './ui/Switch';
 import SignOutModal from './SignOutModal';
+import useConfirmDialog from '../../hooks/useConfirmDialog';
 
 export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) {
   const { user, logout } = useAuth();
@@ -60,8 +61,8 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
   };
 
   // Clear all chat data
-  const handleClearData = () => {
-    if (window.confirm('Are you sure you want to clear all chat data? This cannot be undone.')) {
+  const handleClearData = async () => {
+    if (await confirmAction({ title: 'Are you sure you want to clear all chat data? This cannot be undone.', confirmLabel: "Confirm", variant: "danger" })) {
       if (chatType === 'chatbot') {
         localStorage.removeItem('chatbot_conversations');
         window.location.reload();
@@ -107,7 +108,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
       caregiver: 'bg-orange-100 text-orange-800',
       admin:     'bg-red-100 text-red-800'
     };
-    return colors[role] || 'bg-gray-100 text-gray-800';
+    return colors[role] || 'bg-[var(--card-border)]/30 text-[var(--text-800)]';
   };
 
   return (
@@ -156,7 +157,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 px-6 bg-gray-50">
+            <div className="flex border-b border-[var(--card-border)] px-6 bg-[var(--card-bg)]">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -168,7 +169,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                         ? chatType === 'chatbot'
                           ? 'text-teal-600'
                           : 'text-teal-600'
-                        : 'text-gray-600 hover:text-gray-900'
+                        : 'text-[var(--text-600)] hover:text-[var(--text-900)]'
                     }`}
                   >
                     <Icon size={16} />
@@ -191,12 +192,12 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {/* Profile Tab */}
               {activeTab === 'profile' && (
                 <div className="space-y-4">
-                  <div className="text-center pb-4 border-b border-gray-200">
+                  <div className="text-center pb-4 border-b border-[var(--card-border)]">
                     <div className="w-24 h-24 mx-auto bg-gradient-to-br bg-teal-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-3">
                       {user?.full_name?.charAt(0).toUpperCase() || '¤'}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">{user?.full_name}</h3>
-                    <p className="text-sm text-gray-500">{user?.email}</p>
+                    <h3 className="text-xl font-bold text-[var(--text-900)]">{user?.full_name}</h3>
+                    <p className="text-sm text-[var(--text-500)]">{user?.email}</p>
                     <div className="mt-2">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getRoleColor(user?.role)}`}>
                         {user?.role?.toUpperCase()}
@@ -206,16 +207,16 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
 
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
-                      <span className="text-sm font-medium text-gray-700">Username</span>
-                      <span className="text-sm text-gray-900">{user?.username}</span>
+                      <span className="text-sm font-medium text-[var(--text-700)]">Username</span>
+                      <span className="text-sm text-[var(--text-900)]">{user?.username}</span>
                     </div>
                     <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
-                      <span className="text-sm font-medium text-gray-700">Phone</span>
-                      <span className="text-sm text-gray-900">{user?.phone || 'Not set'}</span>
+                      <span className="text-sm font-medium text-[var(--text-700)]">Phone</span>
+                      <span className="text-sm text-[var(--text-900)]">{user?.phone || 'Not set'}</span>
                     </div>
                     <div className="flex items-center justify-between p-3 bg-[var(--card-bg)] rounded-lg">
-                      <span className="text-sm font-medium text-gray-700">User ID</span>
-                      <span className="text-sm text-gray-900">{user?.id}</span>
+                      <span className="text-sm font-medium text-[var(--text-700)]">User ID</span>
+                      <span className="text-sm text-[var(--text-900)]">{user?.id}</span>
                     </div>
                   </div>
 
@@ -236,14 +237,14 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {activeTab === 'preferences' && (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Appearance</h3>
+                    <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">Appearance</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
                           <div>
-                            <p className="text-sm font-medium text-gray-900">Theme</p>
-                            <p className="text-xs text-gray-500">Choose your preferred theme</p>
+                            <p className="text-sm font-medium text-[var(--text-900)]">Theme</p>
+                            <p className="text-xs text-[var(--text-500)]">Choose your preferred theme</p>
                           </div>
                         </div>
                         <select
@@ -260,14 +261,14 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Language & Region</h3>
+                    <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">Language & Region</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           <Globe size={20} />
                           <div>
-                            <p className="text-sm font-medium text-gray-900">Language</p>
-                            <p className="text-xs text-gray-500">Select your language</p>
+                            <p className="text-sm font-medium text-[var(--text-900)]">Language</p>
+                            <p className="text-xs text-[var(--text-500)]">Select your language</p>
                           </div>
                         </div>
                         <select
@@ -285,14 +286,14 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Audio</h3>
+                    <h3 className="text-lg font-bold text-[var(--text-900)] mb-4">Audio</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-4 bg-[var(--card-bg)] rounded-lg">
                         <div className="flex items-center gap-3">
                           {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                           <div>
-                            <p className="text-sm font-medium text-gray-900">Sound Effects</p>
-                            <p className="text-xs text-gray-500">Message sounds &amp; alerts</p>
+                            <p className="text-sm font-medium text-[var(--text-900)]">Sound Effects</p>
+                            <p className="text-xs text-[var(--text-500)]">Message sounds &amp; alerts</p>
                           </div>
                         </div>
                         <Switch
@@ -313,8 +314,8 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                     <div className="flex items-center gap-3">
                       <Bell size={20} />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Enable Notifications</p>
-                        <p className="text-xs text-gray-500">Receive chat notifications</p>
+                        <p className="text-sm font-medium text-[var(--text-900)]">Enable Notifications</p>
+                        <p className="text-xs text-[var(--text-500)]">Receive chat notifications</p>
                       </div>
                     </div>
                     <Switch
@@ -336,21 +337,21 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
               {activeTab === 'help' && (
                 <div className="space-y-4">
                   <div className="p-4 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    <h3 className="text-lg font-bold text-[var(--text-900)] mb-2">
                       {chatType === 'chatbot' ? '¬ ChatBot' : '§  AI Assistant'}
                     </h3>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <p className="text-sm text-[var(--text-700)] mb-2">
                       {chatType === 'chatbot'
                         ? 'Your personal AI companion for conversations, support, and guidance. Create unlimited chats, save conversations, and get intelligent responses.'
                         : 'Your clinical AI assistant for navigation, patient data queries, and intelligent insights. Get quick access to patient information and system navigation.'
                       }
                     </p>
-                    <p className="text-xs text-gray-600">Version 2.0.0</p>
+                    <p className="text-xs text-[var(--text-600)]">Version 2.0.0</p>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-sm font-bold text-gray-900">Quick Tips:</h4>
-                    <ul className="space-y-1 text-sm text-gray-700">
+                    <h4 className="text-sm font-bold text-[var(--text-900)]">Quick Tips:</h4>
+                    <ul className="space-y-1 text-sm text-[var(--text-700)]">
                       <li>- Drag the button or window to reposition</li>
                       <li>- Click outside to close instantly</li>
                       {chatType === 'chatbot' && (
@@ -365,7 +366,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="text-sm font-bold text-gray-900">Actions:</h4>
+                    <h4 className="text-sm font-bold text-[var(--text-900)]">Actions:</h4>
                     <div className="space-y-2">
                       <button
                         onClick={handleExportSettings}
@@ -405,6 +406,7 @@ export default function ChatSettings({ isOpen, onClose, chatType = 'chatbot' }) 
           logout();
         }}
       />
+      <ConfirmDialog />
     </AnimatePresence>
   );
 }

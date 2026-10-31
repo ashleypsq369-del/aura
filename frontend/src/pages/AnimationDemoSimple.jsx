@@ -26,10 +26,10 @@ export default function AnimationDemoSimple() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-5xl font-bold text-gray-900 mb-3">
+          <h1 className="text-5xl font-bold text-[var(--text-900)] mb-3">
             🎬 Healthcare Animations Demo
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-[var(--text-600)]">
             All 12 animation types demonstrated below
           </p>
         </motion.div>
@@ -44,7 +44,7 @@ export default function AnimationDemoSimple() {
             className="bg-[var(--card-bg)] p-6 rounded-xl shadow-lg border-4 border-teal-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-teal-700">✨ 1. Page Transition</h2>
-            <p className="text-gray-600 mb-3">
+            <p className="text-[var(--text-600)] mb-3">
               This entire page faded in smoothly when loaded!
             </p>
             <div className="bg-teal-50 p-3 rounded-lg">
@@ -61,7 +61,7 @@ export default function AnimationDemoSimple() {
             className="bg-[var(--card-bg)] p-6 rounded-xl shadow-lg border-4 border-purple-300 cursor-pointer"
           >
             <h2 className="text-2xl font-bold mb-3 text-purple-700">🎯 2. Hover Effect</h2>
-            <p className="text-gray-600 mb-3">
+            <p className="text-[var(--text-600)] mb-3">
               Hover over this card to see it lift and scale!
             </p>
             <div className="bg-purple-50 p-3 rounded-lg">
@@ -79,7 +79,7 @@ export default function AnimationDemoSimple() {
             <h2 className="text-2xl font-bold mb-3 text-teal-700">🔢 3. Counting Animation</h2>
             <div className="text-center mb-4">
               <div className="text-5xl font-bold text-teal-600 mb-2">{count}</div>
-              <div className="text-sm text-gray-500">Heart Rate (bpm)</div>
+              <div className="text-sm text-[var(--text-500)]">Heart Rate (bpm)</div>
             </div>
             <button
               onClick={startCount}
@@ -139,7 +139,7 @@ export default function AnimationDemoSimple() {
                 ❤️
               </motion.div>
             </div>
-            <p className="text-center text-gray-600">Perfect for vital signs!</p>
+            <p className="text-center text-[var(--text-600)]">Perfect for vital signs!</p>
           </motion.div>
 
           {/* 6. Pulsing Vital */}
@@ -210,7 +210,7 @@ export default function AnimationDemoSimple() {
             >
               Click Me! (with scale effect)
             </motion.button>
-            <p className="text-sm text-center text-gray-600 mt-3">
+            <p className="text-sm text-center text-[var(--text-600)] mt-3">
               Hover and click to see effects
             </p>
           </motion.div>
@@ -257,7 +257,7 @@ export default function AnimationDemoSimple() {
             className="bg-[var(--card-bg)] p-6 rounded-xl shadow-lg border-4 border-lime-300"
           >
             <h2 className="text-2xl font-bold mb-3 text-lime-700">📜 11. Scroll Animation</h2>
-            <p className="text-gray-600">
+            <p className="text-[var(--text-600)]">
               This zoomed in when scrolled into view!
             </p>
             <div className="bg-lime-50 p-3 rounded-lg mt-3">
@@ -322,7 +322,7 @@ export default function AnimationDemoSimple() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-2xl font-bold mb-3">Modal with Animation!</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-[var(--text-600)] mb-4">
               This modal smoothly scaled in with a backdrop fade.
             </p>
             <motion.button

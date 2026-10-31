@@ -8,8 +8,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
-import FormFileUpload from '../components/FormFileUpload';
-import Modal, { ModalFooter } from '../components/Modal';
+import useConfirmDialog from '../hooks/useConfirmDialog';
 
 /* ── Memory theme clustering ─────────────────────────────────────────── */
 const THEME_PATTERNS = {
@@ -142,10 +141,16 @@ export default function MemoryVault() {
     }
   };
 
-  const handleDelete = (entryId) => {
-    if (window.confirm('Are you sure you want to delete this memory? This cannot be undone.')) {
-      deleteMutation.mutate(entryId);
-    }
+  const { confirm, ConfirmDialog } = useConfirmDialog();
+
+  const handleDelete = async (entryId) => {
+    const ok = await confirm({
+      title: 'Delete this memory?',
+      body: 'This memory will be permanently removed from the vault. This cannot be undone.',
+      confirmLabel: 'Delete Memory',
+      variant: 'danger',
+    });
+    if (ok) deleteMutation.mutate(entryId);
   };
 
   const memories = memoriesData?.entries || [];
@@ -167,7 +172,7 @@ export default function MemoryVault() {
           <h2 className="text-lg font-semibold mb-4 text-purple-700">
             No Patient Linked
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[var(--text-600)]">
             The Memory Vault is available to patients and their families. Please contact your care team if you should have access.
           </p>
         </div>
@@ -201,7 +206,7 @@ export default function MemoryVault() {
         className="max-w-6xl mx-auto px-3 sm:px-6 py-6 space-y-6"
       >
         {paramPatientId && (
-          <Link to="/continuity-bridge" data-tip="Go back to Continuity Bridge" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm">
+          <Link to="/continuity-bridge" data-tip="Go back to Continuity Bridge" className="inline-flex items-center gap-2 text-[var(--text-600)] hover:text-[var(--text-900)] text-sm">
             <ArrowLeft size={16} /> Back to Continuity Bridge
           </Link>
         )}
@@ -446,7 +451,7 @@ export default function MemoryVault() {
         >
           {patientName && (
             <div className="mb-4 p-4 rounded-xl bg-purple-50">
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-[var(--text-700)]">
                 This memory will be saved about <span className="font-medium">{patientName}</span>
               </p>
             </div>
@@ -454,7 +459,7 @@ export default function MemoryVault() {
 
           <form id="memory-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
                 What would you like to remember?
               </label>
               <textarea
@@ -474,15 +479,15 @@ export default function MemoryVault() {
               <label className="flex items-center justify-between cursor-pointer">
                 <div className="flex items-center space-x-3">
                   {isPrivate ? (
-                    <Lock className="w-5 h-5 text-gray-600" />
+                    <Lock className="w-5 h-5 text-[var(--text-600)]" />
                   ) : (
                     <Globe className="w-5 h-5 text-purple-700" />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-[var(--text-900)]">
                       {isPrivate ? 'Private Memory' : 'Shared Memory'}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[var(--text-500)]">
                       {isPrivate
                         ? 'Only you can see this memory'
                         : 'Family members and care team can see this memory'}

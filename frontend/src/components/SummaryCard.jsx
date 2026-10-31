@@ -51,7 +51,7 @@ export default function SummaryCard({
               <Icon className="w-6 h-6" strokeWidth={2.5} />
             </div>
           )}
-          <h3 className="font-bold text-lg text-gray-900">{title}</h3>
+          <h3 className="font-bold text-lg text-[var(--text-900)]">{title}</h3>
         </div>
         
         {badge && (
@@ -62,7 +62,7 @@ export default function SummaryCard({
       </div>
       
       {/* Summary Text */}
-      <p className="text-gray-600 mb-4 text-sm leading-relaxed min-h-[2.5rem]">
+      <p className="text-[var(--text-600)] mb-4 text-sm leading-relaxed min-h-[2.5rem]">
         {summary}
       </p>
       

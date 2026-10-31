@@ -53,7 +53,7 @@ export default function TouchButton({
     success: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 border-2 border-green-500',
     danger: 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700 border-2 border-red-500',
     warning: 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:from-yellow-600 hover:to-orange-700 border-2 border-yellow-500',
-    ghost: 'bg-transparent text-gray-700 border-2 border-gray-300 hover:bg-gray-100'
+    ghost: 'bg-transparent text-[var(--text-700)] border-2 border-gray-300 hover:bg-[var(--card-border)]/30'
   };
 
   // Size styles (touch-optimized minimum 44x44px)
@@ -143,8 +143,8 @@ export function TouchIconButton({
 
   const variantStyles = {
     primary: 'bg-teal-500 text-white hover:bg-teal-600',
-    secondary: 'bg-gray-200 text-gray-700 hover:bg-gray-300',
-    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
+    secondary: 'bg-gray-200 text-[var(--text-700)] hover:bg-gray-300',
+    ghost: 'bg-transparent text-[var(--text-700)] hover:bg-[var(--card-border)]/30',
     danger: 'bg-red-500 text-white hover:bg-red-600'
   };
 
@@ -286,8 +286,8 @@ export function TouchCardButton({
       onClick={handleClick}
       disabled={disabled}
       className={`
-        w-full p-6 rounded-2xl border-2 border-gray-200
-        bg-[var(--card-bg)] hover:bg-gray-50
+        w-full p-6 rounded-2xl border-2 border-[var(--card-border)]
+        bg-[var(--card-bg)] hover:bg-[var(--card-bg)]
         transition-all duration-150
         active:scale-98
         touch-manipulation
@@ -306,9 +306,9 @@ export function TouchCardButton({
           </div>
         )}
         <div className="flex-1">
-          <h3 className="font-bold text-lg text-gray-900 mb-1">{title}</h3>
+          <h3 className="font-bold text-lg text-[var(--text-900)] mb-1">{title}</h3>
           {description && (
-            <p className="text-sm text-gray-600">{description}</p>
+            <p className="text-sm text-[var(--text-600)]">{description}</p>
           )}
         </div>
       </div>

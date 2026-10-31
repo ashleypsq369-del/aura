@@ -114,8 +114,8 @@ function ProviderBadge({ status }) {
   const cfg = {
     gemini:      { icon: <Sparkles size={10} />, label: 'Gemini',   color: 'bg-teal-500/20 text-blue-300' },
     groq:        { icon: <Zap size={10} />,       label: 'Groq',     color: 'bg-purple-500/20 text-purple-300' },
-    'rule-based':{ icon: <Cpu size={10} />,       label: 'Offline',  color: 'bg-gray-500/20 text-gray-300' },
-    fallback:    { icon: <Cpu size={10} />,       label: 'Limited',  color: 'bg-gray-500/20 text-gray-300' },
+    'rule-based':{ icon: <Cpu size={10} />,       label: 'Offline',  color: 'bg-[var(--card-bg)]0/20 text-gray-300' },
+    fallback:    { icon: <Cpu size={10} />,       label: 'Limited',  color: 'bg-[var(--card-bg)]0/20 text-gray-300' },
   };
   const c = cfg[status.provider] || cfg.fallback;
   return (
@@ -166,7 +166,7 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
         <div className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
           isUser
             ? 'bg-teal-600 dark:bg-teal-700 text-white rounded-tr-sm'
-            : 'bg-[var(--card-bg)] border border-gray-100 text-gray-800 rounded-tl-sm'
+            : 'bg-[var(--card-bg)] border border-[var(--card-border)]/50 text-[var(--text-800)] rounded-tl-sm'
         }`}>
           {isUser ? (
             <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
@@ -180,11 +180,11 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
 
         {/* Timestamp + actions */}
         <div className={`flex items-center gap-2 mt-1 px-1 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[11px] text-[var(--text-400)]">
             {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
           {message.model_used && (
-            <span className="text-[11px] text-gray-400">{message.model_used}</span>
+            <span className="text-[11px] text-[var(--text-400)]">{message.model_used}</span>
           )}
 
           {/* Action buttons - appear on hover */}
@@ -192,7 +192,7 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
             <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
               <button
                 onClick={handleCopy}
-                className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+                className="p-1 rounded hover:bg-[var(--card-border)]/30 text-[var(--text-400)] hover:text-[var(--text-700)] transition-colors"
                 title="Copy"
               >
                 {copied ? <Check size={11} className="text-green-500" /> : <Copy size={11} />}
@@ -200,7 +200,7 @@ function MessageBubble({ message, onCopy, onRegenerate, isLast }) {
               {isLast && onRegenerate && (
                 <button
                   onClick={onRegenerate}
-                  className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+                  className="p-1 rounded hover:bg-[var(--card-border)]/30 text-[var(--text-400)] hover:text-[var(--text-700)] transition-colors"
                   title="Regenerate"
                 >
                   <RotateCcw size={11} />
@@ -226,7 +226,7 @@ function ThinkingDots() {
       <div className="w-7 h-7 rounded-full bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0 mt-0.5 shadow">
         <Bot size={14} className="text-white" />
       </div>
-      <div className="bg-[var(--card-bg)] border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)]/50 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
         <div className="flex items-center gap-1.5">
           {[0, 150, 300].map(delay => (
             <div
@@ -235,7 +235,7 @@ function ThinkingDots() {
               style={{ animationDelay: `${delay}ms` }}
             />
           ))}
-          <span className="text-xs text-gray-400 ml-1">Aura is thinking...</span>
+          <span className="text-xs text-[var(--text-400)] ml-1">Aura is thinking...</span>
         </div>
       </div>
     </motion.div>
@@ -665,7 +665,7 @@ export default function ChatBot() {
             }}
             className={`fixed ${
               isMaximized ? 'inset-4' : 'w-[440px] h-[640px]'
-            } bg-[var(--card-bg)] rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-200/60 ${
+            } bg-[var(--card-bg)] rounded-2xl shadow-2xl flex flex-col z-50 overflow-hidden border border-[var(--card-border)]/60 ${
               isDragging ? 'cursor-move select-none' : ''
             }`}
           >
@@ -712,7 +712,7 @@ export default function ChatBot() {
             </div>
 
             {/* -- Toolbar -- */}
-            <div className="px-3 py-2 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between flex-shrink-0">
+            <div className="px-3 py-2 border-b border-[var(--card-border)]/50 bg-[var(--card-bg)]/80 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-1.5">
                 <button onClick={createNewConversation}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-blue-600 text-white text-xs rounded-lg hover:shadow-md transition-all font-medium">
@@ -721,7 +721,7 @@ export default function ChatBot() {
 
                 <div className="relative">
                   <button onClick={() => setShowHistory(v => !v)}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-[var(--card-bg)] border border-gray-200 text-gray-600 text-xs rounded-lg hover:bg-[var(--card-bg)] transition-all">
+                    className="flex items-center gap-1 px-3 py-1.5 bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-600)] text-xs rounded-lg hover:bg-[var(--card-bg)] transition-all">
                     <Clock size={13} />
                     History ({conversations.length})
                     <ChevronDown size={11} className={`transition-transform ${showHistory ? 'rotate-180' : ''}`} />
@@ -733,10 +733,10 @@ export default function ChatBot() {
                         initial={{ opacity: 0, y: -8, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                        className="absolute top-full mt-1 left-0 w-72 bg-[var(--card-bg)] border border-gray-200 rounded-xl shadow-xl max-h-72 overflow-y-auto z-20"
+                        className="absolute top-full mt-1 left-0 w-72 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl max-h-72 overflow-y-auto z-20"
                       >
                         {conversations.length === 0 ? (
-                          <p className="p-4 text-xs text-gray-500 text-center">No conversations yet</p>
+                          <p className="p-4 text-xs text-[var(--text-500)] text-center">No conversations yet</p>
                         ) : (
                           conversations.map(conv => (
                             <div
@@ -747,8 +747,8 @@ export default function ChatBot() {
                               }`}
                             >
                               <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-gray-900 truncate">{conv.title}</p>
-                                <p className="text-[11px] text-gray-400 mt-0.5">
+                                <p className="text-xs font-medium text-[var(--text-900)] truncate">{conv.title}</p>
+                                <p className="text-[11px] text-[var(--text-400)] mt-0.5">
                                   {new Date(conv.updatedAt).toLocaleDateString()} · {conv.messages.length} messages
                                 </p>
                               </div>
@@ -768,7 +768,7 @@ export default function ChatBot() {
               {activeConv && activeConv.messages.length > 0 && (
                 <div className="flex items-center gap-1">
                   <button onClick={downloadConversation}
-                    className="p-1.5 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all"
+                    className="p-1.5 text-[var(--text-500)] hover:text-[var(--text-800)] hover:bg-[var(--card-border)]/30 rounded-lg transition-all"
                     title="Download">
                     <Download size={13} />
                   </button>
@@ -802,10 +802,10 @@ export default function ChatBot() {
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-gray-900">
+                    <h4 className="text-lg font-bold text-[var(--text-900)]">
                       Hi{user?.full_name ? `, ${user.full_name.split(' ')[0]}` : ''}! 👋
                     </h4>
-                    <p className="text-sm text-gray-500 mt-1 max-w-xs">
+                    <p className="text-sm text-[var(--text-500)] mt-1 max-w-xs">
                       {isRealLLM
                         ? "I'm Aura - powered by a real LLM. I understand everything you say, remember our conversation, and respond naturally."
                         : "I'm Aura, your AI companion. Ask me anything about your care or the platform."}
@@ -825,7 +825,7 @@ export default function ChatBot() {
                         whileHover={{ scale: 1.01, x: 2 }}
                         whileTap={{ scale: 0.99 }}
                         onClick={() => { setInput(p.replace(/^[^\s]+\s/, '')); inputRef.current?.focus(); }}
-                        className="w-full text-left px-4 py-2.5 bg-[var(--card-bg)] border border-gray-200 rounded-xl hover:border-violet-300 hover:bg-violet-50/50 transition-all text-sm text-gray-700 shadow-sm"
+                        className="w-full text-left px-4 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl hover:border-violet-300 hover:bg-violet-50/50 transition-all text-sm text-[var(--text-700)] shadow-sm"
                       >
                         {p}
                       </motion.button>
@@ -855,14 +855,14 @@ export default function ChatBot() {
             </div>
 
             {/* -- Input area -- */}
-            <div className="px-4 py-3 border-t border-gray-100 bg-[var(--card-bg)] flex-shrink-0">
+            <div className="px-4 py-3 border-t border-[var(--card-border)]/50 bg-[var(--card-bg)] flex-shrink-0">
               {/* Streaming indicator */}
               {isStreaming && (
                 <div className="flex items-center gap-1.5 mb-2 text-xs text-teal-600">
                   <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-pulse" />
                   Aura is responding...
                   <button onClick={() => setIsStreaming(false)}
-                    className="ml-auto text-gray-400 hover:text-gray-600 flex items-center gap-1">
+                    className="ml-auto text-[var(--text-400)] hover:text-[var(--text-600)] flex items-center gap-1">
                     <X size={10} /> Stop
                   </button>
                 </div>
@@ -879,7 +879,7 @@ export default function ChatBot() {
                   maxLength={2000}
                   disabled={isLoading || isStreaming}
                   autoFocus
-                  className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 transition-all resize-none min-h-[42px] max-h-[140px] overflow-y-auto leading-relaxed bg-[var(--card-bg)] focus:bg-[var(--card-bg)] disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 text-sm border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-violet-400/30 focus:border-violet-400 transition-all resize-none min-h-[42px] max-h-[140px] overflow-y-auto leading-relaxed bg-[var(--card-bg)] focus:bg-[var(--card-bg)] disabled:opacity-50"
                   style={{ height: 'auto' }}
                   onInput={e => {
                     e.target.style.height = 'auto';
@@ -896,8 +896,8 @@ export default function ChatBot() {
               </form>
 
               <div className="flex items-center justify-between mt-1.5">
-                <p className="text-[11px] text-gray-400">{input.length}/2000</p>
-                <p className="text-[11px] text-gray-400">Enter to send · Shift+Enter for new line</p>
+                <p className="text-[11px] text-[var(--text-400)]">{input.length}/2000</p>
+                <p className="text-[11px] text-[var(--text-400)]">Enter to send · Shift+Enter for new line</p>
               </div>
             </div>
           </motion.div>

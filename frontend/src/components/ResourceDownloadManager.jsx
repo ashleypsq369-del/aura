@@ -107,7 +107,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
       patient_resources: 'bg-cyan-100 text-cyan-700',
       quick_reference: 'bg-orange-100 text-orange-700'
     };
-    return colors[category] || 'bg-gray-100 text-gray-700';
+    return colors[category] || 'bg-[var(--card-border)]/30 text-[var(--text-700)]';
   };
 
   const groupByCategory = (resources) => {
@@ -166,8 +166,8 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                 <div className="flex items-center space-x-3">
                   <HardDrive className="w-6 h-6 text-teal-600" />
                   <div>
-                    <p className="font-bold text-gray-900">Storage Used</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="font-bold text-[var(--text-900)]">Storage Used</p>
+                    <p className="text-sm text-[var(--text-600)]">
                       {storageInfo.formatted} - {storageInfo.count} items
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
 
             {/* Download Presets */}
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Download Packs</h3>
+              <h3 className="text-xl font-bold text-[var(--text-900)] mb-4">Download Packs</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.keys(downloadPresets).map((presetKey) => {
                   const preset = downloadPresets[presetKey];
@@ -205,7 +205,7 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                         p-5 rounded-xl border-2 text-left
                         transition-all duration-150 touch-manipulation
                         ${downloading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-teal-50 hover:border-teal-400 active:scale-98'}
-                        ${selectedPreset === presetKey ? 'border-teal-500 bg-teal-50' : 'border-gray-200 bg-slate-50'}
+                        ${selectedPreset === presetKey ? 'border-teal-500 bg-teal-50' : 'border-[var(--card-border)] bg-slate-50'}
                       `}
                       onTouchStart={() => {
                         if (!downloading) {
@@ -214,13 +214,13 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                         }
                       }}
                     >
-                      <h4 className="font-bold text-lg text-gray-900 capitalize mb-1">
+                      <h4 className="font-bold text-lg text-[var(--text-900)] capitalize mb-1">
                         {presetKey.replace('_', ' ')} Pack
                       </h4>
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="text-sm text-[var(--text-600)] mb-2">
                         {preset.length} resources - {downloader.formatBytes(totalSize)}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-[var(--text-500)]">
                         ~{downloader.estimateDownloadTime(totalSize)} at 1 Mbps
                       </p>
                     </button>
@@ -238,12 +238,12 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="font-bold text-lg text-gray-900">Downloading...</p>
-                    <p className="text-sm text-gray-600">{progress.current}</p>
+                    <p className="font-bold text-lg text-[var(--text-900)]">Downloading...</p>
+                    <p className="text-sm text-[var(--text-600)]">{progress.current}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-2xl text-teal-600">{progress.percentage}%</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[var(--text-500)]">
                       {progress.completed} / {progress.total}
                     </p>
                   </div>
@@ -261,14 +261,14 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
 
             {/* Available Resources by Category */}
             <div className="mb-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Browse All Resources</h3>
+              <h3 className="text-xl font-bold text-[var(--text-900)] mb-4">Browse All Resources</h3>
               <div className="space-y-3">
                 {Object.entries(groupedResources).map(([category, resources]) => {
                   const Icon = getIconForFormat(resources[0]?.format || 'pdf');
                   const isExpanded = expandedCategory === category;
                   
                   return (
-                    <div key={category} className="border-2 border-gray-200 rounded-xl overflow-hidden">
+                    <div key={category} className="border-2 border-[var(--card-border)] rounded-xl overflow-hidden">
                       <button
                         onClick={() => setExpandedCategory(isExpanded ? null : category)}
                         className="w-full p-4 bg-[var(--card-bg)] hover:bg-[var(--card-bg)] flex items-center justify-between touch-manipulation"
@@ -279,10 +279,10 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                             <Icon size={20} />
                           </div>
                           <div className="text-left">
-                            <p className="font-bold text-gray-900">
+                            <p className="font-bold text-[var(--text-900)]">
                               {categoryLabels[category] || category}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-[var(--text-500)]">
                               {resources.length} resources
                             </p>
                           </div>
@@ -305,13 +305,13 @@ export default function ResourceDownloadManagerUI({ isOpen, onClose }) {
                                 return (
                                   <div
                                     key={resource.id}
-                                    className="p-3 bg-[var(--card-bg)] rounded-lg border border-gray-200 flex items-center justify-between"
+                                    className="p-3 bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] flex items-center justify-between"
                                   >
                                     <div className="flex-1">
-                                      <p className="font-semibold text-gray-900 text-sm">
+                                      <p className="font-semibold text-[var(--text-900)] text-sm">
                                         {resource.title}
                                       </p>
-                                      <p className="text-xs text-gray-500">
+                                      <p className="text-xs text-[var(--text-500)]">
                                         {downloader.formatBytes(resource.size)}
                                       </p>
                                     </div>

@@ -21,7 +21,7 @@ export default function Breadcrumbs() {
   };
 
   return (
-    <nav className="flex items-center space-x-2 text-base text-gray-600 mb-6 font-medium" aria-label="Breadcrumb">
+    <nav className="flex items-center space-x-2 text-base text-[var(--text-600)] mb-6 font-medium" aria-label="Breadcrumb">
       <Link 
         to="/" 
         className="flex items-center space-x-1.5 hover:text-aura-forest transition-colors text-base"
@@ -38,9 +38,9 @@ export default function Breadcrumbs() {
 
         return (
           <div key={path} className="flex items-center space-x-2">
-            <ChevronRight className="w-5 h-5 text-gray-400" aria-hidden="true" />
+            <ChevronRight className="w-5 h-5 text-[var(--text-400)]" aria-hidden="true" />
             {isLast ? (
-              <span className="text-gray-900 font-semibold text-base" aria-current="page">
+              <span className="text-[var(--text-900)] font-semibold text-base" aria-current="page">
                 {displayName}
               </span>
             ) : (

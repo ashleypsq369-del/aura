@@ -42,10 +42,10 @@ export default function AnimationDemo() {
           variants={fadeIn}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold text-[var(--text-900)] mb-2">
             Ž¬ Healthcare Animations Demo
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[var(--text-600)]">
             Professional, accessible, and calming animations for healthcare applications
           </p>
         </motion.div>
@@ -59,7 +59,7 @@ export default function AnimationDemo() {
             className="bg-[var(--card-bg)] rounded-xl p-6 shadow-lg border-3 border-teal-300"
           >
             <h2 className="text-xl font-bold mb-3 text-teal-700">¨ Page Transition</h2>
-            <p className="text-gray-600 mb-3">
+            <p className="text-[var(--text-600)] mb-3">
               This entire page faded in and slid up smoothly when loaded!
             </p>
             <div className="bg-teal-50 p-3 rounded-lg">
@@ -73,7 +73,7 @@ export default function AnimationDemo() {
             className="bg-[var(--card-bg)] rounded-xl p-6 shadow-lg border-3 border-purple-300 cursor-pointer"
           >
             <h2 className="text-xl font-bold mb-3 text-purple-700">Ž¯ Hover Effect</h2>
-            <p className="text-gray-600 mb-3">
+            <p className="text-[var(--text-600)] mb-3">
               Hover over this card to see it lift and scale!
             </p>
             <div className="bg-purple-50 p-3 rounded-lg">
@@ -92,19 +92,19 @@ export default function AnimationDemo() {
                 <div className="text-3xl font-bold text-teal-600">
                   <AnimatedNumber value={120} suffix=" bpm" />
                 </div>
-                <div className="text-xs text-gray-500">Heart Rate</div>
+                <div className="text-xs text-[var(--text-500)]">Heart Rate</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-red-600">
                   <AnimatedNumber value={98} suffix="%" />
                 </div>
-                <div className="text-xs text-gray-500">O Sat</div>
+                <div className="text-xs text-[var(--text-500)]">O Sat</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">
                   <AnimatedNumber value={36.5} decimals={1} suffix="C" />
                 </div>
-                <div className="text-xs text-gray-500">Temp</div>
+                <div className="text-xs text-[var(--text-500)]">Temp</div>
               </div>
             </div>
             <div className="bg-blue-50 p-3 rounded-lg">
@@ -155,7 +155,7 @@ export default function AnimationDemo() {
             <div className="flex items-center justify-center py-6">
               <HeartbeatIcon className="text-6xl" />
             </div>
-            <p className="text-gray-600 text-center mb-3">
+            <p className="text-[var(--text-600)] text-center mb-3">
               Perfect for vital signs indicators
             </p>
             <div className="bg-red-50 p-3 rounded-lg">
@@ -172,11 +172,11 @@ export default function AnimationDemo() {
             <div className="grid grid-cols-2 gap-3 mb-3">
               <PulsingVital isPulse={true} className="bg-red-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-red-600">180/120</div>
-                <div className="text-xs text-gray-600">BP - Critical!</div>
+                <div className="text-xs text-[var(--text-600)]">BP - Critical!</div>
               </PulsingVital>
               <PulsingVital isPulse={false} className="bg-green-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-green-600">120/80</div>
-                <div className="text-xs text-gray-600">BP - Normal</div>
+                <div className="text-xs text-[var(--text-600)]">BP - Normal</div>
               </PulsingVital>
             </div>
             <div className="bg-amber-50 p-3 rounded-lg">
@@ -194,10 +194,10 @@ export default function AnimationDemo() {
               {['Patient Check-in', 'Vital Signs Recorded', 'Medication Administered', 'Doctors Notes Added'].map((item, i) => (
                 <AnimatedListItem 
                   key={i}
-                  className="flex items-center space-x-3 py-2 border-b border-gray-100 last:border-0"
+                  className="flex items-center space-x-3 py-2 border-b border-[var(--card-border)]/50 last:border-0"
                 >
                   <span className="text-green-500 text-lg">"</span>
-                  <span className="text-gray-700">{item}</span>
+                  <span className="text-[var(--text-700)]">{item}</span>
                 </AnimatedListItem>
               ))}
             </AnimatedList>
@@ -227,7 +227,7 @@ export default function AnimationDemo() {
                 Loading Demo
               </AnimatedButton>
             </div>
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-sm text-[var(--text-600)] text-center">
               Hover and click to see scale effects!
             </p>
             <div className="bg-pink-50 p-3 rounded-lg mt-3">
@@ -283,7 +283,7 @@ export default function AnimationDemo() {
             className="bg-[var(--card-bg)] rounded-xl p-6 shadow-lg border-3 border-lime-300"
           >
             <h2 className="text-xl font-bold mb-3 text-lime-700">Scroll Animation</h2>
-            <p className="text-gray-600 mb-3">
+            <p className="text-[var(--text-600)] mb-3">
               This card animated in when scrolled into view!
             </p>
             <div className="bg-lime-50 p-3 rounded-lg">
@@ -328,7 +328,7 @@ export default function AnimationDemo() {
       <AnimatedModal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
         <ModalHeader title="Animated Modal" onClose={() => setShowModal(false)} />
         <ModalBody>
-          <p className="text-gray-600 mb-4">
+          <p className="text-[var(--text-600)] mb-4">
             This modal smoothly slides up with a backdrop fade!
           </p>
           <div className="bg-teal-50 p-4 rounded-lg">
@@ -338,7 +338,7 @@ export default function AnimationDemo() {
         <ModalFooter>
           <button
             onClick={() => setShowModal(false)}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 text-[var(--text-700)] rounded-lg hover:bg-gray-300"
           >
             Close
           </button>
