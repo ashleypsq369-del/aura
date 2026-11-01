@@ -1,1068 +1,942 @@
 /**
- * Caregivers - HomeCare Ghana–inspired redesign
- * Professional worker profile cards: NMC badge · Ghana Card · star rating
- * AI burnout analysis · workload bar · quick navigation actions
- * New: "What's New" features showcase tab
+ * Caregivers — Care Team management
+ * Redesigned: underline tab bar, gradient card top bands, Services-style
+ * worker cards, gradient avatars, card-surface filter bar, gradient buttons.
+ * PageHeader image kept as requested. All functionality preserved.
  */
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
- Users, HeartHandshake, AlertTriangle, Search, X,
- UserPlus, Phone, Mail, Zap, Heart, Star,
- Loader2, Brain, ChevronLeft, ChevronRight,
- TrendingUp, BarChart2, ListChecks, CheckCircle,
- Shield, Award, MapPin, MessageCircle, Calendar,
- Activity, Navigation, Stethoscope, Sparkles,
- Camera, FileText, Globe, ChevronRight as CRight,
- BadgeCheck, Clock, Info,
+  Users, HeartHandshake, AlertTriangle, Search, X,
+  UserPlus, Phone, Mail, Zap, Heart, Star,
+  Loader2, Brain, ChevronLeft, ChevronRight,
+  TrendingUp, BarChart2, ListChecks, CheckCircle,
+  Shield, Award, MapPin, MessageCircle, Calendar,
+  Activity, Navigation, Stethoscope, Sparkles,
+  Camera, FileText, Globe, BadgeCheck, Clock, Info,
+  ChevronRight as CRight,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import {
- caregiversAPI, caregiverIntelligenceAPI, advancedMlAPI,
- patientsAPI, trustProfileAPI,
+  caregiversAPI, caregiverIntelligenceAPI, advancedMlAPI,
+  patientsAPI, trustProfileAPI,
 } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
 import SearchableSelect from '../components/ui/SearchableSelect';
 
-/* ─── constants ──────────────────────────────────────────────────────────── */
+/* ─── Constants ───────────────────────────────────────────────────────────── */
 const TEAL_GRADS = [
- ['#0d9488','#0891b2'], ['#0891b2','#1d4ed8'], ['#059669','#0d9488'],
- ['#0d9488','#059669'], ['#0891b2','#0d9488'], ['#1d4ed8','#0891b2'],
- ['#065f46','#0d9488'], ['#1e40af','#0891b2'],
+  ['#0d9488','#0891b2'],['#0891b2','#1d4ed8'],['#059669','#0d9488'],
+  ['#0d9488','#059669'],['#0891b2','#0d9488'],['#1d4ed8','#0891b2'],
+  ['#065f46','#0d9488'],['#1e40af','#0891b2'],
 ];
-const PAGE_SIZE = 9;
+const PAGE_SIZE  = 9;
 const getInitials = n => n ? n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase() : '??';
 
-/* ─── helpers ────────────────────────────────────────────────────────────── */
 const capColor = s => ({
- available: { dot:'#10b981', label:'Available', bg:'#10b98115', text:'#065f46' },
- at_capacity: { dot:'#f59e0b', label:'At Capacity', bg:'#f59e0b15', text:'#92400e' },
- overloaded: { dot:'#ef4444', label:'Overloaded', bg:'#ef444415', text:'#991b1b' },
+  available:    { dot:'#10b981', label:'Available', bg:'#10b98115', text:'#065f46' },
+  at_capacity:  { dot:'#f59e0b', label:'At Capacity', bg:'#f59e0b15', text:'#92400e' },
+  overloaded:   { dot:'#ef4444', label:'Overloaded', bg:'#ef444415', text:'#991b1b' },
 })[s] || { dot:'#10b981', label:'Available', bg:'#10b98115', text:'#065f46' };
 
+/* ─── Sub-components (unchanged functionality, upgraded styles) ───────────── */
 function Stars({ value, count }) {
- if (value == null) return <span className="text-[11px] text-[var(--text-400)] italic">No reviews</span>;
- return (
- <span className="flex items-center gap-0.5">
- {[1,2,3,4,5].map(n => (
- <Star key={n} size={11} strokeWidth={1.5}
- className={n <= Math.round(value) ? 'text-amber-400 fill-amber-400' : 'text-slate-200'} />
- ))}
- <span className="ml-1 text-xs font-semibold text-slate-700">{value.toFixed(1)}</span>
- {count > 0 && <span className="text-[11px] text-slate-400">({count})</span>}
- </span>
- );
+  if (value==null) return <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>No reviews</span>;
+  return (
+    <span style={{ display:'flex', alignItems:'center', gap:2 }}>
+      {[1,2,3,4,5].map(n => (
+        <Star key={n} size={11} strokeWidth={1.5}
+          style={{ color: n<=Math.round(value) ? '#f59e0b' : 'var(--card-border)', fill: n<=Math.round(value) ? '#f59e0b' : 'none' }} />
+      ))}
+      <span style={{ marginLeft:4, fontSize:12, fontWeight:700, color:'var(--text-700)' }}>{value.toFixed(1)}</span>
+      {count>0 && <span style={{ fontSize:11, color:'var(--text-400)' }}>({count})</span>}
+    </span>
+  );
 }
 
-function VerifyBadge({ icon: Icon, label, color = '#0d9488' }) {
- return (
- <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[11px] font-bold"
- style={{ background: `${color}15`, color }}>
- <Icon size={9} strokeWidth={2.5} />{label}
- </span>
- );
+function VerifyBadge({ icon:Icon, label, color='#0d9488' }) {
+  return (
+    <span style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'2px 8px', borderRadius:6, fontSize:10, fontWeight:700, background:`${color}15`, color }}>
+      <Icon size={9} strokeWidth={2.5} />{label}
+    </span>
+  );
 }
 
 function BurnoutDot({ level }) {
- const l = String(level || 'low').toLowerCase();
- if (l === 'critical') return <span className="flex items-center gap-1 text-[11px] font-bold text-red-600"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"/>Critical burnout</span>;
- if (l === 'high') return <span className="flex items-center gap-1 text-[11px] font-bold text-orange-600"><span className="w-1.5 h-1.5 rounded-full bg-orange-500"/>High risk</span>;
- if (l === 'moderate') return <span className="flex items-center gap-1 text-[11px] font-bold text-amber-600"><span className="w-1.5 h-1.5 rounded-full bg-amber-400"/>Moderate</span>;
- return <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>Healthy</span>;
+  const l = String(level||'low').toLowerCase();
+  if (l==='critical') return <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, fontWeight:700, color:'#dc2626' }}><span style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', animation:'pulse 2s infinite' }}/>Critical burnout</span>;
+  if (l==='high')     return <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, fontWeight:700, color:'#ea580c' }}><span style={{ width:6, height:6, borderRadius:'50%', background:'#f97316' }}/>High risk</span>;
+  if (l==='moderate') return <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, fontWeight:700, color:'#d97706' }}><span style={{ width:6, height:6, borderRadius:'50%', background:'#f59e0b' }}/>Moderate</span>;
+  return <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, fontWeight:700, color:'#059669' }}><span style={{ width:6, height:6, borderRadius:'50%', background:'#10b981' }}/>Healthy</span>;
 }
 
-/* ─── Worker Profile Card (HomeCare Ghana style) ─────────────────────────── */
+/* ─── Worker Card ─────────────────────────────────────────────────────────── */
 function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMessage, onViewProfile }) {
- const wl = workload || {};
- const capInfo = capColor(wl.capacity_status);
- const activePatients = wl.active_patients ?? 0;
- const workloadPct = Math.min(wl.workload_score ?? 0, 100);
- const [g1, g2] = gradPair;
+  const wl = workload||{};
+  const capInfo = capColor(wl.capacity_status);
+  const activePatients = wl.active_patients??0;
+  const workloadPct    = Math.min(wl.workload_score??0, 100);
+  const [g1,g2] = gradPair;
 
- const { data: trust } = useQuery({
- queryKey: ['trust-profile', cg.id],
- queryFn: () => trustProfileAPI.get(cg.id).then(r => r.data),
- enabled: !!cg.id,
- staleTime: 10 * 60 * 1000,
- });
+  const { data:trust } = useQuery({
+    queryKey: ['trust-profile', cg.id],
+    queryFn:  () => trustProfileAPI.get(cg.id).then(r=>r.data),
+    enabled: !!cg.id, staleTime: 10*60*1000,
+  });
 
- return (
- <motion.div
- layout
- initial={{ opacity: 0, y: 12 }}
- animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.97 }}
- className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col"
- >
- {/* Coloured top band */}
- <div className="h-1.5 w-full" style={{ background: `linear-gradient(to right, ${g1}, ${g2})` }} />
+  return (
+    <motion.div
+      layout
+      initial={{ opacity:0, y:12 }}
+      animate={{ opacity:1, y:0 }}
+      exit={{ opacity:0, scale:0.97 }}
+      whileHover={{ y:-4, boxShadow:'0 12px 36px rgba(0,0,0,0.12)' }}
+      transition={{ type:'spring', stiffness:280, damping:26 }}
+      style={{
+        background:'var(--card-bg)',
+        borderRadius:18, overflow:'hidden',
+        border:'1px solid var(--card-border)',
+        boxShadow:'0 2px 12px rgba(0,0,0,0.06)',
+        display:'flex', flexDirection:'column',
+      }}
+    >
+      {/* Gradient top band — Services ProviderCard treatment */}
+      <div style={{ height:4, background:`linear-gradient(to right,${g1},${g2})` }} />
 
- <div className="p-4 flex flex-col gap-3 flex-1">
- {/* Header row */}
- <div className="flex items-start gap-3">
- {/* Avatar */}
- <div
- className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-base shadow-md flex-shrink-0"
- style={{ background: `linear-gradient(135deg, ${g1}, ${g2})` }}
- >
- {getInitials(cg.full_name)}
- </div>
+      <div style={{ padding:16, display:'flex', flexDirection:'column', gap:12, flex:1 }}>
+        {/* Header */}
+        <div style={{ display:'flex', alignItems:'flex-start', gap:12 }}>
+          <div style={{
+            width:44, height:44, borderRadius:14, flexShrink:0,
+            background:`linear-gradient(135deg,${g1},${g2})`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize:14, fontWeight:900, color:'#fff',
+            boxShadow:`0 4px 12px ${g1}40`,
+          }}>
+            {getInitials(cg.full_name)}
+          </div>
+          <div style={{ flex:1, minWidth:0 }}>
+            <p style={{ fontWeight:700, fontSize:13, color:'var(--text-900)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{cg.full_name}</p>
+            <p style={{ fontSize:11, color:'var(--text-500)', textTransform:'capitalize', margin:0 }}>{cg.role||'Caregiver'}</p>
+            {trust?.specialisation && <p style={{ fontSize:11, color:'var(--c-teal)', fontWeight:500, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{trust.specialisation}</p>}
+          </div>
+          {/* Availability badge */}
+          <span style={{ flexShrink:0, display:'inline-flex', alignItems:'center', gap:4, padding:'3px 8px', borderRadius:99, fontSize:10, fontWeight:700, background:capInfo.bg, color:capInfo.text }}>
+            <span style={{ width:5, height:5, borderRadius:'50%', background:capInfo.dot }} />
+            {capInfo.label}
+          </span>
+        </div>
 
- {/* Name + role + availability */}
- <div className="flex-1 min-w-0">
- <p className="font-bold text-[var(--text-900)] text-sm leading-tight truncate">{cg.full_name}</p>
- <p className="text-[11px] text-[var(--text-500)] capitalize">{cg.role || 'Caregiver'}</p>
- {trust?.specialisation && (
- <p className="text-[11px] text-teal-600 font-medium truncate">{trust.specialisation}</p>
- )}
- </div>
+        {/* Verification badges */}
+        <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
+          {trust?.nmc_pin          && <VerifyBadge icon={Award}    label={`NMC ${trust.nmc_pin}`}  color="#0d9488" />}
+          {trust?.ghana_card_verified && <VerifyBadge icon={Shield}   label="Ghana Card"              color="#0891b2" />}
+          {trust?.is_professional  && <VerifyBadge icon={BadgeCheck} label="Verified Pro"            color="#059669" />}
+          {!trust?.nmc_pin && !trust?.ghana_card_verified && (
+            <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>Badges loading…</span>
+          )}
+        </div>
 
- {/* Availability dot */}
- <span
- className="flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold"
- style={{ background: capInfo.bg, color: capInfo.text }}
- >
- <span className="w-1.5 h-1.5 rounded-full" style={{ background: capInfo.dot }} />
- {capInfo.label}
- </span>
- </div>
+        {/* Rating */}
+        <Stars value={trust?.average_rating} count={trust?.total_reviews??0} />
 
- {/* Verification badges row */}
- <div className="flex flex-wrap gap-1">
- {trust?.nmc_pin && <VerifyBadge icon={Award} label={`NMC ${trust.nmc_pin}`} color="#0d9488" />}
- {trust?.ghana_card_verified && <VerifyBadge icon={Shield} label="Ghana Card" color="#0891b2" />}
- {trust?.is_professional && <VerifyBadge icon={BadgeCheck} label="Verified Pro" color="#059669" />}
- {!trust?.nmc_pin && !trust?.ghana_card_verified && (
- <span className="text-[11px] text-[var(--text-400)] italic">Badges loading…</span>
- )}
- </div>
+        {/* Workload bar */}
+        <div>
+          <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
+            <span style={{ fontSize:11, color:'var(--text-400)', fontWeight:600 }}>Workload</span>
+            <span style={{ fontSize:11, fontWeight:700, fontVariantNumeric:'tabular-nums', color: workloadPct>75?'#ef4444':workloadPct>=50?'#f59e0b':'#10b981' }}>
+              {activePatients} patients · {workloadPct}%
+            </span>
+          </div>
+          <div style={{ height:6, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
+            <motion.div
+              initial={{ width:0 }} animate={{ width:`${workloadPct}%` }}
+              transition={{ duration:0.7, ease:'easeOut' }}
+              style={{
+                height:'100%', borderRadius:99,
+                background: workloadPct>75
+                  ? 'linear-gradient(to right,#ef4444,#dc2626)'
+                  : workloadPct>=50
+                  ? 'linear-gradient(to right,#f59e0b,#d97706)'
+                  : `linear-gradient(to right,${g1},${g2})`,
+              }}
+            />
+          </div>
+        </div>
 
- {/* Star rating */}
- <Stars value={trust?.average_rating} count={trust?.total_reviews ?? 0} />
+        {/* Burnout + location */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <BurnoutDot level={burnoutLevel} />
+          {trust?.region && (
+            <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'var(--text-400)' }}>
+              <MapPin size={9} /> {trust.region}
+            </span>
+          )}
+        </div>
 
- {/* Workload bar */}
- <div>
- <div className="flex justify-between mb-1">
- <span className="text-[11px] text-[var(--text-400)] font-semibold">Workload</span>
- <span className="text-[11px] font-bold tabular-nums" style={{ color: workloadPct > 75 ? '#ef4444' : workloadPct >= 50 ? '#f59e0b' : '#10b981' }}>
- {activePatients} patients · {workloadPct}%
- </span>
- </div>
- <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
- <motion.div
- className="h-full rounded-full"
- initial={{ width: 0 }}
- animate={{ width: `${workloadPct}%` }}
- transition={{ duration: 0.7, ease: 'easeOut' }}
- style={{
- background: workloadPct > 75
- ? 'linear-gradient(to right, #ef4444, #dc2626)'
- : workloadPct >= 50
- ? 'linear-gradient(to right, #f59e0b, #d97706)'
- : `linear-gradient(to right, ${g1}, ${g2})`,
- }}
- />
- </div>
- </div>
+        {/* Contact */}
+        <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
+          {cg.email && <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-500)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}><Mail size={10} style={{ color:'var(--text-400)', flexShrink:0 }} />{cg.email}</p>}
+          {cg.phone && <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-500)' }}><Phone size={10} style={{ color:'var(--text-400)', flexShrink:0 }} />{cg.phone}</p>}
+        </div>
 
- {/* Burnout + location row */}
- <div className="flex items-center justify-between">
- <BurnoutDot level={burnoutLevel} />
- {trust?.region && (
- <span className="flex items-center gap-1 text-[11px] text-slate-400">
- <MapPin size={9} /> {trust.region}
- </span>
- )}
- </div>
-
- {/* Contact row */}
- <div className="space-y-0.5">
- {cg.email && (
- <p className="flex items-center gap-1.5 text-[11px] text-[var(--text-500)] truncate">
- <Mail size={10} className="text-[var(--text-400)] flex-shrink-0" /> {cg.email}
- </p>
- )}
- {cg.phone && (
- <p className="flex items-center gap-1.5 text-[11px] text-slate-500">
- <Phone size={10} className="text-[var(--text-400)] flex-shrink-0" /> {cg.phone}
- </p>
- )}
- </div>
-
- {/* Action buttons */}
- <div className="grid grid-cols-3 gap-1.5 pt-1">
- <button
- onClick={onMessage}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
- style={{ background: '#0d948812', color: '#0d9488' }}
- >
- <MessageCircle size={14} />
- Message
- </button>
- <button
- onClick={onViewProfile}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
- style={{ background: '#0891b212', color: '#0891b2' }}
- >
- <Shield size={14} />
- Trust Profile
- </button>
- <button
- onClick={onBurnoutClick}
- className="flex flex-col items-center gap-0.5 py-2 rounded-xl text-[11px] font-bold transition-all"
- style={{ background: '#7c3aed12', color: '#7c3aed' }}
- >
- <Brain size={14} />
- AI Burnout
- </button>
- </div>
- </div>
- </motion.div>
- );
+        {/* Action buttons */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:6, paddingTop:4 }}>
+          {[
+            { label:'Message', Icon:MessageCircle, color:'#0d9488', onClick:onMessage },
+            { label:'Trust',   Icon:Shield,        color:'#0891b2', onClick:onViewProfile },
+            { label:'Burnout', Icon:Brain,         color:'#7c3aed', onClick:onBurnoutClick },
+          ].map(({ label, Icon, color, onClick }) => (
+            <button key={label} onClick={onClick} style={{
+              display:'flex', flexDirection:'column', alignItems:'center', gap:4,
+              padding:'8px 4px', borderRadius:10, fontSize:10, fontWeight:700,
+              background:`${color}12`, color, border:'none', cursor:'pointer',
+              transition:'all 0.15s',
+            }}
+            onMouseEnter={e=>{e.currentTarget.style.background=`${color}22`;}}
+            onMouseLeave={e=>{e.currentTarget.style.background=`${color}12`;}}>
+              <Icon size={14} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 /* ─── Trust Profile Modal ─────────────────────────────────────────────────── */
 function TrustProfileModal({ cg, onClose }) {
- const { data: trust, isLoading } = useQuery({
- queryKey: ['trust-profile', cg?.id],
- queryFn: () => trustProfileAPI.get(cg.id).then(r => r.data),
- enabled: !!cg?.id,
- });
-
- if (!cg) return null;
-
- return (
- <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
- <motion.div
- initial={{ opacity: 0, scale: 0.95, y: 16 }}
- animate={{ opacity: 1, scale: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.95 }}
- className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden"
- onClick={e => e.stopPropagation()}
- >
- {/* Header band */}
- <div className="h-1.5 bg-gradient-to-r from-teal-500 to-cyan-500" />
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm">
- {getInitials(cg.full_name)}
- </div>
- <div>
- <p className="font-bold text-[var(--text-900)] text-sm">{cg.full_name}</p>
- <p className="text-[11px] text-slate-500">{cg.role}</p>
- </div>
- </div>
- <button onClick={onClose} className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
- <X size={14} className="text-slate-500" />
- </button>
- </div>
-
- <div className="p-5 space-y-4">
- {isLoading ? (
- <div className="flex items-center justify-center h-24">
- <Loader2 size={22} className="animate-spin text-teal-500" />
- </div>
- ) : trust ? (
- <>
- {/* Verification badges */}
- <div>
- <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Verification</p>
- <div className="flex flex-wrap gap-2">
- {trust.nmc_pin
- ? <VerifyBadge icon={Award} label={`NMC PIN: ${trust.nmc_pin}`} color="#0d9488" />
- : <span className="text-[11px] text-[var(--text-400)] italic">NMC PIN not on file</span>
- }
- {trust.ghana_card_verified
- ? <VerifyBadge icon={Shield} label="Ghana Card Verified" color="#0891b2" />
- : <span className="text-[11px] text-[var(--text-400)] italic">Ghana Card not verified</span>
- }
- {trust.is_professional && <VerifyBadge icon={BadgeCheck} label={trust.professional_title || 'Verified Pro'} color="#059669" />}
- </div>
- </div>
-
- {/* Rating */}
- <div>
- <p className="text-[11px] font-bold text-[var(--text-400)] mb-1">Service Rating</p>
- <Stars value={trust.average_rating} count={trust.total_reviews} />
- </div>
-
- {/* Meta */}
- <div className="grid grid-cols-2 gap-2 text-[11px]">
- {trust.specialisation && (
- <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
- <p className="text-[var(--text-400)] font-medium">Specialisation</p>
- <p className="font-semibold text-slate-700">{trust.specialisation}</p>
- </div>
- )}
- {trust.facility_name && (
- <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
- <p className="text-[var(--text-400)] font-medium">Facility</p>
- <p className="font-semibold text-[var(--text-700)] truncate">{trust.facility_name}</p>
- </div>
- )}
- {trust.region && (
- <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
- <p className="text-[var(--text-400)] font-medium">Region</p>
- <p className="font-semibold text-slate-700">{trust.region}</p>
- </div>
- )}
- <div className="bg-[var(--card-bg)] rounded-lg px-3 py-2">
- <p className="text-[var(--text-400)] font-medium">Active Patients</p>
- <p className="font-semibold text-slate-700">{trust.active_patients ?? 0}</p>
- </div>
- </div>
- </>
- ) : (
- <p className="text-sm text-[var(--text-500)] text-center py-6">No trust profile data available</p>
- )}
- </div>
- </motion.div>
- </div>
- );
+  const { data:trust, isLoading } = useQuery({
+    queryKey: ['trust-profile', cg?.id],
+    queryFn:  () => trustProfileAPI.get(cg.id).then(r=>r.data),
+    enabled: !!cg?.id,
+  });
+  if (!cg) return null;
+  const [g1,g2] = TEAL_GRADS[cg.id%TEAL_GRADS.length];
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', backdropFilter:'blur(4px)', zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={onClose}>
+      <motion.div initial={{ opacity:0, scale:0.95, y:16 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.95 }}
+        style={{ background:'var(--card-bg)', borderRadius:20, boxShadow:'0 20px 60px rgba(0,0,0,0.2)', width:'100%', maxWidth:360, overflow:'hidden' }}
+        onClick={e=>e.stopPropagation()}>
+        <div style={{ height:4, background:`linear-gradient(to right,${g1},${g2})` }} />
+        <div style={{ padding:'16px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${g1},${g2})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'#fff', boxShadow:`0 2px 8px ${g1}35` }}>
+              {getInitials(cg.full_name)}
+            </div>
+            <div>
+              <p style={{ fontWeight:700, fontSize:13, color:'var(--text-900)', margin:0 }}>{cg.full_name}</p>
+              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{cg.role}</p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ width:28, height:28, borderRadius:8, background:'var(--page-bg)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)' }}>
+            <X size={14} />
+          </button>
+        </div>
+        <div style={{ padding:20, display:'flex', flexDirection:'column', gap:16 }}>
+          {isLoading ? (
+            <div style={{ display:'flex', justifyContent:'center', padding:'24px 0' }}><Loader2 size={22} className="animate-spin" style={{ color:'var(--c-teal)' }} /></div>
+          ) : trust ? (
+            <>
+              <div>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', marginBottom:8 }}>Verification</p>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                  {trust.nmc_pin           ? <VerifyBadge icon={Award}     label={`NMC PIN: ${trust.nmc_pin}`}            color="#0d9488" /> : <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>NMC PIN not on file</span>}
+                  {trust.ghana_card_verified ? <VerifyBadge icon={Shield}    label="Ghana Card Verified"                    color="#0891b2" /> : <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>Ghana Card not verified</span>}
+                  {trust.is_professional    && <VerifyBadge icon={BadgeCheck} label={trust.professional_title||'Verified Pro'} color="#059669" />}
+                </div>
+              </div>
+              <div>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', marginBottom:6 }}>Service Rating</p>
+                <Stars value={trust.average_rating} count={trust.total_reviews} />
+              </div>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+                {[
+                  { label:'Specialisation', value:trust.specialisation },
+                  { label:'Facility',       value:trust.facility_name },
+                  { label:'Region',         value:trust.region },
+                  { label:'Active Patients',value:trust.active_patients??0 },
+                ].filter(r=>r.value!=null).map(({ label, value }) => (
+                  <div key={label} style={{ background:'var(--page-bg)', borderRadius:10, padding:'8px 12px' }}>
+                    <p style={{ fontSize:10, color:'var(--text-400)', margin:0 }}>{label}</p>
+                    <p style={{ fontSize:12, fontWeight:600, color:'var(--text-700)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p style={{ fontSize:13, color:'var(--text-400)', textAlign:'center', padding:'24px 0' }}>No trust profile data</p>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
 }
 
 /* ─── Burnout Modal ───────────────────────────────────────────────────────── */
 function BurnoutModal({ cg, data, loading, onClose }) {
- if (!cg) return null;
- const pct = data ? Math.round((data.burnout_score ?? 0) * 100) : 0;
- const level = data?.burnout_level || 'low';
- const ringBg = level === 'critical' ? '#ef4444' : level === 'high' ? '#f97316' : level === 'moderate' ? '#f59e0b' : '#10b981';
-
- return (
- <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
- <motion.div
- initial={{ opacity: 0, scale: 0.95, y: 16 }}
- animate={{ opacity: 1, scale: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.95 }}
- className="bg-[var(--card-bg)] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
- onClick={e => e.stopPropagation()}
- >
- <div className="h-1.5" style={{ background: `linear-gradient(to right, ${ringBg}, ${ringBg}88)` }} />
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
- <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm"
- style={{ background: ringBg }}>
- {getInitials(cg.full_name)}
- </div>
- <div>
- <p className="font-bold text-[var(--text-900)] text-sm">{cg.full_name}</p>
- <p className="text-[11px] text-slate-500">AI Burnout Analysis</p>
- </div>
- </div>
- <button onClick={onClose} className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center">
- <X size={14} className="text-slate-500" />
- </button>
- </div>
-
- <div className="p-5 space-y-4 max-h-[72vh] overflow-y-auto">
- {loading && (
- <div className="flex flex-col items-center py-12 gap-3">
- <Loader2 size={24} className="animate-spin text-teal-500" />
- <p className="text-sm text-slate-500">Analysing burnout risk…</p>
- </div>
- )}
- {!loading && !data && (
- <div className="flex flex-col items-center py-12 gap-2 text-slate-400">
- <Brain size={32} className="text-slate-300" />
- <p className="text-sm">No burnout data available</p>
- </div>
- )}
- {!loading && data && (
- <>
- <div className="flex items-center gap-4 bg-[var(--card-bg)] rounded-xl p-4">
- <div className="w-16 h-16 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg flex-shrink-0"
- style={{ background: ringBg }}>
- {pct}%
- </div>
- <div>
- <p className="font-bold text-[var(--text-900)] capitalize">{level} Risk</p>
- <p className="text-xs text-slate-500">ML burnout probability</p>
- <BurnoutDot level={level} />
- </div>
- </div>
-
- {data.signals?.length > 0 && (
- <div>
- <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Risk Signals</p>
- <div className="space-y-1.5">
- {data.signals.map((s, i) => (
- <div key={i} className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-100 rounded-lg text-xs">
- <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0 mt-1" />
- <span className="font-semibold text-slate-700">{s.signal}</span>
- {s.value && <span className="text-[var(--text-500)] ml-auto">{s.value}</span>}
- </div>
- ))}
- </div>
- </div>
- )}
-
- {(!data.signals || data.signals.length === 0) && (
- <div className="flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
- <CheckCircle size={16} className="text-emerald-600 flex-shrink-0" />
- <p className="text-sm font-semibold text-emerald-800">No burnout signals detected</p>
- </div>
- )}
-
- {data.recommendations?.filter(Boolean).length > 0 && (
- <div>
- <p className="text-[11px] font-bold text-[var(--text-400)] mb-2">Recommendations</p>
- <div className="space-y-1.5">
- {data.recommendations.filter(Boolean).map((rec, i) => (
- <div key={i} className="flex items-start gap-2 p-2.5 bg-teal-50 border border-teal-100 rounded-lg text-xs text-teal-800">
- <TrendingUp size={12} className="flex-shrink-0 mt-0.5 text-teal-500" /> {rec}
- </div>
- ))}
- </div>
- </div>
- )}
- </>
- )}
- </div>
- </motion.div>
- </div>
- );
+  if (!cg) return null;
+  const pct   = data ? Math.round((data.burnout_score??0)*100) : 0;
+  const level = data?.burnout_level||'low';
+  const ringColor = level==='critical'?'#ef4444':level==='high'?'#f97316':level==='moderate'?'#f59e0b':'#10b981';
+  return (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', backdropFilter:'blur(4px)', zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={onClose}>
+      <motion.div initial={{ opacity:0, scale:0.95, y:16 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.95 }}
+        style={{ background:'var(--card-bg)', borderRadius:20, boxShadow:'0 20px 60px rgba(0,0,0,0.2)', width:'100%', maxWidth:440, overflow:'hidden' }}
+        onClick={e=>e.stopPropagation()}>
+        <div style={{ height:4, background:`linear-gradient(to right,${ringColor},${ringColor}88)` }} />
+        <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <div style={{ width:36, height:36, borderRadius:10, background:ringColor, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:900, color:'#fff' }}>
+              {getInitials(cg.full_name)}
+            </div>
+            <div>
+              <p style={{ fontWeight:700, fontSize:13, color:'var(--text-900)', margin:0 }}>{cg.full_name}</p>
+              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>AI Burnout Analysis</p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ width:28, height:28, borderRadius:8, background:'var(--page-bg)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)' }}>
+            <X size={14} />
+          </button>
+        </div>
+        <div style={{ padding:20, maxHeight:'72vh', overflowY:'auto', display:'flex', flexDirection:'column', gap:14 }}>
+          {loading && <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'40px 0', gap:10 }}><Loader2 size={22} className="animate-spin" style={{ color:'var(--c-teal)' }} /><p style={{ fontSize:12, color:'var(--text-400)' }}>Analysing burnout risk…</p></div>}
+          {!loading && !data && <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'40px 0', gap:8, color:'var(--text-400)' }}><Brain size={30} /><p style={{ fontSize:13 }}>No burnout data</p></div>}
+          {!loading && data && (
+            <>
+              {/* Score ring */}
+              <div style={{ display:'flex', alignItems:'center', gap:14, padding:16, borderRadius:14, background:'var(--page-bg)', border:'1px solid var(--card-border)' }}>
+                <div style={{ width:64, height:64, borderRadius:14, background:ringColor, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900, color:'#fff', flexShrink:0, boxShadow:`0 4px 14px ${ringColor}40` }}>
+                  {pct}%
+                </div>
+                <div>
+                  <p style={{ fontWeight:700, fontSize:14, color:'var(--text-900)', textTransform:'capitalize', margin:0 }}>{level} Risk</p>
+                  <p style={{ fontSize:11, color:'var(--text-400)', margin:'2px 0 4px' }}>ML burnout probability</p>
+                  <BurnoutDot level={level} />
+                </div>
+              </div>
+              {/* Signals */}
+              {data.signals?.length > 0 && (
+                <div>
+                  <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', marginBottom:8 }}>Risk Signals</p>
+                  <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                    {data.signals.map((s,i) => (
+                      <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, padding:'8px 12px', background:'#fffbeb', border:'1px solid #fde68a', borderRadius:10, fontSize:12 }}>
+                        <span style={{ width:6, height:6, borderRadius:'50%', background:'#f59e0b', flexShrink:0, marginTop:4 }} />
+                        <span style={{ fontWeight:600, color:'var(--text-700)', flex:1 }}>{s.signal}</span>
+                        {s.value && <span style={{ color:'var(--text-400)', marginLeft:'auto' }}>{s.value}</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {(!data.signals||data.signals.length===0) && (
+                <div style={{ display:'flex', alignItems:'center', gap:8, padding:12, background:'#f0fdf4', border:'1px solid #bbf7d0', borderRadius:10 }}>
+                  <CheckCircle size={16} style={{ color:'#16a34a', flexShrink:0 }} />
+                  <p style={{ fontSize:12, fontWeight:600, color:'#166534', margin:0 }}>No burnout signals detected</p>
+                </div>
+              )}
+              {/* Recommendations */}
+              {data.recommendations?.filter(Boolean).length > 0 && (
+                <div>
+                  <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', marginBottom:8 }}>Recommendations</p>
+                  <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                    {data.recommendations.filter(Boolean).map((rec,i) => (
+                      <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, padding:'8px 12px', background:'#f0fdfa', border:'1px solid #99f6e4', borderRadius:10, fontSize:12, color:'#0f766e' }}>
+                        <TrendingUp size={12} style={{ flexShrink:0, marginTop:2 }} />{rec}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
 }
 
-/* ─── New Features Showcase Tab ───────────────────────────────────────────── */
+/* ─── Feature showcase (unchanged) ───────────────────────────────────────── */
 const FEATURES = [
- {
- num: '01',
- title: 'Post-Visit Care Report',
- desc: 'After every completed appointment, a full care report is auto-generated - vitals, medications given, nurse notes - and sent instantly to the patient\'s family.',
- icon: FileText,
- color: '#0d9488',
- where: 'Appointments page → completed appointment card → "View Report"',
- route: '/appointments',
- },
- {
- num: '02',
- title: 'Enhanced Status Flow',
- desc: 'Appointments now follow a 6-step visual journey: Scheduled → Nurse Assigned → En Route → Visit Active → Report Ready → Completed.',
- icon: Navigation,
- color: '#0891b2',
- where: 'Appointments page → any appointment card → status badge stepper',
- route: '/appointments',
- },
- {
- num: '03',
- title: 'Caregiver Trust Profile',
- desc: 'Every nurse and caregiver shows their NMC PIN badge, Ghana Card verification, star rating from patients, and specialisation area.',
- icon: Shield,
- color: '#059669',
- where: 'This page → any worker card → "Trust Profile" button',
- route: '/caregivers',
- },
- {
- num: '04',
- title: 'Family Dashboard Hero',
- desc: '"Last visit was 2 days ago with Nurse Abena - Vitals: Stable." A hero card greets family members with the most recent visit summary.',
- icon: Heart,
- color: '#e11d48',
- where: 'Dashboard → Family view → top hero card',
- route: '/dashboard',
- },
- {
- num: '05',
- title: 'Wound Care Module',
- desc: 'Track wound healing with per-site logs: size, depth, exudate, healing stage (improving / stable / worsening), and treatment applied.',
- icon: Camera,
- color: '#7c3aed',
- where: 'Patient Detail → "Wound Care" quick action card',
- route: '/patients',
- },
- {
- num: '06',
- title: 'Cultural Care Profile',
- desc: 'Record each patient\'s preferred language (Twi, Ga, Ewe, Hausa…), religious preference, cultural practices, and spiritual care requests.',
- icon: Globe,
- color: '#0369a1',
- where: 'Patient Detail page → bottom section "Cultural Care Profile"',
- route: '/patients',
- },
- {
- num: '07',
- title: 'Care Pathway Selector',
- desc: 'A guided 4-step wizard helps families choose the right care type: Nursing Care, Clinical Support, Family Support, Medical Escort, or Respite Care.',
- icon: Stethoscope,
- color: '#b45309',
- where: 'My Space → "Care Pathway" quick action card',
- route: '/care-pathway-selector',
- },
- {
- num: '08',
- title: 'Service Quality Ratings',
- desc: '5-star ratings with punctuality, communication, care quality and cleanliness breakdown after every completed visit.',
- icon: Star,
- color: '#d97706',
- where: 'Appointments page → completed visit → "Rate This Visit" button',
- route: '/appointments',
- },
+  { num:'01', title:'Post-Visit Care Report', desc:'After every completed appointment, a full care report is auto-generated and sent instantly to the patient\'s family.', icon:FileText, color:'#0d9488', where:'Appointments page → completed appointment card → "View Report"', route:'/appointments' },
+  { num:'02', title:'Enhanced Status Flow', desc:'Appointments follow a 6-step visual journey: Scheduled → Nurse Assigned → En Route → Visit Active → Report Ready → Completed.', icon:Navigation, color:'#0891b2', where:'Appointments page → any appointment card → status badge stepper', route:'/appointments' },
+  { num:'03', title:'Caregiver Trust Profile', desc:'Every nurse and caregiver shows their NMC PIN badge, Ghana Card verification, star rating and specialisation.', icon:Shield, color:'#059669', where:'This page → any worker card → "Trust Profile" button', route:'/caregivers' },
+  { num:'04', title:'Family Dashboard Hero', desc:'A hero card greets family members with the most recent visit summary.', icon:Heart, color:'#e11d48', where:'Dashboard → Family view → top hero card', route:'/dashboard' },
+  { num:'05', title:'Wound Care Module', desc:'Track wound healing with per-site logs: size, depth, exudate, healing stage and treatment applied.', icon:Camera, color:'#7c3aed', where:'Patient Detail → "Wound Care" quick action card', route:'/patients' },
+  { num:'06', title:'Cultural Care Profile', desc:'Record each patient\'s preferred language, religious preference, cultural practices and spiritual care requests.', icon:Globe, color:'#0369a1', where:'Patient Detail page → bottom section "Cultural Care Profile"', route:'/patients' },
+  { num:'07', title:'Care Pathway Selector', desc:'A guided 4-step wizard helps families choose the right care type.', icon:Stethoscope, color:'#b45309', where:'My Space → "Care Pathway" quick action card', route:'/care-pathway-selector' },
+  { num:'08', title:'Service Quality Ratings', desc:'5-star ratings with punctuality, communication, care quality and cleanliness breakdown after every completed visit.', icon:Star, color:'#d97706', where:'Appointments page → completed visit → "Rate This Visit" button', route:'/appointments' },
 ];
 
 function FeatureShowcase({ navigate }) {
- return (
- <div className="px-6 space-y-4">
- <div className="rounded-xl border border-teal-200 bg-teal-50 p-4 flex items-start gap-3">
- <Sparkles size={18} className="text-teal-600 flex-shrink-0 mt-0.5" />
- <div>
- <p className="font-bold text-teal-800 text-sm">8 New Ghana Homecare Features</p>
- <p className="text-xs text-teal-600 mt-0.5">
- Inspired by AgedCare Ghana, HomeCare GH, GNA Healthcare, JASBEK, Nurse 24/7, and CareEdge.
- Each feature is fully live - tap a card to navigate there.
- </p>
- </div>
- </div>
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+      {/* Banner */}
+      <div style={{ borderRadius:14, padding:'14px 16px', background:'linear-gradient(135deg,#f0fdfa,#e0f2fe)', border:'1px solid #99f6e4', display:'flex', alignItems:'flex-start', gap:12 }}>
+        <div style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 2px 8px rgba(13,148,136,0.3)' }}>
+          <Sparkles size={16} style={{ color:'#fff' }} />
+        </div>
+        <div>
+          <p style={{ fontWeight:700, fontSize:13, color:'#0f766e', margin:'0 0 2px' }}>8 New Ghana Homecare Features</p>
+          <p style={{ fontSize:11, color:'#0d9488', margin:0 }}>Inspired by AgedCare Ghana, HomeCare GH, GNA Healthcare, JASBEK, Nurse 24/7, and CareEdge. Each feature is fully live.</p>
+        </div>
+      </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
- {FEATURES.map((f, idx) => {
- const Icon = f.icon;
- return (
- <motion.div
- key={f.num}
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: idx * 0.04 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden hover:shadow-md transition-all cursor-pointer group"
- onClick={() => navigate(f.route)}
- >
- <div className="h-1" style={{ background: f.color }} />
- <div className="p-4 flex gap-3">
- {/* Number + icon */}
- <div
- className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
- style={{ background: `${f.color}15`, color: f.color }}
- >
- <Icon size={18} />
- </div>
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 mb-0.5">
- <span className="text-[11px] font-bold text-slate-400">{f.num}</span>
- <p className="font-bold text-[var(--text-800)] text-sm">{f.title}</p>
- </div>
- <p className="text-[11px] text-[var(--text-500)] leading-relaxed mb-2">{f.desc}</p>
- <div className="flex items-center gap-1 text-[11px] text-[var(--text-400)] border-t border-[var(--card-border)]/50 pt-2">
- <Info size={9} />
- <span className="truncate">{f.where}</span>
- <CRight size={10} className="ml-auto text-slate-300 group-hover:text-teal-500 transition-colors flex-shrink-0" />
- </div>
- </div>
- </div>
- </motion.div>
- );
- })}
- </div>
- </div>
- );
+      {/* Grid */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:12 }}>
+        {FEATURES.map((f, idx) => {
+          const Icon = f.icon;
+          return (
+            <motion.div key={f.num}
+              initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay:idx*0.04 }}
+              onClick={() => navigate(f.route)}
+              style={{ borderRadius:14, border:'1px solid var(--card-border)', overflow:'hidden', background:'var(--card-bg)', cursor:'pointer', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', transition:'all 0.15s' }}
+              onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 6px 20px rgba(0,0,0,0.10)';e.currentTarget.style.transform='translateY(-2px)';}}
+              onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)';e.currentTarget.style.transform='translateY(0)';}}>
+              <div style={{ height:3, background:f.color }} />
+              <div style={{ padding:'12px 14px', display:'flex', gap:12 }}>
+                <div style={{ width:38, height:38, borderRadius:10, background:`${f.color}15`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  <Icon size={18} style={{ color:f.color }} />
+                </div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
+                    <span style={{ fontSize:10, fontWeight:700, color:'var(--text-400)' }}>{f.num}</span>
+                    <p style={{ fontWeight:700, fontSize:12, color:'var(--text-800)', margin:0 }}>{f.title}</p>
+                  </div>
+                  <p style={{ fontSize:11, color:'var(--text-500)', lineHeight:1.5, margin:'0 0 8px' }}>{f.desc}</p>
+                  <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'var(--text-400)', borderTop:'1px solid var(--card-border)', paddingTop:6 }}>
+                    <Info size={9} />
+                    <span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', flex:1 }}>{f.where}</span>
+                    <CRight size={10} style={{ color:'var(--text-300)', flexShrink:0 }} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- Main Component
+   Main Component
 ═══════════════════════════════════════════════════════════════════════════ */
 export default function Caregivers() {
- const { user } = useAuth();
- const navigate = useNavigate();
- const qc = useQueryClient();
- const isStaff = user?.role === 'clinician' || user?.role === 'admin';
- const isCaregiver = user?.role === 'caregiver';
+  const { user }   = useAuth();
+  const navigate   = useNavigate();
+  const qc         = useQueryClient();
+  const isStaff    = user?.role==='clinician'||user?.role==='admin';
+  const isCaregiver= user?.role==='caregiver';
+  const indicatorRef = useRef(null);
+  const tabRefs      = useRef({});
 
- const [tab, setTab] = useState('team');
- const [search, setSearch] = useState('');
- const [filter, setFilter] = useState('all');
- const [page, setPage] = useState(0);
- const [burnoutCg, setBurnoutCg] = useState(null);
- const [trustCg, setTrustCg] = useState(null);
- const [burnoutMap, setBurnoutMap] = useState({});
- const [burnoutLoading, setBurnoutLoading] = useState(false);
- const [optPid, setOptPid] = useState('');
- const [manualCg, setManualCg] = useState('');
- const [manualPt, setManualPt] = useState('');
+  const [tab,         setTab]         = useState('team');
+  const [search,      setSearch]      = useState('');
+  const [filter,      setFilter]      = useState('all');
+  const [page,        setPage]        = useState(0);
+  const [burnoutCg,   setBurnoutCg]   = useState(null);
+  const [trustCg,     setTrustCg]     = useState(null);
+  const [burnoutMap,  setBurnoutMap]  = useState({});
+  const [burnoutLoading, setBurnoutLoading] = useState(false);
+  const [optPid,      setOptPid]      = useState('');
+  const [manualCg,    setManualCg]    = useState('');
+  const [manualPt,    setManualPt]    = useState('');
 
- useEffect(() => { setPage(0); }, [search, filter]);
+  /* Animate tab underline */
+  useEffect(() => {
+    const el  = tabRefs.current[tab];
+    const ind = indicatorRef.current;
+    if (!el || !ind) return;
+    const list = el.closest('[data-tab-list]');
+    if (!list) return;
+    const eR = el.getBoundingClientRect();
+    const lR = list.getBoundingClientRect();
+    ind.style.width = `${eR.width}px`;
+    ind.style.left  = `${eR.left-lR.left}px`;
+  }, [tab]);
 
- /* queries */
- const { data: cgRaw, isLoading } = useQuery({ queryKey: ['caregivers-all'], queryFn: () => caregiversAPI.getAll().then(r => r.data), staleTime: 5*60*1000, retry: false });
- const { data: assnRaw } = useQuery({ queryKey: ['cg-assignments'], queryFn: () => caregiversAPI.getAssignments().then(r => r.data), enabled: isStaff, staleTime: 3*60*1000, retry: false });
- const { data: myPtsRaw } = useQuery({ queryKey: ['cg-my-patients'], queryFn: () => caregiverIntelligenceAPI.getMyPatients().then(r => r.data), enabled: isCaregiver, staleTime: 3*60*1000, retry: false });
- const { data: teamRaw } = useQuery({ queryKey: ['cg-team'], queryFn: () => caregiverIntelligenceAPI.getTeamOverview().then(r => r.data), staleTime: 5*60*1000, retry: false });
- const { data: burnoutRaw } = useQuery({ queryKey: ['cg-burnout'], queryFn: () => advancedMlAPI.getAllCaregiverBurnout().then(r => r.data), staleTime: 10*60*1000, retry: false });
- const { data: patientsRaw } = useQuery({ queryKey: ['patients-list'], queryFn: () => patientsAPI.getAll().then(r => r.data), enabled: isStaff, staleTime: 5*60*1000 });
+  useEffect(() => { setPage(0); }, [search, filter]);
 
- /* normalise */
- const caregivers = Array.isArray(cgRaw) ? cgRaw : cgRaw?.caregivers || [];
- const assignments = Array.isArray(assnRaw) ? assnRaw : assnRaw?.assignments || [];
- const myPatients = Array.isArray(myPtsRaw?.patients) ? myPtsRaw.patients : [];
- const burnoutList = Array.isArray(burnoutRaw) ? burnoutRaw : burnoutRaw?.caregivers || [];
- const patientList = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
+  /* Queries */
+  const { data:cgRaw,   isLoading }  = useQuery({ queryKey:['caregivers-all'], queryFn:()=>caregiversAPI.getAll().then(r=>r.data), staleTime:5*60*1000, retry:false });
+  const { data:assnRaw }             = useQuery({ queryKey:['cg-assignments'], queryFn:()=>caregiversAPI.getAssignments().then(r=>r.data), enabled:isStaff, staleTime:3*60*1000, retry:false });
+  const { data:myPtsRaw }            = useQuery({ queryKey:['cg-my-patients'], queryFn:()=>caregiverIntelligenceAPI.getMyPatients().then(r=>r.data), enabled:isCaregiver, staleTime:3*60*1000, retry:false });
+  const { data:teamRaw }             = useQuery({ queryKey:['cg-team'],        queryFn:()=>caregiverIntelligenceAPI.getTeamOverview().then(r=>r.data), staleTime:5*60*1000, retry:false });
+  const { data:burnoutRaw }          = useQuery({ queryKey:['cg-burnout'],     queryFn:()=>advancedMlAPI.getAllCaregiverBurnout().then(r=>r.data), staleTime:10*60*1000, retry:false });
+  const { data:patientsRaw }         = useQuery({ queryKey:['patients-list'],  queryFn:()=>patientsAPI.getAll().then(r=>r.data), enabled:isStaff, staleTime:5*60*1000 });
 
- /* derived maps */
- const workloadMap = useMemo(() => {
- const m = {};
- (teamRaw?.team_metrics || []).forEach(tm => { m[tm.caregiver_id] = tm.workload; });
- return m;
- }, [teamRaw]);
+  const caregivers   = Array.isArray(cgRaw)    ? cgRaw    : cgRaw?.caregivers    || [];
+  const assignments  = Array.isArray(assnRaw)  ? assnRaw  : assnRaw?.assignments || [];
+  const myPatients   = Array.isArray(myPtsRaw?.patients) ? myPtsRaw.patients : [];
+  const burnoutList  = Array.isArray(burnoutRaw) ? burnoutRaw : burnoutRaw?.caregivers || [];
+  const patientList  = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
 
- const burnoutLevelMap = useMemo(() => {
- const m = {};
- burnoutList.forEach(b => {
- const id = b.caregiver_id || b.user_id;
- if (id) m[id] = String(b.burnout_level || b.risk_level || 'low').toLowerCase();
- });
- return m;
- }, [burnoutList]);
+  const workloadMap = useMemo(() => {
+    const m = {};
+    (teamRaw?.team_metrics||[]).forEach(tm => { m[tm.caregiver_id] = tm.workload; });
+    return m;
+  }, [teamRaw]);
 
- const burnoutAlerts = Object.values(burnoutLevelMap).filter(l => l === 'critical' || l === 'high').length;
- const overloaded = Object.values(workloadMap).filter(w => w?.capacity_status === 'overloaded').length;
+  const burnoutLevelMap = useMemo(() => {
+    const m = {};
+    burnoutList.forEach(b => {
+      const id = b.caregiver_id||b.user_id;
+      if (id) m[id] = String(b.burnout_level||b.risk_level||'low').toLowerCase();
+    });
+    return m;
+  }, [burnoutList]);
 
- const FILTERS = [
- { id: 'all', label: 'All', count: caregivers.length },
- { id: 'available', label: 'Available', count: caregivers.length - overloaded },
- { id: 'burnout', label: 'At Risk', count: burnoutAlerts },
- { id: 'overloaded',label: 'Overloaded',count: overloaded },
- ];
+  const burnoutAlerts = Object.values(burnoutLevelMap).filter(l=>l==='critical'||l==='high').length;
+  const overloaded    = Object.values(workloadMap).filter(w=>w?.capacity_status==='overloaded').length;
 
- const filtered = useMemo(() => caregivers.filter(cg => {
- if (search) {
- const s = search.toLowerCase();
- if (!(cg.full_name || '').toLowerCase().includes(s) &&
- !(cg.role || '').toLowerCase().includes(s) &&
- !(cg.email || '').toLowerCase().includes(s)) return false;
- }
- const wl = workloadMap[cg.id] || {};
- const bl = burnoutLevelMap[cg.id] || 'low';
- if (filter === 'burnout') return ['critical','high','moderate'].includes(bl);
- if (filter === 'overloaded') return wl.capacity_status === 'overloaded';
- if (filter === 'available') return wl.capacity_status !== 'overloaded';
- return true;
- }), [caregivers, search, filter, workloadMap, burnoutLevelMap]);
+  const FILTERS = [
+    { id:'all',       label:'All',       count:caregivers.length },
+    { id:'available', label:'Available', count:caregivers.length-overloaded },
+    { id:'burnout',   label:'At Risk',   count:burnoutAlerts },
+    { id:'overloaded',label:'Overloaded',count:overloaded },
+  ];
 
- const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
- const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const filtered = useMemo(() => caregivers.filter(cg => {
+    if (search) { const s=search.toLowerCase(); if (!(cg.full_name||'').toLowerCase().includes(s)&&!(cg.role||'').toLowerCase().includes(s)&&!(cg.email||'').toLowerCase().includes(s)) return false; }
+    const wl = workloadMap[cg.id]||{};
+    const bl = burnoutLevelMap[cg.id]||'low';
+    if (filter==='burnout')    return ['critical','high','moderate'].includes(bl);
+    if (filter==='overloaded') return wl.capacity_status==='overloaded';
+    if (filter==='available')  return wl.capacity_status!=='overloaded';
+    return true;
+  }), [caregivers, search, filter, workloadMap, burnoutLevelMap]);
 
- /* mutations */
- const assignMutation = useMutation({
- mutationFn: d => caregiversAPI.assign(d),
- onSuccess: () => { toast.success('Patient assigned'); setManualCg(''); setManualPt(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
- onError: e => toast.error(e?.response?.data?.detail || 'Assignment failed'),
- });
- const removeMutation = useMutation({
- mutationFn: id => caregiversAPI.removeAssignment(id),
- onSuccess: () => { toast.success('Assignment removed'); qc.invalidateQueries(['cg-assignments']); },
- onError: () => toast.error('Failed to remove'),
- });
- const optimalMutation = useMutation({
- mutationFn: pid => caregiverIntelligenceAPI.assignOptimal(pid),
- onSuccess: d => { toast.success(`AI assigned ${d?.data?.caregiver_name || 'caregiver'}`); setOptPid(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
- onError: e => toast.error(e?.response?.data?.detail || 'Auto-assign failed'),
- });
+  const pageCount = Math.ceil(filtered.length/PAGE_SIZE);
+  const paginated = filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
 
- const openBurnout = useCallback((cg) => {
- setBurnoutCg(cg);
- if (!burnoutMap[cg.id]) {
- setBurnoutLoading(true);
- advancedMlAPI.getCaregiverBurnout(cg.id)
- .then(r => { setBurnoutMap(m => ({ ...m, [cg.id]: r.data })); setBurnoutLoading(false); })
- .catch(() => setBurnoutLoading(false));
- }
- }, [burnoutMap]);
+  /* Mutations */
+  const assignMutation = useMutation({
+    mutationFn: d => caregiversAPI.assign(d),
+    onSuccess: () => { toast.success('Patient assigned'); setManualCg(''); setManualPt(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
+    onError: e => toast.error(e?.response?.data?.detail||'Assignment failed'),
+  });
+  const removeMutation = useMutation({
+    mutationFn: id => caregiversAPI.removeAssignment(id),
+    onSuccess: () => { toast.success('Assignment removed'); qc.invalidateQueries(['cg-assignments']); },
+    onError: () => toast.error('Failed to remove'),
+  });
+  const optimalMutation = useMutation({
+    mutationFn: pid => caregiverIntelligenceAPI.assignOptimal(pid),
+    onSuccess: d => { toast.success(`AI assigned ${d?.data?.caregiver_name||'caregiver'}`); setOptPid(''); qc.invalidateQueries(['cg-assignments']); qc.invalidateQueries(['cg-team']); },
+    onError: e => toast.error(e?.response?.data?.detail||'Auto-assign failed'),
+  });
 
- const TABS = [
- { id: 'team', label: 'Team', Icon: Users },
- { id: 'analytics', label: 'Analytics', Icon: BarChart2 },
- { id: 'assignments', label: 'Assignments', Icon: ListChecks },
- { id: 'whats-new', label: "What's New", Icon: Sparkles },
- ...(isCaregiver ? [{ id: 'mypatients', label: 'My Patients', Icon: Heart }] : []),
- ];
+  const openBurnout = useCallback((cg) => {
+    setBurnoutCg(cg);
+    if (!burnoutMap[cg.id]) {
+      setBurnoutLoading(true);
+      advancedMlAPI.getCaregiverBurnout(cg.id)
+        .then(r => { setBurnoutMap(m=>({...m,[cg.id]:r.data})); setBurnoutLoading(false); })
+        .catch(() => setBurnoutLoading(false));
+    }
+  }, [burnoutMap]);
 
- return (
- <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
- className="min-h-screen pb-10 space-y-5">
+  const TABS = [
+    { id:'team',       label:'Team',       Icon:Users },
+    { id:'analytics',  label:'Analytics',  Icon:BarChart2 },
+    { id:'assignments',label:'Assignments',Icon:ListChecks },
+    { id:'whats-new',  label:"What's New", Icon:Sparkles },
+    ...(isCaregiver ? [{ id:'mypatients', label:'My Patients', Icon:Heart }] : []),
+  ];
 
- <PageHeader
- image="/resources/african/african-caregiver.jpg"
- title="Care Team"
- subtitle="Verified nurses · caregivers · clinicians · Ghana Card & NMC trust profiles"
- icon={HeartHandshake}
- />
+  return (
+    <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
+      style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}>
 
- {/* Burnout alert banner */}
- {burnoutAlerts > 0 && (
- <div className="px-6">
- <div className="border-l-4 border-l-red-500 bg-red-50 border border-red-200 rounded-r-xl p-3.5 flex items-start gap-3">
- <AlertTriangle size={16} className="text-red-600 flex-shrink-0 mt-0.5" />
- <div>
- <p className="font-bold text-red-900 text-sm">{burnoutAlerts} team member{burnoutAlerts > 1 ? 's' : ''} at burnout risk</p>
- {burnoutList.filter(b => ['critical','high'].includes(String(b.burnout_level || b.risk_level || '').toLowerCase()))
- .map((b, i) => (
- <p key={i} className="text-xs text-red-700 mt-0.5"><strong>{b.caregiver_name || b.name}</strong> - {b.burnout_level || b.risk_level} risk</p>
- ))}
- </div>
- </div>
- </div>
- )}
+      {/* PageHeader with image */}
+      <PageHeader
+        image="/resources/african/african-caregiver.jpg"
+        title="Care Team"
+        subtitle="Verified nurses · caregivers · clinicians · Ghana Card & NMC trust profiles"
+        icon={HeartHandshake}
+      />
 
- {/* Tab bar */}
- <div className="px-6">
- <div className="flex border-b border-[var(--card-border)] gap-0 overflow-x-auto">
- {TABS.map(({ id, label, Icon }) => (
- <button key={id} onClick={() => setTab(id)}
- className={`flex items-center gap-1.5 px-4 py-3 text-sm font-bold border-b-2 transition-all whitespace-nowrap flex-shrink-0
- ${tab === id ? 'border-teal-600 text-teal-700' : 'border-transparent text-[var(--text-500)] hover:text-[var(--text-700)] hover:border-slate-300'}`}>
- <Icon size={14} />
- {label}
- {id === 'team' && (
- <span className={`text-[11px] font-black px-1.5 py-0.5 rounded-full tabular-nums ${tab === id ? 'bg-teal-100 text-teal-700' : 'bg-slate-100 text-slate-500'}`}>
- {caregivers.length}
- </span>
- )}
- {id === 'whats-new' && (
- <span className="text-[11px] font-black px-1.5 py-0.5 rounded-full bg-teal-500 text-white">8</span>
- )}
- </button>
- ))}
- </div>
- </div>
+      {/* Burnout alert banner */}
+      {burnoutAlerts > 0 && (
+        <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px' }}>
+          <div style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'12px 16px', background:'#fef2f2', border:'1px solid #fca5a5', borderLeft:'4px solid #ef4444', borderRadius:12 }}>
+            <AlertTriangle size={16} style={{ color:'#dc2626', flexShrink:0, marginTop:1 }} />
+            <div>
+              <p style={{ fontWeight:700, fontSize:13, color:'#991b1b', margin:'0 0 2px' }}>{burnoutAlerts} team member{burnoutAlerts>1?'s':''} at burnout risk</p>
+              {burnoutList.filter(b=>['critical','high'].includes(String(b.burnout_level||b.risk_level||'').toLowerCase())).map((b,i)=>(
+                <p key={i} style={{ fontSize:12, color:'#dc2626', margin:0 }}><strong>{b.caregiver_name||b.name}</strong> — {b.burnout_level||b.risk_level} risk</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
- {/* ══ TAB: TEAM ══ */}
- {tab === 'team' && (
- <div className="px-6 space-y-4">
- {/* Search + filter bar */}
- <div className="flex flex-col sm:flex-row gap-2">
- <div className="relative flex-1">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
- <input value={search} onChange={e => setSearch(e.target.value)}
- placeholder="Search by name, role or email…"
- className="w-full pl-10 pr-9 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-400 outline-none text-sm shadow-sm" />
- {search && (
- <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded bg-slate-100 hover:bg-red-100 flex items-center justify-center">
- <X size={11} className="text-slate-500" />
- </button>
- )}
- </div>
- <div className="flex items-center gap-1 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl px-1.5 py-1 shadow-sm flex-shrink-0">
- {FILTERS.map(f => (
- <button key={f.id} onClick={() => setFilter(f.id)}
- className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
- ${filter === f.id
- ? 'bg-teal-600 text-white shadow-sm'
- : 'text-[var(--text-600)] hover:bg-slate-100'}`}>
- {f.label}
- <span className={`text-[11px] font-black px-1 rounded-full tabular-nums
- ${filter === f.id ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-500'}`}>
- {f.count}
- </span>
- </button>
- ))}
- </div>
- </div>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
+        {/* ── Underline tab bar ── */}
+        <div style={{ borderBottom:'1px solid var(--card-border)', marginTop:16 }}>
+          <div data-tab-list style={{ position:'relative', display:'flex', overflowX:'auto', scrollbarWidth:'none' }}>
+            {TABS.map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                ref={el=>(tabRefs.current[id]=el)}
+                onClick={()=>setTab(id)}
+                style={{
+                  display:'flex', alignItems:'center', gap:6,
+                  padding:'10px 18px', fontSize:13, fontWeight: tab===id?700:500,
+                  color: tab===id ? 'var(--c-teal)' : 'var(--text-500)',
+                  whiteSpace:'nowrap', flexShrink:0,
+                  background:'transparent', border:'none', cursor:'pointer',
+                  transition:'color 0.15s',
+                }}
+              >
+                <Icon size={13} />
+                {label}
+                {id==='team' && (
+                  <span style={{ fontSize:10, fontWeight:800, padding:'1px 6px', borderRadius:99, background: tab===id?'#ccfbf1':'var(--page-bg)', color: tab===id?'#0f766e':'var(--text-400)' }}>
+                    {caregivers.length}
+                  </span>
+                )}
+                {id==='whats-new' && (
+                  <span style={{ fontSize:10, fontWeight:800, padding:'1px 6px', borderRadius:99, background:'#0d9488', color:'#fff' }}>8</span>
+                )}
+              </button>
+            ))}
+            {/* Sliding underline */}
+            <span ref={indicatorRef} aria-hidden style={{
+              position:'absolute', bottom:0, height:2.5, borderRadius:2,
+              background:'linear-gradient(90deg,#0d9488,#0891b2)',
+              transition:'left 0.22s cubic-bezier(.34,1.56,.64,1), width 0.22s cubic-bezier(.34,1.56,.64,1)',
+              left:0, width:0, pointerEvents:'none',
+              boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
+            }} />
+          </div>
+        </div>
 
- {/* Worker cards grid */}
- {isLoading ? (
- <div className="flex items-center justify-center h-64 gap-3">
- <Loader2 size={26} className="animate-spin text-teal-400" />
- <p className="text-sm text-slate-500">Loading care team…</p>
- </div>
- ) : filtered.length === 0 ? (
- <div className="flex flex-col items-center justify-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 h-64 gap-3">
- <Users size={36} className="text-slate-300" />
- <p className="font-bold text-slate-500">No caregivers match</p>
- <button onClick={() => { setSearch(''); setFilter('all'); }} className="text-xs text-teal-600 hover:underline font-semibold">Clear filters</button>
- </div>
- ) : (
- <>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
- <AnimatePresence mode="popLayout">
- {paginated.map((cg, i) => (
- <WorkerCard
- key={cg.id || i}
- cg={cg}
- workload={workloadMap[cg.id]}
- burnoutLevel={burnoutLevelMap[cg.id]}
- gradPair={TEAL_GRADS[(page * PAGE_SIZE + i) % TEAL_GRADS.length]}
- onBurnoutClick={() => openBurnout(cg)}
- onMessage={() => navigate('/messages')}
- onViewProfile={() => setTrustCg(cg)}
- />
- ))}
- </AnimatePresence>
- </div>
+        {/* ── Tab content ── */}
+        <div style={{ paddingTop:20 }}>
 
- {/* Pagination */}
- {pageCount > 1 && (
- <div className="flex items-center justify-between pt-2">
- <p className="text-xs text-slate-400">{filtered.length} workers · page {page + 1} of {pageCount}</p>
- <div className="flex items-center gap-1.5">
- <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
- className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-50 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
- <ChevronLeft size={14} />
- </button>
- {Array.from({ length: pageCount }, (_, idx) => (
- <button key={idx} onClick={() => setPage(idx)}
- className={`h-2 rounded-full transition-all duration-200 ${idx === page ? 'w-6 bg-teal-600' : 'w-2 bg-slate-300 hover:bg-teal-400'}`} />
- ))}
- <button onClick={() => setPage(p => Math.min(pageCount - 1, p + 1))} disabled={page === pageCount - 1}
- className="w-8 h-8 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] hover:border-teal-400 disabled:opacity-50 flex items-center justify-center text-[var(--text-500)] shadow-sm transition-all">
- <ChevronRight size={14} />
- </button>
- </div>
- </div>
- )}
- </>
- )}
- </div>
- )}
+          {/* ══ TEAM TAB ══ */}
+          {tab==='team' && (
+            <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+              {/* Filter bar — wrapped in card surface */}
+              <div style={{ borderRadius:14, border:'1px solid var(--card-border)', background:'var(--card-bg)', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', overflow:'hidden' }}>
+                <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)' }} />
+                <div style={{ padding:'12px 14px', display:'flex', flexWrap:'wrap', alignItems:'center', gap:10 }}>
+                  {/* Search */}
+                  <div style={{ position:'relative', flex:1, minWidth:200 }}>
+                    <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
+                    <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by name, role or email…"
+                      style={{ width:'100%', height:36, paddingLeft:32, paddingRight:search?30:12, fontSize:12, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+                      onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+                      onBlur={e=>(e.target.style.borderColor='var(--card-border)')}
+                    />
+                    {search && <button onClick={()=>setSearch('')} style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', width:18, height:18, borderRadius:5, background:'var(--card-border)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><X size={10} style={{ color:'var(--text-500)' }} /></button>}
+                  </div>
+                  {/* Filter pills */}
+                  <div style={{ display:'flex', gap:5, flexWrap:'wrap' }}>
+                    {FILTERS.map(f => (
+                      <button key={f.id} onClick={()=>setFilter(f.id)} style={{
+                        display:'flex', alignItems:'center', gap:5,
+                        padding:'5px 10px', borderRadius:8, fontSize:11, fontWeight:700,
+                        border: filter===f.id ? '1px solid var(--c-teal)' : '1px solid var(--card-border)',
+                        background: filter===f.id ? 'color-mix(in srgb,var(--c-teal) 12%,var(--card-bg))' : 'transparent',
+                        color: filter===f.id ? 'var(--c-teal)' : 'var(--text-500)',
+                        cursor:'pointer', transition:'all 0.15s',
+                      }}>
+                        {f.label}
+                        <span style={{ fontSize:10, fontWeight:800, padding:'0 5px', borderRadius:99, background: filter===f.id?'var(--c-teal)':'var(--page-bg)', color: filter===f.id?'#fff':'var(--text-400)' }}>
+                          {f.count}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
- {/* ══ TAB: ANALYTICS ══ */}
- {tab === 'analytics' && (
- <div className="px-6 space-y-5">
- {!teamRaw ? (
- <div className="flex flex-col items-center py-20 gap-3 text-slate-400">
- <BarChart2 size={40} className="text-slate-300" />
- <p className="font-medium">Team analytics unavailable</p>
- </div>
- ) : (
- <>
- {/* Summary strip */}
- <div className="flex flex-wrap gap-2">
- {[
- { l: 'Team Size', v: teamRaw.team_size ?? caregivers.length, icon: Users, c: '#0d9488' },
- { l: 'Assigned Patients', v: teamRaw.total_patients_assigned ?? ' - ', icon: Heart, c: '#0891b2' },
- { l: 'Avg per Carer', v: teamRaw.average_patients_per_caregiver ?? ' - ', icon: TrendingUp, c: '#059669' },
- { l: 'Overloaded', v: teamRaw.overloaded_caregivers ?? 0, icon: AlertTriangle, c: '#ef4444' },
- ].map(({ l, v, icon: Icon, c }) => (
- <div key={l}
- className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border bg-[var(--card-bg)] shadow-sm"
- style={{ borderColor: `${c}30` }}>
- <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
- style={{ background: `${c}15`, color: c }}>
- <Icon size={14} />
- </div>
- <span className="text-xl font-black tabular-nums leading-none" style={{ color: c }}>{v}</span>
- <span className="text-xs font-semibold text-slate-500">{l}</span>
- </div>
- ))}
- </div>
+              {/* Worker grid */}
+              {isLoading ? (
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:200, gap:12 }}>
+                  <Loader2 size={24} className="animate-spin" style={{ color:'var(--c-teal)' }} />
+                  <p style={{ fontSize:13, color:'var(--text-400)' }}>Loading care team…</p>
+                </div>
+              ) : filtered.length===0 ? (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:180, gap:10, borderRadius:16, border:'2px dashed var(--card-border)' }}>
+                  <Users size={32} style={{ color:'var(--card-border)' }} />
+                  <p style={{ fontWeight:700, fontSize:13, color:'var(--text-500)' }}>No caregivers match</p>
+                  <button onClick={()=>{setSearch('');setFilter('all');}} style={{ fontSize:12, color:'var(--c-teal)', background:'none', border:'none', cursor:'pointer', fontWeight:600 }}>Clear filters</button>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:16 }}>
+                    <AnimatePresence mode="popLayout">
+                      {paginated.map((cg,i) => (
+                        <WorkerCard key={cg.id||i} cg={cg}
+                          workload={workloadMap[cg.id]}
+                          burnoutLevel={burnoutLevelMap[cg.id]}
+                          gradPair={TEAL_GRADS[(page*PAGE_SIZE+i)%TEAL_GRADS.length]}
+                          onBurnoutClick={()=>openBurnout(cg)}
+                          onMessage={()=>navigate('/messages')}
+                          onViewProfile={()=>setTrustCg(cg)}
+                        />
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                  {/* Pagination */}
+                  {pageCount>1 && (
+                    <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', paddingTop:4 }}>
+                      <p style={{ fontSize:11, color:'var(--text-400)' }}>{filtered.length} workers · page {page+1} of {pageCount}</p>
+                      <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                        <button onClick={()=>setPage(p=>Math.max(0,p-1))} disabled={page===0}
+                          style={{ width:32, height:32, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--card-bg)', cursor:page===0?'not-allowed':'pointer', opacity:page===0?0.4:1, display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)', transition:'all 0.15s' }}
+                          onMouseEnter={e=>{if(page>0)e.currentTarget.style.borderColor='var(--c-teal)';}}
+                          onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';}}>
+                          <ChevronLeft size={14} />
+                        </button>
+                        {Array.from({length:pageCount},(_,idx)=>(
+                          <button key={idx} onClick={()=>setPage(idx)} style={{ height:8, width:idx===page?24:8, borderRadius:99, background:idx===page?'var(--c-teal)':'var(--card-border)', border:'none', cursor:'pointer', transition:'all 0.2s' }} />
+                        ))}
+                        <button onClick={()=>setPage(p=>Math.min(pageCount-1,p+1))} disabled={page===pageCount-1}
+                          style={{ width:32, height:32, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--card-bg)', cursor:page===pageCount-1?'not-allowed':'pointer', opacity:page===pageCount-1?0.4:1, display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)', transition:'all 0.15s' }}
+                          onMouseEnter={e=>{if(page<pageCount-1)e.currentTarget.style.borderColor='var(--c-teal)';}}
+                          onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';}}>
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
- {/* Workload table */}
- {teamRaw.team_metrics?.length > 0 && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
- <div className="px-5 py-4 border-b border-slate-100">
- <h3 className="font-bold text-[var(--text-800)] text-sm">Workload Distribution</h3>
- <p className="text-xs text-[var(--text-500)] mt-0.5">Current patient load per caregiver</p>
- </div>
- <div className="divide-y divide-slate-100">
- {teamRaw.team_metrics.map((m, i) => {
- const pct = Math.min(m.workload?.workload_score ?? 0, 100);
- const pts = m.workload?.active_patients ?? 0;
- const cap = m.workload?.capacity_status || 'available';
- const ci = capColor(cap);
- const [g1, g2] = TEAL_GRADS[i % TEAL_GRADS.length];
- return (
- <div key={m.caregiver_id} className="flex items-center gap-3 px-5 py-3">
- <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-[11px] flex-shrink-0"
- style={{ background: `linear-gradient(135deg,${g1},${g2})` }}>
- {(m.caregiver_name || '?')[0]}
- </div>
- <div className="w-36 min-w-0 flex-shrink-0">
- <p className="font-semibold text-[var(--text-800)] text-sm truncate">{m.caregiver_name}</p>
- <p className="text-xs text-slate-400">{pts} patient{pts !== 1 ? 's' : ''}</p>
- </div>
- <div className="flex-1 min-w-0">
- <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
- <motion.div
- className="h-full rounded-full"
- initial={{ width: 0 }}
- animate={{ width: `${pct}%` }}
- transition={{ duration: 0.7, ease: 'easeOut', delay: i * 0.05 }}
- style={{ background: pct > 75 ? '#ef4444' : pct >= 50 ? '#f59e0b' : `linear-gradient(to right,${g1},${g2})` }}
- />
- </div>
- </div>
- <span className="text-xs font-black tabular-nums w-9 text-right flex-shrink-0"
- style={{ color: pct > 75 ? '#ef4444' : pct >= 50 ? '#f59e0b' : '#10b981' }}>{pct}%</span>
- <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 capitalize"
- style={{ background: ci.bg, color: ci.text }}>{cap.replace('_', ' ')}</span>
- </div>
- );
- })}
- </div>
- </div>
- )}
+          {/* ══ ANALYTICS TAB ══ */}
+          {tab==='analytics' && (
+            <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+              {!teamRaw ? (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'60px 0', gap:10, color:'var(--text-400)' }}>
+                  <BarChart2 size={36} style={{ color:'var(--card-border)' }} />
+                  <p style={{ fontSize:13 }}>Team analytics unavailable</p>
+                </div>
+              ) : (
+                <>
+                  {/* Summary strip */}
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+                    {[
+                      { l:'Team Size',        v:teamRaw.team_size??caregivers.length, Icon:Users,        c:'#0d9488' },
+                      { l:'Assigned Patients',v:teamRaw.total_patients_assigned??'—', Icon:Heart,        c:'#0891b2' },
+                      { l:'Avg per Carer',    v:teamRaw.average_patients_per_caregiver??'—', Icon:TrendingUp, c:'#059669' },
+                      { l:'Overloaded',       v:teamRaw.overloaded_caregivers??0,     Icon:AlertTriangle,c:'#ef4444' },
+                    ].map(({ l, v, Icon, c }) => (
+                      <div key={l} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 16px', borderRadius:12, border:`1px solid ${c}25`, background:'var(--card-bg)', boxShadow:'0 1px 6px rgba(0,0,0,0.04)' }}>
+                        <div style={{ width:32, height:32, borderRadius:9, background:`${c}15`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          <Icon size={15} style={{ color:c }} />
+                        </div>
+                        <span style={{ fontSize:22, fontWeight:900, color:c, lineHeight:1 }}>{v}</span>
+                        <span style={{ fontSize:11, fontWeight:600, color:'var(--text-500)' }}>{l}</span>
+                      </div>
+                    ))}
+                  </div>
 
- {/* Recommendations */}
- {teamRaw.recommendations?.filter(Boolean).length > 0 && (
- <div className="space-y-2">
- <p className="text-xs font-bold text-slate-400">AI Recommendations</p>
- {teamRaw.recommendations.filter(Boolean).map((rec, i) => (
- <div key={i} className={`flex items-start gap-2 px-4 py-3 rounded-xl border text-sm
- ${rec.includes('⚠') || rec.includes('❌') ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-teal-50 border-teal-200 text-teal-800'}`}>
- <TrendingUp size={13} className="flex-shrink-0 mt-0.5" />{rec}
- </div>
- ))}
- </div>
- )}
- </>
- )}
- </div>
- )}
+                  {/* Workload table */}
+                  {teamRaw.team_metrics?.length > 0 && (
+                    <div style={{ borderRadius:16, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' }}>
+                      <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)' }} />
+                      <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--card-border)' }}>
+                        <h3 style={{ fontWeight:700, fontSize:13, color:'var(--text-800)', margin:0 }}>Workload Distribution</h3>
+                        <p style={{ fontSize:11, color:'var(--text-400)', margin:'2px 0 0' }}>Current patient load per caregiver</p>
+                      </div>
+                      {teamRaw.team_metrics.map((m, i) => {
+                        const pct = Math.min(m.workload?.workload_score??0, 100);
+                        const pts = m.workload?.active_patients??0;
+                        const cap = m.workload?.capacity_status||'available';
+                        const ci  = capColor(cap);
+                        const [g1,g2] = TEAL_GRADS[i%TEAL_GRADS.length];
+                        return (
+                          <div key={m.caregiver_id} style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 20px', borderBottom: i<teamRaw.team_metrics.length-1?'1px solid var(--card-border)':undefined }}>
+                            <div style={{ width:32, height:32, borderRadius:10, background:`linear-gradient(135deg,${g1},${g2})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:900, color:'#fff', flexShrink:0 }}>
+                              {(m.caregiver_name||'?')[0]}
+                            </div>
+                            <div style={{ width:140, minWidth:0, flexShrink:0 }}>
+                              <p style={{ fontWeight:600, fontSize:13, color:'var(--text-800)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{m.caregiver_name}</p>
+                              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{pts} patient{pts!==1?'s':''}</p>
+                            </div>
+                            <div style={{ flex:1 }}>
+                              <div style={{ height:6, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
+                                <motion.div initial={{ width:0 }} animate={{ width:`${pct}%` }} transition={{ duration:0.7, ease:'easeOut', delay:i*0.05 }}
+                                  style={{ height:'100%', borderRadius:99, background: pct>75?'#ef4444':pct>=50?'#f59e0b':`linear-gradient(to right,${g1},${g2})` }} />
+                              </div>
+                            </div>
+                            <span style={{ fontSize:11, fontWeight:800, fontVariantNumeric:'tabular-nums', width:36, textAlign:'right', flexShrink:0, color: pct>75?'#ef4444':pct>=50?'#f59e0b':'#10b981' }}>{pct}%</span>
+                            <span style={{ fontSize:10, fontWeight:700, padding:'3px 8px', borderRadius:99, flexShrink:0, textTransform:'capitalize', background:ci.bg, color:ci.text }}>{cap.replace('_',' ')}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
- {/* ══ TAB: ASSIGNMENTS ══ */}
- {tab === 'assignments' && (
- <div className="px-6 space-y-6">
- <div className="grid md:grid-cols-2 gap-6">
- {/* Manual assign */}
- {isStaff && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center gap-2">
- <UserPlus size={15} className="text-teal-600" />
- <h3 className="font-bold text-[var(--text-800)] text-sm">Manual Assignment</h3>
- </div>
- <div className="p-5 space-y-3">
- <div>
- <label className="text-[11px] font-bold text-[var(--text-400)] block mb-1">Caregiver</label>
- <SearchableSelect accent="teal"
- value={manualCg ? String(manualCg) : null}
- onChange={v => setManualCg(v || '')}
- placeholder="Select caregiver…"
- options={caregivers.map(cg => ({ value: String(cg.id), label: cg.full_name, sublabel: cg.role || 'Caregiver' }))}
- />
- </div>
- <div>
- <label className="text-[11px] font-bold text-[var(--text-400)] block mb-1">Patient</label>
- <SearchableSelect accent="teal"
- value={manualPt ? String(manualPt) : null}
- onChange={v => setManualPt(v || '')}
- placeholder="Search patient…"
- options={patientList.map(p => ({ value: String(p.id), label: p.full_name, sublabel: `${p.patient_code || '#' + p.id} · ${p.age}y` }))}
- />
- </div>
- <button
- onClick={() => { if (manualCg && manualPt) assignMutation.mutate({ caregiver_id: parseInt(manualCg), patient_id: parseInt(manualPt), notes: '' }); }}
- disabled={!manualCg || !manualPt || assignMutation.isPending}
- className="w-full flex items-center justify-center gap-2 py-2.5 text-white rounded-xl font-bold text-sm disabled:opacity-50 transition-all"
- style={{ background: '#0d9488' }}>
- {assignMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <UserPlus size={14} />}
- {assignMutation.isPending ? 'Assigning…' : 'Assign Patient'}
- </button>
- </div>
+                  {/* AI Recommendations */}
+                  {teamRaw.recommendations?.filter(Boolean).length > 0 && (
+                    <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                      <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)' }}>AI Recommendations</p>
+                      {teamRaw.recommendations.filter(Boolean).map((rec,i) => (
+                        <div key={i} style={{
+                          display:'flex', alignItems:'flex-start', gap:10,
+                          padding:'10px 14px', borderRadius:10, fontSize:12,
+                          background: rec.includes('⚠')||rec.includes('❌') ? '#fffbeb' : '#f0fdfa',
+                          border: rec.includes('⚠')||rec.includes('❌') ? '1px solid #fde68a' : '1px solid #99f6e4',
+                          color: rec.includes('⚠')||rec.includes('❌') ? '#92400e' : '#0f766e',
+                        }}>
+                          <TrendingUp size={13} style={{ flexShrink:0, marginTop:1 }} />{rec}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
- {/* AI Auto-Assign */}
- <div className="border-t border-[var(--card-border)]/50 px-5 py-4 space-y-3">
- <div className="flex items-center gap-2">
- <Zap size={13} className="text-teal-500" />
- <h4 className="font-bold text-[var(--text-700)] text-sm">AI Auto-Assign</h4>
- <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">ML</span>
- </div>
- <p className="text-xs text-slate-500">ML selects the best available caregiver based on workload and patient complexity.</p>
- <SearchableSelect accent="teal"
- value={optPid ? String(optPid) : null}
- onChange={v => setOptPid(v || '')}
- placeholder="Select patient to auto-assign…"
- options={patientList.map(p => ({ value: String(p.id), label: p.full_name, sublabel: `${p.patient_code || '#' + p.id}` }))}
- />
- <button onClick={() => { if (optPid) optimalMutation.mutate(parseInt(optPid)); }}
- disabled={!optPid || optimalMutation.isPending}
- className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-all"
- style={{ background: '#0891b2' }}>
- {optimalMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} />}
- {optimalMutation.isPending ? 'Assigning…' : 'Auto-Assign Best Caregiver'}
- </button>
- </div>
- </div>
- )}
+          {/* ══ ASSIGNMENTS TAB ══ */}
+          {tab==='assignments' && (
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:16 }}>
+              {/* Manual + AI assign */}
+              {isStaff && (
+                <div style={{ borderRadius:16, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' }}>
+                  <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)' }} />
+                  <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', gap:8 }}>
+                    <UserPlus size={15} style={{ color:'var(--c-teal)' }} />
+                    <span style={{ fontWeight:700, fontSize:13, color:'var(--text-800)' }}>Manual Assignment</span>
+                  </div>
+                  <div style={{ padding:18, display:'flex', flexDirection:'column', gap:12 }}>
+                    <div>
+                      <label style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', display:'block', marginBottom:5 }}>Caregiver</label>
+                      <SearchableSelect accent="teal" value={manualCg?String(manualCg):null} onChange={v=>setManualCg(v||'')} placeholder="Select caregiver…"
+                        options={caregivers.map(cg=>({value:String(cg.id),label:cg.full_name,sublabel:cg.role||'Caregiver'}))} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', display:'block', marginBottom:5 }}>Patient</label>
+                      <SearchableSelect accent="teal" value={manualPt?String(manualPt):null} onChange={v=>setManualPt(v||'')} placeholder="Search patient…"
+                        options={patientList.map(p=>({value:String(p.id),label:p.full_name,sublabel:`${p.patient_code||'#'+p.id} · ${p.age}y`}))} />
+                    </div>
+                    <button onClick={()=>{if(manualCg&&manualPt) assignMutation.mutate({caregiver_id:parseInt(manualCg),patient_id:parseInt(manualPt),notes:''});}} disabled={!manualCg||!manualPt||assignMutation.isPending}
+                      style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 0', borderRadius:10, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg,#0d9488,#0891b2)', border:'none', cursor:!manualCg||!manualPt?'not-allowed':'pointer', opacity:!manualCg||!manualPt?0.5:1, boxShadow:'0 2px 10px rgba(13,148,136,0.3)', transition:'opacity 0.15s' }}>
+                      {assignMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <UserPlus size={14} />}
+                      {assignMutation.isPending?'Assigning…':'Assign Patient'}
+                    </button>
 
- {/* Current assignments list */}
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm overflow-hidden">
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
- <div className="flex items-center gap-2">
- <ListChecks size={15} className="text-teal-600" />
- <h3 className="font-bold text-[var(--text-800)] text-sm">Current Assignments</h3>
- </div>
- <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700">{assignments.length}</span>
- </div>
- <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
- {assignments.length === 0 ? (
- <div className="flex flex-col items-center py-10 gap-2 text-slate-400">
- <ListChecks size={28} className="text-slate-300" />
- <p className="text-sm">No active assignments</p>
- </div>
- ) : assignments.map(a => (
- <div key={a.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50">
- <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-[11px] flex-shrink-0">
- {getInitials(a.caregiver_name)}
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-semibold text-[var(--text-800)] text-xs truncate">{a.caregiver_name}</p>
- <p className="text-[11px] text-[var(--text-500)] truncate">→ {a.patient_name}</p>
- </div>
- {isStaff && (
- <button onClick={() => removeMutation.mutate(a.id)}
- className="w-6 h-6 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 flex-shrink-0">
- <X size={11} />
- </button>
- )}
- </div>
- ))}
- </div>
- </div>
- </div>
- </div>
- )}
+                    <div style={{ borderTop:'1px solid var(--card-border)', paddingTop:14, display:'flex', flexDirection:'column', gap:10 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <Zap size={13} style={{ color:'var(--c-teal)' }} />
+                        <span style={{ fontWeight:700, fontSize:13, color:'var(--text-700)' }}>AI Auto-Assign</span>
+                        <span style={{ marginLeft:'auto', fontSize:10, fontWeight:800, padding:'2px 7px', borderRadius:99, background:'#f0fdfa', color:'#0f766e', border:'1px solid #99f6e4' }}>ML</span>
+                      </div>
+                      <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>ML selects the best available caregiver based on workload and patient complexity.</p>
+                      <SearchableSelect accent="teal" value={optPid?String(optPid):null} onChange={v=>setOptPid(v||'')} placeholder="Select patient to auto-assign…"
+                        options={patientList.map(p=>({value:String(p.id),label:p.full_name,sublabel:`${p.patient_code||'#'+p.id}`}))} />
+                      <button onClick={()=>{if(optPid) optimalMutation.mutate(parseInt(optPid));}} disabled={!optPid||optimalMutation.isPending}
+                        style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'10px 0', borderRadius:10, fontSize:13, fontWeight:700, color:'#fff', background:'linear-gradient(135deg,#0891b2,#1d4ed8)', border:'none', cursor:!optPid?'not-allowed':'pointer', opacity:!optPid?0.5:1, boxShadow:'0 2px 10px rgba(8,145,178,0.3)', transition:'opacity 0.15s' }}>
+                        {optimalMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Zap size={14} />}
+                        {optimalMutation.isPending?'Assigning…':'Auto-Assign Best Caregiver'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
- {/* ══ TAB: WHAT'S NEW ══ */}
- {tab === 'whats-new' && <FeatureShowcase navigate={navigate} />}
+              {/* Current assignments */}
+              <div style={{ borderRadius:16, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' }}>
+                <div style={{ height:3, background:'linear-gradient(90deg,#059669,#0d9488)' }} />
+                <div style={{ padding:'14px 18px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <ListChecks size={15} style={{ color:'var(--c-teal)' }} />
+                    <span style={{ fontWeight:700, fontSize:13, color:'var(--text-800)' }}>Current Assignments</span>
+                  </div>
+                  <span style={{ fontSize:11, fontWeight:800, padding:'2px 8px', borderRadius:99, background:'#f0fdfa', color:'#0f766e', border:'1px solid #99f6e4' }}>{assignments.length}</span>
+                </div>
+                <div style={{ maxHeight:280, overflowY:'auto' }}>
+                  {assignments.length===0 ? (
+                    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'40px 0', gap:8, color:'var(--text-400)' }}>
+                      <ListChecks size={24} style={{ color:'var(--card-border)' }} />
+                      <p style={{ fontSize:12 }}>No active assignments</p>
+                    </div>
+                  ) : assignments.map((a,i) => (
+                    <div key={a.id} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 18px', borderBottom: i<assignments.length-1?'1px solid var(--card-border)':undefined, transition:'background 0.1s' }}
+                      onMouseEnter={e=>(e.currentTarget.style.background='var(--page-bg)')}
+                      onMouseLeave={e=>(e.currentTarget.style.background='transparent')}>
+                      <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#0d9488,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:900, color:'#fff', flexShrink:0 }}>
+                        {getInitials(a.caregiver_name)}
+                      </div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <p style={{ fontWeight:600, fontSize:12, color:'var(--text-800)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{a.caregiver_name}</p>
+                        <p style={{ fontSize:11, color:'var(--text-400)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>→ {a.patient_name}</p>
+                      </div>
+                      {isStaff && (
+                        <button onClick={()=>removeMutation.mutate(a.id)} style={{ width:24, height:24, borderRadius:7, background:'#fef2f2', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#ef4444', flexShrink:0, transition:'background 0.1s' }}
+                          onMouseEnter={e=>(e.currentTarget.style.background='#fee2e2')}
+                          onMouseLeave={e=>(e.currentTarget.style.background='#fef2f2')}>
+                          <X size={11} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
- {/* ══ TAB: MY PATIENTS (caregiver only) ══ */}
- {tab === 'mypatients' && (
- <div className="px-6 space-y-3">
- {myPatients.length === 0 ? (
- <div className="flex flex-col items-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 py-16 gap-3">
- <Heart size={32} className="text-slate-300" />
- <p className="font-bold text-slate-500">No patients assigned yet</p>
- </div>
- ) : (
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {myPatients.map(p => {
- const pid = p.patient_id || p.id;
- return (
- <motion.div key={pid} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
- className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4 flex items-center gap-3 hover:shadow-md transition-all cursor-pointer"
- onClick={() => navigate(`/patients/${pid}`)}>
- <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
- {getInitials(p.patient_name || p.full_name)}
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-bold text-[var(--text-800)] text-sm truncate">{p.patient_name || p.full_name}</p>
- <p className="text-[11px] text-slate-500">{p.primary_diagnosis || 'Patient'}</p>
- </div>
- <ChevronRight size={16} className="text-slate-300 flex-shrink-0" />
- </motion.div>
- );
- })}
- </div>
- )}
- </div>
- )}
+          {/* ══ WHAT'S NEW TAB ══ */}
+          {tab==='whats-new' && <FeatureShowcase navigate={navigate} />}
 
- {/* Modals */}
- <AnimatePresence>
- {burnoutCg && (
- <BurnoutModal
- cg={burnoutCg}
- data={burnoutMap[burnoutCg.id]}
- loading={burnoutLoading}
- onClose={() => setBurnoutCg(null)}
- />
- )}
- {trustCg && (
- <TrustProfileModal
- cg={trustCg}
- onClose={() => setTrustCg(null)}
- />
- )}
- </AnimatePresence>
- </motion.div>
- );
+          {/* ══ MY PATIENTS TAB (caregiver) ══ */}
+          {tab==='mypatients' && (
+            <div>
+              {myPatients.length===0 ? (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'60px 0', gap:10, borderRadius:16, border:'2px dashed var(--card-border)' }}>
+                  <Heart size={28} style={{ color:'var(--card-border)' }} />
+                  <p style={{ fontWeight:700, fontSize:13, color:'var(--text-500)' }}>No patients assigned yet</p>
+                </div>
+              ) : (
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))', gap:12 }}>
+                  {myPatients.map(p => {
+                    const pid = p.patient_id||p.id;
+                    const grads = TEAL_GRADS[pid%TEAL_GRADS.length];
+                    return (
+                      <motion.div key={pid} initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }}
+                        onClick={()=>navigate(`/patients/${pid}`)}
+                        style={{ borderRadius:14, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', cursor:'pointer', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', transition:'all 0.15s' }}
+                        whileHover={{ y:-3, boxShadow:'0 8px 24px rgba(0,0,0,0.10)' }}>
+                        <div style={{ height:3, background:`linear-gradient(to right,${grads[0]},${grads[1]})` }} />
+                        <div style={{ padding:14, display:'flex', alignItems:'center', gap:12 }}>
+                          <div style={{ width:40, height:40, borderRadius:12, background:`linear-gradient(135deg,${grads[0]},${grads[1]})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'#fff', flexShrink:0, boxShadow:`0 2px 8px ${grads[0]}35` }}>
+                            {getInitials(p.patient_name||p.full_name)}
+                          </div>
+                          <div style={{ flex:1, minWidth:0 }}>
+                            <p style={{ fontWeight:700, fontSize:13, color:'var(--text-800)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.patient_name||p.full_name}</p>
+                            <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{p.primary_diagnosis||'Patient'}</p>
+                          </div>
+                          <ChevronRight size={14} style={{ color:'var(--text-400)', flexShrink:0 }} />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modals */}
+      <AnimatePresence>
+        {burnoutCg && <BurnoutModal cg={burnoutCg} data={burnoutMap[burnoutCg.id]} loading={burnoutLoading} onClose={()=>setBurnoutCg(null)} />}
+        {trustCg   && <TrustProfileModal cg={trustCg} onClose={()=>setTrustCg(null)} />}
+      </AnimatePresence>
+    </motion.div>
+  );
 }

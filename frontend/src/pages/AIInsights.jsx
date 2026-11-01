@@ -1071,17 +1071,17 @@ export default function AIInsights() {
 
  /* -- KPI pills config ------------------------------------------------------ */
  const KPI_PILLS = [
- { v: 'all', label: 'All Patients', count: kpi.total, grad: 'from-teal-600 to-cyan-600', icon: Users },
- { v: 'critical', label: 'Critical', count: kpi.critical, grad: 'from-red-600 to-rose-700', icon: AlertTriangle },
- { v: 'high', label: 'High Risk', count: kpi.high, grad: 'from-orange-500 to-amber-600', icon: TrendingUp },
- { v: 'stable', label: 'Stable', count: kpi.stable, grad: 'from-emerald-600 to-teal-600', icon: Heart },
+ { v: 'all',      label: 'All Patients', count: kpi.total,    activeColor: '#0d9488', icon: Users },
+ { v: 'critical', label: 'Critical',     count: kpi.critical, activeColor: '#ef4444', icon: AlertTriangle },
+ { v: 'high',     label: 'High Risk',    count: kpi.high,     activeColor: '#f97316', icon: TrendingUp },
+ { v: 'stable',   label: 'Stable',       count: kpi.stable,   activeColor: '#10b981', icon: Heart },
  ];
 
  return (
  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
- className="min-h-screen space-y-0 pb-8">
+ style={{ minHeight:'100vh', paddingBottom:32, background:'var(--page-bg)' }}>
 
- {/* -- Standard page header (matches all other pages) -- */}
+ {/* PageHeader with image — kept */}
  <PageHeader
  image="/resources/headers/header-ai-insights.jpg"
  title="AI Clinical Intelligence"
@@ -1095,82 +1095,105 @@ export default function AIInsights() {
  <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
  className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30 disabled:opacity-60">
  {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
- {scanMutation.isPending ? 'Scanning - ' : 'Run AI Scan'}
+ {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
  </button>
  </PageHeader>
 
- {/* -- KPI pills + tab bar -- */}
- <div className="bg-[var(--card-bg)] border-b border-[var(--card-border)] px-6 py-3">
- {/* Compact KPI row */}
- <div className="flex items-center gap-2 flex-wrap mb-3">
- {KPI_PILLS.map(({ v, label, count, grad, icon: Ico }) => (
- <button key={v} onClick={() => { setActiveTab('risk'); setFilterRisk(v); }}
- className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
- filterRisk === v && activeTab === 'risk'
- ? `bg-gradient-to-r ${grad} text-white border-transparent shadow-sm`
- : 'bg-[var(--card-bg)] text-[var(--text-700)] border-[var(--card-border)] hover:border-slate-300'
- }`}>
- <Ico size={12} />
- <span>{count}</span>
- <span className="text-[11px] uppercase tracking-wide opacity-80">{label}</span>
- {v === 'critical' && count > 0 && filterRisk !== 'critical' && (
- <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse ml-0.5" />
- )}
- </button>
- ))}
- </div>
- {/* Tab bar */}
- <div className="flex gap-1">
- {[
- { id: 'risk', label: 'Risk Stratification', icon: Brain },
- { id: 'drugs', label: 'Drug Interactions', icon: Pill },
- { id: 'system', label: 'System Overview', icon: BarChart2 },
- ].map(({ id, label, icon: Ico }) => (
- <button key={id} onClick={() => { setActiveTab(id); setDeepDiveId(null); }}
- className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
- activeTab === id
- ? 'bg-teal-600 text-white border-teal-600 shadow-sm'
- : 'text-[var(--text-600)] dark:text-[var(--text-400)] border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
- }`}>
- <Ico size={13} />
- {label}
- </button>
- ))}
- </div>
+ {/* ── KPI strip ── */}
+ <div style={{ maxWidth:1300, margin:'0 auto', padding:'16px 20px 0' }}>
+   <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+     {KPI_PILLS.map(({ v, label, count, icon: Ico, activeColor }) => {
+       const isActive = filterRisk===v && activeTab==='risk';
+       return (
+         <button key={v} onClick={()=>{ setActiveTab('risk'); setFilterRisk(v); }}
+           style={{
+             display:'flex', alignItems:'center', gap:8,
+             padding:'8px 14px', borderRadius:12,
+             background: isActive ? `${activeColor}15` : 'var(--card-bg)',
+             border: isActive ? `1.5px solid ${activeColor}` : '1px solid var(--card-border)',
+             cursor:'pointer', transition:'all 0.15s',
+             boxShadow: isActive ? `0 2px 10px ${activeColor}20` : '0 1px 4px rgba(0,0,0,0.05)',
+           }}>
+           <Ico size={14} style={{ color: isActive ? activeColor : 'var(--text-400)' }} />
+           <span style={{ fontSize:20, fontWeight:900, lineHeight:1, color: isActive ? activeColor : 'var(--text-800)' }}>{count}</span>
+           <span style={{ fontSize:11, fontWeight:600, color: isActive ? activeColor : 'var(--text-500)', whiteSpace:'nowrap' }}>{label}</span>
+           {v==='critical' && count>0 && !isActive && (
+             <span style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', animation:'pulse 2s infinite' }} />
+           )}
+         </button>
+       );
+     })}
+   </div>
  </div>
 
- {/* -- Content -- */}
- <div className="px-6 pt-5">
+ {/* ── Underline tab bar ── */}
+ <div style={{ maxWidth:1300, margin:'0 auto', padding:'0 20px' }}>
+   <div style={{ borderBottom:'1px solid var(--card-border)', marginTop:12 }}>
+     <div data-tab-list style={{ position:'relative', display:'flex' }}>
+       {[
+         { id:'risk',   label:'Risk Stratification', Icon:Brain    },
+         { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
+         { id:'system', label:'System Overview',      Icon:BarChart2 },
+       ].map(({ id, label, Icon: Ico }) => (
+         <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
+           style={{
+             display:'flex', alignItems:'center', gap:6,
+             padding:'10px 18px', fontSize:13, fontWeight: activeTab===id ? 700 : 500,
+             color: activeTab===id ? 'var(--c-teal)' : 'var(--text-500)',
+             background:'transparent', border:'none', cursor:'pointer',
+             whiteSpace:'nowrap', transition:'color 0.15s',
+           }}>
+           <Ico size={13} />{label}
+         </button>
+       ))}
+       {/* Sliding indicator */}
+       <span id="ai-tab-indicator" aria-hidden style={{
+         position:'absolute', bottom:0, height:2.5, borderRadius:2,
+         background:'linear-gradient(90deg,#0d9488,#0891b2)',
+         transition:'left 0.22s cubic-bezier(.34,1.56,.64,1), width 0.22s cubic-bezier(.34,1.56,.64,1)',
+         left: activeTab==='risk' ? 0 : activeTab==='drugs' ? 160 : 308,
+         width: activeTab==='risk' ? 158 : activeTab==='drugs' ? 146 : 150,
+         pointerEvents:'none',
+         boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
+       }} />
+     </div>
+   </div>
+ </div>
 
- {/* Risk tab · search + filter bar */}
+ {/* ── Content ── */}
+ <div style={{ maxWidth:1300, margin:'0 auto', padding:'20px 20px 0' }}>
+
+ {/* Risk tab search + filter */}
  {activeTab === 'risk' && (
- <div className="flex flex-col sm:flex-row gap-3 mb-5 items-center">
- <div className="flex-1 relative w-full">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
- <input value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
- placeholder="Search patients, diagnoses, concerns - "
- className="w-full pl-10 pr-4 py-2.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm shadow-sm" />
- </div>
- <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 flex-shrink-0">
- <ListFilter size={12} className="text-[var(--text-400)] ml-1" />
- {[
- { v: 'all', l: 'All' },
- { v: 'critical', l: 'Crisis' },
- { v: 'high', l: 'High' },
- { v: 'moderate', l: 'Medium' },
- { v: 'stable', l: 'Stable' },
- ].map(({ v, l }) => {
- const ac = v === 'all' ? 'bg-slate-700 text-white' : v === 'critical' ? 'bg-red-600 text-white' :
- v === 'high' ? 'bg-orange-500 text-white' : v === 'moderate' ? 'bg-amber-500 text-white' : 'bg-emerald-600 text-white';
- return (
- <button key={v} onClick={() => setFilterRisk(v)}
- className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterRisk === v ? ac : 'text-[var(--text-600)] dark:text-[var(--text-400)] hover:bg-slate-200 dark:hover:bg-slate-700'}`}>
- {l}
- </button>
- );
- })}
- </div>
- </div>
+   <div style={{ borderRadius:14, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', marginBottom:20, boxShadow:'0 2px 8px rgba(0,0,0,0.04)' }}>
+     <div style={{ height:3, background:'linear-gradient(90deg,#ef4444,#f59e0b,#0d9488,#10b981)' }} />
+     <div style={{ padding:'12px 14px', display:'flex', flexWrap:'wrap', alignItems:'center', gap:10 }}>
+       <div style={{ position:'relative', flex:1, minWidth:200 }}>
+         <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
+         <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} placeholder="Search patients, diagnoses, concerns…"
+           style={{ width:'100%', height:36, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+           onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+           onBlur={e=>(e.target.style.borderColor='var(--card-border)')} />
+       </div>
+       <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+         <ListFilter size={12} style={{ color:'var(--text-400)' }} />
+         {[{v:'all',l:'All'},{v:'critical',l:'Crisis'},{v:'high',l:'High'},{v:'moderate',l:'Medium'},{v:'stable',l:'Stable'}].map(({v,l})=>{
+           const active = filterRisk===v;
+           const colors = { critical:'#ef4444', high:'#f97316', moderate:'#f59e0b', stable:'#10b981', all:'#334155' };
+           const c = colors[v]||'#334155';
+           return (
+             <button key={v} onClick={()=>setFilterRisk(v)} style={{
+               padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
+               border: active ? `1px solid ${c}` : '1px solid var(--card-border)',
+               background: active ? `${c}15` : 'transparent',
+               color: active ? c : 'var(--text-500)',
+               cursor:'pointer', transition:'all 0.15s',
+             }}>{l}</button>
+           );
+         })}
+       </div>
+     </div>
+   </div>
  )}
 
  {/* Risk tab content */}

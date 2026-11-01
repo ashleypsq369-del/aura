@@ -201,10 +201,10 @@ export default function CareSettings() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ duration: 0.2 }}
- className="space-y-6"
+ style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}
  >
 
- {/* -- Page Header -------------------------------------------------------- */}
+ {/* PageHeader with image — kept */}
  <PageHeader
  image="/resources/african/african-hospital-ward.jpg"
  title="Palliative Care Settings"
@@ -212,47 +212,73 @@ export default function CareSettings() {
  icon={Stethoscope}
  />
 
- {/* -- Tab Bar ------------------------------------------------------------ */}
- <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
+ {/* ── Underline tab bar ── */}
+ <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
+ <div style={{ borderBottom:'1px solid var(--card-border)', marginTop:16 }}>
+ <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none', position:'relative' }}>
  {tabs.map(tab => {
  const Icon = tab.icon;
+ const active = activeTab === tab.id;
  return (
  <button
  key={tab.id}
  onClick={() => setActiveTab(tab.id)}
- className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap transition-all ${
- activeTab === tab.id
- ? 'bg-[var(--card-bg)] text-teal-700 shadow-md'
- : 'text-[var(--text-600)] hover:text-[var(--text-900)] hover:bg-white/60'
- }`}
+ style={{
+ display:'flex', alignItems:'center', gap:6,
+ padding:'10px 18px', fontSize:13,
+ fontWeight: active ? 700 : 500,
+ color: active ? 'var(--c-teal)' : 'var(--text-500)',
+ background:'transparent', border:'none', cursor:'pointer',
+ whiteSpace:'nowrap', flexShrink:0, transition:'color 0.15s',
+ borderBottom: active ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
+ marginBottom:-1,
+ }}
  >
- <Icon size={16} />
+ <Icon size={13} />
  {tab.label}
  </button>
  );
  })}
  </div>
+ </div>
+ </div>
+
+ {/* ── Tab content ── */}
+ <div style={{ maxWidth:1200, margin:'0 auto', padding:'20px 20px 0' }}>
 
  {/* ----------------------------------------------------------------------
  TAB: OVERVIEW (admin/clinician)
  ---------------------------------------------------------------------- */}
  {activeTab === 'overview' && isStaff && (
- <div className="space-y-6">
- {/* Stats row */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
- <ProStatCard label="Total Patients" value={dashboardData?.total_patients ?? '-'} icon={Users} iconColor="#0d9488" accent="#0d9488" index={0} />
- <ProStatCard label="Assigned to Setting" value={dashboardData?.total_assigned ?? '-'} icon={CheckCircle2} iconColor="#059669" accent="#059669" index={1} />
- <ProStatCard label="Unassigned" value={dashboardData?.unassigned ?? '-'} icon={AlertCircle} iconColor="#f59e0b" accent="#f59e0b" index={2} />
- <ProStatCard label="Care Settings" value={5} icon={Stethoscope} iconColor="#7c3aed" accent="#7c3aed" index={3} />
+ <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
+ {/* Stat strip */}
+ <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+ {[
+ { label:'Total Patients', value:dashboardData?.total_patients??'—', color:'#0d9488' },
+ { label:'Assigned to Setting', value:dashboardData?.total_assigned??'—', color:'#059669' },
+ { label:'Unassigned', value:dashboardData?.unassigned??'—', color:'#f59e0b' },
+ { label:'Care Settings', value:5, color:'#7c3aed' },
+ ].map(({ label, value, color }) => (
+ <div key={label} style={{
+ display:'flex', alignItems:'center', gap:10,
+ padding:'10px 16px', borderRadius:12,
+ background:'var(--card-bg)', border:`1px solid ${color}20`,
+ boxShadow:`0 1px 6px ${color}10`,
+ }}>
+ <span style={{ fontSize:22, fontWeight:900, color, lineHeight:1 }}>{value}</span>
+ <span style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', whiteSpace:'nowrap' }}>{label}</span>
+ </div>
+ ))}
  </div>
 
  {/* Distribution */}
- <div className="bg-[var(--card-bg)] rounded-2xl p-6 border-2 border-[var(--card-border)] shadow-sm">
- <h2 className="text-lg font-bold text-[var(--text-900)] mb-4 flex items-center gap-2">
- <BarChart3 size={20} className="text-teal-600" />
- Patient Distribution Across Settings
- </h2>
- <div className="space-y-3">
+ <div style={{ borderRadius:16, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' }}>
+ <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2,#059669)' }} />
+ <div style={{ padding:'16px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', gap:8 }}>
+ <BarChart3 size={16} style={{ color:'var(--c-teal)' }} />
+ <h2 style={{ fontSize:14, fontWeight:700, color:'var(--text-900)', margin:0 }}>Patient Distribution Across Settings</h2>
+ </div>
+ <div style={{ padding:'16px 20px', display:'flex', flexDirection:'column', gap:10 }}>
  {distribution.map(item => {
  const c = COLOR[item.color] || COLOR.gray;
  const Icon = ICON_MAP[item.icon] || Stethoscope;
@@ -260,25 +286,23 @@ export default function CareSettings() {
  ? Math.round((item.patient_count / dashboardData.total_patients) * 100)
  : 0;
  return (
- <div key={item.setting_key} className={`p-4 rounded-xl border-2 ${c.bg} ${c.border}`}>
- <div className="flex items-center justify-between mb-2">
- <div className="flex items-center gap-2.5">
- <Icon size={18} className={c.text} />
- <span className={`font-bold text-sm ${c.text}`}>{item.label}</span>
+ <div key={item.setting_key} style={{ padding:'12px 16px', borderRadius:12, border:`1px solid ${c.fallback}20`, background:`${c.fallback}08` }}>
+ <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
+ <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+ <div style={{ width:32, height:32, borderRadius:9, background:`linear-gradient(135deg,${c.fallback},${c.fallback}aa)`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+ <Icon size={16} style={{ color:'#fff' }} />
  </div>
- <span className={`px-3 py-1 rounded-full text-sm font-bold ${c.badge}`}>
+ <span style={{ fontWeight:700, fontSize:13, color:c.fallback }}>{item.label}</span>
+ </div>
+ <span style={{ fontSize:12, fontWeight:700, padding:'3px 10px', borderRadius:99, background:`${c.fallback}15`, color:c.fallback }}>
  {item.patient_count} patients
  </span>
  </div>
- <div className="w-full bg-white/70 rounded-full h-2 overflow-hidden">
- <motion.div
- initial={{ width: 0 }}
- animate={{ width: `${pct}%` }}
- transition={{ duration: 0.8, delay: 0.1 }}
- className={`h-full rounded-full ${c.dot}`}
- />
+ <div style={{ width:'100%', height:6, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
+ <motion.div initial={{ width:0 }} animate={{ width:`${pct}%` }} transition={{ duration:0.8, delay:0.1 }}
+ style={{ height:'100%', borderRadius:99, background:c.fallback }} />
  </div>
- <p className="text-xs text-[var(--text-500)] mt-1.5">{item.focus}</p>
+ <p style={{ fontSize:11, color:'var(--text-500)', marginTop:5 }}>{item.focus}</p>
  </div>
  );
  })}
@@ -611,6 +635,7 @@ export default function CareSettings() {
  />
  )}
 
+ </div>{/* close content wrapper */}
  </motion.div>
  );
 }
