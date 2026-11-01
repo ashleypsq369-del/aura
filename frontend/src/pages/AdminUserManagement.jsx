@@ -1,738 +1,738 @@
+/**
+ * AdminUserManagement — User CRUD, role management, care-setting approvals
+ * Route: /admin/users
+ *
+ * Built with: AdminPageShell + DataTable (TanStack) + Dialog (Radix) + StatusDot
+ * Removes: PageHeader image, KpiCard grid, teal left-border rows, separate filter card
+ * Stats live inline in the topbar meta strip.
+ */
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { createColumnHelper } from '@tanstack/react-table';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
- Users, Search, Plus, Edit2, UserCheck, UserX, KeyRound,
- X, Loader2, CheckCircle, AlertCircle, Download,
- Shield, MoreVertical, AlertTriangle, Clock, ChevronDown,
+  Users, Plus, Edit2, KeyRound, Loader2,
+  CheckCircle, AlertCircle, Download, Shield,
+  MoreVertical, AlertTriangle, Clock, X,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
-import PageHeader from '../components/PageHeader';
+import AdminPageShell from '../components/admin/AdminPageShell';
+import DataTable from '../components/admin/DataTable';
+import StatusDot from '../components/admin/StatusDot';
+import Dialog from '../components/ui/Dialog';
 import SearchableSelect from '../components/ui/SearchableSelect';
-import ModalShell from '../components/ui/ModalShell';
 import { API_URL } from '../api/client';
 
-// ─────────────────────────────────────────────
-// Constants
-// ─────────────────────────────────────────────
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
+const col   = createColumnHelper();
 
+/* ─── Config ──────────────────────────────────────────────────────── */
 const ROLES = ['admin', 'clinician', 'caregiver', 'patient', 'family'];
 
+const ROLE_COLOR = {
+  admin:     '#ef4444',
+  clinician: '#3b82f6',
+  caregiver: '#10b981',
+  patient:   '#f59e0b',
+  family:    '#8b5cf6',
+};
+
 const CARE_SETTINGS = {
- hospital_based: 'Hospital-Based',
- hospice: 'Hospice',
- home_based: 'Home-Based',
- outpatient_clinic: 'Outpatient Clinic',
- long_term_residential: 'Long-Term Residential',
+  hospital_based:       'Hospital-Based',
+  hospice:              'Hospice',
+  home_based:           'Home-Based',
+  outpatient_clinic:    'Outpatient Clinic',
+  long_term_residential:'Long-Term Residential',
 };
 
-const ROLE_BADGE = {
- admin: 'bg-red-100 text-red-700 border-red-200',
- clinician: 'bg-slate-100 text-[var(--text-600)] border-slate-200',
- caregiver: 'bg-green-100 text-green-700 border-green-200',
- patient: 'bg-amber-100 text-amber-700 border-amber-200',
- family: 'bg-pink-100 text-pink-700 border-pink-200',
-};
-
-// ─────────────────────────────────────────────
-// KpiCard
-// ─────────────────────────────────────────────
-function KpiCard({ label, value, icon: Icon, color, onClick, active }) {
- return (
- <button
- onClick={onClick}
- className={`bg-[var(--card-bg)] rounded-xl border-2 px-4 py-3 text-left w-full transition-all ${
- active ? 'border-teal-500 shadow-md' : 'border-[var(--card-border)] hover:border-slate-300'
- }`}
- >
- <div className="flex items-center gap-2 mb-1">
- <Icon size={15} className={color} />
- <span className="text-xs font-medium text-slate-500">{label}</span>
- </div>
- <p className={`text-2xl font-bold ${color}`}>{value}</p>
- </button>
- );
+/* ─── Role badge — Services TYPE_META pill style ───────────────────── */
+function RoleBadge({ role }) {
+  const color = ROLE_COLOR[role] || '#64748b';
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      fontSize: 11, fontWeight: 700,
+      padding: '3px 9px', borderRadius: 8,
+      background: `linear-gradient(135deg,${color}18,${color}10)`,
+      color,
+      border: `1px solid ${color}28`,
+      textTransform: 'capitalize',
+      letterSpacing: '0.01em',
+    }}>
+      <span style={{ width: 5, height: 5, borderRadius: '50%', background: color, flexShrink: 0 }} />
+      {role}
+    </span>
+  );
 }
 
-// ─────────────────────────────────────────────
-// TempPasswordModal
-// ─────────────────────────────────────────────
-function TempPasswordModal({ password, onClose }) {
- const [copied, setCopied] = useState(false);
- const copy = () => {
- navigator.clipboard.writeText(password);
- setCopied(true);
- setTimeout(() => setCopied(false), 2000);
- };
- return (
- <ModalShell
- open onClose={onClose}
- title="Temporary Password" icon={KeyRound} accent="amber" size="sm"
- footer={
- <button onClick={onClose} className="w-full py-2.5 bg-teal-600 text-white rounded-xl font-bold text-sm hover:bg-teal-700">
- Done
- </button>
- }
- >
- <p className="text-sm text-[var(--text-600)] mb-3">
- Share this temporary password securely. The user must change it on next login.
- </p>
- <div className="flex items-center gap-2 p-3 bg-amber-50 border-2 border-amber-300 rounded-xl">
- <code className="flex-1 font-mono text-base font-bold text-amber-900 break-all">{password}</code>
- <button
- onClick={copy}
- className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
- copied ? 'bg-green-600 text-white' : 'bg-amber-200 text-amber-800 hover:bg-amber-300'
- }`}
- >
- {copied ? '✓ Copied' : 'Copy'}
- </button>
- </div>
- </ModalShell>
- );
+/* ─── Inline confirm ───────────────────────────────────────────────── */
+function InlineConfirm({ message, onConfirm, onCancel, confirmLabel = 'Confirm', danger = true }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: -4 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      style={{
+        position: 'absolute', right: 0, top: 36, zIndex: 50, width: 280,
+        background: 'var(--card-bg)', border: '1px solid var(--card-border)',
+        borderRadius: 12, padding: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+        display: 'flex', flexDirection: 'column', gap: 10,
+      }}
+    >
+      <p style={{ fontSize: 12, color: 'var(--text-700)', lineHeight: 1.5 }}>{message}</p>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button onClick={onCancel} style={{
+          flex: 1, padding: '6px 0', borderRadius: 8, fontSize: 11, fontWeight: 600,
+          border: '1px solid var(--card-border)', background: 'transparent',
+          color: 'var(--text-600)', cursor: 'pointer',
+        }}>Cancel</button>
+        <button onClick={onConfirm} style={{
+          flex: 1, padding: '6px 0', borderRadius: 8, fontSize: 11, fontWeight: 700,
+          border: 'none', color: '#fff', cursor: 'pointer',
+          background: danger ? 'var(--c-danger)' : '#10b981',
+        }}>{confirmLabel}</button>
+      </div>
+    </motion.div>
+  );
 }
 
-// ─────────────────────────────────────────────
-// CreateUserModal
-// ─────────────────────────────────────────────
-function CreateUserModal({ open, onClose, onSubmit, pending }) {
- const [form, setForm] = useState({
- username: '', email: '', full_name: '', role: 'clinician',
- password: '', phone: '', department: '',
- });
- const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
- const valid = form.username && form.email && form.password && form.full_name;
-
- const fields = [
- ['Full Name', 'full_name', 'text', 'Dr. Kofi Mensah'],
- ['Username', 'username', 'text', 'kmensah'],
- ['Email', 'email', 'email', 'k.mensah@hospital.gh'],
- ['Password', 'password', 'password', 'Min 8 characters'],
- ['Phone', 'phone', 'text', '+233 24 000 0000'],
- ['Department', 'department', 'text', 'Palliative Care Unit'],
- ];
-
- return (
- <ModalShell
- open={open} onClose={onClose}
- title="Create New User" icon={Plus} accent="teal" size="md"
- footer={
- <div className="flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-slate-50">
- Cancel
- </button>
- <button
- onClick={() => onSubmit(form)} disabled={pending || !valid}
- className="flex-1 py-2.5 text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
- >
- {pending ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
- Create User
- </button>
- </div>
- }
- >
- <div className="space-y-3">
- {fields.map(([label, key, type, ph]) => (
- <div key={key}>
- <label className="block text-xs font-semibold text-slate-600r mb-1">{label}</label>
- <input
- type={type} value={form[key]} onChange={f(key)} placeholder={ph}
- className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none"
- />
- </div>
- ))}
- <SearchableSelect
- label="Role" accent="teal" value={form.role}
- onChange={(v) => setForm((p) => ({ ...p, role: v || 'clinician' }))}
- allowClear={false}
- options={ROLES.map((r) => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
- />
- </div>
- </ModalShell>
- );
-}
-
-// ─────────────────────────────────────────────
-// EditUserModal
-// ─────────────────────────────────────────────
-function EditUserModal({ user, open, onClose, onSubmit, pending }) {
- const [form, setForm] = useState({
- full_name: user.full_name || '',
- email: user.email || '',
- phone: user.phone || '',
- role: user.role || 'clinician',
- department: user.department || '',
- professional_title: user.professional_title || '',
- is_professional: user.is_professional || false,
- care_setting: user.care_setting || null,
- });
- const f = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
-
- const textFields = [
- ['Full Name', 'full_name', 'text'],
- ['Email', 'email', 'email'],
- ['Phone', 'phone', 'text'],
- ['Department', 'department', 'text'],
- ['Professional Title', 'professional_title', 'text'],
- ];
-
- return (
- <ModalShell
- open={open} onClose={onClose}
- title={`Edit: ${user.full_name}`} icon={Edit2} accent="teal" size="md"
- footer={
- <div className="flex gap-3">
- <button onClick={onClose} className="flex-1 py-2.5 text-sm font-semibold border-2 border-slate-300 rounded-xl hover:bg-slate-50">
- Cancel
- </button>
- <button
- onClick={() => onSubmit(form)} disabled={pending}
- className="flex-1 py-2.5 text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
- >
- {pending ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />}
- Save Changes
- </button>
- </div>
- }
- >
- <div className="space-y-3">
- {textFields.map(([label, key, type]) => (
- <div key={key}>
- <label className="block text-xs font-semibold text-slate-600r mb-1">{label}</label>
- <input
- type={type} value={form[key]} onChange={f(key)}
- className="w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl text-sm focus:border-teal-500 outline-none"
- />
- </div>
- ))}
- <SearchableSelect
- label="Role" accent="teal" value={form.role}
- onChange={(v) => setForm((p) => ({ ...p, role: v || p.role }))}
- allowClear={false}
- options={ROLES.map((r) => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
- />
- <SearchableSelect
- label="Care Setting" accent="teal" value={form.care_setting}
- onChange={(v) => setForm((p) => ({ ...p, care_setting: v }))}
- nullLabel="No setting"
- options={Object.entries(CARE_SETTINGS).map(([v, l]) => ({ value: v, label: l }))}
- />
- <label className="flex items-center gap-3 p-3 bg-teal-50 border border-teal-200 rounded-xl cursor-pointer">
- <input
- type="checkbox" checked={form.is_professional}
- onChange={(e) => setForm((p) => ({ ...p, is_professional: e.target.checked }))}
- className="w-4 h-4 accent-teal-600"
- />
- <div>
- <p className="text-sm font-semibold text-teal-900">Professional Verification</p>
- <p className="text-xs text-teal-700">Mark this user as a verified healthcare professional</p>
- </div>
- </label>
- </div>
- </ModalShell>
- );
-}
-
-// ─────────────────────────────────────────────
-// InlineConfirm - small card shown in-row for destructive actions
-// ─────────────────────────────────────────────
-function InlineConfirm({ message, onConfirm, onCancel, confirmLabel = 'Confirm', confirmClass = 'bg-red-600 hover:bg-red-700' }) {
- return (
- <motion.div
- initial={{ opacity: 0, scale: 0.95, y: -4 }}
- animate={{ opacity: 1, scale: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.95, y: -4 }}
- transition={{ duration: 0.15 }}
- className="flex items-center gap-3 px-3 py-2 bg-amber-50 border border-amber-300 rounded-xl shadow-md flex-wrap"
- >
- <AlertTriangle size={14} className="text-amber-600 flex-shrink-0" />
- <span className="text-xs text-amber-900 font-medium flex-1 min-w-0">{message}</span>
- <div className="flex items-center gap-2 flex-shrink-0">
- <button
- onClick={onCancel}
- className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--card-bg)] border border-slate-300 hover:bg-[var(--card-bg)] text-[var(--text-700)] transition"
- >
- Cancel
- </button>
- <button
- onClick={onConfirm}
- className={`px-3 py-1.5 text-xs font-bold rounded-lg text-white transition ${confirmClass}`}
- >
- {confirmLabel}
- </button>
- </div>
- </motion.div>
- );
-}
-
-// ─────────────────────────────────────────────
-// ActionMenu - 3-dot dropdown per row
-// ─────────────────────────────────────────────
+/* ─── 3-dot action menu ────────────────────────────────────────────── */
 function ActionMenu({ user, onEdit, onToggle, onReset, togglePending, resetPending }) {
- const [open, setOpen] = useState(false);
- // 'deactivate' | 'reset' | null
- const [confirm, setConfirm] = useState(null);
- const menuRef = useRef(null);
+  const [open, setOpen]       = useState(false);
+  const [confirm, setConfirm] = useState(null);
+  const ref                   = useRef(null);
 
- // Close on outside click
- useEffect(() => {
- if (!open) return;
- const handler = (e) => {
- if (menuRef.current && !menuRef.current.contains(e.target)) {
- setOpen(false);
- setConfirm(null);
- }
- };
- document.addEventListener('mousedown', handler);
- return () => document.removeEventListener('mousedown', handler);
- }, [open]);
+  useEffect(() => {
+    if (!open && !confirm) return;
+    const fn = e => { if (ref.current && !ref.current.contains(e.target)) { setOpen(false); setConfirm(null); } };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [open, confirm]);
 
- const handleEdit = () => {
- setOpen(false);
- setConfirm(null);
- onEdit();
- };
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => { setOpen(o => !o); setConfirm(null); }}
+        disabled={togglePending || resetPending}
+        style={{
+          width: 30, height: 30, borderRadius: 8, border: 'none',
+          background: 'transparent', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--text-400)',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'var(--page-bg)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+        aria-label="Actions"
+      >
+        {(togglePending || resetPending)
+          ? <Loader2 size={13} className="animate-spin" />
+          : <MoreVertical size={14} />}
+      </button>
 
- const handleResetClick = () => {
- setConfirm('reset');
- setOpen(false);
- };
+      {/* Dropdown menu */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            style={{
+              position: 'absolute', right: 0, top: 34, zIndex: 50, width: 180,
+              background: 'var(--card-bg)', border: '1px solid var(--card-border)',
+              borderRadius: 12, overflow: 'hidden',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+            }}
+          >
+            {[
+              { label: 'Edit user',       icon: '✏️', onClick: () => { setOpen(false); onEdit(); }           },
+              { label: 'Reset password',  icon: '🔑', onClick: () => { setOpen(false); setConfirm('reset'); } },
+            ].map(({ label, icon, onClick }) => (
+              <button key={label} onClick={onClick} style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                padding: '9px 14px', background: 'transparent', border: 'none',
+                fontSize: 12, color: 'var(--text-700)', cursor: 'pointer', textAlign: 'left',
+              }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'var(--page-bg)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+              >
+                {icon} {label}
+              </button>
+            ))}
+            <div style={{ height: 1, background: 'var(--card-border)', margin: '2px 0' }} />
+            <button
+              onClick={() => { setOpen(false); setConfirm('toggle'); }}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+                padding: '9px 14px', background: 'transparent', border: 'none',
+                fontSize: 12, cursor: 'pointer', textAlign: 'left',
+                color: user.is_active ? 'var(--c-danger)' : '#10b981',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--page-bg)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              {user.is_active ? '🚫 Deactivate' : '✅ Activate'}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
- const handleToggleClick = () => {
- setConfirm('deactivate');
- setOpen(false);
- };
-
- const handleConfirmReset = () => {
- setConfirm(null);
- onReset();
- };
-
- const handleConfirmToggle = () => {
- setConfirm(null);
- onToggle();
- };
-
- return (
- <div className="relative" ref={menuRef}>
- {/* 3-dot trigger */}
- <button
- onClick={() => { setOpen((o) => !o); setConfirm(null); }}
- disabled={togglePending || resetPending}
- className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-[var(--text-500)] hover:text-[var(--text-700)] transition disabled:opacity-50"
- aria-label="Actions"
- >
- {(togglePending || resetPending)
- ? <Loader2 size={14} className="animate-spin" />
- : <MoreVertical size={16} />
- }
- </button>
-
- {/* Dropdown */}
- <AnimatePresence>
- {open && (
- <motion.div
- initial={{ opacity: 0, scale: 0.95, y: -6 }}
- animate={{ opacity: 1, scale: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.95, y: -6 }}
- transition={{ duration: 0.12, ease: 'easeOut' }}
- className="absolute right-0 top-9 z-50 w-52 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl overflow-hidden"
- >
- <button
- onClick={handleEdit}
- className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-700)] hover:bg-[var(--card-bg)] transition text-left"
- >
- <span>✏️</span> Edit User
- </button>
- <button
- onClick={handleResetClick}
- className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-700)] hover:bg-amber-50 transition text-left"
- >
- <span>🔑</span> Reset Password
- </button>
- <div className="border-t border-[var(--card-border)]/50 my-0.5" />
- <button
- onClick={handleToggleClick}
- className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition text-left ${
- user.is_active
- ? 'text-red-600 hover:bg-red-50'
- : 'text-emerald-600 hover:bg-emerald-50'
- }`}
- >
- <span>{user.is_active ? '🚫' : '✅'}</span>
- {user.is_active ? 'Deactivate' : 'Activate'}
- </button>
- </motion.div>
- )}
- </AnimatePresence>
-
- {/* Inline confirm cards */}
- <AnimatePresence>
- {confirm === 'reset' && (
- <div className="absolute right-0 top-9 z-50 w-72">
- <InlineConfirm
- message="This will generate a temporary password. Continue?"
- confirmLabel="Yes, Reset"
- confirmClass="bg-amber-600 hover:bg-amber-700"
- onConfirm={handleConfirmReset}
- onCancel={() => setConfirm(null)}
- />
- </div>
- )}
- {confirm === 'deactivate' && (
- <div className="absolute right-0 top-9 z-50 w-80">
- <InlineConfirm
- message={
- user.is_active
- ? `Deactivate ${user.full_name}? They will lose access immediately.`
- : `Reactivate ${user.full_name}? They will regain access.`
- }
- confirmLabel={user.is_active ? 'Deactivate' : 'Activate'}
- confirmClass={user.is_active ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'}
- onConfirm={handleConfirmToggle}
- onCancel={() => setConfirm(null)}
- />
- </div>
- )}
- </AnimatePresence>
- </div>
- );
+      {/* Inline confirm popups */}
+      <AnimatePresence>
+        {confirm === 'reset' && (
+          <InlineConfirm
+            message="Generate a temporary password for this user?"
+            confirmLabel="Reset"
+            danger={false}
+            onConfirm={() => { setConfirm(null); onReset(); }}
+            onCancel={() => setConfirm(null)}
+          />
+        )}
+        {confirm === 'toggle' && (
+          <InlineConfirm
+            message={user.is_active
+              ? `Deactivate ${user.full_name}? They will lose access immediately.`
+              : `Reactivate ${user.full_name}?`}
+            confirmLabel={user.is_active ? 'Deactivate' : 'Activate'}
+            danger={user.is_active}
+            onConfirm={() => { setConfirm(null); onToggle(); }}
+            onCancel={() => setConfirm(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
 
-// ─────────────────────────────────────────────
-// Main Page
-// ─────────────────────────────────────────────
+/* ─── Temp password dialog ─────────────────────────────────────────── */
+function TempPasswordDialog({ password, onClose }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <Dialog open onOpenChange={o => !o && onClose()} title="Temporary Password" icon={KeyRound} accent="amber" size="sm"
+      footer={
+        <button onClick={onClose} style={{
+          width: '100%', padding: '10px 0', borderRadius: 10, fontSize: 13,
+          fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer',
+          background: 'var(--c-teal)',
+        }}>Done</button>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-600)', lineHeight: 1.5 }}>
+          Share this temporary password securely. The user must change it on next login.
+        </p>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: 12, borderRadius: 10,
+          background: '#fffbeb', border: '2px solid #fcd34d',
+        }}>
+          <code style={{ flex: 1, fontFamily: 'monospace', fontSize: 15, fontWeight: 700, color: '#92400e', wordBreak: 'break-all' }}>
+            {password}
+          </code>
+          <button
+            onClick={() => { navigator.clipboard.writeText(password); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+            style={{
+              flexShrink: 0, padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 700,
+              border: 'none', cursor: 'pointer',
+              background: copied ? '#10b981' : '#fcd34d',
+              color: copied ? '#fff' : '#92400e',
+            }}
+          >
+            {copied ? '✓ Copied' : 'Copy'}
+          </button>
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+/* ─── Create user dialog ───────────────────────────────────────────── */
+function CreateUserDialog({ open, onClose, onSubmit, pending }) {
+  const [form, setForm] = useState({
+    username: '', email: '', full_name: '', role: 'clinician',
+    password: '', phone: '', department: '',
+  });
+  const f   = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
+  const ok  = form.username && form.email && form.password && form.full_name;
+
+  const fields = [
+    ['Full Name',   'full_name',  'text',     'Dr. Kofi Mensah'],
+    ['Username',    'username',   'text',     'kmensah'],
+    ['Email',       'email',      'email',    'k.mensah@hospital.gh'],
+    ['Password',    'password',   'password', 'Min 8 characters'],
+    ['Phone',       'phone',      'text',     '+233 24 000 0000'],
+    ['Department',  'department', 'text',     'Palliative Care Unit'],
+  ];
+
+  const inputStyle = {
+    width: '100%', height: 38, borderRadius: 10, padding: '0 12px',
+    fontSize: 13, border: '1px solid var(--card-border)',
+    background: 'transparent', color: 'var(--text-800)',
+    outline: 'none', boxSizing: 'border-box',
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={o => !o && onClose()}
+      title="Create New User" icon={Plus} accent="teal" size="md"
+      footer={
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 600, border: '1px solid var(--card-border)', background: 'transparent', color: 'var(--text-600)', cursor: 'pointer' }}>
+            Cancel
+          </button>
+          <button onClick={() => onSubmit(form)} disabled={pending || !ok} style={{
+            flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 700,
+            color: '#fff', border: 'none', cursor: ok && !pending ? 'pointer' : 'not-allowed',
+            background: 'var(--c-teal)', opacity: !ok || pending ? 0.5 : 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}>
+            {pending ? <Loader2 size={13} className="animate-spin" /> : <Plus size={13} />}
+            Create User
+          </button>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {fields.map(([label, key, type, ph]) => (
+          <div key={key}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: 'var(--text-500)', marginBottom: 5 }}>
+              {label}
+            </label>
+            <input type={type} value={form[key]} onChange={f(key)} placeholder={ph}
+              style={inputStyle}
+              onFocus={e => (e.target.style.borderColor = 'var(--c-teal)')}
+              onBlur={e  => (e.target.style.borderColor = 'var(--card-border)')}
+            />
+          </div>
+        ))}
+        <SearchableSelect label="Role" accent="teal" value={form.role}
+          onChange={v => setForm(p => ({ ...p, role: v || 'clinician' }))}
+          allowClear={false}
+          options={ROLES.map(r => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
+        />
+      </div>
+    </Dialog>
+  );
+}
+
+/* ─── Edit user dialog ─────────────────────────────────────────────── */
+function EditUserDialog({ user, open, onClose, onSubmit, pending }) {
+  const [form, setForm] = useState({
+    full_name:          user.full_name || '',
+    email:              user.email || '',
+    phone:              user.phone || '',
+    role:               user.role || 'clinician',
+    department:         user.department || '',
+    professional_title: user.professional_title || '',
+    is_professional:    user.is_professional || false,
+    care_setting:       user.care_setting || null,
+  });
+  const f = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
+
+  const inputStyle = {
+    width: '100%', height: 38, borderRadius: 10, padding: '0 12px',
+    fontSize: 13, border: '1px solid var(--card-border)',
+    background: 'transparent', color: 'var(--text-800)',
+    outline: 'none', boxSizing: 'border-box',
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={o => !o && onClose()}
+      title={`Edit: ${user.full_name}`} icon={Edit2} accent="teal" size="md"
+      footer={
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 600, border: '1px solid var(--card-border)', background: 'transparent', color: 'var(--text-600)', cursor: 'pointer' }}>
+            Cancel
+          </button>
+          <button onClick={() => onSubmit(form)} disabled={pending} style={{
+            flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 13, fontWeight: 700,
+            color: '#fff', border: 'none', cursor: pending ? 'not-allowed' : 'pointer',
+            background: 'var(--c-teal)', opacity: pending ? 0.5 : 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}>
+            {pending ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle size={13} />}
+            Save Changes
+          </button>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {[
+          ['Full Name',          'full_name',          'text'],
+          ['Email',              'email',              'email'],
+          ['Phone',              'phone',              'text'],
+          ['Department',         'department',         'text'],
+          ['Professional Title', 'professional_title', 'text'],
+        ].map(([label, key, type]) => (
+          <div key={key}>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: 'var(--text-500)', marginBottom: 5 }}>
+              {label}
+            </label>
+            <input type={type} value={form[key]} onChange={f(key)}
+              style={inputStyle}
+              onFocus={e => (e.target.style.borderColor = 'var(--c-teal)')}
+              onBlur={e  => (e.target.style.borderColor = 'var(--card-border)')}
+            />
+          </div>
+        ))}
+        <SearchableSelect label="Role" accent="teal" value={form.role}
+          onChange={v => setForm(p => ({ ...p, role: v || p.role }))}
+          allowClear={false}
+          options={ROLES.map(r => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
+        />
+        <SearchableSelect label="Care Setting" accent="teal" value={form.care_setting}
+          onChange={v => setForm(p => ({ ...p, care_setting: v }))}
+          nullLabel="No setting"
+          options={Object.entries(CARE_SETTINGS).map(([v, l]) => ({ value: v, label: l }))}
+        />
+        <label style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: 12, borderRadius: 10, cursor: 'pointer',
+          background: 'color-mix(in srgb, var(--c-teal) 6%, var(--card-bg))',
+          border: '1px solid color-mix(in srgb, var(--c-teal) 20%, var(--card-border))',
+        }}>
+          <input type="checkbox" checked={form.is_professional}
+            onChange={e => setForm(p => ({ ...p, is_professional: e.target.checked }))}
+            style={{ width: 14, height: 14, accentColor: 'var(--c-teal)' }}
+          />
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-800)', margin: 0 }}>
+              Professional verification
+            </p>
+            <p style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 2 }}>
+              Mark as a verified healthcare professional
+            </p>
+          </div>
+        </label>
+      </div>
+    </Dialog>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Main page
+═══════════════════════════════════════════════════════════════════ */
 export default function AdminUserManagement() {
- const [search, setSearch] = useState('');
- const [roleFilter, setRoleFilter] = useState(null);
- const [statusFilter, setStatusFilter] = useState(null);
- const [showCreate, setShowCreate] = useState(false);
- const [editUser, setEditUser] = useState(null);
- const [tempPwd, setTempPwd] = useState(null);
- const qc = useQueryClient();
+  const [roleFilter,   setRoleFilter]   = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [showCreate,   setShowCreate]   = useState(false);
+  const [editUser,     setEditUser]     = useState(null);
+  const [tempPwd,      setTempPwd]      = useState(null);
+  const qc = useQueryClient();
 
- // ── Fetch users ───────────────────────────────────────────────
- const { data: usersData, isLoading } = useQuery({
- queryKey: ['admin-users', roleFilter, statusFilter, search],
- queryFn: async () => {
- const p = new URLSearchParams();
- if (roleFilter) p.append('role', roleFilter);
- if (statusFilter === 'active') p.append('is_active', 'true');
- if (statusFilter === 'inactive') p.append('is_active', 'false');
- if (search) p.append('search', search);
- const r = await axios.get(`${API_URL}/api/admin/users?${p}&per_page=100`, { headers: authH() });
- return r.data;
- },
- staleTime: 0,
- });
+  const { data: usersData, isLoading } = useQuery({
+    queryKey: ['admin-users', roleFilter, statusFilter],
+    queryFn: async () => {
+      const p = new URLSearchParams();
+      if (roleFilter)              p.append('role',      roleFilter);
+      if (statusFilter === 'active')   p.append('is_active', 'true');
+      if (statusFilter === 'inactive') p.append('is_active', 'false');
+      const r = await axios.get(`${API_URL}/api/admin/users?${p}&per_page=200`, { headers: authH() });
+      return r.data;
+    },
+    staleTime: 0,
+  });
 
- const users = usersData?.users || [];
- const total = usersData?.total || 0;
+  const users = usersData?.users || [];
+  const total = usersData?.total  || 0;
 
- const kpi = useMemo(() => ({
- active: users.filter((u) => u.is_active).length,
- inactive: users.filter((u) => !u.is_active).length,
- admins: users.filter((u) => u.role === 'admin').length,
- }), [users]);
+  const kpi = useMemo(() => ({
+    active:   users.filter(u => u.is_active).length,
+    inactive: users.filter(u => !u.is_active).length,
+    admins:   users.filter(u => u.role === 'admin').length,
+  }), [users]);
 
- const changeRequests = useMemo(() => users.filter((u) => u.care_setting_change_request), [users]);
+  const changeRequests = useMemo(() => users.filter(u => u.care_setting_change_request), [users]);
 
- // ── Mutations ─────────────────────────────────────────────────
- const toggleMutation = useMutation({
- mutationFn: (id) => axios.put(`${API_URL}/api/admin/users/${id}/deactivate`, {}, { headers: authH() }),
- onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('User status updated'); },
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  /* ── Mutations ── */
+  const toggleMut = useMutation({
+    mutationFn: id => axios.put(`${API_URL}/api/admin/users/${id}/deactivate`, {}, { headers: authH() }),
+    onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('User status updated'); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const resetMut = useMutation({
+    mutationFn: id => axios.put(`${API_URL}/api/admin/users/${id}/reset-password`, {}, { headers: authH() }),
+    onSuccess: r => setTempPwd(r.data.temp_password),
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const createMut = useMutation({
+    mutationFn: data => axios.post(`${API_URL}/api/admin/users`, data, { headers: authH() }),
+    onSuccess: () => { qc.invalidateQueries(['admin-users']); setShowCreate(false); toast.success('User created'); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed to create user'),
+  });
+  const editMut = useMutation({
+    mutationFn: ({ id, data }) => axios.put(`${API_URL}/api/admin/users/${id}`, data, { headers: authH() }),
+    onSuccess: () => { qc.invalidateQueries(['admin-users']); setEditUser(null); toast.success('User updated'); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const approveSettingMut = useMutation({
+    mutationFn: ({ id, setting }) => axios.put(`${API_URL}/api/admin/users/${id}`, { care_setting: setting }, { headers: authH() }),
+    onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('Care setting approved'); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const dismissSettingMut = useMutation({
+    mutationFn: id => axios.put(`${API_URL}/api/admin/users/${id}`, { care_setting_change_request: null }, { headers: authH() }),
+    onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('Request dismissed'); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
 
- const resetMutation = useMutation({
- mutationFn: (id) => axios.put(`${API_URL}/api/admin/users/${id}/reset-password`, {}, { headers: authH() }),
- onSuccess: (r) => setTempPwd(r.data.temp_password),
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  /* ── Export ── */
+  const exportCSV = () => {
+    const header = ['ID','Name','Email','Username','Role','Care Setting','Active','Last Login'];
+    const rows   = users.map(u => [
+      u.id, u.full_name, u.email, u.username, u.role,
+      u.care_setting || '', u.is_active ? 'Yes' : 'No',
+      u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never',
+    ]);
+    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const a   = document.createElement('a');
+    a.href    = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `users_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+  };
 
- const createMutation = useMutation({
- mutationFn: (data) => axios.post(`${API_URL}/api/admin/users`, data, { headers: authH() }),
- onSuccess: () => { qc.invalidateQueries(['admin-users']); setShowCreate(false); toast.success('User created'); },
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed to create user'),
- });
+  /* ── Table columns ── */
+  const columns = useMemo(() => [
+    col.accessor('full_name', {
+      header: 'User',
+      cell: info => {
+        const u       = info.row.original;
+        const initials = (u.full_name || '?').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        /* Services ProviderCard: gradient avatar, initials watermark */
+        const colors = ['#0d9488','#0891b2','#059669','#7c3aed','#d97706','#e11d48','#0369a1'];
+        const grad   = colors[(u.id || 0) % colors.length];
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 12, flexShrink: 0,
+              background: `linear-gradient(135deg,${grad},${grad}aa)`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, fontWeight: 800, color: '#fff',
+              boxShadow: `0 2px 8px ${grad}30`,
+            }}>
+              {initials}
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-800)', margin: 0 }}>
+                  {u.full_name}
+                </p>
+                {u.is_professional && (
+                  <span style={{
+                    fontSize: 9, fontWeight: 800, padding: '1px 6px', borderRadius: 4,
+                    background: 'linear-gradient(90deg,#f0fdfa,#e0f2fe)',
+                    color: '#0d9488', border: '1px solid #99f6e4',
+                  }}>
+                    ✓ Verified
+                  </span>
+                )}
+              </div>
+              <p style={{ fontSize: 11, color: 'var(--text-400)', margin: 0 }}>{u.email}</p>
+            </div>
+          </div>
+        );
+      },
+      meta: { thStyle: { minWidth: 200 }, tdStyle: { whiteSpace: 'normal' } },
+    }),
+    col.accessor('role', {
+      header: 'Role',
+      cell: info => <RoleBadge role={info.getValue()} />,
+      meta: { thStyle: { width: 110 } },
+    }),
+    col.accessor('care_setting', {
+      header: 'Care Setting',
+      cell: info => {
+        const val = info.getValue();
+        return val
+          ? <span style={{ fontSize: 11, color: 'var(--c-teal)' }}>{CARE_SETTINGS[val] || val}</span>
+          : <span style={{ fontSize: 11, color: 'var(--text-400)' }}>—</span>;
+      },
+      meta: { thStyle: { width: 160 } },
+    }),
+    col.accessor('is_active', {
+      header: 'Status',
+      cell: info => info.getValue()
+        ? <StatusDot color="#10b981" label="Active"   size="sm" pulse pill />
+        : <StatusDot color="#ef4444" label="Inactive" size="sm" pill />,
+      meta: { thStyle: { width: 100 } },
+    }),
+    col.accessor('last_login', {
+      header: 'Last login',
+      cell: info => (
+        <span style={{ fontSize: 11, color: 'var(--text-400)' }}>
+          {info.getValue()
+            ? new Date(info.getValue()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+            : 'Never'}
+        </span>
+      ),
+      meta: { thStyle: { width: 110 } },
+    }),
+    col.display({
+      id: 'actions',
+      header: '',
+      cell: info => {
+        const u = info.row.original;
+        return (
+          <ActionMenu
+            user={u}
+            onEdit={() => setEditUser(u)}
+            onToggle={() => toggleMut.mutate(u.id)}
+            onReset={() => resetMut.mutate(u.id)}
+            togglePending={toggleMut.isPending}
+            resetPending={resetMut.isPending}
+          />
+        );
+      },
+      meta: { thStyle: { width: 44 }, tdStyle: { textAlign: 'right' } },
+    }),
+  ], [toggleMut.isPending, resetMut.isPending]);
 
- const editMutation = useMutation({
- mutationFn: ({ id, data }) => axios.put(`${API_URL}/api/admin/users/${id}`, data, { headers: authH() }),
- onSuccess: () => { qc.invalidateQueries(['admin-users']); setEditUser(null); toast.success('User updated'); },
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed to update user'),
- });
+  /* ── Filter pills for role and status ── */
+  const filterPills = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      {/* Role pills */}
+      {[null, ...ROLES].map(r => {
+        const active = roleFilter === r;
+        const color  = r ? ROLE_COLOR[r] : 'var(--c-teal)';
+        return (
+          <button key={r ?? 'all-roles'} onClick={() => setRoleFilter(r)}
+            style={{
+              padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+              cursor: 'pointer', textTransform: 'capitalize', transition: 'all 0.15s',
+              border: active ? `1px solid ${color}` : '1px solid var(--card-border)',
+              background: active ? `${color}15` : 'var(--card-bg)',
+              color: active ? color : 'var(--text-500)',
+            }}>
+            {r ?? 'All roles'}
+          </button>
+        );
+      })}
+      <div style={{ width: 1, height: 16, background: 'var(--card-border)', margin: '0 4px' }} />
+      {/* Status pills */}
+      {[
+        { key: null,       label: 'All status' },
+        { key: 'active',   label: 'Active'     },
+        { key: 'inactive', label: 'Inactive'   },
+      ].map(({ key, label }) => {
+        const active = statusFilter === key;
+        const color  = key === 'active' ? '#10b981' : key === 'inactive' ? '#ef4444' : 'var(--c-teal)';
+        return (
+          <button key={key ?? 'all-status'} onClick={() => setStatusFilter(key)}
+            style={{
+              padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+              cursor: 'pointer', transition: 'all 0.15s',
+              border: active ? `1px solid ${color}` : '1px solid var(--card-border)',
+              background: active ? `${color}15` : 'var(--card-bg)',
+              color: active ? color : 'var(--text-500)',
+            }}>
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
 
- const approveSettingMutation = useMutation({
- mutationFn: ({ id, setting }) => axios.put(`${API_URL}/api/admin/users/${id}`, { care_setting: setting }, { headers: authH() }),
- onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('Care setting approved'); },
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  return (
+    <>
+      <AdminPageShell
+        icon={Users}
+        title="User Management"
+        meta={[
+          { label: 'total',    value: total },
+          { label: 'active',   value: kpi.active,   color: '#10b981' },
+          { label: 'inactive', value: kpi.inactive,  color: kpi.inactive > 0 ? '#ef4444' : 'var(--text-400)' },
+          { label: 'admins',   value: kpi.admins,    color: '#8b5cf6' },
+        ]}
+        actions={
+          <>
+            <button onClick={exportCSV}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '7px 14px', borderRadius: 10, fontSize: 12, fontWeight: 600,
+                border: '1px solid var(--card-border)',
+                background: 'var(--card-bg)',
+                color: 'var(--text-600)', cursor: 'pointer',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--c-teal)'; e.currentTarget.style.color = 'var(--c-teal)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.color = 'var(--text-600)'; }}
+            >
+              <Download size={13} /> Export CSV
+            </button>
+            <button onClick={() => setShowCreate(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '7px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700,
+                border: 'none',
+                background: 'linear-gradient(135deg,#0d9488,#0891b2)',
+                color: '#fff', cursor: 'pointer',
+                boxShadow: '0 2px 10px rgba(13,148,136,0.35)',
+                transition: 'opacity 0.15s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+            >
+              <Plus size={13} /> Add User
+            </button>
+          </>
+        }
+        toolbar={filterPills}
+      >
+        {/* Care setting change request banners */}
+        {changeRequests.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+            {changeRequests.map(u => (
+              <div key={u.id} style={{
+                display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+                padding: '10px 14px', borderRadius: 10,
+                background: '#fffbeb', border: '1px solid #fde68a',
+                borderLeft: '3px solid #f59e0b',
+              }}>
+                <Clock size={13} style={{ color: '#d97706', flexShrink: 0 }} />
+                <p style={{ fontSize: 12, color: '#92400e', flex: 1, minWidth: 0, margin: 0 }}>
+                  <strong>{u.full_name}</strong> requests care setting →{' '}
+                  <strong>{CARE_SETTINGS[u.care_setting_change_request] || u.care_setting_change_request}</strong>
+                  {u.care_setting_change_reason && ` — "${u.care_setting_change_reason}"`}
+                </p>
+                <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                  <button onClick={() => approveSettingMut.mutate({ id: u.id, setting: u.care_setting_change_request })}
+                    disabled={approveSettingMut.isPending}
+                    style={{ padding: '4px 12px', borderRadius: 7, fontSize: 11, fontWeight: 700, color: '#fff', border: 'none', cursor: 'pointer', background: '#10b981' }}>
+                    Approve
+                  </button>
+                  <button onClick={() => dismissSettingMut.mutate(u.id)}
+                    disabled={dismissSettingMut.isPending}
+                    style={{ padding: '4px 12px', borderRadius: 7, fontSize: 11, fontWeight: 600, color: 'var(--text-600)', border: '1px solid var(--card-border)', background: 'transparent', cursor: 'pointer' }}>
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
- const dismissSettingMutation = useMutation({
- mutationFn: (id) => axios.put(`${API_URL}/api/admin/users/${id}`, { care_setting_change_request: null }, { headers: authH() }),
- onSuccess: () => { qc.invalidateQueries(['admin-users']); toast.success('Request dismissed'); },
- onError: (e) => toast.error(e.response?.data?.detail || 'Failed'),
- });
+        <DataTable
+          columns={columns}
+          data={users}
+          isLoading={isLoading}
+          searchColumnId="full_name"
+          searchPlaceholder="Search name, email, username…"
+          emptyTitle="No users found"
+          emptyBody="Try adjusting your filters."
+          pageSize={25}
+        />
+      </AdminPageShell>
 
- // ── Export CSV ────────────────────────────────────────────────
- const exportCSV = () => {
- const headers = ['ID', 'Name', 'Email', 'Username', 'Role', 'Care Setting', 'Active', 'Last Login', 'Created'];
- const rows = users.map((u) => [
- u.id, u.full_name, u.email, u.username, u.role,
- u.care_setting || '',
- u.is_active ? 'Yes' : 'No',
- u.last_login ? new Date(u.last_login).toLocaleDateString() : 'Never',
- u.created_at ? new Date(u.created_at).toLocaleDateString() : '',
- ]);
- const csv = [headers, ...rows].map((r) => r.join(',')).join('\n');
- const blob = new Blob([csv], { type: 'text/csv' });
- const a = document.createElement('a');
- a.href = URL.createObjectURL(blob);
- a.download = `users_${new Date().toISOString().slice(0, 10)}.csv`;
- a.click();
- };
-
- // ─────────────────────────────────────────────
- // Render
- // ─────────────────────────────────────────────
- return (
- <div className="min-h-screen pb-12">
-
- {/* ── Page Header ─────────────────────────── */}
- <PageHeader
- image="/resources/african/african-health-tech.jpg"
- title="User Management"
- subtitle="Manage system users, roles, and access"
- icon={Users}
- >
- <button
- onClick={() => setShowCreate(true)}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-bold border border-white/30 transition"
- >
- <Plus size={15} /> Add User
- </button>
- <button
- onClick={exportCSV}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-bold border border-white/30 transition"
- >
- <Download size={15} /> Export CSV
- </button>
- </PageHeader>
-
- <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 space-y-5">
-
- {/* ── KPI Cards ───────────────────────────── */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- <KpiCard
- label="Total Users" value={total} icon={Users} color="text-teal-600"
- onClick={() => { setRoleFilter(null); setStatusFilter(null); }}
- active={!roleFilter && !statusFilter}
- />
- <KpiCard
- label="Active" value={kpi.active} icon={CheckCircle} color="text-emerald-600"
- onClick={() => setStatusFilter('active')}
- active={statusFilter === 'active'}
- />
- <KpiCard
- label="Inactive" value={kpi.inactive} icon={AlertCircle} color="text-red-500"
- onClick={() => setStatusFilter('inactive')}
- active={statusFilter === 'inactive'}
- />
- <KpiCard
- label="Admins" value={kpi.admins} icon={Shield} color="text-purple-600"
- onClick={() => setRoleFilter('admin')}
- active={roleFilter === 'admin'}
- />
- </div>
-
- {/* ── Filters ─────────────────────────────── */}
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 flex flex-col md:flex-row gap-3">
- <div className="flex-1 relative">
- <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
- <input
- value={search}
- onChange={(e) => setSearch(e.target.value)}
- placeholder="Search name, email, username…"
- className="w-full pl-9 pr-4 py-2.5 border border-[var(--card-border)] rounded-xl text-sm focus:border-teal-500 outline-none"
- />
- </div>
- <SearchableSelect
- className="w-48" accent="teal" size="sm"
- value={roleFilter} onChange={(v) => setRoleFilter(v)}
- placeholder="All Roles" nullLabel="All Roles"
- options={ROLES.map((r) => ({ value: r, label: r.charAt(0).toUpperCase() + r.slice(1) }))}
- />
- <SearchableSelect
- className="w-44" accent="teal" size="sm"
- value={statusFilter} onChange={(v) => setStatusFilter(v)}
- placeholder="All Status" nullLabel="All Status"
- options={[{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }]}
- />
- </div>
-
- {/* ── Pending Care Setting Change Requests ── */}
- {changeRequests.length > 0 && (
- <div className="space-y-2">
- {changeRequests.map((u) => (
- <div key={`req-${u.id}`} className="flex items-center gap-3 flex-wrap px-4 py-3 bg-amber-50 border-l-4 border-l-amber-400 border border-amber-200 rounded-xl shadow-sm">
- <Clock size={14} className="text-amber-600 flex-shrink-0" />
- <p className="text-xs font-semibold text-amber-900 flex-1 min-w-0">
- <strong>{u.full_name}</strong> requests care setting change to{' '}
- <strong>{CARE_SETTINGS[u.care_setting_change_request] || u.care_setting_change_request}</strong>
- {u.care_setting_change_reason && ` - "${u.care_setting_change_reason}"`}
- </p>
- <button
- onClick={() => approveSettingMutation.mutate({ id: u.id, setting: u.care_setting_change_request })}
- disabled={approveSettingMutation.isPending}
- className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition disabled:opacity-50"
- >
- Approve
- </button>
- <button
- onClick={() => dismissSettingMutation.mutate(u.id)}
- disabled={dismissSettingMutation.isPending}
- className="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-[var(--text-700)] text-xs font-bold rounded-lg transition disabled:opacity-50"
- >
- Dismiss
- </button>
- </div>
- ))}
- </div>
- )}
-
- {/* ── Users Table ─────────────────────────── */}
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm overflow-hidden">
- {isLoading ? (
- <div className="p-12 text-center">
- <Loader2 size={28} className="animate-spin text-teal-600 mx-auto mb-3" />
- <p className="text-[var(--text-500)] text-sm">Loading users…</p>
- </div>
- ) : users.length === 0 ? (
- <div className="p-12 text-center">
- <Users size={36} className="mx-auto text-slate-300 mb-3" />
- <p className="text-[var(--text-600)] font-semibold">No users found</p>
- </div>
- ) : (
- <div className="overflow-x-auto">
- <table className="w-full text-sm">
- <thead className="bg-[var(--card-bg)] border-b-2 border-slate-200">
- <tr>
- {['User', 'Role', 'Care Setting', 'Status', 'Last Login', 'Actions'].map((h) => (
- <th key={h} className="px-4 py-3 text-left text-[11px] font-bold text-[var(--text-500)] ">
- {h}
- </th>
- ))}
- </tr>
- </thead>
- <tbody className="divide-y divide-slate-100">
- {users.map((u) => (
- <motion.tr
- key={u.id}
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- className="hover:bg-teal-50/30 transition-colors border-l-4 border-transparent hover:border-l-teal-500"
- >
- {/* User cell */}
- <td className="px-4 py-3">
- <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
- {(u.full_name || '?').split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
- </div>
- <div>
- <div className="flex items-center gap-1.5">
- <p className="font-semibold text-slate-900">{u.full_name}</p>
- {u.is_professional && (
- <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-teal-100 text-teal-700">
- Verified
- </span>
- )}
- </div>
- <p className="text-xs text-slate-500">{u.email}</p>
- <p className="text-[11px] text-slate-400">@{u.username}</p>
- </div>
- </div>
- </td>
-
- {/* Role cell */}
- <td className="px-4 py-3">
- <span className={`text-xs font-bold px-2 py-1 rounded-full border capitalize ${
- ROLE_BADGE[u.role] || 'bg-slate-100 text-[var(--text-600)] border-slate-200'
- }`}>
- {u.role}
- </span>
- </td>
-
- {/* Care setting cell */}
- <td className="px-4 py-3 text-xs text-slate-600">
- {u.care_setting
- ? <span className="px-2 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-200 text-xs font-medium">
- {CARE_SETTINGS[u.care_setting] || u.care_setting}
- </span>
- : <span className="text-slate-400"> - </span>
- }
- </td>
-
- {/* Status cell */}
- <td className="px-4 py-3">
- {u.is_active
- ? <span className="flex items-center gap-1 text-xs font-semibold text-emerald-700"><CheckCircle size={12} /> Active</span>
- : <span className="flex items-center gap-1 text-xs font-semibold text-red-600"><AlertCircle size={12} /> Inactive</span>
- }
- </td>
-
- {/* Last login cell */}
- <td className="px-4 py-3 text-xs text-slate-500">
- {u.last_login
- ? new Date(u.last_login).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
- : 'Never'
- }
- </td>
-
- {/* Actions cell */}
- <td className="px-4 py-3">
- <ActionMenu
- user={u}
- onEdit={() => setEditUser(u)}
- onToggle={() => toggleMutation.mutate(u.id)}
- onReset={() => resetMutation.mutate(u.id)}
- togglePending={toggleMutation.isPending}
- resetPending={resetMutation.isPending}
- />
- </td>
- </motion.tr>
- ))}
- </tbody>
- </table>
- </div>
- )}
- </div>
- </div>
-
- {/* ── Modals ──────────────────────────────── */}
- <AnimatePresence>
- {showCreate && (
- <CreateUserModal
- open
- onClose={() => setShowCreate(false)}
- onSubmit={createMutation.mutate}
- pending={createMutation.isPending}
- />
- )}
- {editUser && (
- <EditUserModal
- user={editUser}
- open
- onClose={() => setEditUser(null)}
- onSubmit={(d) => editMutation.mutate({ id: editUser.id, data: d })}
- pending={editMutation.isPending}
- />
- )}
- {tempPwd && (
- <TempPasswordModal password={tempPwd} onClose={() => setTempPwd(null)} />
- )}
- </AnimatePresence>
- </div>
- );
+      {/* Dialogs */}
+      <AnimatePresence>
+        {showCreate && (
+          <CreateUserDialog open onClose={() => setShowCreate(false)}
+            onSubmit={createMut.mutate} pending={createMut.isPending} />
+        )}
+        {editUser && (
+          <EditUserDialog user={editUser} open onClose={() => setEditUser(null)}
+            onSubmit={d => editMut.mutate({ id: editUser.id, data: d })} pending={editMut.isPending} />
+        )}
+        {tempPwd && <TempPasswordDialog password={tempPwd} onClose={() => setTempPwd(null)} />}
+      </AnimatePresence>
+    </>
+  );
 }

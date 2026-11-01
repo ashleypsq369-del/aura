@@ -346,3 +346,77 @@ html.dark {
 .focus\:border-teal-400:focus {
   border-color: #94a3b8 !important;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADMIN PAGE SCOPE — neutralise global !important overrides
+   All admin pages mount inside <div data-admin="true">. Because attribute
+   selectors ([data-admin]) have higher specificity than plain class selectors
+   (.p-5), these rules win without needing their own !important.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Padding scale: restore Tailwind defaults inside admin ── */
+[data-admin] .p-2   { padding: 8px;  }
+[data-admin] .p-3   { padding: 12px; }
+[data-admin] .p-4   { padding: 16px; }
+[data-admin] .p-5   { padding: 20px; }
+[data-admin] .p-6   { padding: 24px; }
+[data-admin] .px-3  { padding-left: 12px; padding-right: 12px; }
+[data-admin] .px-4  { padding-left: 16px; padding-right: 16px; }
+[data-admin] .px-5  { padding-left: 20px; padding-right: 20px; }
+[data-admin] .px-6  { padding-left: 24px; padding-right: 24px; }
+[data-admin] .py-2  { padding-top: 8px;  padding-bottom: 8px;  }
+[data-admin] .py-3  { padding-top: 12px; padding-bottom: 12px; }
+[data-admin] .py-4  { padding-top: 16px; padding-bottom: 16px; }
+[data-admin] .py-5  { padding-top: 20px; padding-bottom: 20px; }
+[data-admin] .py-6  { padding-top: 24px; padding-bottom: 24px; }
+
+/* ── Height/width: restore inside admin ── */
+[data-admin] .h-12  { height: 48px;  }
+[data-admin] .h-10  { height: 40px;  }
+[data-admin] .h-9   { height: 36px;  }
+[data-admin] .h-8   { height: 32px;  }
+[data-admin] .h-6   { height: 24px;  }
+[data-admin] .w-8   { width: 32px;   }
+[data-admin] .w-6   { width: 24px;   }
+
+/* ── Background: admin pages own their own background — stop bleeding ── */
+[data-admin],
+[data-admin] .min-h-screen,
+[data-admin] .min-h-full {
+  background-color: var(--page-bg);
+}
+
+/* ── Input overrides: respect dark mode inside admin modals ── */
+[data-admin] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+[data-admin] textarea,
+[data-admin] select {
+  background-color: var(--card-bg) !important;
+  color: var(--text-800) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* ── Table head/body: let DataTable control its own chrome ── */
+[data-admin] thead th {
+  background: color-mix(in srgb, var(--card-bg) 55%, var(--page-bg)) !important;
+  color: var(--text-400) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  padding: 9px 16px !important;
+  font-size: 11px !important;
+}
+[data-admin] tbody tr:hover {
+  background: var(--page-bg) !important;
+}
+[data-admin] tbody tr {
+  border-bottom: 1px solid color-mix(in srgb, var(--card-border) 50%, transparent) !important;
+}
+
+/* ── Typography: let admin pages use their own font sizes ── */
+[data-admin] h1 { font-size: inherit !important; }
+[data-admin] h2 { font-size: inherit !important; }
+[data-admin] h3 { font-size: inherit !important; }
+[data-admin] h4 { font-size: inherit !important; }
+
+/* ── Rounded utilities — not overridden globally but kept consistent ── */
+[data-admin] .rounded-2xl { border-radius: 16px; }
+[data-admin] .rounded-xl  { border-radius: 12px; }

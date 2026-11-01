@@ -1,449 +1,451 @@
 /**
- * AdminFeedback — Dedicated feedback & bug report management page
+ * AdminFeedback — Feedback & bug report inbox
  * Route: /admin/feedback
- * Shows all submissions with stats, filters, full detail view, status management.
- * Admin-only.
+ * Built on: AdminPageShell + DataTable + Dialog (Radix)
  */
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { createColumnHelper } from '@tanstack/react-table';
 import {
-  MessageSquarePlus, Bug, ThumbsUp, Star, Search, Filter,
-  X, ChevronRight, Clock, User, Globe, Smile, Meh, Frown,
-  CheckCircle, AlertTriangle, Trash2, Download, RefreshCw,
-  BarChart2, Loader2, Mail, Monitor,
+  MessageSquare, Bug, ThumbsUp, Star, X,
+  Clock, User, Globe, Smile, Meh, Frown,
+  AlertTriangle, Trash2, Download, RefreshCw, Mail,
 } from 'lucide-react';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, PieChart, Pie, Cell, Legend,
+} from 'recharts';
 import axios from 'axios';
 import toast from '../utils/toast';
-import PageHeader from '../components/PageHeader';
+import AdminPageShell from '../components/admin/AdminPageShell';
+import DataTable from '../components/admin/DataTable';
 import { API_URL } from '../api/client';
 
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
+const col   = createColumnHelper();
 
-/* ── Type config ── */
-const TYPE_CFG = {
-  rating:      { icon:Star,        color:'#f59e0b', bg:'#fffbeb', label:'Rating'      },
-  ux_feedback: { icon:ThumbsUp,    color:'#0d9488', bg:'#f0fdfa', label:'UX Feedback'  },
-  bug_report:  { icon:Bug,         color:'#e11d48', bg:'#fef2f2', label:'Bug Report'   },
+/* ─── Config ──────────────────────────────────────────────────────── */
+const TYPE = {
+  rating:      { label: 'Rating',      Icon: Star,     color: '#f59e0b', bg: '#fffbeb' },
+  ux_feedback: { label: 'UX Feedback', Icon: ThumbsUp, color: '#0d9488', bg: '#f0fdfa' },
+  bug_report:  { label: 'Bug',         Icon: Bug,      color: '#e11d48', bg: '#fef2f2' },
 };
-
-const BUG_COLORS = {
-  ui_ux:'#7c3aed', broken:'#e11d48', slow:'#d97706',
-  data:'#0891b2', crash:'#dc2626', other:'#64748b',
-};
-
-const RATING_ICONS = { 1:Frown, 2:Frown, 3:Meh, 4:Smile, 5:Smile };
-const RATING_COLORS = { 1:'#ef4444', 2:'#f97316', 3:'#d97706', 4:'#22c55e', 5:'#0d9488' };
+const BUG_COLOR    = { ui_ux:'#7c3aed', broken:'#e11d48', slow:'#d97706', data:'#0891b2', crash:'#dc2626', other:'#64748b' };
+const RATING_FACE  = { 1:Frown, 2:Frown, 3:Meh, 4:Smile, 5:Smile };
+const RATING_COLOR = { 1:'#ef4444', 2:'#f97316', 3:'#d97706', 4:'#22c55e', 5:'#0d9488' };
 
 function relTime(ts) {
   if (!ts) return '—';
   const d = Math.floor((Date.now() - new Date(ts)) / 1000);
-  if (d < 60) return 'just now';
-  if (d < 3600) return `${Math.floor(d/60)}m ago`;
-  if (d < 86400) return `${Math.floor(d/3600)}h ago`;
+  if (d < 60)     return 'just now';
+  if (d < 3600)   return `${Math.floor(d/60)}m ago`;
+  if (d < 86400)  return `${Math.floor(d/3600)}h ago`;
   if (d < 604800) return `${Math.floor(d/86400)}d ago`;
   return new Date(ts).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'2-digit' });
 }
 
-/* ── Stat card ── */
-function StatCard({ icon:Icon, label, value, color, active, onClick }) {
+/* ─── Type badge ───────────────────────────────────────────────────── */
+function TypeBadge({ type, rating }) {
+  const cfg  = TYPE[type] || TYPE.ux_feedback;
+  const Icon = cfg.Icon;
   return (
-    <button onClick={onClick}
-      className={`rounded-xl border-2 px-4 py-3 text-left w-full transition-all bg-[var(--card-bg)] ${
-        active ? 'shadow-md' : 'border-[var(--card-border)] hover:border-slate-300'
-      }`}
-      style={{ borderColor: active ? color : undefined }}>
-      <div className="flex items-center gap-2 mb-1.5">
-        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-          style={{ background:`${color}20` }}>
-          <Icon size={13} style={{ color }}/>
-        </div>
-        <span className="text-[11px] font-semibold" style={{ color:'var(--text-500)' }}>{label}</span>
+    <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+      <div style={{ width:22, height:22, borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center', background:cfg.bg, flexShrink:0 }}>
+        <Icon size={11} style={{ color:cfg.color }} />
       </div>
-      <p className="text-2xl font-black" style={{ color: active ? color : 'var(--text-900)' }}>{value}</p>
-    </button>
+      <span style={{ fontSize:10, fontWeight:600, color:cfg.color }}>{cfg.label}</span>
+      {type==='rating' && rating && (
+        <span style={{ fontSize:10, fontWeight:700, color:RATING_COLOR[rating] }}>{'★'.repeat(rating)}</span>
+      )}
+    </div>
   );
 }
 
-/* ── Detail panel ── */
+/* ─── Detail panel ─────────────────────────────────────────────────── */
 function DetailPanel({ item, onClose, onDelete }) {
-  const cfg  = TYPE_CFG[item.type] || TYPE_CFG.ux_feedback;
-  const Icon = cfg.icon;
-  const RIcon = item.rating ? RATING_ICONS[item.rating] : null;
+  const cfg  = TYPE[item.type] || TYPE.ux_feedback;
+  const Icon = cfg.Icon;
+  const RF   = item.rating ? RATING_FACE[item.rating] : null;
+  const meta = [
+    { Icon:Globe, label:'Page',  value:item.page },
+    { Icon:User,  label:'User',  value:item.user_id ? `#${item.user_id}` : 'Anonymous' },
+    { Icon:User,  label:'Role',  value:item.user_role || '—' },
+    { Icon:Mail,  label:'Email', value:item.email || '—' },
+    { Icon:Clock, label:'Time',  value:item.created_at ? new Date(item.created_at).toLocaleString('en-GB') : '—' },
+  ].filter(r => r.value && r.value !== '—');
 
   return (
-    <motion.div
-      initial={{ opacity:0, x:40 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:40 }}
-      transition={{ type:'spring', damping:28, stiffness:300 }}
-      className="fixed right-0 top-0 bottom-0 z-50 flex flex-col overflow-hidden shadow-2xl"
-      style={{ width:'min(460px,100vw)', background:'var(--card-bg)', borderLeft:'1px solid var(--card-border)' }}
-    >
+    <div style={{ display:'flex', flexDirection:'column', height:'100%', background:'var(--card-bg)' }}>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--card-border)] flex-shrink-0"
-        style={{ background:`linear-gradient(135deg,${cfg.color}10,transparent)` }}>
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background:cfg.bg }}>
-            <Icon size={16} style={{ color:cfg.color }}/>
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 16px', borderBottom:'1px solid var(--card-border)', flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <div style={{ width:32, height:32, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', background:cfg.bg }}>
+            <Icon size={14} style={{ color:cfg.color }} />
           </div>
           <div>
-            <p className="font-bold text-sm" style={{ color:'var(--text-900)' }}>{cfg.label}</p>
-            <p className="text-[11px]" style={{ color:'var(--text-500)' }}>{item.page} · {relTime(item.created_at)}</p>
+            <p style={{ fontSize:13, fontWeight:700, color:'var(--text-900)', margin:0 }}>{cfg.label}</p>
+            <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{item.page} · {relTime(item.created_at)}</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => onDelete(item.id)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-red-50 transition-colors"
-            style={{ color:'#ef4444' }}>
-            <Trash2 size={14}/>
+        <div style={{ display:'flex', gap:4 }}>
+          <button onClick={() => onDelete(item.id)} style={{ width:30, height:30, borderRadius:8, border:'none', background:'transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--c-danger)' }}
+            onMouseEnter={e=>(e.currentTarget.style.background='#fef2f2')}
+            onMouseLeave={e=>(e.currentTarget.style.background='transparent')}>
+            <Trash2 size={13} />
           </button>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--page-bg)] transition-colors"
-            style={{ color:'var(--text-500)' }}>
-            <X size={15}/>
+          <button onClick={onClose} style={{ width:30, height:30, borderRadius:8, border:'none', background:'transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-400)' }}
+            onMouseEnter={e=>(e.currentTarget.style.background='var(--page-bg)')}
+            onMouseLeave={e=>(e.currentTarget.style.background='transparent')}>
+            <X size={14} />
           </button>
         </div>
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4">
-
-        {/* Rating */}
-        {item.type === 'rating' && item.rating && (
-          <div className="rounded-xl p-4 text-center" style={{ background:cfg.bg }}>
-            {RIcon && <RIcon size={36} style={{ color:RATING_COLORS[item.rating], margin:'0 auto 8px', display:'block', fill:RATING_COLORS[item.rating] }}/>}
-            <p className="text-3xl font-black" style={{ color:RATING_COLORS[item.rating] }}>{item.rating}/5</p>
-            <p className="text-sm font-semibold mt-1" style={{ color:'var(--text-700)' }}>{item.label}</p>
+      <div style={{ flex:1, overflowY:'auto', padding:16, display:'flex', flexDirection:'column', gap:12 }}>
+        {item.type==='rating' && item.rating && (
+          <div style={{ display:'flex', alignItems:'center', gap:12, padding:14, borderRadius:10, background:cfg.bg }}>
+            {RF && <RF size={32} style={{ color:RATING_COLOR[item.rating], fill:RATING_COLOR[item.rating] }} />}
+            <div>
+              <p style={{ fontSize:22, fontWeight:900, color:RATING_COLOR[item.rating], margin:0 }}>{item.rating}/5</p>
+              <p style={{ fontSize:11, fontWeight:600, color:'var(--text-600)', margin:0 }}>
+                {['','Very poor','Poor','OK','Good','Excellent'][item.rating]}
+              </p>
+            </div>
           </div>
         )}
-
-        {/* UX Feedback */}
-        {item.type === 'ux_feedback' && (
-          <>
+        {item.type==='ux_feedback' && (
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             {item.what_works && (
-              <div className="rounded-xl p-3" style={{ background:'#f0fdf4', border:'1px solid #bbf7d0' }}>
-                <p className="text-[11px] font-bold text-green-700 mb-1 flex items-center gap-1.5">
-                  <ThumbsUp size={11}/> What works well
+              <div style={{ padding:10, borderRadius:10, background:'#f0fdf4', border:'1px solid #bbf7d0' }}>
+                <p style={{ fontSize:10, fontWeight:700, color:'#16a34a', marginBottom:4, display:'flex', alignItems:'center', gap:4 }}>
+                  <ThumbsUp size={10} /> What works
                 </p>
-                <p className="text-sm" style={{ color:'var(--text-700)' }}>{item.what_works}</p>
+                <p style={{ fontSize:12, color:'var(--text-700)', margin:0 }}>{item.what_works}</p>
               </div>
             )}
             {item.what_doesnt && (
-              <div className="rounded-xl p-3" style={{ background:'#fef2f2', border:'1px solid #fecaca' }}>
-                <p className="text-[11px] font-bold text-red-700 mb-1 flex items-center gap-1.5">
-                  <AlertTriangle size={11}/> Needs improvement
+              <div style={{ padding:10, borderRadius:10, background:'#fef2f2', border:'1px solid #fecaca' }}>
+                <p style={{ fontSize:10, fontWeight:700, color:'#dc2626', marginBottom:4, display:'flex', alignItems:'center', gap:4 }}>
+                  <AlertTriangle size={10} /> Needs improvement
                 </p>
-                <p className="text-sm" style={{ color:'var(--text-700)' }}>{item.what_doesnt}</p>
+                <p style={{ fontSize:12, color:'var(--text-700)', margin:0 }}>{item.what_doesnt}</p>
               </div>
             )}
-          </>
+          </div>
         )}
-
-        {/* Bug Report */}
-        {item.type === 'bug_report' && (
-          <>
+        {item.type==='bug_report' && (
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             {item.bug_type && (
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold px-2.5 py-1 rounded-full"
-                  style={{ background:`${BUG_COLORS[item.bug_type] || '#64748b'}15`, color:BUG_COLORS[item.bug_type]||'#64748b' }}>
-                  {item.bug_type?.replace('_',' ')}
-                </span>
-              </div>
+              <span style={{ display:'inline-block', fontSize:11, fontWeight:600, padding:'3px 8px', borderRadius:6, background:`${BUG_COLOR[item.bug_type]||'#64748b'}15`, color:BUG_COLOR[item.bug_type]||'#64748b' }}>
+                {item.bug_type.replace(/_/g,' ')}
+              </span>
             )}
             {item.description && (
-              <div className="rounded-xl p-4" style={{ background:'var(--page-bg)', border:'1px solid var(--card-border)' }}>
-                <p className="text-[11px] font-bold mb-2" style={{ color:'var(--text-500)' }}>Description</p>
-                <p className="text-sm leading-relaxed" style={{ color:'var(--text-700)', whiteSpace:'pre-wrap' }}>{item.description}</p>
+              <div style={{ padding:12, borderRadius:10, background:'var(--page-bg)', border:'1px solid var(--card-border)', fontSize:12, color:'var(--text-700)', lineHeight:1.6, whiteSpace:'pre-wrap' }}>
+                {item.description}
               </div>
             )}
-          </>
-        )}
-
-        {/* Comment (for ratings) */}
-        {item.what_works && item.type === 'rating' && (
-          <div className="rounded-xl p-3" style={{ background:'var(--page-bg)', border:'1px solid var(--card-border)' }}>
-            <p className="text-[11px] font-bold mb-1" style={{ color:'var(--text-500)' }}>Comment</p>
-            <p className="text-sm" style={{ color:'var(--text-700)' }}>{item.what_works}</p>
           </div>
         )}
-
-        {/* Metadata */}
-        <div className="space-y-2">
-          <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color:'var(--text-400)' }}>Details</p>
-          {[
-            { icon:Globe,   label:'Page',    value:item.page },
-            { icon:Globe,   label:'URL',     value:item.url  },
-            { icon:User,    label:'User ID', value:item.user_id ? `#${item.user_id}` : 'Anonymous' },
-            { icon:User,    label:'Role',    value:item.user_role || '—' },
-            { icon:Mail,    label:'Email',   value:item.email || '—' },
-            { icon:Clock,   label:'Time',    value:item.created_at ? new Date(item.created_at).toLocaleString('en-GB') : '—' },
-          ].map(row => (
-            <div key={row.label} className="flex items-start gap-2.5 px-3 py-2 rounded-lg" style={{ background:'var(--page-bg)' }}>
-              <row.icon size={12} style={{ color:'var(--text-400)', marginTop:2, flexShrink:0 }}/>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-semibold" style={{ color:'var(--text-400)' }}>{row.label}</p>
-                <p className="text-xs font-medium truncate" style={{ color:'var(--text-700)' }}>{row.value}</p>
-              </div>
+        {item.type==='rating' && item.what_works && (
+          <div style={{ padding:10, borderRadius:10, background:'var(--page-bg)', border:'1px solid var(--card-border)' }}>
+            <p style={{ fontSize:10, fontWeight:600, color:'var(--text-400)', marginBottom:4 }}>Comment</p>
+            <p style={{ fontSize:12, color:'var(--text-700)', margin:0 }}>{item.what_works}</p>
+          </div>
+        )}
+        <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+          <p style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'var(--text-400)', margin:'0 0 6px' }}>Details</p>
+          {meta.map(({ Icon:I, label, value }) => (
+            <div key={label} style={{ display:'flex', alignItems:'center', gap:8, padding:'6px 10px', borderRadius:8, background:'var(--page-bg)' }}>
+              <I size={11} style={{ color:'var(--text-400)', flexShrink:0 }} />
+              <span style={{ fontSize:11, fontWeight:500, color:'var(--text-500)', width:46, flexShrink:0 }}>{label}</span>
+              <span style={{ fontSize:11, color:'var(--text-700)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{value}</span>
             </div>
           ))}
-        </div>
-
-        {/* Browser */}
-        {item.browser && (
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide mb-1" style={{ color:'var(--text-400)' }}>Browser</p>
-            <p className="text-[11px] leading-relaxed px-3 py-2 rounded-lg" style={{ background:'var(--page-bg)', color:'var(--text-500)', wordBreak:'break-all' }}>
+          {item.browser && (
+            <div style={{ padding:'6px 10px', borderRadius:8, background:'var(--page-bg)', fontSize:10, color:'var(--text-400)', wordBreak:'break-all', lineHeight:1.5 }}>
               {item.browser}
-            </p>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Reply via email CTA */}
-      {item.email && item.email !== '—' && (
-        <div className="p-4 border-t border-[var(--card-border)] flex-shrink-0">
+      {item.email && (
+        <div style={{ padding:'12px 16px', borderTop:'1px solid var(--card-border)', flexShrink:0 }}>
           <a href={`mailto:${item.email}?subject=Re: Your Project Aura Feedback`}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white text-sm font-bold transition-opacity hover:opacity-90"
-            style={{ background:'linear-gradient(135deg,#0d9488,#0891b2)' }}>
-            <Mail size={14}/> Reply to {item.email}
+            style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, width:'100%', padding:'9px 0', borderRadius:10, background:'var(--c-teal)', color:'#fff', fontSize:12, fontWeight:700, textDecoration:'none' }}>
+            <Mail size={12} /> Reply to {item.email}
           </a>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
 
-/* ── Row ── */
-function FeedbackRow({ item, active, onClick }) {
-  const cfg  = TYPE_CFG[item.type] || TYPE_CFG.ux_feedback;
-  const Icon = cfg.icon;
-  const RIcon = item.rating ? RATING_ICONS[item.rating] : null;
-
-  const summary = item.description || item.what_doesnt || item.what_works ||
-    (item.rating ? `${item.rating}/5 stars` : 'No content');
-
-  return (
-    <motion.div layout initial={{ opacity:0 }} animate={{ opacity:1 }}
-      onClick={onClick}
-      className={`group flex items-center gap-3 px-4 py-3 border-b border-[var(--card-border)]/50 cursor-pointer transition-colors ${
-        active ? 'bg-teal-50' : 'hover:bg-[var(--page-bg)]'
-      }`}>
-      {/* Type icon */}
-      <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{ background:cfg.bg }}>
-        {item.type==='rating' && RIcon
-          ? <RIcon size={15} style={{ color:RATING_COLORS[item.rating], fill:RATING_COLORS[item.rating] }}/>
-          : <Icon size={14} style={{ color:cfg.color }}/>
-        }
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded"
-            style={{ background:cfg.bg, color:cfg.color }}>{cfg.label}</span>
-          {item.bug_type && (
-            <span className="text-[10px] font-semibold" style={{ color:BUG_COLORS[item.bug_type]||'#64748b' }}>
-              [{item.bug_type?.replace('_',' ')}]
-            </span>
-          )}
-          <span className="text-[10px]" style={{ color:'var(--text-400)' }}>{item.page}</span>
-        </div>
-        <p className="text-xs truncate" style={{ color:'var(--text-600)', fontWeight:item.type==='bug_report'?600:400 }}>
-          {summary}
-        </p>
-      </div>
-
-      {/* Right */}
-      <div className="flex flex-col items-end gap-1 flex-shrink-0">
-        <span className="text-[10px]" style={{ color:'var(--text-400)' }}>{relTime(item.created_at)}</span>
-        {item.user_role && (
-          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-[var(--text-500)]">
-            {item.user_role}
-          </span>
-        )}
-      </div>
-      <ChevronRight size={12} style={{ color:'var(--text-400)', flexShrink:0 }} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
-    </motion.div>
-  );
-}
-
-/* ── Main page ── */
+/* ═══════════════════════════════════════════════════════════════════
+   Main page
+═══════════════════════════════════════════════════════════════════ */
 export default function AdminFeedback() {
   const qc = useQueryClient();
-  const [search,   setSearch]   = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [selected, setSelected] = useState(null);
+  const [selected,   setSelected]   = useState(null);
 
-  const { data: raw = [], isLoading, refetch } = useQuery({
+  const { data: raw=[], isLoading, refetch } = useQuery({
     queryKey: ['admin-feedback'],
     queryFn:  () => axios.get(`${API_URL}/api/feedback/submissions`, { headers:authH() }).then(r => r.data),
-    refetchInterval: 30000,
+    refetchInterval: 30_000,
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id) => axios.delete(`${API_URL}/api/feedback/${id}`, { headers:authH() }),
-    onSuccess:  () => { toast.success('Submission deleted'); qc.invalidateQueries(['admin-feedback']); setSelected(null); },
+    mutationFn: id => axios.delete(`${API_URL}/api/feedback/${id}`, { headers:authH() }),
+    onSuccess:  () => { toast.success('Deleted'); qc.invalidateQueries(['admin-feedback']); setSelected(null); },
     onError:    () => toast.error('Delete failed'),
   });
 
-  /* Stats */
-  const stats = useMemo(() => ({
-    total:   raw.length,
-    bugs:    raw.filter(r => r.type==='bug_report').length,
-    ux:      raw.filter(r => r.type==='ux_feedback').length,
-    ratings: raw.filter(r => r.type==='rating'),
-    avgRating: raw.filter(r=>r.rating).length
-      ? (raw.filter(r=>r.rating).reduce((s,r)=>s+r.rating,0) / raw.filter(r=>r.rating).length).toFixed(1)
-      : '—',
-  }), [raw]);
+  const stats = useMemo(() => {
+    const ratings = raw.filter(r => r.rating);
+    return {
+      total: raw.length,
+      bugs:  raw.filter(r => r.type==='bug_report').length,
+      ux:    raw.filter(r => r.type==='ux_feedback').length,
+      avg:   ratings.length ? (ratings.reduce((s,r)=>s+r.rating,0)/ratings.length).toFixed(1) : null,
+    };
+  }, [raw]);
 
-  /* Filtered list */
-  const filtered = useMemo(() => {
-    let list = raw;
-    if (typeFilter !== 'all') list = list.filter(r => r.type === typeFilter);
-    if (search) {
-      const q = search.toLowerCase();
-      list = list.filter(r =>
-        (r.page||'').toLowerCase().includes(q) ||
-        (r.description||'').toLowerCase().includes(q) ||
-        (r.what_works||'').toLowerCase().includes(q) ||
-        (r.what_doesnt||'').toLowerCase().includes(q) ||
-        (r.email||'').toLowerCase().includes(q) ||
-        (r.bug_type||'').toLowerCase().includes(q)
-      );
-    }
-    return [...list].sort((a,b) => new Date(b.created_at||0) - new Date(a.created_at||0));
-  }, [raw, typeFilter, search]);
+  const items = useMemo(() => {
+    const list = typeFilter==='all' ? raw : raw.filter(r => r.type===typeFilter);
+    return [...list].sort((a,b) => new Date(b.created_at||0)-new Date(a.created_at||0));
+  }, [raw, typeFilter]);
 
-  /* CSV export */
   const exportCSV = () => {
-    const header = ['ID','Type','Page','URL','User ID','Role','Email','Bug Type','Description','What Works','What Doesnt','Rating','Time'];
-    const rows = filtered.map(r => [
-      r.id, r.type, r.page, r.url, r.user_id||'', r.user_role||'', r.email||'',
-      r.bug_type||'', (r.description||'').replace(/,/g,' '), (r.what_works||'').replace(/,/g,' '),
-      (r.what_doesnt||'').replace(/,/g,' '), r.rating||'', r.created_at||'',
-    ]);
-    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const header = ['ID','Type','Page','User ID','Role','Email','Bug Type','Description','Rating','Time'];
+    const rows   = items.map(r => [r.id,r.type,r.page,r.user_id||'',r.user_role||'',r.email||'',r.bug_type||'',(r.description||'').replace(/,/g,' '),r.rating||'',r.created_at||'']);
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv' }));
+    a.href = URL.createObjectURL(new Blob([[header,...rows].map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
     a.download = `aura-feedback-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   };
 
-  return (
-    <div className="min-h-screen pb-10" style={{ background:'var(--page-bg)' }}>
-      <PageHeader title="Feedback & Bug Reports" subtitle="All user submissions — ratings, UX feedback, and bug reports" icon={MessageSquarePlus}/>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 space-y-5">
-
-        {/* Stats row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard icon={MessageSquarePlus} label="Total" value={stats.total} color="#0d9488"
-            active={typeFilter==='all'} onClick={() => setTypeFilter('all')}/>
-          <StatCard icon={Bug}       label="Bug Reports"  value={stats.bugs}    color="#e11d48"
-            active={typeFilter==='bug_report'} onClick={() => setTypeFilter('bug_report')}/>
-          <StatCard icon={ThumbsUp}  label="UX Feedback"  value={stats.ux}      color="#0891b2"
-            active={typeFilter==='ux_feedback'} onClick={() => setTypeFilter('ux_feedback')}/>
-          <StatCard icon={Star}      label="Avg Rating"   value={stats.avgRating} color="#f59e0b"
-            active={typeFilter==='rating'} onClick={() => setTypeFilter('rating')}/>
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[180px]">
-            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color:'var(--text-400)' }}/>
-            <input value={search} onChange={e=>setSearch(e.target.value)}
-              placeholder="Search by page, description, email..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl text-sm outline-none border border-[var(--card-border)]"
-              style={{ background:'var(--card-bg)', color:'var(--text-900)' }}/>
+  /* Columns */
+  const columns = useMemo(() => [
+    col.accessor('type', {
+      header: 'Type',
+      cell: info => <TypeBadge type={info.getValue()} rating={info.row.original.rating} />,
+      meta: { thStyle: { width:120 } },
+    }),
+    col.display({
+      id: 'summary', header: 'Summary',
+      cell: info => {
+        const item = info.row.original;
+        const txt  = item.description || item.what_doesnt || item.what_works || (item.rating ? `${item.rating}/5 stars` : '—');
+        return (
+          <div>
+            <p style={{ fontSize:12, color:'var(--text-700)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:260 }}>{txt}</p>
+            {item.bug_type && <span style={{ fontSize:10, fontWeight:600, color:BUG_COLOR[item.bug_type]||'#64748b' }}>{item.bug_type.replace(/_/g,' ')}</span>}
           </div>
+        );
+      },
+      meta: { tdStyle:{ whiteSpace:'normal', minWidth:160 } },
+    }),
+    col.accessor('page', {
+      header: 'Page',
+      cell: info => <span style={{ fontSize:11, color:'var(--text-500)' }}>{info.getValue()||'—'}</span>,
+    }),
+    col.accessor('user_role', {
+      header: 'Role',
+      cell: info => <span style={{ fontSize:10, fontWeight:600, textTransform:'capitalize', color:'var(--text-400)' }}>{info.getValue()||'anon'}</span>,
+      meta: { thStyle:{ width:80 } },
+    }),
+    col.accessor('created_at', {
+      header: 'When',
+      cell: info => <span style={{ fontSize:11, color:'var(--text-400)' }}>{relTime(info.getValue())}</span>,
+      meta: { thStyle:{ width:90, textAlign:'right' }, tdStyle:{ textAlign:'right' } },
+    }),
+  ], []);
+
+  const typeFilterPills = (
+    <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+      {[
+        { key:'all',         label:'All',     color:'var(--c-teal)' },
+        { key:'bug_report',  label:'Bugs',    color:'#e11d48'       },
+        { key:'ux_feedback', label:'UX',      color:'var(--c-teal)' },
+        { key:'rating',      label:'Ratings', color:'#f59e0b'       },
+      ].map(({ key, label, color }) => {
+        const active = typeFilter===key;
+        return (
+          <button key={key} onClick={() => setTypeFilter(key)}
+            style={{
+              padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:600, cursor:'pointer',
+              border: active ? `1px solid ${color}` : '1px solid var(--card-border)',
+              background: active ? `${color}15` : 'var(--card-bg)',
+              color: active ? color : 'var(--text-500)',
+              transition:'all 0.15s',
+            }}>
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <AdminPageShell
+      icon={MessageSquare}
+      title="Feedback"
+      meta={[
+        { label:'total', value:stats.total },
+        { label:'bugs',  value:stats.bugs,  color:'#e11d48' },
+        { label:'UX',    value:stats.ux,    color:'var(--c-teal)' },
+        ...(stats.avg ? [{ label:'avg', value:`★ ${stats.avg}`, color:'#f59e0b' }] : []),
+      ]}
+      toolbar={typeFilterPills}
+      actions={
+        <>
           <button onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold border border-[var(--card-border)] transition-colors hover:bg-[var(--card-bg)]"
-            style={{ color:'var(--text-600)' }}>
-            <RefreshCw size={13}/> Refresh
+            style={{
+              width: 36, height: 36, borderRadius: 10, border: '1px solid var(--card-border)',
+              background: 'var(--card-bg)', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--text-500)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+              transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--c-teal)'; e.currentTarget.style.color = 'var(--c-teal)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.color = 'var(--text-500)'; }}>
+            <RefreshCw size={14} />
           </button>
           <button onClick={exportCSV}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            style={{ background:'linear-gradient(135deg,#0d9488,#0891b2)' }}>
-            <Download size={13}/> Export CSV
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '7px 14px', borderRadius: 10, fontSize: 12, fontWeight: 700,
+              border: 'none',
+              background: 'linear-gradient(135deg,#0d9488,#0891b2)',
+              color: '#fff', cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(13,148,136,0.30)',
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+            <Download size={13} /> Export CSV
           </button>
-        </div>
-
-        {/* Content */}
-        <div className="flex gap-4">
-
-          {/* List */}
-          <div className="flex-1 min-w-0 rounded-2xl overflow-hidden border border-[var(--card-border)]"
-            style={{ background:'var(--card-bg)' }}>
-
-            {/* Column header */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--card-border)]"
-              style={{ background:'color-mix(in srgb,var(--card-bg) 50%,var(--page-bg))' }}>
-              <p className="text-xs font-bold" style={{ color:'var(--text-500)' }}>
-                {filtered.length} submission{filtered.length!==1?'s':''}
-                {typeFilter!=='all' && ` · ${TYPE_CFG[typeFilter]?.label}`}
-              </p>
-              {search && (
-                <button onClick={()=>setSearch('')}
-                  className="text-[10px] font-semibold flex items-center gap-1"
-                  style={{ color:'var(--text-400)' }}>
-                  <X size={10}/> Clear
-                </button>
-              )}
-            </div>
-
-            {isLoading ? (
-              <div className="flex justify-center py-16">
-                <Loader2 size={22} className="animate-spin" style={{ color:'#0d9488' }}/>
-              </div>
-            ) : filtered.length === 0 ? (
-              <div className="text-center py-16">
-                <MessageSquarePlus size={32} className="mx-auto mb-3" style={{ color:'var(--card-border)' }}/>
-                <p className="font-semibold text-sm" style={{ color:'var(--text-500)' }}>No submissions yet</p>
-                <p className="text-xs mt-1" style={{ color:'var(--text-400)' }}>
-                  Feedback from the floating widget will appear here
-                </p>
-              </div>
-            ) : (
-              <AnimatePresence mode="popLayout">
-                {filtered.map(item => (
-                  <FeedbackRow key={item.id} item={item}
-                    active={selected?.id === item.id}
-                    onClick={() => setSelected(selected?.id===item.id ? null : item)}/>
-                ))}
-              </AnimatePresence>
-            )}
+        </>
+      }
+      maxWidth="1300px"
+    >
+      {/* Charts row */}
+      {!isLoading && raw.length > 0 && (
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:16, marginBottom:20 }}>
+          {/* Trend */}
+          <div style={{ borderRadius:12, border:'1px solid var(--card-border)', padding:'12px 14px' }}>
+            <p style={{ fontSize:11, fontWeight:600, color:'var(--text-400)', marginBottom:10 }}>Submissions over time</p>
+            <ResponsiveContainer width="100%" height={100}>
+              <AreaChart data={(() => {
+                const map = {};
+                raw.forEach(r => { const d = (r.created_at||'').slice(0,10); if(d) map[d] = (map[d]||0)+1; });
+                return Object.entries(map).sort(([a],[b])=>a.localeCompare(b)).slice(-14).map(([date,count]) => ({ date:date.slice(5), count }));
+              })()} margin={{ top:4, right:4, left:-22, bottom:0 }}>
+                <defs>
+                  <linearGradient id="feedGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#0d9488" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#0d9488" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--card-border)" vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize:9, fill:'var(--text-400)' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                <YAxis tick={{ fontSize:9, fill:'var(--text-400)' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip contentStyle={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:8, fontSize:11 }} />
+                <Area type="monotone" dataKey="count" stroke="#0d9488" strokeWidth={2} fill="url(#feedGrad)" dot={false} />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
-
-          {/* Detail panel on large screens */}
-          {selected && (
-            <div className="hidden lg:block w-[420px] flex-shrink-0 relative">
-              <div className="sticky top-4 rounded-2xl overflow-hidden border border-[var(--card-border)]"
-                style={{ maxHeight:'80vh', overflowY:'auto', background:'var(--card-bg)' }}>
-                <DetailPanel item={selected}
-                  onClose={() => setSelected(null)}
-                  onDelete={(id) => deleteMut.mutate(id)}/>
-              </div>
-            </div>
-          )}
+          {/* Type donut */}
+          <div style={{ borderRadius:12, border:'1px solid var(--card-border)', padding:'12px 14px' }}>
+            <p style={{ fontSize:11, fontWeight:600, color:'var(--text-400)', marginBottom:4 }}>By type</p>
+            <ResponsiveContainer width="100%" height={110}>
+              <PieChart>
+                <Pie
+                  data={[
+                    { name:'Bugs',    value:stats.bugs,                        fill:'#e11d48' },
+                    { name:'UX',      value:stats.ux,                          fill:'#0d9488' },
+                    { name:'Ratings', value:stats.total-stats.bugs-stats.ux,   fill:'#f59e0b' },
+                  ].filter(d=>d.value>0)}
+                  cx="50%" cy="55%" innerRadius={28} outerRadius={46} paddingAngle={3} dataKey="value">
+                  {[0,1,2].map(i => <Cell key={i} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:8, fontSize:11 }} />
+                <Legend iconSize={8} wrapperStyle={{ fontSize:10, color:'var(--text-500)' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
+      )}
+
+      {/* Master / Detail */}
+      <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
+        {/* Table — hides on mobile when detail is open */}
+        <div style={{ flex:1, minWidth:0, display: selected ? undefined : undefined }}>
+          <DataTable
+            columns={columns}
+            data={items}
+            isLoading={isLoading}
+            searchColumnId="summary"
+            searchPlaceholder="Search by page, type, content…"
+            emptyTitle="No submissions yet"
+            emptyBody="Feedback from the floating widget will appear here."
+            noResultsTitle="No results"
+            noResultsBody="Try adjusting your search."
+            onRowClick={row => setSelected(selected?.id===row.id ? null : row)}
+            pageSize={25}
+          />
+        </div>
+
+        {/* Desktop inline detail panel */}
+        <AnimatePresence>
+          {selected && (
+            <motion.div
+              key="detail"
+              initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:16 }}
+              transition={{ type:'spring', damping:28, stiffness:320 }}
+              style={{
+                width:380, flexShrink:0, borderRadius:12,
+                border:'1px solid var(--card-border)', overflow:'hidden',
+                maxHeight:'calc(100vh - 160px)', position:'sticky', top:80,
+              }}
+            >
+              <DetailPanel
+                item={selected}
+                onClose={() => setSelected(null)}
+                onDelete={id => deleteMut.mutate(id)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* Mobile detail sheet */}
+      {/* Mobile full-screen sheet */}
       <AnimatePresence>
         {selected && (
           <>
-            <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+            <motion.div key="mob-bg"
+              initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              style={{ position:'fixed', inset:0, zIndex:40, background:'rgba(0,0,0,0.45)' }}
               onClick={() => setSelected(null)}
-              className="lg:hidden fixed inset-0 z-40 bg-black/40"/>
-            <div className="lg:hidden">
-              <DetailPanel item={selected}
+            />
+            <motion.div key="mob-sheet"
+              initial={{ x:'100%' }} animate={{ x:0 }} exit={{ x:'100%' }}
+              transition={{ type:'spring', damping:30, stiffness:350 }}
+              style={{ position:'fixed', right:0, top:0, bottom:0, zIndex:50, width:'min(400px,100vw)', borderLeft:'1px solid var(--card-border)' }}
+            >
+              <DetailPanel
+                item={selected}
                 onClose={() => setSelected(null)}
-                onDelete={(id) => deleteMut.mutate(id)}/>
-            </div>
+                onDelete={id => deleteMut.mutate(id)}
+              />
+            </motion.div>
           </>
         )}
       </AnimatePresence>
-    </div>
+    </AdminPageShell>
   );
 }

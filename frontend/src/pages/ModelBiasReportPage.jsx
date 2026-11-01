@@ -1,316 +1,512 @@
+/**
+ * ModelBiasReportPage — AI fairness & demographic bias analysis
+ * Route: /admin/model-bias-report
+ *
+ * Built with: AdminPageShell + DataTable (TanStack) + StatusDot
+ * Layout: category pivot → expandable group table → accordion detail
+ * Reference: Arize AI / Fiddler fairness dashboard + Linear data table
+ */
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { createColumnHelper } from '@tanstack/react-table';
 import {
- BarChart3, AlertTriangle, CheckCircle, TrendingUp,
- Users, Filter, RefreshCw, Info, Shield, Activity,
- Eye, Brain, ChevronDown, ChevronUp, Loader2,
+  BarChart3, AlertTriangle, CheckCircle, TrendingUp,
+  RefreshCw, Brain, ChevronDown, Shield,
+  Eye, SlidersHorizontal, ArrowUp, ArrowDown,
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, ReferenceLine, Cell,
+} from 'recharts';
 import { ethicsAPI } from '../api/client';
-import PageHeader from '../components/PageHeader';
+import AdminPageShell from '../components/admin/AdminPageShell';
+import DataTable from '../components/admin/DataTable';
+import StatusDot from '../components/admin/StatusDot';
 
+const col = createColumnHelper();
+
+/* ─── Config ──────────────────────────────────────────────────────── */
 const CATS = {
- age: { label: 'Age Group', icon: Users, color: '#1d4ed8' },
- gender: { label: 'Gender', icon: Users, color: '#7c3aed' },
- region: { label: 'Region', icon: Filter, color: '#0d9488' },
- diagnosis: { label: 'Diagnosis', icon: Brain, color: '#e11d48' },
+  age:       { label: 'Age group', color: '#3b82f6' },
+  gender:    { label: 'Gender',    color: '#8b5cf6' },
+  region:    { label: 'Region',    color: '#0d9488' },
+  diagnosis: { label: 'Diagnosis', color: '#e11d48' },
 };
 
+/* ─── Inline disparity bar ─────────────────────────────────────────── */
 function DisparityBar({ value, threshold }) {
- const pct = Math.min(Math.abs(value) * 100, 50);
- const side = value >= 0 ? 'right' : 'left';
- const color = Math.abs(value) > threshold ? 'bg-red-500' : Math.abs(value) > threshold / 2 ? 'bg-amber-500' : 'bg-emerald-500';
- const textCls = Math.abs(value) > threshold ? 'text-red-600' : Math.abs(value) > threshold / 2 ? 'text-amber-600' : 'text-emerald-600';
- return (
- <div className="flex items-center gap-2 h-4">
- <div className="w-24 h-2 bg-slate-200 rounded-full relative overflow-hidden">
- <div className="absolute inset-y-0 left-1/2 w-px bg-slate-400"/>
- <div className={`absolute inset-y-0 ${color} rounded-full`} style={{ width:`${pct}%`, [side === 'right' ? 'left' : 'right']: '50%' }}/>
- </div>
- <span className={`text-xs font-bold ${textCls}`}>{value >= 0 ? '+' : ''}{(value * 100).toFixed(1)}%</span>
- </div>
- );
+  const pct   = Math.min(Math.abs(value) * 100, 50);
+  const side  = value >= 0 ? 'left' : 'right';
+  const color = Math.abs(value) > threshold ? '#ef4444' : Math.abs(value) > threshold / 2 ? '#f59e0b' : '#10b981';
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative w-20 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--card-border)' }}>
+        <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: 'var(--text-400)', opacity: 0.3 }} />
+        <div className="absolute inset-y-0 rounded-full"
+          style={{ width: `${pct}%`, [side === 'left' ? 'left' : 'right']: '50%', background: color }} />
+      </div>
+      <span className="text-[11px] font-bold tabular-nums" style={{ color }}>
+        {value >= 0 ? '+' : ''}{(value * 100).toFixed(1)}%
+      </span>
+    </div>
+  );
 }
 
-function GroupCard({ group, data, threshold }) {
- const [open, setOpen] = useState(false);
- const disp = data.disparity_from_mean ?? 0;
- const isHigh = Math.abs(disp) > threshold;
- const isMed = !isHigh && Math.abs(disp) > threshold / 2;
- const border = isHigh ? 'border-red-400' : isMed ? 'border-amber-400' : 'border-emerald-400';
- const bg = isHigh ? 'bg-red-50' : isMed ? 'bg-amber-50' : 'bg-emerald-50';
- const label = isHigh ? 'High Disparity': isMed ? 'Moderate' : 'Fair';
- const cls = isHigh ? 'text-red-600' : isMed ? 'text-amber-600' : 'text-emerald-600';
- const StatusIcon = isHigh ? AlertTriangle : isMed ? TrendingUp : CheckCircle;
+/* ─── Expanded group sub-row ───────────────────────────────────────── */
+function GroupSubRow({ row, threshold, overall }) {
+  const data = row.original.data;
+  const disp = data.disparity_from_mean ?? 0;
+  const isHigh = Math.abs(disp) > threshold;
 
- return (
- <motion.div initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }}
- className={`border-2 rounded-xl ${border} ${bg} overflow-hidden`}>
- <div className="p-4 cursor-pointer" onClick={() => setOpen(v => !v)}>
- <div className="flex items-center justify-between">
- <div className="flex items-center gap-3 flex-1 min-w-0">
- <StatusIcon size={18} className={cls}/>
- <div className="min-w-0">
- <h4 className="font-bold text-[var(--text-900)] truncate">{group}</h4>
- <span className={`text-xs font-semibold ${cls}`}>{label}</span>
- </div>
- </div>
- <div className="flex items-center gap-4 ml-4">
- <div className="text-right hidden sm:block">
- <p className="text-lg font-bold text-slate-900">{data.mean_risk_score?.toFixed(3)}</p>
- <p className="text-[11px] text-slate-500">avg risk</p>
- </div>
- <div className="text-right hidden sm:block">
- <p className="text-sm font-bold text-slate-700">{data.count}</p>
- <p className="text-[11px] text-slate-500">samples</p>
- </div>
- {open ? <ChevronUp size={14} className="text-slate-400"/> : <ChevronDown size={14} className="text-slate-400"/>}
- </div>
- </div>
- <div className="mt-3">
- <div className="flex items-center justify-between text-[11px] text-[var(--text-500)] mb-1">
- <span>Risk Score</span><span>{((data.mean_risk_score||0)*100).toFixed(1)}%</span>
- </div>
- <div className="w-full h-2 bg-white/60 rounded-full overflow-hidden">
- <div className={`h-full rounded-full ${isHigh?'bg-red-500':isMed?'bg-amber-500':'bg-emerald-500'}`} style={{ width:`${Math.min((data.mean_risk_score||0)*100,100)}%` }}/>
- </div>
- </div>
- <div className="mt-2 flex items-center justify-between">
- <span className="text-[11px] text-slate-500">Disparity from mean</span>
- <DisparityBar value={disp} threshold={threshold}/>
- </div>
- </div>
- <AnimatePresence>
- {open && (
- <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
- className="px-4 pb-4 border-t-2 border-white/50 pt-3">
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
- <div className="bg-white/60 rounded-lg p-3">
- <p className="text-xs text-[var(--text-500)] font-semibold mb-1">Sample Size</p>
- <p className="font-bold text-[var(--text-900)] text-lg">{data.count}</p>
- {data.count < 20 && <p className="text-[11px] text-amber-600 mt-1">Small sample · results may be unreliable</p>}
- </div>
- <div className="bg-white/60 rounded-lg p-3">
- <p className="text-xs text-[var(--text-500)] font-semibold mb-1">Std Deviation</p>
- <p className="font-bold text-[var(--text-900)] text-lg">{data.std_risk_score?.toFixed(3)}</p>
- </div>
- <div className="bg-white/60 rounded-lg p-3">
- <p className="text-xs text-[var(--text-500)] font-semibold mb-1">vs Mean</p>
- <p className={`font-bold text-lg ${disp > 0 ? 'text-red-600' : 'text-teal-600'}`}>
- {disp >= 0 ? '+' : ''}{(disp * 100).toFixed(1)}%
- </p>
- </div>
- </div>
- {isHigh && (
- <div className="mt-3 p-3 bg-red-100 border border-red-300 rounded-lg">
- <p className="text-xs font-bold text-red-800 mb-1 flex items-center gap-1.5"><AlertTriangle size={12}/> Action Required</p>
- <p className="text-xs text-red-700">
- This group has a {(Math.abs(disp)*100).toFixed(1)}% deviation from the population mean.
- {data.count < 30 ? ' Small sample · collect more data before acting.' : ' Investigate with clinical experts.'}
- </p>
- </div>
- )}
- </motion.div>
- )}
- </AnimatePresence>
- </motion.div>
- );
+  return (
+    <div className="px-5 pb-4 pt-2 ml-8 space-y-3 border-l-2"
+      style={{ borderColor: isHigh ? '#ef4444' : Math.abs(disp) > threshold / 2 ? '#f59e0b' : '#10b981' }}>
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { label: 'Avg risk score', value: (data.mean_risk_score || 0).toFixed(3) },
+          { label: 'Std deviation',  value: (data.std_risk_score  || 0).toFixed(3) },
+          { label: 'Sample size',    value: data.count, warn: data.count < 20       },
+        ].map(({ label, value, warn }) => (
+          <div key={label} className="rounded-xl p-3"
+            style={{ background: 'var(--page-bg)', border: '1px solid var(--card-border)' }}>
+            <p className="text-[10px] font-semibold mb-1" style={{ color: 'var(--text-400)' }}>{label}</p>
+            <p className="text-sm font-bold" style={{ color: 'var(--text-800)' }}>{value}</p>
+            {warn && <p className="text-[10px] mt-1 font-medium" style={{ color: '#d97706' }}>Small sample</p>}
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-600)' }}>
+        {disp > 0
+          ? <ArrowUp   size={12} style={{ color: '#ef4444' }} />
+          : <ArrowDown size={12} style={{ color: '#10b981' }} />}
+        <span>
+          Risk is <span className="font-semibold" style={{ color: disp > 0 ? '#ef4444' : '#10b981' }}>
+            {Math.abs(disp * 100).toFixed(1)}% {disp > 0 ? 'above' : 'below'}
+          </span> population mean of <span className="font-semibold" style={{ color: 'var(--text-800)' }}>
+            {((overall.mean_risk_score || 0) * 100).toFixed(1)}%
+          </span>
+        </span>
+      </div>
+
+      {isHigh && (
+        <div className="rounded-xl p-3 flex items-start gap-2"
+          style={{ background: '#fef2f2', border: '1px solid #fecaca' }}>
+          <AlertTriangle size={13} style={{ color: '#dc2626', flexShrink: 0, marginTop: 1 }} />
+          <p className="text-xs leading-relaxed" style={{ color: '#991b1b' }}>
+            <strong>Action required.</strong>{' '}
+            {(Math.abs(disp) * 100).toFixed(1)}% deviation from population mean.{' '}
+            {data.count < 30 ? 'Small sample — collect more data before acting.' : 'Investigate with clinical experts and document findings.'}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   Main page
+═══════════════════════════════════════════════════════════════════ */
 export default function ModelBiasReportPage() {
- const [tab, setTab] = useState('fairness');
- const [cat, setCat] = useState('age');
- const [threshold, setThreshold] = useState(0.15);
+  const [tab,       setTab]       = useState('fairness');
+  const [cat,       setCat]       = useState('age');
+  const [threshold, setThreshold] = useState(0.15);
 
- const { data: biasData, isLoading, refetch } = useQuery({
- queryKey: ['model-bias-report'],
- queryFn: () => ethicsAPI.getBiasReport().then(r => r.data),
- staleTime: 5 * 60 * 1000,
- });
- const { data: overrideStats } = useQuery({
- queryKey: ['override-stats'],
- queryFn: () => ethicsAPI.getOverrideStatistics(30).then(r => r.data),
- staleTime: 5 * 60 * 1000,
- });
- const { data: impactData } = useQuery({
- queryKey: ['ai-impact'],
- queryFn: () => ethicsAPI.getAIImpactReport().then(r => r.data),
- staleTime: 5 * 60 * 1000,
- });
+  const { data: biasData, isLoading, refetch } = useQuery({
+    queryKey: ['model-bias-report'],
+    queryFn:  () => ethicsAPI.getBiasReport().then(r => r.data),
+    staleTime: 5 * 60_000,
+  });
+  const { data: overrideStats } = useQuery({
+    queryKey: ['override-stats'],
+    queryFn:  () => ethicsAPI.getOverrideStatistics(30).then(r => r.data),
+    staleTime: 5 * 60_000,
+  });
+  const { data: impactData } = useQuery({
+    queryKey: ['ai-impact'],
+    queryFn:  () => ethicsAPI.getAIImpactReport().then(r => r.data),
+    staleTime: 5 * 60_000,
+  });
 
- if (isLoading) return (
- <div className="flex items-center justify-center min-h-[60vh]">
- <Loader2 size={32} className="animate-spin text-teal-600"/>
- </div>
- );
+  const overall = biasData?.overall ?? {};
+  const catData = biasData?.by_category?.[cat] ?? {};
+  const entries = Object.entries(catData);
+  const flagged = entries.filter(([, d]) => Math.abs(d.disparity_from_mean ?? 0) > threshold).length;
 
- const overall = biasData?.overall ?? {};
- const catData = biasData?.by_category?.[cat] ?? {};
- const entries = Object.entries(catData);
- const flagged = entries.filter(([,d]) => Math.abs(d.disparity_from_mean??0) > threshold).length;
- const grade = flagged === 0 ? { label:'A · Fair', color:'text-emerald-600', bg:'bg-emerald-50 border-emerald-200' }
- : flagged <= 2 ? { label:'B · Moderate', color:'text-amber-600', bg:'bg-amber-50 border-amber-200' }
- : { label:'C · Review', color:'text-red-600', bg:'bg-red-50 border-red-200' };
+  const grade = flagged === 0
+    ? { label: 'A · Fair',     color: '#10b981' }
+    : flagged <= 2
+    ? { label: 'B · Moderate', color: '#f59e0b' }
+    : { label: 'C · Review',   color: '#ef4444' };
 
- const TABS = [
- { id:'fairness', label:'Fairness Analysis', icon:BarChart3 },
- { id:'overrides', label:'Clinical Overrides', icon:Eye },
- { id:'impact', label:'AI Impact', icon:TrendingUp },
- { id:'recommendations', label:'Recommendations', icon:Shield },
- ];
+  /* ── Fairness table columns ── */
+  const fairnessCols = [
+    col.display({
+      id: 'status',
+      header: '',
+      cell: info => {
+        const d     = info.row.original.data;
+        const disp  = d.disparity_from_mean ?? 0;
+        const isH   = Math.abs(disp) > threshold;
+        const isM   = !isH && Math.abs(disp) > threshold / 2;
+        const Icon  = isH ? AlertTriangle : isM ? TrendingUp : CheckCircle;
+        const color = isH ? '#ef4444' : isM ? '#f59e0b' : '#10b981';
+        return <Icon size={14} style={{ color }} />;
+      },
+      meta: { thStyle: { width: 32 } },
+    }),
+    col.accessor('group', {
+      header: 'Group',
+      cell: info => {
+        const d    = info.row.original.data;
+        const disp = d.disparity_from_mean ?? 0;
+        const isH  = Math.abs(disp) > threshold;
+        const isM  = !isH && Math.abs(disp) > threshold / 2;
+        const color = isH ? '#ef4444' : isM ? '#f59e0b' : '#10b981';
+        return (
+          <div>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-800)' }}>{info.getValue()}</p>
+            <p className="text-[10px] font-semibold" style={{ color }}>
+              {isH ? 'High disparity' : isM ? 'Moderate' : 'Fair'}
+            </p>
+          </div>
+        );
+      },
+      meta: { thStyle: { minWidth: 140 } },
+    }),
+    col.display({
+      id: 'risk_bar',
+      header: 'Risk score',
+      cell: info => {
+        const d    = info.row.original.data;
+        const pct  = Math.min((d.mean_risk_score || 0) * 100, 100);
+        const disp = d.disparity_from_mean ?? 0;
+        const color = Math.abs(disp) > threshold ? '#ef4444' : Math.abs(disp) > threshold / 2 ? '#f59e0b' : '#10b981';
+        return (
+          <div className="flex items-center gap-2 min-w-[120px]">
+            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--card-border)' }}>
+              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
+            </div>
+            <span className="text-xs tabular-nums font-semibold w-10 text-right" style={{ color: 'var(--text-700)' }}>
+              {pct.toFixed(1)}%
+            </span>
+          </div>
+        );
+      },
+      meta: { thStyle: { minWidth: 160 } },
+    }),
+    col.display({
+      id: 'disparity',
+      header: 'vs mean',
+      cell: info => <DisparityBar value={info.row.original.data.disparity_from_mean ?? 0} threshold={threshold} />,
+      meta: { thStyle: { minWidth: 160 } },
+    }),
+    col.display({
+      id: 'samples',
+      header: 'Samples',
+      cell: info => (
+        <span className="text-xs font-bold" style={{ color: 'var(--text-700)' }}>
+          {info.row.original.data.count}
+        </span>
+      ),
+      meta: { thStyle: { width: 80, textAlign: 'right' }, tdStyle: { textAlign: 'right' } },
+    }),
+    col.display({
+      id: 'expand',
+      header: '',
+      cell: info => (
+        <ChevronDown size={13} style={{ color: 'var(--text-400)', transition: 'transform 0.18s', transform: info.row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(0)' }} />
+      ),
+      meta: { thStyle: { width: 32 } },
+    }),
+  ];
 
- return (
- <div className="min-h-screen pb-12">
- <PageHeader image="/resources/african/african-health-tech.jpg" title="AI Fairness & Bias Report" icon={Brain}
- subtitle="Ensuring equitable AI predictions across all patient demographics · Justice Principle">
- <button onClick={() => refetch()} className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-bold border border-white/30 transition">
- <RefreshCw size={15}/> Refresh
- </button>
- </PageHeader>
+  const tableData = entries.map(([group, data]) => ({ group, data }));
 
- <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 space-y-5">
- {/* Tabs */}
- <div className="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto">
- {TABS.map(({ id, label, icon: Icon }) => (
- <button key={id} onClick={() => setTab(id)}
- className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all flex-shrink-0 ${tab===id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-white/60'}`}>
- <Icon size={14}/>{label}
- </button>
- ))}
- </div>
+  const TABS = [
+    { id: 'fairness',        label: 'Fairness',    Icon: BarChart3  },
+    { id: 'overrides',       label: 'Overrides',   Icon: Eye        },
+    { id: 'impact',          label: 'AI Impact',   Icon: TrendingUp },
+    { id: 'recommendations', label: 'Actions',     Icon: Shield     },
+  ];
 
- {/* FAIRNESS TAB */}
- {tab === 'fairness' && (
- <div className="space-y-5">
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- {[
- { label:'Total Predictions', value: overall.total_predictions ?? 0, color:'text-teal-600', icon:Brain },
- { label:'Avg Risk Score', value: (overall.mean_risk_score??0).toFixed(3), color:'text-teal-600', icon:Activity },
- { label:'High-Risk Count', value: overall.high_risk_count ?? 0, color:'text-red-500', icon:AlertTriangle },
- { label:'Fairness Grade', value: grade.label.split(' · ')[0], color: grade.color, icon:Shield },
- ].map(({ label, value, color, icon: Icon }) => (
- <div key={label} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm px-4 py-3 flex items-center gap-3">
- <Icon size={18} className={color}/>
- <div><p className="text-xs text-slate-500">{label}</p><p className={`text-xl font-bold ${color}`}>{value}</p></div>
- </div>
- ))}
- </div>
+  return (
+    <AdminPageShell
+      icon={Brain}
+      title="AI Fairness Report"
+      meta={!isLoading ? [
+        { label: 'predictions', value: overall.total_predictions ?? 0 },
+        { label: 'grade',       value: grade.label, color: grade.color },
+        ...(flagged > 0 ? [{ label: 'flagged', value: flagged, color: '#ef4444' }] : []),
+      ] : []}
+      tabs={TABS}
+      activeTab={tab}
+      onTabChange={setTab}
+      toolbar={tab === 'fairness' ? (
+        <div style={{ display:'flex', alignItems:'center', gap:12, flexWrap:'wrap' }}>
+          {/* Category pivot */}
+          <div style={{ display:'flex', gap:6 }}>
+            {Object.entries(CATS).map(([key, { label, color }]) => (
+              <button key={key} onClick={() => setCat(key)}
+                style={{
+                  padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
+                  cursor:'pointer', transition:'all 0.15s',
+                  border: cat===key ? `1px solid ${color}` : '1px solid var(--card-border)',
+                  background: cat===key ? `${color}15` : 'var(--card-bg)',
+                  color: cat===key ? color : 'var(--text-500)',
+                }}>
+                {label}
+              </button>
+            ))}
+          </div>
+          {/* Threshold */}
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginLeft:'auto' }}>
+            <span style={{ fontSize:11, color:'var(--text-500)', whiteSpace:'nowrap' }}>
+              Alert threshold:
+            </span>
+            <input type="range" min={0.05} max={0.30} step={0.05} value={threshold}
+              onChange={e => setThreshold(parseFloat(e.target.value))}
+              style={{ width:80, accentColor:'#f59e0b' }} />
+            <span style={{ fontSize:11, fontWeight:700, color:'#d97706', whiteSpace:'nowrap', minWidth:28 }}>
+              {(threshold*100).toFixed(0)}%
+            </span>
+          </div>
+        </div>
+      ) : undefined}
+      actions={
+        <button onClick={() => refetch()}
+          style={{
+            width: 36, height: 36, borderRadius: 10,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid var(--card-border)',
+            background: 'var(--card-bg)', cursor: 'pointer',
+            color: 'var(--text-500)',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+            transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--c-teal)'; e.currentTarget.style.color = 'var(--c-teal)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.color = 'var(--text-500)'; }}
+        >
+          <RefreshCw size={14} />
+        </button>
+      }
+    >
 
- {/* Threshold */}
- <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4">
- <div className="flex items-center gap-2 mb-2">
- <AlertTriangle size={16} className="text-amber-600"/>
- <span className="font-bold text-amber-900 text-sm">Disparity Alert Threshold: {(threshold*100).toFixed(0)}%</span>
- <span className="ml-auto text-xs text-amber-700">{flagged} group{flagged!==1?'s':''} flagged in "{CATS[cat]?.label}" view</span>
- </div>
- <input type="range" min={0.05} max={0.30} step={0.05} value={threshold} onChange={e => setThreshold(parseFloat(e.target.value))}
- className="w-full accent-amber-600"/>
- </div>
+      {/* ── FAIRNESS ── */}
+      {tab === 'fairness' && (
+        <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
 
- {/* Category tabs */}
- <div className="flex gap-2 flex-wrap">
- {Object.entries(CATS).map(([key, { label, icon: Icon, color }]) => (
- <button key={key} onClick={() => setCat(key)}
- className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all ${cat===key ? 'text-white border-transparent shadow-sm' : 'bg-[var(--card-bg)] text-[var(--text-700)] border-[var(--card-border)] hover:border-slate-300'}`}
- style={cat===key ? { backgroundColor: color } : {}}>
- <Icon size={14}/>{label}
- </button>
- ))}
- </div>
+          {!isLoading && tableData.length > 0 && (
+            <div
+              style={{
+                borderRadius: 16, border: '1px solid var(--card-border)',
+                background: 'var(--card-bg)', padding: '16px 20px 8px',
+              }}
+            >
+              <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-400)', marginBottom: 12 }}>
+                Disparity from population mean — {CATS[cat]?.label}
+              </p>
+              <ResponsiveContainer width="100%" height={Math.max(120, tableData.length * 36)}>
+                <BarChart
+                  data={tableData.map(({ group, data: d }) => ({
+                    name: group,
+                    disparity: parseFloat(((d.disparity_from_mean ?? 0) * 100).toFixed(2)),
+                    risk: parseFloat(((d.mean_risk_score ?? 0) * 100).toFixed(2)),
+                  }))}
+                  layout="vertical"
+                  margin={{ top: 0, right: 40, left: 80, bottom: 0 }}
+                  barSize={12}
+                >
+                  <CartesianGrid
+                    horizontal={false}
+                    strokeDasharray="3 3"
+                    stroke="var(--card-border)"
+                  />
+                  <XAxis
+                    type="number"
+                    tickFormatter={v => `${v > 0 ? '+' : ''}${v}%`}
+                    tick={{ fontSize: 10, fill: 'var(--text-400)' }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    tick={{ fontSize: 11, fill: 'var(--text-600)' }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={76}
+                  />
+                  <Tooltip
+                    formatter={(val) => [`${val > 0 ? '+' : ''}${val}%`, 'Disparity']}
+                    contentStyle={{
+                      background: 'var(--card-bg)',
+                      border: '1px solid var(--card-border)',
+                      borderRadius: 10,
+                      fontSize: 11,
+                      color: 'var(--text-800)',
+                    }}
+                    cursor={{ fill: 'color-mix(in srgb, var(--c-teal) 5%, transparent)' }}
+                  />
+                  <ReferenceLine x={0} stroke="var(--text-400)" strokeWidth={1} />
+                  <ReferenceLine x={threshold * 100}  stroke="#ef4444" strokeDasharray="4 3" strokeWidth={1} />
+                  <ReferenceLine x={-threshold * 100} stroke="#ef4444" strokeDasharray="4 3" strokeWidth={1} />
+                  <Bar dataKey="disparity" radius={[0, 4, 4, 0]}>
+                    {tableData.map(({ data: d }, i) => {
+                      const disp = d.disparity_from_mean ?? 0;
+                      const clr  = Math.abs(disp) > threshold ? '#ef4444'
+                                 : Math.abs(disp) > threshold / 2 ? '#f59e0b'
+                                 : '#10b981';
+                      return <Cell key={i} fill={clr} fillOpacity={0.85} />;
+                    })}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <p style={{ fontSize: 10, color: 'var(--text-400)', marginTop: 8, textAlign: 'right' }}>
+                Red dashed lines = ±{(threshold * 100).toFixed(0)}% alert threshold
+              </p>
+            </div>
+          )}
 
- {/* Group cards */}
- <div className="space-y-3">
- {entries.length === 0 ? (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-12 text-center">
- <BarChart3 size={36} className="mx-auto text-slate-300 mb-3"/>
- <p className="text-slate-500">No data available for this category</p>
- </div>
- ) : entries.map(([group, data]) => (
- <GroupCard key={group} group={group} data={data} threshold={threshold}/>
- ))}
- </div>
- </div>
- )}
+          {/* Groups table */}
+          <DataTable
+            columns={fairnessCols}
+            data={tableData}
+            isLoading={isLoading}
+            emptyTitle={`No data for ${CATS[cat]?.label}`}
+            emptyBody="Run predictions for this demographic category first."
+            renderSubRow={row => (
+              <GroupSubRow row={row} threshold={threshold} overall={overall} />
+            )}
+          />
 
- {/* OVERRIDES TAB */}
- {tab === 'overrides' && (
- <div className="space-y-4">
- {overrideStats ? (
- <>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- {[
- ['Total Overrides', overrideStats.total_overrides, 'text-slate-800'],
- ['Avg Difference', `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference||0)*100).toFixed(1)}%`, overrideStats.average_difference > 0 ? 'text-red-600' : 'text-teal-600'],
- ['AI Bias Direction', overrideStats.direction||'Neutral', 'text-slate-700'],
- ['Recommendation', overrideStats.recommendation||' - ', 'text-emerald-600'],
- ].map(([label, val, color]) => (
- <div key={label} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
- <p className="text-xs text-[var(--text-500)] mb-1">{label}</p>
- <p className={`text-lg font-bold ${color}`}>{val}</p>
- </div>
- ))}
- </div>
- {overrideStats.by_reason && Object.keys(overrideStats.by_reason).length > 0 && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-5">
- <h3 className="text-sm font-bold text-[var(--text-800)] mb-3">Override Reasons Breakdown</h3>
- <div className="flex flex-wrap gap-2">
- {Object.entries(overrideStats.by_reason).map(([reason, count]) => (
- <span key={reason} className="chip-indigo">{reason.replace(/_/g,' ')}: {count}</span>
- ))}
- </div>
- </div>
- )}
- </>
- ) : <p className="text-[var(--text-400)] text-center py-12">No override data available</p>}
- </div>
- )}
+          {!isLoading && tableData.length > 0 && (
+            <p className="text-xs text-right" style={{ color: 'var(--text-400)' }}>
+              {flagged} of {tableData.length} group{tableData.length !== 1 ? 's' : ''} exceed{flagged !== 1 ? '' : 's'} threshold
+            </p>
+          )}
+        </div>
+      )}
 
- {/* IMPACT TAB */}
- {tab === 'impact' && (
- <div className="space-y-4">
- {impactData ? (
- <>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- {[
- ['Clinician Agreement', `${impactData.clinician_agreement_rate||0}%`, 'text-emerald-600'],
- ['High-Risk Alerts', impactData.high_risk_alerts||0, 'text-red-500'],
- ['Engagement Level', impactData.ai_benefit_indicators?.clinician_engagement||' - ', 'text-teal-600'],
- ['Model Reliability', impactData.ai_benefit_indicators?.model_reliability||' - ', impactData.ai_benefit_indicators?.model_reliability === 'High' ? 'text-emerald-600' : 'text-amber-600'],
- ].map(([label, val, color]) => (
- <div key={label} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm px-4 py-3">
- <p className="text-xs text-[var(--text-500)] mb-1">{label}</p>
- <p className={`text-xl font-bold ${color}`}>{val}</p>
- </div>
- ))}
- </div>
- <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800">
- <strong>Academic Basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle · ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
- </div>
- </>
- ) : <p className="text-[var(--text-400)] text-center py-12">No impact data available</p>}
- </div>
- )}
+      {/* ── OVERRIDES ── */}
+      {tab === 'overrides' && (
+        <div className="space-y-4">
+          {overrideStats ? (
+            <>
+              <div className="rounded-2xl border p-5 space-y-3" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+                <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--text-400)' }}>
+                  Clinical override summary · last 30 days
+                </p>
+                {[
+                  ['Total overrides',   overrideStats.total_overrides,  'var(--text-800)'],
+                  ['Avg AI difference', `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference || 0) * 100).toFixed(1)}%`,
+                                        overrideStats.average_difference > 0 ? '#ef4444' : '#10b981'],
+                  ['AI bias direction', overrideStats.direction || 'Neutral', 'var(--text-700)'],
+                  ['Recommendation',    overrideStats.recommendation || '—',  '#10b981'],
+                ].map(([label, val, color]) => (
+                  <div key={label} className="flex items-center justify-between">
+                    <span className="text-xs" style={{ color: 'var(--text-600)' }}>{label}</span>
+                    <span className="text-xs font-bold" style={{ color }}>{val}</span>
+                  </div>
+                ))}
+              </div>
 
- {/* RECOMMENDATIONS TAB */}
- {tab === 'recommendations' && (
- <div className="grid md:grid-cols-2 gap-4">
- {[
- { icon:AlertTriangle, color:'red', title:'High Disparity Groups', text:'Investigate with clinical experts to determine if deviations reflect true health differences or model bias. Document all findings and actions taken.' },
- { icon:Users, color:'amber', title:'Small Sample Sizes', text:'Groups with fewer than 20 predictions produce statistically unreliable results. Prioritise data collection for underrepresented demographics.' },
- { icon:Brain, color:'violet', title:'Model Retraining', text:'If persistent disparities are confirmed, retrain with balanced sampling using SMOTE or stratified splitting across demographic groups.' },
- { icon:Shield, color:'teal', title:'Clinical Validation', text:'Never attribute disparity to model bias alone without clinical review. Work with palliative care specialists to interpret all findings.' },
- ].map(({ icon: Icon, color, title, text }) => (
- <div key={title} className={`bg-[var(--card-bg)] border-2 rounded-2xl p-5 border-${color}-200`}>
- <div className="flex items-center gap-2 mb-2">
- <Icon size={18} className={`text-${color}-600`}/>
- <h4 className={`font-bold text-${color}-900 text-sm`}>{title}</h4>
- </div>
- <p className="text-sm text-[var(--text-700)] leading-relaxed">{text}</p>
- </div>
- ))}
- </div>
- )}
- </div>
- </div>
- );
+              {overrideStats.by_reason && Object.keys(overrideStats.by_reason).length > 0 && (
+                <div style={{ borderRadius: 16, border: '1px solid var(--card-border)', background: 'var(--card-bg)', padding: '16px 20px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-400)', marginBottom: 14 }}>
+                    Override reasons breakdown
+                  </p>
+                  <ResponsiveContainer width="100%" height={Math.max(120, Object.keys(overrideStats.by_reason).length * 38)}>
+                    <BarChart
+                      data={Object.entries(overrideStats.by_reason)
+                        .sort(([, a], [, b]) => b - a)
+                        .map(([reason, count]) => ({
+                          name: reason.replace(/_/g, ' '),
+                          count,
+                        }))}
+                      layout="vertical"
+                      margin={{ top: 0, right: 30, left: 80, bottom: 0 }}
+                      barSize={14}
+                    >
+                      <CartesianGrid horizontal={false} strokeDasharray="3 3" stroke="var(--card-border)" />
+                      <XAxis type="number" tick={{ fontSize: 10, fill: 'var(--text-400)' }} axisLine={false} tickLine={false} />
+                      <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: 'var(--text-600)' }} axisLine={false} tickLine={false} width={76} />
+                      <Tooltip
+                        contentStyle={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 10, fontSize: 11, color: 'var(--text-800)' }}
+                        cursor={{ fill: 'color-mix(in srgb, var(--c-teal) 6%, transparent)' }}
+                      />
+                      <Bar dataKey="count" fill="var(--c-teal)" fillOpacity={0.85} radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="rounded-2xl border p-12 text-center" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+              <Eye size={28} className="mx-auto mb-3" style={{ color: 'var(--card-border)' }} />
+              <p className="text-sm" style={{ color: 'var(--text-500)' }}>No override data available</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── IMPACT ── */}
+      {tab === 'impact' && (
+        <div className="space-y-4">
+          {impactData ? (
+            <>
+              <div className="rounded-2xl border p-5 space-y-3" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+                <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--text-400)' }}>AI impact metrics</p>
+                {[
+                  ['Clinician agreement',  `${impactData.clinician_agreement_rate || 0}%`, '#10b981'],
+                  ['High-risk alerts',     impactData.high_risk_alerts || 0, '#ef4444'],
+                  ['Clinician engagement', impactData.ai_benefit_indicators?.clinician_engagement || '—', 'var(--c-teal)'],
+                  ['Model reliability',    impactData.ai_benefit_indicators?.model_reliability || '—',
+                                           impactData.ai_benefit_indicators?.model_reliability === 'High' ? '#10b981' : '#f59e0b'],
+                ].map(([label, val, color]) => (
+                  <div key={label} className="flex items-center justify-between">
+                    <span className="text-xs" style={{ color: 'var(--text-600)' }}>{label}</span>
+                    <span className="text-xs font-bold" style={{ color }}>{val}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl p-4 text-xs" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534' }}>
+                <strong>Academic basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle — ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
+              </div>
+            </>
+          ) : (
+            <div className="rounded-2xl border p-12 text-center" style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)' }}>
+              <TrendingUp size={28} className="mx-auto mb-3" style={{ color: 'var(--card-border)' }} />
+              <p className="text-sm" style={{ color: 'var(--text-500)' }}>No impact data available</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── RECOMMENDATIONS ── */}
+      {tab === 'recommendations' && (
+        <div className="grid md:grid-cols-2 gap-3">
+          {[
+            { Icon: AlertTriangle, borderColor: '#fca5a5', title: 'High disparity groups',
+              body: 'Investigate with clinical experts to determine whether deviations reflect true health differences or model bias. Document all findings and actions taken.' },
+            { Icon: Brain, borderColor: '#ddd6fe', title: 'Model retraining',
+              body: 'If persistent disparities are confirmed, retrain with balanced sampling using SMOTE or stratified splitting across demographic groups.' },
+            { Icon: Shield, borderColor: 'var(--card-border)', title: 'Clinical validation',
+              body: 'Never attribute disparity to model bias alone without clinical review. Work with palliative care specialists to interpret all findings before acting.' },
+            { Icon: TrendingUp, borderColor: '#bbf7d0', title: 'Small sample sizes',
+              body: 'Groups with fewer than 20 predictions produce unreliable results. Prioritise data collection for underrepresented demographics before drawing conclusions.' },
+          ].map(({ Icon, borderColor, title, body }) => (
+            <div key={title} className="rounded-2xl border-2 p-5 space-y-2"
+              style={{ background: 'var(--card-bg)', borderColor }}>
+              <div className="flex items-center gap-2">
+                <Icon size={14} style={{ color: 'var(--text-500)', flexShrink: 0 }} />
+                <h4 className="text-sm font-bold" style={{ color: 'var(--text-800)' }}>{title}</h4>
+              </div>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-600)' }}>{body}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </AdminPageShell>
+  );
 }

@@ -1,463 +1,547 @@
 /**
- * AdminFeaturePanel
- * =================
- * Admin-only page to:
- * - View all users and their feature overrides
- * - Enable / Disable / Lock features per user
- * - Review and approve/deny user feature access requests
+ * AdminFeaturePanel — Feature flag management per user
+ * Route: /admin/features
+ *
+ * Built with: AdminPageShell + DataTable (TanStack Table) + Dialog (Radix)
+ * Reference: satnaing/shadcn-admin user management table pattern
  */
 import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { createColumnHelper } from '@tanstack/react-table';
+import { AnimatePresence } from 'framer-motion';
 import {
- Shield, Users, Search, CheckCircle, XCircle,
- Lock, Unlock, Eye, EyeOff, ChevronDown, ChevronUp,
- AlertCircle, Clock, RefreshCw, Loader2, Filter,
+  ToggleRight, Users, Clock, Shield, CheckCircle,
+  XCircle, Lock, EyeOff, Eye, Plus, RefreshCw, Loader2,
+  ChevronDown,
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from '../utils/toast';
-import PageHeader from '../components/PageHeader';
+import AdminPageShell from '../components/admin/AdminPageShell';
+import DataTable from '../components/admin/DataTable';
+import StatusDot from '../components/admin/StatusDot';
+import Dialog from '../components/ui/Dialog';
 import SearchableSelect from '../components/ui/SearchableSelect';
 import { API_URL } from '../api/client';
 
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
+const col   = createColumnHelper();
 
-const STATE_CFG = {
- enabled: { label: 'Enabled', icon: Eye, cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
- disabled: { label: 'Disabled', icon: EyeOff, cls: 'bg-slate-100 text-[var(--text-600)] border-slate-200' },
- locked: { label: 'Locked', icon: Lock, cls: 'bg-red-100 text-red-700 border-red-200' },
+/* ─── Config ──────────────────────────────────────────────────────── */
+const STATE = {
+  enabled:  { label: 'Enabled',  dot: '#10b981', Icon: Eye         },
+  disabled: { label: 'Disabled', dot: '#94a3b8', Icon: EyeOff      },
+  locked:   { label: 'Locked',   dot: '#ef4444', Icon: Lock        },
 };
-const SOURCE_CFG = {
- admin: { label: 'Admin', cls: 'text-teal-600' },
- questionnaire: { label: 'Questionnaire', cls: 'text-teal-600' },
- request_approved: { label: 'User Request', cls: 'text-emerald-600' },
+const REQ_STATUS = {
+  pending:  { dot: '#f59e0b', label: 'Pending'  },
+  approved: { dot: '#10b981', label: 'Approved' },
+  denied:   { dot: '#ef4444', label: 'Denied'   },
 };
-const STATUS_CFG = {
- pending: { label: 'Pending', cls: 'bg-amber-100 text-amber-700', icon: Clock },
- approved: { label: 'Approved', cls: 'bg-emerald-100 text-emerald-700', icon: CheckCircle },
- denied: { label: 'Denied', cls: 'bg-red-100 text-red-700', icon: XCircle },
-};
+const SOURCE_LABEL = { admin: 'Admin', questionnaire: 'Questionnaire', request_approved: 'User request' };
+const FEATURES = [
+  ['/memory-vault','Memory Vault'],['/legacy-setup','Digital Legacy Setup'],
+  ['/legacy-content','Legacy Content'],['/heir-management','Heir Management'],
+  ['/journal','Personal Journal'],['/community','Community Hub'],
+  ['/bereavement-support','Bereavement Support'],['/pre-clinic','Pre-Clinic Checklist'],
+  ['/appointments','Appointments'],['/medications','Medications'],
+  ['/wellness-checkin','Wellness Check-In'],['/messages','Messages'],
+  ['/my-space','Patient Portal'],['/resources','Resources'],
+  ['/my-journey','My Journey Timeline'],['/reports','Reports'],
+];
 
+/* ─── Override mini-list (sub-row content) ─────────────────────────── */
+function OverrideList({ u, onAdd, onEdit, onRemove }) {
+  return (
+    <div style={{
+      padding: '10px 20px 16px 32px',
+      borderLeft: '3px solid var(--c-teal)',
+      marginLeft: 16,
+      display: 'flex', flexDirection: 'column', gap: 8,
+    }}>
+      <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-400)', margin: '4px 0 8px' }}>
+        Active overrides
+      </p>
+      {u.overrides.length === 0 && (
+        <p style={{ fontSize: 12, color: 'var(--text-400)', margin: 0 }}>
+          No overrides — features follow care-setting defaults.
+        </p>
+      )}
+      {u.overrides.map(o => {
+        const cfg = STATE[o.state] || STATE.disabled;
+        return (
+          <div key={o.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <StatusDot color={cfg.dot} label={cfg.label} size="sm" />
+            <span style={{ flex: 1, fontSize: 12, fontWeight: 500, color: 'var(--text-700)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {o.feature_name}
+            </span>
+            <span style={{ fontSize: 10, color: 'var(--text-400)' }}>
+              {SOURCE_LABEL[o.source] || o.source}
+            </span>
+            <button
+              onClick={e => { e.stopPropagation(); onEdit(u.id, o); }}
+              style={{ fontSize: 11, fontWeight: 600, color: 'var(--c-teal)', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px', borderRadius: 6 }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'color-mix(in srgb,var(--c-teal) 10%,transparent)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+            >Edit</button>
+            <button
+              onClick={e => { e.stopPropagation(); onRemove(o.id); }}
+              style={{ fontSize: 11, fontWeight: 600, color: 'var(--c-danger)', background: 'none', border: 'none', cursor: 'pointer', padding: '2px 6px', borderRadius: 6 }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#fef2f2')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+            >Remove</button>
+          </div>
+        );
+      })}
+      <button
+        onClick={e => { e.stopPropagation(); onAdd(u); }}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 11, fontWeight: 700, color: '#fff',
+          background: 'linear-gradient(135deg,#0d9488,#0891b2)',
+          border: 'none', cursor: 'pointer',
+          padding: '5px 12px', borderRadius: 8,
+          marginTop: 4, alignSelf: 'flex-start',
+          boxShadow: '0 2px 8px rgba(13,148,136,0.25)',
+          transition: 'opacity 0.15s',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
+        onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+      >
+        <Plus size={11} /> Add override
+      </button>
+    </div>
+  );
+}
+/* ─── Override dialog ──────────────────────────────────────────────── */
+function OverrideDialog({ modal, onClose, onSave, isPending }) {
+  const [featurePath, setFeaturePath] = useState(modal.featurePath || '');
+  const [state, setState] = useState(modal.current || 'disabled');
+  const [note,  setNote]  = useState(modal.note || '');
+
+  const HELP = {
+    enabled: 'Feature shown even if care-setting hides it.',
+    disabled: 'Feature hidden regardless of care-setting.',
+    locked: 'Hidden — user cannot request access.',
+  };
+
+  return (
+    <Dialog
+      open
+      onOpenChange={open => !open && onClose()}
+      title={modal.overrideId ? 'Edit Override' : 'Add Override'}
+      description={modal.userName ? `for ${modal.userName}` : undefined}
+      icon={Shield}
+      accent="teal"
+      size="sm"
+      footer={
+        <div className="flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-colors"
+            style={{ borderColor: 'var(--card-border)', color: 'var(--text-600)' }}
+          >Cancel</button>
+          <button
+            disabled={(!modal.overrideId && !featurePath) || isPending}
+            onClick={() => onSave({ user_id: modal.userId, feature_path: featurePath || modal.featurePath, state, note })}
+            className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition disabled:opacity-40 flex items-center justify-center gap-2"
+            style={{ background: 'var(--c-teal)' }}
+          >
+            {isPending ? <Loader2 size={13} className="animate-spin" /> : <Shield size={13} />}
+            Save
+          </button>
+        </div>
+      }
+    >
+      <div className="space-y-4">
+        {!modal.overrideId && (
+          <SearchableSelect
+            accent="teal"
+            value={featurePath || null}
+            onChange={v => setFeaturePath(v || '')}
+            placeholder="Select a feature…"
+            options={FEATURES.map(([path, name]) => ({ value: path, label: name, sublabel: path }))}
+          />
+        )}
+        {modal.overrideId && (
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-800)' }}>{modal.featureName}</p>
+        )}
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--text-500)' }}>State</p>
+          <div className="grid grid-cols-3 gap-2">
+            {(['enabled', 'disabled', 'locked']).map(s => {
+              const cfg    = STATE[s];
+              const active = state === s;
+              return (
+                <button key={s} onClick={() => setState(s)}
+                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl border-2 text-[11px] font-semibold transition-all"
+                  style={{
+                    borderColor: active ? cfg.dot : 'var(--card-border)',
+                    background:  active ? `${cfg.dot}12` : 'transparent',
+                    color:       active ? cfg.dot : 'var(--text-500)',
+                  }}
+                >
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.dot }} />
+                  {cfg.label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-[11px]" style={{ color: 'var(--text-400)' }}>{HELP[state]}</p>
+        </div>
+        <div>
+          <label className="block text-[11px] font-semibold mb-1.5" style={{ color: 'var(--text-500)' }}>Note (optional)</label>
+          <input
+            value={note} onChange={e => setNote(e.target.value)}
+            placeholder="Reason for this override…"
+            className="w-full rounded-xl px-3 py-2.5 text-sm border outline-none"
+            style={{ background: 'transparent', borderColor: 'var(--card-border)', color: 'var(--text-800)' }}
+            onFocus={e => (e.target.style.borderColor = 'var(--c-teal)')}
+            onBlur={e  => (e.target.style.borderColor = 'var(--card-border)')}
+          />
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+/* ─── Review dialog ────────────────────────────────────────────────── */
+function ReviewDialog({ r, onClose, onDecide, isPending }) {
+  const [note, setNote] = useState('');
+  return (
+    <Dialog
+      open
+      onOpenChange={open => !open && onClose()}
+      title="Review Access Request"
+      description={`${r.user?.name || 'User'} · ${r.feature_name}`}
+      icon={Clock}
+      accent="teal"
+      size="sm"
+      footer={
+        <div className="flex gap-3">
+          <button
+            onClick={() => onDecide('denied', note)} disabled={isPending}
+            className="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition flex items-center justify-center gap-1.5"
+            style={{ borderColor: 'var(--c-danger)', color: 'var(--c-danger)' }}
+          >
+            <XCircle size={13} /> Deny
+          </button>
+          <button
+            onClick={() => onDecide('approved', note)} disabled={isPending}
+            className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-1.5 transition"
+            style={{ background: '#10b981' }}
+          >
+            {isPending ? <Loader2 size={13} className="animate-spin" /> : <CheckCircle size={13} />}
+            Approve
+          </button>
+        </div>
+      }
+    >
+      <div className="space-y-3">
+        <div className="rounded-xl p-4 space-y-1.5" style={{ background: 'var(--page-bg)', border: '1px solid var(--card-border)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-800)' }}>{r.user?.name}</p>
+          <p className="text-xs" style={{ color: 'var(--text-600)' }}>
+            Requesting: <span className="font-bold" style={{ color: 'var(--c-teal)' }}>{r.feature_name}</span>
+          </p>
+          {r.reason && <p className="text-xs leading-relaxed" style={{ color: 'var(--text-500)' }}>{r.reason}</p>}
+        </div>
+        <div>
+          <label className="block text-[11px] font-semibold mb-1.5" style={{ color: 'var(--text-500)' }}>Admin note (optional)</label>
+          <textarea
+            value={note} onChange={e => setNote(e.target.value)} rows={2}
+            placeholder="Reason for your decision…"
+            className="w-full rounded-xl px-3 py-2 text-sm border outline-none resize-none"
+            style={{ background: 'transparent', borderColor: 'var(--card-border)', color: 'var(--text-800)' }}
+            onFocus={e => (e.target.style.borderColor = 'var(--c-teal)')}
+            onBlur={e  => (e.target.style.borderColor = 'var(--card-border)')}
+          />
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Main page
+═══════════════════════════════════════════════════════════════════ */
 export default function AdminFeaturePanel() {
- const { user } = useAuth();
- const navigate = useNavigate();
- const queryClient = useQueryClient();
- const [activeTab, setActiveTab] = useState('users');
- const [search, setSearch] = useState('');
- const [expandedUser, setExpandedUser] = useState(null);
- const [reviewModal, setReviewModal] = useState(null);
- const [overrideModal, setOverrideModal] = useState(null);
- const [reviewNote, setReviewNote] = useState('');
- const [overrideNote, setOverrideNote] = useState('');
- const [statusFilter, setStatusFilter] = useState('pending');
+  const { user } = useAuth();
+  const navigate  = useNavigate();
+  const qc        = useQueryClient();
 
- // ── Queries - always run (hooks must not be conditional) ──────────────────
- const { data: usersData, isLoading: loadingUsers } = useQuery({
- queryKey: ['admin-feature-users'],
- queryFn: () => axios.get(`${API_URL}/api/features/admin/users`, { headers: authH() }).then(r => r.data),
- staleTime: 30000,
- enabled: user?.role === 'admin',
- });
+  const [tab,           setTab]           = useState('users');
+  const [statusFilter,  setStatusFilter]  = useState('pending');
+  const [reviewModal,   setReviewModal]   = useState(null);
+  const [overrideModal, setOverrideModal] = useState(null);
 
- const { data: requestsData, isLoading: loadingReqs } = useQuery({
- queryKey: ['admin-feature-requests', statusFilter],
- queryFn: () => axios.get(`${API_URL}/api/features/admin/requests?status=${statusFilter === 'all' ? '' : statusFilter}`, { headers: authH() }).then(r => r.data),
- staleTime: 15000,
- enabled: user?.role === 'admin',
- });
+  /* ── Queries ── */
+  const { data: usersData, isLoading: loadingUsers } = useQuery({
+    queryKey: ['admin-feature-users'],
+    queryFn: () => axios.get(`${API_URL}/api/features/admin/users`, { headers: authH() }).then(r => r.data),
+    staleTime: 30_000, enabled: user?.role === 'admin',
+  });
+  const { data: requestsData, isLoading: loadingReqs } = useQuery({
+    queryKey: ['admin-feature-requests', statusFilter],
+    queryFn: () => axios.get(
+      `${API_URL}/api/features/admin/requests?status=${statusFilter === 'all' ? '' : statusFilter}`,
+      { headers: authH() }
+    ).then(r => r.data),
+    staleTime: 15_000, enabled: user?.role === 'admin',
+  });
 
- // ── Mutations ─────────────────────────────────────────────────────────────
- const reviewMutation = useMutation({
- mutationFn: ({ id, status, admin_note }) =>
- axios.put(`${API_URL}/api/features/admin/requests/${id}/review`, { status, admin_note }, { headers: authH() }),
- onSuccess: (_, vars) => {
- toast.success(`Request ${vars.status}`);
- queryClient.invalidateQueries({ queryKey: ['admin-feature-requests'] });
- queryClient.invalidateQueries({ queryKey: ['admin-feature-users'] });
- setReviewModal(null);
- setReviewNote('');
- },
- onError: e => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  /* ── Mutations ── */
+  const reviewMut = useMutation({
+    mutationFn: ({ id, status, admin_note }) =>
+      axios.put(`${API_URL}/api/features/admin/requests/${id}/review`, { status, admin_note }, { headers: authH() }),
+    onSuccess: (_, v) => { toast.success(`Request ${v.status}`); qc.invalidateQueries({ queryKey: ['admin-feature-requests'] }); qc.invalidateQueries({ queryKey: ['admin-feature-users'] }); setReviewModal(null); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const overrideMut = useMutation({
+    mutationFn: ({ user_id, feature_path, state, note }) =>
+      axios.put(`${API_URL}/api/features/admin/override`, { user_id, feature_path, state, note }, { headers: authH() }),
+    onSuccess: () => { toast.success('Override saved'); qc.invalidateQueries({ queryKey: ['admin-feature-users'] }); setOverrideModal(null); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
+  const removeMut = useMutation({
+    mutationFn: id => axios.delete(`${API_URL}/api/features/admin/override/${id}`, { headers: authH() }),
+    onSuccess: () => { toast.success('Override removed'); qc.invalidateQueries({ queryKey: ['admin-feature-users'] }); },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed'),
+  });
 
- const overrideMutation = useMutation({
- mutationFn: ({ user_id, feature_path, state, note }) =>
- axios.put(`${API_URL}/api/features/admin/override`, { user_id, feature_path, state, note }, { headers: authH() }),
- onSuccess: () => {
- toast.success('Override saved');
- queryClient.invalidateQueries({ queryKey: ['admin-feature-users'] });
- setOverrideModal(null);
- setOverrideNote('');
- },
- onError: e => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  /* ── Derived ── */
+  const userList   = usersData?.users     || [];
+  const requests   = requestsData?.requests || [];
+  const pending    = userList.reduce((s, u) => s + (u.pending_requests || 0), 0);
+  const overrides  = userList.reduce((s, u) => s + u.override_count, 0);
 
- const removeMutation = useMutation({
- mutationFn: (id) => axios.delete(`${API_URL}/api/features/admin/override/${id}`, { headers: authH() }),
- onSuccess: () => {
- toast.success('Override removed - reverts to care-setting default');
- queryClient.invalidateQueries({ queryKey: ['admin-feature-users'] });
- },
- onError: e => toast.error(e.response?.data?.detail || 'Failed'),
- });
+  /* ── Columns — Users tab ── */
+  const userCols = useMemo(() => [
+    col.accessor('name', {
+      header: 'User',
+      cell: info => {
+        const u        = info.row.original;
+        const initials = (u.name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const grads    = ['#0d9488','#0891b2','#059669','#7c3aed','#d97706','#e11d48'];
+        const grad     = grads[(u.id || 0) % grads.length];
+        return (
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <div style={{
+              width:34, height:34, borderRadius:10, flexShrink:0,
+              background:`linear-gradient(135deg,${grad},${grad}88)`,
+              display:'flex', alignItems:'center', justifyContent:'center',
+              fontSize:12, fontWeight:800, color:'#fff',
+              boxShadow:`0 2px 8px ${grad}35`,
+            }}>
+              {initials}
+            </div>
+            <div>
+              <p style={{ fontSize:13, fontWeight:600, color:'var(--text-800)', margin:0 }}>{u.name}</p>
+              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{u.email || '—'}</p>
+            </div>
+          </div>
+        );
+      },
+      meta: { thStyle: { minWidth: 180 } },
+    }),
+    col.accessor('role', {
+      header: 'Role',
+      cell: info => <span style={{ fontSize:12, textTransform:'capitalize', color:'var(--text-600)' }}>{info.getValue()}</span>,
+    }),
+    col.accessor('care_setting', {
+      header: 'Care Setting',
+      cell: info => <span className="text-xs" style={{ color: 'var(--text-500)' }}>{info.getValue() || '—'}</span>,
+    }),
+    col.accessor('override_count', {
+      header: 'Overrides',
+      cell: info => info.getValue() > 0
+        ? <span className="text-xs font-semibold" style={{ color: 'var(--c-teal)' }}>{info.getValue()}</span>
+        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>—</span>,
+    }),
+    col.accessor('pending_requests', {
+      header: 'Pending',
+      cell: info => info.getValue() > 0
+        ? <StatusDot color="#f59e0b" label={`${info.getValue()} pending`} size="sm" />
+        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>—</span>,
+    }),
+    col.display({
+      id: 'expand',
+      header: '',
+      cell: info => (
+        <ChevronDown
+          size={13}
+          style={{
+            color: 'var(--text-400)',
+            transition: 'transform 0.18s',
+            transform: info.row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(0)',
+          }}
+        />
+      ),
+      meta: { thStyle: { width: 32 } },
+    }),
+  ], []);
 
- // ── Filtered users ────────────────────────────────────────────────────────
- const users = useMemo(() => {
- const list = usersData?.users || [];
- if (!search) return list;
- const q = search.toLowerCase();
- return list.filter(u => u.name?.toLowerCase().includes(q) || u.role?.includes(q) || u.care_setting?.includes(q));
- }, [usersData, search]);
+  /* ── Columns — Requests tab ── */
+  const requestCols = useMemo(() => [
+    col.accessor(r => r.user?.name || `#${r.user_id}`, {
+      id: 'user',
+      header: 'User',
+      cell: info => (
+        <div>
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-800)' }}>{info.getValue()}</p>
+          <p className="text-[11px] capitalize" style={{ color: 'var(--text-400)' }}>{info.row.original.user?.role}</p>
+        </div>
+      ),
+    }),
+    col.accessor('feature_name', {
+      header: 'Feature',
+      cell: info => <span className="text-xs font-semibold" style={{ color: 'var(--text-700)' }}>{info.getValue()}</span>,
+    }),
+    col.accessor('reason', {
+      header: 'Reason',
+      cell: info => (
+        <span className="text-xs line-clamp-2" style={{ color: 'var(--text-600)', maxWidth: 220, display: 'block' }}>
+          {info.getValue() || '—'}
+        </span>
+      ),
+      meta: { tdStyle: { whiteSpace: 'normal' } },
+    }),
+    col.accessor('status', {
+      header: 'Status',
+      cell: info => {
+        const sc = REQ_STATUS[info.getValue()] || REQ_STATUS.pending;
+        const r  = info.row.original;
+        return (
+          <div>
+            <StatusDot color={sc.dot} label={sc.label} size="sm" />
+            {r.admin_note && (
+              <p className="text-[10px] mt-0.5 italic" style={{ color: 'var(--text-400)' }}>{r.admin_note}</p>
+            )}
+          </div>
+        );
+      },
+    }),
+    col.accessor('created_at', {
+      header: 'Date',
+      cell: info => (
+        <span className="text-[11px]" style={{ color: 'var(--text-400)' }}>
+          {new Date(info.getValue()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+        </span>
+      ),
+    }),
+    col.display({
+      id: 'action',
+      header: '',
+      cell: info => info.row.original.status === 'pending' ? (
+        <button
+          onClick={e => { e.stopPropagation(); setReviewModal(info.row.original); }}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            fontSize: 11, fontWeight: 700, color: '#fff',
+            background: 'linear-gradient(135deg,#0d9488,#0891b2)',
+            border: 'none', cursor: 'pointer',
+            padding: '4px 12px', borderRadius: 8,
+            boxShadow: '0 2px 6px rgba(13,148,136,0.28)',
+            transition: 'opacity 0.15s',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+          onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+        >Review</button>
+      ) : null,
+      meta: { thStyle: { width: 90 }, tdStyle: { textAlign: 'right' } },
+    }),
+  ], []);
 
- const requests = requestsData?.requests || [];
- const pendingCount = (usersData?.users || []).reduce((sum, u) => sum + (u.pending_requests || 0), 0);
+  if (user?.role !== 'admin') { navigate('/dashboard'); return null; }
 
- // ── Role guard - after all hooks ──────────────────────────────────────────
- if (user?.role !== 'admin') {
- navigate('/dashboard');
- return null;
- }
+  return (
+    <>
+      <AdminPageShell
+        icon={ToggleRight}
+        title="Feature Control"
+        meta={[
+          { label: 'users',    value: usersData?.total ?? '—' },
+          { label: 'overrides', value: overrides },
+          ...(pending > 0 ? [{ label: 'pending', value: pending, color: '#f59e0b' }] : []),
+        ]}
+        tabs={[
+          { id: 'users',    label: 'Users & Overrides', Icon: Users },
+          { id: 'requests', label: 'Access Requests',   Icon: Clock, badge: pending },
+        ]}
+        activeTab={tab}
+        onTabChange={setTab}
+        toolbar={
+          tab === 'users' ? undefined : (
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(['pending','approved','denied','all']).map(s => (
+                <button key={s} onClick={() => setStatusFilter(s)}
+                  style={{
+                    padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600,
+                    cursor: 'pointer', transition: 'all 0.15s', textTransform: 'capitalize',
+                    border: statusFilter === s ? '1px solid var(--c-teal)' : '1px solid var(--card-border)',
+                    background: statusFilter === s ? 'color-mix(in srgb,var(--c-teal) 12%,var(--card-bg))' : 'var(--card-bg)',
+                    color: statusFilter === s ? 'var(--c-teal)' : 'var(--text-500)',
+                  }}>
+                  {s === 'all' ? 'All' : s}
+                </button>
+              ))}
+            </div>
+          )
+        }
+      >
+        {/* ── USERS TAB ── */}
+        {tab === 'users' && (
+          <>
+            <DataTable
+            columns={userCols}
+            data={userList}
+            isLoading={loadingUsers}
+            searchColumnId="name"
+            searchPlaceholder="Filter by name, role…"
+            emptyTitle="No users found"
+            renderSubRow={row => (
+              <OverrideList
+                u={row.original}
+                onAdd={u => setOverrideModal({ userId: u.id, userName: u.name, featurePath: '', current: 'disabled', overrideId: null })}
+                onEdit={(uid, o) => setOverrideModal({ userId: uid, featurePath: o.feature_path, featureName: o.feature_name, current: o.state, overrideId: o.id, note: o.note })}
+                onRemove={id => removeMut.mutate(id)}
+              />
+            )}
+          />
+          </>
+        )}
 
- return (
- <div className="min-h-screen pb-12">
- <PageHeader
- image="/resources/african/african-health-tech.jpg"
- title="Feature Control Panel"
- subtitle="Manage per-user feature access, approve requests, lock or unlock features"
- icon={Shield}
- />
+        {/* ── REQUESTS TAB ── */}
+        {tab === 'requests' && (
+          <DataTable
+            columns={requestCols}
+            data={requests}
+            isLoading={loadingReqs}
+            emptyTitle="No requests"
+            emptyBody={`No ${statusFilter === 'all' ? '' : statusFilter} access requests.`}
+          />
+        )}
+      </AdminPageShell>
 
- <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5">
-
- {/* KPI row */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- {[
- { label: 'Total Users', value: usersData?.total || 0, icon: Users, color: 'text-teal-600' },
- { label: 'Pending Requests', value: pendingCount, icon: Clock, color: pendingCount > 0 ? 'text-amber-600' : 'text-slate-400' },
- { label: 'Active Overrides', value: (usersData?.users || []).reduce((s, u) => s + u.override_count, 0), icon: Shield, color: 'text-teal-600' },
- { label: 'Locked Features', value: (usersData?.users || []).reduce((s, u) => s + u.overrides.filter(o => o.state === 'locked').length, 0), icon: Lock, color: 'text-red-500' },
- ].map(({ label, value, icon: Icon, color }) => (
- <div key={label} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] px-4 py-3 flex items-center gap-3">
- <Icon size={18} className={color} />
- <div>
- <p className="text-xs text-slate-500">{label}</p>
- <p className="text-xl font-bold text-slate-800">{value}</p>
- </div>
- </div>
- ))}
- </div>
-
- {/* Tab bar */}
- <div className="flex gap-2 border-b border-[var(--card-border)] pb-0">
- {[
- { id: 'users', label: 'Users & Overrides', icon: Users },
- { id: 'requests', label: `Access Requests${pendingCount > 0 ? ` (${pendingCount})` : ''}`, icon: Clock },
- ].map(({ id, label, icon: Icon }) => (
- <button key={id} onClick={() => setActiveTab(id)}
- className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold border-b-2 transition-all ${
- activeTab === id
- ? 'border-teal-600 text-teal-700'
- : 'border-transparent text-[var(--text-500)] hover:text-slate-700'
- }`}>
- <Icon size={15} />{label}
- </button>
- ))}
- </div>
-
- {/* ── USERS TAB ── */}
- {activeTab === 'users' && (
- <div className="space-y-3">
- <div className="relative max-w-sm">
- <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
- <input value={search} onChange={e => setSearch(e.target.value)}
- placeholder="Search users..."
- className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-teal-500" />
- </div>
-
- {loadingUsers ? (
- <div className="flex items-center justify-center py-12 text-slate-400">
- <Loader2 size={24} className="animate-spin mr-2" /> Loading users...
- </div>
- ) : (
- <div className="space-y-2">
- {users.map(u => (
- <div key={u.id} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
- {/* User row */}
- <div className="flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-[var(--card-bg)] transition-colors"
- onClick={() => setExpandedUser(expandedUser === u.id ? null : u.id)}>
- <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
- {u.name?.split(' ').map(n => n[0]).join('').slice(0,2)}
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-semibold text-[var(--text-800)] text-sm truncate">{u.name}</p>
- <p className="text-xs text-[var(--text-500)] capitalize">{u.role} · {u.care_setting || 'No setting'}</p>
- </div>
- <div className="flex items-center gap-2 flex-shrink-0">
- {u.override_count > 0 && (
- <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-medium">
- {u.override_count} override{u.override_count !== 1 ? 's' : ''}
- </span>
- )}
- {u.pending_requests > 0 && (
- <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
- <Clock size={10} /> {u.pending_requests} pending
- </span>
- )}
- {expandedUser === u.id ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
- </div>
- </div>
-
- {/* Expanded overrides */}
- <AnimatePresence>
- {expandedUser === u.id && (
- <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
- exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
- className="border-t border-[var(--card-border)]/50 overflow-hidden">
- <div className="px-5 py-4 space-y-3">
- <p className="text-xs font-bold text-[var(--text-400)] ">Active Overrides</p>
- {u.overrides.length === 0 ? (
- <p className="text-sm text-[var(--text-400)] italic">No overrides - all features follow care-setting defaults</p>
- ) : (
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
- {u.overrides.map(o => {
- const sc = STATE_CFG[o.state] || STATE_CFG.disabled;
- const Icon = sc.icon;
- const src = SOURCE_CFG[o.source] || {};
- return (
- <div key={o.id} className={`flex items-center gap-2.5 px-3 py-2 rounded-lg border text-sm ${sc.cls}`}>
- <Icon size={14} className="flex-shrink-0" />
- <div className="flex-1 min-w-0">
- <p className="font-semibold truncate">{o.feature_name}</p>
- <p className={`text-[11px] ${src.cls}`}>{src.label}</p>
- </div>
- <div className="flex gap-1.5 flex-shrink-0">
- <button onClick={() => { setOverrideModal({ userId: u.id, featurePath: o.feature_path, current: o.state, overrideId: o.id }); setOverrideNote(o.note || ''); }}
- className="p-1 rounded hover:bg-white/50 transition" title="Change state">
- <RefreshCw size={12} />
- </button>
- <button onClick={() => removeMutation.mutate(o.id)}
- className="p-1 rounded hover:bg-white/50 transition" title="Remove override">
- <XCircle size={12} />
- </button>
- </div>
- </div>
- );
- })}
- </div>
- )}
-
- {/* Add new override */}
- <button onClick={() => { setOverrideModal({ userId: u.id, featurePath: '', current: 'disabled', overrideId: null }); setOverrideNote(''); }}
- className="mt-1 flex items-center gap-1.5 text-xs text-teal-600 font-semibold hover:text-teal-700 transition">
- <Shield size={13} /> Add Feature Override
- </button>
- </div>
- </motion.div>
- )}
- </AnimatePresence>
- </div>
- ))}
- </div>
- )}
- </div>
- )}
-
- {/* ── REQUESTS TAB ── */}
- {activeTab === 'requests' && (
- <div className="space-y-3">
- <div className="flex gap-2">
- {['pending', 'approved', 'denied', 'all'].map(s => (
- <button key={s} onClick={() => setStatusFilter(s)}
- className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
- statusFilter === s ? 'bg-teal-600 text-white' : 'bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-600)] hover:bg-slate-50'
- }`}>
- {s === 'all' ? 'All' : s}
- </button>
- ))}
- </div>
-
- {loadingReqs ? (
- <div className="flex items-center justify-center py-12 text-slate-400">
- <Loader2 size={24} className="animate-spin mr-2" /> Loading requests...
- </div>
- ) : requests.length === 0 ? (
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-12 text-center">
- <Clock size={36} className="mx-auto text-slate-300 mb-3" />
- <p className="text-[var(--text-500)] text-sm">No {statusFilter === 'all' ? '' : statusFilter} requests</p>
- </div>
- ) : (
- <div className="space-y-2">
- {requests.map(r => {
- const sc = STATUS_CFG[r.status] || STATUS_CFG.pending;
- const Icon = sc.icon;
- return (
- <div key={r.id} className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] px-5 py-4">
- <div className="flex items-start gap-4">
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap mb-1">
- <p className="font-semibold text-[var(--text-800)] text-sm">{r.user?.name || `User #${r.user_id || ''}`}</p>
- <span className="text-xs text-slate-400">·</span>
- <p className="text-xs text-[var(--text-500)] capitalize">{r.user?.role}</p>
- <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${sc.cls}`}>
- <Icon size={10} />{sc.label}
- </span>
- </div>
- <p className="text-sm font-medium text-teal-700 mb-1">
- Requesting: <span className="font-bold">{r.feature_name}</span>
- </p>
- <p className="text-sm text-slate-600">{r.reason}</p>
- {r.admin_note && (
- <p className="text-xs text-[var(--text-400)] mt-1 italic">Admin note: {r.admin_note}</p>
- )}
- <p className="text-xs text-[var(--text-400)] mt-1.5">
- {new Date(r.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
- </p>
- </div>
- {r.status === 'pending' && (
- <button onClick={() => { setReviewModal(r); setReviewNote(''); }}
- className="flex-shrink-0 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition">
- Review
- </button>
- )}
- </div>
- </div>
- );
- })}
- </div>
- )}
- </div>
- )}
- </div>
-
- {/* ── Review Modal ── */}
- <AnimatePresence>
- {reviewModal && (
- <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
- className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
- onClick={() => setReviewModal(null)}>
- <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
- onClick={e => e.stopPropagation()}
- className="bg-[var(--card-bg)] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
- <h2 className="text-base font-bold text-slate-800">Review Feature Request</h2>
- <div className="bg-[var(--card-bg)] rounded-xl p-4">
- <p className="text-sm font-semibold text-slate-700">{reviewModal.user?.name}</p>
- <p className="text-sm text-teal-700 font-medium mt-1">Requesting: {reviewModal.feature_name}</p>
- <p className="text-sm text-[var(--text-600)] mt-1">{reviewModal.reason}</p>
- </div>
- <div>
- <label className="block text-xs font-semibold text-slate-600r mb-1.5">Admin Note (optional)</label>
- <textarea value={reviewNote} onChange={e => setReviewNote(e.target.value)} rows={3}
- placeholder="Reason for your decision..."
- className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 resize-none" />
- </div>
- <div className="flex gap-3">
- <button onClick={() => reviewMutation.mutate({ id: reviewModal.id, status: 'denied', admin_note: reviewNote })}
- disabled={reviewMutation.isPending}
- className="flex-1 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
- <XCircle size={14} /> Deny
- </button>
- <button onClick={() => reviewMutation.mutate({ id: reviewModal.id, status: 'approved', admin_note: reviewNote })}
- disabled={reviewMutation.isPending}
- className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
- {reviewMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />} Approve
- </button>
- </div>
- </motion.div>
- </motion.div>
- )}
- </AnimatePresence>
-
- {/* ── Override Modal ── */}
- <AnimatePresence>
- {overrideModal && (
- <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
- className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
- onClick={() => setOverrideModal(null)}>
- <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
- onClick={e => e.stopPropagation()}
- className="bg-[var(--card-bg)] rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
- <h2 className="text-base font-bold text-slate-800">
- {overrideModal.overrideId ? 'Update' : 'Add'} Feature Override
- </h2>
-
- {!overrideModal.overrideId && (
- <div>
- <label className="block text-xs font-semibold text-slate-600r mb-1.5">Feature</label>
- <SearchableSelect
- accent="teal"
- value={overrideModal.featurePath || null}
- onChange={v => setOverrideModal(p => ({ ...p, featurePath: v || '' }))}
- placeholder="Select a feature..."
- options={Object.entries({
- '/memory-vault': 'Memory Vault', '/legacy-setup': 'Digital Legacy Setup',
- '/legacy-content': 'Legacy Content', '/heir-management': 'Heir Management',
- '/journal': 'Personal Journal', '/community': 'Community Hub',
- '/bereavement-support': 'Bereavement Support', '/pre-clinic': 'Pre-Clinic Checklist',
- '/appointments': 'Appointments', '/medications': 'Medications',
- '/wellness-checkin': 'Wellness Check-In', '/messages': 'Messages',
- '/my-space': 'Patient Portal (My Space)', '/resources': 'Resources',
- '/my-journey': 'My Journey Timeline', '/reports': 'Reports',
- }).map(([path, name]) => ({ value: path, label: name, sublabel: path }))}
- />
- </div>
- )}
-
- <div>
- <label className="block text-xs font-semibold text-slate-600r mb-1.5">State</label>
- <div className="grid grid-cols-3 gap-2">
- {['enabled', 'disabled', 'locked'].map(s => {
- const cfg = STATE_CFG[s];
- const Icon = cfg.icon;
- return (
- <button key={s} onClick={() => setOverrideModal(p => ({ ...p, current: s }))}
- className={`flex flex-col items-center gap-1 py-3 rounded-xl border-2 text-xs font-bold transition-all ${
- overrideModal.current === s
- ? `${cfg.cls} border-current`
- : 'border-[var(--card-border)] text-[var(--text-500)] hover:bg-slate-50'
- }`}>
- <Icon size={16} /> {cfg.label}
- </button>
- );
- })}
- </div>
- <p className="text-xs text-[var(--text-400)] mt-2">
- {overrideModal.current === 'enabled' && 'Feature will be shown even if care setting hides it.'}
- {overrideModal.current === 'disabled' && 'Feature will be hidden regardless of care setting.'}
- {overrideModal.current === 'locked' && 'Feature is hidden and the user cannot request access to it.'}
- </p>
- </div>
-
- <div>
- <label className="block text-xs font-semibold text-slate-600r mb-1.5">Note (optional)</label>
- <input value={overrideNote} onChange={e => setOverrideNote(e.target.value)}
- placeholder="Reason for this override..."
- className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500" />
- </div>
-
- <div className="flex gap-3">
- <button onClick={() => setOverrideModal(null)}
- className="flex-1 py-2.5 border border-slate-300 text-[var(--text-600)] font-semibold rounded-xl text-sm hover:bg-[var(--card-bg)] transition">
- Cancel
- </button>
- <button
- disabled={!overrideModal.featurePath || overrideMutation.isPending}
- onClick={() => overrideMutation.mutate({
- user_id: overrideModal.userId,
- feature_path: overrideModal.featurePath,
- state: overrideModal.current,
- note: overrideNote,
- })}
- className="flex-1 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition disabled:opacity-50 flex items-center justify-center gap-2">
- {overrideMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Shield size={14} />}
- Save Override
- </button>
- </div>
- </motion.div>
- </motion.div>
- )}
- </AnimatePresence>
- </div>
- );
+      {/* ── Dialogs ── */}
+      <AnimatePresence>
+        {reviewModal && (
+          <ReviewDialog
+            r={reviewModal}
+            onClose={() => setReviewModal(null)}
+            onDecide={(status, admin_note) => reviewMut.mutate({ id: reviewModal.id, status, admin_note })}
+            isPending={reviewMut.isPending}
+          />
+        )}
+        {overrideModal && (
+          <OverrideDialog
+            modal={overrideModal}
+            onClose={() => setOverrideModal(null)}
+            onSave={data => overrideMut.mutate(data)}
+            isPending={overrideMut.isPending}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
 }
