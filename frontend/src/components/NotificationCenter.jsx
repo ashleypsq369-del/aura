@@ -311,20 +311,44 @@ export default function NotificationCenter() {
 
   return (
     <>
-      {/* Bell trigger */}
+      {/* Bell trigger — animated */}
       <div className="relative">
-        <button onClick={() => setOpen(v => !v)}
+        <motion.button
+          onClick={() => setOpen(v => !v)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors"
-          aria-label="Notifications">
-          <Bell size={17} color="#ffffff" strokeWidth={2} />
+          aria-label="Notifications"
+        >
+          {/* Bell shakes when there are unread critical notifications */}
+          <motion.div
+            animate={unreadCount > 0 ? {
+              rotate: [0, -12, 12, -8, 8, -4, 4, 0],
+              transition: { duration: 0.6, delay: 1.5, repeat: Infinity, repeatDelay: 8 }
+            } : {}}
+          >
+            <Bell size={17} color="#ffffff" strokeWidth={2} />
+          </motion.div>
           {unreadCount > 0 && (
-            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
+            <motion.span
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 20 }}
               className="absolute -top-0.5 -right-0.5 bg-red-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg"
-              style={{ fontSize: 9, minWidth: 16, minHeight: 16, padding: '0 3px', lineHeight: 1 }}>
-              {unreadCount > 99 ? '99+' : unreadCount}
+              style={{ fontSize: 9, minWidth: 16, minHeight: 16, padding: '0 3px', lineHeight: 1 }}
+            >
+              {/* Pulse ring behind badge */}
+              <motion.span
+                className="absolute inset-0 rounded-full bg-red-400"
+                animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeOut' }}
+              />
+              <span style={{ position: 'relative', zIndex: 1 }}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
             </motion.span>
           )}
-        </button>
+        </motion.button>
       </div>
 
       <AnimatePresence>

@@ -267,41 +267,51 @@ export default function Login() {
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
-            {/* Demo credentials */}
+            {/* Demo credentials — clean dark cards */}
             <div className="mt-4 pt-4 border-t border-slate-200">
-              <p className="text-[11px] font-bold text-[var(--text-400)]  text-center mb-2.5">
-                Demo Accounts
+              <p className="text-[11px] font-semibold text-[var(--text-400)] text-center mb-2.5 uppercase tracking-wider">
+                Quick Demo Access
               </p>
-              <div className="grid grid-cols-3 gap-2 text-xs text-center">
+              <div className="flex gap-2">
                 {[
-                  { label: 'Clinician', user: 'clinician', color: 'blue' },
-                  { label: 'Family',    user: 'family',    color: 'green' },
-                  { label: 'Patient',   user: 'patient',   color: 'purple' },
-                ].map(({ label, user, color }) => (
-                  <button
-                    key={user}
-                    type="button"
-                    onClick={() => {
-                      setUsername(user);
-                      setPassword(`${user}123`);
-                      setFieldErrors({});
-                      setError('');
-                    }}
-                    className={`p-2 rounded-lg border text-center transition-all hover:scale-[1.03] active:scale-[0.97]
-                      ${color === 'blue'   ? 'bg-blue-50   border-blue-200   hover:border-teal-400'   :
-                        color === 'green'  ? 'bg-green-50  border-green-200  hover:border-green-400'  :
-                                             'bg-purple-50 border-purple-200 hover:border-purple-400'}`}
-                  >
-                    <p className="font-bold text-[var(--text-800)] text-[11px]">{label}</p>
-                    <p className={`font-mono text-[11px] mt-0.5
-                      ${color === 'blue' ? 'text-teal-600' :
-                        color === 'green' ? 'text-green-600' : 'text-purple-600'}`}>
-                      {user}
-                    </p>
-                  </button>
-                ))}
+                  { label:'Clinician', user:'clinician', pass:'clinician123', color:'#0891b2' },
+                  { label:'Family',   user:'family',    pass:'family123',    color:'#059669' },
+                  { label:'Patient',  user:'patient',   pass:'patient123',   color:'#7c3aed' },
+                ].map(({ label, user, pass, color }, i) => {
+                  const isActive = username === user;
+                  return (
+                    <motion.button
+                      key={user}
+                      type="button"
+                      initial={{ opacity:0, y:8 }}
+                      animate={{ opacity:1, y:0 }}
+                      transition={{ delay:0.25 + i*0.06, duration:0.22 }}
+                      whileHover={{ y:-2 }}
+                      whileTap={{ scale:0.96 }}
+                      onClick={() => { setUsername(user); setPassword(pass); setFieldErrors({}); setError(''); }}
+                      style={{
+                        flex:1, padding:'10px 8px', borderRadius:10,
+                        background: isActive ? color : '#0f172a',
+                        border: `1.5px solid ${isActive ? color : '#1e293b'}`,
+                        cursor:'pointer', transition:'all 0.15s', position:'relative', overflow:'hidden',
+                      }}
+                    >
+                      {isActive && (
+                        <motion.div
+                          initial={{ x:'-100%' }} animate={{ x:'200%' }}
+                          transition={{ duration:0.5 }}
+                          style={{ position:'absolute', inset:0, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)', pointerEvents:'none' }}
+                        />
+                      )}
+                      <p style={{ fontSize:12, fontWeight:800, color:'#fff', margin:0, letterSpacing:'-0.01em' }}>{label}</p>
+                      <p style={{ fontSize:10, color: isActive ? 'rgba(255,255,255,0.7)' : '#475569', margin:'2px 0 0', fontFamily:'monospace' }}>{user}</p>
+                    </motion.button>
+                  );
+                })}
               </div>
-              <p className="text-[11px] text-center text-[var(--text-400)] mt-2">Click any card to auto-fill credentials</p>
+              <p className="text-[10px] text-center mt-2 text-[var(--text-400)]">
+                Tap to auto-fill · password = username + 123
+              </p>
             </div>
 
           </div>

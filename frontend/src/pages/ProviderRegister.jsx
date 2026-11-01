@@ -438,43 +438,122 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
 /* ── Step 2: Service Type ────────────────────────────────────────────────────── */
 function StepServiceType({ form, set, types }) {
   return (
-    <div className="space-y-3">
-      <p className="text-sm text-slate-600">
+    <div className="space-y-2">
+      <p className="text-sm font-medium" style={{ color:'var(--text-500)' }}>
         Choose your primary service type. Your knowledge assessment will be tailored to this role.
       </p>
       {types.length === 0 ? (
-        <div className="flex flex-col items-center py-8 gap-3 text-slate-400">
+        <div className="flex flex-col items-center py-8 gap-3" style={{ color:'var(--text-400)' }}>
           <Loader2 size={22} className="animate-spin text-teal-400"/>
           <p className="text-sm">Loading service types...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {types.map(t => {
+        <div className="space-y-2">
+          {types.map((t, idx) => {
             const Icon = ICON_MAP[t.icon_name] || Heart;
-            const sel = form.service_type === t.key;
+            const sel  = form.service_type === t.key;
             return (
-              <button key={t.key} type="button" onClick={() => set('service_type', t.key)}
-                className="text-left p-4 rounded-xl border-2 transition-all"
+              <motion.button
+                key={t.key}
+                type="button"
+                onClick={() => set('service_type', t.key)}
+                initial={{ opacity:0, x:-16 }}
+                animate={{ opacity:1, x:0 }}
+                transition={{ delay: idx * 0.05, type:'spring', stiffness:300, damping:26 }}
+                whileHover={!sel ? { x:4, transition:{ type:'spring', stiffness:400, damping:22 } } : {}}
+                whileTap={{ scale:0.98 }}
                 style={{
-                  borderColor: sel ? t.color : '#e2e8f0',
-                  background: sel ? `${t.color}10` : 'white',
-                  boxShadow: sel ? `0 0 0 1px ${t.color}30` : undefined,
-                }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${t.color}20`, color: t.color }}>
-                    <Icon size={16}/>
+                  width:'100%', textAlign:'left', display:'block',
+                  background: sel ? `linear-gradient(135deg,${t.color},${t.color}cc)` : 'var(--card-bg)',
+                  border: `2px solid ${sel ? t.color : 'var(--card-border)'}`,
+                  borderRadius:14, overflow:'hidden', cursor:'pointer',
+                  boxShadow: sel ? `0 6px 24px ${t.color}40` : '0 1px 4px rgba(0,0,0,0.06)',
+                  transition:'background 0.2s, border-color 0.2s, box-shadow 0.2s',
+                  position:'relative',
+                }}
+              >
+                {/* Shimmer sweep on selection */}
+                {sel && (
+                  <motion.div
+                    initial={{ x:'-100%' }} animate={{ x:'200%' }}
+                    transition={{ duration:0.55, ease:'easeInOut' }}
+                    style={{ position:'absolute', inset:0, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)', pointerEvents:'none', zIndex:1 }}
+                  />
+                )}
+
+                <div style={{ display:'flex', alignItems:'center', gap:14, padding:'13px 14px', position:'relative', zIndex:2 }}>
+                  {/* Icon */}
+                  <motion.div
+                    animate={{ rotate: sel ? [0,-8,8,0] : 0 }}
+                    transition={{ duration:0.35 }}
+                    style={{
+                      width:42, height:42, borderRadius:12, flexShrink:0,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      background: sel ? 'rgba(255,255,255,0.2)' : `${t.color}15`,
+                      border: sel ? '1.5px solid rgba(255,255,255,0.3)' : `1.5px solid ${t.color}30`,
+                    }}>
+                    <Icon size={19} style={{ color: sel ? '#fff' : t.color }} strokeWidth={2}/>
+                  </motion.div>
+
+                  {/* Text */}
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:2 }}>
+                      <p style={{ fontSize:14, fontWeight:800, margin:0, color: sel?'#fff':'var(--text-900)', letterSpacing:'-0.01em' }}>
+                        {t.label}
+                      </p>
+                      {t.min_pass_score && (
+                        <span style={{
+                          fontSize:9, fontWeight:800, padding:'2px 7px', borderRadius:999, flexShrink:0,
+                          background: sel ? 'rgba(255,255,255,0.2)' : `${t.color}12`,
+                          color: sel ? '#fff' : t.color,
+                          border: sel ? '1px solid rgba(255,255,255,0.3)' : `1px solid ${t.color}30`,
+                        }}>
+                          {t.min_pass_score}% to pass
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ fontSize:12, color: sel?'rgba(255,255,255,0.78)':'var(--text-500)', margin:0, lineHeight:1.5 }}>
+                      {t.description}
+                    </p>
+                    {/* Certifications */}
+                    {t.required_certifications?.length > 0 && (
+                      <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginTop:6 }}>
+                        {t.required_certifications.slice(0,2).map(c => (
+                          <span key={c} style={{
+                            fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:6,
+                            background: sel ? 'rgba(255,255,255,0.15)' : 'var(--page-bg)',
+                            color: sel ? 'rgba(255,255,255,0.9)' : 'var(--text-600)',
+                            border: sel ? '1px solid rgba(255,255,255,0.2)' : '1px solid var(--card-border)',
+                          }}>
+                            {c}
+                          </span>
+                        ))}
+                        {t.required_certifications.length > 2 && (
+                          <span style={{ fontSize:9, color: sel?'rgba(255,255,255,0.6)':'var(--text-400)', padding:'2px 0' }}>
+                            +{t.required_certifications.length-2} more
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {sel && <CheckCircle size={14} style={{ color: t.color }} className="ml-auto"/>}
+
+                  {/* Right — checkmark or chevron */}
+                  <div style={{ flexShrink:0 }}>
+                    {sel ? (
+                      <motion.div
+                        initial={{ scale:0, rotate:-90 }}
+                        animate={{ scale:1, rotate:0 }}
+                        transition={{ type:'spring', stiffness:500, damping:22 }}>
+                        <CheckCircle size={20} style={{ color:'#fff' }} strokeWidth={2.5}/>
+                      </motion.div>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 4l4 4-4 4" stroke="var(--card-border)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
                 </div>
-                <p className="font-bold text-sm text-[var(--text-900)] leading-tight">{t.label}</p>
-                <p className="text-[11px] text-[var(--text-600)] mt-0.5 leading-snug">{t.description}</p>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                    Min pass: {t.min_pass_score}%
-                  </span>
-                </div>
-              </button>
+              </motion.button>
             );
           })}
         </div>
