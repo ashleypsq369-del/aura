@@ -307,16 +307,15 @@ export default function Alerts() {
         title="Clinical Alerts"
         subtitle="Active patient safety alerts — sorted by severity"
         icon={ShieldAlert}
+        stats={[
+          { label:'Critical',  value:kpi.critical, color:'#f87171', pulse:kpi.critical>0,  onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },
+          { label:'High',      value:kpi.high,     color:'#fbbf24', pulse:false,            onClick:()=>{setFilterSeverity('high');    setFilterStatus('active');} },
+          { label:'Active',    value:kpi.active,   color:'#2dd4bf', pulse:false,            onClick:()=>{setFilterSeverity('all');     setFilterStatus('active');} },
+          { label:'Resolved today', value:kpi.resolved, color:'#4ade80', pulse:false,      onClick:()=>{setFilterSeverity('all');     setFilterStatus('acknowledged');} },
+        ]}
       />
 
       <div style={{ maxWidth:1100, margin:'0 auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:20 }}>
-
-        {/* KPI strip */}
-        <KpiStrip
-          kpi={kpi}
-          filterSeverity={filterSeverity} filterStatus={filterStatus}
-          setFilterSeverity={setFilterSeverity} setFilterStatus={setFilterStatus}
-        />
 
         {/* Filter card */}
         <div style={{

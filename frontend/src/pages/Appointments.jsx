@@ -378,7 +378,13 @@ export default function Appointments() {
  isFamily ? "Your loved one's appointment schedule" :
  "Patient appointments - schedule, complete, cancel and track visits"
  }
- icon={Calendar}>
+ icon={Calendar}
+ stats={[
+ { label:'Upcoming',  value:kpi.upcoming,  color:'#2dd4bf', pulse:false, onClick:()=>setFilterStatus('active')   },
+ { label:'Today',     value:kpi.today,     color:'#38bdf8', pulse:kpi.today>0, onClick:()=>setFilterStatus('active')   },
+ { label:'Completed', value:kpi.completed, color:'#4ade80', pulse:false, onClick:()=>setFilterStatus('resolved') },
+ { label:'Cancelled', value:kpi.cancelled, color:'rgba(255,255,255,0.55)', pulse:false, onClick:()=>setFilterStatus('all') },
+ ]}>
  {canSchedule && patientId && (
  <button onClick={() => setShowModal(true)}
  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold">
@@ -418,29 +424,9 @@ export default function Appointments() {
  </div>
  )}
 
- {/* KPI cards */}
- <div className={`px-6 ${appointmentsHidden ? 'opacity-30 pointer-events-none' : ''}`}>
- <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
- <KpiCard label="Upcoming" value={kpi.upcoming} icon={Calendar}
- color="bg-teal-50 text-teal-700 border-teal-400"
- selected={filterStatus==='active'} onClick={() => setFilterStatus('active')}
- subtitle="Scheduled visits"/>
- <KpiCard label="Today" value={kpi.today} icon={Clock}
- color="bg-cyan-50 text-cyan-700 border-cyan-400"
- selected={false} onClick={() => setFilterStatus('active')}
- subtitle={new Date().toLocaleDateString('en-GB',{weekday:'long'})}/>
- <KpiCard label="Completed" value={kpi.completed} icon={CheckCircle}
- color="bg-emerald-50 text-emerald-700 border-emerald-400"
- selected={filterStatus==='resolved'} onClick={() => setFilterStatus('resolved')}
- subtitle="Done appointments"/>
- <KpiCard label="Cancelled" value={kpi.cancelled} icon={XCircle}
- color="bg-slate-100 text-[var(--text-600)] border-slate-400"
- selected={false} onClick={() => setFilterStatus('all')}
- subtitle="Cancelled visits"/>
- </div>
- </div>
+ {/* KPI cards removed — stats moved into PageHeader */}
 
- {/* Today's reminders */}
+ {/* Personalisation */} {/* Today's reminders */}
  {todayReminders.length > 0 && (
  <div className="px-6">
  <div className="bg-teal-50 border-l-4 border-l-teal-500 border border-teal-200 rounded-r-xl p-4">

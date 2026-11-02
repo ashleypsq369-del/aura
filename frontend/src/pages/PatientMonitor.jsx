@@ -190,32 +190,39 @@ export default function PatientMonitor() {
  </span>
  )}
  </div>
- </div>
- </div>
 
- {/* ── Quick Vitals strip ── */}
+ {/* ── Vitals stat strip — Services DNA inside header ── */}
  {latest && (
- <div className="px-6">
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- <VitalCard icon={Heart} label="Heart Rate" unit="bpm"
- value={Math.round(latest.heart_rate ?? 0)}
- status={getStatus(latest.heart_rate, 60, 100)}
- normalRange="60–100" />
- <VitalCard icon={Activity} label="Blood Pressure" unit="mmHg"
- value={`${Math.round(latest.blood_pressure_sys ?? 0)}/${Math.round(latest.blood_pressure_dia ?? 0)}`}
- status={getStatus(latest.blood_pressure_sys, 90, 140)}
- normalRange="90–140 sys" />
- <VitalCard icon={Droplets} label="O₂ Saturation" unit="%"
- value={parseFloat((latest.oxygen_saturation ?? 0).toFixed(1))}
- status={getStatus(latest.oxygen_saturation, 95, 100)}
- normalRange="95–100%" />
- <VitalCard icon={Thermometer} label="Temperature" unit="°C"
- value={parseFloat((latest.temperature ?? 0).toFixed(1))}
- status={getStatus(latest.temperature, 36.5, 37.5)}
- normalRange="36.5–37.5°C" />
+ <div className="mt-4 flex flex-wrap items-stretch gap-0 overflow-hidden rounded-xl"
+ style={{ background:'rgba(0,0,0,0.32)', backdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.14)', display:'inline-flex' }}>
+ {[
+ { label:'Heart Rate', value:`${Math.round(latest.heart_rate??0)} bpm`, icon:Heart, status:getStatus(latest.heart_rate,60,100) },
+ { label:'Blood Pressure', value:`${Math.round(latest.blood_pressure_sys??0)}/${Math.round(latest.blood_pressure_dia??0)}`, icon:Activity, status:getStatus(latest.blood_pressure_sys,90,140) },
+ { label:'O₂ Sat', value:`${parseFloat((latest.oxygen_saturation??0).toFixed(1))}%`, icon:Droplets, status:getStatus(latest.oxygen_saturation,95,100) },
+ { label:'Temp', value:`${parseFloat((latest.temperature??0).toFixed(1))}°C`, icon:Thermometer, status:getStatus(latest.temperature,36.5,37.5) },
+ ].map((v, i) => {
+ const statusColor = v.status==='critical' ? '#f87171' : v.status==='warning' ? '#fbbf24' : '#4ade80';
+ return (
+ <div key={v.label} style={{
+ display:'flex', alignItems:'center', gap:10,
+ padding:'9px 16px',
+ borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.10)' : 'none',
+ }}>
+ <div style={{ width:3, height:32, borderRadius:2, background:statusColor, flexShrink:0, boxShadow:`0 0 8px ${statusColor}80` }}/>
+ <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
+ <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+ <v.icon size={11} style={{ color:statusColor, flexShrink:0 }} aria-hidden="true"/>
+ <span style={{ fontSize:15, fontWeight:900, color:'#fff', fontVariantNumeric:'tabular-nums', lineHeight:1 }}>{v.value}</span>
  </div>
+ <span style={{ fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.55)', whiteSpace:'nowrap' }}>{v.label}</span>
+ </div>
+ </div>
+ );
+ })}
  </div>
  )}
+ </div>
+ </div>
 
  {/* ── Tab bar ── */}
  <div className="px-6">

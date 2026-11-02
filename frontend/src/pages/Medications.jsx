@@ -434,7 +434,14 @@ export default function Medications() {
  isCaregiver ? "Patient medications - record doses and flag missed administrations" :
  "Prescriptions, dosage schedules, reminders and interaction monitoring"
  }
- icon={Pill}>
+ icon={Pill}
+ stats={[
+ { label: 'Active', value: active.length, icon: Pill, color: '#2dd4bf', onClick: () => setFilterTab('active') },
+ { label: 'Discontinued', value: inactive.length, icon: Ban, color: 'rgba(255,255,255,0.8)', onClick: () => setFilterTab('inactive') },
+ { label: 'Due in 24h', value: reminders.length, icon: Bell, color: '#fbbf24', pulse: reminders.length > 0 },
+ { label: 'Drug Interactions', value: severeInts.length, icon: AlertTriangle, color: severeInts.length > 0 ? '#f87171' : 'rgba(255,255,255,0.6)', pulse: severeInts.length > 0 },
+ ]}
+ >
  {canEdit && patientId && (
  <button onClick={() => setShowAddModal(true)}
  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all">
@@ -451,26 +458,6 @@ export default function Medications() {
  doneMsg="✓ Medication acknowledgement recorded for today."
  />
  )}
-
- {/* KPI cards */}
- <div className="px-6">
- <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
- <KpiCard label="Active" value={active.length} icon={Pill}
- color="bg-teal-50 text-teal-700 border-teal-400"
- selected={filterTab==='active'} onClick={() => setFilterTab('active')}
- subtitle="Currently prescribed"/>
- <KpiCard label="Discontinued" value={inactive.length} icon={Ban}
- color="bg-slate-100 text-[var(--text-600)] border-slate-400"
- selected={filterTab==='inactive'} onClick={() => setFilterTab('inactive')}
- subtitle="Stopped medications"/>
- <KpiCard label="Dose Reminders" value={reminders.length} icon={Bell}
- color="bg-amber-50 text-amber-700 border-amber-400"
- selected={false} onClick={() => {}} subtitle="Due in next 24h"/>
- <KpiCard label="Drug Interactions" value={severeInts.length} icon={AlertTriangle}
- color={severeInts.length > 0 ? "bg-red-50 text-red-700 border-red-400" : "bg-[var(--card-bg)] text-[var(--text-500)] border-slate-300"}
- selected={false} onClick={() => {}} subtitle={severeInts.length > 0 ? "Severe/major flags" : "None detected"}/>
- </div>
- </div>
 
  {/* Drug interaction warning */}
  {severeInts.length > 0 && (

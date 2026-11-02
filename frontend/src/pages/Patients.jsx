@@ -174,6 +174,12 @@ export default function Patients() {
  title="Patients"
  subtitle="Manage patient records and care"
  icon={Users}
+ stats={[
+ { label: 'Total',        value: patients?.length ?? 0,           color: '#2dd4bf', pulse: false },
+ { label: 'Critical',     value: patients?.filter(p=>p.status==='critical').length    ?? 0, color: '#f87171', pulse: (patients?.filter(p=>p.status==='critical').length??0)>0, onClick:()=>setFilterStatus('critical') },
+ { label: 'Deteriorating',value: patients?.filter(p=>p.status==='deteriorating').length ?? 0, color: '#fbbf24', pulse: false, onClick:()=>setFilterStatus('deteriorating') },
+ { label: 'Stable',       value: patients?.filter(p=>p.status==='stable').length      ?? 0, color: '#4ade80', pulse: false, onClick:()=>setFilterStatus('stable') },
+ ]}
  >
  <button
  onClick={() => setShowAddModal(true)}
