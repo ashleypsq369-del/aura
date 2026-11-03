@@ -386,6 +386,7 @@ export default function Register() {
  role: data.role,
  phone: data.phone ? country.dial + data.phone.replace(/^0/,'') : undefined,
  care_setting: data.care_setting || undefined,
+ consent_given: true,
  }),
  onSuccess: (res) => {
  const { access_token, user } = res.data;

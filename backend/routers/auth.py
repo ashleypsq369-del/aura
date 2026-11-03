@@ -63,6 +63,7 @@ class RegisterRequest(BaseModel):
     location: Optional[str] = None
     linked_patient_id: Optional[int] = None
     care_setting: Optional[str] = None
+    consent_given: Optional[bool] = False
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -182,8 +183,10 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
 
     # Check if user has completed the questionnaire
     prefs = db.query(PatientPreferences).filter(PatientPreferences.user_id == user.id).first()
-    # Default to False (not complete) if no prefs exist -- forces questionnaire for new patient/family users
-    questionnaire_complete = prefs.questionnaire_complete if prefs else False
+    # Only force questionnaire for patient/family who explicitly have NOT completed it.
+    # If no prefs row exists yet (e.g. seeded demo accounts), treat as complete
+    # so demo users don't get stuck in the onboarding loop.
+    questionnaire_complete = prefs.questionnaire_complete if prefs else True
     needs_questionnaire = (user.role in ["patient", "family"]) and not questionnaire_complete
 
     access_token = create_access_token(data={"sub": str(user.id), "role": user.role})
@@ -241,7 +244,7 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
         phone=request.phone,
         is_active=True,
         is_verified=False,
-        consent_given=False,
+        consent_given=bool(getattr(request, 'consent_given', False)),
         created_at=datetime.utcnow(),
     )
     # Save care_setting only (no longer storing gender/dob/address on User model)

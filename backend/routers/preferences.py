@@ -96,7 +96,8 @@ async def save_preferences(
                 data[key] = 0
     # ── End sanitize ──────────────────────────────────────────────────────
 
-    user_id = data.get("user_id", current_user.id)
+    # Always use the authenticated user's ID from JWT — never trust body user_id
+    user_id = current_user.id
     patient_id = data.get("patient_id")
     
     # Check if preferences exist
