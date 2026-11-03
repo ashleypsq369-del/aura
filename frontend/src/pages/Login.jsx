@@ -267,13 +267,13 @@ export default function Login() {
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
-            {/* About link */}
-            <p className="mt-2 text-center text-xs text-[var(--text-400)]">
-              <Link to="/about" className="text-teal-600 hover:underline font-semibold">About this project</Link>
-              {' · '}
-              <Link to="/terms" className="hover:underline">Terms</Link>
-              {' · '}
-              <Link to="/privacy" className="hover:underline">Privacy</Link>
+            {/* Footer links */}
+            <p className="mt-3 text-center text-[11px] text-[var(--text-400)]">
+              <Link to="/about" className="hover:text-teal-600 transition-colors font-medium">About</Link>
+              <span className="mx-1.5 opacity-40">·</span>
+              <Link to="/terms" className="hover:text-teal-600 transition-colors">Terms</Link>
+              <span className="mx-1.5 opacity-40">·</span>
+              <Link to="/privacy" className="hover:text-teal-600 transition-colors">Privacy</Link>
             </p>
 
             {/* Demo credentials — compact role pills */}
