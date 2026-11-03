@@ -5,6 +5,7 @@
  * About type is wider (560px) and shows project info.
  */
 import { createPortal } from 'react-dom';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -72,10 +73,17 @@ const CONFIG = {
 /* ─── Modal ─────────────────────────────────────────────────────── */
 export default function LegalModal({ type = 'terms', open, onClose, onAccept }) {
   const cfg = CONFIG[type] || CONFIG.terms;
+  const [accepted, setAccepted] = useState(false);
+
+  // Reset accepted state when modal closes
+  useEffect(() => {
+    if (!open) setTimeout(() => setAccepted(false), 300);
+  }, [open]);
 
   const handleAccept = () => {
+    setAccepted(true);
     onAccept?.();
-    onClose();
+    setTimeout(() => onClose(), 900);
   };
 
   if (typeof document === 'undefined') return null;
@@ -153,11 +161,17 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
               <div style={{ padding:'14px 22px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, flexShrink:0, background:'#fff' }}>
                 {cfg.showAccept ? (
                   <>
-                    <button onClick={handleAccept}
-                      style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700, background:'#0d9488', color:'#fff', border:'none', cursor:'pointer', boxShadow:'0 2px 8px rgba(13,148,136,0.3)' }}
-                      onMouseEnter={e=>e.currentTarget.style.background='#0f766e'}
-                      onMouseLeave={e=>e.currentTarget.style.background='#0d9488'}>
-                      {cfg.acceptLabel}
+                    <button onClick={handleAccept} disabled={accepted}
+                      style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700,
+                        background: accepted ? '#059669' : '#0d9488',
+                        color:'#fff', border:'none', cursor: accepted ? 'default' : 'pointer',
+                        boxShadow: accepted ? '0 2px 8px rgba(5,150,105,0.3)' : '0 2px 8px rgba(13,148,136,0.3)',
+                        transition:'all 0.2s', display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
+                      onMouseEnter={e=>{ if(!accepted) e.currentTarget.style.background='#0f766e'; }}
+                      onMouseLeave={e=>{ if(!accepted) e.currentTarget.style.background='#0d9488'; }}>
+                      {accepted ? (
+                        <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Accepted</>
+                      ) : cfg.acceptLabel}
                     </button>
                     <button onClick={onClose}
                       style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:600, background:'#fff', color:'#0d9488', border:'1.5px solid #0d9488', cursor:'pointer' }}
@@ -167,11 +181,17 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
                     </button>
                   </>
                 ) : (
-                  <button onClick={onClose}
-                    style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700, background:'#0d9488', color:'#fff', border:'none', cursor:'pointer', boxShadow:'0 2px 8px rgba(13,148,136,0.3)' }}
-                    onMouseEnter={e=>e.currentTarget.style.background='#0f766e'}
-                    onMouseLeave={e=>e.currentTarget.style.background='#0d9488'}>
-                    {cfg.acceptLabel}
+                  <button onClick={accepted ? undefined : handleAccept}
+                    style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700,
+                      background: accepted ? '#059669' : '#0d9488',
+                      color:'#fff', border:'none', cursor: accepted ? 'default' : 'pointer',
+                      boxShadow:'0 2px 8px rgba(13,148,136,0.3)', transition:'all 0.2s',
+                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
+                    onMouseEnter={e=>{ if(!accepted) e.currentTarget.style.background='#0f766e'; }}
+                    onMouseLeave={e=>{ if(!accepted) e.currentTarget.style.background= accepted ? '#059669' : '#0d9488'; }}>
+                    {accepted ? (
+                      <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Got it</>
+                    ) : cfg.acceptLabel}
                   </button>
                 )}
               </div>

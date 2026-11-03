@@ -703,13 +703,22 @@ export default function Register() {
  </div>
 
  {/* Terms */}
- <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-300 cursor-pointer transition-colors bg-slate-50/80">
+ <label className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors bg-slate-50/80 ${terms ? 'border-teal-400 bg-teal-50/60' : 'border-[var(--card-border)] hover:border-teal-300'}`}>
  <input type="checkbox" checked={terms} onChange={e => { setTerms(e.target.checked); setServerErr(''); }}
  className="mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer"/>
  <p className="text-xs text-[var(--text-600)] leading-relaxed">
- I agree to the{' '}
- <button type="button" onClick={() => setShowTermsModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Terms of Service</button>{' '}and{' '}
- <button type="button" onClick={() => setShowPrivacyModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Privacy Policy</button>, and consent to my health information being used for care coordination purposes.
+ {terms ? (
+   <span className="flex items-center gap-1.5 text-teal-700 font-semibold">
+     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#0d9488"/><path d="M4 7l2.5 2.5L10 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+     Terms accepted — you agreed to the Terms of Service and Privacy Policy
+   </span>
+ ) : (
+   <>
+     I agree to the{' '}
+     <button type="button" onClick={() => setShowTermsModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Terms of Service</button>{' '}and{' '}
+     <button type="button" onClick={() => setShowPrivacyModal(true)} className="text-teal-600 font-semibold underline hover:text-teal-700 bg-none border-none cursor-pointer p-0">Privacy Policy</button>, and consent to my health information being used for care coordination purposes.
+   </>
+ )}
  </p>
  </label>
 
