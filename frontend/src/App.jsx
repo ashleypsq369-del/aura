@@ -92,6 +92,7 @@ import Settings from './pages/Settings';
 import TouchDemo from './pages/TouchDemo';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import About from './pages/About';
 import Layout from './components/layout/Layout';
 import AuraChat from './components/AuraChat';
 import AIAssistant from './components/AIAssistant';
@@ -404,6 +405,7 @@ function AppRoutes() {
  {/* Legal pages — public, no auth needed */}
  <Route path="/terms" element={<TermsOfService />} />
  <Route path="/privacy" element={<PrivacyPolicy />} />
+ <Route path="/about" element={<About />} />
  {/* Chatbot redirect - public (catches pre-login visits), preserves ?userId= params */}
  <Route path="/chatbot" element={<RedirectWithSearch to="/messages" />} />
  

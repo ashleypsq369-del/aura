@@ -394,6 +394,19 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  </span>
  )}
  </button>
+
+ {/* About link */}
+ {showLabels && (
+   <Link
+     to="/about"
+     onClick={() => setIsOpen(false)}
+     className="mt-2 flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+     style={{ textDecoration: 'none' }}
+   >
+     <span style={{ fontSize: 10 }}>ℹ️</span>
+     <span className="text-[11px] text-white/40 hover:text-white/70 transition-colors">About Project Aura</span>
+   </Link>
+ )}
  </div>
  </aside>
  </>
