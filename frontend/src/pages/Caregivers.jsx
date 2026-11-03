@@ -565,9 +565,13 @@ export default function Caregivers() {
       )}
 
       {/* ── Underline tab bar ── */}
-      <div style={{ background:'var(--card-bg)', borderBottom:'1px solid var(--card-border)', boxShadow:'0 1px 4px rgba(0,0,0,0.04)' }}>
-        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
-          <div data-tab-list style={{ position:'relative', display:'flex', overflowX:'auto', scrollbarWidth:'none' }}>
+      {/* ── Unified tab container: tab bar + content in one surface ── */}
+      <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px 40px' }}>
+        <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
+
+          {/* Tab bar */}
+          <div style={{ borderBottom:'1px solid var(--card-border)' }}>
+            <div data-tab-list style={{ position:'relative', display:'flex', overflowX:'auto', scrollbarWidth:'none', padding:'0 4px' }}>
             {TABS.map(({ id, label, Icon }) => (
               <button
                 key={id}
@@ -601,11 +605,10 @@ export default function Caregivers() {
               boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
             }} />
           </div>
-        </div>
-      </div>
+          </div>
 
-      {/* ── Tab content ── */}
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'20px 20px 0' }}>
+          {/* ── Tab content ── */}
+          <div style={{ padding:'20px' }}>
 
           {/* ══ TEAM TAB ══ */}
           {tab==='team' && (
@@ -881,7 +884,9 @@ export default function Caregivers() {
               )}
             </div>
           )}
+          </div>
         </div>
+      </div>
 
       {/* Modals */}
       <AnimatePresence>

@@ -214,35 +214,37 @@ export default function CareSettings() {
         )}
       </PageHeader>
 
-      {/* ── Tab bar ── */}
-      <div style={{ background:'var(--card-bg)', borderBottom:'1px solid var(--card-border)', boxShadow:'0 1px 4px rgba(0,0,0,0.04)' }}>
-        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
-          <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none' }}>
-            {tabs.map(tab => {
-              const TabIcon = tab.icon;
-              const active  = activeTab === tab.id;
-              return (
-                <button key={tab.id} onClick={() => switchTab(tab.id)} style={{
-                  display:'flex', alignItems:'center', gap:6,
-                  padding:'11px 18px', fontSize:13,
-                  fontWeight: active ? 700 : 500,
-                  color: active ? 'var(--c-teal)' : 'var(--text-500)',
-                  background:'transparent', border:'none', cursor:'pointer',
-                  whiteSpace:'nowrap', flexShrink:0, transition:'color 0.15s',
-                  borderBottom: active ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
-                  marginBottom:-1,
-                }}>
-                  <TabIcon size={13} />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      {/* ── Unified tab container ── */}
+      <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px 40px' }}>
+        <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
-      {/* ── Tab content ── */}
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'20px 20px 0' }}>
+          {/* Tab bar */}
+          <div style={{ borderBottom:'1px solid var(--card-border)' }}>
+            <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none', padding:'0 4px' }}>
+              {tabs.map(tab => {
+                const TabIcon = tab.icon;
+                const active  = activeTab === tab.id;
+                return (
+                  <button key={tab.id} onClick={() => switchTab(tab.id)} style={{
+                    display:'flex', alignItems:'center', gap:6,
+                    padding:'11px 18px', fontSize:13,
+                    fontWeight: active ? 700 : 500,
+                    color: active ? 'var(--c-teal)' : 'var(--text-500)',
+                    background:'transparent', border:'none', cursor:'pointer',
+                    whiteSpace:'nowrap', flexShrink:0, transition:'color 0.15s',
+                    borderBottom: active ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
+                    marginBottom:-1,
+                  }}>
+                    <TabIcon size={13} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Tab content */}
+          <div style={{ padding:'20px' }}>
 
         {/* ── OVERVIEW ── */}
         {activeTab === 'overview' && isStaff && (
@@ -484,6 +486,8 @@ export default function CareSettings() {
           />
         )}
 
+        </div>
+        </div>
       </div>
 
       {/* ── Request Change Modal ── */}

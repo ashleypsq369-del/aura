@@ -1144,40 +1144,36 @@ export default function AIInsights() {
  </div>
  </PageHeader>
 
- {/* ── Underline tab bar ── */}
- <div style={{ background:'var(--card-bg)', borderBottom:'1px solid var(--card-border)', boxShadow:'0 1px 4px rgba(0,0,0,0.04)' }}>
-   <div style={{ maxWidth:1300, margin:'0 auto', padding:'0 20px' }}>
-     <div data-tab-list style={{ position:'relative', display:'flex' }}>
-       {[
-         { id:'risk',   label:'Risk Stratification', Icon:Brain    },
-         { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
-         { id:'system', label:'System Overview',      Icon:BarChart2 },
-       ].map(({ id, label, Icon: Ico }) => (
-         <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
-           style={{
-             display:'flex', alignItems:'center', gap:6,
-             padding:'10px 18px', fontSize:13, fontWeight: activeTab===id ? 700 : 500,
-             color: activeTab===id ? 'var(--c-teal)' : 'var(--text-500)',
-             background:'transparent', border:'none', cursor:'pointer',
-             whiteSpace:'nowrap', transition:'color 0.15s',
-           }}>
-           <Ico size={13} />{label}
-         </button>
-       ))}
-       <span id="ai-tab-indicator" aria-hidden style={{
-         position:'absolute', bottom:0, height:2.5, borderRadius:2,
-         background:'linear-gradient(90deg,#0d9488,#0891b2)',
-         transition:'left 0.22s cubic-bezier(.34,1.56,.64,1), width 0.22s cubic-bezier(.34,1.56,.64,1)',
-         left: activeTab==='risk' ? 0 : activeTab==='drugs' ? 160 : 308,
-         width: activeTab==='risk' ? 158 : activeTab==='drugs' ? 146 : 150,
-         pointerEvents:'none', boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
-       }} />
-     </div>
-   </div>
- </div>
+ {/* ── Unified tab container ── */}
+ <div style={{ maxWidth:1300, margin:'16px auto 0', padding:'0 20px 40px' }}>
+   <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
- {/* ── Content ── */}
- <div style={{ maxWidth:1300, margin:'0 auto', padding:'20px 20px 0' }}>
+     {/* Tab bar */}
+     <div style={{ borderBottom:'1px solid var(--card-border)' }}>
+       <div data-tab-list style={{ position:'relative', display:'flex', padding:'0 4px' }}>
+         {[
+           { id:'risk',   label:'Risk Stratification', Icon:Brain    },
+           { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
+           { id:'system', label:'System Overview',      Icon:BarChart2 },
+         ].map(({ id, label, Icon: Ico }) => (
+           <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
+             style={{
+               display:'flex', alignItems:'center', gap:6,
+               padding:'11px 18px', fontSize:13, fontWeight: activeTab===id ? 700 : 500,
+               color: activeTab===id ? 'var(--c-teal)' : 'var(--text-500)',
+               background:'transparent', border:'none', cursor:'pointer',
+               whiteSpace:'nowrap', transition:'color 0.15s',
+               borderBottom: activeTab===id ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
+               marginBottom:-1,
+             }}>
+             <Ico size={13} />{label}
+           </button>
+         ))}
+       </div>
+     </div>
+
+     {/* Tab content */}
+     <div style={{ padding:'20px' }}>
 
  {/* Risk tab content */}
  {activeTab === 'risk' && (
@@ -1252,6 +1248,8 @@ export default function AIInsights() {
 
  {activeTab === 'drugs' && <DrugInteractionsTab />}
  {activeTab === 'system' && <SystemOverviewTab batchRisk={batchRisk} sysData={sysData} onScan={() => scanMutation.mutate()} scanning={scanMutation.isPending} />}
+     </div>
+   </div>
  </div>
  </motion.div>
  );
