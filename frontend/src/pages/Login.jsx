@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LoginSlideshow from '../components/LoginSlideshow';
+import LegalModal from '../components/LegalModal';
 
 // ── client-side validation ────────────────────────────────────────────────
 function validate(username, password) {
@@ -36,6 +37,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy' | null
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -261,7 +263,7 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Register link — single clean CTA */}
+            {/* Register link */}
             <p className="mt-4 text-center text-xs text-[var(--text-500)]">
               New to Project Aura?{' '}
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
@@ -271,10 +273,20 @@ export default function Login() {
             <p className="mt-3 text-center text-[11px] text-[var(--text-400)]">
               <Link to="/about" className="hover:text-teal-600 transition-colors font-medium">About</Link>
               <span className="mx-1.5 opacity-40">·</span>
-              <Link to="/terms" className="hover:text-teal-600 transition-colors">Terms</Link>
+              <button type="button" onClick={() => setLegalModal('terms')}
+                className="hover:text-teal-600 transition-colors bg-transparent border-none cursor-pointer p-0 text-[11px] text-[var(--text-400)]">
+                Terms
+              </button>
               <span className="mx-1.5 opacity-40">·</span>
-              <Link to="/privacy" className="hover:text-teal-600 transition-colors">Privacy</Link>
+              <button type="button" onClick={() => setLegalModal('privacy')}
+                className="hover:text-teal-600 transition-colors bg-transparent border-none cursor-pointer p-0 text-[11px] text-[var(--text-400)]">
+                Privacy
+              </button>
             </p>
+
+            {/* Legal modals */}
+            <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
+            <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
 
             {/* Demo credentials — compact role pills */}
             <div className="mt-4 pt-4 border-t border-slate-200">

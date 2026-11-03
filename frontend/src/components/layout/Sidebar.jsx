@@ -395,17 +395,16 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  )}
  </button>
 
- {/* About link */}
+ {/* Copyright strip — only when labels visible */}
  {showLabels && (
-   <Link
-     to="/about"
-     onClick={() => setIsOpen(false)}
-     className="mt-2 flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
-     style={{ textDecoration: 'none' }}
-   >
-     <span style={{ fontSize: 10 }}>ℹ️</span>
-     <span className="text-[11px] text-white/40 hover:text-white/70 transition-colors">About Project Aura</span>
-   </Link>
+   <div style={{ marginTop:10, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.08)' }}>
+     <p style={{ fontSize:10, color:'rgba(255,255,255,0.28)', textAlign:'center', lineHeight:1.6, margin:0 }}>
+       © 2026 Project Aura · Group 31
+     </p>
+     <p style={{ fontSize:10, color:'rgba(255,255,255,0.18)', textAlign:'center', margin:'2px 0 0' }}>
+       UMaT Tarkwa · Academic prototype
+     </p>
+   </div>
  )}
  </div>
  </aside>
