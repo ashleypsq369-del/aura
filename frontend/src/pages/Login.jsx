@@ -272,6 +272,7 @@ export default function Login() {
             {/* Legal modals */}
             <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
             <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
+            <LegalModal type="about"   open={legalModal === 'about'}   onClose={() => setLegalModal(null)} />
 
             {/* Demo credentials — compact role pills */}
             <div className="mt-4 pt-4 border-t border-slate-200">
@@ -332,27 +333,26 @@ export default function Login() {
 
           {/* Footer — outside the card, below it */}
           <div className="mt-4 text-center">
-            {/* Links + copyright in one tight block */}
             <p style={{ fontSize:12, fontWeight:600, margin:'0 0 5px', lineHeight:1.6 }}>
-              <Link to="/about"
-                style={{ color:'rgba(255,255,255,0.85)', textDecoration:'none' }}
-                className="lg:text-[var(--text-600)] hover:opacity-70">
+              <button type="button" onClick={() => setLegalModal('about')}
+                style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.92)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'rgba(45,212,191,0.8)', textUnderlineOffset:3 }}
+                className="lg:text-teal-700 lg:decoration-teal-500">
                 About
-              </Link>
+              </button>
               <span style={{ color:'rgba(255,255,255,0.35)', margin:'0 8px' }} className="lg:text-[var(--text-300)]">·</span>
               <button type="button" onClick={() => setLegalModal('terms')}
-                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.85)', background:'none', border:'none', cursor:'pointer', padding:0 }}
-                className="lg:text-[var(--text-600)] hover:opacity-70">
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.92)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'rgba(45,212,191,0.8)', textUnderlineOffset:3 }}
+                className="lg:text-[var(--text-600)]">
                 Terms
               </button>
               <span style={{ color:'rgba(255,255,255,0.35)', margin:'0 8px' }} className="lg:text-[var(--text-300)]">·</span>
               <button type="button" onClick={() => setLegalModal('privacy')}
-                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.85)', background:'none', border:'none', cursor:'pointer', padding:0 }}
-                className="lg:text-[var(--text-600)] hover:opacity-70">
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.92)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'rgba(45,212,191,0.8)', textUnderlineOffset:3 }}
+                className="lg:text-[var(--text-600)]">
                 Privacy
               </button>
             </p>
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.50)', margin:0 }}
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.55)', margin:0 }}
               className="lg:text-[var(--text-400)] drop-shadow">
               © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
             </p>

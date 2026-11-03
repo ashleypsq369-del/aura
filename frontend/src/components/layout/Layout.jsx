@@ -350,25 +350,19 @@ export default function Layout({ children }) {
    borderTop:'1px solid var(--card-border)',
    background:'var(--card-bg)',
  }}>
-   <p style={{ fontSize:12, fontWeight:600, margin:'0 0 4px', color:'var(--text-500)', lineHeight:1.6 }}>
-     <Link to="/about"
-       style={{ color:'var(--text-500)', textDecoration:'none' }}
-       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
-       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+   <p style={{ fontSize:12, fontWeight:600, margin:'0 0 4px', lineHeight:1.6 }}>
+     <button type="button" onClick={() => setLegalModal('about')}
+       style={{ fontSize:12, fontWeight:700, color:'var(--c-teal)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--c-teal)', textUnderlineOffset:3 }}>
        About
-     </Link>
+     </button>
      <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('terms')}
-       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
-       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
-       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--text-300)', textUnderlineOffset:3 }}>
        Terms
      </button>
      <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('privacy')}
-       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
-       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
-       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--text-300)', textUnderlineOffset:3 }}>
        Privacy
      </button>
    </p>
@@ -380,6 +374,7 @@ export default function Layout({ children }) {
  {/* Legal modals */}
  <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
  <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
+ <LegalModal type="about"   open={legalModal === 'about'}   onClose={() => setLegalModal(null)} />
  </motion.div>
  </main>
       <FeedbackWidget />
