@@ -11,10 +11,8 @@ import {
   UserPlus, Phone, Mail, Zap, Heart, Star,
   Loader2, Brain, ChevronLeft, ChevronRight,
   TrendingUp, BarChart2, ListChecks, CheckCircle,
-  Shield, Award, MapPin, MessageCircle, Calendar,
-  Activity, Navigation, Stethoscope, Sparkles,
-  Camera, FileText, Globe, BadgeCheck, Clock, Info,
-  ChevronRight as CRight,
+  Shield, Award, MapPin, MessageCircle,
+  BadgeCheck, Stethoscope,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -74,18 +72,12 @@ function BurnoutDot({ level }) {
 }
 
 /* ─── Worker Card ─────────────────────────────────────────────────────────── */
-function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMessage, onViewProfile }) {
+function WorkerCard({ cg, workload, burnoutLevel, gradPair, trust, onBurnoutClick, onMessage, onViewProfile }) {
   const wl = workload||{};
   const capInfo = capColor(wl.capacity_status);
   const activePatients = wl.active_patients??0;
   const workloadPct    = Math.min(wl.workload_score??0, 100);
   const [g1,g2] = gradPair;
-
-  const { data:trust } = useQuery({
-    queryKey: ['trust-profile', cg.id],
-    queryFn:  () => trustProfileAPI.get(cg.id).then(r=>r.data),
-    enabled: !!cg.id, staleTime: 10*60*1000,
-  });
 
   return (
     <motion.div
@@ -135,8 +127,8 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, onBurnoutClick, onMe
           {trust?.nmc_pin          && <VerifyBadge icon={Award}    label={`NMC ${trust.nmc_pin}`}  color="#0d9488" />}
           {trust?.ghana_card_verified && <VerifyBadge icon={Shield}   label="Ghana Card"              color="#0891b2" />}
           {trust?.is_professional  && <VerifyBadge icon={BadgeCheck} label="Verified Pro"            color="#059669" />}
-          {!trust?.nmc_pin && !trust?.ghana_card_verified && (
-            <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>Badges loading…</span>
+          {trust && !trust?.nmc_pin && !trust?.ghana_card_verified && !trust?.is_professional && (
+            <span style={{ fontSize:11, color:'var(--text-400)', fontStyle:'italic' }}>No badges on file</span>
           )}
         </div>
 
@@ -325,7 +317,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
                   <p style={{ fontSize:11, fontWeight:700, color:'var(--text-400)', marginBottom:8 }}>Risk Signals</p>
                   <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
                     {data.signals.map((s,i) => (
-                      <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, padding:'8px 12px', background:'#fffbeb', border:'1px solid #fde68a', borderRadius:10, fontSize:12 }}>
+                      <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:8, padding:'8px 12px', background:'var(--warn-bg, #fffbeb)', border:'1px solid var(--warn-border, #fde68a)', borderRadius:10, fontSize:12 }}>
                         <span style={{ width:6, height:6, borderRadius:'50%', background:'#f59e0b', flexShrink:0, marginTop:4 }} />
                         <span style={{ fontWeight:600, color:'var(--text-700)', flex:1 }}>{s.signal}</span>
                         {s.value && <span style={{ color:'var(--text-400)', marginLeft:'auto' }}>{s.value}</span>}
@@ -361,68 +353,7 @@ function BurnoutModal({ cg, data, loading, onClose }) {
   );
 }
 
-/* ─── Feature showcase (unchanged) ───────────────────────────────────────── */
-const FEATURES = [
-  { num:'01', title:'Post-Visit Care Report', desc:'After every completed appointment, a full care report is auto-generated and sent instantly to the patient\'s family.', icon:FileText, color:'#0d9488', where:'Appointments page → completed appointment card → "View Report"', route:'/appointments' },
-  { num:'02', title:'Enhanced Status Flow', desc:'Appointments follow a 6-step visual journey: Scheduled → Nurse Assigned → En Route → Visit Active → Report Ready → Completed.', icon:Navigation, color:'#0891b2', where:'Appointments page → any appointment card → status badge stepper', route:'/appointments' },
-  { num:'03', title:'Caregiver Trust Profile', desc:'Every nurse and caregiver shows their NMC PIN badge, Ghana Card verification, star rating and specialisation.', icon:Shield, color:'#059669', where:'This page → any worker card → "Trust Profile" button', route:'/caregivers' },
-  { num:'04', title:'Family Dashboard Hero', desc:'A hero card greets family members with the most recent visit summary.', icon:Heart, color:'#e11d48', where:'Dashboard → Family view → top hero card', route:'/dashboard' },
-  { num:'05', title:'Wound Care Module', desc:'Track wound healing with per-site logs: size, depth, exudate, healing stage and treatment applied.', icon:Camera, color:'#7c3aed', where:'Patient Detail → "Wound Care" quick action card', route:'/patients' },
-  { num:'06', title:'Cultural Care Profile', desc:'Record each patient\'s preferred language, religious preference, cultural practices and spiritual care requests.', icon:Globe, color:'#0369a1', where:'Patient Detail page → bottom section "Cultural Care Profile"', route:'/patients' },
-  { num:'07', title:'Care Pathway Selector', desc:'A guided 4-step wizard helps families choose the right care type.', icon:Stethoscope, color:'#b45309', where:'My Space → "Care Pathway" quick action card', route:'/care-pathway-selector' },
-  { num:'08', title:'Service Quality Ratings', desc:'5-star ratings with punctuality, communication, care quality and cleanliness breakdown after every completed visit.', icon:Star, color:'#d97706', where:'Appointments page → completed visit → "Rate This Visit" button', route:'/appointments' },
-];
 
-function FeatureShowcase({ navigate }) {
-  return (
-    <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-      {/* Banner */}
-      <div style={{ borderRadius:14, padding:'14px 16px', background:'linear-gradient(135deg,#f0fdfa,#e0f2fe)', border:'1px solid #99f6e4', display:'flex', alignItems:'flex-start', gap:12 }}>
-        <div style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, boxShadow:'0 2px 8px rgba(13,148,136,0.3)' }}>
-          <Sparkles size={16} style={{ color:'#fff' }} />
-        </div>
-        <div>
-          <p style={{ fontWeight:700, fontSize:13, color:'#0f766e', margin:'0 0 2px' }}>8 New Ghana Homecare Features</p>
-          <p style={{ fontSize:11, color:'#0d9488', margin:0 }}>Inspired by AgedCare Ghana, HomeCare GH, GNA Healthcare, JASBEK, Nurse 24/7, and CareEdge. Each feature is fully live.</p>
-        </div>
-      </div>
-
-      {/* Grid */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:12 }}>
-        {FEATURES.map((f, idx) => {
-          const Icon = f.icon;
-          return (
-            <motion.div key={f.num}
-              initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay:idx*0.04 }}
-              onClick={() => navigate(f.route)}
-              style={{ borderRadius:14, border:'1px solid var(--card-border)', overflow:'hidden', background:'var(--card-bg)', cursor:'pointer', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', transition:'all 0.15s' }}
-              onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 6px 20px rgba(0,0,0,0.10)';e.currentTarget.style.transform='translateY(-2px)';}}
-              onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)';e.currentTarget.style.transform='translateY(0)';}}>
-              <div style={{ height:3, background:f.color }} />
-              <div style={{ padding:'12px 14px', display:'flex', gap:12 }}>
-                <div style={{ width:38, height:38, borderRadius:10, background:`${f.color}15`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                  <Icon size={18} style={{ color:f.color }} />
-                </div>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
-                    <span style={{ fontSize:10, fontWeight:700, color:'var(--text-400)' }}>{f.num}</span>
-                    <p style={{ fontWeight:700, fontSize:12, color:'var(--text-800)', margin:0 }}>{f.title}</p>
-                  </div>
-                  <p style={{ fontSize:11, color:'var(--text-500)', lineHeight:1.5, margin:'0 0 8px' }}>{f.desc}</p>
-                  <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:10, color:'var(--text-400)', borderTop:'1px solid var(--card-border)', paddingTop:6 }}>
-                    <Info size={9} />
-                    <span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', flex:1 }}>{f.where}</span>
-                    <CRight size={10} style={{ color:'var(--text-300)', flexShrink:0 }} />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Main Component
@@ -477,6 +408,21 @@ export default function Caregivers() {
   const burnoutList  = Array.isArray(burnoutRaw) ? burnoutRaw : burnoutRaw?.caregivers || [];
   const patientList  = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
 
+  /* Batch trust-profile fetch — one query for ALL caregivers, not one per card (fixes B1) */
+  const { data:trustProfilesRaw } = useQuery({
+    queryKey: ['trust-profiles-all'],
+    queryFn:  () => trustProfileAPI.getAll().then(r => r.data),
+    enabled:  caregivers.length > 0,
+    staleTime: 10*60*1000,
+  });
+  /* Build a lookup map by caregiver id. Falls back to per-id GET if getAll not supported */
+  const trustMap = useMemo(() => {
+    if (!trustProfilesRaw) return {};
+    const list = Array.isArray(trustProfilesRaw) ? trustProfilesRaw : trustProfilesRaw?.profiles || [];
+    const m = {};
+    list.forEach(tp => { if (tp.user_id || tp.caregiver_id) m[tp.user_id ?? tp.caregiver_id] = tp; });
+    return m;
+  }, [trustProfilesRaw]);
   const workloadMap = useMemo(() => {
     const m = {};
     (teamRaw?.team_metrics||[]).forEach(tm => { m[tm.caregiver_id] = tm.workload; });
@@ -496,10 +442,10 @@ export default function Caregivers() {
   const overloaded    = Object.values(workloadMap).filter(w=>w?.capacity_status==='overloaded').length;
 
   const FILTERS = [
-    { id:'all',       label:'All',       count:caregivers.length },
-    { id:'available', label:'Available', count:caregivers.length-overloaded },
-    { id:'burnout',   label:'At Risk',   count:burnoutAlerts },
-    { id:'overloaded',label:'Overloaded',count:overloaded },
+    { id:'all',       label:'All',       count: isLoading ? '—' : caregivers.length },
+    { id:'available', label:'Available', count: isLoading ? '—' : caregivers.length-overloaded },
+    { id:'burnout',   label:'At Risk',   count: isLoading ? '—' : burnoutAlerts },
+    { id:'overloaded',label:'Overloaded',count: isLoading ? '—' : overloaded },
   ];
 
   const filtered = useMemo(() => caregivers.filter(cg => {
@@ -546,7 +492,6 @@ export default function Caregivers() {
     { id:'team',       label:'Team',       Icon:Users },
     { id:'analytics',  label:'Analytics',  Icon:BarChart2 },
     { id:'assignments',label:'Assignments',Icon:ListChecks },
-    { id:'whats-new',  label:"What's New", Icon:Sparkles },
     ...(isCaregiver ? [{ id:'mypatients', label:'My Patients', Icon:Heart }] : []),
   ];
 
@@ -560,7 +505,49 @@ export default function Caregivers() {
         title="Care Team"
         subtitle="Verified nurses · caregivers · clinicians · Ghana Card & NMC trust profiles"
         icon={HeartHandshake}
-      />
+        stats={[
+          { label:'Team',       value: caregivers.length,                    color:'#2dd4bf', pulse:false },
+          { label:'Available',  value: caregivers.length - overloaded,       color:'#4ade80', pulse:false, onClick:()=>setFilter('available') },
+          { label:'At Risk',    value: burnoutAlerts,                        color:'#fbbf24', pulse:burnoutAlerts>0, onClick:()=>setFilter('burnout') },
+          { label:'Overloaded', value: overloaded,                           color:'#f87171', pulse:overloaded>0, onClick:()=>setFilter('overloaded') },
+        ]}
+      >
+        {/* Only show search+filter when on Team tab */}
+        {tab==='team' && (
+          <>
+            {/* Search */}
+            <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:280 }}>
+              <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+              <input value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}} placeholder="Search by name, role, email…"
+                style={{ width:'100%', height:34, paddingLeft:32, paddingRight:search?30:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+                onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+                onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
+              {search && (
+                <button onClick={()=>setSearch('')} style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', width:18, height:18, borderRadius:5, background:'var(--card-border)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <X size={10} style={{ color:'var(--text-500)' }}/>
+                </button>
+              )}
+            </div>
+            {/* Filter pills */}
+            <div style={{ display:'flex', gap:5 }}>
+              {FILTERS.map(f=>(
+                <button key={f.id} onClick={()=>{setFilter(f.id);setPage(0);}} style={{
+                  display:'flex', alignItems:'center', gap:5,
+                  padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
+                  border: filter===f.id ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
+                  background: filter===f.id ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
+                  color: filter===f.id ? 'var(--c-teal)' : 'var(--text-500)',
+                }}>
+                  {f.label}
+                  <span style={{ fontSize:10, fontWeight:800, padding:'0 5px', borderRadius:99, background:filter===f.id?'var(--c-teal)':'var(--page-bg)', color:filter===f.id?'#fff':'var(--text-400)' }}>
+                    {f.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </PageHeader>
 
       {/* Burnout alert banner */}
       {burnoutAlerts > 0 && (
@@ -577,9 +564,9 @@ export default function Caregivers() {
         </div>
       )}
 
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
-        {/* ── Underline tab bar ── */}
-        <div style={{ borderBottom:'1px solid var(--card-border)', marginTop:16 }}>
+      {/* ── Underline tab bar ── */}
+      <div style={{ background:'var(--card-bg)', borderBottom:'1px solid var(--card-border)', boxShadow:'0 1px 4px rgba(0,0,0,0.04)' }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 20px' }}>
           <div data-tab-list style={{ position:'relative', display:'flex', overflowX:'auto', scrollbarWidth:'none' }}>
             {TABS.map(({ id, label, Icon }) => (
               <button
@@ -602,9 +589,7 @@ export default function Caregivers() {
                     {caregivers.length}
                   </span>
                 )}
-                {id==='whats-new' && (
-                  <span style={{ fontSize:10, fontWeight:800, padding:'1px 6px', borderRadius:99, background:'#0d9488', color:'#fff' }}>8</span>
-                )}
+
               </button>
             ))}
             {/* Sliding underline */}
@@ -617,47 +602,14 @@ export default function Caregivers() {
             }} />
           </div>
         </div>
+      </div>
 
-        {/* ── Tab content ── */}
-        <div style={{ paddingTop:20 }}>
+      {/* ── Tab content ── */}
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'20px 20px 0' }}>
 
           {/* ══ TEAM TAB ══ */}
           {tab==='team' && (
             <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-              {/* Filter bar — wrapped in card surface */}
-              <div style={{ borderRadius:14, border:'1px solid var(--card-border)', background:'var(--card-bg)', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', overflow:'hidden' }}>
-                <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)' }} />
-                <div style={{ padding:'12px 14px', display:'flex', flexWrap:'wrap', alignItems:'center', gap:10 }}>
-                  {/* Search */}
-                  <div style={{ position:'relative', flex:1, minWidth:200 }}>
-                    <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
-                    <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by name, role or email…"
-                      style={{ width:'100%', height:36, paddingLeft:32, paddingRight:search?30:12, fontSize:12, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
-                      onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
-                      onBlur={e=>(e.target.style.borderColor='var(--card-border)')}
-                    />
-                    {search && <button onClick={()=>setSearch('')} style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', width:18, height:18, borderRadius:5, background:'var(--card-border)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}><X size={10} style={{ color:'var(--text-500)' }} /></button>}
-                  </div>
-                  {/* Filter pills */}
-                  <div style={{ display:'flex', gap:5, flexWrap:'wrap' }}>
-                    {FILTERS.map(f => (
-                      <button key={f.id} onClick={()=>setFilter(f.id)} style={{
-                        display:'flex', alignItems:'center', gap:5,
-                        padding:'5px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-                        border: filter===f.id ? '1px solid var(--c-teal)' : '1px solid var(--card-border)',
-                        background: filter===f.id ? 'color-mix(in srgb,var(--c-teal) 12%,var(--card-bg))' : 'transparent',
-                        color: filter===f.id ? 'var(--c-teal)' : 'var(--text-500)',
-                        cursor:'pointer', transition:'all 0.15s',
-                      }}>
-                        {f.label}
-                        <span style={{ fontSize:10, fontWeight:800, padding:'0 5px', borderRadius:99, background: filter===f.id?'var(--c-teal)':'var(--page-bg)', color: filter===f.id?'#fff':'var(--text-400)' }}>
-                          {f.count}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
 
               {/* Worker grid */}
               {isLoading ? (
@@ -679,9 +631,10 @@ export default function Caregivers() {
                         <WorkerCard key={cg.id||i} cg={cg}
                           workload={workloadMap[cg.id]}
                           burnoutLevel={burnoutLevelMap[cg.id]}
-                          gradPair={TEAL_GRADS[(page*PAGE_SIZE+i)%TEAL_GRADS.length]}
+                          gradPair={TEAL_GRADS[cg.id % TEAL_GRADS.length]}
+                          trust={trustMap[cg.id]}
                           onBurnoutClick={()=>openBurnout(cg)}
-                          onMessage={()=>navigate('/messages')}
+                          onMessage={()=>navigate(`/messages?recipient=${cg.id}&name=${encodeURIComponent(cg.full_name||'')}`)}
                           onViewProfile={()=>setTrustCg(cg)}
                         />
                       ))}
@@ -788,8 +741,8 @@ export default function Caregivers() {
                         <div key={i} style={{
                           display:'flex', alignItems:'flex-start', gap:10,
                           padding:'10px 14px', borderRadius:10, fontSize:12,
-                          background: rec.includes('⚠')||rec.includes('❌') ? '#fffbeb' : '#f0fdfa',
-                          border: rec.includes('⚠')||rec.includes('❌') ? '1px solid #fde68a' : '1px solid #99f6e4',
+                          background: rec.includes('⚠')||rec.includes('❌') ? 'var(--warn-bg,#fffbeb)' : '#f0fdfa',
+                          border: rec.includes('⚠')||rec.includes('❌') ? '1px solid var(--warn-border,#fde68a)' : '1px solid #99f6e4',
                           color: rec.includes('⚠')||rec.includes('❌') ? '#92400e' : '#0f766e',
                         }}>
                           <TrendingUp size={13} style={{ flexShrink:0, marginTop:1 }} />{rec}
@@ -890,8 +843,7 @@ export default function Caregivers() {
             </div>
           )}
 
-          {/* ══ WHAT'S NEW TAB ══ */}
-          {tab==='whats-new' && <FeatureShowcase navigate={navigate} />}
+          {/* ══ WHAT'S NEW TAB ══ — removed (B2: unrelated to care team mgmt) */}
 
           {/* ══ MY PATIENTS TAB (caregiver) ══ */}
           {tab==='mypatients' && (
@@ -930,7 +882,6 @@ export default function Caregivers() {
             </div>
           )}
         </div>
-      </div>
 
       {/* Modals */}
       <AnimatePresence>

@@ -1087,48 +1087,66 @@ export default function AIInsights() {
  title="AI Clinical Intelligence"
  subtitle="XGBoost · 8 Models · Real SHAP · Auto-refresh 30s"
  icon={Brain}
+ stats={[
+ { label:'All',      value:kpi.total,    color:'#2dd4bf', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('all');} },
+ { label:'Critical', value:kpi.critical, color:'#f87171', pulse:kpi.critical>0, onClick:()=>{setActiveTab('risk');setFilterRisk('critical');} },
+ { label:'High Risk',value:kpi.high,     color:'#fbbf24', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('high');} },
+ { label:'Stable',   value:kpi.stable,   color:'#4ade80', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('stable');} },
+ ]}
  >
- <button onClick={() => { refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
- className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30">
- <RefreshCw size={12} /> Refresh
+ {/* Risk tab search + filter — only shown when on risk tab */}
+ {activeTab === 'risk' && (
+ <>
+ <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:300 }}>
+ <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+ <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
+ placeholder="Search patients, diagnoses…"
+ style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+ onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+ onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
+ </div>
+ <div style={{ display:'flex', gap:4 }}>
+ {[{v:'all',l:'All'},{v:'critical',l:'Crisis'},{v:'high',l:'High'},{v:'moderate',l:'Medium'},{v:'stable',l:'Stable'}].map(({v,l})=>{
+ const colors={critical:'#ef4444',high:'#f97316',moderate:'#f59e0b',stable:'#10b981',all:'#334155'};
+ const c=colors[v]||'#334155'; const active=filterRisk===v;
+ return (
+ <button key={v} onClick={()=>setFilterRisk(v)} style={{
+ padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
+ border: active ? `1.5px solid ${c}` : '1px solid var(--card-border)',
+ background: active ? `${c}12` : 'var(--card-bg)',
+ color: active ? c : 'var(--text-500)',
+ }}>{l}</button>
+ );
+ })}
+ </div>
+ </>
+ )}
+ {/* Action buttons — always visible */}
+ <div style={{ display:'flex', gap:6, marginLeft:'auto', flexShrink:0 }}>
+ <button onClick={()=>{refetchSys();queryClient.invalidateQueries(['batch-risk']);toast.success('Refreshed');}} style={{
+ display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
+ fontSize:11, fontWeight:600, border:'1px solid var(--card-border)', background:'var(--card-bg)',
+ color:'var(--text-600)', cursor:'pointer', transition:'all 0.15s',
+ }}
+ onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--c-teal)';e.currentTarget.style.color='var(--c-teal)';}}
+ onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';e.currentTarget.style.color='var(--text-600)';}}>
+ <RefreshCw size={12}/> Refresh
  </button>
- <button onClick={() => scanMutation.mutate()} disabled={scanMutation.isPending}
- className="flex items-center gap-1.5 px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl text-xs font-bold transition border border-white/30 disabled:opacity-60">
- {scanMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
- {scanMutation.isPending ? 'Scanning…' : 'Run AI Scan'}
+ <button onClick={()=>scanMutation.mutate()} disabled={scanMutation.isPending} style={{
+ display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
+ fontSize:11, fontWeight:700, border:'none', cursor:scanMutation.isPending?'not-allowed':'pointer',
+ background:'linear-gradient(135deg,#7c3aed,#6d28d9)', color:'#fff',
+ boxShadow:'0 2px 8px rgba(124,58,237,0.3)', opacity:scanMutation.isPending?0.6:1, transition:'opacity 0.15s',
+ }}>
+ {scanMutation.isPending?<Loader2 size={11} className="animate-spin"/>:<Zap size={11}/>}
+ {scanMutation.isPending?'Scanning…':'Run AI Scan'}
  </button>
+ </div>
  </PageHeader>
 
- {/* ── KPI strip ── */}
- <div style={{ maxWidth:1300, margin:'0 auto', padding:'16px 20px 0' }}>
-   <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
-     {KPI_PILLS.map(({ v, label, count, icon: Ico, activeColor }) => {
-       const isActive = filterRisk===v && activeTab==='risk';
-       return (
-         <button key={v} onClick={()=>{ setActiveTab('risk'); setFilterRisk(v); }}
-           style={{
-             display:'flex', alignItems:'center', gap:8,
-             padding:'8px 14px', borderRadius:12,
-             background: isActive ? `${activeColor}15` : 'var(--card-bg)',
-             border: isActive ? `1.5px solid ${activeColor}` : '1px solid var(--card-border)',
-             cursor:'pointer', transition:'all 0.15s',
-             boxShadow: isActive ? `0 2px 10px ${activeColor}20` : '0 1px 4px rgba(0,0,0,0.05)',
-           }}>
-           <Ico size={14} style={{ color: isActive ? activeColor : 'var(--text-400)' }} />
-           <span style={{ fontSize:20, fontWeight:900, lineHeight:1, color: isActive ? activeColor : 'var(--text-800)' }}>{count}</span>
-           <span style={{ fontSize:11, fontWeight:600, color: isActive ? activeColor : 'var(--text-500)', whiteSpace:'nowrap' }}>{label}</span>
-           {v==='critical' && count>0 && !isActive && (
-             <span style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', animation:'pulse 2s infinite' }} />
-           )}
-         </button>
-       );
-     })}
-   </div>
- </div>
-
  {/* ── Underline tab bar ── */}
- <div style={{ maxWidth:1300, margin:'0 auto', padding:'0 20px' }}>
-   <div style={{ borderBottom:'1px solid var(--card-border)', marginTop:12 }}>
+ <div style={{ background:'var(--card-bg)', borderBottom:'1px solid var(--card-border)', boxShadow:'0 1px 4px rgba(0,0,0,0.04)' }}>
+   <div style={{ maxWidth:1300, margin:'0 auto', padding:'0 20px' }}>
      <div data-tab-list style={{ position:'relative', display:'flex' }}>
        {[
          { id:'risk',   label:'Risk Stratification', Icon:Brain    },
@@ -1146,15 +1164,13 @@ export default function AIInsights() {
            <Ico size={13} />{label}
          </button>
        ))}
-       {/* Sliding indicator */}
        <span id="ai-tab-indicator" aria-hidden style={{
          position:'absolute', bottom:0, height:2.5, borderRadius:2,
          background:'linear-gradient(90deg,#0d9488,#0891b2)',
          transition:'left 0.22s cubic-bezier(.34,1.56,.64,1), width 0.22s cubic-bezier(.34,1.56,.64,1)',
          left: activeTab==='risk' ? 0 : activeTab==='drugs' ? 160 : 308,
          width: activeTab==='risk' ? 158 : activeTab==='drugs' ? 146 : 150,
-         pointerEvents:'none',
-         boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
+         pointerEvents:'none', boxShadow:'0 1px 4px rgba(13,148,136,0.35)',
        }} />
      </div>
    </div>
@@ -1162,39 +1178,6 @@ export default function AIInsights() {
 
  {/* ── Content ── */}
  <div style={{ maxWidth:1300, margin:'0 auto', padding:'20px 20px 0' }}>
-
- {/* Risk tab search + filter */}
- {activeTab === 'risk' && (
-   <div style={{ borderRadius:14, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', marginBottom:20, boxShadow:'0 2px 8px rgba(0,0,0,0.04)' }}>
-     <div style={{ height:3, background:'linear-gradient(90deg,#ef4444,#f59e0b,#0d9488,#10b981)' }} />
-     <div style={{ padding:'12px 14px', display:'flex', flexWrap:'wrap', alignItems:'center', gap:10 }}>
-       <div style={{ position:'relative', flex:1, minWidth:200 }}>
-         <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
-         <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)} placeholder="Search patients, diagnoses, concerns…"
-           style={{ width:'100%', height:36, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:10, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
-           onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
-           onBlur={e=>(e.target.style.borderColor='var(--card-border)')} />
-       </div>
-       <div style={{ display:'flex', alignItems:'center', gap:5 }}>
-         <ListFilter size={12} style={{ color:'var(--text-400)' }} />
-         {[{v:'all',l:'All'},{v:'critical',l:'Crisis'},{v:'high',l:'High'},{v:'moderate',l:'Medium'},{v:'stable',l:'Stable'}].map(({v,l})=>{
-           const active = filterRisk===v;
-           const colors = { critical:'#ef4444', high:'#f97316', moderate:'#f59e0b', stable:'#10b981', all:'#334155' };
-           const c = colors[v]||'#334155';
-           return (
-             <button key={v} onClick={()=>setFilterRisk(v)} style={{
-               padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-               border: active ? `1px solid ${c}` : '1px solid var(--card-border)',
-               background: active ? `${c}15` : 'transparent',
-               color: active ? c : 'var(--text-500)',
-               cursor:'pointer', transition:'all 0.15s',
-             }}>{l}</button>
-           );
-         })}
-       </div>
-     </div>
-   </div>
- )}
 
  {/* Risk tab content */}
  {activeTab === 'risk' && (
