@@ -218,24 +218,31 @@ export default function CareSettings() {
       <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px 40px' }}>
         <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
-          {/* Tab bar */}
-          <div style={{ borderBottom:'1px solid var(--card-border)' }}>
-            <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none', padding:'0 4px' }}>
+          {/* Tab bar — pill segment control */}
+          <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
+            <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none', gap:2, padding:'10px 0' }}>
               {tabs.map(tab => {
                 const TabIcon = tab.icon;
                 const active  = activeTab === tab.id;
                 return (
                   <button key={tab.id} onClick={() => switchTab(tab.id)} style={{
                     display:'flex', alignItems:'center', gap:6,
-                    padding:'11px 18px', fontSize:13,
-                    fontWeight: active ? 700 : 500,
-                    color: active ? 'var(--c-teal)' : 'var(--text-500)',
-                    background:'transparent', border:'none', cursor:'pointer',
-                    whiteSpace:'nowrap', flexShrink:0, transition:'color 0.15s',
-                    borderBottom: active ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
-                    marginBottom:-1,
-                  }}>
-                    <TabIcon size={13} />
+                    padding:'7px 14px',
+                    fontSize:12, fontWeight: active ? 700 : 500,
+                    color: active ? '#fff' : 'var(--text-500)',
+                    background: active
+                      ? 'linear-gradient(135deg,#0d9488,#0891b2)'
+                      : 'transparent',
+                    border: active ? 'none' : '1px solid transparent',
+                    borderRadius:8,
+                    cursor:'pointer', whiteSpace:'nowrap', flexShrink:0,
+                    transition:'all 0.15s',
+                    boxShadow: active ? '0 2px 8px rgba(13,148,136,0.25)' : 'none',
+                  }}
+                  onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background='var(--page-bg)'; e.currentTarget.style.color='var(--text-700)'; }}}
+                  onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-500)'; }}}
+                  >
+                    <TabIcon size={12} style={{ opacity: active ? 1 : 0.7 }} />
                     {tab.label}
                   </button>
                 );

@@ -1148,27 +1148,33 @@ export default function AIInsights() {
  <div style={{ maxWidth:1300, margin:'16px auto 0', padding:'0 20px 40px' }}>
    <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
-     {/* Tab bar */}
-     <div style={{ borderBottom:'1px solid var(--card-border)' }}>
-       <div data-tab-list style={{ position:'relative', display:'flex', padding:'0 4px' }}>
+     {/* Tab bar — pill segment control */}
+     <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
+       <div style={{ display:'flex', gap:2, padding:'10px 0' }}>
          {[
            { id:'risk',   label:'Risk Stratification', Icon:Brain    },
            { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
            { id:'system', label:'System Overview',      Icon:BarChart2 },
-         ].map(({ id, label, Icon: Ico }) => (
-           <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
-             style={{
-               display:'flex', alignItems:'center', gap:6,
-               padding:'11px 18px', fontSize:13, fontWeight: activeTab===id ? 700 : 500,
-               color: activeTab===id ? 'var(--c-teal)' : 'var(--text-500)',
-               background:'transparent', border:'none', cursor:'pointer',
-               whiteSpace:'nowrap', transition:'color 0.15s',
-               borderBottom: activeTab===id ? '2.5px solid var(--c-teal)' : '2.5px solid transparent',
-               marginBottom:-1,
-             }}>
-             <Ico size={13} />{label}
-           </button>
-         ))}
+         ].map(({ id, label, Icon: Ico }) => {
+           const active = activeTab === id;
+           return (
+             <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
+               style={{
+                 display:'flex', alignItems:'center', gap:6,
+                 padding:'7px 14px', fontSize:12, fontWeight: active ? 700 : 500,
+                 color: active ? '#fff' : 'var(--text-500)',
+                 background: active ? 'linear-gradient(135deg,#0d9488,#0891b2)' : 'transparent',
+                 border:'none', borderRadius:8,
+                 cursor:'pointer', whiteSpace:'nowrap', transition:'all 0.15s',
+                 boxShadow: active ? '0 2px 8px rgba(13,148,136,0.25)' : 'none',
+               }}
+               onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background='var(--page-bg)'; e.currentTarget.style.color='var(--text-700)'; }}}
+               onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-500)'; }}}
+             >
+               <Ico size={12} style={{ opacity: active ? 1 : 0.7 }} />{label}
+             </button>
+           );
+         })}
        </div>
      </div>
 

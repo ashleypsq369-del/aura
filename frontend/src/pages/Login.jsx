@@ -267,50 +267,58 @@ export default function Login() {
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
-            {/* Demo credentials — clean dark cards */}
+            {/* Demo credentials — compact role pills */}
             <div className="mt-4 pt-4 border-t border-slate-200">
               <p className="text-[11px] font-semibold text-[var(--text-400)] text-center mb-2.5 uppercase tracking-wider">
                 Quick Demo Access
               </p>
-              <div className="flex gap-2">
+              <div className="grid grid-cols-4 gap-1.5">
                 {[
-                  { label:'Clinician', user:'clinician', pass:'clinician123', color:'#0891b2' },
-                  { label:'Family',   user:'family',    pass:'family123',    color:'#059669' },
-                  { label:'Patient',  user:'patient',   pass:'patient123',   color:'#7c3aed' },
-                ].map(({ label, user, pass, color }, i) => {
+                  { label:'Clinician', user:'clinician', pass:'Clinician1234', color:'#0891b2', bg:'#eff6ff' },
+                  { label:'Caregiver', user:'caregiver', pass:'Care1234',      color:'#0d9488', bg:'#f0fdfa' },
+                  { label:'Patient',   user:'patient',   pass:'Patient1234',   color:'#7c3aed', bg:'#faf5ff' },
+                  { label:'Family',    user:'family',    pass:'Family1234',    color:'#059669', bg:'#f0fdf4' },
+                ].map(({ label, user, pass, color, bg }, i) => {
                   const isActive = username === user;
                   return (
                     <motion.button
                       key={user}
                       type="button"
-                      initial={{ opacity:0, y:8 }}
-                      animate={{ opacity:1, y:0 }}
-                      transition={{ delay:0.25 + i*0.06, duration:0.22 }}
-                      whileHover={{ y:-2 }}
-                      whileTap={{ scale:0.96 }}
+                      initial={{ opacity:0, scale:0.92 }}
+                      animate={{ opacity:1, scale:1 }}
+                      transition={{ delay:0.18 + i*0.05, duration:0.18 }}
+                      whileTap={{ scale:0.94 }}
                       onClick={() => { setUsername(user); setPassword(pass); setFieldErrors({}); setError(''); }}
                       style={{
-                        flex:1, padding:'10px 8px', borderRadius:10,
-                        background: isActive ? color : '#0f172a',
-                        border: `1.5px solid ${isActive ? color : '#1e293b'}`,
-                        cursor:'pointer', transition:'all 0.15s', position:'relative', overflow:'hidden',
+                        padding:'8px 4px',
+                        borderRadius:10,
+                        background: isActive ? color : bg,
+                        border: `1.5px solid ${isActive ? color : color+'30'}`,
+                        cursor:'pointer',
+                        transition:'all 0.15s',
+                        display:'flex',
+                        flexDirection:'column',
+                        alignItems:'center',
+                        gap:2,
                       }}
                     >
-                      {isActive && (
-                        <motion.div
-                          initial={{ x:'-100%' }} animate={{ x:'200%' }}
-                          transition={{ duration:0.5 }}
-                          style={{ position:'absolute', inset:0, background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent)', pointerEvents:'none' }}
-                        />
-                      )}
-                      <p style={{ fontSize:12, fontWeight:800, color:'#fff', margin:0, letterSpacing:'-0.01em' }}>{label}</p>
-                      <p style={{ fontSize:10, color: isActive ? 'rgba(255,255,255,0.7)' : '#475569', margin:'2px 0 0', fontFamily:'monospace' }}>{user}</p>
+                      {/* Colored dot */}
+                      <span style={{
+                        width:6, height:6, borderRadius:'50%',
+                        background: isActive ? 'rgba(255,255,255,0.9)' : color,
+                        flexShrink:0,
+                      }} />
+                      <p style={{
+                        fontSize:11, fontWeight:700,
+                        color: isActive ? '#fff' : color,
+                        margin:0, whiteSpace:'nowrap',
+                      }}>{label}</p>
                     </motion.button>
                   );
                 })}
               </div>
               <p className="text-[10px] text-center mt-2 text-[var(--text-400)]">
-                Tap to auto-fill · password = username + 123
+                Click any role to auto-fill demo credentials
               </p>
             </div>
 
