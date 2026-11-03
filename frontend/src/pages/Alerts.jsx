@@ -301,122 +301,97 @@ export default function Alerts() {
       initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
       style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}
     >
-      {/* PageHeader with image — kept as requested */}
+      {/* PageHeader — stats on right, filters in children toolbar below image */}
       <PageHeader
         image="/resources/african/african-nurse-female.jpg"
         title="Clinical Alerts"
         subtitle="Active patient safety alerts — sorted by severity"
         icon={ShieldAlert}
         stats={[
-          { label:'Critical',  value:kpi.critical, color:'#f87171', pulse:kpi.critical>0,  onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },
-          { label:'High',      value:kpi.high,     color:'#fbbf24', pulse:false,            onClick:()=>{setFilterSeverity('high');    setFilterStatus('active');} },
-          { label:'Active',    value:kpi.active,   color:'#2dd4bf', pulse:false,            onClick:()=>{setFilterSeverity('all');     setFilterStatus('active');} },
-          { label:'Resolved today', value:kpi.resolved, color:'#4ade80', pulse:false,      onClick:()=>{setFilterSeverity('all');     setFilterStatus('acknowledged');} },
+          { label:'Critical',       value:kpi.critical,  color:'#f87171', pulse:kpi.critical>0, onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },
+          { label:'High',           value:kpi.high,      color:'#fbbf24', pulse:false,           onClick:()=>{setFilterSeverity('high');    setFilterStatus('active');} },
+          { label:'Active',         value:kpi.active,    color:'#2dd4bf', pulse:false,           onClick:()=>{setFilterSeverity('all');     setFilterStatus('active');} },
+          { label:'Resolved today', value:kpi.resolved,  color:'#4ade80', pulse:false,           onClick:()=>{setFilterSeverity('all');     setFilterStatus('acknowledged');} },
         ]}
-      />
+      >
+        {/* Search */}
+        <div style={{ position:'relative', flex:1, minWidth:180, maxWidth:340 }}>
+          <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
+          <input
+            value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
+            placeholder="Search alerts, patients…"
+            style={{
+              width:'100%', height:34, paddingLeft:32, paddingRight:12,
+              fontSize:12, borderRadius:20,
+              border:'1px solid var(--card-border)',
+              background:'var(--page-bg)', color:'var(--text-800)',
+              outline:'none', boxSizing:'border-box', transition:'border-color 0.15s',
+            }}
+            onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+            onBlur={e=>(e.target.style.borderColor='var(--card-border)')}
+          />
+        </div>
 
-      <div style={{ maxWidth:1100, margin:'0 auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:20 }}>
+        {/* Separator */}
+        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }} />
 
-        {/* Filter card */}
-        <div style={{
-          borderRadius:14, border:'1px solid var(--card-border)',
-          background:'var(--card-bg)',
-          boxShadow:'0 2px 10px rgba(0,0,0,0.05)',
-          overflow:'hidden',
-        }}>
-          {/* Gradient accent band */}
-          <div style={{ height:3, background:'linear-gradient(90deg,#ef4444,#f59e0b,#0d9488)' }} />
+        {/* Severity pills */}
+        <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+          <span style={{ fontSize:10, fontWeight:600, color:'var(--text-400)', marginRight:2, whiteSpace:'nowrap' }}>Severity</span>
+          {['all','critical','high','medium','low'].map(s => {
+            const active = filterSeverity===s;
+            const col = SEV_COLOR[s] || '#334155';
+            return (
+              <button key={s} onClick={()=>setFilterSeverity(s)} style={{
+                padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
+                border: active ? `1.5px solid ${col}` : '1px solid var(--card-border)',
+                background: active ? `${col}12` : 'var(--card-bg)',
+                color: active ? col : 'var(--text-500)',
+                cursor:'pointer', transition:'all 0.15s', textTransform:'capitalize',
+              }}>
+                {s==='all'?'All':s}
+              </button>
+            );
+          })}
+        </div>
 
-          <div style={{ padding:'14px 16px', display:'flex', flexDirection:'column', gap:12 }}>
-            {/* Search + pills row */}
-            <div style={{ display:'flex', flexWrap:'wrap', alignItems:'center', gap:10 }}>
-              {/* Search */}
-              <div style={{ position:'relative', flex:1, minWidth:200 }}>
-                <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
-                <input
-                  value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
-                  placeholder="Search alerts, patients, types…"
-                  style={{
-                    width:'100%', height:36, paddingLeft:32, paddingRight:12,
-                    fontSize:12, borderRadius:10,
-                    border:'1px solid var(--card-border)',
-                    background:'var(--page-bg)', color:'var(--text-800)',
-                    outline:'none', boxSizing:'border-box',
-                    transition:'border-color 0.15s',
-                  }}
-                  onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
-                  onBlur={e=>(e.target.style.borderColor='var(--card-border)')}
-                />
-              </div>
+        {/* Separator */}
+        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }} />
 
-              {/* Severity pills */}
-              <div style={{ display:'flex', alignItems:'center', gap:4, flexWrap:'wrap' }}>
-                <span style={{ fontSize:10, fontWeight:700, color:'var(--text-400)', paddingRight:4 }}>Severity</span>
-                {['all','critical','high','medium','low'].map(s => {
-                  const active = filterSeverity===s;
-                  const col = SEV_COLOR[s] || '#334155';
-                  return (
-                    <button key={s} onClick={()=>setFilterSeverity(s)} style={{
-                      padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-                      border: active ? `1px solid ${col}` : '1px solid var(--card-border)',
-                      background: active ? `${col}15` : 'transparent',
-                      color: active ? col : 'var(--text-500)',
-                      cursor:'pointer', transition:'all 0.15s', textTransform:'capitalize',
-                    }}>
-                      {s==='all'?'All':s}
-                    </button>
-                  );
-                })}
-              </div>
+        {/* Status pills */}
+        <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+          <span style={{ fontSize:10, fontWeight:600, color:'var(--text-400)', marginRight:2, whiteSpace:'nowrap' }}>Status</span>
+          {[{v:'active',l:'Active'},{v:'all',l:'All'},{v:'acknowledged',l:'Resolved'}].map(({v,l})=>(
+            <button key={v} onClick={()=>setFilterStatus(v)} style={{
+              padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
+              border: filterStatus===v ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
+              background: filterStatus===v ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
+              color: filterStatus===v ? 'var(--c-teal)' : 'var(--text-500)',
+              cursor:'pointer', transition:'all 0.15s',
+            }}>
+              {l}
+            </button>
+          ))}
+        </div>
 
-              {/* Status pills */}
-              <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-                {[{v:'active',l:'Active'},{v:'all',l:'All'},{v:'acknowledged',l:'Resolved'}].map(({v,l})=>(
-                  <button key={v} onClick={()=>setFilterStatus(v)} style={{
-                    padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-                    border: filterStatus===v ? '1px solid var(--c-teal)' : '1px solid var(--card-border)',
-                    background: filterStatus===v ? 'color-mix(in srgb,var(--c-teal) 12%,var(--card-bg))' : 'transparent',
-                    color: filterStatus===v ? 'var(--c-teal)' : 'var(--text-500)',
-                    cursor:'pointer', transition:'all 0.15s',
-                  }}>
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Active filter chips */}
-            {(filterSeverity!=='all'||searchTerm||filterStatus!=='active') && (
-              <div style={{ display:'flex', alignItems:'center', flexWrap:'wrap', gap:6, paddingTop:8, borderTop:'1px solid var(--card-border)' }}>
-                <span style={{ fontSize:10, fontWeight:600, color:'var(--text-400)', display:'flex', alignItems:'center', gap:4 }}>
-                  <ListFilter size={10} /> Filters:
-                </span>
-                {filterSeverity!=='all' && (
-                  <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99, background:'#fee2e2', color:'#dc2626', display:'inline-flex', alignItems:'center', gap:4 }}>
-                    {filterSeverity}
-                    <button onClick={()=>setFilterSeverity('all')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#dc2626', lineHeight:1 }}>×</button>
-                  </span>
-                )}
-                {filterStatus!=='active' && (
-                  <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99, background:'#f0fdf9', color:'#0f766e', display:'inline-flex', alignItems:'center', gap:4 }}>
-                    {filterStatus}
-                    <button onClick={()=>setFilterStatus('active')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#0f766e', lineHeight:1 }}>×</button>
-                  </span>
-                )}
-                {searchTerm && (
-                  <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99, background:'#f5f3ff', color:'#7c3aed', display:'inline-flex', alignItems:'center', gap:4 }}>
-                    "{searchTerm}"
-                    <button onClick={()=>setSearchTerm('')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#7c3aed', lineHeight:1 }}>×</button>
-                  </span>
-                )}
-                <button onClick={()=>{setFilterSeverity('all');setFilterStatus('active');setSearchTerm('');}}
-                  style={{ marginLeft:'auto', fontSize:11, fontWeight:600, color:'var(--text-400)', background:'none', border:'none', cursor:'pointer' }}>
-                  Clear all
-                </button>
-              </div>
+        {/* Active filter chips */}
+        {(filterSeverity!=='all'||searchTerm) && (
+          <div style={{ display:'flex', alignItems:'center', gap:5, marginLeft:'auto' }}>
+            {filterSeverity!=='all' && (
+              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#fee2e2', color:'#dc2626', display:'inline-flex', alignItems:'center', gap:3 }}>
+                {filterSeverity} <button onClick={()=>setFilterSeverity('all')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#dc2626', lineHeight:1, padding:0 }}>×</button>
+              </span>
+            )}
+            {searchTerm && (
+              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#f5f3ff', color:'#7c3aed', display:'inline-flex', alignItems:'center', gap:3 }}>
+                "{searchTerm}" <button onClick={()=>setSearchTerm('')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#7c3aed', lineHeight:1, padding:0 }}>×</button>
+              </span>
             )}
           </div>
-        </div>
+        )}
+      </PageHeader>
+
+      <div style={{ maxWidth:1100, margin:'0 auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:20 }}>
 
         {/* Content */}
         <div style={{ display:'flex', flexDirection:'column', gap:20 }}>

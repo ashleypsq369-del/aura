@@ -1,13 +1,18 @@
 /**
- * PageHeader — full-width banner with frosted glass stat strip
+ * PageHeader — full-width banner
  *
- * Layout:
- *   TOP    — icon + title + subtitle + action buttons (left-aligned)
- *   BOTTOM — frosted glass pill strip with Services-style stat bars
+ * Layout (matches Services hero exactly):
+ *   ┌─────────────────────────────────────────────────────┐
+ *   │  [icon] Title                    ┃ 64  ┃ 130 ┃ ... │  ← header image
+ *   │         Subtitle                 ┃ Crit ┃ High┃     │
+ *   │         [action buttons]         ┃     ┃     ┃     │
+ *   └─────────────────────────────────────────────────────┘
+ *   [ search bar / filter toolbar — children slot ]         ← below image, on page-bg
  *
- * Each stat pill: [colored 3px bar] [bold number] [small label]
- * The strip sits at the bottom of the header image, frosted glass backdrop.
- * Each page keeps its own background image.
+ * Stats: vertical stack on the RIGHT side of the header.
+ * Each stat: colored 3px bar | bold number | small label (Services DNA).
+ *
+ * children: rendered BELOW the image in a toolbar strip.
  */
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -58,10 +63,12 @@ export default function PageHeader({
   title,
   subtitle,
   icon: Icon,
-  children,           // action buttons — rendered top-right
-  compact = false,
+  /* action buttons slot — NOW renders below the image as a toolbar */
+  children,
+  compact    = false,
   gradient,
-  stats,              // [{ label, value, color?, pulse?, onClick? }]
+  /* stats: vertical stack on the RIGHT — Services DNA */
+  stats,
 }) {
   const location   = useLocation();
   const dailyQuote = useMemo(() => getDailyMessage(), []);
@@ -70,69 +77,73 @@ export default function PageHeader({
     || Object.entries(ROUTE_GRADIENTS).find(([k]) => location.pathname.startsWith(k))?.[1]
     || 'linear-gradient(135deg,#0d9488,#0891b2)';
 
-  const hasStats = stats?.length > 0;
+  const hasStats    = stats?.length > 0;
+  const hasChildren = !!children;
 
-  // Height: taller when stats present so strip doesn't crowd the title
-  const height = compact ? 120 : hasStats ? 210 : 160;
+  /* Image height — compact if no stats */
+  const imgHeight = compact ? 110 : hasStats ? 180 : 140;
 
   return (
-    <div
-      className="img-card relative w-full overflow-hidden"
-      style={{ height }}
-      role="banner"
-    >
-      {/* Gradient fallback */}
-      <div
-        className="img-card-bg absolute inset-0"
-        style={{ background: resolvedGradient, zIndex: 0 }}
-      />
+    <div role="banner">
 
-      {/* Background photo — each page passes its own image */}
-      {image && (
-        <img
-          src={image}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ zIndex: 1 }}
-          loading="lazy"
-          onError={e => { e.currentTarget.style.display = 'none'; }}
-        />
-      )}
-
-      {/* Dark overlay — strong enough for WCAG AA contrast on white text */}
+      {/* ══ Header image band ════════════════════════════════════════ */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.40) 60%, rgba(0,0,0,0.70) 100%)',
-          zIndex: 2,
-        }}
-      />
-
-      {/* Kente accent strip */}
-      <div
-        className="kente-strip absolute inset-x-0 bottom-0 pointer-events-none"
-        style={{ zIndex: 4 }}
-      />
-
-      {/* ── Content ───────────────────────────────────────────────── */}
-      <div
-        className="relative h-full flex flex-col justify-between px-4 sm:px-6 md:px-8"
-        style={{ zIndex: 3, paddingTop: 20, paddingBottom: hasStats ? 0 : 20 }}
+        className="img-card relative w-full overflow-hidden"
+        style={{ height: imgHeight }}
       >
-        {/* TOP: title row + action buttons */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+        {/* Gradient fallback */}
+        <div
+          className="img-card-bg absolute inset-0"
+          style={{ background: resolvedGradient, zIndex: 0 }}
+        />
+
+        {/* Background photo */}
+        {image && (
+          <img
+            src={image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{ zIndex: 1 }}
+            loading="lazy"
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+        )}
+
+        {/* Dark overlay — heavier on left for text, lighter on right for stats */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: hasStats
+              ? 'linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 55%, rgba(0,0,0,0.35) 100%)'
+              : 'linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.42) 60%, rgba(0,0,0,0.20) 100%)',
+            zIndex: 2,
+          }}
+        />
+
+        {/* Kente strip */}
+        <div
+          className="kente-strip absolute inset-x-0 bottom-0 pointer-events-none"
+          style={{ zIndex: 4 }}
+        />
+
+        {/* ── Content: LEFT text + RIGHT stat stack ── */}
+        <div
+          className="relative h-full flex items-center justify-between px-4 sm:px-6 md:px-8"
+          style={{ zIndex: 3, gap: 20 }}
+        >
+          {/* LEFT — icon + title + subtitle */}
           <motion.div
             initial={{ opacity: 0, x: -14 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.26 }}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: 1 }}
+            style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 12 }}
           >
             {Icon && (
               <div
                 aria-hidden="true"
                 style={{
-                  width: 42, height: 42, borderRadius: 12, flexShrink: 0,
+                  width: 40, height: 40, borderRadius: 12, flexShrink: 0,
                   background: 'rgba(255,255,255,0.15)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
@@ -140,15 +151,14 @@ export default function PageHeader({
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <Icon size={20} style={{ color: '#ffffff' }} />
+                <Icon size={19} style={{ color: '#ffffff' }} />
               </div>
             )}
             <div style={{ minWidth: 0 }}>
-              {/* Title — always pure white, no design-system gradient-text override */}
               <h1
                 className="img-heading"
                 style={{
-                  fontSize: 'clamp(17px,2.8vw,24px)',
+                  fontSize: 'clamp(16px,2.6vw,22px)',
                   fontWeight: 800,
                   color: '#ffffff',
                   WebkitTextFillColor: '#ffffff',
@@ -163,8 +173,8 @@ export default function PageHeader({
               {subtitle && (
                 <p
                   style={{
-                    fontSize: 12,
-                    color: 'rgba(255,255,255,0.88)',
+                    fontSize: 11,
+                    color: 'rgba(255,255,255,0.85)',
                     margin: '3px 0 0',
                     textShadow: '0 1px 4px rgba(0,0,0,0.5)',
                   }}
@@ -172,148 +182,143 @@ export default function PageHeader({
                   {subtitle}
                 </p>
               )}
+              {/* Daily quote — only when no stats */}
+              {!hasStats && dailyQuote && !compact && (
+                <p
+                  style={{
+                    fontSize: 11,
+                    fontStyle: 'italic',
+                    color: 'rgba(45,212,191,0.85)',
+                    margin: '5px 0 0',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+                    letterSpacing: '0.01em',
+                  }}
+                  aria-label="Daily motivational quote"
+                >
+                  {dailyQuote}
+                </p>
+              )}
             </div>
           </motion.div>
 
-          {/* Action buttons */}
-          {children && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              {children}
-            </div>
-          )}
-        </div>
-
-        {/* Daily quote — shown only when no stats */}
-        {!hasStats && dailyQuote && (
-          <p
-            style={{
-              fontSize: 12,
-              fontStyle: 'italic',
-              color: 'rgba(45,212,191,0.85)',
-              margin: 0,
-              textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-              letterSpacing: '0.01em',
-            }}
-            aria-label="Daily motivational quote"
-          >
-            {dailyQuote}
-          </p>
-        )}
-
-        {/* ── FROSTED GLASS STAT STRIP — bottom of image ────────────
-            Services DNA: horizontal pill strip, frosted glass backdrop,
-            each stat has a colored 3px left-bar + bold number + tiny label.
-            Sits flush at the bottom edge of the header.
-        ─────────────────────────────────────────────────────────── */}
-        {hasStats && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.18 }}
-            style={{
-              display:              'flex',
-              alignItems:           'stretch',
-              alignSelf:            'flex-start',
-              gap:                  0,
-              /* Frosted glass pill */
-              background:           'rgba(0,0,0,0.38)',
-              backdropFilter:       'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              borderRadius:         '12px 12px 0 0',   // flat bottom — flush with header edge
-              border:               '1px solid rgba(255,255,255,0.15)',
-              borderBottom:         'none',
-              overflow:             'hidden',
-              marginBottom:         0,
-            }}
-            role="region"
-            aria-label="Page statistics"
-          >
-            {stats.map(({ label, value, color = '#2dd4bf', pulse, onClick }, i) => (
-              <button
-                key={label}
-                onClick={onClick}
-                disabled={!onClick}
-                aria-label={`${label}: ${value}`}
-                style={{
-                  display:    'flex',
-                  alignItems: 'center',
-                  gap:        10,
-                  padding:    '10px 20px',
-                  background: 'transparent',
-                  border:     'none',
-                  borderLeft: i > 0 ? '1px solid rgba(255,255,255,0.10)' : 'none',
-                  cursor:     onClick ? 'pointer' : 'default',
-                  outline:    'none',
-                  transition: 'background 0.15s',
-                  minWidth:   80,
-                }}
-                onMouseEnter={e => { if (onClick) e.currentTarget.style.background = `${color}18`; }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-                onFocus={e => { e.currentTarget.style.outline = `2px solid ${color}`; e.currentTarget.style.outlineOffset = '-2px'; }}
-                onBlur={e  => { e.currentTarget.style.outline = 'none'; }}
-              >
-                {/* Colored vertical accent bar — Services signature */}
-                <div
-                  aria-hidden="true"
+          {/* RIGHT — 2×2 grid of stats when 4 items, vertical stack otherwise */}
+          {hasStats && (
+            <motion.div
+              initial={{ opacity: 0, x: 14 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.12 }}
+              style={{
+                display:             'grid',
+                gridTemplateColumns: stats.length >= 4 ? '1fr 1fr' : '1fr',
+                gap:                 '8px 16px',
+                flexShrink:          0,
+                paddingRight:        4,
+              }}
+              role="region"
+              aria-label="Page statistics"
+            >
+              {stats.map(({ label, value, color = '#2dd4bf', pulse, onClick }) => (
+                <button
+                  key={label}
+                  onClick={onClick}
+                  disabled={!onClick}
+                  aria-label={`${label}: ${value}`}
                   style={{
-                    width:        3,
-                    height:       32,
-                    borderRadius: 2,
-                    background:   color,
-                    flexShrink:   0,
-                    boxShadow:    `0 0 10px ${color}99`,
+                    display:    'flex',
+                    alignItems: 'center',
+                    gap:        9,
+                    background: 'transparent',
+                    border:     'none',
+                    cursor:     onClick ? 'pointer' : 'default',
+                    padding:    0,
+                    outline:    'none',
+                    transition: 'opacity 0.15s',
                   }}
-                />
-
-                {/* Value + label */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left' }}>
-                  {/* Value row — optionally with pulse dot */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                    {pulse && (
-                      <span
-                        aria-hidden="true"
-                        style={{
-                          width:        7,
-                          height:       7,
-                          borderRadius: '50%',
-                          background:   color,
-                          animation:    'pulse 2s infinite',
-                          flexShrink:   0,
-                          boxShadow:    `0 0 0 2px ${color}40`,
-                        }}
-                      />
-                    )}
+                  onMouseEnter={e => { if (onClick) e.currentTarget.style.opacity = '0.72'; }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+                  onFocus={e  => { e.currentTarget.style.outline = `2px solid ${color}`; e.currentTarget.style.outlineOffset = '3px'; e.currentTarget.style.borderRadius = '4px'; }}
+                  onBlur={e   => { e.currentTarget.style.outline = 'none'; }}
+                >
+                  {/* Colored left-bar accent — Services signature */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      width:        3,
+                      height:       28,
+                      borderRadius: 2,
+                      background:   color,
+                      flexShrink:   0,
+                      boxShadow:    `0 0 8px ${color}90`,
+                    }}
+                  />
+                  {/* Number + label */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {pulse && (
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            width: 6, height: 6, borderRadius: '50%',
+                            background: color,
+                            animation: 'pulse 2s infinite',
+                            flexShrink: 0,
+                            boxShadow: `0 0 0 2px ${color}35`,
+                          }}
+                        />
+                      )}
+                      <span style={{
+                          fontSize: 14, fontWeight: 900, color: '#ffffff',
+                          fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em',
+                        }}>
+                        {value}
+                      </span>
+                    </div>
                     <span
                       style={{
-                        fontSize:           18,
-                        fontWeight:         900,
-                        color:              '#ffffff',
-                        fontVariantNumeric: 'tabular-nums',
-                        lineHeight:         1,
-                        letterSpacing:      '-0.02em',
+                        fontSize:   9,
+                        fontWeight: 500,
+                        color:      'rgba(255,255,255,0.48)',
+                        whiteSpace: 'nowrap',
+                        lineHeight: 1,
                       }}
                     >
-                      {value}
+                      {label}
                     </span>
                   </div>
-                  {/* Label */}
-                  <span
-                    style={{
-                      fontSize:   10,
-                      fontWeight: 500,
-                      color:      'rgba(255,255,255,0.50)',
-                      whiteSpace: 'nowrap',
-                      lineHeight: 1,
-                    }}
-                  >
-                    {label}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </motion.div>
-        )}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </div>
       </div>
+
+      {/* ══ Toolbar strip — search + filters slot (below image) ═══════
+          Renders children in a clean card-surface row directly under
+          the header image. No more padding wrapper needed in the page.
+      ══════════════════════════════════════════════════════════════ */}
+      {hasChildren && (
+        <div
+          style={{
+            background:   'var(--card-bg)',
+            borderBottom: '1px solid var(--card-border)',
+            boxShadow:    '0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
+          <div
+            style={{
+              maxWidth:   '1200px',
+              margin:     '0 auto',
+              padding:    '10px 20px',
+              display:    'flex',
+              alignItems: 'center',
+              flexWrap:   'wrap',
+              gap:        10,
+            }}
+          >
+            {children}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

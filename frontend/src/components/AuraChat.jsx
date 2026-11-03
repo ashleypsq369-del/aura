@@ -315,47 +315,98 @@ export default function AuraChat() {
  {isOpen&&(
  <>
  <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setIsOpen(false)}
- className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.25)',backdropFilter:'blur(2px)'}}/>
- <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
- transition={{type:'spring',damping:28,stiffness:260}}
- className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
- style={{width:'min(92vw,420px)',background:T.drawerBg,borderLeft:`1px solid ${T.drawerBdr}`,boxShadow:'-8px 0 32px rgba(0,0,0,0.12)'}}
+ className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.35)',backdropFilter:'blur(3px)'}}/>
+ <motion.div initial={{x:'100%',opacity:0}} animate={{x:0,opacity:1}} exit={{x:'100%',opacity:0}}
+ transition={{type:'spring',damping:30,stiffness:280}}
+ className="fixed top-3 right-3 bottom-3 z-50 flex flex-col"
+ style={{
+ width:'min(92vw,400px)',
+ background:T.drawerBg,
+ borderRadius:20,
+ border:`1px solid ${T.drawerBdr}`,
+ boxShadow:'0 24px 64px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12)',
+ overflow:'hidden',
+ }}
  onClick={e=>e.stopPropagation()}>
 
- {/* Header - clean white */}
- <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3" style={{background:T.headerBg,borderBottom:`1px solid ${T.headerBdr}`}}>
- <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
- <AuraMascot size={28} isThinking={thinking} isStreaming={loading&&!thinking}/>
+ {/* ── Header — single 56px row, Intercom/Crisp pattern ── */}
+ <div className="flex-shrink-0 flex items-center gap-3 px-4"
+ style={{
+ height: 56,
+ background: 'linear-gradient(135deg,#0d9488,#0891b2)',
+ borderBottom: '1px solid rgba(255,255,255,0.12)',
+ boxShadow: '0 2px 12px rgba(13,148,136,0.25)',
+ }}>
+ {/* Avatar */}
+ <div style={{
+ width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+ background: 'rgba(255,255,255,0.18)',
+ border: '1.5px solid rgba(255,255,255,0.30)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center',
+ }}>
+ <AuraMascot size={24} isThinking={thinking} isStreaming={loading&&!thinking}/>
  </div>
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap">
- <span className="font-semibold text-sm" style={{color:T.nameText}}>Aura</span>
- <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{background:T.badgeBg,border:`1px solid ${T.badgeBdr}`,color:T.badgeText}}>Companion</span>
- {msgCount>0&&<span className="text-xs" style={{color:T.msgCountText}}>{msgCount} msg{msgCount!==1?'s':''}</span>}
+
+ {/* Name + status — single line each */}
+ <div style={{ flex: 1, minWidth: 0 }}>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+ <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1 }}>Aura</span>
+ <span style={{
+ fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 99,
+ background: 'rgba(255,255,255,0.18)', color: '#fff',
+ border: '1px solid rgba(255,255,255,0.25)',
+ }}>Companion</span>
  </div>
- <div className="flex items-center gap-2 mt-0.5">
- <LLMBadge provider={provider} offline={isOffline}/>
- <span className="text-xs text-slate-400">·</span>
- <span className="text-xs text-slate-500">{subLabel}</span>
- </div>
- </div>
- <div className="flex items-center gap-0.5">
- <button onClick={()=>setView(v=>v==='history'?'chat':'history')} title="Chat history"
- style={{color:view==='history'?T.btnHoverText:T.btnText,background:view==='history'?T.btnHoverBg:'transparent'}} className="p-1.5 rounded-lg transition-colors">
- <History size={15}/>
- </button>
- <button onClick={startNew} title="New chat" className="p-1.5 text-[var(--text-400)] hover:text-[var(--text-600)] hover:bg-slate-100 rounded-lg transition-colors">
- <Plus size={15}/>
- </button>
- {messages.length>1&&<button onClick={clearChat} title="Clear" className="p-1.5 rounded-lg transition-colors" style={{color:T.btnText}}><RotateCcw size={14}/></button>}
- <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg transition-colors ml-1" style={{color:T.btnText}}><X size={16}/></button>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+ {isOffline
+ ? <span style={{ fontSize: 11, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 3 }}>
+ <WifiOff size={9}/> Offline
+ </span>
+ : <span style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
+ <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }}/>
+ Online
+ </span>
+ }
+ <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11 }}>·</span>
+ <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.65)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+ {subLabel}
+ </span>
  </div>
  </div>
 
- {/* Safety bar */}
- <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
- <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[11px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong></p>
+ {/* Action icons — right-aligned, compact */}
+ <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+ {[
+ { Icon: History, onClick: ()=>setView(v=>v==='history'?'chat':'history'), title:'History', active: view==='history' },
+ { Icon: Plus,    onClick: startNew,   title: 'New chat' },
+ ...(messages.length>1 ? [{ Icon: RotateCcw, onClick: clearChat, title: 'Clear' }] : []),
+ { Icon: X,       onClick: ()=>setIsOpen(false), title: 'Close' },
+ ].map(({ Icon, onClick, title, active }) => (
+ <button key={title} onClick={onClick} title={title}
+ style={{
+ width: 30, height: 30, borderRadius: 8, display: 'flex',
+ alignItems: 'center', justifyContent: 'center',
+ background: active ? 'rgba(255,255,255,0.22)' : 'transparent',
+ color: active ? '#fff' : 'rgba(255,255,255,0.65)',
+ border: 'none', cursor: 'pointer', transition: 'all 0.15s',
+ flexShrink: 0,
+ }}
+ onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; e.currentTarget.style.color = '#fff'; }}
+ onMouseLeave={e => { e.currentTarget.style.background = active ? 'rgba(255,255,255,0.22)' : 'transparent'; e.currentTarget.style.color = active ? '#fff' : 'rgba(255,255,255,0.65)'; }}
+ >
+ <Icon size={14}/>
+ </button>
+ ))}
+ </div>
+ </div>
+
+ {/* ── Safety bar — slim single line ── */}
+ <div className="flex-shrink-0 flex items-center gap-2 px-4"
+ style={{ height: 28, background: '#fef3c7', borderBottom: '1px solid #fde68a' }}>
+ <AlertTriangle size={10} style={{ color: '#d97706', flexShrink: 0 }}/>
+ <p style={{ fontSize: 11, fontWeight: 500, color: '#92400e', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+ Not medical advice · Emergency: <strong>193</strong> · Crisis Line: <strong>0800-567890</strong>
+ </p>
  </div>
 
  {/* History panel */}
@@ -405,32 +456,42 @@ export default function AuraChat() {
 
  {/* Empty state */}
  {messages.length===0&&(
- <div className="flex flex-col items-center pt-6 space-y-5">
- <div className="w-16 h-16"><AuraMascot size={64} isThinking={thinking} isStreaming={loading&&!thinking}/></div>
- <div className="text-center px-4">
- <p className="font-semibold text-base mb-1" style={{color:T.nameText}}>I'm here for you</p>
- <p className="text-sm leading-relaxed" style={{color:T.subText}}>Ask me anything - symptoms, medications,<br/>emotional support, or just to talk.</p>
+ <div className="flex flex-col items-center pt-8 space-y-5 px-4">
+ {/* Large mascot with glow */}
+ <div style={{ position:'relative', width:48, height:48 }}>
+ <div style={{ position:'absolute', inset:-6, borderRadius:'50%', background:'radial-gradient(circle,rgba(13,148,136,0.15),transparent)', pointerEvents:'none' }}/>
+ <div style={{ width:48, height:48, borderRadius:'50%', background:'linear-gradient(135deg,#f0fdfa,#e0f2fe)', display:'flex', alignItems:'center', justifyContent:'center', border:'1.5px solid rgba(13,148,136,0.18)', boxShadow:'0 3px 14px rgba(13,148,136,0.15)' }}>
+ <AuraMascot size={32} isThinking={thinking} isStreaming={loading&&!thinking}/>
+ </div>
+ </div>
+ <div className="text-center">
+ <p className="font-bold text-sm mb-0.5" style={{color:T.nameText}}>I'm here for you</p>
+ <p className="text-xs leading-relaxed" style={{color:T.subText}}>Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
  </div>
  {isPatient&&(
  <div className="w-full">
- <p className="text-xs font-semibold text-center mb-3" style={{color:T.subText}}>How are you feeling today?</p>
- <div className="flex justify-center gap-3">
+ <p className="text-[11px] font-semibold text-center mb-2" style={{color:T.subText}}>How are you feeling today?</p>
+ <div className="flex justify-center gap-2">
  {FEEL_SCALE.map(f=>(
  <button key={f.emoji} onClick={()=>sendMessage(f.msg)} title={f.label}
- className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl transition-all" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`}}>
- <span className="text-2xl">{f.emoji}</span>
- <span className="text-[11px] font-semibold" style={{color:T.subText}}>{f.label}</span>
+ style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:3, padding:'7px 10px', borderRadius:12, background:'var(--card-bg)', border:'1px solid var(--card-border)', cursor:'pointer', transition:'all 0.15s', minWidth:52 }}
+ onMouseEnter={e=>{e.currentTarget.style.borderColor='#0d9488';e.currentTarget.style.boxShadow='0 2px 8px rgba(13,148,136,0.15)';}}
+ onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';e.currentTarget.style.boxShadow='none';}}>
+ <span style={{ fontSize:18 }}>{f.emoji}</span>
+ <span style={{ fontSize:10, fontWeight:600, color:T.subText }}>{f.label}</span>
  </button>
  ))}
  </div>
  </div>
  )}
  <div className="w-full">
- <p className="text-xs font-semibold mb-2" style={{color:T.subText}}>Suggested</p>
- <div className="flex flex-wrap gap-2">
+ <p className="text-[11px] font-semibold mb-2" style={{color:T.subText}}>Suggested</p>
+ <div className="flex flex-wrap gap-1.5">
  {prompts.map((p,i)=>(
  <button key={i} onClick={()=>sendMessage(p)} disabled={loading}
- className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50" style={{background:T.emptyChipBg,border:`1px solid ${T.emptyChipBdr}`,color:T.emptyChipText}}>
+ style={{ padding:'5px 10px', borderRadius:8, fontSize:11, fontWeight:500, background:'var(--card-bg)', border:'1px solid var(--card-border)', color:T.emptyChipText, cursor:'pointer', transition:'all 0.15s', opacity:loading?0.5:1 }}
+ onMouseEnter={e=>{e.currentTarget.style.borderColor='#0d9488';e.currentTarget.style.color='#0d9488';}}
+ onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';e.currentTarget.style.color=T.emptyChipText;}}>
  {p}
  </button>
  ))}
@@ -452,12 +513,22 @@ export default function AuraChat() {
  )}
  <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
  <div
- className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none':'rounded-bl-none'}`}
+ className={`px-4 py-3 ${isUser?'rounded-br-sm':'rounded-bl-sm'}`}
  style={isUser
- ? {background:T.userBubble,color:'#ffffff'}
+ ? {
+ background:T.userBubble,
+ color:'#ffffff',
+ borderRadius:'18px 18px 4px 18px',
+ }
  : msg.crisis_flagged
- ? {background:'#fef2f2',border:'1px solid #fecaca',color:'#7f1d1d'}
- : {background:T.aiBubbleBg,border:`1px solid ${T.aiBubbleBdr}`,color:T.nameText,boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}
+ ? {background:'#fef2f2',border:'1px solid #fecaca',color:'#7f1d1d',borderRadius:'4px 18px 18px 18px'}
+ : {
+ background:T.aiBubbleBg,
+ border:`1px solid ${T.aiBubbleBdr}`,
+ color:T.nameText,
+ borderRadius:'4px 18px 18px 18px',
+ boxShadow:'0 1px 3px rgba(0,0,0,0.06)',
+ }}
  >
  {msg.crisis_flagged&&!isUser&&(<div className="flex items-center gap-1 mb-2 text-[11px] font-bold text-red-500"><AlertTriangle size={11}/>CRISIS SUPPORT</div>)}
  <MsgContent content={msg.content} streaming={msg.streaming} isUser={isUser}/>
@@ -485,7 +556,7 @@ export default function AuraChat() {
  <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`}}>
  <Brain size={12} className="animate-pulse" style={{color:T.accent}}/>
  </div>
- <div className="px-4 py-3 rounded-2xl rounded-bl-none" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`}}>
+ <div className="px-4 py-3" style={{background:T.typingBubbleBg,border:`1px solid ${T.typingBubbleBdr}`,borderRadius:'4px 18px 18px 18px'}}>
  <div className="flex items-center gap-2">
  {[0,1,2].map(i=>(<motion.div key={i} className="w-2 h-2 rounded-full" style={{background:T.typingDot}} animate={{y:[0,-4,0],opacity:[0.5,1,0.5]}} transition={{duration:0.7,delay:i*0.15,repeat:Infinity}}/>))}
  <span className="text-xs font-medium ml-1" style={{color:T.typingText}}>Aura is typing…</span>
@@ -497,38 +568,70 @@ export default function AuraChat() {
  <div ref={msgEndRef}/>
  </div>
 
- {/* Scroll pill */}
+ {/* Scroll pill — positioned above input, not over messages */}
  <AnimatePresence>
  {!atBottom&&(
  <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
- className="absolute left-1/2 -translate-x-1/2 bottom-24 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg bg-teal-600 hover:bg-teal-700 transition-colors">
+ style={{
+ position:'absolute', left:'50%', transform:'translateX(-50%)',
+ bottom: 72, zIndex: 10,
+ display:'flex', alignItems:'center', gap:6,
+ padding:'6px 14px', borderRadius:99,
+ fontSize:12, fontWeight:600, color:'#fff',
+ background:'#0d9488', border:'none', cursor:'pointer',
+ boxShadow:'0 4px 16px rgba(13,148,136,0.40)',
+ }}>
  <ChevronDown size={13}/>New messages
  </motion.button>
  )}
  </AnimatePresence>
 
  {/* Input */}
- <div className="flex-shrink-0 px-4 py-3 border-t" style={{background:T.inputAreaBg,borderColor:T.inputAreaBdr}}>
- <form onSubmit={e=>{e.preventDefault();sendMessage();}} className="space-y-1.5">
- <div className="flex items-end gap-2">
- <div className="flex-1 relative">
+ <div className="flex-shrink-0 border-t" style={{background:T.inputAreaBg,borderColor:T.inputAreaBdr,padding:'12px 16px'}}>
+ <form onSubmit={e=>{e.preventDefault();sendMessage();}}>
+ <div style={{display:'flex',alignItems:'flex-end',gap:10}}>
+ <div style={{flex:1,position:'relative'}}>
  <textarea ref={el=>{inputRef.current=el;taRef.current=el;}} value={input}
  onChange={e=>{setInput(e.target.value);resizeTA();}}
  onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}}
  placeholder="Message Aura…" rows={1} maxLength={MAX_CHARS} disabled={loading}
- className="w-full resize-none rounded-xl outline-none transition-all max-h-[140px] overflow-y-auto leading-relaxed px-4 py-2.5 disabled:opacity-50 text-sm"
- style={{background:T.inputFieldBg,border:`1px solid ${T.inputFieldBdr}`,color:T.inputFieldText,caretColor:T.accent}}/>
+ style={{
+ width:'100%', resize:'none', outline:'none',
+ maxHeight:140, overflowY:'auto', lineHeight:1.5,
+ padding:'10px 14px', borderRadius:14,
+ fontSize:14, fontFamily:'inherit',
+ background:T.inputFieldBg,
+ border:`1.5px solid ${T.inputFieldBdr}`,
+ color:T.inputFieldText, caretColor:T.accent,
+ opacity:loading?0.5:1, boxSizing:'border-box',
+ transition:'border-color 0.15s, box-shadow 0.15s',
+ }}
+ onFocus={e=>{e.target.style.borderColor=T.accent;e.target.style.boxShadow=`0 0 0 3px ${T.accent}18`;}}
+ onBlur={e=>{e.target.style.borderColor=T.inputFieldBdr;e.target.style.boxShadow='none';}}
+ />
  </div>
- <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
+ <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6,flexShrink:0}}>
  <CharRing len={input.length} max={MAX_CHARS}/>
  <motion.button type="submit" disabled={!input.trim()||loading}
  whileHover={{scale:1.06}} whileTap={{scale:0.94}}
- className="w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400">
+ style={{
+ width:40, height:40, borderRadius:12,
+ display:'flex', alignItems:'center', justifyContent:'center',
+ border:'none', cursor:input.trim()&&!loading?'pointer':'not-allowed',
+ background: input.trim()&&!loading
+ ? 'linear-gradient(135deg,#0d9488,#0891b2)'
+ : isDark?'#1e293b':'#e2e8f0',
+ color: input.trim()&&!loading?'#fff':isDark?'#475569':'#94a3b8',
+ boxShadow: input.trim()&&!loading?'0 4px 12px rgba(13,148,136,0.40)':'none',
+ transition:'all 0.18s',
+ }}>
  {loading?<Loader2 size={15} className="animate-spin"/>:<Send size={15} strokeWidth={2.5}/>}
  </motion.button>
  </div>
  </div>
- <p className="text-[11px] text-center mt-1" style={{color:T.footerNote}}>{isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}</p>
+ <p style={{fontSize:10,textAlign:'center',marginTop:6,color:T.footerNote}}>
+ {isOffline?'⚡ Offline mode':'Shift+Enter for new line · Not medical advice'}
+ </p>
  </form>
  </div>
  </>

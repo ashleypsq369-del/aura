@@ -431,21 +431,62 @@ export default function Medications() {
  subtitle={
  isPatient ? "Your prescribed medications, dose schedule and daily confirmation" :
  isFamily ? "Your loved one's current medications" :
- isCaregiver ? "Patient medications - record doses and flag missed administrations" :
+ isCaregiver ? "Patient medications — record doses and flag missed administrations" :
  "Prescriptions, dosage schedules, reminders and interaction monitoring"
  }
  icon={Pill}
  stats={[
- { label: 'Active', value: active.length, icon: Pill, color: '#2dd4bf', onClick: () => setFilterTab('active') },
- { label: 'Discontinued', value: inactive.length, icon: Ban, color: 'rgba(255,255,255,0.8)', onClick: () => setFilterTab('inactive') },
- { label: 'Due in 24h', value: reminders.length, icon: Bell, color: '#fbbf24', pulse: reminders.length > 0 },
- { label: 'Drug Interactions', value: severeInts.length, icon: AlertTriangle, color: severeInts.length > 0 ? '#f87171' : 'rgba(255,255,255,0.6)', pulse: severeInts.length > 0 },
- ]}
- >
+ { label:'Active',          value:active.length,     color:'#2dd4bf', pulse:false,                   onClick:()=>setFilterTab('active')   },
+ { label:'Discontinued',    value:inactive.length,   color:'rgba(255,255,255,0.75)', pulse:false,    onClick:()=>setFilterTab('inactive') },
+ { label:'Due in 24h',       value:reminders.length,  color:'#fbbf24', pulse:reminders.length>0      },
+ { label:'Interactions',    value:severeInts.length, color:severeInts.length>0?'#f87171':'rgba(255,255,255,0.5)', pulse:severeInts.length>0 },
+ ]}>
+ {/* Patient picker (staff) */}
+ {isStaff && (
+ <SearchableSelect
+ placeholder="Select patient…"
+ accent="teal"
+ value={patientId ? String(patientId) : null}
+ onChange={v => setPatientId(v ? Number(v) : null)}
+ options={patientList.map(p => ({
+ value: String(p.id), label: p.full_name,
+ sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+ avatar: 'linear-gradient(135deg,#0d9488,#0891b2)',
+ }))}
+ nullLabel="All patients"
+ />
+ )}
+ {/* Text search */}
+ <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:280 }}>
+ <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+ <input value={search} onChange={e=>setSearch(e.target.value)}
+ placeholder="Search medications…"
+ style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+ onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+ onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
+ </div>
+ {/* Active / History toggle */}
+ <div style={{ display:'flex', gap:4 }}>
+ {[['active',`Active (${active.length})`],['inactive',`History (${inactive.length})`]].map(([v,l])=>(
+ <button key={v} onClick={()=>setFilterTab(v)} style={{
+ padding:'4px 12px', borderRadius:20, fontSize:11, fontWeight:600,
+ border: filterTab===v ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
+ background: filterTab===v ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
+ color: filterTab===v ? 'var(--c-teal)' : 'var(--text-500)', cursor:'pointer', transition:'all 0.15s',
+ }}>{l}</button>
+ ))}
+ </div>
+ {/* Add button */}
  {canEdit && patientId && (
- <button onClick={() => setShowAddModal(true)}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all">
- <Plus size={15}/> Add Medication
+ <button onClick={()=>setShowAddModal(true)} style={{
+ display:'flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:20,
+ fontSize:12, fontWeight:700, border:'none', cursor:'pointer',
+ background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff',
+ boxShadow:'0 2px 8px rgba(13,148,136,0.3)', transition:'opacity 0.15s',
+ }}
+ onMouseEnter={e=>(e.currentTarget.style.opacity='0.88')}
+ onMouseLeave={e=>(e.currentTarget.style.opacity='1')}>
+ <Plus size={14}/> Add Medication
  </button>
  )}
  </PageHeader>
@@ -522,49 +563,6 @@ export default function Medications() {
  </div>
  </div>
  )}
-
- {/* Filter bar */}
- <div className="px-6">
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 space-y-3">
- <div className="flex flex-col md:flex-row gap-3 items-center">
- {/* Patient search (staff) */}
- {isStaff && (
- <SearchableSelect
- className="flex-1 max-w-xs"
- placeholder="Search patient…"
- accent="teal"
- value={patientId ? String(patientId) : null}
- onChange={v => setPatientId(v ? Number(v) : null)}
- options={patientList.map(p => ({
- value: String(p.id),
- label: p.full_name,
- sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
- avatar: 'linear-gradient(135deg,#0d9488,#0891b2)',
- }))}
- nullLabel="All patients"
- />
- )}
- {/* Text search */}
- <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
- <input value={search} onChange={e => setSearch(e.target.value)}
- placeholder="Search medications or indication…"
- className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"/>
- </div>
- {/* Tabs */}
- <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
- {[['active','Active',active.length],['inactive','History',inactive.length]].map(([v,l,n])=>(
- <button key={v} onClick={() => setFilterTab(v)}
- className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterTab===v ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
- }`}>
- {l} ({n})
- </button>
- ))}
- </div>
- </div>
- </div>
- </div>
 
  {/* Content */}
  <div className="px-6 space-y-2.5">

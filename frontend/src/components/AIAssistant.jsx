@@ -236,46 +236,100 @@ export default function AIAssistant() {
  {isOpen&&(
  <>
  <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setIsOpen(false)}
- className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.2)',backdropFilter:'blur(2px)'}}/>
- <motion.div initial={{x:'100%'}} animate={{x:0}} exit={{x:'100%'}}
- transition={{type:'spring',damping:28,stiffness:260}}
- className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
- style={{width:'min(92vw,520px)',background:T.drawerBg,borderLeft:`1px solid ${T.drawerBdr}`,boxShadow:'-8px 0 32px rgba(0,0,0,0.12)'}}
+ className="fixed inset-0 z-40" style={{background:'rgba(0,0,0,0.35)',backdropFilter:'blur(3px)'}}/>
+ <motion.div initial={{x:'100%',opacity:0}} animate={{x:0,opacity:1}} exit={{x:'100%',opacity:0}}
+ transition={{type:'spring',damping:30,stiffness:280}}
+ className="fixed top-3 right-3 bottom-3 z-50 flex flex-col"
+ style={{
+ width:'min(92vw,480px)',
+ background:T.drawerBg,
+ borderRadius:20,
+ border:`1px solid ${T.drawerBdr}`,
+ boxShadow:'0 24px 64px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12)',
+ overflow:'hidden',
+ }}
  onClick={e=>e.stopPropagation()}>
 
- {/* Header - clean white */}
- <div className="flex-shrink-0 flex items-center gap-3 px-4 py-3" style={{background:T.headerBg,borderBottom:`1px solid ${T.headerBdr}`}}>
- <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{background:T.botIconBg,border:`1px solid ${T.botIconBdr}`}}>
- <AuraMascot size={28} isThinking={loading&&!streaming} isStreaming={streaming}/>
+ {/* ── Header — single 56px row, sky-blue gradient ── */}
+ <div className="flex-shrink-0 flex items-center gap-3 px-4"
+ style={{
+ height: 56,
+ background: 'linear-gradient(135deg,#0284c7,#0891b2)',
+ borderBottom: '1px solid rgba(255,255,255,0.12)',
+ boxShadow: '0 2px 12px rgba(2,132,199,0.25)',
+ }}>
+ {/* Avatar */}
+ <div style={{
+ width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+ background: 'rgba(255,255,255,0.18)',
+ border: '1.5px solid rgba(255,255,255,0.30)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center',
+ }}>
+ <AuraMascot size={24} isThinking={loading&&!streaming} isStreaming={streaming}/>
  </div>
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap">
- <span className="font-semibold text-sm" style={{color:T.nameText}}>Clinical Copilot</span>
- {hasUrgent&&(
- <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-bold text-white bg-red-500">
- <span className="w-1.5 h-1.5 bg-[var(--card-bg)] rounded-full animate-pulse"/>{critical} urgent
+
+ {/* Name + context */}
+ <div style={{ flex: 1, minWidth: 0 }}>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+ <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1 }}>Clinical Copilot</span>
+ {hasUrgent && (
+ <span style={{
+ display: 'inline-flex', alignItems: 'center', gap: 4,
+ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 99,
+ background: '#ef4444', color: '#fff',
+ }}>
+ <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', animation: 'pulse 2s infinite' }}/>
+ {critical} urgent
  </span>
  )}
- {provider&&(
- <span className="flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+ {provider && (
+ <span style={{
+ fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 99,
+ background: 'rgba(255,255,255,0.18)', color: '#fff',
+ border: '1px solid rgba(255,255,255,0.25)',
+ display: 'inline-flex', alignItems: 'center', gap: 3,
+ }}>
  <Zap size={9}/>{provider}
  </span>
  )}
  </div>
- <p className="text-xs mt-0.5 font-medium capitalize" style={{color:T.subText}}>
- {user?.role} · {readablePageName}{urlPid&&` · Patient #${urlPid}`}
+ <p style={{
+ fontSize: 11, color: 'rgba(255,255,255,0.65)',
+ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+ }}>
+ {user?.role} · {readablePageName}{urlPid && ` · Patient #${urlPid}`}
  </p>
  </div>
- <div className="flex items-center gap-0.5">
- {messages.length>0&&<button onClick={clearChat} className="p-1.5 rounded-lg transition-colors" style={{color:T.subText}}><RotateCcw size={14}/></button>}
- <button onClick={()=>setIsOpen(false)} className="p-1.5 rounded-lg transition-colors" style={{color:T.subText}}><X size={16}/></button>
+
+ {/* Action icons */}
+ <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+ {[
+ ...(messages.length > 0 ? [{ Icon: RotateCcw, onClick: clearChat, title: 'Clear' }] : []),
+ { Icon: X, onClick: () => setIsOpen(false), title: 'Close' },
+ ].map(({ Icon, onClick, title }) => (
+ <button key={title} onClick={onClick} title={title}
+ style={{
+ width: 30, height: 30, borderRadius: 8, display: 'flex',
+ alignItems: 'center', justifyContent: 'center',
+ background: 'transparent', color: 'rgba(255,255,255,0.65)',
+ border: 'none', cursor: 'pointer', transition: 'all 0.15s', flexShrink: 0,
+ }}
+ onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; e.currentTarget.style.color = '#fff'; }}
+ onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; }}
+ >
+ <Icon size={14}/>
+ </button>
+ ))}
  </div>
  </div>
 
- {/* Disclaimer */}
- <div className="flex-shrink-0 flex items-center gap-2 px-4 py-1.5 border-b" style={{borderColor:isDark?'#78350f':'#fde68a',background:isDark?'#1c1000':'#fef3c7'}}>
- <AlertTriangle size={10} className="text-amber-600 flex-shrink-0"/>
- <p className="text-[11px] font-medium" style={{color:isDark?'#fcd34d':'#92400e'}}>AI suggestions only - always apply clinical judgement · Emergency: <strong>193</strong></p>
+ {/* Disclaimer — slim */}
+ <div className="flex-shrink-0 flex items-center gap-2 px-4"
+ style={{ height: 28, background: '#fef3c7', borderBottom: '1px solid #fde68a' }}>
+ <AlertTriangle size={10} style={{ color: '#d97706', flexShrink: 0 }}/>
+ <p style={{ fontSize: 11, fontWeight: 500, color: '#92400e', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+ AI suggestions only — always apply clinical judgement · Emergency: <strong>193</strong>
+ </p>
  </div>
 
  {/* Conversation area */}
@@ -322,52 +376,82 @@ export default function AIAssistant() {
 
  {/* Empty state - analysis-focused */}
  {messages.length===0&&(
- <div className="flex flex-col items-center pt-4 space-y-5">
- <div className="w-14 h-14"><AuraMascot size={56} isThinking={loading&&!streaming} isStreaming={streaming}/></div>
+ <div className="flex flex-col items-center pt-3 space-y-4">
+ {/* Compact mascot */}
+ <div style={{ width:44, height:44, borderRadius:'50%', background:'linear-gradient(135deg,#f0f9ff,#e0f2fe)', display:'flex', alignItems:'center', justifyContent:'center', border:'1.5px solid rgba(2,132,199,0.18)', boxShadow:'0 2px 10px rgba(2,132,199,0.12)' }}>
+ <AuraMascot size={30} isThinking={loading&&!streaming} isStreaming={streaming}/>
+ </div>
  <div className="text-center">
- <p className="font-semibold text-base mb-1" style={{color:T.nameText}}>Clinical Copilot</p>
- <p className="text-sm leading-relaxed max-w-xs mx-auto" style={{color:T.subText}}>Ask me to summarise patients, explain AI predictions, flag drug interactions, or draft clinical notes.</p>
+ <p className="font-semibold text-sm mb-0.5" style={{color:T.nameText}}>Clinical Copilot</p>
+ <p className="text-xs leading-relaxed max-w-xs mx-auto" style={{color:T.subText}}>Summarise patients, explain AI predictions, flag drug interactions, draft clinical notes.</p>
  </div>
 
- {/* Stats - clinical overview */}
+ {/* Stats — compact inline strip */}
  {isClinical&&dashSummary&&(
- <div className="flex items-center gap-2 flex-wrap justify-center">
+ <div style={{
+ display:'flex', alignItems:'stretch', gap:0,
+ background:'rgba(2,132,199,0.06)',
+ border:'1px solid rgba(2,132,199,0.15)',
+ borderRadius:10, overflow:'hidden', alignSelf:'stretch',
+ }}>
  {[
- {label:'Patients', value: dashSummary.stats?.total_patients ?? dashSummary.total_patients ?? ' - ', color:'#7c3aed'},
+ {label:'Patients', value: dashSummary.stats?.total_patients ?? dashSummary.total_patients ?? '—', color:'#7c3aed'},
  {label:'Critical', value: critical || '0', color:'#dc2626'},
- {label:'Alerts', value: dashSummary.stats?.active_alerts ?? dashSummary.active_alerts ?? ' - ', color:'#d97706'},
- {label:'High Risk', value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? ' - ', color: C.accent},
- ].map(s=>(
- <div key={s.label} className="flex items-center gap-1.5 px-3 py-2 rounded-lg shadow-sm" style={{background:T.statsBg,border:`1px solid ${T.statsBdr}`}}>
- <span className="text-sm font-black tabular-nums" style={{color:s.color}}>{s.value}</span>
- <span className="text-[11px] font-medium" style={{color:T.subText}}>{s.label}</span>
+ {label:'Alerts', value: dashSummary.stats?.active_alerts ?? dashSummary.active_alerts ?? '—', color:'#d97706'},
+ {label:'High Risk', value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '—', color:C.accent},
+ ].map((s,i)=>(
+ <div key={s.label} style={{
+ flex:1, display:'flex', flexDirection:'column', alignItems:'center',
+ padding:'7px 6px', gap:1,
+ borderLeft: i>0 ? '1px solid rgba(2,132,199,0.12)' : 'none',
+ }}>
+ <span style={{ fontSize:15, fontWeight:900, color:s.color, lineHeight:1, fontVariantNumeric:'tabular-nums' }}>{s.value}</span>
+ <span style={{ fontSize:9, fontWeight:500, color:T.subText, whiteSpace:'nowrap' }}>{s.label}</span>
  </div>
  ))}
  </div>
  )}
 
- {/* Analysis chips - what AI can actually do here */}
+ {/* Analysis chips */}
  <div className="w-full">
- <p className="text-xs font-semibold mb-2" style={{color:T.subText}}>Ask about this page</p>
- <div className="flex flex-wrap gap-2">
+ <p className="text-[11px] font-semibold mb-2" style={{color:T.subText}}>Ask about this page</p>
+ <div className="flex flex-wrap gap-1.5">
  {chips.map(c=>(
  <button key={c} onClick={()=>sendMessage(c)}
- className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all" style={{background:T.chipBg,border:`1px solid ${T.chipBdr}`,color:T.chipText}}>
+ style={{
+ padding:'5px 10px', borderRadius:8, fontSize:11, fontWeight:500,
+ background:T.chipBg, border:`1px solid ${T.chipBdr}`, color:T.chipText,
+ cursor:'pointer', transition:'all 0.15s',
+ }}
+ onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent;e.currentTarget.style.color=C.accent;}}
+ onMouseLeave={e=>{e.currentTarget.style.borderColor=T.chipBdr;e.currentTarget.style.color=T.chipText;}}>
  {c}
  </button>
  ))}
  </div>
  </div>
 
- {/* Capability hints */}
- <div className="w-full grid grid-cols-2 gap-2">
- {[{icon:TrendingUp,label:'Summarise patients',desc:'Risk levels & changes',q:'Summarise all patients by risk level'},{icon:Brain,label:'Explain AI predictions',desc:'SHAP values in plain English',q:'Explain the top risk factors for high-risk patients'},{icon:ClipboardList,label:'Draft clinical notes',desc:'Handover, SOAP notes',q:'Draft a shift handover summary'},{icon:FileText,label:'Flag drug interactions',desc:'Current prescriptions',q:'Are there any dangerous drug interactions in current prescriptions?'}].map(h=>{
+ {/* Capability hint grid — compact 2-col */}
+ <div className="w-full grid grid-cols-2 gap-1.5">
+ {[
+ {icon:TrendingUp, label:'Summarise patients', desc:'Risk levels', q:'Summarise all patients by risk level'},
+ {icon:Brain,      label:'Explain AI',         desc:'SHAP values', q:'Explain the top risk factors for high-risk patients'},
+ {icon:ClipboardList,label:'Draft notes',      desc:'Handover, SOAP', q:'Draft a shift handover summary'},
+ {icon:FileText,   label:'Drug interactions',  desc:'Current prescriptions', q:'Are there any dangerous drug interactions in current prescriptions?'},
+ ].map(h=>{
  const Icon=h.icon;
  return (
  <button key={h.label} onClick={()=>sendMessage(h.q)}
- className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all shadow-sm" style={{background:T.hintBg,border:`1px solid ${T.hintBdr}`}}>
- <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 bg-sky-50"><Icon size={13} style={{color:C.accent}}/></div>
- <div className="min-w-0"><p className="text-[11px] font-semibold truncate" style={{color:T.hintTitle}}>{h.label}</p><p className="text-[11px] truncate" style={{color:T.subText}}>{h.desc}</p></div>
+ style={{ display:'flex', alignItems:'flex-start', gap:8, padding:'8px 10px', borderRadius:10, background:T.hintBg, border:`1px solid ${T.hintBdr}`, cursor:'pointer', transition:'all 0.15s' }}
+ onMouseEnter={e=>{e.currentTarget.style.borderColor=C.accent;}}
+ onMouseLeave={e=>{e.currentTarget.style.borderColor=T.hintBdr;}}>
+ <div style={{ width:24, height:24, borderRadius:7, background:'#f0f9ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+ <Icon size={12} style={{color:C.accent}}/>
+ </div>
+ <div style={{ minWidth:0 }}>
+ <p style={{ fontSize:11, fontWeight:600, color:T.hintTitle, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{h.label}</p>
+ <p style={{ fontSize:10, color:T.subText, margin:0 }}>{h.desc}</p>
+ </div>
  </button>
  );
  })}
@@ -387,10 +471,20 @@ export default function AIAssistant() {
  </div>
  )}
  <div className={`flex flex-col gap-1.5 max-w-[84%] ${isUser?'items-end':'items-start'}`}>
- <div className={`px-4 py-3 rounded-2xl ${isUser?'rounded-br-none':'rounded-bl-none'}`}
+ <div className={`px-4 py-3 ${isUser?'rounded-br-sm':'rounded-bl-sm'}`}
  style={isUser
- ? {background:T.userBubble,color:'#ffffff'}
- : {background:T.aiBubbleBg,border:`1px solid ${T.aiBubbleBdr}`,color:T.nameText,boxShadow:'0 1px 3px rgba(0,0,0,0.06)'}}>
+ ? {
+ background:T.userBubble,
+ color:'#ffffff',
+ borderRadius: '18px 18px 4px 18px',
+ }
+ : {
+ background:T.aiBubbleBg,
+ border:`1px solid ${T.aiBubbleBdr}`,
+ color:T.nameText,
+ borderRadius: '4px 18px 18px 18px',
+ boxShadow:'0 1px 3px rgba(0,0,0,0.06)',
+ }}>
  <MsgContent text={msg.content} streaming={msg.streaming} isUser={isUser}/>
  </div>
  <div className={`flex items-center gap-2 px-1 ${isUser?'justify-end':'justify-start'} opacity-0 group-hover:opacity-100 transition-opacity`}>
@@ -427,12 +521,20 @@ export default function AIAssistant() {
  <div ref={msgEndRef}/>
  </div>
 
- {/* Scroll pill */}
+ {/* Scroll pill — compact, above input */}
  <AnimatePresence>
  {!atBottom&&(
- <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}
- className="absolute left-1/2 -translate-x-1/2 bottom-20 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition-colors" style={{background:T.scrollPillBg,color:T.scrollPillText,border:`1px solid ${T.scrollPillBdr}`}}>
- <ChevronDown size={13}/>Jump to latest
+ <motion.button initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} onClick={scrollToBottom}
+ style={{
+ position:'absolute', left:'50%', transform:'translateX(-50%)',
+ bottom:64, zIndex:10,
+ display:'flex', alignItems:'center', gap:5,
+ padding:'5px 12px', borderRadius:99,
+ fontSize:11, fontWeight:600, color:'#fff',
+ background:C.accent, border:'none', cursor:'pointer',
+ boxShadow:`0 4px 14px ${C.accent}50`,
+ }}>
+ <ChevronDown size={12}/>Latest
  </motion.button>
  )}
  </AnimatePresence>
@@ -451,14 +553,36 @@ export default function AIAssistant() {
 
  {/* Input */}
  <form onSubmit={e=>{e.preventDefault();sendMessage();}}
- className="flex-shrink-0 px-4 pb-3 pt-2 border-t flex gap-2 items-center" style={{background:T.inputFormBg,borderColor:T.inputFormBdr}}>
+ className="flex-shrink-0 px-4 pb-4 pt-3 border-t flex items-center gap-3"
+ style={{background:T.inputFormBg,borderColor:T.inputFormBdr}}>
  <input ref={inputRef} type="text" value={input} onChange={e=>setInput(e.target.value)}
  placeholder="Ask about patients, get summaries, or draft notes…" disabled={loading}
- className="flex-1 px-4 py-2.5 text-sm rounded-xl outline-none transition-all disabled:opacity-50 min-w-0"
- style={{background:T.inputFieldBg,border:`1px solid ${T.inputFieldBdr}`,color:T.inputFieldText,caretColor:T.accent}}/>
+ className="flex-1 text-sm outline-none disabled:opacity-50 min-w-0"
+ style={{
+ background:T.inputFieldBg,
+ border:`1.5px solid ${T.inputFieldBdr}`,
+ color:T.inputFieldText,
+ caretColor:T.accent,
+ borderRadius:12,
+ padding:'10px 14px',
+ transition:'border-color 0.15s, box-shadow 0.15s',
+ }}
+ onFocus={e=>{e.target.style.borderColor=T.accent;e.target.style.boxShadow=`0 0 0 3px ${T.accent}18`;}}
+ onBlur={e=>{e.target.style.borderColor=T.inputFieldBdr;e.target.style.boxShadow='none';}}
+ />
  <motion.button type="submit" disabled={!input.trim()||loading}
  whileHover={{scale:1.06}} whileTap={{scale:0.94}}
- className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-white transition-all disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400" style={{background:T.accent}}>
+ style={{
+ flexShrink:0, width:40, height:40, borderRadius:12,
+ display:'flex', alignItems:'center', justifyContent:'center',
+ background: input.trim()&&!loading
+ ? `linear-gradient(135deg,${T.accent},#0891b2)`
+ : isDark ? '#1e293b' : '#e2e8f0',
+ color: input.trim()&&!loading ? '#fff' : isDark ? '#475569' : '#94a3b8',
+ border:'none', cursor: input.trim()&&!loading ? 'pointer' : 'not-allowed',
+ boxShadow: input.trim()&&!loading ? `0 4px 12px ${T.accent}40` : 'none',
+ transition:'all 0.18s',
+ }}>
  {loading?<Loader2 size={16} className="animate-spin"/>:<Send size={16} strokeWidth={2.5}/>}
  </motion.button>
  </form>

@@ -376,7 +376,7 @@ export default function Appointments() {
  subtitle={
  isPatient ? "Your upcoming visits, today's schedule and past appointments" :
  isFamily ? "Your loved one's appointment schedule" :
- "Patient appointments - schedule, complete, cancel and track visits"
+ "Patient appointments — schedule, complete, cancel and track visits"
  }
  icon={Calendar}
  stats={[
@@ -385,10 +385,53 @@ export default function Appointments() {
  { label:'Completed', value:kpi.completed, color:'#4ade80', pulse:false, onClick:()=>setFilterStatus('resolved') },
  { label:'Cancelled', value:kpi.cancelled, color:'rgba(255,255,255,0.55)', pulse:false, onClick:()=>setFilterStatus('all') },
  ]}>
+ {/* Patient picker (staff) */}
+ {isStaff && (
+ <SearchableSelect
+ style={{ minWidth:180, maxWidth:240 }}
+ placeholder="Select patient…"
+ accent="blue"
+ value={patientId ? String(patientId) : null}
+ onChange={v => setPatientId(v ? Number(v) : null)}
+ options={patientList.map(p => ({
+ value: String(p.id), label: p.full_name,
+ sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
+ avatar: 'linear-gradient(135deg,#1d4ed8,#0891b2)',
+ }))}
+ nullLabel="All patients"
+ />
+ )}
+ {/* Search */}
+ <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:280 }}>
+ <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+ <input value={search} onChange={e=>setSearch(e.target.value)}
+ placeholder="Search by type or location…"
+ style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+ onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+ onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
+ </div>
+ {/* Status pills — keep All option not covered by stats */}
+ <div style={{ display:'flex', gap:4 }}>
+ {[['active','Upcoming'],['all','All'],['resolved','Completed']].map(([v,l])=>(
+ <button key={v} onClick={()=>setFilterStatus(v)} style={{
+ padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
+ border: filterStatus===v ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
+ background: filterStatus===v ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
+ color: filterStatus===v ? 'var(--c-teal)' : 'var(--text-500)', cursor:'pointer', transition:'all 0.15s',
+ }}>{l}</button>
+ ))}
+ </div>
+ {/* Schedule button */}
  {canSchedule && patientId && (
- <button onClick={() => setShowModal(true)}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold">
- <Plus size={15}/> Schedule
+ <button onClick={()=>setShowModal(true)} style={{
+ display:'flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:20,
+ fontSize:12, fontWeight:700, border:'none', cursor:'pointer',
+ background:'linear-gradient(135deg,#1d4ed8,#0891b2)', color:'#fff',
+ boxShadow:'0 2px 8px rgba(29,78,216,0.3)', transition:'opacity 0.15s',
+ }}
+ onMouseEnter={e=>(e.currentTarget.style.opacity='0.88')}
+ onMouseLeave={e=>(e.currentTarget.style.opacity='1')}>
+ <Plus size={14}/> Schedule
  </button>
  )}
  </PageHeader>
@@ -458,58 +501,6 @@ export default function Appointments() {
 
  {/* Filter bar + Content - hidden for care settings that gate appointments */}
  {!appointmentsHidden && (<>
- <div className="px-6">
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4 space-y-3">
- <div className="flex flex-col md:flex-row gap-3 items-center">
- {isStaff && (
- <SearchableSelect
- className="flex-1 max-w-xs"
- placeholder="Search patient…"
- accent="blue"
- value={patientId ? String(patientId) : null}
- onChange={v => setPatientId(v ? Number(v) : null)}
- options={patientList.map(p => ({
- value: String(p.id),
- label: p.full_name,
- sublabel: `${p.patient_code || '#'+p.id} · ${p.age}y`,
- avatar: 'linear-gradient(135deg,#1d4ed8,#0891b2)',
- }))}
- nullLabel="All patients"
- />
- )}
- <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
- <input value={search} onChange={e => setSearch(e.target.value)}
- placeholder="Search by type or location…"
- className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none text-sm"/>
- </div>
- <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1">
- {[['active','Upcoming'],['all','All'],['resolved','Resolved']].map(([v,l]) => (
- <button key={v} onClick={() => setFilterStatus(v)}
- className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterStatus===v ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
- }`}>{l}</button>
- ))}
- </div>
- </div>
- {(search || filterStatus !== 'active') && (
- <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-slate-100">
- <span className="text-[11px] text-[var(--text-400)] font-semibold flex items-center gap-1"><ListFilter size={11}/> Filters:</span>
- {filterStatus !== 'active' && (
- <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-700 flex items-center gap-1">
- {filterStatus}<button onClick={() => setFilterStatus('active')} className="font-black hover:text-red-600">×</button>
- </span>
- )}
- {search && (
- <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-700 flex items-center gap-1">
- "{search}"<button onClick={() => setSearch('')} className="font-black hover:text-red-600">×</button>
- </span>
- )}
- <button onClick={() => { setFilterStatus('active'); setSearch(''); }} className="text-xs text-[var(--text-400)] hover:text-red-500 font-semibold ml-auto">Clear all</button>
- </div>
- )}
- </div>
- </div>
 
  {/* Content */}
  <div className="px-6 space-y-5">

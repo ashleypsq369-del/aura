@@ -175,124 +175,73 @@ export default function Patients() {
  subtitle="Manage patient records and care"
  icon={Users}
  stats={[
- { label: 'Total',        value: patients?.length ?? 0,           color: '#2dd4bf', pulse: false },
- { label: 'Critical',     value: patients?.filter(p=>p.status==='critical').length    ?? 0, color: '#f87171', pulse: (patients?.filter(p=>p.status==='critical').length??0)>0, onClick:()=>setFilterStatus('critical') },
- { label: 'Deteriorating',value: patients?.filter(p=>p.status==='deteriorating').length ?? 0, color: '#fbbf24', pulse: false, onClick:()=>setFilterStatus('deteriorating') },
- { label: 'Stable',       value: patients?.filter(p=>p.status==='stable').length      ?? 0, color: '#4ade80', pulse: false, onClick:()=>setFilterStatus('stable') },
+ { label:'Total',         value:patients?.length ?? 0,                                            color:'#2dd4bf', pulse:false },
+ { label:'Critical',      value:patients?.filter(p=>p.status==='critical').length ?? 0,            color:'#f87171', pulse:(patients?.filter(p=>p.status==='critical').length??0)>0, onClick:()=>setFilterStatus('critical') },
+ { label:'Deteriorating', value:patients?.filter(p=>p.status==='deteriorating').length ?? 0,       color:'#fbbf24', pulse:false, onClick:()=>setFilterStatus('deteriorating') },
+ { label:'Stable',        value:patients?.filter(p=>p.status==='stable').length ?? 0,              color:'#4ade80', pulse:false, onClick:()=>setFilterStatus('stable') },
  ]}
  >
- <button
- onClick={() => setShowAddModal(true)}
- data-tip="Register a new patient"
- data-tip-below=""
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all"
- >
- <Plus size={16} /> Add Patient
- </button>
- </PageHeader>
-
- {/* Search and Filter Bar */}
- <div className="px-3 sm:px-4 space-y-3">
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] shadow-sm p-4">
- {/* Active filter banner */}
- {location.state?.filterStatus && filterStatus !== 'all' && (
- <div className={`flex items-center justify-between mb-3 px-4 py-2.5 rounded-xl border text-sm font-semibold ${
- filterStatus === 'critical' ? 'bg-red-50 border-red-300 text-red-800' :
- filterStatus === 'deteriorating'? 'bg-amber-50 border-amber-300 text-amber-800' :
- 'bg-green-50 border-green-300 text-green-800'
- }`}>
- <span className="text-xs">
- {filterStatus === 'critical' ? 'Showing Critical Patients -- Require immediate attention' :
- filterStatus === 'deteriorating' ? 'Showing Deteriorating Patients -- Declining health status' :
- 'Showing Stable Patients -- Maintaining good health'}
- </span>
- <button onClick={() => { setFilterStatus('all'); navigate('/patients', { replace: true, state: {} }); }}
- className="ml-3 px-2.5 py-1 bg-[var(--card-bg)] rounded-lg border text-xs font-bold hover:bg-[var(--card-bg)] transition">
- Clear
- </button>
- </div>
- )}
-
- <div className="flex flex-col sm:flex-row gap-3 items-center">
  {/* Search */}
- <div className="flex-1 relative">
- <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none" />
- <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
- placeholder="Search by name, diagnosis or code..."
- className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none" />
+ <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:300 }}>
+ <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+ <input type="text" value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
+ placeholder="Search name, diagnosis, code…"
+ style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
+ onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+ onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
  </div>
 
- {/* Status pills - scrollable on xs so "Deteriorating" never clips */}
- <div className="flex items-center gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto scrollbar-none flex-shrink-0">
- {[
- { value:'all', label:'All', color:'#475569' },
- { value:'active', label:'Active', color:'#0d9488' },
- { value:'stable', label:'Stable', color:'#059669' },
- { value:'deteriorating',label:'Deteriorating', color:'#d97706' },
- { value:'critical', label:'Critical', color:'#e11d48' },
- ].map(({ value, label, color }) => (
- <button key={value} onClick={() => setFilterStatus(value)}
- className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
- filterStatus === value ? 'text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-200'
- }`}
- style={filterStatus === value ? { backgroundColor: color } : {}}>
- {label}
- </button>
+ {/* Separator */}
+ <div style={{ width:1, height:20, background:'var(--card-border)', flexShrink:0 }}/>
+
+ {/* Status pills */}
+ <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
+ {[{value:'all',label:'All',color:'#475569'},{value:'active',label:'Active',color:'#0d9488'},{value:'stable',label:'Stable',color:'#059669'},{value:'deteriorating',label:'Deteriorating',color:'#d97706'},{value:'critical',label:'Critical',color:'#e11d48'}].map(({value:v,label,color})=>(
+ <button key={v} onClick={()=>setFilterStatus(v)} style={{
+ padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
+ border: filterStatus===v ? `1.5px solid ${color}` : '1px solid var(--card-border)',
+ background: filterStatus===v ? `${color}12` : 'var(--card-bg)',
+ color: filterStatus===v ? color : 'var(--text-500)',
+ }}>{label}</button>
  ))}
  </div>
- </div>
 
- {/* Care setting filter row */}
- <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
- <span className="text-[11px] font-bold text-[var(--text-400)] ">Care Setting:</span>
- {CARE_SETTING_FILTERS.map(({ value, label, icon: Icon, color }) => {
- const active = filterCareSetting === value;
+ {/* Separator */}
+ <div style={{ width:1, height:20, background:'var(--card-border)', flexShrink:0 }}/>
+
+ {/* Care setting pills — compact */}
+ <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
+ {CARE_SETTING_FILTERS.map(({value:v,label,icon:CSIcon,color})=>{
+ const active = filterCareSetting===v;
  return (
- <button key={value} onClick={() => setFilterCareSetting(value)}
- className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
- active
- ? 'text-white border-transparent shadow-sm'
- : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-600)] hover:border-slate-300'
- }`}
- style={active ? { backgroundColor: color || '#475569' } : {}}>
- {Icon && <Icon size={10}/>}
- {label}
- {active && value !== 'all' && (
- <span className="ml-0.5 opacity-75">
- ({patients?.filter(p => p.care_setting === value).length || 0})
- </span>
- )}
+ <button key={v} onClick={()=>setFilterCareSetting(v)} style={{
+ display:'flex', alignItems:'center', gap:4,
+ padding:'4px 10px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
+ border: active ? `1.5px solid ${color||'#475569'}` : '1px solid var(--card-border)',
+ background: active ? `${color||'#475569'}12` : 'var(--card-bg)',
+ color: active ? color||'#475569' : 'var(--text-500)',
+ }}>
+ {CSIcon && <CSIcon size={10}/>}{label}
  </button>
  );
  })}
  </div>
- </div>
 
- <div className="flex items-center justify-between flex-wrap gap-2 py-1 px-1">
- <p className="text-sm text-[var(--text-500)] font-medium">
- Showing <strong>{filteredPatients?.length || 0}</strong> of <strong>{patients?.length || 0}</strong> patients
- {filterStatus !== 'all' && <span className="ml-2 text-teal-600 font-semibold capitalize">· {filterStatus}</span>}
- {filterCareSetting !== 'all' && (
- <span className="ml-2 text-teal-600 font-semibold">
- · {CARE_SETTING_FILTERS.find(f => f.value === filterCareSetting)?.label}
- </span>
- )}
- </p>
- <div className="flex items-center gap-2">
- {filterCareSetting !== 'all' && (
- <button onClick={() => setFilterCareSetting('all')} className="text-xs text-teal-500 hover:text-red-500 font-semibold flex items-center gap-1">
- Clear setting ×
+ {/* Add patient */}
+ <button onClick={()=>setShowAddModal(true)} style={{
+ display:'flex', alignItems:'center', gap:6, padding:'6px 14px', borderRadius:20,
+ fontSize:12, fontWeight:700, border:'none', cursor:'pointer', marginLeft:'auto',
+ background:'linear-gradient(135deg,#1d4ed8,#0891b2)', color:'#fff',
+ boxShadow:'0 2px 8px rgba(29,78,216,0.3)', transition:'opacity 0.15s', flexShrink:0,
+ }}
+ onMouseEnter={e=>(e.currentTarget.style.opacity='0.88')}
+ onMouseLeave={e=>(e.currentTarget.style.opacity='1')}>
+ <Plus size={14}/> Add Patient
  </button>
- )}
- {searchTerm && (
- <button onClick={() => setSearchTerm('')} className="text-xs text-[var(--text-400)] hover:text-red-500 font-semibold flex items-center gap-1">
- Clear search ×
- </button>
- )}
- </div>
- </div>
+ </PageHeader>
 
- {/* Patients Table - TanStack Table with sorting, filtering, pagination */}
+ {/* Patients Table */}
+ <div className="px-3 sm:px-4">
  <SectionErrorBoundary name="Patient Table">
  <PatientDataTable
  patients={filteredPatients || []}
@@ -303,7 +252,7 @@ export default function Patients() {
  <EmptyPatients onAddClick={() => setShowAddModal(true)} />
  )}
  </SectionErrorBoundary>
- </div>{/* end max-w-5xl */}
+ </div>
 
  {/* Add Patient Modal */}
  <Modal
