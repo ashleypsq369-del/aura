@@ -343,37 +343,36 @@ export default function Layout({ children }) {
  <div className="flex-1">
  {children}
  </div>
- {/* Footer — links row + copyright, clearly legible */}
+ {/* Footer — links row + copyright */}
  <footer style={{
-   width: '100%', textAlign: 'center',
-   padding: '12px 16px 14px',
-   borderTop: '1px solid var(--card-border)',
-   background: 'var(--card-bg)',
+   width:'100%', textAlign:'center',
+   padding:'10px 16px 14px',
+   borderTop:'1px solid var(--card-border)',
+   background:'var(--card-bg)',
  }}>
-   {/* Links row */}
-   <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:0, marginBottom:5 }}>
-     <Link to="/about" style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', textDecoration:'none' }}
+   <p style={{ fontSize:12, fontWeight:600, margin:'0 0 4px', color:'var(--text-500)', lineHeight:1.6 }}>
+     <Link to="/about"
+       style={{ color:'var(--text-500)', textDecoration:'none' }}
        onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
        onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
        About
      </Link>
-     <span style={{ fontSize:11, color:'var(--text-300)', margin:'0 8px' }}>·</span>
+     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('terms')}
-       style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
        onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
        onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
        Terms
      </button>
-     <span style={{ fontSize:11, color:'var(--text-300)', margin:'0 8px' }}>·</span>
+     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('privacy')}
-       style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+       style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
        onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
        onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
        Privacy
      </button>
-   </div>
-   {/* Copyright */}
-   <p style={{ fontSize:10, color:'var(--text-400)', margin:0, lineHeight:1.5 }}>
+   </p>
+   <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>
      © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
    </p>
  </footer>

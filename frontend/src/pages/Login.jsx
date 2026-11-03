@@ -332,28 +332,28 @@ export default function Login() {
 
           {/* Footer — outside the card, below it */}
           <div className="mt-4 text-center">
-            {/* Links */}
-            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:0, marginBottom:6 }}>
+            {/* Links + copyright in one tight block */}
+            <p style={{ fontSize:12, fontWeight:600, margin:'0 0 5px', lineHeight:1.6 }}>
               <Link to="/about"
-                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', textDecoration:'none', transition:'color 0.15s' }}
-                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                style={{ color:'rgba(255,255,255,0.85)', textDecoration:'none' }}
+                className="lg:text-[var(--text-600)] hover:opacity-70">
                 About
               </Link>
-              <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)', margin:'0 10px' }} className="lg:text-[var(--text-300)]">·</span>
+              <span style={{ color:'rgba(255,255,255,0.35)', margin:'0 8px' }} className="lg:text-[var(--text-300)]">·</span>
               <button type="button" onClick={() => setLegalModal('terms')}
-                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', background:'none', border:'none', cursor:'pointer', padding:0, transition:'color 0.15s' }}
-                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.85)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+                className="lg:text-[var(--text-600)] hover:opacity-70">
                 Terms
               </button>
-              <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)', margin:'0 10px' }} className="lg:text-[var(--text-300)]">·</span>
+              <span style={{ color:'rgba(255,255,255,0.35)', margin:'0 8px' }} className="lg:text-[var(--text-300)]">·</span>
               <button type="button" onClick={() => setLegalModal('privacy')}
-                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', background:'none', border:'none', cursor:'pointer', padding:0, transition:'color 0.15s' }}
-                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.85)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+                className="lg:text-[var(--text-600)] hover:opacity-70">
                 Privacy
               </button>
-            </div>
-            {/* Copyright */}
-            <p style={{ fontSize:11, color:'rgba(255,255,255,0.50)', margin:0 }} className="lg:text-[var(--text-400)] drop-shadow">
+            </p>
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.50)', margin:0 }}
+              className="lg:text-[var(--text-400)] drop-shadow">
               © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
             </p>
           </div>
