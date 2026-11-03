@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -22,6 +22,7 @@ import AvatarDisplay from '../avatar/AvatarDisplay';
 import AvatarModal from '../avatar/AvatarModal';
 import TaskStatusBar from '../TaskStatusBar';
 import FeedbackWidget from '../FeedbackWidget';
+import LegalModal from '../LegalModal';
 
 export default function Layout({ children }) {
  const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function Layout({ children }) {
  const [showAvatarBuilder, setShowAvatarBuilder] = useState(false);
  const [showCompanion, setShowCompanion] = useState(false);
  const [showCopilot, setShowCopilot] = useState(false);
+ const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy' | null
  const { isLoggingOut, user, logout } = useAuth();
  const { settings: a11ySettings, disableAssistedMode } = useAccessibility();
  const { theme, updateTheme, sidebarSettings, updateSidebarSetting } = useAppSettings();
@@ -341,12 +343,44 @@ export default function Layout({ children }) {
  <div className="flex-1">
  {children}
  </div>
- {/* Copyright footer - in document flow, never overlaps content */}
- <footer className="w-full text-center py-2 px-4 select-none pointer-events-none" aria-hidden="true">
- <p className="text-[11px] text-[var(--text-400)]/50">
- © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
- </p>
+ {/* Footer — links row + copyright, clearly legible */}
+ <footer style={{
+   width: '100%', textAlign: 'center',
+   padding: '12px 16px 14px',
+   borderTop: '1px solid var(--card-border)',
+   background: 'var(--card-bg)',
+ }}>
+   {/* Links row */}
+   <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:0, marginBottom:5 }}>
+     <Link to="/about" style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', textDecoration:'none' }}
+       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
+       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+       About
+     </Link>
+     <span style={{ fontSize:11, color:'var(--text-300)', margin:'0 8px' }}>·</span>
+     <button type="button" onClick={() => setLegalModal('terms')}
+       style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
+       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+       Terms
+     </button>
+     <span style={{ fontSize:11, color:'var(--text-300)', margin:'0 8px' }}>·</span>
+     <button type="button" onClick={() => setLegalModal('privacy')}
+       style={{ fontSize:11, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0 }}
+       onMouseEnter={e=>e.currentTarget.style.color='var(--c-teal)'}
+       onMouseLeave={e=>e.currentTarget.style.color='var(--text-500)'}>
+       Privacy
+     </button>
+   </div>
+   {/* Copyright */}
+   <p style={{ fontSize:10, color:'var(--text-400)', margin:0, lineHeight:1.5 }}>
+     © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved · For academic &amp; demonstration use only
+   </p>
  </footer>
+
+ {/* Legal modals */}
+ <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
+ <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
  </motion.div>
  </main>
       <FeedbackWidget />
