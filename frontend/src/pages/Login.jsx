@@ -269,21 +269,6 @@ export default function Login() {
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
-            {/* Footer links */}
-            <p className="mt-3 text-center text-[11px] text-[var(--text-400)]">
-              <Link to="/about" className="hover:text-teal-600 transition-colors font-medium">About</Link>
-              <span className="mx-1.5 opacity-40">·</span>
-              <button type="button" onClick={() => setLegalModal('terms')}
-                className="hover:text-teal-600 transition-colors bg-transparent border-none cursor-pointer p-0 text-[11px] text-[var(--text-400)]">
-                Terms
-              </button>
-              <span className="mx-1.5 opacity-40">·</span>
-              <button type="button" onClick={() => setLegalModal('privacy')}
-                className="hover:text-teal-600 transition-colors bg-transparent border-none cursor-pointer p-0 text-[11px] text-[var(--text-400)]">
-                Privacy
-              </button>
-            </p>
-
             {/* Legal modals */}
             <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
             <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
@@ -345,9 +330,33 @@ export default function Login() {
 
           </div>
 
-          <p className="text-center text-[11px] text-white/70 lg:text-[var(--text-400)] mt-3 drop-shadow">
-            © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
-          </p>
+          {/* Footer — outside the card, below it */}
+          <div className="mt-4 text-center">
+            {/* Links */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:0, marginBottom:6 }}>
+              <Link to="/about"
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', textDecoration:'none', transition:'color 0.15s' }}
+                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                About
+              </Link>
+              <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)', margin:'0 10px' }} className="lg:text-[var(--text-300)]">·</span>
+              <button type="button" onClick={() => setLegalModal('terms')}
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', background:'none', border:'none', cursor:'pointer', padding:0, transition:'color 0.15s' }}
+                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                Terms
+              </button>
+              <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)', margin:'0 10px' }} className="lg:text-[var(--text-300)]">·</span>
+              <button type="button" onClick={() => setLegalModal('privacy')}
+                style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.80)', background:'none', border:'none', cursor:'pointer', padding:0, transition:'color 0.15s' }}
+                className="lg:text-[var(--text-600)] hover:text-teal-300 lg:hover:text-teal-600 drop-shadow">
+                Privacy
+              </button>
+            </div>
+            {/* Copyright */}
+            <p style={{ fontSize:11, color:'rgba(255,255,255,0.50)', margin:0 }} className="lg:text-[var(--text-400)] drop-shadow">
+              © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
+            </p>
+          </div>
         </motion.div>
       </div>
     </div>
