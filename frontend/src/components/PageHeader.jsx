@@ -210,9 +210,15 @@ export default function PageHeader({
               style={{
                 display:             'grid',
                 gridTemplateColumns: stats.length >= 4 ? '1fr 1fr' : '1fr',
-                gap:                 '8px 16px',
+                gap:                 '6px 12px',
                 flexShrink:          0,
                 paddingRight:        4,
+                background:          'rgba(0,0,0,0.38)',
+                backdropFilter:      'blur(12px)',
+                WebkitBackdropFilter:'blur(12px)',
+                borderRadius:        12,
+                padding:             '10px 14px',
+                border:              '1px solid rgba(255,255,255,0.12)',
               }}
               role="region"
               aria-label="Page statistics"
@@ -238,16 +244,16 @@ export default function PageHeader({
                   onMouseEnter={onClick ? (e => { e.currentTarget.style.opacity = '0.72'; }) : undefined}
                   onMouseLeave={onClick ? (e => { e.currentTarget.style.opacity = '1'; }) : undefined}
                 >
-                  {/* Colored left-bar accent — Services signature */}
+                  {/* Colored left-bar accent */}
                   <div
                     aria-hidden="true"
                     style={{
                       width:        3,
-                      height:       28,
+                      height:       26,
                       borderRadius: 2,
                       background:   color,
                       flexShrink:   0,
-                      boxShadow:    `0 0 12px ${color}, 0 0 4px ${color}`,
+                      boxShadow:    `0 0 10px ${color}, 0 0 20px ${color}88`,
                     }}
                   />
                   {/* Number + label */}
@@ -266,22 +272,14 @@ export default function PageHeader({
                         />
                       )}
                       <span style={{
-                          fontSize: 15, fontWeight: 900, color: '#ffffff',
-                          fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em',
-                          textShadow: `0 0 12px ${color}cc, 0 1px 3px rgba(0,0,0,0.4)`,
+                          fontSize: 16, fontWeight: 900, color: '#ffffff',
+                          fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.03em',
+                          textShadow: `0 0 14px ${color}, 0 1px 2px rgba(0,0,0,0.6)`,
                         }}>
                         {value}
                       </span>
                     </div>
-                    <span
-                      style={{
-                        fontSize:   10,
-                        fontWeight: 600,
-                        color:      'rgba(255,255,255,0.65)',
-                        whiteSpace: 'nowrap',
-                        lineHeight: 1,
-                      }}
-                    >
+                    <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', lineHeight: 1 }}>
                       {label}
                     </span>
                   </div>

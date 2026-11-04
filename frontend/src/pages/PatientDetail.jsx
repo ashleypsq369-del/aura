@@ -352,19 +352,19 @@ export default function PatientDetail() {
  </span>
  {canUpdateStatus && (
  <button onClick={() => { setSelectedStatus(patient.status || 'active'); setShowStatusModal(true); }}
- className="w-7 h-7 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition" title="Update Status">
- <Edit2 size={13} className="text-white" />
+ className="w-7 h-7 bg-[var(--page-bg)] hover:bg-[var(--card-border)] rounded-lg flex items-center justify-center transition border border-[var(--card-border)]" title="Update Status">
+ <Edit2 size={13} className="text-[var(--text-600)]" />
  </button>
  )}
  <button onClick={explainRisk} disabled={loadingRisk}
- className="flex items-center gap-1 px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50">
- <Brain size={13} /> <span className="hidden xs:inline sm:inline">{loadingRisk ? 'Analyzing...' : 'AI Risk'}</span>
+ className="flex items-center gap-1 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-xs font-bold transition disabled:opacity-50">
+ <Brain size={13} className="text-purple-600" /> <span>{loadingRisk ? 'Analyzing...' : 'AI Risk'}</span>
  </button>
  <button onClick={() => patientUserData?.user_id
  ? chatWith(patientUserData.user_id, `Hi ${patient?.full_name?.split(' ')[0]}, this is ${user?.full_name} from the care team.`)
  : navigate('/messages')}
- className="flex items-center gap-1 px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-xs font-bold transition">
- <MessageCircle size={13} /> <span className="hidden sm:inline">Message</span>
+ className="flex items-center gap-1 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-xs font-bold transition">
+ <MessageCircle size={13} className="text-teal-600" /> <span>Message</span>
  </button>
  </div>
  </PageHeader>
