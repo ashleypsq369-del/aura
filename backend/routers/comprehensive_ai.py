@@ -1501,14 +1501,14 @@ async def _explain_vital_focus_fallback(patient: Patient, focus_data: dict, db: 
                 deviation = value - baseline
                 explanation += f"This is {abs(deviation):.0f}% below their baseline ({baseline:.0f}%). "
             
-            # Check respiratory symptoms
+            # Check respiratory symptoms using actual Symptom columns
             recent_symptoms = db.query(Symptom).filter(
                 Symptom.patient_id == patient.id,
-                Symptom.symptom_type.in_(['breathlessness', 'cough', 'chest_pain'])
+                Symptom.breathlessness > 3
             ).order_by(Symptom.recorded_at.desc()).limit(3).all()
             
             if recent_symptoms:
-                explanation += f"Patient has recent respiratory symptoms: {', '.join([s.symptom_type for s in recent_symptoms])}. "
+                explanation += f"Patient has {len(recent_symptoms)} recent reports of breathlessness. "
             
             if value < 90:
                 risk_level = "critical"
@@ -1681,76 +1681,90 @@ async def explain_medication_focus(patient: Patient, focus_data: dict, db: Sessi
     }
 
 
-async def explain_symptom_focus(patient: Patient, focus_data: dict, db: Session):
-    """Explain symptom patterns and trends"""
-    
-    symptom_type = focus_data.get('symptom_type', '')
+async def explain_symptom_focus(patient, focus_data: dict, db):
+    """Explain symptom patterns using actual Symptom model columns."""
+    from src.db import Symptom as _Sym
+    import numpy as _np
+
+    symptom_type     = focus_data.get('symptom_type', 'pain')
     current_severity = focus_data.get('severity', 0)
-    
-    # Get symptom history
-    symptom_history = db.query(Symptom).filter(
-        Symptom.patient_id == patient.id,
-        Symptom.symptom_type == symptom_type
-    ).order_by(Symptom.recorded_at.desc()).limit(10).all()
-    
-    explanation = f"Analyzing {symptom_type} pattern for {patient.full_name}. "
-    risk_level = "normal"
+
+    symptom_history = db.query(_Sym).filter(
+        _Sym.patient_id == patient.id
+    ).order_by(_Sym.recorded_at.desc()).limit(10).all()
+
+    explanation   = f"Analyzing {symptom_type} pattern for {patient.full_name}. "
+    risk_level    = "normal"
     recommendations = []
-    trend = "stable"
-    
+    trend         = "stable"
+
+    col_map = {
+        'pain':           lambda s: s.pain_level or 0,
+        'nausea':         lambda s: (s.nausea_level or 0) if s.nausea else 0,
+        'fatigue':        lambda s: (s.fatigue_level or 0) if s.fatigue else 0,
+        'anxiety':        lambda s: (s.anxiety_level or 0) if s.anxiety else 0,
+        'breathlessness': lambda s: s.breathlessness or 0,
+        'dyspnea':        lambda s: s.breathlessness or 0,
+        'depression':     lambda s: s.depression_level or 0,
+        'appetite':       lambda s: s.appetite_level or 0,
+    }
+    get_level = col_map.get(symptom_type, lambda s: s.pain_level or 0)
+
     if len(symptom_history) > 1:
-        # Calculate trend
-        recent_severity = [s.severity for s in symptom_history[:3]]
-        older_severity = [s.severity for s in symptom_history[3:6]] if len(symptom_history) >= 6 else recent_severity
-        
-        if np.mean(recent_severity) > np.mean(older_severity) + 1:
-            trend = "worsening"
-            risk_level = "warning"
-            explanation += f"{symptom_type.capitalize()} is worsening over time. "
-        elif np.mean(recent_severity) < np.mean(older_severity) - 1:
-            trend = "improving"
-            explanation += f"{symptom_type.capitalize()} is improving. "
-    
+        recent = [get_level(s) for s in symptom_history[:3]]
+        older  = [get_level(s) for s in symptom_history[3:6]] if len(symptom_history) >= 6 else recent
+        if recent and older:
+            if _np.mean(recent) > _np.mean(older) + 1:
+                trend, risk_level = "worsening", "warning"
+                explanation += f"{symptom_type.capitalize()} is worsening over time. "
+            elif _np.mean(recent) < _np.mean(older) - 1:
+                trend = "improving"
+                explanation += f"{symptom_type.capitalize()} is improving. "
+
     if current_severity >= 7:
         risk_level = "critical"
         explanation += f"Current severity ({current_severity}/10) is severe. "
-        recommendations.append("Urgent intervention required")
+        recommendations.append("Urgent clinical review required")
     elif current_severity >= 5:
         risk_level = "warning"
-        explanation += f"Current severity ({current_severity}/10) is moderate and requires attention. "
-    
-    # Symptom-specific recommendations
-    if symptom_type == 'pain':
-        if current_severity >= 7:
-            recommendations.append("Consider breakthrough pain medication")
-            recommendations.append("Assess pain source and characteristics")
-        recommendations.append("Review pain management plan")
-    
-    elif symptom_type == 'nausea':
-        recommendations.append("Administer antiemetic medication")
-        recommendations.append("Small, frequent meals")
-        recommendations.append("Assess for medication-induced nausea")
-    
-    elif symptom_type == 'breathlessness':
-        recommendations.append("Check oxygen saturation")
-        recommendations.append("Position patient upright")
-        recommendations.append("Consider oxygen therapy if SpO2 < 95%")
-    
-    if not recommendations:
-        recommendations.append("Continue monitoring symptom progression")
-    
+        explanation += f"Current severity ({current_severity}/10) is moderate. "
+
+    rec_map = {
+        'pain':                    ["Consider breakthrough pain medication if score >= 7",
+                                    "Review WHO analgesic ladder — step up if needed",
+                                    "Non-pharmacological: positioning, heat/cold, relaxation"],
+        'nausea':                  ["Administer prescribed antiemetic",
+                                    "Small frequent meals, avoid strong odours",
+                                    "Check if opioid-induced — consider dose reduction"],
+        'breathlessness':          ["Check SpO2 immediately",
+                                    "Position patient upright at 30-45 degrees",
+                                    "Consider supplemental oxygen if SpO2 < 95%"],
+        'dyspnea':                 ["Check SpO2 immediately",
+                                    "Position patient upright",
+                                    "Consider supplemental oxygen if SpO2 < 95%"],
+        'anxiety':                 ["Breathing exercises: 4-7-8 technique",
+                                    "Ensure patient feels safe and informed",
+                                    "Review anxiolytic prescription with clinician"],
+        'fatigue':                 ["Energy conservation and pacing strategies",
+                                    "Check haemoglobin — may indicate anaemia",
+                                    "Review medications for fatigue side-effects"],
+    }
+    recommendations.extend(rec_map.get(symptom_type, ["Continue monitoring and document changes"]))
+    if current_severity >= 7 and 'Urgent clinical review required' not in recommendations:
+        recommendations.insert(0, "Urgent clinical review required")
+
     return {
-        "patient_id": patient.id,
-        "patient_name": patient.full_name,
-        "focus_type": "symptom",
-        "symptom_type": symptom_type,
+        "patient_id":       patient.id,
+        "patient_name":     patient.full_name,
+        "focus_type":       "symptom",
+        "symptom_type":     symptom_type,
         "current_severity": current_severity,
-        "trend": trend,
-        "risk_level": risk_level,
-        "explanation": explanation,
-        "history_count": len(symptom_history),
-        "recommendations": recommendations,
-        "confidence": 0.80
+        "trend":            trend,
+        "risk_level":       risk_level,
+        "explanation":      explanation,
+        "history_count":    len(symptom_history),
+        "recommendations":  recommendations[:6],
+        "confidence":       0.80
     }
 
 
