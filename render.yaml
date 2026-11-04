@@ -4,7 +4,7 @@ services:
     runtime: docker
     rootDir: backend
     dockerfilePath: ./Dockerfile
-    branch: master
+    branch: main
     plan: free
     healthCheckPath: /health
     envVars:

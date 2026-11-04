@@ -5,7 +5,7 @@
  * About type is wider (560px) and shows project info.
  */
 import { createPortal } from 'react-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -74,23 +74,41 @@ const CONFIG = {
 export default function LegalModal({ type = 'terms', open, onClose, onAccept }) {
   const cfg = CONFIG[type] || CONFIG.terms;
   const [accepted, setAccepted] = useState(false);
+  const [localOpen, setLocalOpen] = useState(open);
+  const timerRef = useRef(null);
 
-  // Reset accepted state when modal closes
+  // Follow the open prop — but if accepted, delay closing so green state shows
   useEffect(() => {
-    if (!open) setTimeout(() => setAccepted(false), 300);
+    if (open) {
+      setAccepted(false);
+      setLocalOpen(true);
+    } else if (!accepted) {
+      setLocalOpen(false);
+    }
   }, [open]);
 
   const handleAccept = () => {
     setAccepted(true);
     onAccept?.();
-    setTimeout(() => onClose(), 900);
+    // Show green for 1 second then close
+    timerRef.current = setTimeout(() => {
+      setLocalOpen(false);
+      setTimeout(() => onClose(), 300); // let exit animation finish
+    }, 1000);
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, []);
+
+  const handleDecline = () => onClose();
 
   if (typeof document === 'undefined') return null;
 
   return createPortal(
     <AnimatePresence>
-      {open && (
+      {localOpen && (
         <>
           {/* Backdrop */}
           <motion.div
@@ -173,7 +191,7 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
                         <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Accepted</>
                       ) : cfg.acceptLabel}
                     </button>
-                    <button onClick={onClose}
+                    <button onClick={handleDecline}
                       style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:600, background:'#fff', color:'#0d9488', border:'1.5px solid #0d9488', cursor:'pointer' }}
                       onMouseEnter={e=>e.currentTarget.style.background='#f0fdfa'}
                       onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
