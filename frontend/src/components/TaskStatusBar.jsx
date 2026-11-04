@@ -187,38 +187,37 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
  const pendingReq = tasks.filter(t => t.required && !t.done);
  const allReqDone = pendingReq.length === 0 && reqTotal > 0;
- const dotColor = allReqDone
- ? 'bg-emerald-400'
- : pendingReq.length > 0
- ? 'bg-red-400 animate-pulse'
- : 'bg-slate-400';
 
  return (
  <div
  className="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-default select-none"
- style={{ background: 'rgba(255,255,255,0.14)', border: '1.5px solid rgba(255,255,255,0.28)', backdropFilter: 'blur(8px)' }}
+ style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.30)' }}
  title={`Today's tasks: ${reqDone}/${reqTotal} required done`}
  >
- {/* Mini ring */}
- <Ring pct={pct} size={28} light />
+ {/* Percent badge */}
+ <span style={{
+ fontSize: 11, fontWeight: 900, color: '#fff',
+ background: allReqDone ? 'rgba(52,211,153,0.35)' : pendingReq.length > 0 ? 'rgba(248,113,113,0.35)' : 'rgba(255,255,255,0.15)',
+ padding: '1px 6px', borderRadius: 99, lineHeight: '18px', letterSpacing: '-0.3px',
+ border: `1px solid ${allReqDone ? 'rgba(52,211,153,0.5)' : pendingReq.length > 0 ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.2)'}`,
+ }}>
+ {pct}%
+ </span>
 
- {/* Status dots - one per required task, max 4, 8px for legibility */}
+ {/* Status dots */}
  <div className="flex gap-1.5 items-center">
- {tasks.filter(t => t.required).slice(0, 4).map(t => (
- <div
- key={t.id}
- title={t.name}
- className={`w-2 h-2 rounded-full flex-shrink-0 transition-colors ${t.done ? 'bg-emerald-300' : 'bg-red-400 animate-pulse'}`}
- />
+ {tasks.filter(t => t.required).slice(0, 5).map(t => (
+ <div key={t.id} title={t.name}
+ style={{ width:8, height:8, borderRadius:'50%', flexShrink:0,
+ background: t.done ? '#6ee7b7' : '#f87171',
+ boxShadow: t.done ? '0 0 4px rgba(110,231,183,0.6)' : '0 0 4px rgba(248,113,113,0.6)',
+ }} />
  ))}
  </div>
 
- {/* Text label */}
- <span className="text-[11px] font-bold text-white whitespace-nowrap hidden md:block" style={{ letterSpacing: '-0.2px' }}>
- {allReqDone
- ? <span className="text-emerald-300">All done ✓</span>
- : <span>{reqDone}<span className="opacity-50">/{reqTotal}</span></span>
- }
+ {/* Count */}
+ <span style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.90)', whiteSpace:'nowrap', letterSpacing:'-0.3px' }}>
+ {allReqDone ? '✓ Done' : `${reqDone}/${reqTotal}`}
  </span>
  </div>
  );

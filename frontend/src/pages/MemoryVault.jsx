@@ -194,10 +194,16 @@ export default function MemoryVault() {
         <button
           onClick={() => setShowModal(true)}
           data-tip="Add a new memory"
-          data-tip-below=""
-          className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all"
+          style={{
+            display:'flex', alignItems:'center', gap:7,
+            padding:'8px 16px', borderRadius:10,
+            background:'linear-gradient(135deg,#7c3aed,#9d174d)',
+            color:'#fff', border:'none', cursor:'pointer',
+            fontSize:13, fontWeight:700,
+            boxShadow:'0 2px 10px rgba(124,58,237,0.3)',
+          }}
         >
-          <Plus size={16} /> Add Memory
+          <Plus size={14} /> Add Memory
         </button>
       </PageHeader>
 

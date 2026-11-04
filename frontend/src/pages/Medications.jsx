@@ -414,8 +414,9 @@ export default function Medications() {
  ),
  onSuccess: () => {
  toast.success('Medication marked as taken');
- queryClient.invalidateQueries(['task-status']);
- queryClient.invalidateQueries(['compliance-tasks']);
+ queryClient.invalidateQueries({ queryKey: ['task-status'] });
+ queryClient.invalidateQueries({ queryKey: ['compliance-tasks', patientId] });
+ queryClient.invalidateQueries({ queryKey: ['compliance-tasks'] });
  },
  onError: () => toast.error('Could not log medication'),
  });

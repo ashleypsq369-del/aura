@@ -1,13 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
  Activity, Heart, Thermometer, Droplets, Wind,
- Plus, Brain, ArrowLeft
+ Plus, Brain, ArrowLeft, X, Loader2, CheckCircle,
 } from 'lucide-react';
-import apiClient, { mlAPI } from '../api/client';
+import apiClient, { mlAPI, vitalsAPI } from '../api/client';
 import { offlineVitalsAPI } from '../api/offlineClient';
+import { useAuth } from '../context/AuthContext';
+import toast from '../utils/toast';
 import PageHeader from '../components/PageHeader';
 import PageTransition from '../components/PageTransition';
 import FocusedAIExplanation from '../components/FocusedAIExplanation';
@@ -47,10 +49,26 @@ function VitalCard({ label, value, unit, icon: Icon, color, status }) {
 export default function VitalsDetail() {
  const { patientId } = useParams();
  const navigate = useNavigate();
+ const { user } = useAuth();
+ const qc = useQueryClient();
  const token = localStorage.getItem('auth_token');
  const [showAI, setShowAI] = useState(false);
  const [aiData, setAiData] = useState(null);
  const [loadingAI, setLoadingAI] = useState(false);
+ const [showRecord, setShowRecord] = useState(false);
+ const [vf, setVf] = useState({ heart_rate:'', blood_pressure_sys:'', blood_pressure_dia:'', oxygen_saturation:'', temperature:'', respiratory_rate:'', notes:'' });
+ const canRecord = user?.role && ['admin','clinician','caregiver'].includes(user.role);
+
+ const recordMut = useMutation({
+ mutationFn: (data) => vitalsAPI.log({ patient_id: parseInt(patientId), ...data }),
+ onSuccess: () => {
+ toast.success('Vitals recorded');
+ setShowRecord(false);
+ setVf({ heart_rate:'', blood_pressure_sys:'', blood_pressure_dia:'', oxygen_saturation:'', temperature:'', respiratory_rate:'', notes:'' });
+ qc.invalidateQueries({ queryKey: ['patient-vitals-detail', patientId] });
+ },
+ onError: e => toast.error(e?.response?.data?.detail || 'Could not record vitals'),
+ });
 
  const { data: patient } = useQuery({
  queryKey: ['patient', patientId],
@@ -111,8 +129,6 @@ export default function VitalsDetail() {
  }
  };
 
- const actions = [{ label: 'Patient Monitor', icon: Plus, primary: true, onClick: () => navigate(`/patient/${patientId}`) }];
-
  return (
  <PageTransition>
  <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-0">
@@ -126,8 +142,14 @@ export default function VitalsDetail() {
  title={patient ? `${patient.full_name} - Vitals` : 'Vitals'}
  subtitle="Complete vital sign history and trends"
  icon={Activity}
- actions={actions}
- />
+ >
+ {canRecord && (
+ <button onClick={() => setShowRecord(true)}
+ style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer', fontSize:13, fontWeight:700, boxShadow:'0 2px 10px rgba(13,148,136,0.3)', whiteSpace:'nowrap' }}>
+ <Plus size={14}/> Record Vitals
+ </button>
+ )}
+ </PageHeader>
 
  {isLoading ? (
  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 animate-pulse">
@@ -272,6 +294,75 @@ export default function VitalsDetail() {
  {showAI && aiData && (
  <FocusedAIExplanation data={aiData} onClose={() => { setShowAI(false); setAiData(null); }} />
  )}
+
+ {/* ── Record Vitals Modal ── */}
+ <AnimatePresence>
+ {showRecord && (
+ <>
+ <motion.div key="rv-bg" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+ onClick={() => setShowRecord(false)}
+ style={{position:'fixed',inset:0,zIndex:9000,background:'rgba(15,23,42,0.55)',backdropFilter:'blur(4px)'}} />
+ <div style={{position:'fixed',inset:0,zIndex:9001,display:'flex',alignItems:'center',justifyContent:'center',padding:16,pointerEvents:'none'}}>
+ <motion.div key="rv-card" initial={{opacity:0,scale:0.96,y:14}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:0.96}}
+ transition={{type:'spring',damping:30,stiffness:360}} onClick={e=>e.stopPropagation()}
+ style={{pointerEvents:'all',background:'var(--card-bg)',borderRadius:16,width:'100%',maxWidth:440,overflow:'hidden',boxShadow:'0 12px 60px rgba(15,23,42,0.22)'}}>
+ <div style={{height:3,background:'linear-gradient(90deg,#0d9488,#0891b2)'}} />
+ <div style={{padding:'18px 20px',borderBottom:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+ <div>
+ <p style={{fontWeight:800,fontSize:15,color:'var(--text-900)',margin:0}}>Record Vitals</p>
+ <p style={{fontSize:11,color:'var(--text-400)',margin:'2px 0 0'}}>{patient?.full_name}</p>
+ </div>
+ <button onClick={() => setShowRecord(false)} style={{width:28,height:28,borderRadius:'50%',background:'var(--page-bg)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-500)'}}>
+ <X size={13}/>
+ </button>
+ </div>
+ <div style={{padding:'16px 20px',display:'flex',flexDirection:'column',gap:12}}>
+ <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+ {[
+ {k:'heart_rate', l:'Heart Rate (bpm)', p:'e.g. 72'},
+ {k:'oxygen_saturation', l:'O₂ Saturation (%)', p:'e.g. 98'},
+ {k:'temperature', l:'Temperature (°C)', p:'e.g. 37.0'},
+ {k:'respiratory_rate', l:'Respiratory Rate', p:'e.g. 16'},
+ ].map(f => (
+ <div key={f.k}>
+ <label style={{fontSize:11,fontWeight:700,color:'var(--text-500)',display:'block',marginBottom:4}}>{f.l}</label>
+ <input type="number" value={vf[f.k]} onChange={e=>setVf(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
+ style={{width:'100%',padding:'8px 10px',borderRadius:8,border:'1px solid var(--card-border)',background:'var(--page-bg)',color:'var(--text-800)',fontSize:13,outline:'none',boxSizing:'border-box'}}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'} onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ ))}
+ </div>
+ <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+ {[
+ {k:'blood_pressure_sys', l:'BP Systolic (mmHg)', p:'e.g. 120'},
+ {k:'blood_pressure_dia', l:'BP Diastolic (mmHg)', p:'e.g. 80'},
+ ].map(f => (
+ <div key={f.k}>
+ <label style={{fontSize:11,fontWeight:700,color:'var(--text-500)',display:'block',marginBottom:4}}>{f.l}</label>
+ <input type="number" value={vf[f.k]} onChange={e=>setVf(p=>({...p,[f.k]:e.target.value}))} placeholder={f.p}
+ style={{width:'100%',padding:'8px 10px',borderRadius:8,border:'1px solid var(--card-border)',background:'var(--page-bg)',color:'var(--text-800)',fontSize:13,outline:'none',boxSizing:'border-box'}}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'} onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ ))}
+ </div>
+ <div>
+ <label style={{fontSize:11,fontWeight:700,color:'var(--text-500)',display:'block',marginBottom:4}}>Notes (optional)</label>
+ <textarea value={vf.notes} onChange={e=>setVf(p=>({...p,notes:e.target.value}))} rows={2}
+ placeholder="Clinical observations…"
+ style={{width:'100%',padding:'8px 10px',borderRadius:8,border:'1px solid var(--card-border)',background:'var(--page-bg)',color:'var(--text-800)',fontSize:13,outline:'none',resize:'none',boxSizing:'border-box',fontFamily:'inherit'}}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'} onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ <button onClick={() => recordMut.mutate(vf)} disabled={recordMut.isPending || !vf.heart_rate}
+ style={{width:'100%',padding:'11px 0',borderRadius:10,background:'linear-gradient(135deg,#0d9488,#0891b2)',color:'#fff',border:'none',cursor:'pointer',fontSize:14,fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',gap:8,opacity:recordMut.isPending||!vf.heart_rate?0.6:1}}>
+ {recordMut.isPending ? <><Loader2 size={14} className="animate-spin"/> Saving…</> : <><CheckCircle size={14}/> Save Vitals</>}
+ </button>
+ </div>
+ </motion.div>
+ </div>
+ </>
+ )}
+ </AnimatePresence>
+
  </div>
  </PageTransition>
  );
