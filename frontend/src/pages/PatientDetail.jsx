@@ -419,14 +419,8 @@ export default function PatientDetail() {
  })()}
  <div className="ml-auto flex items-center gap-2">
  <button onClick={() => navigate(`/assessments/${patientId}`)}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold transition">
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition">
  <ClipboardList size={13} /> Assessments
- </button>
- <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-[var(--card-bg)] transition" title="Call">
- <Phone size={15} className="text-slate-600" />
- </button>
- <button className="p-1.5 border border-slate-300 rounded-lg hover:bg-[var(--card-bg)] transition" title="Email">
- <Mail size={15} className="text-slate-600" />
  </button>
  </div>
  </motion.div>

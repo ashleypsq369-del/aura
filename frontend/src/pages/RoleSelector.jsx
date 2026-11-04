@@ -77,7 +77,7 @@ function RoleCard({ role, idx, selected, onSelect }) {
         whileTap={!isDisabled   ? { scale: 0.97 } : {}}
         style={{
           width: '100%', textAlign: 'left', position: 'relative',
-          background: isSelected ? `linear-gradient(135deg,${g1},${g2})` : '#fff',
+          background: isSelected ? `linear-gradient(135deg,${g1},${g2})` : 'var(--card-bg)',
           border: `2px solid ${isSelected ? g1 : 'var(--card-border)'}`,
           borderRadius: 14, overflow: 'hidden',
           cursor: isDisabled ? 'default' : 'pointer',
@@ -130,7 +130,7 @@ function RoleCard({ role, idx, selected, onSelect }) {
 
           {/* Right badge */}
           {isDisabled ? (
-            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 999, background: '#f1f5f9', color: '#94a3b8', flexShrink: 0 }}>
+            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 999, background: 'var(--page-bg)', color: 'var(--text-400)', flexShrink: 0 }}>
               Admin only
             </span>
           ) : isSelected ? (

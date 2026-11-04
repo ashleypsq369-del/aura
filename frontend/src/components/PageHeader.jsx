@@ -217,11 +217,12 @@ export default function PageHeader({
               role="region"
               aria-label="Page statistics"
             >
-              {stats.map(({ label, value, color = '#2dd4bf', pulse, onClick }) => (
-                <button
+              {stats.map(({ label, value, color = '#2dd4bf', pulse, onClick }) => {
+                const Tag = onClick ? 'button' : 'div';
+                return (
+                <Tag
                   key={label}
                   onClick={onClick}
-                  disabled={!onClick}
                   aria-label={`${label}: ${value}`}
                   style={{
                     display:    'flex',
@@ -234,10 +235,8 @@ export default function PageHeader({
                     outline:    'none',
                     transition: 'opacity 0.15s',
                   }}
-                  onMouseEnter={e => { if (onClick) e.currentTarget.style.opacity = '0.72'; }}
-                  onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
-                  onFocus={e  => { e.currentTarget.style.outline = `2px solid ${color}`; e.currentTarget.style.outlineOffset = '3px'; e.currentTarget.style.borderRadius = '4px'; }}
-                  onBlur={e   => { e.currentTarget.style.outline = 'none'; }}
+                  onMouseEnter={onClick ? (e => { e.currentTarget.style.opacity = '0.72'; }) : undefined}
+                  onMouseLeave={onClick ? (e => { e.currentTarget.style.opacity = '1'; }) : undefined}
                 >
                   {/* Colored left-bar accent — Services signature */}
                   <div
@@ -248,7 +247,7 @@ export default function PageHeader({
                       borderRadius: 2,
                       background:   color,
                       flexShrink:   0,
-                      boxShadow:    `0 0 8px ${color}90`,
+                      boxShadow:    `0 0 12px ${color}, 0 0 4px ${color}`,
                     }}
                   />
                   {/* Number + label */}
@@ -267,17 +266,18 @@ export default function PageHeader({
                         />
                       )}
                       <span style={{
-                          fontSize: 14, fontWeight: 900, color: '#ffffff',
+                          fontSize: 15, fontWeight: 900, color: '#ffffff',
                           fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.02em',
+                          textShadow: `0 0 12px ${color}cc, 0 1px 3px rgba(0,0,0,0.4)`,
                         }}>
                         {value}
                       </span>
                     </div>
                     <span
                       style={{
-                        fontSize:   9,
-                        fontWeight: 500,
-                        color:      'rgba(255,255,255,0.48)',
+                        fontSize:   10,
+                        fontWeight: 600,
+                        color:      'rgba(255,255,255,0.65)',
                         whiteSpace: 'nowrap',
                         lineHeight: 1,
                       }}
@@ -285,8 +285,9 @@ export default function PageHeader({
                       {label}
                     </span>
                   </div>
-                </button>
-              ))}
+                </Tag>
+                );
+              })}
             </motion.div>
           )}
         </div>

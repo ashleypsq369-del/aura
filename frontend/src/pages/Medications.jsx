@@ -405,20 +405,24 @@ export default function Medications() {
  onError: () => toast.error('Failed'),
  });
 
- // Mark as taken — uses PUT (same method as compliance router)
+ // Mark as taken — per-medication tracking (not shared across all meds)
+ const [takenMedIds, setTakenMedIds] = useState(new Set());
  const markTakenMutation = useMutation({
  mutationFn: (medId) => axios.put(
  `${API_URL}/api/compliance/acknowledge`,
- { task_id: 'medication_acknowledge', notes: `Medication ID ${medId} taken` },
+ { task_id: `med_taken_${medId}`, notes: `Medication ID ${medId} taken` },
  { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } }
  ),
+ onMutate: (medId) => setTakenMedIds(prev => new Set([...prev, medId])),
  onSuccess: () => {
  toast.success('Medication marked as taken');
  queryClient.invalidateQueries({ queryKey: ['task-status'] });
  queryClient.invalidateQueries({ queryKey: ['compliance-tasks', patientId] });
- queryClient.invalidateQueries({ queryKey: ['compliance-tasks'] });
  },
- onError: () => toast.error('Could not log medication'),
+ onError: (_, medId) => {
+ setTakenMedIds(prev => { const s = new Set(prev); s.delete(medId); return s; });
+ toast.error('Could not log medication');
+ },
  });
 
  const painLevel = prefsData?.esas_pain || prefsData?.pain_level || 0;
@@ -598,7 +602,7 @@ export default function Medications() {
  <MedRow key={med.id} med={med} index={i}
  canEdit={canEdit}
  canLogAdherence={canLogAdherence}
- todayTaken={canLogAdherence && med.is_active ? medAckDone : undefined}
+ todayTaken={canLogAdherence && med.is_active ? (takenMedIds.has(med.id) || medAckDone) : undefined}
  onEdit={setEditingMed}
  onStop={setStopTarget}
  onMarkTaken={(medId) => markTakenMutation.mutate(medId)}

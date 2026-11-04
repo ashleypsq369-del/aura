@@ -231,14 +231,17 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
              const Icon = ICON_MAP[task.icon] || Activity;
              return (
                <motion.div key={task.id} layout
+                 onClick={() => !task.done && task.link && navigate(task.link)}
                  style={{
                    display:'flex', alignItems:'center', gap:12,
                    padding:'12px 14px', borderRadius:12,
                    background: task.done ? '#f0fdf4' : 'var(--page-bg)',
                    border: `1px solid ${task.done ? '#bbf7d0' : 'var(--card-border)'}`,
                    transition:'all 0.15s',
-                 }}>
-                 {/* Icon */}
+                   cursor: task.done ? 'default' : 'pointer',
+                 }}
+                 whileHover={!task.done ? { x: 2 } : {}}
+               >                 {/* Icon */}
                  <div style={{
                    width:36, height:36, borderRadius:10, flexShrink:0,
                    background: task.done ? '#dcfce7' : `${task.done ? '#dcfce7' : '#0d948815'}`,
@@ -320,7 +323,10 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
                  display:'flex', alignItems:'center', gap:12, padding:'12px 14px',
                  borderRadius:12, background: task.done ? '#f0fdf4' : 'var(--page-bg)',
                  border:`1px solid ${task.done ? '#bbf7d0' : 'var(--card-border)'}`,
-                 transition:'all 0.15s' }}>
+                 transition:'all 0.15s',
+                 cursor: task.done ? 'default' : 'pointer',
+               }}
+               onClick={() => !task.done && task.link && navigate(task.link)}>
                  <div style={{ width:34, height:34, borderRadius:10, flexShrink:0, background: task.done ? '#dcfce7' : '#0d948815', display:'flex', alignItems:'center', justifyContent:'center' }}>
                    {task.done ? <CheckCircle2 size={15} style={{ color:'#16a34a' }} /> : <Icon size={15} style={{ color:'#0d9488' }} />}
                  </div>

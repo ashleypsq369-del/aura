@@ -5,13 +5,14 @@
  * full - expandable card on every page
  */
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
  CheckCircle2, Circle, AlertCircle, ChevronDown, ChevronUp,
  Calendar, Heart, Pill, Activity, Clipboard, Book,
- RefreshCw, Loader2, ClipboardCheck, ListChecks,
+ RefreshCw, Loader2, ClipboardCheck, ListChecks, X, Lock,
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -119,7 +120,7 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  )}
  {!task.done && task.link && (
  <button
- onClick={() => navigate(task.link.replace('{patient_id}', ''))}
+ onClick={() => navigate(task.link.replace('{patient_id}', patientId || ''))}
  className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
  >
  Do Now
@@ -142,9 +143,11 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
 /* ── Main export ────────────────────────────────────────── */
 export default function TaskStatusBar({ compact = false, patientId = null }) {
  const { user } = useAuth();
+ const navigate = useNavigate();
  const qc = useQueryClient();
  const [expanded, setExpanded] = useState(false);
  const [acknowledging,setAcknowledging]= useState(null);
+ const [showModal, setShowModal] = useState(false);
 
  const endpoint = patientId
  ? `${API_URL}/api/compliance/patient/${patientId}`
@@ -189,10 +192,12 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  const allReqDone = pendingReq.length === 0 && reqTotal > 0;
 
  return (
- <div
- className="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-default select-none"
- style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.30)' }}
- title={`Today's tasks: ${reqDone}/${reqTotal} required done`}
+ <>
+ <button
+ onClick={() => setShowModal(true)}
+ className="flex items-center gap-2 px-3 py-1.5 rounded-full select-none"
+ style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.30)', cursor:'pointer' }}
+ title="View today's tasks"
  >
  {/* Percent badge */}
  <span style={{
@@ -203,7 +208,6 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  }}>
  {pct}%
  </span>
-
  {/* Status dots */}
  <div className="flex gap-1.5 items-center">
  {tasks.filter(t => t.required).slice(0, 5).map(t => (
@@ -214,12 +218,87 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  }} />
  ))}
  </div>
-
  {/* Count */}
  <span style={{ fontSize:11, fontWeight:800, color:'rgba(255,255,255,0.90)', whiteSpace:'nowrap', letterSpacing:'-0.3px' }}>
  {allReqDone ? '✓ Done' : `${reqDone}/${reqTotal}`}
  </span>
+ </button>
+
+ {/* ── Task Modal Portal ── */}
+ {showModal && typeof document !== 'undefined' && createPortal(
+ <>
+ <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+ onClick={() => setShowModal(false)}
+ style={{position:'fixed',inset:0,zIndex:9000,background:'rgba(15,23,42,0.55)',backdropFilter:'blur(4px)'}} />
+ <div style={{position:'fixed',inset:0,zIndex:9001,display:'flex',alignItems:'flex-start',justifyContent:'center',padding:'70px 16px 16px',pointerEvents:'none'}}>
+ <motion.div initial={{opacity:0,y:-12,scale:0.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:-12}}
+ transition={{type:'spring',damping:30,stiffness:400}}
+ onClick={e=>e.stopPropagation()}
+ style={{pointerEvents:'all',background:'var(--card-bg)',borderRadius:16,width:'100%',maxWidth:420,maxHeight:'80vh',overflow:'hidden',display:'flex',flexDirection:'column',boxShadow:'0 12px 60px rgba(15,23,42,0.22)'}}>
+ {/* Header */}
+ <div style={{height:3,background:'linear-gradient(90deg,#0d9488,#0891b2)',flexShrink:0}} />
+ <div style={{padding:'14px 18px',borderBottom:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
+ <div style={{display:'flex',alignItems:'center',gap:10}}>
+ <ListChecks size={16} style={{color:'var(--c-teal)'}} />
+ <div>
+ <p style={{fontWeight:800,fontSize:14,color:'var(--text-900)',margin:0}}>Today's Care Tasks</p>
+ <p style={{fontSize:11,color:'var(--text-400)',margin:0}}>{reqDone}/{reqTotal} required done</p>
  </div>
+ </div>
+ <div style={{display:'flex',gap:6}}>
+ <button onClick={()=>refetch()} style={{width:28,height:28,borderRadius:8,background:'var(--page-bg)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-400)'}}>
+ <RefreshCw size={12}/>
+ </button>
+ <button onClick={()=>setShowModal(false)} style={{width:28,height:28,borderRadius:8,background:'var(--page-bg)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-500)'}}>
+ <X size={13}/>
+ </button>
+ </div>
+ </div>
+ {/* Task list */}
+ <div style={{flex:1,overflowY:'auto',padding:'12px 14px',display:'flex',flexDirection:'column',gap:6}}>
+ {tasks.filter(t=>t.required).length > 0 && (
+ <p style={{fontSize:10,fontWeight:800,color:'var(--text-400)',textTransform:'uppercase',letterSpacing:'0.08em',margin:'0 0 4px',display:'flex',alignItems:'center',gap:5}}>
+ <Lock size={9} style={{color:'#f87171'}}/> Required today
+ </p>
+ )}
+ {tasks.map(task => {
+ const Icon = ICON_MAP[task.icon] || Activity;
+ const isReq = task.required;
+ return (
+ <div key={task.id}
+ onClick={() => { if(!task.done && task.link){ navigate(task.link.replace('{patient_id}', patientId || '')); setShowModal(false); } }}
+ style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:10,
+ background: task.done ? '#f0fdf4' : isReq ? '#fef2f2' : 'var(--page-bg)',
+ border:`1px solid ${task.done?'#bbf7d0':isReq?'#fca5a5':'var(--card-border)'}`,
+ cursor: task.done ? 'default' : 'pointer',transition:'all 0.12s'}}>
+ <div style={{width:30,height:30,borderRadius:9,background:task.done?'#dcfce7':isReq?'#fee2e2':'#0d948815',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+ {task.done ? <CheckCircle2 size={15} style={{color:'#16a34a'}}/> : <Icon size={14} style={{color:isReq?'#dc2626':'#0d9488'}}/>}
+ </div>
+ <div style={{flex:1,minWidth:0}}>
+ <p style={{fontWeight:600,fontSize:12,color:task.done?'#15803d':isReq?'#dc2626':'var(--text-800)',margin:0,textDecoration:task.done?'line-through':'none',opacity:task.done?0.7:1}}>{task.name}</p>
+ {task.description && <p style={{fontSize:11,color:'var(--text-400)',margin:'1px 0 0',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{task.description}</p>}
+ </div>
+ {task.done
+ ? <CheckCircle2 size={14} style={{color:'#22c55e',flexShrink:0}}/>
+ : isReq
+ ? <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:99,background:'#fee2e2',color:'#dc2626',flexShrink:0}}>Required</span>
+ : task.link
+ ? <button onClick={e=>{e.stopPropagation();acknowledgeMutation.mutate(task.id)}} disabled={acknowledging===task.id}
+ style={{fontSize:11,fontWeight:600,padding:'4px 10px',borderRadius:7,background:'var(--card-bg)',border:'1px solid var(--card-border)',color:'var(--text-600)',cursor:'pointer'}}>
+ {acknowledging===task.id?'…':'Done'}
+ </button>
+ : null
+ }
+ </div>
+ );
+ })}
+ </div>
+ </motion.div>
+ </div>
+ </>,
+ document.body
+ )}
+ </>
  );
  }
 

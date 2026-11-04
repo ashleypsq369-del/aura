@@ -142,6 +142,12 @@ export default function VitalsDetail() {
  title={patient ? `${patient.full_name} - Vitals` : 'Vitals'}
  subtitle="Complete vital sign history and trends"
  icon={Activity}
+ stats={latest ? [
+ { label:'BP', value: latest.blood_pressure_sys ? `${Math.round(latest.blood_pressure_sys)}/${Math.round(latest.blood_pressure_dia??0)}` : '—', color: getStatus('bp_sys',latest.blood_pressure_sys)==='warning'?'#f87171':'#2dd4bf' },
+ { label:'Heart Rate', value: latest.heart_rate ? `${Math.round(latest.heart_rate)} bpm` : '—', color: getStatus('hr',latest.heart_rate)==='warning'?'#f87171':'#4ade80' },
+ { label:'O₂ Sat', value: latest.oxygen_saturation ? `${latest.oxygen_saturation.toFixed(1)}%` : '—', color: getStatus('o2',latest.oxygen_saturation)==='critical'?'#ef4444':getStatus('o2',latest.oxygen_saturation)==='warning'?'#fbbf24':'#60a5fa' },
+ { label:'Temp °C', value: latest.temperature ? `${latest.temperature.toFixed(1)}°C` : '—', color: getStatus('temp',latest.temperature)==='warning'?'#fbbf24':'#a78bfa' },
+ ] : undefined}
  >
  {canRecord && (
  <button onClick={() => setShowRecord(true)}
@@ -152,31 +158,10 @@ export default function VitalsDetail() {
  </PageHeader>
 
  {isLoading ? (
- <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6 animate-pulse">
- {[1,2,3,4,5].map(i => <div key={i} className="h-24 bg-slate-200 rounded-xl" />)}
+ <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 animate-pulse">
+ {[1,2,3,4,5].map(i => <div key={i} className="h-20 bg-slate-200 rounded-xl" />)}
  </div>
- ) : (
- <>
- {/* Latest readings */}
- {latest && (
- <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
- <VitalCard label="Blood Pressure" icon={Heart} color="#e11d48"
- value={latest.blood_pressure_sys ? `${Math.round(latest.blood_pressure_sys)}/${Math.round(latest.blood_pressure_dia ?? 0)}` : null}
- unit="mmHg" status={getStatus('bp_sys', latest.blood_pressure_sys)} />
- <VitalCard label="Heart Rate" icon={Activity} color="#0d9488"
- value={latest.heart_rate ? Math.round(latest.heart_rate) : null}
- unit="bpm" status={getStatus('hr', latest.heart_rate)} />
- <VitalCard label="O₂ Saturation" icon={Wind} color="#1d4ed8"
- value={latest.oxygen_saturation?.toFixed(1)}
- unit="%" status={getStatus('o2', latest.oxygen_saturation)} />
- <VitalCard label="Temperature" icon={Thermometer} color="#ea580c"
- value={latest.temperature?.toFixed(1)}
- unit="°C" status={getStatus('temp', latest.temperature)} />
- <VitalCard label="Resp. Rate" icon={Droplets} color="#7c3aed"
- value={latest.respiratory_rate ? Math.round(latest.respiratory_rate) : null}
- unit="breaths/min" status="normal" />
- </div>
- )}
+ ) : null}
 
  {/* ML Vital Risk Anomaly card */}
  {mlRisk && (
@@ -288,8 +273,6 @@ export default function VitalsDetail() {
  )}
  </div>
  </motion.div>
- </>
- )}
 
  {showAI && aiData && (
  <FocusedAIExplanation data={aiData} onClose={() => { setShowAI(false); setAiData(null); }} />
