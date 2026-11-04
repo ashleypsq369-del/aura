@@ -38,21 +38,23 @@ function Ring({ pct, size = 38, light = false }) {
  const cx = size / 2;
  const cy = size / 2;
  return (
- <svg width={size} height={size} className="flex-shrink-0">
+ <svg width={size} height={size} className="flex-shrink-0" style={{ display:'block' }}>
  {/* Track */}
  <circle cx={cx} cy={cy} r={r} fill="none"
- stroke={light ? 'rgba(255,255,255,0.15)' : '#e5e7eb'} strokeWidth="5"/>
- {/* Progress arc - starts at top (−90°) */}
+ stroke={light ? 'rgba(255,255,255,0.20)' : '#e5e7eb'} strokeWidth="4"/>
+ {/* Progress arc */}
  <circle cx={cx} cy={cy} r={r} fill="none"
- stroke={color} strokeWidth="5"
+ stroke={color} strokeWidth="4"
  strokeDasharray={circ} strokeDashoffset={dash}
  strokeLinecap="round"
  transform={`rotate(-90 ${cx} ${cy})`}
  style={{ transition: 'stroke-dashoffset 0.6s ease' }}/>
- {/* Centred percentage text */}
+ {/* Percentage — bold, crisp */}
  <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
- fontSize={size <= 28 ? '8' : '9'} fontWeight="800"
- fill={light ? 'rgba(255,255,255,0.9)' : color}>
+ fontSize={size <= 28 ? '9' : '10'} fontWeight="900"
+ fontFamily="system-ui, sans-serif"
+ fill={light ? '#ffffff' : color}
+ style={{ letterSpacing: '-0.5px' }}>
  {pct}%
  </text>
  </svg>
@@ -193,29 +195,29 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
 
  return (
  <div
- className="flex items-center gap-2 px-2.5 py-1 rounded-full cursor-default select-none"
- style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
+ className="flex items-center gap-2 px-3 py-1.5 rounded-full cursor-default select-none"
+ style={{ background: 'rgba(255,255,255,0.14)', border: '1.5px solid rgba(255,255,255,0.28)', backdropFilter: 'blur(8px)' }}
  title={`Today's tasks: ${reqDone}/${reqTotal} required done`}
  >
  {/* Mini ring */}
- <Ring pct={pct} size={26} light />
+ <Ring pct={pct} size={28} light />
 
- {/* Status dots - one per required task, max 4 */}
- <div className="flex gap-1 items-center">
+ {/* Status dots - one per required task, max 4, 8px for legibility */}
+ <div className="flex gap-1.5 items-center">
  {tasks.filter(t => t.required).slice(0, 4).map(t => (
  <div
  key={t.id}
  title={t.name}
- className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors ${t.done ? 'bg-emerald-400' : 'bg-red-400 animate-pulse'}`}
+ className={`w-2 h-2 rounded-full flex-shrink-0 transition-colors ${t.done ? 'bg-emerald-300' : 'bg-red-400 animate-pulse'}`}
  />
  ))}
  </div>
 
  {/* Text label */}
- <span className="text-[11px] font-semibold text-white/80 whitespace-nowrap hidden md:block">
+ <span className="text-[11px] font-bold text-white whitespace-nowrap hidden md:block" style={{ letterSpacing: '-0.2px' }}>
  {allReqDone
  ? <span className="text-emerald-300">All done ✓</span>
- : <span>{reqDone}<span className="text-white/40">/{reqTotal}</span></span>
+ : <span>{reqDone}<span className="opacity-50">/{reqTotal}</span></span>
  }
  </span>
  </div>

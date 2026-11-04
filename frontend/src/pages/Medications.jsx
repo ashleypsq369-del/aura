@@ -405,9 +405,9 @@ export default function Medications() {
  onError: () => toast.error('Failed'),
  });
 
- // Mark as taken - logs adherence for patient/caregiver
+ // Mark as taken — uses PUT (same method as compliance router)
  const markTakenMutation = useMutation({
- mutationFn: (medId) => axios.post(
+ mutationFn: (medId) => axios.put(
  `${API_URL}/api/compliance/acknowledge`,
  { task_id: 'medication_acknowledge', notes: `Medication ID ${medId} taken` },
  { headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` } }

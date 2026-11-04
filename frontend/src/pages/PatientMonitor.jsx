@@ -6,12 +6,14 @@
  */
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
  patientsAPI, vitalsAPI, symptomsAPI,
  medicationsAPI, appointmentsAPI,
 } from '../api/client';
+import { useAuth } from '../context/AuthContext';
+import toast from '../utils/toast';
 import {
  LineChart, Line, XAxis, YAxis, CartesianGrid,
  Tooltip, Legend, ResponsiveContainer,
@@ -20,6 +22,7 @@ import {
  Activity, Heart, Thermometer, Droplets, AlertCircle,
  Pill, Calendar, FileText, TrendingUp, TrendingDown,
  Minus, User, MapPin, ChevronLeft, Clock, CheckCircle,
+ Plus, X, Loader2,
 } from 'lucide-react';
 
 /* ─── Vital status helpers ───────────────────────────────────────────────── */
@@ -97,8 +100,17 @@ function SymBadge({ label, color = '#0d9488' }) {
 export default function PatientMonitor() {
  const { id } = useParams();
  const navigate = useNavigate();
+ const { user } = useAuth();
+ const queryClient = useQueryClient();
  const patientId = parseInt(id) || 1;
  const [activeTab, setActiveTab] = useState('vitals');
+ const [showVitalsModal, setShowVitalsModal] = useState(false);
+ const [vitalsForm, setVitalsForm] = useState({
+ heart_rate: '', blood_pressure_sys: '', blood_pressure_dia: '',
+ oxygen_saturation: '', temperature: '', respiratory_rate: '', notes: '',
+ });
+
+ const canRecordVitals = user?.role && ['admin','clinician','caregiver'].includes(user.role);
 
  const { data: patient } = useQuery({
  queryKey: ['patient', patientId],
@@ -119,6 +131,17 @@ export default function PatientMonitor() {
  const { data: appointments } = useQuery({
  queryKey: ['appointments', patientId],
  queryFn: () => appointmentsAPI.getPatientAppointments(patientId).then(r => r.data),
+ });
+
+ const recordVitalsMutation = useMutation({
+ mutationFn: (data) => vitalsAPI.log({ patient_id: patientId, ...data }),
+ onSuccess: () => {
+ toast.success('Vitals recorded');
+ setShowVitalsModal(false);
+ setVitalsForm({ heart_rate:'', blood_pressure_sys:'', blood_pressure_dia:'', oxygen_saturation:'', temperature:'', respiratory_rate:'', notes:'' });
+ queryClient.invalidateQueries({ queryKey: ['vitals', patientId] });
+ },
+ onError: e => toast.error(e?.response?.data?.detail || 'Could not record vitals'),
  });
 
  const latest = vitals?.[0];
@@ -252,6 +275,15 @@ export default function PatientMonitor() {
  {/* ── VITALS ── */}
  {activeTab === 'vitals' && (
  <>
+ {/* Record vitals button — staff only */}
+ {canRecordVitals && (
+ <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:8 }}>
+ <button onClick={() => setShowVitalsModal(true)}
+ style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer', fontSize:13, fontWeight:700, boxShadow:'0 2px 10px rgba(13,148,136,0.3)' }}>
+ <Plus size={14} /> Record Vitals
+ </button>
+ </div>
+ )}
  <Section title="Vitals Trend - last 20 readings">
  {vitalsChart.length > 0 ? (
  <ResponsiveContainer width="100%" height={320}>
@@ -468,6 +500,85 @@ export default function PatientMonitor() {
  </motion.div>
  </AnimatePresence>
  </div>
+
+ {/* ── Record Vitals Modal ── */}
+ <AnimatePresence>
+ {showVitalsModal && (
+ <>
+ <motion.div key="vbdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
+ onClick={() => setShowVitalsModal(false)}
+ style={{ position:'fixed', inset:0, zIndex:9000, background:'rgba(15,23,42,0.55)', backdropFilter:'blur(4px)' }} />
+ <div style={{ position:'fixed', inset:0, zIndex:9001, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+ <motion.div key="vmodal" initial={{opacity:0,scale:0.96,y:16}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:0.96,y:8}}
+ transition={{ type:'spring', damping:30, stiffness:360 }}
+ onClick={e=>e.stopPropagation()}
+ style={{ pointerEvents:'all', background:'var(--card-bg)', borderRadius:16, width:'100%', maxWidth:440, overflow:'hidden', boxShadow:'0 12px 60px rgba(15,23,42,0.2)' }}>
+ <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)' }} />
+ <div style={{ padding:'18px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+ <div>
+ <p style={{ fontWeight:800, fontSize:15, color:'var(--text-900)', margin:0 }}>Record Vitals</p>
+ <p style={{ fontSize:11, color:'var(--text-400)', margin:'2px 0 0' }}>{patient?.full_name}</p>
+ </div>
+ <button onClick={() => setShowVitalsModal(false)}
+ style={{ width:28, height:28, borderRadius:'50%', background:'var(--page-bg)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)' }}>
+ <X size={13} />
+ </button>
+ </div>
+ <div style={{ padding:'16px 20px', display:'flex', flexDirection:'column', gap:12 }}>
+ <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+ {[
+ { key:'heart_rate', label:'Heart Rate (bpm)', placeholder:'e.g. 72' },
+ { key:'oxygen_saturation', label:'O₂ Saturation (%)', placeholder:'e.g. 98' },
+ { key:'temperature', label:'Temperature (°C)', placeholder:'e.g. 37.0' },
+ { key:'respiratory_rate', label:'Respiratory Rate', placeholder:'e.g. 16' },
+ ].map(f => (
+ <div key={f.key}>
+ <label style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', display:'block', marginBottom:4 }}>{f.label}</label>
+ <input type="number" value={vitalsForm[f.key]} onChange={e => setVitalsForm(p=>({...p,[f.key]:e.target.value}))}
+ placeholder={f.placeholder}
+ style={{ width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', fontSize:13, outline:'none', boxSizing:'border-box' }}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'}
+ onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ ))}
+ </div>
+ <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+ <div>
+ <label style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', display:'block', marginBottom:4 }}>BP Systolic (mmHg)</label>
+ <input type="number" value={vitalsForm.blood_pressure_sys} onChange={e=>setVitalsForm(p=>({...p,blood_pressure_sys:e.target.value}))}
+ placeholder="e.g. 120"
+ style={{ width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', fontSize:13, outline:'none', boxSizing:'border-box' }}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'}
+ onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ <div>
+ <label style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', display:'block', marginBottom:4 }}>BP Diastolic (mmHg)</label>
+ <input type="number" value={vitalsForm.blood_pressure_dia} onChange={e=>setVitalsForm(p=>({...p,blood_pressure_dia:e.target.value}))}
+ placeholder="e.g. 80"
+ style={{ width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', fontSize:13, outline:'none', boxSizing:'border-box' }}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'}
+ onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ </div>
+ <div>
+ <label style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', display:'block', marginBottom:4 }}>Notes (optional)</label>
+ <textarea value={vitalsForm.notes} onChange={e=>setVitalsForm(p=>({...p,notes:e.target.value}))} rows={2}
+ placeholder="Any clinical observations…"
+ style={{ width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', fontSize:13, outline:'none', resize:'none', boxSizing:'border-box', fontFamily:'inherit' }}
+ onFocus={e=>e.target.style.borderColor='var(--c-teal)'}
+ onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
+ </div>
+ <button onClick={() => recordVitalsMutation.mutate(vitalsForm)}
+ disabled={recordVitalsMutation.isPending || !vitalsForm.heart_rate}
+ style={{ width:'100%', padding:'11px 0', borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer', fontSize:14, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:8, opacity: recordVitalsMutation.isPending || !vitalsForm.heart_rate ? 0.6 : 1 }}>
+ {recordVitalsMutation.isPending ? <><Loader2 size={14} className="animate-spin"/> Saving…</> : <><CheckCircle size={14}/> Save Vitals</>}
+ </button>
+ </div>
+ </motion.div>
+ </div>
+ </>
+ )}
+ </AnimatePresence>
  </div>
  );
 }

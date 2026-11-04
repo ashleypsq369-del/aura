@@ -9,6 +9,8 @@ import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import useConfirmDialog from '../hooks/useConfirmDialog';
+import Modal, { ModalFooter } from '../components/Modal';
+import FormFileUpload from '../components/FormFileUpload';
 
 /* ── Memory theme clustering ─────────────────────────────────────────── */
 const THEME_PATTERNS = {
