@@ -161,11 +161,11 @@ export default function FeedbackWidget() {
   const panelX = clamp(pos.x - (panelW - BUTTON_W) / 2, MARGIN, window.innerWidth - panelW - MARGIN);
   const panelY = clamp(pos.y - panelH - 10, MARGIN, pos.y - panelH - 10);
 
-  /* ── Input style ── */
+  /* ── Input style — dark mode aware ── */
   const inp = {
     width: '100%', padding: '9px 12px', borderRadius: 10,
-    border: '1.5px solid #e2e8f0', fontSize: 13,
-    color: '#0f172a', background: '#f8fafc',
+    border: '1.5px solid var(--card-border)', fontSize: 13,
+    color: 'var(--text-800)', background: 'var(--page-bg)',
     outline: 'none', resize: 'none', boxSizing: 'border-box',
     fontFamily: 'inherit',
   };
@@ -229,10 +229,10 @@ export default function FeedbackWidget() {
               zIndex: 9991,
               width: panelW,
               maxHeight: `min(${panelH}px, calc(100vh - 80px))`,
-              background: '#ffffff',
+              background: 'var(--card-bg)',
               borderRadius: 16,
-              boxShadow: '0 8px 40px rgba(0,0,0,0.18)',
-              border: '1px solid #e2e8f0',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.22)',
+              border: '1px solid var(--card-border)',
               display: 'flex', flexDirection: 'column',
               overflow: 'hidden',
             }}
@@ -266,12 +266,12 @@ export default function FeedbackWidget() {
             </div>
 
             {/* Body */}
-            <div style={{ flex:1, overflowY:'auto', padding:'12px 14px' }}>
+            <div style={{ flex:1, overflowY:'auto', padding:'12px 14px', background:'var(--card-bg)' }}>
 
               {/* MENU */}
               {mode === 'menu' && (
                 <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
-                  <p style={{ fontSize:11, color:'#64748b', margin:'0 0 4px' }}>
+                  <p style={{ fontSize:11, color:'var(--text-500)', margin:'0 0 4px' }}>
                     What would you like to do?
                   </p>
                   {[
@@ -281,22 +281,22 @@ export default function FeedbackWidget() {
                   ].map(item => (
                     <button key={item.m} onClick={() => setMode(item.m)}
                       style={{ display:'flex', alignItems:'center', gap:9, padding:'9px 11px',
-                        borderRadius:11, background:'#f8fafc', border:'1.5px solid #e2e8f0',
+                        borderRadius:11, background:'var(--page-bg)', border:'1.5px solid var(--card-border)',
                         cursor:'pointer', textAlign:'left', transition:'border-color 0.15s' }}
                       onMouseEnter={e => e.currentTarget.style.borderColor = item.c}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = '#e2e8f0'}>
+                      onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--card-border)'}>
                       <div style={{ width:30, height:30, borderRadius:8, background:`${item.c}15`,
                         display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
                         <item.icon size={14} style={{ color:item.c }} />
                       </div>
                       <div style={{ flex:1 }}>
-                        <p style={{ fontSize:12, fontWeight:700, color:'#0f172a', margin:0 }}>{item.label}</p>
-                        <p style={{ fontSize:10, color:'#64748b', margin:0 }}>{item.sub}</p>
+                        <p style={{ fontSize:12, fontWeight:700, color:'var(--text-900)', margin:0 }}>{item.label}</p>
+                        <p style={{ fontSize:10, color:'var(--text-500)', margin:0 }}>{item.sub}</p>
                       </div>
-                      <ChevronRight size={12} style={{ color:'#94a3b8', flexShrink:0 }} />
+                      <ChevronRight size={12} style={{ color:'var(--text-400)', flexShrink:0 }} />
                     </button>
                   ))}
-                  <p style={{ fontSize:10, color:'#94a3b8', textAlign:'center', marginTop:4 }}>
+                  <p style={{ fontSize:10, color:'var(--text-400)', textAlign:'center', marginTop:4 }}>
                     Drag the button to reposition it anywhere
                   </p>
                 </div>
@@ -305,10 +305,9 @@ export default function FeedbackWidget() {
               {/* RATE */}
               {mode === 'rate' && (
                 <div>
-                  <p style={{ fontSize:12, color:'#64748b', marginBottom:12, textAlign:'center' }}>
+                  <p style={{ fontSize:12, color:'var(--text-500)', marginBottom:12, textAlign:'center' }}>
                     How would you rate this page?
                   </p>
-                  {/* Star row with labels */}
                   <div style={{ display:'flex', justifyContent:'center', gap:4, marginBottom:8 }}>
                     {[1,2,3,4,5].map(score => {
                       const active = (hovered || rating) >= score;
@@ -320,24 +319,14 @@ export default function FeedbackWidget() {
                           onClick={() => setRating(score)}
                           style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 2px',
                             display:'flex', flexDirection:'column', alignItems:'center', gap:3 }}>
-                          <Star size={28}
-                            style={{
-                              color: active ? color : '#e2e8f0',
-                              fill:  active ? color : 'none',
-                              transition: 'all 0.12s',
-                            }} />
-                          <span style={{ fontSize:9, fontWeight:600,
-                            color: active ? color : '#cbd5e1',
-                            transition: 'color 0.12s' }}>
-                            {score}
-                          </span>
+                          <Star size={28} style={{ color: active ? color : 'var(--card-border)', fill: active ? color : 'none', transition:'all 0.12s' }} />
+                          <span style={{ fontSize:9, fontWeight:600, color: active ? color : 'var(--text-400)', transition:'color 0.12s' }}>{score}</span>
                         </button>
                       );
                     })}
                   </div>
-                  {/* Selected label */}
                   <p style={{ textAlign:'center', fontSize:12, fontWeight:700,
-                    color: rating > 0 ? STAR_COLORS[rating-1] : '#94a3b8',
+                    color: rating > 0 ? STAR_COLORS[rating-1] : 'var(--text-400)',
                     marginBottom:12, minHeight:18 }}>
                     {rating > 0 ? STAR_LABELS[rating - 1] : 'Select a rating'}
                   </p>
@@ -346,18 +335,12 @@ export default function FeedbackWidget() {
                       <textarea placeholder="Any comments? (optional)"
                         value={uxGood} onChange={e => setUxGood(e.target.value)}
                         rows={2} style={{ ...inp, marginBottom:8 }} />
-                      <button
-                        onClick={() => submitMut.mutate(payload('rating', {
-                          rating, label: STAR_LABELS[rating - 1], what_works: uxGood,
-                        }))}
+                      <button onClick={() => submitMut.mutate(payload('rating', { rating, label: STAR_LABELS[rating-1], what_works: uxGood }))}
                         disabled={submitMut.isPending}
                         style={{ width:'100%', padding:'10px', borderRadius:10, fontSize:13, fontWeight:700,
-                          background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff',
-                          border:'none', cursor:'pointer',
+                          background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer',
                           display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
-                        {submitMut.isPending
-                          ? <Loader2 size={13} className="animate-spin" />
-                          : <Send size={13} />}
+                        {submitMut.isPending ? <Loader2 size={13} className="animate-spin"/> : <Send size={13}/>}
                         Send Rating
                       </button>
                     </>
@@ -369,16 +352,14 @@ export default function FeedbackWidget() {
               {mode === 'ux' && (
                 <div style={{ display:'flex', flexDirection:'column', gap:9 }}>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:'#22c55e',
-                      display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
+                    <label style={{ fontSize:11, fontWeight:700, color:'#22c55e', display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
                       <ThumbsUp size={11}/> What works well?
                     </label>
                     <textarea value={uxGood} onChange={e => setUxGood(e.target.value)} rows={2}
                       placeholder="e.g. Clear navigation, fast loading..." style={inp} />
                   </div>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:'#ef4444',
-                      display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
+                    <label style={{ fontSize:11, fontWeight:700, color:'#ef4444', display:'flex', alignItems:'center', gap:4, marginBottom:4 }}>
                       <ThumbsDown size={11}/> What could improve?
                     </label>
                     <textarea value={uxBad} onChange={e => setUxBad(e.target.value)} rows={2}
@@ -386,16 +367,12 @@ export default function FeedbackWidget() {
                   </div>
                   <input value={email} onChange={e => setEmail(e.target.value)}
                     placeholder="Email (optional)" style={inp} />
-                  <button
-                    onClick={() => submitMut.mutate(payload('ux_feedback', { what_works: uxGood, what_doesnt: uxBad }))}
+                  <button onClick={() => submitMut.mutate(payload('ux_feedback', { what_works:uxGood, what_doesnt:uxBad }))}
                     disabled={(!uxGood && !uxBad) || submitMut.isPending}
                     style={{ width:'100%', padding:'10px', borderRadius:10, fontSize:13, fontWeight:700,
-                      background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff',
-                      border:'none', cursor:'pointer', opacity: (!uxGood && !uxBad) ? 0.5 : 1,
-                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
-                    {submitMut.isPending
-                      ? <Loader2 size={13} className="animate-spin" />
-                      : <Send size={13} />}
+                      background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer',
+                      opacity:(!uxGood && !uxBad)?0.5:1, display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                    {submitMut.isPending ? <Loader2 size={13} className="animate-spin"/> : <Send size={13}/>}
                     Send Feedback
                   </button>
                 </div>
@@ -404,20 +381,16 @@ export default function FeedbackWidget() {
               {/* BUG */}
               {mode === 'bug' && (
                 <div style={{ display:'flex', flexDirection:'column', gap:9 }}>
-                  <p style={{ fontSize:11, color:'#64748b', margin:0 }}>
-                    Page and browser info are auto-attached.
-                  </p>
+                  <p style={{ fontSize:11, color:'var(--text-500)', margin:0 }}>Page and browser info are auto-attached.</p>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:'#334155', marginBottom:5, display:'block' }}>
-                      Bug type
-                    </label>
+                    <label style={{ fontSize:11, fontWeight:700, color:'var(--text-700)', marginBottom:5, display:'block' }}>Bug type</label>
                     <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
                       {BUG_TYPES.map(bt => (
                         <button key={bt.value} onClick={() => setBugType(bt.value)}
                           style={{ padding:'4px 9px', borderRadius:999, fontSize:10, fontWeight:700,
-                            border:`1.5px solid ${bugType === bt.value ? bt.color : '#e2e8f0'}`,
-                            background: bugType === bt.value ? `${bt.color}15` : '#f8fafc',
-                            color: bugType === bt.value ? bt.color : '#64748b',
+                            border:`1.5px solid ${bugType===bt.value ? bt.color : 'var(--card-border)'}`,
+                            background: bugType===bt.value ? `${bt.color}15` : 'var(--page-bg)',
+                            color: bugType===bt.value ? bt.color : 'var(--text-500)',
                             cursor:'pointer', transition:'all 0.12s' }}>
                           {bt.label}
                         </button>
@@ -425,25 +398,18 @@ export default function FeedbackWidget() {
                     </div>
                   </div>
                   <div>
-                    <label style={{ fontSize:11, fontWeight:700, color:'#334155', marginBottom:4, display:'block' }}>
-                      What happened? *
-                    </label>
+                    <label style={{ fontSize:11, fontWeight:700, color:'var(--text-700)', marginBottom:4, display:'block' }}>What happened? *</label>
                     <textarea value={bugDesc} onChange={e => setBugDesc(e.target.value)} rows={3}
-                      placeholder="What were you doing? What did you expect vs what happened?"
-                      style={inp} />
+                      placeholder="What were you doing? What did you expect vs what happened?" style={inp} />
                   </div>
                   <input value={email} onChange={e => setEmail(e.target.value)}
                     placeholder="Email for updates (optional)" style={inp} />
-                  <button
-                    onClick={() => submitMut.mutate(payload('bug_report', { bug_type: bugType, description: bugDesc }))}
+                  <button onClick={() => submitMut.mutate(payload('bug_report', { bug_type:bugType, description:bugDesc }))}
                     disabled={!bugDesc.trim() || submitMut.isPending}
                     style={{ width:'100%', padding:'10px', borderRadius:10, fontSize:13, fontWeight:700,
-                      background:'linear-gradient(135deg,#e11d48,#dc2626)', color:'#fff',
-                      border:'none', cursor:'pointer', opacity: !bugDesc.trim() ? 0.5 : 1,
-                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
-                    {submitMut.isPending
-                      ? <Loader2 size={13} className="animate-spin" />
-                      : <AlertTriangle size={13} />}
+                      background:'linear-gradient(135deg,#e11d48,#dc2626)', color:'#fff', border:'none', cursor:'pointer',
+                      opacity:!bugDesc.trim()?0.5:1, display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                    {submitMut.isPending ? <Loader2 size={13} className="animate-spin"/> : <AlertTriangle size={13}/>}
                     Report Bug
                   </button>
                 </div>
@@ -456,10 +422,8 @@ export default function FeedbackWidget() {
                     display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
                     <Check size={24} style={{ color:'#16a34a' }} />
                   </div>
-                  <p style={{ fontSize:14, fontWeight:800, color:'#0f172a', margin:'0 0 5px' }}>Thank you!</p>
-                  <p style={{ fontSize:12, color:'#64748b', margin:0 }}>
-                    Your feedback has been sent to the team.
-                  </p>
+                  <p style={{ fontSize:14, fontWeight:800, color:'var(--text-900)', margin:'0 0 5px' }}>Thank you!</p>
+                  <p style={{ fontSize:12, color:'var(--text-500)', margin:0 }}>Your feedback has been sent to the team.</p>
                 </div>
               )}
 
