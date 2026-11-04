@@ -73,42 +73,36 @@ const CONFIG = {
 /* ─── Modal ─────────────────────────────────────────────────────── */
 export default function LegalModal({ type = 'terms', open, onClose, onAccept }) {
   const cfg = CONFIG[type] || CONFIG.terms;
-  const [accepted, setAccepted] = useState(false);
-  const [localOpen, setLocalOpen] = useState(open);
+  const [phase, setPhase] = useState('idle'); // 'idle' | 'accepted' | 'closing'
   const timerRef = useRef(null);
+  const acceptedRef = useRef(false);
 
-  // Follow the open prop — but if accepted, delay closing so green state shows
   useEffect(() => {
     if (open) {
-      setAccepted(false);
-      setLocalOpen(true);
-    } else if (!accepted) {
-      setLocalOpen(false);
+      setPhase('idle');
+      acceptedRef.current = false;
     }
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [open]);
 
   const handleAccept = () => {
-    setAccepted(true);
+    acceptedRef.current = true;
+    setPhase('accepted');
     onAccept?.();
-    // Show green for 1 second then close
     timerRef.current = setTimeout(() => {
-      setLocalOpen(false);
-      setTimeout(() => onClose(), 300); // let exit animation finish
-    }, 1000);
+      setPhase('closing');
+      onClose();
+    }, 1100);
   };
 
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, []);
-
   const handleDecline = () => onClose();
+  const isAccepted = phase === 'accepted' || phase === 'closing';
 
   if (typeof document === 'undefined') return null;
 
   return createPortal(
     <AnimatePresence>
-      {localOpen && (
+      {open && (
         <>
           {/* Backdrop */}
           <motion.div
@@ -130,7 +124,7 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
               onClick={e => e.stopPropagation()}
               style={{
                 pointerEvents:'all',
-                background:'#ffffff',
+                background:'var(--card-bg)',
                 borderRadius:14,
                 boxShadow:'0 12px 60px rgba(15,23,42,0.22), 0 2px 8px rgba(0,0,0,0.08)',
                 width:'100%', maxWidth:cfg.maxWidth,
@@ -143,31 +137,30 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
               <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2)', flexShrink:0 }} />
 
               {/* Header */}
-              <div style={{ padding:'20px 22px 12px', flexShrink:0, position:'relative', borderBottom:'1px solid #f1f5f9' }}>
+              <div style={{ padding:'20px 22px 12px', flexShrink:0, position:'relative', borderBottom:'1px solid var(--card-border)' }}>
                 <button onClick={onClose} aria-label="Close"
-                  style={{ position:'absolute', top:14, right:14, width:28, height:28, borderRadius:'50%', background:'#f1f5f9', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#64748b' }}
-                  onMouseEnter={e=>e.currentTarget.style.background='#e2e8f0'}
-                  onMouseLeave={e=>e.currentTarget.style.background='#f1f5f9'}>
+                  style={{ position:'absolute', top:14, right:14, width:28, height:28, borderRadius:'50%', background:'var(--page-bg)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)' }}
+                  onMouseEnter={e=>e.currentTarget.style.background='var(--card-border)'}
+                  onMouseLeave={e=>e.currentTarget.style.background='var(--page-bg)'}>
                   <X size={14} strokeWidth={2.5} />
                 </button>
-                <h2 style={{ fontSize:18, fontWeight:800, color:'#0f172a', margin:0, paddingRight:36 }}>
+                <h2 style={{ fontSize:18, fontWeight:800, color:'var(--text-900)', margin:0, paddingRight:36 }}>
                   {cfg.title}
                 </h2>
               </div>
 
               {/* Scrollable body */}
-              <div style={{ flex:1, overflowY:'auto', padding:'16px 22px 8px', scrollbarWidth:'thin', scrollbarColor:'#0d948860 #f1f5f9' }}>
-                <style>{`.lm-scroll::-webkit-scrollbar{width:4px}.lm-scroll::-webkit-scrollbar-track{background:#f1f5f9;border-radius:99px}.lm-scroll::-webkit-scrollbar-thumb{background:#0d948860;border-radius:99px}`}</style>
+              <div style={{ flex:1, overflowY:'auto', padding:'16px 22px 8px', scrollbarWidth:'thin', scrollbarColor:'#0d948860 var(--page-bg)', background:'var(--card-bg)' }}>
                 <div className="lm-scroll" style={{ height:'100%', overflowY:'auto' }}>
                   {cfg.items.map((item, i) => (
                     <div key={i} style={{ marginBottom:18 }}>
-                      <p style={{ fontSize:13, fontWeight:700, color:'#0d9488', margin:'0 0 2px', textTransform:'uppercase', letterSpacing:'0.04em', fontSize:11 }}>
+                      <p style={{ fontSize:11, fontWeight:700, color:'#0d9488', margin:'0 0 2px', textTransform:'uppercase', letterSpacing:'0.04em' }}>
                         {item.heading}
                       </p>
                       {item.sub && (
-                        <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', margin:'0 0 6px' }}>{item.sub}</p>
+                        <p style={{ fontSize:11, fontWeight:600, color:'var(--text-400)', margin:'0 0 6px' }}>{item.sub}</p>
                       )}
-                      <p style={{ fontSize:13, color:'#475569', lineHeight:1.75, margin:0, whiteSpace:'pre-line' }}>
+                      <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.75, margin:0, whiteSpace:'pre-line' }}>
                         {item.body}
                       </p>
                     </div>
@@ -176,40 +169,34 @@ export default function LegalModal({ type = 'terms', open, onClose, onAccept }) 
               </div>
 
               {/* Footer */}
-              <div style={{ padding:'14px 22px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, flexShrink:0, background:'#fff' }}>
+              <div style={{ padding:'14px 22px', borderTop:'1px solid var(--card-border)', display:'flex', gap:10, flexShrink:0, background:'var(--card-bg)' }}>
                 {cfg.showAccept ? (
                   <>
-                    <button onClick={handleAccept} disabled={accepted}
+                    <button onClick={isAccepted ? undefined : handleAccept}
                       style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700,
-                        background: accepted ? '#059669' : '#0d9488',
-                        color:'#fff', border:'none', cursor: accepted ? 'default' : 'pointer',
-                        boxShadow: accepted ? '0 2px 8px rgba(5,150,105,0.3)' : '0 2px 8px rgba(13,148,136,0.3)',
-                        transition:'all 0.2s', display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
-                      onMouseEnter={e=>{ if(!accepted) e.currentTarget.style.background='#0f766e'; }}
-                      onMouseLeave={e=>{ if(!accepted) e.currentTarget.style.background='#0d9488'; }}>
-                      {accepted ? (
-                        <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Accepted</>
-                      ) : cfg.acceptLabel}
+                        background: isAccepted ? '#059669' : '#0d9488',
+                        color:'#fff', border:'none', cursor: isAccepted ? 'default' : 'pointer',
+                        transition:'background 0.25s',
+                        display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                      {isAccepted
+                        ? <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Accepted</>
+                        : cfg.acceptLabel}
                     </button>
                     <button onClick={handleDecline}
-                      style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:600, background:'#fff', color:'#0d9488', border:'1.5px solid #0d9488', cursor:'pointer' }}
-                      onMouseEnter={e=>e.currentTarget.style.background='#f0fdfa'}
-                      onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
+                      style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:600, background:'transparent', color:'#0d9488', border:'1.5px solid #0d9488', cursor:'pointer' }}>
                       {cfg.declineLabel}
                     </button>
                   </>
                 ) : (
-                  <button onClick={accepted ? undefined : handleAccept}
+                  <button onClick={isAccepted ? undefined : handleAccept}
                     style={{ flex:1, padding:'11px 0', borderRadius:8, fontSize:14, fontWeight:700,
-                      background: accepted ? '#059669' : '#0d9488',
-                      color:'#fff', border:'none', cursor: accepted ? 'default' : 'pointer',
-                      boxShadow:'0 2px 8px rgba(13,148,136,0.3)', transition:'all 0.2s',
-                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}
-                    onMouseEnter={e=>{ if(!accepted) e.currentTarget.style.background='#0f766e'; }}
-                    onMouseLeave={e=>{ if(!accepted) e.currentTarget.style.background= accepted ? '#059669' : '#0d9488'; }}>
-                    {accepted ? (
-                      <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Got it</>
-                    ) : cfg.acceptLabel}
+                      background: isAccepted ? '#059669' : '#0d9488',
+                      color:'#fff', border:'none', cursor: isAccepted ? 'default' : 'pointer',
+                      transition:'background 0.25s',
+                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                    {isAccepted
+                      ? <><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3L11.5 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> Got it</>
+                      : cfg.acceptLabel}
                   </button>
                 )}
               </div>
