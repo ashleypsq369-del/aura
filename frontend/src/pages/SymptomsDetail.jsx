@@ -176,7 +176,7 @@ export default function SymptomsDetail() {
              </motion.div>
            )}
 
-           {/* History — card rows, not a table */}
+           {/* History — PatientDataTable DNA */}
            <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.25 }}
              style={{ background:'var(--card-bg)', borderRadius:16, border:'1px solid var(--card-border)', overflow:'hidden', marginTop:24 }}>
              <div style={{ height:3, background:'linear-gradient(90deg,#e11d48,#7c3aed,#0891b2)' }} />
@@ -187,75 +187,87 @@ export default function SymptomsDetail() {
                </div>
              </div>
 
+             {/* Column headers — same style as PatientDataTable */}
+             <div style={{ display:'grid', gridTemplateColumns:'1fr 80px 100px 1fr 120px 90px', padding:'8px 16px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+               {['Date & Time','Pain','Severity','Symptoms Present','Notes','AI Explain'].map(h=>(
+                 <span key={h} style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.06em' }}>{h}</span>
+               ))}
+             </div>
+
              {symptoms.length === 0 ? (
                <div style={{ padding:'48px 0', textAlign:'center' }}>
                  <AlertCircle size={32} style={{ color:'var(--card-border)', margin:'0 auto 10px' }} />
                  <p style={{ fontWeight:600, fontSize:13, color:'var(--text-500)', margin:0 }}>No symptoms recorded</p>
                  <p style={{ fontSize:12, color:'var(--text-400)', margin:'4px 0 0' }}>Use "Record Symptoms" to start tracking</p>
                </div>
-             ) : (
-               <div style={{ display:'flex', flexDirection:'column' }}>
-                 {symptoms.map((s, idx) => {
-                   const sev = getPainSeverity(s.pain_level ?? 0);
-                   const flags = [s.nausea&&'Nausea', s.fatigue&&'Fatigue', s.anxiety&&'Anxiety', s.dyspnea&&'Dyspnea'].filter(Boolean);
-                   return (
-                     <div key={s.id} style={{
-                       display:'flex', alignItems:'center', gap:14, padding:'12px 20px',
-                       borderBottom: idx < symptoms.length-1 ? '1px solid var(--card-border)' : 'none',
-                       background: idx%2===0 ? 'transparent' : `${sev.bg}40`,
-                       transition:'background 0.12s',
-                     }}
-                     onMouseEnter={e=>e.currentTarget.style.background='var(--page-bg)'}
-                     onMouseLeave={e=>e.currentTarget.style.background=idx%2===0?'transparent':`${sev.bg}40`}>
-                       {/* Date */}
-                       <div style={{ minWidth:130, flexShrink:0 }}>
-                         <p style={{ fontSize:12, fontWeight:600, color:'var(--text-700)', margin:0 }}>
-                           {new Date(s.recorded_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}
-                         </p>
-                         <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>
-                           {new Date(s.recorded_at).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}
-                         </p>
-                       </div>
-                       {/* Pain score */}
-                       <div style={{ minWidth:70, flexShrink:0, display:'flex', alignItems:'center', gap:6 }}>
-                         <div style={{ width:36, height:36, borderRadius:10, background:sev.bg, border:`1px solid ${sev.border}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                           <span style={{ fontSize:13, fontWeight:900, color:sev.color, lineHeight:1 }}>{s.pain_level??'—'}</span>
-                         </div>
-                         <span style={{ fontSize:10, color:sev.color, fontWeight:700 }}>/10</span>
-                       </div>
-                       {/* Severity badge */}
-                       <div style={{ minWidth:72, flexShrink:0 }}>
-                         <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:99, background:sev.bg, color:sev.color, border:`1px solid ${sev.border}` }}>
-                           {sev.label}
-                         </span>
-                       </div>
-                       {/* Symptom tags */}
-                       <div style={{ flex:1, display:'flex', flexWrap:'wrap', gap:4, minWidth:0 }}>
-                         {flags.length > 0 ? flags.map(f => (
-                           <span key={f} style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#f3e8ff', color:'#7c3aed', border:'1px solid #e9d5ff' }}>{f}</span>
-                         )) : <span style={{ fontSize:11, color:'var(--text-300)', fontStyle:'italic' }}>None reported</span>}
-                       </div>
-                       {/* Notes */}
-                       {s.notes && (
-                         <div style={{ maxWidth:160, flexShrink:0 }}>
-                           <p style={{ fontSize:11, color:'var(--text-500)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{s.notes}</p>
-                         </div>
-                       )}
-                       {/* AI Explain — available for all rows */}
-                       <div style={{ flexShrink:0 }}>
-                         <button onClick={() => explainSymptom('pain', s.pain_level)} disabled={loadingAI}
-                           title="Explain with AI"
-                           style={{ width:32, height:32, borderRadius:8, background:'#f5f3ff', border:'1px solid #e9d5ff', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', opacity:loadingAI?0.5:1, transition:'all 0.12s' }}
-                           onMouseEnter={e=>e.currentTarget.style.background='#ede9fe'}
-                           onMouseLeave={e=>e.currentTarget.style.background='#f5f3ff'}>
-                           <Brain size={14} style={{ color:'#7c3aed' }} />
-                         </button>
-                       </div>
+             ) : symptoms.map((s, idx) => {
+               const sev   = getPainSeverity(s.pain_level ?? 0);
+               const flags = [s.nausea&&'Nausea', s.fatigue&&'Fatigue', s.anxiety&&'Anxiety', s.dyspnea&&'Dyspnea'].filter(Boolean);
+               /* gradient avatar — same palette as PatientDataTable */
+               const GRADS = ['linear-gradient(135deg,#e11d48,#f97316)','linear-gradient(135deg,#f97316,#d97706)','linear-gradient(135deg,#7c3aed,#e11d48)','linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#dc2626,#7c3aed)','linear-gradient(135deg,#d97706,#ea580c)'];
+               const grad  = GRADS[idx % GRADS.length];
+               /* badge class matches PatientDataTable exactly */
+               const badgeClass = s.pain_level >= 8 ? 'badge-critical' : s.pain_level >= 5 ? 'badge-high' : s.pain_level >= 3 ? 'badge-moderate' : 'badge-low';
+               /* risk bar — same as PatientDataTable risk_score column */
+               const barPct   = Math.round((s.pain_level ?? 0) * 10);
+               const barColor = s.pain_level >= 8 ? '#e11d48' : s.pain_level >= 5 ? '#f97316' : '#10b981';
+
+               return (
+                 <div key={s.id}
+                   style={{ display:'grid', gridTemplateColumns:'1fr 80px 100px 1fr 120px 90px', padding:'12px 16px', borderBottom: idx < symptoms.length-1 ? '1px solid var(--card-border)' : 'none', alignItems:'center', transition:'background 0.1s', cursor:'default' }}
+                   onMouseEnter={e=>e.currentTarget.style.background='var(--page-bg)'}
+                   onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+
+                   {/* Date — gradient avatar + date/time, same as PatientDataTable Patient column */}
+                   <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                     <div style={{ width:36, height:36, borderRadius:'50%', background:grad, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0, boxShadow:'0 2px 6px rgba(0,0,0,0.15)' }}>
+                       {String(idx+1).padStart(2,'0')}
                      </div>
-                   );
-                 })}
-               </div>
-             )}
+                     <div>
+                       <p style={{ fontSize:13, fontWeight:600, color:'var(--text-900)', margin:0 }}>
+                         {new Date(s.recorded_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+                       </p>
+                       <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>
+                         {new Date(s.recorded_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+                       </p>
+                     </div>
+                   </div>
+
+                   {/* Pain score with bar — same as PatientDataTable risk_score column */}
+                   <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
+                     <span style={{ fontSize:14, fontWeight:900, color:sev.color, fontVariantNumeric:'tabular-nums' }}>
+                       {s.pain_level ?? '—'}<span style={{ fontSize:11, fontWeight:500, color:'var(--text-400)' }}>/10</span>
+                     </span>
+                     <div style={{ width:44, height:4, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
+                       <div style={{ height:'100%', width:`${barPct}%`, background:barColor, borderRadius:99 }}/>
+                     </div>
+                   </div>
+
+                   {/* Severity badge — same badge-* classes as PatientDataTable RiskBadge */}
+                   <span className={badgeClass} style={{ display:'inline-block', width:'fit-content' }}>{sev.label}</span>
+
+                   {/* Symptom flags */}
+                   <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
+                     {flags.length > 0 ? flags.map(f=>(
+                       <span key={f} style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#f3e8ff', color:'#7c3aed', border:'1px solid #e9d5ff' }}>{f}</span>
+                     )) : <span style={{ fontSize:11, color:'var(--text-300)', fontStyle:'italic' }}>None reported</span>}
+                   </div>
+
+                   {/* Notes */}
+                   <span style={{ fontSize:11, color:'var(--text-500)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                     {s.notes || '—'}
+                   </span>
+
+                   {/* AI Explain — labeled button, same style as VitalsDetail */}
+                   <button onClick={() => explainSymptom('pain', s.pain_level)} disabled={loadingAI}
+                     style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', borderRadius:8, background:'#f5f3ff', border:'1px solid #e9d5ff', cursor:'pointer', fontSize:11, fontWeight:700, color:'#7c3aed', opacity:loadingAI?0.5:1, whiteSpace:'nowrap', transition:'all 0.12s' }}
+                     onMouseEnter={e=>{e.currentTarget.style.background='#ede9fe';}}
+                     onMouseLeave={e=>{e.currentTarget.style.background='#f5f3ff';}}>
+                     <Brain size={12}/> AI Explain
+                   </button>
+                 </div>
+               );
+             })}
            </motion.div>
          </>
        )}

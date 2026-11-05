@@ -220,58 +220,117 @@ export default function VitalsDetail() {
  </motion.div>
  )}
 
- {/* History table */}
+ {/* History — same DNA as PatientDataTable */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
- className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--card-border)] overflow-hidden mt-6">
- <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-white border-b-2 border-slate-200">
- <h2 className="text-base font-bold text-slate-900">Vitals History</h2>
- <p className="text-[var(--text-500)] text-sm">Complete record of all vital sign measurements</p>
+ style={{ background:'var(--card-bg)', borderRadius:16, border:'1px solid var(--card-border)', overflow:'hidden', marginTop:24 }}>
+ <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2,#1d4ed8)' }} />
+ <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+ <div>
+ <h2 style={{ fontSize:14, fontWeight:700, color:'var(--text-900)', margin:0 }}>Vitals History</h2>
+ <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>{vitals.length} readings recorded</p>
+ </div>
  </div>
 
- <div className="overflow-x-auto">
- <table className="w-full">
- <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
- {['Date & Time','BP (mmHg)','HR (bpm)','Temp (°C)','O₂ Sat (%)','Resp. Rate','Recorded By'].map(h => (
- <th key={h} className="text-left py-3 px-4 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">{h}</th>
+ {/* Header row — matches PatientDataTable th style */}
+ <div style={{ display:'grid', gridTemplateColumns:'1fr 90px 80px 80px 70px 70px 100px 90px', padding:'8px 16px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+ {['Date & Time','BP','HR (bpm)','SpO₂ (%)','Temp °C','RR','Status','AI Explain'].map(h=>(
+ <span key={h} style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.06em' }}>{h}</span>
  ))}
- <th className="text-right py-3 px-4 text-xs font-bold text-[var(--text-600)] uppercase tracking-wide">AI</th>
- </tr>
- </thead>
- <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
- {vitals.map((v) => (
- <tr key={v.id} className="hover:bg-[var(--card-bg)] transition-colors h-[52px]">
- <td className="py-3 px-4 text-sm font-medium text-[var(--text-900)]">
- {new Date(v.recorded_at).toLocaleString('en-GB', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
- </td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)]">
- {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia ?? 0)}` : '--'}
- </td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.heart_rate ? Math.round(v.heart_rate) : '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.temperature?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.oxygen_saturation?.toFixed(1) ?? '--'}</td>
- <td className="py-3 px-4 text-sm text-[var(--text-700)]">{v.respiratory_rate ? Math.round(v.respiratory_rate) : '--'}</td>
- <td className="py-3 px-4 text-sm text-slate-500">{v.recorded_by || 'System'}</td>
- <td className="py-3 px-4 text-right">
- {v.heart_rate >= 100 || v.oxygen_saturation < 95 ? (
+ </div>
+
+ {vitals.length === 0 ? (
+ <div style={{ padding:'48px 0', textAlign:'center' }}>
+ <Activity size={32} style={{ color:'var(--card-border)', margin:'0 auto 10px' }} />
+ <p style={{ fontWeight:600, fontSize:13, color:'var(--text-500)', margin:0 }}>No vitals recorded</p>
+ <p style={{ fontSize:12, color:'var(--text-400)', margin:'4px 0 0' }}>Use the Record Vitals button to start tracking</p>
+ </div>
+ ) : vitals.map((v, idx) => {
+ const hrOk  = !v.heart_rate        || (v.heart_rate >= 60  && v.heart_rate <= 100);
+ const o2Ok  = !v.oxygen_saturation  || v.oxygen_saturation >= 95;
+ const bpOk  = !v.blood_pressure_sys || (v.blood_pressure_sys >= 90 && v.blood_pressure_sys <= 140);
+ const tmpOk = !v.temperature        || (v.temperature >= 36  && v.temperature <= 38.5);
+ const criticals = [!hrOk, !o2Ok, !bpOk, !tmpOk].filter(Boolean).length;
+ const badgeClass = criticals >= 2 ? 'badge-critical' : criticals === 1 ? 'badge-high' : 'badge-low';
+ const badgeLabel = criticals >= 2 ? 'Critical' : criticals === 1 ? 'Abnormal' : 'Normal';
+
+ /* gradient avatar by row index — same palette as PatientDataTable */
+ const GRADS = ['linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#0891b2,#1d4ed8)','linear-gradient(135deg,#059669,#0d9488)','linear-gradient(135deg,#7c3aed,#0891b2)','linear-gradient(135deg,#d97706,#ea580c)','linear-gradient(135deg,#e11d48,#d97706)'];
+ const grad = GRADS[idx % GRADS.length];
+ const initials = String(idx + 1).padStart(2,'0');
+
+ /* risk score bar — same as PatientDataTable risk_score column */
+ const abnormPct = Math.round((criticals / 4) * 100);
+ const barColor  = criticals >= 2 ? '#e11d48' : criticals === 1 ? '#f97316' : '#10b981';
+
+ return (
+ <div key={v.id}
+ style={{ display:'grid', gridTemplateColumns:'1fr 90px 80px 80px 70px 70px 100px 90px', padding:'12px 16px', borderBottom: idx < vitals.length-1 ? '1px solid var(--card-border)' : 'none', alignItems:'center', transition:'background 0.1s', cursor:'default' }}
+ onMouseEnter={e=>e.currentTarget.style.background='var(--page-bg)'}
+ onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+
+ {/* Date — gradient avatar + text, same as PatientDataTable Patient column */}
+ <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+ <div style={{ width:36, height:36, borderRadius:'50%', background:grad, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0, boxShadow:'0 2px 6px rgba(0,0,0,0.15)' }}>
+ {initials}
+ </div>
+ <div>
+ <p style={{ fontSize:13, fontWeight:600, color:'var(--text-900)', margin:0 }}>
+ {new Date(v.recorded_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+ </p>
+ <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>
+ {new Date(v.recorded_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+ </p>
+ </div>
+ </div>
+
+ {/* BP */}
+ <span style={{ fontSize:13, fontWeight:600, color:bpOk?'var(--text-700)':'#dc2626' }}>
+ {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia??0)}` : '—'}
+ </span>
+
+ {/* HR with risk bar — same as PatientDataTable risk_score */}
+ <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+ <span style={{ fontSize:13, fontWeight:600, color:hrOk?'var(--text-700)':'#dc2626', minWidth:28 }}>
+ {v.heart_rate ? Math.round(v.heart_rate) : '—'}
+ </span>
+ {!hrOk && <div style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', flexShrink:0, animation:'pulse 2s infinite' }}/>}
+ </div>
+
+ {/* SpO2 */}
+ <span style={{ fontSize:13, fontWeight:600, color:o2Ok?'var(--text-700)':'#dc2626' }}>
+ {v.oxygen_saturation ? `${v.oxygen_saturation.toFixed(1)}%` : '—'}
+ </span>
+
+ {/* Temp */}
+ <span style={{ fontSize:13, fontWeight:600, color:tmpOk?'var(--text-700)':'#f97316' }}>
+ {v.temperature ? `${v.temperature.toFixed(1)}°` : '—'}
+ </span>
+
+ {/* RR */}
+ <span style={{ fontSize:13, color:'var(--text-600)' }}>
+ {v.respiratory_rate ? Math.round(v.respiratory_rate) : '—'}
+ </span>
+
+ {/* Status badge — same badge-* classes as PatientDataTable */}
+ <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
+ <span className={badgeClass} style={{ display:'inline-block', width:'fit-content' }}>{badgeLabel}</span>
+ <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+ <div style={{ width:48, height:4, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
+ <div style={{ height:'100%', width:`${100-abnormPct}%`, background:barColor, borderRadius:99, transition:'width 0.4s' }}/>
+ </div>
+ </div>
+ </div>
+
+ {/* AI Explain */}
  <button onClick={() => explainVital('vitals', v)} disabled={loadingAI}
- className="p-1.5 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors disabled:opacity-50" data-tip="Explain with AI">
- <Brain size={14} className="text-purple-600" />
+ style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', borderRadius:8, background:'#f5f3ff', border:'1px solid #e9d5ff', cursor:'pointer', fontSize:11, fontWeight:700, color:'#7c3aed', opacity:loadingAI?0.5:1, whiteSpace:'nowrap', transition:'all 0.12s' }}
+ onMouseEnter={e=>{e.currentTarget.style.background='#ede9fe';}}
+ onMouseLeave={e=>{e.currentTarget.style.background='#f5f3ff';}}>
+ <Brain size={12}/> AI Explain
  </button>
- ) : null}
- </td>
- </tr>
- ))}
- </tbody>
- </table>
- {vitals.length === 0 && (
- <div className="py-12 text-center">
- <Activity className="w-12 h-12 mx-auto mb-3 text-slate-300" />
- <p className="text-[var(--text-500)] font-medium">No vitals recorded</p>
- <p className="text-sm text-[var(--text-400)] mt-1">Start recording vital signs to track patient health</p>
  </div>
- )}
- </div>
+ );
+ })}
  </motion.div>
 
  {showAI && aiData && (
