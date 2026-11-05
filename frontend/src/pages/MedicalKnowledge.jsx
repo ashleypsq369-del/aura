@@ -433,7 +433,7 @@ export default function MedicalKnowledge() {
  <Plus size={13}/> Add Condition
  </button>
  )}
- <button onClick={() => refetch()} className="p-2 bg-white/20 hover:bg-white/30 rounded-lg text-white transition" title="Refresh">
+ <button onClick={() => refetch()} className="p-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] rounded-lg text-[var(--text-700)] transition border border-[var(--card-border)]" title="Refresh">
  <RefreshCw size={15}/>
  </button>
  </div>
