@@ -13,7 +13,7 @@ import {
  Camera, FileText, CheckCircle, X,
 } from 'lucide-react';
 import { woundCareAPI } from '../api/client';
-import { toast } from 'sonner';
+import toast from '../utils/toast';
 import PageHeader from '../components/PageHeader';
 
 const HEALING = {
@@ -217,24 +217,28 @@ export default function WoundCareModule() {
  const sites = [...new Set(logs.map(l => l.wound_site))];
 
  return (
- <div className="min-h-screen" style={{ background: '#c2dde8' }}>
- <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+ <div className="min-h-screen">
  <PageHeader
  title="Wound Care"
  subtitle="Track wound healing progress and treatment logs"
- icon={<Camera size={18} />}
- backAction={() => navigate(-1)}
- />
-
- <div className="flex justify-end">
+ icon={Camera}
+ >
+ <button
+ onClick={() => navigate(-1)}
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-lg border border-[var(--card-border)] text-xs font-semibold transition"
+ >
+ <ChevronLeft size={14} /> Back
+ </button>
  <button
  onClick={() => setShowForm(true)}
- className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition"
  style={{ background: '#0d9488' }}
  >
- <Plus size={15} /> New Log
+ <Plus size={13} /> New Log
  </button>
- </div>
+ </PageHeader>
+
+ <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
  <AnimatePresence>
  {showForm && (

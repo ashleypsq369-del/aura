@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import { servicesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { toast } from 'sonner';
+import toast from '../utils/toast';
 
 /* ─────────────────────────── CONSTANTS ─────────────────────────────────── */
 
@@ -176,14 +176,23 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       {/* ── PHOTO AREA — top 48% of card, like Style A ── */}
       <div style={{ position:'relative', height:170, flexShrink:0, overflow:'hidden', background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
 
-        {/* Role image fills the area — NO dark overlay on top half */}
-        {meta.img && (
-          <img src={meta.img} alt={meta.label}
-            style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
+        {/* Individual avatar first, fall back to role category image */}
+        {(p.avatar_url || meta.img) && (
+          <img
+            src={p.avatar_url || meta.img}
+            alt={p.full_name}
+            style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 15%' }}
+            onError={e => {
+              // If personal avatar fails, fall through to category image
+              if (e.currentTarget.src !== meta.img && meta.img) {
+                e.currentTarget.src = meta.img;
+              }
+            }}
+          />
         )}
 
-        {/* Initials fallback watermark when no real photo */}
-        {!meta.img && (
+        {/* Initials fallback watermark when no photo at all */}
+        {!p.avatar_url && !meta.img && (
           <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
             <span style={{ fontSize:52, fontWeight:900, color:'rgba(255,255,255,0.25)', letterSpacing:'-2px' }}>{initials}</span>
           </div>
@@ -350,8 +359,18 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
       >
         {/* ── Photo hero header — large, clean, like the card ── */}
         <div style={{ height:230, position:'relative', overflow:'hidden', flexShrink:0, background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
-          {meta.img && (
-            <img src={meta.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
+        {/* Individual avatar first, fall back to role category image */}
+          {(p.avatar_url || meta.img) && (
+            <img
+              src={p.avatar_url || meta.img}
+              alt={p.full_name}
+              style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 15%' }}
+              onError={e => {
+                if (e.currentTarget.src !== meta.img && meta.img) {
+                  e.currentTarget.src = meta.img;
+                }
+              }}
+            />
           )}
           {/* Only bottom gradient — no dark overlay on the whole photo */}
           <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)' }}/>
