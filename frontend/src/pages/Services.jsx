@@ -846,7 +846,7 @@ export default function Services() {
   });
   const types = typesData || [];
 
-  const { data: providersData, isLoading } = useQuery({
+  const { data: providersData, isLoading, error: providersError } = useQuery({
     queryKey: ['providers', filterType, filterRegion, search, page],
     queryFn:  () => servicesAPI.getProviders({
       service_type: filterType || undefined,
@@ -856,6 +856,10 @@ export default function Services() {
     }).then(r => r.data),
     staleTime: 2 * 60 * 1000,
     keepPreviousData: true,
+    retry: 1,
+    onError: (err) => {
+      console.error('[Services] Providers fetch error:', err?.response?.status, err?.response?.data || err?.message);
+    },
   });
   const providers = providersData?.providers || [];
   const total     = providersData?.total || 0;
@@ -1123,8 +1127,10 @@ export default function Services() {
             {/* Filters row */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap', marginBottom:20 }}>
               <p style={{ fontSize:13, color:'#64748b' }}>
-                Showing <strong style={{ color:'var(--text-900)' }}>{total}</strong> provider{total!==1?'s':''}
-                {filterType && <> in <strong style={{ color: TYPE_META[filterType]?.color }}>{TYPE_META[filterType]?.label}</strong></>}
+                {providersError
+                  ? <span style={{color:'#dc2626'}}>⚠ Could not load providers — {providersError?.response?.status === 401 ? 'please log in again' : 'check connection'}</span>
+                  : <><strong style={{ color:'var(--text-900)' }}>{total}</strong> provider{total!==1?'s':''}{filterType && <> in <strong style={{ color: TYPE_META[filterType]?.color }}>{TYPE_META[filterType]?.label}</strong></>}</>
+                }
               </p>
               <div style={{ display:'flex', gap:8, alignItems:'center' }}>
                 <select value={filterRegion} onChange={e => { setFilterRegion(e.target.value); setPage(1); }}

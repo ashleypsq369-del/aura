@@ -7,22 +7,22 @@ sys.path.insert(0, os.path.dirname(__file__))
 from src.db import get_session, User, UserExtended
 
 AVATAR_MAP = {
-    "abena_nurse":    "/resources/providers/provider-nurse-female-pink.jpg",
-    "kwame_nurse":    "/resources/providers/provider-nurse-male-asian.jpg",
-    "dr_efua":        "/resources/providers/provider-doctor-female-black.jpg",
-    "dr_kofi":        "/resources/providers/provider-doctor-male-white.jpg",
-    "ama_physio":     "/resources/providers/provider-doctor-female-asian.jpg",
-    "emma_physio":    "/resources/providers/provider-doctor-male-black.jpg",
-    "akosua_counsel": "/resources/providers/provider-nurse-female-curly.jpg",
-    "yaw_counsel":    "/resources/providers/provider-doctor-male-black2.jpg",
-    "adjoa_nanny":    "/resources/providers/provider-nurse-female-dark.jpg",
-    "fatima_nanny":   "/resources/providers/provider-doctor-female-black.jpg",
-    "nana_massage":   "/resources/providers/provider-doctor-male-black.jpg",
-    "serwa_massage":  "/resources/providers/provider-nurse-female-pink.jpg",
-    "adwoa_social":   "/resources/providers/provider-doctor-female-black.jpg",
-    "osei_social":    "/resources/providers/provider-doctor-male-black2.jpg",
-    "rev_grace":      "/resources/providers/provider-nurse-female-curly.jpg",
-    "imam_rahman":    "/resources/providers/provider-doctor-male-white.jpg",
+    "abena_nurse":    "/resources/providers/provider-8.jpg",   # nurse female dark scrubs
+    "kwame_nurse":    "/resources/providers/provider-1.jpg",   # nurse male asian scrubs
+    "dr_efua":        "/resources/providers/provider-3.jpg",   # doctor female black lab coat
+    "dr_kofi":        "/resources/providers/provider-2.jpg",   # doctor male white lab coat
+    "ama_physio":     "/resources/providers/provider-5.jpg",   # doctor female asian lab coat
+    "emma_physio":    "/resources/providers/provider-4.jpg",   # doctor male black lab coat ICU
+    "akosua_counsel": "/resources/providers/provider-7.jpg",   # nurse female pink scrubs
+    "yaw_counsel":    "/resources/providers/provider-6.jpg",   # doctor male black tie
+    "adjoa_nanny":    "/resources/providers/provider-9.jpg",   # nurse female navy scrubs
+    "fatima_nanny":   "/resources/providers/provider-11.jpg",  # nurse female dark professional
+    "nana_massage":   "/resources/providers/provider-12.jpg",  # doctor male black arms crossed
+    "serwa_massage":  "/resources/providers/provider-10.jpg",  # nurse female black scrubs headshot
+    "adwoa_social":   "/resources/providers/provider-3.jpg",   # doctor female black
+    "osei_social":    "/resources/providers/provider-6.jpg",   # doctor male black
+    "rev_grace":      "/resources/providers/provider-7.jpg",   # nurse female pink
+    "imam_rahman":    "/resources/providers/provider-2.jpg",   # doctor male white coat
 }
 
 def patch():
