@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+﻿/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Plus, X, Calendar, Trash2, Lock, ArrowLeft } from 'lucide-react';
@@ -217,7 +217,7 @@ export default function Journal() {
         >
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-sm font-semibold transition-all"
           >
             <Plus size={16} /> New Entry
           </button>

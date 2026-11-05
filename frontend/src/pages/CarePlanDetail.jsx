@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -285,13 +285,13 @@ export default function CarePlanDetail() {
  >
  <div className="flex items-center gap-2">
  <button onClick={() => navigate(-1)}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-xl border border-white/30 text-xs font-bold transition">
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-xs font-bold transition">
  <ArrowLeft size={13} /> Back
  </button>
  <button
  onClick={() => generateMutation.mutate()}
  disabled={generateMutation.isPending}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-xl border border-white/30 text-xs font-bold transition disabled:opacity-50"
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-xs font-bold transition disabled:opacity-50"
  >
  <RefreshCw size={13} className={generateMutation.isPending ? 'animate-spin' : ''} />
  {generateMutation.isPending ? 'Regenerating...' : 'Regenerate'}

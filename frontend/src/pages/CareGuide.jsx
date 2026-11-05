@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CareGuide.jsx
  * =============
  * Layout:
@@ -898,7 +898,7 @@ export default function CareGuide() {
  icon={BookOpen}
  >
  <button onClick={() => window.print()}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg border border-white/30 text-xs font-bold transition">
+ className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-lg border border-[var(--card-border)] text-xs font-bold transition">
  Print / Export
  </button>
  </PageHeader>

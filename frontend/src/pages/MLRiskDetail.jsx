@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MLRiskDetail - full ML risk analysis page
  * Route: /patients/:patientId/ml-risk
  * Shows all SHAP breakdowns, task cards, deterioration, drug interactions
@@ -37,7 +37,7 @@ export default function MLRiskDetail() {
  >
  <button
  onClick={() => navigate(`/patients/${patientId}`)}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl border border-white/30 text-sm font-semibold transition-all"
+ className="flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-sm font-semibold transition-all"
  >
  <ArrowLeft size={14}/> Back to Patient
  </button>

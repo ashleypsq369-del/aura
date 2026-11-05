@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WellnessCheckin.jsx
  * Daily "how are you feeling" form for patients.
  * Submits to POST /api/assessments/esas
@@ -309,7 +309,7 @@ export default function WellnessCheckin() {
  >
  <button
  onClick={() => navigate('/my-space')}
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-semibold border border-white/30 transition"
+ className="flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl text-sm font-semibold border border-[var(--card-border)] transition"
  >
  <ChevronLeft size={16} /> My Space
  </button>

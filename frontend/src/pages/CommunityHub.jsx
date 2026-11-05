@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CommunityHub - Group listing page
  * Each group card shows: avatar, name, description, member count,
  * recent post preview, tags, join/leave + "Open Chat" button.
@@ -162,7 +162,7 @@ export default function CommunityHub() {
  <button onClick={() => setShowCreate(true)}
  data-tip="Create a new community group"
  data-tip-below=""
- className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-sm font-bold border border-white/30 transition">
+ className="flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl text-sm font-bold border border-[var(--card-border)] transition">
  <Plus size={15} /> New Group
  </button>
  </PageHeader>
