@@ -8,11 +8,12 @@
  */
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Building2, Heart, Home, Stethoscope, BedDouble,
   Users, ChevronRight, ChevronDown, Info, CheckCircle2,
-  Clock, UserCheck, ArrowRight, BookOpen,
+  Clock, UserCheck, ArrowRight, BookOpen, X,
   ClipboardList, BarChart3, AlertCircle,
   Calendar, Pill, Bell, CheckCircle, XCircle, Loader2,
 } from 'lucide-react';
@@ -21,7 +22,6 @@ import { useNavigate } from 'react-router-dom';
 import toast from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
 import apiClient, { careSettingsAPI, patientsAPI } from '../api/client';
-import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 import SearchableSelect from '../components/ui/SearchableSelect';
 
@@ -315,34 +315,14 @@ export default function CareSettings() {
               </div>
             )}
 
-            <Modal
-              isOpen={!!(selectedTemplate && detailData)}
-              onClose={() => setSelectedTemplate(null)}
-              title={detailData?.label || 'Care Setting Details'}
-              size="xl"
-              footerContent={
-                <ModalFooter>
-                  {detailData && ['hospital_based','outpatient_clinic'].includes(detailData.setting_key) && (
-                    <button type="button" onClick={() => { setSelectedTemplate(null); navigate('/appointments'); }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl border-2 border-amber-500 transition">
-                      <Calendar size={14} /> View Appointments
-                    </button>
-                  )}
-                  {detailData && ['home_based','hospice','long_term_residential'].includes(detailData.setting_key) && (
-                    <button type="button" onClick={() => { setSelectedTemplate(null); navigate('/medications'); }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-teal-600 hover:bg-teal-700 text-white rounded-xl border-2 border-teal-600 transition">
-                      <Pill size={14} /> View Medications
-                    </button>
-                  )}
-                  <button type="button" onClick={() => setSelectedTemplate(null)}
-                    className="px-5 py-2 text-sm font-semibold text-[var(--text-700)] border-2 border-slate-300 rounded-xl hover:bg-[var(--card-bg)] transition">
-                    Close
-                  </button>
-                </ModalFooter>
-              }
-            >
-              {detailData && <SettingDetailPanel detail={detailData} userRole={user?.role} />}
-            </Modal>
+            {/* Portal modal — follows FocusedAIExplanation pattern */}
+            {selectedTemplate && detailData && (
+              <SettingDetailPanel
+                detail={detailData}
+                userRole={user?.role}
+                onClose={() => setSelectedTemplate(null)}
+              />
+            )}
           </div>
         )}
 
@@ -604,111 +584,178 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
   );
 }
 
-/* ── SettingDetailPanel ──────────────────────────────────────────────────────── */
-function SettingDetailPanel({ detail: t, userRole }) {
+/* ── SettingDetailPanel — portal modal matching FocusedAIExplanation DNA ─── */
+function SettingDetailPanel({ detail: t, userRole, onClose }) {
   const c    = COLOR[t.color] || COLOR.gray;
   const Icon = ICON_MAP[t.icon] || Stethoscope;
   const [activeSection, setActiveSection] = useState('overview');
   const roleInteractions = t.interactions_by_role?.[userRole] || [];
 
-  return (
-    <div>
-      {/* Header strip — compact, no font-serif */}
-      <div className={`bg-gradient-to-r ${c.header} px-5 py-4 flex items-center gap-3`}>
-        <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-          <Icon size={22} className="text-white" />
-        </div>
-        <div>
-          <h2 className="text-base font-bold text-white leading-tight">{t.label}</h2>
-          <p className="text-white/75 text-xs mt-0.5">{t.focus}</p>
-        </div>
-      </div>
+  return createPortal(
+    <AnimatePresence>
+      <>
+        {/* Backdrop */}
+        <motion.div key="sdp-bg"
+          initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+          onClick={onClose}
+          style={{ position:'fixed', inset:0, zIndex:9500, background:'rgba(0,0,0,0.45)' }} />
 
-      {/* Section tabs — inline styles to avoid dynamic Tailwind purge (fixes B2) */}
-      <div className="flex gap-1 px-4 pt-3 border-b border-[var(--card-border)] overflow-x-auto">
-        {[
-          { id:'overview',      label:'Overview',      icon: Info         },
-          { id:'interventions', label:'Interventions', icon: ClipboardList },
-          { id:'team',          label:'Care Team',     icon: Users        },
-          { id:'my-role',       label:'My Role',       icon: UserCheck    },
-        ].map(sec => {
-          const SecIcon = sec.icon;
-          const active  = activeSection === sec.id;
-          return (
-            <button key={sec.id} onClick={() => setActiveSection(sec.id)}
-              className="flex items-center gap-1.5 px-3 pb-2.5 text-xs font-semibold border-b-2 transition whitespace-nowrap"
-              style={{
-                borderBottomColor: active ? (c.fallback || '#0d9488') : 'transparent',
-                color: active ? (c.fallback || '#0d9488') : 'var(--text-500)',
-              }}>
-              <SecIcon size={13} />
-              {sec.label}
-            </button>
-          );
-        })}
-      </div>
+        {/* Card */}
+        <div style={{ position:'fixed', inset:0, zIndex:9501, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+          <motion.div key="sdp-card"
+            initial={{ opacity:0, y:18, scale:0.97 }}
+            animate={{ opacity:1, y:0,  scale:1   }}
+            exit={{    opacity:0, y:10, scale:0.97 }}
+            transition={{ type:'spring', damping:30, stiffness:360 }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              pointerEvents:'all',
+              background:'#ffffff',
+              borderRadius:12,
+              width:'100%', maxWidth:620,
+              maxHeight:'90vh',
+              display:'flex', flexDirection:'column',
+              boxShadow:'0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+              fontFamily:"'Inter','system-ui',sans-serif",
+              overflow:'hidden',
+            }}>
 
-      <div className="p-5">
-        {activeSection === 'overview' && (
-          <div className="space-y-4">
-            <p className="text-sm text-[var(--text-700)] leading-relaxed">{t.description}</p>
-            <div className="grid md:grid-cols-2 gap-3">
-              <InfoBlock title="Who It Serves" icon={Users} color={c}>
-                <ul className="space-y-1.5">
-                  {t.who_it_serves?.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
-                      <CheckCircle2 size={13} className={`${c.text} mt-0.5 flex-shrink-0`} />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </InfoBlock>
-              <InfoBlock title="Expected Duration" icon={Clock} color={c}>
-                <p className="text-sm text-slate-700">{t.typical_duration}</p>
-                <div className="mt-2 pt-2 border-t border-slate-200">
-                  <p className="text-xs font-bold text-[var(--text-500)] mb-1">Outcome Focus</p>
-                  <p className="text-sm text-slate-700">{t.outcome_focus}</p>
-                </div>
-              </InfoBlock>
+            {/* ── Fixed header ── */}
+            <div style={{ display:'flex', alignItems:'center', gap:12, padding:'14px 18px 12px', borderBottom:'1px solid #f1f5f9', flexShrink:0,
+              background:`linear-gradient(135deg, ${c.fallback}, ${c.fallback}cc)` }}>
+              <div style={{ width:40, height:40, background:'rgba(255,255,255,0.2)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                <Icon size={20} style={{ color:'#fff' }} />
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <p style={{ fontSize:15, fontWeight:700, color:'#fff', margin:0, lineHeight:1.3 }}>{t.label}</p>
+                <p style={{ fontSize:12, color:'rgba(255,255,255,0.75)', margin:'2px 0 0' }}>{t.focus}</p>
+              </div>
+              <button onClick={onClose}
+                style={{ width:28, height:28, borderRadius:'50%', background:'rgba(255,255,255,0.2)', border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                <X size={14} style={{ color:'#fff' }} strokeWidth={2.5} />
+              </button>
             </div>
-          </div>
-        )}
 
-        {activeSection === 'interventions' && (
-          <div className="space-y-2">
-            {t.key_interventions?.map((item, i) => (
-              <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${c.bg} ${c.border}`}>
-                <div className={`w-6 h-6 rounded-full ${c.dot} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
-                  {i + 1}
+            {/* ── Section tabs ── */}
+            <div style={{ display:'flex', gap:0, padding:'0 18px', borderBottom:'1px solid #f1f5f9', overflowX:'auto', flexShrink:0, background:'#fff' }}>
+              {[
+                { id:'overview',      label:'Overview',      icon: Info          },
+                { id:'interventions', label:'Interventions', icon: ClipboardList },
+                { id:'team',          label:'Care Team',     icon: Users         },
+                { id:'my-role',       label:'My Role',       icon: UserCheck     },
+              ].map(sec => {
+                const SecIcon = sec.icon;
+                const active  = activeSection === sec.id;
+                return (
+                  <button key={sec.id} onClick={() => setActiveSection(sec.id)}
+                    style={{
+                      display:'flex', alignItems:'center', gap:5,
+                      padding:'10px 14px 10px', fontSize:12, fontWeight: active ? 700 : 500,
+                      border:'none', borderBottom: active ? `2px solid ${c.fallback}` : '2px solid transparent',
+                      background:'transparent',
+                      color: active ? c.fallback : '#64748b',
+                      cursor:'pointer', whiteSpace:'nowrap', transition:'all 0.12s',
+                    }}>
+                    <SecIcon size={13} />
+                    {sec.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Scrollable body ── */}
+            <div style={{ flex:1, overflowY:'auto', padding:'16px 18px', display:'flex', flexDirection:'column', gap:14 }}>
+
+              {activeSection === 'overview' && (
+                <>
+                  <p style={{ fontSize:13, color:'#334155', lineHeight:1.7, margin:0 }}>{t.description}</p>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+                    {/* Who it serves */}
+                    <div style={{ padding:'12px 14px', borderRadius:10, border:`1px solid ${c.fallback}30`, background:`${c.fallback}08` }}>
+                      <p style={{ fontSize:11, fontWeight:700, color:c.fallback, margin:'0 0 8px', display:'flex', alignItems:'center', gap:5 }}>
+                        <Users size={12} /> Who It Serves
+                      </p>
+                      {t.who_it_serves?.map((item, i) => (
+                        <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:6, marginBottom:5 }}>
+                          <CheckCircle2 size={12} style={{ color:c.fallback, flexShrink:0, marginTop:2 }} />
+                          <span style={{ fontSize:12, color:'#334155', lineHeight:1.5 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Duration + outcome */}
+                    <div style={{ padding:'12px 14px', borderRadius:10, border:`1px solid ${c.fallback}30`, background:`${c.fallback}08` }}>
+                      <p style={{ fontSize:11, fontWeight:700, color:c.fallback, margin:'0 0 8px', display:'flex', alignItems:'center', gap:5 }}>
+                        <Clock size={12} /> Expected Duration
+                      </p>
+                      <p style={{ fontSize:13, color:'#334155', margin:'0 0 8px' }}>{t.typical_duration}</p>
+                      <div style={{ borderTop:`1px solid ${c.fallback}20`, paddingTop:8 }}>
+                        <p style={{ fontSize:11, fontWeight:600, color:'#94a3b8', margin:'0 0 3px' }}>Outcome Focus</p>
+                        <p style={{ fontSize:12, color:'#334155', lineHeight:1.5, margin:0 }}>{t.outcome_focus}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeSection === 'interventions' && (
+                <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                  {t.key_interventions?.map((item, i) => (
+                    <div key={i} style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 12px', borderRadius:10, border:`1px solid ${c.fallback}25`, background:`${c.fallback}06` }}>
+                      <div style={{ width:24, height:24, borderRadius:'50%', background:c.fallback, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                        <span style={{ fontSize:11, fontWeight:700, color:'#fff' }}>{i+1}</span>
+                      </div>
+                      <p style={{ fontSize:13, color:'#334155', margin:0, lineHeight:1.5 }}>{item}</p>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-sm text-slate-700">{item}</p>
-              </div>
-            ))}
-          </div>
-        )}
+              )}
 
-        {activeSection === 'team' && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {t.care_team_roles?.map(role => (
-              <div key={role} className={`p-3 rounded-xl border-2 ${c.bg} ${c.border} text-center`}>
-                <UserCheck size={18} className={`${c.text} mx-auto mb-1.5`} />
-                <p className={`font-bold text-xs ${c.text}`}>{role}</p>
-              </div>
-            ))}
-          </div>
-        )}
+              {activeSection === 'team' && (
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))', gap:10 }}>
+                  {t.care_team_roles?.map(role => (
+                    <div key={role} style={{ padding:'12px', borderRadius:10, border:`2px solid ${c.fallback}30`, background:`${c.fallback}08`, textAlign:'center' }}>
+                      <UserCheck size={18} style={{ color:c.fallback, margin:'0 auto 6px' }} />
+                      <p style={{ fontSize:12, fontWeight:700, color:c.fallback, margin:0 }}>{role}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-        {activeSection === 'my-role' && (
-          <div className="space-y-2">
-            {roleInteractions.length === 0 ? (
-              <p className="text-sm text-[var(--text-500)] text-center py-5">No interactions defined for your role in this setting.</p>
-            ) : roleInteractions.map((ix, i) => (
-              <InteractionRow key={i} ix={ix} />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+              {activeSection === 'my-role' && (
+                <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                  {roleInteractions.length === 0 ? (
+                    <p style={{ fontSize:13, color:'#94a3b8', textAlign:'center', padding:'24px 0' }}>No interactions defined for your role in this setting.</p>
+                  ) : roleInteractions.map((ix, i) => (
+                    <InteractionRow key={i} ix={ix} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* ── Fixed footer ── */}
+            <div style={{ padding:'12px 18px', background:'#fafafa', borderTop:'1px solid #f1f5f9', display:'flex', alignItems:'center', justifyContent:'flex-end', gap:8, flexShrink:0 }}>
+              {t && ['hospital_based','outpatient_clinic'].includes(t.setting_key) && (
+                <button onClick={() => { onClose(); window.location.href='/appointments'; }}
+                  style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:8, fontSize:12, fontWeight:700, color:'#fff', background:'#d97706', border:'none', cursor:'pointer' }}>
+                  <Calendar size={13} /> View Appointments
+                </button>
+              )}
+              {t && ['home_based','hospice','long_term_residential'].includes(t.setting_key) && (
+                <button onClick={() => { onClose(); window.location.href='/medications'; }}
+                  style={{ display:'flex', alignItems:'center', gap:6, padding:'8px 16px', borderRadius:8, fontSize:12, fontWeight:700, color:'#fff', background:c.fallback, border:'none', cursor:'pointer' }}>
+                  <Pill size={13} /> View Medications
+                </button>
+              )}
+              <button onClick={onClose}
+                style={{ padding:'8px 18px', borderRadius:8, fontSize:12, fontWeight:600, color:'#475569', background:'transparent', border:'1px solid #e2e8f0', cursor:'pointer' }}>
+                Close
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </>
+    </AnimatePresence>,
+    document.body
   );
 }
 
@@ -784,18 +831,19 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
   const actions = (isFamily ? FAMILY_ACTIONS : PATIENT_ACTIONS)[setting.setting_key] || [];
 
   return (
-    <div className="space-y-4">
+    <div className="grid md:grid-cols-2 gap-4 items-start">
+      {/* Hero image card */}
       <div className="relative rounded-2xl overflow-hidden shadow-md" style={{ minHeight:180 }}>
         {img && <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" onError={e => { e.currentTarget.style.display='none'; }} />}
         <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/10" />
-        <div className="relative p-6">
+        <div className="relative p-5">
           <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 border border-white/30">
-              <Icon size={22} className="text-white" />
+            <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 border border-white/30">
+              <Icon size={20} className="text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white/70 text-xs font-semibold mb-0.5">{isFamily ? "Loved One's Care Setting" : 'Your Care Setting'}</p>
-              <h2 className="text-xl font-bold text-white leading-tight">{setting.setting_label}</h2>
+              <h2 className="text-lg font-bold text-white leading-tight">{setting.setting_label}</h2>
               {assignedDate && <p className="text-white/60 text-xs mt-1 flex items-center gap-1"><Clock size={10} /> Assigned {assignedDate}</p>}
             </div>
             <span className="flex-shrink-0 bg-white/20 backdrop-blur border border-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
@@ -845,12 +893,13 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
         </div>
       </div>
 
+      {/* What to expect — right column */}
       {bullets.length > 0 && (
-        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4">
+        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4 h-full">
           <h3 className="text-sm font-semibold text-[var(--text-700)] mb-3 flex items-center gap-2">
-            <Info size={14} className="text-teal-500" /> What to expect in this setting
+            <Info size={14} className="text-teal-500" /> What to expect
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {bullets.map((b, i) => (
               <div key={i} className="flex items-start gap-2.5">
                 <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${c.header} flex items-center justify-center flex-shrink-0 mt-0.5`}>

@@ -427,78 +427,81 @@ function FamilyDashboard({ user, summary, navigate }) {
 
  return (
  <div className="min-h-screen">
- <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-8 space-y-6">
+ <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-0 space-y-5">
  <PageHeader
  image="/resources/cards/header-family-dash.jpg"
  title="Family Dashboard"
- subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'there'} -- stay connected with your loved one's care journey`}
+ subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'there'} — stay connected with your loved one's care journey`}
  icon={Heart}
  />
 
- {/* Feature 4: Care Status hero - last visit + quick actions */}
+ {/* Two-col layout on desktop: hero+cards left, care updates right */}
+ <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+ {/* LEFT — hero + quick actions + tasks */}
+ <div className="lg:col-span-2 space-y-4">
  {patientId && (
  <FamilyDashboardHero patientId={patientId} patientName={summary?.patient?.full_name} />
  )}
-
- {/* Quick navigation ImageCards */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
  <ImageCard image="/resources/african/african-nurse-male.jpg" icon={MessageSquare} title="Messages" description="Chat with care team" onClick={() => chatWithCareTeam()} color="#0d9488" />
- <ImageCard image="/resources/african/african-appointment.jpg" icon={Calendar} title="Appointments" description="Upcoming care visits" onClick={() => navigate('/appointments')} color="#0891b2" />
- <ImageCard image="/resources/african/african-memory.jpg" icon={Heart} title="Memory Vault" description="Share precious memories" onClick={() => navigate('/memory-vault')} color="#059669" />
- <ImageCard image="/resources/african/african-medical-reading.jpg" icon={BookOpen} title="Resources" description="Caregiver support guides" onClick={() => navigate('/resources')} color="#0d9488" />
+ <ImageCard image="/resources/african/african-appointment.jpg" icon={Calendar} title="Appointments" description="Upcoming visits" onClick={() => navigate('/appointments')} color="#0891b2" />
+ <ImageCard image="/resources/african/african-memory.jpg" icon={Heart} title="Memory Vault" description="Precious memories" onClick={() => navigate('/memory-vault')} color="#059669" />
+ <ImageCard image="/resources/african/african-medical-reading.jpg" icon={BookOpen} title="Resources" description="Caregiver guides" onClick={() => navigate('/resources')} color="#0d9488" />
  <ImageCard image="/resources/african/african-community.jpg" icon={Globe} title="Community" description="Connect with others" onClick={() => navigate('/community')} color="#0891b2" />
  <ImageCard image="/resources/african/african-family-care.jpg" icon={MapPin} title="Care Journey" description="Track their journey" onClick={() => navigate('/continuity-bridge')} color="#059669" />
  <ImageCard image="/resources/african/journal-writing.jpg" icon={FileText} title="Grief Journal" description="Your private journal" onClick={() => navigate('/journal')} color="#0d9488" />
  <ImageCard image="/resources/african/african-grief-support.jpg" icon={Activity} title="Bereavement" description="Support resources" onClick={() => navigate('/bereavement-support')} color="#e11d48" />
  </div>
- {/* StatCard row REMOVED - data is shown in the Care Status hero above */}
-
- {/* Daily task checklist for family - shows appointments + optional tasks */}
  <TaskStatusBar />
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
- <div className="px-5 py-4 border-b border-[var(--card-border)]/50 flex items-center justify-between">
- <div>
- <h2 className="text-base font-bold text-[var(--text-800)]">Recent Care Updates</h2>
- <p className="text-xs text-[var(--text-500)] dark:text-slate-400">Live events from your loved one's care journey</p>
  </div>
- <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700">
+
+ {/* RIGHT — Recent Care Updates */}
+ <div>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-4 py-3 border-b border-[var(--card-border)] flex items-center justify-between">
+ <div>
+ <h2 className="text-sm font-bold text-[var(--text-800)]">Recent Care Updates</h2>
+ <p className="text-xs text-[var(--text-500)]">Live from your loved one's journey</p>
+ </div>
+ <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors">
  Full timeline →
  </button>
  </div>
- <div className="divide-y divide-slate-100">
- {events.length > 0 ? events.slice(0, 8).map((ev, i) => {
- const cfg = eventTypeConfig[ev.event_type] || { Icon: Pin, color: 'border-slate-400', bg: 'bg-slate-50', iconCls: 'text-slate-500', label: ev.event_type?.replace(/_/g, ' ') || 'Event' };
+ <div className="divide-y divide-[var(--card-border)]">
+ {events.length > 0 ? events.slice(0, 12).map((ev, i) => {
+ const cfg = eventTypeConfig[ev.event_type] || { Icon: Pin, color: 'border-[var(--card-border)]', bg: '', iconCls: 'text-[var(--text-400)]', label: ev.event_type?.replace(/_/g, ' ') || 'Event' };
  const IconComp = cfg.Icon;
  return (
  <motion.div key={ev.id || i}
- initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
- className={`flex items-start gap-3 px-5 py-3.5 border-l-4 ${cfg.color} ${cfg.bg} hover:brightness-95 transition-all`}>
+ initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
+ className={`flex items-start gap-3 px-4 py-3 border-l-4 ${cfg.color} hover:bg-[var(--page-bg)] transition-colors`}>
  <div className={`flex-shrink-0 mt-0.5 ${cfg.iconCls}`}>
- <IconComp size={16} strokeWidth={2} />
+ <IconComp size={13} strokeWidth={2} />
  </div>
  <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 mb-0.5">
- <span className="text-[11px] font-bold text-[var(--text-500)] ">{cfg.label}</span>
+ <p className="text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider">{cfg.label}</p>
+ <p className="text-xs font-semibold text-[var(--text-800)] leading-snug mt-0.5">{ev.event_title}</p>
+ {ev.event_detail && <p className="text-[11px] text-[var(--text-500)] line-clamp-2 mt-0.5 leading-relaxed">{ev.event_detail}</p>}
  </div>
- <p className="text-sm font-semibold text-[var(--text-900)] truncate">{ev.event_title}</p>
- {ev.event_detail && <p className="text-xs text-[var(--text-500)] line-clamp-1 mt-0.5">{ev.event_detail}</p>}
- </div>
- <span className="text-[11px] text-[var(--text-400)] flex-shrink-0 whitespace-nowrap">{formatTime(ev.created_at)}</span>
+ <span className="text-[10px] text-[var(--text-400)] flex-shrink-0 whitespace-nowrap pt-0.5">{formatTime(ev.created_at)}</span>
  </motion.div>
  );
  }) : (
- <div className="px-5 py-8 text-center">
- <p className="text-[var(--text-400)] text-sm">No care updates yet.</p>
+ <div className="px-4 py-10 text-center">
+ <p className="text-xs text-[var(--text-400)]">No care updates yet.</p>
  </div>
  )}
  </div>
- {events.length > 8 && (
- <div className="px-5 py-3 bg-[var(--card-bg)] border-t border-[var(--card-border)]/50 text-center">
- <button onClick={() => navigate('/continuity-bridge')} className="text-sm font-semibold text-rose-600 hover:text-rose-700">
+ {events.length > 12 && (
+ <div className="px-4 py-3 bg-[var(--page-bg)] border-t border-[var(--card-border)] text-center">
+ <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors">
  View all {events.length} updates →
  </button>
  </div>
  )}
+ </div>
+ </div>
  </div>
  </div>
  </div>

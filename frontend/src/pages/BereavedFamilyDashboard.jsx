@@ -105,7 +105,7 @@ export default function BereavedFamilyDashboard() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-5">
+      <div className="max-w-5xl mx-auto px-4 py-5">
         <AnimatePresence mode="wait">
           <motion.div key={tab}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
@@ -137,106 +137,133 @@ function HomeTab({ screeningData, go, chatWithCareTeam }) {
   };
 
   const quickCards = [
-    { label:'Track My Grief', sub:'Screening & progress',  img:'/resources/african/african-prayer-peace.jpg',      tab:'grief'     },
-    { label:'Join a Group',   sub:'Peer support community',img:'/resources/african/african-community-group.jpg',   tab:'support'   },
-    { label:'Get Counseling', sub:'Professional support',  img:'/resources/african/african-nurse-patient.jpg',     tab:'counseling'},
-    { label:'Learn & Heal',   sub:'Articles & guides',     img:'/resources/african/journal-writing.jpg',           tab:'resources' },
+    { label:'Track My Grief', sub:'Screening & progress',  img:'/resources/african/african-prayer-peace.jpg',    tab:'grief'     },
+    { label:'Join a Group',   sub:'Peer support',          img:'/resources/african/african-community-group.jpg', tab:'support'   },
+    { label:'Get Counseling', sub:'Professional support',  img:'/resources/african/african-nurse-patient.jpg',   tab:'counseling'},
+    { label:'Learn & Heal',   sub:'Articles & guides',     img:'/resources/african/journal-writing.jpg',         tab:'resources' },
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-      {/* Mood check-in — compact inline row */}
-      <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
-        <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">How are you feeling today?</p>
-        <div className="flex gap-2">
-          {moods.map(({ label, Icon, color, bg }) => (
-            <button key={label} onClick={() => setMood(label)}
-              className={`flex-1 flex flex-col items-center gap-1.5 py-2.5 rounded-lg border text-xs font-semibold transition-all ${
-                mood === label ? bg : 'border-[var(--card-border)] hover:bg-[var(--page-bg)]'}`}>
-              <Icon size={20} style={mood === label ? { color } : { color: 'var(--text-400)' }} />
-              <span className="text-[var(--text-600)]">{label}</span>
+      {/* LEFT — main content */}
+      <div className="lg:col-span-2 space-y-4">
+
+        {/* Mood check-in */}
+        <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+          <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">How are you feeling today?</p>
+          <div className="flex gap-2">
+            {moods.map(({ label, Icon, color, bg }) => (
+              <button key={label} onClick={() => setMood(label)}
+                className={`flex-1 flex flex-col items-center gap-1.5 py-3 rounded-lg border-2 text-xs font-semibold transition-all ${
+                  mood === label ? bg : 'border-[var(--card-border)] hover:bg-[var(--page-bg)]'}`}>
+                <Icon size={22} style={mood === label ? { color } : { color: 'var(--text-400)' }} />
+                <span className="text-[var(--text-600)]">{label}</span>
+              </button>
+            ))}
+          </div>
+          {mood && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="mt-3 text-xs text-[var(--text-500)] leading-relaxed border-t border-[var(--card-border)] pt-3">
+              {moodMsg[mood]}
+            </motion.p>
+          )}
+        </div>
+
+        {/* Grief screening CTA */}
+        {!screeningData?.completed_recently && (
+          <div className="bg-[var(--card-bg)] rounded-xl border border-purple-200 p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+              <Calendar size={16} className="text-purple-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-[var(--text-900)]">Grief Screening Due</p>
+              <p className="text-xs text-[var(--text-500)] mt-0.5">Helps us personalise your bereavement support plan</p>
+            </div>
+            <button onClick={() => go('grief')}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition">
+              Start <ArrowRight size={12} />
+            </button>
+          </div>
+        )}
+
+        {/* Quote */}
+        <div className="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl p-5 relative overflow-hidden">
+          <Quote size={42} className="absolute top-2 right-4 text-white/10" aria-hidden />
+          <p className="text-purple-100 text-sm italic leading-relaxed">
+            "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity — the price you pay for love."
+          </p>
+          <p className="text-purple-400 text-xs mt-3 font-medium">— Earl Grollman</p>
+        </div>
+
+        {/* Quick access image cards */}
+        <div className="grid grid-cols-2 gap-3">
+          {quickCards.map(({ label, sub, img, tab }) => (
+            <motion.button key={label} whileHover={{ y: -2 }} onClick={() => go(tab)}
+              className="relative rounded-xl overflow-hidden h-28 group text-left">
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p className="text-white font-semibold text-sm leading-tight">{label}</p>
+                <p className="text-white/65 text-xs mt-0.5">{sub}</p>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT — contacts + crisis */}
+      <div className="space-y-4">
+
+        {/* Message care team */}
+        <button onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
+          className="w-full flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-teal-300 hover:bg-teal-50 rounded-xl p-4 transition-all text-left group">
+          <div className="w-9 h-9 rounded-lg bg-teal-50 border border-[var(--card-border)] flex items-center justify-center flex-shrink-0 group-hover:bg-teal-100 transition-colors">
+            <MessageCircle size={16} className="text-teal-600" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-[var(--text-800)]">Message Your Care Team</p>
+            <p className="text-xs text-[var(--text-500)]">Ask questions or share how you're doing</p>
+          </div>
+          <ChevronRight size={15} className="text-[var(--text-400)] group-hover:text-teal-500 flex-shrink-0" />
+        </button>
+
+        {/* Quick nav links */}
+        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl overflow-hidden divide-y divide-[var(--card-border)]">
+          {[
+            { label: 'Grief Journey',   tab: 'grief',      color: '#7c3aed' },
+            { label: 'Support Groups',  tab: 'support',    color: '#0d9488' },
+            { label: 'Counseling',      tab: 'counseling', color: '#db2777' },
+            { label: 'Resources',       tab: 'resources',  color: '#d97706' },
+          ].map(({ label, tab, color }) => (
+            <button key={tab} onClick={() => go(tab)}
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--page-bg)] transition-colors group text-left">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                <span className="text-sm font-semibold text-[var(--text-700)] group-hover:text-[var(--text-900)] transition-colors">{label}</span>
+              </div>
+              <ChevronRight size={14} className="text-[var(--text-300)] group-hover:text-[var(--text-500)]" />
             </button>
           ))}
         </div>
-        {mood && (
-          <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-            className="mt-2.5 text-xs text-[var(--text-500)] leading-relaxed border-t border-[var(--card-border)] pt-2.5">
-            {moodMsg[mood]}
-          </motion.p>
-        )}
-      </div>
 
-      {/* Grief screening CTA — only if not recently done */}
-      {!screeningData?.completed_recently && (
-        <div className="bg-[var(--card-bg)] rounded-xl border border-purple-200 p-4 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
-            <Calendar size={16} className="text-purple-600" />
+        {/* Crisis numbers */}
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <p className="text-xs font-bold text-red-700 mb-3 flex items-center gap-1.5">
+            <AlertCircle size={13} /> Crisis Support · Ghana
+          </p>
+          <div className="divide-y divide-red-100">
+            {CRISIS.map(({ name, number, tag }) => (
+              <a key={name} href={`tel:${number.replace(/-/g,'')}`}
+                className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0 group">
+                <span className="text-xs text-[var(--text-600)] group-hover:text-red-700 transition-colors leading-tight">{name}</span>
+                <div className="text-right ml-2 flex-shrink-0">
+                  <p className="text-sm font-bold text-red-600">{number}</p>
+                  <p className="text-[10px] text-[var(--text-400)]">{tag}</p>
+                </div>
+              </a>
+            ))}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-[var(--text-900)]">Grief Screening Due</p>
-            <p className="text-xs text-[var(--text-500)] mt-0.5">Helps us personalise your bereavement support plan</p>
-          </div>
-          <button onClick={() => go('grief')}
-            className="flex-shrink-0 flex items-center gap-1.5 bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition">
-            Start <ArrowRight size={12} />
-          </button>
-        </div>
-      )}
-
-      {/* Quote */}
-      <div className="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl p-5 relative overflow-hidden">
-        <Quote size={42} className="absolute top-2 right-4 text-white/10" aria-hidden />
-        <p className="text-purple-100 text-sm italic leading-relaxed">
-          "Grief is not a disorder, a disease or sign of weakness. It is an emotional, physical and spiritual necessity — the price you pay for love."
-        </p>
-        <p className="text-purple-400 text-xs mt-3 font-medium">— Earl Grollman</p>
-      </div>
-
-      {/* Quick access image cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {quickCards.map(({ label, sub, img, tab }) => (
-          <motion.button key={label} whileHover={{ y: -2 }} onClick={() => go(tab)}
-            className="relative rounded-xl overflow-hidden h-28 shadow-sm group text-left">
-            <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-3">
-              <p className="text-white font-semibold text-sm leading-tight">{label}</p>
-              <p className="text-white/65 text-xs mt-0.5">{sub}</p>
-            </div>
-          </motion.button>
-        ))}
-      </div>
-
-      {/* Message care team */}
-      <button onClick={() => chatWithCareTeam('Hello, I wanted to get in touch regarding bereavement support for my family.')}
-        className="w-full flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--card-border)] hover:border-teal-300 hover:bg-teal-50 rounded-xl p-4 transition-all text-left group">
-        <div className="w-9 h-9 rounded-lg bg-teal-50 border border-[var(--card-border)] flex items-center justify-center flex-shrink-0 group-hover:bg-teal-100 transition-colors">
-          <MessageCircle size={16} className="text-teal-600" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-[var(--text-800)]">Message Your Care Team</p>
-          <p className="text-xs text-[var(--text-500)]">Ask questions or share how you're doing</p>
-        </div>
-        <ChevronRight size={15} className="text-[var(--text-400)] group-hover:text-teal-500 flex-shrink-0" />
-      </button>
-
-      {/* Crisis numbers — compact table */}
-      <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-        <p className="text-xs font-bold text-red-700 mb-3 flex items-center gap-1.5">
-          <AlertCircle size={13} /> Crisis Support · Ghana
-        </p>
-        <div className="divide-y divide-red-100">
-          {CRISIS.map(({ name, number, tag }) => (
-            <a key={name} href={`tel:${number.replace(/-/g,'')}`}
-              className="flex items-center justify-between py-2 first:pt-0 last:pb-0 group">
-              <span className="text-xs text-[var(--text-600)] group-hover:text-red-700 transition-colors">{name}</span>
-              <div className="text-right">
-                <span className="text-sm font-bold text-red-600">{number}</span>
-                <span className="text-[10px] text-[var(--text-400)] ml-2">{tag}</span>
-              </div>
-            </a>
-          ))}
         </div>
       </div>
     </div>
