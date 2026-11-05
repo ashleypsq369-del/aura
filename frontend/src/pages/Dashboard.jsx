@@ -12,7 +12,7 @@ import {
  Users, AlertTriangle, Bell, Activity, Pill, Calendar,
  MessageSquare, Heart, BookOpen, Globe, Stethoscope,
  FileText, MapPin, Brain,
- UserPlus, RefreshCw, BarChart2, Star, Pin
+ UserPlus, RefreshCw, BarChart2, Star, Pin, ChevronRight
 } from 'lucide-react';
 import CriticalAlertModal from '../components/CriticalAlertModal';
 import ImageCard from '../components/ImageCard';
@@ -456,47 +456,62 @@ function FamilyDashboard({ user, summary, navigate }) {
  <TaskStatusBar />
  </div>
 
- {/* RIGHT — Recent Care Updates */}
- <div>
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
- <div className="px-4 py-3 border-b border-[var(--card-border)] flex items-center justify-between">
- <div>
- <h2 className="text-sm font-bold text-[var(--text-800)]">Recent Care Updates</h2>
- <p className="text-xs text-[var(--text-500)]">Live from your loved one's journey</p>
+ {/* RIGHT — sticky care updates column */}
+ <div className="lg:sticky lg:top-4 self-start">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+ {/* Compact single-line header */}
+ <div className="flex items-center justify-between px-3 py-2.5 border-b border-[var(--card-border)] flex-shrink-0">
+ <div className="flex items-center gap-1.5">
+ <Activity size={12} className="text-rose-500 flex-shrink-0" />
+ <span className="text-xs font-bold text-[var(--text-800)]">Recent Updates</span>
+ {events.length > 0 && <span className="text-[11px] text-[var(--text-400)]">({events.length})</span>}
  </div>
- <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors">
- Full timeline →
+ <button onClick={() => navigate('/continuity-bridge')}
+ className="text-[11px] font-bold text-rose-600 hover:text-rose-700 transition-colors whitespace-nowrap flex items-center gap-1">
+ Full timeline <ChevronRight size={11} />
  </button>
  </div>
- <div className="divide-y divide-[var(--card-border)]">
- {events.length > 0 ? events.slice(0, 12).map((ev, i) => {
- const cfg = eventTypeConfig[ev.event_type] || { Icon: Pin, color: 'border-[var(--card-border)]', bg: '', iconCls: 'text-[var(--text-400)]', label: ev.event_type?.replace(/_/g, ' ') || 'Event' };
+
+ {/* Scrollable events */}
+ <div className="overflow-y-auto flex-1 divide-y divide-[var(--card-border)]">
+ {events.length > 0 ? events.slice(0, 25).map((ev, i) => {
+ const cfg = eventTypeConfig[ev.event_type] || { Icon: Pin, color: 'border-[var(--card-border)]', iconCls: 'text-[var(--text-400)]', label: ev.event_type?.replace(/_/g, ' ') || 'Event' };
  const IconComp = cfg.Icon;
+ // Trim verbose auto-generated detail text
+ const rawDetail = ev.event_detail || '';
+ const shortDetail = rawDetail
+ ? rawDetail
+ .replace(/ on \w+ \d+, \d{4} at \d+:\d+ [AP]M/g, '')
+ .replace(/\s+/g, ' ').trim()
+ .substring(0, 55) + (rawDetail.length > 55 ? '…' : '')
+ : null;
  return (
  <motion.div key={ev.id || i}
- initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
- className={`flex items-start gap-3 px-4 py-3 border-l-4 ${cfg.color} hover:bg-[var(--page-bg)] transition-colors`}>
+ initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.02 }}
+ className={`flex items-start gap-2 px-3 py-2.5 border-l-2 ${cfg.color} hover:bg-[var(--page-bg)] transition-colors`}>
  <div className={`flex-shrink-0 mt-0.5 ${cfg.iconCls}`}>
- <IconComp size={13} strokeWidth={2} />
+ <IconComp size={12} strokeWidth={2} />
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider">{cfg.label}</p>
- <p className="text-xs font-semibold text-[var(--text-800)] leading-snug mt-0.5">{ev.event_title}</p>
- {ev.event_detail && <p className="text-[11px] text-[var(--text-500)] line-clamp-2 mt-0.5 leading-relaxed">{ev.event_detail}</p>}
+ <span className={`text-[10px] font-bold uppercase tracking-wide ${cfg.iconCls}`}>{cfg.label}</span>
+ <p className="text-xs font-semibold text-[var(--text-800)] leading-snug truncate">{ev.event_title}</p>
+ {shortDetail && <p className="text-[11px] text-[var(--text-500)] truncate">{shortDetail}</p>}
  </div>
- <span className="text-[10px] text-[var(--text-400)] flex-shrink-0 whitespace-nowrap pt-0.5">{formatTime(ev.created_at)}</span>
+ <span className="text-[10px] text-[var(--text-400)] flex-shrink-0 whitespace-nowrap">{formatTime(ev.created_at)}</span>
  </motion.div>
  );
  }) : (
- <div className="px-4 py-10 text-center">
+ <div className="px-4 py-8 text-center">
  <p className="text-xs text-[var(--text-400)]">No care updates yet.</p>
  </div>
  )}
  </div>
- {events.length > 12 && (
- <div className="px-4 py-3 bg-[var(--page-bg)] border-t border-[var(--card-border)] text-center">
- <button onClick={() => navigate('/continuity-bridge')} className="text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors">
- View all {events.length} updates →
+
+ {events.length > 25 && (
+ <div className="px-3 py-2 bg-[var(--page-bg)] border-t border-[var(--card-border)] text-center flex-shrink-0">
+ <button onClick={() => navigate('/continuity-bridge')}
+ className="text-[11px] font-bold text-rose-600 hover:text-rose-700 transition-colors">
+ View all {events.length} →
  </button>
  </div>
  )}
