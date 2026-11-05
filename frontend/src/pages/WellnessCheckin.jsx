@@ -331,25 +331,35 @@ export default function WellnessCheckin() {
  return (
  <motion.div
  key={item.key}
- initial={{ opacity: 0, y: 16 }}
+ initial={{ opacity: 0, y: 12 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.04 }}
- className={`bg-[var(--card-bg)] rounded-2xl border-2 p-3 sm:p-5 shadow-sm ${val !== null ? c.border : 'border-slate-200'}`}
+ className={`bg-[var(--card-bg)] rounded-xl border-2 p-4 transition-colors ${val !== null ? c.border : 'border-[var(--card-border)]'}`}
  >
  <div className="flex items-center gap-3 mb-3">
  <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
- <Icon size={18} className="text-white" strokeWidth={2.5} />
+ <Icon size={16} className="text-white" strokeWidth={2.5} />
  </div>
- <div className="flex-1">
+ <div className="flex-1 min-w-0">
  <p className="font-bold text-[var(--text-900)] text-sm">{item.label}</p>
- <p className="text-xs text-slate-500">{item.desc}</p>
+ <p className="text-xs text-[var(--text-400)] truncate">{item.desc}</p>
  </div>
  {val !== null && (
- <span className={`text-lg font-bold ${c.text}`}>{val}</span>
+ <div className="flex items-center gap-1.5 flex-shrink-0">
+ <span className={`text-xl font-black ${c.text}`}>{val}</span>
+ <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+ val === 0 ? 'bg-green-100 text-green-700' :
+ val <= 3 ? 'bg-teal-100 text-teal-700' :
+ val <= 6 ? 'bg-amber-100 text-amber-700' :
+ 'bg-red-100 text-red-700'
+ }`}>
+ {val === 0 ? 'None' : val <= 3 ? 'Mild' : val <= 6 ? 'Moderate' : 'Severe'}
+ </span>
+ </div>
  )}
  </div>
 
- <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2 pt-1">
+ <div className="flex items-center justify-between gap-1 overflow-x-auto pb-1">
  {[0,1,2,3,4,5,6,7,8,9,10].map(n => (
  <ScoreButton
  key={n}
@@ -361,9 +371,9 @@ export default function WellnessCheckin() {
  ))}
  </div>
 
- <div className="flex justify-between mt-1.5 px-1">
- <span className="text-[11px] text-[var(--text-400)] font-medium">0 - None</span>
- <span className="text-[11px] text-[var(--text-400)] font-medium">10 - Worst</span>
+ <div className="flex justify-between mt-2 px-0.5">
+ <span className="text-[10px] text-[var(--text-400)] font-medium">0 — None</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">10 — Worst</span>
  </div>
  </motion.div>
  );

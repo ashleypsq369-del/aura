@@ -1,12 +1,56 @@
+/**
+ * MotorSkillsForm.jsx — Physical Function & Mobility Tests
+ * Redesigned: PageHeader + clean test cards + auto-calculated fall risk
+ */
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Activity, Save, Timer, Dumbbell } from 'lucide-react';
+import {
+  Activity, Save, Timer, Dumbbell, ChevronLeft,
+  AlertTriangle, Footprints, Wind,
+} from 'lucide-react';
 import apiClient from '../api/client';
 import toast from '../utils/toast';
 import offlineStorage from '../utils/offlineStorage';
 import FormFileUpload from '../components/FormFileUpload';
+import PageHeader from '../components/PageHeader';
+
+function calcFallRisk(sec) {
+  const t = parseFloat(sec);
+  if (isNaN(t)) return '';
+  if (t <= 10) return 'Low Risk';
+  if (t <= 14) return 'Moderate Risk';
+  return 'High Risk';
+}
+
+function FallRiskBadge({ risk }) {
+  if (!risk) return null;
+  const cls = risk === 'Low Risk' ? 'badge-low' : risk === 'Moderate Risk' ? 'badge-moderate' : 'badge-critical';
+  return <span className={cls}>{risk}</span>;
+}
+
+function FieldRow({ label, children, hint }) {
+  return (
+    <div>
+      <label className="block text-xs font-bold text-[var(--text-600)] mb-1">{label}</label>
+      {hint && <p className="text-[11px] text-[var(--text-400)] mb-1.5">{hint}</p>}
+      {children}
+    </div>
+  );
+}
+
+function NumInput({ value, onChange, placeholder, unit, min = 0, step = 1 }) {
+  return (
+    <div className="flex items-center gap-2">
+      <input type="number" min={min} step={step} value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-28 px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-orange-400 focus:outline-none" />
+      {unit && <span className="text-xs text-[var(--text-400)]">{unit}</span>}
+    </div>
+  );
+}
 
 export default function MotorSkillsForm() {
   const { patientId } = useParams();
@@ -14,504 +58,253 @@ export default function MotorSkillsForm() {
   const queryClient = useQueryClient();
 
   // Grip Strength
-  const [gripRight, setGripRight] = useState('');
-  const [gripLeft, setGripLeft] = useState('');
+  const [gripRight, setGripRight]               = useState('');
+  const [gripLeft, setGripLeft]                 = useState('');
   const [gripInterpretation, setGripInterpretation] = useState('');
 
-  // Timed Up & Go
-  const [tugTime, setTugTime] = useState('');
+  // TUG
+  const [tugTime, setTugTime]         = useState('');
   const [tugAssistance, setTugAssistance] = useState('');
-  const [tugFallRisk, setTugFallRisk] = useState('');
 
-  // 6-Minute Walk Test
-  const [walkDistance, setWalkDistance] = useState('');
+  // 6MWT
+  const [walkDistance, setWalkDistance]   = useState('');
   const [dyspneaBefore, setDyspneaBefore] = useState('');
-  const [dyspneaAfter, setDyspneaAfter] = useState('');
-  const [o2SatBefore, setO2SatBefore] = useState('');
-  const [o2SatAfter, setO2SatAfter] = useState('');
+  const [dyspneaAfter, setDyspneaAfter]   = useState('');
+  const [o2SatBefore, setO2SatBefore]     = useState('');
+  const [o2SatAfter, setO2SatAfter]       = useState('');
 
-  // Balance & Coordination
-  const [balanceScore, setBalanceScore] = useState('');
+  // Balance
+  const [balanceScore, setBalanceScore]         = useState('');
   const [coordinationScore, setCoordinationScore] = useState('');
-
   const [notes, setNotes] = useState('');
 
-  // Fetch patient
   const { data: patient } = useQuery({
     queryKey: ['patient', patientId],
-    queryFn: async () => {
-      const response = await apiClient.get(`/api/patients/${patientId}`);
-      return response.data;
-    }
+    queryFn: async () => (await apiClient.get(`/api/patients/${patientId}`)).data,
   });
 
-  // Auto-calculate TUG fall risk
-  const calculateFallRisk = (time) => {
-    const t = parseFloat(time);
-    if (isNaN(t)) return '';
-    if (t <= 10) return 'Low Risk';
-    if (t <= 14) return 'Moderate Risk';
-    return 'High Risk';
-  };
+  const fallRisk = calcFallRisk(tugTime);
+  const o2Drop  = o2SatBefore && o2SatAfter ? parseInt(o2SatBefore) - parseInt(o2SatAfter) : null;
 
-  // Auto-update fall risk when TUG time changes
-  useState(() => {
-    if (tugTime) {
-      const risk = calculateFallRisk(tugTime);
-      setTugFallRisk(risk);
-    }
-  });
-
-  // Submit mutation
   const submitMutation = useMutation({
     mutationFn: async (data) => {
-      if (!navigator.onLine) {
-        await offlineStorage.saveOffline('motor_skills', data);
-        return { offline: true, data };
-      }
-      return await apiClient.post('/api/assessments/motor-skills', data);
+      if (!navigator.onLine) { await offlineStorage.saveOffline('motor_skills', data); return { offline: true }; }
+      return apiClient.post('/api/assessments/motor-skills', data);
     },
-    onSuccess: (response) => {
-      if (response.offline) {
-        toast.success('Assessment saved offline! Will sync when online.', { duration: 5000 });
-      } else {
-        toast.success('Motor Skills assessment saved successfully!');
-        
-        if (response.data.alerts_generated && response.data.alerts_generated.length > 0) {
-          toast.error(`${response.data.alerts_generated.length} clinical alert(s) generated - please review`, {
-            duration: 5000
-          });
-        }
+    onSuccess: (res) => {
+      if (res.offline) toast.success('Saved offline — will sync when online', { duration: 5000 });
+      else {
+        toast.success('Motor Skills assessment saved');
+        if (res.data.alerts_generated?.length > 0)
+          toast.error(`${res.data.alerts_generated.length} alert(s) generated`, { duration: 5000 });
       }
-      
       queryClient.invalidateQueries(['motor-skills', patientId]);
       queryClient.invalidateQueries(['assessment-overview', patientId]);
-      
       setTimeout(() => navigate(`/assessments/${patientId}`), 1500);
     },
-    onError: (error) => {
-      toast.error('Failed to save assessment');
-      console.error(error);
-    }
+    onError: () => toast.error('Failed to save assessment'),
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // At least one test must be completed
-    const hasGrip = gripRight || gripLeft;
-    const hasTUG = tugTime;
-    const hasWalk = walkDistance;
+    const hasGrip    = gripRight || gripLeft;
+    const hasTUG     = tugTime;
+    const hasWalk    = walkDistance;
     const hasBalance = balanceScore || coordinationScore;
-
     if (!hasGrip && !hasTUG && !hasWalk && !hasBalance) {
-      toast.error('Please complete at least one motor skills test');
+      toast.error('Complete at least one motor skills test');
       return;
     }
-
-    const data = {
+    submitMutation.mutate({
       patient_id: parseInt(patientId),
-      grip_strength_right: gripRight ? parseFloat(gripRight) : null,
-      grip_strength_left: gripLeft ? parseFloat(gripLeft) : null,
+      grip_strength_right:       gripRight        ? parseFloat(gripRight)        : null,
+      grip_strength_left:        gripLeft         ? parseFloat(gripLeft)         : null,
       grip_strength_interpretation: gripInterpretation || null,
-      tug_time_seconds: tugTime ? parseFloat(tugTime) : null,
-      tug_assistance_used: tugAssistance || null,
-      tug_fall_risk: tugFallRisk || null,
-      walk_distance_meters: walkDistance ? parseFloat(walkDistance) : null,
-      walk_dyspnea_before: dyspneaBefore ? parseInt(dyspneaBefore) : null,
-      walk_dyspnea_after: dyspneaAfter ? parseInt(dyspneaAfter) : null,
-      walk_oxygen_sat_before: o2SatBefore ? parseInt(o2SatBefore) : null,
-      walk_oxygen_sat_after: o2SatAfter ? parseInt(o2SatAfter) : null,
-      balance_score: balanceScore ? parseInt(balanceScore) : null,
-      coordination_score: coordinationScore ? parseInt(coordinationScore) : null,
-      notes
-    };
-    
-    submitMutation.mutate(data);
+      tug_time_seconds:          tugTime          ? parseFloat(tugTime)          : null,
+      tug_assistance_used:       tugAssistance || null,
+      tug_fall_risk:             fallRisk          || null,
+      walk_distance_meters:      walkDistance     ? parseFloat(walkDistance)     : null,
+      walk_dyspnea_before:       dyspneaBefore    ? parseInt(dyspneaBefore)      : null,
+      walk_dyspnea_after:        dyspneaAfter     ? parseInt(dyspneaAfter)       : null,
+      walk_oxygen_sat_before:    o2SatBefore      ? parseInt(o2SatBefore)        : null,
+      walk_oxygen_sat_after:     o2SatAfter       ? parseInt(o2SatAfter)         : null,
+      balance_score:             balanceScore     ? parseInt(balanceScore)       : null,
+      coordination_score:        coordinationScore? parseInt(coordinationScore)  : null,
+      notes,
+    });
   };
 
   return (
-    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-{/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-orange-600 to-red-600 rounded-xl p-6 shadow-lg"
+    <div className="min-h-full">
+      <PageHeader
+        image="/resources/african/african-vitals.jpg"
+        title="Motor Skills Assessment"
+        subtitle={`Physical Function & Mobility${patient?.full_name ? ` · ${patient.full_name}` : ''}`}
+        icon={Activity}
+        stats={[
+          { label: 'TUG Fall Risk', value: fallRisk || '—', color: fallRisk === 'High Risk' ? '#f87171' : fallRisk === 'Moderate Risk' ? '#fbbf24' : '#2dd4bf' },
+          { label: 'Walk Distance', value: walkDistance ? `${walkDistance}m` : '—', color: '#818cf8' },
+        ]}
       >
-        <div className="flex items-center space-x-4">
-          <div className="p-3 rounded-lg bg-white/20">
-            <Activity className="w-8 h-8 text-white" strokeWidth={2.5} />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-white">Motor Skills Assessment</h1>
-            <p className="text-orange-100 text-lg">Physical Function & Mobility Tests</p>
-            <p className="text-orange-200 text-sm mt-1">
-              Patient: <span className="font-bold">{patient?.full_name}</span>
-            </p>
-          </div>
+        <button onClick={() => navigate(`/assessments/${patientId}`)}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-lg border border-[var(--card-border)] text-xs font-semibold transition">
+          <ChevronLeft size={14} /> Assessments
+        </button>
+      </PageHeader>
+
+      <div className="max-w-[760px] mx-auto px-4 py-5 space-y-4">
+        <div className="flex items-start gap-3 px-4 py-3 bg-orange-50 rounded-xl border border-orange-200">
+          <Activity size={15} className="text-orange-600 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-orange-800">
+            Complete at least one test. All tests are optional — document those applicable to this patient.
+            Fall risk is automatically calculated from TUG time.
+          </p>
         </div>
-      </motion.div>
 
-      {/* Instructions */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="bg-orange-50 rounded-lg p-4 border-2 border-orange-200"
-      >
-        <p className="text-sm text-orange-900">
-          <strong>Instructions:</strong> Complete the relevant motor skills tests based on patient ability. 
-          Not all tests need to be performed - select appropriate tests for the patient's functional level.
-        </p>
-      </motion.div>
+        <form onSubmit={handleSubmit} className="space-y-3">
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Grip Strength Test */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
-            <Dumbbell className="w-6 h-6 mr-2 text-orange-600" />
-            Grip Strength Test
-          </h3>
-          <p className="text-sm text-[var(--text-600)] mb-4">
-            Measured in kilograms using a hand dynamometer
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Right Hand (kg)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={gripRight}
-                onChange={(e) => setGripRight(e.target.value)}
-                placeholder="0.0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
+          {/* Grip Strength */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 border border-[var(--card-border)] flex items-center justify-center">
+                <Dumbbell size={15} className="text-orange-600" />
+              </div>
+              <p className="text-sm font-bold text-[var(--text-900)]">Grip Strength</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Left Hand (kg)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={gripLeft}
-                onChange={(e) => setGripLeft(e.target.value)}
-                placeholder="0.0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <FieldRow label="Right hand" hint="Dominant hand">
+                <NumInput value={gripRight} onChange={setGripRight} placeholder="e.g. 28" unit="kg" step={0.1} />
+              </FieldRow>
+              <FieldRow label="Left hand">
+                <NumInput value={gripLeft} onChange={setGripLeft} placeholder="e.g. 25" unit="kg" step={0.1} />
+              </FieldRow>
             </div>
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-              Interpretation
-            </label>
-            <select
-              value={gripInterpretation}
-              onChange={(e) => setGripInterpretation(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-            >
-              <option value="">Select...</option>
-              <option value="Normal">Normal for age/gender</option>
-              <option value="Mild Weakness">Mild Weakness</option>
-              <option value="Moderate Weakness">Moderate Weakness</option>
-              <option value="Severe Weakness">Severe Weakness</option>
-            </select>
-          </div>
-        </motion.div>
-
-        {/* Timed Up & Go Test */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
-            <Timer className="w-6 h-6 mr-2 text-orange-600" />
-            Timed Up & Go Test (TUG)
-          </h3>
-          <p className="text-sm text-[var(--text-600)] mb-4">
-            Time taken to stand from chair, walk 3 meters, turn, walk back, and sit down
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Time (seconds)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={tugTime}
-                onChange={(e) => {
-                  setTugTime(e.target.value);
-                  setTugFallRisk(calculateFallRisk(e.target.value));
-                }}
-                placeholder="0.0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-              {tugTime && (
-                <p className="text-xs text-[var(--text-500)] mt-1">
-                  =10s: Low risk | 10-14s: Moderate | &gt;14s: High risk
-                </p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Assistance Used
-              </label>
-              <select
-                value={tugAssistance}
-                onChange={(e) => setTugAssistance(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              >
-                <option value="">Select...</option>
-                <option value="None">None</option>
-                <option value="Cane">Cane</option>
-                <option value="Walker">Walker</option>
-                <option value="Human Assistance">Human Assistance</option>
+            <FieldRow label="Interpretation">
+              <select value={gripInterpretation} onChange={e => setGripInterpretation(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-orange-400 focus:outline-none">
+                <option value="">Select…</option>
+                {['Normal','Slightly Weak','Moderately Weak','Severely Weak'].map(v => (
+                  <option key={v} value={v.toLowerCase().replace(/ /g,'_')}>{v}</option>
+                ))}
               </select>
-            </div>
+            </FieldRow>
           </div>
 
-          {tugFallRisk && (
-            <div className={`mt-4 p-3 rounded-lg ${
-              tugFallRisk === 'High Risk' ? 'bg-red-100 border border-red-300' :
-              tugFallRisk === 'Moderate Risk' ? 'bg-yellow-100 border border-yellow-300' :
-              'bg-green-100 border border-green-300'
-            }`}>
-              <p className={`text-sm font-bold ${
-                tugFallRisk === 'High Risk' ? 'text-red-900' :
-                tugFallRisk === 'Moderate Risk' ? 'text-yellow-900' :
-                'text-green-900'
-              }`}>
-                Fall Risk: {tugFallRisk}
-              </p>
+          {/* TUG */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-orange-50 border border-[var(--card-border)] flex items-center justify-center">
+                  <Timer size={15} className="text-orange-600" />
+                </div>
+                <p className="text-sm font-bold text-[var(--text-900)]">Timed Up &amp; Go (TUG)</p>
+              </div>
+              {fallRisk && <FallRiskBadge risk={fallRisk} />}
             </div>
-          )}
-        </motion.div>
+            <div className="grid grid-cols-2 gap-3">
+              <FieldRow label="Time" hint="Stand, walk 3m, return, sit">
+                <NumInput value={tugTime} onChange={setTugTime} placeholder="e.g. 12.5" unit="seconds" step={0.1} />
+              </FieldRow>
+              <FieldRow label="Assistance used">
+                <select value={tugAssistance} onChange={e => setTugAssistance(e.target.value)}
+                  className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-orange-400 focus:outline-none">
+                  <option value="">None</option>
+                  {['Walking stick','Walker/frame','Crutches','Personal assistance'].map(v => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </FieldRow>
+            </div>
+            {tugTime && (
+              <p className="text-xs text-[var(--text-400)] mt-2">
+                Auto-calculated: ≤10s Low · 10–14s Moderate · &gt;14s High fall risk
+              </p>
+            )}
+          </div>
 
-        {/* 6-Minute Walk Test */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4 flex items-center">
-            <Activity className="w-6 h-6 mr-2 text-orange-600" />
-            6-Minute Walk Test (6MWT)
-          </h3>
-          <p className="text-sm text-[var(--text-600)] mb-4">
-            Distance walked in 6 minutes with vitals monitoring
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Distance Walked (meters)
-              </label>
-              <input
-                type="number"
-                step="1"
-                value={walkDistance}
-                onChange={(e) => setWalkDistance(e.target.value)}
-                placeholder="0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-              {walkDistance && (
-                <p className="text-xs text-[var(--text-500)] mt-1">
-                  Normal: 400-700m | Moderate impairment: 300-400m | Severe: &lt;300m
+          {/* 6-Minute Walk */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 border border-[var(--card-border)] flex items-center justify-center">
+                <Footprints size={15} className="text-orange-600" />
+              </div>
+              <p className="text-sm font-bold text-[var(--text-900)]">6-Minute Walk Test (6MWT)</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <FieldRow label="Distance walked">
+                <NumInput value={walkDistance} onChange={setWalkDistance} placeholder="e.g. 320" unit="metres" />
+              </FieldRow>
+              <div className="col-span-2 grid grid-cols-2 gap-3">
+                <FieldRow label="Dyspnoea before" hint="Borg 0–10">
+                  <NumInput value={dyspneaBefore} onChange={setDyspneaBefore} placeholder="0–10" min={0} />
+                </FieldRow>
+                <FieldRow label="Dyspnoea after" hint="Borg 0–10">
+                  <NumInput value={dyspneaAfter} onChange={setDyspneaAfter} placeholder="0–10" min={0} />
+                </FieldRow>
+                <FieldRow label="O₂ saturation before">
+                  <NumInput value={o2SatBefore} onChange={setO2SatBefore} placeholder="e.g. 97" unit="%" />
+                </FieldRow>
+                <FieldRow label="O₂ saturation after">
+                  <NumInput value={o2SatAfter} onChange={setO2SatAfter} placeholder="e.g. 92" unit="%" />
+                </FieldRow>
+              </div>
+            </div>
+            {o2Drop !== null && o2Drop > 4 && (
+              <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }}
+                className="mt-3 flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg border border-orange-200">
+                <AlertTriangle size={13} className="text-orange-600 flex-shrink-0" />
+                <p className="text-xs text-orange-800 font-semibold">
+                  O₂ desaturation of {o2Drop}% — consider stopping test / monitoring closely
                 </p>
-              )}
-            </div>
+              </motion.div>
+            )}
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Dyspnea Before (0-10)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="10"
-                value={dyspneaBefore}
-                onChange={(e) => setDyspneaBefore(e.target.value)}
-                placeholder="0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
+          {/* Balance */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 border border-[var(--card-border)] flex items-center justify-center">
+                <Wind size={15} className="text-orange-600" />
+              </div>
+              <p className="text-sm font-bold text-[var(--text-900)]">Balance &amp; Coordination</p>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Dyspnea After (0-10)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="10"
-                value={dyspneaAfter}
-                onChange={(e) => setDyspneaAfter(e.target.value)}
-                placeholder="0"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                O2 Saturation Before (%)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="100"
-                value={o2SatBefore}
-                onChange={(e) => setO2SatBefore(e.target.value)}
-                placeholder="98"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                O2 Saturation After (%)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="100"
-                value={o2SatAfter}
-                onChange={(e) => setO2SatAfter(e.target.value)}
-                placeholder="96"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <FieldRow label="Balance score" hint="0–10 clinical rating">
+                <NumInput value={balanceScore} onChange={setBalanceScore} placeholder="0–10" min={0} />
+              </FieldRow>
+              <FieldRow label="Coordination score" hint="0–10 clinical rating">
+                <NumInput value={coordinationScore} onChange={setCoordinationScore} placeholder="0–10" min={0} />
+              </FieldRow>
             </div>
           </div>
 
-          {o2SatBefore && o2SatAfter && parseInt(o2SatBefore) - parseInt(o2SatAfter) > 4 && (
-            <div className="mt-4 p-3 bg-red-100 rounded-lg border border-red-300">
-              <p className="text-sm font-bold text-red-900">
-                ?? Significant oxygen desaturation detected ({o2SatBefore}% ? {o2SatAfter}%)
-              </p>
-            </div>
-          )}
-        </motion.div>
-
-        {/* Balance & Coordination */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <h3 className="text-xl font-bold text-[var(--text-900)] mb-4">
-            Balance & Coordination
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Balance Score (0-10)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="10"
-                value={balanceScore}
-                onChange={(e) => setBalanceScore(e.target.value)}
-                placeholder="0-10"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-              <p className="text-xs text-[var(--text-500)] mt-1">
-                0 = Unable to stand | 10 = Perfect balance
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Coordination Score (0-10)
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="10"
-                value={coordinationScore}
-                onChange={(e) => setCoordinationScore(e.target.value)}
-                placeholder="0-10"
-                className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-              />
-              <p className="text-xs text-[var(--text-500)] mt-1">
-                0 = No coordination | 10 = Perfect coordination
-              </p>
-            </div>
+          {/* Notes */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">
+              Clinical Notes <span className="font-normal text-[var(--text-400)]">(optional)</span>
+            </label>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
+              placeholder="Testing conditions, patient cooperation, any safety concerns…"
+              className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-orange-400 focus:outline-none resize-none" />
           </div>
-        </motion.div>
 
-        {/* Notes */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-            Additional Notes (Optional)
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="Any observations, limitations, or special considerations..."
-            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-orange-500 focus:outline-none"
-          />
-        </motion.div>
+          <FormFileUpload category="documents" label="Assessment Records"
+            description="Attach test reports or supporting evidence"
+            accept="image/*,.pdf,.doc,.docx" multiple maxSizeMB={50} />
 
-        {/* Submit Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex space-x-4"
-        >
-          
-          {/* File Attachments */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mb-6"
-          >
-            <FormFileUpload
-              category="documents"
-              label="Assessment Media"
-              description="Attach photos or videos of motor skill assessments"
-              accept="image/*,video/*,.pdf"
-              multiple={true}
-              maxSizeMB={50}
-            />
-          </motion.div>
-
-          <button
-            type="submit"
-            disabled={submitMutation.isLoading}
-            className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
-          >
-            <Save className="w-5 h-5" />
-            <span>{submitMutation.isLoading ? 'Saving...' : 'Save Assessment'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
-          >
-            Cancel
-          </button>
-        </motion.div>
-      </form>
+          <div className="flex gap-3">
+            <button type="submit" disabled={submitMutation.isLoading}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-bold transition disabled:opacity-50">
+              <Save size={15} />
+              {submitMutation.isLoading ? 'Saving…' : 'Save Assessment'}
+            </button>
+            <button type="button" onClick={() => navigate(`/assessments/${patientId}`)}
+              className="px-5 py-3 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl text-sm font-semibold border border-[var(--card-border)] transition">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
-

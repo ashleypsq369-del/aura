@@ -1,435 +1,265 @@
+/**
+ * CognitiveAssessmentForm.jsx — MMSE / MoCA Cognitive Assessment
+ * Redesigned: PageHeader + clean component score inputs
+ */
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Brain, Save } from 'lucide-react';
+import { Brain, Save, ChevronLeft, Info } from 'lucide-react';
 import apiClient from '../api/client';
 import toast from '../utils/toast';
 import FormFileUpload from '../components/FormFileUpload';
+import PageHeader from '../components/PageHeader';
 
 const mmseComponents = [
-  { key: 'mmse_orientation_time', label: 'Orientation to Time', max: 5, desc: 'Year, season, date, day, month' },
-  { key: 'mmse_orientation_place', label: 'Orientation to Place', max: 5, desc: 'State, county, town, hospital, floor' },
-  { key: 'mmse_registration', label: 'Registration', max: 3, desc: 'Repeat 3 words' },
-  { key: 'mmse_attention_calculation', label: 'Attention & Calculation', max: 5, desc: 'Serial 7s or spell WORLD backwards' },
-  { key: 'mmse_recall', label: 'Recall', max: 3, desc: 'Recall the 3 words' },
-  { key: 'mmse_language', label: 'Language', max: 8, desc: 'Naming, repetition, 3-stage command, reading, writing' },
-  { key: 'mmse_visual_construction', label: 'Visual Construction', max: 1, desc: 'Copy intersecting pentagons' }
+  { key:'mmse_orientation_time',       label:'Orientation to Time',       max:5, desc:'Year, season, date, day, month'                                },
+  { key:'mmse_orientation_place',      label:'Orientation to Place',      max:5, desc:'State, county, town, hospital, floor'                         },
+  { key:'mmse_registration',           label:'Registration',              max:3, desc:'Repeat 3 words immediately after examiner'                    },
+  { key:'mmse_attention_calculation',  label:'Attention & Calculation',   max:5, desc:'Serial 7s or spell WORLD backwards'                          },
+  { key:'mmse_recall',                 label:'Recall',                    max:3, desc:'Recall the 3 words from Registration'                        },
+  { key:'mmse_language',               label:'Language',                  max:8, desc:'Naming, repetition, 3-stage command, reading, writing'        },
+  { key:'mmse_visual_construction',    label:'Visual Construction',       max:1, desc:'Copy the intersecting pentagons'                              },
 ];
 
 const mocaComponents = [
-  { key: 'moca_visuospatial_executive', label: 'Visuospatial/Executive', max: 5, desc: 'Trail making, cube copy, clock' },
-  { key: 'moca_naming', label: 'Naming', max: 3, desc: 'Lion, rhinoceros, camel' },
-  { key: 'moca_attention', label: 'Attention', max: 6, desc: 'Forward/backward digits, vigilance, serial 7s' },
-  { key: 'moca_language', label: 'Language', max: 3, desc: 'Sentence repetition, fluency' },
-  { key: 'moca_abstraction', label: 'Abstraction', max: 2, desc: 'Similarities' },
-  { key: 'moca_delayed_recall', label: 'Delayed Recall', max: 5, desc: 'Remember 5 words' },
-  { key: 'moca_orientation', label: 'Orientation', max: 6, desc: 'Date, month, year, day, place, city' }
+  { key:'moca_visuospatial_executive', label:'Visuospatial / Executive', max:5, desc:'Trail making B, cube copy, clock drawing'                    },
+  { key:'moca_naming',                 label:'Naming',                   max:3, desc:'Name the lion, rhinoceros, camel'                             },
+  { key:'moca_attention',              label:'Attention',                max:6, desc:'Forward/backward digit span, vigilance, serial 7s'           },
+  { key:'moca_language',               label:'Language',                 max:3, desc:'Sentence repetition and verbal fluency'                      },
+  { key:'moca_abstraction',            label:'Abstraction',              max:2, desc:'Similarities between paired words'                           },
+  { key:'moca_delayed_recall',         label:'Delayed Recall',           max:5, desc:'Remember 5 words after 5-minute delay'                      },
+  { key:'moca_orientation',            label:'Orientation',              max:6, desc:'Date, month, year, day, place, city'                         },
 ];
+
+function getMMSEInterp(total) {
+  if (total >= 24) return { label:'Normal',             badge:'badge-low'      };
+  if (total >= 18) return { label:'Mild Impairment',    badge:'badge-stable'   };
+  if (total >= 10) return { label:'Moderate Impairment',badge:'badge-moderate' };
+  return                   { label:'Severe Impairment', badge:'badge-critical' };
+}
+
+function getMoCAInterp(total) {
+  if (total >= 26) return { label:'Normal',                      badge:'badge-low'      };
+  if (total >= 18) return { label:'Mild Cognitive Impairment',   badge:'badge-stable'   };
+  if (total >= 10) return { label:'Moderate Impairment',         badge:'badge-moderate' };
+  return                   { label:'Severe Impairment',          badge:'badge-critical' };
+}
 
 export default function CognitiveAssessmentForm() {
   const { patientId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [assessmentType, setAssessmentType] = useState('MMSE'); // or 'MoCA'
+  const [assessmentType, setAssessmentType] = useState('MMSE');
   const [educationYears, setEducationYears] = useState('');
-  
-  const [mmseScores, setMmseScores] = useState({
-    mmse_orientation_time: '',
-    mmse_orientation_place: '',
-    mmse_registration: '',
-    mmse_attention_calculation: '',
-    mmse_recall: '',
-    mmse_language: '',
-    mmse_visual_construction: ''
-  });
-
-  const [mocaScores, setMocaScores] = useState({
-    moca_visuospatial_executive: '',
-    moca_naming: '',
-    moca_attention: '',
-    moca_language: '',
-    moca_abstraction: '',
-    moca_delayed_recall: '',
-    moca_orientation: ''
-  });
-
+  const [mmseScores, setMmseScores] = useState(Object.fromEntries(mmseComponents.map(c => [c.key, ''])));
+  const [mocaScores, setMocaScores] = useState(Object.fromEntries(mocaComponents.map(c => [c.key, ''])));
   const [notes, setNotes] = useState('');
 
-  // Fetch patient
   const { data: patient } = useQuery({
     queryKey: ['patient', patientId],
-    queryFn: async () => {
-      const response = await apiClient.get(`/api/patients/${patientId}`);
-      return response.data;
-    }
+    queryFn: async () => (await apiClient.get(`/api/patients/${patientId}`)).data,
   });
 
-  // Calculate MMSE total
-  const calculateMMSETotal = () => {
-    return Object.values(mmseScores).reduce((sum, val) => sum + (parseInt(val) || 0), 0);
+  const calcMMSE = () => Object.values(mmseScores).reduce((s, v) => s + (parseInt(v) || 0), 0);
+  const calcMoCA = () => {
+    let t = Object.values(mocaScores).reduce((s, v) => s + (parseInt(v) || 0), 0);
+    if (parseInt(educationYears) <= 12 && parseInt(educationYears) > 0) t += 1;
+    return Math.min(t, 30);
   };
 
-  // Calculate MoCA total
-  const calculateMoCATotal = () => {
-    let total = Object.values(mocaScores).reduce((sum, val) => sum + (parseInt(val) || 0), 0);
-    // Add 1 point if education <= 12 years
-    if (parseInt(educationYears) <= 12 && parseInt(educationYears) > 0) {
-      total += 1;
-    }
-    return Math.min(total, 30); // Cap at 30
-  };
+  const currentScores  = assessmentType === 'MMSE' ? mmseScores  : mocaScores;
+  const setCurrentScores = assessmentType === 'MMSE' ? setMmseScores : setMocaScores;
+  const currentComponents = assessmentType === 'MMSE' ? mmseComponents : mocaComponents;
+  const currentTotal   = assessmentType === 'MMSE' ? calcMMSE() : calcMoCA();
+  const currentInterp  = assessmentType === 'MMSE' ? getMMSEInterp(currentTotal) : getMoCAInterp(currentTotal);
+  const allFilled      = Object.values(currentScores).every(v => v !== '');
+  const educationBonus = assessmentType === 'MoCA' && parseInt(educationYears) <= 12 && parseInt(educationYears) > 0;
 
-  const getMMSEInterpretation = (total) => {
-    if (total >= 24) return { label: 'Normal', color: 'text-green-600', bg: 'bg-green-100' };
-    if (total >= 18) return { label: 'Mild Impairment', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    if (total >= 10) return { label: 'Moderate Impairment', color: 'text-orange-600', bg: 'bg-orange-100' };
-    return { label: 'Severe Impairment', color: 'text-red-600', bg: 'bg-red-100' };
-  };
-
-  const getMoCAInterpretation = (total) => {
-    if (total >= 26) return { label: 'Normal', color: 'text-green-600', bg: 'bg-green-100' };
-    if (total >= 18) return { label: 'Mild Cognitive Impairment', color: 'text-yellow-600', bg: 'bg-yellow-100' };
-    if (total >= 10) return { label: 'Moderate Impairment', color: 'text-orange-600', bg: 'bg-orange-100' };
-    return { label: 'Severe Impairment', color: 'text-red-600', bg: 'bg-red-100' };
-  };
-
-  // Submit mutation
   const submitMutation = useMutation({
-    mutationFn: async (data) => {
-      return await apiClient.post('/api/assessments/cognitive', data);
-    },
+    mutationFn: async (data) => apiClient.post('/api/assessments/cognitive', data),
     onSuccess: (response) => {
-      toast.success('Cognitive assessment saved successfully!');
-      
-      if (response.data.alerts_generated && response.data.alerts_generated.length > 0) {
-        toast.error(`${response.data.alerts_generated.length} clinical alert(s) generated - please review`, {
-          duration: 5000
-        });
-      }
-      
+      toast.success('Cognitive assessment saved');
+      if (response.data.alerts_generated?.length > 0)
+        toast.error(`${response.data.alerts_generated.length} alert(s) generated`, { duration: 5000 });
       queryClient.invalidateQueries(['cognitive', patientId]);
       queryClient.invalidateQueries(['assessment-overview', patientId]);
-      
       setTimeout(() => navigate(`/assessments/${patientId}`), 1500);
     },
-    onError: (error) => {
-      toast.error('Failed to save assessment');
-      console.error(error);
-    }
+    onError: () => toast.error('Failed to save assessment'),
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    const data = {
-      patient_id: parseInt(patientId),
-      assessment_type: assessmentType,
-      patient_education_years: parseInt(educationYears) || null,
-      notes
-    };
+    if (!allFilled) { toast.error(`Please complete all ${assessmentType} components`); return; }
+
+    const data = { patient_id: parseInt(patientId), assessment_type: assessmentType,
+      patient_education_years: parseInt(educationYears) || null, notes };
 
     if (assessmentType === 'MMSE') {
-      // Check all MMSE scores are filled
-      const allScored = Object.values(mmseScores).every(val => val !== '');
-      if (!allScored) {
-        toast.error('Please complete all MMSE components');
-        return;
-      }
-      
-      Object.entries(mmseScores).forEach(([key, value]) => {
-        data[key] = parseInt(value);
-      });
-      data.mmse_total = calculateMMSETotal();
-      data.interpretation = getMMSEInterpretation(data.mmse_total).label;
+      Object.entries(mmseScores).forEach(([k, v]) => { data[k] = parseInt(v); });
+      data.mmse_total = calcMMSE();
+      data.interpretation = getMMSEInterp(data.mmse_total).label;
     } else {
-      // Check all MoCA scores are filled
-      const allScored = Object.values(mocaScores).every(val => val !== '');
-      if (!allScored) {
-        toast.error('Please complete all MoCA components');
-        return;
-      }
-      
-      Object.entries(mocaScores).forEach(([key, value]) => {
-        data[key] = parseInt(value);
-      });
-      data.moca_education_adjustment = (parseInt(educationYears) <= 12 && parseInt(educationYears) > 0) ? 1 : 0;
-      data.moca_total = calculateMoCATotal();
-      data.interpretation = getMoCAInterpretation(data.moca_total).label;
+      Object.entries(mocaScores).forEach(([k, v]) => { data[k] = parseInt(v); });
+      data.moca_education_adjustment = educationBonus ? 1 : 0;
+      data.moca_total = calcMoCA();
+      data.interpretation = getMoCAInterp(data.moca_total).label;
     }
-    
     submitMutation.mutate(data);
   };
 
-  const mmseTotal = calculateMMSETotal();
-  const mocaTotal = calculateMoCATotal();
-  const mmseInterpretation = getMMSEInterpretation(mmseTotal);
-  const mocaInterpretation = getMoCAInterpretation(mocaTotal);
-
-  const currentComponents = assessmentType === 'MMSE' ? mmseComponents : mocaComponents;
-  const currentScores = assessmentType === 'MMSE' ? mmseScores : mocaScores;
-  const setCurrentScores = assessmentType === 'MMSE' ? setMmseScores : setMocaScores;
-  const currentTotal = assessmentType === 'MMSE' ? mmseTotal : mocaTotal;
-  const currentInterpretation = assessmentType === 'MMSE' ? mmseInterpretation : mocaInterpretation;
-
   return (
-    <div className="max-w-[1000px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-6">
-{/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl p-5 border-l-4 border-teal-500 bg-violet-50 dark:bg-violet-900/20"
+    <div className="min-h-full">
+      <PageHeader
+        image="/resources/african/african-clinical-team.jpg"
+        title="Cognitive Assessment"
+        subtitle={`MMSE / MoCA Screening${patient?.full_name ? ` · ${patient.full_name}` : ''}`}
+        icon={Brain}
+        stats={[
+          { label: assessmentType, value: `${currentTotal}/30`, color: currentTotal >= 24 ? '#16a34a' : currentTotal >= 18 ? '#d97706' : '#dc2626' },
+          { label: 'Interpretation', value: allFilled ? currentInterp.label.split(' ')[0] : '—', color: '#818cf8' },
+        ]}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 rounded-lg bg-white/20">
-              <Brain className="w-8 h-8 text-white" strokeWidth={2.5} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-white">Cognitive Assessment</h1>
-              <p className="text-purple-100 text-lg">MMSE & MoCA Screening</p>
-              <p className="text-purple-200 text-sm mt-1">
-                Patient: <span className="font-bold">{patient?.full_name}</span>
-              </p>
-            </div>
+        <button onClick={() => navigate(`/assessments/${patientId}`)}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-lg border border-[var(--card-border)] text-xs font-semibold transition">
+          <ChevronLeft size={14} /> Assessments
+        </button>
+      </PageHeader>
+
+      <div className="max-w-[760px] mx-auto px-4 py-5 space-y-4">
+
+        {/* Type selector */}
+        <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+          <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">Assessment Type</p>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { type:'MMSE', name:'MMSE', sub:'Mini-Mental State Exam', note:'Most widely used · 7 components' },
+              { type:'MoCA', name:'MoCA', sub:'Montreal Cognitive Assessment', note:'More sensitive · 7 components' },
+            ].map(opt => (
+              <button key={opt.type} type="button" onClick={() => setAssessmentType(opt.type)}
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
+                  assessmentType === opt.type
+                    ? 'border-indigo-500 bg-indigo-50'
+                    : 'border-[var(--card-border)] hover:border-indigo-300 hover:bg-[var(--page-bg)]'
+                }`}>
+                <p className="text-sm font-bold text-[var(--text-900)]">{opt.name}</p>
+                <p className="text-xs text-[var(--text-600)]">{opt.sub}</p>
+                <p className="text-[11px] text-[var(--text-400)] mt-0.5">{opt.note}</p>
+              </button>
+            ))}
           </div>
-          {(Object.values(currentScores).every(v => v !== '')) && (
-            <div className="text-right">
-              <div className="text-5xl font-bold text-white">{currentTotal}</div>
-              <div className="text-sm text-purple-100">/ 30</div>
-              <div className="mt-2 px-3 py-1 rounded-full text-sm font-bold bg-white/20 text-white">
-                {currentInterpretation.label}
-              </div>
-            </div>
+        </div>
+
+        {/* Education */}
+        <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+          <label className="block text-sm font-semibold text-[var(--text-700)] mb-1.5">
+            Patient's Years of Education
+            {assessmentType === 'MoCA' && <span className="text-red-500 ml-1">*</span>}
+          </label>
+          <input type="number" min="0" max="30" value={educationYears}
+            onChange={e => setEducationYears(e.target.value)}
+            placeholder="e.g. 12"
+            className="w-32 px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-indigo-500 focus:outline-none"
+            required={assessmentType === 'MoCA'} />
+          {educationBonus && (
+            <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
+              <Info size={11} /> +1 education adjustment point will be added
+            </p>
           )}
         </div>
-      </motion.div>
 
-      {/* Test Type Selector */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-      >
-        <label className="block text-sm font-medium text-[var(--text-700)] mb-3">
-          Select Assessment Type
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <button
-            type="button"
-            onClick={() => setAssessmentType('MMSE')}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              assessmentType === 'MMSE'
-                ? 'border-purple-500 bg-purple-50'
-                : 'border-[var(--card-border)] hover:border-purple-300'
-            }`}
-          >
-            <div className="font-bold text-lg text-slate-900">MMSE</div>
-            <div className="text-sm text-slate-600">Mini-Mental State Examination</div>
-            <div className="text-xs text-[var(--text-500)] mt-1">Most widely used, 7 components</div>
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => setAssessmentType('MoCA')}
-            className={`p-4 rounded-lg border-2 transition-all ${
-              assessmentType === 'MoCA'
-                ? 'border-purple-500 bg-purple-50'
-                : 'border-[var(--card-border)] hover:border-purple-300'
-            }`}
-          >
-            <div className="font-bold text-lg text-slate-900">MoCA</div>
-            <div className="text-sm text-slate-600">Montreal Cognitive Assessment</div>
-            <div className="text-xs text-[var(--text-500)] mt-1">More sensitive, 7 components</div>
-          </button>
+        {/* Instructions */}
+        <div className="flex items-start gap-3 px-4 py-3 bg-indigo-50 rounded-xl border border-indigo-200">
+          <Brain size={15} className="text-indigo-600 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-indigo-800">
+            Administer the <strong>{assessmentType}</strong> following the standardised protocol.
+            Enter each component score — all components must be completed.
+            {assessmentType === 'MoCA' && ' +1 point is added automatically if education ≤12 years.'}
+          </p>
         </div>
-      </motion.div>
 
-      {/* Instructions */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="bg-purple-50 rounded-lg p-4 border-2 border-purple-200"
-      >
-        <p className="text-sm text-purple-900 mb-2">
-          <strong>Instructions:</strong> Administer the {assessmentType} according to standardized protocol. 
-          Score each component based on patient's responses. All components must be completed.
-        </p>
-        {assessmentType === 'MoCA' && (
-          <p className="text-sm text-purple-900 font-semibold">
-            ?? Note: 1 point is added if education = 12 years (automatically calculated)
-          </p>
-        )}
-      </motion.div>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {currentComponents.map((comp, idx) => {
+            const val = currentScores[comp.key];
+            const pct = val !== '' ? (parseInt(val) / comp.max) * 100 : null;
+            return (
+              <motion.div key={comp.key}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.04 }}
+                className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4 flex items-center gap-4">
 
-      {/* Education */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-      >
-        <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-          Patient's Years of Education {assessmentType === 'MoCA' && <span className="text-red-500">*</span>}
-        </label>
-        <input
-          type="number"
-          min="0"
-          max="30"
-          value={educationYears}
-          onChange={(e) => setEducationYears(e.target.value)}
-          placeholder="e.g., 12"
-          className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:outline-none"
-          required={assessmentType === 'MoCA'}
-        />
-        {assessmentType === 'MoCA' && parseInt(educationYears) <= 12 && parseInt(educationYears) > 0 && (
-          <p className="text-xs text-green-600 mt-1">
-            ? +1 bonus point will be added to final score
-          </p>
-        )}
-      </motion.div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {currentComponents.map((component, idx) => (
-          <motion.div
-            key={component.key}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 + idx * 0.05 }}
-            className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900">{component.label}</h3>
-                <p className="text-sm text-slate-600">{component.desc}</p>
-                <p className="text-xs text-[var(--text-500)] mt-1">Maximum: {component.max} points</p>
-              </div>
-              {currentScores[component.key] !== '' && (
-                <div className="text-3xl font-bold text-purple-600">
-                  {currentScores[component.key]} / {component.max}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <p className="text-sm font-bold text-[var(--text-900)]">{comp.label}</p>
+                    <span className="text-xs text-[var(--text-400)] flex-shrink-0">max {comp.max}</span>
+                  </div>
+                  <p className="text-xs text-[var(--text-400)]">{comp.desc}</p>
+                  {pct !== null && (
+                    <div className="mt-2 h-1.5 bg-[var(--card-border)] rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all"
+                        style={{ width: `${pct}%`, backgroundColor: pct >= 80 ? '#16a34a' : pct >= 50 ? '#d97706' : '#dc2626' }} />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Score Input */}
-            <div className="flex items-center space-x-2">
-              <label className="text-sm font-medium text-slate-700">Score:</label>
-              <input
-                type="number"
-                min="0"
-                max={component.max}
-                value={currentScores[component.key]}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === '' || (parseInt(val) >= 0 && parseInt(val) <= component.max)) {
-                    setCurrentScores({ ...currentScores, [component.key]: val });
-                  }
-                }}
-                className="w-24 px-3 py-2 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:outline-none text-center text-lg font-bold"
-                required
-              />
-              <span className="text-slate-600">/ {component.max}</span>
-            </div>
-          </motion.div>
-        ))}
-
-        {/* Score Summary */}
-        {Object.values(currentScores).every(v => v !== '') && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={`${currentInterpretation.bg} rounded-xl p-6 border-2 border-slate-300`}
-          >
-            <div className="text-center">
-              <div className="text-sm text-[var(--text-600)] mb-2">{assessmentType} Total Score</div>
-              <div className="text-5xl font-bold mb-2">{currentTotal} / 30</div>
-              {assessmentType === 'MoCA' && parseInt(educationYears) <= 12 && parseInt(educationYears) > 0 && (
-                <div className="text-xs text-[var(--text-600)] mb-2">
-                  (Base: {mocaTotal - 1} + Education adjustment: +1)
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <input type="number" min="0" max={comp.max} value={val} required
+                    onChange={e => {
+                      const v = e.target.value;
+                      if (v === '' || (parseInt(v) >= 0 && parseInt(v) <= comp.max))
+                        setCurrentScores(p => ({ ...p, [comp.key]: v }));
+                    }}
+                    className="w-16 text-center text-lg font-black px-2 py-1.5 border-2 border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-indigo-600 focus:border-indigo-500 focus:outline-none"
+                    aria-label={`${comp.label} score`} />
+                  <span className="text-xs text-[var(--text-400)]">/ {comp.max}</span>
                 </div>
+              </motion.div>
+            );
+          })}
+
+          {/* Score summary */}
+          {allFilled && (
+            <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
+              className="bg-[var(--card-bg)] rounded-xl border-2 border-indigo-200 p-4 text-center">
+              <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-1">{assessmentType} Total Score</p>
+              <p className="text-4xl font-black tabular-nums text-indigo-600">{currentTotal} <span className="text-lg text-[var(--text-400)]">/ 30</span></p>
+              <span className={`${currentInterp.badge} mt-2 inline-block`}>{currentInterp.label}</span>
+              {educationBonus && (
+                <p className="text-[11px] text-[var(--text-400)] mt-1">Includes +1 education adjustment</p>
               )}
-              <div className={`text-2xl font-bold ${currentInterpretation.color} mb-3`}>
-                {currentInterpretation.label}
-              </div>
-              <div className="text-sm text-slate-700">
-                {currentTotal >= 26 && assessmentType === 'MoCA' && 'Normal cognitive function'}
-                {currentTotal >= 24 && assessmentType === 'MMSE' && 'No cognitive impairment detected'}
-                {currentTotal >= 18 && currentTotal < 24 && assessmentType === 'MMSE' && 'Mild cognitive impairment - consider further evaluation'}
-                {currentTotal >= 18 && currentTotal < 26 && assessmentType === 'MoCA' && 'Possible mild cognitive impairment'}
-                {currentTotal >= 10 && currentTotal < 18 && 'Moderate impairment - interventions recommended'}
-                {currentTotal < 10 && 'Severe impairment - urgent specialist referral needed'}
-              </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
 
-        {/* Notes */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="bg-[var(--card-bg)] rounded-xl p-6 shadow-md border-2 border-slate-200"
-        >
-          <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-            Clinical Notes (Optional)
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={3}
-            placeholder="Observations during testing, patient cooperation, environmental factors..."
-            className="w-full px-4 py-2 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:outline-none"
-          />
-        </motion.div>
+          {/* Notes */}
+          <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
+            <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">
+              Clinical Notes <span className="font-normal text-[var(--text-400)]">(optional)</span>
+            </label>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
+              placeholder="Observations during testing, patient cooperation, environmental factors…"
+              className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-indigo-500 focus:outline-none resize-none" />
+          </div>
 
-        {/* Submit Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="flex space-x-4"
-        >
-          
-          {/* File Attachments */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mb-6"
-          >
-            <FormFileUpload
-              category="documents"
-              label="Test Materials"
-              description="Attach test results or supporting documentation"
-              accept="image/*,.pdf"
-              multiple={true}
-              maxSizeMB={50}
-            />
-          </motion.div>
+          <FormFileUpload category="documents" label="Assessment Documentation"
+            description="Attach test sheets or supporting files"
+            accept=".pdf,.doc,.docx,image/*" multiple maxSizeMB={50} />
 
-          <button
-            type="submit"
-            disabled={submitMutation.isLoading}
-            className="flex-1 bg-teal-600 hover:bg-teal-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
-          >
-            <Save className="w-5 h-5" />
-            <span>{submitMutation.isLoading ? 'Saving...' : 'Save Assessment'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => navigate(`/assessments/${patientId}`)}
-            className="px-6 py-4 bg-slate-200 text-[var(--text-900)] rounded-xl font-bold hover:bg-slate-300 transition-colors"
-          >
-            Cancel
-          </button>
-        </motion.div>
-      </form>
+          <div className="flex gap-3">
+            <button type="submit" disabled={submitMutation.isLoading}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition disabled:opacity-50">
+              <Save size={15} />
+              {submitMutation.isLoading ? 'Saving…' : 'Save Assessment'}
+            </button>
+            <button type="button" onClick={() => navigate(`/assessments/${patientId}`)}
+              className="px-5 py-3 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl text-sm font-semibold border border-[var(--card-border)] transition">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
-
