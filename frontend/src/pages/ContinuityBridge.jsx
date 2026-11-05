@@ -58,7 +58,7 @@ export default function ContinuityBridge() {
  );
 
  return (
- <div className="min-h-screen bg-slate-50">
+ <div className="min-h-screen">
 
  {/* -- Header ---------------------------------------------------- */}
  <PageHeader
@@ -70,13 +70,13 @@ export default function ContinuityBridge() {
 
  {/* -- Sticky tabs --------------------------------------------- */}
  <div className="sticky top-0 z-20 bg-[var(--card-bg)] border-b border-[var(--card-border)] shadow-sm">
- <div className="max-w-6xl mx-auto px-4">
+ <div className="max-w-3xl mx-auto px-4">
  <div className="flex gap-1 overflow-x-auto scrollbar-hide py-2">
  {TABS.map(({ id, label, icon: Icon }) => (
  <button key={id} onClick={() => setTab(id)}
- className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
- selectedTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
- <Icon size={14} />{label}
+ className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+ selectedTab === id ? 'bg-teal-600 text-white shadow-sm' : 'text-[var(--text-600)] hover:bg-[var(--page-bg)]'}`}>
+ <Icon size={13} />{label}
  </button>
  ))}
  </div>
@@ -84,7 +84,7 @@ export default function ContinuityBridge() {
  </div>
 
  {/* -- Content ------------------------------------------------- */}
- <div className="max-w-6xl mx-auto px-4 py-8">
+ <div className="max-w-3xl mx-auto px-4 py-5">
  <AnimatePresence mode="wait">
  <motion.div key={selectedTab}
  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -104,73 +104,74 @@ export default function ContinuityBridge() {
 /* -- Overview ------------------------------------------------------------ */
 function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
  const stats = [
- { label: 'Memories saved', value: patientData?.memory_count ?? ' - ' },
- { label: 'Messages prepared', value: patientData?.message_count ?? ' - ' },
- { label: 'Heirs designated', value: patientData?.heir_count ?? ' - ' },
+ { label: 'Memories saved',    value: patientData?.memory_count   ?? '—' },
+ { label: 'Messages prepared', value: patientData?.message_count  ?? '—' },
+ { label: 'Heirs designated',  value: patientData?.heir_count     ?? '—' },
  ];
  const actions = [
- { icon: HeartHandshake, label: 'Memory Vault', sub: 'Preserve cherished moments', tab: 'legacy', color: 'from-purple-700 to-violet-800', img: '/resources/african/african-hands-comfort.jpg' },
- { icon: MessageSquareHeart,label: 'Final Messages', sub: 'Words for those you love', tab: 'messages', color: 'from-rose-600 to-pink-700', img: '/resources/african/african-prayer-peace.jpg' },
- { icon: BookOpen, label: 'My Journal', sub: 'Private · only you can see', tab: 'my-journal', color: 'from-indigo-700 to-blue-800', img: '/resources/african/journal-writing.jpg' },
- { icon: UserCheck, label: 'My Heirs', sub: 'Who receives your legacy', tab: 'heirs', color: 'from-teal-600 to-emerald-700', img: '/resources/african/african-family-support.jpg' },
+ { icon: HeartHandshake,    label: 'Memory Vault',   sub: 'Preserve cherished moments',  tab: 'legacy',    img: '/resources/african/african-hands-comfort.jpg'  },
+ { icon: MessageSquareHeart,label: 'Final Messages', sub: 'Words for those you love',    tab: 'messages',  img: '/resources/african/african-prayer-peace.jpg'   },
+ { icon: BookOpen,          label: 'My Journal',     sub: 'Private · only you can see',  tab: 'my-journal',img: '/resources/african/journal-writing.jpg'        },
+ { icon: UserCheck,         label: 'My Heirs',       sub: 'Who receives your legacy',    tab: 'heirs',     img: '/resources/african/african-family-support.jpg' },
  ];
 
  return (
- <div className="space-y-6">
- {/* Stat strip */}
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+ <div className="space-y-4">
+ {/* Stat strip — compact inline */}
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 flex items-center divide-x divide-[var(--card-border)]">
  {stats.map(({ label, value }) => (
- <div key={label} className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 text-center">
- <p className="text-2xl font-bold text-purple-700">{value}</p>
- <p className="text-xs text-[var(--text-500)] mt-1">{label}</p>
+ <div key={label} className="flex-1 text-center px-3 first:pl-0 last:pr-0">
+ <p className="text-xl font-black text-purple-600">{value}</p>
+ <p className="text-[11px] text-[var(--text-400)] mt-0.5">{label}</p>
  </div>
  ))}
  </div>
 
- {/* Inspirational quote */}
- <div className="relative bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl p-6 overflow-hidden">
- <div className="absolute top-3 right-5 opacity-10"><Quote size={52} className="text-white" /></div>
- <p className="text-purple-100 text-sm italic leading-relaxed max-w-lg">
+ {/* Quote */}
+ <div className="relative bg-gradient-to-br from-purple-900 to-indigo-900 rounded-xl p-5 overflow-hidden">
+ <Quote size={42} className="absolute top-2 right-4 text-white/10" aria-hidden />
+ <p className="text-purple-100 text-sm italic leading-relaxed">
  "What we have once enjoyed we can never lose. All that we love deeply becomes a part of us."
  </p>
- <p className="text-purple-400 text-xs mt-3 font-medium"> - Helen Keller</p>
+ <p className="text-purple-400 text-xs mt-3">— Helen Keller</p>
  </div>
 
- {/* Action cards */}
- <div>
- <h2 className="text-xs font-semibold text-[var(--text-500)] mb-3">Your Legacy Tools</h2>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
- {actions.map(({ icon: Icon, label, sub, tab, color, img }) => (
- <motion.div key={tab} whileHover={{ y: -3 }} onClick={() => onTab(tab)}
- className="relative rounded-xl overflow-hidden cursor-pointer h-36 shadow-sm group">
- <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
- <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
- <div className="absolute inset-0 p-3.5 flex flex-col justify-end">
- <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center mb-2">
- <Icon size={14} className="text-white" />
+ {/* Action cards — 2×2 */}
+ <div className="grid grid-cols-2 gap-3">
+ {actions.map(({ icon: Icon, label, sub, tab, img }) => (
+ <motion.button key={tab} whileHover={{ y: -2 }} onClick={() => onTab(tab)}
+ className="relative rounded-xl overflow-hidden h-28 group text-left">
+ <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+ <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+ <div className="absolute bottom-0 left-0 right-0 p-3">
+ <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center mb-1.5">
+ <Icon size={13} className="text-white" />
  </div>
- <p className="text-white font-semibold text-sm leading-tight">{label}</p>
- <p className="text-white/65 text-xs mt-0.5 line-clamp-1">{sub}</p>
+ <p className="text-white font-semibold text-xs leading-tight">{label}</p>
+ <p className="text-white/60 text-[10px] mt-0.5">{sub}</p>
  </div>
- </motion.div>
+ </motion.button>
  ))}
  </div>
- </div>
 
- {/* Timeline */}
- <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-5">
- <h3 className="text-sm font-semibold text-[var(--text-700)] mb-4 flex items-center gap-2"><Clock size={14} className="text-purple-500" /> How the Continuity Bridge Works</h3>
- <div className="space-y-4">
+ {/* How it works — compact timeline */}
+ <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl overflow-hidden">
+ <div className="px-4 py-3 border-b border-[var(--card-border)] bg-[var(--page-bg)]">
+ <p className="text-xs font-bold text-[var(--text-700)] flex items-center gap-2">
+ <Clock size={13} className="text-purple-500" /> How the Continuity Bridge Works
+ </p>
+ </div>
+ <div className="divide-y divide-[var(--card-border)]">
  {[
- { step: '1', title: 'While you are alive', desc: 'Create memories, write final messages, and designate heirs who will receive your legacy.', color: 'bg-purple-100 text-purple-700' },
- { step: '2', title: 'Your legacy is secured', desc: 'All content is privately stored. Heirs cannot access it yet · only you can edit or delete entries.', color: 'bg-indigo-100 text-teal-700' },
- { step: '3', title: 'After you pass', desc: 'Designated heirs receive access to the memories and messages you left for them · exactly as you intended.', color: 'bg-teal-100 text-teal-700' },
+ { step:'1', title:'While you are alive', desc:'Create memories, write final messages, and designate heirs who will receive your legacy.', color:'bg-purple-100 text-purple-700' },
+ { step:'2', title:'Your legacy is secured', desc:'All content is privately stored. Heirs cannot access it yet — only you can edit or delete entries.', color:'bg-indigo-100 text-teal-700' },
+ { step:'3', title:'After you pass', desc:'Designated heirs receive access to the memories and messages you left for them — exactly as you intended.', color:'bg-teal-100 text-teal-700' },
  ].map(({ step, title, desc, color }) => (
- <div key={step} className="flex gap-4">
- <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>{step}</div>
+ <div key={step} className="flex gap-3 px-4 py-3">
+ <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${color}`}>{step}</div>
  <div>
- <p className="text-sm font-semibold text-slate-800">{title}</p>
- <p className="text-xs text-[var(--text-500)] mt-0.5 leading-relaxed">{desc}</p>
+ <p className="text-xs font-bold text-[var(--text-800)]">{title}</p>
+ <p className="text-[11px] text-[var(--text-500)] mt-0.5 leading-relaxed">{desc}</p>
  </div>
  </div>
  ))}
