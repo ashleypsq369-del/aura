@@ -1,15 +1,208 @@
-﻿/* eslint-disable react-hooks/set-state-in-effect */
+﻿/**
+ * HeirManagement - Designate who receives your digital legacy
+ * Redesigned: no hardcoded purple, proper cards, portal modal
+ */
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Plus, X, Trash2, Heart, Shield, AlertCircle } from 'lucide-react';
+import {
+  Users, Plus, X, Trash2, Heart, Shield, AlertCircle,
+  CheckCircle2, Lock, Eye, ChevronRight, UserPlus,
+} from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
-import ModalShell from '../components/ui/ModalShell';
 import useConfirmDialog from '../hooks/useConfirmDialog';
+
+const ACCESS_LEVELS = [
+  { value: 'full',           label: 'Full Access',     desc: 'All memories, messages and journal' },
+  { value: 'memories_only',  label: 'Memories Only',   desc: 'Just the Memory Vault' },
+  { value: 'messages_only',  label: 'Messages Only',   desc: 'Just messages and notes' },
+];
+
+const GRADIENTS = [
+  'from-teal-500 to-cyan-600',
+  'from-purple-500 to-violet-600',
+  'from-rose-500 to-pink-600',
+  'from-amber-500 to-orange-500',
+  'from-indigo-500 to-blue-600',
+];
+
+function HeirCard({ heir, onRemove, idx }) {
+  const grad = GRADIENTS[idx % GRADIENTS.length];
+  const level = ACCESS_LEVELS.find(l => l.value === heir.access_level) || ACCESS_LEVELS[0];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: idx * 0.06 }}
+      className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden group"
+    >
+      {/* Header strip */}
+      <div className={`bg-gradient-to-r ${grad} px-4 py-3 flex items-center gap-3`}>
+        <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-bold text-white text-base flex-shrink-0">
+          {(heir.heir_name || '?').charAt(0).toUpperCase()}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-white truncate">{heir.heir_name}</p>
+          <p className="text-xs text-white/70">{heir.relationship}</p>
+        </div>
+        <button
+          onClick={() => onRemove(heir.id, heir.heir_name)}
+          className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+          title="Remove heir"
+        >
+          <Trash2 size={13} className="text-white" />
+        </button>
+      </div>
+
+      {/* Body */}
+      <div className="p-4 space-y-3">
+        {/* Access badges */}
+        <div className="flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 text-xs font-bold text-teal-700 dark:text-teal-300">
+            <Eye size={11} /> {level.label}
+          </span>
+          {heir.can_access_private && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--page-bg)] border border-[var(--card-border)] text-xs font-semibold text-[var(--text-600)]">
+              <Lock size={10} /> Incl. private
+            </span>
+          )}
+          {heir.activated_at && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">
+              <CheckCircle2 size={10} /> Active
+            </span>
+          )}
+        </div>
+
+        {/* Personal note */}
+        {heir.notes_from_patient && (
+          <div className="px-3 py-2.5 bg-[var(--page-bg)] rounded-lg border border-[var(--card-border)]">
+            <p className="text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider mb-1">Your note to them</p>
+            <p className="text-xs text-[var(--text-700)] italic leading-relaxed">"{heir.notes_from_patient}"</p>
+          </div>
+        )}
+
+        <p className="text-[11px] text-[var(--text-400)]">
+          Designated {new Date(heir.designated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+function AddHeirModal({ onClose, patientId, availableUsers, onSubmit, isPending }) {
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [relationship, setRelationship] = useState('');
+  const [accessLevel, setAccessLevel] = useState('full');
+  const [canAccessPrivate, setCanAccessPrivate] = useState(true);
+  const [personalNote, setPersonalNote] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!selectedUserId || !relationship.trim()) { toast.error('Please fill in all required fields'); return; }
+    onSubmit({ patient_id: patientId, heir_user_id: parseInt(selectedUserId), relationship, access_level: accessLevel, can_access_private: canAccessPrivate, notes_from_patient: personalNote || null });
+  };
+
+  return createPortal(
+    <>
+      <motion.div key="him-bg" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+        onClick={onClose} style={{ position:'fixed', inset:0, zIndex:9500, background:'rgba(0,0,0,0.45)' }} />
+      <div style={{ position:'fixed', inset:0, zIndex:9501, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+        <motion.div key="him-card" initial={{ opacity:0, y:18, scale:0.97 }} animate={{ opacity:1, y:0, scale:1 }}
+          exit={{ opacity:0, y:10 }} transition={{ type:'spring', damping:28, stiffness:340 }}
+          onClick={e => e.stopPropagation()}
+          style={{ pointerEvents:'all', background:'var(--card-bg)', borderRadius:14, width:'100%', maxWidth:520, maxHeight:'90vh', display:'flex', flexDirection:'column', overflow:'hidden', boxShadow:'0 20px 60px rgba(0,0,0,0.18)', border:'1px solid var(--card-border)' }}>
+
+          {/* Header */}
+          <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#7c3aed)', flexShrink:0 }} />
+          <div style={{ padding:'16px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', justifyContent:'space-between', flexShrink:0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <div style={{ width:36, height:36, borderRadius:10, background:'#f0fdf4', border:'1px solid #d1fae5', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <UserPlus size={16} style={{ color:'#0d9488' }} />
+              </div>
+              <div>
+                <p style={{ fontSize:14, fontWeight:700, color:'var(--text-900)', margin:0 }}>Designate an Heir</p>
+                <p style={{ fontSize:12, color:'var(--text-400)', margin:'2px 0 0' }}>Choose who receives your legacy</p>
+              </div>
+            </div>
+            <button onClick={onClose} style={{ width:30, height:30, borderRadius:8, background:'transparent', border:'1px solid var(--card-border)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'var(--text-500)' }}>
+              <X size={14} />
+            </button>
+          </div>
+
+          {/* Body */}
+          <form onSubmit={handleSubmit} style={{ flex:1, overflowY:'auto', padding:'16px 20px', display:'flex', flexDirection:'column', gap:14 }}>
+
+            <div>
+              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'var(--text-600)', marginBottom:6 }}>Person <span style={{ color:'#dc2626' }}>*</span></label>
+              <select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)} required
+                style={{ width:'100%', padding:'10px 12px', fontSize:13, border:'1px solid var(--card-border)', borderRadius:10, background:'var(--page-bg)', color:'var(--text-800)', outline:'none' }}>
+                <option value="">Choose someone...</option>
+                {availableUsers.map(u => <option key={u.id} value={u.id}>{u.full_name} ({u.role})</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'var(--text-600)', marginBottom:6 }}>Relationship <span style={{ color:'#dc2626' }}>*</span></label>
+              <input type="text" value={relationship} onChange={e => setRelationship(e.target.value)} required
+                placeholder="e.g. daughter, spouse, best friend..."
+                style={{ width:'100%', padding:'10px 12px', fontSize:13, border:'1px solid var(--card-border)', borderRadius:10, background:'var(--page-bg)', color:'var(--text-800)', outline:'none' }} />
+            </div>
+
+            <div>
+              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'var(--text-600)', marginBottom:8 }}>Access Level</label>
+              <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                {ACCESS_LEVELS.map(lvl => (
+                  <label key={lvl.value} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:10, border:`2px solid ${accessLevel === lvl.value ? '#0d9488' : 'var(--card-border)'}`, background: accessLevel === lvl.value ? '#f0fdf4' : 'var(--page-bg)', cursor:'pointer', transition:'all 0.12s' }}>
+                    <input type="radio" name="accessLevel" value={lvl.value} checked={accessLevel === lvl.value} onChange={() => setAccessLevel(lvl.value)} style={{ accentColor:'#0d9488' }} />
+                    <div>
+                      <p style={{ fontSize:12, fontWeight:700, color:'var(--text-800)', margin:0 }}>{lvl.label}</p>
+                      <p style={{ fontSize:11, color:'var(--text-400)', margin:'2px 0 0' }}>{lvl.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <label style={{ display:'flex', alignItems:'center', gap:10, padding:'12px', borderRadius:10, border:`1px solid var(--card-border)`, background:'var(--page-bg)', cursor:'pointer' }}>
+              <input type="checkbox" checked={canAccessPrivate} onChange={e => setCanAccessPrivate(e.target.checked)} style={{ width:15, height:15, accentColor:'#0d9488' }} />
+              <div>
+                <p style={{ fontSize:12, fontWeight:700, color:'var(--text-800)', margin:0 }}>Allow access to private content</p>
+                <p style={{ fontSize:11, color:'var(--text-400)', margin:'2px 0 0' }}>They can see entries you marked as private</p>
+              </div>
+            </label>
+
+            <div>
+              <label style={{ display:'block', fontSize:12, fontWeight:700, color:'var(--text-600)', marginBottom:6 }}>
+                Personal message <span style={{ fontWeight:400, color:'var(--text-400)' }}>(optional)</span>
+              </label>
+              <textarea value={personalNote} onChange={e => setPersonalNote(e.target.value)} rows={3}
+                placeholder="A personal message for this person that they'll see when they access your legacy..."
+                style={{ width:'100%', padding:'10px 12px', fontSize:13, border:'1px solid var(--card-border)', borderRadius:10, background:'var(--page-bg)', color:'var(--text-800)', outline:'none', resize:'none' }} />
+            </div>
+          </form>
+
+          {/* Footer */}
+          <div style={{ padding:'12px 20px', background:'var(--page-bg)', borderTop:'1px solid var(--card-border)', display:'flex', gap:10, flexShrink:0 }}>
+            <button onClick={onClose} style={{ flex:1, padding:'10px', borderRadius:10, border:'1px solid var(--card-border)', background:'transparent', color:'var(--text-600)', fontSize:13, fontWeight:600, cursor:'pointer' }}>
+              Cancel
+            </button>
+            <button onClick={handleSubmit} disabled={isPending || !selectedUserId || !relationship.trim()}
+              style={{ flex:2, padding:'10px', borderRadius:10, border:'none', background: isPending || !selectedUserId || !relationship.trim() ? '#e2e8f0' : '#0d9488', color: isPending || !selectedUserId || !relationship.trim() ? '#94a3b8' : '#fff', fontSize:13, fontWeight:700, cursor: isPending || !selectedUserId || !relationship.trim() ? 'not-allowed' : 'pointer', transition:'all 0.15s' }}>
+              {isPending ? 'Designating...' : 'Designate Heir'}
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    </>,
+    document.body
+  );
+}
 
 export default function HeirManagement() {
   const { user } = useAuth();
@@ -18,122 +211,48 @@ export default function HeirManagement() {
   const [showModal, setShowModal] = useState(false);
   const queryClient = useQueryClient();
 
-  // Form state
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [relationship, setRelationship] = useState('');
-  const [accessLevel, setAccessLevel] = useState('full');
-  const [canAccessPrivate, setCanAccessPrivate] = useState(true);
-  const [personalNote, setPersonalNote] = useState('');
-
-  // Fetch linked patient
   const { data: patientData } = useQuery({
     queryKey: ['my-patient'],
-    queryFn: async () => {
-      const response = await apiClient.get('/api/bereavement/my-patient');
-      return response.data;
-    },
+    queryFn: async () => (await apiClient.get('/api/bereavement/my-patient')).data,
   });
 
   useEffect(() => {
-    if (patientData?.patient_id) {
-      setPatientId(patientData.patient_id);
-    } else if (patientData?.patient?.id) {
-      setPatientId(patientData.patient.id);
-    }
+    if (patientData?.patient_id) setPatientId(patientData.patient_id);
+    else if (patientData?.patient?.id) setPatientId(patientData.patient.id);
   }, [patientData]);
 
-  // Check consent
   const { data: consentData } = useQuery({
     queryKey: ['legacy-consent', patientId],
-    queryFn: async () => {
-      if (!patientId) return null;
-      const response = await apiClient.get(`/api/legacy/consent/${patientId}`);
-      return response.data;
-    },
+    queryFn: async () => (await apiClient.get(`/api/legacy/consent/${patientId}`)).data,
     enabled: !!patientId,
   });
 
-  // Fetch heirs
   const { data: heirsData, isLoading } = useQuery({
     queryKey: ['legacy-heirs', patientId],
-    queryFn: async () => {
-      if (!patientId) return { heirs: [] };
-      const response = await apiClient.get(`/api/legacy/heirs/${patientId}`);
-      return response.data;
-    },
+    queryFn: async () => { if (!patientId) return { heirs: [] }; return (await apiClient.get(`/api/legacy/heirs/${patientId}`)).data; },
     enabled: !!patientId,
   });
 
-  // Fetch all users for heir selection
   const { data: usersData } = useQuery({
     queryKey: ['all-users'],
-    queryFn: async () => {
-      const response = await apiClient.get('/api/auth/users');
-      return response.data;
-    },
+    queryFn: async () => (await apiClient.get('/api/auth/users')).data,
     enabled: showModal,
   });
 
-  // Designate heir mutation
   const designateHeirMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await apiClient.post('/api/legacy/heirs', data);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['legacy-heirs', patientId]);
-      setShowModal(false);
-      resetForm();
-      toast.success('Heir designated successfully');
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.detail || 'Failed to designate heir');
-    },
+    mutationFn: async (data) => (await apiClient.post('/api/legacy/heirs', data)).data,
+    onSuccess: () => { queryClient.invalidateQueries(['legacy-heirs', patientId]); setShowModal(false); toast.success('Heir designated'); },
+    onError: (e) => toast.error(e.response?.data?.detail || 'Failed to designate heir'),
   });
 
-  // Remove heir mutation
   const removeHeirMutation = useMutation({
-    mutationFn: async (heirId) => {
-      const response = await apiClient.delete(`/api/legacy/heirs/${heirId}`);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['legacy-heirs', patientId]);
-      toast.success('Heir removed');
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.detail || 'Failed to remove heir');
-    },
+    mutationFn: async (id) => (await apiClient.delete(`/api/legacy/heirs/${id}`)).data,
+    onSuccess: () => { queryClient.invalidateQueries(['legacy-heirs', patientId]); toast.success('Heir removed'); },
+    onError: (e) => toast.error(e.response?.data?.detail || 'Failed to remove heir'),
   });
-
-  const resetForm = () => {
-    setSelectedUserId('');
-    setRelationship('');
-    setAccessLevel('full');
-    setCanAccessPrivate(true);
-    setPersonalNote('');
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!selectedUserId || !relationship) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
-    designateHeirMutation.mutate({
-      patient_id: patientId,
-      heir_user_id: parseInt(selectedUserId),
-      relationship: relationship,
-      access_level: accessLevel,
-      can_access_private: canAccessPrivate,
-      notes_from_patient: personalNote || null
-    });
-  };
 
   const handleRemoveHeir = async (heirId, heirName) => {
-    if (await confirmAction({ title: `Are you sure you want to remove ${heirName} as an heir? They will lose access to your legacy.`, confirmLabel: "Confirm", variant: "danger" })) {
+    if (await confirmAction({ title: `Remove ${heirName} as heir?`, body: 'They will lose access to your legacy. You can re-add them at any time.', confirmLabel: 'Remove', variant: 'danger' })) {
       removeHeirMutation.mutate(heirId);
     }
   };
@@ -141,44 +260,23 @@ export default function HeirManagement() {
   const heirs = heirsData?.heirs || [];
   const hasConsent = consentData?.consent_given;
   const users = usersData?.users || [];
-  const availableUsers = users.filter(u => 
-    u.id !== user?.id && // Not current user
-    !heirs.some(h => h.heir_user_id === u.id) // Not already an heir
-  );
+  const availableUsers = users.filter(u => u.id !== user?.id && !heirs.some(h => h.heir_user_id === u.id));
 
-  if (!patientId && !isLoading) {
+  // No consent — gate page
+  if (!hasConsent && !isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
-          <Users className="w-16 h-16 mx-auto mb-6" className="text-purple-400" />
-          <h2 className="text-base font-semibold mb-4" className="text-purple-700">
-            No Patient Linked
-          </h2>
-          <p className="text-[var(--text-600)]">
-            Heir management is available to patients. Please contact your care team.
+      <div className="min-h-full flex items-center justify-center p-6">
+        <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-8 max-w-sm text-center">
+          <div className="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto mb-4">
+            <Shield size={24} className="text-teal-600" />
+          </div>
+          <p className="text-sm font-bold text-[var(--text-900)] mb-2">Consent Required</p>
+          <p className="text-xs text-[var(--text-500)] mb-5 leading-relaxed">
+            You need to set up your digital legacy plan before designating heirs.
           </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!hasConsent) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" className="bg-purple-50">
-        <div className="bg-[var(--card-bg)] rounded-lg p-8 max-w-sm text-center border border-slate-200">
-          <Shield className="w-16 h-16 mx-auto mb-6" className="text-purple-400" />
-          <h2 className="text-base font-semibold mb-4" className="text-purple-700">
-            Consent Required
-          </h2>
-          <p className="text-[var(--text-600)] mb-6">
-            You need to give consent for your digital legacy before designating heirs.
-          </p>
-          <Link
-            to="/legacy-setup"
-            className="inline-block px-6 py-3 rounded-xl shadow-lg"
-            className="bg-purple-700 text-white"
-          >
-            Set Up Digital Legacy
+          <Link to="/legacy-setup"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition">
+            Set Up Digital Legacy <ChevronRight size={14} />
           </Link>
         </div>
       </div>
@@ -186,269 +284,69 @@ export default function HeirManagement() {
   }
 
   return (
-    <div className="min-h-screen" className="bg-purple-50">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="max-w-6xl mx-auto px-6 py-8 space-y-8"
+    <div className="min-h-full">
+      <PageHeader
+        image="/resources/african/african-family-support.jpg"
+        title="Manage Heirs"
+        subtitle="Designate who receives access to your digital legacy"
+        icon={Users}
       >
-        {/* Header */}
-        <PageHeader
-          image="/resources/african/african-family-support.jpg"
-          title="Heir Management"
-          subtitle="Designate who can access your digital legacy"
-          icon={Users}
-        >
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[var(--page-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-xl border border-[var(--card-border)] text-sm font-semibold transition-all"
-          >
-            <Plus size={16} /> Add Heir
-          </button>
-        </PageHeader>
+        <button onClick={() => setShowModal(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition">
+          <Plus size={13} /> Add Heir
+        </button>
+      </PageHeader>
 
-        {/* Info Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 flex items-start space-x-3"
-        >
-          <AlertCircle className="w-6 h-6 text-teal-600 mt-1" />
-          <div className="flex-1">
-            <h3 className="font-medium text-blue-900 mb-2">What are Heirs?</h3>
-            <p className="text-sm text-blue-800">
-              Heirs are people you designate to access your memories, messages, and other content after you pass away. You can choose anyone - family members, friends, or anyone you trust. Each heir can have different access levels and permissions.
-            </p>
-          </div>
-        </motion.div>
+      <div className="max-w-4xl mx-auto px-4 py-5 space-y-4">
 
-        {/* Heirs List */}
+        {/* Info strip */}
+        <div className="flex items-start gap-3 px-4 py-3 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)]">
+          <AlertCircle size={15} className="text-teal-600 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-[var(--text-600)] leading-relaxed">
+            Heirs can only access your content <strong>after you pass away</strong> and a clinician activates the legacy system. You can add, change or remove heirs at any time.
+          </p>
+        </div>
+
+        {/* Heirs grid */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2" ></div>
+          <div className="py-12 text-center">
+            <div className="w-8 h-8 border-2 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : heirs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {heirs.map((heir, index) => (
-              <motion.div
-                key={heir.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-6 shadow-md hover:shadow-lg transition relative group"
-              >
-                {/* Delete Button */}
-                <button
-                  onClick={() => handleRemoveHeir(heir.id, heir.heir_name)}
-                  className="absolute top-4 right-4 p-2 bg-red-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100"
-                  title="Remove heir"
-                >
-                  <Trash2 className="w-4 h-4 text-red-600" />
-                </button>
-
-                <div className="flex items-start space-x-4">
-                  <div className="p-3 bg-purple-100 rounded-full">
-                    <Users className="w-6 h-6" className="text-purple-700" />
-                  </div>
-                  <div className="flex-1 pr-8">
-                    <h3 className="text-lg font-medium text-[var(--text-900)]">{heir.heir_name}</h3>
-                    <p className="text-sm text-[var(--text-600)] mb-3">{heir.relationship}</p>
-
-                    {/* Access Level Badge */}
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span className="px-3 py-1 bg-purple-100 text-purple-600 text-xs font-medium rounded-full">
-                        {heir.access_level === 'full' && 'Full Access'}
-                        {heir.access_level === 'memories_only' && 'Memories Only'}
-                        {heir.access_level === 'messages_only' && 'Messages Only'}
-                      </span>
-                      {heir.can_access_private && (
-                        <span className="px-3 py-1 bg-[var(--card-border)]/30 text-[var(--text-700)] text-xs font-medium rounded-full">
-                          Can View Private
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Personal Note */}
-                    {heir.notes_from_patient && (
-                      <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-                        <p className="text-xs text-[var(--text-500)] mb-1">Your note to them:</p>
-                        <p className="text-sm text-[var(--text-700)] italic">"{heir.notes_from_patient}"</p>
-                      </div>
-                    )}
-
-                    {/* Metadata */}
-                    <div className="mt-4 pt-4 border-t border-[var(--card-border)] flex items-center justify-between text-xs text-[var(--text-500)]">
-                      <span>Designated {new Date(heir.designated_at).toLocaleDateString()}</span>
-                      {heir.activated_at && (
-                        <span className="text-green-600">
-                          " Activated {new Date(heir.activated_at).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {heirs.map((heir, idx) => (
+              <HeirCard key={heir.id} heir={heir} onRemove={handleRemoveHeir} idx={idx} />
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-white/70 backdrop-blur-sm rounded-lg p-8 text-center border border-slate-200"
-          >
-            <Heart className="w-20 h-20 mx-auto mb-6" style={{ color: '#6B4F7A', opacity: 0.3 }} />
-            <h3 className="text-base font-semibold mb-3" className="text-purple-700">
-              No Heirs Designated Yet
-            </h3>
-            <p className="text-[var(--text-600)] mb-6">
-              Start designating people who will be able to access your memories and messages after you're gone.
-            </p>
-            <button
-              onClick={() => setShowModal(true)}
-              className="px-6 py-3 rounded-xl shadow-lg"
-              className="bg-purple-700 text-white"
-            >
-              Designate Your First Heir
+          <div className="bg-[var(--card-bg)] rounded-xl border border-dashed border-[var(--card-border)] p-10 text-center">
+            <Heart size={32} className="text-[var(--text-300)] mx-auto mb-3" />
+            <p className="text-sm font-semibold text-[var(--text-600)] mb-1">No heirs designated yet</p>
+            <p className="text-xs text-[var(--text-400)] mb-5">Choose the people who will receive your legacy</p>
+            <button onClick={() => setShowModal(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition">
+              <UserPlus size={14} /> Designate First Heir
             </button>
-          </motion.div>
+          </div>
         )}
 
-        {/* Add Heir Modal */}
-        <ModalShell
-          open={showModal}
-          onClose={() => setShowModal(false)}
-          title="Designate an Heir"
-          icon={Users}
-          accent="violet"
-          size="lg"
-          footer={
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => { setShowModal(false); resetForm(); }}
-                className="flex-1 px-6 py-3 border-2 rounded-xl hover:bg-[var(--card-bg)] transition"
-                style={{ borderColor: '#6B4F7A40', color: '#6B4F7A' }}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={designateHeirMutation.isPending}
-                className="flex-1 px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition disabled:opacity-50"
-                style={{ backgroundColor: '#6B4F7A', color: 'white' }}
-              >
-                {designateHeirMutation.isPending ? 'Designating...' : 'Designate Heir'}
-              </button>
-            </div>
-          }
-        >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Search User */}
-            <div>
-              <label className="block text-sm font-semibold text-[var(--text-700)] mb-1">
-                Search Person *
-              </label>
-              <select
-                value={selectedUserId}
-                onChange={(e) => setSelectedUserId(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                style={{ borderColor: '#6B4F7A40' }}
-                required
-              >
-                <option value="">Choose someone from the system...</option>
-                {availableUsers.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.full_name} ({u.role})
-                  </option>
-                ))}
-              </select>
-            </div>
+        <p className="text-center text-xs text-[var(--text-400)] pb-2">
+          Heirs are only activated after you pass away and a clinician confirms the legacy. Changes take effect immediately.
+        </p>
+      </div>
 
-            {/* Relationship */}
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Relationship *
-              </label>
-              <input
-                type="text"
-                value={relationship}
-                onChange={(e) => setRelationship(e.target.value)}
-                placeholder="e.g., daughter, son, spouse, best friend, sister..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                style={{ borderColor: '#6B4F7A40' }}
-                required
-              />
-            </div>
-
-            {/* Access Level */}
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Access Level
-              </label>
-              <select
-                value={accessLevel}
-                onChange={(e) => setAccessLevel(e.target.value)}
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none"
-                style={{ borderColor: '#6B4F7A40' }}
-              >
-                <option value="full">Full Access - All content and memories</option>
-                <option value="memories_only">Memories Only - Just Memory Vault</option>
-                <option value="messages_only">Messages Only - Just messages and notes</option>
-              </select>
-            </div>
-
-            {/* Can Access Private */}
-            <div className="bg-[var(--card-bg)] rounded-xl p-4">
-              <label className="flex items-start space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={canAccessPrivate}
-                  onChange={(e) => setCanAccessPrivate(e.target.checked)}
-                  className="w-5 h-5 mt-0.5 rounded"
-                  style={{ accentColor: '#6B4F7A' }}
-                />
-                <div>
-                  <p className="font-medium text-[var(--text-900)]">Allow access to private content</p>
-                  <p className="text-sm text-[var(--text-600)] dark:text-slate-400">
-                    They can see entries you marked as "private". Uncheck to only show shared content.
-                  </p>
-                </div>
-              </label>
-            </div>
-
-            {/* Personal Note */}
-            <div>
-              <label className="block text-sm font-medium text-[var(--text-700)] mb-2">
-                Personal Message (Optional)
-              </label>
-              <textarea
-                value={personalNote}
-                onChange={(e) => setPersonalNote(e.target.value)}
-                rows={4}
-                placeholder="A personal message for this person that they'll see when they access your legacy..."
-                className="w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none"
-                style={{ borderColor: '#6B4F7A40' }}
-              />
-            </div>
-          </form>
-        </ModalShell>
-
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center py-6"
-        >
-          <p className="text-sm text-[var(--text-500)] italic">
-            You can change or remove heirs at any time. Heirs will only get access after you pass away and a clinician activates the legacy system.
-          </p>
-        </motion.div>
-      </motion.div>
+      <AnimatePresence>
+        {showModal && (
+          <AddHeirModal
+            onClose={() => setShowModal(false)}
+            patientId={patientId}
+            availableUsers={availableUsers}
+            onSubmit={designateHeirMutation.mutate}
+            isPending={designateHeirMutation.isPending}
+          />
+        )}
+      </AnimatePresence>
       <ConfirmDialog />
     </div>
   );
 }
-

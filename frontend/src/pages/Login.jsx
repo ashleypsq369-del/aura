@@ -57,7 +57,7 @@ export default function Login() {
       const savedUserStr = localStorage.getItem('user');
       if (savedUserStr) {
         const u = JSON.parse(savedUserStr);
-        if (u.needs_questionnaire) {
+        if (u.needs_questionnaire && !u.questionnaire_skipped) {
           navigate('/setup');
         } else {
           // Role-based landing pages

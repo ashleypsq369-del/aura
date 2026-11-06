@@ -1431,7 +1431,7 @@ export default function PersonalisationQuest() {
  </div>
 
  {/* Navigation footer */}
- <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] flex justify-between items-center">
+ <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] flex justify-between items-center gap-3">
  <button onClick={handleBack} disabled={currentStep === 1}
  className={`flex items-center gap-2 px-5 py-2 rounded-xl font-semibold text-sm transition-all ${
  currentStep === 1 ? 'opacity-0 cursor-not-allowed' :
@@ -1439,6 +1439,28 @@ export default function PersonalisationQuest() {
  }`}>
  <ArrowLeft size={15} /> Back
  </button>
+
+ {/* Skip option — always visible, navigates to dashboard without completing */}
+ <button
+ onClick={() => {
+ try {
+ const stored = localStorage.getItem('user');
+ if (stored) {
+ const u = JSON.parse(stored);
+ u.needs_questionnaire = false;
+ localStorage.setItem('user', JSON.stringify(stored ? { ...JSON.parse(stored), needs_questionnaire: false } : {}));
+ }
+ } catch {}
+ const dest = (() => {
+ try { const u = JSON.parse(localStorage.getItem('user') || '{}'); return u.role === 'patient' ? '/my-space' : u.role === 'family' ? '/dashboard' : '/dashboard'; } catch { return '/dashboard'; }
+ })();
+ navigate(dest, { replace: true });
+ }}
+ className="text-xs font-semibold text-[var(--text-400)] hover:text-[var(--text-600)] transition-colors px-3 py-2 rounded-lg hover:bg-[var(--page-bg)]"
+ >
+ Skip for now
+ </button>
+
  <button onClick={handleNext} disabled={savePreferences.isPending}
  className="flex items-center gap-2 px-7 py-2.5 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-bold text-sm transition-all shadow-md disabled:opacity-50">
  <span>{currentStep === TOTAL ? 'Complete Setup' : 'Continue'}</span>

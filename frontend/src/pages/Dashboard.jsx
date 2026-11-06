@@ -96,9 +96,9 @@ export default function Dashboard() {
 
  useEffect(() => {
  if (user && prefsData) {
- if (!prefsData.questionnaire_complete) {
+ if (!prefsData.questionnaire_complete && !prefsData.questionnaire_skipped) {
  navigate('/setup');
- } else if (user.role === 'patient' && prefsData.questionnaire_complete) {
+ } else if (user.role === 'patient' && (prefsData.questionnaire_complete || prefsData.questionnaire_skipped)) {
  navigate('/my-space');
  }
  }

@@ -269,24 +269,17 @@ export default function CommunityHub() {
  )}
 
  {/* Personalised banner */}
- {signals?.needsCommunity && activeTab === 'all' && (
- <div className="px-4 py-3 bg-indigo-50 border border-indigo-300 rounded-xl">
- <h3 className="text-sm font-bold text-indigo-900 mb-1 flex items-center gap-2">
- <Users size={14} className="text-teal-700" />
- Groups Matched to Your Profile
- </h3>
- <p className="text-xs text-indigo-800">
- Based on your preferences: {signals.communityTags?.join(', ')}
- {signals.needsEmotionalSupport && <span className="block mt-1 text-teal-700 font-medium">✨ Emotional support groups highlighted</span>}
- {signals.needsSpiritualSupport && <span className="block mt-1 text-teal-700 font-medium">🙏 Spiritual care groups available</span>}
- </p>
+ {signals?.needsCommunity && activeTab === 'all' && !search && (
+ <div className="flex items-center gap-2 px-4 py-2.5 bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl">
+ <Users size={13} className="text-teal-600 flex-shrink-0" />
+ <p className="text-xs text-teal-800 dark:text-teal-300 font-semibold">Groups matched to your health profile</p>
  </div>
  )}
 
  {recommended.length > 0 && (
  <div>
- <p className="text-xs font-bold text-amber-800 mb-3 flex items-center gap-1.5">
- <Star size={12} className="fill-amber-500 text-amber-500" /> Recommended for you
+ <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">
+ Recommended for you
  </p>
  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
  {recommended.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
@@ -425,11 +418,10 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
         <div style={{ display:'flex', borderTop:'1px solid var(--card-border)', paddingTop:10, marginBottom:12 }}>
           {[
             { v: group.member_count ?? 0, l:'Members' },
-            { v: group.is_recommended ? 'Yes' : 'No', l:'Recommended' },
-            { v: group.joined ? 'Yes' : 'No', l:'Joined' },
+            { v: group.joined ? 'Joined' : 'Open',  l: group.joined ? 'Status' : 'Status' },
           ].map((s, i) => (
-            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<2?'1px solid var(--card-border)':'none' }}>
-              <p style={{ fontSize:13, fontWeight:800, color:'var(--text-900)', margin:0, lineHeight:1 }}>{s.v}</p>
+            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<1?'1px solid var(--card-border)':'none' }}>
+              <p style={{ fontSize:13, fontWeight:800, color: s.v === 'Joined' ? '#0d9488' : 'var(--text-900)', margin:0, lineHeight:1 }}>{s.v}</p>
               <p style={{ fontSize:9, color:'var(--text-500)', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
             </div>
           ))}

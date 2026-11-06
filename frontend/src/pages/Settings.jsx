@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
  User, Bell, Palette, Globe, Eye, Shield, Brain,
  Download, Trash2, ChevronRight, Check, Sun, Moon,
  Type, Zap, Volume2, MousePointer, MessageSquare,
- Hand, Activity, Heart, RotateCcw, Info, Smile,
+ Hand, Activity, Heart, RotateCcw, Info, Smile, RefreshCw,
  PanelLeft, PanelLeftClose, PanelLeftOpen, AlignJustify,
  Sparkles, LayoutGrid, Stethoscope, Briefcase, Users,
  Smartphone, Loader2, Keyboard, BookOpen,
@@ -69,6 +69,7 @@ export default function Settings() {
  const { user } = useAuth();
   const { confirm: confirmAction, ConfirmDialog } = useConfirmDialog();
  const location = useLocation();
+ const navigate = useNavigate();
  const push = usePushNotifications();
  const pwa = useInstallPrompt();
  const restartTour = useRestartTour();
@@ -453,6 +454,75 @@ export default function Settings() {
  <Info size={11} className="flex-shrink-0 mt-0.5" />
  Switching profile applies larger text, adjusted touch targets, and layout changes immediately. Based on W3C WCAG 2.2 and COGA guidelines.
  </p>
+ </div>
+ </Section>
+ <Section title="Personalised Care">
+ <div className="px-5 py-4 space-y-4">
+ <p className="text-xs text-[var(--text-500)] leading-relaxed">
+ Your personalisation questionnaire sets up your care experience - language, symptom tracking, community preferences, and which features are shown to you. You can retake it at any time to refresh your personalised care plan.
+ </p>
+ <div className="flex items-start gap-4 p-4 bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-xl">
+ <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-800/40 border border-teal-200 dark:border-teal-700 flex items-center justify-center flex-shrink-0">
+ <Sparkles size={18} className="text-teal-600 dark:text-teal-400" />
+ </div>
+ <div className="flex-1 min-w-0">
+ <p className="text-sm font-bold text-[var(--text-900)] mb-0.5">Retake Personalisation Quiz</p>
+ <p className="text-xs text-[var(--text-500)] leading-relaxed mb-3">
+ Update your care preferences, symptom priorities, spiritual needs, language and more. Your personalised care plan will be refreshed immediately.
+ </p>
+ <button
+ onClick={() => {
+ // Reset questionnaire completion so /setup shows fresh
+ const stored = localStorage.getItem('user');
+ if (stored) {
+ try {
+ const u = JSON.parse(stored);
+ u.needs_questionnaire = true;
+ localStorage.setItem('user', JSON.stringify(u));
+ } catch {}
+ }
+ navigate('/setup');
+ }}
+ className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition-colors"
+ >
+ <RefreshCw size={13} /> Retake Quiz
+ </button>
+ </div>
+ </div>
+ <div className="flex items-start gap-4 p-4 bg-[var(--page-bg)] border border-[var(--card-border)] rounded-xl">
+ <div className="w-10 h-10 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] flex items-center justify-center flex-shrink-0">
+ <Brain size={18} className="text-[var(--text-500)]" />
+ </div>
+ <div className="flex-1 min-w-0">
+ <p className="text-sm font-bold text-[var(--text-900)] mb-0.5">Skip Questionnaire</p>
+ <p className="text-xs text-[var(--text-500)] leading-relaxed mb-3">
+ Prefer to use standard settings without personalisation? You can skip the questionnaire and use the app with default settings. You can always retake it later.
+ </p>
+ <button
+ onClick={async () => {
+ try {
+ const token = localStorage.getItem('auth_token');
+ const stored = localStorage.getItem('user');
+ const u = stored ? JSON.parse(stored) : {};
+ // Mark questionnaire as skipped/complete via API
+ await fetch(`${window.__AURA_API || ''}/api/preferences/my`, {
+ method: 'PUT',
+ headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+ body: JSON.stringify({ questionnaire_complete: true, questionnaire_skipped: true }),
+ });
+ u.needs_questionnaire = false;
+ localStorage.setItem('user', JSON.stringify(u));
+ toast.success('Questionnaire skipped - using standard settings');
+ } catch {
+ toast.error('Could not save preference');
+ }
+ }}
+ className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--card-bg)] hover:bg-[var(--card-border)] text-[var(--text-700)] rounded-lg text-xs font-bold border border-[var(--card-border)] transition-colors"
+ >
+ Use Standard Settings
+ </button>
+ </div>
+ </div>
  </div>
  </Section>
  <Section title="Language">

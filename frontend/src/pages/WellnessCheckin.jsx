@@ -164,7 +164,7 @@ export default function WellnessCheckin() {
  <motion.div
  initial={{ scale: 0.9, opacity: 0 }}
  animate={{ scale: 1, opacity: 1 }}
- className="bg-[var(--card-bg)] rounded-lg shadow-sm p-10 max-w-md w-full text-center border-2 border-emerald-200"
+ className="bg-[var(--card-bg)] rounded-xl shadow-sm p-8 max-w-md w-full text-center border border-[var(--card-border)]"
  >
  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring' }}>
  <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
@@ -334,7 +334,7 @@ export default function WellnessCheckin() {
  initial={{ opacity: 0, y: 12 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.04 }}
- className={`bg-[var(--card-bg)] rounded-xl border-2 p-4 transition-colors ${val !== null ? c.border : 'border-[var(--card-border)]'}`}
+ className={`bg-[var(--card-bg)] rounded-xl border p-4 transition-colors ${val !== null ? c.border : 'border-[var(--card-border)]'}`}
  >
  <div className="flex items-center gap-3 mb-3">
  <div className={`w-9 h-9 rounded-xl ${c.bg} flex items-center justify-center flex-shrink-0`}>
@@ -409,7 +409,7 @@ export default function WellnessCheckin() {
  <button
  onClick={handleSubmit}
  disabled={!allAnswered || submitMutation.isPending}
- className="w-full py-4 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-base rounded-xl shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+ className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
  >
  {submitMutation.isPending ? 'Saving...' : !allAnswered ? `Rate all items to continue (${ITEMS.filter(i => scores[i.key] !== null).length}/${ITEMS.length} done)` : 'Submit Check-in'}
  </button>
