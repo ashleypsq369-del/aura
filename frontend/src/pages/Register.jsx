@@ -393,13 +393,12 @@ export default function Register() {
  }),
  onSuccess: (res) => {
  const { access_token, user } = res.data;
+ // Store token but DON'T call setUser yet — that would trigger auth redirects
+ // Navigate to /welcome with user data; /welcome makes the questionnaire choice
+ // then calls setUser and goes to the right destination
  localStorage.setItem('auth_token', access_token);
- localStorage.setItem('user', JSON.stringify(user));
- setUser(user);
- toast.success('Account created! Welcome to Project Aura.');
- // Show opt-in modal BEFORE any auth-triggered redirects
- setRegisteredUser(user);
- setTimeout(() => setShowSetupModal(true), 100);
+ localStorage.setItem('pending_user', JSON.stringify(user));
+ navigate('/welcome', { state: { user, access_token } });
  },
  onError: (err) => setServerErr(err.response?.data?.detail || 'Registration failed. Please try again.'),
  });

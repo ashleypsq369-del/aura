@@ -30,6 +30,7 @@ import './styles/color-system.css';
 import './styles/sonner-overrides.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Welcome from './pages/Welcome';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
@@ -398,6 +399,7 @@ function AppRoutes() {
  {/* Public Routes */}
  <Route path="/login" element={<Login />} />
  <Route path="/register" element={<Register />} />
+ <Route path="/welcome" element={<Welcome />} />
  <Route path="/forgot-password" element={<ForgotPassword />} />
  <Route path="/reset-password" element={<ResetPassword />} />
  <Route path="/provider-register" element={<ProviderRegister />} />
