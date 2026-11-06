@@ -397,8 +397,9 @@ export default function Register() {
  localStorage.setItem('user', JSON.stringify(user));
  setUser(user);
  toast.success('Account created! Welcome to Project Aura.');
+ // Show opt-in modal BEFORE any auth-triggered redirects
  setRegisteredUser(user);
- setShowSetupModal(true);
+ setTimeout(() => setShowSetupModal(true), 100);
  },
  onError: (err) => setServerErr(err.response?.data?.detail || 'Registration failed. Please try again.'),
  });

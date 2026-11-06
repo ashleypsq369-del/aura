@@ -226,13 +226,23 @@ export default function FamilyConsentSettings() {
  aria-checked={granted}
  aria-label={`${granted ? 'Revoke' : 'Grant'} family access to ${cat.label}`}
  onClick={() => toggle(cat.key)}
- className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 ${
- granted ? 'bg-teal-600' : 'bg-slate-300'
- }`}
+ style={{
+ position:'relative', display:'inline-flex', alignItems:'center',
+ width:44, height:24, borderRadius:12, padding:'2px',
+ border:'none', cursor:'pointer', flexShrink:0,
+ backgroundColor: granted ? '#0d9488' : '#cbd5e1',
+ transition:'background-color 0.2s ease', outline:'none',
+ }}
+ onFocus={e => e.currentTarget.style.boxShadow='0 0 0 3px rgba(13,148,136,0.35)'}
+ onBlur={e => e.currentTarget.style.boxShadow='none'}
  >
- <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
- granted ? 'translate-x-5' : 'translate-x-0'
- }`} />
+ <span style={{
+ display:'block', width:20, height:20, borderRadius:'50%',
+ backgroundColor:'#ffffff',
+ boxShadow:'0 1px 4px rgba(0,0,0,0.2)',
+ transform: granted ? 'translateX(20px)' : 'translateX(0px)',
+ transition:'transform 0.2s ease', flexShrink:0,
+ }} />
  </button>
  </motion.div>
  );
