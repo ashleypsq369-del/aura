@@ -27,7 +27,7 @@ interface PairingEntry {
   expiresAt: number;
 }
 
-// A single outstanding pairing code is sufficient — pairing is a brief,
+// A single outstanding pairing code is sufficient - pairing is a brief,
 // user-driven handshake. A fresh startPairing() supersedes any prior code.
 let pendingPairing: PairingEntry | null = null;
 

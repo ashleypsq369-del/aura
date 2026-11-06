@@ -6,7 +6,7 @@
 // This is a product ruling, not a capability regression: the store can hold a
 // video perfectly well. It is a capacity ruling. One blob is capped at 64 MiB
 // and one project at 2 GiB (`quota.ts`), so a handful of video iterations can
-// exhaust a project's budget — and an exhausted budget fails the WHOLE batch's
+// exhaust a project's budget - and an exhausted budget fails the WHOLE batch's
 // captures with `quota_exceeded`, so a kind nobody ruled on would have been
 // evicting the image semantics that were ruled on.
 //
@@ -128,7 +128,7 @@ describe('video and audio are not immutable originals (user ruling 2026-09-02)',
       // `failed`. Calling it a failure would put a real render/quota failure
       // and a deliberate product exclusion in the same bucket.
       expect(ref?.snapshotState).toBe('legacy_unavailable');
-      // The card still opens the workspace's latest file — the ruling removed
+      // The card still opens the workspace's latest file - the ruling removed
       // the frozen copy, not the identity the click needs.
       expect(ref?.workspaceArtifactId).toBeTruthy();
     }
@@ -201,7 +201,7 @@ describe('video and audio are not immutable originals (user ruling 2026-09-02)',
   it('retires a residual pending video intent instead of re-capturing it', async () => {
     // The dev-DB case. A build that still stored video crashed mid-capture and
     // left a pending path intent behind; this build boots and reconciles it.
-    // Recovery must NOT finish it — that would reinstall the exact bytes the
+    // Recovery must NOT finish it - that would reinstall the exact bytes the
     // ruling just excluded, on the one path that runs before anyone is looking.
     const d = deps();
     const abs = writeProjectFile('clip.mp4', bytes('mp4-on-disk'));
@@ -224,7 +224,7 @@ describe('video and audio are not immutable originals (user ruling 2026-09-02)',
 
     expect(report.completed).toBe(0);
     const row = getChatArtifactSnapshot(d.db, 'residual-video');
-    // Terminal, so the GC can sweep it; and honestly labelled — nothing failed,
+    // Terminal, so the GC can sweep it; and honestly labelled - nothing failed,
     // the kind is simply not stored any more.
     expect(row?.captureState).toBe('failed');
     expect(row?.failureCode).toBe('not_captured');
@@ -289,7 +289,7 @@ describe('video and audio are not immutable originals (user ruling 2026-09-02)',
     expect(ref?.snapshotState).toBe('ready');
   });
 
-  it('still attaches an HTML cover — the gate is on originals, not on covers', async () => {
+  it('still attaches an HTML cover - the gate is on originals, not on covers', async () => {
     const d = deps();
     writeProjectFile('page.html', bytes('<html>v1</html>'));
     await captureRunChatArtifactSnapshots(d, {

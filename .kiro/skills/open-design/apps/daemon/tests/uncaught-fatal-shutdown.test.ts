@@ -3,7 +3,7 @@
 // Node's default crash path, so we have to call `process.exit(1)`
 // explicitly after a bounded posthog-node flush. Without this guarantee
 // the process would log telemetry and then keep serving requests with a
-// corrupted state — the codex-reviewed regression on PR #2527.
+// corrupted state - the codex-reviewed regression on PR #2527.
 //
 // This file pins the contract that's hard to assert from the server.ts
 // integration suite (which has no way to throw inside Express handlers
@@ -35,13 +35,13 @@ function buildFatalShutdown(
   exitFn: (code: number) => void,
 ): (eventName: string, properties: Record<string, unknown>) => void {
   // Mirrors `triggerFatalShutdown` in apps/daemon/src/server.ts. Kept in
-  // sync with that helper by structure — the unit assertions below
+  // sync with that helper by structure - the unit assertions below
   // verify each invariant the server-side path also relies on.
   let fatalShuttingDown = false;
   return (eventName, properties) => {
     if (fatalShuttingDown) return;
     fatalShuttingDown = true;
-    // Await captureSafety BEFORE shutdown — the real captureSafety does
+    // Await captureSafety BEFORE shutdown - the real captureSafety does
     // an internal `await readInstallationIdSafe()`, so a sync
     // fire-and-forget here would let shutdown() drain an empty queue.
     const flushSequence = (async () => {
@@ -98,14 +98,14 @@ describe('daemon fatal-shutdown helper', () => {
       expect.objectContaining({ eventName: 'daemon_uncaught_exception' }),
     );
 
-    // shutdown() resolved synchronously — let the microtask queue drain.
+    // shutdown() resolved synchronously - let the microtask queue drain.
     await vi.runAllTimersAsync();
     expect(shutdownMock).toHaveBeenCalledTimes(1);
     expect(exitMock).toHaveBeenCalledWith(1);
   });
 
   it('still exits even when shutdown() hangs past the timeout (bounded flush)', async () => {
-    // Simulate posthog-node never resolving — network hang during exit.
+    // Simulate posthog-node never resolving - network hang during exit.
     shutdownMock.mockReturnValue(new Promise<void>(() => undefined));
 
     const fatal = buildFatalShutdown(analytics, exit);
@@ -130,7 +130,7 @@ describe('daemon fatal-shutdown helper', () => {
     );
 
     await vi.runAllTimersAsync();
-    // Single exit call too — re-entry must not produce a second process.exit.
+    // Single exit call too - re-entry must not produce a second process.exit.
     expect(exitMock).toHaveBeenCalledTimes(1);
     expect(exitMock).toHaveBeenCalledWith(1);
   });
@@ -171,7 +171,7 @@ describe('daemon fatal-shutdown helper', () => {
     const fatal = buildFatalShutdown(analytics, exit);
     fatal('daemon_uncaught_exception', { error_message: 'order-check' });
 
-    // After 50ms only capture has run — shutdown is waiting on its own timer.
+    // After 50ms only capture has run - shutdown is waiting on its own timer.
     await vi.advanceTimersByTimeAsync(50);
     expect(events).toEqual(['capture-enqueued']);
     expect(shutdownMock).toHaveBeenCalledTimes(1);
@@ -191,7 +191,7 @@ describe('daemon fatal-shutdown helper', () => {
     const fatal = buildFatalShutdown(analytics, exit);
     fatal('daemon_uncaught_exception', { error_message: 'capture-hangs' });
 
-    // shutdown must NOT run while capture is still pending — that was
+    // shutdown must NOT run while capture is still pending - that was
     // the original race the previous round of review identified.
     await vi.advanceTimersByTimeAsync(500);
     expect(shutdownMock).not.toHaveBeenCalled();

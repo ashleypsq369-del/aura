@@ -128,10 +128,10 @@ export function createJsonLineStream(onMessage: (message: unknown, rawLine: stri
  *
  * Performs a single-pass character-level parse, tracking object and array
  * frames on a stack. Returns:
- * - `'complete'`   — a syntactically valid, fully closed JSON value.
- * - `'incomplete'` — valid so far but the document is still open (unclosed
+ * - `'complete'`   - a syntactically valid, fully closed JSON value.
+ * - `'incomplete'` - valid so far but the document is still open (unclosed
  *   strings, objects, or arrays).
- * - `'invalid'`    — an irrecoverable syntax error was encountered.
+ * - `'invalid'`    - an irrecoverable syntax error was encountered.
  *
  * @param value - A string candidate to classify, typically one or more
  *   accumulated stdout lines from an ACP subprocess.

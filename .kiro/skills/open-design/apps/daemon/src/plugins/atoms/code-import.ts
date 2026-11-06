@@ -1,4 +1,4 @@
-// Phase 7 entry slice / spec §10 / §21.3.2 — code-import atom runner.
+// Phase 7 entry slice / spec §10 / §21.3.2 - code-import atom runner.
 //
 // SKILL.md fragment lives at plugins/_official/atoms/code-import/. The
 // runner walks an existing repository's tree and writes a normalised
@@ -10,7 +10,7 @@
 //   - a budget (`OD_CODE_IMPORT_BUDGET_MS`, default 60s) so monorepos
 //     don't burn an entire run on import;
 //   - the standard skip-list (node_modules, .git, .next, dist, build,
-//     out, .turbo, .pnpm-store) — recorded under
+//     out, .turbo, .pnpm-store) - recorded under
 //     `code/index.json.skipped[]` with a reason so the human can audit;
 //   - the §11.5.1 patch-safety contract via lightweight framework
 //     detection (next / vite / remix / astro / sveltekit / cra /

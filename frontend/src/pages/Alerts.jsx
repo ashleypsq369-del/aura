@@ -1,5 +1,5 @@
-/**
- * Alerts — Clinical Safety Alerts
+﻿/**
+ * Alerts - Clinical Safety Alerts
  * Redesigned: underline tab bar, gradient card accents, card-surface filter bar,
  * gradient avatar/icon badges, Services-inspired button and badge treatment.
  * PageHeader image kept as requested.
@@ -80,7 +80,7 @@ function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading
         boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
       }}
     >
-      {/* Gradient top accent — matches Services ProviderCard band */}
+      {/* Gradient top accent - matches Services ProviderCard band */}
       <div style={{ height: 3, background: grad }} />
 
       <div style={{ padding: '12px 16px', display:'flex', alignItems:'flex-start', gap: 12 }}>
@@ -301,11 +301,11 @@ export default function Alerts() {
       initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
       style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}
     >
-      {/* PageHeader — stats on right, filters in children toolbar below image */}
+      {/* PageHeader - stats on right, filters in children toolbar below image */}
       <PageHeader
         image="/resources/african/african-nurse-female.jpg"
         title="Clinical Alerts"
-        subtitle="Active patient safety alerts — sorted by severity"
+        subtitle="Active patient safety alerts - sorted by severity"
         icon={ShieldAlert}
         stats={[
           { label:'Critical',       value:kpi.critical,  color:'#f87171', pulse:kpi.critical>0, onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },

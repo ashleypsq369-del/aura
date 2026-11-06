@@ -4,7 +4,7 @@
 // `renameWorkspaceArtifactPath` and `deleteWorkspaceArtifact` are unit-tested
 // in `chat-artifacts-store.test.ts`. Nothing tested that a route ever CALLS
 // them, and all three call sites sit inside a `try { … } catch { console.warn }`
-// — so deleting the call, or throwing inside it, produced a green suite and a
+// - so deleting the call, or throwing inside it, produced a green suite and a
 // silently wrong workspace pointer:
 //
 //   * rename not followed  -> a card's click target still names the old path,
@@ -115,7 +115,7 @@ describe('file mutation routes move workspace artifact identity', () => {
     expect(renamed.status).toBe(200);
 
     const db = openDatabase(dataDir, { dataDir });
-    // Same identity, new path — not a second row, and not a stale pointer.
+    // Same identity, new path - not a second row, and not a stale pointer.
     expect(getWorkspaceArtifact(db, artifactId)?.currentPath).toBe('after.html');
     expect(getLiveWorkspaceArtifactByPath(db, projectId, 'before.html')).toBeNull();
     expect(getLiveWorkspaceArtifactByPath(db, projectId, 'after.html')?.id).toBe(artifactId);

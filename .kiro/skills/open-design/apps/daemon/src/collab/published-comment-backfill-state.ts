@@ -167,8 +167,8 @@ export function readPublishedCommentBackfill(
     subject.workspaceId, subject.workspaceMemberId, subject.projectId, subject.filePath, current.revision,
   ) as { state?: unknown; retryable?: unknown; code?: unknown; reopened?: unknown } | undefined;
   if (!row || (row.state !== 'pending' && row.state !== 'succeeded' && row.state !== 'failed')) return undefined;
-  // Real, measured progress from the SAME batch — the exact initial member
-  // set this revision's backfill recorded at publish time — not an estimate.
+  // Real, measured progress from the SAME batch - the exact initial member
+  // set this revision's backfill recorded at publish time - not an estimate.
   // A total of 0 never reaches here as `pending` (an empty batch is recorded
   // `succeeded` immediately), so this only ever adds a meaningful count.
   const members = db.prepare(`SELECT COUNT(*) AS total, COALESCE(SUM(delivered), 0) AS synced

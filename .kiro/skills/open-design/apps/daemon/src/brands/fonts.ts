@@ -13,7 +13,7 @@ import { findRealTagEnd, HTML_TAG_PATTERNS } from '@open-design/contracts/runtim
  * best source per face (woff2 preferred) into `<brandDir>/fonts/`, and keeps a
  * `fonts/manifest.json` + portable `fonts/fonts.css` in sync. The engine then
  * inlines matching `@font-face` rules into every system document (kit,
- * artifacts, index) so previews — and the exported .brandpack — render in the
+ * artifacts, index) so previews - and the exported .brandpack - render in the
  * brand's real typefaces instead of fallbacks.
  *
  * Two ingestion moments feed the same manifest:
@@ -26,7 +26,7 @@ import { findRealTagEnd, HTML_TAG_PATTERNS } from '@open-design/contracts/runtim
 
 export type FontFile = {
   family: string;
-  /** Raw CSS font-weight value — "400", "700", or a variable range "100 900". */
+  /** Raw CSS font-weight value - "400", "700", or a variable range "100 900". */
   weight: string;
   style: string;
   /** Filename inside the brand dir's fonts/ folder. */
@@ -298,7 +298,7 @@ const GF_CSS_RE = /^https:\/\/fonts\.googleapis\.com\//i;
 
 /**
  * Self-host the Google Fonts faces the synthesized brand declares
- * (`typography.*.googleFontsUrl`) — fetches each stylesheet with a modern-
+ * (`typography.*.googleFontsUrl`) - fetches each stylesheet with a modern-
  * browser UA (so Google serves woff2) and harvests the files into fonts/.
  * Families already in the manifest are skipped by the harvest's dedupe.
  */
@@ -317,7 +317,7 @@ export async function selfHostGoogleFonts(brand: Brand, brandDir: string): Promi
       });
       if (res.ok) chunks.push(await res.text());
     } catch {
-      /* unreachable stylesheet — skip */
+      /* unreachable stylesheet - skip */
     }
   }
   if (chunks.length === 0) return readFontManifest(brandDir);

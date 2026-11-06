@@ -101,7 +101,7 @@ interface WorkspaceProjectBindingRow {
   createdByWorkspaceMemberId?: string | null;
 }
 
-// The narrow slice of a `workspace_resources` row the mutation gate needs —
+// The narrow slice of a `workspace_resources` row the mutation gate needs -
 // see collab/workspace-resource-mutation.ts's `WorkspaceResourceAccessInput`,
 // which this mirrors so `enforceWorkspaceResourceMutation` accepts it as-is.
 interface WorkspaceResourceBindingRow {
@@ -214,7 +214,7 @@ export interface RegisterPluginRoutesDeps {
   };
   /**
    * Read access to the generic `workspace_resources` binding table (db.ts),
-   * pre-bound to no particular resource type — routes below pass `'plugin'`
+   * pre-bound to no particular resource type - routes below pass `'plugin'`
    * explicitly so a future skill/design-system route can reuse the exact
    * same deps shape. Optional so callers that never reach the uninstall
    * route (`registerProjectPluginRoutes`, existing narrow-scope tests) don't

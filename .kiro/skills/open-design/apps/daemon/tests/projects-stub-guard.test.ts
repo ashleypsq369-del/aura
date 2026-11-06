@@ -82,7 +82,7 @@ describe('artifact stub guard via /api/projects/:id/files', () => {
 
     const stubResp = await postFile(projectId, {
       name: 'dashboard-2.html',
-      content: 'See dashboard.html in this project — full standalone file written to disk.',
+      content: 'See dashboard.html in this project - full standalone file written to disk.',
       artifactManifest: manifestFor('dashboard'),
     });
 
@@ -370,7 +370,7 @@ describe('artifact stub guard via /api/projects/:id/files', () => {
   it('catches stub rewrites of legacy sidecar-less HTML priors (mrcfps R6)', async () => {
     const projectId = await createProject('legacy');
 
-    // Seed a "legacy" file by POSTing without artifactManifest — the
+    // Seed a "legacy" file by POSTing without artifactManifest - the
     // route writes the body but no .artifact.json. Mirrors any HTML that
     // pre-dates the sidecar era or was uploaded outside the artifact-tag
     // flow (Write tool, paste-text, manual import).

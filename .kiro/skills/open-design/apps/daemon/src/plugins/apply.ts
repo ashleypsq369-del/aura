@@ -322,12 +322,12 @@ function buildAssetRefs(manifest: PluginManifest): PluginAssetRef[] {
 // Pick a global skill id from od.context.skills[]. Two ref shapes are
 // accepted:
 //
-//   - `{ ref: 'skill-id' }` — registry id; returned as-is.
-//   - `{ path: 'subdir/SKILL.md' }` — plugin-local file; returned as
+//   - `{ ref: 'skill-id' }` - registry id; returned as-is.
+//   - `{ path: 'subdir/SKILL.md' }` - plugin-local file; returned as
 //     undefined so the project record never stores a non-existent skill
 //     id like 'SKILL.md'. Plugin-local SKILL.md bodies are sourced
 //     directly by the daemon at prompt-compose time from the installed
-//     plugin's fsPath (see server.ts) — they do NOT roam into the
+//     plugin's fsPath (see server.ts) - they do NOT roam into the
 //     global skills registry.
 function pickFirstSkillId(manifest: PluginManifest): string | undefined {
   for (const ref of manifest.od?.context?.skills ?? []) {

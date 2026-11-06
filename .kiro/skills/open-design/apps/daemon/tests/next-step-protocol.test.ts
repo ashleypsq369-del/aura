@@ -2,9 +2,9 @@
  * 下一步引导的**协议侧**:标记进来,事件出去,正文里什么都不留。
  *
  * 三件事必须成立:
- *   1. `next_steps` 事件能落库 —— 刷新之后那三行还在,和实时看到的一样;
- *   2. 没有这个事件的老消息**原样不动** —— 旧会话不出这一行是设计,不是缺陷;
- *   3. 标记不进 `content` —— `content` 是复制 / 导出 / 旧渲染路径读的东西。
+ *   1. `next_steps` 事件能落库 -- 刷新之后那三行还在,和实时看到的一样;
+ *   2. 没有这个事件的老消息**原样不动** -- 旧会话不出这一行是设计,不是缺陷;
+ *   3. 标记不进 `content` -- `content` 是复制 / 导出 / 旧渲染路径读的东西。
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
@@ -39,7 +39,7 @@ describe('next-step marker · 契约形状', () => {
     expect(markers).toHaveLength(3);
     expect(markers[0]).toBe(`<od-next key="${KEY}" value="再加一页订单列表"/>`);
     expect(markers.every((marker) => marker.endsWith('/>'))).toBe(true);
-    // 例子必须能被自己的解析器读回来 —— 两边各写一份迟早会分家
+    // 例子必须能被自己的解析器读回来 -- 两边各写一份迟早会分家
     expect(markers.map((marker) => parseNextStepMarkerValue(marker))).toEqual(THREE);
   });
 
@@ -66,7 +66,7 @@ describe('next-step 事件 · 落库与回放', () => {
     ).toEqual({ kind: 'next_steps', suggestions: THREE });
   });
 
-  it('多于三条时截断 —— 界面固定三行', () => {
+  it('多于三条时截断 -- 界面固定三行', () => {
     expect(
       daemonAgentPayloadToPersistedAgentEvent({
         type: 'next_steps',
@@ -75,7 +75,7 @@ describe('next-step 事件 · 落库与回放', () => {
     ).toEqual({ kind: 'next_steps', suggestions: THREE });
   });
 
-  it('空的 / 全是空白的载荷不落库 —— 空壳不如不出', () => {
+  it('空的 / 全是空白的载荷不落库 -- 空壳不如不出', () => {
     expect(
       daemonAgentPayloadToPersistedAgentEvent({ type: 'next_steps', suggestions: [] }),
     ).toBeNull();
@@ -116,7 +116,7 @@ describe('next-step 事件 · 落库与回放', () => {
 
     /**
      * 旧会话兼容(产品硬要求)。改动之前的消息里没有这个事件,回放出来必须
-     * 和改动前**逐字一致** —— 不许因为「没有建议」就动正文,也不许补一个默认值。
+     * 和改动前**逐字一致** -- 不许因为「没有建议」就动正文,也不许补一个默认值。
      */
     it('没有这个事件的老消息原样回放', () => {
       const db = openDatabase(tempDir, { dataDir: tempDir });
@@ -131,7 +131,7 @@ describe('next-step 事件 · 落库与回放', () => {
 
     /**
      * 兜底:流式那一层已经把标记剥掉了,所以正常路径下 text 事件里不会有它。
-     * 这条守的是「万一有别的路径绕过了剥离器」—— `content` 是复制 / 导出读的东西,
+     * 这条守的是「万一有别的路径绕过了剥离器」-- `content` 是复制 / 导出读的东西,
      * 那里出现一枚协议标签就是线上事故(`<od-title>` 已经这样翻过一次车)。
      */
     it('万一标记混进了 text 事件,也不进 content', () => {

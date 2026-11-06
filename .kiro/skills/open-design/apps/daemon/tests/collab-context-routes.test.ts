@@ -33,7 +33,7 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
-/** The minimal payload a dev/demo run PUTs — only enum + identity fields. */
+/** The minimal payload a dev/demo run PUTs - only enum + identity fields. */
 const TEAM_CONTEXT = {
   workspaceType: 'team',
   workspaceMemberId: 'wm-1',
@@ -66,7 +66,7 @@ const TEAM_HEADERS = {
 const TEAM_WORKSPACE_SETTINGS_URL = resolveWorkspaceSettingsUrl('wm-1', undefined);
 
 /** What `parseWorkspaceCollabContext` returns: the minimal input enriched with the
- *  fields it derives — workspaceId fallback, provider/billing defaults, and the
+ *  fields it derives - workspaceId fallback, provider/billing defaults, and the
  *  permissions + seat summary derived through B's shared helpers. */
 const TEAM_CONTEXT_PARSED: WorkspaceCollabContext = {
   workspaceId: 'wm-1',
@@ -81,7 +81,7 @@ const TEAM_CONTEXT_PARSED: WorkspaceCollabContext = {
   seatSummary: buildWorkspaceSeatSummary({ seatLimit: 5, usedSeats: 1 }),
   permissions: buildWorkspacePermissions({ role: 'member', lifecycleState: 'active' }),
   // Invariant: a team context always carries teamId (the workspace IS the
-  // team scope) — collab gates on it, so the parser pins it when omitted.
+  // team scope) - collab gates on it, so the parser pins it when omitted.
   teamId: 'wm-1',
   displayName: 'Ma Shu',
   ...(TEAM_WORKSPACE_SETTINGS_URL

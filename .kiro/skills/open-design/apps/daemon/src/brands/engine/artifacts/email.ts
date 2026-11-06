@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * email — a single-column, 600px, bulletproof-table promotional/announcement
+ * email - a single-column, 600px, bulletproof-table promotional/announcement
  * email built to its content-structure playbook (docs/content-structures/
  * email.md):
  *
@@ -62,7 +62,7 @@ function pick(...vals: Array<string | undefined | null>): string {
 }
 
 /**
- * The single most-clickable phrase the email can name — used both as the
+ * The single most-clickable phrase the email can name - used both as the
  * subject's lead and the hero headline (conclusion-first / inverted pyramid).
  * Prefers a real tagline, then the first messaging pillar's title.
  */
@@ -82,11 +82,11 @@ function leadClaim(brand: Brand): string {
 function subjectLine(brand: Brand): string {
   const claim = noDot(leadClaim(brand));
   // Front-load the benefit; keep the brand as a short qualifier, not the hook.
-  return `${claim} — from ${brand.name}`;
+  return `${claim} - from ${brand.name}`;
 }
 
 /**
- * Preheader: the subject's *second sentence*. Complements, never repeats — so
+ * Preheader: the subject's *second sentence*. Complements, never repeats - so
  * we deliberately pull from a different field than the subject/hero headline.
  */
 function preheader(brand: Brand): string {
@@ -97,13 +97,13 @@ function preheader(brand: Brand): string {
     fromDesc,
     fromTone,
     adj.length >= 2
-      ? `${cap(adj[0])} and ${adj[1]} — the short version is inside.`
+      ? `${cap(adj[0])} and ${adj[1]} - the short version is inside.`
       : "",
     `A two-minute read on what ${brand.name} changes for your team.`,
   );
 }
 
-/** Hero sub-paragraph: 1–2 sentences of "why this matters to you". */
+/** Hero sub-paragraph: 1-2 sentences of "why this matters to you". */
 function heroSupport(brand: Brand): string {
   const blurb = brandBlurb(brand);
   // Avoid echoing the headline verbatim when the blurb == tagline fallback.
@@ -112,12 +112,12 @@ function heroSupport(brand: Brand): string {
     if (adj.length) {
       return `Built to be ${adj.slice(0, 2).join(" and ")}, ${brand.name} earns its place in your day from the very first run.`;
     }
-    return `Here is the short version of what ${brand.name} does — and why it is worth two minutes of your inbox.`;
+    return `Here is the short version of what ${brand.name} does - and why it is worth two minutes of your inbox.`;
   }
   return blurb;
 }
 
-/** The single primary action's verb — concrete, brand-flavored. */
+/** The single primary action's verb - concrete, brand-flavored. */
 function ctaLabel(brand: Brand): string {
   const verbs = brand.voice.vocabulary.use.map(trimmed).filter((w) => w.length > 2);
   // Only borrow a vocabulary word when it reads like an action.
@@ -136,7 +136,7 @@ function benefits(brand: Brand): Array<{ title: string; body: string }> {
       const { title, body } = splitPillar(p);
       out.push({
         title,
-        body: body ?? `${cap(noDot(title))} is built into ${brand.name} from day one — not bolted on later.`,
+        body: body ?? `${cap(noDot(title))} is built into ${brand.name} from day one - not bolted on later.`,
       });
     } else {
       out.push(FEATURE_FALLBACKS[i]);
@@ -145,7 +145,7 @@ function benefits(brand: Brand): Array<{ title: string; body: string }> {
   return out;
 }
 
-/** One named proof point — a number beats a pile of adjectives. */
+/** One named proof point - a number beats a pile of adjectives. */
 function proof(brand: Brand): { quote: string; name: string; role: string } {
   const adj = brand.voice.adjectives.map(trimmed).filter(Boolean);
   const a0 = adj[0] ?? "useful";
@@ -187,7 +187,7 @@ function bulletproofButton(label: string, opts?: { inverse?: boolean }): string 
                   </table>`;
 }
 
-/** Small line-SVG check glyph in the brand accent — no emoji, scales with type. */
+/** Small line-SVG check glyph in the brand accent - no emoji, scales with type. */
 function checkGlyph(color: string): string {
   return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;" aria-hidden="true"><circle cx="10" cy="10" r="9" stroke="${color}" stroke-width="1.5" opacity="0.45"/><path d="M6 10.2l2.6 2.6L14.2 7.4" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
@@ -292,7 +292,7 @@ export function renderEmail(brand: Brand, tokens: DesignTokens): string {
               </td>
             </tr>
 
-            <!-- Hero: inverted pyramid — conclusion first, then why it matters, then the one CTA -->
+            <!-- Hero: inverted pyramid - conclusion first, then why it matters, then the one CTA -->
             <tr>
               <td style="padding:${varRef("sizeXXL")} ${varRef("sizeXL")} ${varRef(
                 "sizeLG",
@@ -337,7 +337,7 @@ export function renderEmail(brand: Brand, tokens: DesignTokens): string {
                   "colorTextSecondary",
                 )};">Here is what ${esc(
                   brand.name,
-                )} gives your team from the first day — no migration project, no setup tax:</p>
+                )} gives your team from the first day - no migration project, no setup tax:</p>
 
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
 ${rows}
@@ -373,7 +373,7 @@ ${rows}
               </td>
             </tr>
 
-            <!-- CTA repeated once near the end — same single action -->
+            <!-- CTA repeated once near the end - same single action -->
             <tr>
               <td style="padding:${varRef("sizeSM")} ${varRef("sizeXL")} ${varRef(
                 "sizeXL",
@@ -385,7 +385,7 @@ ${rows}
                   "fontSizeSM",
                 )};color:${varRef(
                   "colorTextTertiary",
-                )};line-height:1.5;">Questions? Just reply to this email — a real person reads every message.</p>
+                )};line-height:1.5;">Questions? Just reply to this email - a real person reads every message.</p>
               </td>
             </tr>
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * form — a conversion-tuned signup / contact form.
+ * form - a conversion-tuned signup / contact form.
  *
  * Built to the content-structure playbook (docs/content-structures/form.md):
  * optimize for COMPLETION, not collection. A split layout pairs a value-prompt
@@ -72,14 +72,14 @@ function fieldLabel(text: string, mark?: "optional" | "required"): string {
   return `<label style="${labelStyle}"><span>${esc(text)}</span>${tag}</label>`;
 }
 
-/** Always-visible help line — placeholders are examples only, never labels. */
+/** Always-visible help line - placeholders are examples only, never labels. */
 function fieldHelp(text?: string): string {
   return text ? `<p style="${helpStyle}">${esc(text)}</p>` : "";
 }
 
 /** A complete labelled text/email input row. The optional `error` line is
  *  hidden until the browser flags `:invalid` on a non-empty value (doc §4:
- *  inline, specific, human, brand-colored — and never on every keystroke). */
+ *  inline, specific, human, brand-colored - and never on every keystroke). */
 function field(opts: {
   label: string;
   type?: string;
@@ -171,7 +171,7 @@ const footerDot = `<span style="flex:0 0 auto;display:inline-flex;align-items:ce
   "colorPrimary",
 )}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
 
-/** A faint dotted-grid motif for the brand panel — themed, not a stock photo. */
+/** A faint dotted-grid motif for the brand panel - themed, not a stock photo. */
 const PANEL_MOTIF = `<svg width="220" height="220" viewBox="0 0 220 220" fill="none" aria-hidden="true" style="position:absolute;top:-40px;right:-40px;opacity:0.18;color:#fff;"><defs><pattern id="fdot" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="currentColor"/></pattern></defs><rect width="220" height="220" fill="url(#fdot)"/></svg>`;
 
 const FORM_CSS = `
@@ -200,7 +200,7 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
   const adjectives = brand.voice.adjectives.map((a) => a.trim()).filter(Boolean);
   const niceWord = adjectives[0] ? adjectives[0].toLowerCase() : "in good hands";
 
-  // Panel headline answers "what do I get" — never "fill in the form below".
+  // Panel headline answers "what do I get" - never "fill in the form below".
   const panelTitle = firstOf([brand.tagline], `Start with ${brand.name}`);
   const panelBlurb = brandBlurb(brand);
 
@@ -208,7 +208,7 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
   const formTitle = `Tell us where to start`;
   const formSub = `A couple of details and ${esc(
     brand.name,
-  )} takes it from there — no account needed yet.`;
+  )} takes it from there - no account needed yet.`;
 
   const topicOptions = (pillars.length >= 3 ? pillars.slice(0, 5) : [
     "Getting started",
@@ -272,7 +272,7 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
         </div>
       </div>`;
 
-  // ── fields (modules 2–4): easy → hard, single column, top labels ──────────
+  // ── fields (modules 2-4): easy → hard, single column, top labels ──────────
   const formFields = `<div style="display:flex;flex-direction:column;gap:${varRef("sizeLG")};">
             <div class="form-grid-2">
               ${field({
@@ -293,13 +293,13 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
               inputmode: "email",
               autocomplete: "email",
               help: "We'll send your next steps here.",
-              error: "That doesn't look like an email yet — try name@company.com.",
+              error: "That doesn't look like an email yet - try name@company.com.",
             })}
             ${selectField({
               label: "What can we help with?",
               prompt: "Choose one…",
               options: topicOptions,
-              help: "Pick the closest — you can change direction later.",
+              help: "Pick the closest - you can change direction later.",
             })}
             ${textareaField({
               label: "Anything we should know?",
@@ -323,11 +323,11 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
               "sizeXS",
             )};font-size:${varRef("fontSizeSM")};color:${varRef("colorTextTertiary")};text-align:center;">
               <svg width="13" height="14" viewBox="0 0 13 14" fill="none" aria-hidden="true" style="flex:0 0 auto;"><path d="M2 6V4.5a4.5 4.5 0 019 0V6m-10 0h11v7H1.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>No spam, ever. Unsubscribe in one click — your data stays yours.</span>
+              <span>No spam, ever. Unsubscribe in one click - your data stays yours.</span>
             </p>
           </div>`;
 
-  // ── success state (module 7): rendered, hidden — the next step is explicit ─
+  // ── success state (module 7): rendered, hidden - the next step is explicit ─
   const successState = `<div class="form-success" hidden style="display:none;flex-direction:column;align-items:center;text-align:center;gap:${varRef(
     "sizeMD",
   )};padding:${varRef("sizeXL")} 0;">
@@ -341,7 +341,7 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
           <h2 style="font-size:${varRef("fontSizeHeading4")};">You're in.</h2>
           <p style="color:${varRef("colorTextSecondary")};max-width:34ch;">Check your inbox for a note from ${esc(
             brand.name,
-          )} — your next step is waiting there. We usually reply within one business day.</p>
+          )} - your next step is waiting there. We usually reply within one business day.</p>
         </div>`;
 
   // ── form card ─────────────────────────────────────────────────────────────
@@ -395,7 +395,7 @@ export function renderFormPage(brand: Brand, tokens: DesignTokens): string {
     </div>`;
 
   return document({
-    title: `${brand.name} — Get started`,
+    title: `${brand.name} - Get started`,
     tokens,
     brand,
     body,

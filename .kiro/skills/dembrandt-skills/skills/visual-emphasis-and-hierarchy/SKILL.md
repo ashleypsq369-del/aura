@@ -46,7 +46,7 @@ retrieval:
 
 # Visual Emphasis and Hierarchy
 
-Every screen has a most-important thing. Visual hierarchy is the design work that makes sure the user's eye finds it first — without requiring the user to read everything and decide for themselves.
+Every screen has a most-important thing. Visual hierarchy is the design work that makes sure the user's eye finds it first - without requiring the user to read everything and decide for themselves.
 
 Emphasis is achieved through **size**, **colour**, **weight**, **contrast**, and **position**. These tools work because they are relative: an element looks important because it differs from what surrounds it.
 
@@ -59,9 +59,9 @@ Design every action group and content area with a clear hierarchy:
 | **Primary** | The one action the user should most likely take | Filled, brand colour, largest button in the group |
 | **Secondary** | An alternative action of moderate importance | Outlined or ghost, neutral colour, same or slightly smaller size |
 | **Tertiary** | Rarely needed, destructive, or low-priority | Text link or subtle ghost, smaller, visually recessive |
-| **Disabled** | Unavailable | Low contrast, no hover state — signals "not yet" |
+| **Disabled** | Unavailable | Low contrast, no hover state - signals "not yet" |
 
-There should be **at most one primary action per view** or per logical section. Two filled buttons side by side cancel each other out — both feel equally important, so neither guides the user.
+There should be **at most one primary action per view** or per logical section. Two filled buttons side by side cancel each other out - both feel equally important, so neither guides the user.
 
 ## Size as Emphasis
 
@@ -71,26 +71,26 @@ A larger button, heading, or element draws the eye before a smaller one. Use siz
 - Page headings are larger than section headings, which are larger than labels
 - A featured product, plan, or option can be physically larger than its peers to signal recommendation
 
-Size differences must be perceptible — a 2px difference reads as inconsistency, not hierarchy. Use your modular scale for type; use meaningful size steps for components.
+Size differences must be perceptible - a 2px difference reads as inconsistency, not hierarchy. Use your modular scale for type; use meaningful size steps for components.
 
 ## Colour as Emphasis
 
 Colour is the strongest emphasis signal and therefore the most easily overused.
 
-- **One brand colour for primary actions** — used sparingly so it retains its signal
+- **One brand colour for primary actions** - used sparingly so it retains its signal
 - Secondary and tertiary actions should be neutral (grey, outlined) so the primary colour stands out
-- Status colours (red, orange, green) should never appear on primary CTAs — they carry their own semantic meaning
+- Status colours (red, orange, green) should never appear on primary CTAs - they carry their own semantic meaning
 
 ## Brand Colour as Large Areas
 
-Brand primary colours work well as large background regions — hero sections, feature banners, section dividers. This is different from using brand colour on interactive elements.
+Brand primary colours work well as large background regions - hero sections, feature banners, section dividers. This is different from using brand colour on interactive elements.
 
 The rule: **pick one role and commit to it per view.**
 
 - Brand colour as a large area → buttons and links on that section use white or a high-contrast neutral, not the brand colour again
 - Brand colour on interactive elements → backgrounds stay neutral so the colour retains its signal
 
-Used as a bold background, brand colour communicates identity and energy. Used simultaneously on both backgrounds and buttons, it loses all signal — everything blends together.
+Used as a bold background, brand colour communicates identity and energy. Used simultaneously on both backgrounds and buttons, it loses all signal - everything blends together.
 
 ## Contrast and Whitespace as a Focal Point
 
@@ -148,7 +148,7 @@ copy, and any long-form markdown an agent generates.
 
 Text legibility is often compromised when placed directly over photographs or complex patterns. To maintain hierarchy and credibility:
 
-- **Subtle Text Shadow:** Use a soft, high-blur text-shadow (e.g. `0 2px 4px rgba(0,0,0,0.2)`) to lift text off the background. It should be felt rather than seen — if the shadow is obvious, it's too heavy.
+- **Subtle Text Shadow:** Use a soft, high-blur text-shadow (e.g. `0 2px 4px rgba(0,0,0,0.2)`) to lift text off the background. It should be felt rather than seen - if the shadow is obvious, it's too heavy.
 - **Image Tints & Gradients:** Apply a subtle dark tint or a linear gradient (e.g. from transparent to 40% black) over the image to increase contrast behind the text.
 - **Selective Backgrounds:** When selecting stock footage, look for images with "negative space" or solid color areas (e.g. a clear sky, a plain wall) where text can sit naturally.
 - **Scrims:** Use a "scrim" (a semi-transparent gradient overlay) specifically in the area where text sits to preserve the image's vibrant colours while ensuring text is readable.
@@ -159,17 +159,17 @@ Users in left-to-right reading cultures scan top-left first. Position reinforces
 
 - Primary action: bottom-right of a form or dialog (natural end of the reading flow), or top-right of a page header
 - Most important content: top of the page, above the fold
-- On a landing page the hero carries one value promise, large and with air around it — for the sequence below it, see the product narrative framework in [[layout-paradigms-and-consistency]]
+- On a landing page the hero carries one value promise, large and with air around it - for the sequence below it, see the product narrative framework in [[layout-paradigms-and-consistency]]
 - Warnings and critical status: top of the affected section, not buried at the bottom
 - Destructive actions (Delete, Remove): visually separated from constructive actions, often at the end of an action group
 
 ## Surface the One Key Thing in Data-Heavy Views
 
-When a view has a lot of data, don't present it all at one flat level of emphasis — that pushes the work of finding the important thing onto the user. Instead, decide the **single key figure or fact for this use context** and make it **large and immediately findable**; let everything else sit in a supporting, lower tier.
+When a view has a lot of data, don't present it all at one flat level of emphasis - that pushes the work of finding the important thing onto the user. Instead, decide the **single key figure or fact for this use context** and make it **large and immediately findable**; let everything else sit in a supporting, lower tier.
 
 - Ask what the user came to this screen to know or do, and give *that* the size, weight, and position (a big headline metric, a prominent status, a clear primary action).
-- You may **drop or hide** the less important data — collapse it, move it behind a detail view or a "show more", or cut it entirely (this pairs with the hide-don't-serve-up-front decision in [[information-architecture]] and density choices in [[ui-density]]).
-- **Validate what you demote or hide.** What's "key" is a claim about the user, not a given — ideally test with real end users. If UX testing isn't possible, at least validate the priority with the business / domain owner before shipping. Guessing wrong here hides the one thing someone needed.
+- You may **drop or hide** the less important data - collapse it, move it behind a detail view or a "show more", or cut it entirely (this pairs with the hide-don't-serve-up-front decision in [[information-architecture]] and density choices in [[ui-density]]).
+- **Validate what you demote or hide.** What's "key" is a claim about the user, not a given - ideally test with real end users. If UX testing isn't possible, at least validate the priority with the business / domain owner before shipping. Guessing wrong here hides the one thing someone needed.
 
 ## One Primary Action Per View
 
@@ -179,11 +179,11 @@ The biggest hierarchy mistake is giving everything equal emphasis. When every bu
 
 **A view with several workflow steps gets one primary per step.** A search, an action on its results and a save are three steps; each has one filled button, in reading order. Header utilities and per-row actions stay secondary. The exception is a row that is the only active one, such as the row being edited: its confirm is that step's primary.
 
-**Priority is per-view, not absolute.** The same action is primary on its own page, secondary beside bigger ones — re-rank for the current context. "Primary/secondary/tertiary" are your names; the user sees only fill, colour, size, position. Needing a tertiary tier usually means the view is too complex — simplify first.
+**Priority is per-view, not absolute.** The same action is primary on its own page, secondary beside bigger ones - re-rank for the current context. "Primary/secondary/tertiary" are your names; the user sees only fill, colour, size, position. Needing a tertiary tier usually means the view is too complex - simplify first.
 
 ## Cursor
 
-Every clickable or interactive element must use `cursor: pointer`. Users rely on the cursor changing to confirm that an element is actionable — without it, buttons and links feel broken or unresponsive.
+Every clickable or interactive element must use `cursor: pointer`. Users rely on the cursor changing to confirm that an element is actionable - without it, buttons and links feel broken or unresponsive.
 
 ```css
 button, a, [role="button"], [onclick], label { cursor: pointer; }
@@ -202,7 +202,7 @@ The line under a verdict word says what the word does not: how much, how many, s
 - [ ] Is the primary action framed by enough whitespace to stand out from surrounding content?
 - [ ] Are secondary and tertiary actions visually recessive compared to the primary?
 - [ ] Is the most important content positioned highest and/or largest?
-- [ ] Are size differences between hierarchy levels perceptible, not just 1–2px?
+- [ ] Are size differences between hierarchy levels perceptible, not just 1-2px?
 - [ ] Is brand colour used sparingly enough that it retains its emphasis signal?
 - [ ] Are destructive actions visually distinct and separated from constructive actions?
 - [ ] Do all buttons, links, and interactive elements use `cursor: pointer`?
@@ -214,7 +214,7 @@ The line under a verdict word says what the word does not: how much, how many, s
 
 | Anti-pattern | Problem | Fix |
 |---|---|---|
-| Two or more filled primary buttons side by side | Both feel equally important — no guidance | One primary, one secondary (outlined) |
+| Two or more filled primary buttons side by side | Both feel equally important - no guidance | One primary, one secondary (outlined) |
 | Brand colour used on backgrounds, headers, AND buttons | Colour loses emphasis signal | Reserve brand colour for one role |
 | All text the same weight on a data-heavy screen | No visual entry point for the eye | Bold the key metric or label per group |
 | "Cancel" and "Confirm" buttons the same size and colour | User must read to distinguish | Primary = filled, Cancel = ghost or text link |

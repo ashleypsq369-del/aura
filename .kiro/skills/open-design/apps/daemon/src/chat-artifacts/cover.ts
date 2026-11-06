@@ -4,14 +4,14 @@
 // TWO COVER PATHS LIVE HERE, and they differ only in what "freeze" can mean:
 //
 //   * HTML gets its RENDERER INPUT frozen now and rendered later, because a
-//     self-contained document is portable evidence — see the four steps below.
+//     self-contained document is portable evidence - see the four steps below.
 //   * VIDEO gets its FIRST FRAME decoded now, inside a verified window, because
 //     there is no portable freeze for a video short of copying it, and the
 //     capacity ruling forbids that. The mechanics live in `video-cover.ts`;
 //     this file owns the per-ref bookkeeping both paths share.
 //
-// WHY A FREEZE AND NOT A JOB. The obvious implementation — "queue a screenshot
-// of this file, take it when the renderer is free" — is a version race, not an
+// WHY A FREEZE AND NOT A JOB. The obvious implementation - "queue a screenshot
+// of this file, take it when the renderer is free" - is a version race, not an
 // optimization. Between the queue and the render the agent's next turn can
 // overwrite the file, and the cover then shows a version that message never
 // produced. Worse, it does so silently: a screenshot of the wrong bytes looks
@@ -24,22 +24,22 @@
 //      one window, and every file read is fingerprinted (size + mtime).
 //   2. The whole graph is inlined into ONE self-contained document. The result
 //      carries no relative URL that could resolve to a project file.
-//   3. The window is re-verified at the end. Any drift — a write that landed
-//      while we were reading — voids the freeze instead of producing a document
+//   3. The window is re-verified at the end. Any drift - a write that landed
+//      while we were reading - voids the freeze instead of producing a document
 //      torn across two versions.
 //   4. The renderer is handed that document with NO `baseHref`. It loads from a
 //      `data:` URL, so even a render that starts minutes later has no address
 //      for the live workspace. It cannot read latest; there is nothing to read.
 //
 // Step 4 is what makes the async render safe. Steps 1-3 are what make step 4
-// honest — a self-contained document assembled from a moving target would still
+// honest - a self-contained document assembled from a moving target would still
 // be a lie, just an unfalsifiable one.
 //
 // WHY FAILURE IS SILENT. Product ruling 2026-09-02: a cover that cannot be
 // rendered falls back to the card's live preview, with no placeholder and no
 // error copy ("不允许退回不就一个错误文案显示在上面了?这感觉更奇怪呢"). That is
-// coherent with the click ruling of the same day — clicking a card always opens
-// the workspace's LATEST file, for HTML and images alike — so a card that falls
+// coherent with the click ruling of the same day - clicking a card always opens
+// the workspace's LATEST file, for HTML and images alike - so a card that falls
 // back to live is showing the same thing the click would open. There is no
 // "cover says one thing, click shows another" state to explain away.
 
@@ -83,7 +83,7 @@ export type ChatArtifactCoverRenderer = (
 export const CHAT_ARTIFACT_COVER_BUDGET_MS = 20_000;
 
 /**
- * Per-turn ceiling. A run that rewrote forty pages is not worth forty renders —
+ * Per-turn ceiling. A run that rewrote forty pages is not worth forty renders -
  * the renderer is a shared, single-window resource and the next turn's covers
  * matter more than the tail of this one's.
  */
@@ -106,13 +106,13 @@ export interface FreezeChatArtifactCoversInput {
    *
    * The render outlives the turn on purpose, so by the time a cover exists the
    * client has already done its one post-run re-read and is showing the
-   * live-iframe degrade branch. Something has to tell it to look again — spec
+   * live-iframe degrade branch. Something has to tell it to look again - spec
    * line 505, "后台 ready 后消息投影更新".
    *
    * A callback rather than an import: this module has no business knowing what
    * an SSE sink is, and the same indifference is what lets the tests observe
    * the render without standing up a transport. Fired only for a cover that
-   * actually landed — a failure changes no projection, so announcing one would
+   * actually landed - a failure changes no projection, so announcing one would
    * buy the client a pointless fetch.
    */
   onRefsChanged?: (row: MessageArtifactRow) => void;
@@ -131,14 +131,14 @@ export interface FreezeChatArtifactCoversReport {
  * Freeze every coverable ref on this message, then render them in the
  * background.
  *
- * The AWAITED half is the freeze — it must complete before the terminal SSE
+ * The AWAITED half is the freeze - it must complete before the terminal SSE
  * frame goes out, because after that the next turn may start writing. For HTML
  * the render is deliberately NOT awaited: it costs seconds, the frozen document
  * makes it race-free, and a chat turn should not sit open waiting for a
  * thumbnail. A card with no cover yet simply keeps its live preview.
  *
  * A video's frame extraction IS awaited, because for video the extraction is
- * the freeze — there is nothing to hand a later worker that is still guaranteed
+ * the freeze - there is nothing to hand a later worker that is still guaranteed
  * to be this turn's bytes. `video-cover.ts` keeps that cost bounded (one frame,
  * a 10s budget, a handful per turn).
  */
@@ -175,7 +175,7 @@ export async function freezeAndRenderChatArtifactCovers(
       report.skipped += 1;
       continue;
     }
-    // No renderer at all is not a failure of THIS turn — recording one would
+    // No renderer at all is not a failure of THIS turn - recording one would
     // mark every HTML card in a web-only daemon as failed forever, which buries
     // the real render failures the state is there to surface.
     if (typeof input.renderer !== 'function' || pending.length >= CHAT_ARTIFACT_COVER_MAX_PER_RUN) {
@@ -209,7 +209,7 @@ export async function freezeAndRenderChatArtifactCovers(
  * `kind === 'html'` is the CAPABILITY answer: this renderer is a browser, so a
  * .pdf or .docx ref has to keep waiting for a document renderer that does not
  * exist yet. Keeping the two separate means adding that renderer later is a
- * change here, not a change to the product policy — which is exactly how video
+ * change here, not a change to the product policy - which is exactly how video
  * arrived: a second capability answer below, with the policy untouched.
  */
 function wantsRenderedCover(row: MessageArtifactRow): boolean {
@@ -222,7 +222,7 @@ function wantsRenderedCover(row: MessageArtifactRow): boolean {
  *
  * Video only. Audio shares video's policy row but has no frames, and its card
  * is a waveform pill rather than a thumbnail, so there is nothing for a cover
- * to occupy — asking ffmpeg for a frame of an mp3 would spend a subprocess to
+ * to occupy - asking ffmpeg for a frame of an mp3 would spend a subprocess to
  * learn that.
  */
 function wantsFrozenVideoFrame(row: MessageArtifactRow): boolean {
@@ -245,7 +245,7 @@ function coverable(row: MessageArtifactRow): boolean {
  * Decode this turn's first frame and attach it as the card's cover.
  *
  * Returns which bucket the ref landed in; the caller owns the counters. A
- * failure is recorded the same way a failed HTML render is — as an honest miss
+ * failure is recorded the same way a failed HTML render is - as an honest miss
  * on the ref, never as a substituted frame from the current file.
  */
 async function freezeVideoFrameCover(
@@ -295,7 +295,7 @@ type FreezeOutcome =
  * The witness map is the freeze: every file the bundler touched is fingerprinted
  * when it is read and re-checked when the bundle is done. A single drift means
  * the assembled document may mix two versions, and a mixed document is worse
- * than no cover — it is a screenshot of something that never existed.
+ * than no cover - it is a screenshot of something that never existed.
  */
 async function freezeCoverDocument(
   projectRoot: string,
@@ -343,8 +343,8 @@ async function freezeCoverDocument(
   } catch (err) {
     // A graph that cannot be closed (a missing local dependency, a document
     // past the bundler's limits) has no dependency-complete freeze available.
-    // Spec §6.3's fallback — render the live file immediately while its
-    // fingerprint still matches — is deliberately NOT taken here: it would put
+    // Spec §6.3's fallback - render the live file immediately while its
+    // fingerprint still matches - is deliberately NOT taken here: it would put
     // the daemon's live raw endpoint back in the renderer's hands, which only
     // fingerprints the entry and leaves every dependency free to move.
     logCoverFailure(relativePath, err);
@@ -440,7 +440,7 @@ async function renderOneCover(
       logCoverFailure(row.labelAtCapture, err);
     }
   } finally {
-    // The renderer's temp file is the daemon's to clean up — the same contract
+    // The renderer's temp file is the daemon's to clean up - the same contract
     // the `od export` route follows.
     await fs.promises.rm(result.path, { force: true }).catch(() => {});
   }
@@ -457,7 +457,7 @@ function coverFailureCodeFor(result: DesktopExportArtifactResult | undefined): C
  * The ref keeps its `workspace_artifact_id`, so the card still opens the latest
  * file; it just has no cover and the web falls back to a live preview. The row
  * exists so a real render failure is distinguishable from a card that was never
- * a cover candidate in the first place — otherwise every legacy message would
+ * a cover candidate in the first place - otherwise every legacy message would
  * look like a failure and the failures would look like nothing.
  */
 function recordCoverFailure(
@@ -567,7 +567,7 @@ function resolveInsideProject(projectRoot: string, projectPath: string): string 
 function logCoverFailure(label: string, err: unknown): void {
   const message = err instanceof Error ? err.message : String(err);
   try {
-    // Project-relative label only — never bytes, never an absolute path.
+    // Project-relative label only - never bytes, never an absolute path.
     console.warn(`[chat-artifacts] cover failed for ${label}: ${message}`);
   } catch {
     // logging is best effort

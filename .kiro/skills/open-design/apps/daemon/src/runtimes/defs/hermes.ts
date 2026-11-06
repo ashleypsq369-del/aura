@@ -15,14 +15,14 @@ export const hermesAgentDef = {
         defaultModelOption: DEFAULT_MODEL_OPTION,
       }),
     // Used only when `fetchModels` (which calls `hermes acp` to enumerate
-    // the user's actually-installed providers) fails — e.g. Hermes isn't on
+    // the user's actually-installed providers) fails - e.g. Hermes isn't on
     // PATH yet. The list doubles as discovery hints in the model picker so a
     // user who hasn't installed Hermes still sees what becomes available
     // after `hermes auth add xai-oauth` (xAI · SuperGrok subscription) or
     // `hermes auth add openai` (Codex). Reference: https://x.ai/news/grok-hermes.
     fallbackModels: [
       DEFAULT_MODEL_OPTION,
-      // xAI Grok — available via SuperGrok OAuth (`hermes auth add xai-oauth`)
+      // xAI Grok - available via SuperGrok OAuth (`hermes auth add xai-oauth`)
       // or XAI_API_KEY in `~/.hermes/.env`.
       { id: 'grok-4.3', label: 'grok-4.3 (xAI · default)' },
       {

@@ -14,7 +14,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { generateMedia } from '../../src/media/index.js';
 
-// Tiny fake MP4 header — just enough to assert the result has bytes.
+// Tiny fake MP4 header - just enough to assert the result has bytes.
 const FAKE_MP4 = Buffer.from([
   0x00, 0x00, 0x00, 0x1c, 0x66, 0x74, 0x79, 0x70,
   0x69, 0x73, 0x6f, 0x6d, 0x00, 0x00, 0x02, 0x00,
@@ -382,7 +382,7 @@ describe('openrouter video generation', () => {
       .mockResolvedValueOnce(mp4Resp());
     vi.stubGlobal('fetch', fetchMock);
 
-    // No `length` key in args — should fall back to 5
+    // No `length` key in args - should fall back to 5
     await generateMedia(argsWithPaths());
 
     const [, submitOpts] = fetchMock.mock.calls[0]!;
@@ -489,7 +489,7 @@ describe('openrouter video generation', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     // If the default were less than 30 min, long jobs would fail.
-    // This test simply asserts the happy path completes — the default
+    // This test simply asserts the happy path completes - the default
     // timeout doesn't fire for a fast job. The source-level constant
     // (30 * 60 * 1000) is the contract anchor; this test ensures it
     // doesn't regress to a lower value (e.g. 20 min).

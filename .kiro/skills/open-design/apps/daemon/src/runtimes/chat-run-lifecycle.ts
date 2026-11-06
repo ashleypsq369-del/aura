@@ -8,7 +8,7 @@ export function assertValidRuntimeDefInactivityTimeoutMs(agentDefault?: number):
   if (!Number.isFinite(agentDefault) || agentDefault < 0 || !Number.isInteger(agentDefault)) {
     throw new RangeError(
       `RuntimeAgentDef.inactivityTimeoutMs must be a non-negative integer, got ${String(agentDefault)}. ` +
-        'Fix the runtime def — invalid values used to silently disable the watchdog.',
+        'Fix the runtime def - invalid values used to silently disable the watchdog.',
     );
   }
 }
@@ -18,7 +18,7 @@ export function assertValidRuntimeDefFirstOutputTimeoutMs(agentDefault?: number)
   if (!Number.isFinite(agentDefault) || agentDefault < 0 || !Number.isInteger(agentDefault)) {
     throw new RangeError(
       `RuntimeAgentDef.firstOutputTimeoutMs must be a non-negative integer, got ${String(agentDefault)}. ` +
-        'Fix the runtime def — invalid values used to silently disable the watchdog.',
+        'Fix the runtime def - invalid values used to silently disable the watchdog.',
     );
   }
 }
@@ -129,8 +129,8 @@ export function applyClaudeStreamJsonRunBookkeeping(
     (event.type === 'usage' && event.stopReason !== 'tool_use');
   if (!terminalTurn) return;
 
-  // An error termination (is_error result frame) ends the turn — stdin must
-  // still close — but it is NOT a clean completion: marking it clean lets
+  // An error termination (is_error result frame) ends the turn - stdin must
+  // still close - but it is NOT a clean completion: marking it clean lets
   // classifyChatRunCloseStatus translate the CLI's non-zero exit into
   // 'succeeded' and the failure never reaches the user. A SessionEnd-hook
   // non-zero exit after a normal result (#3373) carries no isError flag and
@@ -155,7 +155,7 @@ export function applyClaudeStreamJsonRunBookkeeping(
  * Only bytes the agent produced count. Everything the daemon manufactures while
  * closing out a turn is excluded, because stamping the progress clock from our
  * own bookkeeping means the last recorded "progress" is the very act of giving
- * up — so `last_progress_age_ms` reads near zero on exactly the stalled runs
+ * up - so `last_progress_age_ms` reads near zero on exactly the stalled runs
  * whose contract says it must read "near the inactivity ceiling" (see
  * TrackingRunFinished in packages/contracts). That is what made the 2026-07-28
  * AMR design-system stall (run 14b04dd3, ~30 minutes of silence, reported age
@@ -163,14 +163,14 @@ export function applyClaudeStreamJsonRunBookkeeping(
  *
  * Two kinds of emission are ours, not the agent's:
  *
- * 1. A terminal `error` — the daemon reporting its own verdict (an ACP
+ * 1. A terminal `error` - the daemon reporting its own verdict (an ACP
  *    stage-watchdog timeout, a protocol failure we detected, a close with no
  *    result).
- * 2. Any emission flagged `hostSynthesized` — currently the terminal
+ * 2. Any emission flagged `hostSynthesized` - currently the terminal
  *    `tool_use`/`tool_result` pair the ACP bridge writes for a tool the agent
  *    left open (`flushOpenAcpTools`). These ride the normal `agent` channel and
  *    are otherwise indistinguishable from real tool traffic, and they are
- *    emitted on every ACP failure path immediately BEFORE the terminal error —
+ *    emitted on every ACP failure path immediately BEFORE the terminal error -
  *    so excluding only case 1 still lets a stall that died with a tool in
  *    flight report a near-zero age. That is the common stall shape, not an
  *    edge case.
@@ -179,7 +179,7 @@ export function applyClaudeStreamJsonRunBookkeeping(
  * stdout/stderr, and those raw-chunk handlers stamp the clock already.
  *
  * This predicate only covers emissions that reach the daemon BEFORE the verdict
- * — `fail()` flushes open tools and only then sends the error. Everything that
+ * - `fail()` flushes open tools and only then sends the error. Everything that
  * arrives after it (the child's shutdown line on stderr, diagnostics promoted
  * from it) is handled by the attempt-scoped freeze in `startChatRun`; see
  * `freezeProgressClock`. The two together are one rule: the progress clock runs
@@ -214,8 +214,8 @@ export function resolveAcpStageTimeoutMs(agentDefault?: number): number | undefi
 
 /**
  * Whether a runtime reads its whole prompt from stdin (and then waits for
- * EOF). Those runtimes get the prompt — as plain text, or in the shape their
- * `encodeStdinPrompt` produces — as a complete file-backed stdin at spawn; see
+ * EOF). Those runtimes get the prompt - as plain text, or in the shape their
+ * `encodeStdinPrompt` produces - as a complete file-backed stdin at spawn; see
  * `openCompletePromptAsStdin` in `agent-process.ts` and
  * `agentStdinPromptPayload` below.
  *
@@ -257,7 +257,7 @@ export function agentStdinPromptPayload(
  *
  * The prompt was complete on disk before the child existed, so the daemon's
  * side of the write is finished the moment the child is spawned: it cannot be
- * backpressured (`stdin_backpressure` is false by construction — a child that
+ * backpressured (`stdin_backpressure` is false by construction - a child that
  * never reads its stdin now stalls in its own first-token wait, not in a daemon
  * write), and `stdin_write_start`/`stdin_write_end` land together, in their
  * historical position after spawn, so phase math and the Langfuse

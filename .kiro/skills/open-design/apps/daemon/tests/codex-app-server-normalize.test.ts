@@ -283,7 +283,7 @@ describe('codex app-server -> OpenDesign event normalization', () => {
       /*
        * `item/started` now opens the row in its EARLY form rather than its
        * settled one, so the row can fill in from
-       * `item/commandExecution/outputDelta` while the command runs — a settled
+       * `item/commandExecution/outputDelta` while the command runs - a settled
        * row makes every later update invisible, because the client drops any
        * early row whose id already has a settled one. The settled pair below is
        * unchanged and still arrives from `item/completed`. Full rationale and
@@ -371,8 +371,8 @@ describe('codex app-server -> OpenDesign event normalization', () => {
     it('carries no diff stat when the frame carries no diff to count', () => {
       // The guard on the line above: a stat is only ever reported when a real
       // `diff` arrived. `emitCodexFileChangeToolUses` keeps `input` at its
-      // single-key shape otherwise, so the older `exec --json` wire — which
-      // never sent a diff — produces byte-identical events to what it did
+      // single-key shape otherwise, so the older `exec --json` wire - which
+      // never sent a diff - produces byte-identical events to what it did
       // before the stat existed, and no row invents a `+0 −0`.
       const { events } = drive([
         {
@@ -464,11 +464,11 @@ describe('codex app-server -> OpenDesign event normalization', () => {
     /*
      * 起始帧的 `query` 真的一直是空的(`action.type` 在这一刻是 `other`,
      * 搜索词只存在于 `item/completed`)。这条测试原本钉的是「没有搜索词的
-     * 搜索行,比没有行更糟」—— 于是起始帧什么都不发。
+     * 搜索行,比没有行更糟」-- 于是起始帧什么都不发。
      *
      * 产品 2026-09-03 推翻了那个取舍:调用**发出的那一刻**就必须上屏并开始计时,
      * 绝不能调完了才出现。一个没有搜索词的行照样回答了用户真正在问的问题
-     * ——「它卡在哪」—— 因为它带着秒表。
+     * --「它卡在哪」-- 因为它带着秒表。
      *
      * 所以这里现在是三件事,不是两件:早期的 `tool_in_flight` + 落定的
      * `tool_use` + `tool_result`。前两者**共享同一个 id**,客户端靠
@@ -592,8 +592,8 @@ describe('codex app-server -> OpenDesign event normalization', () => {
         // The same notification also carries the LIVE thinking reading. Two
         // events rather than one field because the two have different
         // lifetimes: `usage` is persisted with the run, `thinking_tokens` is
-        // deliberately live-only (`chat-run-messages.ts`). Full coverage —
-        // monotonic clamp, zero suppression, `total` vs `last` — lives in
+        // deliberately live-only (`chat-run-messages.ts`). Full coverage -
+        // monotonic clamp, zero suppression, `total` vs `last` - lives in
         // `codex-thinking-tokens.test.ts`.
         { type: 'thinking_tokens', tokens: 60 },
       ]);

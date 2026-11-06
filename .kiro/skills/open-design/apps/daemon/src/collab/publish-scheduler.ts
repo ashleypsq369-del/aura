@@ -1,10 +1,10 @@
-// Team collaboration sync trigger — the author-side "trigger + orchestration" that the sync trigger owns.
+// Team collaboration sync trigger - the author-side "trigger + orchestration" that the sync trigger owns.
 //
 // It does NOT implement the resource store: publishing content + advancing the
 // `published` ref is the resource hub (the resource-hub owner, the resource hub the spec = createVersion + setRef).
 // C's job is *when* to publish: coalesce rapid author edits into one publish so
 // half-written intermediate states never reach members, flush at run boundaries,
-// and — on success — let the orchestrator notify online members to pull.
+// and - on success - let the orchestrator notify online members to pull.
 //
 // Invariant: notification happens strictly AFTER the adapter's
 // publish resolves (content durable, pointer moved), so members are never told to
@@ -137,7 +137,7 @@ export class CollabPublishScheduler {
       // project yet, so it will pick this change up when it is admitted.
       // `state.reason` above is what it will publish under.
       if (!state.admitted) return;
-      // Don't interrupt an in-flight publish — mark dirty so a fresh one runs
+      // Don't interrupt an in-flight publish - mark dirty so a fresh one runs
       // after it settles (last-write-wins; the change is never lost).
       state.dirty = true;
       state.dirtyReason = reason;
@@ -150,7 +150,7 @@ export class CollabPublishScheduler {
   }
 
   /**
-   * Run boundary — flush any pending publish immediately instead of waiting out
+   * Run boundary - flush any pending publish immediately instead of waiting out
    * the debounce, so members see the stable end-of-run state promptly.
    */
   runBoundary(projectId: string): void {
@@ -215,7 +215,7 @@ export class CollabPublishScheduler {
       state.admitted = false;
       if (state.dirty) {
         state.dirty = false;
-        // A change landed during the publish — schedule a fresh one. That
+        // A change landed during the publish - schedule a fresh one. That
         // newer content supersedes failure recovery, so no retry stacks on
         // top of the re-publish (notifyChanged restores the retry budget).
         this.notifyChanged(projectId, state.dirtyReason || 'change');
@@ -228,7 +228,7 @@ export class CollabPublishScheduler {
   /**
    * Recovery for a publish that failed with nothing newer pending: re-run the
    * same publish (same reason) after a bounded backoff. Exhausting the budget
-   * leaves the project in its failed sync state until the next author change —
+   * leaves the project in its failed sync state until the next author change -
    * deliberately, so a persistently failing hub is retried a handful of times
    * rather than forever.
    */

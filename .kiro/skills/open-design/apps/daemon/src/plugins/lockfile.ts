@@ -76,10 +76,10 @@ export async function writePluginLockfile(
 
 // Two installs finishing close together both read-modify-write this same
 // file; without serializing, whichever write lands last silently discards
-// the other's entry (issue #109 — concurrent plugin installs drop one
+// the other's entry (issue #109 - concurrent plugin installs drop one
 // lockfile row even though both copies land on disk). The daemon is the
 // sole writer of its own data root, so an in-memory per-path promise chain
-// is enough — no OS-level file lock needed. Chains are intentionally never
+// is enough - no OS-level file lock needed. Chains are intentionally never
 // evicted: the number of distinct lockfile paths in one daemon's lifetime
 // is bounded by the number of projects it manages, not installs.
 const pendingWritesByPath = new Map<string, Promise<unknown>>();

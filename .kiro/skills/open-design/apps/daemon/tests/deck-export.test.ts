@@ -64,8 +64,8 @@ describe('resolvePptxConstructor', () => {
   it('resolves the tsx CJS-interop shape where default is double-wrapped', () => {
     // tsx (the tools-dev daemon runtime) loads pptxgenjs's CJS build and wraps
     // it so the namespace's `.default` is an object whose own `.default` is the
-    // class. Reaching only one level — as the old
-    // `PptxGenJSModule.default as ...` did — constructs a plain Object and
+    // class. Reaching only one level - as the old
+    // `PptxGenJSModule.default as ...` did - constructs a plain Object and
     // fails with "PptxGenJS is not a constructor" on every PPTX export.
     expect(resolvePptxConstructor({ default: { default: FakePptxGenJS } })).toBe(FakePptxGenJS);
   });
@@ -187,7 +187,7 @@ describe('buildScreenshotPptx', () => {
     const pngs = decodeSlideDataUrls([PNG_DATA_URL, PNG_DATA_URL]);
     const out = await buildScreenshotPptx(pngs, { title: 'Test Deck' });
     expect(out.length).toBeGreaterThan(0);
-    // .pptx is a ZIP container — starts with the local file header "PK".
+    // .pptx is a ZIP container - starts with the local file header "PK".
     expect(out.subarray(0, 2).toString('latin1')).toBe('PK');
   });
 

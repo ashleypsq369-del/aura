@@ -115,7 +115,7 @@ async function runCli(
 // Reserve a port the OS just told us is free, then close it before
 // any test runs so connections to it fail with ECONNREFUSED. The
 // previous `port + 1` heuristic only assumed the stub's ephemeral port
-// was free — `+1` could already be bound by an unrelated process on a
+// was free - `+1` could already be bound by an unrelated process on a
 // shared CI host, which would silently route the "unreachable daemon"
 // tests at a real server and let them pass (or fail) for the wrong
 // reason (#2428 round-4 reviewer-correctness fix).
@@ -367,8 +367,8 @@ describe('od templates CLI', () => {
   // "failed to reach daemon at <url>: <code>" error that the rest of
   // the CLI emits via `surfaceFetchError`, not a raw
   // `TypeError: fetch failed`. The CLI is pointed at a port the OS
-  // just told us was free and which we immediately released — see
-  // `reserveAndReleasePort` above — so the connection fails with
+  // just told us was free and which we immediately released - see
+  // `reserveAndReleasePort` above - so the connection fails with
   // ECONNREFUSED rather than silently routing to whatever happens to
   // be bound nearby.
 
@@ -410,7 +410,7 @@ describe('od templates CLI', () => {
   // Reviewer-correctness fixes from #2428 round 3.
   // (1) positional id must work even when shared flags come first.
   // (2) `templates save` 404 / 400 must map to project-not-found /
-  //     missing-input — not the default `daemon-not-running`, which
+  //     missing-input - not the default `daemon-not-running`, which
   //     would send agents down the wrong recovery branch.
   it('accepts positional projectId after --daemon-url for `templates save` (flag-before-id)', async () => {
     stub.setResponder(() => ({

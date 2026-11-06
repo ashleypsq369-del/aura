@@ -2,14 +2,14 @@
 //
 // Boots the real daemon Express app on a random port (same shape as
 // memory-config-route.test.ts) and exercises the three endpoints from the
-// outside — `/api/integrations/vela/{status,login,logout}` — so the Settings
+// outside - `/api/integrations/vela/{status,login,logout}` - so the Settings
 // AmrLoginPill provider helpers, the spawn lifecycle, and the
 // ~/.amr/config.json projection all stay in lockstep.
 //
 // HOME is redirected to a tmpdir per test so the suite never touches the
 // developer's real `~/.amr/config.json`. VELA_BIN points at the
 // `tests/fixtures/fake-vela.mjs` stub, which handles the `login` argv by
-// writing the config file with the active VELA_PROFILE and exiting 0 —
+// writing the config file with the active VELA_PROFILE and exiting 0 -
 // mirroring real vela's on-disk side-effect without the device-auth loop.
 
 import { mkdtempSync, existsSync, readFileSync, writeFileSync, mkdirSync, rmSync, chmodSync } from 'node:fs';
@@ -109,7 +109,7 @@ async function waitForVelaLoginIdle(timeoutMs = 10_000): Promise<void> {
 
 // Wait for the close/error terminal handler (and any late proxy fallback it
 // starts), not the public loginInFlight projection. Status can report idle
-// between the child's exit and close once exitCode is set — especially after
+// between the child's exit and close once exitCode is set - especially after
 // cancel, which suppresses the fallbackPending bridge that covers that gap.
 async function waitForVelaLoginSupervisorSettled(timeoutMs = 10_000): Promise<void> {
   const deadline = Date.now() + timeoutMs;
@@ -892,7 +892,7 @@ describe('GET /api/integrations/vela/status', () => {
     // Regression: several account surfaces read /status once per mount/open
     // and do not re-poll on a fixed interval, so a cold cache should still
     // resolve live billing before the first response WHEN billing answers
-    // promptly (the common case — fake-vela here has no delay configured).
+    // promptly (the common case - fake-vela here has no delay configured).
     // A billing read slower than the wait budget is covered separately by
     // "does not block /status on a cold cache when billing is slow, …" below,
     // which asserts the response is never held hostage to a slow probe.
@@ -918,7 +918,7 @@ describe('GET /api/integrations/vela/status', () => {
     // Regression for the "sign out then sign back in" cold-cache path: every
     // logout clears the live-account cache (clearAllVelaLiveAccounts), so a
     // slow (or hung) `vela billing summary` must not delay the login-status
-    // check itself — that check is what the avatar/menu/settings surfaces
+    // check itself - that check is what the avatar/menu/settings surfaces
     // need FIRST. The fetch is left running in the background and the next
     // /status read (every consumer already re-reads on mount, window
     // focus/visibilitychange, or the sign-in event) picks up the resolved
@@ -939,7 +939,7 @@ describe('GET /api/integrations/vela/status', () => {
     const elapsedMs = Date.now() - startedAt;
 
     expect(first.body.loggedIn).toBe(true);
-    // Well under the 2s billing delay — proves /status did not block on it.
+    // Well under the 2s billing delay - proves /status did not block on it.
     expect(elapsedMs).toBeLessThan(1800);
     expect(first.body.account).toBeUndefined();
 
@@ -1183,7 +1183,7 @@ describe('POST /api/integrations/vela/login', () => {
   it('falls back to the proxy when the direct attempt fails AFTER the startup grace', async () => {
     // Regression (review on #4402): a direct device-authorization that survives
     // the 250ms startup grace and only then errors out before printing an
-    // activation URL must still reach the proxy retry — returning 202 on the
+    // activation URL must still reach the proxy retry - returning 202 on the
     // dead direct login would strand the broken-edge cohort. waitForActivation
     // blocks for the steady state; OD_AMR_LOGIN_ACTIVATION_GRACE_MS keeps the
     // wait short, and the direct failure is delayed past LOGIN_STARTUP_GRACE_MS.
@@ -3559,7 +3559,7 @@ describe('login → status round-trip (E2E across the three routes)', () => {
   });
 });
 
-describe('parseAmrEntryAnalyticsPayload — entry sources added in this PR', () => {
+describe('parseAmrEntryAnalyticsPayload - entry sources added in this PR', () => {
   const payloadFor = (source: string, page: string) => ({
     pageName: 'open_design',
     sourcePageName: page,
@@ -3610,7 +3610,7 @@ describe('parseAmrEntryAnalyticsPayload — entry sources added in this PR', () 
 
   // The ingest allowlist is fail-closed: an unrecognised campaign id voids the
   // WHOLE entry, not just its campaign field. So a live campaign missing from
-  // the set loses every attributed entry it produces — and the campaign's own
+  // the set loses every attributed entry it produces - and the campaign's own
   // success metrics (活动归因付费人数 / 金额) are defined as payments carrying
   // its `campaign_id`, which means the campaign would report zero while
   // converting normally.

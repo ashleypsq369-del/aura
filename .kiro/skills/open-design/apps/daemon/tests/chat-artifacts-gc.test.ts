@@ -92,7 +92,7 @@ describe('chat artifact mark-sweep GC', () => {
       label: 'hero.png', kind: 'image',
       displayPolicy: 'immutable_snapshot',      snapshotId: captured.snapshotId,
     }]);
-    // Message delete drops the ref (FK cascade) but not the blob — GC does that.
+    // Message delete drops the ref (FK cascade) but not the blob - GC does that.
     d.db.prepare(`DELETE FROM messages WHERE id = ?`).run(message);
     expect(getChatArtifactBlob(d.db, sha256(bytes('drop-me')))).not.toBeNull();
 

@@ -2,12 +2,12 @@
  * `<od-focus …/>` 的**流式那一半**:标记进来,事件出去,正文里什么都不留。
  *
  * 三件事必须成立,少一件这个功能就不能上:
- *   1. 标记**一个字符都不许上屏** —— 包括被 SSE 切成两半的时候;
- *   2. 标记**不许让 host 读到项目外的文件** —— 声明的路径是不可信输入;
- *   3. 文件还空着的时候**不许开预览** —— 空白页在用户眼里就是 bug。
+ *   1. 标记**一个字符都不许上屏** -- 包括被 SSE 切成两半的时候;
+ *   2. 标记**不许让 host 读到项目外的文件** -- 声明的路径是不可信输入;
+ *   3. 文件还空着的时候**不许开预览** -- 空白页在用户眼里就是 bug。
  *
  * 分片样本不是编的:真实录制 `.od/runs/*'/events.jsonl` 里 `<od-done>` 就是这么
- * 断的 —— `{"type":"text_delta","delta":"<od-done"}` 单独一帧,
+ * 断的 -- `{"type":"text_delta","delta":"<od-done"}` 单独一帧,
  * `"<od-done key=\"89a"` 又是一帧,`"<od-done key=\"8"` 再一帧。
  * `<od-focus` 走同一条流,断法完全一样。
  */
@@ -114,7 +114,7 @@ describe('标记一个字符都不许进正文', () => {
     p.cleanup();
   });
 
-  it('key 不对 / 没写 key / 没闭合,照样吃掉 —— 剥离不看 key', () => {
+  it('key 不对 / 没写 key / 没闭合,照样吃掉 -- 剥离不看 key', () => {
     const p = makeProject();
     const h = harness(p.root);
     for (const marker of [
@@ -131,7 +131,7 @@ describe('标记一个字符都不许进正文', () => {
     p.cleanup();
   });
 
-  it('流结束时还卡着半个标记 —— 丢掉标记,不是打在屏幕上', () => {
+  it('流结束时还卡着半个标记 -- 丢掉标记,不是打在屏幕上', () => {
     const p = makeProject();
     const h = harness(p.root);
     expect(h.strip(`结论在这里。<od-focus key="${KEY}" open="ind`)).toBe('结论在这里。');
@@ -140,7 +140,7 @@ describe('标记一个字符都不许进正文', () => {
   });
 
   /*
-   * 正面对照 —— 防的是「凡是尖括号一律删掉」这种糊弄式修法。
+   * 正面对照 -- 防的是「凡是尖括号一律删掉」这种糊弄式修法。
    * 少了这一条,把匹配换成 `/<[^>]*>/g` 也能让上面几条全绿。
    */
   it('长得像但不是的东西,一个字都不许动', () => {
@@ -158,7 +158,7 @@ describe('标记一个字符都不许进正文', () => {
     p.cleanup();
   });
 
-  it('攒着的半截最终是人话时,flush 原样吐回去 —— 不吞用户的字', () => {
+  it('攒着的半截最终是人话时,flush 原样吐回去 -- 不吞用户的字', () => {
     const p = makeProject();
     const h = harness(p.root);
     expect(h.strip('这里有个孤立的 <')).toBe('这里有个孤立的 ');
@@ -180,7 +180,7 @@ describe('标记一个字符都不许进正文', () => {
 });
 
 /* ─────────────────────────────────────────────────────────────────────────
- * 2. 路径安全 —— 声明的路径是不可信输入
+ * 2. 路径安全 -- 声明的路径是不可信输入
  * ──────────────────────────────────────────────────────────────────────── */
 
 describe('resolveArtifactFocusProjectPath', () => {
@@ -225,7 +225,7 @@ describe('标记不许让 host 读到项目外的文件', () => {
     h.strip(`<od-focus key="${KEY}" open="../../../etc/passwd"/>`);
     await h.settle();
     expect(h.emitted).toEqual([]);
-    // 关键:根本没去碰文件系统 —— 拒绝发生在 stat 之前
+    // 关键:根本没去碰文件系统 -- 拒绝发生在 stat 之前
     expect(h.probed).toEqual([]);
     p.cleanup();
   });
@@ -241,7 +241,7 @@ describe('标记不许让 host 读到项目外的文件', () => {
   });
 
   /*
-   * 字符串校验挡得住 `../`,挡不住软链 —— `assets/logo.png` 可以是指向
+   * 字符串校验挡得住 `../`,挡不住软链 -- `assets/logo.png` 可以是指向
    * `~/.ssh/id_rsa` 的软链。所以 probe 里还要再按 realpath 判一次归属。
    */
   it('项目内的软链指向项目外时,probe 之后仍然拒绝', async () => {
@@ -256,7 +256,7 @@ describe('标记不许让 host 读到项目外的文件', () => {
     h.strip(`<od-focus key="${KEY}" open="leak.html"/>`);
     await h.settle();
     // 路径本身合法,所以确实去碰了文件系统(和上面两条「压根不 probe」相反),
-    // 但 realpath 之后判出界 —— 一次事件都不发
+    // 但 realpath 之后判出界 -- 一次事件都不发
     expect(h.probed.length).toBeGreaterThan(0);
     expect(h.probed.every((p) => p.startsWith(path.join(root, path.sep)))).toBe(true);
     expect(h.emitted).toEqual([]);
@@ -286,7 +286,7 @@ describe('标记不许让 host 读到项目外的文件', () => {
  * ──────────────────────────────────────────────────────────────────────── */
 
 describe('空的时候不开,有内容了才开', () => {
-  it('文件还不存在时不发事件 —— 但标记留着,等字节', async () => {
+  it('文件还不存在时不发事件 -- 但标记留着,等字节', async () => {
     const p = makeProject();
     const h = harness(p.root);
     h.strip(`<od-focus key="${KEY}" open="index.html"/>`);
@@ -314,7 +314,7 @@ describe('空的时候不开,有内容了才开', () => {
     p.cleanup();
   });
 
-  it('文件已经有内容时,标记一到就发 —— 不等回合结束', async () => {
+  it('文件已经有内容时,标记一到就发 -- 不等回合结束', async () => {
     const p = makeProject();
     writeFileSync(path.join(p.root, 'index.html'), '<!doctype html><body>done</body>');
     const h = harness(p.root);
@@ -324,7 +324,7 @@ describe('空的时候不开,有内容了才开', () => {
     p.cleanup();
   });
 
-  it('目录不是产物 —— 指向目录不发事件', async () => {
+  it('目录不是产物 -- 指向目录不发事件', async () => {
     const p = makeProject();
     mkdirSync(path.join(p.root, 'assets'));
     const h = harness(p.root);
@@ -348,7 +348,7 @@ describe('空的时候不开,有内容了才开', () => {
 
   /*
    * show 走的是另一条路:它只**收窄** host 自己算出来的清单,不会让 host 去
-   * 读任何文件,所以不需要 stat 门。这条钉住这个区别 —— 否则有人「顺手统一」
+   * 读任何文件,所以不需要 stat 门。这条钉住这个区别 -- 否则有人「顺手统一」
    * 成两边都 stat,show 就会在文件还没落盘时被丢掉。
    */
   it('show 不受空文件门约束:文件不存在也照样下发', () => {

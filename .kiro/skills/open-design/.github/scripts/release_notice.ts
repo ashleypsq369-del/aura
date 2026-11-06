@@ -2,7 +2,7 @@
 // card: a colored header title plus a markdown body, with no download buttons.
 //
 // This is the lightweight sibling of feishu.ts (the build/download card). It is
-// for events that are NOT a package build — e.g. cut-patch-release announcing
+// for events that are NOT a package build - e.g. cut-patch-release announcing
 // that the Thursday patch cut was skipped because the week's minor has not
 // shipped stable yet. The signing + retry transport mirrors feishu.ts so both
 // notifiers behave identically against the same bot.

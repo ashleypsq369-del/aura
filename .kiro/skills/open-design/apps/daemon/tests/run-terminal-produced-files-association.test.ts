@@ -1,5 +1,5 @@
 /**
- * 一轮跑完之后,那份产物到底有没有**归档到消息上** —— Plane OPEND-2598 / 2608。
+ * 一轮跑完之后,那份产物到底有没有**归档到消息上** -- Plane OPEND-2598 / 2608。
  *
  * 两单的定位证据是同一句话:run 成功了(2598 的 `end` 事件写着
  * `status=succeeded, artifactCount=1, artifactPaths=[wallpaper-capybara.png]`)、
@@ -12,7 +12,7 @@
  * 为什么会 null:`produced_files_json` 今天**只有 web 客户端写**
  * (`PUT /api/projects/:id/conversations/:cid/messages/:mid` 是唯一入口),
  * 而算它的那段代码住在 `ProjectView` 的 SSE `onDone` 闭包里。用户在跑的时候离开
- * 项目 —— 或者只是切了会话 —— `ProjectView` 卸载,`abortRef.current.abort()` 把流
+ * 项目 -- 或者只是切了会话 -- `ProjectView` 卸载,`abortRef.current.abort()` 把流
  * 摘掉,`daemon.ts` 里的 `AbortError` 分支直接 `return`,`onDone` 永远不执行。
  * daemon 这边照常把消息 promote 成 `succeeded`
  * (`reconcileAssistantMessageOnRunEnd`),**但不带任何产物关联**。等用户回来,
@@ -22,12 +22,12 @@
  *
  * 所以这条测试**故意不扮演客户端**:它跑一轮真的 run、真的写文件,然后一次
  * `PUT .../messages/:mid` 都不发,直接问 daemon 要这条会话的消息。产物关联必须
- * 已经在那儿了 —— 这正是 2598 的验收原话:「无论当前项目视图是否挂载,成功运行的
+ * 已经在那儿了 -- 这正是 2598 的验收原话:「无论当前项目视图是否挂载,成功运行的
  * artifactPaths 都应可靠关联并持久化到对应 assistant message」。
  *
  * 夹具用媒体产物(png / mp3)而不是 html:两张单讲的都是媒体轮,而且媒体文件
  * 是媒体任务写进项目的、不经过 Write/Edit 工具行,`AssistantMessage` 那条
- * `inferProducedFilesFromTurn` 的正文闸对它完全不生效 —— 落库是唯一的来源。
+ * `inferProducedFilesFromTurn` 的正文闸对它完全不生效 -- 落库是唯一的来源。
  */
 
 import type http from 'node:http';
@@ -44,7 +44,7 @@ import { associateRunProducedFiles } from '../src/runtimes/run-produced-files.js
 /**
  * Open the running server's own database, the way the cover suite does.
  *
- * `await`s the callback before closing — a sync `finally` would close the
+ * `await`s the callback before closing - a sync `finally` would close the
  * handle out from under an async caller and the statement would run on a dead
  * connection.
  */
@@ -71,7 +71,7 @@ let baseUrl: string;
 let server: http.Server;
 const tempDirs: string[] = [];
 
-/** 把一个假 agent 塞到 PATH 最前面 —— 与 `chat-artifacts-run-cover.test.ts` 同一套。 */
+/** 把一个假 agent 塞到 PATH 最前面 -- 与 `chat-artifacts-run-cover.test.ts` 同一套。 */
 async function withFakeAgent<T>(binName: string, script: string, run: () => Promise<T>): Promise<T> {
   const dir = await fsp.mkdtemp(join(tmpdir(), 'od-produced-bin-'));
   tempDirs.push(dir);
@@ -119,7 +119,7 @@ async function readMessages(projectId: string, conversationId: string): Promise<
  * 跑一轮真的 run,让它把两份媒体产物写进 run cwd。
  *
  * **客户端那一半刻意不做**:不发 `PUT .../messages/:mid`。这条测试模拟的就是
- * 「用户在跑的时候离开了项目」—— 浏览器根本没机会算产物、更没机会写回来。
+ * 「用户在跑的时候离开了项目」-- 浏览器根本没机会算产物、更没机会写回来。
  */
 async function runTurnThatWritesMedia(): Promise<{
   projectId: string;
@@ -212,7 +212,7 @@ describe('run terminal produced-file association', () => {
       (m) => (m?.producedFiles?.length ?? 0) > 0,
     );
 
-    // 先证明这一轮确实跑成功了 —— 否则下面的断言在讲另一个故事
+    // 先证明这一轮确实跑成功了 -- 否则下面的断言在讲另一个故事
     expect(message?.runStatus).toBe('succeeded');
 
     const names = (message?.producedFiles ?? []).map((f) => f.name).sort();
@@ -221,7 +221,7 @@ describe('run terminal produced-file association', () => {
       'wallpaper-capybara.png',
     ]);
 
-    // 形状必须是 ChatPanel 认的那种 `ProjectFile`,不是一串裸文件名 ——
+    // 形状必须是 ChatPanel 认的那种 `ProjectFile`,不是一串裸文件名 --
     // 卡片按 `kind` / `mime` 分图片卡与音频胶囊,`size` 还要显示出来。
     const audio = message!.producedFiles!.find((f) => f.name === 'greeting-autumn-cn.mp3');
     expect(audio?.kind).toBe('audio');

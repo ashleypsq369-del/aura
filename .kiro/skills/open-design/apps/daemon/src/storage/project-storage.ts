@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 — `ProjectStorage` adapter interface.
+// Phase 5 / spec §15.6 - `ProjectStorage` adapter interface.
 //
 // The daemon's project filesystem usage today is concentrated in
 // `apps/daemon/src/projects.ts` (read/write/list/delete). Spec §15.6
@@ -10,17 +10,17 @@
 //
 // This module is the substrate slice. It ships:
 //
-//   - `ProjectStorage` interface — the narrow contract every backend
+//   - `ProjectStorage` interface - the narrow contract every backend
 //     implements (read / write / list / delete / stat).
-//   - `LocalProjectStorage` — a thin wrapper over the existing
+//   - `LocalProjectStorage` - a thin wrapper over the existing
 //     `apps/daemon/src/projects.ts` helpers; this is the v1 default.
-//   - `S3ProjectStorage` — a stub that mirrors the interface and
+//   - `S3ProjectStorage` - a stub that mirrors the interface and
 //     records the operations it would perform. The real AWS SDK
 //     wiring is the next Phase 5 PR; the stub exists so unit tests
 //     can lock the interface contract.
 //
 // The daemon's existing project routes don't yet route through this
-// adapter — that's an opt-in flag away (`OD_PROJECT_STORAGE=s3`).
+// adapter - that's an opt-in flag away (`OD_PROJECT_STORAGE=s3`).
 // The substrate slice keeps the call sites unchanged so a wrong
 // adapter never silently corrupts user data on roll-out.
 
@@ -48,7 +48,7 @@ export interface ProjectStorage {
   // implementation-defined; callers that need deterministic order
   // sort by `path`.
   listFiles(projectId: string): Promise<ProjectFileMeta[]>;
-  // Deletes a single file under `<projectId>/`. Idempotent — missing
+  // Deletes a single file under `<projectId>/`. Idempotent - missing
   // files do not throw.
   deleteFile(projectId: string, relpath: string): Promise<void>;
   // Reports metadata for a single file without reading its bytes.
@@ -66,7 +66,7 @@ export class StorageError extends Error {
 }
 
 /**
- * v1 default — backed by the daemon's existing `<dataDir>/.od/projects/`
+ * v1 default - backed by the daemon's existing `<dataDir>/.od/projects/`
  * filesystem layout. Pure pass-through to fs/promises with the
  * traversal guard the legacy `projects.ts` helpers already enforce.
  */
@@ -162,7 +162,7 @@ export class LocalProjectStorage implements ProjectStorage {
 }
 
 /**
- * Phase 5 / spec §15.6 / plan §3.U1 — S3-compatible blob backend.
+ * Phase 5 / spec §15.6 / plan §3.U1 - S3-compatible blob backend.
  *
  * Signs requests inline with AWS SigV4 (see ./aws-sigv4.ts) using
  * only node:crypto. No `@aws-sdk/*` dep is pulled in; the backend
@@ -194,7 +194,7 @@ export interface S3ProjectStorageOptions {
   credentials: SigV4Credentials;
   // Pluggable fetch for tests. Defaults to globalThis.fetch.
   fetchFn?: typeof fetch;
-  // Override for clock — tests pin signatures with this. Production
+  // Override for clock - tests pin signatures with this. Production
   // leaves it undefined (signSigV4 falls back to `new Date()`).
   now?: () => Date;
 }
@@ -359,7 +359,7 @@ interface ListBucketEntry { key: string; size: number; lastModifiedMs: number }
 
 function parseListBucketV2Xml(xml: string): { entries: ListBucketEntry[]; isTruncated: boolean; nextToken?: string } {
   const entries: ListBucketEntry[] = [];
-  // Lightweight XML scrape — we accept S3 / S3-compat shapes:
+  // Lightweight XML scrape - we accept S3 / S3-compat shapes:
   //   <Contents>
   //     <Key>...</Key>
   //     <LastModified>2026-...</LastModified>

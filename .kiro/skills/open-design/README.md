@@ -1,6 +1,6 @@
 <h1 align="center">OpenDesign: The 1st Collaborative AI Design Agent Workspace</h1>
 
-> ✨ **[Celebrating 100K GitHub stars with OpenDesign Go](https://open-design.ai/pricing/)** — Go credits are doubled: **$8 for your first month, with up to $120 in monthly credits for eligible Design Plan models**. Use them across 10+ models, including GPT-6 Luna, DeepSeek V4.1 Flash, GLM-5.3 Flash-X, and MiMo V2.6 Flash. All personal plans include API access for Codex, Claude Code, DSH, OpenCode, and more.
+> ✨ **[Celebrating 100K GitHub stars with OpenDesign Go](https://open-design.ai/pricing/)** - Go credits are doubled: **$8 for your first month, with up to $120 in monthly credits for eligible Design Plan models**. Use them across 10+ models, including GPT-6 Luna, DeepSeek V4.1 Flash, GLM-5.3 Flash-X, and MiMo V2.6 Flash. All personal plans include API access for Codex, Claude Code, DSH, OpenCode, and more.
 
 <p align="center">
   <img src="docs/assets/readme-hero-design-agent.webp" alt="OpenDesign: The 1st Collaborative AI Design Agent Workspace" width="100%" />
@@ -42,46 +42,46 @@ That workflow is open and extensible. OpenDesign is licensed under Apache 2.0 an
 <tr>
 <td width="50%" valign="top">
 <a href="docs/screenshots/product-tour/home-workspace-2026-09-30-220844.png"><img src="docs/screenshots/product-tour/home-workspace-2026-09-30-220844.png" alt="OpenDesign Home page with the prototype composer and example prompts" width="500" /></a><br/>
-<sub><b>Home</b> — start with a brief or an example.</sub>
+<sub><b>Home</b> - start with a brief or an example.</sub>
 </td>
 <td width="50%" valign="top">
 <a href="docs/screenshots/product-tour/all-projects-2026-09-30-220900.webp"><img src="docs/screenshots/product-tour/all-projects-2026-09-30-220900.webp" alt="OpenDesign All projects page showing recent design systems, media, and prototypes" width="500" /></a><br/>
-<sub><b>All projects</b> — revisit design systems, media, and prototypes.</sub>
+<sub><b>All projects</b> - revisit design systems, media, and prototypes.</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 <a href="docs/screenshots/product-tour/design-systems-stripe-2026-09-30-220910.png"><img src="docs/screenshots/product-tour/design-systems-stripe-2026-09-30-220910.png" alt="OpenDesign Design systems page showing the Stripe brand identity, logo, and typography" width="500" /></a><br/>
-<sub><b>Design Systems</b> — inspect brand assets and refine them with an agent.</sub>
+<sub><b>Design Systems</b> - inspect brand assets and refine them with an agent.</sub>
 </td>
 <td width="50%" valign="top">
 <a href="docs/screenshots/product-tour/plugins-skills-2026-09-30-220917.png"><img src="docs/screenshots/product-tour/plugins-skills-2026-09-30-220917.png" alt="OpenDesign Plugins page showing official skills, categories, and search" width="500" /></a><br/>
-<sub><b>Plugins</b> — find skills and launch them with <code>Try it</code>.</sub>
+<sub><b>Plugins</b> - find skills and launch them with <code>Try it</code>.</sub>
 </td>
 </tr>
 </table>
 
-### Studio — create and refine in one project
+### Studio - create and refine in one project
 
 <table>
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/product-tour/studio-prototype-2026.webp" alt="Website prototype with live preview and agent conversation in OpenDesign Studio" /><br/>
-<sub><b>Prototype</b> — build and refine interactive web experiences with your agent and live preview.</sub>
+<sub><b>Prototype</b> - build and refine interactive web experiences with your agent and live preview.</sub>
 </td>
 <td width="50%" valign="top">
 <img src="docs/screenshots/product-tour/studio-slides-2026.png" alt="Swiss Grid presentation in OpenDesign Studio with slide thumbnails and speaker notes" /><br/>
-<sub><b>Slides</b> — create decks, review slides and speaker notes, and export when ready.</sub>
+<sub><b>Slides</b> - create decks, review slides and speaker notes, and export when ready.</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/product-tour/studio-image-2026.webp" alt="Generated fashion portrait preview in OpenDesign Studio" /><br/>
-<sub><b>Image</b> — generate visual assets from the conversation, inspect the result, then download or open it.</sub>
+<sub><b>Image</b> - generate visual assets from the conversation, inspect the result, then download or open it.</sub>
 </td>
 <td width="50%" valign="top">
 <a href="docs/screenshots/product-tour/studio-hyperframes-2026.mp4"><img src="docs/screenshots/product-tour/studio-hyperframes-poster-2026.png" alt="OpenDesign HyperFrames editor showing the One brief, Every deliverable motion graphic" /></a><br/>
-<sub><b>HyperFrames</b> — create motion graphics with your agent and export to MP4. <a href="docs/screenshots/product-tour/studio-hyperframes-2026.mp4">Watch the video</a>.</sub>
+<sub><b>HyperFrames</b> - create motion graphics with your agent and export to MP4. <a href="docs/screenshots/product-tour/studio-hyperframes-2026.mp4">Watch the video</a>.</sub>
 </td>
 </tr>
 </table>
@@ -119,10 +119,10 @@ For DeepSeek Harness, install the official `dsh` CLI first, then select it in Op
 ¹ Automatic MCP configuration for Claude Desktop is currently supported on macOS and Windows only.
 
 <p align="center">
-  <img src="https://repo-assets.open-design.ai/resources/images/coding-agents.png" alt="The 26 coding-agent CLIs OpenDesign supports — DeepSeek Harness · Claude Code · Codex · OpenCode · Hermes · Antigravity · Vela · Grok Build · Kimi · Cursor Agent · Qwen · Qoder · GitHub Copilot · Pi · Kiro · Kilo · Mistral Vibe · DeepSeek · Reasonix · Aider · Amp · CodeBuddy · Mimo · AtomCode · Devin · Trae" width="100%" />
+  <img src="https://repo-assets.open-design.ai/resources/images/coding-agents.png" alt="The 26 coding-agent CLIs OpenDesign supports - DeepSeek Harness · Claude Code · Codex · OpenCode · Hermes · Antigravity · Vela · Grok Build · Kimi · Cursor Agent · Qwen · Qoder · GitHub Copilot · Pi · Kiro · Kilo · Mistral Vibe · DeepSeek · Reasonix · Aider · Amp · CodeBuddy · Mimo · AtomCode · Devin · Trae" width="100%" />
 </p>
 
-**No CLI installed?** The BYOK proxy at `POST /api/proxy/{anthropic,openai,azure,google,ollama,senseaudio}/stream` gives you the same loop (no process spawn) — paste `baseUrl` + `apiKey` + `model`, with presets for OpenAI, Atlas Cloud, Anthropic, Azure OpenAI, Google Gemini, Ollama, LM Studio, vLLM, or any OpenAI-compatible endpoint. Atlas Cloud uses `https://api.atlascloud.ai/v1` with your own key and OpenAI-compatible model ids such as `qwen/qwen3.5-flash`. Per-target SSRF protection blocks internal IPs / link-local / CGNAT at the daemon edge.
+**No CLI installed?** The BYOK proxy at `POST /api/proxy/{anthropic,openai,azure,google,ollama,senseaudio}/stream` gives you the same loop (no process spawn) - paste `baseUrl` + `apiKey` + `model`, with presets for OpenAI, Atlas Cloud, Anthropic, Azure OpenAI, Google Gemini, Ollama, LM Studio, vLLM, or any OpenAI-compatible endpoint. Atlas Cloud uses `https://api.atlascloud.ai/v1` with your own key and OpenAI-compatible model ids such as `qwen/qwen3.5-flash`. Per-target SSRF protection blocks internal IPs / link-local / CGNAT at the daemon edge.
 
 Runtime definitions live in [`apps/daemon/src/runtimes/defs/`](apps/daemon/src/runtimes/defs/), with registration and shared stream handling under [`apps/daemon/src/runtimes/`](apps/daemon/src/runtimes/). See [`docs/agent-adapters.md`](docs/agent-adapters.md) for the adapter contract.
 
@@ -132,7 +132,7 @@ Runtime definitions live in [`apps/daemon/src/runtimes/defs/`](apps/daemon/src/r
 
 Four core product categories, all rendered by a coding agent running on your laptop. Click a thumbnail to see the real example.
 
-### 1 · Prototypes — web · desktop · mobile
+### 1 · Prototypes - web · desktop · mobile
 
 The default output surface. Single-page HTML artifacts that read your `DESIGN.md` and render in a sandboxed iframe.
 
@@ -140,74 +140,74 @@ The default output surface. Single-page HTML artifacts that read your `DESIGN.md
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/dating-web.png" alt="Web prototype dating-web" /><br/>
-<sub><b>Web prototype</b> — an editorial dashboard with scrollbars, KPIs, and charts. Rendered straight from <code>design-templates/dating-web/</code>.</sub>
+<sub><b>Web prototype</b> - an editorial dashboard with scrollbars, KPIs, and charts. Rendered straight from <code>design-templates/dating-web/</code>.</sub>
 </td>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/gamified-app.png" alt="Gamified app" /><br/>
-<sub><b>Mobile app prototype</b> — a three-screen gamified flow with XP ribbons and quest detail. Hand off straight to Cursor / Codex / Claude Code to turn into React/Next/Vue.</sub>
+<sub><b>Mobile app prototype</b> - a three-screen gamified flow with XP ribbons and quest detail. Hand off straight to Cursor / Codex / Claude Code to turn into React/Next/Vue.</sub>
 </td>
 </tr>
 </table>
 
 ### 2 · Live artifacts & dashboards
 
-Live dashboards, decision rooms, KPI walls — single-page artifacts that pull data through a tweaks panel and stay editable in place.
+Live dashboards, decision rooms, KPI walls - single-page artifacts that pull data through a tweaks panel and stay editable in place.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/live-dashboard.png" alt="Live dashboard" /><br/>
-<sub><b>Live dashboard</b> — an editable KPI wall whose tweaks panel surfaces the parameters worth nudging. The agent emits a manifest, and the iframe re-renders without a reload.</sub>
+<sub><b>Live dashboard</b> - an editable KPI wall whose tweaks panel surfaces the parameters worth nudging. The agent emits a manifest, and the iframe re-renders without a reload.</sub>
 </td>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/research-decision-room.png" alt="Decision room" /><br/>
-<sub><b>Decision room</b> — a multi-source briefing artifact for product / research / ops meetings.</sub>
+<sub><b>Decision room</b> - a multi-source briefing artifact for product / research / ops meetings.</sub>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/github-dashboard.png" alt="GitHub dashboard" /><br/>
-<sub><b>GitHub-style dashboard</b> — repo metrics presented as a live artifact.</sub>
+<sub><b>GitHub-style dashboard</b> - repo metrics presented as a live artifact.</sub>
 </td>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/flowai-live-dashboard-template.png" alt="Flow live dashboard" /><br/>
-<sub><b>Flow live-dashboard template</b> — a domain-specific KPI template, branded through the active <code>DESIGN.md</code>.</sub>
+<sub><b>Flow live-dashboard template</b> - a domain-specific KPI template, branded through the active <code>DESIGN.md</code>.</sub>
 </td>
 </tr>
 </table>
 
-### 3 · Decks — magazine decks, weekly updates, pitches
+### 3 · Decks - magazine decks, weekly updates, pitches
 
 <table>
 <tr>
 <td width="50%" valign="top">
 <img src="docs/screenshots/07-magazine-deck.png" alt="Magazine deck (guizang-ppt)" /><br/>
-<sub><b>Deck mode (guizang-ppt)</b> — magazine layouts, WebGL hero, P0/P1/P2 checklists. Bundled verbatim from <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> with its original license preserved.</sub>
+<sub><b>Deck mode (guizang-ppt)</b> - magazine layouts, WebGL hero, P0/P1/P2 checklists. Bundled verbatim from <a href="https://github.com/op7418/guizang-ppt-skill"><code>op7418/guizang-ppt-skill</code></a> with its original license preserved.</sub>
 </td>
 <td width="50%" valign="top">
 <img src="docs/screenshots/skills/deck-swiss-international.png" alt="Swiss deck" /><br/>
-<sub><b>Swiss International-style deck</b> — grid-anchored, monochrome accents. One of <b>15 deck templates</b> and <b>36 themes</b> under <code>design-templates/html-ppt-*/</code>.</sub>
+<sub><b>Swiss International-style deck</b> - grid-anchored, monochrome accents. One of <b>15 deck templates</b> and <b>36 themes</b> under <code>design-templates/html-ppt-*/</code>.</sub>
 </td>
 </tr>
 </table>
 
 Every deck exports to **HTML** (single file, inlined assets), **PDF** (browser print, deck-aware), **PPTX** (agent-driven skill), **ZIP** (archive), or **Markdown**.
 
-### 4 · Images — `gpt-image-2`, ImageRouter, custom API
+### 4 · Images - `gpt-image-2`, ImageRouter, custom API
 
 <table>
 <tr>
 <td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1776662673014_nf0taw_HGRMNDybsAAGG88.jpg" alt="Illustrated city food map" /><br/><sub><b>Illustrated city food map</b><br/>Hand-drawn editorial travel poster</sub></td>
 <td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1777453149026_gd2k50_HHCSvymboAAVscc.jpg" alt="Cinematic elevator scene" /><br/><sub><b>Cinematic elevator scene</b><br/>Single-frame editorial still</sub></td>
-<td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1777453164993_mt5b69_HHDoWfeaUAEA6Vt.jpg" alt="Cyberpunk anime portrait" /><br/><sub><b>Cyberpunk portrait</b><br/>Profile avatar — neon face text</sub></td>
+<td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1777453164993_mt5b69_HHDoWfeaUAEA6Vt.jpg" alt="Cyberpunk anime portrait" /><br/><sub><b>Cyberpunk portrait</b><br/>Profile avatar - neon face text</sub></td>
 <td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1776661968404_8a5flm_HGQc_KOaMAA2vt0.jpg" alt="3D stone staircase evolution" /><br/><sub><b>3D stone staircase</b><br/>Hewn-stone infographic</sub></td>
 <td width="20%" valign="top"><img src="https://cms-assets.youmind.com/media/1777453184257_vb9hvl_HG9tAkOa4AAuRrn.jpg" alt="Glamorous portrait" /><br/><sub><b>Glamorous portrait</b><br/>Editorial studio shot</sub></td>
 </tr>
 </table>
 
-**93 ready-to-replicate prompts** live in [`prompt-templates/`](prompt-templates/) — preview thumbnails, full prompt body, target model, aspect ratio, and source attribution. One click drops a brief into the composer.
+**93 ready-to-replicate prompts** live in [`prompt-templates/`](prompt-templates/) - preview thumbnails, full prompt body, target model, aspect ratio, and source attribution. One click drops a brief into the composer.
 
-### 5 · Video & HyperFrames — agent-native motion graphics
+### 5 · Video & HyperFrames - agent-native motion graphics
 
 **[HyperFrames][hyperframes]** is HeyGen's open-source, agent-native video framework, integrated as a first-class citizen in OpenDesign. The agent writes HTML + CSS + GSAP, and HyperFrames renders it to a deterministic MP4 via headless Chrome + FFmpeg. Pair it with **Seedance 2.0** for cinematic t2v / i2v, **Veo 3 / Sora 2 / Kling 2** for routed model variants, and **Suno v5 / Lyria 2** for the audio layer.
 
@@ -245,7 +245,7 @@ Every deck exports to **HTML** (single file, inlined assets), **PDF** (browser p
 
 ## Quick start
 
-### 🖥️ Download the desktop app (recommended — zero config)
+### 🖥️ Download the desktop app (recommended - zero config)
 
 The fastest way to use OpenDesign. No Node, no pnpm, no clone.
 
@@ -257,7 +257,7 @@ After install: the app auto-detects every coding-agent CLI on your `PATH`, loads
 
 ### 🤖 Install into your coding agent (no UI)
 
-You can use OpenDesign without ever opening the GUI — call it as a skill, plugin, or MCP server inside Claude Code, Codex, Cursor, Copilot, OpenClaw, Antigravity, Hermes, Kimi, and more.
+You can use OpenDesign without ever opening the GUI - call it as a skill, plugin, or MCP server inside Claude Code, Codex, Cursor, Copilot, OpenClaw, Antigravity, Hermes, Kimi, and more.
 
 If you installed the macOS desktop app via the DMG or Homebrew cask, your shell
 may still resolve `od` to Apple's built-in `/usr/bin/od` octal-dump utility. In
@@ -328,21 +328,21 @@ Open the URL printed by `tools-dev`; development ports are allocated dynamically
 
 Node `~24`, pnpm `10.33.x`. WSL2 users, see [`docs/wsl-setup.md`](docs/wsl-setup.md); native Windows users, see [`docs/windows-troubleshooting.md`](docs/windows-troubleshooting.md). Full quickstart, env vars, and packaged build flow → [`QUICKSTART.md`](QUICKSTART.md).
 
-### A full workflow — from brief to artifact
+### A full workflow - from brief to artifact
 
 `brief → plugin → direction → design system → artifact → handoff → memory`
 
 1. **A PM submits a brief.** The plugin picker offers landing page · pitch deck · dashboard · social post · PM spec · OKR scorecard…
 2. **A designer (or the agent) locks the direction.** No brand? Pick from 5 curated directions. Have a brand? Drop a screenshot / URL → the agent connects GitHub and codifies a reusable `DESIGN.md`.
 3. **The agent creates the first deliverable.** Plugin + functional skill or design template + `DESIGN.md` are bound. Filesystem-backed CLI runs write canonical project files and the preview follows them; BYOK/plain-API runs without file tools return one complete `<artifact>` block.
-4. **Hand off to engineering.** The artifact is real HTML/CSS — drop it into Cursor, Codex, or Claude Code to keep building as code. Or export PPTX / PDF / MP4 straight to marketing.
+4. **Hand off to engineering.** The artifact is real HTML/CSS - drop it into Cursor, Codex, or Claude Code to keep building as code. Or export PPTX / PDF / MP4 straight to marketing.
 5. **OpenDesign gets smarter as you use it.** Your screenshots, fonts, palettes, and confirmed artifacts accumulate as defaults for the next session. Less rework, less drift.
 
 ---
 
 ## Use OpenDesign from your coding agent
 
-OpenDesign ships a **stdio MCP server** and per-agent **install scripts**. Any MCP-compatible agent in another repo can read files from your local OpenDesign projects directly — tokens CSS, JSX components, entry HTML — as a structured API queryable by name. The agent always sees the live file, not a stale export.
+OpenDesign ships a **stdio MCP server** and per-agent **install scripts**. Any MCP-compatible agent in another repo can read files from your local OpenDesign projects directly - tokens CSS, JSX components, entry HTML - as a structured API queryable by name. The agent always sees the live file, not a stale export.
 
 ```bash
 # One-line install (16+ CLIs supported):
@@ -356,13 +356,13 @@ od plugin list --json
 od skills list --json
 ```
 
-**Why MCP?** Exporting and re-attaching a zip every iteration breaks flow. MCP exposes the design source directly — the agent always sees the live file.
+**Why MCP?** Exporting and re-attaching a zip every iteration breaks flow. MCP exposes the design source directly - the agent always sees the live file.
 
 **For an agent starting from scratch,** the installer places `~/.config/<agent>/open-design.json` (or the platform equivalent) plus a copy-paste MCP snippet. Cursor gets a one-click deeplink; Claude Code gets a `claude mcp add-json` one-liner; every other agent gets JSON in the schema its config expects. On macOS desktop installs, prefer that Settings snippet over typing bare `od mcp install <agent>` in Terminal, because `/usr/bin/od` may win on PATH. Full per-agent flow → **Settings → MCP server** in the desktop app, or [`docs/agent-adapters.md`](docs/agent-adapters.md).
 
 **Security model.** Read-only by default, the daemon binds to `127.0.0.1`, and SSRF is blocked at the proxy edge. LAN exposure requires an explicit `OD_BIND_HOST` plus `OD_ALLOWED_ORIGINS`. Connector credentials and live-artifact preview routes stay loopback-only regardless.
 
-**Internally-hosted model endpoints.** To prevent SSRF, the daemon blocks provider base URLs that resolve to private/internal address ranges (RFC1918, link-local, CGNAT, and cloud-metadata IPs) by default, surfacing `Internal IPs blocked`. If you run an internally-hosted gateway (e.g. LiteLLM or Ollama on a VPN-only `10.x`/`192.168.x` address), opt that host out with `OD_ALLOWED_INTERNAL_HOSTS=<host1>,<host2>,...` — a comma- or whitespace-separated list of bare hostnames or IPs (`10.0.0.5`, `litellm.internal.corp`; a `host:port` or full URL is accepted and reduced to its hostname; IPv6 must be bracketed, e.g. `[fd00::1]`). The allowlist is strict opt-in (empty by default), exact-host (no subdomain/substring matching), and applies **only** to provider endpoints you configure (connection test, model discovery, BYOK chat). It deliberately does **not** relax the guard on download URLs returned inside upstream responses, which stay blocked. A malformed entry — or CIDR notation, which is not supported — is dropped with a warning rather than silently trusted, so a typo never quietly widens (or fails to widen) the guard. Allowlisting a hostname trusts whatever it resolves to (like `OD_ALLOWED_ORIGINS`); allowlist the resolved IP instead if you want the DNS-resolved address re-checked.
+**Internally-hosted model endpoints.** To prevent SSRF, the daemon blocks provider base URLs that resolve to private/internal address ranges (RFC1918, link-local, CGNAT, and cloud-metadata IPs) by default, surfacing `Internal IPs blocked`. If you run an internally-hosted gateway (e.g. LiteLLM or Ollama on a VPN-only `10.x`/`192.168.x` address), opt that host out with `OD_ALLOWED_INTERNAL_HOSTS=<host1>,<host2>,...` - a comma- or whitespace-separated list of bare hostnames or IPs (`10.0.0.5`, `litellm.internal.corp`; a `host:port` or full URL is accepted and reduced to its hostname; IPv6 must be bracketed, e.g. `[fd00::1]`). The allowlist is strict opt-in (empty by default), exact-host (no subdomain/substring matching), and applies **only** to provider endpoints you configure (connection test, model discovery, BYOK chat). It deliberately does **not** relax the guard on download URLs returned inside upstream responses, which stay blocked. A malformed entry - or CIDR notation, which is not supported - is dropped with a warning rather than silently trusted, so a typo never quietly widens (or fails to widen) the guard. Allowlisting a hostname trusts whatever it resolves to (like `OD_ALLOWED_ORIGINS`); allowlist the resolved IP instead if you want the DNS-resolved address re-checked.
 
 ---
 
@@ -406,23 +406,23 @@ Full protocol and directory split → [`docs/skills-protocol.md`](docs/skills-pr
 <details>
 <summary><b>Full catalog (click to expand)</b></summary>
 
-**AI & LLM** — `claude` · `cohere` · `mistral-ai` · `minimax` · `together-ai` · `replicate` · `runwayml` · `elevenlabs` · `ollama` · `x-ai`
+**AI & LLM** - `claude` · `cohere` · `mistral-ai` · `minimax` · `together-ai` · `replicate` · `runwayml` · `elevenlabs` · `ollama` · `x-ai`
 
-**Developer Tools** — `cursor` · `vercel` · `linear-app` · `expo` · `clickhouse` · `mongodb` · `supabase` · `hashicorp` · `posthog` · `sentry` · `warp` · `sanity` · `mintlify` · `composio` · `opencode-ai` · `voltagent`
+**Developer Tools** - `cursor` · `vercel` · `linear-app` · `expo` · `clickhouse` · `mongodb` · `supabase` · `hashicorp` · `posthog` · `sentry` · `warp` · `sanity` · `mintlify` · `composio` · `opencode-ai` · `voltagent`
 
-**Productivity** — `notion` · `miro` · `airtable` · `superhuman` · `intercom` · `zapier` · `cal` · `clay` · `raycast`
+**Productivity** - `notion` · `miro` · `airtable` · `superhuman` · `intercom` · `zapier` · `cal` · `clay` · `raycast`
 
-**Fintech** — `stripe` · `coinbase` · `binance` · `kraken` · `mastercard` · `revolut` · `wise`
+**Fintech** - `stripe` · `coinbase` · `binance` · `kraken` · `mastercard` · `revolut` · `wise`
 
-**E-commerce** — `shopify` · `airbnb` · `uber` · `nike` · `starbucks` · `pinterest`
+**E-commerce** - `shopify` · `airbnb` · `uber` · `nike` · `starbucks` · `pinterest`
 
-**Media** — `spotify` · `playstation` · `wired` · `theverge` · `meta`
+**Media** - `spotify` · `playstation` · `wired` · `theverge` · `meta`
 
-**Automotive** — `tesla` · `bmw` · `ferrari` · `lamborghini` · `bugatti` · `renault`
+**Automotive** - `tesla` · `bmw` · `ferrari` · `lamborghini` · `bugatti` · `renault`
 
-**Other** — `apple` · `ibm` · `nvidia` · `vodafone` · `resend` · `spacex`
+**Other** - `apple` · `ibm` · `nvidia` · `vodafone` · `resend` · `spacex`
 
-**Starters** — `default` (Neutral Modern) · `warm-editorial`
+**Starters** - `default` (Neutral Modern) · `warm-editorial`
 
 </details>
 
@@ -438,8 +438,8 @@ Re-import the library via [`scripts/sync-design-systems.ts`](scripts/sync-design
 
 | Category | Count | Contents |
 |---|---|---|
-| [`scenarios/`](plugins/_official/scenarios/) | 13 | Complete design scenarios — [`od-default`](plugins/_official/scenarios/od-default/), [`od-design-refine`](plugins/_official/scenarios/od-design-refine/), [`od-figma-migration`](plugins/_official/scenarios/od-figma-migration/), [`od-code-migration`](plugins/_official/scenarios/od-code-migration/), [`od-react-export`](plugins/_official/scenarios/od-react-export/), [`od-nextjs-export`](plugins/_official/scenarios/od-nextjs-export/), [`od-vue-export`](plugins/_official/scenarios/od-vue-export/), [`od-media-generation`](plugins/_official/scenarios/od-media-generation/), [`od-new-generation`](plugins/_official/scenarios/od-new-generation/), [`od-tune-collab`](plugins/_official/scenarios/od-tune-collab/), [`od-plugin-authoring`](plugins/_official/scenarios/od-plugin-authoring/), [`od-share-to-community`](plugins/_official/scenarios/od-share-to-community/), [`od-web-effect-extractor`](plugins/_official/scenarios/od-web-effect-extractor/) |
-| [`image-templates/`](plugins/_official/image-templates/) | 45 | One-shot image prompts — editorial, cinematic, product, portrait |
+| [`scenarios/`](plugins/_official/scenarios/) | 13 | Complete design scenarios - [`od-default`](plugins/_official/scenarios/od-default/), [`od-design-refine`](plugins/_official/scenarios/od-design-refine/), [`od-figma-migration`](plugins/_official/scenarios/od-figma-migration/), [`od-code-migration`](plugins/_official/scenarios/od-code-migration/), [`od-react-export`](plugins/_official/scenarios/od-react-export/), [`od-nextjs-export`](plugins/_official/scenarios/od-nextjs-export/), [`od-vue-export`](plugins/_official/scenarios/od-vue-export/), [`od-media-generation`](plugins/_official/scenarios/od-media-generation/), [`od-new-generation`](plugins/_official/scenarios/od-new-generation/), [`od-tune-collab`](plugins/_official/scenarios/od-tune-collab/), [`od-plugin-authoring`](plugins/_official/scenarios/od-plugin-authoring/), [`od-share-to-community`](plugins/_official/scenarios/od-share-to-community/), [`od-web-effect-extractor`](plugins/_official/scenarios/od-web-effect-extractor/) |
+| [`image-templates/`](plugins/_official/image-templates/) | 45 | One-shot image prompts - editorial, cinematic, product, portrait |
 | [`video-templates/`](plugins/_official/video-templates/) | 63 | HyperFrames / Seedance / Veo motion templates |
 | [`design-systems/`](plugins/_official/design-systems/) | 143 | Brand `DESIGN.md` wrapped as plugins |
 | [`atoms/`](plugins/_official/atoms/) | 13 | Reusable UI fragments (buttons, heroes, KPI cards) |
@@ -449,18 +449,18 @@ Also [`plugins/community/`](plugins/community/) for community plugins and [`plug
 
 ### What plugins can do
 
-- 🤖 **Run in any coding agent** — [Claude Code](docs/agent-adapters.md), Codex, Cursor, Copilot, [OpenClaw](https://github.com/openclaw/openclaw), [Antigravity](https://antigravity.google), Hermes, Kimi… through the same skill protocol the agent already knows.
+- 🤖 **Run in any coding agent** - [Claude Code](docs/agent-adapters.md), Codex, Cursor, Copilot, [OpenClaw](https://github.com/openclaw/openclaw), [Antigravity](https://antigravity.google), Hermes, Kimi… through the same skill protocol the agent already knows.
 - 🔁 **Migrate Figma / Pencil workflows** → React, Next.js, or Vue source. See [`od-figma-migration`](plugins/_official/scenarios/od-figma-migration/).
-- 🛠️ **Refresh an existing codebase to a brand spec** — point a plugin at a `git` repo + `DESIGN.md`, get a PR. See [`od-code-migration`](plugins/_official/scenarios/od-code-migration/).
-- 💾 **Persist custom workflows** — your team's reusable templates sit next to the shipped ones.
+- 🛠️ **Refresh an existing codebase to a brand spec** - point a plugin at a `git` repo + `DESIGN.md`, get a PR. See [`od-code-migration`](plugins/_official/scenarios/od-code-migration/).
+- 💾 **Persist custom workflows** - your team's reusable templates sit next to the shipped ones.
 
 ### Using plugins
 
-Plugins are at full parity across the **web UI** and the **`od` CLI** — same `/api/plugins` endpoints, pick whichever fits.
+Plugins are at full parity across the **web UI** and the **`od` CLI** - same `/api/plugins` endpoints, pick whichever fits.
 
 **In the desktop / web app:** open the **Plugin** page to browse the marketplace and click **Install**; inside a project's Studio, plugins appear as composer chips you click to apply (with the inputs they declare).
 
-**On the command line** (runs without a UI — this is the path external agents use):
+**On the command line** (runs without a UI - this is the path external agents use):
 
 ```bash
 od plugin list                       # list installed plugins (--task-kind / --mode / --tag filters)
@@ -487,7 +487,7 @@ my-plugin/
 └── examples/           ← optional: concrete use cases
 ```
 
-Core `open-design.json` fields: `specVersion` (currently `1.0.0`), `name` (stable ID), `version` (semver), optional `compat.agentSkills[].path` (points at `./SKILL.md` when the entry exposes an Agent Skill), `od.kind` (`skill` / `scenario` / `atom` / `bundle`), `od.taskKind` (`new-generation` / `figma-migration` / `code-migration` / `tune-collab`), `od.mode` (the output surface, e.g. `prototype` / `deck` / `live-artifact` / `image` / `video` / `hyperframes` / `audio` / `design-system` / `scenario`), `od.capabilities[]` (**declare the minimum** — a restricted install grants only `prompt:inject` by default), `od.inputs[]` (apply-time parameters).
+Core `open-design.json` fields: `specVersion` (currently `1.0.0`), `name` (stable ID), `version` (semver), optional `compat.agentSkills[].path` (points at `./SKILL.md` when the entry exposes an Agent Skill), `od.kind` (`skill` / `scenario` / `atom` / `bundle`), `od.taskKind` (`new-generation` / `figma-migration` / `code-migration` / `tune-collab`), `od.mode` (the output surface, e.g. `prototype` / `deck` / `live-artifact` / `image` / `video` / `hyperframes` / `audio` / `design-system` / `scenario`), `od.capabilities[]` (**declare the minimum** - a restricted install grants only `prompt:inject` by default), `od.inputs[]` (apply-time parameters).
 
 Scaffold + validate locally:
 
@@ -501,7 +501,7 @@ Full field set and runtime contract → [`plugins/spec/SPEC.md`](plugins/spec/SP
 
 ### Contributing a plugin
 
-1. Drop the plugin folder into [`plugins/community/`](plugins/community/) (third-party plugins), or — to ship it bundled with OpenDesign — into the matching tier of [`plugins/_official/`](plugins/_official/).
+1. Drop the plugin folder into [`plugins/community/`](plugins/community/) (third-party plugins), or - to ship it bundled with OpenDesign - into the matching tier of [`plugins/_official/`](plugins/_official/).
 2. Pass validation: `od plugin validate`, `pnpm guard`, `pnpm --filter @open-design/plugin-runtime typecheck`.
 3. Fill the PR using the template in [`plugins/spec/CONTRIBUTING.md`](plugins/spec/CONTRIBUTING.md) (ID, version, lane, mode, capabilities, trigger examples; attach a screenshot / preview for visual plugins).
 4. To publish to an external registry (skills.sh / ClawHub / standalone GitHub) → [`plugins/spec/PUBLISHING-REGISTRIES.md`](plugins/spec/PUBLISHING-REGISTRIES.md).
@@ -564,16 +564,16 @@ Full architecture → [`docs/architecture.md`](docs/architecture.md). Skill prot
 - [x] Claude Design ZIP import (`/api/import/claude-design`)
 - [x] Sidecar protocol + Electron desktop + IPC automation
 - [x] Artifact lint API + 5-dim self-critique pre-emit gate
-- [x] **0.8.0** — plugin marketplace infrastructure (261 official plugins, manifest spec, per-agent install scripts)
-- [x] **0.9.0** — OpenDesign Cloud (official model service built into the app: zero config, one-click sign-in)
-- [x] **0.10.0** — the all-in-one design workspace: the whole craft loop in one window (references → material → interactive editing → motion → handoff)
-- [x] **0.11.0** — _The Bazaar_: built in the open — a community marketplace of plugins and design systems anyone can pick from and contribute to
-- [x] **0.12.0** — _Brand-backed Design System_: turn the brand you already own into a reusable, portable `DESIGN.md` system
-- [x] **0.13.0** — _Stay in Flow_: native session resume, faster model picking, and export straight to screenshot-backed PPTX / PDF
-- [x] Published desktop releases — macOS (Apple Silicon + Intel) + Windows (x64)
-- [ ] Published Linux desktop release (optional lane) — tracked in [#4368](https://github.com/nexu-io/open-design/issues/4368)
-- [ ] Comment-mode surgical edits — partially shipped; reliable targeted patching in progress
-- [ ] AI-emitted tweaks panel UX — not yet implemented
+- [x] **0.8.0** - plugin marketplace infrastructure (261 official plugins, manifest spec, per-agent install scripts)
+- [x] **0.9.0** - OpenDesign Cloud (official model service built into the app: zero config, one-click sign-in)
+- [x] **0.10.0** - the all-in-one design workspace: the whole craft loop in one window (references → material → interactive editing → motion → handoff)
+- [x] **0.11.0** - _The Bazaar_: built in the open - a community marketplace of plugins and design systems anyone can pick from and contribute to
+- [x] **0.12.0** - _Brand-backed Design System_: turn the brand you already own into a reusable, portable `DESIGN.md` system
+- [x] **0.13.0** - _Stay in Flow_: native session resume, faster model picking, and export straight to screenshot-backed PPTX / PDF
+- [x] Published desktop releases - macOS (Apple Silicon + Intel) + Windows (x64)
+- [ ] Published Linux desktop release (optional lane) - tracked in [#4368](https://github.com/nexu-io/open-design/issues/4368)
+- [ ] Comment-mode surgical edits - partially shipped; reliable targeted patching in progress
+- [ ] AI-emitted tweaks panel UX - not yet implemented
 - [ ] `npx od init` to scaffold a project with `DESIGN.md`
 - [ ] Plugin SDK + `od plugin {add,list,remove,test,publish}` CLI
 - [ ] Figma / Pencil → React / Next / Vue migration plugins (alpha)
@@ -587,10 +587,10 @@ Phased delivery → [`docs/roadmap.md`](docs/roadmap.md).
 
 Real people behind every channel.
 
-- 💬 **Discord** — daily chat, plugin sharing, questions → [**discord.gg/mHAjSMV6gz**](https://discord.gg/mHAjSMV6gz)
-- 🐦 **X / Twitter** — release notes, milestones, behind the scenes → [**@OpenDesignHQ**](https://x.com/OpenDesignHQ)
-- 🗣️ **GitHub Discussions** — deep Q&A, RFCs, "show your work" → [**Discussions**](https://github.com/nexu-io/open-design/discussions)
-- 🐛 **GitHub Issues** — bug reports, feature requests → [**Issues**](https://github.com/nexu-io/open-design/issues)
+- 💬 **Discord** - daily chat, plugin sharing, questions → [**discord.gg/mHAjSMV6gz**](https://discord.gg/mHAjSMV6gz)
+- 🐦 **X / Twitter** - release notes, milestones, behind the scenes → [**@OpenDesignHQ**](https://x.com/OpenDesignHQ)
+- 🗣️ **GitHub Discussions** - deep Q&A, RFCs, "show your work" → [**Discussions**](https://github.com/nexu-io/open-design/discussions)
+- 🐛 **GitHub Issues** - bug reports, feature requests → [**Issues**](https://github.com/nexu-io/open-design/issues)
 
 The [`good-first-issue`](https://github.com/nexu-io/open-design/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and [`help-wanted`](https://github.com/nexu-io/open-design/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) labels are the easiest way in.
 
@@ -598,7 +598,7 @@ The [`good-first-issue`](https://github.com/nexu-io/open-design/issues?q=is%3Ais
 
 ## Contributing
 
-OpenDesign keeps moving because contributors — designers, engineers, prompt authors — keep showing up. Many of the most-used skills, design systems, and plugins were written by people outside the core team.
+OpenDesign keeps moving because contributors - designers, engineers, prompt authors - keep showing up. Many of the most-used skills, design systems, and plugins were written by people outside the core team.
 
 ### 🎯 Where to start (max leverage, min change)
 
@@ -638,13 +638,13 @@ Full agent-friendly contribution flow, code style, and PR bar → [`CONTRIBUTING
 
 ### 🏅 OpenDesign Fellow program
 
-We're recruiting **OpenDesign Fellows** around the world — Fellows shape the product alongside the core team, represent OpenDesign officially in their region, and grow the community locally, backed by funded support ($1,000 / MR), free LLM credits, and a direct review track. Details → [`MAINTAINERS.md`](MAINTAINERS.md) and the announcement on [Discord](https://discord.gg/mHAjSMV6gz).
+We're recruiting **OpenDesign Fellows** around the world - Fellows shape the product alongside the core team, represent OpenDesign officially in their region, and grow the community locally, backed by funded support ($1,000 / MR), free LLM credits, and a direct review track. Details → [`MAINTAINERS.md`](MAINTAINERS.md) and the announcement on [Discord](https://discord.gg/mHAjSMV6gz).
 
 ---
 
 ## Maintainers
 
-They carry a lot of the load — daily maintenance, review, and community support.
+They carry a lot of the load - daily maintenance, review, and community support.
 
 <table>
   <tr>
@@ -676,7 +676,7 @@ Maintainer rules, promotion criteria, and the exit protocol → [`MAINTAINERS.md
 
 ## Contributors
 
-Thanks to everyone who has taken part — code, docs, feedback, a sharp issue, a new skill, a new design system.
+Thanks to everyone who has taken part - code, docs, feedback, a sharp issue, a new skill, a new design system.
 
 <a href="https://github.com/nexu-io/open-design/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=nexu-io/open-design&max=500&columns=20&anon=1&cache_bust=2026-08-04" alt="OpenDesign contributors" />
@@ -687,7 +687,7 @@ Thanks to everyone who has taken part — code, docs, feedback, a sharp issue, a
 ## Repository activity
 
 <picture>
-  <img alt="OpenDesign — repository metrics" src="https://repo-assets.open-design.ai/resources/images/github-metrics.svg" />
+  <img alt="OpenDesign - repository metrics" src="https://repo-assets.open-design.ai/resources/images/github-metrics.svg" />
 </picture>
 
 The SVG above is regenerated daily by [`.github/workflows/metrics.yml`](.github/workflows/metrics.yml) using [`lowlighter/metrics`](https://github.com/lowlighter/metrics).
@@ -697,10 +697,10 @@ The SVG above is regenerated daily by [`.github/workflows/metrics.yml`](.github/
 ## Star us
 
 <p align="center">
-  <a href="https://github.com/nexu-io/open-design"><img src="https://repo-assets.open-design.ai/resources/images/star-us.png" alt="Star OpenDesign on GitHub — github.com/nexu-io/open-design" width="100%" /></a>
+  <a href="https://github.com/nexu-io/open-design"><img src="https://repo-assets.open-design.ai/resources/images/star-us.png" alt="Star OpenDesign on GitHub - github.com/nexu-io/open-design" width="100%" /></a>
 </p>
 
-If this saved you thirty minutes, give it a ★. Stars don't pay rent — but they tell the next designer, agent, and contributor that this experiment is worth their attention. One click, three seconds, a real signal.
+If this saved you thirty minutes, give it a ★. Stars don't pay rent - but they tell the next designer, agent, and contributor that this experiment is worth their attention. One click, three seconds, a real signal.
 
 <a href="https://star-history.dera.page/#nexu-io/open-design&Date">
   <picture>
@@ -716,11 +716,11 @@ If this saved you thirty minutes, give it a ★. Stars don't pay rent — but th
 
 | Project | Role |
 |---|---|
-| [`alchaincyf/huashu-design`](https://github.com/alchaincyf/huashu-design) | The design-philosophy compass — junior-designer workflow, brand-asset protocol, anti-AI-slop checklist, five-dimensional critique. |
+| [`alchaincyf/huashu-design`](https://github.com/alchaincyf/huashu-design) | The design-philosophy compass - junior-designer workflow, brand-asset protocol, anti-AI-slop checklist, five-dimensional critique. |
 | [`op7418/guizang-ppt-skill`](https://github.com/op7418/guizang-ppt-skill) | The magazine-style web PPT skill, bundled verbatim under [`design-templates/guizang-ppt/`](design-templates/guizang-ppt/). Default for deck mode. |
-| [`lewislulu/html-ppt-skill`](https://github.com/lewislulu/html-ppt-skill) | The HTML PPT Studio family — 15 deck templates, 36 themes, 31 page layouts, animation runtime, magnetic-card presenter mode. |
+| [`lewislulu/html-ppt-skill`](https://github.com/lewislulu/html-ppt-skill) | The HTML PPT Studio family - 15 deck templates, 36 themes, 31 page layouts, animation runtime, magnetic-card presenter mode. |
 | [`OpenCoworkAI/open-codesign`](https://github.com/OpenCoworkAI/open-codesign) | UX patterns we borrow (streaming-artifact loop, sandboxed iframe, live agent panel). |
-| [`multica-ai/multica`](https://github.com/multica-ai/multica) | The daemon + adapter architecture — PATH-scan agent detection, local daemon as the only privileged process. |
+| [`multica-ai/multica`](https://github.com/multica-ai/multica) | The daemon + adapter architecture - PATH-scan agent detection, local daemon as the only privileged process. |
 | [`VoltAgent/awesome-design-md`](https://github.com/VoltAgent/awesome-design-md) | Historical source of the original 9-section `DESIGN.md` schema and 70 upstream-derived systems; current packages may extend that baseline. |
 | [`bergside/awesome-design-skills`](https://github.com/bergside/awesome-design-skills) | Source of the 57 design skills added under `design-systems/`. |
 | [`heygen-com/hyperframes`](https://github.com/heygen-com/hyperframes) | The HTML→MP4 motion-graphics framework, integrated as the first-class `hyperframes-html` in OpenDesign. |

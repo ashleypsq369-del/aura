@@ -64,7 +64,7 @@ for fpath in FILES:
         src
     )
 
-    # Add ConfirmDialog to JSX return — find the last </div> or </motion.div> before end
+    # Add ConfirmDialog to JSX return - find the last </div> or </motion.div> before end
     # Simple approach: add <ConfirmDialog /> just before the last closing return tag
     src = re.sub(
         r'(\s+</(?:div|motion\.div|AnimatePresence)>\s*\);\s*}[\s\n]*(?:export default|$))',

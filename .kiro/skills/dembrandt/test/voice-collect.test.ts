@@ -31,7 +31,7 @@ const page404 = `<!doctype html><html lang="en"><head><title>Not found</title></
   <p style="font-size:16px">Nothing here. Try the homepage instead, everything else still works fine.</p></body></html>`;
 
 const doc = (inner: string, lang = 'en'): string =>
-  `<!doctype html><html lang="${lang}"><head><title>Example — design system extraction</title>` +
+  `<!doctype html><html lang="${lang}"><head><title>Example - design system extraction</title>` +
   `<meta name="description" content="Extract design tokens from any website in one command today."></head>` +
   `<body style="margin:0">${inner}</body></html>`;
 

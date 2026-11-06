@@ -1,5 +1,5 @@
 // `until` evaluator (spec §10.1 / §10.2). Closed vocabulary, intentionally
-// not arbitrary JS — the parser refuses signals it does not know about and
+// not arbitrary JS - the parser refuses signals it does not know about and
 // only accepts == != >= <= > < operators. The evaluator is short-circuit
 // per OR clause and returns the first matching conjunction so the run
 // audit can record "what convinced me to advance".

@@ -9,7 +9,7 @@
 //   message: "Account temporarily suspended\nWe detected abnormal payment risk …"
 //   data:    {"kind":"account_suspended","retryable":false}
 //
-// 没有这条分类,客户端的映射表就没有可挂的钩子 —— 报错卡上会挂一颗必然白点的
+// 没有这条分类,客户端的映射表就没有可挂的钩子 -- 报错卡上会挂一颗必然白点的
 // 〔重试〕(违反设计原则四)。
 import { describe, expect, it, vi } from 'vitest';
 
@@ -67,7 +67,7 @@ describe('封号(R-064)', () => {
 
   it('不给重试,也不给任何「用户去做点什么」的动作', () => {
     const result = classify('AGENT_EXECUTION_FAILED', SUSPENDED_MESSAGE);
-    // 重试必然同样结果 —— 原则四。
+    // 重试必然同样结果 -- 原则四。
     expect(result?.retryable).toBe(false);
     expect(result?.user_action).toBe('none');
   });

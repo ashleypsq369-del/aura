@@ -1,4 +1,4 @@
-"""
+﻿"""
 Feedback & Bug Report Router
 Receives feedback/bug reports from the FeedbackWidget and:
 1. Stores them in the database
@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from src.db import get_db
 from routers.auth import get_current_user
 
-# Optional auth — feedback works whether logged in or not
+# Optional auth - feedback works whether logged in or not
 def get_current_user_optional(token: str = None, db: Session = Depends(get_db)):
     if not token:
         return None
@@ -48,7 +48,7 @@ class FeedbackCreate(BaseModel):
 
 
 def send_feedback_email(data: FeedbackCreate):
-    """Send feedback email to admin — non-blocking background task."""
+    """Send feedback email to admin - non-blocking background task."""
     try:
         import smtplib
         from email.mime.text import MIMEText
@@ -60,11 +60,11 @@ def send_feedback_email(data: FeedbackCreate):
 
         # Build subject
         type_labels = {
-            "rating":      f"⭐ Page Rating — {data.rating}/5 on {data.page}",
+            "rating":      f"⭐ Page Rating - {data.rating}/5 on {data.page}",
             "ux_feedback": f"💬 UX Feedback on {data.page}",
             "bug_report":  f"🐛 Bug Report [{data.bug_type or 'general'}] on {data.page}",
         }
-        subject = type_labels.get(data.type, f"📝 Feedback — {data.page}")
+        subject = type_labels.get(data.type, f"📝 Feedback - {data.page}")
 
         # Build body
         lines = [
@@ -101,7 +101,7 @@ def send_feedback_email(data: FeedbackCreate):
         msg["To"]      = admin_email
         msg.attach(MIMEText(body, "html"))
 
-        # Try SMTP — falls back gracefully if not configured
+        # Try SMTP - falls back gracefully if not configured
         smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
         smtp_port = int(os.getenv("SMTP_PORT", "587"))
         smtp_user = os.getenv("SMTP_USER", "")
@@ -114,7 +114,7 @@ def send_feedback_email(data: FeedbackCreate):
                 s.sendmail(from_email, admin_email, msg.as_string())
             print(f"[feedback] Email sent to {admin_email}: {subject}")
         else:
-            print(f"[feedback] SMTP not configured — logged only: {subject}")
+            print(f"[feedback] SMTP not configured - logged only: {subject}")
 
     except Exception as e:
         print(f"[feedback] Email error: {e}")
@@ -129,9 +129,9 @@ async def submit_feedback(
     """
     Receive feedback from the FeedbackWidget.
     Stores to DB + sends email notification in background.
-    No auth required — widget works for all users.
+    No auth required - widget works for all users.
     """
-    # Log to DB via AuditLog (reuse existing table — no new migration needed)
+    # Log to DB via AuditLog (reuse existing table - no new migration needed)
     from src.db import AuditLog
     import json
 

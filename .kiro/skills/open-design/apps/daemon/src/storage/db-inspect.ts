@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 / plan §3.GG1 — daemon-DB inspection helper.
+// Phase 5 / spec §15.6 / plan §3.GG1 - daemon-DB inspection helper.
 //
 // Pure helper that walks a SQLite db file + schema and returns a
 // structured inventory: file size, table list, per-table row count,
@@ -80,7 +80,7 @@ export async function inspectSqliteDatabase(input: {
       }
     }
   } catch {
-    // ignore — empty tables[] surfaces 'cannot read schema' to the
+    // ignore - empty tables[] surfaces 'cannot read schema' to the
     // caller (CLI shows 0 tables, which is itself a useful signal).
   }
 
@@ -163,7 +163,7 @@ function sanitizeTableName(name: string): string | null {
   return name;
 }
 
-// Plan §3.LL1 — daemon-DB integrity check.
+// Plan §3.LL1 - daemon-DB integrity check.
 //
 // Wraps SQLite's PRAGMA integrity_check + foreign_key_check + the
 // fast PRAGMA quick_check variant. Returns a structured report so
@@ -182,7 +182,7 @@ export interface DbIntegrityIssue {
 
 export interface DbIntegrityReport {
   ok:           boolean;
-  // 'integrity_check' (default) or 'quick_check' — quick is faster
+  // 'integrity_check' (default) or 'quick_check' - quick is faster
   // but skips the index-content check.
   mode:         'integrity_check' | 'quick_check';
   issues:       DbIntegrityIssue[];

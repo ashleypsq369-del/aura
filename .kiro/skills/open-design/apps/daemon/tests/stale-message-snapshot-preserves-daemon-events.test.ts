@@ -12,7 +12,7 @@ import { startServer } from '../src/server.js';
 // The web client still saves whole-message snapshots through
 // PUT /messages/:mid, and a STALE snapshot (captured in memory before a
 // reconnect / project-switch, then PUT after the daemon appended more events)
-// used to overwrite `events_json` and wipe early events — including the
+// used to overwrite `events_json` and wipe early events - including the
 // `status:model` event the UI renders the Model module from.
 //
 // This drives a real run to completion so the daemon persists the early event,
@@ -112,7 +112,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
     expect(before?.content).toBe('Hello from the model.');
 
     // Simulate TWO stale web snapshots, both captured before the daemon
-    // appended any run events AND before `/api/runs` assigned a run id — so the
+    // appended any run events AND before `/api/runs` assigned a run id - so the
     // payload omits `runId` entirely (a genuinely pre-run snapshot). PUT both
     // after the daemon persisted them. events/content/runStatus are all the
     // pre-run values; feedback is a genuine client-owned metadata write that
@@ -212,7 +212,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
     expect(before?.runStatus).toBe('succeeded');
     expect(before?.events?.length).toBeGreaterThan(0);
 
-    // Same event count, but the pre-finalize status — the exact shape that
+    // Same event count, but the pre-finalize status - the exact shape that
     // previously slipped through the length-based freshness check.
     const equalLengthSnapshot = {
       id: assistantMessageId,
@@ -688,7 +688,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
 
   it('lets a mock-agent flow persist events/runStatus when the daemon never wrote any', async () => {
     // e2e Playwright suites mock the run SSE end-to-end, so the daemon never
-    // persists events for the assistant message — the web client is the only
+    // persists events for the assistant message - the web client is the only
     // writer. The no-regression guard must NOT block that: a web write that
     // grows the stored event list (from empty to non-empty) must flow through,
     // including the terminal runStatus. Regression for the UI P0
@@ -832,7 +832,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
   it('does not let a stale pre-run snapshot clear the pinned runId', async () => {
     // nettee review (#6418): a daemon-backed row pinned by /api/runs (runId
     // set, runStatus queued, no events yet) followed by a stale web snapshot
-    // that omits runId must not null `run_id` — otherwise the row drops out of
+    // that omits runId must not null `run_id` - otherwise the row drops out of
     // the protected path and the next stale PUT can wipe events once they land.
     delete process.env.POSTHOG_KEY;
     delete process.env.POSTHOG_HOST;
@@ -898,7 +898,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
 
   it('lets a same-message retry snapshot replace the pinned generation', async () => {
     // mrcfps review (#6418): pinAssistantMessageOnRunCreate is the generation
-    // boundary — it rebinds run_id and resets the run-owned fields to the new
+    // boundary - it rebinds run_id and resets the run-owned fields to the new
     // run's start, so the retry's final PUT shares the pinned runId with a
     // non-terminal stored status and must flow through the no-regression guard
     // even though it carries fewer client events and a fresh terminal status.
@@ -966,7 +966,7 @@ describe('stale web message snapshot does not wipe daemon-owned run events', () 
 
   it('discards a delayed PUT from a superseded run generation', async () => {
     // nettee P2 on #6418: after a retry pins run B, a delayed snapshot from the
-    // old run A must not repopulate run B's data — the guard keeps the current
+    // old run A must not repopulate run B's data - the guard keeps the current
     // generation's run fields while letting metadata land.
     delete process.env.POSTHOG_KEY;
     delete process.env.POSTHOG_HOST;

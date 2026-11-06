@@ -3,8 +3,8 @@
  * 「视频这个东西,那看起来视频还是要快照一下首帧的..先显示首帧吧」).
  *
  * WHAT THIS PINS, AND WHY IT NEEDS A REAL TURN. A video card has no snapshot of
- * its own — the same day's capacity ruling keeps video ORIGINALS out of the blob
- * store — so its card fell back to the live workspace file and let the browser
+ * its own - the same day's capacity ruling keeps video ORIGINALS out of the blob
+ * store - so its card fell back to the live workspace file and let the browser
  * paint whatever frame is on disk TODAY. Overwrite the file and the first frame
  * inside an old message changes with it. That is the image card's original bug,
  * wearing a `<video>` element.
@@ -17,9 +17,9 @@
  * TWO COUNTER-CONTROLS RIDE ALONG in the same turn, because "freeze the first
  * frame" is one step away from two regressions that look like fixes:
  *
- *   * the video's ORIGINAL bytes must still be absent from the blob store —
+ *   * the video's ORIGINAL bytes must still be absent from the blob store -
  *     storing a poster is not permission to start storing videos again;
- *   * an image must still store its original — the poster path must not be
+ *   * an image must still store its original - the poster path must not be
  *     implemented by loosening the per-kind policy for everyone.
  */
 
@@ -53,7 +53,7 @@ const tempDirs: string[] = [];
 
 /** Flat single-colour fixtures: the frame's identity is readable as one pixel. */
 // 读文件回来的是 `Buffer<ArrayBufferLike>`,而 `Buffer.alloc` 推断出的是
-// `Buffer<ArrayBuffer>` —— 后者更窄,直接赋值会被 tsc 拦下。标注成宽的那个。
+// `Buffer<ArrayBuffer>` -- 后者更窄,直接赋值会被 tsc 拦下。标注成宽的那个。
 let videoV1: Buffer<ArrayBufferLike> = Buffer.alloc(0); // red
 let videoV2: Buffer<ArrayBufferLike> = Buffer.alloc(0); // blue
 let imageV1: Buffer<ArrayBufferLike> = Buffer.alloc(0); // green
@@ -93,7 +93,7 @@ async function makeImage(dir: string, name: string, colour: string): Promise<Buf
  * png), take its first frame, average it down to 1x1 and read the RGB triple.
  *
  * This is the measuring instrument, so the suite proves up front that it can
- * SEE the difference it is about to assert on — red and blue must not read the
+ * SEE the difference it is about to assert on - red and blue must not read the
  * same, or every "the frame is still the old one" assertion would be vacuous.
  */
 async function dominantColour(bytes: Buffer, hint: string): Promise<[number, number, number]> {
@@ -286,7 +286,7 @@ describe('video cards freeze the first frame of the turn that produced them', ()
     const video = refs.find((ref) => ref.label === 'clip.mp4');
     expect(video, 'the turn produced clip.mp4, so the message should carry a ref').toBeTruthy();
     expect(video?.displayPolicy).toBe('latest_with_static_preview');
-    // Click still opens the live workspace file — the freeze is the card face
+    // Click still opens the live workspace file - the freeze is the card face
     // only (user ruling 2026-09-02).
     expect(video?.workspaceArtifactId).toBeTruthy();
     expect(video?.thumbnailUrl, 'the video card should carry a frozen first frame').toBeTruthy();
@@ -337,7 +337,7 @@ describe('video cards freeze the first frame of the turn that produced them', ()
     /*
      * The cover is `image/jpeg`; the FILE is still `video/mp4`. These travel
      * through the same capture entry point, and `workspace_artifacts` is the
-     * mutable Design Files identity the card's click resolves through — a cover
+     * mutable Design Files identity the card's click resolves through - a cover
      * that restamps it has quietly rewritten what the workspace thinks the file
      * IS. Nothing renders that column today, which is exactly why it needs a
      * test: the damage would be invisible until something did.
@@ -359,7 +359,7 @@ describe('video cards freeze the first frame of the turn that produced them', ()
    * The end-to-end case above cannot reach the one race that matters most: a
    * write that lands WHILE ffmpeg is reading. The decode is milliseconds, so
    * there is no reliable way to slip an overwrite into the middle of it from
-   * the HTTP boundary — and without this pair, dropping the second stat would
+   * the HTTP boundary - and without this pair, dropping the second stat would
    * leave every test green.
    */
   it('refuses a frame decoded across a write that landed mid-extraction', async () => {

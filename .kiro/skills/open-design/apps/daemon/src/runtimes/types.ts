@@ -31,7 +31,7 @@ export type RuntimeBuildOptions = {
 export type RuntimeContext = {
   cwd?: string;
   // True when the current chat run has at least one prior persisted
-  // assistant message in the same conversation — i.e. this isn't the
+  // assistant message in the same conversation - i.e. this isn't the
   // first user turn. Plain-streaming adapters that support a "continue
   // the most recent conversation" CLI flag (e.g. `agy -c`) read this to
   // decide whether to resume the upstream agent's own session state
@@ -89,8 +89,8 @@ export type RuntimeContext = {
 // for multi-turn coherence.
 //
 // Without this opt-out, agy with `-c` receives the same prior turn
-// twice — once from its own conversation memory, once embedded in the
-// composed user request — and the embedded copy includes the literal
+// twice - once from its own conversation memory, once embedded in the
+// composed user request - and the embedded copy includes the literal
 // `<question-form>` markup it emitted on turn 1. The model then
 // pattern-matches that and re-emits the form on turn 2, looking like
 // the discovery loop never breaks.
@@ -112,7 +112,7 @@ export type RuntimeVersionPolicy = {
    * moves faster than our releases do, so naming individual ones warns every
    * user who followed our own install instructions the week after we bump
    * them. Matching the line keeps the check meaningful instead of removing
-   * it — a version off that line still warns.
+   * it - a version off that line still warns.
    *
    * Must not carry the `g` flag: `RegExp.test` is stateful with it, so the
    * same version would alternate between supported and untested.
@@ -209,17 +209,17 @@ export type RuntimeAgentDef = {
   // is one of three strategies, each of which the server.ts spawn
   // pipeline knows how to apply:
   //
-  //   'claude-mcp-json'      — write `.mcp.json` into the managed
+  //   'claude-mcp-json'      - write `.mcp.json` into the managed
   //                            project cwd (Claude Code auto-loads it).
-  //   'acp-merge'            — merge stdio entries into the existing
+  //   'acp-merge'            - merge stdio entries into the existing
   //                            `mcpServers` array of an ACP launch
   //                            descriptor (Hermes / Kimi / Kilo / Kiro
   //                            / Vibe / Devin).
-  //   'opencode-env-content' — serialise to OpenCode's `mcp` config
+  //   'opencode-env-content' - serialise to OpenCode's `mcp` config
   //                            schema and hand it through
   //                            `OPENCODE_CONFIG_CONTENT` in the spawn
   //                            env.
-  //   'mimo-env-content'      — same schema as opencode-env-content
+  //   'mimo-env-content'      - same schema as opencode-env-content
   //                            but emitted as `MIMOCODE_CONFIG_CONTENT`
   //                            under MiMo's env namespace.
   //
@@ -239,7 +239,7 @@ export type RuntimeAgentDef = {
   // When `false`, the Settings model picker hides the "Custom (fill below)"
   // option and the associated free-text input. Use this for agents whose
   // CLI does not actually accept a model id (e.g. `agy` v1.0.3 has no
-  // `--model` flag yet — upstream issue #35 — and the model is chosen
+  // `--model` flag yet - upstream issue #35 - and the model is chosen
   // server-side; AMR routes model selection through ACP's
   // `session/set_model` and rejects free-form ids). Defaults to allowing
   // custom input (undefined === true) so most adapters keep today's UX.
@@ -247,7 +247,7 @@ export type RuntimeAgentDef = {
   // When `true`, the daemon trusts this adapter's CLI to carry its own
   // multi-turn conversation memory across spawn invocations (today only
   // `agy -c`). The chat composer skips the rendered web transcript on
-  // follow-up turns and sends just the latest user message — see the
+  // follow-up turns and sends just the latest user message - see the
   // RuntimeContext.hasPriorAssistantTurn comment for why double-context
   // is the discovery-form loop's root cause.
   resumesSessionViaCli?: boolean;
@@ -262,7 +262,7 @@ export type RuntimeAgentDef = {
   // `true` the adapter is "capture-style": the CLI generates its OWN session
   // id and reports it on the stream (codex `thread.started.thread_id`), so the
   // daemon must capture that id from the parsed stream (surfaced as a
-  // `status` event's `sessionId`) and persist THAT as the resume handle —
+  // `status` event's `sessionId`) and persist THAT as the resume handle -
   // `newSessionId` is not passed to the CLI. See server.ts capture-and-store
   // path and `agent-cli-session-resume.md`. Profile-stdio transports can also
   // capture the id from a validated protocol status frame.
@@ -280,7 +280,7 @@ export type RuntimeAgentDef = {
   // the default model id when the chat run reaches the spawn layer with
   // null or the synthetic 'default'. Used by adapters whose CLI rejects
   // 'default' (e.g. AMR / vela) so an operator can swap the hardcoded
-  // fallback without a code change — set the env var on the daemon
+  // fallback without a code change - set the env var on the daemon
   // process when launching `tools-dev` / `od` daemon. The value must be
   // present in the daemon's `process.env`; Settings-UI per-agent env
   // values only reach the spawned child and are NOT consulted here.
@@ -291,7 +291,7 @@ export type RuntimeAgentDef = {
   // during legitimate work (e.g. Copilot's deck-generation thinking
   // phase from #2467) need a longer ceiling than the 10-minute global
   // default. Operators can still override per-process via
-  // `OD_CHAT_RUN_INACTIVITY_TIMEOUT_MS` — that env wins.
+  // `OD_CHAT_RUN_INACTIVITY_TIMEOUT_MS` - that env wins.
   inactivityTimeoutMs?: number;
   // Absolute ceiling between the runtime announcing that it is waiting for
   // model output and the first substantive text/thinking/tool/artifact event.
@@ -308,7 +308,7 @@ export type RuntimeAgentDef = {
   // hardcoded "only cursor-agent gets an auth probe" gate: an adapter
   // opts in by declaring a cheap, side-effect-free status/whoami command
   // (e.g. cursor-agent `status`). Adapters WITHOUT this field are never
-  // actively probed for auth — their auth status is only inferred later
+  // actively probed for auth - their auth status is only inferred later
   // from a real chat failure's error text (see classifyAgentServiceFailure).
   authProbe?: {
     args: string[];
@@ -322,17 +322,17 @@ export type RuntimeAgentDef = {
     classifierAgentId?: string;
   };
   // Format for the `env` field in ACP `session/new` → `mcpServers[].env`.
-  // `'array'` (default) emits `[{name, value}]` — used by Hermes, Kimi,
-  // Kilo, Kiro, Vibe, and Devin.  `'map'` emits `{"KEY": "val"}` — used
+  // `'array'` (default) emits `[{name, value}]` - used by Hermes, Kimi,
+  // Kilo, Kiro, Vibe, and Devin.  `'map'` emits `{"KEY": "val"}` - used
   // by reasonix ≥ 1.0 (Go) whose ACP implementation expects the standard
   // MCP `map[string]string` shape. Leave `undefined` (defaults to 'array')
-  // for all other agents — the existing behavior is unchanged.
+  // for all other agents - the existing behavior is unchanged.
   acpMcpEnvFormat?: 'array' | 'map';
   // First version of this agent whose ACP `session/new` handler rejects stdio
   // MCP servers, e.g. `'0.37.0'` for Kimi Code CLI. When set, the ACP session
   // withholds stdio entries from any build at or above it and sends only the
   // transports that build still accepts. Leave `undefined` for every agent that
-  // still ingests stdio MCP servers at all versions — the existing behavior is
+  // still ingests stdio MCP servers at all versions - the existing behavior is
   // unchanged. See `agent-protocol/acp/stdio-mcp.ts` for the mechanism.
   acpStdioMcpRemovedInVersion?: string;
 };
@@ -356,7 +356,7 @@ export type DetectedAgent = Omit<
   // watchdogs. They are not part of the public `/api/agents`
   // contract (`packages/contracts/src/api/registry.ts#AgentInfo`), so
   // omitting them here keeps the daemon response aligned with that
-  // shared web/CLI shape — agents pick it up by reading the runtime
+  // shared web/CLI shape - agents pick it up by reading the runtime
   // def directly, the registry payload stays unchanged.
   | 'inactivityTimeoutMs'
   | 'firstOutputTimeoutMs'

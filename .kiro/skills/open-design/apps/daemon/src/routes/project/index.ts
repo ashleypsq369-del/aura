@@ -1570,7 +1570,7 @@ const URL_PREVIEW_SNAPSHOT_BRIDGE = `<script data-od-url-snapshot-bridge>
     }
   }
   // innerHTML uses the HTML serializer, which emits void elements (<br>, <img>)
-  // without self-closing slashes — invalid XML, so the foreignObject SVG image
+  // without self-closing slashes - invalid XML, so the foreignObject SVG image
   // fails to parse (img.onerror → 'snapshot image failed'). XMLSerializer emits
   // well-formed XHTML instead.
   function serializeSnapshotXhtml(node){
@@ -1745,7 +1745,7 @@ function injectBeforeBodyClose(html: string, marker: string, injection: string):
   }
   // No boundary: appending is not a safe fallback, because the reason there is
   // no boundary is often that the document ends inside a construct that
-  // swallows whatever follows — `<plaintext>` never leaves PLAINTEXT, an
+  // swallows whatever follows - `<plaintext>` never leaves PLAINTEXT, an
   // unterminated comment or script runs to EOF. Appended markup would become
   // text there and the bridge would never run. Going in near the top instead
   // costs the "end of body" placement but keeps the bridge live.
@@ -1900,7 +1900,7 @@ function applyUrlPreviewBridgesToHtml(
 // host page cannot access contentDocument to rewrite the title after load.
 // Instead we rewrite it here, in the daemon response, before the browser
 // parses the document. The web srcDoc path has its own sanitizeTitleInDoc in
-// apps/web/src/runtime/srcdoc.ts — keep the two in sync when the logic changes.
+// apps/web/src/runtime/srcdoc.ts - keep the two in sync when the logic changes.
 // ---------------------------------------------------------------------------
 
 /** Named non-ASCII entities common in business/design document titles. */
@@ -1921,7 +1921,7 @@ const DAEMON_NAMED_ENTITY_MAP: Record<string, string> = {
   Ograve: 'Ò', Oacute: 'Ó', Ocirc: 'Ô', Otilde: 'Õ', Ouml: 'Ö', Oslash: 'Ø',
   Ugrave: 'Ù', Uacute: 'Ú', Ucirc: 'Û', Uuml: 'Ü',
   Yacute: 'Ý', THORN: 'Þ',
-  ndash: '–', mdash: '—', lsquo: '‘', rsquo: '’',
+  ndash: '-', mdash: '-', lsquo: '‘', rsquo: '’',
   ldquo: '“', rdquo: '”', hellip: '…', trade: '™', reg: '®',
   copy: '©', deg: '°', euro: '€', pound: '£', yen: '¥',
 };
@@ -2166,7 +2166,7 @@ function buildDesignSystemCopyPendingPrompt(input: {
     '',
     'Autonomy requirement:',
     '- Do not ask setup or clarification questions during design-system generation.',
-    '- Do not emit `<question-form>`, "Quick brief — 30 seconds", direction cards, choice cards, or any UI that waits for user input.',
+    '- Do not emit `<question-form>`, "Quick brief - 30 seconds", direction cards, choice cards, or any UI that waits for user input.',
     '- The source project already contains the evidence. Choose sensible defaults where details are missing and begin generating the design-system artifacts immediately.',
     '',
     'Source project handoff:',
@@ -2356,7 +2356,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       metadata = undefined;
     }
     // A move/rename/share-visibility change touches only the workspace_projects
-    // row, not the project's own content (projects.updated_at) — but it is real,
+    // row, not the project's own content (projects.updated_at) - but it is real,
     // recent activity on this project from the user's point of view. Report the
     // later of the two so the "最近更新" label matches the sort order above
     // (ORDER BY MAX(p.updated_at, wp.updated_at)), instead of a card that jumps
@@ -2427,7 +2427,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
     // admin's blanket edit grant, a generic per-project flag, etc.), and
     // treating "can view something I don't own yet" as "adopt it and make it
     // mine" is exactly the ownership-invention the adoption red line above
-    // forbids — a member discovering a teammate's shared project must stay
+    // forbids - a member discovering a teammate's shared project must stay
     // read-only regardless of canEdit. Require this member to BE the project's
     // owner too; only then is honoring canEdit "this member's own project,
     // whose local row is stale" rather than "assign ownership to a reader".
@@ -2507,7 +2507,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    * but the team catalog is read through a stale-while-revalidate cache, so
    * the very next list can still carry the row that was just removed. The
    * move also nulls `resourceHubResourceId`, which is the key
-   * `listRemoteTeamProjectSummaries` dedupes on — so without this gate the
+   * `listRemoteTeamProjectSummaries` dedupes on - so without this gate the
    * stale row is re-materialised as a `visibility: 'team'` card and the
    * project silently un-unshares itself. Worse, a remote summary is never
    * `canMoveToPersonal`, so the user cannot undo it.
@@ -2556,7 +2556,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *     because `enforceWorkspaceProjectMutation` never finds a matching row.
    *   - `canEdit: false` but a stale local row happens to already sit under
    *     THIS workspace with THIS member recorded as its creator (a rarer, but
-   *     real, coincidence — e.g. a locally-created draft that was never
+   *     real, coincidence - e.g. a locally-created draft that was never
    *     shared, then this project id got reused by an unrelated team share):
    *     the local row would grant a save the remote side has already revoked.
    * Only a visibly stale exact binding or the existing narrow access-repair
@@ -2595,7 +2595,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         resourceHubResourceId: remote.resourceId,
         cloudTombstonedAt: null,
         syncState: expectedSyncState,
-        // This runs INSIDE the list read, against B's catalog — nobody changed
+        // This runs INSIDE the list read, against B's catalog - nobody changed
         // the project, so it must not restamp `lastActivityAt` below (which is
         // `MAX(p.updated_at, wp.updated_at)`). See SYNC_KEEPS_UPDATED_AT.
         updatedAt: SYNC_KEEPS_UPDATED_AT,
@@ -2642,8 +2642,8 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *
    * `ensureWorkspaceProjection(project, ctx, 'personal')` (below, in the move
    * route) unconditionally binds a brand-new row as `visibility: 'personal'`.
-   * That default is harmless for a "move to team" request — canMoveToTeam
-   * requires exactly that starting visibility — but it is fatal for a "move to
+   * That default is harmless for a "move to team" request - canMoveToTeam
+   * requires exactly that starting visibility - but it is fatal for a "move to
    * personal" request: the code has just invented the very state
    * (`visibility: 'personal'`) that makes canMoveToPersonal impossible, then
    * rejects the request for contradicting the state it invented one line
@@ -2660,7 +2660,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    * `RecentProjectsStrip.tsx`) already read this exact catalog
    * (`GET /api/workspace/projects/team` → `createTeamProjectsLister` →
    * `velaCliTeamProjectCatalog`, the same instance threaded into this route as
-   * `teamProjectCatalog`) — so whenever that affordance is visible at all, the
+   * `teamProjectCatalog`) - so whenever that affordance is visible at all, the
    * hub already knows this project is team-visible, whether or not this
    * exact daemon's local sqlite has caught up.
    *
@@ -2857,7 +2857,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *
    * The lookup is by PROJECT, not by `(workspace, project)`. A project belongs
    * to exactly one workspace (collab/workspace-project-home.ts), so "no row in
-   * the workspace I am currently looking at" does not mean "unbound" — reading
+   * the workspace I am currently looking at" does not mean "unbound" - reading
    * it that way is what made an older build write one ownerless row per
    * workspace visited and put the same 草稿 list in front of every workspace.
    */
@@ -2884,7 +2884,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *
    * `POST /api/projects` binds the project it creates immediately (see
    * `workspaceIdForCreate` below), but duplicate and design-system-copy used
-   * to skip that step entirely — the new project row landed with NO
+   * to skip that step entirely - the new project row landed with NO
    * `workspace_projects` row at all. It stayed an unbound orphan until
    * whichever workspace's project list happened to be read next, and only a
    * PERSONAL workspace read ever adopts an orphan
@@ -2896,7 +2896,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *
    * Called only after `enforceWorkspaceProjectMutation` already allowed the
    * duplicate/copy, which is proof `ctx` names an active, write-capable
-   * member of the workspace that owns the SOURCE project — exactly the right
+   * member of the workspace that owns the SOURCE project - exactly the right
    * home for the copy too.
    *
    * A request with no identity remains a true legacy/unbound copy. Modern web
@@ -2930,22 +2930,22 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    *
    * The Workspace mutation gate denies any
    * mutation the moment the two-key lookup comes back empty
-   * (`workspaceResourceMutationAllowed`'s `if (!row) return false;`) — right
+   * (`workspaceResourceMutationAllowed`'s `if (!row) return false;`) - right
    * for a project genuinely bound to a DIFFERENT workspace than the one the
    * caller claims, but wrong for a project this daemon has never bound
    * anywhere at all. That exact state is reachable one call up this same
    * route: `bindDuplicateIntoRequestWorkspace` above skips binding the COPY
    * whenever the duplicating request carried no workspace headers
-   * (`ctx === null` — a legitimate legacy/pre-context caller, per its own doc
+   * (`ctx === null` - a legitimate legacy/pre-context caller, per its own doc
    * comment), leaving the copy permanently unbound. The FIRST later mutation
-   * that DOES carry real headers — e.g. duplicating that same copy again once
-   * the client's `workspaceContext` has resolved — then 403s as "workspace
+   * that DOES carry real headers - e.g. duplicating that same copy again once
+   * the client's `workspaceContext` has resolved - then 403s as "workspace
    * project mutation is not allowed" even though nothing has ever claimed the
    * project (recvqbhor3pai2, "复制的项目再次复制").
    *
    * Keyed on "does ANY `workspace_projects` row exist for this project id at
    * all" (`getWorkspaceProjectByProjectId`), not on the current
-   * `ctx.workspaceId` — a project already bound elsewhere (including a
+   * `ctx.workspaceId` - a project already bound elsewhere (including a
    * remote team project a prior list read already reconciled, which always
    * attributes the REAL hub owner, never the reader) is left exactly where it
    * is; this only ever claims a true orphan, matching `ensureWorkspaceProject`'s
@@ -3051,14 +3051,14 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
    * The rule is adoption of orphans, not a back-fill of everything. A project
    * that already has a binding is left exactly where it is; only a project with
    * no row anywhere is claimed. Those are the pre-workspace ("legacy") projects
-   * — created before workspaces existed, or left unbound by the repair in
-   * collab/workspace-project-home.ts — and losing them across the upgrade would
+   * - created before workspaces existed, or left unbound by the repair in
+   * collab/workspace-project-home.ts - and losing them across the upgrade would
    * be data loss, which the red-line test in tests/routes/workspace-projects.ts
    * guards.
    *
    * The target is the user's PERSONAL workspace, per product: it always exists,
    * so there is always somewhere to put an orphan, and it is the honest home for
-   * a project that predates any team. Team workspaces are excluded on purpose —
+   * a project that predates any team. Team workspaces are excluded on purpose -
    * adopting a user's private pre-workspace drafts into a team would expose them
    * to people who never had them.
    *
@@ -3383,12 +3383,12 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       // here at all, so every unbound (never-claimed) project must be visible
       // (pre-workspace-isolation compatibility) while every project some
       // workspace HAS claimed must not leak to a caller with no identity to
-      // check it against — a signed-out client, a removed member, or a plain
+      // check it against - a signed-out client, a removed member, or a plain
       // `curl` (spec 04 §10: "no scope" must not mean "trust everything").
       // `listUnboundProjects` is the join that enforces this; a workspace-
       // scoped caller uses `GET /api/workspaces/:id/projects` instead, which
       // has its own ctx-gated membership check. Every row here is, by
-      // construction, unbound — so `workspaceId` is always `null`; no binding
+      // construction, unbound - so `workspaceId` is always `null`; no binding
       // lookup needed (a `listWorkspaceProjectBindings` scan here would only
       // ever resolve to misses).
       /** @type {import('@open-design/contracts').ProjectsResponse} */
@@ -3603,7 +3603,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         await collabSync.requestTeamUnshare(projectId, workspaceProjectPrincipal(ctx));
       }
     }
-    // The catalog this daemon serves is now stale by construction — drop it so
+    // The catalog this daemon serves is now stale by construction - drop it so
     // the refetch the client fires on this response reads the new list instead
     // of the one from before the move. Best-effort: the move itself already
     // succeeded, and a cold cache is a slow list, not a failed share.
@@ -3705,7 +3705,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       if (!project || !projectVisibleForLocations(project, locations)) return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       // A "move to personal" request on a project this daemon has never
       // locally bound must not be judged against a 'personal' default this
-      // same request is about to invent — see
+      // same request is about to invent - see
       // `reconcileUnboundProjectBeforeMove`'s doc comment. Scoped to the
       // 'personal' direction only: 'team' already matches the fresh default
       // and must keep behaving exactly as before.
@@ -3895,7 +3895,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
     const normalized = normalizeProjectDisplayStatus(run.status);
     // A just-finished in-memory run overrides the DB-derived status for its
     // project (it is newer), so it must carry the same incomplete signal the
-    // persisted projection derives — otherwise the pill flashes "Completed" for
+    // persisted projection derives - otherwise the pill flashes "Completed" for
     // the ~30 min the run stays in memory before the DB-derived `incomplete`
     // takes over (#1247 / #1060). run.endedWithUnfinishedWork is set at finish().
     const value =
@@ -3909,9 +3909,9 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
 
   // Brand-extraction projects are driven by a brand lifecycle (extracting →
   // needs_input → ready / failed), not only by a chat run. When the run-derived
-  // status would be `not_started` — e.g. the programmatic-first finalize ran
+  // status would be `not_started` - e.g. the programmatic-first finalize ran
   // without a recorded chat run, or the daemon restarted and the in-memory run
-  // aged out — fall back to the brand's own status so Home / Designs never show
+  // aged out - fall back to the brand's own status so Home / Designs never show
   // a live brand extraction as "Not started". Run-derived status is kept
   // whenever it is meaningful (queued/running/succeeded/failed/awaiting_input).
   function brandAwareProjectStatus(project: any, status: { value: string; updatedAt?: number; runId?: string }) {
@@ -3968,7 +3968,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       // RUNTIME_DATA_DIR reentry checks live. Block client-supplied
       // metadata.baseDir on this generic create endpoint so an attacker
       // can't smuggle e.g. /etc through here. Same rule for
-      // originalBaseDir / importedFrom='folder' — only the import path
+      // originalBaseDir / importedFrom='folder' - only the import path
       // owns those state fields.
       if (metadata && typeof metadata === 'object') {
         if ('_commentFiles' in metadata) return sendApiError(res, 400, 'BAD_REQUEST', '_commentFiles is daemon-owned');
@@ -4130,7 +4130,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         externalProjectDir = await createLocationProjectDir(location, id);
       }
       // Website Clone projects that already carry the target URL explicitly
-      // skip the project-opening discovery brief: the URL *is* the brief —
+      // skip the project-opening discovery brief: the URL *is* the brief -
       // the user asked for a reproduction, not a requirements interview, and
       // an unanswered question form just stalls the run (the agent then
       // "answers" it with conservative defaults). An explicit client-provided
@@ -4239,7 +4239,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       // An official example card picked under a task type. It is a reference,
       // not a strategy: the project keeps its automatic OD Next route and the
       // example's SKILL.md travels as a user-selected Skill at run start. It
-      // therefore deliberately does NOT participate in `explicitPlugin` — the
+      // therefore deliberately does NOT participate in `explicitPlugin` - the
       // whole point is to stop pinning an executable plugin.
       //
       // Fail-closed like `automaticStrategyTaskProfile` above: a present but
@@ -4832,7 +4832,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       }
       const createHome = await resolveCreatedProjectHome(req);
       // recvqbhor3pai2: a project this daemon has never bound anywhere (e.g.
-      // a copy left unbound by an earlier headerless duplicate — see
+      // a copy left unbound by an earlier headerless duplicate - see
       // `bindDuplicateIntoRequestWorkspace`'s doc comment) must not be
       // permanently un-duplicatable the moment a real, authenticated request
       // finally comes in for it. Claim it into the caller's own workspace
@@ -4956,7 +4956,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       }
       const createHome = await resolveCreatedProjectHome(req);
-      // recvqbhor3pai2 — same reasoning as the sibling /duplicate route just
+      // recvqbhor3pai2 - same reasoning as the sibling /duplicate route just
       // above: a never-bound source project must not be permanently
       // un-copyable once a real, authenticated request finally names it.
       reconcileUnboundProjectBeforeMutation(req, sourceProject.id, createHome);
@@ -5307,7 +5307,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       //      that only edits linkedDirs sends `{ metadata: { kind, linkedDirs } }`).
       //      updateProject() replaces metadata wholesale, so without
       //      preservation the existing baseDir gets wiped and the project
-      //      detaches from the user's folder — subsequent reads/writes
+      //      detaches from the user's folder - subsequent reads/writes
       //      silently fall back to .od/projects/<id>.
       // For case 2 we re-stamp the immutable fields from the existing
       // project record onto the incoming patch so the user can keep
@@ -5612,7 +5612,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       if (typeof patch.name === 'string' && patch.name.trim().length > 0) {
         // Write the rename through to the team catalog. Metadata-only changes
         // never trigger a content publish, so without this a rename only
-        // reached teammates after the NEXT file edit — or never.
+        // reached teammates after the NEXT file edit - or never.
         ctx.collabSync.refreshTeamProjectMetadata(req.params.id);
       }
       /** @type {import('@open-design/contracts').ProjectResponse} */
@@ -5656,7 +5656,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
       const workspaceRow = getWorkspaceProjectByProjectId(db, project.id);
       if (workspaceRow && !shareResiduals?.length
         && (workspaceRow.visibility === 'team' || workspaceRow.resourceHubResourceId)) {
-        // Same context the gate above allowed this delete under — NOT a fresh
+        // Same context the gate above allowed this delete under - NOT a fresh
         // header read, which is null for a headerless caller and would skip the
         // hub work while still deleting locally.
         const teamCtx = await verifiedWorkspaceProjectContext(req);
@@ -5676,7 +5676,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         try { collabSync.invalidateTeamProjectCatalog?.(); } catch { /* Best-effort display cache. */ }
       }
       // Stop any live agent run in this project before its row and directory
-      // are removed, otherwise the CLI subprocess is orphaned — it keeps
+      // are removed, otherwise the CLI subprocess is orphaned - it keeps
       // billing and writes into a directory that no longer exists (#5468).
       await cancelRunsOwnedBy(design.runs, { projectId: project.id });
       dbDeleteProject(db, req.params.id);
@@ -5740,7 +5740,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
     }
   });
 
-  // Comments have no workspace binding of their own — thread down the SAME
+  // Comments have no workspace binding of their own - thread down the SAME
   // authoritative `enforceWorkspaceProjectMutation` instance so a comment's
   // gate matches its parent project's exactly, instead of comments quietly
   // shipping a second, weaker copy.
@@ -5828,7 +5828,7 @@ export function registerProjectRoutes(app: Express, ctx: RegisterProjectRoutesDe
         return res.status(404).json({ error: 'source project not found' });
       }
       // Snapshot every HTML / sketch / text file in the source project.
-      // We deliberately skip binary uploads — templates are about the
+      // We deliberately skip binary uploads - templates are about the
       // generated design, not the user's reference imagery.
       const files = await listFiles(PROJECTS_DIR, sourceProjectId, {
         metadata: sourceProject.metadata,
@@ -5926,7 +5926,7 @@ export function registerProjectArtifactRoutes(app: Express, ctx: RegisterProject
     }
   });
 
-  // Standalone lint endpoint — POST raw HTML, get findings back.
+  // Standalone lint endpoint - POST raw HTML, get findings back.
   // The chat layer uses this to lint streamed-in artifacts without writing
   // them to disk first, so a P0 issue can be surfaced before save.
   // Request/response are typed against the shared contract so a producer
@@ -6022,18 +6022,18 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
     res.setHeader('Content-Security-Policy', projectPreviewCsp);
   }
 
-  // "Powered preview" headers — the opposite trade-off from setProjectPreviewHeaders.
+  // "Powered preview" headers - the opposite trade-off from setProjectPreviewHeaders.
   // Real WebGL / Web Worker / WASM sites (Gaussian-splat viewers, physics demos,
   // ffmpeg.wasm, threaded renderers) need capabilities the opaque-origin preview
-  // sandbox blocks: same-origin Workers, real Web Storage, and — for threaded
-  // WASM — SharedArrayBuffer, which requires the document to be crossOriginIsolated.
+  // sandbox blocks: same-origin Workers, real Web Storage, and - for threaded
+  // WASM - SharedArrayBuffer, which requires the document to be crossOriginIsolated.
   //
   // `Document-Isolation-Policy: isolate-and-credentialless` grants the SERVED
   // document its own cross-origin-isolated agent cluster WITHOUT requiring the
   // embedding app to opt the whole page into COOP/COEP. That is the key that
   // unlocks SharedArrayBuffer for just this iframe. The `credentialless` variant
   // (vs `require-corp`) still lets artifacts pull no-cors cross-origin
-  // subresources (CDN fonts/images) — those loads just drop credentials — so
+  // subresources (CDN fonts/images) - those loads just drop credentials - so
   // enabling isolation does not blank out otherwise-working artifacts.
   //
   // The web host renders the powered iframe with `allow-same-origin` at the
@@ -6250,7 +6250,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
 
   // Lets a browser (or the desktop export window, which shares the same Chromium
   // session/cache as the web UI) reuse already-downloaded fonts/CSS/images
-  // across loads instead of re-fetching them every time — covers, live preview,
+  // across loads instead of re-fetching them every time - covers, live preview,
   // and screenshot export all hit /raw/. The ETag/Last-Modified are derived from
   // the file's size+mtime, so any agent rewrite changes them and busts the cache
   // immediately; `no-cache` means "always revalidate" (never serve stale without
@@ -6266,7 +6266,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
 
   function rawRequestIsFresh(req: any, etag: string, mtimeMs: number): boolean {
     // If-None-Match is authoritative when present (RFC 9110 §13.1.3): freshness
-    // is decided solely by whether the ETag matches — do NOT fall through to
+    // is decided solely by whether the ETag matches - do NOT fall through to
     // If-Modified-Since. Otherwise a same-second rewrite (ETag changes
     // immediately, but Last-Modified is identical at HTTP-date second
     // granularity) would 304 stale-but-changed bytes when a client sends both a
@@ -6290,7 +6290,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
   // file returned, so a resumed download can't splice stale + fresh bytes.
   //
   // §13.1.5 also requires the entity-tag form to use a STRONG validator. Our
-  // ETag is weak (`W/"size-mtime"` — size+mtime is not byte-exact), so an
+  // ETag is weak (`W/"size-mtime"` - size+mtime is not byte-exact), so an
   // entity-tag If-Range can never authorize partial content: a same-size rewrite
   // or mtime-granularity collision could otherwise splice stale + fresh bytes
   // under a matching weak tag. We therefore reject ALL entity-tag If-Range values
@@ -6383,10 +6383,10 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
     const isStreamed = meta.mime.startsWith('video/') || meta.mime.startsWith('audio/');
     const shouldStreamBody = isStreamed || !transformFile;
     // A transform (the Vite dev-entry -> dist/index.html substitution, or preview
-    // bridge injection) can replace the response bytes — but only for HTML. For
+    // bridge injection) can replace the response bytes - but only for HTML. For
     // HTML the source file's mtime/size is NOT a valid validator, so its ETag is
     // computed from the actual sent bytes after the transform. Everything else
-    // (assets, fonts, images, streamed media — where the transform is a no-op)
+    // (assets, fonts, images, streamed media - where the transform is a no-op)
     // keeps the fast mtime ETag with an early 304.
     const willSubstitute =
       !isStreamed && !!transformFile && /^text\/html(?:;|$)/i.test(meta.mime);
@@ -6408,7 +6408,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
         return res.status(200).end();
       }
 
-      // Honor Range only when If-Range still matches the current file — otherwise
+      // Honor Range only when If-Range still matches the current file - otherwise
       // a resumed download after a rewrite would splice stale + fresh bytes.
       const range =
         currentEtag === null || ifRangeAllowsPartial(req, currentEtag, meta.mtime)
@@ -6489,7 +6489,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
    * Both look identical to a linear scan.
    *
    * The template test is by namespace as well as name. A foreign element may
-   * also be called `template` — `<svg><template><foreignObject><base>` — and it
+   * also be called `template` - `<svg><template><foreignObject><base>` - and it
    * creates no inert fragment, so the base under it is live and a name-only
    * test would wrongly discard it.
    */
@@ -6518,14 +6518,14 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
     // `<base>` an author merely wrote into a string does not govern this
     // document, so it must not suppress containment.
     if (findRealTagOffset(html, /<base(?=[\t\n\f\r />])/i) >= 0) return html;
-    // A `<base>` can also sit inside an HTML integration point — under
+    // A `<base>` can also sit inside an HTML integration point - under
     // `<foreignObject>`, `<desc>`, or an `annotation-xml` that names an HTML
-    // encoding — where the structural scan deliberately does not go, because
+    // encoding - where the structural scan deliberately does not go, because
     // for its own purpose the whole foreign subtree is skippable. Such a base
     // is an HTML-namespace element and governs the document; the generated one
     // would land in `<head>` ahead of it and win, silently repointing every
     // authored relative URL. Only foreign content can hide one, so the parse
-    // below is gated on the document having some — 10% of this repository's
+    // below is gated on the document having some - 10% of this repository's
     // HTML files reach it, at a few milliseconds each.
     if (/<(svg|math)[\t\n\f\r />]/i.test(html) && hasAuthoredHtmlBase(html)) return html;
     const ownerDir = path.posix.dirname(ownerFilePath);
@@ -7164,7 +7164,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
         return sendApiError(res, 404, 'PROJECT_NOT_FOUND', 'not found');
       }
       // PreviewModal loads artifact HTML via srcdoc, giving the iframe Origin: "null".
-      // data: URIs, file://, and some sandboxed iframes also send null — all are
+      // data: URIs, file://, and some sandboxed iframes also send null - all are
       // local-only callers, so this is safe. Real cross-origin sites send a real
       // origin and remain blocked by the browser's same-origin policy.
       if (req.headers.origin === 'null') {
@@ -7463,7 +7463,7 @@ export function registerProjectFileRoutes(app: Express, ctx: RegisterProjectFile
       // Bootstrapping a baseline version is a WRITE, so it belongs only to a
       // caller with write authority over this project. A readonly member
       // reading a mirror of someone else's shared project gets the truthful
-      // empty history instead — the owner's real history can never be here
+      // empty history instead - the owner's real history can never be here
       // (`.file-versions` is excluded from member mirrors), so synthesizing
       // one would only manufacture history that never existed, inside a
       // project the member is told they cannot modify. The read itself is

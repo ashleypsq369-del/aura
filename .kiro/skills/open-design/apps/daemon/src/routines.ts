@@ -1,4 +1,4 @@
-// RoutineService — multi-routine scheduler. Generalizes the single-routine
+// RoutineService - multi-routine scheduler. Generalizes the single-routine
 // pattern in OrbitService: a list of user-defined routines, each with its
 // own schedule, that fires the registered run handler. Schedule kinds
 // covered: hourly (every hour at minute M), daily (HH:MM in timezone),
@@ -84,13 +84,13 @@ export interface RoutineRunHandlerStart {
   prepare?: (run: RoutineRun) => void | Promise<void>;
   start?: () => void;
   // Tear-down for the case where the handler returned a start handle but
-  // `RoutineService` later reached `prepare()` and it failed — i.e. the
+  // `RoutineService` later reached `prepare()` and it failed - i.e. the
   // routine_run row exists, prepare may have partially mutated project /
   // conversation / snapshot state, and the in-memory chat run still needs
   // to terminate as `canceled`. Callers MUST surface failures rather than
   // swallow them (the loser-retry path depends on it).
   discard?: () => void;
-  // Tear-down for the case where the run was NEVER durably inserted —
+  // Tear-down for the case where the run was NEVER durably inserted -
   // either `insertRun()` threw, or `insertRun()` returned `false` because
   // a sibling daemon already won the scheduled slot. Prepare has not run,
   // so no project / conversation / snapshot writes need rolling back. The
@@ -151,7 +151,7 @@ function isScheduledRunPersistenceError(error: unknown): error is ScheduledRunPe
 
 // Returns the wall-clock parts of `atUtc` rendered in `timezone`. Uses
 // Intl.DateTimeFormat which Node ships with full-icu by default. If the
-// timezone is invalid the formatter throws — we catch upstream.
+// timezone is invalid the formatter throws - we catch upstream.
 function partsInTimezone(timezone: string, atUtc: Date): {
   year: number;
   month: number;
@@ -198,7 +198,7 @@ function partsInTimezone(timezone: string, atUtc: Date): {
 // match. On a fall-back transition day the requested time inside the
 // repeated hour has two matches (one before the transition, one after);
 // outside that hour it still has one. On a spring-forward gap the
-// requested time inside the gap has zero matches — callers fall back to
+// requested time inside the gap has zero matches - callers fall back to
 // `tzWallToUtcGapFallback` to land on a post-gap instant the same day.
 // Probes offsets at three reference points across the day so that both
 // pre- and post-transition offsets are sampled regardless of which side
@@ -595,7 +595,7 @@ export class RoutineService {
       // Tear-down to use when the durable routine_run row was never
       // inserted (insertRun threw, or another daemon already won the slot).
       // Prefer the explicit `discardUnstarted` callback when the handler
-      // distinguishes the two cases — that one drops the in-memory chat run
+      // distinguishes the two cases - that one drops the in-memory chat run
       // entirely instead of finalizing it as `canceled`, so duplicate
       // scheduled losers do not surface phantom runs on `/api/runs`.
       // Handlers that do not implement the split still see `discard`.
@@ -666,7 +666,7 @@ export class RoutineService {
         // enrichment, clear the sentinels so the terminal row does not point
         // at fabricated project/conversation IDs. For scheduled runs the
         // slot claim was already accepted at `insertRun()`, so retrying the
-        // same slot is not appropriate — let the error propagate so the
+        // same slot is not appropriate - let the error propagate so the
         // scheduler advances to the next cadence.
         scrubRoutinePlaceholders();
         this.persistence.updateRun(runId, {

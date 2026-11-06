@@ -1,4 +1,4 @@
-// Plan §3.FF1 — verifyPlugin() pure helper.
+// Plan §3.FF1 - verifyPlugin() pure helper.
 
 import { describe, expect, it } from 'vitest';
 import type { DoctorReport } from '../src/plugins/doctor.js';
@@ -35,7 +35,7 @@ const capHitSim = (): SimulatePipelineResult => ({
   ],
 });
 
-describe('verifyPlugin — pass / fail aggregation', () => {
+describe('verifyPlugin - pass / fail aggregation', () => {
   it('passes when every enabled check passes', () => {
     const report = verifyPlugin({
       config: { enabled: ['doctor', 'simulate'] },
@@ -84,7 +84,7 @@ describe('verifyPlugin — pass / fail aggregation', () => {
   });
 });
 
-describe('verifyPlugin — canon byte-equality', () => {
+describe('verifyPlugin - canon byte-equality', () => {
   it('passes when canon === canonExpected', () => {
     const report = verifyPlugin({
       config: { enabled: ['canon'] },
@@ -116,7 +116,7 @@ describe('verifyPlugin — canon byte-equality', () => {
   });
 });
 
-describe('verifyPlugin — strict mode (Plan §3.HH1)', () => {
+describe('verifyPlugin - strict mode (Plan §3.HH1)', () => {
   it('passes by default when doctor reports warnings + no errors', () => {
     const doctor: DoctorReport = {
       pluginId: 'p',
@@ -149,7 +149,7 @@ describe('verifyPlugin — strict mode (Plan §3.HH1)', () => {
   });
 });
 
-describe('verifyPlugin — summaries', () => {
+describe('verifyPlugin - summaries', () => {
   it('doctor summary mentions error + warning counts', () => {
     const doctor: DoctorReport = {
       pluginId: 'p',

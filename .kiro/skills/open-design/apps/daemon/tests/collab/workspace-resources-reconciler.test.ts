@@ -219,7 +219,7 @@ describe('reconcileWorkspaceResourcesWithRemote (orchestrator)', () => {
     // Belt-and-suspenders: even if a caller's `listLocalActiveTeamRows` bug
     // let a `resourceState: 'deleted'` row through, the planner only acts on
     // ABSENCE from the remote listing, so passing an already-retired row that
-    // the remote ALSO no longer lists would retire it again (idempotent —
+    // the remote ALSO no longer lists would retire it again (idempotent -
     // `applyRetire` writing the same 'deleted' state twice is harmless). This
     // pins that idempotency rather than asserting a prefilter this module
     // does not own.

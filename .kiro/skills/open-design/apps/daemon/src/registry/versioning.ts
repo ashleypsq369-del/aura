@@ -153,7 +153,7 @@ function compareSemver(left: SemverParts, right: SemverParts): number {
 }
 
 // semver §11 precedence: a normal release outranks a prerelease of the same
-// core version; otherwise compare dot-separated identifiers left to right —
+// core version; otherwise compare dot-separated identifiers left to right -
 // numeric ones numerically and ranked below alphanumeric, and a longer set of
 // identifiers wins when all preceding ones are equal.
 function comparePrerelease(left: string | null, right: string | null): number {

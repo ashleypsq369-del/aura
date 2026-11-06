@@ -90,7 +90,7 @@ describe('kindFor', () => {
 
 describe('mimeFor', () => {
   it('returns the mapped Content-Type for known extensions', () => {
-    // Web/text formats — verify the charset suffix lands so browsers
+    // Web/text formats - verify the charset suffix lands so browsers
     // don't second-guess encoding.
     expect(mimeFor('a.html')).toBe('text/html; charset=utf-8');
     expect(mimeFor('a.htm')).toBe('text/html; charset=utf-8');
@@ -99,7 +99,7 @@ describe('mimeFor', () => {
     expect(mimeFor('a.mjs')).toBe('text/javascript; charset=utf-8');
     expect(mimeFor('a.cjs')).toBe('text/javascript; charset=utf-8');
     // `.jsx` and `.tsx` are served to browsers running Babel-standalone
-    // (multi-file React prototypes), so they need a JS-family MIME — see
+    // (multi-file React prototypes), so they need a JS-family MIME - see
     // issue #336. `.ts` stays as `text/typescript` because it has no
     // browser-execution path; tooling reads it as TS source.
     expect(mimeFor('a.jsx')).toBe('text/javascript; charset=utf-8');
@@ -110,7 +110,7 @@ describe('mimeFor', () => {
     expect(mimeFor('a.md')).toBe('text/markdown; charset=utf-8');
     expect(mimeFor('a.txt')).toBe('text/plain; charset=utf-8');
 
-    // Office / PDF — opaque application types.
+    // Office / PDF - opaque application types.
     expect(mimeFor('a.pdf')).toBe('application/pdf');
     expect(mimeFor('a.docx')).toBe(
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -122,7 +122,7 @@ describe('mimeFor', () => {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
 
-    // Image / video / audio — verify the IANA-canonical types so
+    // Image / video / audio - verify the IANA-canonical types so
     // browsers preview inline instead of forcing a download.
     expect(mimeFor('a.svg')).toBe('image/svg+xml');
     expect(mimeFor('a.png')).toBe('image/png');
@@ -140,7 +140,7 @@ describe('mimeFor', () => {
   });
 
   it('falls back to application/octet-stream for unmapped extensions', () => {
-    // Anything outside EXT_MIME — covers extensionless names, archives,
+    // Anything outside EXT_MIME - covers extensionless names, archives,
     // and binaries the daemon doesn't know about. Browsers receiving
     // octet-stream typically force a download, which is the safe default.
     expect(mimeFor('app.exe')).toBe('application/octet-stream');

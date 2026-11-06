@@ -2,8 +2,8 @@
 // the in-memory event ring buffer.
 //
 // run.events is capped at createChatRunService `maxEvents` (2000). On a long
-// run, the earliest events — including an artifact's tool_use / tool_result
-// pair — are spliced out. The finalization consumers (retry safety gate,
+// run, the earliest events - including an artifact's tool_use / tool_result
+// pair - are spliced out. The finalization consumers (retry safety gate,
 // artifact_count, and the close-status `artifactProducedThisRun` verdict) used
 // to re-scan the truncated run.events, so a run that genuinely produced an
 // artifact early, then streamed >2000 more events, then exited non-zero, was
@@ -50,7 +50,7 @@ describe('run event-buffer truncation vs artifact verdict (unit)', () => {
       event: 'agent',
       data: { type: 'tool_result', toolUseId: 'toolu_1', isError: false },
     });
-    // Flood with far more than maxEvents later events — these would splice the
+    // Flood with far more than maxEvents later events - these would splice the
     // tool_use/tool_result out of an in-memory run.events buffer.
     for (let i = 0; i < PROD_DEFAULT_MAX_EVENTS + 500; i++) {
       foldEventIntoRunSideEffectLedger(ledger, {
@@ -100,7 +100,7 @@ describe('run event-buffer truncation vs artifact verdict (unit)', () => {
     const ledger = createRunSideEffectLedger();
     // A long tool-heavy run: thousands of Read/Bash/Grep calls, each a
     // tool_use + tool_result pair. None are write/edit tools, so none should
-    // leave anything behind in the ledger's pending map — otherwise this fix
+    // leave anything behind in the ledger's pending map - otherwise this fix
     // would reintroduce unbounded per-run growth on the same long-run path it
     // is meant to harden.
     for (let i = 0; i < 5_000; i++) {
@@ -198,7 +198,7 @@ describe('run event-buffer truncation vs artifact verdict (HTTP)', () => {
 
     // The run genuinely produced index.html (its tool_use/tool_result is in the
     // on-disk log) and then exited non-zero. The non-zero exit must be rescued
-    // by the artifact it produced — the verdict must not depend on that
+    // by the artifact it produced - the verdict must not depend on that
     // evidence surviving the run.events ring buffer.
     expect(run.exitCode).toBe(1);
     expect(run.status).toBe('succeeded');

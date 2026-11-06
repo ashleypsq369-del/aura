@@ -175,7 +175,7 @@ describe('od files write / upload (ESM require regression)', () => {
   });
 
   // Same-pattern site: `safeReadJsonFile` also called `require('node:fs')`,
-  // but inside its own try/catch — so instead of crashing, `od project create
+  // but inside its own try/catch - so instead of crashing, `od project create
   // --metadata-json <file>` SILENTLY dropped the metadata from the POST body.
   it('`project create --metadata-json` actually sends the file content as metadata', async () => {
     const metadataPath = join(scratchDir, 'metadata.json');

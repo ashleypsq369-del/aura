@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 /**
- * daemon 那一头到底发没发 —— 在真正的 HTTP 边界上问。
+ * daemon 那一头到底发没发 -- 在真正的 HTTP 边界上问。
  *
  * daemon 在 finalize 时算出 `retryable` + `user_action`
  * (`run-failure-classification.ts`),但只把 `user_action` 存成
@@ -98,7 +98,7 @@ describe('daemon carries the failure verdict to every client-visible exit', () =
     // 事实前提:这一格是分类器判过的「重试没用」。
     expect(run.status.failureDetail).toBe('hard_quota');
 
-    // 出口 1 —— 实时那条路。
+    // 出口 1 -- 实时那条路。
     const frames = await readRunEvents(started.url, run.status.id);
     const end = [...frames].reverse().find((frame) => frame.event === 'end');
     expect(end, 'terminal SSE frame should exist').toBeTruthy();
@@ -106,11 +106,11 @@ describe('daemon carries the failure verdict to every client-visible exit', () =
     expect(end!.data.retryable).toBe(false);
     expect(end!.data.failureAction).toBe('none');
 
-    // 出口 2 —— 断线重连的兜底那条路。
+    // 出口 2 -- 断线重连的兜底那条路。
     expect(run.status.retryable).toBe(false);
     expect(run.status.failureAction).toBe('none');
 
-    // 出口 3 —— 重载对话那条路。
+    // 出口 3 -- 重载对话那条路。
     const stored = await fetchAssistantMessage(
       started.url,
       projectId,

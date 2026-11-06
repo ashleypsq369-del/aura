@@ -8,14 +8,14 @@ function findColor(colors: Color[], name: string): Color | undefined {
 }
 
 describe('extractColors / Pattern B', () => {
-  it('parses `- **Name:** `#hex`` (colon inside bold) — agentic / warm-editorial shape', () => {
+  it('parses `- **Name:** `#hex`` (colon inside bold) - agentic / warm-editorial shape', () => {
     const md = [
       '## 2. Color',
       '',
-      '- **Primary:** `#FF5701` — Token from style foundations.',
-      '- **Secondary:** `#F6F6F1` — Token from style foundations.',
-      '- **Surface:** `#FFFFFF` — Token from style foundations.',
-      '- **Text:** `#111827` — Token from style foundations.',
+      '- **Primary:** `#FF5701` - Token from style foundations.',
+      '- **Secondary:** `#F6F6F1` - Token from style foundations.',
+      '- **Surface:** `#FFFFFF` - Token from style foundations.',
+      '- **Text:** `#111827` - Token from style foundations.',
     ].join('\n');
 
     const colors = extractColors(md);

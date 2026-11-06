@@ -10,7 +10,7 @@ export interface RegisterHandoffRoutesDeps
 }
 
 /**
- * `POST /api/projects/:id/handoff` — synthesise a "first user message"
+ * `POST /api/projects/:id/handoff` - synthesise a "first user message"
  * prompt the next conversation can send so a fresh chat can resume the
  * work without replaying the full transcript.
  *
@@ -95,7 +95,7 @@ export function registerHandoffRoutes(app: Express, ctx: RegisterHandoffRoutesDe
       }
       if (!await ctx.authorizeProjectRequest(req, res, project.id, { mode: 'read' })) return;
 
-      // Handoff is conversation-scoped — the conversation must exist AND
+      // Handoff is conversation-scoped - the conversation must exist AND
       // belong to this project, otherwise the synthesized transcript would
       // either be empty or (worse) summarize an unrelated project's chat.
       const conversation = getConversation(db, conversationId);
@@ -140,7 +140,7 @@ export function registerHandoffRoutes(app: Express, ctx: RegisterHandoffRoutesDe
         return sendApiError(res, 409, 'CONFLICT', err.message);
       }
 
-      // The selected conversation has no messages — fail fast as caller
+      // The selected conversation has no messages - fail fast as caller
       // input rather than spending BYOK tokens on an empty synthesis.
       if (err instanceof EmptyTranscriptError) {
         return sendApiError(res, 400, 'EMPTY_TRANSCRIPT', err.message);
@@ -156,7 +156,7 @@ export function registerHandoffRoutes(app: Express, ctx: RegisterHandoffRoutesDe
           return sendApiError(res, 429, 'RATE_LIMITED', err.message, init);
         }
         // An upstream 400 is a deterministic request-shape error (unknown
-        // model, invalid maxTokens, malformed body) — caller input, not a
+        // model, invalid maxTokens, malformed body) - caller input, not a
         // transient outage. Surface it as the caller's own BAD_REQUEST with
         // the redacted upstream detail so they fix the offending field
         // rather than retrying a 502.

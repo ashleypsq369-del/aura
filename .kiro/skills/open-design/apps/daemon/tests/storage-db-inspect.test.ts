@@ -1,4 +1,4 @@
-// Plan §3.GG1 — inspectSqliteDatabase() pure helper.
+// Plan §3.GG1 - inspectSqliteDatabase() pure helper.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';

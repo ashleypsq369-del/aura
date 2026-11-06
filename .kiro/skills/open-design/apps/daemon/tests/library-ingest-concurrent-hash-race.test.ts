@@ -5,18 +5,18 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 // Red spec: two (or more) concurrent Library ingests of the SAME bytes must
-// both succeed AND fully converge — one deduped asset that preserves every
+// both succeed AND fully converge - one deduped asset that preserves every
 // request's source/tag contribution. `registerLibraryAsset` (library.ts) checks
 // `findLibraryAssetByHash` (SELECT), then `await mkdir` + `await writeFile`,
-// then `insertLibraryAsset` (INSERT) — with a bare `UNIQUE(content_hash)`
+// then `insertLibraryAsset` (INSERT) - with a bare `UNIQUE(content_hash)`
 // constraint and no surrounding transaction or ON CONFLICT. Two concurrent
 // requests both pass the SELECT (neither has inserted yet), both await the file
-// write, then both INSERT — the loser hits "UNIQUE constraint failed:
+// write, then both INSERT - the loser hits "UNIQUE constraint failed:
 // library_assets.content_hash" and the route returns 500 INGEST_FAILED, dropping
 // that upload's source/tags instead of deduping.
 //
 // The assertions cover BOTH halves of the bug: (1) the loser must not 500, and
-// (2) the loser's data (a unique tag) must survive the dedup merge — a silent
+// (2) the loser's data (a unique tag) must survive the dedup merge - a silent
 // data-integrity loss that a "no 500 + one asset id" check alone would miss.
 
 type StartedServer = {
@@ -75,7 +75,7 @@ describe('concurrent Library ingest content-hash race', () => {
         `returned an error: ${JSON.stringify(failures.map((f) => f.status + ':' + JSON.stringify(f.body)))}`,
     ).toEqual([]);
 
-    // Each success must be a complete, well-shaped result — not just a 200: a
+    // Each success must be a complete, well-shaped result - not just a 200: a
     // non-empty asset id and a boolean `deduped`. Guards against a "200 with no
     // asset.id" regression slipping past.
     const oks = results.map((r) => r.body as { asset?: { id?: string }; deduped?: unknown });
@@ -95,7 +95,7 @@ describe('concurrent Library ingest content-hash race', () => {
     ).toBe(1);
 
     // (2) Data-integrity core: fetch the converged asset and prove EVERY
-    // request's unique tag survived the concurrent dedup merge — none dropped.
+    // request's unique tag survived the concurrent dedup merge - none dropped.
     const assetId = [...assetIds][0];
     const getRes = await fetch(`${started!.url}/api/library/assets/${assetId}`);
     expect(getRes.status).toBe(200);

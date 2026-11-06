@@ -117,7 +117,7 @@ export function rpcErrorData(raw: unknown): unknown {
  *
  * The two spellings are not read with equal authority, and deliberately so:
  * ACP's own `retryable` is honoured in both directions, while the vendor
- * `isRetryable` flag is honoured only when it says `true` — the same asymmetry
+ * `isRetryable` flag is honoured only when it says `true` - the same asymmetry
  * `inferRpcErrorRetryable` applies to that field's string form, so the bridge's
  * verdict does not depend on which shape the adapter happened to send.
  *
@@ -131,14 +131,14 @@ export function rpcErrorRetryable(data: unknown): boolean | undefined {
   // where an adapter passes that object through as ACP `error.data`; the
   // observed 2026-09-08 corpus carries it inside the message string instead,
   // which `inferRpcErrorRetryable` below covers. Either way the bridge stops
-  // dropping the one authoritative word upstream said about its own failure —
+  // dropping the one authoritative word upstream said about its own failure -
   // `run-failure-classification.ts` already knew this spelling
   // (`latestRetryable` reads `error.data.isRetryable`); the bridge did not.
   //
   // Only `true` is read, under exactly the rule `inferRpcErrorRetryable` states
   // for the string form of the same field. The two readers are composed with
   // `??` in `session.ts`, so returning `false` here would not merely record a
-  // "no" — it would short-circuit the message reader that may hold a better
+  // "no" - it would short-circuit the message reader that may hold a better
   // answer, and hand `fail()` a verdict the classifier then adopts. Letting a
   // coarse SDK flag force `false` is the drift `run-failure-classification.ts`
   // refuses by name; an explicit upstream "no" is already served by the
@@ -172,19 +172,19 @@ export function inferRpcErrorRetryable(message: string, data: unknown): boolean 
     return true;
   }
   // opencode states its own retryability as a machine-readable field, and vela
-  // hands us the whole `session.error` envelope carrying it — but as a JSON
+  // hands us the whole `session.error` envelope carrying it - but as a JSON
   // STRING inside the message, not as ACP `error.data`, so neither
   // `rpcErrorRetryable` above nor the classifier's `latestRetryable` (which
   // reads `error.data.isRetryable`) could ever see it.
   //
   // Real corpus, 2026-09-08, runs 423140d1 and e9bea966: a closed upstream
-  // socket after opencode had already exhausted its own three attempts —
+  // socket after opencode had already exhausted its own three attempts -
   // `{"isRetryable":true,"message":"Cannot connect to API: The socket
   // connection was closed unexpectedly…"}`. With that word unread, `fail()`
   // stamped the frame `retryable: false` (its default for a frame that carries
   // details but no verdict), the classifier took that as the run's verdict, and
-  // `isResumableFailure` — which returns false the moment `retryable` is false
-  // — withdrew the Continue affordance from the single most recoverable failure
+  // `isResumableFailure` - which returns false the moment `retryable` is false
+  // - withdrew the Continue affordance from the single most recoverable failure
   // there is.
   //
   // Only `true` is read here. An explicit upstream "no" is already handled by

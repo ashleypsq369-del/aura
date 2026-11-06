@@ -128,7 +128,7 @@ export function validateBrand(raw: unknown, sourceUrl: string): Brand {
   };
 }
 
-/** Pull the last ```json fenced block (or bare top-level object) out of text —
+/** Pull the last ```json fenced block (or bare top-level object) out of text -
  *  the fallback path when a brand object arrives inline instead of as JSON. */
 export function extractJsonBlock(text: string): unknown | null {
   const fences = [...text.matchAll(/```(?:json)?\s*\n([\s\S]*?)```/g)];

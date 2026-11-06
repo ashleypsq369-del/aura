@@ -52,7 +52,7 @@ export function resolveRunProjectKindForAnalytics({
   if (typeof hintProjectKind === 'string') return hintProjectKind;
   if (projectMetadata?.importedFrom === 'design-system') return 'design_system';
   // Brand-extraction backing projects (kind:'brand', importedFrom:
-  // 'brand-extraction') ARE design systems — a brand is one source for a DS,
+  // 'brand-extraction') ARE design systems - a brand is one source for a DS,
   // not a separate object. Report them as design_system so DS-project runs
   // (creation + later edits) drill down cleanly. See design-system tracking spec §1.
   if (projectMetadata?.importedFrom === 'brand-extraction') return 'design_system';
@@ -127,8 +127,8 @@ export function scanRunEventsForRetrySideEffects(events: unknown): RunRetrySideE
 //
 // The batch `scanRunEventsForRetrySideEffects` / `countNewArtifacts` above read
 // `run.events`, which is a bounded in-memory ring buffer (createChatRunService
-// maxEvents). On a long run the earliest events — including an artifact's
-// `tool_use` / `tool_result` pair — are spliced out of that buffer, so a
+// maxEvents). On a long run the earliest events - including an artifact's
+// `tool_use` / `tool_result` pair - are spliced out of that buffer, so a
 // finalization-time scan of `run.events` no longer sees committed work that the
 // run genuinely did (and that the on-disk events.jsonl still records). That
 // silently flips the retry safety gate, `artifact_count`, and the close-status
@@ -145,7 +145,7 @@ export interface RunSideEffectLedger {
   directArtifactEventSeen: boolean;
   liveArtifactSeen: boolean;
   artifactPaths: Set<string>;
-  // Every successfully written/edited path regardless of extension — the
+  // Every successfully written/edited path regardless of extension - the
   // truncation-proof source for `run_finished.files_written_count`'s
   // tool-stream fallback. `artifactPaths` is the renderable-extension subset.
   writtenFilePaths: Set<string>;
@@ -153,7 +153,7 @@ export interface RunSideEffectLedger {
   previewModulePaths: Set<string>;
   // Only WRITE/EDIT tool_use ids awaiting their tool_result live here, and each
   // is removed the moment its result arrives. A tool_result cannot precede its
-  // tool_use within a run, so we never need to buffer results — an ordinary
+  // tool_use within a run, so we never need to buffer results - an ordinary
   // (non-write) tool_result finds nothing pending and is dropped, keeping this
   // map bounded by the small number of outstanding artifact writes rather than
   // by the run's total tool_result count.
@@ -292,7 +292,7 @@ export function foldEventIntoRunSideEffectLedger(
     const id = readToolResultId(data);
     if (!id) return;
     const path = ledger.pendingWritePathById.get(id);
-    // Non-write tool_result (Read/Bash/Grep/…): nothing pending, drop it — this
+    // Non-write tool_result (Read/Bash/Grep/…): nothing pending, drop it - this
     // is what keeps the ledger bounded on long tool-heavy runs.
     if (path === undefined) return;
     ledger.pendingWritePathById.delete(id);

@@ -1,4 +1,4 @@
-// Plan §3.B4 — marketplaces add / list / refresh / remove / trust unit tests.
+// Plan §3.B4 - marketplaces add / list / refresh / remove / trust unit tests.
 //
 // Locks the storage half of the federated catalog story. The Phase 3
 // follow-up will layer on `od plugin install <name>` resolution +

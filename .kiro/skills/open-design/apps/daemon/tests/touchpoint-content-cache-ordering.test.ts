@@ -2,7 +2,7 @@
 // focus refresh racing a timer), and nothing guarantees their answers arrive in
 // the order the server gave them. The store holds ONE answer per placement and
 // replaces it wholesale, so an older answer that lands last would replace the
-// newer one — and if the newer one ended the activity early, the older one
+// newer one - and if the newer one ended the activity early, the older one
 // quietly puts the long window back and offline replay outlives the real end.
 //
 // Local files and a virtual clock only, no sockets.
@@ -446,7 +446,7 @@ describe('touchpoint content cache answer ordering', () => {
   it('does not let an older full answer undo a newer early end', () => {
     const cache = createTouchpointContentCache(dataDir);
     vi.advanceTimersByTime(30_000);
-    // The newer answer — the operator ended the activity early — lands first.
+    // The newer answer - the operator ended the activity early - lands first.
     cache.remember(key, full({ serverTime: 30_000, endsAt: 90_000 }));
     // The older one, requested before the change, lands after it.
     cache.remember(key, full({ serverTime: 0, endsAt: HOUR }));
@@ -464,7 +464,7 @@ describe('touchpoint content cache answer ordering', () => {
     expect(cache.reassemble(key, held, trimmed({ serverTime: 30_000, endsAt: 90_000 }))?.endsAt).toBe(
       iso(90_000),
     );
-    // Still rebuilt for the caller that asked — only the WRITE is refused.
+    // Still rebuilt for the caller that asked - only the WRITE is refused.
     expect(cache.reassemble(key, held, trimmed({ serverTime: 20_000, endsAt: HOUR }))?.endsAt).toBe(
       iso(HOUR),
     );
@@ -537,7 +537,7 @@ describe('touchpoint content cache answer ordering', () => {
     // Same server time: the later write wins, even when it shortens.
     cache.remember(key, full({ serverTime: 0, endsAt: 90_000 }));
     expect(replayAfterRestart()?.endsAt).toBe(iso(90_000));
-    // Newer: adopted even when it lengthens — REPLACE, never max().
+    // Newer: adopted even when it lengthens - REPLACE, never max().
     vi.advanceTimersByTime(10_000);
     cache.reassemble(key, cache.held(key)!, trimmed({ serverTime: 10_000, endsAt: 2 * HOUR }));
     expect(replayAfterRestart()?.endsAt).toBe(iso(2 * HOUR));

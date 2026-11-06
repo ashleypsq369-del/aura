@@ -2,7 +2,7 @@
 // single-file upload route POST /api/projects/:id/files resolved the caller's
 // desired name with sanitizeName(), which replaces "/" with "_". A kit upload
 // sends name="imagery/hero.png" so the file landed at the project root as
-// "imagery_hero.png" while brand.json still referenced "imagery/hero.png" — the
+// "imagery_hero.png" while brand.json still referenced "imagery/hero.png" - the
 // gallery <img> then 404'd and rendered the broken-image glyph, and finalize's
 // copyProjectDirToBrand('imagery') missed the orphaned root file entirely.
 //

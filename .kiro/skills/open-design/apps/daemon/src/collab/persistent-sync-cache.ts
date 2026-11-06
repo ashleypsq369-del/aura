@@ -4,7 +4,7 @@
 // This layer sits BELOW the in-memory stale-while-revalidate caches in
 // server.ts. They answer "the same page asked twice in one second"; this one
 // answers "the daemon restarted, or this workspace has not been opened in a
-// while" — a cold process still pays a full catalog/member round-trip on first
+// while" - a cold process still pays a full catalog/member round-trip on first
 // paint even though nothing changed upstream. Trading that round-trip for a
 // digest GET is the entire win.
 //
@@ -14,8 +14,8 @@
 //   2. a local snapshot exists,
 //   3. the local token EQUALS the token the cloud reports right now.
 //
-// Anything else — no digest (signed out, offline, non-vela source), no stored
-// row, unparseable payload, different token — falls through to the real fetch.
+// Anything else - no digest (signed out, offline, non-vela source), no stored
+// row, unparseable payload, different token - falls through to the real fetch.
 // Conditions 1 and 2 collapse into a single row read because the store writes
 // token and snapshot atomically.
 //
@@ -45,7 +45,7 @@ export interface PersistentSyncCacheOptions<T> {
   /**
    * Is the fetcher's answer authoritative right now?
    *
-   * Both cached readers answer `[]` — not an error — while the workspace
+   * Both cached readers answer `[]` - not an error - while the workspace
    * context has no team identity yet (startup, signed out, personal
    * workspace). That empty is indistinguishable from a genuinely empty team,
    * so persisting it under a live token would pin an empty catalog/roster
@@ -62,8 +62,8 @@ export interface PersistentSyncCache<T> {
    * Drop the persisted snapshot for the key last used.
    *
    * Only for the moments we KNOW the payload changed (a local share/unshare, a
-   * hub event). Correctness does not depend on it — a changed payload moves the
-   * cloud token, which already defeats reuse — but it keeps an invalidated
+   * hub event). Correctness does not depend on it - a changed payload moves the
+   * cloud token, which already defeats reuse - but it keeps an invalidated
    * entry from surviving in the database across a restart.
    */
   invalidate(): void;
@@ -125,7 +125,7 @@ export function createPersistentSyncCache<T>(
     const reading = await options.readDigest();
     // A reading always carries a non-empty account + workspace (the reader
     // refuses to report one otherwise), so a key is either fully formed or
-    // absent — there is no placeholder-keyed cache entry.
+    // absent - there is no placeholder-keyed cache entry.
     const token = reading ? tokenForFace(reading.digest, face) : '';
     const key: CollabSyncSnapshotKey | null =
       reading && token ? { face, accountId: reading.accountId, workspaceId: reading.workspaceId } : null;
@@ -139,7 +139,7 @@ export function createPersistentSyncCache<T>(
     const value = await options.fetch();
     // The same generation guard as the reuse path above, and for the same
     // reason. A change that lands while this fetch is open makes the value in
-    // flight already stale, while `token` still names the pre-change state — so
+    // flight already stale, while `token` still names the pre-change state - so
     // writing the pair back would restore exactly the row invalidate() just
     // dropped, and the cloud digest has not necessarily recomputed yet to
     // defeat it. Skipping the write costs one round-trip next time; making it

@@ -61,7 +61,7 @@ const processWithResources = process as NodeJS.Process & { resourcesPath?: strin
 // it: `dist/app-version.js` (rootDir=src, used by the `od` CLI) and
 // `dist/src/app-version.js` (rootDir=., used by the packaged sidecar entry).
 // A fixed relative path like `../package.json` only points at the daemon
-// `package.json` in the first layout — in the sidecar layout it resolves to
+// `package.json` in the first layout - in the sidecar layout it resolves to
 // `dist/package.json`, which does not exist, so the version silently falls
 // back to `APP_VERSION_FALLBACK`. Walk up from `import.meta.url` until we find
 // a real `package.json` so both build outputs (and the TypeScript source

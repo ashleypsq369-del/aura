@@ -48,7 +48,7 @@ retrieval:
 
 # Form Design
 
-Forms are where users give the product data. Every unnecessary obstacle between the user and a completed form is a failure. The design goal is to make correct input easy and incorrect input obvious — before the user submits.
+Forms are where users give the product data. Every unnecessary obstacle between the user and a completed form is a failure. The design goal is to make correct input easy and incorrect input obvious - before the user submits.
 
 ---
 
@@ -56,7 +56,7 @@ Forms are where users give the product data. Every unnecessary obstacle between 
 
 Each layer serves a distinct purpose. Do not collapse them.
 
-### Layer 1 — Helper Text
+### Layer 1 - Helper Text
 Explains *what* to enter. Appears below the input, always visible, in small secondary text.
 
 ```
@@ -66,11 +66,11 @@ Use the email you signed up with.
 ```
 
 - Write in plain language from the user's perspective
-- Keep it to one sentence — if you need more, the field is too complex or misnamed
+- Keep it to one sentence - if you need more, the field is too complex or misnamed
 - Do not repeat the label ("Enter your email" below a label that says "Email" is redundant)
-- Helper text is not a replacement for a label — the label is still required
+- Helper text is not a replacement for a label - the label is still required
 
-### Layer 2 — Placeholder
+### Layer 2 - Placeholder
 Shows the *format* or an example value. Appears inside the input, disappears on typing.
 
 ```
@@ -78,11 +78,11 @@ Shows the *format* or an example value. Appears inside the input, disappears on 
 ```
 
 - Use a realistic example, not a description: `+358 40 123 4567` not `Enter phone number`
-- Never use placeholder as a label — it disappears and leaves the user without context
+- Never use placeholder as a label - it disappears and leaves the user without context
 - Keep it grey (`--color-text-secondary`) and lighter than actual input text
-- Optional — not every field needs a placeholder
+- Optional - not every field needs a placeholder
 
-### Layer 3 — Validation
+### Layer 3 - Validation
 Confirms whether the input is correct. The most important layer.
 
 ```
@@ -92,17 +92,17 @@ Email address
 ```
 
 **Validation timing:**
-- **On blur** (leaving the field): default for most fields — validates once the user has finished
-- **Real-time** (on input): use when the format is complex or the error is likely — password strength, IBAN, VAT number, URL, regex-heavy fields
+- **On blur** (leaving the field): default for most fields - validates once the user has finished
+- **Real-time** (on input): use when the format is complex or the error is likely - password strength, IBAN, VAT number, URL, regex-heavy fields
 - **On submit**: catches anything missed, scrolls to the first error
 
-Real-time validation must be forgiving at the start — do not show an error the instant the user starts typing. Show it after a short debounce (300–500ms) or after the first character that makes the input definitively wrong.
+Real-time validation must be forgiving at the start - do not show an error the instant the user starts typing. Show it after a short debounce (300-500ms) or after the first character that makes the input definitively wrong.
 
 ---
 
 ## Submit Button State
 
-The submit button enables when the form is valid. This is one of the clearest affordance signals in form design — the user sees the goal and knows when they have reached it.
+The submit button enables when the form is valid. This is one of the clearest affordance signals in form design - the user sees the goal and knows when they have reached it.
 
 ```
 [Submit]   ← disabled, low contrast, cursor: not-allowed
@@ -117,7 +117,7 @@ The submit button enables when the form is valid. This is one of the clearest af
 <button type="submit" disabled={!isFormValid}>Submit</button>
 ```
 
-For long or complex forms where real-time validation is not practical, do not disable the submit — validate on submit and scroll to errors instead. Disabled submit on a long form frustrates users who cannot tell what is missing.
+For long or complex forms where real-time validation is not practical, do not disable the submit - validate on submit and scroll to errors instead. Disabled submit on a long form frustrates users who cannot tell what is missing.
 
 **Loading state on submit:** Replace label with spinner, disable the button. Prevent double-submission.
 
@@ -128,8 +128,8 @@ For long or complex forms where real-time validation is not practical, do not di
 ```
 [Label]                           [Optional badge if optional]
 [Input field                                                  ]
-[Helper text — what to enter, format, constraints            ]
-[Error message — appears below helper text on validation fail ]
+[Helper text - what to enter, format, constraints            ]
+[Error message - appears below helper text on validation fail ]
 ```
 
 ```html
@@ -153,7 +153,7 @@ For long or complex forms where real-time validation is not practical, do not di
 
 Mark the minority. If most fields are required, mark the optional ones. If most are optional, mark the required ones.
 
-- Do not rely on colour alone — add a text label ("Required" or asterisk with legend)
+- Do not rely on colour alone - add a text label ("Required" or asterisk with legend)
 - Place the required/optional indicator in the label, not only in the placeholder or helper text
 
 ```html
@@ -187,7 +187,7 @@ Use fieldsets for:
 
 ## Input Types
 
-Use the correct `type` — browsers provide free validation, appropriate keyboards, and autofill.
+Use the correct `type` - browsers provide free validation, appropriate keyboards, and autofill.
 
 | Data | Input type |
 |---|---|

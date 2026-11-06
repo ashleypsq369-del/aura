@@ -1,5 +1,5 @@
-/**
- * PageHeader — full-width banner
+﻿/**
+ * PageHeader - full-width banner
  *
  * Layout (matches Services hero exactly):
  *   ┌─────────────────────────────────────────────────────┐
@@ -7,7 +7,7 @@
  *   │         Subtitle                 ┃ Crit ┃ High┃     │
  *   │         [action buttons]         ┃     ┃     ┃     │
  *   └─────────────────────────────────────────────────────┘
- *   [ search bar / filter toolbar — children slot ]         ← below image, on page-bg
+ *   [ search bar / filter toolbar - children slot ]         ← below image, on page-bg
  *
  * Stats: vertical stack on the RIGHT side of the header.
  * Each stat: colored 3px bar | bold number | small label (Services DNA).
@@ -63,11 +63,11 @@ export default function PageHeader({
   title,
   subtitle,
   icon: Icon,
-  /* action buttons slot — NOW renders below the image as a toolbar */
+  /* action buttons slot - NOW renders below the image as a toolbar */
   children,
   compact    = false,
   gradient,
-  /* stats: vertical stack on the RIGHT — Services DNA */
+  /* stats: vertical stack on the RIGHT - Services DNA */
   stats,
 }) {
   const location   = useLocation();
@@ -80,7 +80,7 @@ export default function PageHeader({
   const hasStats    = stats?.length > 0;
   const hasChildren = !!children;
 
-  /* Image height — compact if no stats */
+  /* Image height - compact if no stats */
   const imgHeight = compact ? 110 : hasStats ? 180 : 140;
 
   return (
@@ -110,7 +110,7 @@ export default function PageHeader({
           />
         )}
 
-        {/* Dark overlay — heavier on left for text, lighter on right for stats */}
+        {/* Dark overlay - heavier on left for text, lighter on right for stats */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -132,7 +132,7 @@ export default function PageHeader({
           className="relative h-full flex items-center justify-between px-4 sm:px-6 md:px-8"
           style={{ zIndex: 3, gap: 20 }}
         >
-          {/* LEFT — icon + title + subtitle */}
+          {/* LEFT - icon + title + subtitle */}
           <motion.div
             initial={{ opacity: 0, x: -14 }}
             animate={{ opacity: 1, x: 0 }}
@@ -182,7 +182,7 @@ export default function PageHeader({
                   {subtitle}
                 </p>
               )}
-              {/* Daily quote — only when no stats */}
+              {/* Daily quote - only when no stats */}
               {!hasStats && dailyQuote && !compact && (
                 <p
                   style={{
@@ -201,7 +201,7 @@ export default function PageHeader({
             </div>
           </motion.div>
 
-          {/* RIGHT — 2×2 grid of stats when 4 items, vertical stack otherwise */}
+          {/* RIGHT - 2×2 grid of stats when 4 items, vertical stack otherwise */}
           {hasStats && (
             <motion.div
               initial={{ opacity: 0, x: 14 }}
@@ -291,7 +291,7 @@ export default function PageHeader({
         </div>
       </div>
 
-      {/* ══ Toolbar strip — search + filters slot (below image) ═══════
+      {/* ══ Toolbar strip - search + filters slot (below image) ═══════
           Renders children in a clean card-surface row directly under
           the header image. No more padding wrapper needed in the page.
       ══════════════════════════════════════════════════════════════ */}

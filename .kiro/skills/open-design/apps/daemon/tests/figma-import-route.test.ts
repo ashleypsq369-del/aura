@@ -1,5 +1,5 @@
 // @ts-nocheck
-// HTTP-layer test for `POST /api/projects/:id/figma/import` — spins up the
+// HTTP-layer test for `POST /api/projects/:id/figma/import` - spins up the
 // real daemon via `startServer({ port: 0 })`, uploads a synthetic `.fig`
 // through the multipart boundary (multer → importFigmaFromBytes), and asserts
 // the canonical `figma/` snapshot lands in the project cwd. Mirrors the
@@ -13,7 +13,7 @@ import { buildSampleFig } from './helpers/fig-fixture.js';
 
 const PROJECT_ID = 'figma-import-route-fixture';
 
-describe('POST /api/projects/:id/figma/import — HTTP layer', () => {
+describe('POST /api/projects/:id/figma/import - HTTP layer', () => {
   let server: http.Server;
   let baseUrl: string;
   let dataDir: string;

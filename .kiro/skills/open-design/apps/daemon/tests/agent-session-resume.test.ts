@@ -194,7 +194,7 @@ describe('resolveAgentResumeContext', () => {
     // A daemon-internal restart can re-enter startChatRun with the SAME
     // assistant placeholder after that placeholder was already persisted as the
     // session cursor (post-tool recovery writes it, and
-    // `nativeSessionContinuePending` is consumed once — a later safe-retry
+    // `nativeSessionContinuePending` is consumed once - a later safe-retry
     // restart arrives without it). The cursor filter already means to admit the
     // stored cursor itself, but the `id != <current>` clause excludes it first,
     // so a live session was abandoned and the transcript re-seeded even though
@@ -280,7 +280,7 @@ describe('resolveAgentResumeContext', () => {
       cwd: null,
       stablePromptHash: null,
     });
-    // Turn 2 must continue the same session — the failed turn it owns is a valid
+    // Turn 2 must continue the same session - the failed turn it owns is a valid
     // resume cursor, not conversation advancement.
     const ctx = resolveAgentResumeContext(db, { conversationId: 'conv-1', agentId: 'claude' });
     expect(ctx.isResuming).toBe(true);
@@ -327,7 +327,7 @@ describe('resolveAgentResumeContext', () => {
       stablePromptHash: null,
     });
     // ...but a different agent then COMPLETED a turn (asst-2 succeeded). That is
-    // genuine advancement the session never saw — must reseed, not resume.
+    // genuine advancement the session never saw - must reseed, not resume.
     seedMessage(db, 'asst-2', 'assistant'); // succeeded
     const ctx = resolveAgentResumeContext(db, { conversationId: 'conv-1', agentId: 'claude' });
     expect(ctx.isResuming).toBe(false);
@@ -484,7 +484,7 @@ describe('persistCapturedAgentSession', () => {
   });
 
   // Regression for the resume identity guard: pi-rpc persists via this capture
-  // path, so it must store model/cwd/lastMessageId too — otherwise the next pi
+  // path, so it must store model/cwd/lastMessageId too - otherwise the next pi
   // turn sees a null cursor (`missing_cursor`) and reseeds forever, silently
   // disabling pi's existing follow-up-session path (reported by @nettee).
   it('persists the resume identity so a successful pi turn still resumes next turn', () => {
@@ -583,7 +583,7 @@ describe('isClaudeResumeFailure', () => {
 
   // Guard against over-clearing: a transient in-turn failure (overload /
   // network) spends real API time and produces at least one turn, and a
-  // successful run is not an error — neither must read as a dead resume, or a
+  // successful run is not an error - neither must read as a dead resume, or a
   // blip would drop a still-valid session.
   it('does not treat an in-turn API failure or a successful run as a resume failure', () => {
     const inTurnApiError = JSON.stringify({
@@ -738,10 +738,10 @@ describe('isAgentResumeFailure dispatch', () => {
 
   it('does NOT treat a generic phrase in successful assistant stdout as a resume miss (#4629 nettee)', () => {
     // A turn that SUCCEEDS but whose model output literally says "session not
-    // found" must not be failed + have its session cleared — the phrase is only
+    // found" must not be failed + have its session cleared - the phrase is only
     // a resume miss when it comes from the CLI's stderr failure channel.
     expect(
-      isAgentResumeFailure('opencode', '', 'Sure — your previous session was not found in the list, here it is...'),
+      isAgentResumeFailure('opencode', '', 'Sure - your previous session was not found in the list, here it is...'),
     ).toBe(false);
     expect(
       isAgentResumeFailure('codex', '', 'The logs mention "no rollout found for thread id" as an example.'),
@@ -820,7 +820,7 @@ describe('resolveAgentResumeFailurePolicy', () => {
   it('leaves a compaction EOF on a create turn alone', () => {
     // The gate that keeps this from becoming a general retry: no stored handle
     // was being continued, so there is nothing stale to clear and nothing to
-    // re-seed — the turn already ran from scratch.
+    // re-seed - the turn already ran from scratch.
     expect(
       resolveAgentResumeFailurePolicy({
         agentId: 'amr',

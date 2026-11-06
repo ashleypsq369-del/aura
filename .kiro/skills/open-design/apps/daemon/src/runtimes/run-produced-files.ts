@@ -3,13 +3,13 @@
 // THE INVARIANT: a run that succeeded and touched artifacts leaves that
 // association on its assistant message, whether or not a browser was watching.
 //
-// `produced_files_json` has only ever had one writer — the web client, from a
+// `produced_files_json` has only ever had one writer - the web client, from a
 // closure inside `ProjectView`'s SSE `onDone`. Detach that stream and the
 // column is never written: leaving the project mid-run (or merely switching
 // conversations) aborts the controller, `streamViaDaemon` swallows the
 // `AbortError` without calling any handler, and the turn's deliverable is never
 // attached to the turn. The daemon meanwhile promotes the same row to
-// `succeeded` (`reconcileAssistantMessageOnRunEnd`) — publishing a terminal
+// `succeeded` (`reconcileAssistantMessageOnRunEnd`) - publishing a terminal
 // state while withholding the artifact association that terminal state was
 // supposed to carry. On the user's return the client's own repair is refused,
 // because a succeeded row with prose is past
@@ -21,11 +21,11 @@
 //
 // A FLOOR, NOT A VERDICT. The client sees the pre-turn snapshot and the daemon
 // does not, so the client's list stays authoritative: this only ever fills a
-// column that is still NULL, in one idempotent statement. A client write —
-// before or after — wins by construction, and re-running this is a no-op.
+// column that is still NULL, in one idempotent statement. A client write -
+// before or after - wins by construction, and re-running this is a no-op.
 //
 // The turn's diff cannot describe a file that did not exist yet when it was
-// taken, so an async media generation needs a second, additive entry point —
+// taken, so an async media generation needs a second, additive entry point -
 // `associateLateRunProducedFile` at the bottom of this file.
 
 import path from 'node:path';
@@ -70,7 +70,7 @@ export type AssociateRunProducedFilesOutcome =
   | { written: false; reason: 'no-paths' | 'unreadable' | 'client-owned' }
   | { written: true; files: RunProducedFile[] };
 
-/** Mirrors `captureRunChatArtifactSnapshots`' ref cap — same list, same bound. */
+/** Mirrors `captureRunChatArtifactSnapshots`' ref cap - same list, same bound. */
 const DEFAULT_MAX_FILES = 64;
 
 /**
@@ -80,7 +80,7 @@ const DEFAULT_MAX_FILES = 64;
  * Only positive evidence counts: every consumer downstream treats this string
  * as a project file key (`/raw/<project-relative path>`, tab identity, card
  * dedupe), so a path we cannot place inside the project must be dropped rather
- * than guessed at by basename — pointing a card at the wrong file is worse
+ * than guessed at by basename - pointing a card at the wrong file is worse
  * than showing no card.
  */
 function projectRelativeKey(projectRoot: string, absolutePath: string): string | null {
@@ -159,8 +159,8 @@ export async function associateRunProducedFiles(
 // `od media generate` is a 202 dispatch. The CLI polls for a bounded budget and
 // then hands off ("task N still running"), so a generation that outlives that
 // budget writes its bytes into the project AFTER the turn is already terminal.
-// The floor above cannot see it — the run's own diff was frozen before the file
-// existed — and neither can the browser: `ProjectView`'s `onDone` computes its
+// The floor above cannot see it - the run's own diff was frozen before the file
+// existed - and neither can the browser: `ProjectView`'s `onDone` computes its
 // list at the same instant, off the same daemon-authoritative touched paths, so
 // the client persists a list that simply does not contain the file (very often
 // an empty one). That is the whole of OPEND-2609: the audio is generated, it
@@ -213,15 +213,15 @@ interface LateAssociationTarget {
  *     completed with a file the client could not have seen. Re-running it is a
  *     no-op: a path already in the list is left alone.
  *  2. It refuses to act while the turn is still live. A media task that
- *     completes DURING its run needs nothing from here — its file is on disk
- *     before the terminal snapshot, so the floor above already carries it — and
+ *     completes DURING its run needs nothing from here - its file is on disk
+ *     before the terminal snapshot, so the floor above already carries it - and
  *     writing early would make that floor read the column as client-owned and
  *     silently drop every other file the same turn produced.
  *
  * THE READ-MODIFY-WRITE MUST STAY UNBROKEN. The list is re-read AFTER the only
  * `await` in here and then extended and written with nothing awaited in
  * between, which is what makes it atomic against every other writer in this
- * single-threaded daemon — including a client `PUT` that lands while the
+ * single-threaded daemon - including a client `PUT` that lands while the
  * `stat` is in flight, and a sibling media task of the same batch finishing
  * alongside this one. Introduce an `await` between that re-read and the
  * `UPDATE` and two concurrent late files start overwriting each other.
@@ -254,7 +254,7 @@ export async function associateLateRunProducedFile(
   if (!file) return { written: false, reason: 'unreadable' };
 
   // Everything from here to the UPDATE is one uninterrupted synchronous block
-  // — see THE READ-MODIFY-WRITE MUST STAY UNBROKEN above.
+  // - see THE READ-MODIFY-WRITE MUST STAY UNBROKEN above.
   const current = readTarget();
   if (!current || current.id !== target.id) return { written: false, reason: 'contended' };
 

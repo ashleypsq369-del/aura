@@ -60,7 +60,7 @@ export interface ResourceDeps {
   // never from a daemon-global active/current Workspace.
   resolveWorkspaceScope?: (req: any) => Promise<string | null>;
   // Whether the caller may mutate (edit / publish-toggle / delete) design
-  // system `id` — the same verdict the PATCH/DELETE routes enforce (see
+  // system `id` - the same verdict the PATCH/DELETE routes enforce (see
   // `registerDesignSystemRoutes`'s identically-named dep). Optional so a
   // caller that never renders a design-system list (e.g. a route-only test
   // fixture) does not have to supply it; the design-system LIST route below
@@ -101,7 +101,7 @@ export interface ProjectPreviewScopeDeps {
   ) => string;
   /**
    * Like `mint`, but reuses the live scope for this exact (project, workspace)
-   * when one exists — **without renewing it**. Preview reads must be
+   * when one exists - **without renewing it**. Preview reads must be
    * byte-stable across refetches, and the scope's expiry is serialized into
    * the bridged document, so touching it here would change the served bytes
    * and reload the iframe just as a fresh id would.
@@ -118,7 +118,7 @@ export interface ProjectPreviewScopeDeps {
   revoke: (scope: string) => void;
   expiresAt: (projectId: string, scope: string) => number | undefined;
   /**
-   * The expiry to embed in a served document — frozen for the scope's whole
+   * The expiry to embed in a served document - frozen for the scope's whole
    * life, unlike `expiresAt`, which `renew` moves. Use this for any body whose
    * bytes must stay identical across refetches; JSON responses keep using
    * `expiresAt`.
@@ -152,7 +152,7 @@ export interface TelemetryDeps {
    * Returns the categorical outcome so the API surface in chat-routes can
    * report back to the web client whether the report was accepted or
    * skipped (consent off / no sink). The handler must not await this in
-   * the request hot path — fire-and-forget.
+   * the request hot path - fire-and-forget.
    */
   reportFeedback?: (req: {
     runId: string;
@@ -260,7 +260,7 @@ export interface ServerContext {
      * Drop the cached team-project catalog because this daemon just changed it.
      * The share/unshare response is what makes the client refetch, and without
      * this that refetch is served the pre-change list out of the display cache
-     * — so a project the user just shared did not appear in 全部项目 until some
+     * - so a project the user just shared did not appear in 全部项目 until some
      * later poll (acceptance #53). Fire-and-forget.
      */
     invalidateTeamProjectCatalog?(): void;

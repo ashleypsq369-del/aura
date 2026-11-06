@@ -805,7 +805,7 @@ describe('deploy plan and analyzer', () => {
   it('checks the doctype prolog without catastrophic backtracking on a comment-only entry', () => {
     // Regression: the prolog check's comment-run group used a lazy `[\s\S]*?`
     // body inside `(?:...)*`, so a comment-only entry with no doctype forced
-    // 2^n backtracking — a ~250-byte HTML could hang the single-threaded
+    // 2^n backtracking - a ~250-byte HTML could hang the single-threaded
     // daemon for minutes (event-loop DoS on POST /deploy/preflight). The
     // tempered comment body makes each comment match deterministically.
     const html = '<!---->'.repeat(28) + '<html><body></body></html>';
@@ -2356,7 +2356,7 @@ describe('cloudflare pages deploys', () => {
           headers: { 'content-type': 'application/json' },
         });
       }
-      // HEAD check — respond 200 for any URL so waitForReachableDeploymentUrl resolves
+      // HEAD check - respond 200 for any URL so waitForReachableDeploymentUrl resolves
       if (method === 'HEAD') {
         return new Response('', { status: 200 });
       }

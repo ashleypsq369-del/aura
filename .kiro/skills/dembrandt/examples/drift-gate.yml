@@ -1,4 +1,4 @@
-# Design drift gate — copy into .github/workflows/ of your app repo.
+# Design drift gate - copy into .github/workflows/ of your app repo.
 #
 # On every successful preview deploy, extracts the preview and compares its
 # design tokens against production. Fails the check on drift, posts a per-page
@@ -6,7 +6,7 @@
 # summary), and uploads self-contained HTML reports. No design-review meeting
 # needed to catch that a colour or spacing step quietly changed.
 #
-# This is the GitHub Actions reference. The gate itself is platform-neutral —
+# This is the GitHub Actions reference. The gate itself is platform-neutral -
 # `--compare` gives an exit code and, with --json-only, the drift report as
 # JSON. The full table is in docs/ci.md; this workflow branches on 0 stable,
 # 1 drift, and treats anything else as a failed extraction. Only the surfacing below (annotations,
@@ -50,7 +50,7 @@ jobs:
           npm i dembrandt
           npx playwright-core install --with-deps chromium
 
-      - name: Drift gate — preview vs production
+      - name: Drift gate - preview vs production
         run: |
           set +e   # handle each page's exit code; never abort the loop
           mkdir -p reports
@@ -81,7 +81,7 @@ jobs:
               icon="✅"; echo "::notice title=Stable::${name} (${path}) matches production"
             elif [ "$code" = "1" ]; then
               icon="🔴"; fail=1; drifted=$((drifted+1))
-              echo "::error title=Design drift::${name} (${path}) drift ${score:-?} — see the PR comment or drift-reports artifact"
+              echo "::error title=Design drift::${name} (${path}) drift ${score:-?} - see the PR comment or drift-reports artifact"
             else
               icon="⚠️"; fail=1
               echo "::error title=Extraction failed::${name} (${path}) exit ${code}"
@@ -91,7 +91,7 @@ jobs:
             [ "${chg:-0}" != "0" ] && delta="${chg} changed"
             [ "${add:-0}" != "0" ] && delta="${delta:+$delta, }${add} added"
             [ "${rem:-0}" != "0" ] && delta="${delta:+$delta, }${rem} removed"
-            [ -z "$delta" ] && delta="—"
+            [ -z "$delta" ] && delta="-"
             echo "| \`${path}\` | ${icon} | ${delta} |" >> reports/_rows.md
             # Per-token highlights for drifting pages, from the drift JSON.
             if [ "$code" = "1" ] && jq -e '.drift.changes | length > 0' "reports/${name}.json" >/dev/null 2>&1; then
@@ -116,11 +116,11 @@ jobs:
           SUMMARY=reports/summary.md
           {
             echo "<!-- drift-gate -->"
-            echo "## 🎨 Design drift — preview vs production"
+            echo "## 🎨 Design drift - preview vs production"
             echo ""
-            if [ "$fail" = "0" ]; then echo "✅ **Stable** — preview matches production across all pages."
+            if [ "$fail" = "0" ]; then echo "✅ **Stable** - preview matches production across all pages."
             elif [ "$drifted" -gt 0 ]; then echo "🔴 **Drift detected** on ${drifted} page(s). Review below, or accept if intended."
-            else echo "⚠️ **Extraction failed** — see the run logs."; fi
+            else echo "⚠️ **Extraction failed** - see the run logs."; fi
             echo ""
             echo "| Page | | Changes |"
             echo "|------|:--:|:--|"

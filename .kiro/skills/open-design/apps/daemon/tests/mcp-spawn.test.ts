@@ -198,7 +198,7 @@ describe('spawn writes external MCP config for Claude Code', () => {
       const { id, dir } = await createProject();
 
       // Drive a chat run. The fake `claude` exits 0 immediately; what we care
-      // about is the SIDE EFFECT — `.mcp.json` written to the project cwd
+      // about is the SIDE EFFECT - `.mcp.json` written to the project cwd
       // before the spawn.
       const chatRes = await fetch(`${baseUrl}/api/runs`, {
         method: 'POST',
@@ -680,7 +680,7 @@ describe('spawn writes external MCP config for Claude Code', () => {
     expect(putRes.ok).toBe(true);
 
     const { id, dir } = await createProject();
-    // Trigger any non-claude agent — it'll fail to spawn (no fake binary) but
+    // Trigger any non-claude agent - it'll fail to spawn (no fake binary) but
     // the .mcp.json write gate runs BEFORE bin resolution, so the absence of
     // the file is the assertion that the gate held.
     await fetch(`${baseUrl}/api/runs`, {

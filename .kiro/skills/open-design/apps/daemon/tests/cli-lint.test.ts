@@ -6,7 +6,7 @@
 // Same stub-server process harness as cli-templates.test.ts /
 // cli-deploy.test.ts: we prove SUBCOMMAND_MAP routes `lint`, parseFlags
 // accepts the documented flags, the right HTTP call is emitted, and the
-// exit code follows the --fail-on threshold — without booting the daemon.
+// exit code follows the --fail-on threshold - without booting the daemon.
 
 import http from 'node:http';
 import { execFile } from 'node:child_process';
@@ -182,7 +182,7 @@ describe('od lint CLI entrypoint', () => {
     const before = stub.requests.length;
     const run = await runCli(['lint', cleanFile, '--daemon-url', stub.baseUrl]);
     expect(run.code).toBe(0);
-    expect(run.stdout).toContain('clean — 0 findings');
+    expect(run.stdout).toContain('clean - 0 findings');
     const req = stub.requests[before];
     expect(req?.method).toBe('POST');
     expect(req?.url).toBe('/api/artifacts/lint');

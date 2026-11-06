@@ -16,7 +16,7 @@ import { startServer } from '../src/server.js';
 // Stable-prompt cache regression for the intent-signal hotfix
 // (specs/current/intent-signal-cache-hotfix.md §1/§6). The three intent
 // signals gate blocks inside daemonSystemPrompt, which is part of
-// stableInstructionFingerprint — so a signal flip on a resume turn re-sends
+// stableInstructionFingerprint - so a signal flip on a resume turn re-sends
 // the whole stable block and records a `stable-prompt-changed` miss. The
 // turn-1 discovery form's own option copy used to flip deck+platform at t2
 // on EVERY form-driven conversation, making t2 a guaranteed miss.
@@ -48,9 +48,9 @@ const SESSION = 'ses_intentsignal0001';
 // src/prompts/discovery.ts, whose option copy carries deck vocabulary
 // ("Slide deck / pitch") the user never chose.
 const DISCOVERY_FORM_ASSISTANT_TURN = [
-  'Got it — quick brief to lock the direction:',
+  'Got it - quick brief to lock the direction:',
   '',
-  '<question-form id="discovery" title="Quick brief — 30 seconds">',
+  '<question-form id="discovery" title="Quick brief - 30 seconds">',
   '{',
   '  "lang": "en",',
   '  "questions": [',
@@ -70,7 +70,7 @@ function packedFormAnswerTurn2(outputAnswer: string): {
   currentPrompt: string;
 } {
   const answers = [
-    '[form answers — discovery]',
+    '[form answers - discovery]',
     `- What are we making?: ${outputAnswer}`,
     '- Who is this for?: internal exec review',
     '- Roughly how much?: 3 screens',
@@ -142,7 +142,7 @@ describe('intent signals × stable prompt cache', () => {
     // This suite covers legacy intent/memory stable sections; Discovery has its own prompt.
     process.env.OD_NEXT_STRATEGY_ROLLOUT = 'off';
     // Memory auto-extraction folds prior form answers into the stable-region
-    // "Personal memory" block, which legitimately changes the stable hash —
+    // "Personal memory" block, which legitimately changes the stable hash -
     // disable it so the assertions isolate the intent-signal contribution.
     // `memoryEnabled` turns the block back on for the tests that assert on
     // memory attribution itself; `extraction` stays null either way so only
@@ -176,7 +176,7 @@ describe('intent signals × stable prompt cache', () => {
 
     // t2: the assistant turn carries the discovery form's full option copy
     // ("Slide deck / pitch"); the user answered "Dashboard / tool UI".
-    // Option copy offered ≠ intent — no signal may flip, so the resumed
+    // Option copy offered ≠ intent - no signal may flip, so the resumed
     // stable slice must be byte-identical and the turn must be a cache hit.
     const turn2 = await sendRunAndWait(
       url,
@@ -201,7 +201,7 @@ describe('intent signals × stable prompt cache', () => {
     expect(turn1.status).toBe('succeeded');
 
     // t2 selects "Slide deck / pitch": new content genuinely enters the
-    // stable region — the one justified miss.
+    // stable region - the one justified miss.
     const turn2 = await sendRunAndWait(
       url,
       projectId,
@@ -287,7 +287,7 @@ describe('intent signals × stable prompt cache', () => {
       currentPrompt: followUp,
     });
     expect(turn2.status).toBe('succeeded');
-    // Attribution must stay silent when nothing drifted — an empty-but-present
+    // Attribution must stay silent when nothing drifted - an empty-but-present
     // list would read in telemetry as a drift with no cause.
     expect(await runPromptCache(url, conversationId, turn2.id)).toMatchObject({
       hit: true,

@@ -16,7 +16,7 @@ import {
 } from '../src/server.js';
 
 /**
- * PR #974 — desktop-import-token gate. The HTTP /api/import/folder
+ * PR #974 - desktop-import-token gate. The HTTP /api/import/folder
  * route only accepts requests when either (a) no desktop auth secret
  * has been registered (web mode, gate dormant) or (b) a request
  * carries a valid HMAC-signed `X-OD-Desktop-Import-Token` minted by
@@ -39,7 +39,7 @@ describe('desktop-import-token gate', () => {
 
   beforeEach(() => {
     // Each test starts in "no secret registered" mode unless it
-    // explicitly registers one — keeps tests independent.
+    // explicitly registers one - keeps tests independent.
     resetDesktopAuthForTests();
   });
 
@@ -187,7 +187,7 @@ describe('desktop-import-token gate', () => {
     expect(okBody.project.metadata?.fromTrustedPicker).toBe(true);
     expect(okBody.project.metadata?.baseDir).toBeTruthy();
 
-    // Replay: same nonce, same secret, same path — the daemon must
+    // Replay: same nonce, same secret, same path - the daemon must
     // reject because the nonce is already in the consumed set.
     const replayResp = await importFolder(
       { baseDir: folder },
@@ -220,7 +220,7 @@ describe('desktop-import-token gate', () => {
     expect(importBody.project.metadata?.fromTrustedPicker).toBe(true);
 
     // Re-spread the existing metadata exactly the way the linked-folder
-    // UI does — fromTrustedPicker:true is included unchanged.
+    // UI does - fromTrustedPicker:true is included unchanged.
     const patchResp = await fetch(`${baseUrl}/api/projects/${projectId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -320,12 +320,12 @@ describe('desktop-import-token gate', () => {
     };
     expect(body.project.metadata?.fromTrustedPicker).toBe(true);
     // Daemon realpath()s the trimmed input, so metadata.baseDir is
-    // the canonical realpath of the trimmed string — never the padded
+    // the canonical realpath of the trimmed string - never the padded
     // version, never a divergent canonicalization step.
     expect(body.project.metadata?.baseDir).toBe(await realpath(trimmed));
   });
 
-  // Round-5 (lefarcen P3) — defensive: a request whose body baseDir is
+  // Round-5 (lefarcen P3) - defensive: a request whose body baseDir is
   // un-trimmed but whose token was signed against the trimmed value
   // must be rejected as a 403 token-mismatch, NOT silently coerced.
   // This pins the "no daemon-side re-trim before HMAC verify" contract.
@@ -358,7 +358,7 @@ describe('verifyDesktopImportToken (pure helper)', () => {
   function mint(baseDir: string, nonce: string, exp: string): string {
     const sig = createHmac('sha256', SECRET).update(`${baseDir}\n${nonce}\n${exp}`).digest('base64url');
     // `~` field separator mirrors the daemon's
-    // DESKTOP_IMPORT_TOKEN_FIELD_SEP — ISO 8601 expiries embed `.` so
+    // DESKTOP_IMPORT_TOKEN_FIELD_SEP - ISO 8601 expiries embed `.` so
     // a `.` separator would split into four parts on parse.
     return [nonce, exp, sig].join('~');
   }

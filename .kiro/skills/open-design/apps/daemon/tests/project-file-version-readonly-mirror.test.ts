@@ -2,9 +2,9 @@
 //
 // Reported as "a member can still open the time machine on a readonly shared
 // project". Investigation (2026-07-27, feature-test hub, real owner/member
-// daemons) found the *entry point* is intentional — 飞书 recvq56vFjQKfT
+// daemons) found the *entry point* is intentional - 飞书 recvq56vFjQKfT
 // deliberately un-gated it, because browsing history is a read action and the
-// restore button keeps its own `viewerOnly` gate — and the restore ENDPOINT is
+// restore button keeps its own `viewerOnly` gate - and the restore ENDPOINT is
 // correctly gated: a real member's headers get 403
 // WORKSPACE_PROJECT_PERMISSION_DENIED, headerless gets 401.
 //
@@ -23,12 +23,12 @@
 // syncs to a member. Measured live: the owner had 4 versions; the member's
 // panel showed exactly 1, labelled "Version 1", created by their own GET at
 // the moment they opened the panel. The member was not reading the owner's
-// history — they were reading a synthetic one their own read had just
+// history - they were reading a synthetic one their own read had just
 // manufactured.
 //
 // Invariant this file pins: the baseline-version bootstrap belongs to callers
 // with write authority over the project. A caller whose workspace identity
-// proves it cannot write still gets to READ the history (no 401/403 — the
+// proves it cannot write still gets to READ the history (no 401/403 - the
 // entry stays open per recvq56vFjQKfT), it just gets the truthful empty
 // history instead of a fabricated entry, and leaves nothing behind on disk.
 //
@@ -98,7 +98,7 @@ describe('version history on a readonly shared mirror', () => {
    * Content is then written straight to the project directory instead of
    * through the file-write API, because that API bootstraps a version of its
    * own. The result is the shape a freshly pulled member mirror has: real
-   * content on disk, no version manifest — `.file-versions` is in
+   * content on disk, no version manifest - `.file-versions` is in
    * `MEMBER_MIRROR_EXCLUDED_ENTRIES`, so a mirror never receives the owner's.
    */
   async function seedTeamProject(): Promise<string> {
@@ -168,7 +168,7 @@ describe('version history on a readonly shared mirror', () => {
 
     const body = await getVersions(projectId, memberHeaders(READER_MEMBER_ID, 'member'));
 
-    // The read still succeeds — the entry point stays open (recvq56vFjQKfT).
+    // The read still succeeds - the entry point stays open (recvq56vFjQKfT).
     // It just reports the truth: this mirror carries no version history.
     expect(body.versions).toEqual([]);
     // And it left nothing behind in a project the member cannot write.

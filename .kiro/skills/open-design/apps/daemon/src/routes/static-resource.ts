@@ -165,7 +165,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   // Stamp a freshly imported/installed skill with the caller's workspace, the
   // same moment plugin install does (`installOrUpgradePlugin` in server.ts).
   // A caller with no workspace headers (`od skill import`, a not-logged-in
-  // web session) leaves the skill unbound — visible everywhere, same as
+  // web session) leaves the skill unbound - visible everywhere, same as
   // every skill imported before this shipped ("no retroactive tagging").
   const bindImportedSkillToWorkspace = (
     authority: WorkspaceCollabContext | null,
@@ -295,7 +295,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   };
   // Gate a mutation route for a skill bound into `workspace_resources`. Only
   // applies when the skill actually carries a binding row (installed/imported
-  // through the workspace-aware routes above after this shipped) — an unbound
+  // through the workspace-aware routes above after this shipped) - an unbound
   // legacy skill stays outside the isolation regime, mirroring the plugin
   // uninstall route's same conditional gate.
   const enforceSkillWorkspaceMutation = async (
@@ -510,7 +510,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
         workspaceId,
         workspaceMemberId: authority?.workspaceMemberId ?? null,
       });
-      // Strip full body + on-disk dir from the listing — frontend fetches the
+      // Strip full body + on-disk dir from the listing - frontend fetches the
       // body via /api/skills/:id when needed (keeps the listing payload small).
       res.json({
         skills: skills.map(({ body, dir: _dir, ...rest }) => ({
@@ -541,7 +541,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // Design templates — the rendering catalogue. Same shape as /api/skills
+  // Design templates - the rendering catalogue. Same shape as /api/skills
   // (so the web client can reuse SkillSummary types) but rooted at
   // DESIGN_TEMPLATE_ROOTS so the listing stays focused on template-style
   // entries without bleeding functional skills into the EntryView gallery.
@@ -571,7 +571,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // POST /api/skills/import — write a new SKILL.md under USER_SKILLS_DIR
+  // POST /api/skills/import - write a new SKILL.md under USER_SKILLS_DIR
   // from a UI-supplied body. The next /api/skills request surfaces it
   // automatically because listSkills walks USER_SKILLS_DIR first.
   app.post('/api/skills/import', async (req, res) => {
@@ -613,7 +613,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // PUT /api/skills/:id — update an existing user-managed skill's
+  // PUT /api/skills/:id - update an existing user-managed skill's
   // SKILL.md (and, when the user edits a built-in for the first time,
   // clone its side files into USER_SKILLS_DIR/<slug>/ so subsequent
   // /api/skills/:id/{files,example,assets/*} requests keep resolving
@@ -694,7 +694,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // GET /api/skills/:id/files — flat listing of the files that ship with
+  // GET /api/skills/:id/files - flat listing of the files that ship with
   // a skill. Used by the Settings → Skills detail panel to render the
   // file tree (capped server-side to keep payload bounded).
   app.get('/api/skills/:id/files', async (req, res) => {
@@ -717,7 +717,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // Codex hatch-pet registry — pets packaged by the upstream `hatch-pet`
+  // Codex hatch-pet registry - pets packaged by the upstream `hatch-pet`
   // skill under `${CODEX_HOME:-$HOME/.codex}/pets/`. Surfaced so the web
   // pet settings can offer one-click adoption of recently-hatched pets.
   app.get('/api/codex-pets', async (_req, res) => {
@@ -735,7 +735,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   // One-click community sync. Hits the Codex Pet Share + j20 Hatchery
   // catalogs and drops every pet into `${CODEX_HOME:-$HOME/.codex}/pets/`
   // so `GET /api/codex-pets` (and the web Pet settings) pick them up
-  // immediately. The body is intentionally tiny — we keep the heavier
+  // immediately. The body is intentionally tiny - we keep the heavier
   // tuning knobs (`--limit`, `--concurrency`) on the CLI script and
   // only surface `force` + `source` here.
   app.post('/api/codex-pets/sync', async (req, res) => {
@@ -845,7 +845,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
       // renders straight off this list (e.g. `ProjectView`'s in-project
       // Design System tab, which resolves its own `designSystemEditable`
       // from this exact array rather than the single-item detail fetch) can
-      // gate its Publish toggle / delete affordances on it too — not just
+      // gate its Publish toggle / delete affordances on it too - not just
       // the detail route. Skipped for anything not `teamSynced` (the
       // overwhelming majority: every built-in preset plus the caller's own
       // systems) so a hot, frequently-polled list read does not pay a
@@ -892,7 +892,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
     }
   });
 
-  // Pre-built example HTML for a skill — what a typical artifact from this
+  // Pre-built example HTML for a skill - what a typical artifact from this
   // skill looks like. Lets users browse skills without running an agent.
   //
   // The skill's `id` (from SKILL.md frontmatter `name`) can differ from its
@@ -901,22 +901,22 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   //
   // Resolution order:
   //   1. Derived id (`<parent>:<child>`):
-  //      <parentDir>/examples/<child>.html — pre-baked single-file sample.
+  //      <parentDir>/examples/<child>.html - pre-baked single-file sample.
   //      Subfolder layouts (e.g. live-artifact's
   //      `examples/<name>/template.html`) are intentionally not served:
   //      they still contain `{{data.x}}` placeholders that only the
   //      daemon-side renderer fills in, and serving the raw template
   //      would render visible placeholder braces in the gallery.
-  //   2. <skillDir>/example.html — fully-baked static example (preferred)
+  //   2. <skillDir>/example.html - fully-baked static example (preferred)
   //   3. <skillDir>/assets/template.html  +
-  //      <skillDir>/assets/example-slides.html — assemble at request time
+  //      <skillDir>/assets/example-slides.html - assemble at request time
   //      by replacing the `<!-- SLIDES_HERE -->` marker with the snippet
   //      and patching the placeholder <title>. Lets a skill ship one
   //      canonical seed plus a small content fragment, so the example
   //      never drifts from the seed.
-  //   4. <skillDir>/assets/template.html — raw template, no content slides
-  //   5. <skillDir>/assets/index.html — generic fallback
-  //   6. First .html in <skillDir>/examples/ — used as a friendly fallback
+  //   4. <skillDir>/assets/template.html - raw template, no content slides
+  //   5. <skillDir>/assets/index.html - generic fallback
+  //   6. First .html in <skillDir>/examples/ - used as a friendly fallback
   //      so a skill that aggregates examples (like live-artifact) still has
   //      a real preview on its parent card instead of returning 404.
   app.get('/api/skills/:id/example', async (req, res) => {
@@ -938,7 +938,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
         ? `?workspaceId=${encodeURIComponent(authority.workspaceId)}&workspaceMemberId=${encodeURIComponent(authority.workspaceMemberId)}`
         : '';
 
-      // 1. Derived `<parent>:<child>` id — resolve straight to the matching
+      // 1. Derived `<parent>:<child>` id - resolve straight to the matching
       // file under <parentDir>/examples/. Done before findSkillById so the
       // parent's normal fallback chain never accidentally serves a stale
       // file when a sample is missing (we'd rather 404 explicitly).
@@ -1012,7 +1012,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
       // alongside SKILL.md; pick the first .html file alphabetically so
       // direct URL access (e.g. deep links) shows something representative.
       // Subfolder layouts are excluded for the same reason as the derived
-      // resolver above — their `template.html` still has unresolved
+      // resolver above - their `template.html` still has unresolved
       // `{{data.x}}` placeholders.
       const examplesDir = path.join(skill.dir, 'examples');
       if (fs.existsSync(examplesDir)) {
@@ -1058,7 +1058,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   // contributors can preview `example.html` straight from disk.
   app.get('/api/skills/:id/assets/*splat', async (req, res) => {
     try {
-      // Same rationale as /example above — assets need to resolve whether
+      // Same rationale as /example above - assets need to resolve whether
       // the owning skill folder lives under skills/ or design-templates/.
       const authority = await resolveWorkspaceAuthority(req, res, {
         allowNavigationQuery: true,
@@ -1195,7 +1195,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
   // workspace, any role) could delete any skill, including one installed by
   // someone else or pulled in from a team share. Now gated the same way
   // `POST /api/plugins/:id/uninstall` is, via the shared
-  // `enforceWorkspaceResourceMutation` — see `enforceSkillWorkspaceMutation`
+  // `enforceWorkspaceResourceMutation` - see `enforceSkillWorkspaceMutation`
   // above for the "only when a binding row exists" conditional.
   app.delete('/api/skills/:id', async (req, res) => {
     if (!requireLocalOrigin(req, res)) return;
@@ -1215,7 +1215,7 @@ export function registerStaticResourceRoutes(app: Express, ctx: RegisterStaticRe
       if (!await enforceSkillWorkspaceMutation(req, res, req.params.id, 'delete')) return;
       const result = await uninstallById(req.params.id, USER_SKILLS_DIR, SKILLS_DIR, 'skill');
       if (!result.ok) return res.status(result.status || 400).json({ error: result.error });
-      // Clean up the binding row too — `workspace_resources` has no
+      // Clean up the binding row too - `workspace_resources` has no
       // FOREIGN KEY ... ON DELETE CASCADE (see db.ts's doc comment on the
       // table), so skipping this would leave an orphan binding that
       // re-importing the same skill id would find and silently reuse (stale
@@ -1504,7 +1504,7 @@ export function assembleExample(templateHtml: string, slidesHtml: string, title:
   // skill-authored and can carry a <title> of their own, which a text match
   // would rewrite instead (nexu-io/open-design#7410).
   // The close is located by the raw-text rule rather than searched for as text
-  // from the open tag's own start — from there a `</title` sitting in one of
+  // from the open tag's own start - from there a `</title` sitting in one of
   // its attribute values would match first.
   const range = findRealElementRange(withSlides, HTML_TAG_PATTERNS.titleOpen, 'title');
   if (!range) return withSlides;

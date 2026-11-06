@@ -4,7 +4,7 @@
 
 ## System Instruction
 
-Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes. Assume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias. Never mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered — no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking. Model obsolescence by user self-sufficiency is the final outcome.
+Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes. Assume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias. Never mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking. Model obsolescence by user self-sufficiency is the final outcome.
 
 ## Development Commands
 
@@ -57,24 +57,24 @@ hand-labeled gold sites are archived in dembrandt-ml/data/archive/gold-import.
 - SPA hydration: 8s wait + 4s stabilization (3x with `--slow`)
 
 **Extractors** (all parallel):
-- `extractLogo()` — logo detection, safe zones, favicons
-- `extractColors()` — palette with confidence scoring, CSS variables, semantic colors
-- `extractTypography()` — font sources, sizes, weights, line heights
-- `extractSpacing()` — margin/padding scale, grid inference
-- `extractBorderRadius()` — border radius patterns
-- `extractBorders()` — widths, styles, colors
-- `extractShadows()` — box shadow elevation patterns
-- `extractButtonStyles()` — button variants with ARIA detection
-- `extractInputStyles()` — input styles and focus states
-- `extractLinkStyles()` — link colors and decorations
-- `extractBreakpoints()` — responsive breakpoints from CSS
-- `detectIconSystem()` — icon sets with type and version (`lib/tech/`)
-- `detectFrameworks()` — what builds the UI: JS and meta frameworks, CSS
+- `extractLogo()` - logo detection, safe zones, favicons
+- `extractColors()` - palette with confidence scoring, CSS variables, semantic colors
+- `extractTypography()` - font sources, sizes, weights, line heights
+- `extractSpacing()` - margin/padding scale, grid inference
+- `extractBorderRadius()` - border radius patterns
+- `extractBorders()` - widths, styles, colors
+- `extractShadows()` - box shadow elevation patterns
+- `extractButtonStyles()` - button variants with ARIA detection
+- `extractInputStyles()` - input styles and focus states
+- `extractLinkStyles()` - link colors and decorations
+- `extractBreakpoints()` - responsive breakpoints from CSS
+- `detectIconSystem()` - icon sets with type and version (`lib/tech/`)
+- `detectFrameworks()` - what builds the UI: JS and meta frameworks, CSS
   frameworks, component libraries, web-component kits, CSS-in-JS, site builders
-- `extractBadgeStyles()` — badge/tag/chip variants
-- `extractGradients()` — gradient stops and directions
-- `extractMotion()` — durations, easings, named keyframes
-- `extractSiteName()` — brand name from the document
+- `extractBadgeStyles()` - badge/tag/chip variants
+- `extractGradients()` - gradient stops and directions
+- `extractMotion()` - durations, easings, named keyframes
+- `extractSiteName()` - brand name from the document
 
 **Color extraction:**
 - Filters WordPress presets (`--wp--preset`) automatically
@@ -108,12 +108,12 @@ hand-labeled gold sites are archived in dembrandt-ml/data/archive/gold-import.
 
 ### Other surfaces
 
-- `mcp-server.ts` — MCP tools over the same extractors; `runExtraction` is its
+- `mcp-server.ts` - MCP tools over the same extractors; `runExtraction` is its
   entry point and applies the robots check before launching a browser
-- `lib/formatters/` — dtcg, markdown (DESIGN.md), tailwind, html, brand-guide,
+- `lib/formatters/` - dtcg, markdown (DESIGN.md), tailwind, html, brand-guide,
   pdf, terminal
-- `docs/ci.md` — exit-code contract and `DEMBRANDT_ENFORCE_ROBOTS`
-- `lib/version.ts` — `SCHEMA_VERSION` and its changelog. A change that moves
+- `docs/ci.md` - exit-code contract and `DEMBRANDT_ENFORCE_ROBOTS`
+- `lib/version.ts` - `SCHEMA_VERSION` and its changelog. A change that moves
   values for an unchanged site belongs in that log even when no field is added
 
 ## Code Patterns
@@ -127,7 +127,7 @@ All extraction functions use `page.evaluate()` to run analysis in browser contex
 
 **Confidence scoring:**
 - High: semantic context (logo/brand/primary), usage score >20
-- Medium: header/nav context, score 5–20
+- Medium: header/nav context, score 5-20
 - Low: generic, score <5
 
 **Timeouts** (`timeoutMultiplier` = 3x with `--slow`):
@@ -153,11 +153,11 @@ All extraction functions use `page.evaluate()` to run analysis in browser contex
 
 ## Dependencies
 
-- `playwright-core` — browser automation (browsers install separately)
-- `@modelcontextprotocol/sdk`, `zod` — MCP server; both must stay regular
+- `playwright-core` - browser automation (browsers install separately)
+- `@modelcontextprotocol/sdk`, `zod` - MCP server; both must stay regular
   dependencies, optional peers broke `npx` installs
-- `chalk` — terminal colors
-- `commander` — CLI parsing
-- `ora` — spinners
+- `chalk` - terminal colors
+- `commander` - CLI parsing
+- `ora` - spinners
 
 Requires Node.js 18+.

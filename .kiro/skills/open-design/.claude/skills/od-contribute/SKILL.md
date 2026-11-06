@@ -1,6 +1,6 @@
 ---
 name: od-contribute
-description: One-click contribution flow for OpenDesign (nexu-io/open-design) — even for non-coders. Pick one of four cards (ship a Skill or Design System you made with OD; translate docs; fix a typo / write a blog; report a bug), the agent validates and opens a PR (or issue) for you. Trigger words contribute to open design, ship my OD skill, ship my OD design system, translate OD docs, report an OD bug, od-contribute.
+description: One-click contribution flow for OpenDesign (nexu-io/open-design) - even for non-coders. Pick one of four cards (ship a Skill or Design System you made with OD; translate docs; fix a typo / write a blog; report a bug), the agent validates and opens a PR (or issue) for you. Trigger words contribute to open design, ship my OD skill, ship my OD design system, translate OD docs, report an OD bug, od-contribute.
 allowed-tools:
   - Bash
   - Read
@@ -12,15 +12,15 @@ allowed-tools:
   - WebFetch
 ---
 
-# od-contribute — first-contribution flow for OpenDesign
+# od-contribute - first-contribution flow for OpenDesign
 
 Locked to `nexu-io/open-design`. Branches by **contribution type**, not by issue. Replaces the dev-loop with type-specific no-code validators. Designed so a product user with zero coding background can ship a real PR.
 
 ## Language
 
-Mirror the user's language in every user-facing message — `AskUserQuestion` labels and descriptions, status updates, error explanations. Detect from their first message; when uncertain, default to English.
+Mirror the user's language in every user-facing message - `AskUserQuestion` labels and descriptions, status updates, error explanations. Detect from their first message; when uncertain, default to English.
 
-**Generated artifacts (PR titles, commit messages, PR/issue body files, branch names) MUST be English** regardless of the user's chat language. GitHub conventions, maintainer review, and search all assume English. The templates under `templates/` are already English — keep them that way when rendering.
+**Generated artifacts (PR titles, commit messages, PR/issue body files, branch names) MUST be English** regardless of the user's chat language. GitHub conventions, maintainer review, and search all assume English. The templates under `templates/` are already English - keep them that way when rendering.
 
 Scripts live under `scripts/`. Source the shared helpers from any script:
 
@@ -32,7 +32,7 @@ source "$(dirname "$0")/config.sh"
 
 ---
 
-## Step 1 — Prereq check (always first)
+## Step 1 - Prereq check (always first)
 
 ```bash
 bash "$SKILL_DIR/scripts/check-prereqs.sh"
@@ -43,20 +43,20 @@ bash "$SKILL_DIR/scripts/check-prereqs.sh"
 
 If `gh repo view "$TARGET_FORK"` fails, ask the user (one `AskUserQuestion`) whether to fork now via `gh repo fork nexu-io/open-design --clone=false`. Default to yes.
 
-## Step 2 — Pick contribution type
+## Step 2 - Pick contribution type
 
 Single `AskUserQuestion` (header: "Contribution", multiSelect: false), four options. Translate option labels/descriptions into the user's chat language; the branch routing is unchanged.
 
-1. **🎨 Ship something I made with OD** — _a Skill, Design System, HyperFrame, or template I want to contribute upstream_ → branch `3a`
-2. **🌍 Translate OD docs** — _README / QUICKSTART / CONTRIBUTING into a new language_ → branch `3b`
-3. **📝 Fix docs / write a blog / fix a typo** — _typo fix, dead link, use-case writeup_ → branch `3c`
-4. **🐛 Report a bug** — _something broke; I'll help turn it into a high-quality issue_ → branch `3d` (issue path, no PR)
+1. **🎨 Ship something I made with OD** - _a Skill, Design System, HyperFrame, or template I want to contribute upstream_ → branch `3a`
+2. **🌍 Translate OD docs** - _README / QUICKSTART / CONTRIBUTING into a new language_ → branch `3b`
+3. **📝 Fix docs / write a blog / fix a typo** - _typo fix, dead link, use-case writeup_ → branch `3c`
+4. **🐛 Report a bug** - _something broke; I'll help turn it into a high-quality issue_ → branch `3d` (issue path, no PR)
 
-Each branch below is self-contained. Steps 7–8 (preview + push) are shared across branches `3a`/`3b`/`3c`. Branch `3d` skips them entirely.
+Each branch below is self-contained. Steps 7-8 (preview + push) are shared across branches `3a`/`3b`/`3c`. Branch `3d` skips them entirely.
 
 ---
 
-### Step 3a — OD product submission (Skill / Design System)
+### Step 3a - OD product submission (Skill / Design System)
 
 **3a.1** Ask user: "What's the local path to the artifact you want to ship?" (single free-text, translated into the user's chat language). Common: a folder path (Skill) or a single `DESIGN.md` file (Design System).
 
@@ -97,15 +97,15 @@ bash "$SKILL_DIR/scripts/validate-design-system.sh" \
 If validation fails, surface the FAIL lines verbatim, ask the user to fix, retry. **Never push a failing artifact.**
 
 **3a.6** Ask 3 short questions via `AskUserQuestion` (translate the labels into the user's chat language):
-- "What name should we credit you under in the PR?" — free-text
-- "One-line pitch for this Skill / Design System?" — free-text
-- "Path to a screenshot (optional)?" — free-text
+- "What name should we credit you under in the PR?" - free-text
+- "One-line pitch for this Skill / Design System?" - free-text
+- "Path to a screenshot (optional)?" - free-text
 
 **3a.7** Render `templates/PR-BODY-skill.md` (or `PR-BODY-design-system.md`) with substitutions:
 - `{{SKILL_NAME}}`, `{{SKILL_SLUG}}` (or `{{BRAND_NAME}}`, `{{BRAND_SLUG}}`)
 - `{{PITCH}}` (the one-line)
-- `{{MOTIVATION}}` (free-text — agent can offer to draft this from the skill body, but user confirms)
-- `{{TRY_PROMPT}}` (a prompt they recommend trying — agent suggests a default, user confirms)
+- `{{MOTIVATION}}` (free-text - agent can offer to draft this from the skill body, but user confirms)
+- `{{TRY_PROMPT}}` (a prompt they recommend trying - agent suggests a default, user confirms)
 - `{{SCREENSHOT_BLOCK}}` (Markdown image block if a screenshot path was given, else empty)
 - `{{DISCORD_INVITE}}` from `$OD_DISCORD_INVITE`
 
@@ -115,7 +115,7 @@ Write to `$WORKDIR/.od-contrib/PR-BODY.md`.
 
 ---
 
-### Step 3b — i18n translation
+### Step 3b - i18n translation
 
 **3b.1** Setup workspace (slug = `translate-<doc>-<lang>` if known, else `translate`):
 
@@ -135,7 +135,7 @@ Each line is JSON. Rank by:
 - then `status: "stale"` ordered by `english_commits_since_translation` desc
 - README family before QUICKSTART before CONTRIBUTING
 
-**3b.3** Take the top 3–4 gaps and present via `AskUserQuestion` (header: "Translation target"). Each option label like: `README → 한국어 (Korean)` / `QUICKSTART (zh-CN) refresh — 12 commits behind`. Translate the header text into the user's chat language but keep the option labels descriptive (the language names belong in their native script).
+**3b.3** Take the top 3-4 gaps and present via `AskUserQuestion` (header: "Translation target"). Each option label like: `README → 한국어 (Korean)` / `QUICKSTART (zh-CN) refresh - 12 commits behind`. Translate the header text into the user's chat language but keep the option labels descriptive (the language names belong in their native script).
 
 **3b.4** Once user picks, **rename branch** to be specific:
 ```bash
@@ -153,7 +153,7 @@ git -C "$WORKDIR" branch -m "od-contrib/i18n/<doc>-<lang>-<date>"
 
 Write the result to `$WORKDIR/<TRANSLATED_PATH>` (e.g. `QUICKSTART.es.md`). Show user a unified diff vs. the English source for visual sanity-check (line-count delta within ±15% is a healthy signal).
 
-**3b.6** Validate the translated file against the English source. The `--reference` flag tells the validator to ignore relative refs that were already broken in the source — OD docs frequently link to website route slugs (e.g. `skills/blog-post/`) that aren't files on disk; we don't want a structure-preserving translation to fail because of pre-existing dead refs.
+**3b.6** Validate the translated file against the English source. The `--reference` flag tells the validator to ignore relative refs that were already broken in the source - OD docs frequently link to website route slugs (e.g. `skills/blog-post/`) that aren't files on disk; we don't want a structure-preserving translation to fail because of pre-existing dead refs.
 
 ```bash
 bash "$SKILL_DIR/scripts/validate-markdown.sh" \
@@ -169,7 +169,7 @@ If FAIL → surface verbatim, fix, retry.
 
 ---
 
-### Step 3c — Docs / blog / typo
+### Step 3c - Docs / blog / typo
 
 **3c.1** Setup workspace (slug `docs`):
 
@@ -180,7 +180,7 @@ bash "$SKILL_DIR/scripts/setup-workspace.sh" docs <slug>
 **3c.2** Ask user (one `AskUserQuestion`):
 1. **Auto-discover small fixes** (run discover-doc-gaps, pick something)
 2. **I have a specific fix in mind** (free-text)
-3. **I want to write a blog / case study** (free-text — what's the use case?)
+3. **I want to write a blog / case study** (free-text - what's the use case?)
 
 **3c.3 (Auto-discover branch)** Run:
 
@@ -220,7 +220,7 @@ bash "$SKILL_DIR/scripts/validate-markdown.sh" \
 
 ---
 
-### Step 3d — Bug report (issue path, no PR)
+### Step 3d - Bug report (issue path, no PR)
 
 **3d.1** Read OD's actual schema at runtime to make sure we mirror it:
 
@@ -248,7 +248,7 @@ Translate every prompt above into the user's chat language at runtime.
 - OS family from `uname`
 - Node version from `node -v` if relevant
 
-**3d.4** Dedupe: extract 3–5 keywords from the description, run:
+**3d.4** Dedupe: extract 3-5 keywords from the description, run:
 
 ```bash
 gh search issues "<keywords>" --repo "$TARGET_REPO" --state open --limit 5 --json number,title,url
@@ -269,7 +269,7 @@ bash "$SKILL_DIR/scripts/create-issue.sh" \
 
 ---
 
-## Step 7 — Preview + confirm (shared, PR branches only)
+## Step 7 - Preview + confirm (shared, PR branches only)
 
 Show the user a clean summary:
 
@@ -286,13 +286,13 @@ About to commit:
 Then `git -C "$WORKDIR" diff --stat` and a `head -40` of the rendered PR body for visual sanity.
 
 Required `AskUserQuestion` confirmation (translate to user's language): **"Push this PR?"** with three options:
-- **Ship it** — proceed to Step 8
-- **Let me revise** — return to the relevant Step 3 sub-step
-- **Cancel** — leave the workspace on disk, tell the user the path so they can return later, exit
+- **Ship it** - proceed to Step 8
+- **Let me revise** - return to the relevant Step 3 sub-step
+- **Cancel** - leave the workspace on disk, tell the user the path so they can return later, exit
 
 Never push without an explicit "Ship it".
 
-## Step 8 — Push & open PR
+## Step 8 - Push & open PR
 
 ```bash
 bash "$SKILL_DIR/scripts/create-pr.sh" \

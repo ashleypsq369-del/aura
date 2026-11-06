@@ -1,12 +1,12 @@
-// Phase 4 / spec §11.5 / plan §3.FF1 — `od plugin verify` orchestrator.
+// Phase 4 / spec §11.5 / plan §3.FF1 - `od plugin verify` orchestrator.
 //
 // Pure helper that aggregates three independent checks into one
 // CI-friendly pass/fail report:
 //
-//   doctor     — manifest + atom + ref lint (existing helper)
-//   simulate   — pipeline convergence dry-run for every
+//   doctor     - manifest + atom + ref lint (existing helper)
+//   simulate   - pipeline convergence dry-run for every
 //                'until' expression in the plugin (existing helper)
-//   canon      — optional byte-equality check against a committed
+//   canon      - optional byte-equality check against a committed
 //                expected-block.md fixture
 //
 // The orchestrator is pure relative to its inputs: doctor + simulate
@@ -27,10 +27,10 @@ export type VerifyCheckId = 'doctor' | 'simulate' | 'canon';
 export interface VerifyConfig {
   // Subset of checks to run. Default: all.
   enabled?: ReadonlyArray<VerifyCheckId>;
-  // Plan §3.HH1 — when true, doctor warnings count as failures.
+  // Plan §3.HH1 - when true, doctor warnings count as failures.
   // Mirrors `od plugin doctor --strict`. Default false.
   strict?: boolean;
-  // Optional simulate inputs — if absent, simulate is skipped (the
+  // Optional simulate inputs - if absent, simulate is skipped (the
   // verify config doesn't auto-build a default signal map; the
   // author must opt in by declaring expected signals).
   simulate?: {
@@ -133,7 +133,7 @@ export function verifyPlugin(input: VerifyInput): VerifyReport {
     });
   }
 
-  // canon — only meaningful when both inputs are present.
+  // canon - only meaningful when both inputs are present.
   if (!enabled.has('canon')) {
     outcomes.push({ check: 'canon', status: 'skipped', summary: 'canon: skipped (not in enabled set)' });
   } else if (typeof input.canon !== 'string' || typeof input.canonExpected !== 'string') {

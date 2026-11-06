@@ -7,11 +7,11 @@ import { teamProjectRegistration } from './team-project-registration-fixture.js'
 // project, per `markLocalChangePending` in ../src/collab/runtime.ts. The web
 // client (apps/web/src/collab/collab-client.ts) only learns the current
 // syncState via a fixed 5s poll unless something calls `checkStatusNow()`
-// sooner — this test proves the transient window the poll has to land in is,
+// sooner - this test proves the transient window the poll has to land in is,
 // with the default debounce and a fast (stub) publish, an order of magnitude
 // shorter than that poll interval, so a blind 5s poll will usually observe
 // 'synced' on both sides of the edit and never catch 'pending_upload'.
-describe('collab runtime — owner upload-badge transient window', () => {
+describe('collab runtime - owner upload-badge transient window', () => {
   it('flips pending_upload -> synced well inside the web client\'s 5s status-poll cadence', async () => {
     const runtime: CollabRuntime = createCollabRuntime({
       adapter: { publish: async () => ({ version: 2 }) },
@@ -40,7 +40,7 @@ describe('collab runtime — owner upload-badge transient window', () => {
       expect(runtime.projectSyncState(projectId, principal)).toBe('pending_upload');
 
       // Wait past the scheduler's default 400ms debounce plus a fast publish
-      // — comfortably under CollabClient's 5_000ms DEFAULT_STATUS_POLL_MS.
+      // - comfortably under CollabClient's 5_000ms DEFAULT_STATUS_POLL_MS.
       await new Promise((resolve) => setTimeout(resolve, 600));
       expect(runtime.projectSyncState(projectId, principal)).toBe('synced');
     } finally {
@@ -49,7 +49,7 @@ describe('collab runtime — owner upload-badge transient window', () => {
   });
 });
 
-describe('collab runtime — member pull materialized version', () => {
+describe('collab runtime - member pull materialized version', () => {
   it('returns the version reported by the pull instead of a newer post-pull head', async () => {
     const syncLatest = vi.fn(async () => ({ version: 2 }));
     const runtime = createCollabRuntime({

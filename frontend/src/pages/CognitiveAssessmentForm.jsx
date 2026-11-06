@@ -1,5 +1,5 @@
-/**
- * CognitiveAssessmentForm.jsx — MMSE / MoCA Cognitive Assessment
+﻿/**
+ * CognitiveAssessmentForm.jsx - MMSE / MoCA Cognitive Assessment
  * Redesigned: PageHeader + clean component score inputs
  */
 import { useState } from 'react';
@@ -119,7 +119,7 @@ export default function CognitiveAssessmentForm() {
         icon={Brain}
         stats={[
           { label: assessmentType, value: `${currentTotal}/30`, color: currentTotal >= 24 ? '#16a34a' : currentTotal >= 18 ? '#d97706' : '#dc2626' },
-          { label: 'Interpretation', value: allFilled ? currentInterp.label.split(' ')[0] : '—', color: '#818cf8' },
+          { label: 'Interpretation', value: allFilled ? currentInterp.label.split(' ')[0] : '-', color: '#818cf8' },
         ]}
       >
         <button onClick={() => navigate(`/assessments/${patientId}`)}
@@ -175,7 +175,7 @@ export default function CognitiveAssessmentForm() {
           <Brain size={15} className="text-indigo-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-indigo-800">
             Administer the <strong>{assessmentType}</strong> following the standardised protocol.
-            Enter each component score — all components must be completed.
+            Enter each component score - all components must be completed.
             {assessmentType === 'MoCA' && ' +1 point is added automatically if education ≤12 years.'}
           </p>
         </div>

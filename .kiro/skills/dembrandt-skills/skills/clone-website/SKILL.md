@@ -40,7 +40,7 @@ retrieval:
 
 One-click cloners return a lookalike: it resembles the page, and nothing in the
 process ever checked whether it matches it. This skill produces a different
-artifact — values traceable to the source, and a diff that says what is still
+artifact - values traceable to the source, and a diff that says what is still
 wrong.
 
 **The one rule: if the page states a value, read it. If it does not, and only
@@ -85,7 +85,7 @@ JavaScript, which is why it is the second capture and not the first.
 
 ## 3. Measure the design values
 
-Read the tokens off the live page rather than off a picture — the type scale,
+Read the tokens off the live page rather than off a picture - the type scale,
 palette and spacing are already declared. Use [[extract-design]] for the
 extraction; `--design-md` gives you a brief you can hand straight to the
 rebuild step.
@@ -98,8 +98,8 @@ value the source states. Nothing retyped means nothing drifts.
 
 ## 5. Build section by section
 
-One section at a time — header, hero, feature rows, tables, media, testimonials,
-FAQ, footer — in auto layout or real layout containers, never pinned
+One section at a time - header, hero, feature rows, tables, media, testimonials,
+FAQ, footer - in auto layout or real layout containers, never pinned
 coordinates. Screenshot each section and compare it before moving on. A rebuild
 judged only at the end gets judged once, badly.
 
@@ -145,7 +145,7 @@ rebuild to fix one card costs the hour again and moves the errors somewhere
 new.
 
 Where the fix is a judgement call rather than a value, produce two or three
-versions of that one section and ask which is right — and ask what made it
+versions of that one section and ask which is right - and ask what made it
 right. That sentence is what gets applied to the next section instead of a
 guess.
 
@@ -159,7 +159,7 @@ in the file, the file is still a draft.
 
 Reproducing a page is research: teardowns, redesign baselines, migration
 references, and regression checks against your own site. The last is the most
-undervalued — the fastest way to learn whether production still matches its
+undervalued - the fastest way to learn whether production still matches its
 design system is to extract it and compare.
 
 Shipping someone else's layout, copy or brand as your own is a different act,
@@ -168,6 +168,6 @@ and terms of service.
 
 ## Related
 
-- [[extract-design]] — the measurement step, and the verification pass
-- [[generate-ui-from-brand]] — when the goal is new UI in a brand, not a copy
-- [[authentic-product-representation]] — keeping rebuilt content truthful
+- [[extract-design]] - the measurement step, and the verification pass
+- [[generate-ui-from-brand]] - when the goal is new UI in a brand, not a copy
+- [[authentic-product-representation]] - keeping rebuilt content truthful

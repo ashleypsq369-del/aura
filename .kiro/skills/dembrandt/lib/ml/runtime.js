@@ -1,4 +1,4 @@
-// runtime.ts — fast inference for end users. Loads the bundled ONNX model and
+// runtime.ts - fast inference for end users. Loads the bundled ONNX model and
 // scores a dembrandt extraction's palette. This is what dembrandt imports.
 //
 //   import { predictPrimary, scorePalette } from 'dembrandt-ml';

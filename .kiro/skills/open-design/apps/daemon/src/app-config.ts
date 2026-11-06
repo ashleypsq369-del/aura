@@ -127,7 +127,7 @@ export interface AppConfigPrefs {
   projectLocations?: ProjectLocationPrefs[];
   defaultProjectLocationId?: string | null;
   // Whether this installation runs the OD Next design strategy. Absent and
-  // null both mean "unconfigured", which resolves to `active` — OD Next is the
+  // null both mean "unconfigured", which resolves to `active` - OD Next is the
   // default route and this key is how an installation opts out of it.
   // `OD_NEXT_STRATEGY_ROLLOUT` outranks this when set; see
   // readOdNextRolloutPolicy.
@@ -662,12 +662,12 @@ function applyConfigValue(
     return;
   }
   if (key === 'odNextStrategyMode') {
-    // Reached with a non-mode value only on the READ path — a truncated file, a
+    // Reached with a non-mode value only on the READ path - a truncated file, a
     // hand edit, a value written by some other version. It must not take the
     // daemon down, and it must not read as unconfigured either: see
     // OD_NEXT_MODE_WHEN_CONFIG_UNREADABLE. `null` is different and stays a
     // delete, because clearing the key IS the deliberate way back to the
-    // default. The WRITE path never reaches here with a bad value —
+    // default. The WRITE path never reaches here with a bad value -
     // `assertWritableControlValues` refuses it first.
     if (value === 'off' || value === 'observe' || value === 'active') {
       target[key] = value;
@@ -722,7 +722,7 @@ function filterAllowedKeys(obj: Record<string, unknown>): AppConfigPrefs {
 // Fill in telemetry defaults when the saved config has no `telemetry`
 // field at all (fresh install, pre-disclosure). `metrics` / `content`
 // default to true so onboarding-funnel events emit from the first
-// render — without these defaults the gate at
+// render - without these defaults the gate at
 // `analytics.ts` (`if (cfg.telemetry?.metrics !== true) return`)
 // dropped every event a user fired before the post-onboarding
 // disclosure modal had a chance to set them. An EXPLICIT `false`
@@ -790,19 +790,19 @@ export async function readAppConfig(dataDir: string): Promise<AppConfigPrefs> {
     return applyTelemetryDefaults({ ...base, installationId: installation.installationId });
   }
   if (typeof base.installationId === 'string' && base.installationId.length > 0) {
-    // Best-effort migration. A write failure here doesn't break the read —
+    // Best-effort migration. A write failure here doesn't break the read -
     // we still serve the legacy id. The next write through writeAppConfig
     // will retry the mirror.
     try {
       await writeInstallationFile(installationDir, { installationId: base.installationId });
     } catch {
-      // swallow — observability beats correctness on this path
+      // swallow - observability beats correctness on this path
     }
   }
   return applyTelemetryDefaults(base);
 }
 
-// Synchronous mirror of readAppConfig for callers that cannot await — e.g.
+// Synchronous mirror of readAppConfig for callers that cannot await - e.g.
 // building the spawn env for the vela CLI inside the synchronous
 // spawnEnvForAgent. It reuses the exact same parsing, validation and telemetry
 // defaulting as the async path, so the consent decision and installationId can
@@ -968,11 +968,11 @@ async function doWrite(
   // survive a namespace-scoped data-dir wipe. Only fires when the caller
   // explicitly touches installation identity or consent lifecycle state
   // (avoiding noisy writes on every unrelated app-config update). A write
-  // failure here doesn't roll back the app-config write — the next read
+  // failure here doesn't roll back the app-config write - the next read
   // merges them transparently.
   if (Object.prototype.hasOwnProperty.call(partial, 'installationId') || shouldClearAttribution) {
     const id = normalizedNextWithoutRetiredAgents.installationId;
-    // Caller explicitly touched installationId — mirror the outcome
+    // Caller explicitly touched installationId - mirror the outcome
     // (including the clear case) to installation.json so a future read
     // doesn't keep serving the old value out of the channel-root file.
     // "Delete my data" relies on this clear path.
@@ -991,7 +991,7 @@ async function doWrite(
     try {
       await writeInstallationFile(resolveInstallationDir(dataDir), installPatch);
     } catch {
-      // swallow — install file mirroring is best-effort; the canonical
+      // swallow - install file mirroring is best-effort; the canonical
       // app-config write already succeeded.
     }
   }

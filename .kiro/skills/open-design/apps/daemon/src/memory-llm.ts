@@ -2,8 +2,8 @@
 // LLM-driven memory extractor.
 //
 // The heuristic regex pack in `memory.ts` only catches explicit markers
-// ("remember:", "记住", "我喜欢"…). For everything else — implicit
-// preferences, role, ongoing-work context — we ask a small fast model
+// ("remember:", "记住", "我喜欢"…). For everything else - implicit
+// preferences, role, ongoing-work context - we ask a small fast model
 // to look at the just-finished turn and the existing memory and return
 // a JSON list of facts to add.
 //
@@ -14,7 +14,7 @@
 // Provider selection (in order):
 //   0. memory `.config.json` extraction override → user-supplied
 //      provider/model/baseUrl/apiKey/apiVersion from the Memory model
-//      picker. The override may pick any of four providers — anthropic,
+//      picker. The override may pick any of four providers - anthropic,
 //      openai, azure (openai-compatible at a per-resource URL), or
 //      google gemini. This is the only path that lets a Local-CLI user
 //      (no env-var key in the daemon's environment) point memory
@@ -41,8 +41,8 @@
 //      so the UI can surface "configure a key to enable LLM memory"
 //      instead of staying silent
 //
-// Every attempt — whether it actually called the model or short-circuited
-// — produces a record in `memory-extractions.ts` so the settings panel
+// Every attempt - whether it actually called the model or short-circuited
+// - produces a record in `memory-extractions.ts` so the settings panel
 // can show running / skipped / success / failed states in real time.
 
 import { MEMORY_TYPES } from '@open-design/contracts';
@@ -94,7 +94,7 @@ A fact is NOT worth remembering when ANY of these is true:
 - It's something the assistant said about itself.
 - It's a code snippet, an output, or a paste.
 
-Output STRICT JSON in this exact shape — nothing else, no prose, no markdown fences:
+Output STRICT JSON in this exact shape - nothing else, no prose, no markdown fences:
 {
   "entries": [
     { "type": "user|feedback|project|reference", "name": "short title (≤ 60 chars)", "description": "one-line summary (≤ 140 chars)", "body": "the actual remembered fact, 1-3 sentences" }
@@ -110,24 +110,24 @@ Type rules:
 - reference: pointers to external systems (Linear projects, Slack channels, dashboards)`;
 
 // Specialised system prompt for the annotation distiller. The user just
-// reviewed a generated design artifact and left inline marks — comments,
-// highlights, or drawn strokes — on specific elements. We turn the durable
+// reviewed a generated design artifact and left inline marks - comments,
+// highlights, or drawn strokes - on specific elements. We turn the durable
 // signal in those marks into `feedback` (a standing preference) and `rule`
 // (an enforceable, checkable constraint) memory so the next generation honors
 // it without the user re-explaining. The output shape matches the generic
 // extractor so the same parser/writer pipeline applies.
 const ANNOTATION_SYSTEM_PROMPT = `You are a memory distiller for a personal AI design assistant.
 
-The user just reviewed a generated design artifact and left inline annotations — comments, highlights, or drawn marks — each attached to a specific element. Your job is to distill any STANDING design preference or constraint the user is expressing, so future generations honor it without the user repeating themselves.
+The user just reviewed a generated design artifact and left inline annotations - comments, highlights, or drawn marks - each attached to a specific element. Your job is to distill any STANDING design preference or constraint the user is expressing, so future generations honor it without the user repeating themselves.
 
-Only extract a fact when the annotation expresses a durable preference that should apply to FUTURE work — never a one-off tweak to this single element.
+Only extract a fact when the annotation expresses a durable preference that should apply to FUTURE work - never a one-off tweak to this single element.
 - "make THIS button green" → one-off, do NOT remember.
 - "always use the brand green for primary actions" / a complaint they clearly keep making → durable, remember.
 - "too busy" / "太花了" as a recurring critique → remember as feedback about visual density / decoration.
 
 Generalize the wording so it is not tied to this one element, page, or run.
 
-Output STRICT JSON in this exact shape — nothing else, no prose, no markdown fences:
+Output STRICT JSON in this exact shape - nothing else, no prose, no markdown fences:
 {
   "entries": [
     { "type": "feedback|rule", "name": "short title (≤ 60 chars)", "description": "one-line summary (≤ 140 chars)", "body": "the remembered preference/rule" }
@@ -137,7 +137,7 @@ Output STRICT JSON in this exact shape — nothing else, no prose, no markdown f
 If nothing is durable, return: {"entries": []}
 
 Type rules:
-- feedback: a preference about how to work or what the user likes/dislikes ("keep decoration minimal — at most two accent colors").
+- feedback: a preference about how to work or what the user likes/dislikes ("keep decoration minimal - at most two accent colors").
 - rule: an enforceable, checkable constraint. The body MUST be exactly two lines:
   Assertion: <what must always hold in the output>
   Check: <how to verify it on a rendered artifact>`;
@@ -147,7 +147,7 @@ Type rules:
 // anthropic" without typing a model, we still want the same
 // claude-haiku-4-5 fallback the env path uses.
 //
-// Azure has no useful baseUrl default — every Azure resource has its
+// Azure has no useful baseUrl default - every Azure resource has its
 // own `https://<resource>.openai.azure.com` host, so the user must
 // supply theirs. We still emit an empty default here so a missing
 // override doesn't crash with `undefined` when accessed.
@@ -273,7 +273,7 @@ function envKeyFor(provider) {
 // hood. This is the bridge that makes "follow chat" actually mean
 // something for memory extraction in CLI mode: when the user is on
 // Claude Code (claude → anthropic) we don't want memory to silently
-// fall through to whatever OpenAI key happens to be in media-config —
+// fall through to whatever OpenAI key happens to be in media-config -
 // that produces the very confusing "openai/gpt-4o-mini" attempts the
 // user sees while they think they're "using Claude". Anything we don't
 // recognise stays unconstrained (returns null) so the legacy
@@ -400,7 +400,7 @@ async function hasUnsupportedMediaProviderConfig(projectRoot) {
 //      compatible CLIs only consult OPENAI_API_KEY (and text-capable
 //      media-config keys as a secondary fallback). This stops the
 //      legacy "claude user, openai gpt-4o-mini extracts in the
-//      background" surprise — if the matching key isn't configured,
+//      background" surprise - if the matching key isn't configured,
 //      we'd rather skip with 'no-provider' and surface that in the
 //      history than quietly run on a different vendor's key.
 //   3. BYOK chat-config snapshot → for API-mode chats (the picker is
@@ -410,7 +410,7 @@ async function hasUnsupportedMediaProviderConfig(projectRoot) {
 //      default extractor follows the chat configuration instead of
 //      falling through to env / media-config which the daemon never
 //      saw the user configure. The model deliberately overrides the
-//      user-supplied `chatProvider.model` only when none was given —
+//      user-supplied `chatProvider.model` only when none was given -
 //      memory should default to a cheaper/faster model than the chat
 //      model the user is paying for.
 //   4. (legacy fallback, only when we can't tell which CLI is in use
@@ -421,10 +421,10 @@ async function hasUnsupportedMediaProviderConfig(projectRoot) {
 //      MiniMax / AIHubMix / SenseAudio fast defaults
 //
 // The `OD_MEMORY_MODEL` env continues to override the model name across
-// (1)–(6) so power users don't lose that lever. It does NOT override the
+// (1)-(6) so power users don't lose that lever. It does NOT override the
 // memory-config provider since that one carries an explicit user choice.
 // `projectRoot` is required for the media-config path; `chatAgentId` is
-// optional but recommended — without it we fall through to the legacy
+// optional but recommended - without it we fall through to the legacy
 // unconstrained chain, which is what the daemon used to do and what
 // pre-context callers (the HTTP /api/memory/extract endpoint) still
 // expect. `chatProvider` is the BYOK chat-config snapshot threaded
@@ -474,7 +474,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
           credentialSource = 'media-config';
         }
       } catch {
-        // Ignore — we'll record a no-provider skip below.
+        // Ignore - we'll record a no-provider skip below.
       }
     }
     if (!resolvedKey) {
@@ -490,7 +490,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
       (typeof override.baseUrl === 'string' && override.baseUrl.trim())
       || defaults.baseUrl;
     if (override.provider === 'azure' && !baseUrl) {
-      // Azure with no resource URL is unrecoverable — bail rather than
+      // Azure with no resource URL is unrecoverable - bail rather than
       // logging a confusing 404 from `https:///openai/deployments/...`.
       return null;
     }
@@ -566,7 +566,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
       if (mediaProvider) return mediaProvider;
     }
     // The chat protocol is known but no key for it is available. Bail
-    // out instead of wandering — recording 'skipped: no-provider' is
+    // out instead of wandering - recording 'skipped: no-provider' is
     // strictly more useful than silently running on a foreign vendor.
     return null;
   }
@@ -574,7 +574,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
   // BYOK chat-config snapshot (path 2). The web app forwards the live
   // chat provider/key/baseUrl/apiVersion on every API-mode extraction
   // call so the daemon can run extraction against the same vendor the
-  // user is chatting with — even though the daemon never persists
+  // user is chatting with - even though the daemon never persists
   // BYOK creds itself. Use the per-protocol fast-model default instead
   // of the chat model the user is paying for, so a memory pass on a
   // big chat model (gpt-4o, claude-sonnet-4-5) silently turns into a
@@ -582,7 +582,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
   // model verbatim by setting `chatProvider.model`.
   //
   // Keyless BYOK (local vLLM / Ollama / openai-compatible servers with
-  // `requiresApiKey: false`) is also valid — the web app explicitly
+  // `requiresApiKey: false`) is also valid - the web app explicitly
   // marks it via `requiresApiKey: false` on the snapshot. We must
   // enter the BYOK branch in that case too because the alternative
   // paths below all require an env / media-config key and would fall
@@ -601,7 +601,7 @@ async function pickProvider(projectRoot, dataDir, chatAgentId, chatProvider, cha
       const baseUrl =
         (typeof chatProvider.baseUrl === 'string' && chatProvider.baseUrl.trim())
         || defaults.baseUrl;
-      // Azure with no resource URL is unrecoverable — same guard as
+      // Azure with no resource URL is unrecoverable - same guard as
       // the override path above. (Azure is never keyless.)
       if (chatProvider.provider !== 'azure' || baseUrl) {
         const explicitModel =
@@ -690,13 +690,13 @@ function renderUserPayload({ userMessage, assistantMessage, currentMemory }) {
   }
   parts.push('');
   parts.push(
-    'Return ONLY the JSON object described in the system prompt — no prose, no fences.',
+    'Return ONLY the JSON object described in the system prompt - no prose, no fences.',
   );
   return parts.join('\n');
 }
 
 // 30s ceiling. The chat run has long since finished and the user is
-// staring at the settings panel waiting for a green/red pill — leaving
+// staring at the settings panel waiting for a green/red pill - leaving
 // a half-dead fetch in flight for two minutes (the default undici
 // connect timeout) makes the failure feel even worse than it is.
 const FETCH_TIMEOUT_MS = 30_000;
@@ -738,8 +738,8 @@ function withTimeout(ms) {
 // shows `error.message`, so without unwrapping the cause the user
 // sees "fetch failed" with no clue whether DNS broke, the firewall
 // reset the connection, or the request timed out. Surface the most
-// useful piece — the OS error code if present, otherwise the cause's
-// message — appended in parentheses. We deliberately don't include
+// useful piece - the OS error code if present, otherwise the cause's
+// message - appended in parentheses. We deliberately don't include
 // both: `cause.message` typically already embeds the code (e.g.
 // "read ECONNRESET"), and showing "ECONNRESET · read ECONNRESET"
 // would just double the noise.
@@ -818,7 +818,7 @@ async function callOpenAI(provider, system, user) {
           'content-type': 'application/json',
           // Keyless BYOK endpoints (local vLLM / Ollama / openai-compatible
           // servers marked with `requiresApiKey: false`) accept requests
-          // without an Authorization header — sending `Bearer ` (empty)
+          // without an Authorization header - sending `Bearer ` (empty)
           // would cause some servers to reject the call. Only attach the
           // header when we actually have a key.
           ...(provider.apiKey
@@ -854,7 +854,7 @@ async function callOpenAI(provider, system, user) {
 // Azure OpenAI speaks the same chat-completions JSON as OpenAI, but on
 // a per-deployment URL and with `api-key:` instead of `Authorization:`.
 // `provider.model` here is the Azure deployment name (the user typed it
-// into the model field — that's what the chat picker calls "Deployment
+// into the model field - that's what the chat picker calls "Deployment
 // (Model)" too), not the underlying model family.
 async function callAzure(provider, system, user) {
   const base = String(provider.baseUrl || '').replace(/\/+$/, '');
@@ -983,7 +983,7 @@ async function callLocalCli(provider, system, user, options) {
   // reads project files, so it has no reason to run in the daemon's own cwd.
   // Falling back to process.cwd() there meant a bun-based agent (OpenCode) ran
   // its startup `bun install` in whatever directory the daemon was launched from
-  // — clobbering a pnpm workspace (dev checkout). Use a neutral temp cwd.
+  // - clobbering a pnpm workspace (dev checkout). Use a neutral temp cwd.
   const cwd =
     typeof options?.projectRoot === 'string' && options.projectRoot.trim()
       ? options.projectRoot
@@ -1113,7 +1113,7 @@ async function callLocalCli(provider, system, user, options) {
   });
 }
 
-// Tolerant JSON parse — the model occasionally wraps output in ```json
+// Tolerant JSON parse - the model occasionally wraps output in ```json
 // fences even when told not to. Strip those defensively.
 function parseEntries(rawText) {
   if (typeof rawText !== 'string') return [];
@@ -1135,8 +1135,8 @@ function parseEntries(rawText) {
     }
   }
   const list = Array.isArray(parsed?.entries) ? parsed.entries : [];
-  // Accept every type the shared contract knows about — including the new
-  // `profile` / `rule` buckets — so an LLM that proposes a verified rule or a
+  // Accept every type the shared contract knows about - including the new
+  // `profile` / `rule` buckets - so an LLM that proposes a verified rule or a
   // profile fact isn't silently discarded here.
   const validTypes = new Set(MEMORY_TYPES);
   return list
@@ -1171,13 +1171,13 @@ function toMemoryDraft(candidate) {
 }
 
 // Duplicate-turn de-duplication for chat ('llm') extraction. The daemon fires
-// the extractor from a run's child-close hook, so a turn that is re-fed —
-// retried, re-posted, or re-ground during a long build — re-enters here with the
+// the extractor from a run's child-close hook, so a turn that is re-fed -
+// retried, re-posted, or re-ground during a long build - re-enters here with the
 // same (conversation, user message, rendered reply). A failed/out-of-credits
 // attempt yields an empty reply, so the whole re-fire storm shares one signature
 // and collapses to a single pass. The signature is keyed by conversation, so an
 // identical message+reply in a different conversation is still examined, and it
-// is recorded only AFTER a provider call succeeds (see collectProposedEntries) —
+// is recorded only AFTER a provider call succeeds (see collectProposedEntries) -
 // a failed or no-provider attempt must not permanently mark a turn as seen. The
 // set is bounded, and process-lifetime only: a restart is a fine reason to
 // re-examine a turn.
@@ -1205,7 +1205,7 @@ function rememberLlmTurnSignature(signature) {
   }
 }
 
-// Test-only — reset the duplicate-turn de-dup set so specs start from a clean slate.
+// Test-only - reset the duplicate-turn de-dup set so specs start from a clean slate.
 export function __resetMemoryTurnDedupeForTests() {
   recentLlmTurnSignatures.clear();
 }
@@ -1220,7 +1220,7 @@ async function collectProposedEntries(dataDir, input, options) {
     typeof options?.systemPrompt === 'string' && options.systemPrompt.trim()
       ? options.systemPrompt.trim()
       : SYSTEM_PROMPT;
-  // BYOK chat-config snapshot — only present for API-mode calls
+  // BYOK chat-config snapshot - only present for API-mode calls
   // forwarded through `/api/memory/extract`. The daemon doesn't
   // persist BYOK creds, so this per-call signal is the *only* way
   // pickProvider() can run "Same as chat" extraction against the
@@ -1241,7 +1241,7 @@ async function collectProposedEntries(dataDir, input, options) {
     return { status: 'skipped', attemptId: null, proposed: [], existingEntries: [] };
   }
 
-  // Duplicate-turn gate — skip BEFORE picking a provider so no LLM call is spent
+  // Duplicate-turn gate - skip BEFORE picking a provider so no LLM call is spent
   // re-mining a turn already extracted. The daemon fires this from the run's
   // child-close hook, which re-runs on every retry / re-fed attempt of the same
   // turn (a long out-of-credits build re-analyzed one turn dozens of times). A
@@ -1252,8 +1252,8 @@ async function collectProposedEntries(dataDir, input, options) {
   // signature is recorded only AFTER a successful provider call (below), so a
   // failed or no-provider extraction never permanently marks the turn as seen.
   //
-  // Gate is scoped to a REAL conversation id. Callers that don't thread one —
-  // e.g. the BYOK/API-mode `/api/memory/extract` post-turn path — get no
+  // Gate is scoped to a REAL conversation id. Callers that don't thread one -
+  // e.g. the BYOK/API-mode `/api/memory/extract` post-turn path - get no
   // de-dup at all, because an empty fallback key would be shared across every
   // such caller and collapse identical (message, reply) pairs from unrelated
   // conversations into a single skipped extraction. The chat close hook that
@@ -1286,7 +1286,7 @@ async function collectProposedEntries(dataDir, input, options) {
   }
 
   // Past this point we have a provider committed and an actual model
-  // call about to happen — switch from one-shot skip records to a
+  // call about to happen - switch from one-shot skip records to a
   // running record we can update through phase transitions.
   const attemptId = startExtraction({ userMessage, kind: extractionKind, extractionOrigin });
   markProvider(attemptId, {
@@ -1303,7 +1303,7 @@ async function collectProposedEntries(dataDir, input, options) {
       listMemoryEntries(dataDir),
     ]);
   } catch {
-    // Fresh store — proceed with empty context.
+    // Fresh store - proceed with empty context.
   }
 
   const userPayload = renderUserPayload({
@@ -1327,7 +1327,7 @@ async function collectProposedEntries(dataDir, input, options) {
     } else if (provider.kind === 'google') {
       raw = await callGoogle(provider, systemPrompt, userPayload);
     } else {
-      // openai or ollama — both speak the OpenAI chat-completions
+      // openai or ollama - both speak the OpenAI chat-completions
       // wire shape, so callOpenAI handles them with just a different
       // base URL.
       raw = await callOpenAI(provider, systemPrompt, userPayload);
@@ -1358,7 +1358,7 @@ async function collectProposedEntries(dataDir, input, options) {
     return { status: 'failed', attemptId, proposed: [], existingEntries };
   }
   markProposed(attemptId, proposed.length);
-  // Provider call succeeded (even an empty extraction) — now safe to remember
+  // Provider call succeeded (even an empty extraction) - now safe to remember
   // this turn so identical re-fires skip. Recording here, not before the call,
   // means a failed / no-provider attempt can still be retried for this turn.
   if (turnSignature) rememberLlmTurnSignature(turnSignature);
@@ -1410,7 +1410,7 @@ function renderAnnotationPayload(annotations, userMessage) {
   }
   parts.push('');
   parts.push(
-    'Return ONLY the JSON object described in the system prompt — no prose, no fences.',
+    'Return ONLY the JSON object described in the system prompt - no prose, no fences.',
   );
   return parts.join('\n');
 }
@@ -1442,7 +1442,7 @@ export async function distillAnnotationsToMemory(dataDir, input, options) {
       systemPrompt: ANNOTATION_SYSTEM_PROMPT,
       source: 'annotation',
       kind: 'annotation',
-      // The distiller only deals in durable preferences/constraints — never
+      // The distiller only deals in durable preferences/constraints - never
       // let it spawn project/reference/user noise from a design critique.
       candidateFilter: (candidate) =>
         candidate.type === 'feedback' || candidate.type === 'rule',

@@ -7,7 +7,7 @@
 //     assistant text as proof that the CLI can run unless the text is an
 //     explicit model-selection error.
 //
-// Both functions persist nothing — no project, no chat record, no
+// Both functions persist nothing - no project, no chat record, no
 // media-config write. The intent is to give Settings a definite "your
 // configuration works" answer without users having to send a real chat to
 // discover that the API key, model, base URL, or CLI is broken.
@@ -113,7 +113,7 @@ export { validateBaseUrl } from '@open-design/contracts/api/connectionTest';
 // hostname that resolves to a loopback address (including `*.localhost` per
 // RFC 6761 and IPv4-mapped IPv6 loopback) follows that same carve-out.
 //
-// DNS lookup failures are *not* treated as a security signal — the caller is
+// DNS lookup failures are *not* treated as a security signal - the caller is
 // going to surface a connection error from `fetch` anyway, and turning a
 // transient resolver hiccup into a 403 would just confuse users. The sync
 // hostname check still rejected the obvious literal-IP cases before we ever
@@ -144,10 +144,10 @@ export async function validateBaseUrlResolved(
   if (sync.error || !sync.parsed) return sync;
 
   const hostname = sync.parsed.hostname.toLowerCase();
-  // When forbidLoopback is set, do NOT short-circuit on loopback — let it
+  // When forbidLoopback is set, do NOT short-circuit on loopback - let it
   // fall through to the block check (issue #5478).
   if (!options.forbidLoopback && isLoopbackApiHost(hostname)) return sync;
-  // Issue #3225 — an operator who trusts this hostname has opted it out of the
+  // Issue #3225 - an operator who trusts this hostname has opted it out of the
   // guard entirely, so skip the resolved-IP block even though it points into
   // private space. The sync check above already honored a literal-IP allowlist
   // entry; this covers the hostname-that-resolves-private case.
@@ -173,7 +173,7 @@ export async function validateBaseUrlResolved(
     const ip = String(addr.address).toLowerCase();
     // When forbidLoopback is set (asset download URLs from issue #5478),
     // a DNS name that resolves to loopback is just as dangerous as a
-    // literal loopback host — reject it instead of skipping.
+    // literal loopback host - reject it instead of skipping.
     if (isLoopbackApiHost(ip)) {
       if (options.forbidLoopback) {
         return {
@@ -204,7 +204,7 @@ export async function validateBaseUrlResolved(
  * endpoint (connection test, model discovery, BYOK chat dispatch). Identical
  * to {@link validateBaseUrlResolved} except it honors the operator's
  * `OD_ALLOWED_INTERNAL_HOSTS` allowlist (issue #3225), so an internally hosted
- * gateway on an RFC1918 address can be reached when — and only when — the
+ * gateway on an RFC1918 address can be reached when - and only when - the
  * operator opted in.
  *
  * INVARIANT: use this ONLY for user-configured endpoints. URLs that arrive
@@ -223,7 +223,7 @@ export function validateUserProviderBaseUrl(
 
 /**
  * SSRF guard for asset URLs handed back inside a successful API
- * response — typically a `data.url` or `data.video_url` that points
+ * response - typically a `data.url` or `data.video_url` that points
  * at the gateway's CDN, but is attacker-controllable when the
  * upstream gateway is compromised or misconfigured. Routes the URL
  * through `validateBaseUrlResolved` (DNS-resolve → reject loopback,
@@ -266,7 +266,7 @@ export async function assertExternalAssetUrl(
         : `invalid download url: ${validated.error ?? 'unknown reason'}`,
     };
   }
-  // Only include resolvedAddresses when present — exactOptionalPropertyTypes
+  // Only include resolvedAddresses when present - exactOptionalPropertyTypes
   // forbids assigning `undefined` to an optional property.
   if (validated.resolvedAddresses) {
     return { ok: true, resolvedAddresses: validated.resolvedAddresses };
@@ -277,7 +277,7 @@ export async function assertExternalAssetUrl(
 /**
  * Connection-time DNS validator for asset-download requests. Wraps `dns.lookup`
  * and rejects any resolved address that is loopback, RFC1918, link-local,
- * CGNAT, metadata-service, or multicast — the same predicate used during
+ * CGNAT, metadata-service, or multicast - the same predicate used during
  * pre-validation. Installed as the Undici Agent's `connect.lookup` so the
  * address we validate IS the address the socket connects to, closing the
  * DNS-rebinding / TOCTOU gap that a separate pre-validation lookup leaves open
@@ -341,7 +341,7 @@ export function getAssetValidatingDispatcher(): NonNullable<RequestInit['dispatc
  * on the literal URL (fail-closed on DNS errors), forces `redirect: 'error'`
  * (blocking a 3xx hop into private space), and routes the fetch through a
  * long-lived Undici dispatcher whose connection-time `lookup` rejects any
- * non-public address — so even if an attacker's DNS returns a public address
+ * non-public address - so even if an attacker's DNS returns a public address
  * during pre-validation and loopback at connect time, the socket is refused
  * (issue #5478).
  *
@@ -364,7 +364,7 @@ export async function assertAndFetchExternalAsset(
   if (!check.ok) throw new Error(check.error);
 
   // Determine whether the hostname is an IP literal. If so, the synchronous
-  // validation already vetted it — no DNS rebind is possible.
+  // validation already vetted it - no DNS rebind is possible.
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
@@ -376,10 +376,10 @@ export async function assertAndFetchExternalAsset(
 
   // For non-IP-literal hostnames, require validated resolved addresses. If
   // they are missing (DNS lookup failed and was caught → fail-closed in
-  // validateBaseUrlResolved), never fall back to an unpinned fetch — that
+  // validateBaseUrlResolved), never fall back to an unpinned fetch - that
   // would allow the attacker to rebind at fetch time (issue #5478).
   if (!isIpLiteral && (!check.resolvedAddresses || check.resolvedAddresses.length === 0)) {
-    throw new Error('asset URL hostname was not DNS-validated — refusing unpinned fetch');
+    throw new Error('asset URL hostname was not DNS-validated - refusing unpinned fetch');
   }
 
   // Route through the long-lived asset dispatcher whose connection-time lookup
@@ -393,20 +393,20 @@ export async function assertAndFetchExternalAsset(
   return fetchImpl(url, requestInit);
 }
 
-// Aggressive but not punitive — happy paths usually return in under 2 s.
+// Aggressive but not punitive - happy paths usually return in under 2 s.
 // Override with OD_CONNECTION_TEST_PROVIDER_TIMEOUT_MS for slow networks
 // or distant providers; invalid values fall back to the default.
 const DEFAULT_PROVIDER_TIMEOUT_MS = 12_000;
 const LOOPBACK_NO_PROXY_TOKENS = ['localhost', '127.0.0.1', '[::1]'] as const;
 // CLI boot time is dominated by adapter auth/session restore; the heavy
-// adapters (Codex, Cursor Agent) regularly take 5–10 s on a cold first
+// adapters (Codex, Cursor Agent) regularly take 5-10 s on a cold first
 // run, so 45 s leaves headroom without making a hung child invisible.
 // Override with OD_CONNECTION_TEST_AGENT_TIMEOUT_MS.
 const DEFAULT_AGENT_TIMEOUT_MS = 45_000;
 const AGENT_STDOUT_DRAIN_MS = 25;
 // Node's `setTimeout` silently clamps any delay above this to ~1 ms
 // (with a TimeoutOverflowWarning), so an override meant to *extend*
-// the budget — e.g. `OD_CONNECTION_TEST_AGENT_TIMEOUT_MS=3000000000` —
+// the budget - e.g. `OD_CONNECTION_TEST_AGENT_TIMEOUT_MS=3000000000` -
 // would actually make every connection test fail almost immediately.
 // Reject above the cap so the safety timeout cannot be accidentally
 // disarmed by an oversized env value.
@@ -1112,8 +1112,8 @@ function extractProviderErrorDetail(data: unknown, rawText: string): string {
  * undici reports DNS/TLS/connect failures as a `TypeError` whose message is the
  * generic `fetch failed`, with the actual reason only on `cause.code`. Since
  * `networkErrorToKind` maps just an allowlist to `invalid_base_url`, everything
- * else — `DEPTH_ZERO_SELF_SIGNED_CERT`, `SELF_SIGNED_CERT_IN_CHAIN`,
- * `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `EPROTO` — became `kind: unknown` with
+ * else - `DEPTH_ZERO_SELF_SIGNED_CERT`, `SELF_SIGNED_CERT_IN_CHAIN`,
+ * `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `EPROTO` - became `kind: unknown` with
  * `detail: "fetch failed"`, i.e. a failure the user sees and we cannot name.
  * That is the bulk of the 776 unattributed connection tests / 196 devices a day.
  *
@@ -1830,7 +1830,7 @@ export async function testProviderConnection(
     try {
       detailText = await response.text();
     } catch {
-      // Ignore — we still report the status code.
+      // Ignore - we still report the status code.
     }
     const { kind, detail } = classifyProviderHttpFailure(
       input.protocol,
@@ -2046,7 +2046,7 @@ export function createAgentSink(): AgentSink {
       }
       return;
     }
-    // Ignore 'start', 'status', 'end', 'tool_use', 'thinking', etc. —
+    // Ignore 'start', 'status', 'end', 'tool_use', 'thinking', etc. -
     // they don't carry assistant prose.
   };
 
@@ -2361,7 +2361,7 @@ async function testAgentConnectionInternal(
 
   const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'od-conn-test-'));
   // Antigravity's print mode is silent on stdout/stderr for both
-  // missing-auth and quota-exhausted failures — it exits 0 without
+  // missing-auth and quota-exhausted failures - it exits 0 without
   // echoing the upstream error. The only place that failure shape
   // surfaces is agy's `--log-file`, so hand the smoke test a temp log
   // path under `tempDir` (cleaned up with the rest of the dir) and let
@@ -2410,7 +2410,7 @@ async function testAgentConnectionInternal(
   // into the response so consumers don't have to scrape `detail` to
   // know how far the test got. Phase is mutated at the points where
   // the daemon meaningfully advances (just before spawn, when the
-  // child first produces stdout, etc.) — not on every event.
+  // child first produces stdout, etc.) - not on every event.
   let phase: ConnectionTestPhase = 'binary_resolution';
   const buildDiagnostics = (
     overrides: Partial<ConnectionTestDiagnostics> = {},
@@ -2418,7 +2418,7 @@ async function testAgentConnectionInternal(
     const rawStderr = sink.getStderrTail().trim();
     const rawStdout = sink.getRawStdoutTail().trim();
     // `exactOptionalPropertyTypes: true` means we can't pass `undefined`
-    // to an optional field directly — conditionally spread instead so
+    // to an optional field directly - conditionally spread instead so
     // empty values just don't appear in the response.
     return {
       phase,
@@ -2671,7 +2671,7 @@ async function testAgentConnectionInternal(
     const auth = await probeAgentAuthStatus(def, executableResolution.launchPath, env);
     if (auth?.status === 'missing') {
       // Preflight auth probe runs after binary resolution but before the
-      // smoke spawn — phase is still 'binary_resolution'. The smoke
+      // smoke spawn - phase is still 'binary_resolution'. The smoke
       // sink is empty here (no spawn happened), so the probe itself is
       // the only source of stderr/stdout/exit context. Fold what the
       // probe captured into the diagnostics block; `...overrides` in
@@ -2853,19 +2853,19 @@ async function testAgentConnectionInternal(
       // server.ts: fold agy's `--log-file` tail into the classifier
       // input and route to the specific auth / quota result so Settings
       // can show actionable re-authentication or quota guidance. Only
-      // runs when agy produced no visible text — a healthy `ok` reply
+      // runs when agy produced no visible text - a healthy `ok` reply
       // returns above before reaching here.
       if (input.agentId === 'antigravity' && !visibleText) {
         let combinedDetail = `${stderrTail}\n${rawStdoutTail}`;
         if (antigravityLogFilePath) {
           try {
             const logContent = await fsp.readFile(antigravityLogFilePath, 'utf8');
-            // Keep the last 8 KB — quota / auth lines land near the tail,
+            // Keep the last 8 KB - quota / auth lines land near the tail,
             // after the spawn / model-config preamble.
             combinedDetail = `${combinedDetail}\n${logContent.slice(-8192)}`;
           } catch {
             // Missing log file (agy never wrote it, read-only tmp, etc.)
-            // is fine — fall through to the clean-exit auth fallback below.
+            // is fine - fall through to the clean-exit auth fallback below.
           }
         }
         const antigravityAuth = classifyAgentAuthFailure('antigravity', combinedDetail);
@@ -3090,7 +3090,7 @@ async function testAgentConnectionInternal(
     return await resultFromChildExit(winner);
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    // Outer catch — the failure may have happened at any phase between
+    // Outer catch - the failure may have happened at any phase between
     // binary_resolution and output_parse, so stamp the current phase as
     // observed. buildDiagnostics is defined in the enclosing scope and
     // is safe to call here.
@@ -3113,7 +3113,7 @@ async function testAgentConnectionInternal(
       try {
         child.kill('SIGTERM');
       } catch {
-        // Already gone — nothing to do.
+        // Already gone - nothing to do.
       }
       const closedAfterTerm = childExit
         ? await Promise.race([
@@ -3125,7 +3125,7 @@ async function testAgentConnectionInternal(
         try {
           child.kill('SIGKILL');
         } catch {
-          // Already gone — nothing to do.
+          // Already gone - nothing to do.
         }
         if (childExit) {
           await Promise.race([

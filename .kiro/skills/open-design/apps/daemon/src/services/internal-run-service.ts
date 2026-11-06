@@ -14,7 +14,7 @@ import type { RunAnalyticsFacts } from './run-analytics-lifecycle.js';
  * used to be installed by whichever caller remembered to do it, and four
  * daemon-internal Run creators silently reported nothing (OPEND-2365). Making
  * the facts part of the start contract means a new caller has to state its
- * analytics identity — including stating that it has none — instead of dropping
+ * analytics identity - including stating that it has none - instead of dropping
  * the Run. The type is owned by the lifecycle so the choke point and the
  * lifecycle cannot drift apart.
  */
@@ -203,7 +203,7 @@ export function createInternalRunCreationService<
 
       // Before the child is spawned: `run_created` describes a Run that has
       // been accepted, and the terminal half must already be attached when the
-      // Run settles — including a Run that fails on its first tick.
+      // Run settles - including a Run that fails on its first tick.
       deps.analyticsLifecycle.install({ ...analytics, run });
       return deps.runs.start(run, () => {
         if (!deps.coordinateStart) return starter(run);

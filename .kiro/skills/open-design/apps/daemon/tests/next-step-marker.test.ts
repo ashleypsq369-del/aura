@@ -8,7 +8,7 @@ import { createNextStepMarkerStripper } from '../src/next-step-marker.js';
  *
  * 两条硬要求都是用户明确提过的:
  *   ① 流式切成两半时,**半截字符一个都不许上屏**;
- *   ② **不吞用户的字** —— 攒着的半截最终不是标记就原样吐回。
+ *   ② **不吞用户的字** -- 攒着的半截最终不是标记就原样吐回。
  *
  * 第三条来自这个标记自己的语义:点一条建议 = 把那句话当用户消息发出去,
  * 所以裸标记会被内容伪造。key 对不上的一律**只剥离、不采纳**。
@@ -33,7 +33,7 @@ function feed(
   return { visible: frames.join(''), frames };
 }
 
-/** 每一个可能的切点都切一遍 —— SSE 想切哪儿切哪儿 */
+/** 每一个可能的切点都切一遍 -- SSE 想切哪儿切哪儿 */
 function everyCut(text: string): string[][] {
   const out: string[][] = [];
   for (let i = 1; i < text.length; i += 1) out.push([text.slice(0, i), text.slice(i)]);
@@ -83,7 +83,7 @@ describe('解析', () => {
     assert.deepEqual(seen, [['把 A & B 合并', '补一个 "About" 页面']]);
   });
 
-  test('模型给多于三条时只取前三条 —— 稿子固定三行', () => {
+  test('模型给多于三条时只取前三条 -- 稿子固定三行', () => {
     const { s, seen } = make();
     feed(s, [
       `<od-next key="${KEY}">\n一\n二\n三\n四\n五\n</od-next>`,
@@ -97,7 +97,7 @@ describe('解析', () => {
     assert.deepEqual(seen, [['加一页订单列表', '补深色模式']]);
   });
 
-  test('模型一条都没给(块是空的)时不发事件 —— 空壳不如不出', () => {
+  test('模型一条都没给(块是空的)时不发事件 -- 空壳不如不出', () => {
     const { s, seen } = make();
     feed(s, [`<od-next key="${KEY}">\n\n</od-next>`]);
     assert.deepEqual(seen, []);
@@ -109,7 +109,7 @@ describe('解析', () => {
     assert.deepEqual(seen, [['再加一页订单列表', '把商品卡换成两列布局']]);
   });
 
-  test('超长的一行被丢掉 —— 一行装不下就说明模型理解错了', () => {
+  test('超长的一行被丢掉 -- 一行装不下就说明模型理解错了', () => {
     const { s, seen } = make();
     const long = '啊'.repeat(200);
     feed(s, [`<od-next key="${KEY}">\n${long}\n补一套深色模式\n</od-next>`]);
@@ -228,14 +228,14 @@ describe('不吞用户的字', () => {
  *
  * 关键在 `tagEnd()`:它是**认引号**的。`value="` 的右引号永远没来,于是扫描器
  * 把下一个标签的 `key="` 的引号当成了它的闭合,之后每一个 `>`(包括 `/>`)都被
- * 当作「引号里的字符」跳过 —— 永远返回 -1。缓冲一路涨到 258 > MAX_OPEN_TAG_HOLD(256),
+ * 当作「引号里的字符」跳过 -- 永远返回 -1。缓冲一路涨到 258 > MAX_OPEN_TAG_HOLD(256),
  * 走进「一直没闭合就当正文放行」那条分支,把**整条半截标签**原样吐上屏并落库。
  *
  * 两条硬要求里第一条(半截标记一个字符都不许上屏)在这里是被违反的。
  */
 describe('W19:开标签自己没写完', () => {
   const HALF_TAG = `<od-next key="${KEY}" value="把单页扩展为包含案例`;
-  /** 重连后模型重写的结论,和断流前那份措辞不同 —— 原文照抄 */
+  /** 重连后模型重写的结论,和断流前那份措辞不同 -- 原文照抄 */
   const AFTER_RECONNECT =
     `\n<od-done key="${KEY}"/>\n已完成 [AI 立项决策备忘录](</p/ai-decision-memo.html>)。\n\n`
     + '采用 Kami 羊皮纸视觉系统，包含三项立项标准、最低证据清单及评审建议；'
@@ -285,7 +285,7 @@ describe('W19:属性扫描不变量', () => {
   }
 
   const PROSE = '交付完成。已适配桌面、移动端和 A4 打印。';
-  /** 各种写坏的开标签 —— 引号没闭、属性截断、跨行、值里带 `<` */
+  /** 各种写坏的开标签 -- 引号没闭、属性截断、跨行、值里带 `<` */
   const BROKEN = [
     `<od-next key="${KEY}" value="把单页扩展为包含案例`,
     `<od-next key="${KEY}" value=`,
@@ -323,7 +323,7 @@ describe('W19:属性扫描不变量', () => {
             `半截标签上屏 (${JSON.stringify(broken.slice(0, 40))}): ${JSON.stringify(frame.slice(0, 80))}`,
           );
         }
-        // ② 标记以外的正文必须原样还回来 —— 前后各一份
+        // ② 标记以外的正文必须原样还回来 -- 前后各一份
         assert.equal(
           visible.startsWith(PROSE),
           true,

@@ -1319,7 +1319,7 @@ const DAEMON_RESOURCE_ROOT = resolveDaemonResourceRoot({
     process.env.OD_INSTALLATION_DIR,
   ],
 });
-// Built web app lives in `out/` — that's where Next.js writes the static
+// Built web app lives in `out/` - that's where Next.js writes the static
 // export configured in next.config.ts. The folder name used to be `dist/`
 // when this project shipped with Vite; the daemon serves whatever the
 // frontend toolchain emits, no further config needed.
@@ -1459,7 +1459,7 @@ migrateLegacyDataDirSync({
   dataDir: RUNTIME_DATA_DIR,
 });
 // Immutable chat-artifact snapshot storage. Derived from the SINGLE resolved
-// data root per the repository "Daemon data directory contract" — the store
+// data root per the repository "Daemon data directory contract" - the store
 // itself has no default and would throw if handed anything else.
 const CHAT_ARTIFACT_BLOBS = createChatArtifactBlobStore({ dataDir: RUNTIME_DATA_DIR });
 const CHAT_ARTIFACT_QUOTA = resolveChatArtifactQuota(process.env);
@@ -1498,7 +1498,7 @@ const ALL_SKILL_LIKE_ROOTS = [
   SKILLS_DIR,
   DESIGN_TEMPLATES_DIR,
 ];
-// Global OD Library data root — owned, content-addressed assets captured by
+// Global OD Library data root - owned, content-addressed assets captured by
 // the clipper / `od library import`. Derived from RUNTIME_DATA_DIR per the
 // daemon data directory contract.
 const LIBRARY_DIR = path.join(RUNTIME_DATA_DIR, 'library');
@@ -1520,7 +1520,7 @@ let routineService = null;
 const mcpPendingAuth = new PendingAuthCache();
 
 /**
- * Resolve the daemon's public base URL — the origin the user's browser
+ * Resolve the daemon's public base URL - the origin the user's browser
  * (or the OAuth provider) reaches us at. Order of precedence:
  *
  *   1. `OD_PUBLIC_BASE_URL` env var. Cloud and packaged-electron deployments
@@ -1529,7 +1529,7 @@ const mcpPendingAuth = new PendingAuthCache();
  *      local dev and most reverse-proxy setups (Express respects
  *      `trust proxy` so X-Forwarded-* headers are honored).
  *
- * The OAuth callback URI is derived from this — it MUST be reachable from
+ * The OAuth callback URI is derived from this - it MUST be reachable from
  * the user's browser, otherwise the redirect after auth lands on
  * ERR_CONNECTION_REFUSED. Misconfiguration is loud: the OAuth provider
  * will reject `redirect_uri` mismatches.
@@ -1554,7 +1554,7 @@ function mcpOAuthCallbackUrl(req) {
  * authorization-code exchange persisted alongside the token. Refresh tokens
  * are bound (RFC 6749 §6) to the client that received them, so we MUST
  * refresh against the same `tokenEndpoint` / `clientId` / `clientSecret`
- * pair — re-running discovery with a different redirect URI would risk
+ * pair - re-running discovery with a different redirect URI would risk
  * registering a new client_id that the upstream then rejects the refresh
  * for. Tokens persisted before that context was recorded can't be safely
  * refreshed; the caller treats `null` as "needs reconnect".
@@ -1603,7 +1603,7 @@ const workspaceEventSinks =
   new Map<string, Set<(payload: unknown) => void>>();
 // Per-chat-run handles, keyed by runId. Lets non-stream side effects
 // (live-artifact create, project events) reach back into the chat
-// run's local state — currently used by the artifact quiet-period
+// run's local state - currently used by the artifact quiet-period
 // shortcut (#1451) so a successful artifact registration can shorten
 // the inactivity watchdog without the chat path having to poll a
 // store.
@@ -1831,7 +1831,7 @@ const PROMPT_TEMP_FILE = () =>
   '.od-prompt-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.md';
 const promptFileBootstrap = (fp) =>
   `Your full instructions are stored in the file: ${fp.replace(/\\/g, '/')}. ` +
-  'Open that file first and follow every instruction in it exactly — ' +
+  'Open that file first and follow every instruction in it exactly - ' +
   'it contains the system prompt, design system, skill workflow, and user request. ' +
   'Do not begin your response until you have read the entire file.';
 
@@ -1902,8 +1902,8 @@ export function createAgentRuntimeEnv(
     }
   }
 
-  // Ensure the node binary directory is on PATH so agent sub-processes —
-  // in particular npm .cmd shims on Windows that run `"node" script.js` —
+  // Ensure the node binary directory is on PATH so agent sub-processes -
+  // in particular npm .cmd shims on Windows that run `"node" script.js` -
   // can find the same node binary that runs the daemon even when the daemon
   // was launched with a full path to node and the directory was not on PATH.
   const nodeBinDir = path.dirname(nodeBin);
@@ -1912,7 +1912,7 @@ export function createAgentRuntimeEnv(
     // than 'PATH'. Locate the key case-insensitively so we read and write the
     // same entry that child_process.spawn consults. If we blindly write a new
     // 'PATH' key alongside an existing 'Path', Node's case-insensitive env
-    // de-duplication on Windows lets the new key win — dropping all inherited
+    // de-duplication on Windows lets the new key win - dropping all inherited
     // directories (git, npm, agent shims, etc.) from the child's search path.
     const pathKey = Object.keys(env).find((k) => k.toLowerCase() === 'path') ?? 'PATH';
     const existingPath = typeof env[pathKey] === 'string' ? (env[pathKey] as string) : '';
@@ -2052,13 +2052,13 @@ const ASK_USER_SCAN_CAP = 256 * 1024;
 //     so finish() can judge whether declared work was left unfinished;
 //   - a turn-terminal event cut off by max_tokens sets run.truncatedMidTurn, so
 //     a truncated generation is flagged incomplete regardless of its todos.
-// Never keys off a mid-turn `tool_use` pause — only turn_end / usage terminals.
+// Never keys off a mid-turn `tool_use` pause - only turn_end / usage terminals.
 //
 // Visible TEXT is deliberately not folded here. It has a second emit path that
 // never reaches this function: `emitGuardedTextDelta` sends its guarded delta
 // straight to `send('agent', …)` (json-event-stream / copilot / ACP all go that
 // way), so a text signal folded here would silently miss whole runtime families.
-// `run.askUserScanText` is therefore accumulated inside `send` itself — the one
+// `run.askUserScanText` is therefore accumulated inside `send` itself - the one
 // sink both paths pass through.
 function captureRunWorkCompletenessSignals(run, ev) {
   if (!run || !ev || typeof ev !== 'object') return;
@@ -2214,7 +2214,7 @@ function formAnswerTransitionForCurrentPrompt(currentPrompt) {
     '## Latest user turn - form answers submitted',
     trimmed,
     '',
-    // Keep the wording in lock-step with main — the stronger answered-form
+    // Keep the wording in lock-step with main - the stronger answered-form
     // dedupe now lives in the system-prompt
     // `FORM_ANSWERED_SYSTEM_OVERRIDE` block, which every plain /
     // stream-json adapter sees. Diverging the
@@ -2240,7 +2240,7 @@ function formAnswerTransitionForCurrentPrompt(currentPrompt) {
  *
  * Only ever rendered for a turn whose message is a continuation directive AND
  * whose stored session the daemon refused (see `resolveResumeContinuationSeed`).
- * Absent for every other turn, so no existing prompt moves by a byte — and so
+ * Absent for every other turn, so no existing prompt moves by a byte - and so
  * no upstream cached prefix moves either.
  */
 export function renderResumeContinuationContext(
@@ -2256,7 +2256,7 @@ export function renderResumeContinuationContext(
     '',
     request,
     '',
-    'Any files it already wrote are still in the project — inspect them before'
+    'Any files it already wrote are still in the project - inspect them before'
       + ' redoing work.',
   ].join('\n');
 }
@@ -2275,7 +2275,7 @@ export function composeChatUserRequestForAgent(
      */
     resumeContinuationOriginalRequest?: string | null;
     /**
-     * The task list an earlier turn of this conversation last declared — the
+     * The task list an earlier turn of this conversation last declared - the
      * WHOLE snapshot, finished rows included (see
      * `latestTodoWriteInputForConversation` + `recalledTodosFromTodoWriteInput`).
      * `renderUnfinishedTodoRecall` owns the question of whether any of it is
@@ -2296,7 +2296,7 @@ export function composeChatUserRequestForAgent(
 ) {
   // When the adapter resumes its own session, the
   // daemon-rendered `## user` / `## assistant` transcript is a duplicate
-  // of what the upstream CLI already has in memory — and the embedded
+  // of what the upstream CLI already has in memory - and the embedded
   // copy carries the literal `<question-form>` markup the agent emitted
   // on turn 1, which the model then re-emits on turn 2. Send only the
   // latest user turn (`currentPrompt`) in that case; the external runtime's
@@ -2337,7 +2337,7 @@ export function composeChatUserRequestForAgent(
     parts.push(transition, '## Full conversation transcript', body);
   }
   // With no recall block this is byte-for-byte the pre-feature result in all
-  // three branches — a conversation with nothing outstanding cannot shift a
+  // three branches - a conversation with nothing outstanding cannot shift a
   // single prompt byte (and so cannot move an upstream cache boundary).
   return parts.join('\n\n');
 }
@@ -2656,7 +2656,7 @@ function createProjectPreviewScopeRegistry() {
       // `expiresAt` floats as the client renews; anything embedded in a served
       // body must not, or the same artifact comes back with different bytes and
       // the iframe reloads. The host only needs this as the seed for its first
-      // renewal — every renewal after that is driven by the renew response.
+      // renewal - every renewal after that is driven by the renew response.
       documentExpiresAt: expiresAt,
     });
     return scope;
@@ -2872,7 +2872,7 @@ function rewriteKnownAgentStreamError(agentId, message, failureText = '') {
  * The runtime identity a failure ships as structured data: the runtime's
  * display name, which is the one fact the localized copy interpolates.
  *
- * Read straight off the already-resolved `RuntimeAgentDef` — a pure lookup on
+ * Read straight off the already-resolved `RuntimeAgentDef` - a pure lookup on
  * a value this run resolved before it spawned, so naming the failure adds no
  * work and no waiting to the failure path.
  *
@@ -2945,7 +2945,7 @@ const pluginUpload = multer({
   },
 });
 
-// Figma `.fig` import — memory storage so the offline decoder gets the raw
+// Figma `.fig` import - memory storage so the offline decoder gets the raw
 // bytes without a temp-file round-trip. The decoder unzips + kiwi-decodes
 // in-process and writes the snapshot under the project cwd.
 const figmaUpload = multer({
@@ -2961,7 +2961,7 @@ const pluginShareTaskStore = createPluginShareTaskStore({
 });
 
 // Project-scoped multi-file upload. Lands files directly in the project
-// folder (flat — same shape FileWorkspace expects), so the composer's
+// folder (flat - same shape FileWorkspace expects), so the composer's
 // pasted/dropped/picked images become referenceable filenames the agent
 // can Read or @-mention without any cross-folder gymnastics.
 // Bridge between the multer upload-storage destination (built at module
@@ -3031,7 +3031,7 @@ const projectUpload = multer({
       cb(null, uniqueUploadFileName(uploadDir, safe, reserved));
     },
   }),
-  limits: { fileSize: 200 * 1024 * 1024 },  // 200MB — covers the largest design assets we expect (PPTX/PDF/raw images)
+  limits: { fileSize: 200 * 1024 * 1024 },  // 200MB - covers the largest design assets we expect (PPTX/PDF/raw images)
 });
 
 function uniqueUploadFileName(uploadDir, safeName, reserved) {
@@ -3164,7 +3164,7 @@ export type DesktopFrameRenderer = (input: DesktopRenderFramesInput) => Promise<
 export type DesktopSlideRenderer = (input: DesktopRenderSlidesInput) => Promise<DesktopRenderSlidesResult>;
 export type DesktopArtifactExporter = (input: DesktopExportArtifactInput) => Promise<DesktopExportArtifactResult>;
 
-// Loosely typed shape — we only access `namespace`, `base`, `mode`, and
+// Loosely typed shape - we only access `namespace`, `base`, `mode`, and
 // `source` from the runtime context when building the diagnostics export.
 // Anything richer would force a dependency from server.ts into the sidecar
 // package, which the boundary checks explicitly forbid.
@@ -3232,14 +3232,14 @@ export async function startServer({
     process.env.OD_WORKSPACE_AUTHORITY_CACHE_MODE,
   );
 
-  // Plan §3.K1 / spec §15.7 — bound-API-token guard.
+  // Plan §3.K1 / spec §15.7 - bound-API-token guard.
   //
   // The daemon refuses to bind to a public interface unless an
   // OD_API_TOKEN is set. This is the spec §16 Phase 5 safety floor:
   // a hosted operator can no longer accidentally publish an unsecured
   // daemon by setting OD_BIND_HOST=0.0.0.0 without a token.
   //
-  // Loopback hosts (127.0.0.1 / ::1 / localhost) are always allowed —
+  // Loopback hosts (127.0.0.1 / ::1 / localhost) are always allowed -
   // the desktop / dev flow remains unchanged. Setting OD_API_TOKEN is
   // purely additive: when present, every /api/* request must carry a
   // matching Bearer token or browser Basic credentials (loopback origins
@@ -3281,7 +3281,7 @@ export async function startServer({
   installRouteRegistrationGuard(app);
   // Clipper page captures are self-contained HTML with inlined images plus a
   // Figma IR, which for an image-heavy site (The Economist, news front pages)
-  // runs to tens of MB — far past a normal JSON body. Give the ingest route a
+  // runs to tens of MB - far past a normal JSON body. Give the ingest route a
   // dedicated generous limit so a full-page capture doesn't 413; the rest of the
   // API stays at the conservative 4mb. Registered first so this parser claims
   // the ingest body before the global one (express.json is a no-op once a body
@@ -3289,13 +3289,13 @@ export async function startServer({
   app.use('/api/library/ingest', express.json({ limit: '128mb' }));
   // Brand extract-from-html carries the full rendered page DOM (+ collected CSS)
   // the web read out of the in-app browser tab after the user cleared an anti-bot
-  // wall — well past 4mb for image/markup-heavy sites. Give it a dedicated limit
+  // wall - well past 4mb for image/markup-heavy sites. Give it a dedicated limit
   // (registered before the global parser so it claims the body first).
   app.use('/api/brands/:id/extract-from-html', express.json({ limit: '32mb' }));
   // A chat-scroll forensics capture carries the chat log's full `outerHTML`,
   // and the envelope carries two of them (`live` + `retained`), each truncated
   // renderer-side at 8MB. Registered here for the same reason as the two above
-  // — the route itself is declared far below, and by then the global parser has
+  // - the route itself is declared far below, and by then the global parser has
   // already read and refused the body. The endpoint exists to collect the
   // longest transcripts, so leaving it on the 4mb ceiling made it blind to
   // exactly the incidents it was built for, and silently: the uploader reports
@@ -3304,7 +3304,7 @@ export async function startServer({
   app.use(express.json({ limit: '4mb', verify: captureJsonBodySize }));
   const projectPreviewScopes = createProjectPreviewScopeRegistry();
 
-  // Plan §3.K1 — API-token middleware.
+  // Plan §3.K1 - API-token middleware.
   //
   // Active only when OD_API_TOKEN is set and API auth is not disabled.
   // Loopback origins skip the check (the desktop UI / local CLI never carry
@@ -3381,7 +3381,7 @@ export async function startServer({
   }
 
   const designSystemServices = createDesignSystemServerServices({
-    // `db` (below) is not initialized yet at this point in `startServer` —
+    // `db` (below) is not initialized yet at this point in `startServer` -
     // pass a getter so `listAllSkills`'s workspace filter reads it lazily,
     // once the first request that needs it actually arrives.
     getDb: () => db,
@@ -3700,7 +3700,7 @@ export async function startServer({
   // snapshot store must degrade the cards, not the daemon.
   //
   // The period defaults to 0 (boot-only, today's behaviour) because no period
-  // has been ruled on yet — see `resolveChatArtifactMaintenanceIntervalMs`.
+  // has been ruled on yet - see `resolveChatArtifactMaintenanceIntervalMs`.
   const chatArtifactMaintenance = startChatArtifactMaintenance({
     db,
     blobs: CHAT_ARTIFACT_BLOBS,
@@ -3723,11 +3723,11 @@ export async function startServer({
   }
 
   let bundledMarketplaceEntries = [];
-  // Plan §3.I3 / spec §23.3.5 — register every plugin under
+  // Plan §3.I3 / spec §23.3.5 - register every plugin under
   // <resourceRoot>/plugins/_official/** in packaged runs, or
   // <projectRoot>/plugins/_official/** in workspace runs, as bundled plugins. The walker
   // is idempotent (upserts on every boot) so a daemon upgrade rotates
-  // the bundled set in lockstep with the code. ENOENT is silent —
+  // the bundled set in lockstep with the code. ENOENT is silent -
   // running the daemon outside the dev tree just skips this step.
   try {
     const result = await registerBundledPlugins({
@@ -3813,7 +3813,7 @@ export async function startServer({
   // Memory hygiene: one-time removal of entries the retired chat
   // auto-extraction pipelines wrote (regex-pack artifacts + chat-form
   // residue in user_profile). Marker-gated inside, so this is a no-op on
-  // every boot after the first. Best-effort — memory cleanup must never
+  // every boot after the first. Best-effort - memory cleanup must never
   // block the daemon from serving.
   try {
     const memoryCleanup = await runAutoExtractionCleanup(RUNTIME_DATA_DIR);
@@ -4176,8 +4176,8 @@ export async function startServer({
    *
    * Envelope double-write (spec 9.2): `metadata.json` stays the only thing
    * `listDesignSystems`'s filter reads, but a claimed system also gets a row
-   * in the generic `workspace_resources` table — the same table plugin/skill
-   * already bind into — so design systems stop being the one resource type
+   * in the generic `workspace_resources` table - the same table plugin/skill
+   * already bind into - so design systems stop being the one resource type
    * with zero rows there. Both writes happen from this single call site, so
    * they can never drift apart.
    */
@@ -4227,7 +4227,7 @@ export async function startServer({
   const velaCliWorkspaceTeamProjectCatalog =
     createVelaCliTeamProjectCatalogClientFromEnv();
   // Generic stale-while-revalidate cache (with an `invalidate()` escape hatch)
-  // — see collab/swr-cache.ts.
+  // - see collab/swr-cache.ts.
   // Cache the workspace-scoped team catalog behind /api/workspaces/:id/projects
   // ?view=… (the "All projects"/"Recent" pages) the same way. The wrapper keeps
   // the verified request principal in both its key and its upstream call, so
@@ -4371,7 +4371,7 @@ export async function startServer({
   ) {
     if (!workspaceId) return;
     // Where a background upload got to is sync bookkeeping, not a change to the
-    // project — see SYNC_KEEPS_UPDATED_AT.
+    // project - see SYNC_KEEPS_UPDATED_AT.
     updateWorkspaceProject(db, workspaceId, projectId, {
       syncState,
       updatedAt: SYNC_KEEPS_UPDATED_AT,
@@ -4425,8 +4425,8 @@ export async function startServer({
         };
     const persist = db.transaction(() => {
       // `rebindWorkspaceProject`, not `updateWorkspaceProject`: the row this
-      // event is about can predate the share — a personal draft the user made
-      // before ever joining the team it just got shared into — so it sits under
+      // event is about can predate the share - a personal draft the user made
+      // before ever joining the team it just got shared into - so it sits under
       // an unrelated, stale workspace_id. Asking for an update scoped to the
       // NEW workspaceId would find nothing and silently never migrate it.
       rebindWorkspaceProject(db, input.projectId, { ...patch, workspaceId });
@@ -4650,7 +4650,7 @@ export async function startServer({
         // gate, and each one is load-bearing:
         //
         // - the binding must be this workspace's, active, and created by the
-        //   member we are resolving for — a publication slug alone says which
+        //   member we are resolving for - a publication slug alone says which
         //   share, not that this daemon's user may read into it;
         // - a comment with no slug (written before the field existed) resolves
         //   to null rather than to whatever is published now. That fallback is
@@ -4736,7 +4736,7 @@ export async function startServer({
             .find((project) => project.projectId === projectId)
             ?.ownerMemberId ?? null,
         workspaceContext: collab.workspaceContext,
-        // Only poll comments for projects the UI is actively viewing — those
+        // Only poll comments for projects the UI is actively viewing - those
         // have a live `/api/projects/:id/events` SSE subscriber, so their id is
         // a key in activeProjectEventSinks. Polling every local project each 5s
         // cycle spawned one `vela collab comment pull` subprocess per project
@@ -4911,7 +4911,7 @@ export async function startServer({
    * display reads use stale-while-revalidate caches, so for up to one TTL
    * the list can still carry the pre-transition team row.
    * That is long enough to paint the "shared" badge back onto a project the
-   * user just made private — the unshare looks like it silently reverted. It
+   * user just made private - the unshare looks like it silently reverted. It
    * would also let the publish watcher re-adopt the project as owned-and-
    * shared and republish it.
    *
@@ -5024,7 +5024,7 @@ export async function startServer({
       // still registered to its owner, so it must keep counting as "remote
       // lists it" here even though the display list hides it. Judging this
       // dep by the display read demoted a teammate's sync-failed mirror into
-      // a self-attributed personal draft (recvqzjnshIlOe) — see
+      // a self-attributed personal draft (recvqzjnshIlOe) - see
       // `reconcilerRemoteTeamProjects`'s invariant comment. Both sources run
       // through `withoutLocallyUnsharedProjects` so a row this member just
       // moved back to personal cannot be re-bound out from under the move
@@ -5066,7 +5066,7 @@ export async function startServer({
           },
         });
       },
-      // Materialization gate for the bind direction — see the dep's doc
+      // Materialization gate for the bind direction - see the dep's doc
       // comment in workspace-projects-reconciler.ts. `getProject` is the same
       // `projects`-table read `workspace_projects`' FOREIGN KEY points at.
       hasLocalProject: (projectId) => getProject(db, projectId) != null,
@@ -5110,13 +5110,13 @@ export async function startServer({
       },
       applyBind: (projectId, patch) => {
         // `rebindWorkspaceProject` only corrects an EXISTING row (it never
-        // inserts — see its own doc comment in db.ts); a project this daemon
+        // inserts - see its own doc comment in db.ts); a project this daemon
         // has never locally bound at all needs `ensureWorkspaceProject`
         // instead, seeded with the same patch so the fresh row is correct on
         // arrival.
         //
         // Reconciling a binding against B's catalog changes no project content,
-        // so it must not restamp "last changed" — see SYNC_KEEPS_UPDATED_AT.
+        // so it must not restamp "last changed" - see SYNC_KEEPS_UPDATED_AT.
         const synced = { ...patch, updatedAt: SYNC_KEEPS_UPDATED_AT };
         if (rebindWorkspaceProject(db, projectId, synced)) return;
         ensureWorkspaceProject(db, { projectId, ...synced });
@@ -5569,7 +5569,7 @@ export async function startServer({
   // `createSqlitePublicFilePublicationStore` call above, next to the
   // design-system backfill). Re-declaring it here is what a merge produced when
   // two lanes each added their own binding in different hunks: git saw no
-  // conflict, and `tsc` did not object — only esbuild did, at transform time.
+  // conflict, and `tsc` did not object - only esbuild did, at transform time.
   const shareBindingOutbox = createShareBindingOutbox(db);
   const retryShareBindingsAtStartup = createShareBindingStartup(shareBindingOutbox, {
     publications: publicFilePublicationStore,
@@ -5610,7 +5610,7 @@ export async function startServer({
     // Recording a publication and queueing its existing comments for backfill
     // is ONE transaction. Without this the route falls back to a bare
     // `publicationStore.set`, which records the share and silently drops the
-    // backfill intent — the publish succeeds, and the comments the person
+    // backfill intent - the publish succeeds, and the comments the person
     // already wrote never reach the share page.
     //
     // The recorder also refuses to proceed without a publication witness
@@ -5688,7 +5688,7 @@ export async function startServer({
     },
     // Register-on-pull: after a member pulls a shared project, insert a local
     // project record so it appears in /api/projects and opens read-only (the
-    // member is not the owner). Idempotent — an already-local project is a no-op.
+    // member is not the owner). Idempotent - an already-local project is a no-op.
     projectStore: {
       get: (projectId) => getProject(db, projectId),
       has: (projectId) => getProject(db, projectId) != null,
@@ -5765,7 +5765,7 @@ export async function startServer({
     // serve a project once this is set.
     markTeamProjectRevoked: setTeamProjectMirrorRevoked,
     // Set/clear the unmaterialized shared-project placeholder stamp (the
-    // recvqzaDvUU6B3 fresh-install wipe guard) — same non-destructive
+    // recvqzaDvUU6B3 fresh-install wipe guard) - same non-destructive
     // metadata-flag pattern as markTeamProjectRevoked above.
     markSharedProjectPlaceholder: (projectId: string, placeholder: boolean) => {
       const project = getProject(db, projectId);
@@ -5780,13 +5780,13 @@ export async function startServer({
       }
       // Raised on placeholder registration and lowered the moment a pull
       // materializes real content. Both are sync steps on someone else's
-      // project — see SYNC_KEEPS_UPDATED_AT. This is the flag that made a
+      // project - see SYNC_KEEPS_UPDATED_AT. This is the flag that made a
       // member's very first open of a shared project read 「刚刚更新」.
       updateProject(db, projectId, { metadata, updatedAt: SYNC_KEEPS_UPDATED_AT });
     },
     // Retracted-share heal (飞书 recvqA6qhV7St1): delete a placeholder record
     // whose backing hub resource turned out to be tombstoned. Re-checks the
-    // placeholder stamp HERE — deletion is only ever legal for a record the
+    // placeholder stamp HERE - deletion is only ever legal for a record the
     // stamp proves contentless, so a pull that materialized real content
     // between the heal's decision and this call is never destroyed. The
     // `workspace_projects` binding (if any) goes with it via ON DELETE
@@ -5840,8 +5840,8 @@ export async function startServer({
       : {}),
   });
   // Hub push-channel consumer for 'project-content-changed' (recvqmKQRiIlYf):
-  // when a teammate publishes new content for a shared project, pull it NOW —
-  // daemon-side, no open tab required — through the SAME flow the member
+  // when a teammate publishes new content for a shared project, pull it NOW -
+  // daemon-side, no open tab required - through the SAME flow the member
   // web's POST /collab/pull runs (collabSyncRoutes.pullSharedProject, which
   // also coalesces the two when they race). Every guard is fail-closed and
   // every failure degrades silently to the web's ~5s status polling, which
@@ -5876,7 +5876,7 @@ export async function startServer({
   // Background pull size guard (issue #6518, incident #6512): before any
   // background lane downloads a published version, an authorize-only Vela
   // probe reads the manifest entry count; oversized versions are deferred to
-  // the foreground open-project pull. Fail-closed here means PULL AS BEFORE —
+  // the foreground open-project pull. Fail-closed here means PULL AS BEFORE -
   // an old CLI, a countless output, or a probe failure keeps today's
   // behavior. See collab/background-pull-size-guard.ts.
   const backgroundPullSizeGuard = createBackgroundPullSizeGuard({
@@ -6288,20 +6288,20 @@ export async function startServer({
     // Reuse the shared team-projects lister (which holds the shared vela-cli
     // catalog adapter). Without this the endpoint built a fresh adapter per
     // request and re-ran the one-off `vela team-projects --help` capability
-    // probe — an extra CLI spawn (and, on the current CLI, a blocking analytics
+    // probe - an extra CLI spawn (and, on the current CLI, a blocking analytics
     // POST) on every workspace projects load.
     //
     // Use the DISPLAY cache, not the uncached exact lookup. This is the read
     // behind the Home team-project grid and the deep-link "is this shared to my
     // team?" check, and `teamProjectsDisplayCache` was built for exactly this
-    // route — see its doc comment, which names it. Wired to the uncached lister
+    // route - see its doc comment, which names it. Wired to the uncached lister
     // instead, every call spawned `vela team-projects list`: measured at ~1.1s
     // per request against a live workspace, cold and warm alike, on a path the
     // UI hits on every launch and every deep link.
     //
     // These routes are display reads: the Home team-project grid and the
     // deep-link "is this shared to my team?" check. Nothing here gates data
-    // access — the pull gate and the comment/presence relays reach
+    // access - the pull gate and the comment/presence relays reach
     // `teamProjectsLister` on their own and still observe an unshare
     // immediately.
     //
@@ -6791,7 +6791,7 @@ export async function startServer({
         case 'team-projects-changed': {
           // Catalog changed (share/unshare). Refresh the display cache and
           // signal the web, AND run a real `workspace_projects`
-          // reconciliation pass — see `collab/workspace-projects-reconciler.ts`.
+          // reconciliation pass - see `collab/workspace-projects-reconciler.ts`.
           hubEventRefreshes.request(
             `team-projects:${eventWorkspaceId}`,
             () => handleHubTeamProjectsChanged(
@@ -6858,7 +6858,7 @@ export async function startServer({
           const projectId = event.projectId;
           if (!projectId) break;
           if (activeProjectEventSinks.has(projectId)) {
-            // Project is open here — pull IT now instead of waiting for the
+            // Project is open here - pull IT now instead of waiting for the
             // next poll tick; the merge emits `comment-changed` to the web.
             // A consumed dirty mark is only redeemed by a pull that actually
             // ran; on a no-op/failed pull restore it so the next comment read
@@ -6904,7 +6904,7 @@ export async function startServer({
           // pull lands, the existing post-pull signals (`file-changed` +
           // `project-metadata-changed`) reach any open view over the same
           // SSE path a web-triggered pull uses. All ownership/binding guards
-          // live in collab/proactive-content-pull.ts — an owner daemon
+          // live in collab/proactive-content-pull.ts - an owner daemon
           // receiving its own publish echo never pulls over its working
           // tree, and failures degrade silently to the web's status polling.
           if (sharedProjectPullProfiling) {
@@ -7095,12 +7095,12 @@ export async function startServer({
           // A design-system/plugin/skill resource was shared (moved the
           // 'published' ref) or retracted (removed) on the resource hub.
           // `resourceKind` routes to just that kind's reconciler instead of
-          // re-checking all of them on every event — see
+          // re-checking all of them on every event - see
           // `reconcileTeamResourcesFromRemote` below (declared
           // later in this function; referencing it here is safe because this
           // callback only ever RUNS once an actual SSE event arrives, well
-          // after the rest of `startServer`'s synchronous setup — including
-          // that declaration — has completed).
+          // after the rest of `startServer`'s synchronous setup - including
+          // that declaration - has completed).
           hubEventRefreshes.request(
             `team-resources:${eventWorkspaceId}:${event.resourceKind ?? '*'}`,
             () => reconcileTeamResourcesFromRemote(
@@ -7594,7 +7594,7 @@ export async function startServer({
     );
     const captureActivationFence = (): string | null =>
       workspaceTeamSkillBindingActivationFence(db, workspaceId, resource.id);
-    // Claim the pulled copy for the workspace whose hub served it — a
+    // Claim the pulled copy for the workspace whose hub served it - a
     // team-shared skill is workspace-owned by construction, same rule
     // syncSharedTeamDesignSystem's markTeamSynced already ships (#145).
     // Fills the gap this resource type previously had no binding row at
@@ -7716,7 +7716,7 @@ export async function startServer({
   // `invalidate()` is consumed by registerTeamResourceShareRoutes' share/
   // unshare handlers below (a local mutation this daemon just made). It has to
   // drop TWO layers, not one: this cache's own parsed-and-materialized entry,
-  // AND `sharedTeamResourcesCommand` underneath it — `share.sharedResources()`
+  // AND `sharedTeamResourcesCommand` underneath it - `share.sharedResources()`
   // reads the raw `vela shared --json` listing through that second SWR cache
   // (shared by all three kinds), so a bare reset of this layer alone would
   // still hand the immediate post-share/unshare refetch the pre-change hub
@@ -7973,12 +7973,12 @@ export async function startServer({
   // to a `team-resources-changed` signal (hub push, wired above, OR the
   // dedicated poll fallback below) by reconciling this workspace's
   // `workspace_resources` rows against each kind's live shared listing. See
-  // `collab/workspace-resources-reconciler.ts` for the full design —
+  // `collab/workspace-resources-reconciler.ts` for the full design -
   // in particular why retraction marks `resourceState: 'deleted'` and leaves
   // `visibility: 'team'` alone, instead of demoting to `visibility:
   // 'personal'` the way `workspace-projects-reconciler.ts` does for
   // `workspace_projects` (that would misattribute a teammate's pulled copy
-  // as caller-authored — the exact bug `SkillSummary.teamSynced` exists to
+  // as caller-authored - the exact bug `SkillSummary.teamSynced` exists to
   // prevent).
   //
   const RECONCILED_TEAM_RESOURCE_KINDS = ['design_system', 'plugin', 'skill'] as const;
@@ -8286,7 +8286,7 @@ export async function startServer({
     for (const lease of rememberedLeases) ids.add(lease.workspaceId);
     return [...ids];
   };
-  // Dedicated ~15s poll fallback — the "poll-as-floor" half of the same
+  // Dedicated ~15s poll fallback - the "poll-as-floor" half of the same
   // architecture principle `workspaceInvalidationPoller` follows for
   // project/member/context signals (push accelerates delivery; the poll
   // remains a floor for subscribed, persisted, or briefly prewarmed scopes).
@@ -8337,7 +8337,7 @@ export async function startServer({
     paths: { RUNTIME_DATA_DIR },
   });
 
-  // Reconcile follow-up — the inline POST /api/projects body that lived
+  // Reconcile follow-up - the inline POST /api/projects body that lived
   // on garnet (with baseDir privilege check, linkedDirs validation,
   // template snapshot seeding, plugin snapshot resolution with default
   // scenario fallback) is intentionally dropped here. main moved project
@@ -8345,8 +8345,8 @@ export async function startServer({
   // simple project-create surface is wired through `registerProjectRoutes`
   // further down. Plugin-snapshot-resolution / default-scenario-fallback
   // from garnet need to be re-integrated into routes/project/index.ts as a
-  // follow-up — see reconcile decision log.
-  // (legacy POST /api/projects body deleted — see registerProjectRoutes below.)
+  // follow-up - see reconcile decision log.
+  // (legacy POST /api/projects body deleted - see registerProjectRoutes below.)
 
   let automaticDiagnostics: AutomaticDiagnostics | null = null;
   const telemetry = registerTelemetryRoutes(app, {
@@ -8575,7 +8575,7 @@ export async function startServer({
   );
 
   // Interactive Terminal sessions (node-pty). In-memory, process-local, and
-  // killed on daemon shutdown — see shutdownDaemonRuns below.
+  // killed on daemon shutdown - see shutdownDaemonRuns below.
   const terminalService = createTerminalService();
   const browserSessionService = createBrowserSessionService();
 
@@ -8641,7 +8641,7 @@ export async function startServer({
   };
 
   // Every physical Run is started through this service so the analytics
-  // lifecycle is installed once, for whoever asked for the Run — an HTTP
+  // lifecycle is installed once, for whoever asked for the Run - an HTTP
   // client, an OD Next automatic continuation, a scheduled Automation, or a
   // live-artifact refresh. Starting a Run any other way drops its analytics
   // silently, which is what OPEND-2365 was.
@@ -8818,7 +8818,7 @@ export async function startServer({
     // near-static fact about the build: the same URL answers differently
     // depending on which daemon is behind it. A cached response therefore
     // outlives the daemon that produced it, and a stale `slideRenderer: true`
-    // is consumed as authoritative — reopening the export the gate exists to
+    // is consumed as authoritative - reopening the export the gate exists to
     // hide. Must not be cached anywhere.
     res.setHeader('Cache-Control', 'no-store');
     // Runtime capabilities ride along on the version payload rather than a
@@ -8908,13 +8908,13 @@ export async function startServer({
   // Gate the diagnostics export behind requireLocalDaemonRequest so it stays
   // unreachable when daemon binds to a non-loopback address (Tailscale,
   // 0.0.0.0, etc.). The bundle contains daemon/web/desktop logs, host
-  // metadata, and crash reports — same threat tier as connector / live-
+  // metadata, and crash reports - same threat tier as connector / live-
   // artifact endpoints, which all use the same guard.
   // Renderer-side chat-scroll evidence, pushed just before an export is
   // requested. Same guard and same threat tier as the export itself: the body
-  // carries the chat log's DOM. Not a user-facing capability — it is the
+  // carries the chat log's DOM. Not a user-facing capability - it is the
   // renderer half of `od diagnostics export`, which already exists on both
-  // surfaces — so it gets no CLI subcommand of its own.
+  // surfaces - so it gets no CLI subcommand of its own.
   //
   // The 24mb body parser is NOT in this chain: a route-level parser cannot
   // reach a body the app-level 4mb parser has already read, so it is mounted
@@ -9280,7 +9280,7 @@ export async function startServer({
     projectFiles: projectFileDeps,
     authorizeProjectRequest,
   });
-  // OD Library — global asset registry (clipper ingest, grid, pairing, apply).
+  // OD Library - global asset registry (clipper ingest, grid, pairing, apply).
   registerLibraryRoutes(app, {
     db,
     http: httpDeps,
@@ -9381,7 +9381,7 @@ export async function startServer({
     templates: templateDeps,
     status: projectStatusDeps,
     // Same provider `collab` was built with (collab.workspaceContext ===
-    // workspaceContext) — see the mutation-gate cross-check note above.
+    // workspaceContext) - see the mutation-gate cross-check note above.
     verifyWorkspaceReadAuthority,
     verifyWorkspaceRequestAuthority,
     verifyPersonalProjectDeleteLeaseAuthority,
@@ -9539,7 +9539,7 @@ export async function startServer({
             resolveFreshWorkspaceContext,
           ) => {
             // Consume the hub push channel's dirty mark: first read after
-            // opening a project pulls THAT project's missed comments — a
+            // opening a project pulls THAT project's missed comments - a
             // targeted pull, because the poll loop only covers projects with
             // a live events subscriber and this read can arrive before (or
             // without) one.
@@ -9578,7 +9578,7 @@ export async function startServer({
           },
           // The durable outbox also reconciles pin_seq (recvq5BVsolIxi): a genuinely
           // new comment on a team-shared project is inserted with a
-          // provisional LOCAL pin_seq (pin_seq_confirmed=0 — see
+          // provisional LOCAL pin_seq (pin_seq_confirmed=0 - see
           // upsertPreviewComment); once this push resolves with the
           // collab-cloud's globally-serialized seq, confirmPreviewCommentPinSeq
           // overwrites it with that authoritative value, which is what keeps
@@ -9652,14 +9652,14 @@ export async function startServer({
 
   // Whether the caller may mutate (edit / publish-toggle / delete) a design
   // system. A system pulled from a teammate's team share (`teamSynced` in its
-  // metadata.json — see `isTeamSyncedUserDesignSystem`) is only mutable by
-  // whoever `canManageSharedResource` says may manage the share — the same
+  // metadata.json - see `isTeamSyncedUserDesignSystem`) is only mutable by
+  // whoever `canManageSharedResource` says may manage the share - the same
   // principal check `unshare` already enforces. Anything not teamSynced is
   // the caller's own, so it stays unrestricted.
   //
   // Hoisted out of `registerDesignSystemRoutes`'s deps (recvqb6mfyqXLD) so
   // `registerStaticResourceRoutes`'s design-system LIST route can decorate
-  // every teamSynced entry with the same verdict — any detail surface a
+  // every teamSynced entry with the same verdict - any detail surface a
   // design system's summary reaches (not just the single-item GET) can then
   // gate its own edit/publish/delete affordances on the authority the
   // backend actually enforces, instead of re-deriving (or forgetting to
@@ -9725,7 +9725,7 @@ export async function startServer({
       createUserDesignSystem: createWorkspaceOwnedDesignSystem,
       deleteUserDesignSystem,
       // spec 04 §11: unshare `id` from the team hub before DELETE proceeds
-      // locally, but ONLY when it is on the LIVE team share list — never
+      // locally, but ONLY when it is on the LIVE team share list - never
       // `isTeamSyncedUserDesignSystem` alone. That flag is
       // true only for a teammate's PULLED copy; the sharer deleting their own
       // original always reads `teamSynced: false`, so a check gated on it
@@ -10065,7 +10065,7 @@ export async function startServer({
           marketplaceResolution = resolvePluginInMarketplaces(db, plugin.sourceMarketplaceEntryName);
           if (marketplaceResolution) source = marketplaceResolution.source;
         }
-        if (!source) return res.status(409).json({ error: { code: 'missing-source', message: `Plugin "${id}" has no recorded install source — cannot upgrade. Reinstall via 'od plugin install --source <...>' to set one.`, data: { id } } });
+        if (!source) return res.status(409).json({ error: { code: 'missing-source', message: `Plugin "${id}" has no recorded install source - cannot upgrade. Reinstall via 'od plugin install --source <...>' to set one.`, data: { id } } });
       } else {
         source = typeof body.source === 'string' ? body.source : '';
         if (!source) return res.status(400).json({ error: 'source is required' });
@@ -10149,7 +10149,7 @@ export async function startServer({
         const now = Date.now(); const id = randomId(); const cid = randomId(); const sourceSlug = githubRepoNameFromPluginName(sourcePlugin.id); const stagedPath = `plugin-source/${sourceSlug}`; const prompt = renderPluginSharePrompt({ action, sourcePlugin, stagedPath }); const metadata = { kind: 'prototype' }; const projectRoot = await ensureProject(PROJECTS_DIR, id, metadata); await copyPluginFolderForProjectContext(sourcePlugin.fsPath, path.join(projectRoot, 'plugin-source', sourceSlug));
         insertProject(db, { id, name: `${PLUGIN_SHARE_ACTION_LABELS[action]}: ${sourcePlugin.title || sourcePlugin.id}`, skillId: null, designSystemId: null, pendingPrompt: prompt, metadata, createdAt: now, updatedAt: now });
         insertConversation(db, { id: cid, projectId: id, title: null, createdAt: now, updatedAt: now });
-        // The share task IS a chat project — it opens with a seeded prompt the
+        // The share task IS a chat project - it opens with a seeded prompt the
         // user immediately runs. `createPluginShareProject` (apps/web) mints no
         // workspace headers at all, so this was permanently unbound, not merely
         // racy: the very first turn 403s on the workspace gate.
@@ -10249,7 +10249,7 @@ export async function startServer({
   // Pure read off `installed_plugins`: rows whose source_kind='bundled'
   // AND od.kind='scenario' AND od.pipeline is non-empty become entries
   // the apply path can fall back to. Scenario plugins from third-party
-  // sources are intentionally NOT trusted as defaults — the bundled
+  // sources are intentionally NOT trusted as defaults - the bundled
   // boot walker (apps/daemon/src/plugins/bundled.ts) is the only writer
   // of source_kind='bundled', so this function never grants the
   // privilege to user-installed scenarios.
@@ -10650,7 +10650,7 @@ export async function startServer({
     // is the original page. Treating a project/app design system as
     // authoritative would overwrite the cloned site's palette/typography
     // with the user's brand, and universal craft rules would "improve"
-    // visual decisions the clone must preserve verbatim — so both prompt
+    // visual decisions the clone must preserve verbatim - so both prompt
     // blocks are skipped for these runs. Step 6 of the skill (replace with
     // the user's own content) is where brand application belongs.
     const isWebCloneRun = metadata?.intent === 'web-clone';
@@ -10686,7 +10686,7 @@ export async function startServer({
     };
 
     // Per-turn skills picked via the composer's @-mention popover. They
-    // never persist on the project — we just append their bodies after the
+    // never persist on the project - we just append their bodies after the
     // primary skill so the agent sees one combined block this turn.
     const effectiveCanonicalSkillId =
       typeof effectiveSkillId === 'string' && effectiveSkillId
@@ -10793,7 +10793,7 @@ export async function startServer({
           }
         }
         blocks.push(
-          `\n\n---\n\n## Composed skill — ${extra.name || id}\n\n${(extra.body || '').trim()}`,
+          `\n\n---\n\n## Composed skill - ${extra.name || id}\n\n${(extra.body || '').trim()}`,
         );
       }
       if (blocks.length > 0) {
@@ -10836,7 +10836,7 @@ export async function startServer({
             } else {
               // The plugin references a shared global skill by id
               // (`od.context.skills[{ ref: '<skill-id>' }]`) instead of
-              // shipping its own SKILL.md — resolve it from the global
+              // shipping its own SKILL.md - resolve it from the global
               // registry so the pinned plugin still gets the skill body AND
               // its companion dir staged into the project cwd (scripts, etc).
               // Lets many example plugins share one skill without each
@@ -10894,7 +10894,7 @@ export async function startServer({
     // memory body so the composer can gate the PRE intent-gateway brief and
     // the POST self-verify scorecard on the same config the settings panel
     // writes. Read failure falls through to undefined hooks, which the
-    // composer treats as on-by-default — matching the config's default-on
+    // composer treats as on-by-default - matching the config's default-on
     // semantics.
     let memoryHooks: { profile?: boolean; rewrite?: boolean; verify?: boolean } | undefined;
     try {
@@ -10919,7 +10919,7 @@ export async function startServer({
     let designSystemTitle;
     // Compiled (tokens.css + components manifest / components.html)
     // form of the active brand.
-    // Default-on as of PR-D — every chat that picks a brand with
+    // Default-on as of PR-D - every chat that picks a brand with
     // `tokens.css` + `components.html` siblings (today: `default` and
     // `kami`; every other brand falls through silently because the
     // files are absent) gets the structured token contract appended to
@@ -11147,7 +11147,7 @@ export async function startServer({
       }
     }
 
-    // Plan §3.M2 / §3.V1 / spec §23.4 — render each stage's atoms[]
+    // Plan §3.M2 / §3.V1 / spec §23.4 - render each stage's atoms[]
     // into `## Active stage` blocks via the contracts helper when
     // the run carries a snapshot with a pipeline. Default is now ON
     // (flipped in §3.V1 once the bundled SKILL.md fragments covered
@@ -11179,11 +11179,11 @@ export async function startServer({
              * 默认 scenario 的 `critique` 阶段一直声明 `atoms: ['critique-theater']`,
              * 而 2026-08-26 下线剧场时只关掉了协议注入(`renderPanelPrompt`)那一条路。
              * 结果是模型读到一段自相矛盾的提示词:「严格遵守 daemon 注入的标记协议」,
-             * 而那份协议永远不会来 —— 于是它照着 atom SKILL.md 的散文把线格式现编出来,
+             * 而那份协议永远不会来 -- 于是它照着 atom SKILL.md 的散文把线格式现编出来,
              * 原样打进聊天正文。用户连着撞到五次。详见 `critique-prompt-gate.ts`。
              *
              * `critiqueShouldRun` 就是"协议会不会注入"的答案,这里直接复用它,
-             * 不另起一套判据 —— 另起一套就是第三个入口。
+             * 不另起一套判据 -- 另起一套就是第三个入口。
              */
             const atoms = atomsForPrompt(stage.atoms ?? [], {
               critiqueEnabled: critiqueShouldRun,
@@ -11191,7 +11191,7 @@ export async function startServer({
             const bodies = await loadAtomBodies(db, atoms);
             stageViews.push({ stageId: stage.id, bodies });
           }
-          // Issue #6238 — the builder inlines each atom body exactly
+          // Issue #6238 - the builder inlines each atom body exactly
           // once across the pipeline; stages that re-declare an atom
           // get a one-line back-reference instead of the full body.
           const blocks = renderActiveStageBlocks(stageViews);
@@ -11214,7 +11214,7 @@ export async function startServer({
 
     // Hoisted verbatim out of the composeSystemPrompt() call so the exact same
     // object both composes the prompt and feeds section-level drift
-    // attribution — a second, hand-maintained copy of these inputs would drift
+    // attribution - a second, hand-maintained copy of these inputs would drift
     // from the real ones and mislabel the telemetry it exists to explain.
     const defaultSystemPromptInputs = {
       agentId,
@@ -11262,11 +11262,11 @@ export async function startServer({
       freeformDeckSignal,
       mediaHintSignal,
       platformHintSignal,
-      // VALIDATION DEFAULT — feat/system-prompt integration branch only.
+      // VALIDATION DEFAULT - feat/system-prompt integration branch only.
       // Slim is the default here so packaged beta builds exercise the
       // rewritten charter without env plumbing (the packaged sidecar env
       // allowlist does not forward OD_PROMPT_CORE); OD_PROMPT_CORE=classic
-      // restores the classic stack. main keeps classic as the default —
+      // restores the classic stack. main keeps classic as the default -
       // do NOT carry this flip into a PR against main.
       promptCoreVariant: process.env.OD_PROMPT_CORE === 'classic' ? undefined : 'slim',
     };
@@ -11763,7 +11763,7 @@ export async function startServer({
         ? normalizeConversationSessionMode(sessionMode)
         : normalizeConversationSessionMode(conversationSession?.sessionMode);
     // Single choke point for the codex transport switch. Every other
-    // agent — and codex with the switch off — gets back the identical
+    // agent - and codex with the switch off - gets back the identical
     // registry object, so nothing below can tell this call happened.
     const def = applyCodexTransportOverride(getAgentDef(agentId));
     if (!def)
@@ -11801,8 +11801,8 @@ export async function startServer({
     // for invalid checked-in values. Anything else (a regression that
     // makes the helper throw on a valid value, an unrelated bug
     // introduced while touching this path) should bubble up to the
-    // outer chat-run starter — which surfaces it as
-    // `AGENT_EXECUTION_FAILED` — rather than being misreported as
+    // outer chat-run starter - which surfaces it as
+    // `AGENT_EXECUTION_FAILED` - rather than being misreported as
     // "the runtime def is bad" and burying the real failure.
     try {
       assertValidRuntimeDefInactivityTimeoutMs(def.inactivityTimeoutMs);
@@ -11840,7 +11840,7 @@ export async function startServer({
     // files under <dataDir>/memory/. We await so the very next
     // composeSystemPrompt() call (a few lines below) re-reads memory from
     // disk and a marker inside this turn's message is reflected in this
-    // turn's prompt. Failures are swallowed — memory is best-effort and
+    // turn's prompt. Failures are swallowed - memory is best-effort and
     // must never block the agent run.
     if (
       (run.retryAttemptCount ?? 0) === 0 &&
@@ -11857,7 +11857,7 @@ export async function startServer({
     }
 
     // Resolve the project working directory (creating the folder if it
-    // doesn't exist yet). Without one we don't pass cwd to spawn — the
+    // doesn't exist yet). Without one we don't pass cwd to spawn - the
     // agent then runs in whatever inherited dir, which still lets API
     // mode work but loses file-tool addressability.
     // Project directory resolution lives in projects.ts so sandbox mode can
@@ -11970,7 +11970,7 @@ export async function startServer({
       : safeAttachments;
 
     // Local code agents don't accept a separate "system" channel the way the
-    // Messages API does — we fold the skill + design-system prompt into the
+    // Messages API does - we fold the skill + design-system prompt into the
     // user message. The <artifact> wrapping instruction comes from
     // systemPrompt. We also stitch in the cwd hint so the agent knows
     // where its file tools should write, and the attachment list so it
@@ -12064,8 +12064,8 @@ export async function startServer({
     // probe models, …) has many awaits and no blanket try/finally; an
     // exception there finalizes the run via runs.fail() without running the
     // per-attempt cleanup wired to the child lifecycle. Register the grant +
-    // sink release on the run's terminal chokepoint so any exit path — startup
-    // throw included — revokes the capability token instead of leaking it for
+    // sink release on the run's terminal chokepoint so any exit path - startup
+    // throw included - revokes the capability token instead of leaking it for
     // the token TTL. Idempotent with the explicit pre-spawn/child-close cleanup.
     if (toolTokenGrant) {
       run.onFinalize = () => {
@@ -12082,8 +12082,8 @@ export async function startServer({
     // system prompt can warn the model away from Claude Code's synthetic
     // `*_authenticate` / `*_complete_authentication` tools for any
     // server the daemon already holds a valid Bearer for. We re-use both
-    // values further down at .mcp.json write time — see the spawn block
-    // below — instead of re-reading.
+    // values further down at .mcp.json write time - see the spawn block
+    // below - instead of re-reading.
     let externalMcpConfig = { servers: [] };
     if (!SANDBOX_RUNTIME.enabled) {
       try {
@@ -12140,7 +12140,7 @@ export async function startServer({
             console.warn(
               '[mcp-oauth] skipping expired token for',
               serverId,
-              '— reconnect required',
+              '- reconnect required',
             );
           }
         }
@@ -12158,7 +12158,7 @@ export async function startServer({
     // Intent signals gate stable-region prompt blocks, so every flip changes
     // stableInstructionFingerprint and re-sends the whole stable block on
     // resume. Two rules keep flips down to genuine activations only:
-    //   1. Scan user-authored text only — for transcript-resending agents
+    //   1. Scan user-authored text only - for transcript-resending agents
     //      `message` embeds prior ASSISTANT turns, whose copy (an earlier
     //      discovery form's own options, delivery summaries) must never flip
     //      a signal the user did not express.
@@ -12215,7 +12215,7 @@ export async function startServer({
         sessionMode: runSessionMode,
         mediaExecution: run?.mediaExecution,
         byokMediaDefaults,
-        // Plan §3.M2 / §3.V1 — forward the run's snapshot id so the
+        // Plan §3.M2 / §3.V1 - forward the run's snapshot id so the
         // prompt composer can splice in `## Active stage` blocks.
         // Default ON; set OD_BUNDLED_ATOM_PROMPTS=0 to opt out.
         appliedPluginSnapshotId: run?.appliedPluginSnapshotId ?? null,
@@ -12249,10 +12249,10 @@ export async function startServer({
     // (2/3) so the agent can pick whichever works.
     //
     //   1. CWD-relative copy. Stage every active/composed skill into
-    //      `<cwd>/.od-skills/<folder>/` so any agent CLI — not just the
-    //      ones that honour `--add-dir` — can reach those files via a
+    //      `<cwd>/.od-skills/<folder>/` so any agent CLI - not just the
+    //      ones that honour `--add-dir` - can reach those files via a
     //      path inside its working directory. We copy (not symlink) so
-    //      each staged directory is a true write barrier — agents cannot
+    //      each staged directory is a true write barrier - agents cannot
     //      mutate the shipped repo resource through their cwd.
     //   2. `--add-dir` allowlist. For non-Codex agents, pass `SKILLS_DIR`
     //      and `DESIGN_SYSTEMS_DIR` so the absolute fallback path in the
@@ -12262,7 +12262,7 @@ export async function startServer({
     //      `${CODEX_HOME:-$HOME/.codex}/generated_images` output folder
     //      for allowlisted gpt-image image projects.
     //   3. PROJECT_ROOT cwd. When `cwd` is null, the agent runs with
-    //      `cwd: PROJECT_ROOT` — there the absolute path is already an
+    //      `cwd: PROJECT_ROOT` - there the absolute path is already an
     //      in-cwd path, so neither (1) nor (2) is required for it to
     //      resolve.
     //
@@ -12335,8 +12335,8 @@ export async function startServer({
     }
     // Resolve the agent's effective working directory once and use it
     // everywhere the agent could read it (buildArgs runtimeContext, spawn
-    // cwd, ACP session new). Falling back to PROJECT_ROOT — rather than
-    // letting `spawn` inherit the daemon process cwd — is what makes the
+    // cwd, ACP session new). Falling back to PROJECT_ROOT - rather than
+    // letting `spawn` inherit the daemon process cwd - is what makes the
     // absolute-path fallback in the skill preamble actually in-cwd for
     // no-project runs (packaged daemons / service launches do not start
     // their working directory from the workspace root).
@@ -12345,7 +12345,7 @@ export async function startServer({
     // run-finished handler can diff against them and report `artifact_count`
     // for ANY agent (not just claude_code). Only for real project runs: a
     // null `cwd` means a no-project run rooted at PROJECT_ROOT, whose churn is
-    // not the user's artifacts — those fall back to the tool-stream count.
+    // not the user's artifacts - those fall back to the tool-stream count.
     let baselineEntryFile: string | undefined;
     if (run?.id && cwd) {
       try {
@@ -12454,7 +12454,7 @@ export async function startServer({
       return resolveRunArtifactOutcomeBeforeFinish(afterSnapshot);
     };
     // Design §10.3. The properties object is the builder's return value
-    // VERBATIM — nothing is spread in or added here, so what the builder's own
+    // VERBATIM - nothing is spread in or added here, so what the builder's own
     // tests assert on is exactly what reaches the sink.
     const emitChatArtifactCaptureTelemetry = (
       captureRun: { id: string; projectId?: string; analyticsContext?: AnalyticsContext | null },
@@ -12484,7 +12484,7 @@ export async function startServer({
     // moment: at the terminal chokepoint, BEFORE the terminal SSE frame goes
     // out and before any client can see the message as done. A snapshot taken
     // after that races the next turn's overwrite, which is exactly the bug this
-    // exists to close. Never throws — a failed capture degrades one card, it
+    // exists to close. Never throws - a failed capture degrades one card, it
     // does not fail the run.
     const captureChatArtifactsBeforeSuccess = async () => {
       try {
@@ -12495,8 +12495,8 @@ export async function startServer({
           : [];
         if (!outcome?.projectRoot || touchedPaths.length === 0) return;
         // Attach the turn's deliverable to the turn, before anything else here
-        // can fail. `produced_files_json` otherwise has exactly one writer — a
-        // closure inside the browser's `ProjectView` — so a run whose viewer
+        // can fail. `produced_files_json` otherwise has exactly one writer - a
+        // closure inside the browser's `ProjectView` - so a run whose viewer
         // navigated away finishes with its artifacts orphaned, and the client's
         // own repair window has closed by the time the user returns
         // (OPEND-2598 / OPEND-2608). This only fills a column that is still
@@ -12525,14 +12525,14 @@ export async function startServer({
         // BYTES here; this freezes the HTML card's RENDERER INPUT here, so the
         // cover render that follows can take its seconds without the file it is
         // drawing being allowed to change underneath it. Only the freeze is
-        // awaited — the render deliberately outlives the turn.
+        // awaited - the render deliberately outlives the turn.
         await freezeAndRenderChatArtifactCovers(deps, {
           projectRoot: outcome.projectRoot,
           rows: captured.rows,
           renderer: desktopArtifactExporter,
           /*
            * The cover outlives the turn by design, so it lands into a message
-           * the client already filed as done — after the single post-run
+           * the client already filed as done - after the single post-run
            * re-read (`ProjectView.scheduleConversationMessageRefresh`, 150ms)
            * has been and gone. Without this nudge the card keeps the
            * live-iframe degrade branch until a full reload, which is the
@@ -12582,7 +12582,7 @@ export async function startServer({
       });
       // §3.2 lineage, backfilled rather than reordered: the chat-artifact refs
       // were written a few lines above, before these versions existed. Never
-      // allowed to fail the run — a card without lineage is still a card.
+      // allowed to fail the run - a card without lineage is still a card.
       if (run.assistantMessageId && result.snapshots.length > 0) {
         try {
           setMessageArtifactHtmlVersionIds(
@@ -12882,10 +12882,10 @@ export async function startServer({
     });
     publishNativeSessionRecoveryMetadata();
     /*
-     * The plan the previous turn last declared — whole, finished rows included.
+     * The plan the previous turn last declared - whole, finished rows included.
      *
      * Read here, on the path that already queries this conversation for the
-     * resume cursor, and handed to the agent as a fact it decides about — see
+     * resume cursor, and handed to the agent as a fact it decides about - see
      * `renderUnfinishedTodoRecall`, which decides whether any of it is still
      * open and renders nothing when none of it is. Every runtime gets it, not
      * just the 6 with native resume: the 21 that start a fresh process each
@@ -12893,7 +12893,7 @@ export async function startServer({
      * degrades to "nothing outstanding" rather than failing the run.
      *
      * NOTE(sync/main): the OD Next request stage composes its own user prompt
-     * from the frozen task bundle, so recall is not threaded into that branch —
+     * from the frozen task bundle, so recall is not threaded into that branch -
      * the bundle IS the turn's stated input. Recall still applies to every
      * ordinary chat turn, which is where it was measured.
      */
@@ -12956,7 +12956,7 @@ export async function startServer({
     // prompt = design system / skills / memory) is identical across turns of
     // a conversation in the common case. A resumed Claude session already
     // holds it, so on resume turns we skip it unless it changed since the
-    // session was seeded — keyed by a hash stored on agent_sessions. Create
+    // session was seeded - keyed by a hash stored on agent_sessions. Create
     // turns and changed-hash turns send the full block (byte-identical to the
     // previous behavior); non-resume agents have isResuming === false and so
     // always send the full block.
@@ -12968,7 +12968,7 @@ export async function startServer({
     const currentStableHash = hashStableInstructions(stableInstructionFingerprint);
     // Per-section digests of the SAME inputs the fingerprint is built from, so a
     // drift event can name which one moved. `currentStableHash` above stays the
-    // sole re-send decider — these only label a decision already made.
+    // sole re-send decider - these only label a decision already made.
     const currentStableSections = computeStableSectionHashes({
       ...(stableSectionInputs ?? {}),
       runtimeToolPrompt,
@@ -13011,12 +13011,12 @@ export async function startServer({
      * It lives in the per-turn slice for the same reason the connected-MCP
      * directive does (see the note just below): the key is a fresh nonce every
      * run, so putting it in `daemonSystemPrompt` would move the cached stable
-     * prefix on EVERY turn of EVERY conversation — a guaranteed
+     * prefix on EVERY turn of EVERY conversation - a guaranteed
      * `stable-prompt-changed` miss that also invalidates the upstream cache for
      * the whole conversation history downstream of it. The rules are cheap to
      * restate per turn; the prefix is not cheap to lose.
      *
-     * Wording mirrors the `<od-title>` task above it — same shape of contract
+     * Wording mirrors the `<od-title>` task above it - same shape of contract
      * (emit one inline marker the host parses and strips), same "don't narrate
      * this to the user" clause.
      */
@@ -13024,7 +13024,7 @@ export async function startServer({
      * The run's UI locale rides along (OPEND-2765).
      *
      * `# UI locale override` states the same rule, but it lives in
-     * `daemonSystemPrompt` — the cache-stable head, which the payload below
+     * `daemonSystemPrompt` - the cache-stable head, which the payload below
      * drops whenever `includeStableForPayload` is false. These three markers
      * are re-sent every turn because of the nonce, so on a resume turn the
      * marker contract was arriving with no locale attached and the follow-up
@@ -13038,7 +13038,7 @@ export async function startServer({
     /*
      * This turn's follow-up suggestions.
      *
-     * Shares the per-turn nonce with the done marker above — see
+     * Shares the per-turn nonce with the done marker above - see
      * `packages/contracts/src/api/next-step-marker.ts` for why this marker is
      * keyed at all (clicking a suggestion sends that exact sentence as the
      * user's next message, so an unkeyed marker would let any text the agent
@@ -13053,13 +13053,13 @@ export async function startServer({
     /*
      * This turn's display intent.
      *
-     * Same per-turn slice and same shared nonce as the two markers above — see
+     * Same per-turn slice and same shared nonce as the two markers above - see
      * `packages/contracts/src/api/artifact-focus-marker.ts` for why this one is
      * keyed (it names a path the host then reads and renders, so an unkeyed
      * form would let any document the agent merely READ steer the preview).
      *
      * The body lives next to the parser rather than here, so the instruction,
-     * the example it shows, and the regexes that accept it cannot drift apart —
+     * the example it shows, and the regexes that accept it cannot drift apart -
      * and so a BYOK path composing its own per-turn slice reads the same string
      * instead of a second copy of it. `renderArtifactFocusInstruction` returns
      * '' without a key, which is the same guard the two markers above spell out
@@ -13078,8 +13078,8 @@ export async function startServer({
      * origin/main extracted that composition into `composeChatAgentTextPayload`
      * (see the call below), which owns the contributor registry and the OD Next
      * exact-input coverage assertion. We adopt main's composer and feed this
-     * branch's three per-turn directives — done key, `<od-next>` suggestions and
-     * `<od-focus>` — through its `clientSystemPrompt` slot, which is the same
+     * branch's three per-turn directives - done key, `<od-next>` suggestions and
+     * `<od-focus>` - through its `clientSystemPrompt` slot, which is the same
      * position they occupied in the old array (after the title directive,
      * ahead of the system prompt). Unlike `systemPrompt` they are NOT gated on
      * `includeStableForPayload`: each carries this turn's nonce, so it has to be
@@ -13091,7 +13091,7 @@ export async function startServer({
     // real answer. Closing every Instructions block with an explicit
     // "do not echo" line cuts the regression in practice without changing
     // the turn-shape every agent CLI expects (user message carrying both
-    // instructions and request) — see server.ts:9920 composer notes.
+    // instructions and request) - see server.ts:9920 composer notes.
     const ECHO_GUARD =
       '\n\n(Do not quote, restate, or echo the # Instructions block above in your reply. Begin your response with the answer to the # User request below.)';
     const formAnswerMatch = FORM_ANSWERS_HEADER_RE.exec(
@@ -13302,7 +13302,7 @@ export async function startServer({
     // the run service, which cannot see route locals. We buffer the streamed
     // text rather than read the persisted message because the assistant message
     // row may not be wired up at close time, and cap it because a clarification
-    // form streams near the top of the turn — enough to validate the first
+    // form streams near the top of the turn - enough to validate the first
     // complete block (see `emittedRenderableQuestionForm`). Past the cap the
     // signal fails CLOSED: the turn keeps reporting its TodoWrite verdict rather
     // than inventing a form.
@@ -13314,7 +13314,7 @@ export async function startServer({
     // every agent family contributes its actual reply, and none leak raw
     // transport frames (system:init, stream_event, hooks). Kept separate from
     // `visibleAssistantText` so the filesystem empty-output guard that reads
-    // that variable keeps its text_delta-only semantics. Bounded — the
+    // that variable keeps its text_delta-only semantics. Bounded - the
     // extractor only needs the head of the reply.
     const MEMORY_REPLY_CAP = 32 * 1024;
     let memoryReplyText = '';
@@ -13336,7 +13336,7 @@ export async function startServer({
     // is the single choke point every stream event passes through on its way
     // to the user, and the strategy's close-time tail is broadcast from the
     // child-close handler. A throw from instrumentation there does not cost an
-    // analytics field, it costs the user the entire reply — so every mark goes
+    // analytics field, it costs the user the entire reply - so every mark goes
     // through here and its failures are contained to itself. The guard is
     // scoped to the marks alone; nothing that decides what the user receives
     // is inside it.
@@ -13364,7 +13364,7 @@ export async function startServer({
       markers: RunLifecycleStreamEventMarkers,
     ): void => {
       // Sole owner of `first_visible_output`. A mark here means the bytes
-      // really did leave the daemon — past the title-marker stripper, past the
+      // really did leave the daemon - past the title-marker stripper, past the
       // role-marker guard, past the strategy protocol, past close-time
       // buffering. Do not stamp this mark from a decode site: doing so is what
       // made `time_to_first_visible_output_ms` identical to
@@ -13411,8 +13411,8 @@ export async function startServer({
           // still measures to arrival and is unaffected.
           //
           // Stamped only from this live path. It records when the daemon SAW
-          // the model respond, so the close-time tail below — a re-emission of
-          // something seen long before — must not claim it, or a withheld
+          // the model respond, so the close-time tail below - a re-emission of
+          // something seen long before - must not claim it, or a withheld
           // reply would drag every phase boundary to the end of the run.
           lifecycle.markFirstModelEvent(
             lifecycleMarkers.firstModelEventType,
@@ -13425,7 +13425,7 @@ export async function startServer({
       // funnels here, and so does `emitGuardedTextDelta`, which bypasses
       // `emitAgentEvent` entirely for json-event-stream / copilot / ACP. Folding
       // this signal at `emitAgentEvent` instead silently dropped those runtime
-      // families — the whole opencode family included.
+      // families - the whole opencode family included.
       if (
         event === 'agent' &&
         data &&
@@ -13561,7 +13561,7 @@ export async function startServer({
       // to child.stdout / child.stderr / child.stdin across the run
       // lifecycle (line ~12890..~13500+ in this file). Those listeners hold
       // the Stream objects alive, and the Stream objects own the read side
-      // of the OS pipes — so dropping the child reference via
+      // of the OS pipes - so dropping the child reference via
       // `run.child = null` without destroying the streams leaks the pipe
       // file descriptors. After a few hundred retries the daemon
       // accumulates 10k+ FDs and posix_spawn returns EBADF.
@@ -13579,7 +13579,7 @@ export async function startServer({
     };
     // Synchronously detach the failed attempt: kill the old child and move the
     // run back to `queued` *now*, even when the re-spawn is delayed by backoff.
-    // This must not be deferred — leaving the old child alive during the backoff
+    // This must not be deferred - leaving the old child alive during the backoff
     // window lets a follow-on signal (e.g. the inactivity watchdog's SIGTERM)
     // drive a second close-handler pass that finalizes the run as failed before
     // the retry ever spawns.
@@ -13590,13 +13590,13 @@ export async function startServer({
       const priorChild = run.child;
       const priorProcessGroupId = run.processGroupId;
       // Release the previous child's stdio streams before letting the
-      // reference drop — see destroyChildStdio for rationale.
+      // reference drop - see destroyChildStdio for rationale.
       destroyChildStdio(priorChild);
       // Disband the WHOLE process group of the failed attempt, not just the
       // direct child. A same-run retry that only SIGTERMs run.child leaves the
       // CLI's spawned descendants (MCP servers, tool subprocesses) orphaned
       // (re-parented to PID 1), accumulating one leaked group per retry. Reap by
-      // the CAPTURED pgid — the SIGKILL escalation is bound to it, so it can
+      // the CAPTURED pgid - the SIGKILL escalation is bound to it, so it can
       // never hit the next attempt's group (the cross-generation kill fixed in
       // #5202). On win32 / no pgid, fall back to signalling the direct child.
       const termination = design.runs.terminateProcessTree(
@@ -14017,7 +14017,7 @@ export async function startServer({
       // something concrete to pick up. We deliberately EXCLUDE
       // `userVisibleOutputSeen`: it flips true on the first streamed text
       // delta, but a single-turn drop can stream a few tokens with
-      // `output_tokens == 0` and never commit a text block — resuming that
+      // `output_tokens == 0` and never commit a text block - resuming that
       // continues from the prior user turn (nothing to pick up), which is
       // exactly the "resume something with nothing to continue" case this
       // feature is meant to avoid. A text-only turn that is cut therefore stays
@@ -14114,13 +14114,13 @@ export async function startServer({
     //     auto-loads that file at spawn (same format the CLI accepts via
     //     `claude mcp add` + Claude Desktop's config). Fire-and-forget; we
     //     deliberately do NOT block spawn on a write failure since the agent
-    //     can still run without external tools — log a warning and continue.
+    //     can still run without external tools - log a warning and continue.
     //   - ACP agents (Hermes/Kimi): merge stdio entries into the existing
     //     `mcpServers` array; SSE/HTTP entries are skipped because ACP's
     //     stdio-only descriptor can't represent them yet.
     // Other agents (Codex, Gemini, OpenCode, Cursor, Qwen, Qoder, Copilot,
     // Pi, DeepSeek) inherit the user's per-CLI MCP config from their own
-    // home dir for now — a future change can grow this list.
+    // home dir for now - a future change can grow this list.
     //
     // The MCP config + OAuth tokens were resolved earlier (above
     // composeDaemonSystemPrompt) so the system prompt could mention any
@@ -14142,7 +14142,7 @@ export async function startServer({
     // id / stream-format checks. The three branches are functionally
     // equivalent to the previous shape (claude/acp), with the OpenCode
     // env-content branch added to fix #2142. Runtimes that leave the field
-    // undefined fall through unchanged — the settings UI surfaces an
+    // undefined fall through unchanged - the settings UI surfaces an
     // explicit "external MCP is not forwarded to <agent>" banner for them
     // so the previous silent-failure UX is gone.
     if (
@@ -14198,13 +14198,13 @@ export async function startServer({
     // .json` (per OpenCode's documented config layering), so adding a
     // server here does not erase whatever the user already has in their
     // global config. We deliberately leave the env unset when no servers
-    // are enabled — overwriting with `{}` would wipe the user's saved
+    // are enabled - overwriting with `{}` would wipe the user's saved
     // mcp section for this single invocation, which is exactly the kind
     // of surprise the previous silent-failure UX taught us to avoid.
     const isMiMoContent = def.externalMcpInjection === 'mimo-env-content';
 
     // Pre-flight the composed prompt against any argv-byte budget the
-    // adapter declared (only DeepSeek TUI today — its CLI doesn't accept
+    // adapter declared (only DeepSeek TUI today - its CLI doesn't accept
     // a `-` stdin sentinel, so the prompt has to ride argv). Doing this
     // before bin resolution means the test harness pins the guard
     // independently of whether the adapter binary happens to be on PATH
@@ -14283,7 +14283,7 @@ export async function startServer({
       // `preset`/`--version` calls need neither), takes up to ~10s, and only
       // retries a narrow set of network errors. Running it blocking on every
       // turn turned any transient gateway/timeout/HOME hiccup into a hard
-      // "AMR model … is not available from Vela" — even for a logged-in user
+      // "AMR model … is not available from Vela" - even for a logged-in user
       // who already picked a real model the picker surfaced from the preset
       // seed. Under CorpLink/飞连 the call routinely exceeded the timeout, so
       // AMR became unusable in packaged nightlies. Reusing the cache keeps that
@@ -14406,7 +14406,7 @@ export async function startServer({
     // to resume upstream session state on follow-up turns. The query
     // matches any persisted assistant message in the same conversation
     // EXCEPT the placeholder row this run just inserted (it's still
-    // `pending` and has no body — counting it as prior would always
+    // `pending` and has no body - counting it as prior would always
     // force `-c` on the very first turn). Adapters that don't consume
     // this field ignore it.
     const hasPriorAssistantTurn = run.conversationId
@@ -14440,17 +14440,17 @@ export async function startServer({
     // Codex CLI parses config.toml before processing any -c overrides. An
     // invalid `service_tier` value (the Codex app has written "priority",
     // "default", and other values the CLI rejects) causes an immediate parse
-    // error and exit-1 before any work starts. Normalize it in-place — any
+    // error and exit-1 before any work starts. Normalize it in-place - any
     // value outside {fast,flex} has its line removed so the CLI uses its
-    // built-in default — so the launch succeeds. Errors are silently swallowed
-    // — a missing or read-only config.toml is fine, and the Codex CLI still
+    // built-in default - so the launch succeeds. Errors are silently swallowed
+    // - a missing or read-only config.toml is fine, and the Codex CLI still
     // surfaces the original error if the write fails. See issue #4276 / #3408.
     if (def.id === 'codex') {
       const { normalizeCodexConfigFile } = await import('./codex-config-normalize.js');
       // Route through spawnEnvForAgent so resolveCodexConfigPath sees the same
       // fully-expanded CODEX_HOME the Codex child process will see. In
       // particular, spawnEnvForAgent calls expandConfiguredEnv which expands
-      // `~/` / `~\` prefixes — a user-configured CODEX_HOME="~/.codex-alt"
+      // `~/` / `~\` prefixes - a user-configured CODEX_HOME="~/.codex-alt"
       // would otherwise resolve to the literal path "~/.codex-alt/config.toml"
       // in the normalizer while the child resolves it to the absolute path,
       // leaving the real config untouched. Mirrors the diagnostics-export.ts
@@ -14591,7 +14591,7 @@ export async function startServer({
     // raw composed prompt; on Windows an npm-installed adapter resolves
     // to e.g. `deepseek.cmd`, the spawn path goes through `cmd.exe /d /s
     // /c "<inner>"`, and `quoteForWindowsCmdShim` doubles every embedded
-    // `"` plus wraps any whitespace/special-char arg in outer quotes —
+    // `"` plus wraps any whitespace/special-char arg in outer quotes -
     // so a quote-heavy prompt that fit under `maxPromptArgBytes` can
     // still expand past CreateProcess's 32_767-char cap. Fail fast with
     // the same `AGENT_PROMPT_TOO_LARGE` shape so the SSE error path
@@ -14659,7 +14659,7 @@ export async function startServer({
         // session id the CLI minted and reported on the stream; specify-style
         // adapters store the daemon-minted id they passed to the CLI. A
         // capture-style run that never reported an id (CLI died before
-        // `thread.started`) leaves nothing to resume — correct, the next turn
+        // `thread.started`) leaves nothing to resume - correct, the next turn
         // starts fresh and re-seeds the transcript.
         const createTurnSessionId = agentCapturesSessionId
           ? capturedSessionId
@@ -14749,7 +14749,7 @@ export async function startServer({
     // as `succeeded` in the close handler. A later unrelated SIGTERM /
     // SIGKILL (external `kill`, OOM, container shutdown) must keep its
     // existing `failed` classification even when `artifactRegistered`
-    // is true — those signals don't mean the agent finished cleanly,
+    // is true - those signals don't mean the agent finished cleanly,
     // they just terminated the process. Set strictly inside
     // `failForInactivity`'s quiet-period branch.
     let artifactQuietShutdownRequested = false;
@@ -14830,7 +14830,7 @@ export async function startServer({
       // Capture THIS attempt's child and its process group. A same-run retry
       // can swap `run.child` to a fresh child within the grace window; these
       // timers must escalate the stalled child they were scheduled for, never
-      // whatever now occupies `run.child` — otherwise the healthy retry gets
+      // whatever now occupies `run.child` - otherwise the healthy retry gets
       // killed and this stalled child is left unreaped. See runs.ts
       // `signalChildProcess`.
       const targetChild = child;
@@ -14854,13 +14854,13 @@ export async function startServer({
         // open stdin) or wedged in post-write reasoning that never
         // emits stdout. Either way, finishing the run via the normal
         // child-exit path (status decision in child.on('close') below)
-        // is safer than tearing it down with a failure banner — the
+        // is safer than tearing it down with a failure banner - the
         // tool token, cancel state, and exit-code classification stay
         // owned by the existing lifecycle. SIGTERM the child and let
         // the close handler classify the run as succeeded (via the
         // artifactQuietShutdown branch). Mark this termination as
         // daemon-initiated so an unrelated later signal (external
-        // kill, OOM) is NOT silently reclassified to `succeeded` —
+        // kill, OOM) is NOT silently reclassified to `succeeded` -
         // only signals from this watchdog branch should be.
         artifactQuietShutdownRequested = true;
         if (acpSession?.abort) {
@@ -14877,7 +14877,7 @@ export async function startServer({
       }
       // OpenCode retries a 429 usage-limit silently and emits nothing on
       // stdout/stderr, so the watchdog is the first signal we get. The real
-      // reason is recorded only in OpenCode's own session log — recover it
+      // reason is recorded only in OpenCode's own session log - recover it
       // and surface it HERE, before finish() tears down the live SSE
       // clients, so a viewer sees "usage limit reached" instead of the
       // generic stall message. Bound to this run via `since` so a stale or
@@ -14927,7 +14927,7 @@ export async function startServer({
       // permits the same-run retry when no output/tools/artifacts were seen.
       // Route through the shared finalizer (after surfacing stallPayload) so
       // the watchdog path gets the same run_retry_attempted/run_retry_finished
-      // telemetry as child close/error — not a bare terminal failure.
+      // telemetry as child close/error - not a bare terminal failure.
       const retried = finishWithRetryDecision('failed', 1, null);
       if (retried) {
         watchdogRetryRestarted = true;
@@ -14975,7 +14975,7 @@ export async function startServer({
      * stops at the moment the daemon gives up on this attempt.
      *
      * After a terminal verdict the agent is no longer making progress toward
-     * the user's task; whatever it emits next is a reaction to our teardown —
+     * the user's task; whatever it emits next is a reaction to our teardown -
      * a shutdown line on stderr, a late diagnostic promoted from that stderr,
      * the bridge's own flushed bookkeeping. Letting any of it re-stamp the
      * clock is what makes a run that sat silent for the whole timeout window
@@ -15011,7 +15011,7 @@ export async function startServer({
     };
     const noteAgentActivity = () => {
       // Once this attempt has a terminal verdict, nothing the child says may
-      // restart any of its clocks — not the progress timestamp, and not the
+      // restart any of its clocks - not the progress timestamp, and not the
       // inactivity watchdog. Bailing here rather than only skipping the
       // timestamp is load-bearing: the raw `child.stderr` handler routes every
       // late byte through this helper, so a child that logs while ignoring
@@ -15043,7 +15043,7 @@ export async function startServer({
       // before the new ceiling takes effect. Call unconditionally:
       // an earlier `if (inactivityTimer)` gate left the run in limbo
       // when `OD_CHAT_RUN_INACTIVITY_TIMEOUT_MS=0` but
-      // `OD_CHAT_RUN_ARTIFACT_QUIET_PERIOD_MS>0` — noteAgentActivity()
+      // `OD_CHAT_RUN_ARTIFACT_QUIET_PERIOD_MS>0` - noteAgentActivity()
       // had returned early at run start (pre-artifact delay = 0,
       // no timer set), so the guard then skipped the re-arm and the
       // newly-positive quiet-period delay never armed a timer at all.
@@ -15069,7 +15069,7 @@ export async function startServer({
     }
     // If detection can't find the binary, surface a friendly SSE error
     // pointing at /api/agents instead of silently falling back to
-    // spawn(def.bin) — that fallback re-introduces the exact ENOENT symptom
+    // spawn(def.bin) - that fallback re-introduces the exact ENOENT symptom
     // from issue #10.
     if (!resolvedBin || !agentLaunch.launchPath) {
       cleanupPromptFile();
@@ -15184,7 +15184,7 @@ export async function startServer({
      * seen for this turn, so the key event must land ahead of the first
      * `text_delta` on both the live stream and the persisted event list. It is
      * emitted as a normal agent event so it rides the same path as everything
-     * else — persisted into the assistant message and replayed on reconnect —
+     * else - persisted into the assistant message and replayed on reconnect -
      * rather than needing a message column of its own.
      */
     if (typeof run.doneKey === 'string' && run.doneKey) {
@@ -15203,7 +15203,7 @@ export async function startServer({
       ? new Promise<void>((resolve) => { completeCodexEvidenceCollection = resolve; })
       : undefined;
     // The stream handler is block-scoped to its parser branch, but the OpenCode
-    // post-run child export runs in the shared close handler below — after the
+    // post-run child export runs in the shared close handler below - after the
     // stream that produced the candidates is gone.
     let jsonEventStreamHandler: ReturnType<typeof createJsonEventStreamHandler> | null = null;
     let agentStdoutTail = '';
@@ -15257,7 +15257,7 @@ export async function startServer({
           externalPluginAnalytics: run.externalPluginAnalytics ?? null,
         }, {
           // Report persisted-binding vs truly-unbound selection to the daemon
-          // log and telemetry. Ids and the branch name only —
+          // log and telemetry. Ids and the branch name only -
           // never member rows or credentials.
           onWorkspaceScopeOutcome: (outcome) => {
             console.log(
@@ -15422,7 +15422,7 @@ export async function startServer({
       // --log-file confirms the chosen model was propagated to the
       // backend (the upstream signal that settings.json was read).
       // The watcher's `false` return (timeout) deliberately does NOT
-      // release — looper review at 263fd2fe7 flagged that releasing
+      // release - looper review at 263fd2fe7 flagged that releasing
       // on timeout reopens the slow-cold-start race: a >15s agy
       // startup that hadn't yet read settings.json would let run B
       // rewrite the file and run A would then read run B's model.
@@ -15476,13 +15476,13 @@ export async function startServer({
       ) {
         // EPIPE from a fast-exiting CLI (bad auth, missing model, exit on
         // launch) would otherwise surface as an unhandled stream error and
-        // crash the daemon. Swallow it — the regular exit/close handlers
+        // crash the daemon. Swallow it - the regular exit/close handlers
         // below already route the underlying failure to SSE via stderr.
         child.stdin.on('error', (err) => {
           // EPIPE = Unix broken-pipe when child closes its stdin read end
           // early. 'write EOF' (err.code 'EOF') = Windows equivalent of
           // the same condition via UV_EOF. Both mean the child exited before
-          // reading stdin — the process exit/close handlers already route
+          // reading stdin - the process exit/close handlers already route
           // the underlying failure to SSE via stderr, so swallow these here.
           if (err.code !== 'EPIPE' && err.code !== 'EOF' && err.message !== 'write EOF') {
             send(
@@ -15496,7 +15496,7 @@ export async function startServer({
         });
         // The app-server transport owns its own stdin writes (JSON-RPC
         // frames); only the plain stdin-prompt adapters hand the composed
-        // prompt over on this channel — and a prompt already delivered as the
+        // prompt over on this channel - and a prompt already delivered as the
         // child's file-backed stdin at spawn must never be written twice.
         writePromptToChildStdin = def.promptViaStdin === true && !promptDeliveredAtSpawn;
       }
@@ -15533,14 +15533,14 @@ export async function startServer({
     // Hand the extractor the guarded, rendered reply (`memoryReplyText`, fed
     // through `send()` from either the `agent` text_delta or the `stdout`
     // channel), NOT the child's raw stdout. For stream-json agents (Claude Code)
-    // raw stdout is JSONL transport — system:init, stream_event thinking deltas,
-    // hook_started/hook_response frames — none of which is the reply; mining it
+    // raw stdout is JSONL transport - system:init, stream_event thinking deltas,
+    // hook_started/hook_response frames - none of which is the reply; mining it
     // produced empty extractions that, near-identical across a build's re-fires,
     // caused the same turn to be re-analyzed dozens of times.
     child.on('close', () => {
       const userMsg = typeof message === 'string' ? message : '';
       // Forward the chat agent id so memory-llm.pickProvider can
-      // constrain its auto-pick to the chat protocol's family — keeps
+      // constrain its auto-pick to the chat protocol's family - keeps
       // a Claude Code (anthropic) chat from triggering OpenAI/gpt-4o-
       // mini extraction in the background just because the user has
       // an OpenAI key parked in media-config.
@@ -15599,7 +15599,7 @@ export async function startServer({
           // drawn marks) from this turn into durable feedback + rule memory.
           // This closes the "interaction → memory" loop automatically: the
           // agent no longer has to propose a rule and the user no longer has
-          // to click Keep — a review turn that carried annotations mines
+          // to click Keep - a review turn that carried annotations mines
           // itself in the background and writes straight to the store.
           const annotationPass =
             safeCommentAttachments.length > 0
@@ -15826,7 +15826,7 @@ export async function startServer({
      * construction, and Claude is the case where they genuinely differ: its
      * extended thinking arrives as `thinking_delta` frames whose `thinking` is
      * the empty string (20 of 20 frames on a 26.5s turn measured straight off
-     * the CLI). A token really was produced — thinking tokens are billed — so
+     * the CLI). A token really was produced - thinking tokens are billed - so
      * `first_token` belongs here; nothing was drawn, so the pixel boundary does
      * not. Run 1cc48454-e9a7-411a-981e-4325fcca95dd reported
      * `time_to_first_visible_output_ms: 9926` for a turn whose first on-screen
@@ -15834,7 +15834,7 @@ export async function startServer({
      *
      * A runtime whose visible output never reaches `send()` simply leaves the
      * mark unset, and `summarizeRunTimingAnalytics` already falls back to
-     * `firstTokenAt` — i.e. exactly the value this line used to write.
+     * `firstTokenAt` - i.e. exactly the value this line used to write.
      */
     const noteFirstTokenAt = (timestamp = Date.now()) => {
       // Telemetry-only, and every call site sits inside a live stream handler
@@ -15882,14 +15882,14 @@ export async function startServer({
     const visibleStdoutControlStripper = new TerminalControlSequenceStripper();
     // Strip on every Run, announce on the Runs that asked for a title. The
     // directive lives in the agent's own session history, so a resumed CLI can
-    // repeat the marker on a later turn that never requested one — gating the
+    // repeat the marker on a later turn that never requested one - gating the
     // stripper on the request is what let `<od-title>` reach the chat.
     //
     // NOTE(sync/main): origin/main fixed that leak AT THIS CALL SITE (pass
     // `enabled: true`, swap the announce callback). This branch fixed the same
     // leak one layer down, in `title-marker.ts`: the stripper now always scans,
     // and `enabled` means "adopt this title", not "strip it". Both fixes are
-    // kept — the call site below reads correctly against the new semantics, and
+    // kept - the call site below reads correctly against the new semantics, and
     // main's regression test (`enabled: true` + no-op emit) still passes.
     const rawTitleMarkerStripper = createAgentTitleMarkerStripper({
       enabled: Boolean(titleGenerationRequested),
@@ -15900,12 +15900,12 @@ export async function startServer({
      *
      * 挂在这里而不是逐个改五个调用点:所有可见文本都要先过 `titleMarkerStripper`,
      * 把它包一层,五处自动都有,以后再多一处也不会漏。
-     * 顺序是「先剥标题、再剥面板语法」—— 两者互不重叠,谁先都行,
+     * 顺序是「先剥标题、再剥面板语法」-- 两者互不重叠,谁先都行,
      * 但两个都必须有各自的半截缓冲,否则会闪出半截标签。
      */
     const panelGrammarStripper = createPanelGrammarStripper();
     /*
-     * **思考流**的那一份 —— 独立实例,不和正文共用。
+     * **思考流**的那一份 -- 独立实例,不和正文共用。
      *
      * 上面那个只盖住 `text_delta`。`thinking_delta` 走的是另一条路
      * (`sendAgentEvent` 里非 text_delta 一律直接 `emitAgentEvent`),
@@ -15914,7 +15914,7 @@ export async function startServer({
      * 刷新之后永远还在。用户第五次撞到的就有这一半。
      *
      * 为什么必须是**第二个实例**而不是复用上面那个:剥离器带「半截标记」缓冲,
-     * 两条流交错喂进同一个缓冲会互相串位 —— 正文的半截会被思考流的下一片接上,
+     * 两条流交错喂进同一个缓冲会互相串位 -- 正文的半截会被思考流的下一片接上,
      * 拼出一个两边都没写过的东西。各自一份缓冲是唯一安全的做法。
      */
     const thinkingGrammarStripper = createPanelGrammarStripper();
@@ -15922,7 +15922,7 @@ export async function startServer({
      * 这一轮的「下一步建议」(`<od-next key="…">`,见 `next-step-marker.ts`)。
      *
      * 和上面两个剥离器串在同一条链上,理由一样:所有可见文本都要过这条链,
-     * 挂在这里就不会漏掉任何一个调用点。它排在最外层 —— 看到的正是客户端
+     * 挂在这里就不会漏掉任何一个调用点。它排在最外层 -- 看到的正是客户端
      * 将要看到的文本,判据和最终屏幕上的东西一致。
      *
      * key 只管**采纳**,不管**剥离**:key 不对、没写 key、这一轮压根没 key,
@@ -15938,12 +15938,12 @@ export async function startServer({
      * 和上面三个剥离器串在同一条链上,理由一样:所有可见文本都要过这条链,
      * 挂在这里就不会漏掉任何一个调用点。
      *
-     * key 只管**采纳**,不管**剥离** —— 和 `<od-next>` 同一条规矩,也是
+     * key 只管**采纳**,不管**剥离** -- 和 `<od-next>` 同一条规矩,也是
      * `<od-title>` 拿线上事故换来的。
      *
      * `open` 还要过一道文件系统门:声明的路径必须落在项目根之内(realpath 之后
      * 再判一次,软链走不出去),而且文件必须**非空**。空白预览在用户眼里就是
-     * bug,所以标记先到、字节后到时,标记是**攒着**而不是丢掉 —— 由
+     * bug,所以标记先到、字节后到时,标记是**攒着**而不是丢掉 -- 由
      * `settle()` 在每个 tool_result 之后补发。
      */
     const artifactFocusStripper = createArtifactFocusMarkerStripper({
@@ -15976,7 +15976,7 @@ export async function startServer({
       const visible = titleMarkerStripper.flush();
       if (visible) emitGuardedTextDelta(visible);
       /*
-       * 思考流攒着的半截 —— 流结束了,它终究不是标记,原样吐回去。
+       * 思考流攒着的半截 -- 流结束了,它终究不是标记,原样吐回去。
        *
        * 「不吞用户的字」和「不闪半截标签」是同一条规矩的两面(见
        * `panel-grammar-strip.ts` 开头的两条硬要求)。走 `send` 而不是
@@ -15987,7 +15987,7 @@ export async function startServer({
       if (heldThinking) send('agent', { type: 'thinking_delta', delta: heldThinking });
       /*
        * Backstop for the empty-file gate. The normal release path is the
-       * `tool_result` hook in `emitAgentEvent` — the write lands, the result
+       * `tool_result` hook in `emitAgentEvent` - the write lands, the result
        * frame arrives, the bytes are there. This covers the runtime that
        * reports no write event at all: the file is on disk by the time the
        * stream ends, so one last probe turns a held marker into an event.
@@ -16035,12 +16035,12 @@ export async function startServer({
     //   2. `tool_use` content blocks emitted AFTER the marker cannot
     //      reach the daemon's tool-call dispatcher. Blocks emitted
     //      BEFORE the marker have already been dispatched; this guard
-    //      can't help with those — they're a separate hardening.
+    //      can't help with those - they're a separate hardening.
     //   3. The UI distinguishes "completed" from "killed by safety
     //      guard" through a structured SSE error rather than seeing a
     //      `fabricated_role_marker` warning followed by an eventual
     //      normal turn-end.
-    // Idempotent — multiple guard paths (per-message Claude, run-scoped
+    // Idempotent - multiple guard paths (per-message Claude, run-scoped
     // non-Claude, plain stdout) can all call it.
     let roleMarkerAbortFired = false;
     function abortForRoleMarker(marker: string) {
@@ -16063,7 +16063,7 @@ export async function startServer({
         try {
           acpSession.abort();
         } catch {
-          // ignore — best-effort
+          // ignore - best-effort
         }
       }
       if (child && !child.killed) design.runs.signalChild(run, 'SIGTERM');
@@ -16073,8 +16073,8 @@ export async function startServer({
     // Per-run tool-loop guard. Agents sometimes fixate on a failing tool call
     // and grind through dozens of identical attempts (e.g. re-running an Edit
     // whose `old_string` never matches, or a shell assertion against an element
-    // that does not exist). Unlike the BYOK proxy path — bounded by
-    // MAX_BYOK_TOOL_LOOPS — the autonomous chat agents had no such bound. This
+    // that does not exist). Unlike the BYOK proxy path - bounded by
+    // MAX_BYOK_TOOL_LOOPS - the autonomous chat agents had no such bound. This
     // guard observes the normalized tool_use/tool_result events EVERY agent
     // path emits, so one instance covers Claude, Codex/OpenCode, Copilot, ACP,
     // … It emits a one-shot `tool_loop` warning, then (in halt mode) terminates
@@ -16082,7 +16082,7 @@ export async function startServer({
     const toolLoopGuard = createToolLoopGuard({ mode: resolveToolLoopMode() });
     let toolLoopAbortFired = false;
 
-    // Idempotent — both agent-event paths (sendAgentEvent, the Claude
+    // Idempotent - both agent-event paths (sendAgentEvent, the Claude
     // stream-json callback) can route a halt verdict here.
     function abortForToolLoop(verdict: ToolLoopVerdict) {
       if (toolLoopAbortFired) return;
@@ -16093,7 +16093,7 @@ export async function startServer({
           'TOOL_LOOP_DETECTED',
           `Run terminated: the agent repeated a failing ${verdict.toolName} call ` +
             `${verdict.count}× without progress (\`${verdict.signature}\`). Re-check the ` +
-            'actual target — the file, the element, the command — before retrying ' +
+            'actual target - the file, the element, the command - before retrying ' +
             'instead of resubmitting the same turn.',
           { retryable: true },
         ),
@@ -16102,14 +16102,14 @@ export async function startServer({
         try {
           acpSession.abort();
         } catch {
-          // ignore — best-effort
+          // ignore - best-effort
         }
       }
       // Route through signalChild (not a bare child.kill) so the halt escalates
       // to the whole process group when one exists, matching abortForRoleMarker,
       // cancel, and the inactivity watchdog. A bare child.kill leaves Bash/build
       // grandchildren alive to keep mutating the workspace until the forced
-      // shutdown fires — exactly the loop class this guard is meant to stop.
+      // shutdown fires - exactly the loop class this guard is meant to stop.
       if (child && !child.killed) design.runs.signalChild(run, 'SIGTERM');
       scheduleForcedChildShutdown();
     }
@@ -16146,7 +16146,7 @@ export async function startServer({
     // Copilot and ACP bypassed the guard by calling send('agent', …) directly.)
     function emitAgentEvent(ev: any) {
       /*
-       * 思考流的剧场语法剥离 —— 位置是判据的一部分,不是随手挑的。
+       * 思考流的剧场语法剥离 -- 位置是判据的一部分,不是随手挑的。
        *
        * 必须在 `send('agent', …)` **之前**:落库(`persistRunEventToAssistantMessage`)
        * 就挂在 `send()` 里,晚一步这段协议就永久写进 `{ kind: 'thinking' }`,
@@ -16154,15 +16154,15 @@ export async function startServer({
        *
        * 必须在 `emitAgentEvent` 这一层而不是某个适配器里:这是 27 个 runtime
        * 唯一都要经过的收口(见下面 tool timing 的同款理由),挂在这里就没有
-       * runtime 能从覆盖面里漂出去 —— 上一次正是"某条路径漏挂"栽的跟头。
+       * runtime 能从覆盖面里漂出去 -- 上一次正是"某条路径漏挂"栽的跟头。
        *
        * 整片都是标记时连事件都不发,免得思考区多出一格空的「Thoughts」;
        * 但"模型已经在出字"这件事照记,否则首字时延会被记晚。
        *
-       * ⚠️ 该不该扔看的是 `strippingConsumedTheWholeFrame` ——「上游到底送没送字符」,
+       * ⚠️ 该不该扔看的是 `strippingConsumedTheWholeFrame` --「上游到底送没送字符」,
        * 不是「剥完还剩没剩」。W102(2026-09-03)在这里栽过:原来写的是 `if (!visible)`,
        * 而 claude 的思考帧正文 100% 是空串,`strip('')` 也返回空串,于是**整个
-       * claude 家族的思考帧被 100% 丢掉** —— 壳头「思考中」永远不亮(规格 W11 明写
+       * claude 家族的思考帧被 100% 丢掉** -- 壳头「思考中」永远不亮(规格 W11 明写
        * 「哪怕 delta 为空」也要进入思考中),传输层拿这些帧当心跳的静默计时也一起谎报。
        * 判据与真机数字见 `panel-grammar-strip.ts` 上那个函数的注释。
        */
@@ -16174,8 +16174,8 @@ export async function startServer({
         }
         if (visible !== ev.delta) ev = { ...ev, delta: visible };
       }
-      // Stamp tool call start/finish time here — the one choke point every runtime
-      // funnels through — so all 27 adapters get per-call durations without each
+      // Stamp tool call start/finish time here - the one choke point every runtime
+      // funnels through - so all 27 adapters get per-call durations without each
       // one growing its own clock. Only fills what is missing (ACP already carries
       // `startedAt`). See `runtimes/tool-timing.ts` for why both ends can be absent
       // and why the web treats a sub-100ms difference as "unknown", not "fast".
@@ -16191,7 +16191,7 @@ export async function startServer({
        * The `<od-focus open="…">` release point.
        *
        * A tool result is the daemon's only runtime-agnostic "the filesystem may
-       * have changed" signal — Write, Edit, and a Bash heredoc all land here,
+       * have changed" signal - Write, Edit, and a Bash heredoc all land here,
        * and this is the choke point every one of the 27 adapters funnels
        * through, so no runtime can drift out of coverage. `settle()` is a no-op
        * unless a marker is actually waiting on bytes, and it is idempotent, so
@@ -16280,7 +16280,7 @@ export async function startServer({
         // Decode time, captured BEFORE the emit. The gate has to run first to
         // learn whether these bytes are a token at all, but the emit inside it
         // fans the delta out to every SSE client and stamps
-        // `first_visible_output` on the way — reading the clock afterwards
+        // `first_visible_output` on the way - reading the clock afterwards
         // charges our own write latency to TTFT and can leave the visible-output
         // mark a millisecond AHEAD of the token that produced it. See the
         // matching sites in the Copilot and ACP handlers.
@@ -16371,7 +16371,7 @@ export async function startServer({
           // would otherwise reach the UI verbatim as a non-retryable
           // AGENT_EXECUTION_FAILED. Run the same per-agent diagnostic used at
           // child-exit so this path emits the specific class
-          // (AGENT_CONNECTION_DROPPED) — retryable, with copy the web can
+          // (AGENT_CONNECTION_DROPPED) - retryable, with copy the web can
           // localize and triage can count by code.
           const diagnostic = structuredCode
             ? null
@@ -16430,11 +16430,11 @@ export async function startServer({
         }
         // Stream-json input mode keeps the child's stdin open across the
         // turn so the daemon can stream further user messages mid-turn. The
-        // child has no other way to know the turn is over, though — without
+        // child has no other way to know the turn is over, though - without
         // an EOF it sits idle until the inactivity watchdog kills it.
         // Bookkeeping here closes stdin on a clean terminal turn:
         //   - turn_end (per-turn synthesized from `stop_reason`): fire on
-        //     `end_turn` etc. but NOT on `tool_use` — that stop reason
+        //     `end_turn` etc. but NOT on `tool_use` - that stop reason
         //     means the model paused mid-tool, not "turn complete".
         //   - usage (session result at EOF in single-shot mode).
         try {
@@ -16483,7 +16483,7 @@ export async function startServer({
         lastAgentEventPhase = summarizeAgentEventForInactivity(ev);
         noteAgentActivity();
         if (ev?.type === 'text_delta' && typeof ev.delta === 'string') {
-          // Decode time, read before the emit — see `sendAgentEvent`.
+          // Decode time, read before the emit - see `sendAgentEvent`.
           const decodedAt = Date.now();
           if (emitTitleFilteredGuardedTextDelta(ev.delta)) {
             noteFirstTokenAt(decodedAt);
@@ -16505,7 +16505,7 @@ export async function startServer({
       // Route through sendAgentEvent so that pi-rpc's error events
       // (extension_error, auto_retry_end with success=false, and the
       // message_update error delta) set agentStreamError and flip the
-      // run to `failed` on close — same path as qoder-stream-json and
+      // run to `failed` on close - same path as qoder-stream-json and
       // json-event-stream after issue #691. Also enables the
       // substantive-output guard (agentProducedOutput) so a pi run
       // that exits 0 without producing visible content is caught.
@@ -16651,8 +16651,8 @@ export async function startServer({
           if (runtimeEmissionCountsAsAgentProgress(event, meta)) {
             noteAgentActivity();
           }
-          // ...and everything the child emits AFTER the verdict — its shutdown
-          // line on stderr, the diagnostic promoted from that line — is a
+          // ...and everything the child emits AFTER the verdict - its shutdown
+          // line on stderr, the diagnostic promoted from that line - is a
           // reaction to the SIGTERM this error is about to trigger, not
           // progress. Freeze here so the recorded age keeps describing the
           // silence rather than our own teardown.
@@ -16678,8 +16678,8 @@ export async function startServer({
           // bridge has already called `fail()` -> `send('error')` for the failed
           // load. The child-close handler then clears the stale handle and
           // re-runs this turn fresh (the resume-target-missing block below), so
-          // forwarding this error would flash an execution failure — and trip
-          // clients that treat an SSE `error` as terminal — a beat before the
+          // forwarding this error would flash an execution failure - and trip
+          // clients that treat an SSE `error` as terminal - a beat before the
           // invisible recovery. Suppress it and leave a diagnostic instead; the
           // close handler is the sole authority on whether this turn ends in an
           // error or a transparent reseed. The `resumeAutoReseeded` guard lets a
@@ -16706,7 +16706,7 @@ export async function startServer({
             return;
           }
           if (event === 'agent' && data?.type === 'text_delta' && typeof data.delta === 'string') {
-            // Decode time, read before the emit — see `sendAgentEvent`.
+            // Decode time, read before the emit - see `sendAgentEvent`.
             const decodedAt = Date.now();
             if (emitTitleFilteredGuardedTextDelta(data.delta)) {
               noteFirstTokenAt(decodedAt);
@@ -16844,8 +16844,8 @@ export async function startServer({
         onSessionReady: () => noteSessionInitDoneAt(),
         // The prompt boundary for this transport is the `turn/start` write, not
         // a stdin write that never happens. Marking it keeps the Langfuse
-        // `stdin-write` and `agent-call` spans — and therefore the tool spans
-        // nested under `agent-call` — present on app-server runs.
+        // `stdin-write` and `agent-call` spans - and therefore the tool spans
+        // nested under `agent-call` - present on app-server runs.
         onPromptSendStart: () => {
           lifecycle.mark('model_call_start');
           lifecycle.mark('stdin_write_start');
@@ -17069,7 +17069,7 @@ export async function startServer({
       completeCodexEvidenceCollection();
       // Native OpenCode filters child-session events out of the root JSON
       // stream, so the live stream can only produce a terminal-only L1
-      // candidate — which fails the evidence graph on `child_started_missing`
+      // candidate - which fails the evidence graph on `child_started_missing`
       // and refuses every COMPLEX task on this runtime. `opencode export
       // --sanitize` is the only surface that pairs a child's `parentID` with
       // its own transcript, and it can only be read once the child has exited.
@@ -17105,7 +17105,7 @@ export async function startServer({
       // reports a structured `resume_failed` JSON-RPC error that the ACP bridge
       // turns into a FATAL. Either would otherwise be swallowed by the
       // `fatal_rpc_error` / `stream_error` paths below and leave the dead session
-      // id stored — so every later turn would retry the same broken resume (#4275
+      // id stored - so every later turn would retry the same broken resume (#4275
       // class). Clearing the stale handle here lets the next turn start fresh +
       // re-seed the full transcript: one cold turn, never a broken conversation.
       if (
@@ -17139,11 +17139,11 @@ export async function startServer({
         }
         // The resumed upstream session is gone (expired / pruned). Clear the dead
         // handle and TRANSPARENTLY re-run this same turn with a fresh session +
-        // the full transcript rebuilt from the DB — exactly the pre-session-reuse
+        // the full transcript rebuilt from the DB - exactly the pre-session-reuse
         // path. The user sees one (slightly slower) turn, never an error or a
         // "resend" prompt. Re-spawn reuses the same-run retry machinery; because
         // the session row is now cleared, the re-spawn resolves isResuming=false
-        // (fresh session, full transcript), so it CANNOT resume-fail again — the
+        // (fresh session, full transcript), so it CANNOT resume-fail again - the
         // `resumeAutoReseeded` guard is belt-and-suspenders against any loop.
         clearAgentSession(db, run.conversationId, def.id);
         if (!run.resumeAutoReseeded) {
@@ -17233,7 +17233,7 @@ export async function startServer({
         });
       }
       // P0-24 N9: a plugin-authoring run that exited cleanly without the
-      // generated-plugin files still ended normally — what it produced never
+      // generated-plugin files still ended normally - what it produced never
       // decides the run's status. Keep the evidence as a diagnostic only.
       if (
         code === 0 &&
@@ -17299,7 +17299,7 @@ export async function startServer({
         return finishWithRetryDecision('failed', 0, signal, {
           emptyReplyError: createSseErrorPayload(
             'AGENT_EXECUTION_FAILED',
-            `${def.name} returned an empty response. This may indicate an expired session — try re-authenticating the agent.`,
+            `${def.name} returned an empty response. This may indicate an expired session - try re-authenticating the agent.`,
             { retryable: true },
           ),
         });
@@ -17338,7 +17338,7 @@ export async function startServer({
       });
       // Skip the close-handler failure emit when the run is already
       // terminal: the inactivity watchdog (failForInactivity) finishes the
-      // run — sending its error and clearing run.clients/eventsLogStream —
+      // run - sending its error and clearing run.clients/eventsLogStream -
       // before SIGTERM, so re-emitting here would double-send the error and
       // reopen the closed events-log stream. The run is finalized below
       // regardless (finish() no-ops once terminal).
@@ -17416,7 +17416,7 @@ export async function startServer({
       // without a manifest sidecar (e.g. agent used write_file instead of
       // create_artifact, or the run terminated between HTML write and
       // sidecar write). Only files modified after the run started are
-      // touched — pre-existing HTML in imported-folder projects must not
+      // touched - pre-existing HTML in imported-folder projects must not
       // receive spurious manifests. Best-effort; must not block finalisation.
       // See issue #2893.
       if (run.projectId) {
@@ -17896,7 +17896,7 @@ export async function startServer({
         const continuation = pendingStrategyContinuation;
         // This turn is not over: the daemon is about to run the next stage of
         // the SAME logical task, with no user prompt of its own. Record the
-        // hand-off on the source stream — it lands in the Run's event log,
+        // hand-off on the source stream - it lands in the Run's event log,
         // which is where a multi-Run turn is reconstructed when diagnosing one.
         //
         // Observability only. Do NOT drive rendering from it: the client keeps
@@ -17956,7 +17956,7 @@ export async function startServer({
         // receipt. The cleanup owner separately fences the shutdown deadline.
         completeCodexEvidenceCollection();
         // Best-effort cleanup of the per-run agy log file on every close
-        // path — successful, failed, cancelled, or non-zero exit — so
+        // path - successful, failed, cancelled, or non-zero exit - so
         // /tmp doesn't accumulate one file per Antigravity run.
         if (agentLogFilePath) {
           fs.promises.unlink(agentLogFilePath).catch(() => {});
@@ -17996,12 +17996,12 @@ export async function startServer({
         const userMessage = encodeStreamJsonUserMessage(composed);
         try {
           // E-lite: `write` returns false when the chunk was buffered because the
-          // OS pipe is full (the child isn't draining stdin) — the corroborating
+          // OS pipe is full (the child isn't draining stdin) - the corroborating
           // signal for a `stdin_write`-phase inactivity stall.
           const accepted = child.stdin.write(userMessage, 'utf8', markStdinWriteEnd);
           run.stdinBackpressure = accepted === false;
         } catch (err) {
-          // Swallow EPIPE here for the same reason as the listener above —
+          // Swallow EPIPE here for the same reason as the listener above -
           // a fast-exiting child has already routed its failure through
           // stderr / exit handlers.
           if (err && err.code !== 'EPIPE') throw err;
@@ -18171,7 +18171,7 @@ export async function startServer({
   orbitService.setTemplateResolver(async (skillId) => {
     // Orbit templates (live-artifact, etc.) live under design-templates after
     // the split, but earlier projects may still point at functional-skill
-    // ids for the same purpose — search both roots so a stored project id
+    // ids for the same purpose - search both roots so a stored project id
     // keeps resolving through one or the other.
     // This callback carries no request/project Workspace authority. It may
     // therefore resolve app-bundled templates only; accepting a user skill
@@ -18246,7 +18246,7 @@ export async function startServer({
     },
     internalRuns: internalRunCreation,
     // POST /api/runs and POST /api/chat are this file's "create a run" entry
-    // points — see RegisterRunRoutesDeps.enforceWorkspaceProjectMutation.
+    // points - see RegisterRunRoutesDeps.enforceWorkspaceProjectMutation.
     // Same provider `collab` was built with (collab.workspaceContext ===
     // workspaceContext), matching the cross-check `registerProjectRoutes`
     // wires up for its own mutation routes above.
@@ -18470,7 +18470,7 @@ export async function startServer({
       }
       if (resolved && !resolved.ok) {
         // Non-throwing resolver failures cannot have called `finalizeOk()`,
-        // so the project pin is still the previous one — nothing to roll
+        // so the project pin is still the previous one - nothing to roll
         // back beyond the loser cleanup the caller will perform.
         throw new Error(`Automation plugin ${primaryPluginId} could not be applied: ${JSON.stringify(resolved.body)}`);
       }
@@ -18560,7 +18560,7 @@ export async function startServer({
           'Do not ask follow-up questions, do not emit <question-form>, and do not wait for user input. Pick reasonable defaults and finish the task.',
         ].join('\n'),
       };
-      // A scheduled Automation has no caller either — see the live-artifact
+      // A scheduled Automation has no caller either - see the live-artifact
       // note above. Same start path, same reason.
       internalRunCreation.start(
         run,
@@ -18572,7 +18572,7 @@ export async function startServer({
     // Tear-down for the case where the durable routine_run row was never
     // inserted (sibling daemon won the slot, or insertRun threw). The
     // in-memory chat run was created speculatively above, but the deferred
-    // `persistPreparedRun()` has not run yet — so no project / conversation
+    // `persistPreparedRun()` has not run yet - so no project / conversation
     // / snapshot writes have to be rolled back. Dropping the run keeps it
     // off `/api/runs` instead of leaving a phantom canceled entry there.
     const discardUnstarted = () => {
@@ -18590,7 +18590,7 @@ export async function startServer({
       if (routine.target.mode === 'reuse') {
         // Prefer the fully-resolved snapshot id; fall back to whatever id
         // `resolvePluginSnapshot()` left pinned on the project if it threw
-        // partway through linking — see the comment on
+        // partway through linking - see the comment on
         // `partiallyAppliedSnapshotId` above.
         const snapshotIdToDiscard =
           resolvedRoutineSnapshot?.ok
@@ -18742,7 +18742,7 @@ export async function startServer({
   });
 
   // proxy routes (anthropic / openai / azure / google / ollama) live
-  // in chat-routes.ts now — garnet had a partial duplicate here that
+  // in chat-routes.ts now - garnet had a partial duplicate here that
   // referenced helpers (rejectPluginInProxyBody, extractGeminiText, …)
   // dropped during the reconcile merge. Deleted to fix the BYOK crash.
   // Restore the plugin-runs-must-go-through-daemon gate by adding it
@@ -18765,7 +18765,7 @@ export async function startServer({
 
   registerStaticSpaFallback(app, staticDir);
 
-  // Wait for `listen` to bind so callers always see the resolved URL —
+  // Wait for `listen` to bind so callers always see the resolved URL -
   // critical when port=0 (ephemeral port) and when the embedding sidecar
   // needs to advertise the port to a parent process before any request
   // can flow. Three callers depend on this contract:
@@ -18799,7 +18799,7 @@ export async function startServer({
       routineService?.stop();
       clearInterval(teamResourcesPollTimer);
       // Disarms synchronously; the returned promise drains an in-flight pass.
-      // Nothing here awaits it — the point is that no NEW pass can start once
+      // Nothing here awaits it - the point is that no NEW pass can start once
       // the daemon is coming down.
       void chatArtifactMaintenance.stop();
       workspaceHubSubscriptions?.dispose();
@@ -18841,7 +18841,7 @@ export async function startServer({
         //
         // Node's `keepAliveTimeout` (default 5s) only arms *after* a
         // response finishes writing, bounding the idle gap before the next
-        // request on the same socket — it does not fire while an SSE
+        // request on the same socket - it does not fire while an SSE
         // response is still streaming. A streaming `/api/runs/:id/events`
         // response stays open until the agent finishes, so middlebox idle
         // timers (nginx, socat/docker bridges, EC2 SG NAT) are typically
@@ -18862,7 +18862,7 @@ export async function startServer({
         server.headersTimeout = 125_000;
         const address = server.address();
         // `address()` can in theory return `string | AddressInfo | null`. For
-        // a TCP listener it's always `AddressInfo` with a `.port` — the guard
+        // a TCP listener it's always `AddressInfo` with a `.port` - the guard
         // is belt-and-braces so an unexpected null never silently produces a
         // `http://127.0.0.1:0` URL that callers would then try to fetch.
         const boundPort =

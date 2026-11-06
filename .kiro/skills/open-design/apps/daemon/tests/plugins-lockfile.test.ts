@@ -75,7 +75,7 @@ describe('plugin lockfile', () => {
       const filePath = path.join(dir, '.od', 'od-plugin-lock.json');
       const names = Array.from({ length: 12 }, (_, i) => `community/plugin-${i}`);
       // All twelve read-modify-write cycles start from the same on-disk state
-      // and race to write back — the exact shape a burst of concurrent
+      // and race to write back - the exact shape a burst of concurrent
       // installs produces. Before the per-path write queue, whichever write
       // landed last silently discarded every entry from the others.
       await Promise.all(

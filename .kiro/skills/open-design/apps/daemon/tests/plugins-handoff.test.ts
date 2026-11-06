@@ -1,4 +1,4 @@
-// Phase 7-8 entry slice / spec §11.5.1 — handoff atom helper.
+// Phase 7-8 entry slice / spec §11.5.1 - handoff atom helper.
 
 import { describe, expect, it } from 'vitest';
 import type { ArtifactManifest } from '@open-design/contracts';
@@ -14,7 +14,7 @@ const baseManifest = (extra: Partial<ArtifactManifest> = {}): ArtifactManifest =
   ...extra,
 });
 
-describe('recordHandoff — append-only contracts', () => {
+describe('recordHandoff - append-only contracts', () => {
   it('appends a new exportTargets entry', () => {
     const out = recordHandoff({
       manifest: baseManifest(),
@@ -49,7 +49,7 @@ describe('recordHandoff — append-only contracts', () => {
   });
 });
 
-describe('recordHandoff — handoffKind monotonicity', () => {
+describe('recordHandoff - handoffKind monotonicity', () => {
   it('records the first handoffKind unconditionally', () => {
     const out = recordHandoff({
       manifest: baseManifest(),

@@ -15,12 +15,12 @@
 //   - PRUNE `user_profile` down to the canonical field set the settings
 //     profile editor writes; drop chat-form residue rows. Delete the entry
 //     when nothing canonical survives.
-//   - KEEP everything else: LLM-extracted facts (kept deliberately —
+//   - KEEP everything else: LLM-extracted facts (kept deliberately -
 //     they are indistinguishable from hand-written prose on disk),
 //     connector/brand output, and anything the user typed by hand.
 //
 // One-time semantics: a marker file inside the memory dir records the run.
-// Later boots are no-ops — this is a migration, not a standing GC — so a
+// Later boots are no-ops - this is a migration, not a standing GC - so a
 // user who consciously re-enables extraction afterwards is not re-flipped
 // and re-created entries are not re-reaped.
 
@@ -56,7 +56,7 @@ function markerPath(dataDir: string): string {
 /**
  * Run the one-time auto-extraction cleanup for a data dir. Idempotent via a
  * marker file; safe to call on every daemon boot. Never throws for a single
- * bad entry — a migration must not take the daemon down.
+ * bad entry - a migration must not take the daemon down.
  */
 export async function runAutoExtractionCleanup(
   dataDir: string,
@@ -65,7 +65,7 @@ export async function runAutoExtractionCleanup(
     await fsp.access(markerPath(dataDir));
     return { ran: false, deletedIds: [], profilePruned: false };
   } catch {
-    // No marker — first run.
+    // No marker - first run.
   }
 
   const deletedIds: string[] = [];

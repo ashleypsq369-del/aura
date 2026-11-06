@@ -1,4 +1,4 @@
-// Plan §6 Phase 2B + spec §11.6 — `/api/plugins/:id/preview`
+// Plan §6 Phase 2B + spec §11.6 - `/api/plugins/:id/preview`
 // fallback chain.
 //
 // Several bundled plugins (`example-guizang-ppt`, `example-html-ppt`)
@@ -116,7 +116,7 @@ afterEach(async () => {
   await rm(pluginRoot, { recursive: true, force: true });
 });
 
-describe('GET /api/plugins/:id/preview — fallback chain', () => {
+describe('GET /api/plugins/:id/preview - fallback chain', () => {
   it('assembles example-slides fragments with the sibling template when the declared entry is missing', async () => {
     const resp = await fetch(`${baseUrl}/api/plugins/${PLUGIN_ID}/preview`);
     if (resp.status !== 200) {

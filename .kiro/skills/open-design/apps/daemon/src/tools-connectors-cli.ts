@@ -2249,7 +2249,7 @@ function skillHasAgentFrontmatter(text: string): boolean {
 function skillHasReusableSections(text: string): boolean {
   if (text.trim().length < 800) return false;
   // Accept "What's inside", the skill_missing_reuse_sections warning's own
-  // "What is inside" wording, and "Contents" — the validator must accept the
+  // "What is inside" wording, and "Contents" - the validator must accept the
   // headings the warning tells authors to write or --fail-on-warnings loops
   // forever re-spelling them (#4435).
   const hasInside = (/\*\*What(?:'s| is) inside:\*\*/iu.test(text) || /^##\s+(?:What(?:'s| is) inside|Contents)\s*$/imu.test(text))

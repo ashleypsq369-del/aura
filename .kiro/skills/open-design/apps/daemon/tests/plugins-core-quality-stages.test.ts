@@ -6,12 +6,12 @@
 // verbatim (`source: 'declared'`), so the `plan` (TodoWrite) and
 // `critique` (5-dimension quality / anti-slop) stages never run. The
 // colleague's symptom: using a plugin/template skipped the five-stage
-// main flow — no todolist, no real anti-slop critique loop.
+// main flow - no todolist, no real anti-slop critique loop.
 //
 // Invariant under test: when a plugin produces a code/document design
 // artifact (a `generate` stage whose atoms include `file-write` or
 // `live-artifact`), the applied pipeline always carries `plan` and
-// `critique` — whether the artifact came from a free-form prompt or a
+// `critique` - whether the artifact came from a free-form prompt or a
 // template. Pure media generation (image/video/audio) stays
 // generate-only.
 
@@ -104,7 +104,7 @@ describe('core quality-stage floor', () => {
 
   // Regression for the blocking review: bundled media scenarios seed an
   // `example.html`, so they ship `generate: [file-write, live-artifact]`
-  // — the SAME atom shape as a code artifact. The media `mode` must keep
+  // - the SAME atom shape as a code artifact. The media `mode` must keep
   // them generate-only; gating on atom shape alone would wrongly rewrite
   // them to plan -> generate -> critique.
   it.each([
@@ -149,7 +149,7 @@ describe('core quality-stage floor', () => {
         'utf8',
       ),
     ) as PluginManifest;
-    // Sanity: the shipped template really is generate-only — this is the
+    // Sanity: the shipped template really is generate-only - this is the
     // exact shape the screenshots' templates carry.
     expect(manifest.od?.pipeline?.stages.map((s) => s.id)).toEqual(['generate']);
 
@@ -214,7 +214,7 @@ describe('core quality-stage floor', () => {
           mode: 'image',
           useCase: { query: 'Make a poster.' },
           capabilities: ['prompt:inject', 'fs:write'],
-          // deliberately no `pipeline` — forces scenario fallback
+          // deliberately no `pipeline` - forces scenario fallback
         },
       },
     } as InstalledPluginRecord;

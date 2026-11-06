@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, Calendar, Pill, AlertTriangle,
@@ -311,7 +311,7 @@ export default function NotificationCenter() {
 
   return (
     <>
-      {/* Bell trigger — animated */}
+      {/* Bell trigger - animated */}
       <div className="relative">
         <motion.button
           onClick={() => setOpen(v => !v)}

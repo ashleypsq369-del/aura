@@ -2,7 +2,7 @@
 
 Reference for the `od-contribute` skill's `validate-skill-submission.sh` step and for guiding a user through assembling a Skill submission.
 
-> **Authoritative source**: read 1–2 existing folders under `skills/` in `nexu-io/open-design` at runtime — conventions evolve faster than this doc.
+> **Authoritative source**: read 1-2 existing folders under `skills/` in `nexu-io/open-design` at runtime - conventions evolve faster than this doc.
 
 ## Minimum viable skill
 
@@ -13,7 +13,7 @@ skills/<your-skill>/
 
 That's it. Many of the simplest skills in OD are exactly that: one Markdown file in one folder.
 
-## Frontmatter — what `validate-skill-submission.sh` requires
+## Frontmatter - what `validate-skill-submission.sh` requires
 
 ```yaml
 ---
@@ -43,11 +43,11 @@ Looking at existing skills, the typical body has:
 
 ## When a skill folder needs more than `SKILL.md`
 
-- **Reference assets** — long prompt fragments, example outputs, image references — go alongside `SKILL.md` in the same folder, referenced via relative paths in `SKILL.md`.
+- **Reference assets** - long prompt fragments, example outputs, image references - go alongside `SKILL.md` in the same folder, referenced via relative paths in `SKILL.md`.
 - **Subfolders** are fine: the validator only requires that every relative reference inside `SKILL.md` resolves and that no path escapes the skill folder.
 
 ## Don'ts
 
-- Don't put runtime code in here. Skills are *content* — Markdown + maybe assets. Code adapters live in `apps/daemon/src/`.
-- Don't reference files outside `skills/<your-skill>/` — that breaks portability.
+- Don't put runtime code in here. Skills are *content* - Markdown + maybe assets. Code adapters live in `apps/daemon/src/`.
+- Don't reference files outside `skills/<your-skill>/` - that breaks portability.
 - Don't put binaries you don't need (the lighter the folder, the easier the review).

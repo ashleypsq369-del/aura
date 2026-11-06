@@ -94,11 +94,11 @@ jobs:
           stale-issue-label: 'stale'
           exempt-issue-labels: 'good first issue,help wanted,security,exempt-from-stale'
           stale-issue-message: |
-            This issue has been inactive for 30 days and is being marked as stale. If it is still relevant, please leave a comment or push an update — otherwise it will be closed in 7 days.
+            This issue has been inactive for 30 days and is being marked as stale. If it is still relevant, please leave a comment or push an update - otherwise it will be closed in 7 days.
 
             This is only a queue-management step, not a rejection of the report. Closed issues can be reopened when work resumes.
           close-issue-message: |
-            Closing this issue for now because it has been inactive for more than 37 days. If it is still relevant, please leave a comment and reopen — context is preserved and we can pick it back up.
+            Closing this issue for now because it has been inactive for more than 37 days. If it is still relevant, please leave a comment and reopen - context is preserved and we can pick it back up.
           remove-issue-stale-when-updated: true
           operations-per-run: 100
           ascending: true

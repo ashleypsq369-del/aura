@@ -75,7 +75,7 @@ describe('workspace_resources persistence', () => {
 
   // Mirrors `ensureWorkspaceProject`'s idempotency contract (db.ts doc
   // comment above it): a resource already bound is returned as-is rather
-  // than bound a second time — the `(resource_type, resource_id)` primary
+  // than bound a second time - the `(resource_type, resource_id)` primary
   // key physically enforces this, so a naive second INSERT would throw
   // instead of silently duplicating.
   it('is idempotent across repeated ensure calls, even naming a different workspace', () => {
@@ -165,7 +165,7 @@ describe('workspace_resources persistence', () => {
   });
 
   // Uninstall must call this regardless of which workspace the binding
-  // actually lives in — see installer.ts's uninstallPlugin, which has no
+  // actually lives in - see installer.ts's uninstallPlugin, which has no
   // caller-supplied workspaceId to scope a two-key delete with.
   it('deletes a binding by resource id alone, regardless of its bound workspace', () => {
     const db = seed();

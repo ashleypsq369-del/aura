@@ -1,5 +1,5 @@
-/**
- * MentalHealthForm.jsx — PHQ-9 (Depression) + GAD-7 (Anxiety)
+﻿/**
+ * MentalHealthForm.jsx - PHQ-9 (Depression) + GAD-7 (Anxiety)
  * Redesigned: PageHeader + clean question cards + crisis alert
  */
 import { useState } from 'react';
@@ -18,7 +18,7 @@ const PHQ9_QUESTIONS = [
   { key: 'sleep_trouble',            text: 'Trouble falling or staying asleep, or sleeping too much', crisis: false },
   { key: 'feeling_tired',            text: 'Feeling tired or having little energy', crisis: false },
   { key: 'appetite_change',          text: 'Poor appetite or overeating', crisis: false },
-  { key: 'feeling_bad_about_self',   text: 'Feeling bad about yourself — feeling like a failure', crisis: false },
+  { key: 'feeling_bad_about_self',   text: 'Feeling bad about yourself - feeling like a failure', crisis: false },
   { key: 'trouble_concentrating',    text: 'Trouble concentrating on things, such as reading or watching TV', crisis: false },
   { key: 'moving_slowly_or_fidgety', text: 'Moving/speaking so slowly others noticed, or being unusually fidgety', crisis: false },
   { key: 'thoughts_of_harm',         text: 'Thoughts that you would be better off dead, or of hurting yourself', crisis: true },
@@ -126,7 +126,7 @@ export default function MentalHealthForm() {
       ]);
       toast.success('Mental health assessments saved');
       if (phq9Res.data.crisis_alert)
-        toast.error('CRISIS ALERT — Suicide risk detected. Immediate intervention required.', { duration: 10000 });
+        toast.error('CRISIS ALERT - Suicide risk detected. Immediate intervention required.', { duration: 10000 });
       const alerts = (phq9Res.data.alerts_generated?.length || 0) + (gad7Res.data.alerts_generated?.length || 0);
       if (alerts > 0) toast.error(`${alerts} alert(s) generated`, { duration: 5000 });
       queryClient.invalidateQueries(['phq9', patientId]);
@@ -181,7 +181,7 @@ export default function MentalHealthForm() {
             <div className="flex items-start gap-3">
               <AlertTriangle size={18} className="text-red-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm font-bold text-red-900">⚠ CRISIS ALERT — Self-harm thoughts indicated</p>
+                <p className="text-sm font-bold text-red-900">⚠ CRISIS ALERT - Self-harm thoughts indicated</p>
                 <p className="text-xs text-red-800 mt-1">
                   Patient has indicated thoughts of self-harm. <strong>Do not leave patient alone.</strong>
                   Immediate psychiatric evaluation required.
@@ -208,7 +208,7 @@ export default function MentalHealthForm() {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h2 className="text-sm font-bold text-[var(--text-900)]">PHQ-9: Depression Screening</h2>
-                <p className="text-xs text-[var(--text-400)]">9 questions · score 0–27</p>
+                <p className="text-xs text-[var(--text-400)]">9 questions · score 0-27</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tabular-nums text-purple-600">{phq9Total}</span>
@@ -236,7 +236,7 @@ export default function MentalHealthForm() {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h2 className="text-sm font-bold text-[var(--text-900)]">GAD-7: Anxiety Screening</h2>
-                <p className="text-xs text-[var(--text-400)]">7 questions · score 0–21</p>
+                <p className="text-xs text-[var(--text-400)]">7 questions · score 0-21</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tabular-nums text-amber-600">{gad7Total}</span>

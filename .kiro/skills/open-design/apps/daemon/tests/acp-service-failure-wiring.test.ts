@@ -14,9 +14,9 @@ import { startServer } from '../src/server.js';
 //
 // The gap this pins down: `attachAcpSession`'s `fail()`
 // (`agent-protocol/acp/session.ts`) hard-codes `AGENT_EXECUTION_FAILED` on
-// every failure payload it emits, and — unlike the json-event-stream and Claude
+// every failure payload it emits, and - unlike the json-event-stream and Claude
 // paths in `server.ts`, which both run `classifyAgentServiceFailure` over the
-// failure text — never upgrades that code from what the agent actually said.
+// failure text - never upgrades that code from what the agent actually said.
 // So on all nine `streamFormat: 'acp-json-rpc'` runtimes (amr, vibe, devin,
 // hermes, kilo, kimi, kiro, trae-cli, reasonix), a provider outage, a throttle,
 // and a signed-out CLI all arrive at the client under the same opaque code.
@@ -24,7 +24,7 @@ import { startServer } from '../src/server.js';
 // A pure test over the classifier proves nothing about that, because the
 // classifier was never the broken part: it already recognises every one of
 // these strings. What was missing was the call. So these tests assert on the
-// two surfaces a user and the telemetry pipeline actually observe — the `error`
+// two surfaces a user and the telemetry pipeline actually observe - the `error`
 // SSE frame recorded in the run's events log, and `run.error` / `run.errorCode`
 // on `GET /api/runs/:id`.
 //
@@ -47,7 +47,7 @@ type RunStatus = {
   eventsLogPath: string;
 };
 
-/** The structured half of an SSE `error` frame — what the web localizes from. */
+/** The structured half of an SSE `error` frame - what the web localizes from. */
 type ErrorFrame = {
   message?: unknown;
   error?: {
@@ -60,7 +60,7 @@ type ErrorFrame = {
 
 type RunEvent = { event: string; data: unknown };
 
-/** The persisted half of the same failure — what a reload reads instead of SSE. */
+/** The persisted half of the same failure - what a reload reads instead of SSE. */
 type PersistedStatusEvent = {
   kind?: unknown;
   label?: unknown;
@@ -89,11 +89,11 @@ const AGENT_ID = 'kimi';
 const AGENT_BIN = 'kimi';
 
 /**
- * The line a user read on packaged `0.21.2-beta.1`, verbatim — an AMR/vela run
+ * The line a user read on packaged `0.21.2-beta.1`, verbatim - an AMR/vela run
  * whose provider replied "overloaded". The `(event=session.error, session=…)`
  * tail is vela's own; the `json-rpc id N: ` prefix is the daemon's
  * `rpcErrorMessage`. Reported from inside `session/prompt`, so it reaches the
- * daemon post-session — the half of the ACP path the handshake guidance is
+ * daemon post-session - the half of the ACP path the handshake guidance is
  * explicitly not about.
  */
 const UPSTREAM_OVERLOADED =
@@ -103,10 +103,10 @@ const UPSTREAM_OVERLOADED =
   + '"sessionID":"ses_f86193cfdffevgdF9Hpf8QQcGF"},"type":"session.error"}'
   + ' (event=session.error, session=ses_f86193cfdffevgdF9Hpf8QQcGF)';
 
-/** What a signed-out ACP CLI answers `session/new` with — found on a real Kimi CLI. */
+/** What a signed-out ACP CLI answers `session/new` with - found on a real Kimi CLI. */
 const AUTH_REQUIRED = 'Authentication required';
 
-describe('ACP model-service failure classes — server wiring', () => {
+describe('ACP model-service failure classes - server wiring', () => {
   const originalEnv = snapshotEnv();
   let started: StartedServer | null = null;
   let binDir: string | null = null;
@@ -131,7 +131,7 @@ describe('ACP model-service failure classes — server wiring', () => {
 
   // The headline case. `UPSTREAM_UNAVAILABLE` is the one code the web has an
   // upstream-outage card for; without it this run reaches the client as
-  // `AGENT_EXECUTION_FAILED`, whose card has a null messageKey — which hands the
+  // `AGENT_EXECUTION_FAILED`, whose card has a null messageKey - which hands the
   // description slot back to the raw string, so the user reads vela's whole JSON
   // envelope with the one sentence that explains the failure quoted inside it.
   it('names a mid-turn provider overload as an upstream outage', async () => {
@@ -199,7 +199,7 @@ describe('ACP model-service failure classes — server wiring', () => {
   // Same bridge, a different class, and the one that decides which of two
   // completely different remedies the user is sent after. A handshake rejection
   // that names authentication is claimed by auth, not by the CLI-refusal
-  // verdict — `AGENT_CLI_SESSION_REFUSED` would tell a signed-out user to
+  // verdict - `AGENT_CLI_SESSION_REFUSED` would tell a signed-out user to
   // change a CLI that works.
   it('names a signed-out CLI as an auth failure, not a generic execution failure', async () => {
     binDir = await mkdtemp(path.join(os.tmpdir(), 'od-acp-service-auth-bin-'));
@@ -307,7 +307,7 @@ async function detectAgents(url: string): Promise<void> {
 }
 
 /**
- * Makes the fixture CLI the ONLY agent CLI detection can find — see the same
+ * Makes the fixture CLI the ONLY agent CLI detection can find - see the same
  * helper in `acp-handshake-failure-wiring.test.ts` for why an unscoped
  * `GET /api/agents` turns into a dozen real CLI spawns on a developer machine.
  */

@@ -43,7 +43,7 @@ retrieval:
 
 ## What Belongs Here
 
-Global controls affect the entire product experience but are not the user's primary task. They are reached occasionally — once per session or less — and should not compete visually with primary navigation or content.
+Global controls affect the entire product experience but are not the user's primary task. They are reached occasionally - once per session or less - and should not compete visually with primary navigation or content.
 
 Typical global toolbar controls:
 - **Currency selector** (e-commerce, financial tools)
@@ -68,7 +68,7 @@ A secondary row above or within the main header, right-aligned. Common on e-comm
 [Main navigation]
 ```
 
-### Header right — compact
+### Header right - compact
 Inline with the main header, far right, using small typography and minimal visual weight.
 
 ```
@@ -83,17 +83,17 @@ For more complex preference sets, a Settings page or panel is cleaner than cramm
 
 ## Typography and Visual Treatment
 
-Global toolbar controls are secondary UI — they should not draw the eye away from primary content.
+Global toolbar controls are secondary UI - they should not draw the eye away from primary content.
 
-- **Font size: 13–14px** — deliberately smaller than body text (14px maximum per the type scale)
-- **Colour: muted** — use a secondary text colour (`--color-text-secondary`), not the primary text colour
-- **No bold** — regular weight only
-- **Compact spacing** — tighter padding than primary navigation items
-- **Separator** — a `|` or thin vertical rule between adjacent controls (language | currency) keeps them grouped without using full button chrome
+- **Font size: 13-14px** - deliberately smaller than body text (14px maximum per the type scale)
+- **Colour: muted** - use a secondary text colour (`--color-text-secondary`), not the primary text colour
+- **No bold** - regular weight only
+- **Compact spacing** - tighter padding than primary navigation items
+- **Separator** - a `|` or thin vertical rule between adjacent controls (language | currency) keeps them grouped without using full button chrome
 
 ```css
 .toolbar-control {
-  font-size: var(--text-sm);       /* 13–14px */
+  font-size: var(--text-sm);       /* 13-14px */
   color: var(--color-text-secondary);
   font-weight: 400;
   padding: 4px 8px;
@@ -102,13 +102,13 @@ Global toolbar controls are secondary UI — they should not draw the eye away f
 
 ## Interaction Pattern
 
-Global controls typically use a **compact dropdown** — clicking the label opens a small popover or select with the available options.
+Global controls typically use a **compact dropdown** - clicking the label opens a small popover or select with the available options.
 
 - Show the current value as the trigger label: `EUR ▾`, `EN ▾`
 - A language control shows the current language as code or name, never a globe or flag alone. A globe names the category, not the state. A flag names a country. List choices by endonym ("Suomi", "Deutsch"): the reader who needs the control cannot read the language it is translated into
 - Currency: symbol + code
 - Region and language are independent axes. Every link and region switch carries the current language forward. The region default is a fallback for entry points only
-- Keep the option list short — if it exceeds ~20 items, add a search input inside the dropdown
+- Keep the option list short - if it exceeds ~20 items, add a search input inside the dropdown
 - On selection, apply immediately and confirm with a brief status update (toast or inline update) if the change has a visible effect
 - A persisted preference is also synced across open tabs. Listen for the storage event and rehydrate. It fires in the other tabs, never the writer, so the tab the developer watches is always right. If the value gates the first fetch, gate the fetch on hydration
 

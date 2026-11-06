@@ -1105,7 +1105,7 @@ describe('POST /api/import/folder', () => {
     // bypass the RUNTIME_DATA_DIR-reentry check.
     const dataDir = process.env.OD_DATA_DIR;
     if (!dataDir) {
-      // Test setup didn't pin a data dir — skip this case rather than guess.
+      // Test setup didn't pin a data dir - skip this case rather than guess.
       return;
     }
     const linkParent = makeFolder();
@@ -1113,7 +1113,7 @@ describe('POST /api/import/folder', () => {
     try {
       symlinkSync(dataDir, linkPath);
     } catch {
-      // Symlink creation may fail in restricted CI environments — skip.
+      // Symlink creation may fail in restricted CI environments - skip.
       return;
     }
     const resp = await importFolder({ baseDir: linkPath });

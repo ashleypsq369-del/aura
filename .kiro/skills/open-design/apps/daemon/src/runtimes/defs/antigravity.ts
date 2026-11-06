@@ -20,7 +20,7 @@ const ANTIGRAVITY_SKIP_PERMISSIONS_FLAG = '--dangerously-skip-permissions';
 // must never ride argv: on Windows the composed OD prompt routinely exceeds
 // CreateProcess's 32_767-char command line and the spawn dies with
 // `ENAMETOOLONG` before agy starts (OPEND-3495). And agy has no other way to
-// read stdin — with `-p <text>` it ignores stdin entirely (agy 1.1.1: "no
+// read stdin - with `-p <text>` it ignores stdin entirely (agy 1.1.1: "no
 // longer reading stdin when a prompt is provided via a flag"), while `-p -`
 // is the literal prompt "-" (#7161). Every stream-json message runs one turn;
 // the daemon hands the frame over as a complete file-backed stdin, so agy
@@ -38,7 +38,7 @@ export function encodeAntigravityStdinPrompt(prompt: string): string {
 
 // `agy` v1.0.3 still has no `--model` flag (upstream issue #35), but the
 // TUI's Switch-Model picker writes the choice to its settings.json, and
-// every headless `agy` invocation re-reads that file on startup — verified by
+// every headless `agy` invocation re-reads that file on startup - verified by
 // capturing the `--log-file` line `Propagating selected model override to
 // backend: label="<model>"`. So we can route OD's model picker through
 // settings.json: when the user picks a concrete model in Settings, the
@@ -55,7 +55,7 @@ export function encodeAntigravityStdinPrompt(prompt: string): string {
 //                         (Thinking)"). We persist it before spawn.
 //
 // `supportsCustomModel: false` because the label set is a server-side
-// enum — a typed id agy doesn't recognise resolves to a silent
+// enum - a typed id agy doesn't recognise resolves to a silent
 // `availableModels` cache miss + empty headless output, which surfaces
 // to the user as a generic "empty response" error.
 //
@@ -82,7 +82,7 @@ export function writeAntigravityModelSelection(
         existing = parsed as Record<string, unknown>;
       }
     } catch {
-      // Corrupt JSON — fall through and rewrite the file from scratch so
+      // Corrupt JSON - fall through and rewrite the file from scratch so
       // the next spawn starts from a known-good state.
     }
   }
@@ -95,7 +95,7 @@ export function writeAntigravityModelSelection(
 // cycles on antigravity. `~/.gemini/antigravity-cli/settings.json` is
 // process-global, so two OD runs that both pick concrete (non-default)
 // models can race: run A writes model A, spawn A starts, run B writes
-// model B before A's agy has read settings.json — A then executes on
+// model B before A's agy has read settings.json - A then executes on
 // model B. The daemon serialises non-default antigravity spawns
 // through this chain: each acquire awaits the previous release, and
 // each release fires only after the spawned agy actually emits
@@ -129,7 +129,7 @@ export interface WaitForAgyModelOptions {
   // Override `Date.now` for tests; production uses the wall clock.
   now?: () => number;
   // Stops polling when fired. Production wires this to `child.once('exit')`
-  // so the watcher cancels as soon as agy exits — the lock release is
+  // so the watcher cancels as soon as agy exits - the lock release is
   // then driven by the exit handler rather than the helper's return
   // value, eliminating the slow-startup race the looper review at
   // 263fd2fe7 flagged: if a cold agy takes >timeoutMs to read its
@@ -144,12 +144,12 @@ export interface WaitForAgyModelOptions {
 // which `model_config_manager.go` emits once agy has finished reading
 // `~/.gemini/antigravity-cli/settings.json` and sent the model
 // override to the upstream backend. Returns true on observed signal,
-// false on timeout OR abort. Never throws — a missing log file is
+// false on timeout OR abort. Never throws - a missing log file is
 // treated as "not yet seen" so the polling loop keeps retrying until
 // either the deadline or the abort signal fires.
 //
 // IMPORTANT: callers MUST NOT use a `false` return as a "go ahead and
-// release the settings.json lock" signal — false means "I gave up
+// release the settings.json lock" signal - false means "I gave up
 // polling," not "agy definitely didn't read this." Release the lock
 // only on (a) a `true` return, OR (b) child exit. See server.ts for
 // the wiring.
@@ -219,7 +219,7 @@ export const antigravityAgentDef = {
   // resume flag on follow-up turns. Tested both shapes; `-c` activates
   // agy's internal agentic loop (multi-step model retries, tool calls,
   // fallback-to-cached-response on tool errors) which can't be steered
-  // from OD's system-prompt OVERRIDE — even with the strongest wording
+  // from OD's system-prompt OVERRIDE - even with the strongest wording
   // we got an identical byte-for-byte form re-emission on turn 2 when
   // turn 1's tool-call retry path returned the cached form response.
   //

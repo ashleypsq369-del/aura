@@ -11,7 +11,7 @@ import { createQoderStreamHandler } from '../src/runtimes/qoder-stream.js';
  * `child.stdout.setEncoding('utf8')` (server.ts), which buffers an incomplete
  * multi-byte sequence until the next chunk completes it. This parser accepted
  * raw Buffers and decoded each one on its own, so a split landing inside a
- * three-byte CJK character produced U+FFFD on both sides — the character was
+ * three-byte CJK character produced U+FFFD on both sides - the character was
  * destroyed, and with it the JSON line it belonged to.
  *
  * The failure is invisible in an English transcript and certain in a Chinese
@@ -45,7 +45,7 @@ describe('qoder stdout 分片解码', () => {
 
   test('切在多字节字符中间也不许出现替换字符', () => {
     const full = Buffer.from(LINE, 'utf8');
-    // Every byte offset inside the payload — the pipe gets to choose, so the
+    // Every byte offset inside the payload - the pipe gets to choose, so the
     // parser has to survive all of them, not just the lucky ones.
     for (let at = 1; at < full.length; at += 1) {
       const { events } = collect(splitAt(full, at));

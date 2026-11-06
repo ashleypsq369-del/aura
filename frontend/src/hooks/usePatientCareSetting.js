@@ -1,4 +1,4 @@
-/**
+﻿/**
  * usePatientCareSetting
  * =====================
  * Returns the care setting for a SPECIFIC patient - used by clinicians
@@ -33,7 +33,7 @@ const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token
 const SETTING_CLINICAL = {
  hospital_based: {
  notes: 'Inpatient specialist care. Prioritise: vitals q4-8h, pain control, daily MDT review.',
- tasks: ['Vitals every 4–8h', 'Daily ESAS check-in', 'Medication review', 'MDT daily review'],
+ tasks: ['Vitals every 4-8h', 'Daily ESAS check-in', 'Medication review', 'MDT daily review'],
  },
  hospice: {
  notes: 'Comfort-focused. Prioritise: dignity, pain & symptom control, family support.',

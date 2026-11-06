@@ -599,7 +599,7 @@ describe('collab/status local-only fast path', () => {
     expect(body.ownerMemberId).toBe('member-owner');
     expect(body.syncState).toBe('synced');
     // The owner is the single writer, never auto-pulls, and sees an editable
-    // surface (no "shared by X" banner) — so BOTH the hub head lookup and the
+    // surface (no "shared by X" banner) - so BOTH the hub head lookup and the
     // owner-name directory lookup are skipped; their editable state resolves fast.
     expect(headCalls).toBe(0);
     expect(nameLookups).toBe(0);

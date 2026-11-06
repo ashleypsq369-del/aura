@@ -92,7 +92,7 @@ describe('annotation → memory distillation', () => {
 
     expect(written).toHaveLength(2);
 
-    // Both entries land on disk (auto-keep) — no Keep round-trip.
+    // Both entries land on disk (auto-keep) - no Keep round-trip.
     const rule = await readMemoryEntry(dataDir, 'rule_primary_buttons_use_brand_green');
     const feedback = await readMemoryEntry(dataDir, 'feedback_minimal_decoration');
     expect(rule?.type).toBe('rule');

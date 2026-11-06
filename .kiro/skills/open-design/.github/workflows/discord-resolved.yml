@@ -8,13 +8,13 @@
 #     author, the PR that resolved it, and the merger.
 #
 # Why a workflow instead of a raw repo→Discord webhook?
-#   GitHub's webhook can't tell Discord "this issue was closed *by a merged PR*" —
+#   GitHub's webhook can't tell Discord "this issue was closed *by a merged PR*" -
 #   the issues.closed payload doesn't carry that linkage. We have to walk the
 #   timeline ourselves, which a workflow does in <1s.
 #
 # Why only the `closed` + `commit_id` path (no cross-referenced fallback)?
 #   `cross-referenced` events fire on plain mentions ("related to #123"),
-#   so trusting them creates false positives — a manually closed issue mentioned
+#   so trusting them creates false positives - a manually closed issue mentioned
 #   by an unrelated merged PR would post to #resolved. The closed-event linkage
 #   is the only signal GitHub itself uses to display "closed by PR #N", so it's
 #   the source of truth. We accept the rare miss (e.g. a PR that closed an issue
@@ -90,7 +90,7 @@ jobs:
 
             if (!resolvingPr) {
               core.info(
-                'No merged PR found via closed-event linkage — skipping Discord post. ' +
+                'No merged PR found via closed-event linkage - skipping Discord post. ' +
                 'This is expected for manual closes or web-UI "close with comment" events.'
               );
               core.setOutput('skip', 'true');
@@ -142,24 +142,24 @@ jobs:
 
           # ── Webhook URL sanity check ────────────────────────────────────
           # Refuse to post if the secret is missing or doesn't look like a
-          # Discord webhook URL — guards against accidentally leaking issue
+          # Discord webhook URL - guards against accidentally leaking issue
           # metadata to a misconfigured endpoint.
           if [ -z "${WEBHOOK:-}" ]; then
-            echo "DISCORD_RESOLVED_WEBHOOK secret not configured — aborting."
+            echo "DISCORD_RESOLVED_WEBHOOK secret not configured - aborting."
             exit 1
           fi
           case "$WEBHOOK" in
             https://discord.com/api/webhooks/*) ;;
             https://discordapp.com/api/webhooks/*) ;;
             *)
-              echo "WEBHOOK does not look like a Discord webhook URL — aborting."
+              echo "WEBHOOK does not look like a Discord webhook URL - aborting."
               echo "(Expected prefix: https://discord.com/api/webhooks/...)"
               exit 1
               ;;
           esac
 
           # ── Build embed JSON via jq ─────────────────────────────────────
-          # Color 0x2eb67d (3066993) — green for "resolved".
+          # Color 0x2eb67d (3066993) - green for "resolved".
           # `allowed_mentions: { parse: [] }` disables @everyone/@here/role/user
           # mentions so a malicious or accidental issue title can't ping the
           # channel.

@@ -3,7 +3,7 @@ name: release-withdraw
 # Abandon a release that was CUT but never SHIPPED: undo `cut-release.yml`.
 #
 # This is not `release-rollback.yml`. That one retracts a release users already
-# have, by repointing `stable/latest`. This one is for the other case — the
+# have, by repointing `stable/latest`. This one is for the other case - the
 # branch exists, a prerelease is circulating internally, and the team decides
 # the version is not going out. Nothing reached stable, so there is no GitHub
 # Release and no tag to undo.
@@ -28,13 +28,13 @@ name: release-withdraw
 # with.
 #
 # `dry_run` defaults to TRUE here, unlike release-rollback. A withdrawal is
-# never the urgent case — nothing is bleeding, the release simply is not going
-# out — so the plan is worth one look before a branch is deleted. A dry run runs
+# never the urgent case - nothing is bleeding, the release simply is not going
+# out - so the plan is worth one look before a branch is deleted. A dry run runs
 # every guard and the full rollback plan against live R2; it only withholds the
 # three writes (pointer, label, branch), so "the dry run passed" means the real
 # run has nothing left to discover.
 #
-# TRUST BOUNDARY — `workflow_dispatch` runs the workflow file from the dispatch
+# TRUST BOUNDARY - `workflow_dispatch` runs the workflow file from the dispatch
 # ref, so no check written here is a security control; the control is the repo's
 # dispatch permission plus the App private key. The main-ref assertion is an
 # operator guard rail that keeps a withdrawal reproducible from reviewed code.
@@ -91,7 +91,7 @@ concurrency:
 
 jobs:
   # No secrets, no App token. Everything rejectable without credentials is
-  # rejected here, and every condition exits 1 rather than skipping green — a
+  # rejected here, and every condition exits 1 rather than skipping green - a
   # withdrawal that quietly did nothing reads as "handled".
   guard:
     name: validate request
@@ -131,7 +131,7 @@ jobs:
           fi
 
       # The decisive refusal. A version that reached stable is not "cut but
-      # unshipped" — users have it, and pulling it back is release-rollback's
+      # unshipped" - users have it, and pulling it back is release-rollback's
       # job, not a branch deletion.
       - name: Assert the version never shipped stable
         env:
@@ -146,7 +146,7 @@ jobs:
           fi
           echo "stable/latest currently serves $served"
           if [ "$served" = "$VERSION" ]; then
-            echo "::error::$VERSION is the live stable release — use release-rollback to retract a shipped release, not release-withdraw"
+            echo "::error::$VERSION is the live stable release - use release-rollback to retract a shipped release, not release-withdraw"
             exit 1
           fi
           if curl -fsSL -o /dev/null "$PUBLIC_ORIGIN/stable/versions/$VERSION/metadata.json" 2>/dev/null; then
@@ -189,7 +189,7 @@ jobs:
 
       # Everything the branch carries that main does not must be cut machinery.
       # A human commit, or a fix backported here and nowhere else, would be
-      # destroyed by the deletion below — so refuse and let a person decide.
+      # destroyed by the deletion below - so refuse and let a person decide.
       - name: Assert the branch holds nothing but cut commits
         id: branch
         env:
@@ -287,7 +287,7 @@ jobs:
       # metadata.json last, and reads it all back.
       #
       # Runs on a dry run too, gated only on whether the pointer needs moving.
-      # `RELEASE_DRY_RUN` stops it writing, it does not stop it planning — and
+      # `RELEASE_DRY_RUN` stops it writing, it does not stop it planning - and
       # planning IS the validation: that the target exists, published completely,
       # has a manifest for every ready target and a feed for every platform, and
       # that the live launcher floor is still satisfiable. Skipping this step on a
@@ -359,7 +359,7 @@ jobs:
           fi
           # Recorded before the delete so the branch can be restored:
           #   git push origin <SHA>:refs/heads/<BRANCH>
-          echo "deleting $BRANCH (was $SHA — restore with: git push origin $SHA:refs/heads/$BRANCH)"
+          echo "deleting $BRANCH (was $SHA - restore with: git push origin $SHA:refs/heads/$BRANCH)"
           gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH"
           if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             echo "::error::$BRANCH still exists after the delete"
@@ -375,7 +375,7 @@ jobs:
           NOTICE_BODY: |
             **本次发布取消**:`release/v${{ inputs.version }}` 分支与 `backport release/v${{ inputs.version }}` 标签均已删除。
 
-            **要回灌的修复先不用打 backport label 了** —— 下一轮切分支后会有新的 label。
+            **要回灌的修复先不用打 backport label 了** -- 下一轮切分支后会有新的 label。
 
             **内部 Prerelease 通道**已退回 `${{ inputs.prerelease_to_version }}`;之前更到 `v${{ inputs.version }}` 预发包的同学,下次检查更新会回到这个版本。
 
@@ -397,7 +397,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$DRY_RUN" = "true" ]; then
-            heading="Withdrawal plan for $VERSION (dry run — validated, nothing was changed)"
+            heading="Withdrawal plan for $VERSION (dry run - validated, nothing was changed)"
           else
             heading="Withdrew $VERSION"
           fi
@@ -409,7 +409,7 @@ jobs:
             if [ "$PRERELEASE_ROLLBACK" = "true" ]; then
               echo "| \`prerelease/latest\` | \`$PRERELEASE_FROM\` → \`$PRERELEASE_TO\` |"
             else
-              echo "| \`prerelease/latest\` | untouched — it does not serve $VERSION |"
+              echo "| \`prerelease/latest\` | untouched - it does not serve $VERSION |"
             fi
             echo "| Label | \`backport release/v$VERSION\` |"
             echo "| Branch | \`release/v$VERSION\` at \`$BRANCH_SHA\` |"
@@ -418,7 +418,7 @@ jobs:
             echo ""
             echo "### Left for a person"
             echo ""
-            echo "- [ ] Plane acceptance module \`$VERSION 验收\` — close or delete it if the cut created one."
+            echo "- [ ] Plane acceptance module \`$VERSION 验收\` - close or delete it if the cut created one."
             echo "- [ ] The Feishu acceptance document for $VERSION, if one was published."
             echo "- [ ] Immutable \`prerelease/versions/$VERSION-prerelease.*\` artifacts stay on R2 by design; nothing points at them any more."
             echo "- [ ] The next \`cut-release\` bumps the minor of the highest remaining release branch, so $VERSION is free to be cut again."

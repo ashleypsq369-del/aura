@@ -1,4 +1,4 @@
-// Phase 8 entry slice — diff-review GenUI bridge.
+// Phase 8 entry slice - diff-review GenUI bridge.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';

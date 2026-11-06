@@ -1,17 +1,17 @@
 // Skill's workspace-isolation onboarding (specs/current/
 // 04-resource-workspace-isolation.md §9.1): skill previously had NO
-// persistent attribution at all — no table, no metadata.json, nothing —
+// persistent attribution at all - no table, no metadata.json, nothing -
 // which meant `GET /api/skills` returned one flat list to every workspace
 // and `DELETE /api/skills/:id` let ANY caller delete ANY skill regardless of
 // who imported it or whether it was a team share. Skill now binds into the
 // generic `workspace_resources` table (see db.ts) exactly like plugin does:
 //
 //   - `listSkills`'s workspace filter (skills.ts's `skillVisibleFromWorkspace`)
-//     — mirrors `listInstalledPlugins`'s one-way "unclaimed visible
+//     - mirrors `listInstalledPlugins`'s one-way "unclaimed visible
 //     everywhere, claimed elsewhere hidden" rule.
 //   - `DELETE /api/skills/:id` is gated by the shared
 //     `enforceWorkspaceResourceMutation` (collab/workspace-resource-mutation.ts),
-//     the same gate `POST /api/plugins/:id/uninstall` uses — see
+//     the same gate `POST /api/plugins/:id/uninstall` uses - see
 //     tests/plugins-uninstall-workspace-gate.test.ts for the plugin
 //     equivalent this file mirrors.
 //
@@ -122,7 +122,7 @@ async function fetchSkillIds(
   return (await fetchSkills(workspaceId, workspaceMemberId)).map((skill) => skill.id);
 }
 
-describe('GET /api/skills — workspace visibility scope', () => {
+describe('GET /api/skills - workspace visibility scope', () => {
   it.skipIf(process.platform === 'win32')('loads the owner-visible media Skill through the POSIX prompt wrapper and keeps built-in fallback for other callers', async () => {
     const skillId = 'od-next-media-inputs';
     const workspaceId = 'ws-media-wrapper';
@@ -287,12 +287,12 @@ describe('GET /api/skills — workspace visibility scope', () => {
     expect(await ownerAfter.text()).toContain('PRIVATE OWNER SKILL BODY');
   });
 
-  // spec 04 §10: the symmetric case plugin/design-system already pin — a
+  // spec 04 §10: the symmetric case plugin/design-system already pin - a
   // CLAIMED skill must not leak to a caller with no workspace identity at
   // all (signed-out client, headerless `curl`), not just to a caller scoped
   // to a DIFFERENT workspace. Before this fix, `GET /api/skills` with no
   // header fell through to the unfiltered "no scope = everything" branch the
-  // same way plugin/design-system did — "no scope" must not mean "trust
+  // same way plugin/design-system did - "no scope" must not mean "trust
   // everything" (recvqbeDjAsejl / recvqbklNGDqYY).
   it('hides a claimed skill from a caller with no workspace header at all', async () => {
     const skillId = `wsscope-headerless-${Date.now()}`;
@@ -305,7 +305,7 @@ describe('GET /api/skills — workspace visibility scope', () => {
   });
 });
 
-describe('DELETE /api/skills/:id — workspace ownership gate', () => {
+describe('DELETE /api/skills/:id - workspace ownership gate', () => {
   it('rejects a non-owner, non-privileged member of the same workspace', async () => {
     const skillId = `wsgate-member-${Date.now()}`;
     const folder = await seedSkillFolder(skillId);
@@ -332,7 +332,7 @@ describe('DELETE /api/skills/:id — workspace ownership gate', () => {
 
     expect(resp.status).toBe(200);
     expect(existsSync(folder)).toBe(false);
-    // The binding row is cleaned up too — no orphan left behind for a future
+    // The binding row is cleaned up too - no orphan left behind for a future
     // re-import of the same id to find and silently reuse.
     const db = openDatabase(process.cwd(), { dataDir: process.env.OD_DATA_DIR! });
     expect(getWorkspaceResourceByResourceId(db, 'skill', skillId)).toBeUndefined();
@@ -391,7 +391,7 @@ describe('DELETE /api/skills/:id — workspace ownership gate', () => {
   // spec 04 §10 fix #3: `enforceWorkspaceResourceMutation`'s null-ctx branch
   // used to only refuse a `visibility: 'team'` row, letting a headerless
   // caller delete any BOUND-BUT-`personal` skill (`bindSkillToWorkspace`
-  // above defaults to `visibility: 'personal'`) — a claimed resource is a
+  // above defaults to `visibility: 'personal'`) - a claimed resource is a
   // claimed resource regardless of who else it's shared with.
   it('rejects a headerless caller against a personal-visibility (but bound) skill too', async () => {
     const skillId = `wsgate-personal-headerless-${Date.now()}`;
@@ -476,7 +476,7 @@ describe('Team Skill mutation targets', () => {
   );
 });
 
-describe('POST /api/skills/install — same-id ownership preflight', () => {
+describe('POST /api/skills/install - same-id ownership preflight', () => {
   it('does not let another member install over an existing Personal skill identity', async () => {
     const skillId = `wsgate-install-${Date.now()}`;
     const ownerFolder = await seedSkillFolder(skillId);
@@ -518,7 +518,7 @@ describe('POST /api/skills/install — same-id ownership preflight', () => {
 });
 
 // Skill previously had NO field at all distinguishing a skill materialized
-// from a TEAMMATE's team share from one the caller authored themselves — both
+// from a TEAMMATE's team share from one the caller authored themselves - both
 // read `source: 'user'`. Design-system (`metadata.json`'s `teamSynced`) and
 // plugin (`installed_plugins.source`'s `team:plugin:` prefix) already carried
 // this; skill was the one kind missing it entirely, so unsharing a skill
@@ -526,9 +526,9 @@ describe('POST /api/skills/install — same-id ownership preflight', () => {
 // instead of just dropping out of the Team scope. `teamSynced` on
 // `SkillSummary` closes that gap, sourced from the same `workspace_resources`
 // binding `syncSharedTeamSkill`'s `markTeamSynced` (server.ts) already writes
-// as `visibility: 'team'` — this test only exercises the READ side (the
+// as `visibility: 'team'` - this test only exercises the READ side (the
 // `GET /api/skills` projection), not the write path itself.
-describe('GET /api/skills — teamSynced projection', () => {
+describe('GET /api/skills - teamSynced projection', () => {
   it('reports teamSynced:true for a skill bound with visibility "team"', async () => {
     const skillId = `wsteamsynced-team-${Date.now()}`;
     await seedSkillFolder(skillId);

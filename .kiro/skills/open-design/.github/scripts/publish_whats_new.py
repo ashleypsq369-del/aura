@@ -67,7 +67,7 @@ REQUIRED_STORAGE_VARS = (
 
 # The GitHub environment that holds the R2 credentials, named here because the
 # missing-credentials error is the one place an operator reads when the publish
-# fails — and following it to the wrong place reopens the trust boundary.
+# fails - and following it to the wrong place reopens the trust boundary.
 # Repository secrets are readable from any job on any branch, so storing them
 # there would let a modified workflow dispatched from an unreviewed ref publish
 # to every installed client. The environment's deployment-branch policy allows
@@ -166,7 +166,7 @@ def main() -> int:
 
     body, payload = read_document(document_path)
     new_id = _highlight_id(payload)
-    print(f"source: {document_path} ({len(body)} bytes), highlight id: {new_id or '(none — card retired)'}")
+    print(f"source: {document_path} ({len(body)} bytes), highlight id: {new_id or '(none - card retired)'}")
 
     _, live_payload = fetch_live(public_url)
     live_id = _highlight_id(live_payload)
@@ -193,7 +193,7 @@ def main() -> int:
         append_summary(
             "\n".join(
                 [
-                    "### What's New — dry run",
+                    "### What's New - dry run",
                     "",
                     f"- source: `{document_path}` → `{object_key}`",
                     f"- would publish id: `{new_id or '(none)'}` (live: `{live_id or '(none)'}`)",

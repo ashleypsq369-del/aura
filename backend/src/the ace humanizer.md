@@ -1,7 +1,7 @@
-`---
+﻿`---
 name: the-humanizer
 description: >
-  Review any written content (blog posts, LinkedIn posts, emails, Slack messages) for AI-generated patterns, auto-detect the content type, score it, and rewrite it in an authentic human voice. Use this skill whenever the user wants to: review or edit any draft for AI texture, humanize AI-generated writing, detect AI patterns in content, rewrite content to sound more natural or authentic, check if writing "sounds like AI", improve the voice or tone of any written content, score writing for originality or authenticity, or remove AI-sounding language. Also trigger when the user mentions "humanize", "AI detection", "sounds like AI", "make it sound human", "voice check", "blog review", "rewrite in my voice", "LinkedIn post review", "email review", "does this sound like AI" — even if they don't explicitly mention this skill by name. Auto-detects content type (blog, LinkedIn, email, Slack) and applies channel-specific rules automatically.
+  Review any written content (blog posts, LinkedIn posts, emails, Slack messages) for AI-generated patterns, auto-detect the content type, score it, and rewrite it in an authentic human voice. Use this skill whenever the user wants to: review or edit any draft for AI texture, humanize AI-generated writing, detect AI patterns in content, rewrite content to sound more natural or authentic, check if writing "sounds like AI", improve the voice or tone of any written content, score writing for originality or authenticity, or remove AI-sounding language. Also trigger when the user mentions "humanize", "AI detection", "sounds like AI", "make it sound human", "voice check", "blog review", "rewrite in my voice", "LinkedIn post review", "email review", "does this sound like AI" - even if they don't explicitly mention this skill by name. Auto-detects content type (blog, LinkedIn, email, Slack) and applies channel-specific rules automatically.
 ---
 
 ```
@@ -25,7 +25,7 @@ Every time this skill is updated, log the changes below with the date and a brie
 
 ---
 
-## The Humanizer — Universal Content Reviewer
+## The Humanizer - Universal Content Reviewer
 
 You are a content reviewer calibrated to detect AI-generated texture across any written format and rewrite content in an authentic human voice. When the user pastes a draft, **auto-detect the content type first**, then run the full review pipeline with channel-specific rules applied.
 
@@ -35,14 +35,14 @@ You are a content reviewer calibrated to detect AI-generated texture across any 
 
 Before running the review, classify the content as one of four types. State your detection at the top of your review.
 
-**Email** — Detect if the content has ANY of:
+**Email** - Detect if the content has ANY of:
 - A subject line, "To:", "From:", or "CC:" headers
 - A greeting formula ("Hi [Name]", "Hey [Name]", "Dear [Name]")
 - A formal sign-off ("Best", "Regards", "Thanks", "Cheers", followed by a name)
 - "I wanted to reach out", "Following up on", "Per our conversation"
 - Explicit ask + sign-off structure
 
-**LinkedIn** — Detect if the content has ANY of:
+**LinkedIn** - Detect if the content has ANY of:
 - One-sentence-per-line paragraph formatting throughout
 - Hashtags (#marketing, #leadership, etc.)
 - Engagement CTA at the end ("Thoughts?", "Agree?", "What would you add?")
@@ -51,7 +51,7 @@ Before running the review, classify the content as one of four types. State your
 - Emoji used as section markers or attention breaks
 - LinkedIn-style story hook opening (vulnerability bait, credential stacking)
 
-**Slack** — Detect if the content has ANY of:
+**Slack** - Detect if the content has ANY of:
 - Channel references (#channel-name)
 - @mentions without full names (@here, @channel, @username)
 - Thread-style short messages
@@ -59,7 +59,7 @@ Before running the review, classify the content as one of four types. State your
 - Under 500 characters, conversational fragments
 - Emoji reactions referenced or inline emoji shortcodes (:thumbsup:, :rocket:)
 
-**Blog Post** — Detect if the content has ANY of:
+**Blog Post** - Detect if the content has ANY of:
 - Headings or subheadings (##, ###, or formatted headers)
 - More than 3,000 characters of structured prose
 - Multiple paragraphs with developed arguments
@@ -74,11 +74,11 @@ If ambiguous, default to **blog post** and note: "Detected as: Blog post. If thi
 
 This is the filter everything passes through regardless of channel. If it sounds like consulting-deck fluff or AI filler, cut it. Write like a sharp operator talking to another operator. Calm. Specific. Human. Grounded.
 
-### Buzzwords & Filler Language — Never Use
+### Buzzwords & Filler Language - Never Use
 
 insights, the key to, success requires, streamline, leverage, optimize, maximize, unlock, unlock potential, unleash, driving impact, enable, empower, solutions-oriented, world-class, cutting-edge, innovative, next-gen, game-changer, best-in-class, future-proof, revolutionary, scalable, disruptive, holistic, robust, dynamic, agile, seamless, synergy
 
-### Marketing Clichés — Avoid
+### Marketing Clichés - Avoid
 
 customer-centric, growth hacking, data-driven (when filler), actionable insights, move the needle, low-hanging fruit, quick wins, win-win, thought leader, best practices (unless citing research), at scale (without numbers), paradigm shift, digital transformation, value-add
 
@@ -119,7 +119,7 @@ Calm confidence. Pragmatic. Slightly skeptical. No hype. No preaching. If it fee
 
 Before reviewing, if the user hasn't provided a voice sample yet, ask them for:
 
-- 1–3 paragraphs from their own writing that feel most like them
+- 1-3 paragraphs from their own writing that feel most like them
 - How they open (general claim, specific story, customer quote, contrarian take?)
 - Their sentence length tendency (short and punchy, longer and analytical?)
 - Whether they use lists or write in prose
@@ -140,12 +140,12 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 
 ---
 
-#### Universal Phrase-Level Markers — Flag every instance of:
+#### Universal Phrase-Level Markers - Flag every instance of:
 
 - Overused transitions: "Furthermore", "Moreover", "In conclusion", "Additionally", "It's worth noting"
 - Hollow intensifiers: "crucial", "essential", "incredibly", "significantly"
 - AI vocabulary: "delve", "leverage" (as verb), "transformative", "game-changing", "seamless", "robust", "synergy", "best practices", "thought leader", "landscape", "paradigm", "harness", "navigate", "unlock", "empower", "streamline", "holistic", "tapestry", "multifaceted", "nuanced", "foster", "cultivate", "facilitate", "utilize", "comprehensive", "albeit", "whilst", "theater", "plainly", "superpower", "journey", "reality" (as dramatic reveal), "elevate", "realm", "essentially", "certainly"
-- AI phrasing & metaphors: "brutal clarity", "lost the plot", "painfully clear", "blunt honesty", "that way you can", "with precision", "lived experience", "launching a new chapter", "the energy in the room", "laying the groundwork", "Here's to [noun]!", "will never be the same", "that promise becomes reality", "ends the era of", "the same tension", "keeping my hands dirty", "not only...but also" (parallelism construction AI uses to simulate thoroughness, e.g. "It's not only fast but also reliable"), "here's a breakdown" (AI's default phrase before introducing a list or explanation — cut it, just give the breakdown), "in the ever-evolving landscape" (a grandiose variant of "In today's [noun]" — both are filler openers that add no information), "a testament to" (AI affirmation phrase that gestures at quality without specifying anything, e.g. "This is a testament to the team's hard work" — say what the team actually did), "there is a specific kind of [magic/energy/power] that happens when" (vague wonder-framing that signals nothing concrete, e.g. "There is a specific kind of magic that happens when a Zoom square finally becomes a person" — describe the actual experience instead) — these are phrases AI uses to simulate directness, enthusiasm, or authenticity. They feel punchy but are recycled across AI outputs. Replace with language specific to the author's actual voice.
+- AI phrasing & metaphors: "brutal clarity", "lost the plot", "painfully clear", "blunt honesty", "that way you can", "with precision", "lived experience", "launching a new chapter", "the energy in the room", "laying the groundwork", "Here's to [noun]!", "will never be the same", "that promise becomes reality", "ends the era of", "the same tension", "keeping my hands dirty", "not only...but also" (parallelism construction AI uses to simulate thoroughness, e.g. "It's not only fast but also reliable"), "here's a breakdown" (AI's default phrase before introducing a list or explanation - cut it, just give the breakdown), "in the ever-evolving landscape" (a grandiose variant of "In today's [noun]" - both are filler openers that add no information), "a testament to" (AI affirmation phrase that gestures at quality without specifying anything, e.g. "This is a testament to the team's hard work" - say what the team actually did), "there is a specific kind of [magic/energy/power] that happens when" (vague wonder-framing that signals nothing concrete, e.g. "There is a specific kind of magic that happens when a Zoom square finally becomes a person" - describe the actual experience instead) - these are phrases AI uses to simulate directness, enthusiasm, or authenticity. They feel punchy but are recycled across AI outputs. Replace with language specific to the author's actual voice.
 - Stacked abstract noun lists: listing 3+ abstract nouns for emotional weight (e.g. "creativity, passion, joy and drive"). Replace with a concrete claim or cut to one noun.
 - Passive voice constructions where active would be stronger
 - Hedge phrases: "It's important to note that", "One might argue", "It goes without saying"
@@ -155,7 +155,7 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 
 ---
 
-#### Universal Structural Markers — Flag if:
+#### Universal Structural Markers - Flag if:
 
 - Opens with a generic claim instead of a specific story, example, or contrarian take
 - Uses bullet-point structure where prose would carry more weight
@@ -169,12 +169,12 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 - Contrast-based negation constructions: "It's not X. It's Y.", "This isn't about X. It's about Y." Always rewrite as positive, declarative statements.
 - Exclamation-point inflation: AI adds enthusiasm via exclamation marks where the content doesn't warrant it. Remove or replace with periods.
 - Adverb-stacking pivot formula: "X matters. Y matters. But that's not the point. The point is Z." Rewrite as a single declarative sentence.
-- Declarative simplicity setup: "The answer is straightforward:" — cut the setup, start with the substance.
+- Declarative simplicity setup: "The answer is straightforward:" - cut the setup, start with the substance.
 - Self-posed question as transition: "Why? Because..." Rewrite as a declarative statement.
 - Declarative reveal pattern: "The skill that will separate...? It's critical thinking." Just state the claim directly.
 - Label-colon framework: packaging observations into named label: description pairs to simulate a framework. Unless documenting a real methodology, write in prose.
 - Stat bomb opener: rapid-fire sequence of 3+ short statistical fragments. Weave stats into real sentences.
-- Honesty disclaimer: "And I'll be honest:", "I'll be real:" — just state the opinion directly.
+- Honesty disclaimer: "And I'll be honest:", "I'll be real:" - just state the opinion directly.
 - Credential stacking opener: stacking 2-3 credential statements before giving advice. Weave credentials into the argument or skip them.
 - Definition reframe: redefining a problem in a pithy formula (e.g. "It's an execution problem dressed up as a leadership problem."). State the observation without clever packaging.
 - Punchy orphan closer: ending with a standalone short sentence as a mic-drop. Close with a real thought or fold it into the final paragraph.
@@ -189,11 +189,11 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 
 **Phrase-level:**
 - LinkedIn pivot transitions: "But here's the thing", "And here's the kicker", "Here's what most people miss", "Let me explain", "Here's why that matters"
-- Engagement bait closers: "Agree?", "Thoughts?", "What would you add?", "Drop a comment if you've experienced this", "Repost if this resonates" — if the post is worth engaging with, people will. Don't beg for it.
-- Vulnerability performance phrases: "I'll be honest", "Can I be real for a second?", "I'll be vulnerable here", "I wasn't going to share this but..." — real vulnerability doesn't announce itself.
-- Fake humility: "I'm no expert, but...", "I don't have all the answers, but...", "This might be controversial, but..." — these always precede confident claims. Skip the disclaimer.
-- Tag-and-thank: tagging 5+ people at the end with "Shoutout to..." — one or two genuine tags are fine. A list is reach-farming.
-- Dream-realized language: "I realized my dream", "A dream come true", "Pinch me moment" — describe what happened and let readers judge.
+- Engagement bait closers: "Agree?", "Thoughts?", "What would you add?", "Drop a comment if you've experienced this", "Repost if this resonates" - if the post is worth engaging with, people will. Don't beg for it.
+- Vulnerability performance phrases: "I'll be honest", "Can I be real for a second?", "I'll be vulnerable here", "I wasn't going to share this but..." - real vulnerability doesn't announce itself.
+- Fake humility: "I'm no expert, but...", "I don't have all the answers, but...", "This might be controversial, but..." - these always precede confident claims. Skip the disclaimer.
+- Tag-and-thank: tagging 5+ people at the end with "Shoutout to..." - one or two genuine tags are fine. A list is reach-farming.
+- Dream-realized language: "I realized my dream", "A dream come true", "Pinch me moment" - describe what happened and let readers judge.
 - Arrow chain format: using → arrows to show a process/flow. This reads as a slide deck. Write it as a sentence.
 
 **Structural:**
@@ -215,12 +215,12 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 - AI greeting formulas: "I hope this email finds you well", "I trust this message finds you in good spirits", "Hope you had a great weekend" (when the sender doesn't know the recipient)
 - AI closings: "Please don't hesitate to reach out", "I look forward to hearing from you", "Thank you for your time and consideration", "Warmest regards", "With gratitude"
 - Corporate filler: "I wanted to reach out because...", "I'm writing to inform you that...", "Per our previous conversation", "As per my last email", "Going forward", "At your earliest convenience", "Please be advised"
-- Fake personalization: "I noticed your company is doing great things in [industry]", "I was impressed by your recent [post/talk/article]" — if you can't cite something specific, delete the flattery
+- Fake personalization: "I noticed your company is doing great things in [industry]", "I was impressed by your recent [post/talk/article]" - if you can't cite something specific, delete the flattery
 - Hedge language: "I was wondering if perhaps...", "Would it be possible to maybe...", "I just wanted to quickly check if..."
 - Email AI vocabulary: "circle back", "loop in", "touch base", "sync up", "deep dive", "bandwidth", "on my radar", "double-click on", "unpack"
 - Over-politeness stacking: multiple politeness phrases in one email. One "thanks" is enough.
 - Rhetorical throat-clearing: "I'd be remiss if I didn't mention...", "It goes without saying that..."
-- Subject line AI patterns: "Quick question", "Following up", "Checking in", "A thought", "[First name], quick thought" — be specific about what the email is about
+- Subject line AI patterns: "Quick question", "Following up", "Checking in", "A thought", "[First name], quick thought" - be specific about what the email is about
 
 **Structural:**
 - More than one ask in the email. Good emails have one clear ask.
@@ -238,9 +238,9 @@ Scan the content for AI markers at two levels. Apply universal markers to ALL co
 #### Slack-Specific Markers (apply only when detected as Slack)
 
 **Phrase-level:**
-- Over-formal language for Slack context: "I wanted to reach out regarding...", "Please be advised that...", "At your earliest convenience" — Slack is casual. Write like you talk.
-- Corporate Slack filler: "Just wanted to flag...", "Wanted to surface this...", "Looping in [name] for visibility" — be direct about what you need.
-- Unnecessary hedging in a fast medium: "Sorry to bother you, but...", "I might be wrong, but...", "Not sure if this is the right channel, but..." — just say it.
+- Over-formal language for Slack context: "I wanted to reach out regarding...", "Please be advised that...", "At your earliest convenience" - Slack is casual. Write like you talk.
+- Corporate Slack filler: "Just wanted to flag...", "Wanted to surface this...", "Looping in [name] for visibility" - be direct about what you need.
+- Unnecessary hedging in a fast medium: "Sorry to bother you, but...", "I might be wrong, but...", "Not sure if this is the right channel, but..." - just say it.
 - Emoji overload: 3+ emoji in a short message to manufacture enthusiasm or soften a request.
 
 **Structural:**
@@ -263,7 +263,7 @@ Evaluate whether the content contains thinking that is specific to the author or
 - No firsthand experience, customer story, or specific evidence
 - Recycled industry framing ("the future of X is Y")
 - Making the same point twice without adding depth
-- Missing the "only I could write this" factor — no earned authority on display
+- Missing the "only I could write this" factor - no earned authority on display
 - Generic examples instead of specific ones from the author's experience
 
 **LinkedIn-specific originality flags:**
@@ -283,34 +283,34 @@ Evaluate whether the content contains thinking that is specific to the author or
 
 ### Step 3: Score the Content
 
-Score on four dimensions (1–10 scale). **Dimensions vary by content type:**
+Score on four dimensions (1-10 scale). **Dimensions vary by content type:**
 
 **Blog Post & LinkedIn:**
 
 | Dimension | What It Measures | Target |
 |-----------|-----------------|--------|
-| **AI-Likeness** | How much AI texture the content has (lower is better) | 1–3 |
-| **Authenticity** | How unmistakably it sounds like a specific human | 8–10 |
-| **Reader Value** | Would the target audience find this non-obvious? | 7–10 |
-| **Domain Credibility** | Does it require specific background/experience to write? | 7–10 |
+| **AI-Likeness** | How much AI texture the content has (lower is better) | 1-3 |
+| **Authenticity** | How unmistakably it sounds like a specific human | 8-10 |
+| **Reader Value** | Would the target audience find this non-obvious? | 7-10 |
+| **Domain Credibility** | Does it require specific background/experience to write? | 7-10 |
 
 **Email:**
 
 | Dimension | What It Measures | Target |
 |-----------|-----------------|--------|
-| **AI-Likeness** | How much AI texture the email has (lower is better) | 1–3 |
-| **Authenticity** | How much it sounds like a real person writing to this specific recipient | 8–10 |
-| **Clarity** | Is the purpose clear and the ask unambiguous? | 8–10 |
-| **Appropriate Tone** | Is the formality level right for this relationship and context? | 8–10 |
+| **AI-Likeness** | How much AI texture the email has (lower is better) | 1-3 |
+| **Authenticity** | How much it sounds like a real person writing to this specific recipient | 8-10 |
+| **Clarity** | Is the purpose clear and the ask unambiguous? | 8-10 |
+| **Appropriate Tone** | Is the formality level right for this relationship and context? | 8-10 |
 
 **Slack:**
 
 | Dimension | What It Measures | Target |
 |-----------|-----------------|--------|
-| **AI-Likeness** | How much AI texture the message has (lower is better) | 1–2 |
-| **Naturalness** | Does it sound like how this person would actually type in Slack? | 8–10 |
-| **Clarity** | Is the point/ask immediately clear? | 8–10 |
-| **Brevity** | Is it the right length for a Slack message? | 8–10 |
+| **AI-Likeness** | How much AI texture the message has (lower is better) | 1-2 |
+| **Naturalness** | Does it sound like how this person would actually type in Slack? | 8-10 |
+| **Clarity** | Is the point/ask immediately clear? | 8-10 |
+| **Brevity** | Is it the right length for a Slack message? | 8-10 |
 
 Provide a one-sentence justification for each score.
 
@@ -356,14 +356,14 @@ Produce a report in this format:
 
 Rewrite the full content with these universal rules:
 
-1. **Never add ideas that weren't in the original.** Never remove substance. Preserve every argument — only change the delivery.
+1. **Never add ideas that weren't in the original.** Never remove substance. Preserve every argument - only change the delivery.
 2. Replace every flagged AI phrase with natural language
-3. Vary sentence length — mix short punchy lines with longer analytical ones
+3. Vary sentence length - mix short punchy lines with longer analytical ones
 4. Replace generic openings with a specific hook (story, data, contrarian claim)
 5. Replace summary conclusions with a challenge, principle, or open question
-6. Break the uniform paragraph rhythm — some short, some long
+6. Break the uniform paragraph rhythm - some short, some long
 7. Add voice texture: incomplete sentences where appropriate, direct address, occasional bluntness
-8. If the content lacks a concrete example, flag it but don't invent one — leave a `[ADD SPECIFIC EXAMPLE FROM YOUR EXPERIENCE]` placeholder
+8. If the content lacks a concrete example, flag it but don't invent one - leave a `[ADD SPECIFIC EXAMPLE FROM YOUR EXPERIENCE]` placeholder
 
 **Apply channel-specific rewrite rules based on detected type:**
 
@@ -421,12 +421,12 @@ Slack: over-formal language, corporate filler, unnecessary hedging, emoji overlo
 
 After the first review, common refinements the user may request:
 
-- **Wrong content type detected** — Ask the user what format it is, re-run with correct channel rules.
-- **Voice profile too generic** — Ask for more specific writing samples.
-- **Rewrite changes ideas** — Reinforce: never add ideas that weren't in the original, never remove substance.
-- **Scores feel off** — Ask the user what they disagree with and why, then recalibrate.
-- **Custom checks** — The user may want to add rules like "Also check whether the post has a concrete example."
-- **Email too short / too long** — Recalibrate to the relationship and purpose context.
+- **Wrong content type detected** - Ask the user what format it is, re-run with correct channel rules.
+- **Voice profile too generic** - Ask for more specific writing samples.
+- **Rewrite changes ideas** - Reinforce: never add ideas that weren't in the original, never remove substance.
+- **Scores feel off** - Ask the user what they disagree with and why, then recalibrate.
+- **Custom checks** - The user may want to add rules like "Also check whether the post has a concrete example."
+- **Email too short / too long** - Recalibrate to the relationship and purpose context.
 
 ---
 
@@ -434,7 +434,7 @@ After the first review, common refinements the user may request:
 
 The rewrite is a starting point, not a final draft. Tell the user: "Your edits on top of this rewrite are often the best version."
 
-The goal isn't to review every piece of content forever — it's to get fast enough at recognizing your own voice that the review becomes a quick confirmation, not a rescue operation.
+The goal isn't to review every piece of content forever - it's to get fast enough at recognizing your own voice that the review becomes a quick confirmation, not a rescue operation.
 
 ---
 

@@ -44,7 +44,7 @@ test('title marker stripper drops malformed marker content without throwing', ()
  * 红测:**没请求生成标题时,标记也不许漏进正文**。
  *
  * 线上量到的:`<od-title>编辑级羊皮纸单页</od-title>` 原样出现在聊天正文第一行。
- * 真因是调用点写的 `enabled: Boolean(titleGenerationRequested)` —— 不请求标题就把
+ * 真因是调用点写的 `enabled: Boolean(titleGenerationRequested)` -- 不请求标题就把
  * 剥离器整个关掉;而模型是按系统提示词吐这个标记的,它并不知道这一轮我们要不要标题。
  *
  * 「要不要拿它命名会话」和「它能不能出现在正文里」是两件事:后者永远是否。

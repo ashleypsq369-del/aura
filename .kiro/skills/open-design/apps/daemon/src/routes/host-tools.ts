@@ -1,14 +1,14 @@
-// Hand-off surface — paseo-style "open project in <local app>".
+// Hand-off surface - paseo-style "open project in <local app>".
 //
 // The daemon owns the editor catalogue, probes each entry's CLI shim on
 // $PATH at request time, and on POST spawns the chosen app with the
 // project's resolvedDir as its single argument. This is the same shape
 // paseo uses (see getpaseo/paseo packages/server/src/server/editor-
-// targets.ts) — declarative catalogue + `which` probe + detached spawn.
+// targets.ts) - declarative catalogue + `which` probe + detached spawn.
 //
 // Why not `shell.openPath`? The desktop bridge can already open the OS
 // file manager at a project's resolvedDir, but it cannot pick a specific
-// editor — `shell.openPath` is whatever the OS associates with the path.
+// editor - `shell.openPath` is whatever the OS associates with the path.
 // For "open in Cursor specifically" we have to invoke a CLI shim
 // directly, which means the daemon (not the renderer) is the layer with
 // access to spawn + $PATH probing.
@@ -56,7 +56,7 @@ const MAC_OPEN_COMMAND = '/usr/bin/open';
 
 // The catalogue covers the apps shown in the user's reference screenshot
 // (image 4): Qoder, Cursor, Zed, Windsurf, Antigravity, Finder, Terminal,
-// Warp, Xcode, IntelliJ IDEA — plus a few cross-platform staples.
+// Warp, Xcode, IntelliJ IDEA - plus a few cross-platform staples.
 export const CATALOGUE: ReadonlyArray<CatalogueEntry> = [
   { id: 'cursor', label: 'Cursor', icon: 'sparkles', command: 'cursor', macOpenBundle: 'Cursor' },
   { id: 'vscode', label: 'VS Code', icon: 'file-code', command: 'code', macOpenBundle: 'Visual Studio Code' },
@@ -229,7 +229,7 @@ export async function resolveHostToolLaunchPlan(
 // actually started. Node emits `spawn` once the child is running and `error`
 // when the launch is refused (missing binary, quarantine, EACCES). The
 // `error` event arrives on a later tick, so the route must await this before
-// replying — otherwise it reports success for a launch the OS rejected and
+// replying - otherwise it reports success for a launch the OS rejected and
 // the user sees nothing happen (#3871).
 export function launchHostTool(
   command: string,
@@ -240,12 +240,12 @@ export function launchHostTool(
     // uses (CLI shim, `open -a`, Explorer, xdg-open, etc.).
     //
     // Do NOT pass `shell: true`. On Windows that runs the launch through cmd.exe,
-    // which shell-interprets the args — and one of them is the (project-derived)
+    // which shell-interprets the args - and one of them is the (project-derived)
     // directory path, so a path containing `&`, `|`, `^`, `>` etc. would inject
     // commands. `command` is already a resolved absolute path (incl. .exe/.cmd),
     // so route it through `createCommandInvocation`, which runs a .cmd/.bat via
     // cmd.exe with CommandLineToArgvW-safe verbatim args and everything else
-    // directly — no shell, no metacharacter interpretation.
+    // directly - no shell, no metacharacter interpretation.
     const invocation = createCommandInvocation({ command, args });
     const child = spawn(invocation.command, invocation.args, {
       detached: true,
@@ -360,7 +360,7 @@ export function registerHostToolsRoutes(app: Express, ctx: RegisterHostToolsRout
       // Wait for the OS to confirm the launch before replying. Previously
       // this returned ok:true synchronously and swallowed the child's `error`
       // event, so a refused launch was reported as success and the user saw
-      // nothing happen — the web button only surfaces an error on a non-OK
+      // nothing happen - the web button only surfaces an error on a non-OK
       // response (#3871).
       const launch = await launchHostTool(launchPlan.command, launchPlan.args);
       if (!launch.ok) {

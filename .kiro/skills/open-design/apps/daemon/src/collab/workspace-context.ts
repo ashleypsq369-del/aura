@@ -19,7 +19,7 @@ import { resolveEffectiveVelaConsoleOrigin } from '../integrations/vela-console-
 // workspace membership directory, then resolves the daemon's locally persisted
 // workspace selection; until B is reachable, the dev provider below holds an
 // in-memory context that a demo/tools-dev run can set. Swapping the provider is
-// the only change when B ships — routes and the web client stay put.
+// the only change when B ships - routes and the web client stay put.
 
 export interface WorkspaceContextRequest {
   /** The caller's bearer token (a real provider verifies this against B). */
@@ -184,7 +184,7 @@ function nonNegativeInt(value: unknown, fallback: number): number {
 
 /**
  * The URL of the workspace settings/management console on the cloud web app.
- * Team actions (create, invite, members, billing) live there — the local client
+ * Team actions (create, invite, members, billing) live there - the local client
  * only links out to them. Prefers an explicit value the upstream context carries;
  * otherwise builds one from `OD_VELA_WEB_URL` when configured. Undefined when
  * neither is available (the client then hides the settings entry).
@@ -197,7 +197,7 @@ export function resolveWorkspaceSettingsUrl(
 ): string | undefined {
   // B's web console supports workspace deep links (?workspaceId=…): the target
   // page opens directly when it matches the account's Active Workspace, and
-  // otherwise asks the user to confirm the switch — the confirmation IS the
+  // otherwise asks the user to confirm the switch - the confirmation IS the
   // explicit user action that may change B's Active Workspace (the client
   // itself never PUTs it). A bare /settings link would depend on whatever
   // workspace another device left active, so every console link pins the id.
@@ -295,7 +295,7 @@ export function parseWorkspaceCollabContext(input: unknown): WorkspaceCollabCont
     context.teamId = teamId;
   } else if (workspaceType === 'team') {
     // Invariant (matches the vela provider): a team context always carries
-    // teamId — the workspace IS the team scope. Collab gates on `teamId`, so
+    // teamId - the workspace IS the team scope. Collab gates on `teamId`, so
     // a dev PUT that omits it must not silently disable the collab plane.
     context.teamId = workspaceId;
   }
@@ -304,7 +304,7 @@ export function parseWorkspaceCollabContext(input: unknown): WorkspaceCollabCont
   if (typeof raw.teamName === 'string' && raw.teamName.trim()) {
     context.teamName = raw.teamName.trim();
   }
-  // Any workspace type may carry a name here — the dev/demo lane must be able
+  // Any workspace type may carry a name here - the dev/demo lane must be able
   // to drive a personal workspace's label the same way B does.
   if (typeof raw.workspaceName === 'string' && raw.workspaceName.trim()) {
     context.workspaceName = raw.workspaceName.trim();
@@ -320,7 +320,7 @@ export function parseWorkspaceCollabContext(input: unknown): WorkspaceCollabCont
 
 /**
  * Dev/demo provider: holds a single in-memory context, optionally seeded from
- * `OD_DEV_WORKSPACE_CONTEXT` (JSON). Ignores the request — a real B-backed
+ * `OD_DEV_WORKSPACE_CONTEXT` (JSON). Ignores the request - a real B-backed
  * provider derives the context per-caller from the token instead.
  */
 export function createDevWorkspaceContextProvider(

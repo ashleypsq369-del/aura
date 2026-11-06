@@ -32,7 +32,7 @@ function mapKey(key: TeamResourceKey): string {
 
 /**
  * Dev/demo provider: an in-memory registry of team-shared resources. A resource
- * not in the registry is treated as `personal` (copies freely) — so with no team
+ * not in the registry is treated as `personal` (copies freely) - so with no team
  * resources registered the guard is a no-op, exactly as production is until E's
  * hub reports real team resources. A test seeds a `frozen` resource to prove the
  * guard actually rejects.

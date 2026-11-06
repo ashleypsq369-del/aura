@@ -18,8 +18,8 @@
 // Rebuild pruning (BO2). A per-scope ledger records every comment id the member
 // stream has delivered to this scope. The first page of a snapshot pass marks
 // the whole ledger unseen; each snapshot page marks the ids it carries (merged,
-// or skipped as malformed) seen. The terminal snapshot page — in the same
-// transaction that hands the cursor off to incremental — deletes the local rows
+// or skipped as malformed) seen. The terminal snapshot page - in the same
+// transaction that hands the cursor off to incremental - deletes the local rows
 // whose ids stayed unseen: cloud-origin rows the stream no longer has at the
 // snapshot watermark W. Consequences, each deliberate:
 // - Nothing is deleted before the snapshot completes, so a rebuild keeps the
@@ -209,7 +209,7 @@ const sameQuery = (a: CollabCloudMemberPageQuery, b: CollabCloudMemberPageQuery)
  * A row with a `pin_seq` is treated as cloud-origin and deleted. The id itself
  * is the stronger witness: the cloud can only emit a tombstone for an id that
  * was pushed to it, so this deliberately does NOT also require the push to be
- * confirmed — a teammate may delete our comment before our own push's seq is
+ * confirmed - a teammate may delete our comment before our own push's seq is
  * written back, and skipping it then would lose the deletion for good once
  * the cursor moves past it. A row without a `pin_seq` is left alone, as is
  * any id we do not store (a snapshot replays historical deletes).

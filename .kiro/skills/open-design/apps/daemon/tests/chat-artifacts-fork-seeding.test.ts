@@ -10,7 +10,7 @@
 //
 // The two properties that matter, and the two ways to get this wrong:
 //
-//   * the copy gets its OWN ref rows pointing at the SAME snapshot — not a
+//   * the copy gets its OWN ref rows pointing at the SAME snapshot - not a
 //     duplicated blob, and not a shared row that one branch's delete would
 //     take from the other.
 //   * refs are seeded only when the message has none, so a browser PUT echoing

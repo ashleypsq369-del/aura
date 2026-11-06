@@ -1,4 +1,4 @@
-// Phase 6/7 entry slice / spec §10 / §21.3.2 — design-extract atom.
+// Phase 6/7 entry slice / spec §10 / §21.3.2 - design-extract atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/design-extract/.
 // The runner takes a project cwd that already has
@@ -30,10 +30,10 @@ export type {
 export interface DesignExtractOptions {
   // Project cwd containing code/index.json + the source files.
   cwd: string;
-  // Repo root (where the imported source actually lives — typically
+  // Repo root (where the imported source actually lives - typically
   // distinct from cwd; the runner reads file contents via this path).
   repoPath: string;
-  // Per-file size cap — files larger than this are skipped because
+  // Per-file size cap - files larger than this are skipped because
   // the regex pass becomes O(n) on hundreds of MB of bundled JS.
   // Default 256 KiB.
   largeFileBytes?: number;

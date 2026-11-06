@@ -1,6 +1,6 @@
 // spec 04 §10 fix #4/#6 (recvqbklNGDqYY): before this fix,
 // `apps/daemon/src/routes/project/comments.ts` had ZERO `enforceWorkspace*`
-// coverage — not "only blocks team, lets personal through" like the other
+// coverage - not "only blocks team, lets personal through" like the other
 // three resource types' mutation gate, but literally no gate at all. A
 // caller with no workspace identity whatsoever (signed out, a plain `curl`)
 // could POST/PATCH/DELETE comments on ANY project, including one bound to a
@@ -10,7 +10,7 @@
 // `enforceWorkspaceProjectMutation`/`sendApiError` deps to the REAL
 // `enforceWorkspaceResourceMutation('project', …)` gate (the same one
 // `routes/project/index.ts` builds for its own project routes), against a
-// real project bound into `workspace_projects` — not a stub — so this is
+// real project bound into `workspace_projects` - not a stub - so this is
 // exercising the actual production wiring path end to end at the HTTP layer,
 // not just the shared gate function in isolation (that is
 // `tests/collab/workspace-resource-mutation.test.ts`'s job).
@@ -160,7 +160,7 @@ async function startServer(
   });
   // The exact row shape `materializePulledTeamMirror` writes on a MEMBER's own
   // daemon for someone else's shared project: bound + team visibility, but
-  // UNATTRIBUTED (`createdByWorkspaceMemberId: null` — the adoption red line
+  // UNATTRIBUTED (`createdByWorkspaceMemberId: null` - the adoption red line
   // means lazy projection never assigns the reader as creator). This is the
   // row the real member-comment flow gates against.
   ensureWorkspaceProject(db, {
@@ -175,7 +175,7 @@ async function startServer(
     visibility: 'personal',
     createdByWorkspaceMemberId: OWNER_MEMBER_ID,
   });
-  // UNBOUND_PROJECT deliberately gets no `workspace_projects` row — the
+  // UNBOUND_PROJECT deliberately gets no `workspace_projects` row - the
   // "legacy / never claimed" control case the gate must leave alone.
 
   const app = express();
@@ -240,7 +240,7 @@ async function startServer(
   return `http://127.0.0.1:${port}`;
 }
 
-describe('project comments — workspace mutation gate', () => {
+describe('project comments - workspace mutation gate', () => {
   it('explicit remote pull works without SSE, requires fresh authority, and returns local conversation comments', async () => {
     const pullCommentsNow = vi.fn(async () => {
       upsertPreviewComment(database!, TEAM_PROJECT, 'conv-team', { id: 'visitor-feedback', target: COMMENT_TARGET, note: 'Visitor feedback' });
@@ -905,7 +905,7 @@ describe('project comments — workspace mutation gate', () => {
 
   it('rejects a headerless PATCH (status transition) against a team-bound project', async () => {
     const baseUrl = await startServer();
-    // Seed a comment with a member header first (allowed — owner), then
+    // Seed a comment with a member header first (allowed - owner), then
     // retry the status PATCH with no headers at all.
     const create = await fetch(`${baseUrl}/api/projects/${TEAM_PROJECT}/conversations/conv-team/comments`, {
       method: 'POST',
@@ -976,7 +976,7 @@ describe('project comments — workspace mutation gate', () => {
 
   // The member-comment regression (2026-07-27 dogfood, beta 0.15.2-beta.137):
   // the comment gate borrowed the project's `writeFiles` capability, whose
-  // `canMutate` requires `privileged || selfCreated` — so a PLAIN member could
+  // `canMutate` requires `privileged || selfCreated` - so a PLAIN member could
   // never comment on someone else's team-shared project even though the
   // product's read-only banner explicitly promises "view and comment". A
   // comment is not a file write; it needs its own capability that any active
@@ -1013,7 +1013,7 @@ describe('project comments — workspace mutation gate', () => {
   );
 
   // Same as above but against the exact row shape the member's own daemon
-  // holds after `POST /api/projects/:id/collab/pull` — the unattributed
+  // holds after `POST /api/projects/:id/collab/pull` - the unattributed
   // (`createdByWorkspaceMemberId: null`) team mirror. This is the literal
   // production shape of the dogfood failure (403
   // WORKSPACE_PROJECT_PERMISSION_DENIED → “评论保存失败，请重试。”).
@@ -1268,7 +1268,7 @@ describe('project comments — workspace mutation gate', () => {
 
   // Guard against overshoot: widening the comment gate must not open comments
   // on a personal-visibility (unshared, merely claimed) project to other
-  // members — only the sharing act (`visibility: 'team'`) grants comment
+  // members - only the sharing act (`visibility: 'team'`) grants comment
   // standing beyond creator/privileged.
   it('still rejects a non-creator member commenting on a personal-visibility project', async () => {
     const baseUrl = await startServer();

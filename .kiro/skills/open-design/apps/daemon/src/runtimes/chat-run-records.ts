@@ -2,7 +2,7 @@
 // the run analytics lifecycle both read.
 //
 // These live outside `routes/runs.ts` so the analytics lifecycle can consume
-// them without importing the route module back — a run's project row and its
+// them without importing the route module back - a run's project row and its
 // touched-artifact list are facts about the run, not about HTTP.
 //
 // Each guard takes the narrowest shape it actually reads rather than the full
@@ -99,7 +99,7 @@ export async function validateChatRunDeliverable(input: {
  *
  * The presentation-side question, resolved through the same project record
  * lookup as `validateChatRunDeliverable` so both answers describe one project.
- * Never feed it to a completion gate — see `DeliverableValidationScope`.
+ * Never feed it to a completion gate - see `DeliverableValidationScope`.
  */
 export async function validateChatProjectDeliverable(input: {
   db: Parameters<typeof getProject>[0];

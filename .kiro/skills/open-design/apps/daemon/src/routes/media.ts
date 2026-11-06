@@ -128,7 +128,7 @@ export function resolveMediaTaskProjectFile(
  * Per-task uniqueness is not enough: two tasks that recorded the same witness
  * each see exactly one candidate and each would take it. A file that more than
  * one task can claim proves nothing about either, so it is withdrawn from all
- * of them — the same fail-closed rule, applied across tasks instead of within
+ * of them - the same fail-closed rule, applied across tasks instead of within
  * one.
  */
 export function resolveMovedMediaTaskFiles(
@@ -338,9 +338,9 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
      * The dual of `attachLateOutputToRunMessage` below: hand the FAILURE back to
      * the turn that asked for it.
      *
-     * Every failure path here already knew which run this was — `runId` is right
+     * Every failure path here already knew which run this was - `runId` is right
      * there in `options.grant`, printed in the `[media]` diagnostic and shipped
-     * to analytics — and none of them wrote it anywhere the run could see. So
+     * to analytics - and none of them wrote it anywhere the run could see. So
      * the run's terminal verdict came from the agent's exit code alone: the
      * agent apologises in prose and exits 0, and the turn published
      * `status: "succeeded"`, `endedWithUnfinishedWork: false`, a green check and
@@ -415,7 +415,7 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
        * of every file that DID land in time.
        *
        * Resolves the project directory exactly the way `generateMedia` does
-       * (`ensureProject(projectsRoot, projectId)` — no metadata), so this points
+       * (`ensureProject(projectsRoot, projectId)` - no metadata), so this points
        * at the bytes that were actually written.
        */
       const attachLateOutputToRunMessage = async (meta: unknown): Promise<void> => {
@@ -540,7 +540,7 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
           // may have outlived the turn that asked for it, and the run-terminal
           // floor froze its file list before these bytes existed. Attach them
           // to that turn now, additively. A no-op whenever the run is still
-          // live — the terminal pass covers that case on its own.
+          // live - the terminal pass covers that case on its own.
           await attachLateOutputToRunMessage(meta);
         })
         .catch((err: any) => {
@@ -739,7 +739,7 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
         : 'image_generation';
     // This is an unauthenticated, public GET. The AIHubMix catalogue lives at a
     // single fixed origin, so we deliberately do NOT honour a caller-supplied
-    // `baseUrl` here — letting the caller pick the fetch target would open an
+    // `baseUrl` here - letting the caller pick the fetch target would open an
     // SSRF hole (e.g. pointing the daemon at http://169.254.169.254/ cloud
     // metadata). Hard-code the official origin instead; a custom BYOK base URL
     // only ever needs to differ for authenticated chat/media calls, not for
@@ -755,7 +755,7 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
       const resp = await fetch(aihubmixCatalogUrl(baseUrl, type), {
         ...dispatcher.requestInit,
         method: 'GET',
-        // The catalogue endpoint is public — no auth header (sending an empty
+        // The catalogue endpoint is public - no auth header (sending an empty
         // Bearer would be rejected by some gateways).
         redirect: 'error',
         signal: AbortSignal.timeout(15_000),
@@ -1181,7 +1181,7 @@ export function registerMediaRoutes(app: Express, ctx: RegisterMediaRoutesDeps) 
     }) => {
       // Best effort: a replication never fails because telemetry did. This is
       // the only product signal that says whether anyone uses replication and
-      // where it stops working — no prompt, no file name, no frame content.
+      // where it stops working - no prompt, no file name, no frame content.
       try {
         const context = await mediaAnalyticsContext(req, null);
         if (!context) return;

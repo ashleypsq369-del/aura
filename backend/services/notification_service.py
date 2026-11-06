@@ -1,4 +1,4 @@
-"""
+﻿"""
 NotificationQueue Service - Monitor and Alert System
 Monitors appointments, medications, and critical vitals
 Sends alerts to patients, caregivers, and clinicians
@@ -633,7 +633,7 @@ def notify_provider_approved(db: Session, provider_user_id: int):
             recipient_id=provider_user_id,
             notification_type='provider_approved',
             title='Application Approved!',
-            body='Congratulations — your provider application has been approved. You are now live on Aura Services.',
+            body='Congratulations - your provider application has been approved. You are now live on Aura Services.',
             is_read=False,
             created_at=datetime.utcnow(),
         ))

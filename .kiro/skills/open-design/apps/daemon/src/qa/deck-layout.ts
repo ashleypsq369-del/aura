@@ -2,7 +2,7 @@
 //
 // Background: the generated brand deck (`system/artifacts/deck.html`) lays
 // its content on fixed-size 16:9 slides. When a slide's content is taller or
-// wider than that frame, the surrounding `overflow:hidden` clips it — the
+// wider than that frame, the surrounding `overflow:hidden` clips it - the
 // hero headline loses its last line, the problem paragraph is cut mid
 // sentence, a market funnel label overflows its pill. Brand-derived copy has
 // variable length, so the only durable fix is a template that is robust by
@@ -12,7 +12,7 @@
 //
 // `analyseDeckLayout` parses the rendered deck and asserts the structural
 // invariants that keep those guarantees in place. It is deterministic and
-// side-effect free — there is no browser layout engine in the daemon, so the
+// side-effect free - there is no browser layout engine in the daemon, so the
 // pass verifies that the no-clip *mechanism* is present and not the pixel
 // result (the actual fit runs in the artifact's own browser context). It runs
 // as a hard guard inside the brand-system rebuild so a regressed template can
@@ -66,7 +66,7 @@ export function analyseDeckLayout(html: string): DeckLayoutReport {
     issues.push({
       code: 'no-slides',
       severity: 'error',
-      message: 'Deck has no `.slide` sections — the document is not a renderable deck.',
+      message: 'Deck has no `.slide` sections - the document is not a renderable deck.',
     });
     return { issues, slideCount };
   }
@@ -107,7 +107,7 @@ export function analyseDeckLayout(html: string): DeckLayoutReport {
     });
   }
 
-  // 4. No headline / lede slot may carry a fixed line-clamp truncation class —
+  // 4. No headline / lede slot may carry a fixed line-clamp truncation class -
   //    that silently cuts brand copy (the "problem paragraph cut mid-sentence"
   //    defect). The runtime fit replaces clamping.
   for (const selector of truncatedMessageSlots($)) {

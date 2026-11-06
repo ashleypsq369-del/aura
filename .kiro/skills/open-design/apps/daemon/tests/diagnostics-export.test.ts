@@ -47,7 +47,7 @@ interface DiagnosticsManifestFile {
   name: string;
 }
 
-describe('diagnostics export handler — non-sidecar launch', () => {
+describe('diagnostics export handler - non-sidecar launch', () => {
   it('exports failure-time workspace/proxy evidence and the previous process checkpoint through the existing handler', async () => {
     const root = join(tmpdir(), `od-diag-environment-${randomUUID()}`);
     const evidence = createDiagnosticsEvidence({
@@ -188,7 +188,7 @@ describe('diagnostics export handler — non-sidecar launch', () => {
   });
 });
 
-describe('diagnostics export handler — packaged (runtime) layout', () => {
+describe('diagnostics export handler - packaged (runtime) layout', () => {
   // Regression for the namespaceRoot off-by-one that left every packaged
   // bundle without daemon/web logs (the agent-run flow lives in the daemon
   // log). In packaged builds the orchestrator launches each child with
@@ -273,7 +273,7 @@ describe('diagnostics export handler — packaged (runtime) layout', () => {
 
   // The daemon's latest.log is truncated on every packaged launch, so after an
   // incident-triggered relaunch the bundle used to contain only the ~70 lines
-  // written since the restart — the incident-time log was gone. The packaged
+  // written since the restart - the incident-time log was gone. The packaged
   // launcher now rotates the prior session's log aside as previous.log; the
   // export must pick it up so support bundles cover the window BEFORE the
   // restart.
@@ -320,7 +320,7 @@ describe('diagnostics export handler — packaged (runtime) layout', () => {
   // Guard: previous.log only exists where a rotating launcher (packaged) has
   // produced one. tools-dev appends to latest.log and never rotates, so an
   // unconditional source entry would stamp a missing-file placeholder into
-  // every dev bundle — the same noise the renderer.log desktop-only rule
+  // every dev bundle - the same noise the renderer.log desktop-only rule
   // exists to avoid. When the file is absent there must be NO manifest entry.
   it('omits previous.log from the manifest entirely when no rotated log exists', async () => {
     const root = join(tmpdir(), `od-diag-noprev-${randomUUID()}`);
@@ -450,7 +450,7 @@ describe('diagnostics export handler — packaged (runtime) layout', () => {
 
 });
 
-describe('diagnostics export handler — run event logs', () => {
+describe('diagnostics export handler - run event logs', () => {
   it('bundles recent per-run events.jsonl logs for agent stream forensics', async () => {
     const root = join(tmpdir(), `od-diag-runs-${randomUUID()}`);
     const runsDir = join(root, 'runs');
@@ -592,7 +592,7 @@ describe('diagnostics export handler — run event logs', () => {
   });
 
   // The 2MB run-event tail used to be a hard byte cut from the file head, so
-  // the first kept line was almost always half a JSON object — and a bundle
+  // the first kept line was almost always half a JSON object - and a bundle
   // consumer streaming the file through a jsonl parser fell over on line 1.
   // Truncation must advance to the next line boundary so every kept line is
   // complete JSON.
@@ -603,7 +603,7 @@ describe('diagnostics export handler — run event logs', () => {
     // Every line is exactly 100 bytes (99 JSON chars + newline). 21000 lines =
     // 2,100,000 bytes > the 2 MiB (2,097,152) tail cap, and the resulting cut
     // offset (2,100,000 - 2,097,152 = 2,848) deterministically lands mid-line
-    // (2,848 % 100 = 48) — so an unaligned truncation ALWAYS yields a broken
+    // (2,848 % 100 = 48) - so an unaligned truncation ALWAYS yields a broken
     // first line rather than passing by luck.
     const lineFor = (seq: number): string =>
       `{"seq":"${String(seq).padStart(6, '0')}","pad":"${'a'.repeat(74)}"}\n`;
@@ -644,7 +644,7 @@ describe('diagnostics export handler — run event logs', () => {
 
   // The pathological end of the same contract: ONE event larger than the whole
   // 2 MiB tail budget. No complete line fits in the window at all, so there is
-  // nothing to align to — and shipping the middle of that record would put a
+  // nothing to align to - and shipping the middle of that record would put a
   // JSON fragment on line 1, exactly the breakage line alignment exists to
   // prevent. The bundle must say the file was omitted instead of quietly
   // exporting half an object.
@@ -692,7 +692,7 @@ describe('diagnostics export handler — run event logs', () => {
   it('warns when runsDir is set but no per-run event logs were found', async () => {
     // An empty/absent runs dir adds no manifest file entries, so without an
     // explicit warning an empty bundle is indistinguishable from a healthy run
-    // — exactly the gap that made an AMR loop look like "nothing happened."
+    // - exactly the gap that made an AMR loop look like "nothing happened."
     const runsDir = join(tmpdir(), `od-diag-empty-runs-${randomUUID()}`);
     const handler = createDiagnosticsExportHandler({
       runtime: null,

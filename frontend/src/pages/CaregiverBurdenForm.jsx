@@ -1,5 +1,5 @@
-/**
- * CaregiverBurdenForm.jsx — Zarit Burden Interview (12 questions)
+﻿/**
+ * CaregiverBurdenForm.jsx - Zarit Burden Interview (12 questions)
  * Redesigned: PageHeader + clean question cards
  */
 import { useState, useEffect } from 'react';
@@ -68,7 +68,7 @@ export default function CaregiverBurdenForm() {
       return apiClient.post('/api/assessments/caregiver-burden', data);
     },
     onSuccess: (res) => {
-      if (res.offline) toast.success('Saved offline — will sync when online', { duration: 5000 });
+      if (res.offline) toast.success('Saved offline - will sync when online', { duration: 5000 });
       else {
         toast.success('Caregiver burden assessment saved');
         if (res.data.alerts_generated?.length > 0)
@@ -118,7 +118,7 @@ export default function CaregiverBurdenForm() {
           <Users size={15} className="text-violet-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-violet-800">
             12 questions about caring for this patient. Select how often each statement applies.
-            Score ≤10 = Little burden · 10–20 = Mild to Moderate · &gt;20 = High burden.
+            Score ≤10 = Little burden · 10-20 = Mild to Moderate · &gt;20 = High burden.
           </p>
         </div>
 
@@ -142,7 +142,7 @@ export default function CaregiverBurdenForm() {
             Caregiver Name / ID <span className="font-normal text-[var(--text-400)]">(optional)</span>
           </label>
           <input type="text" value={caregiverId} onChange={e => setCaregiverId(e.target.value)}
-            placeholder="e.g. Jane Smith — Spouse"
+            placeholder="e.g. Jane Smith - Spouse"
             className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg bg-[var(--page-bg)] text-[var(--text-800)] focus:border-violet-500 focus:outline-none" />
         </div>
 

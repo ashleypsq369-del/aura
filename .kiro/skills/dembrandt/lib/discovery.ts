@@ -253,7 +253,7 @@ export async function parseSitemap(baseUrl, maxPages, knownSitemaps: string[] = 
 /**
  * How many pages a multi-page run asked for, for meta.crawl.pagesRequested.
  * `sitemapMax` is the resolved cap passed to parseSitemap (crawlN - 1, or the
- * 20-page default when no --crawl N is given) — pagesRequested must read that
+ * 20-page default when no --crawl N is given) - pagesRequested must read that
  * resolved cap, not crawlN directly, or the default-sitemap case reports null
  * instead of 21.
  */

@@ -7,7 +7,7 @@
  * a person reporting that their install did not work.
  *
  * The existing drift check (`e2e/tests/dsh-installer-version-policy.test.ts`)
- * compares our installers against our agent def — the two halves of *our*
+ * compares our installers against our agent def - the two halves of *our*
  * config. It stays green while both are equally out of date, which is exactly
  * what happened. This one compares them against the registry.
  *
@@ -15,13 +15,13 @@
  * names all three, because forgetting the third is the one that actually breaks
  * an install rather than merely warning about it:
  *
- *   1. `tools/release/resources/dsh-bootstrap/install-dsh.{sh,ps1}` — the
+ *   1. `tools/release/resources/dsh-bootstrap/install-dsh.{sh,ps1}` - the
  *      version and the `--before` resolution window (canonical product source;
  *      landing `public/install-dsh.*` copies must stay byte-identical until
  *      extraction).
- *   2. `apps/daemon/src/runtimes/defs/deepseek-harness.ts` — the accepted
+ *   2. `apps/daemon/src/runtimes/defs/deepseek-harness.ts` - the accepted
  *      release line.
- *   3. `packages/dsh-runtime/package.json` — the peer ranges. semver only lets a
+ *   3. `packages/dsh-runtime/package.json` - the peer ranges. semver only lets a
  *      prerelease satisfy a range when a comparator carries the same
  *      major.minor.patch tuple AND its own prerelease tag, so every new upstream
  *      prerelease line needs its own comparator or the connection component
@@ -54,7 +54,7 @@ export interface DriftVerdict {
   accepted: boolean;
   /**
    * When the registry published `latest`, ISO-8601, or `null` when it did not
-   * say. Nullable on purpose — see `readPublishedAt`.
+   * say. Nullable on purpose - see `readPublishedAt`.
    */
   publishedAt: string | null;
 }
@@ -92,7 +92,7 @@ export function readPinnedVersion(installerSource: string): string {
 
 /**
  * The release line the agent def accepts, rebuilt from the literal in source.
- * Absent is valid — it means the def only accepts the versions it lists.
+ * Absent is valid - it means the def only accepts the versions it lists.
  */
 export function readAcceptedPattern(defSource: string): RegExp | null {
   const found = /supportedVersionPattern:\s*\/(.+?)\/([a-z]*)\s*,/u.exec(defSource);
@@ -112,7 +112,7 @@ export function readListedVersions(defSource: string): string[] {
  * How badly we have fallen behind.
  *
  * `behind` means a user who takes our installer gets an older version than the
- * registry serves — annoying, but everything works. `unsupported` means a user
+ * registry serves - annoying, but everything works. `unsupported` means a user
  * who has what npm serves is outside what we claim to support: Settings calls
  * their CLI untested, and the peer ranges very likely do not resolve either.
  */
@@ -136,7 +136,7 @@ export function classifyDrift(args: {
  * sentence of context on an alert whose entire reason to exist is being sent.
  * A registry that answers with a compact packument (no `time` map at all), a
  * `time` map that has not caught up with `dist-tags`, or a non-string entry
- * must cost the card that sentence — never the alert.
+ * must cost the card that sentence - never the alert.
  */
 export function readPublishedAt(packument: unknown, version: string): string | null {
   if (typeof packument !== "object" || packument === null) return null;
@@ -147,7 +147,7 @@ export function readPublishedAt(packument: unknown, version: string): string | n
 }
 
 /**
- * `2026-09-03（4 天前）` — the date plus the one thing a bare date does not
+ * `2026-09-03（4 天前）` - the date plus the one thing a bare date does not
  * answer: whether this landed this morning or has been sitting for a fortnight.
  * `null` for anything unparseable, so callers can drop the clause entirely.
  */
@@ -168,7 +168,7 @@ export function describePublishedAt(publishedAt: string | null, now: Date): stri
 
 async function fetchLatestRelease(): Promise<{ latest: string; publishedAt: string | null }> {
   // The compact packument (`application/vnd.npm.install-v1+json`) carries only
-  // name / dist-tags / versions / modified — it has no `time` map, so the card
+  // name / dist-tags / versions / modified - it has no `time` map, so the card
   // could never say when upstream shipped. This runs once a day; the full
   // document is worth its bytes.
   const response = await fetch(`${REGISTRY}/${encodeURIComponent(PACKAGE)}`, {
@@ -191,8 +191,8 @@ async function fetchLatestRelease(): Promise<{ latest: string; publishedAt: stri
  * happened, why it matters, what to change. An earlier version led with a
  * verdict as its headline and opened its body with semver theory, and the
  * maintainer who received it could not tell what the message even was. So the
- * headline names the check and nothing else — severity is carried by the header
- * template, which Feishu renders before a single word of text — and the first
+ * headline names the check and nothing else - severity is carried by the header
+ * template, which Feishu renders before a single word of text - and the first
  * sentence is three facts with no reasoning attached: the upstream version,
  * when it shipped, and what we still pin.
  */
@@ -217,7 +217,7 @@ export function buildCard(verdict: DriftVerdict, now: Date = new Date()): DriftC
     : [
         `**\`${verdict.latest}\` 我们是支持的，只是安装脚本还没跟上。**`,
         `照我们的一行安装命令装的用户会拿到 \`${verdict.pinned}\`，` +
-          "比 registry 上的 `latest` 旧一档——能用，但不是最新的。",
+          "比 registry 上的 `latest` 旧一档--能用，但不是最新的。",
       ].join("\n");
 
   return {
@@ -232,9 +232,9 @@ export function buildCard(verdict: DriftVerdict, now: Date = new Date()): DriftC
           tag: "lark_md",
           content: [
             "**三处要一起改**（漏掉第三条会让组件装不上，不只是警告）：",
-            `1. \`${INSTALLER_SH}\` 和 \`.ps1\` — 版本 + \`--before\` 时间窗`,
-            `2. \`${AGENT_DEF}\` — 接受的发布线`,
-            `3. \`${PEER_MANIFEST}\` — peer 范围加一条比较器`,
+            `1. \`${INSTALLER_SH}\` 和 \`.ps1\` - 版本 + \`--before\` 时间窗`,
+            `2. \`${AGENT_DEF}\` - 接受的发布线`,
+            `3. \`${PEER_MANIFEST}\` - peer 范围加一条比较器`,
           ].join("\n"),
         },
       },
@@ -266,7 +266,7 @@ export interface FeishuDelivery {
  *
  * A rejected webhook request still comes back HTTP 200 with a nonzero `code`,
  * so treating every 2xx as success loses the one message this workflow exists
- * to send — silently, which is the worst way to lose an alert. Same contract as
+ * to send - silently, which is the worst way to lose an alert. Same contract as
  * the landing notifier: code 0 (or absent) is delivered; 429, 5xx and Feishu's
  * 9499 are worth another attempt.
  */
@@ -394,7 +394,7 @@ function selfCheck(): void {
   // `String(card.header)` is "[object Object]" whatever the card says, so the
   // assertion that used to stand here could never fail. Read the fields a human
   // reads instead: the card has to name the check, and its body has to carry
-  // all three facts — upstream version, publish date, what we pin — including
+  // all three facts - upstream version, publish date, what we pin - including
   // on the blocking branch, which once mentioned no pinned version at all.
   const card = buildCard(missed, new Date("2026-09-07T00:00:00.000Z"));
   const body = card.elements.map((element) => element.text?.content ?? "").join("\n");
@@ -439,7 +439,7 @@ function selfCheck(): void {
 
 // Only dispatch when this file is the process entrypoint. Without the guard,
 // importing it to reuse the pure helpers executes `run`: a live registry
-// request during test collection, and — once drift exists — an attempted
+// request during test collection, and - once drift exists - an attempted
 // Feishu post before a single assertion has run.
 const entry = process.argv[1];
 const invokedDirectly = entry !== undefined && path.resolve(entry) === import.meta.filename;

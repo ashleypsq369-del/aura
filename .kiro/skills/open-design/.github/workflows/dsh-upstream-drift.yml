@@ -5,7 +5,7 @@ name: dsh-upstream-drift
 # `@deepseek-ai/dsh` has twice published a new release line while this repo kept
 # pinning the old one, and both times a person reporting a broken install was the
 # detection mechanism. The in-repo check compares our installers against our
-# agent def — both halves of our own config — so it stays green while both are
+# agent def - both halves of our own config - so it stays green while both are
 # equally stale. This compares them against the registry instead.
 #
 # Standalone and outside the merge gate, like docker-image.yml: an

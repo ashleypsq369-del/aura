@@ -3,7 +3,7 @@
 //
 // 1. Settings-backed env config (VELA_RUNTIME_KEY/VELA_LINK_URL via
 //    agentCliEnv.amr) must count as AMR-authorized for the run-event
-//    configure_type derivation — the status route and run launcher merge
+//    configure_type derivation - the status route and run launcher merge
 //    that env, so analytics dropping it would report signed-in users as
 //    'none' and preserve the undercount the PR fixes.
 // 2. Signed-in runs must stamp the AMR account id as `user_id` so daemon

@@ -80,21 +80,21 @@ Respect `prefers-color-scheme` and let the OS set the default. Offer a toggle fo
 
 ## When to Build a Theme Selector in the UI
 
-A theme selector is a UI control — it takes space and adds complexity. Only build it when user control genuinely matters.
+A theme selector is a UI control - it takes space and adds complexity. Only build it when user control genuinely matters.
 
 | Situation | Theme selector? |
 |---|---|
-| Marketing site, landing page | No — pick one mode, commit to it |
+| Marketing site, landing page | No - pick one mode, commit to it |
 | Consumer SaaS, general audience | Combined (system-default + toggle) |
-| Developer tool, technical product | Yes — developers expect it |
-| Trading platform, financial dashboard | Yes — extended use, low-light sessions common |
-| B2B enterprise tool (ERP, analytics) | Yes — power users, long sessions, personal preference varies |
-| E-commerce storefront | Usually no — light default, possibly system-default |
-| Creative tool (design, video, audio) | Yes — dark is often preferred, toggle still expected |
+| Developer tool, technical product | Yes - developers expect it |
+| Trading platform, financial dashboard | Yes - extended use, low-light sessions common |
+| B2B enterprise tool (ERP, analytics) | Yes - power users, long sessions, personal preference varies |
+| E-commerce storefront | Usually no - light default, possibly system-default |
+| Creative tool (design, video, audio) | Yes - dark is often preferred, toggle still expected |
 
 **Rule:** if the user will spend hours per day in the tool, give them control. If it's a transactional or occasional-use product, pick the mode that fits the brand and move on.
 
-Place the theme toggle in the header (top-right, near account) or in user settings — not in primary navigation.
+Place the theme toggle in the header (top-right, near account) or in user settings - not in primary navigation.
 
 ---
 
@@ -116,15 +116,15 @@ If the brand uses a very dark primary colour (navy, deep green, near-black), a d
 
 ## Dark Mode Token Principles
 
-**A theme switcher is a second palette, not a toggle.** Every semantic colour needs a verified value in each mode — not one value flipped by an algorithm. Contrast that passes on light routinely fails on dark; saturation and elevation read differently. Real cost, and a reason not to build one unless it earns its place (see above).
+**A theme switcher is a second palette, not a toggle.** Every semantic colour needs a verified value in each mode - not one value flipped by an algorithm. Contrast that passes on light routinely fails on dark; saturation and elevation read differently. Real cost, and a reason not to build one unless it earns its place (see above).
 
 Dark mode is not just inverting colours. Common mistakes:
 
-- **Do not use pure black (#000000) as the base surface** — use a very dark neutral (#0A0A0F, #111827) for depth
-- **Surface hierarchy in dark mode uses lightness, not shadows** — base, +1, +2 surfaces get progressively lighter, not more shadowed
-- **Reduce brand colour saturation slightly** — vivid colours on dark backgrounds can be visually aggressive; a 10–15% desaturation keeps them readable
-- **Increase font weight for reversed text** — light text on a dark background often appears "thinner" than the same weight in light mode. Increase the weight by one step (e.g., from Regular to Medium, or Medium to Semibold) to maintain legibility.
-- **Text contrast needs active verification** — light text on dark surfaces is not automatically WCAG-compliant; check all combinations
+- **Do not use pure black (#000000) as the base surface** - use a very dark neutral (#0A0A0F, #111827) for depth
+- **Surface hierarchy in dark mode uses lightness, not shadows** - base, +1, +2 surfaces get progressively lighter, not more shadowed
+- **Reduce brand colour saturation slightly** - vivid colours on dark backgrounds can be visually aggressive; a 10-15% desaturation keeps them readable
+- **Increase font weight for reversed text** - light text on a dark background often appears "thinner" than the same weight in light mode. Increase the weight by one step (e.g., from Regular to Medium, or Medium to Semibold) to maintain legibility.
+- **Text contrast needs active verification** - light text on dark surfaces is not automatically WCAG-compliant; check all combinations
 
 **A literal equal to a token's value is that token.** When a hardcoded colour happens to match what a token resolves to in the current theme, it is not a coincidence and not a local choice: it is that token, written in the one form that cannot follow the theme. The damage then shows up inverted rather than missing. A surface frozen at its dark-mode value does not merely look wrong in light mode, it reverses its relationship to its neighbours, so what was sunken becomes raised and what receded now advances. The layout still renders, nothing throws, and the only report is somebody saying a screen feels off. Do not leave this to discipline, because a literal is invisible to every token audit by construction. Make it mechanical: grep the markup for literal colour values, treat the count as a debt with a number, and fail the build on new ones once it reaches zero. Any literal that survives the grep needs a reason in writing, and "it is the same as the token anyway" is the one reason that is never valid.
 

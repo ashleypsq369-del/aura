@@ -6,7 +6,7 @@
  *
  * Rule of thumb: keep the loose type at the input boundary, run it through here
  * once at ingest, and store the tight, canonical form. The CLI itself does not
- * need these — they live in core so every consumer shares one implementation
+ * need these - they live in core so every consumer shares one implementation
  * instead of each repo re-deriving it.
  */
 import type { BrandingResult, Colors } from './types.js';

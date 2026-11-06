@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 / plan §3.U1 — SigV4 signer correctness.
+// Phase 5 / spec §15.6 / plan §3.U1 - SigV4 signer correctness.
 
 import { describe, expect, it } from 'vitest';
 import { encodeS3PathSegment, signSigV4 } from '../src/storage/aws-sigv4.js';

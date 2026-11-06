@@ -1,9 +1,9 @@
-// Offline `.fig` decoder — no Figma account, API token, or MCP server.
+// Offline `.fig` decoder - no Figma account, API token, or MCP server.
 //
 // A `.fig` file is a ZIP archive wrapping `canvas.fig` (Figma's "fig-kiwi"
 // binary), `thumbnail.png`, `meta.json`, and `images/<hex-hash>` blobs.
 // `canvas.fig` itself is: 8-byte magic "fig-kiwi", a little-endian u32
-// version, then length-prefixed chunks `[u32 len][data]` — chunk 0 is a
+// version, then length-prefixed chunks `[u32 len][data]` - chunk 0 is a
 // kiwi *schema*, chunk 1 is the kiwi-encoded *message* (`nodeChanges` +
 // `blobs`). Both chunks are raw-deflate; newer files zstd-compress the
 // message chunk.
@@ -51,7 +51,7 @@ const JAM_MAGIC = 'fig-jam.';
 
 /**
  * Decode a `.fig` file (ZIP-wrapped or raw `canvas.fig`) fully offline.
- * Never throws on a malformed kiwi payload — it degrades to whatever the
+ * Never throws on a malformed kiwi payload - it degrades to whatever the
  * ZIP layer recovered.
  */
 export async function decodeFigFile(input: Uint8Array): Promise<FigDecodeResult> {

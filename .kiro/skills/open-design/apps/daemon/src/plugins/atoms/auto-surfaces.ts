@@ -1,4 +1,4 @@
-// Phase 8 entry slice / spec §10.3.1 / §21.5 — auto-derived GenUI surfaces
+// Phase 8 entry slice / spec §10.3.1 / §21.5 - auto-derived GenUI surfaces
 // for first-party atom stages.
 //
 // Mirrors the connector-gate's auto oauth-prompt pattern: when the
@@ -6,7 +6,7 @@
 // `choice` GenUI surface (`__auto_diff_review_<stageId>`,
 // persist='run') so the user can accept / reject / partial without
 // the plugin author having to declare the surface by hand.
-// Plugin-author-declared surfaces with the same id win — this helper
+// Plugin-author-declared surfaces with the same id win - this helper
 // returns the implicit list and `mergeAutoOAuthPrompts` (re-used) does
 // the dedupe.
 //
@@ -70,7 +70,7 @@ function buildDiffReviewSurface(stageId: string): GenUISurfaceSpec {
       },
       required: ['decision'],
     },
-    timeout:    24 * 60 * 60 * 1000, // 24h — diff review may sit overnight
+    timeout:    24 * 60 * 60 * 1000, // 24h - diff review may sit overnight
     onTimeout:  'abort',
     capabilitiesRequired: [],
   };

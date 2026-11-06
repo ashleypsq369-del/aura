@@ -20,7 +20,7 @@ FIXES = [
     # text-[10px] → text-[11px] ONLY in className strings (not in style objects)
     # We do a safe version: only replace when it's inside className
     # ── Rounded-md → rounded-lg for small action buttons in alert/medication rows ──
-    # Only in very specific contexts — look for the pattern in button classes
+    # Only in very specific contexts - look for the pattern in button classes
     ('rounded-md text-[10px]',  'rounded-lg text-[11px]'),
     ('rounded-md text-[11px]',  'rounded-lg text-[11px]'),
     # Sidebar collapse specific fix
@@ -37,7 +37,7 @@ FIXES = [
      'bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50'),
     ('bg-teal-600 hover:bg-teal-700 text-white rounded-md text-[10px] font-bold transition',
      'bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50'),
-    # Explain/secondary small buttons — unify radius
+    # Explain/secondary small buttons - unify radius
     ('bg-slate-100 hover:bg-slate-200 text-[var(--text-600)] rounded-md text-[10px] font-semibold',
      'bg-[var(--card-border)]/40 hover:bg-[var(--card-border)] text-[var(--text-600)] rounded-lg text-[11px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400/40'),
     # text-[10px] in badge/chip spans → text-[11px]

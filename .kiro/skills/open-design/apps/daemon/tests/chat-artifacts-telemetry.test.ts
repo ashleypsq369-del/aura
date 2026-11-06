@@ -5,8 +5,8 @@
 // `source_changed` means the file on disk stopped being the file this turn
 // produced BEFORE the copy was taken. Every other failure code says "we could
 // not keep a copy"; this one says the capture WINDOW is wrong. Averaged into a
-// failure rate it disappears — a store that is 2% full and a store that is
-// fabricating history look identical — so it has to be countable on its own.
+// failure rate it disappears - a store that is 2% full and a store that is
+// fabricating history look identical - so it has to be countable on its own.
 //
 // The event carries counts and ids. The assertions below also pin what it must
 // NOT carry: a snapshot is a copy of the user's own design work, so no path,
@@ -72,7 +72,7 @@ describe('chat artifact capture telemetry', () => {
       runId: 'run-1',
       report: report({ refs: 2, reused: 2 }),
     });
-    // Reuse IS the strong path — the media hook already froze provider bytes.
+    // Reuse IS the strong path - the media hook already froze provider bytes.
     // Scoring it as a shortfall would invert the health signal.
     expect(props!.result).toBe('success');
     expect(props!.reused_count).toBe(2);
@@ -156,7 +156,7 @@ describe('run capture counts a drifted source under source_changed', () => {
       messageId: 'msg-1',
       runId: 'run-1',
       // The second path was touched by the run and is already gone by the time
-      // the chokepoint reads it — the shape a same-turn cleanup produces.
+      // the chokepoint reads it - the shape a same-turn cleanup produces.
       touchedPaths: [
         path.join(projectRoot, 'kept.png'),
         path.join(projectRoot, 'vanished.png'),

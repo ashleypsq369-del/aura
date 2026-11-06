@@ -1,4 +1,4 @@
-// Trust resolver. Spec §5.3 has two tiers — `trusted` and `restricted`.
+// Trust resolver. Spec §5.3 has two tiers - `trusted` and `restricted`.
 // Phase 1 keeps the policy minimal:
 //
 //   - Local installs default to `trusted` (the user copied the folder
@@ -92,7 +92,7 @@ const KNOWN_TOP_LEVEL_CAPABILITIES = new Set<string>([
   'network',
   'connector',
   'pipeline:*',
-  // Plan §3.K3 / spec §10.3.5 — plugin-bundled React component
+  // Plan §3.K3 / spec §10.3.5 - plugin-bundled React component
   // surfaces require an explicit capability so a restricted plugin
   // cannot smuggle arbitrary UI through the GenUI layer.
   'genui:custom-component',
@@ -108,7 +108,7 @@ export interface InvalidCapabilityIssue {
 
 // Validate a list of capability strings against the spec §5.3 vocabulary.
 // Returns the (deduped) accepted list plus issues for anything rejected;
-// unknown shapes are NOT silently dropped — the caller must surface them.
+// unknown shapes are NOT silently dropped - the caller must surface them.
 export function validateCapabilityList(
   raw: unknown,
 ): { accepted: string[]; rejected: InvalidCapabilityIssue[] } {
@@ -143,7 +143,7 @@ export function validateCapabilityList(
 
 // Persist a capability grant. Reads the existing union from
 // `installed_plugins.capabilities_granted`, merges with the request,
-// and writes the deduped sorted union back. Idempotent — re-granting
+// and writes the deduped sorted union back. Idempotent - re-granting
 // the same set is a no-op. Returns the resulting list.
 export function grantCapabilities(args: {
   db: import('better-sqlite3').Database;

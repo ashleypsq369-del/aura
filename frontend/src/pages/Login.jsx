@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
@@ -274,7 +274,7 @@ export default function Login() {
             <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
             <LegalModal type="about"   open={legalModal === 'about'}   onClose={() => setLegalModal(null)} />
 
-            {/* Demo credentials — compact role pills */}
+            {/* Demo credentials - compact role pills */}
             <div className="mt-4 pt-4 border-t border-slate-200">
               <p className="text-[11px] font-semibold text-[var(--text-400)] text-center mb-2.5 uppercase tracking-wider">
                 Quick Demo Access
@@ -331,7 +331,7 @@ export default function Login() {
 
           </div>
 
-          {/* Footer — outside the card, below it */}
+          {/* Footer - outside the card, below it */}
           <div className="mt-4 text-center">
             <p style={{ fontSize:12, fontWeight:600, margin:'0 0 5px', lineHeight:1.6 }}>
               <button type="button" onClick={() => setLegalModal('about')}

@@ -47,7 +47,7 @@ export const MAX_IMAGE_COUNT = 10;
 export const MAX_TOTAL_IMAGE_BYTES = 20 * 1024 * 1024; // 20 MB
 /** File extensions accepted in pi's `images` RPC field. */
 export const ALLOWED_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp']);
-/** Extension UI methods that expect no response — silently consumed without reply. */
+/** Extension UI methods that expect no response - silently consumed without reply. */
 export const FIRE_AND_FORGET_METHODS = new Set([
   'setStatus',
   'setWidget',
@@ -140,7 +140,7 @@ export function snapshotPiSessionFiles(cwd: string | undefined): PiSessionFileSn
 /**
  * Compares the current `.pi/sessions/` directory against a before-snapshot
  * and returns the path of the single changed file. Returns `null` when zero
- * or more than one file changed — concurrent pi processes are detected this
+ * or more than one file changed - concurrent pi processes are detected this
  * way to avoid associating the wrong session with this run.
  *
  * @param cwd    - Absolute path to the pi working directory; may be undefined.
@@ -235,8 +235,8 @@ export function attachPiRpcSession({
     if (!child.killed) child.kill('SIGTERM');
   };
 
-  // Emit initial status with model name immediately — before pi even
-  // responds — so the UI header shows the model name at session start.
+  // Emit initial status with model name immediately - before pi even
+  // responds - so the UI header shows the model name at session start.
   send('agent', {
     type: 'status',
     label: 'initializing',
@@ -340,7 +340,7 @@ export function attachPiRpcSession({
       }
       return;
     }
-    // Once finished (agent_end or abort), stop processing — the run is
+    // Once finished (agent_end or abort), stop processing - the run is
     // over, so no more agent events should be emitted. We still drain
     // stdout via parser.feed() so the pipe doesn't break; we just skip
     // acting on the parsed objects.
@@ -352,7 +352,7 @@ export function attachPiRpcSession({
       return;
     }
 
-    // RPC responses (prompt accepted, set_model ack, etc.) — not
+    // RPC responses (prompt accepted, set_model ack, etc.) - not
     // agent events. Log the prompt acceptance, ignore the rest.
     if (raw.type === 'response') {
       if (parentSessionRpcId !== null && raw.id === parentSessionRpcId) {

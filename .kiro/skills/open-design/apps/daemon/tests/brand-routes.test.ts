@@ -628,7 +628,7 @@ describe('brand routes', () => {
       'needs_input',
     );
 
-    // needs_input is reversible — it must NOT be persisted (the user can still
+    // needs_input is reversible - it must NOT be persisted (the user can still
     // answer and resume extraction), unlike the terminal failed reconcile.
     const storedMeta = JSON.parse(readFileSync(path.join(brandsRoot, 'brand-blocked', 'meta.json'), 'utf8'));
     expect(storedMeta.status).toBe('extracting');
@@ -669,7 +669,7 @@ describe('brand routes', () => {
     // not close: `startBrandExtraction` (brands/index.ts) inserts its backing
     // project row directly and never calls `ensureWorkspaceProject`. Before
     // this fix, that left the project with NO `workspace_projects` row even
-    // when the request that created it plainly named a team workspace member —
+    // when the request that created it plainly named a team workspace member -
     // and POST /api/runs + POST /api/chat's workspace mutation gate
     // (`enforceWorkspaceResourceMutation`) unconditionally denies a run against
     // ANY unbound project once the caller's client sends workspace headers at
@@ -983,7 +983,7 @@ describe('brand routes', () => {
     // Regression: a black/white/red brand (e.g. the Economist) harvests fewer
     // than three non-extreme colors, which the network prefetch's `thin` gate
     // treats as a failed harvest. The post-wall browser DOM is a real,
-    // user-confirmed page, so the `extract-from-html` path must still succeed —
+    // user-confirmed page, so the `extract-from-html` path must still succeed -
     // the sparse palette is filled by seed defaults and refined by the later AI
     // enrichment pass, rather than dead-ending on "Extraction failed".
     let prefetchStarted!: () => void;
@@ -1083,7 +1083,7 @@ describe('brand routes', () => {
 
       expect(getObservedSignal().aborted).toBe(true);
       // The attempt did not synthesize, so the HTTP call reports 422 + a retry
-      // toast message — but the brand stays RECOVERABLE, not terminal.
+      // toast message - but the brand stays RECOVERABLE, not terminal.
       expect(extracted.status).toBe(422);
       expect(extracted.body).toEqual({
         error: 'Could not extract a design system from the provided page.',

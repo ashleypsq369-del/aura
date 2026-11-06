@@ -758,7 +758,7 @@ describe('od project CLI', () => {
 
     expect(result.code).toBe(0);
     expect(result.stderr).toBe('');
-    // No workspace/directory call — explicit flags win, but they route to
+    // No workspace/directory call - explicit flags win, but they route to
     // the workspace-scoped catalog (/api/workspaces/:id/projects), not to
     // the unbound /api/projects catalog. Passing --workspace to /api/projects
     // does NOT scope it (#6679 repro), so the explicit path mirrors the

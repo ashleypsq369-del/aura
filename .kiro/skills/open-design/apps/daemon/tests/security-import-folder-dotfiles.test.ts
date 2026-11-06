@@ -7,8 +7,8 @@
 //     - validates only: absolute path, realpath, isDirectory, not fs-root,
 //       not RUNTIME_DATA_DIR, sandbox-mode allowlist (no-op unless
 //       OD_SANDBOX_MODE is on). NO sensitive-dir blocklist ($HOME, ~/.ssh,
-//       ~/.aws, ...) — the existing BLOCKED_CANONICAL list in
-//       src/linked-dirs.ts is never consulted on this route — and no dotfile
+//       ~/.aws, ...) - the existing BLOCKED_CANONICAL list in
+//       src/linked-dirs.ts is never consulted on this route - and no dotfile
 //       rule. baseDir is persisted into project metadata.
 //   GET    /api/projects/:id/raw/*               (src/routes/project/index.ts:3280)
 //   DELETE /api/projects/:id/raw/*               (src/routes/project/index.ts:3392)
@@ -27,7 +27,7 @@
 // per-file raw/files routes are the siblings missing that guard.
 //
 // Exposure: the /api origin middleware (src/server.ts:2222) lets any request
-// WITHOUT an Origin header through — i.e. any local process (prompt-injected
+// WITHOUT an Origin header through - i.e. any local process (prompt-injected
 // agent, malware, another app) can drive this unauthenticated on loopback.
 // Real cross-origin browser requests (Origin: https://evil.example) and
 // Origin: null on mutating routes are still blocked by that middleware; those
@@ -61,7 +61,7 @@ const PREV_DATA_DIR = process.env.OD_DATA_DIR;
 
 beforeEach(async () => {
   // Sentinel "home directory". Everything the daemon touches lives under this
-  // mkdtemp — no real user file is ever read or deleted by this spec.
+  // mkdtemp - no real user file is ever read or deleted by this spec.
   fakeHome = await mkdtemp(path.join(os.tmpdir(), 'od-fakehome-'));
   await mkdir(path.join(fakeHome, '.ssh'), { recursive: true });
   await mkdir(path.join(fakeHome, '.aws'), { recursive: true });
@@ -192,10 +192,10 @@ describe('import/folder -> home-tree file primitives', () => {
 
   // The rm-rf-of-a-user-directory reach exists because the home root can be
   // imported at all (deleting a subfolder of a legitimately-imported project is
-  // a valid feature — the abuse is binding the project to $HOME). Close it at
+  // a valid feature - the abuse is binding the project to $HOME). Close it at
   // the source: importing the home root or a credential store must be rejected
   // before a project is ever created. (Importing a temp folder and deleting its
-  // `docs` subfolder is NOT asserted here — that is legitimate.)
+  // `docs` subfolder is NOT asserted here - that is legitimate.)
   it('must reject importing the home root or a credential directory (no project bound to it)', async () => {
     const importDir = async (baseDir: string) => {
       const resp = await fetch(`${baseUrl}/api/import/folder`, {
@@ -225,7 +225,7 @@ describe('import/folder -> home-tree file primitives', () => {
   }, 30000);
 
   // A/B causal: the per-file read/delete chain runs every path through
-  // validateProjectPath — and that helper has no hidden-segment rule, unlike
+  // validateProjectPath - and that helper has no hidden-segment rule, unlike
   // its sibling buildBatchArchive (src/projects.ts:373-384) which explicitly
   // rejects dot segments for the same project tree. One omitted check, not a
   // design gap.
@@ -234,14 +234,14 @@ describe('import/folder -> home-tree file primitives', () => {
     // The hole: '.ssh/id_rsa' sails through the guard used by GET/DELETE raw.
     expect(validateProjectPath('.ssh/id_rsa')).toBe('.ssh/id_rsa');
     expect(validateProjectPath('.aws/credentials')).toBe('.aws/credentials');
-    // While traversal and reserved segments ARE rejected — the guard exists,
+    // While traversal and reserved segments ARE rejected - the guard exists,
     // it just never learned the hidden-segment rule its sibling has.
     expect(() => validateProjectPath('../escape')).toThrow();
     expect(() => validateProjectPath('.file-versions/x')).toThrow();
   });
 
   // Coverage guard (raised by review on #5857): the dotfile denial must live at
-  // the file-op choke point, not just the 3 raw/folders route handlers — every
+  // the file-op choke point, not just the 3 raw/folders route handlers - every
   // sibling read route (files/*, text-preview/*, powered/*) resolves through the
   // same readProjectFile/resolveProjectFilePath and must equally refuse
   // dotfiles from an imported tree.

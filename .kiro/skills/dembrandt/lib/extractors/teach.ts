@@ -1,7 +1,7 @@
-// teach.ts — internal, opt-in extractor. Hidden flag; not part of the product
+// teach.ts - internal, opt-in extractor. Hidden flag; not part of the product
 // output. Only runs when `--teach` is passed; its result is written to a
 // separate `<file>.teach.json` sidecar (see index.ts). Collects the raw :root
-// custom-property map (names + resolved values) and interactive-state styles —
+// custom-property map (names + resolved values) and interactive-state styles -
 // both publicly visible CSS that the product extractor deliberately filters out.
 
 export async function extractTeach(page: any) {

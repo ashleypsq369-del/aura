@@ -4,7 +4,7 @@ An Ant-Design-style brand engine: a brand collapses into a tiny **Seed**
 (~20 fields), and a deterministic algorithm derives a whole style system, a
 themed component kit, and finished products (landing / email / poster) from it.
 Variants (light / dark / compact) are the *same* seed run through a different
-algorithm — never hand-authored.
+algorithm - never hand-authored.
 
 ## Pipeline
 
@@ -24,7 +24,7 @@ algorithm — never hand-authored.
    theme.json (antd)             (var(--brand-*))    poster (HTML)        + 13 presets
 ```
 
-Every downstream value traces back to the Seed via algorithm — nothing is
+Every downstream value traces back to the Seed via algorithm - nothing is
 hand-typed. The 10-step color ladders are a faithful, dependency-free port of
 `@ant-design/colors`' `generate()` (the canonical blue ladder reproduces
 bit-for-bit; see `__tests__/palette.test.ts`).
@@ -55,7 +55,7 @@ import {
 where `files` is a `{ relativePath → contents }` map ready to write, return over
 HTTP, or inspect.
 
-## How an agent drives it — one command
+## How an agent drives it - one command
 
 ### CLI
 

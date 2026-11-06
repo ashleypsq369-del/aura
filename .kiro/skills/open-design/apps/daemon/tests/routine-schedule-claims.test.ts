@@ -330,7 +330,7 @@ describe('routine scheduled loser cleanup', () => {
       expect(rows).toEqual([{ id: 'phantom-winning-run' }]);
 
       // `/api/runs` must not surface the loser's in-memory chat run as
-      // `canceled` — `design.runs.drop()` removes it from the registry.
+      // `canceled` - `design.runs.drop()` removes it from the registry.
       const runsRes = await fetch(`${started.url}/api/runs`);
       expect(runsRes.status).toBe(200);
       const runsJson = await runsRes.json() as {
@@ -355,7 +355,7 @@ describe('routine scheduled loser cleanup', () => {
     // `linkSnapshotToConversation()` throws (e.g. a CHECK constraint, a
     // missing conversation row, a trigger), `discard()` previously landed
     // with `resolvedRoutineSnapshot === null` and never restored the
-    // project's prior pin — leaving the reused project pointed at a
+    // project's prior pin - leaving the reused project pointed at a
     // snapshot the routine never durably claimed.
     //
     // The fix captures the intermediate pin in `partiallyAppliedSnapshotId`
@@ -441,7 +441,7 @@ describe('routine scheduled loser cleanup', () => {
       await vi.advanceTimersByTimeAsync(0);
       vi.useRealTimers();
 
-      // Wait for the routine_runs row to land in a terminal failed state —
+      // Wait for the routine_runs row to land in a terminal failed state -
       // the scheduled prepare-failure path patches the row to 'failed'
       // after the slot claim is accepted.
       let stored: { status: string } | undefined;

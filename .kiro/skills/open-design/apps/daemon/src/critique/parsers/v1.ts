@@ -594,7 +594,7 @@ function parseAttrs(s: string): Record<string, string> {
  * Find the first occurrence of `needle` in `source` that is NOT inside a
  * `<![CDATA[ ... ]]>` span. The wire protocol uses sibling tags (`</SHIP>`,
  * `</ARTIFACT>`, `<SUMMARY>`) that an agent could legitimately ship inside
- * an HTML / JS payload wrapped in CDATA — a naive `indexOf` would match
+ * an HTML / JS payload wrapped in CDATA - a naive `indexOf` would match
  * those sentinels, slicing the wrong block out and corrupting both the
  * extraction and the surrounding parser state. CDATA forbids the literal
  * `]]>` inside its content per the XML spec, so once we open one we can
@@ -641,7 +641,7 @@ export function indexOfOutsideCdata(
  * `blockEnd` is the offset in `source` immediately after the closing
  * `</ARTIFACT>` tag, so callers that need to scan SHIP-level sibling tags
  * (`<SUMMARY>`, etc.) can do so on `source.slice(blockEnd)` instead of the
- * full SHIP inner — otherwise an artifact body that contains a literal
+ * full SHIP inner - otherwise an artifact body that contains a literal
  * `<SUMMARY>...</SUMMARY>` pair would be misread as the ship summary
  * (mrcfps follow-up on PR #1085).
  *
@@ -674,7 +674,7 @@ export function extractArtifactBlock(
   if (trimmed.startsWith('<![CDATA[')) {
     // `cdataInnerStart` is an offset into `remainder` (the slice of
     // `source` that begins right after the `<ARTIFACT ...>` opener), so
-    // every subsequent slice must be against `remainder` too — slicing
+    // every subsequent slice must be against `remainder` too - slicing
     // `source` here would shift by `bodyStart` and chop off the leading
     // bytes of the body.
     const cdataInnerStart = leadingWs + '<![CDATA['.length;

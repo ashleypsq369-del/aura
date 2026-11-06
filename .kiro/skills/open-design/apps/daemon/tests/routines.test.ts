@@ -102,7 +102,7 @@ describe('nextRunAtForSchedule DST handling', () => {
     // 2026-03-08 in America/New_York: clocks jump 02:00 EST → 03:00 EDT, so
     // a daily routine scheduled at 02:30 has no valid wall clock that day.
     // Prior to the fix, tzWallToUtc returned 06:30Z which renders back as
-    // 01:30 EST — an hour before the requested time. The fixed scheduler
+    // 01:30 EST - an hour before the requested time. The fixed scheduler
     // must instead advance to a valid post-gap instant on the same day.
     const now = new Date('2026-03-08T05:00:00Z');
     const next = nextRunAtForSchedule(
@@ -122,7 +122,7 @@ describe('nextRunAtForSchedule DST handling', () => {
   });
 
   it('still fires the second occurrence when the wall time itself is in the repeated hour', () => {
-    // 2026-11-01 in America/New_York: 01:30 happens twice — first at
+    // 2026-11-01 in America/New_York: 01:30 happens twice - first at
     // 05:30Z (EDT) and again at 06:30Z (EST) after clocks fall back.
     // If the daemon checks at 05:45Z (between the two occurrences),
     // a daily routine at 01:30 must still fire today at 06:30Z, not
@@ -329,7 +329,7 @@ describe('RoutineService scheduled run idempotency', () => {
     service.setRunHandler(async () => {
       return {
         // Placeholder IDs mirror server.ts's `scheduledPlaceholder*`
-        // values — these are what the row gets inserted with before
+        // values - these are what the row gets inserted with before
         // `prepare()` patches them with real IDs.
         projectId: 'routine-pending-project',
         conversationId: 'routine-pending-conversation',
@@ -365,7 +365,7 @@ describe('RoutineService scheduled run idempotency', () => {
       expect(completionResolved).toBe(true);
 
       // The persisted row ends in the terminal failed state and carries
-      // the real IDs that prepare() assigned — no `routine-pending-*`
+      // the real IDs that prepare() assigned - no `routine-pending-*`
       // placeholders left behind.
       expect(persistence.runs).toHaveLength(1);
       const stored = persistence.runs[0]!;
@@ -597,7 +597,7 @@ describe('RoutineService scheduled run idempotency', () => {
       expect(discardCalls).toBe(1);
 
       // The cleanup failure is surfaced via console.error and does not
-      // swallow the prepare failure — the routine row is still finalized
+      // swallow the prepare failure - the routine row is still finalized
       // and the original prepare error reaches the scheduler.
       expect(errors.mock.calls.some((call) =>
         call.some((value) => String(value).includes('cleanup blew up')),

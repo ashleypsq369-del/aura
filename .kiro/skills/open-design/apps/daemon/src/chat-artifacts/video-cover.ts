@@ -5,7 +5,7 @@
 // WHY A FRAME AND NOT THE FILE. The same day's capacity ruling keeps video
 // ORIGINALS out of the blob store (`policy.ts`): one blob is capped at 64 MiB
 // and one project at 2 GiB, and an exhausted project budget fails the whole
-// batch — including the image snapshots that WERE ruled on. A first frame is a
+// batch - including the image snapshots that WERE ruled on. A first frame is a
 // single still, the same order of magnitude as an HTML cover, so it rides the
 // COVER path and not the original path. Storing a poster is not a licence to
 // start storing videos again; `capture.ts`'s per-kind gate still refuses the
@@ -14,21 +14,21 @@
 // WHY IT IS EXTRACTED SYNCHRONOUSLY. The HTML cover path can freeze its input
 // (a self-contained document) and render it minutes later, because the frozen
 // document no longer refers to anything on disk. A video has no equivalent
-// freeze that does not amount to copying the file — which is exactly what the
+// freeze that does not amount to copying the file - which is exactly what the
 // capacity ruling forbids. So the extraction IS the freeze: it happens inside
 // the run-terminal window, and the window is verified around it the way
 // `capture.ts` verifies a byte copy (stat, work, stat, refuse on any drift).
 // A frame decoded from a file that moved underneath us would be a picture of a
 // version that message never produced.
 //
-// WHY FFMPEG. It is already a daemon runtime dependency — `media/index.ts`
+// WHY FFMPEG. It is already a daemon runtime dependency - `media/index.ts`
 // encodes HyperFrames MP4s with the same bundled binary, and `tools/pack`
 // already ships it on mac, Windows and Linux. No new binary, no new packaging
 // decision.
 //
 // WHY FAILURE IS SILENT. Product ruling 2026-09-02: no placeholder and no error
 // copy (「不允许退回不就一个错误文案显示在上面了?这感觉更奇怪呢」). A video with
-// no frozen poster falls back to exactly what it does today — the card's
+// no frozen poster falls back to exactly what it does today - the card's
 // `<video>` element pointing at the live workspace file, with the browser
 // painting whatever frame is there now.
 
@@ -140,7 +140,7 @@ export const extractVideoFirstFrameWithFfmpeg: ChatArtifactVideoFrameExtractor =
  *
  * The stat pair around the decode is the whole guarantee: the frame must come
  * from the bytes this turn produced, and a write that landed while ffmpeg was
- * reading would otherwise hand back a frame of the NEXT version — indis-
+ * reading would otherwise hand back a frame of the NEXT version - indis-
  * tinguishable, once it is a JPEG, from the right one.
  *
  * Pure of the database on purpose: the caller owns the ref bookkeeping and the
@@ -211,7 +211,7 @@ export async function freezeVideoFirstFrame(
 function logVideoFrameFailure(absolutePath: string, err: unknown): void {
   const message = err instanceof Error ? err.message : String(err);
   try {
-    // Basename only — never the absolute path, never bytes.
+    // Basename only - never the absolute path, never bytes.
     console.warn(`[chat-artifacts] video frame failed for ${path.basename(absolutePath)}: ${message}`);
   } catch {
     // logging is best effort

@@ -17,8 +17,8 @@ import type { TeamProject } from '@open-design/contracts';
 // sync-digest hands out opaque comparison tokens, and this layer decides
 // whether the payload already on disk can stand in for a real round-trip.
 //
-// The reuse rule under test is three conditions AND-ed — local token, local
-// snapshot, token equality — with EVERY other combination falling through to a
+// The reuse rule under test is three conditions AND-ed - local token, local
+// snapshot, token equality - with EVERY other combination falling through to a
 // real fetch. Account isolation is the load-bearing one: a snapshot must never
 // be readable by a different signed-in user.
 
@@ -136,7 +136,7 @@ describe('createPersistentSyncCache', () => {
     let accountId = 'user-1';
     let listed = [project('owned-by-user-1')];
     const { cache, fetchCount } = harness({
-      // Same workspace id and the SAME digest token for both users — only the
+      // Same workspace id and the SAME digest token for both users - only the
       // account differs. If the account were not part of the key, user-2 would
       // be handed user-1's catalog here.
       read: () => reading(accountId, 'ws-shared'),
@@ -184,7 +184,7 @@ describe('createPersistentSyncCache', () => {
     expect(fetchCount()).toBe(1);
 
     // Offline / signed out / non-vela source: no token means nothing to compare
-    // against, which is a miss — never an optimistic reuse.
+    // against, which is a miss - never an optimistic reuse.
     available = false;
     await expect(cache()).resolves.toEqual([project('p1')]);
     expect(fetchCount()).toBe(2);
@@ -221,7 +221,7 @@ describe('createPersistentSyncCache', () => {
 
   it('degrades to a real fetch when the stored snapshot has the wrong shape', async () => {
     const key = { face: 'catalog' as const, accountId: 'user-1', workspaceId: 'ws-1' };
-    // Valid JSON, wrong contract — e.g. a payload written by an older schema.
+    // Valid JSON, wrong contract - e.g. a payload written by an older schema.
     store.write(key, {
       token: digest().catalogToken,
       snapshotJson: JSON.stringify([{ projectId: 'p1' }]),
@@ -263,7 +263,7 @@ describe('createPersistentSyncCache', () => {
     ).toMatchObject({ token: 'token-a' });
 
     // Once the token comes back to what the snapshot was taken at, it is served
-    // again without a fetch — the outage cost nothing permanent.
+    // again without a fetch - the outage cost nothing permanent.
     token = 'token-a';
     fail = false;
     await expect(cache()).resolves.toEqual([project('p1')]);

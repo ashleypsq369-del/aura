@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react';
@@ -271,7 +271,7 @@ export default function GriefScreeningForm({ onClose, onComplete }) {
               <h3 className="font-bold text-purple-900 text-lg mb-3">Recommended Next Steps</h3>
               <ul className="space-y-2 text-purple-800 text-sm mb-4">
                 {['Consider speaking with a grief counselor or therapist','Join a bereavement support group','Continue using self-care strategies','Retake this screening in 1-3 months'].map(s => (
-                  <li key={s} className="flex items-start gap-2"><span>–</span><span>{s}</span></li>
+                  <li key={s} className="flex items-start gap-2"><span>-</span><span>{s}</span></li>
                 ))}
               </ul>
               <p className="text-purple-900 font-semibold text-sm">

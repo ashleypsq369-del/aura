@@ -1,5 +1,5 @@
-/**
- * AdminFeaturePanel — Feature flag management per user
+﻿/**
+ * AdminFeaturePanel - Feature flag management per user
  * Route: /admin/features
  *
  * Built with: AdminPageShell + DataTable (TanStack Table) + Dialog (Radix)
@@ -65,7 +65,7 @@ function OverrideList({ u, onAdd, onEdit, onRemove }) {
       </p>
       {u.overrides.length === 0 && (
         <p style={{ fontSize: 12, color: 'var(--text-400)', margin: 0 }}>
-          No overrides — features follow care-setting defaults.
+          No overrides - features follow care-setting defaults.
         </p>
       )}
       {u.overrides.map(o => {
@@ -123,7 +123,7 @@ function OverrideDialog({ modal, onClose, onSave, isPending }) {
   const HELP = {
     enabled: 'Feature shown even if care-setting hides it.',
     disabled: 'Feature hidden regardless of care-setting.',
-    locked: 'Hidden — user cannot request access.',
+    locked: 'Hidden - user cannot request access.',
   };
 
   return (
@@ -315,7 +315,7 @@ export default function AdminFeaturePanel() {
   const pending    = userList.reduce((s, u) => s + (u.pending_requests || 0), 0);
   const overrides  = userList.reduce((s, u) => s + u.override_count, 0);
 
-  /* ── Columns — Users tab ── */
+  /* ── Columns - Users tab ── */
   const userCols = useMemo(() => [
     col.accessor('name', {
       header: 'User',
@@ -337,7 +337,7 @@ export default function AdminFeaturePanel() {
             </div>
             <div>
               <p style={{ fontSize:13, fontWeight:600, color:'var(--text-800)', margin:0 }}>{u.name}</p>
-              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{u.email || '—'}</p>
+              <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{u.email || '-'}</p>
             </div>
           </div>
         );
@@ -350,19 +350,19 @@ export default function AdminFeaturePanel() {
     }),
     col.accessor('care_setting', {
       header: 'Care Setting',
-      cell: info => <span className="text-xs" style={{ color: 'var(--text-500)' }}>{info.getValue() || '—'}</span>,
+      cell: info => <span className="text-xs" style={{ color: 'var(--text-500)' }}>{info.getValue() || '-'}</span>,
     }),
     col.accessor('override_count', {
       header: 'Overrides',
       cell: info => info.getValue() > 0
         ? <span className="text-xs font-semibold" style={{ color: 'var(--c-teal)' }}>{info.getValue()}</span>
-        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>—</span>,
+        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>-</span>,
     }),
     col.accessor('pending_requests', {
       header: 'Pending',
       cell: info => info.getValue() > 0
         ? <StatusDot color="#f59e0b" label={`${info.getValue()} pending`} size="sm" />
-        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>—</span>,
+        : <span className="text-xs" style={{ color: 'var(--text-400)' }}>-</span>,
     }),
     col.display({
       id: 'expand',
@@ -381,7 +381,7 @@ export default function AdminFeaturePanel() {
     }),
   ], []);
 
-  /* ── Columns — Requests tab ── */
+  /* ── Columns - Requests tab ── */
   const requestCols = useMemo(() => [
     col.accessor(r => r.user?.name || `#${r.user_id}`, {
       id: 'user',
@@ -401,7 +401,7 @@ export default function AdminFeaturePanel() {
       header: 'Reason',
       cell: info => (
         <span className="text-xs line-clamp-2" style={{ color: 'var(--text-600)', maxWidth: 220, display: 'block' }}>
-          {info.getValue() || '—'}
+          {info.getValue() || '-'}
         </span>
       ),
       meta: { tdStyle: { whiteSpace: 'normal' } },
@@ -460,7 +460,7 @@ export default function AdminFeaturePanel() {
         icon={ToggleRight}
         title="Feature Control"
         meta={[
-          { label: 'users',    value: usersData?.total ?? '—' },
+          { label: 'users',    value: usersData?.total ?? '-' },
           { label: 'overrides', value: overrides },
           ...(pending > 0 ? [{ label: 'pending', value: pending, color: '#f59e0b' }] : []),
         ]}

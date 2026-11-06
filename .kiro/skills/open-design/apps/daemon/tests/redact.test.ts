@@ -125,7 +125,7 @@ describe('redactSecrets', () => {
     expect(redactSecrets('host 192.168.1.1 listens')).toBe(
       'host [REDACTED:ipv4] listens',
     );
-    // 1.2.3.4 is technically a valid v4 — match.
+    // 1.2.3.4 is technically a valid v4 - match.
     expect(redactSecrets('192.168.0.1, 10.0.0.1')).toBe(
       '[REDACTED:ipv4], [REDACTED:ipv4]',
     );
@@ -174,7 +174,7 @@ describe('redactSecrets', () => {
     expect(out).toContain('[REDACTED:ipv4]');
   });
 
-  it('is idempotent — redacting an already-redacted string is a no-op', () => {
+  it('is idempotent - redacting an already-redacted string is a no-op', () => {
     const once = redactSecrets('email is jane@example.com');
     expect(once).toBe('email is [REDACTED:email]');
     expect(redactSecrets(once)).toBe(once);

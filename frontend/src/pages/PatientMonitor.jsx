@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PatientMonitor - redesigned to match Project Aura design system
  * Route: /patient/:id (legacy deep-link, separate from /patients/:patientId)
  * Teal palette · no old .card / text-charcoal / text-muted CSS classes
@@ -214,7 +214,7 @@ export default function PatientMonitor() {
  )}
  </div>
 
- {/* ── Vitals stat strip — Services DNA inside header ── */}
+ {/* ── Vitals stat strip - Services DNA inside header ── */}
  {latest && (
  <div className="mt-4 flex flex-wrap items-stretch gap-0 overflow-hidden rounded-xl"
  style={{ background:'rgba(0,0,0,0.32)', backdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.14)', display:'inline-flex' }}>
@@ -275,7 +275,7 @@ export default function PatientMonitor() {
  {/* ── VITALS ── */}
  {activeTab === 'vitals' && (
  <>
- {/* Record vitals button — staff only */}
+ {/* Record vitals button - staff only */}
  {canRecordVitals && (
  <div style={{ display:'flex', justifyContent:'flex-end', marginBottom:8 }}>
  <button onClick={() => setShowVitalsModal(true)}

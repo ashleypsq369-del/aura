@@ -60,7 +60,7 @@ Every interactive component must have a complete, visually distinct state for ea
 
 ## Deriving State Colours Algorithmically
 
-State colours are not chosen independently — they are derived from the base colour by adjusting lightness in HSL. This guarantees coherence across the entire palette.
+State colours are not chosen independently - they are derived from the base colour by adjusting lightness in HSL. This guarantees coherence across the entire palette.
 
 ```
 base:     hsl(H, S%, L%)
@@ -82,7 +82,7 @@ active:   hsl(H, S%, L% - 14%)   ← darken 14%
 }
 ```
 
-For light buttons on dark backgrounds, invert the logic — lighten on hover instead of darkening.
+For light buttons on dark backgrounds, invert the logic - lighten on hover instead of darkening.
 
 ### Secondary / outlined buttons
 
@@ -103,7 +103,7 @@ For light buttons on dark backgrounds, invert the logic — lighten on hover ins
 
 ## Focus State
 
-Focus is a keyboard navigation requirement (WCAG 2.2). It must be visible and must not rely on the hover style alone — keyboard users do not trigger hover.
+Focus is a keyboard navigation requirement (WCAG 2.2). It must be visible and must not rely on the hover style alone - keyboard users do not trigger hover.
 
 ```css
 .btn:focus-visible {
@@ -112,8 +112,8 @@ Focus is a keyboard navigation requirement (WCAG 2.2). It must be visible and mu
 }
 ```
 
-- Use `outline`, not `box-shadow`, for focus rings — `outline` respects `border-radius` in modern browsers and does not affect layout
-- `outline-offset: 2–4px` gives the ring breathing room from the component edge
+- Use `outline`, not `box-shadow`, for focus rings - `outline` respects `border-radius` in modern browsers and does not affect layout
+- `outline-offset: 2-4px` gives the ring breathing room from the component edge
 - Never use `outline: none` without a replacement focus style
 
 ## Disabled State
@@ -127,9 +127,9 @@ Focus is a keyboard navigation requirement (WCAG 2.2). It must be visible and mu
 }
 ```
 
-- Disabled elements are exempt from WCAG contrast requirements — low opacity is correct and intentional
+- Disabled elements are exempt from WCAG contrast requirements - low opacity is correct and intentional
 - Use `pointer-events: none` to prevent click events even if JS is bypassed
-- Do not change the shape or size of a disabled button — only colour and cursor change
+- Do not change the shape or size of a disabled button - only colour and cursor change
 
 ## Loading State
 
@@ -144,13 +144,13 @@ When a button triggers an async action, replace the label with a spinner and pre
 
 **The cursor does not change while loading.** It signals affordance, not progress: the arrow for ordinary content, `pointer` for something you can act on. Progress belongs to the element and the loading region, which the user is already looking at, rather than to wherever the mouse happens to rest. `cursor: wait` is also inert next to `pointer-events: none`, so the rule reads as deliberate while doing nothing.
 
-- Keep the button width stable during loading — avoid layout shift when label is replaced by spinner
+- Keep the button width stable during loading - avoid layout shift when label is replaced by spinner
 - Return to rest state on completion (success or error)
-- For long-running operations, pair with a status message — a spinner alone does not tell the user what is happening
+- For long-running operations, pair with a status message - a spinner alone does not tell the user what is happening
 
 ## Scale on Active (Optional)
 
-A subtle scale-down on press adds physical feedback — borrowed from Disney's squash principle.
+A subtle scale-down on press adds physical feedback - borrowed from Disney's squash principle.
 
 ```css
 .btn:active {
@@ -159,7 +159,7 @@ A subtle scale-down on press adds physical feedback — borrowed from Disney's s
 }
 ```
 
-Keep the scale value between `0.95–0.98`. Below `0.95` feels like the button is breaking.
+Keep the scale value between `0.95-0.98`. Below `0.95` feels like the button is breaking.
 
 ## Complete Button CSS Reference
 
@@ -189,6 +189,6 @@ Keep the scale value between `0.95–0.98`. Below `0.95` feels like the button i
 - [ ] Is focus state visible and using `outline` (not removed)?
 - [ ] Is disabled state low-opacity with `cursor: not-allowed`?
 - [ ] Does loading state prevent re-submission?
-- [ ] Are transition durations 80–150ms — not instant, not slow?
+- [ ] Are transition durations 80-150ms - not instant, not slow?
 - [ ] Does `cursor: pointer` appear on all interactive elements at rest?
 - [ ] Does the cursor stay unchanged while an action runs, with progress shown by the element itself?

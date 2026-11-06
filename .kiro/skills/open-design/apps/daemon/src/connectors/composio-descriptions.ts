@@ -797,7 +797,7 @@ export const COMPOSIO_TOOLKIT_METADATA: Record<string, ComposioToolkitMetadata> 
 
 /**
  * Resolve curated metadata for a toolkit slug. Returns undefined when the
- * toolkit has not been manually described yet — callers should fall back
+ * toolkit has not been manually described yet - callers should fall back
  * to a generic description in that case.
  */
 export function getComposioToolkitMetadata(slug: string): ComposioToolkitMetadata | undefined {

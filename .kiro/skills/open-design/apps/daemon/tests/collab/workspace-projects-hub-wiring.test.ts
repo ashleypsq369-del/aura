@@ -27,7 +27,7 @@ function sseResponse(frames: string[]) {
         for (const frame of frames) controller.enqueue(encoder.encode(frame));
         return;
       }
-      // Never enqueue again — keeps the connection open so the subscriber
+      // Never enqueue again - keeps the connection open so the subscriber
       // does not immediately loop into a reconnect after the one event.
       await new Promise(() => undefined);
     },
@@ -65,7 +65,7 @@ describe('handleHubTeamProjectsChanged', () => {
   });
 
   // End-to-end through the REAL SSE parser/dispatcher (`startHubEventsSubscriber`
-  // + `parseHubWorkspaceEvent`), not a hand-called function — this is the
+  // + `parseHubWorkspaceEvent`), not a hand-called function - this is the
   // "real push" half of the verification: a genuine `team-projects-changed`
   // wire frame, parsed by real code, must reach the reconciler.
   it('fires from a genuine team-projects-changed SSE frame parsed by the real hub subscriber', async () => {
@@ -167,7 +167,7 @@ describe('handlePolledWorkspaceInvalidation', () => {
   });
 });
 
-// Scope-boundary guard (real source, not a re-implementation) — the sibling of
+// Scope-boundary guard (real source, not a re-implementation) - the sibling of
 // `hub-workspace-context-changed-poll.test.ts`'s own switch-boundary test.
 // Confirms the wiring actually landed in server.ts: exactly the
 // `team-projects-changed` case calls `handleHubTeamProjectsChanged`, and the
@@ -290,7 +290,7 @@ describe('server.ts wiring (source boundary)', () => {
 
   it('logs broad-head cooldown deferrals in catch-up completion diagnostics', () => {
     // Matched without the closing backtick so the assertion survives further
-    // fields being appended to the same template — it is here to pin that
+    // fields being appended to the same template - it is here to pin that
     // suppressed/complete are still reported, not to freeze the line's length.
     expect(source).toContain(
       'suppressed=${event.suppressed ?? 0} complete=${event.complete === true}',
@@ -302,7 +302,7 @@ describe('server.ts wiring (source boundary)', () => {
     // actually landed on a member's disk. These totals are the only reading
     // that makes OD_COLLAB_BACKGROUND_PULL_MAX_CUMULATIVE_ENTRIES choosable
     // from a diagnostics bundle, so the guard's `volume()` has to reach this
-    // sink — a counter nothing reads is why that ceiling stayed unset.
+    // sink - a counter nothing reads is why that ceiling stayed unset.
     expect(source).toContain('const backgroundVolume = backgroundPullSizeGuard.volume();');
     expect(source).toContain('processEntries=${backgroundVolume.entries}');
     expect(source).toContain('processProjects=${backgroundVolume.countedProjects}');

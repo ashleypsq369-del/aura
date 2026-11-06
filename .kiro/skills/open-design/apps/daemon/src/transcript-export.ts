@@ -7,8 +7,8 @@
 // source of truth for chat history, so there's no live mirror to keep in
 // sync.
 //
-// Format choice — JSONL with header line, per-conversation marker lines, and
-// per-message lines — keeps the dump compact (no indentation), streamable,
+// Format choice - JSONL with header line, per-conversation marker lines, and
+// per-message lines - keeps the dump compact (no indentation), streamable,
 // and `jq -c`/`tail`-friendly. A `schemaVersion` field on the header reserves
 // room for incompatible changes later.
 //
@@ -23,7 +23,7 @@
 //   * `kind: 'text'` runs concatenate their `text` field into one terminal
 //     text block.
 //   * `kind: 'thinking'` runs concatenate their `text` field into one
-//     terminal thinking block (the field is `text`, not `thinking` — see
+//     terminal thinking block (the field is `text`, not `thinking` - see
 //     contract above).
 //   * `kind: 'tool_use'` and `kind: 'tool_result'` flush any pending text /
 //     thinking accumulator and emit verbatim.
@@ -191,7 +191,7 @@ export function exportProjectTranscript(
   }
 
   try {
-    // Conversations ordered chronologically (oldest first) — easiest for an
+    // Conversations ordered chronologically (oldest first) - easiest for an
     // LLM to follow as a single sequence. db.listConversations sorts by
     // updated_at DESC for the sidebar; we re-sort here. When
     // `options.conversationId` is set the export is narrowed to that one
@@ -441,7 +441,7 @@ function parseCommentAttachments(raw: string | null): CommentAttachmentRef[] {
 // Walk arrival-order. Maintain a single accumulator for the current run of
 // text or thinking events; flush on type change, on any tool block, on a
 // status thinking-start marker, and at end-of-stream. Pure telemetry events
-// (status with non-thinking label, usage, raw) drop without flushing — they
+// (status with non-thinking label, usage, raw) drop without flushing - they
 // neither contribute content nor signal a content boundary.
 //
 // Both `kind: 'text'` and `kind: 'thinking'` carry their content in a `text`
@@ -508,14 +508,14 @@ function coalesceBlocks(events: PersistedAgentEvent[]): Block[] {
         // status with label === 'thinking' is the daemon's translated
         // thinking_start marker (apps/web/src/providers/daemon.ts:367-369).
         // It signals a new thinking segment, so flush the prior accumulator
-        // — without this, two thinking segments separated only by the
+        // - without this, two thinking segments separated only by the
         // marker would merge into one block and synthesis could not recover
         // the original boundaries. Other status labels are pure telemetry
         // and drop without flushing.
         if (ev.label === 'thinking') flush();
         break;
       }
-      // Telemetry: usage, raw — intentional drop, neither contributes
+      // Telemetry: usage, raw - intentional drop, neither contributes
       // content nor signals a content boundary.
       default:
         break;

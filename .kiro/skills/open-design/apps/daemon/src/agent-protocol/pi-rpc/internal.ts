@@ -4,7 +4,7 @@
  * type guards and error-extraction helpers consumed by events.ts and session.ts.
  */
 
-/** A plain JSON object — the base payload type for pi RPC messages. */
+/** A plain JSON object - the base payload type for pi RPC messages. */
 export type JsonRecord = Record<string, unknown>;
 /** Callback signature for forwarding a typed event to the daemon's SSE layer. */
 export type SendAgentEvent = (channel: string, payload: JsonRecord) => void;
@@ -34,7 +34,7 @@ export function errorMessage(err: unknown): string {
 }
 /**
  * Extracts the `code` property from an unknown thrown value when it is a
- * string — useful for matching Node.js system-error codes such as `EPIPE`.
+ * string - useful for matching Node.js system-error codes such as `EPIPE`.
  * Returns `undefined` if the value carries no string `code`.
  *
  * @param err - Any caught value from a try/catch or error callback.
@@ -44,7 +44,7 @@ export function errorCode(err: unknown): string | undefined {
 }
 /**
  * Returns `value` cast to `JsonRecord` when it is a non-null object, or
- * `undefined` otherwise — a narrowing helper for optional nested fields.
+ * `undefined` otherwise - a narrowing helper for optional nested fields.
  *
  * @param value - An arbitrary value from a parsed JSON payload.
  */

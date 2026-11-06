@@ -203,12 +203,12 @@ describe('listFiles with metadata.baseDir', () => {
   // standard .od/projects/<id>/ instead of the imported folder. Codex
   // review of #624 caught one in chat-route. Lock the contract: when a
   // bare metadata object is passed at the top level, listFiles must
-  // ignore it and fall back to the standard project dir — no false
+  // ignore it and fall back to the standard project dir - no false
   // positives on a folder the caller didn't ask for.
   it('ignores bare metadata at opts top-level (must be opts.metadata)', async () => {
     // Pass the metadata object directly as opts. With the documented
     // contract this means opts.metadata is undefined, so listFiles
-    // resolves to projectsRoot/projectId — which here doesn't exist,
+    // resolves to projectsRoot/projectId - which here doesn't exist,
     // so the result must be an empty array, not the contents of baseDir.
     const files = await listFiles('/unused/projects', 'unused-id', {
       kind: 'prototype',

@@ -35,7 +35,7 @@ const TEAM_RESOURCE_LIST_FRESH_MS = 3000;
 
 /**
  * Cache identity for a listing. Team resource visibility is a function of the
- * whole principal — a role or lifecycle change can add or remove entries — so
+ * whole principal - a role or lifecycle change can add or remove entries - so
  * every field that the authority consults is part of the key.
  */
 export const teamResourceScopeKey = (scope: TeamResourceRequestScope): string =>
@@ -74,8 +74,8 @@ export interface TeamResourceListCacheOptions {
    * The materialization gate, owned by the composition root and SHARED by every
    * resource kind.
    *
-   * It has to be injected rather than built here. The three listing surfaces —
-   * design systems, plugins, skills — are separate caches that a single client
+   * It has to be injected rather than built here. The three listing surfaces -
+   * design systems, plugins, skills - are separate caches that a single client
    * poll refreshes together, so a gate built per cache bounds each kind
    * independently and the daemon's real peak becomes the cap times the number
    * of kinds. The bound only means anything if all three draw from one budget.

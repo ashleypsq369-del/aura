@@ -25,7 +25,7 @@
  *      module calls `onPromptSendStart` / `onPromptSendEnd` around the
  *      `turn/start` write, which is this transport's real prompt boundary.
  *   2. ACP files per-step usage under `diagnostic`, where the analytics scan
- *      cannot reach it. Usage here is a plain `usage` agent event — the exact
+ *      cannot reach it. Usage here is a plain `usage` agent event - the exact
  *      channel `exec --json` uses.
  *   3. ACP raises `fatal_rpc_error` instead of the `stream_error` failure
  *      detail the Langfuse triage practice queries on. Every failure here,
@@ -360,7 +360,7 @@ export function attachCodexAppServerSession(
     }
     if (typeof frame.method !== 'string') return;
     if (id !== null) {
-      // A server-to-client REQUEST. Nothing in this build answers one — the
+      // A server-to-client REQUEST. Nothing in this build answers one - the
       // thread runs with approvals disabled, so MCP elicitation and approval
       // prompts should never fire. Refusing explicitly keeps a future codex
       // that does send one from blocking the turn forever waiting on a reply.
@@ -411,7 +411,7 @@ export function attachCodexAppServerSession(
    * is a server that keeps listening. Without this the child never exits, the
    * daemon's close handler never fires, and the run sits in `running` forever
    * with its answer already delivered. Measured on codex-cli 0.149.1, stdin EOF
-   * shuts the server down with exit code 0 in roughly 250ms — a normal clean
+   * shuts the server down with exit code 0 in roughly 250ms - a normal clean
    * exit, so nothing downstream needs a special case for it.
    */
   function shutdown(): void {

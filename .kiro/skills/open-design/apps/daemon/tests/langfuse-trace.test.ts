@@ -743,7 +743,7 @@ describe('buildTracePayload', () => {
       }),
     );
     // Custom ACP/MCP names are canonicalized to the allowlisted `other` family
-    // for span labels and metadata — never shipped raw to Langfuse.
+    // for span labels and metadata - never shipped raw to Langfuse.
     const custom = bodyOf(batch, 'span-create', 'tool:other');
     expect(custom.metadata.toolName).toBe('other');
     expect(custom.input).toBe('[REDACTED:tool_input:unknown_tool]');

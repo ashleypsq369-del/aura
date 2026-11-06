@@ -6,7 +6,7 @@ import {
   scanQuestionForms,
 } from '../src/question-form-detect.js';
 
-// A renderable question-form body — JSON with a non-empty `questions` array.
+// A renderable question-form body - JSON with a non-empty `questions` array.
 // Same fixture style as tests/runtimes/run-artifacts.test.ts: the detector
 // requires a closed, renderable block, not a bare tag.
 const RENDERABLE_BODY = '{"questions":[{"id":"surface","label":"Which surface?"}]}';
@@ -60,7 +60,7 @@ describe('scanQuestionForms', () => {
   });
 
   // The defect: an open tag whose body is prose and which never closes used to
-  // be indistinguishable from "the turn asked nothing" — the scan returned 0
+  // be indistinguishable from "the turn asked nothing" - the scan returned 0
   // and raised nothing, so every downstream consumer read it as silence.
   it('distinguishes an unterminated marker from an absent one', () => {
     expect(scanQuestionForms(STRAY_MARKER_TURN)).toEqual({

@@ -7,7 +7,7 @@
  * Copilot's schema uses dotted top-level types (`assistant.*`, `tool.*`,
  * `session.*`, `user.*`, `result`) with the payload under `data`. The
  * `ephemeral: true` events (session.mcp_*, reasoning_delta, etc.) are still
- * useful — they carry the streaming deltas — but events we don't have a UI
+ * useful - they carry the streaming deltas - but events we don't have a UI
  * lane for (mcp_server_status, skills_loaded, full reasoning recap, turn
  * boundaries) are dropped on the floor.
  *
@@ -111,7 +111,7 @@ export function createCopilotStreamHandler(onEvent: EventSink) {
 
       case 'result':
         // `result` puts usage / exitCode at the top level, not under `data`.
-        // Treat a missing exitCode as success when `success: true` is set —
+        // Treat a missing exitCode as success when `success: true` is set -
         // strict `=== 0` would otherwise mis-flag turns where Copilot emits
         // usage without a numeric exit code as `error`.
         onEvent({

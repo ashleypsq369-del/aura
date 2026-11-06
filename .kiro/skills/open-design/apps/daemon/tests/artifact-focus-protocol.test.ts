@@ -2,10 +2,10 @@
  * `<od-focus …/>` 的**协议侧**:标记进来,事件出去,正文里什么都不留。
  *
  * 三件事必须成立:
- *   1. `artifact_focus` 事件能落库 —— 刷新之后卡片还是那几张,和实时一样;
- *   2. 没有这个事件的老消息**原样回放** —— 旧会话退回 host 自己的推断,
+ *   1. `artifact_focus` 事件能落库 -- 刷新之后卡片还是那几张,和实时一样;
+ *   2. 没有这个事件的老消息**原样回放** -- 旧会话退回 host 自己的推断,
  *      不是空面板(这是产品拍的板:「不发标记要么按现在规则展示」);
- *   3. 标记不进 `content` —— `content` 是复制 / 导出 / 旧渲染路径读的东西。
+ *   3. 标记不进 `content` -- `content` 是复制 / 导出 / 旧渲染路径读的东西。
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
@@ -41,7 +41,7 @@ describe('artifact-focus marker · 契约形状', () => {
     expect(rendered).toBe(
       `<od-focus key="${KEY}" open="index.html" show="index.html, report.md"/>`,
     );
-    // 例子必须能被自己的解析器读回来 —— 两边各写一份迟早会分家
+    // 例子必须能被自己的解析器读回来 -- 两边各写一份迟早会分家
     const parsed = parseArtifactFocusMarker(rendered);
     expect(parsed.key).toBe(KEY);
     expect(parsed.open).toBe('index.html');
@@ -80,7 +80,7 @@ describe('artifact_focus 载荷 · 翻成可落库的事件', () => {
     ).toEqual({ kind: 'artifact_focus', open: 'index.html', show: ['index.html'] });
   });
 
-  it('两个字段都空的载荷不落库 —— 落一条空事件只会让下游多一次跳过', () => {
+  it('两个字段都空的载荷不落库 -- 落一条空事件只会让下游多一次跳过', () => {
     expect(daemonAgentPayloadToPersistedAgentEvent({ type: 'artifact_focus' })).toBeNull();
     expect(
       daemonAgentPayloadToPersistedAgentEvent({ type: 'artifact_focus', open: '', show: [] }),
@@ -127,14 +127,14 @@ describe('artifact_focus 事件 · 落库与回放', () => {
 
     const message = listMessages(db, 'c1').find((m) => m.id === 'm1');
     expect(message?.content).toBe('页面写好了。');
-    // 一轮可以发好几枚,两枚都要留着 —— 折叠是消费者的事(按字段取最后一个)
+    // 一轮可以发好几枚,两枚都要留着 -- 折叠是消费者的事(按字段取最后一个)
     expect(message?.events ?? []).toContainEqual({ kind: 'artifact_focus', open: 'index.html' });
     expect(message?.events ?? []).toContainEqual({ kind: 'artifact_focus', show: ['index.html'] });
   });
 
   /**
    * 旧会话兼容(产品硬要求)。改动之前的消息里没有这个事件,回放出来必须和
-   * 改动前**逐字一致** —— 不许因为「没有声明」就把面板清空。
+   * 改动前**逐字一致** -- 不许因为「没有声明」就把面板清空。
    */
   it('没有这个事件的老消息原样回放', () => {
     const db = openDatabase(tempDir, { dataDir: tempDir });
@@ -149,7 +149,7 @@ describe('artifact_focus 事件 · 落库与回放', () => {
 
   /**
    * 兜底:流式那一层已经把标记剥掉了,所以正常路径下 text 事件里不会有它。
-   * 这条守的是「万一有别的路径绕过了剥离器」—— `content` 是复制 / 导出读的
+   * 这条守的是「万一有别的路径绕过了剥离器」-- `content` 是复制 / 导出读的
    * 东西,一个裸协议标记落在那里就是屏幕上的协议标记。
    */
   it('万一有别的路径把标记塞进 text,content 里也不许留下它', () => {

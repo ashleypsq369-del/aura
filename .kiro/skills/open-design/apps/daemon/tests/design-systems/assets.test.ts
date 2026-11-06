@@ -1,4 +1,4 @@
-// Focused test for readDesignSystemAssets — the new sibling-file reader
+// Focused test for readDesignSystemAssets - the new sibling-file reader
 // that lets the daemon ship the compiled (tokens.css + components.html)
 // form of a brand alongside its DESIGN.md prose. The legacy reader
 // (`readDesignSystem`, returning DESIGN.md content) already has implicit
@@ -120,7 +120,7 @@ describe('readDesignSystemAssets', () => {
     const root = fresh();
     const dir = brandDir(root, 'broken-tokens');
     // Plant a DIRECTORY at the tokens.css path. readFile() rejects
-    // with EISDIR — a real-world stand-in for permission / packaged-
+    // with EISDIR - a real-world stand-in for permission / packaged-
     // resource path bugs that should fail visibly, not silently fall
     // back. EACCES would be more lifelike but is hard to simulate
     // portably across CI runners; EISDIR exercises the exact same
@@ -502,7 +502,7 @@ describe('Design System Project manifest runtime consumption', () => {
 // Reviewer feedback (nettee, PR-D #1544): the parity guard at
 // `scripts/check-design-system-flag-parity.ts` exercises the prompt
 // composer directly and therefore does NOT cover the server-layer env
-// gate that PR-D actually flipped — a future regression that restored
+// gate that PR-D actually flipped - a future regression that restored
 // `=== '1'`, used a typo'd env name, or stopped reading assets when
 // the var is unset would still let the guard pass green. These tests
 // pin the predicate that wraps the gate so the default-on flip itself
@@ -523,7 +523,7 @@ describe('isDesignTokenChannelEnabled (PR-D env gate)', () => {
     expect(isDesignTokenChannelEnabled({ OD_DESIGN_TOKEN_CHANNEL: 'yes' })).toBe(true);
   });
 
-  it('is true for an empty string (operator typed `=` and forgot the value — fail open, not closed)', () => {
+  it('is true for an empty string (operator typed `=` and forgot the value - fail open, not closed)', () => {
     expect(isDesignTokenChannelEnabled({ OD_DESIGN_TOKEN_CHANNEL: '' })).toBe(true);
   });
 
@@ -531,7 +531,7 @@ describe('isDesignTokenChannelEnabled (PR-D env gate)', () => {
     expect(isDesignTokenChannelEnabled({ OD_DESIGN_TOKEN_CHANNEL: '0' })).toBe(false);
   });
 
-  it('is true for whitespace-padded `0` — strict literal match prevents accidental kill-switch tripping', () => {
+  it('is true for whitespace-padded `0` - strict literal match prevents accidental kill-switch tripping', () => {
     expect(isDesignTokenChannelEnabled({ OD_DESIGN_TOKEN_CHANNEL: ' 0' })).toBe(true);
     expect(isDesignTokenChannelEnabled({ OD_DESIGN_TOKEN_CHANNEL: '0 ' })).toBe(true);
   });
@@ -539,7 +539,7 @@ describe('isDesignTokenChannelEnabled (PR-D env gate)', () => {
 
 // Reviewer feedback (lefarcen, PR-D #1544 round 2): the predicate
 // suite above pins the env-flag boolean but does NOT exercise the
-// server's asset-resolution path that PR-D actually flipped — i.e.
+// server's asset-resolution path that PR-D actually flipped - i.e.
 // the seam where the daemon decides whether to read tokens.css /
 // components.html from disk and hand them to composeSystemPrompt.
 //
@@ -636,7 +636,7 @@ describe('resolveDesignSystemAssets (PR-D server-layer asset resolution)', () =>
     const dir = brandDir(builtInRoot, 'sample');
     writeFileSync(path.join(dir, 'tokens.css'), ':root { --bg: built-in; }');
     writeFileSync(path.join(dir, 'components.html'), '<from-built-in/>');
-    // Plant different content under user-installed root — if the
+    // Plant different content under user-installed root - if the
     // fallback chain mistakenly merges, the test below would catch it.
     const userDir = brandDir(userRoot, 'sample');
     writeFileSync(path.join(userDir, 'tokens.css'), ':root { --bg: user-installed; }');

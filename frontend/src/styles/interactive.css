@@ -1,4 +1,4 @@
-/*
+﻿/*
  * interactive.css - Global hover, focus, tooltip, and cursor polish
  * Applies to ALL interactive elements across the entire app automatically.
  * No per-file changes needed.
@@ -362,7 +362,7 @@ table tbody tr {
 
 
 /* ---------------------------------------------------------------------------
-   LINK RESET — prevent browser default blue/purple/underline on all <a> tags.
+   LINK RESET - prevent browser default blue/purple/underline on all <a> tags.
    Tailwind v4 preflight should do this, but this ensures it across all
    import orders and any browser quirks.
    Components that want underlined links use class="underline".
@@ -376,7 +376,7 @@ a:hover {
   text-decoration: none;
 }
 
-/* Sidebar links specifically — force white text regardless of visited state */
+/* Sidebar links specifically - force white text regardless of visited state */
 aside a,
 aside a:link,
 aside a:visited,

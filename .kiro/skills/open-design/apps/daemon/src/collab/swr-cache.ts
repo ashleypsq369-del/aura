@@ -6,11 +6,11 @@
 //
 // Extracted out of server.ts (where every SWR-cached read in the daemon used
 // to redeclare this inline) so `invalidate()` is a property of the primitive
-// itself instead of something each call site has to bolt on by hand — see
+// itself instead of something each call site has to bolt on by hand - see
 // `cachedTeamResourceList` in server.ts, which forgot to and left share/
 // unshare with no way to drop the stale entry it just created (the team
-// design-system/plugin/skill lists took up to `freshMs` — or the client's
-// slower background poll once SSE lowers its cadence — to catch up).
+// design-system/plugin/skill lists took up to `freshMs` - or the client's
+// slower background poll once SSE lowers its cadence - to catch up).
 // `teamProjectsDisplayCache` in server.ts is the sibling precedent: it wraps
 // its OWN hand-rolled SWR loop in an equivalent `Object.assign(read, {
 // invalidate })`.
@@ -20,7 +20,7 @@ export interface SwrCache<T> {
   /**
    * Drop the cached value for the key last used, so the next read is a real
    * fetch instead of the stale one. Only needed for the moments a caller KNOWS
-   * the underlying data changed (a local mutation, a hub push) — correctness
+   * the underlying data changed (a local mutation, a hub push) - correctness
    * does not depend on it, since the fetcher will naturally refresh once
    * `freshMs` elapses, but without it a just-made change can take up to that
    * long (or longer, behind a slower client poll) to become visible.

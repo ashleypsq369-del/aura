@@ -389,7 +389,7 @@ interface RunCreateMeta extends InternalRunCreateInput, JsonRecord {
  * registered design system in place, so two concurrent passes bill twice and
  * race on identical files. Incident 2026-07-28: one double-triggered UI
  * affordance created two enrichment runs 383 ms apart in one conversation and
- * both were billed. Ordinary chat turns are deliberately NOT gated here — the
+ * both were billed. Ordinary chat turns are deliberately NOT gated here - the
  * web composer already queues them while the conversation is busy, and a
  * "send now" interrupt may legitimately overlap the run it is cancelling.
  *
@@ -447,7 +447,7 @@ interface ChatRunService {
   /**
    * B11 「引导对话」: deliver one more user message into the turn that is still
    * running. `runtimeAccepts` is the caller's `runtimeAcceptsMidTurnInput`
-   * verdict for the run's agent def — the runs service owns no agent registry.
+   * verdict for the run's agent def - the runs service owns no agent registry.
    */
   steer(
     run: ChatRun,
@@ -685,24 +685,24 @@ export interface RegisterRunRoutesDeps {
    */
   internalRuns?: InternalRunCreationService<RunCreateMeta, ChatRun>;
   /**
-   * Workspace-identity gate for POST /api/runs and POST /api/chat — this
+   * Workspace-identity gate for POST /api/runs and POST /api/chat - this
    * file's two "create a run" entry points. Until this fix both had ZERO
    * `enforceWorkspace*` coverage: unlike rename/delete/duplicate/writeFiles
    * and comments (all gated per spec 04 §10/§11), any caller who knew a
-   * projectId could spawn an agent run against it — including a project
-   * bound to a TEAM workspace — with no workspace identity headers at all.
+   * projectId could spawn an agent run against it - including a project
+   * bound to a TEAM workspace - with no workspace identity headers at all.
    *
    * Borrows the SAME `enforceWorkspaceProjectMutation` instance
    * `routes/project/index.ts` builds via `createEnforceWorkspaceProjectMutation`
    * (cross-checked against the daemon's own last-known membership) rather
-   * than re-deriving a second, possibly-drifting copy here — see
+   * than re-deriving a second, possibly-drifting copy here - see
    * `routes/project/comments.ts` for the established borrow-the-project's-
    * gate pattern this mirrors.
    *
    * Optional, and a no-op when omitted, so fixtures that only exercise run
    * creation (most of this file's existing tests, which use plain
    * non-workspace-bound projects) keep compiling and behaving exactly as
-   * before — an unbound project's runs were never gated either way, since
+   * before - an unbound project's runs were never gated either way, since
    * `enforceWorkspaceResourceMutation` itself passes a `row === null` lookup
    * straight through regardless of ctx.
    */
@@ -1079,7 +1079,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
    * A blocked verdict says the protocol could not record the step. It does NOT
    * say the user lost anything, and those two got conflated because one
    * predicate answered both: `deliverableValid` asks "did THIS run write it",
-   * which is `false` for the most ordinary shape of the failure — a turn that
+   * which is `false` for the most ordinary shape of the failure - a turn that
    * checks already-finished work and correctly changes nothing. The client
    * needs the other answer to decide whether a refusal is worth a red card.
    *
@@ -1681,8 +1681,8 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
         || suppliedPluginWasNamed
         || (projectHasExplicitPin && !projectPinIsAutomaticDefault)
       );
-      // A named Skill is deliberately absent here. Naming one — the composer's
-      // @-mention, `od run --skill`, a Skill persisted on the project — refines
+      // A named Skill is deliberately absent here. Naming one - the composer's
+      // @-mention, `od run --skill`, a Skill persisted on the project - refines
       // the task; it does not claim the route away from a task type OD Next
       // already owns. An admitted strategy carries the Skill in
       // `session_skills/user_selected_skills` (see
@@ -2201,7 +2201,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
     }
     if (clientAssistantMessageId) {
       // Without a resolvable conversation there is nothing to validate the
-      // assistantMessageId against — the run would mutate a row it does not
+      // assistantMessageId against - the run would mutate a row it does not
       // own via the id-only writers. Reject rather than guess (nettee).
       if (typeof meta.conversationId !== 'string' || !meta.conversationId) {
         return sendApiError(res, 400, 'BAD_REQUEST', 'assistantMessageId requires a conversation');
@@ -2262,7 +2262,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
         meta.assistantMessageId = randomUUID();
       }
       // Prefer original request currentPrompt (latest turn) whenever it is a
-      // string — including empty for attachments-only sends. Plugin resolution
+      // string - including empty for attachments-only sends. Plugin resolution
       // may replace meta.message with a rendered scenario brief for the run
       // (see above); seed visible chat content from requestBody so that
       // internal brief never appears as user-authored content. message may be
@@ -2425,8 +2425,8 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
       !idempotentStrategyRetry
       && strategyRolloutDecision?.effectiveMode === 'active'
     ) {
-      // Everything the session selected inside this task type — an @-mentioned
-      // Skill, an official example card — is frozen into one package here and
+      // Everything the session selected inside this task type - an @-mentioned
+      // Skill, an official example card - is frozen into one package here and
       // read back as `session_skills/user_selected_skills`. A task with no
       // selection still persists the empty package, which is what keeps
       // restart/continuation identity deterministic.
@@ -2923,8 +2923,8 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
   // unscoped listing once any run belongs to a Workspace-bound project, so a
   // host-level caller could never learn whether it is safe to restart. This
   // route answers only that question: it is loopback-only (peer, Host and
-  // Origin, which also defeats DNS rebinding) and returns a bare count — no
-  // run, project or conversation ids — so it cannot enumerate Workspace runs.
+  // Origin, which also defeats DNS rebinding) and returns a bare count - no
+  // run, project or conversation ids - so it cannot enumerate Workspace runs.
   // Registered before `/api/runs/:id` so the path is not read as a run id.
   app.get('/api/runs/active-count', (req: ApiRequest, res: ApiResponse) => {
     const local = validateLocalDaemonRequest(req);
@@ -2942,7 +2942,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
    *
    *  · a project with no Workspace binding (pre-Workspace local) is visible;
    *  · a bound project is visible only when the caller's asserted Workspace
-   *    identity passes the same read gate the project's own routes use — so a
+   *    identity passes the same read gate the project's own routes use - so a
    *    Team project's notice reaches only a client currently in that Team,
    *    and a member whose access was revoked locally sees nothing;
    *  · a caller with no identity at all (headerless CLI) sees no bound
@@ -3034,7 +3034,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
     // `ChatRunStatus` cannot say "waiting on the user": the run that asked the
     // question reports `succeeded` and exits, while the project stays blocked.
     // Clients rendering a per-project status off this feed would show such a
-    // project as finished, so ship the awaiting-input set alongside — the same
+    // project as finished, so ship the awaiting-input set alongside - the same
     // one `GET /api/projects` composes `awaiting_input` from.
     //
     // Intersected with the projects `visibleRuns` already reveals: the query
@@ -3050,7 +3050,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
       : [];
     // Per conversation too: a project shows "needs your reply" only when the
     // conversation that most recently started a Run is the one waiting
-    // (P0-24). Same visibility rule — only conversations the runs expose.
+    // (P0-24). Same visibility rule - only conversations the runs expose.
     const visibleConversationIds = new Set(
       visibleRuns
         .map((run) => run.conversationId)
@@ -3404,10 +3404,10 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
     res.json(body);
   });
 
-  // B11 「引导对话」 — steer the turn that is ALREADY running.
+  // B11 「引导对话」 - steer the turn that is ALREADY running.
   //
   // The sibling `/cancel` above is the interrupt path: it stops the turn and
-  // the caller re-sends. This one is the opposite — the turn keeps everything
+  // the caller re-sends. This one is the opposite - the turn keeps everything
   // it has done and one more `user` frame goes down the child's still-open
   // stdin, so the model reads the correction mid-flight. Admissibility is
   // decided once, in `classifyRunSteering`; this route only translates the
@@ -3441,7 +3441,7 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
     if (!outcome.ok) {
       // Two distinct codes on purpose: `UNSUPPORTED` is permanent for this
       // agent (the caller should stop offering the affordance), the closed
-      // ones mean "this turn is past taking input — send it as a new turn".
+      // ones mean "this turn is past taking input - send it as a new turn".
       if (outcome.refusal === 'runtime_unsupported') {
         return sendApiError(
           res,
@@ -3463,13 +3463,13 @@ export function registerRunRoutes(app: Express, ctx: RegisterRunRoutesDeps) {
       );
     }
     // Durability. Without this row the user reloads and their own words are
-    // gone — the model acted on something the transcript never recorded. It is
+    // gone - the model acted on something the transcript never recorded. It is
     // written only AFTER a successful delivery, so a refused steer leaves no
     // trace, and it goes in as `role: 'user'` because that is who wrote it:
     // any other role would misattribute it, and the next turn's flattened
     // transcript would drop the instruction the model was actually given.
     // Position is append-only, so it lands after the assistant turn it steered
-    // — which is exactly when the user said it.
+    // - which is exactly when the user said it.
     const messageId = randomUUID();
     if (run.conversationId) {
       const conversationId = run.conversationId;

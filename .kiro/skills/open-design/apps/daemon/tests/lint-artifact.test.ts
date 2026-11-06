@@ -65,7 +65,7 @@ describe('ai-default-indigo', () => {
   it('does not flag indigo declared as a token in :root and consumed via var(--accent)', () => {
     // Brand whose accent is intentionally indigo: defines #6366f1 once
     // in :root and uses var(--accent) downstream. This is the design
-    // system speaking, not the model defaulting — must not fire P0.
+    // system speaking, not the model defaulting - must not fire P0.
     const html = `
       <style>
         :root { --accent: #6366f1; --bg: #ffffff; }
@@ -80,7 +80,7 @@ describe('ai-default-indigo', () => {
   it('still flags indigo when it appears outside :root even if also defined as a token', () => {
     // If the artifact both defines the accent AND hard-codes the same
     // hex in a component rule, the component rule is still raw indigo
-    // — fire as before.
+    // - fire as before.
     const html = `
       <style>
         :root { --accent: #6366f1; }
@@ -235,7 +235,7 @@ describe('ai-default-indigo', () => {
     // Regression: `:root[data-variant="primary"]` used to be exempted
     // because the regex only checked the tag prefix and not the
     // attribute name. A component/state attribute attached to `:root`
-    // is exactly the laundering pattern this lint must catch — the
+    // is exactly the laundering pattern this lint must catch - the
     // exemption now requires the attribute (when present) to name a
     // known global-theme switch.
     const html = `
@@ -314,7 +314,7 @@ describe('ai-default-indigo', () => {
     // `:root { /* brand accent */ --accent: #6366f1; }` produced a
     // declaration fragment beginning with the comment, failed the
     // token-shape test, and the rule was left in scope of the
-    // indigo scan — a false P0 on a legitimate token definition.
+    // indigo scan - a false P0 on a legitimate token definition.
     const html = `
       <style>
         :root { /* brand accent */ --accent: #6366f1; --bg: #ffffff; }
@@ -341,7 +341,7 @@ describe('ai-default-indigo', () => {
       <style>
         :root {
           --bg: #ffffff;
-          /* brand accent — keep in sync with DESIGN.md */
+          /* brand accent - keep in sync with DESIGN.md */
           --accent: #6366f1;
         }
       </style>
@@ -355,7 +355,7 @@ describe('ai-default-indigo', () => {
     // `selector { body }` rules, so a media-query-wrapped token block
     // like `@media (prefers-color-scheme: dark) { :root { --accent: #6366f1 } }`
     // had its outer `@media` rule treated as the selector/body pair and
-    // the inner `:root` token block was never stripped — producing a
+    // the inner `:root` token block was never stripped - producing a
     // P0 false positive on legitimate responsive theme CSS.
     const html = `
       <style>
@@ -385,7 +385,7 @@ describe('ai-default-indigo', () => {
     // Regression: the strip pass used to remove every custom-property-only
     // global theme block, even when the indigo hid behind a non-`--accent`
     // token like `--primary` or `--button-bg`. The craft contract's escape
-    // hatch is `--accent` specifically — encoding indigo as any other
+    // hatch is `--accent` specifically - encoding indigo as any other
     // token name still launders the LLM-default color, so the rule must
     // stay in scope of the indigo scan.
     const html = `
@@ -401,7 +401,7 @@ describe('ai-default-indigo', () => {
 
   it('still flags indigo declared on a --button-bg global token alongside other tokens', () => {
     // A laundered indigo token mixed with legitimate tokens in the same
-    // :root block must not be stripped — the non-`--accent` indigo
+    // :root block must not be stripped - the non-`--accent` indigo
     // declaration keeps the whole rule in scope so the literal hex is
     // visible to the indigo scan.
     const html = `
@@ -606,7 +606,7 @@ describe('all-caps-no-tracking', () => {
 
   it('does not double-fire when both <style> block and inline style are offending', () => {
     // The inline-style scan should be skipped when the <style>-block
-    // scan already produced this finding — single corrective signal.
+    // scan already produced this finding - single corrective signal.
     const html = `
       <style>.eyebrow { text-transform: uppercase; font-size: 12px; }</style>
       <span style="text-transform: uppercase">NEW</span>
@@ -619,7 +619,7 @@ describe('all-caps-no-tracking', () => {
   it('passes a 12px label with 1px tracking (resolves 0.06em via same-rule font-size)', () => {
     // Regression: the previous absolute-fallback floor of >=1.5px was
     // stricter than the craft rule. `font-size: 12px; letter-spacing: 1px`
-    // is `1 / 12 = 0.083em` — well above the 0.06em rule — and must pass.
+    // is `1 / 12 = 0.083em` - well above the 0.06em rule - and must pass.
     const html = `
       <style>
         .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
@@ -683,7 +683,7 @@ describe('all-caps-no-tracking', () => {
     // Regression: `rem` was previously folded into the same branch as
     // `em` and accepted at the 0.06 threshold. But `rem` is relative
     // to the root font-size (16px default), not the element's own
-    // font-size, so on a 48px heading `0.06rem` resolves to 0.96px —
+    // font-size, so on a 48px heading `0.06rem` resolves to 0.96px -
     // about 0.02em of the element, well below the 0.06em rule.
     const html = `
       <style>
@@ -696,7 +696,7 @@ describe('all-caps-no-tracking', () => {
   });
 
   it('passes a 16px label with 0.06rem tracking (rem ≈ 1px ≈ 0.06em on 16px)', () => {
-    // 0.06rem * 16px/rem = 0.96px; on a 16px element that is 0.06em —
+    // 0.06rem * 16px/rem = 0.96px; on a 16px element that is 0.06em -
     // exactly at the floor. The rem branch must accept it.
     const html = `
       <style>
@@ -708,7 +708,7 @@ describe('all-caps-no-tracking', () => {
   });
 
   it('passes a 48px heading with 0.18rem tracking (rem converted, meets element 0.06em)', () => {
-    // 0.18rem * 16px/rem = 2.88px; 48px * 0.06 = 2.88px floor — the
+    // 0.18rem * 16px/rem = 2.88px; 48px * 0.06 = 2.88px floor - the
     // converted rem matches the per-element em floor exactly.
     const html = `
       <style>
@@ -733,8 +733,8 @@ describe('all-caps-no-tracking', () => {
 
   it('passes uppercase rule whose letter-spacing dereferences a compliant :root token', () => {
     // Regression: the tracking helper used to recognise only literal
-    // numeric values, so a tokenized rule — exactly the pattern the
-    // craft prompt steers artifacts toward — was wrongly reported as
+    // numeric values, so a tokenized rule - exactly the pattern the
+    // craft prompt steers artifacts toward - was wrongly reported as
     // `all-caps-no-tracking`. The helper now resolves `var(--name)` to
     // its `:root` definition and judges the literal value against the
     // 0.06em floor.
@@ -800,7 +800,7 @@ describe('all-caps-no-tracking', () => {
     // Regression: the px-vs-element-font-size resolution previously
     // matched only `font-size: <n>px`, so a `font-size: 3rem` heading
     // fell through to the lenient `>= 1px` fallback and accepted 1px
-    // tracking — even though the rendered ~48px display has a 2.88px
+    // tracking - even though the rendered ~48px display has a 2.88px
     // floor and 1px is well below the 0.06em rule. The helper now
     // resolves `rem` font-size via the same root assumption used for
     // tracking and applies the strict per-element floor.
@@ -855,7 +855,7 @@ describe('all-caps-no-tracking', () => {
   });
 
   it('flags a tokenized px display size with 1px tracking', () => {
-    // The token-resolution path must also catch a px-valued token —
+    // The token-resolution path must also catch a px-valued token -
     // `font-size: var(--display-size)` with `--display-size: 48px`
     // resolves the same way and the 2.88px floor still applies.
     const html = `
@@ -871,7 +871,7 @@ describe('all-caps-no-tracking', () => {
   it('flags a heading with 1em font-size (unresolvable unit) and 1px tracking', () => {
     // When the rule explicitly declares font-size in a unit we cannot
     // resolve (`em`, `%`, `calc(...)`, unresolved var), the helper
-    // refuses the lenient body-text fallback — the element might be
+    // refuses the lenient body-text fallback - the element might be
     // arbitrarily large. The rule must use `em` letter-spacing or an
     // explicit px/rem font-size to be verifiable.
     const html = `
@@ -946,7 +946,7 @@ describe('all-caps-no-tracking', () => {
     // letter-spacing declaration in the rule, but CSS applies the LAST
     // effective declaration in source order. So
     // `.eyebrow { letter-spacing: 0.08em; letter-spacing: 0.02em }`
-    // renders the noncompliant 0.02em — the lint must judge against the
+    // renders the noncompliant 0.02em - the lint must judge against the
     // last declaration, not the first.
     const html = `
       <style>
@@ -969,7 +969,7 @@ describe('all-caps-no-tracking', () => {
     // font-size declaration; the cascade resolves to the LAST. With
     // `font-size: 14px; font-size: 100px`, the rendered floor is
     // `100 * 0.06 = 6px`, so 1px tracking is well below the rule and
-    // must flag — even though the stale 14px would have accepted it
+    // must flag - even though the stale 14px would have accepted it
     // (14 * 0.06 = 0.84px floor).
     const html = `
       <style>
@@ -983,7 +983,7 @@ describe('all-caps-no-tracking', () => {
   it('passes when the compliant letter-spacing is the LAST declaration (override of an earlier noncompliant one)', () => {
     // Sanity check: the cascade fix must not regress the inverse case.
     // An author intentionally restoring the floor with a later override
-    // — `letter-spacing: 0.02em; letter-spacing: 0.08em` — renders 0.08em
+    // - `letter-spacing: 0.02em; letter-spacing: 0.08em` - renders 0.08em
     // and must not fire the lint.
     const html = `
       <style>
@@ -1002,7 +1002,7 @@ describe('all-caps-no-tracking', () => {
     // that rendered below it, just because the second declaration
     // happened to be parsed last. The helper now enumerates every
     // applicable value and only passes if all resolutions satisfy the
-    // 0.06em floor — so the default-theme 0.02em still trips the lint.
+    // 0.06em floor - so the default-theme 0.02em still trips the lint.
     const html = `
       <style>
         :root { --caps-tracking: 0.02em; }
@@ -1016,7 +1016,7 @@ describe('all-caps-no-tracking', () => {
   });
 
   it('flags an uppercase rule even when the conflicting :root override comes second', () => {
-    // Same regression but with declaration order swapped — the previous
+    // Same regression but with declaration order swapped - the previous
     // last-write-wins behaviour was order-dependent, so both orderings
     // must fail when ANY resolution is below the floor.
     const html = `
@@ -1051,7 +1051,7 @@ describe('all-caps-no-tracking', () => {
     // value seen for a custom property, even when the duplicates lived
     // in the SAME cascade scope. CSS source-order cascade collapses
     // `:root { --caps-tracking: 0.02em; --caps-tracking: 0.08em; }`
-    // to the second declaration — the first is dead weight, never
+    // to the second declaration - the first is dead weight, never
     // reaches any element. Treating both as theme alternatives fed the
     // stale 0.02em into `hasAdequateUppercaseTracking` and emitted a
     // spurious P1 on what is normal CSS overriding. The fix collapses
@@ -1118,8 +1118,8 @@ describe('all-caps-no-tracking', () => {
     // 0.06em floor (48 * 0.06 = 2.88px > 1px) and emitted a false
     // `all-caps-no-tracking` even though the artifact is compliant
     // under both real themes:
-    //   default: 16px size + 1px tracking — 1 / 16 ≈ 0.0625em ≥ 0.06em
-    //   dark:    48px size + 3px tracking — 3 / 48 ≈ 0.0625em ≥ 0.06em
+    //   default: 16px size + 1px tracking - 1 / 16 ≈ 0.0625em ≥ 0.06em
+    //   dark:    48px size + 3px tracking - 3 / 48 ≈ 0.0625em ≥ 0.06em
     // The fix preserves per-scope token maps and evaluates per-theme
     // effective maps so paired declarations stay paired.
     const html = `
@@ -1141,8 +1141,8 @@ describe('all-caps-no-tracking', () => {
   it('flags paired theme tokens when one scope is internally noncompliant', () => {
     // The per-theme evaluation must not silently rescue a scope whose
     // own paired values fall below the floor. Default theme here is
-    // 48px size + 1px tracking — 1 / 48 ≈ 0.021em, well below the
-    // 0.06em rule — and must flag, even though the dark scope is
+    // 48px size + 1px tracking - 1 / 48 ≈ 0.021em, well below the
+    // 0.06em rule - and must flag, even though the dark scope is
     // internally compliant.
     const html = `
       <style>

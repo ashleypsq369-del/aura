@@ -48,7 +48,7 @@ export interface ConnectorDetail {
    * only invokes tools whose names appear here. For Composio
    * connectors this expands on hydration to include any
    * provider-discovered tool whose classified safety is
-   * `read + auto-approval` — so the count can grow from the catalog
+   * `read + auto-approval` - so the count can grow from the catalog
    * baseline by tens of read tools after a Composio API key is
    * configured (issue #748).
    *
@@ -94,7 +94,7 @@ export interface ConnectorCatalogDefinition {
   allowedToolNames: string[];
   /**
    * The hand-curated subset of `allowedToolNames` that is fixed at the
-   * catalog level — never extended by provider discovery (issue #748).
+   * catalog level - never extended by provider discovery (issue #748).
    * Optional: when omitted, serialized wire details fall back to
    * `allowedToolNames`, which is the right preview subset for
    * non-Composio connectors that don't have a dynamic discovery layer
@@ -239,7 +239,7 @@ export function connectorDefinitionToDetail(definition: ConnectorCatalogDefiniti
     tools: definition.tools.map((tool) => toolDefinitionToDetail(tool)),
     allowedToolNames: [...definition.allowedToolNames],
     // Fall back to `allowedToolNames` when `curatedToolNames` isn't
-    // explicitly set — non-Composio connectors don't go through a
+    // explicitly set - non-Composio connectors don't go through a
     // dynamic merge, so for them the two are equivalent and the badge
     // is stable either way (issue #748).
     curatedToolNames: [...(definition.curatedToolNames ?? definition.allowedToolNames)],

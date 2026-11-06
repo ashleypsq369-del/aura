@@ -1,5 +1,5 @@
-/**
- * DataTable — Admin data table on @tanstack/react-table v8
+﻿/**
+ * DataTable - Admin data table on @tanstack/react-table v8
  *
  * Services design DNA applied:
  *  - Teal gradient table header (matches Services stat strip)
@@ -29,7 +29,7 @@ function SortIcon({ sorted }) {
   return <ChevronsUpDown size={10} style={{ color: 'var(--text-400)', opacity: 0.4 }} />;
 }
 
-/* ─── Shimmer skeleton — Services card shimmer style ─────────────── */
+/* ─── Shimmer skeleton - Services card shimmer style ─────────────── */
 const shimmerStyle = {
   background: 'linear-gradient(90deg, var(--card-border) 25%, color-mix(in srgb,var(--card-border) 60%,var(--card-bg)) 50%, var(--card-border) 75%)',
   backgroundSize: '200% 100%',
@@ -131,7 +131,7 @@ export default function DataTable({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }} className={className}>
 
-      {/* shimmer keyframe — injected once */}
+      {/* shimmer keyframe - injected once */}
       <style>{`
         @keyframes shimmer {
           0%   { background-position: 200% 0; }
@@ -218,7 +218,7 @@ export default function DataTable({
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
 
-            {/* ── Head — teal-tinted, same as Services stat strip ── */}
+            {/* ── Head - teal-tinted, same as Services stat strip ── */}
             <thead>
               {table.getHeaderGroups().map(hg => (
                 <tr key={hg.id} style={{
@@ -267,7 +267,7 @@ export default function DataTable({
                 ? (
                   <tr>
                     <td colSpan={columns.length} style={{ padding: '52px 16px', textAlign: 'center' }}>
-                      {/* Warm empty state — Services style */}
+                      {/* Warm empty state - Services style */}
                       <div style={{
                         width: 48, height: 48, borderRadius: 16,
                         background: 'linear-gradient(135deg,#f0fdfa,#e0f2fe)',
@@ -310,7 +310,7 @@ export default function DataTable({
                           borderBottom: '1px solid color-mix(in srgb,var(--card-border) 60%,transparent)',
                           cursor:       isClickable ? 'pointer' : 'default',
                           transition:   'background 0.12s',
-                          /* Teal left border accent on selected/expanded — like ProviderCard featured */
+                          /* Teal left border accent on selected/expanded - like ProviderCard featured */
                           borderLeft:   (isSelected || isExpanded) ? '3px solid var(--c-teal)' : '3px solid transparent',
                           background:   isSelected
                             ? 'color-mix(in srgb,var(--c-teal) 7%,var(--card-bg))'
@@ -345,7 +345,7 @@ export default function DataTable({
                         ))}
                       </tr>
 
-                      {/* Sub-row — teal accent, like Services featured strip */}
+                      {/* Sub-row - teal accent, like Services featured strip */}
                       {renderSubRow && isExpanded && (
                         <tr style={{
                           borderBottom: '1px solid var(--card-border)',

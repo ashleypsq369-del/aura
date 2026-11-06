@@ -185,7 +185,7 @@ function formatContextRefList(ids: string[], refs: unknown, titleKey: 'title' | 
         ref?.status,
         ref?.accountLabel,
       ].filter((value): value is string => typeof value === 'string' && value.trim().length > 0).join(' · ');
-      return `- ${label} (\`${id}\`)${meta ? ` — ${meta}` : ''}`;
+      return `- ${label} (\`${id}\`)${meta ? ` - ${meta}` : ''}`;
     })
     .join('\n');
 }
@@ -200,7 +200,7 @@ function formatWorkspaceContextList(items: WorkspaceContextItem[]) {
         item.title ? `title: ${item.title}` : null,
         item.tabId ? `tab: \`${item.tabId}\`` : null,
       ].filter(Boolean).join(' | ');
-      return `${index + 1}. ${item.kind}: ${item.label} (\`${item.id}\`)${details ? ` — ${details}` : ''}`;
+      return `${index + 1}. ${item.kind}: ${item.label} (\`${item.id}\`)${details ? ` - ${details}` : ''}`;
     })
     .join('\n');
 }

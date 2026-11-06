@@ -364,7 +364,7 @@ describe('reconcileWorkspaceProjectsWithRemote (orchestrator, fake deps)', () =>
     });
   });
 
-  it('is a total no-op off-team (null identity) — never reads or writes anything', async () => {
+  it('is a total no-op off-team (null identity) - never reads or writes anything', async () => {
     const listRemoteTeamProjects = vi.fn(async () => []);
     const applyBind = vi.fn();
     const applyDemote = vi.fn();
@@ -474,9 +474,9 @@ describe('reconcileWorkspaceProjectsWithRemote (orchestrator, fake deps)', () =>
 
   // recvqmnuxxKHaI: `workspace_projects.project_id` is a FOREIGN KEY into
   // `projects(id)`, so a bind for a project this daemon never materialized
-  // (no `projects` row — e.g. a teammate's share the member never opened)
-  // can never be written. The reconciler must skip it silently — the pull
-  // path owns materialization — not throw SQLITE_CONSTRAINT_FOREIGNKEY on
+  // (no `projects` row - e.g. a teammate's share the member never opened)
+  // can never be written. The reconciler must skip it silently - the pull
+  // path owns materialization - not throw SQLITE_CONSTRAINT_FOREIGNKEY on
   // every pass forever.
   it('skips the bind for a remote project with no local binding and no local projects row', async () => {
     const applyBind = vi.fn();

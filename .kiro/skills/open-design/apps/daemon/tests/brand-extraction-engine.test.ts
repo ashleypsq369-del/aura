@@ -52,15 +52,15 @@ const SKILLS_ROOT = path.resolve(
   '../../../skills',
 );
 
-// Injected logo harvester that does nothing — keeps the engine tests offline
+// Injected logo harvester that does nothing - keeps the engine tests offline
 // (the real fallback fetches the site's icon assets over the network).
 const NO_LOGO_FALLBACK = async () => ({ changed: false });
 
-// Injected imagery harvester that does nothing — keeps finalize offline (the
+// Injected imagery harvester that does nothing - keeps finalize offline (the
 // real fallback fetches the site's cover/hero images over the network).
 const NO_IMAGERY_FALLBACK = async () => ({ changed: false });
 
-// Injected palette/typography harvester that does nothing — keeps the engine
+// Injected palette/typography harvester that does nothing - keeps the engine
 // tests offline except for cases that explicitly stub a harvester behavior.
 const NO_SEED_FALLBACK = async () => ({ changed: false });
 
@@ -79,7 +79,7 @@ function startOfflineBrandExtraction(
 // does NOT register `skills/` as Claude-Code `Skill` / slash commands. A seeded
 // prompt that tells the agent to "use the `brand-extract` skill" is therefore
 // executed as a `Skill {"skill":"brand-extract"}` tool call that has no registry
-// to resolve against and always fails — the red Skill card users hit mid-
+// to resolve against and always fails - the red Skill card users hit mid-
 // extraction. The seeded prompt must never instruct loading/invoking a skill.
 function expectNoPhantomSkillCall(prompt: string): void {
   expect(prompt).not.toMatch(/use the `?brand-extract`? skill/i);
@@ -227,14 +227,14 @@ describe('agent-driven brand extraction engine', () => {
     // instead of clamping to the light Ant baseline.
     expect(system.themes.default.colorBgContainer).toBe('#050505');
     expect(system.themes.dark.colorBgContainer).toBe('#050505');
-    // Neutral text derives from the brand foreground over the dark canvas —
+    // Neutral text derives from the brand foreground over the dark canvas -
     // it must read light, not the light-theme #1f1f1f.
     expect(parseInt(system.themes.default.colorText.slice(1, 3), 16)).toBeGreaterThan(180);
     expect(system.files['kit.html']).toContain('--brand-color-bg-container: #050505;');
     expect(system.files['kit.html']).not.toContain('--brand-color-bg-container: #ffffff;');
     expect(system.files['kit.dark.html']).toContain('--brand-color-bg-container: #050505;');
     // The exported ConfigProvider artifact must carry the SAME effective
-    // algorithm as the tokens/CSS/kit above — otherwise a consumer applies the
+    // algorithm as the tokens/CSS/kit above - otherwise a consumer applies the
     // light algorithm to a dark canvas.
     expect(JSON.parse(system.files['theme.json'] ?? '').algorithm).toBe('dark');
   });
@@ -261,7 +261,7 @@ describe('agent-driven brand extraction engine', () => {
   });
 
   it('drops scraped CSS source junk from font families instead of corrupting the token block', () => {
-    // Extractors sometimes scrape CSS *source text* instead of a real family —
+    // Extractors sometimes scrape CSS *source text* instead of a real family -
     // e.g. Tailwind v4's `--theme(--default-font-family` from aliyun.com. The
     // unbalanced `(` inside the emitted `--brand-font-family` value swallows
     // every later `:root` declaration (sizes, control heights, radii), which
@@ -297,7 +297,7 @@ describe('agent-driven brand extraction engine', () => {
     // reassembleWithSeed → tokensToThemeJson(seed, defaultThemeAlgorithm(seed))):
     // a background-only override on an otherwise light brand must NOT be treated
     // as dark-first, or theme.json would export algorithm:"dark" while the seed
-    // still carries a dark colorTextBase — the ConfigProvider mismatch.
+    // still carries a dark colorTextBase - the ConfigProvider mismatch.
     const bgOnlyDark: SeedToken = { ...defaultSeed, colorBgBase: '#050505' }; // colorTextBase stays #000000
     expect(defaultThemeAlgorithm(bgOnlyDark)).toBe('default');
     // The derived default theme clamps back to the light canvas...
@@ -306,7 +306,7 @@ describe('agent-driven brand extraction engine', () => {
     expect(JSON.parse(tokensToThemeJson(bgOnlyDark, defaultThemeAlgorithm(bgOnlyDark))).algorithm).toBe('default');
 
     // A full override supplying BOTH a dark canvas and a light foreground DOES
-    // opt into dark-first — consistently across the derived theme and export.
+    // opt into dark-first - consistently across the derived theme and export.
     const fullDark: SeedToken = { ...defaultSeed, colorBgBase: '#050505', colorTextBase: '#f4f4f4' };
     expect(defaultThemeAlgorithm(fullDark)).toBe('dark');
     expect(deriveTokens(fullDark, 'default').colorBgContainer).toBe('#050505');
@@ -766,7 +766,7 @@ describe('agent-driven brand extraction engine', () => {
     expect(detail?.meta.status).toBe('extracting');
     // Entity-first: the user:<id> design system exists as a DRAFT from the start
     // (so it shows under "Your systems" and stays editable), but the brand is
-    // not finalized — the draft was never promoted to published.
+    // not finalized - the draft was never promoted to published.
     expect(detail?.meta.designSystemId).toMatch(/^user:/);
     const stoppedSystems = await listDesignSystems(userDesignSystemsRoot, {
       idPrefix: 'user:',
@@ -1474,7 +1474,7 @@ describe('agent-driven brand extraction engine', () => {
     expect(generatedGuide).not.toContain('only authored surface');
   });
 
-  it('finalizeBrand is idempotent — re-finalizing reuses the brand design system', async () => {
+  it('finalizeBrand is idempotent - re-finalizing reuses the brand design system', async () => {
     const db = openDatabase(tempDir, { dataDir: tempDir });
     const started = await startOfflineBrandExtraction({
       url: 'acme.com',
@@ -1905,7 +1905,7 @@ describe('agent-driven brand extraction engine', () => {
     });
 
     const projectDir = path.join(projectsRoot, started.projectId);
-    // Agent wrote a complete kit but captured ZERO imagery samples — exactly the
+    // Agent wrote a complete kit but captured ZERO imagery samples - exactly the
     // case the displayed pre-imagery brand was stuck in.
     writeFileSync(
       path.join(projectDir, 'brand.json'),
@@ -1982,7 +1982,7 @@ describe('agent-driven brand extraction engine', () => {
         url: 'https://acme.com/',
         finalUrl: 'https://acme.com/',
         siteName: 'Acme',
-        title: 'Acme — we make things',
+        title: 'Acme - we make things',
         description: 'Acme makes excellent things for everyone.',
         colors: [
           { hex: '#ffffff', count: 50 },
@@ -2042,7 +2042,7 @@ describe('agent-driven brand extraction engine', () => {
       await new Promise((resolve) => setTimeout(resolve, 5));
     }
 
-    // The background pass registers and syncs the usable design system — no
+    // The background pass registers and syncs the usable design system - no
     // agent run required.
     const detail = readBrandDetail(brandsRoot, result.id);
     expect(detail?.meta.status).toBe('ready');
@@ -2352,7 +2352,7 @@ describe('agent-driven brand extraction engine', () => {
         url: 'https://slow.com/',
         finalUrl: 'https://slow.com/',
         siteName: 'Slow',
-        title: 'Slow — eventually',
+        title: 'Slow - eventually',
         description: 'Slow makes things, eventually.',
         colors: [
           { hex: '#ffffff', count: 50 },

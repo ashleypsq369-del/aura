@@ -1,6 +1,6 @@
 // Agent-agnostic artifact counter. Instead of reconstructing file writes from
 // each agent's tool-call stream (which only `claude_code` reports in a shape
-// `run-artifacts.ts#countNewArtifacts` recognizes — see the audit that found
+// `run-artifacts.ts#countNewArtifacts` recognizes - see the audit that found
 // codex / opencode / gemini / cursor / amr / … all report artifact_count: 0),
 // this snapshots the project's artifact files before the run and diffs against
 // a snapshot taken at run end. Whatever runtime the agent used, a real file
@@ -10,7 +10,7 @@
 // existing artifact leaves the directory's file count unchanged (still 1 file)
 // yet did produce artifact work. Counting only "new files" would miss every
 // iteration turn. So we compare per-path fingerprints and count a path as
-// touched when it is new OR its size/mtime changed — which matches the
+// touched when it is new OR its size/mtime changed - which matches the
 // tool-stream counter's existing semantics (both Write and Edit count).
 
 import { createHash } from 'node:crypto';
@@ -34,7 +34,7 @@ function isTrackedRunFile(name: string): boolean {
 // Manifest-backed artifacts: `create_artifact` persists a manifest sidecar
 // next to the artifact file as `<file>.artifact.json`, and the manifest layer
 // (`artifacts/manifest.ts`) accepts entry kinds the extension whitelist above
-// does not — most importantly Markdown exports (`markdown-document`). A file
+// does not - most importantly Markdown exports (`markdown-document`). A file
 // with a valid sidecar therefore counts as a tracked run artifact even though
 // its extension is not renderable, while the sidecar itself is metadata and
 // never tracked. See #7579: a manifest-backed `.md` export was invisible to
@@ -119,7 +119,7 @@ export interface ArtifactFingerprint {
 }
 
 // Files larger than this are not content-hashed (cost bound). Artifacts that
-// get edited in place — HTML, DESIGN.md, SVG — are small; large media are
+// get edited in place - HTML, DESIGN.md, SVG - are small; large media are
 // regenerated wholesale (size changes), so size+mtime suffices for them.
 const HASH_MAX_BYTES = 1024 * 1024;
 
@@ -181,14 +181,14 @@ const MAX_FILES = 5000;
 
 // Separate cap for files outside the tracked-extension set (markdown, docs,
 // code, JSON, …). These feed only the coarse `files_written_count` signal, so
-// they get their own budget instead of competing with — and on a large
-// imported repo starving — the artifact fingerprints that the primary
+// they get their own budget instead of competing with - and on a large
+// imported repo starving - the artifact fingerprints that the primary
 // `artifact_count` funnel depends on.
 const MAX_OTHER_FILES = 5000;
 
 // Cheap fingerprint for non-tracked files: size + mtime only, no content read.
 // `files_written_count` is a boolean-ish "did the run write anything" signal,
-// so the pathological same-size-same-mtime rewrite these miss is acceptable —
+// so the pathological same-size-same-mtime rewrite these miss is acceptable -
 // hashing every code file in an imported repo at run finish is not.
 function statOnlyFingerprint(size: number, mtimeMs: number): ArtifactFingerprint {
   return { size, mtimeMs, hash: null };
@@ -241,7 +241,7 @@ export function snapshotProjectArtifacts(rootDir: string): ArtifactSnapshot {
           else otherCount += 1;
         } catch {
           complete = false;
-          // Race (file removed mid-walk) or permission error — skip.
+          // Race (file removed mid-walk) or permission error - skip.
         }
       }
     }
@@ -344,10 +344,10 @@ export interface RunArtifactDiff {
   // Fed into `run_finished.artifact_count`, so an edit-only turn still
   // reports >0.
   touched: number;
-  // True when the run created or modified a `DESIGN.md` — the filesystem
+  // True when the run created or modified a `DESIGN.md` - the filesystem
   // equivalent of the tool-stream `didRunCreateDesignSystemFile`.
   designSystemCreated: boolean;
-  // Distinct `preview/*.html` modules created or modified — the filesystem
+  // Distinct `preview/*.html` modules created or modified - the filesystem
   // equivalent of the tool-stream `countDesignSystemPreviewModules`. A preview
   // module is also an artifact, so it is counted in `touched` too (matching the
   // tool-stream counter, where preview writes also bumped artifact_count).
@@ -369,7 +369,7 @@ export interface RunArtifactDiff {
   renderDependencyTouched: number;
   renderDependencyTouchedPaths: string[];
   supportingMediaTouched: number;
-  // Distinct files of ANY type this run created or modified — markdown briefs,
+  // Distinct files of ANY type this run created or modified - markdown briefs,
   // docx exports, JSON data, code, plus everything the counters above already
   // cover. `artifact_count` deliberately only counts renderable outputs, which
   // makes a run that delivered `PROMPTS.md` or `report.docx` look identical to
@@ -519,7 +519,7 @@ export interface RunArtifactBaseline {
   before: ArtifactSnapshot;
   // True when another run was active in the SAME cwd while this run ran. The
   // daemon allows overlapping runs (see the antigravity lock in server.ts), and
-  // a whole-tree snapshot diff cannot tell which concurrent run wrote a file —
+  // a whole-tree snapshot diff cannot tell which concurrent run wrote a file -
   // so a contended run must NOT trust the filesystem diff (the caller falls back
   // to the per-run tool-stream count) to avoid attributing one run's artifacts
   // to another.

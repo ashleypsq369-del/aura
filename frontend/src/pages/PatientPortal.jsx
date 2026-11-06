@@ -1,5 +1,5 @@
-/**
- * PatientPortal — My Space
+﻿/**
+ * PatientPortal - My Space
  * Dashboard for patients: daily tasks, quick access, care journey, and wellbeing.
  */
 import { useEffect } from 'react';
@@ -210,7 +210,7 @@ export default function PatientPortal() {
           {/* LEFT col */}
           <div className="lg:col-span-2 space-y-4">
 
-            {/* Journey Phase — compact strip, not a giant card */}
+            {/* Journey Phase - compact strip, not a giant card */}
             {journey_phase && (
               <CardSection icon={MapPin} iconColor="#7c3aed" title="Your Care Journey"
                 action={
@@ -220,7 +220,7 @@ export default function PatientPortal() {
                   </button>
                 }>
                 <div className="flex items-center gap-4">
-                  {/* Phase steps — horizontal compact */}
+                  {/* Phase steps - horizontal compact */}
                   <div className="flex items-center gap-1 flex-1 min-w-0 overflow-x-auto py-1">
                     {['Diagnosis','Care Planning','Active Monitoring','Escalation','Transition','Legacy'].map((name, idx) => {
                       const num = idx + 1;
@@ -316,7 +316,7 @@ export default function PatientPortal() {
               </CardSection>
             )}
 
-            {/* Community — only if opted in */}
+            {/* Community - only if opted in */}
             {community_groups?.length > 0 && uiFlags.showCommunity !== false && (
               <CardSection icon={Users} iconColor="#1d4ed8" title="Connect with Others"
                 action={
@@ -396,7 +396,7 @@ export default function PatientPortal() {
               </div>
             </CardSection>
 
-            {/* Wellbeing snapshot — ESAS sparklines + AI health check */}
+            {/* Wellbeing snapshot - ESAS sparklines + AI health check */}
             <CardSection icon={Activity} iconColor="#e11d48" title="Wellbeing Snapshot" noPad>
               <div>
                 {/* Wellbeing insight from personalisation */}
@@ -407,7 +407,7 @@ export default function PatientPortal() {
                   </div>
                 )}
 
-                {/* ESAS sparklines — 2-col compact grid */}
+                {/* ESAS sparklines - 2-col compact grid */}
                 {esasTrends && esasTrends.count > 0 && (
                   <div className="px-4 py-3 border-b border-[var(--card-border)]">
                     <p className="text-[10px] font-bold text-[var(--text-400)] uppercase tracking-wider mb-2">

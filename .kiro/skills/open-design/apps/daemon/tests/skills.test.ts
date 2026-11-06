@@ -427,7 +427,7 @@ describe('listSkills preamble', () => {
 
     const demoAlias = `${SKILLS_CWD_ALIAS}/${skillCwdAliasSegment(path.join(root, 'demo-skill'))}`;
 
-    // The cwd-relative alias path is the primary one — that's what makes
+    // The cwd-relative alias path is the primary one - that's what makes
     // the agent stay inside its working directory when reading skill
     // side files (issue #430).
     expect(skill.body).toContain(`${demoAlias}/`);
@@ -483,7 +483,7 @@ describe('listSkills preamble', () => {
 
     // `id`/`name` reflect the frontmatter value (used elsewhere as a stable
     // public id), but the on-disk alias path must use the actual folder
-    // name — that is what the daemon-staged junction maps to.
+    // name - that is what the daemon-staged junction maps to.
     expect(skill.id).toBe('magazine-web-ppt');
     expect(skill.body).toContain(`${folderAlias}/`);
     expect(skill.body).not.toContain(`${frontmatterAlias}/`);

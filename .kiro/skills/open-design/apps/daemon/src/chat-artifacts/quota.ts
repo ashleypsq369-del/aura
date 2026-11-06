@@ -1,7 +1,7 @@
 // Storage budget for immutable chat artifact snapshots.
 //
 // Three tiers (spec §7.1): one blob, one project, one daemon data root.
-// Exceeding a budget fails THAT capture, never the turn — the message still
+// Exceeding a budget fails THAT capture, never the turn - the message still
 // completes and the card honestly reports "history was not saved".
 
 import type Database from 'better-sqlite3';

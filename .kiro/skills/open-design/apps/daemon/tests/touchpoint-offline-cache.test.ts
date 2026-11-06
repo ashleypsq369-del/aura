@@ -1,5 +1,5 @@
 // OPEND-3436. The daemon keeps a production activity on screen while the CMS
-// runtime is unreachable, and takes it down — bytes and all — the moment its
+// runtime is unreachable, and takes it down - bytes and all - the moment its
 // own schedule says it is over or the server says it is withdrawn.
 //
 // Every case here is about one of the two ways this feature can be wrong:
@@ -237,7 +237,7 @@ describe('offline schedule cache', () => {
     const timeless = fullResponse(MODAL.placementKey, 'modal.js', MODAL_ENTRY) as Record<string, unknown>;
     delete timeless.endsAt;
     cache.remember(MODAL, timeless);
-    // The content half may still be cached — that is OPEND-3371's job — but a
+    // The content half may still be cached - that is OPEND-3371's job - but a
     // decision with no end is not one this feature may put back on the screen.
     expect(cache.replayOffline(MODAL, 'upstream_unreachable')).toBeNull();
   });
@@ -358,7 +358,7 @@ describe('offline schedule cache', () => {
   // Note for anyone tempted to make the two sides agree: Vela's own lease
   // renewal (`persistence.ts`) deliberately does the opposite and takes
   // `greatest()`, so that a slow request cannot write `expires_at` BACKWARDS.
-  // That is a different question with a different answer — the server's own
+  // That is a different question with a different answer - the server's own
   // grant must be monotonic, and a client's copy of the server's schedule must
   // follow it wherever it goes. They are not two implementations of one rule.
   it('follows a shortened end time down, including one that has already passed', () => {
@@ -422,8 +422,8 @@ describe('offline schedule cache', () => {
 
   // A record is one activity's, whole. Merging a new answer into the old one
   // would leave a package whose identity half and schedule half came from
-  // different activities, and the only thing that compares identity — the
-  // withdrawal receipt — would then answer for the wrong one.
+  // different activities, and the only thing that compares identity - the
+  // withdrawal receipt - would then answer for the wrong one.
   it('replaces the record outright when the server moves to another activity', () => {
     const cache = createTouchpointContentCache(dataDir);
     cache.remember(MODAL, fullResponse(MODAL.placementKey, 'modal.js', MODAL_ENTRY));
@@ -492,7 +492,7 @@ describe('offline schedule cache', () => {
 
     const file = assemblyFileOnDisk();
     const record = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, unknown>;
-    // Valid JSON, right version, every scalar intact — only the envelope is gone.
+    // Valid JSON, right version, every scalar intact - only the envelope is gone.
     record.envelope = null;
     fs.writeFileSync(file, JSON.stringify(record));
 

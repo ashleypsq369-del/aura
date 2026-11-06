@@ -40,7 +40,7 @@ describe('analytics telemetry environment', () => {
     // posthog-node defaults disableGeoip:true (it assumes a datacenter
     // deployment). The daemon runs on the user's own machine, so its
     // ingestion IP is the user's real public IP and country enrichment is
-    // accurate — the service must explicitly opt back in or every
+    // accurate - the service must explicitly opt back in or every
     // daemon-emitted event lands in the null-country bucket.
     posthogCtor.mockClear();
     const dataDir = await mkdtemp(path.join(tmpdir(), 'od-analytics-geoip-'));

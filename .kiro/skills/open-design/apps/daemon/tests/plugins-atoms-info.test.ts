@@ -1,9 +1,9 @@
-// Plan §3.AA2 — atoms catalog promotion + atom info.
+// Plan §3.AA2 - atoms catalog promotion + atom info.
 
 import { describe, expect, it } from 'vitest';
 import { findAtom, FIRST_PARTY_ATOMS, isImplementedAtom } from '../src/plugins/atoms.js';
 
-describe('atoms catalog — Phase 6/7/8 promotion', () => {
+describe('atoms catalog - Phase 6/7/8 promotion', () => {
   const promotedIds = [
     'code-import',
     'design-extract',

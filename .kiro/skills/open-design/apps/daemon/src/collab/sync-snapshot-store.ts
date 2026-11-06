@@ -7,7 +7,7 @@
 // impossible to write one without the other.
 //
 // The row lives in the daemon's SQLite database, which the daemon opened from
-// the resolved runtime data root — this module never resolves a data path of
+// the resolved runtime data root - this module never resolves a data path of
 // its own (see the Daemon data directory contract in AGENTS.md).
 
 import type Database from 'better-sqlite3';
@@ -32,7 +32,7 @@ export function migrateCollabSyncSnapshots(db: SqliteDb): void {
 
 /**
  * Cache identity. `accountId` is part of the primary key so a snapshot can
- * only ever be read back under the account that wrote it — switching accounts
+ * only ever be read back under the account that wrote it - switching accounts
  * is a miss, not a leak. Callers must never synthesize a placeholder for a
  * missing account id.
  */

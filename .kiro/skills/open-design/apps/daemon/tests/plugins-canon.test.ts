@@ -1,4 +1,4 @@
-// Plan §3.CC1 — `od plugin canon <snapshotId>` route + helper.
+// Plan §3.CC1 - `od plugin canon <snapshotId>` route + helper.
 //
 // The CLI subcommand fetches GET /api/applied-plugins/<id>/canon,
 // which calls renderPluginBlock() (re-exported as pluginPromptBlock
@@ -29,7 +29,7 @@ const snapshot = (over: Partial<AppliedPluginSnapshot> = {}): AppliedPluginSnaps
   ...over,
 });
 
-describe('pluginPromptBlock — Active plugin block shape', () => {
+describe('pluginPromptBlock - Active plugin block shape', () => {
   it('renders the plugin id + version when title is absent', () => {
     const out = pluginPromptBlock(snapshot({ pluginId: 'p', pluginVersion: '1.0.0' }));
     expect(out).toContain('## Active plugin');

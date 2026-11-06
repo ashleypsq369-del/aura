@@ -34,4 +34,4 @@
 
 ---
 
-_Reported via the `od-contribute` skill. If you can reproduce or have more context, please add a comment — every signal helps narrow the fix._
+_Reported via the `od-contribute` skill. If you can reproduce or have more context, please add a comment - every signal helps narrow the fix._

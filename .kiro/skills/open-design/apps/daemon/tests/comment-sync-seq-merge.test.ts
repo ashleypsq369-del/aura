@@ -4,7 +4,7 @@
 // cloud seq 10 reverted to `open` after a daemon restart, because the legacy
 // pull cursor lives in memory, the restarted daemon re-pulled from seq 0, and
 // the merge substituted `Date.now()` for the share-page create's missing
-// `updatedAt` — so the replayed create looked newest. Every replay (legacy
+// `updatedAt` - so the replayed create looked newest. Every replay (legacy
 // pull after restart, member snapshot rebuild, relay echo) must be idempotent.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';

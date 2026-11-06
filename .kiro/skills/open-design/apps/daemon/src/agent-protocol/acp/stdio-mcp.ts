@@ -12,7 +12,7 @@
  * The message names a "runtime identity" the entry should declare, but no
  * accepted value exists. Kimi validates `session/new` against a zod union whose
  * stdio member declares no `type` key at all, so zod strips an explicit
- * `type: "stdio"` before the handler runs — after which the handler sees no
+ * `type: "stdio"` before the handler runs - after which the handler sees no
  * `type` and throws. Verified against the published tarballs: 0.35.0 and 0.36.1
  * accept a stdio entry with or without `type`; 0.37.0, 0.37.1, 0.37.2 and
  * 0.38.0 reject both spellings identically. Only `http` and `sse` survive.
@@ -21,12 +21,12 @@
  * (`open-design-live-artifacts`, from `buildLiveArtifactsMcpServersForAgent`),
  * plus any user-configured external MCP servers merged in via `acp-merge`. On a
  * rejecting build that makes `session/new` fail deterministically, which is why
- * the observed failure rate for those versions is ~85–92% rather than
+ * the observed failure rate for those versions is ~85-92% rather than
  * intermittent.
  *
  * Withholding the stdio entries costs those runs their live-artifact tooling,
  * but a session that opens without MCP is strictly better than a session that
- * cannot open at all — and on a rejecting build the tooling is unreachable
+ * cannot open at all - and on a rejecting build the tooling is unreachable
  * either way. Which builds reject is runtime-specific data
  * (`RuntimeAgentDef.acpStdioMcpRemovedInVersion`), so this module stays generic
  * and every runtime that does not declare the field is left untouched.
@@ -71,7 +71,7 @@ function isAtLeast(version: VersionCore, minimum: VersionCore): boolean {
  * True when the connected agent build can still ingest a stdio MCP server.
  *
  * A runtime that does not declare `removedInVersion` accepts stdio at every
- * version — the removal is specific to the runtimes that shipped it, and every
+ * version - the removal is specific to the runtimes that shipped it, and every
  * other ACP agent must keep the payload it has today.
  *
  * When a runtime *does* declare it, an unreadable reported version answers
@@ -130,8 +130,8 @@ export interface WithheldStdioMcpResult<T> {
  * Invariant: OD never sends a stdio MCP server to an ACP build that rejects
  * them.
  *
- * Applied to the fully-assembled `mcpServers` array — live-artifacts plus any
- * `acp-merge` external servers — so a stdio entry cannot reach `session/new`
+ * Applied to the fully-assembled `mcpServers` array - live-artifacts plus any
+ * `acp-merge` external servers - so a stdio entry cannot reach `session/new`
  * from either producer. Returns the input array unchanged (same reference) for
  * every build that still accepts stdio, so no other agent's payload shape moves.
  *

@@ -1,25 +1,25 @@
-// Phase 7-8 entry slice / spec §20.3 / §21.3.2 — diff-review atom.
+// Phase 7-8 entry slice / spec §20.3 / §21.3.2 - diff-review atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/diff-review/.
 // The runner walks the project cwd's `plan/receipts/` directory,
 // re-reads each touched file's current state, and emits the four
 // files the SKILL.md fragment promises:
 //
-//   <cwd>/review/diff.patch     — concatenation of every receipt's
+//   <cwd>/review/diff.patch     - concatenation of every receipt's
 //                                  files in canonical 'unified diff'
 //                                  shape, derived from a snapshot of
 //                                  the original file content.
-//   <cwd>/review/summary.md     — per-step walkthrough with stats.
-//   <cwd>/review/decision.json  — { decision, accepted_files,
+//   <cwd>/review/summary.md     - per-step walkthrough with stats.
+//   <cwd>/review/decision.json  - { decision, accepted_files,
 //                                  rejected_files, reviewer }
-//   <cwd>/review/meta.json      — { generatedAt, atomDigest,
+//   <cwd>/review/meta.json      - { generatedAt, atomDigest,
 //                                  planRevision }
 //
 // `decision.json` is owned by the user-facing GenUI surface; this
 // runner only generates the file when the caller passes an explicit
 // decision (or when a previous decision exists at <cwd>/review/decision.json).
 //
-// The runner does NOT compute a real line-by-line diff — it relies
+// The runner does NOT compute a real line-by-line diff - it relies
 // on the receipts the patch-edit atom already wrote and just records
 // the file list, before/after sizes, and added/removed counts. The
 // SKILL.md fragment documents that the diff.patch artefact is a

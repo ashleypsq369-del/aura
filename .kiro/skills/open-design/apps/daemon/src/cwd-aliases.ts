@@ -14,16 +14,16 @@
 // write access to their cwd, and a `Write`/`Edit`/`Bash` call against
 // `.od-skills/<id>/SKILL.md` resolves through the symlink and mutates
 // the shipped resource itself. Per-project copies eliminate that
-// channel — every byte under `.od-skills/` is a private working copy,
+// channel - every byte under `.od-skills/` is a private working copy,
 // and corrupting it has no effect on other projects or on the source.
 //
 // Cost. We only stage the *active* skill, not the entire SKILLS_DIR;
-// individual skills are typically 1–3 MB. On APFS / btrfs / ReFS
+// individual skills are typically 1-3 MB. On APFS / btrfs / ReFS
 // `fs.cp` uses copy-on-write where available, so the steady-state cost
 // is a few syscalls.
 //
 // Source symlinks. We `dereference: true` so the staged copy is fully
-// self-contained — nothing inside it can write back to a real file
+// self-contained - nothing inside it can write back to a real file
 // outside the project. We also call `stat()` (not `lstat()`) on the
 // source root so an environment that puts `skills/` itself behind a
 // symlink (e.g. a content-addressable mount) is followed correctly.
@@ -54,7 +54,7 @@ export function skillCwdAliasSegment(dir: string): string {
   return `${folder}-${digest}`;
 }
 
-// copy_file_range(2) — used by fs.cp under the hood — is rejected with
+// copy_file_range(2) - used by fs.cp under the hood - is rejected with
 // these errno codes when source and destination live on different
 // filesystems (commonly EXDEV; a container image layer copied onto a
 // ZFS/overlay bind mount surfaces EPERM). Node doesn't fall back to a
@@ -69,7 +69,7 @@ type SkillCopyFn = (
 
 // Recursive copy that mirrors `cp({ dereference: true })` without going
 // through copy_file_range. `stat()` (not `lstat`) follows symlinks, so
-// every staged entry lands as a real directory or regular file — keeping
+// every staged entry lands as a real directory or regular file - keeping
 // `.od-skills/` a self-contained write barrier even on the fallback path.
 async function copyTreeDereferenced(srcDir: string, destDir: string): Promise<void> {
   await mkdir(destDir, { recursive: true });
@@ -83,21 +83,21 @@ async function copyTreeDereferenced(srcDir: string, destDir: string): Promise<vo
       await pipeline(createReadStream(from), createWriteStream(to));
       // createWriteStream opens the destination with the default 0644, so
       // restore the source's permission bits (notably the exec bit on
-      // skill helper scripts) and mtime — `fs.cp` preserves these, and
+      // skill helper scripts) and mtime - `fs.cp` preserves these, and
       // skills shell out to staged scripts. Mask to 0o777 so the
       // agent-writable staging copy never inherits setuid/setgid/sticky.
       await chmod(to, entryStat.mode & 0o777);
       await utimes(to, entryStat.atime, entryStat.mtime);
     }
     // Sockets, FIFOs, and devices can't appear in a sane skill folder and
-    // copying them would hang or fail — skip them.
+    // copying them would hang or fail - skip them.
   }
 }
 
 /**
  * Copy `<sourceDir>` to `<cwd>/.od-skills/<folderName>/` so an agent can
  * reach skill side files via a cwd-relative path. Idempotent and
- * non-throwing — failures are logged and surfaced via the result so the
+ * non-throwing - failures are logged and surfaced via the result so the
  * caller falls back to absolute-path delivery (`--add-dir` for
  * Claude/Copilot, embedded absolute path in the preamble for others).
  *
@@ -162,7 +162,7 @@ export async function stageActiveSkill(
       };
     }
   } catch {
-    // does not exist — created by `cp` below
+    // does not exist - created by `cp` below
   }
 
   try {
@@ -175,7 +175,7 @@ export async function stageActiveSkill(
         recursive: true,
         // Resolve every symlink we find inside the skill so the staged
         // copy is a fully self-contained set of regular files. This is
-        // what makes the copy a true write barrier — no entry under
+        // what makes the copy a true write barrier - no entry under
         // `.od-skills/...` can resolve back to a real file outside the
         // project cwd.
         dereference: true,

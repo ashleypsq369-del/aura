@@ -79,7 +79,7 @@ describe('MCP workspace-scoped resource handlers (#6770)', () => {
     const dsCall = calls.find((c) => c.url.endsWith('/api/design-systems'));
     expect(skillCall).toBeTruthy();
     expect(dsCall).toBeTruthy();
-    // both carry the workspace headers — this is the regression from #6770:
+    // both carry the workspace headers - this is the regression from #6770:
     // before the fix they were headerless and the daemon returned the NO-SCOPE
     // catalog, hiding claimed Personal design systems from the MCP client.
     expect((skillCall?.init?.headers as Record<string, string>)['x-od-workspace-id']).toBe('ws-personal');
@@ -98,7 +98,7 @@ describe('MCP workspace-scoped resource handlers (#6770)', () => {
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       calls.push({ url, init });
       if (url.endsWith('/api/workspace/directory')) {
-        // No active membership — non-vela fallback.
+        // No active membership - non-vela fallback.
         return new Response(JSON.stringify({ items: [], activeWorkspaceId: null }), { status: 200 });
       }
       if (url.endsWith('/api/skills')) {

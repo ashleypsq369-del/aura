@@ -3,7 +3,7 @@
 // file only decides which of its fields a given row can honestly fill.
 //
 // PRIVACY: only ids, labels and route URLs cross this boundary. Storage keys
-// and absolute paths never do — a URL addresses a snapshot by id and the route
+// and absolute paths never do - a URL addresses a snapshot by id and the route
 // resolves the key internally. Digests, byte sizes and failure codes are
 // diagnostics and live on the snapshot metadata endpoint, not on a card.
 //
@@ -90,7 +90,7 @@ function toRef(
 }
 
 /**
- * A ref with no snapshot row never had a capture attempted for it — that is
+ * A ref with no snapshot row never had a capture attempted for it - that is
  * `legacy_unavailable`, not `failed`. Both fall back to a live preview, but
  * only `failed` is worth reporting, and calling a card that was never captured
  * a failure buries the real failures in noise.

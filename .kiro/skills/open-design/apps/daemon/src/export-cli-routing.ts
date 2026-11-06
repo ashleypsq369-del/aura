@@ -4,7 +4,7 @@
 // HTML uses the daemon-owned dependency graph bundler and works headlessly.
 //
 // In particular `pdf` maps to `/export/pdf-image` (one raster page per deck
-// slide, or per viewport for a long page) — NOT the generic `/export` route,
+// slide, or per viewport for a long page) - NOT the generic `/export` route,
 // whose `desktopArtifactExporter` renders vector PDF via `printToPDF()` and
 // drops CJK glyphs in the packaged runtime. The UI was switched to the raster
 // path for that reason, and the CLI must not diverge.

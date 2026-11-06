@@ -10,7 +10,7 @@ import { startServer } from '../src/server.js';
 // #895 regression: the daemon classifies a failure's fine-grained cause
 // (failure_category / failure_detail) at finalize. The live web error handler
 // stamps that onto the assistant message, but a failure persisted purely on the
-// daemon side — or a conversation reloaded before the web save lands — reads the
+// daemon side - or a conversation reloaded before the web save lands - reads the
 // stored message instead of the live SSE stream. Historically that stored
 // `status:error` event only carried `{ detail, code }`, so a reload fell back to
 // the coarse errorCode UI and lost the specific fix guidance.

@@ -1,4 +1,4 @@
-// Phase 4 / spec §14 — `od plugin export <projectId> --as <target>`.
+// Phase 4 / spec §14 - `od plugin export <projectId> --as <target>`.
 //
 // Materialises a publish-ready folder from the AppliedPluginSnapshot
 // the project was created against. The exporter does NOT modify the
@@ -63,14 +63,14 @@ export async function exportPlugin(input: ExportInput): Promise<ExportResult> {
   }
   const plugin = getInstalledPlugin(input.db, snapshot.pluginId);
   // It's legal to export a snapshot whose plugin has since been
-  // uninstalled — we fall back to the snapshot's frozen manifest
+  // uninstalled - we fall back to the snapshot's frozen manifest
   // metadata. The .fs_path / SKILL.md copy is best-effort in that
   // case (skip on miss).
   const folder = path.join(input.outDir, snapshot.pluginId);
   await fsp.mkdir(folder, { recursive: true });
   const written: string[] = [];
 
-  // SKILL.md — copy from the installed plugin if available, otherwise
+  // SKILL.md - copy from the installed plugin if available, otherwise
   // synthesize from the snapshot's plugin title + description.
   const skillBody = await readSkillBody(plugin?.fsPath, snapshot);
   if (input.target !== 'od') {
@@ -107,7 +107,7 @@ export async function exportPlugin(input: ExportInput): Promise<ExportResult> {
 
   // Always ship a small README that records the source snapshot id
   // and digest. This is the audit trail for "which version of the
-  // plugin produced this folder" — exactly the contract spec §8.2.1
+  // plugin produced this folder" - exactly the contract spec §8.2.1
   // expects from a replay.
   const readme = [
     `# ${snapshot.pluginTitle ?? snapshot.pluginId}`,

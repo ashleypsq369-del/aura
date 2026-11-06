@@ -1,6 +1,6 @@
 // Injection-style capability registry (layer ①).
 //
-// The registry holds NO data of its own — callers seed it (now from a const
+// The registry holds NO data of its own - callers seed it (now from a const
 // ported from aihubmix-video; later from AIHubMix's /api/v1/models fetched at
 // startup with the const as a fallback). Consumers depend ONLY on `get()` /
 // `all()`, never on the raw seed, so swapping the data source touches nothing

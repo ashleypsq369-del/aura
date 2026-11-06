@@ -1,4 +1,4 @@
-// OPEND-3371 at the daemon HTTP boundary — the cheapest layer that can see the
+// OPEND-3371 at the daemon HTTP boundary - the cheapest layer that can see the
 // symptom (AGENTS.md "Try the cheapest layer first").
 //
 // The browser is not changed by this ticket and must not be able to tell that
@@ -9,7 +9,7 @@
 // Two properties are load-bearing and each has its own named case below:
 //
 //   1. A request the daemon holds nothing for is byte-for-byte today's request
-//      and today's response — no new parameters, no `contentOmitted`.
+//      and today's response - no new parameters, no `contentOmitted`.
 //   2. Once durable authority admission succeeds, content-cache failures cost
 //      bandwidth, never the online campaign. A trimmed reply it cannot rebuild
 //      is re-asked in full. Failed authority admission must not dispatch upstream.

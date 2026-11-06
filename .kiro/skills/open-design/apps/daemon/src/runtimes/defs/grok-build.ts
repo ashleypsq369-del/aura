@@ -22,7 +22,7 @@ function grokModelSupportsReasoningEffort(model: string | null | undefined): boo
   return /reasoning/i.test(model);
 }
 
-// xAI's first-party CLI agent — https://x.ai/cli — distributed as the
+// xAI's first-party CLI agent - https://x.ai/cli - distributed as the
 // `grok` binary. Installed via `curl -fsSL https://x.ai/cli/install.sh | bash`,
 // which symlinks `~/.grok/bin/grok` into PATH.
 //

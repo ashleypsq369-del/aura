@@ -1,6 +1,6 @@
-"""
+﻿"""
 Palliative Care Modules - ACP, MDT Meetings, Referrals, Spiritual Care
-Endpoints for the four clinical modules (Tables 31–34).
+Endpoints for the four clinical modules (Tables 31-34).
 """
 
 from fastapi import APIRouter, Depends, HTTPException

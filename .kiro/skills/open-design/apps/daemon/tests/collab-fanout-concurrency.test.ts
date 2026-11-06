@@ -1,4 +1,4 @@
-// Every fan-out in the collab layer ends in a `vela` child process — one pull
+// Every fan-out in the collab layer ends in a `vela` child process - one pull
 // per shared resource, one push per dirty project. Both fan-outs are sized by
 // user data (how much a workspace shares, how many projects a run touched), so
 // an unbounded fan-out makes the daemon's peak subprocess count a property of
@@ -174,7 +174,7 @@ describe('cross-project publish fan-out', () => {
       for (let index = 0; index < PROJECT_COUNT; index += 1) {
         scheduler.notifyChanged(`p${index}`);
       }
-      // Every project's debounce expires in the same tick — the worst case a
+      // Every project's debounce expires in the same tick - the worst case a
       // run boundary or a workspace-wide reconcile produces.
       await vi.advanceTimersByTimeAsync(10);
 
@@ -221,7 +221,7 @@ describe('cross-project publish fan-out', () => {
 
       // The author keeps editing while the publish waits for a slot. The
       // adapter has not read the project yet, so this must NOT become a
-      // second publish — it must become the reason of the queued one.
+      // second publish - it must become the reason of the queued one.
       scheduler.notifyChanged('queued', 'second');
       scheduler.notifyChanged('queued', 'third');
 

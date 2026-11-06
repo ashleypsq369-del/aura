@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 — ProjectStorage + DaemonDb adapter tests.
+// Phase 5 / spec §15.6 - ProjectStorage + DaemonDb adapter tests.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';

@@ -12,7 +12,7 @@
 // into `imagery/`, deduped, and fills in `imagery.samples`.
 //
 // Everything is timeout-bounded and failure-tolerant: offline or a hostile
-// origin just yields an empty result, preserving the prior (empty) behavior —
+// origin just yields an empty result, preserving the prior (empty) behavior -
 // it never throws. It mirrors `logo-fallback.ts` and is injectable so tests
 // run offline.
 
@@ -152,14 +152,14 @@ export function findImageRefs(html: string, baseUrl: string): ImageRef[] {
     }
     if (seen.has(abs)) return;
     // Keep only raster image URLs and drop obvious chrome. We deliberately skip
-    // .svg here — they are almost always icons/logos, not cover images.
+    // .svg here - they are almost always icons/logos, not cover images.
     if (!IMAGE_EXT_RE.test(abs)) return;
     if (JUNK_URL_RE.test(abs)) return;
     seen.add(abs);
     refs.push({ url: abs, rank, kind });
   };
 
-  // 1. Social card images — the site's hand-picked representative image.
+  // 1. Social card images - the site's hand-picked representative image.
   push(
     metaContent(html, 'og:image:secure_url') ||
       metaContent(html, 'og:image:url') ||
@@ -169,7 +169,7 @@ export function findImageRefs(html: string, baseUrl: string): ImageRef[] {
   );
   push(metaContent(html, 'twitter:image:src') || metaContent(html, 'twitter:image'), 0, 'cover');
 
-  // 2. <link rel=preload as=image> — the LCP / hero image the page prioritizes.
+  // 2. <link rel=preload as=image> - the LCP / hero image the page prioritizes.
   for (const m of html.matchAll(/<link[^>]+rel=["']preload["'][^>]*>/gi)) {
     if (!/as=["']image["']/i.test(m[0])) continue;
     const href = /href=["']([^"']+)["']/i.exec(m[0])?.[1];
@@ -177,12 +177,12 @@ export function findImageRefs(html: string, baseUrl: string): ImageRef[] {
     push(imageSrcset ? pickFromSrcset(imageSrcset) : href, 1, 'hero');
   }
 
-  // 3. <picture><source srcset> — pick the highest-res candidate per source.
+  // 3. <picture><source srcset> - pick the highest-res candidate per source.
   for (const m of html.matchAll(/<source[^>]+srcset=["']([^"']+)["'][^>]*>/gi)) {
     push(pickFromSrcset(m[1] ?? ''), 1, 'hero');
   }
 
-  // 4. <img> — prefer srcset's largest, else src; rank by declared size when
+  // 4. <img> - prefer srcset's largest, else src; rank by declared size when
   //    available so big hero imgs sort ahead of small inline thumbnails.
   for (const m of html.matchAll(/<img[^>]+>/gi)) {
     const tag = m[0];
@@ -199,7 +199,7 @@ export function findImageRefs(html: string, baseUrl: string): ImageRef[] {
     push(chosen, large ? 2 : 4, large ? 'hero' : 'image');
   }
 
-  // 5. CSS hero backgrounds — inline style="" and <style> url(...) references.
+  // 5. CSS hero backgrounds - inline style="" and <style> url(...) references.
   for (const m of html.matchAll(/background(?:-image)?\s*:[^;"']*url\(\s*['"]?([^"')]+)['"]?\s*\)/gi)) {
     push(m[1], 3, 'hero');
   }
@@ -227,7 +227,7 @@ function read24LE(buf: Buffer, off: number): number {
 /**
  * Decode the pixel dimensions of a PNG / GIF / JPEG / WebP buffer from its
  * header, or null when the format is unrecognized (AVIF and anything else just
- * fails the size gate gracefully). Header-only — never decodes pixel data.
+ * fails the size gate gracefully). Header-only - never decodes pixel data.
  */
 export function imageSize(buf: Buffer): { w: number; h: number } | null {
   if (buf.length < 24) return null;
@@ -347,7 +347,7 @@ function fileSlug(kind: string, index: number, ext: string): string {
  * `imageryDir`, deduped by content hash. Returns the saved files ranked by
  * candidate strength then decoded area. Best-effort: any failure (offline,
  * blocked, non-image) yields whatever was salvageable, possibly an empty array
- * — never throws.
+ * - never throws.
  */
 export async function harvestSiteImagery(
   siteUrl: string,
@@ -392,7 +392,7 @@ export async function harvestSiteImagery(
 
 /**
  * Wire image files already present in `imageryDir` into `imagery.samples` when
- * they are not referenced yet. Pure filesystem — never touches the network — so
+ * they are not referenced yet. Pure filesystem - never touches the network - so
  * an agent that downloaded images but forgot to list them still gets a gallery.
  * Mutates and returns `{ changed }`.
  */
@@ -422,8 +422,8 @@ export function adoptExistingImagery(imageryDir: string, imagery: ImagerySlot): 
 /**
  * Ensure `imagery.samples` carries enough representative images for the kit
  * gallery. No-op when the agent already listed at least {@link MIN_SAMPLES}.
- * Otherwise it first adopts any image files already on disk (offline), then —
- * if still short — harvests the site's cover/hero images over the network and
+ * Otherwise it first adopts any image files already on disk (offline), then -
+ * if still short - harvests the site's cover/hero images over the network and
  * appends them. Mutates and returns `imagery`. Best-effort; never throws.
  */
 export async function ensureImageryFallback(
@@ -442,7 +442,7 @@ export async function ensureImageryFallback(
     return { changed };
   }
 
-  // Still short — harvest the live site's representative images.
+  // Still short - harvest the live site's representative images.
   let harvested: FallbackImage[] = [];
   try {
     harvested = await harvestSiteImagery(siteUrl, imageryDir, normalizeSamples(imagery).length);

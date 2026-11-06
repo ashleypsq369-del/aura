@@ -3,7 +3,7 @@
  * `POST /api/projects/:id/handoff`. Mirrors the rationale from
  * `finalize-route-abort.test.ts`: without `res.on('close')` flipping
  * an AbortController that is then threaded into the synthesis call,
- * a UI-side cancel would only abort the browser fetch — the daemon's
+ * a UI-side cancel would only abort the browser fetch - the daemon's
  * Anthropic call would keep running and consume tokens after the
  * client has walked away.
  */
@@ -15,7 +15,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 
 import { startServer } from '../src/server.js';
 
-describe('POST /api/projects/:id/handoff — request-lifecycle abort', () => {
+describe('POST /api/projects/:id/handoff - request-lifecycle abort', () => {
   let server: http.Server;
   let baseUrl: string;
   let conversationId: string;

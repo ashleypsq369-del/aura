@@ -15,7 +15,7 @@ Please tell me about:
 - Graphic design workflow ideas
 - Dev workflow pain
 - Missing design tokens
-- Marketing–design–dev chaos
+- Marketing-design-dev chaos
 - Design systems you love/hate
 - How to use more AI without selling our souls
 - Tone of voice obsessions

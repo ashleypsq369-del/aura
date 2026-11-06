@@ -1,15 +1,15 @@
 // ---------------------------------------------------------------------------
 // GUARDRAIL: daemon startup actually runs snapshot reconcile and GC.
 //
-// `reconcile.ts` and `gc.ts` are thoroughly unit-tested — by calling them
+// `reconcile.ts` and `gc.ts` are thoroughly unit-tested - by calling them
 // directly. Nothing tested that the daemon ever calls them. Their one call site
 // lives in a fire-and-forget `void (async () => …)()` inside `startServer`,
 // wrapped in a `try { … } catch { console.warn }`, so deleting either call left
 // the whole suite green while:
 //
-//   * every capture interrupted by a crash stayed `pending` forever — the card
+//   * every capture interrupted by a crash stayed `pending` forever - the card
 //     shows a spinner state that nothing will ever settle.
-//   * every unreferenced blob stayed on disk forever — the store only grows,
+//   * every unreferenced blob stayed on disk forever - the store only grows,
 //     and the quota that fails future captures is spent on dead bytes.
 //
 // This test seeds both residues BEFORE boot and asserts the daemon settled them

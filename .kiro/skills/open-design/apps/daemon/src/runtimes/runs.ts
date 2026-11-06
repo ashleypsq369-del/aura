@@ -58,7 +58,7 @@ const MAX_RUN_MEDIA_TASK_FAILURES = 20;
  * The only evidence this predicate accepts is evidence the daemon wrote down
  * about its own execution: a media generation dispatched under this run's tool
  * grant that `routes/media.ts` recorded as `failed`. It never reads the model's
- * output. That boundary is the point — the turn-completion marker, the TodoWrite
+ * output. That boundary is the point - the turn-completion marker, the TodoWrite
  * snapshot and the closing prose are all the model's account of its own turn,
  * and an account cannot outrank a failure the host observed. Judging on the
  * agent's words would also make a copy edit (the S22 apology sentence in
@@ -735,7 +735,7 @@ export function createChatRunService({
   shutdownGraceMs = 3_000,
   // Absolute directory under which per-run event JSONL logs are written
   // (one file per run at <runsLogDir>/<runId>/events.jsonl). When null,
-  // event persistence is disabled and statusBody.eventsLogPath = null —
+  // event persistence is disabled and statusBody.eventsLogPath = null -
   // legacy behavior. The path is surfaced through MCP get_run so an
   // external coding agent can `tail` the file in its own shell during
   // a long OD generation, instead of polling blindly and giving up.
@@ -942,8 +942,8 @@ export function createChatRunService({
    * happened to hydrate by id, so after a daemon restart (or after the terminal
    * TTL evicted a run) a project's newest terminal run can be missing while an
    * older one is present, and every consumer that folds the list into one
-   * status per project — `GET /api/runs?projectId`, the Home entry rail, the
-   * `od run list` CLI — then reports the wrong outcome. Hydration is scoped to
+   * status per project - `GET /api/runs?projectId`, the Home entry rail, the
+   * `od run list` CLI - then reports the wrong outcome. Hydration is scoped to
    * the one project being listed so listing never loads the whole run history.
    *
    * A run whose durable state can no longer be read (dropped, or the journal
@@ -999,7 +999,7 @@ export function createChatRunService({
       // Plan §3.A1 / spec §11.5. The applied plugin snapshot id pins
       // every prompt fragment and tool gate to a frozen view so replay
       // is byte-equal across plugin upgrades. Runs are in-memory in
-      // v1 — the id lives on the run object plus on the
+      // v1 - the id lives on the run object plus on the
       // `applied_plugin_snapshots` row (FK back via run_id).
       appliedPluginSnapshotId:
         typeof meta.appliedPluginSnapshotId === 'string' && meta.appliedPluginSnapshotId
@@ -1076,7 +1076,7 @@ export function createChatRunService({
       nativeSessionContinuePending: null,
       stdinOpen: false,
       // E-lite root-cause telemetry. `stdinBackpressure` records whether the
-      // prompt write to the child's stdin was queued (pipe buffer full — a
+      // prompt write to the child's stdin was queued (pipe buffer full - a
       // corroborating signal for a `stdin_write`-phase stall). `lastAgentActivityAt`
       // is the clock the inactivity watchdog keys off, read at finish to derive
       // `last_progress_age_ms`. (`approval_requested` and `tool_result_sent` are
@@ -1091,7 +1091,7 @@ export function createChatRunService({
       lastTodoSnapshot: null,
       truncatedMidTurn: false,
       // The turn's visible assistant text, capped, accumulated by the `send`
-      // sink in server.ts — the one point every text path reaches. finish()
+      // sink in server.ts - the one point every text path reaches. finish()
       // scans it ONCE, at the terminal choke point, to ask the canonical
       // `turnEndedByAskingUser` whether this turn handed the baton back to the
       // user; a `<question-form>` is only a form once its close tag lands, so
@@ -1186,8 +1186,8 @@ export function createChatRunService({
    * The dual of `associateLateRunProducedFile`: that one gives the turn the
    * bytes a 202 dispatch eventually produced, this one gives it the fact that
    * the dispatch produced none. Until it existed, `routes/media.ts` knew the
-   * failing task's `run_id` — it printed it in the `[media]` diagnostic and
-   * shipped it to analytics — and told the run nothing, so the turn's verdict
+   * failing task's `run_id` - it printed it in the `[media]` diagnostic and
+   * shipped it to analytics - and told the run nothing, so the turn's verdict
    * came from the agent's exit code alone and a turn whose only deliverable
    * failed still published `succeeded` with a green check.
    *
@@ -1195,7 +1195,7 @@ export function createChatRunService({
    * a re-entrant call (retry, replay, both catch paths firing) must not double
    * count. Bounded, because a batch fan-out can fail wholesale and this is
    * evidence, not a log. Recording is accepted whether or not the run is already
-   * terminal — a late failure still belongs in the run's record — but a run that
+   * terminal - a late failure still belongs in the run's record - but a run that
    * has already published its terminal frame keeps the verdict it published;
    * re-deriving completeness after the fact is a separate contract.
    */
@@ -1469,7 +1469,7 @@ export function createChatRunService({
 
   // Lazily open the per-run event log on first emit. The directory may
   // not exist yet; mkdir is recursive so it's safe to call repeatedly.
-  // Disk failures are best-effort — if we can't write, the run still
+  // Disk failures are best-effort - if we can't write, the run still
   // proceeds (SSE clients keep getting events from memory).
   const ensureLogStream = (run) => {
     if (!run.eventsLogPath) return null;
@@ -1477,8 +1477,8 @@ export function createChatRunService({
     // finish() has already closed + nulled this run's log stream. Re-opening it
     // here for a late event (async child-close diagnostic, trailing tool
     // callback, telemetry) would leak a file descriptor that nothing ever
-    // closes. We gate on the explicit `eventsLogClosed` flag — NOT on terminal
-    // status — so finish()'s own `end` emit (which runs while status is already
+    // closes. We gate on the explicit `eventsLogClosed` flag - NOT on terminal
+    // status - so finish()'s own `end` emit (which runs while status is already
     // terminal but before the stream is closed) can still open + write + close
     // the log for a run that had no prior events. Late events still reach
     // memory + SSE clients below; we just stop persisting them to the closed
@@ -1663,7 +1663,7 @@ export function createChatRunService({
     const authenticatedDoneProvesDelivery =
       status === 'succeeded' && run.authenticatedDoneConclusion === true;
     // A clarification turn writes its plan, asks its question, and exits 0. It
-    // did not stop with work undone — it handed the baton back, and the user's
+    // did not stop with work undone - it handed the baton back, and the user's
     // answer is the continuation. Judging it on the TodoWrite snapshot alone
     // asserted a termination cause nothing had caused: run
     // 441ff961-bd66-4c4a-91e7-812f1d489668 ended `succeeded` / code 0 / no error
@@ -1680,7 +1680,7 @@ export function createChatRunService({
     // and a run that apologised for a failed generation reached `succeeded` with
     // a green check because the marker vetoed a `cancelled` todo. A failure the
     // daemon watched happen is not something the turn's own narration may
-    // overrule — nor may it be read out of that narration (the apology copy is
+    // overrule - nor may it be read out of that narration (the apology copy is
     // product copy, changed at will). Gated on `succeeded` for the same reason
     // the two clauses above are: a run the user stopped is stopped, and one that
     // already failed carries its verdict in `status`.
@@ -1698,8 +1698,8 @@ export function createChatRunService({
     finalizeTerminalLocally(run, status, terminalAt);
     // Release run-scoped resources the starter registered (e.g. the minted
     // tool-token grant + agent event-sink entries). This runs on EVERY
-    // terminal path — including a startup throw that never reached the child
-    // lifecycle cleanup — so a failed run can never leave its capability token
+    // terminal path - including a startup throw that never reached the child
+    // lifecycle cleanup - so a failed run can never leave its capability token
     // live for the token TTL. Best-effort + one-shot.
     if (typeof run.onFinalize === 'function') {
       const finalize = run.onFinalize;
@@ -1733,7 +1733,7 @@ export function createChatRunService({
       // The verdict, not just the classification: what the user should do, and
       // whether re-running can help. The chat picks the error card's button off
       // this frame, so leaving them out forced it to re-derive retryability from
-      // the detail NAME — a lookup table that disagreed with the daemon on
+      // the detail NAME - a lookup table that disagreed with the daemon on
       // forty-odd causes it had already ruled futile.
       failureAction: run.failureAction ?? null,
       retryable: run.retryable ?? null,
@@ -1829,7 +1829,7 @@ export function createChatRunService({
    * Development/diagnostics only, armed exclusively by `OD_REPLAY_EVENTS`.
    * The invariant it exists to hold: **everything downstream of the agent
    * child process must be the real product path.** So the replay substitutes
-   * only the *source* of the events — the agent subprocess — and then hands
+   * only the *source* of the events - the agent subprocess - and then hands
    * each recorded record to the very same `emit()` / `finish()` the live
    * spawn path uses. Persistence, the SSE fan-out to `run.clients`, run
    * analytics, terminal reconciliation and the web's consumption of
@@ -1936,8 +1936,8 @@ export function createChatRunService({
     // Arming the directory is NOT by itself a decision to replay. A shared
     // test runtime points `OD_REPLAY_DIR` at a scratch folder for its whole
     // lifetime, and only the one spec that wants a deterministic turn drops a
-    // `.selected` pointer in it. Every other Run in that runtime — and every
-    // Run in production, where nothing is armed — must reach the real agent.
+    // `.selected` pointer in it. Every other Run in that runtime - and every
+    // Run in production, where nothing is armed - must reach the real agent.
     // Failing here instead of falling through would hijack them all.
     const replaySource = (process.env.OD_REPLAY_EVENTS || process.env.OD_REPLAY_DIR)
       ? resolveReplaySource()
@@ -2169,7 +2169,7 @@ export function createChatRunService({
   const killChild = (run, signal) => {
     if (signalChildProcess(run.child, run.processGroupId, signal)) return true;
     // The direct child has already exited, but its process group can still hold
-    // survivors — grandchildren that inherited its stdio outlive it. Reap them by
+    // survivors - grandchildren that inherited its stdio outlive it. Reap them by
     // pgid so cancel/shutdown don't leave orphans (the same class the retry
     // teardown reaps). Safe here: every killChild caller is a terminating path
     // (cancel / shutdownActive) that never re-spawns into this pgid, so there is
@@ -2195,7 +2195,7 @@ export function createChatRunService({
     try {
       process.kill(-processGroupId, signal);
     } catch {
-      // ESRCH (group already gone) or EPERM — nothing more we can do; the group
+      // ESRCH (group already gone) or EPERM - nothing more we can do; the group
       // signal was still the right action to take.
     }
     return true;
@@ -2407,7 +2407,7 @@ export function createChatRunService({
   };
 
   // Reap a torn-down attempt's whole process group: SIGTERM now, then SIGKILL any
-  // survivors after the grace window. Both target the CAPTURED pgid passed in —
+  // survivors after the grace window. Both target the CAPTURED pgid passed in -
   // callers must snapshot run.processGroupId before a same-run retry overwrites
   // it, so the escalation can never hit the next attempt's group (#5202). Returns
   // whether the group path handled it (so callers can fall back on win32).
@@ -2473,7 +2473,7 @@ export function createChatRunService({
     }
     if (write.backpressure) run.stdinBackpressure = true;
     run.updatedAt = Date.now();
-    // Observability only — the delivered text is durable as a `role: 'user'`
+    // Observability only - the delivered text is durable as a `role: 'user'`
     // message in the conversation, written by the route.
     emit(run, 'steering_message', {
       runId: run.id,
@@ -2589,7 +2589,7 @@ export function createChatRunService({
   // event. Used by callers that prepared a run optimistically (created the
   // record before some external precondition was checked) and need to undo
   // the create without surfacing the run via `/api/runs`. Only valid before
-  // the run reaches a terminal status — terminal runs use scheduleCleanup
+  // the run reaches a terminal status - terminal runs use scheduleCleanup
   // and would already have notified any subscribers.
   const drop = (run) => {
     if (!run) return;
@@ -2626,7 +2626,7 @@ export function createChatRunService({
     }
     run.clients.clear();
     // Resolve any pending waiters with a synthetic "canceled" status so
-    // they unblock instead of hanging forever — the run is being dropped
+    // they unblock instead of hanging forever - the run is being dropped
     // because nothing will ever start.
     run.status = 'canceled';
     run.updatedAt = Date.now();

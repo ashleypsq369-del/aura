@@ -2,15 +2,15 @@
 //
 // WHY A LOOP AND NOT JUST BOOT. Both passes were wired to daemon startup only,
 // which quietly makes their correctness depend on how often the daemon
-// restarts. A capture interrupted mid-turn stays `pending` — a card stuck in a
-// state nothing will settle — until the next restart, and a store that only
+// restarts. A capture interrupted mid-turn stays `pending` - a card stuck in a
+// state nothing will settle - until the next restart, and a store that only
 // ever grows spends the quota that fails FUTURE captures on bytes nothing
 // references. A daemon that runs for a week is exactly the daemon where both
 // matter most, and it is the one that never ran either pass again.
 //
 // ONE DEFINITION OF "A PASS". The boot pass and the timer tick call the same
 // function on purpose. Two copies would drift, and the drift would only ever
-// show up on long-running daemons — the case with the least observation.
+// show up on long-running daemons - the case with the least observation.
 
 import type Database from 'better-sqlite3';
 
@@ -38,7 +38,7 @@ export interface ChatArtifactMaintenancePass {
 }
 
 /**
- * Reconcile first, then sweep — never the other way round.
+ * Reconcile first, then sweep - never the other way round.
  *
  * The sweep treats a `pending` row as live, because its bytes may be
  * mid-install. Running it before the reconciler has classified those rows means
@@ -72,7 +72,7 @@ export interface ChatArtifactMaintenanceOptions extends ChatArtifactMaintenanceD
    *
    * OPEN DECISION: `specs/current/chat-artifact-versioning-design.md` §5.3 and
    * §7.2 both ask for a periodic pass and neither names a period. Until that is
-   * ruled on, the default is off and the only way to turn it on is explicit —
+   * ruled on, the default is off and the only way to turn it on is explicit -
    * see `resolveChatArtifactMaintenanceIntervalMs`.
    */
   intervalMs: number;
@@ -100,8 +100,8 @@ export interface ChatArtifactMaintenanceHandle {
  * The env knob, and the reason there is no default period.
  *
  * A maintenance cadence is an operations decision with a real cost on both
- * sides — too slow leaves stuck cards and dead bytes around for hours, too fast
- * walks the whole blob directory on someone's laptop — and the design document
+ * sides - too slow leaves stuck cards and dead bytes around for hours, too fast
+ * walks the whole blob directory on someone's laptop - and the design document
  * does not name one. Inventing a number here would look exactly like a decision
  * that had been made. `0` (the default) keeps the daemon on its current
  * boot-only behaviour.
@@ -134,7 +134,7 @@ export function startChatArtifactMaintenance(
 
   const runPass = (): Promise<void> => {
     // REENTRANCY: skip, never queue. A pass is idempotent and re-scans the same
-    // rows from scratch, so a dropped tick loses nothing — the next one sees
+    // rows from scratch, so a dropped tick loses nothing - the next one sees
     // exactly the same work. Queueing would let a slow disk build a backlog
     // that never drains, and two concurrent passes would race each other over
     // the same grace-window decisions: both can conclude the same orphan is
@@ -201,7 +201,7 @@ export function startChatArtifactMaintenance(
     get overlappedTicks() { return overlappedTicks; },
     // SHUTDOWN, part 2: disarm synchronously so no new pass can start, then
     // drain. `closeDatabase()` during a live pass is a hard SQLite error, not a
-    // degraded card, so the drain is the contract — not a courtesy.
+    // degraded card, so the drain is the contract - not a courtesy.
     stop: async () => {
       stopped = true;
       clearInterval(timer);

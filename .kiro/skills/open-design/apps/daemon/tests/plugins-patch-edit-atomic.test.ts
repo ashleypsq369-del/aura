@@ -1,4 +1,4 @@
-// Plan §3.Z1 — patch-edit atomic file writes.
+// Plan §3.Z1 - patch-edit atomic file writes.
 //
 // Asserts the safety contract: a patch apply that crashes mid-
 // write must NOT leave the source file truncated. The applier
@@ -29,7 +29,7 @@ afterEach(async () => {
   await rm(cwd, { recursive: true, force: true });
 });
 
-describe('applyPatchForStep — atomic file writes', () => {
+describe('applyPatchForStep - atomic file writes', () => {
   it('does NOT leave a stray .tmp blob beside the target after a successful edit', async () => {
     await writeFile(path.join(cwd, 'x.ts'), 'line one\nline two\nline three\n');
     const diff = `--- a/x.ts
@@ -64,7 +64,7 @@ describe('applyPatchForStep — atomic file writes', () => {
     const result = await applyPatchForStep({ cwd, stepId: 'rewrite-x', diff: stale });
     expect(result.status).toBe('failed');
     expect(result.reason).toMatch(/context mismatch/);
-    // The original must be byte-equal — no atomic-write artefact
+    // The original must be byte-equal - no atomic-write artefact
     // partially overwrote it.
     expect(await readFile(path.join(cwd, 'x.ts'), 'utf8')).toBe(original);
     // No .tmp leftover from the rejected attempt.

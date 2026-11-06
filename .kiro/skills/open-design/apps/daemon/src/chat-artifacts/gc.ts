@@ -2,7 +2,7 @@
 //
 // WHY MARK-SWEEP AND NOT A REFERENCE COUNTER: a counter is a second truth
 // source. It drifts on every crash between the row delete and the decrement,
-// and a drifted counter deletes bytes a message still points at — silently
+// and a drifted counter deletes bytes a message still points at - silently
 // destroying exactly the history this whole feature exists to preserve. The
 // real reference set is recomputable from the `message_artifacts` foreign keys,
 // so it is recomputed. A counter would only ever be a cache.

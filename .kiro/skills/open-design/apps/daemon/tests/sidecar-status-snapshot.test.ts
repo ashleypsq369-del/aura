@@ -24,7 +24,7 @@ import { withCurrentDesktopAuthGate } from '../src/sidecar/server.js';
  */
 describe('withCurrentDesktopAuthGate', () => {
   // The startup snapshot mirrors what `startDaemonSidecar` builds at
-  // boot — see apps/daemon/src/sidecar/server.ts. Field values other
+  // boot - see apps/daemon/src/sidecar/server.ts. Field values other
   // than `desktopAuthGateActive` are arbitrary; the helper passes
   // them through verbatim, so we use stable fixtures.
   const baseSnapshot: DaemonStatusSnapshot = {
@@ -62,7 +62,7 @@ describe('withCurrentDesktopAuthGate', () => {
 
   it('keeps reporting gate active after the secret is cleared (sticky once-set)', () => {
     // The daemon uses a sticky flag so production code can never
-    // silently relax the gate — see server.ts setDesktopAuthSecret.
+    // silently relax the gate - see server.ts setDesktopAuthSecret.
     // The STATUS snapshot must reflect that stickiness so tools-dev
     // does NOT trigger an unnecessary restart after a transient
     // null-clear (e.g., between test runs in the same process).

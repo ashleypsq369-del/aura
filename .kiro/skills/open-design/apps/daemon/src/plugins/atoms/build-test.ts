@@ -1,4 +1,4 @@
-// Phase 7 entry slice / spec §10 / §22.4 — build-test atom runner.
+// Phase 7 entry slice / spec §10 / §22.4 - build-test atom runner.
 //
 // Spec-side atom contract lives in `plugins/_official/atoms/build-test/SKILL.md`.
 // This module is the daemon-side shell-out implementation: given a
@@ -7,7 +7,7 @@
 // signals the devloop's `until` evaluator reads
 // (`build.passing`, `tests.passing`, plus the legacy `critique.score`).
 //
-// The runner is intentionally framework-agnostic — it prefers the
+// The runner is intentionally framework-agnostic - it prefers the
 // declared override, falls back to scripts inside `package.json`,
 // and otherwise emits a `tests: 'skipped'` outcome with an explicit
 // reason so the agent doesn't claim success on a project it never
@@ -45,7 +45,7 @@ export interface BuildTestRunOptions {
   // caller is responsible for staging the imported repo here.
   cwd: string;
   // Explicit overrides (highest priority). Either OR both can be
-  // null — the atom skips the matching half cleanly.
+  // null - the atom skips the matching half cleanly.
   buildCommand?: string | null;
   testCommand?:  string | null;
   // Per-command timeout (ms). Default 5 min.
@@ -116,10 +116,10 @@ export async function writeBuildTestReport(args: {
   };
   await fsp.writeFile(jsonPath, JSON.stringify(json, null, 2) + '\n', 'utf8');
   const logBody = [
-    `# build (${args.report.build.status}) — ${args.report.build.command || '<skipped>'}`,
+    `# build (${args.report.build.status}) - ${args.report.build.command || '<skipped>'}`,
     args.report.build.log,
     '',
-    `# tests (${args.report.tests.status}) — ${args.report.tests.command || '<skipped>'}`,
+    `# tests (${args.report.tests.status}) - ${args.report.tests.command || '<skipped>'}`,
     args.report.tests.log,
   ].join('\n');
   await fsp.writeFile(logPath, logBody, 'utf8');

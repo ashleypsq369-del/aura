@@ -1,4 +1,4 @@
-// Spec §23.3.3 / Plan §3.O1 — bundled-scenario pipeline fallback,
+// Spec §23.3.3 / Plan §3.O1 - bundled-scenario pipeline fallback,
 // driven through the live applyPlugin path with the daemon
 // registry view.
 

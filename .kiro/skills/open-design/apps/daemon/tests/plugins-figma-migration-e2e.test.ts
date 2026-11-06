@@ -1,4 +1,4 @@
-// Plan §3.T2 / spec §1 / §10 / §21.3.1 — figma-migration pipeline e2e.
+// Plan §3.T2 / spec §1 / §10 / §21.3.1 - figma-migration pipeline e2e.
 //
 // Walks every Phase 6 atom impl in sequence on a Figma fixture
 // without going to the network:
@@ -77,7 +77,7 @@ afterEach(async () => {
   await rm(cwd, { recursive: true, force: true });
 });
 
-describe('figma-migration pipeline — full atom chain', () => {
+describe('figma-migration pipeline - full atom chain', () => {
   it('runs figma-extract \u2192 token-map \u2192 diff-review \u2192 handoff end-to-end', async () => {
     // 1. figma-extract.
     const fetchFn = stubFetch({ body: figmaFixture });

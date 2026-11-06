@@ -1,9 +1,9 @@
-// media-adapters — pure, isomorphic model-capability + request-mapping layer.
+// media-adapters - pure, isomorphic model-capability + request-mapping layer.
 //
 // This module is package-shaped (Phase 1 lives in open-design; later extracted
 // to a public, generic npm package consumed by both open-design and
 // aihubmix-video). It contains NO transport (fetch/auth/poll/storage) and NO
-// proprietary model data baked into the interpreter — the model capability data
+// proprietary model data baked into the interpreter - the model capability data
 // is INJECTED (seeded now from a const, later fetched from AIHubMix's
 // /api/v1/models + contract.json).
 //
@@ -15,14 +15,14 @@
  * Request-shape family. Determined from the *resolved* upstream model name
  * (i2v variant when a reference image is present), mirroring aihubmix-video's
  * create-task.ts branching.
- *   • `seedance` — multimodal `content[]` array (ByteDance Ark).
- *   • `wan` — Alibaba DashScope/wanx wire: `{ input:{ prompt, media[] }, parameters:{ resolution, duration, … } }`.
+ *   • `seedance` - multimodal `content[]` array (ByteDance Ark).
+ *   • `wan` - Alibaba DashScope/wanx wire: `{ input:{ prompt, media[] }, parameters:{ resolution, duration, … } }`.
  *     Covers wan* and happyhorse* (both proxied to DashScope by the gateway).
- *   • `veo` — Google Veo via the Gemini `predictLongRunning` link. Flat JSON, but
+ *   • `veo` - Google Veo via the Gemini `predictLongRunning` link. Flat JSON, but
  *     `seconds` MUST be a NUMBER and the only size hint is `size` (no `aspect_ratio`).
  *     Reference image rides as `input_reference`. Verified against a working
  *     veo-3.1-lite-generate-preview call.
- *   • `generic` — flat JSON `{ prompt, seconds (string), input_reference }` (sora/…).
+ *   • `generic` - flat JSON `{ prompt, seconds (string), input_reference }` (sora/…).
  */
 export type MediaFamily = 'seedance' | 'wan' | 'veo' | 'generic';
 
@@ -99,7 +99,7 @@ export interface VideoBuildInput {
 
 /**
  * Result of building a request. Transport-free: the caller attaches auth +
- * base URL and performs the fetch. `body` is a plain object — the caller
+ * base URL and performs the fetch. `body` is a plain object - the caller
  * JSON.stringify's it (all current families are JSON; no multipart).
  */
 export interface BuiltVideoRequest {

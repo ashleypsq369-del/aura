@@ -78,6 +78,6 @@ test('scorePalette returns all candidates sorted best-first', opts, async () => 
 
 test('predictPrimary prefers chromatic over white/black', opts, async () => {
   const result = await predictPrimary(MINIMAL_EXTRACTION as any);
-  // #ff5416 is the only chromatic color — model should prefer it
+  // #ff5416 is the only chromatic color - model should prefer it
   assert.equal(result!.hex, '#ff5416', 'should pick the chromatic brand color');
 });

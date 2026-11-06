@@ -73,7 +73,7 @@ export function registerTerminalRoutes(app: Express, ctx: RegisterTerminalRoutes
       res.json({ terminal: terminals.statusBody(session) });
     } catch (err: any) {
       // The most common failure is a missing/uncompiled node-pty native
-      // addon — surface it as a 500 with the underlying message so the
+      // addon - surface it as a 500 with the underlying message so the
       // operator knows to re-run `pnpm install`.
       sendApiError(res, 500, 'TERMINAL_SPAWN_FAILED', err instanceof Error ? err.message : String(err));
     }

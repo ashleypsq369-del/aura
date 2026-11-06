@@ -11,7 +11,7 @@
 //     `TranscriptExportLockedError` to `409 CONFLICT` for the caller
 //     (mirrors finalize's own lockfile handling),
 //   - no on-disk write of the synthesised body (the caller seeds the
-//     composer with it — disk storage is the next conversation's
+//     composer with it - disk storage is the next conversation's
 //     responsibility),
 //   - no design system or artifact loading (the issue body and lefarcen's
 //     2026-05-12 invite scoped this slice to transcript-only synthesis;
@@ -61,7 +61,7 @@ export class EmptyTranscriptError extends Error {
 
 export interface HandoffOptions {
   /**
-   * The conversation to summarize. Handoff is conversation-scoped — only
+   * The conversation to summarize. Handoff is conversation-scoped - only
    * this conversation's transcript is exported and synthesized.
    */
   conversationId: string;
@@ -233,7 +233,7 @@ export async function synthesizeHandoffPrompt(
     } catch (err: unknown) {
       // A timeout (or caller cancellation) that lands mid-body aborts the
       // shared signal, which rejects this read with an AbortError. Re-throw
-      // it as-is — mirroring the call-phase catch above — so the route maps
+      // it as-is - mirroring the call-phase catch above - so the route maps
       // it to the intended `503` "handoff timed out" rather than a
       // misleading `502` "non-JSON body".
       const errName =

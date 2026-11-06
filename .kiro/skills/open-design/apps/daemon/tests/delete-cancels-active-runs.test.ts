@@ -1,6 +1,6 @@
 // Regression for #5468: deleting a conversation (or project) must terminate
 // any still-active agent run it owns. Before the fix the DELETE handler only
-// removed the row, leaving the run's CLI subprocess alive — it kept burning
+// removed the row, leaving the run's CLI subprocess alive - it kept burning
 // provider quota, stayed `running` in GET /api/runs with no UI trace, and for
 // a project delete kept writing into a directory that had been rm'd out from
 // under it.

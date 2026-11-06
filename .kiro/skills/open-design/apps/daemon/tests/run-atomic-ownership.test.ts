@@ -1,6 +1,6 @@
 // #6418 acceptance gate: the run creation must atomically claim the assistant
 // message. Two concurrent runs sharing an assistantMessageId can never both
-// claim it — exactly one succeeds, the other is rejected with RUN_IN_PROGRESS
+// claim it - exactly one succeeds, the other is rejected with RUN_IN_PROGRESS
 // and its run is dropped (no child process spawned).
 
 import type { Server } from 'node:http';
@@ -123,7 +123,7 @@ setInterval(() => {}, 1000);
         const raw = await readFile(invocationPath, 'utf8');
         if (raw.trim()) return raw;
       } catch {
-        // file not written yet — the daemon spawns the child asynchronously
+        // file not written yet - the daemon spawns the child asynchronously
       }
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
@@ -182,7 +182,7 @@ setInterval(() => {}, 1000);
     });
     expect(r1.status).toBe(202);
 
-    // A stale whole-message PUT omits runStatus — must not null the column.
+    // A stale whole-message PUT omits runStatus - must not null the column.
     const statusless = await fetch(
       `${url}/api/projects/${projectId}/conversations/${conversationId}/messages/${assistantMessageId}`,
       {

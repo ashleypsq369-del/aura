@@ -12,11 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.9.0] - 2026-05-29
 
-🎉 **310 PRs · 88 contributors · 7 days** — Meet the **install-and-create release**. No more API-key scavenger hunts. No more asking teammates to install three different CLIs before their first prompt. **OpenDesign AMR** is now built into the app: sign in once, pick a model, and start building. Around that zero-config first run, 0.9.0 brings a bigger agent bench, faster model picking, a more discoverable plugin marketplace, richer review workflows, smoother Studio tools, and easier installs across Windows, macOS, and Linux. 🚀
+🎉 **310 PRs · 88 contributors · 7 days** - Meet the **install-and-create release**. No more API-key scavenger hunts. No more asking teammates to install three different CLIs before their first prompt. **OpenDesign AMR** is now built into the app: sign in once, pick a model, and start building. Around that zero-config first run, 0.9.0 brings a bigger agent bench, faster model picking, a more discoverable plugin marketplace, richer review workflows, smoother Studio tools, and easier installs across Windows, macOS, and Linux. 🚀
 
 ### Highlights
 
-- 🤖 **OpenDesign AMR — official AI, one click from a fresh install.** The old first-run tax was brutal: install a CLI, find an API key, paste secrets, test auth, debug the shell, then maybe start designing. 0.9.0 cuts that down to the thing users actually wanted: open the app, sign in to AMR, pick a model, and go. Onboarding leads with AMR, the desktop keeps sign-in visible, live model discovery keeps choices fresh, wallet/account states are handled in the UI, image attachments work, and the `vela` runtime is bundled in the installer. (#2355, #2979, #2980, #3012, #3019, #3048, #3073, #3076, #3088, #3092, #3094, #3097, #3099, #3117, #3127, #3158, #3198, #3226) Thanks @lefarcen, @nettee, @mrcfps, @pftom, @jinmeihong0201-gif, @Caprika.
+- 🤖 **OpenDesign AMR - official AI, one click from a fresh install.** The old first-run tax was brutal: install a CLI, find an API key, paste secrets, test auth, debug the shell, then maybe start designing. 0.9.0 cuts that down to the thing users actually wanted: open the app, sign in to AMR, pick a model, and go. Onboarding leads with AMR, the desktop keeps sign-in visible, live model discovery keeps choices fresh, wallet/account states are handled in the UI, image attachments work, and the `vela` runtime is bundled in the installer. (#2355, #2979, #2980, #3012, #3019, #3048, #3073, #3076, #3088, #3092, #3094, #3097, #3099, #3117, #3127, #3158, #3198, #3226) Thanks @lefarcen, @nettee, @mrcfps, @pftom, @jinmeihong0201-gif, @Caprika.
 - 🆕 **The agent bench gets much bigger.** Aider, Trae CLI, Antigravity, and DeepSeek Reasonix all join the picker, giving builders more real local-agent paths instead of a single blessed workflow. Aider gets first-class branding, Trae runs over ACP in yolo mode, and the new adapters make OpenDesign feel less like one agent integration and more like the place where agents come to work. (#1970, #2729, #2856, #3157, #2952) Thanks @mrbeandev, @JasonYang0104, @lefarcen, @Bernardxu123.
 - 🔎 **Model picking stops feeling like scrolling a phone book.** Search now cuts through long model lists, and shared BYOK catalogs keep Settings and the inline switcher aligned so switching models feels fast instead of fiddly. (#3278) Thanks @AmyShang-alt.
 - 💬 **Keep talking while the model is still working.** Queue chat sends mid-stream, then let OpenDesign continue the conversation the moment the current turn finishes. Studio and Draw now follow the same flow, so capturing an idea does not depend on waiting for the previous response to end. (#2870, #3270, #1961) Thanks @zoeforfun, @lefarcen, @leno23.
@@ -136,35 +136,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.0] - 2026-05-20
 
-The rebuilt-core release: **everything is a plugin**, **headless by default**, **plugins create plugins**. OpenDesign's research-preview architecture has been replaced with a small, boring engine plus a plugin surface — design systems, slices, prototypes, exports, and Figma itself all live in plugins now. The desktop app is a thin wrapper around the OD CLI, so the same engine runs in Claude Code, OpenClaw, Hermes Agent, and chat bots in Lark / Discord / Slack. **Critique Theater** matures through **Phase 16** (rollout ratchet, conformance API, 9 Prometheus metrics, Grafana dashboard, M0 dark-launch by default). **149 design systems** now ship with structured `tokens.css` + components manifests across 60+ new brand fixtures. **Italian (it) locale** + **CJK font fallback**. New media providers: **Leonardo.ai**, **ElevenLabs**, **SenseAudio**. **Packaged auto-update** lands on both **macOS and Windows**, battle-hardened through the preview cycle. Plus a **top-to-bottom visual refresh**, **Quick-brief discovery overhaul**, **PostHog v2 analytics schema**, **manual edit UX overhaul** (focus mode, uploads, remove-element patch), **custom CLI agent profiles**, and **HTML Anything** landing page. 305 merged PRs by 75 contributors since 0.7.0.
+The rebuilt-core release: **everything is a plugin**, **headless by default**, **plugins create plugins**. OpenDesign's research-preview architecture has been replaced with a small, boring engine plus a plugin surface - design systems, slices, prototypes, exports, and Figma itself all live in plugins now. The desktop app is a thin wrapper around the OD CLI, so the same engine runs in Claude Code, OpenClaw, Hermes Agent, and chat bots in Lark / Discord / Slack. **Critique Theater** matures through **Phase 16** (rollout ratchet, conformance API, 9 Prometheus metrics, Grafana dashboard, M0 dark-launch by default). **149 design systems** now ship with structured `tokens.css` + components manifests across 60+ new brand fixtures. **Italian (it) locale** + **CJK font fallback**. New media providers: **Leonardo.ai**, **ElevenLabs**, **SenseAudio**. **Packaged auto-update** lands on both **macOS and Windows**, battle-hardened through the preview cycle. Plus a **top-to-bottom visual refresh**, **Quick-brief discovery overhaul**, **PostHog v2 analytics schema**, **manual edit UX overhaul** (focus mode, uploads, remove-element patch), **custom CLI agent profiles**, and **HTML Anything** landing page. 305 merged PRs by 75 contributors since 0.7.0.
 
 ### Added
 
 #### Plugin engine, registry & publishing
-- **Plugin engine rebuild** with `packages/plugin-runtime`, `packages/registry-protocol`, and `packages/host` — the engine surfaces the plugin lifecycle through a small, neutral API so design systems, slices, prototypes, exports, and even Figma itself can live as plugins.
+- **Plugin engine rebuild** with `packages/plugin-runtime`, `packages/registry-protocol`, and `packages/host` - the engine surfaces the plugin lifecycle through a small, neutral API so design systems, slices, prototypes, exports, and even Figma itself can live as plugins.
 - **Plugin registry detail drawer** with trust badges and marketplace metadata. ([#2087])
 - **GitHub rate-limit fallback for marketplace plugins** keeps install / refresh flows reliable when GitHub API is throttled. ([#2064])
 - **Plugin Publish-repo flow creates the author's repo correctly.** ([#2332], [#2363])
 - **CLI plugin publish reads manifest version** when the stored row is the `0.0.0` sentinel. ([#1903])
-- **Block raw publish CLIs from the authoring summary** — keep agents on the OD publish path. ([#2380])
+- **Block raw publish CLIs from the authoring summary** - keep agents on the OD publish path. ([#2380])
 - **Demote Plugins + Integrations to the nav rail footer** so primary surface stays focused. ([#1806], [#2360], [#2397])
 
-#### Critique Theater (Phases 9 – 16)
-- **Phase 9** — drop-in mount wrapper, native i18n for `de` / `ja` / `ko` / `zh-TW`. ([#1315])
-- **Phase 10** — daemon adapter conformance lab + degraded registry. ([#1316])
-- **Phase 11** — Playwright stage suite (happy path, interrupt, 3 viewports, a11y). ([#1317], [#1483])
-- **Phase 12** — 9 Prometheus metrics + 6 log events + OTel span + Grafana dashboard. ([#1485])
-- **Phase 13** — reducer p99 benchmark + surface coverage walker. ([#1318])
-- **Phase 15** — rollout resolver + Settings toggle hook. ([#1320])
-- **Phase 16** — M-phase rollout ratchet + `/api/critique/conformance`. ([#1499])
+#### Critique Theater (Phases 9 - 16)
+- **Phase 9** - drop-in mount wrapper, native i18n for `de` / `ja` / `ko` / `zh-TW`. ([#1315])
+- **Phase 10** - daemon adapter conformance lab + degraded registry. ([#1316])
+- **Phase 11** - Playwright stage suite (happy path, interrupt, 3 viewports, a11y). ([#1317], [#1483])
+- **Phase 12** - 9 Prometheus metrics + 6 log events + OTel span + Grafana dashboard. ([#1485])
+- **Phase 13** - reducer p99 benchmark + surface coverage walker. ([#1318])
+- **Phase 15** - rollout resolver + Settings toggle hook. ([#1320])
+- **Phase 16** - M-phase rollout ratchet + `/api/critique/conformance`. ([#1499])
 - **Wireup with M0 dark-launch by default.** ([#1338])
 - **Settings toggle** with dedicated section + i18n keys across 6 locales. ([#1484])
 
 #### Design systems & tokens
 - **Token channel default-on (PR-D)** so the new fixture pipeline is the default surface. ([#1544])
 - **Structured `tokens.css` for 60+ new brands** across AI, devtool, SaaS, fintech, docs, consumer, hardware, cultural categories (Apple, Stripe, Airbnb, Vercel, Notion, Linear, GitHub, Figma, Slack, Discord, OpenAI, Shopify, Spotify, Uber, Cursor, and many more). ([#1652], [#1794], [#1841], [#2023], [#2028], [#2029], [#2033])
-- **Token fixture catalog** — 20 brand + 20 product + remaining style fixtures, component-fixture coverage report. ([#2037], [#2040], [#2043], [#2049])
-- **Component manifests** — extract + consume manifests for design systems. ([#2051])
+- **Token fixture catalog** - 20 brand + 20 product + remaining style fixtures, component-fixture coverage report. ([#2037], [#2040], [#2043], [#2049])
+- **Component manifests** - extract + consume manifests for design systems. ([#2051])
 - **Import design-system projects** via the discovery flow.
 - **Perplexity design system.** ([#1747])
 
@@ -177,7 +177,7 @@ The rebuilt-core release: **everything is a plugin**, **headless by default**, *
 - **Cursor Agent live model id parsing** + auth diagnostics. ([#1538], [#2228])
 
 #### Web UI
-- **Manual edit UX overhaul** — focus mode, inline uploads, remove-element patch. ([#1516])
+- **Manual edit UX overhaul** - focus mode, inline uploads, remove-element patch. ([#1516])
 - **Manual edit inspector.** ([#1448])
 - **Tweaks toolbar bound to the artifact panel** (toggle visibility from the panel chrome).
 - **Custom select primitive** for cleaner dropdowns.
@@ -196,17 +196,17 @@ The rebuilt-core release: **everything is a plugin**, **headless by default**, *
 
 #### Desktop & packaging
 - **Packaged auto-update for both macOS and Windows.** ([#2362], [#2270], [#2403])
-- **Updater hardening** through the preview cycle — release validation, deferred installer on Windows, applied-state clearing, download / install handoff hardening, smoke-recovery. ([#2565], [#2575], [#2592], [#2595], [#2677], [#2687], [#2700])
-- **Desktop updater UI flow** — new in-app updater popup.
+- **Updater hardening** through the preview cycle - release validation, deferred installer on Windows, applied-state clearing, download / install handoff hardening, smoke-recovery. ([#2565], [#2575], [#2592], [#2595], [#2677], [#2687], [#2700])
+- **Desktop updater UI flow** - new in-app updater popup.
 - **Packaged update apply observations** captured for telemetry / debugging. ([#2429])
 - **Prerelease + preview package identity** so beta installs don't collide with stable. ([#2437])
 - **macOS Dock icon stays put** when desktop-pet window opens. ([#2413])
-- **Refresh OpenDesign app visuals** — new app icons, logo, brand glyphs. ([#2436])
+- **Refresh OpenDesign app visuals** - new app icons, logo, brand glyphs. ([#2436])
 - **Linux packaged client parity smoke coverage.**
 - **Ensure node binary dir is on PATH for agent sub-processes on Windows.** ([#1989])
 
 #### Internationalization
-- **Italian (it) locale** — full UI translation, brings supported languages to 19. ([#1323])
+- **Italian (it) locale** - full UI translation, brings supported languages to 19. ([#1323])
 - **CJK font fallback** for Chinese / Japanese / Korean. ([#2227])
 - **Refresh + polish French UI locale.**
 - **Translate template platform selection + Companion surfaces to Chinese.** ([#1491])
@@ -230,7 +230,7 @@ The rebuilt-core release: **everything is a plugin**, **headless by default**, *
 
 - **Critique Theater dark-launched at M0 by default**, gated through the new rollout ratchet so phases can be promoted independently.
 - **Plugin trust badges unified** across registry surfaces.
-- Plugins and Integrations moved to the nav rail footer ([#1806], [#2360], [#2397]) — keep primary surface focused.
+- Plugins and Integrations moved to the nav rail footer ([#1806], [#2360], [#2397]) - keep primary surface focused.
 
 ### Fixed
 
@@ -291,7 +291,7 @@ The rebuilt-core release: **everything is a plugin**, **headless by default**, *
 - Sync Windows troubleshooting link across locale READMEs.
 - Refresh contributors wall + GitHub metrics SVG.
 - Clarify Intel Mac ZIP packaging support (includes the Monterey verified path and the Finder `PATH` caveat for packaged CLI detection). (Fixes [#327])
-- README inventory badges sync — skills 31 → 131, design-systems 72 → 149. ([#1899])
+- README inventory badges sync - skills 31 → 131, design-systems 72 → 149. ([#1899])
 - 0.8.0-preview banner + Discussion #1727 pointer. ([#1781])
 - Active 0.8.0 contributors point at `main`. ([#1846])
 
@@ -313,15 +313,15 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
 ### Added
 
 #### Critique Theater
-- **Phase 7 — web client state machine.** Reducer plus `useCritiqueStream` / `useCritiqueReplay` hooks so the critique UI replays cleanly and reconnects mid-run. ([#1307])
-- **Phase 6.2 — daemon artifact extraction + endpoint.** Critique-tagged artifacts are extracted server-side and exposed via a dedicated endpoint. ([#1085])
+- **Phase 7 - web client state machine.** Reducer plus `useCritiqueStream` / `useCritiqueReplay` hooks so the critique UI replays cleanly and reconnects mid-run. ([#1307])
+- **Phase 6.2 - daemon artifact extraction + endpoint.** Critique-tagged artifacts are extracted server-side and exposed via a dedicated endpoint. ([#1085])
 
 #### Web / UI
-- **Designs tab redesign** — cards with covers, tags, overflow menu, and multi-select. ([#1161])
-- **In-context comment thread for the artifact preview** — comment directly on a preview without leaving the workspace. ([#1276])
-- **Unified Media tab** — Image / Video / Audio entries consolidated into a single tab. ([#1167])
-- **Tweaks palette popover with HSL hue-shift recoloring** — adjust hue/saturation/lightness inline. ([#1292])
-- **Responsive preview + design handoff outputs** — tablet/mobile preview auto-fit, 2025–2026 responsive viewport matrix, screen-file-first export policy, DESIGN-HANDOFF / DESIGN-MANIFEST exports for coding-tool implementation. ([#1224])
+- **Designs tab redesign** - cards with covers, tags, overflow menu, and multi-select. ([#1161])
+- **In-context comment thread for the artifact preview** - comment directly on a preview without leaving the workspace. ([#1276])
+- **Unified Media tab** - Image / Video / Audio entries consolidated into a single tab. ([#1167])
+- **Tweaks palette popover with HSL hue-shift recoloring** - adjust hue/saturation/lightness inline. ([#1292])
+- **Responsive preview + design handoff outputs** - tablet/mobile preview auto-fit, 2025-2026 responsive viewport matrix, screen-file-first export policy, DESIGN-HANDOFF / DESIGN-MANIFEST exports for coding-tool implementation. ([#1224])
 - **Thumbs-up / thumbs-down feedback widget** under completed assistant turns. ([#1308])
 - **`Cmd/Ctrl+,` opens Settings** with a platform shortcut badge in the menu. ([#1173])
 - **Finalize design package + Continue in CLI buttons.** ([#974])
@@ -370,7 +370,7 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
 
 ### Changed
 
-- Conversation run isolation enforced — concurrent runs no longer cross-contaminate state. ([#1271])
+- Conversation run isolation enforced - concurrent runs no longer cross-contaminate state. ([#1271])
 - Default English resource i18n fallback so missing translations don't break agent prompts. ([#1270])
 - `[codex]` Claude Code exit diagnostics improved. ([#1267])
 - `[codex]` empty API responses handled as no output (not as errors). ([#1244])
@@ -382,7 +382,7 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
 - Persist Appearance accent color selection so swatch picks survive Settings close. ([#1439])
 - Load Orbit template choices from `design-templates` instead of `skills` (aligns with the skill model refactor). ([#1442])
 - Restore custom dropdown chevron for the timezone selector in dark mode. ([#1368])
-- Polish EntryView UI — sidebar layout, folder tabs, slim form, blue selected token. ([#1360])
+- Polish EntryView UI - sidebar layout, folder tabs, slim form, blue selected token. ([#1360])
 - Translate Design Files refresh strings instead of hardcoding English. ([#1300])
 - Pretty-print JSON file previews. ([#1206])
 - Keep Tweaks selection usable without annotations. ([#1268])
@@ -450,25 +450,25 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
 - Expand entry and settings automation coverage. ([#954])
 - Refreshed generated GitHub metrics SVG and contributors wall. ([#1115], [#1117], [#1183], [#1188], [#1328], [#1330])
 
-- **Plugin & marketplace system — Phase 2A + 1 + 1.5 + 2B + 2C entry slice + 3 (full) + 4 (full incl. OD_BUNDLED_ATOM_PROMPTS default ON) + 5 (full incl. live S3 impl; postgres adapter still stubbed) + 6 (full incl. asset rasterisation) + 7 (all six code-migration atom impls landed; full pipeline e2e covered by smoke test) + 8 (full incl. GenUI \u2192 decision bridge + handoff promotion ladder bridge) + bundled scenarios + bundled-scenario fallback resolver.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - Phase 2A + 1 + 1.5 + 2B + 2C entry slice + 3 (full) + 4 (full incl. OD_BUNDLED_ATOM_PROMPTS default ON) + 5 (full incl. live S3 impl; postgres adapter still stubbed) + 6 (full incl. asset rasterisation) + 7 (all six code-migration atom impls landed; full pipeline e2e covered by smoke test) + 8 (full incl. GenUI \u2192 decision bridge + handoff promotion ladder bridge) + bundled scenarios + bundled-scenario fallback resolver.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **`od plugin events purge` admin escape hatch (Phase 4).** New `purgePluginEventBuffer()` returns pre-purge stats `{ purged, firstId, lastId, preNextId }` so an operator can audit what was discarded. Loopback-only `POST /api/plugins/events/purge` route + `od plugin events purge --confirm` CLI subcommand (refuses to run without `--confirm` so a stray invocation never drops audit data accidentally).
   - **`od plugin manifest <id>` + `od plugin sources` (Phase 4).** New CLI subcommands for plugin authors and ops: `od plugin manifest <id>` prints just the parsed manifest JSON (no wrapper, no fsPath / installedAt noise) so authors can diff against their on-disk `open-design.json`. `od plugin sources` lists every distinct `(sourceKind, source)` tuple + plugin count, sorted by descending count then alphabetically, with the per-bucket plugin list sorted by id. New `pluginSourceBuckets()` pure helper backs the CLI for byte-deterministic output.
-  - **`od plugin events snapshot/stats` + tail filters (Phase 4).** Extends §3.II1 with: `GET /api/plugins/events/snapshot` for non-SSE one-shot reads (dashboards that don't want a live connection); `GET /api/plugins/events/stats` returns a `summarisePluginEvents()` rollup (counts byKind, byPluginId — skipping empty ids — plus oldest/newest at + id range); `--kind <k>` and `--plugin-id <id>` filter flags work on both `od plugin events tail` (client-side post-render) and the new `od plugin events snapshot` subcommand. CLI pretty-prints the stats rollup with sorted-key counts for byte-determinism.
+  - **`od plugin events snapshot/stats` + tail filters (Phase 4).** Extends §3.II1 with: `GET /api/plugins/events/snapshot` for non-SSE one-shot reads (dashboards that don't want a live connection); `GET /api/plugins/events/stats` returns a `summarisePluginEvents()` rollup (counts byKind, byPluginId - skipping empty ids - plus oldest/newest at + id range); `--kind <k>` and `--plugin-id <id>` filter flags work on both `od plugin events tail` (client-side post-render) and the new `od plugin events snapshot` subcommand. CLI pretty-prints the stats rollup with sorted-key counts for byte-determinism.
   - **More plugin event producer hooks (Phase 4).** Extends §3.II1 with: `installPlugin` accepts `eventKind: 'installed' | 'upgraded'` so the upgrade route distinguishes the operation in the live tail; `POST /api/plugins/:id/trust` emits `plugin.trust-changed`; `POST /api/applied-plugins/prune` emits `plugin.snapshot-pruned` when anything was actually removed; `POST /api/marketplaces/:id/refresh` emits `plugin.marketplace-refreshed`. Each hook is best-effort and never blocks the underlying mutation if the ring buffer throws.
-  - **Plugin event ring buffer + SSE tail (Phase 4).** New `apps/daemon/src/plugins/events.ts` ships an in-memory FIFO ring buffer (capped at 1000 entries, monotonic ids, fan-out subscribers) for plugin lifecycle events: `plugin.installed` / `.upgraded` / `.uninstalled` / `.trust-changed` / `.applied` / `.snapshot-pruned` / `.marketplace-refreshed`. Producer hooks landed on the installer (install + uninstall). New `GET /api/plugins/events` SSE route emits the backlog on connect (with optional `?since=<id>` trim) then forwards live events. CLI: `od plugin events tail [-f] [--since <id>] [--json]` — non-follow mode drains backlog + exits; `-f` keeps the stream open for ops dashboards.
+  - **Plugin event ring buffer + SSE tail (Phase 4).** New `apps/daemon/src/plugins/events.ts` ships an in-memory FIFO ring buffer (capped at 1000 entries, monotonic ids, fan-out subscribers) for plugin lifecycle events: `plugin.installed` / `.upgraded` / `.uninstalled` / `.trust-changed` / `.applied` / `.snapshot-pruned` / `.marketplace-refreshed`. Producer hooks landed on the installer (install + uninstall). New `GET /api/plugins/events` SSE route emits the backlog on connect (with optional `?since=<id>` trim) then forwards live events. CLI: `od plugin events tail [-f] [--since <id>] [--json]` - non-follow mode drains backlog + exits; `-f` keeps the stream open for ops dashboards.
   - **`od plugin doctor --strict` + verify strict propagation (Phase 4).** New `--strict` flag on `od plugin doctor` promotes warnings to failures (exit 4 distinguishes 'strict failed' from doctor errors at exit 1). The `verifyPlugin()` orchestrator gains a matching `strict: true` config knob that flows through the plugin verify config file so plugins can lock 'no warnings allowed' as a one-line CI policy.
-  - **`od daemon db verify` SQLite integrity check (Phase 5).** New `verifySqliteIntegrity()` pure helper wraps PRAGMA `integrity_check` (or `quick_check` with `--quick`) + PRAGMA `foreign_key_check`. Returns a structured `{ ok, mode, issues[], elapsedMs, generatedAt }` report with issues tagged `kind='integrity' | 'foreign_key'`. Loopback-only `POST /api/daemon/db/verify` route + `od daemon db verify [--quick]` CLI subcommand — exit 0 on ok=true, 4 on any issue, so CI can wire it into a pre-deploy check.
+  - **`od daemon db verify` SQLite integrity check (Phase 5).** New `verifySqliteIntegrity()` pure helper wraps PRAGMA `integrity_check` (or `quick_check` with `--quick`) + PRAGMA `foreign_key_check`. Returns a structured `{ ok, mode, issues[], elapsedMs, generatedAt }` report with issues tagged `kind='integrity' | 'foreign_key'`. Loopback-only `POST /api/daemon/db/verify` route + `od daemon db verify [--quick]` CLI subcommand - exit 0 on ok=true, 4 on any issue, so CI can wire it into a pre-deploy check.
   - **`od daemon db vacuum` (Phase 5).** New loopback-only `POST /api/daemon/db/vacuum` runs SQLite VACUUM and reports before/after sizes + reclaimed bytes + elapsed ms. Useful after large delete batches (snapshot prune, plugin uninstall) shrink rows but leave space allocated to the file. CLI: `od daemon db vacuum [--json]`.
   - **`od daemon db status` SQLite inventory (Phase 5).** New `inspectSqliteDatabase()` pure helper + `GET /api/daemon/db` route returns a structured report: `kind` ('sqlite'), file location, size on disk (primary + WAL + SHM), schema version (`user_version` PRAGMA), and per-table row counts (system tables excluded, lexicographic order). CLI: `od daemon db status [--json]` lets ops sanity-check deployments at a glance + compare expected-vs-actual table rosters across daemon upgrades.
-  - **`od plugin verify <id>` CI meta-command (Phase 4).** New `verifyPlugin()` pure orchestrator aggregates `doctor` + `simulate` + `canon --check` into one pass/fail report. Reads the plugin verify config file (or `--config <path>`) so plugin authors commit their CI checks into their repo. Each check resolves to `passed | failed | skipped | unsupported`; aggregate passes iff every enabled check is passed or skipped (`unsupported` bubbles up as a fail to keep CI honest). One-liner CI workflow: `od plugin verify my-plugin` — exit 0 on pass, 4 on fail, 2 on CLI/config error.
-  - **`od plugin simulate <id>` pipeline dry-run (Phase 4).** New `simulatePipeline({ pipeline, signals, iterationCap? })` pure helper walks every stage in a plugin's pipeline against caller-supplied signals (constant snapshot OR per-iteration generator function) and reports `outcome ∈ { single | converged | cap | unparsable }` per stage plus aggregate `outcome ∈ { all-converged | all-single | mixed | cap-hit | unparsable }`. Companion `parseSignalKv()` parses repeatable `-s key=value` CLI flags into the closed `UntilSignals` vocabulary with typo guards. CLI: `od plugin simulate <pluginId> [-s key=value ...] [--cap <n>] [--json]` — exit 4 on cap-hit/unparsable so CI can hook this into a pipeline check.
-  - **`od plugin stats` inventory health report (Phase 4).** New `pluginInventoryStats()` + `snapshotInventoryStats()` pure helpers aggregate installed-plugin counts (by `sourceKind` / `trust` / `taskKind`, bundled vs. third-party split, plugins with elevated capabilities — `fs:write` / `subprocess` / `bash` / `network` / `connector:*`) and snapshot health (status breakdown, project / run linkage, oldest / newest applied timestamps). New `GET /api/plugins/stats` route + `od plugin stats [--json]` CLI subcommand for at-a-glance fleet audit.
+  - **`od plugin verify <id>` CI meta-command (Phase 4).** New `verifyPlugin()` pure orchestrator aggregates `doctor` + `simulate` + `canon --check` into one pass/fail report. Reads the plugin verify config file (or `--config <path>`) so plugin authors commit their CI checks into their repo. Each check resolves to `passed | failed | skipped | unsupported`; aggregate passes iff every enabled check is passed or skipped (`unsupported` bubbles up as a fail to keep CI honest). One-liner CI workflow: `od plugin verify my-plugin` - exit 0 on pass, 4 on fail, 2 on CLI/config error.
+  - **`od plugin simulate <id>` pipeline dry-run (Phase 4).** New `simulatePipeline({ pipeline, signals, iterationCap? })` pure helper walks every stage in a plugin's pipeline against caller-supplied signals (constant snapshot OR per-iteration generator function) and reports `outcome ∈ { single | converged | cap | unparsable }` per stage plus aggregate `outcome ∈ { all-converged | all-single | mixed | cap-hit | unparsable }`. Companion `parseSignalKv()` parses repeatable `-s key=value` CLI flags into the closed `UntilSignals` vocabulary with typo guards. CLI: `od plugin simulate <pluginId> [-s key=value ...] [--cap <n>] [--json]` - exit 4 on cap-hit/unparsable so CI can hook this into a pipeline check.
+  - **`od plugin stats` inventory health report (Phase 4).** New `pluginInventoryStats()` + `snapshotInventoryStats()` pure helpers aggregate installed-plugin counts (by `sourceKind` / `trust` / `taskKind`, bundled vs. third-party split, plugins with elevated capabilities - `fs:write` / `subprocess` / `bash` / `network` / `connector:*`) and snapshot health (status breakdown, project / run linkage, oldest / newest applied timestamps). New `GET /api/plugins/stats` route + `od plugin stats [--json]` CLI subcommand for at-a-glance fleet audit.
   - **`od plugin canon --check <expected-file>` byte-equality fixtures (Phase 4).** New `--check` mode on `od plugin canon` compares the canon output against an on-disk fixture and exits 4 on mismatch with a per-line diff preview. Lets plugin authors commit `renderPluginBlock()` regression fixtures into their own `tests/` without writing a fresh test harness.
   - **`od plugin canon <snapshotId>` show prompt block (Phase 4).** New `GET /api/applied-plugins/:snapshotId/canon` route renders the canonical `## Active plugin` / `## Plugin inputs` block this snapshot splices into the system prompt, byte-equal to what the agent reads via `composeSystemPrompt`. Plain-text response when the request sends `Accept: text/plain` so shell pipes work cleanly; JSON wrapper otherwise. CLI: `od plugin canon <snapshotId> [--json]`.
   - **`od plugin snapshots show / diff` debugging (Phase 4).** New `GET /api/applied-plugins/<id>`-backed `od plugin snapshots show <snapshotId>` dumps a full `AppliedPluginSnapshot` for inspection. New `diffSnapshots()` pure helper + `od plugin snapshots diff <a> <b>` compares two snapshots field-by-field with a `digestEqual` flag that surfaces the e2e-2 invariance check at-a-glance. Compares identity, inputs map, capabilities, resolvedContext, connectors, mcpServers, genuiSurfaces, pipeline (stages + per-stage atoms / until), assets. Entries sort lexicographically so output is byte-deterministic.
   - **`od plugin diff <a> <b>` author tooling (Phase 4).** New `diffPlugins({ a, b })` pure-helper compares two `InstalledPluginRecord` values and returns a structured `{ pluginId?, entries[], added, removed, changed }` report. Compares top-level fields (id, version, sourceKind, source, trust, capabilitiesGranted) plus manifest body (title / version / description / license / tags / kind / taskKind / mode / capabilities / inputs / context.skills / context.craft / context.assets / pipeline.stages + per-stage atoms / connectors.required / genui.surfaces). Collection diffs collapse to `<n> added, <m> removed` summaries; entries sort lexicographically by field path so the report is byte-deterministic across re-runs. CLI: `od plugin diff <id-a> <id-b> [--json]` renders +/-/~ glyphs.
-  - **`od atoms info <id>` + atom catalog drift fix (Phase 4).** New `GET /api/atoms/:id` returns catalog metadata + the bundled SKILL.md body. Catalog promoted nine atoms (`code-import`, `design-extract`, `figma-extract`, `token-map`, `rewrite-plan`, `patch-edit`, `diff-review`, `handoff`) from `status='planned'` to `'implemented'` to reflect the daemon impls landed across §3.N–§3.S; `build-test` added as a missing catalog row. Net: zero `planned` atoms remaining.
-  - **`od plugin upgrade <id>` re-install from recorded source (Phase 4).** New `POST /api/plugins/:id/upgrade` route streams the same SSE shape as `/install`, internally calling `installPlugin()` against the plugin's recorded `source` string (so the github / https / local-folder byte path replays end-to-end). 409s with `code='bundled-plugin'` when the plugin shipped bundled with the daemon (those upgrade with the daemon image), and `code='missing-source'` when the recorded source is empty. CLI: `od plugin upgrade <id>` — exit 0 on success, 1 on installer error.
+  - **`od atoms info <id>` + atom catalog drift fix (Phase 4).** New `GET /api/atoms/:id` returns catalog metadata + the bundled SKILL.md body. Catalog promoted nine atoms (`code-import`, `design-extract`, `figma-extract`, `token-map`, `rewrite-plan`, `patch-edit`, `diff-review`, `handoff`) from `status='planned'` to `'implemented'` to reflect the daemon impls landed across §3.N-§3.S; `build-test` added as a missing catalog row. Net: zero `planned` atoms remaining.
+  - **`od plugin upgrade <id>` re-install from recorded source (Phase 4).** New `POST /api/plugins/:id/upgrade` route streams the same SSE shape as `/install`, internally calling `installPlugin()` against the plugin's recorded `source` string (so the github / https / local-folder byte path replays end-to-end). 409s with `code='bundled-plugin'` when the plugin shipped bundled with the daemon (those upgrade with the daemon image), and `code='missing-source'` when the recorded source is empty. CLI: `od plugin upgrade <id>` - exit 0 on success, 1 on installer error.
   - **patch-edit atomic file writes (Phase 7 safety patch).** Every `fs.writeFile` inside `patch-edit` (file content + `plan/steps.json` + `plan/receipts/`) now routes through an `atomicWriteFile()` helper that writes to a sibling tmp file and renames into place via POSIX `rename(2)`. A daemon crash mid-write can no longer leave the source file truncated; rejection-path failures (context mismatch, etc.) leave the original byte-equal. Cleanup path unlinks the orphan tmp on failure so disk noise stays bounded.
   - **`od plugin search <query>` + filters on `od plugin list` (Phase 4).** New `searchInstalledPlugins({ plugins, query?, taskKind?, mode?, tag?, trust?, bundled? })` pure-helper ranks free-text matches across id / title / description / tags (exact wins over substring; tag-exact ranks ahead of title-substring) and AND-combines with structural filters. CLI gains `od plugin search <query>` and adds `--task-kind / --mode / --tag / --trust / --bundled / --no-bundled` knobs to `od plugin list`. Search results show `matched=[…]` per row so the user can trace which field caught the hit.
   - **`od plugin pack <folder>` distribution archive (Phase 4).** New `packPlugin({ folder, out? })` helper builds a gzip-compressed tar archive of an author's plugin folder, ready to install via the installer's HTTPS-tarball path. Default output path is `<basename>-<manifest.version>.tgz` beside the folder. Skiplist matches the installer's extract-time exclusions (`node_modules`, `.git`, `dist`, `build`, `out`, `coverage`, `.turbo`, `.cache`, `.pnpm-store`, `.DS_Store`, etc). Symlinks rejected at both walk and tar-filter passes so what authors pack matches what the installer accepts. The output archive itself is always excluded from its own contents (no spiral when `--out` lands inside the folder).
@@ -486,10 +486,10 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
   - **`figma-extract` asset rasterisation second pass (Phase 6 entry slice).** `runFigmaExtract({ offlineAssets: false })` now downloads per-leaf-node assets via the Figma `GET /v1/images` endpoint. New knobs: `assetFormat` (`'svg' | 'png' | 'jpg' | 'pdf'`, default svg), `assetMaxBytes` (default 5 MiB). 50-id chunks, per-id failure isolation (a single CDN hiccup doesn't lose the batch), every issue lands in `meta.unsupportedNodes[]` with `reason='asset-too-large' | 'no download URL returned' | 'download <status>' | 'image fetch error: …' | 'figma error: …'`. `atomDigest` is recomputed after the asset pass settles so the digest reflects which assets succeeded.
   - **Earlier in this changeset:**
   - **`token-map` atom (Phase 6/7 entry slice).** New `runTokenMap({ cwd, source?, designSystem, strict? })` writes `<cwd>/token-map/{colors,typography,spacing,radius,shadow,unmatched,meta}.json`. Match strategies (deterministic, first-win): exact value match → normalised hex (#abc → #aabbcc) → fuzzy name (strips `--` / `ds-` / `odds-` / `theme-` prefixes). Unmatched lands with `'no-target-equivalent'`, `'target-collision'`, or `'invalid-source'`. `parseDesignSystemTokens(body)` heuristic helper lifts CSS custom properties + markdown table rows from a DESIGN.md body so daemon callers don't need a hand-curated bag.
-  - **`figma-extract` atom (Phase 6 entry slice).** New `runFigmaExtract({ cwd, fileUrl?, fileKey?, token, fetchFn?, offlineAssets? })` walks Figma's REST `GET /v1/files/<key>` into the canonical `<cwd>/figma/{tree,tokens,meta}.json`. Token lift heuristics: SOLID fills + strokes → colours, `cornerRadius` → radius, FRAME / GROUP heights → spacing candidates. Gradient + image fills land in `meta.unsupportedNodes[]` with a reason. `fetchFn` is pluggable (tests inject stubs); offline mode keeps the assets/ directory empty. The OAuth bearer token is forwarded via the `Authorization` header and never persisted by the runner — the daemon's connector-gate stays the only place that touches the token store.
+  - **`figma-extract` atom (Phase 6 entry slice).** New `runFigmaExtract({ cwd, fileUrl?, fileKey?, token, fetchFn?, offlineAssets? })` walks Figma's REST `GET /v1/files/<key>` into the canonical `<cwd>/figma/{tree,tokens,meta}.json`. Token lift heuristics: SOLID fills + strokes → colours, `cornerRadius` → radius, FRAME / GROUP heights → spacing candidates. Gradient + image fills land in `meta.unsupportedNodes[]` with a reason. `fetchFn` is pluggable (tests inject stubs); offline mode keeps the assets/ directory empty. The OAuth bearer token is forwarded via the `Authorization` header and never persisted by the runner - the daemon's connector-gate stays the only place that touches the token store.
   - **Auto-derived `choice` surface for `diff-review` (Phase 8 entry slice).** Mirrors the connector-gate's auto `oauth-prompt` pattern. When a stage in the EFFECTIVE pipeline (consumer-declared OR scenario-fallback) lists `diff-review`, applyPlugin() synthesises an implicit `choice` GenUI surface (`__auto_diff_review_<stageId>`, `persist='run'`, 24h timeout, `onTimeout='abort'`) so the user can accept / reject / partial without the plugin author having to declare the surface by hand. Plugin-author-declared surfaces with the same id win.
   - **Earlier in this changeset:**
-  - **Bundled-scenario pipeline fallback (spec §23.3.3).** New pure helper `resolveAppliedPipeline({ manifest, scenarios })` returns `{ pipeline, source: 'declared'|'scenario'|'none', scenarioId? }`. `applyPlugin()` now consults the bundled scenarios surfaced by `loadPluginRegistryView()` and copies the matching scenario's pipeline verbatim into both the `ApplyResult.pipeline` and `AppliedPluginSnapshot.pipeline`. Scenario plugins themselves never recurse. `manifestSourceDigest` stays unchanged across the fallback so spec §11.5 e2e-2 invariance holds. Only rows with `source_kind='bundled'` AND `od.kind='scenario'` are eligible — third-party scenarios cannot promote themselves.
+  - **Bundled-scenario pipeline fallback (spec §23.3.3).** New pure helper `resolveAppliedPipeline({ manifest, scenarios })` returns `{ pipeline, source: 'declared'|'scenario'|'none', scenarioId? }`. `applyPlugin()` now consults the bundled scenarios surfaced by `loadPluginRegistryView()` and copies the matching scenario's pipeline verbatim into both the `ApplyResult.pipeline` and `AppliedPluginSnapshot.pipeline`. Scenario plugins themselves never recurse. `manifestSourceDigest` stays unchanged across the fallback so spec §11.5 e2e-2 invariance holds. Only rows with `source_kind='bundled'` AND `od.kind='scenario'` are eligible - third-party scenarios cannot promote themselves.
   - **`design-extract` atom (Phase 6/7 entry slice).** New `runDesignExtract({ cwd, repoPath })` reads `code/index.json`, walks every scannable file (css/scss/ts/tsx/js/jsx/html/json), and writes the canonical token bag at `<cwd>/code/tokens.json`. Captures hex / rgba / hsla colours, CSS custom properties (`--*-color/-bg/-accent/-primary/-secondary/-surface/-border/-muted`), font-family declarations, px/rem/em spacing on padding/margin/gap/inset, border-radius, box-shadow, and Tailwind config quoted hex palette entries. Each token records `sources[]` (`<path>:<line>`) + `usage[]` so `token-map` has a precise audit trail.
   - **`rewrite-plan` atom (Phase 7 entry slice).** New `runRewritePlan({ cwd, intent? })` produces `<cwd>/plan/{plan.md, ownership.json, steps.json, meta.json}`. Heuristic ownership classifier maps every imported file to a tier (`leaf | shared | route | shell`); the step generator emits one `rewrite-<slug>` per leaf component, bundles sibling stylesheets, prepends a `tokens-alignment` step when design-extract surfaced literals, marks shared/route touches `medium` risk, and always closes with a `build-test` step. `meta.atomDigest` is over a canonicalised view of `code/index.json` so re-walks that don't change the file roster don't invalidate the plan.
   - **`patch-edit` atom (Phase 7 entry slice).** New `applyPatchForStep({ cwd, stepId, diff })`, `skipStep()`, and `readPlanProgress()`. The applier parses unified-diff text (plain edits, `/dev/null` creation, `/dev/null` deletion, multi-file hunks) and enforces the spec §20.3 safety contract before any byte is written: (a) path-traversal guard, (b) every touched file MUST appear in `step.files[]`, (c) `shell`-tier files require `step.risk='high'`, (d) context lines must match exactly so stale patches surface `context mismatch at line N` without mutating disk. After a successful apply, the runner updates `plan/steps.json[id].status='completed'` and writes `plan/receipts/step-<id>.json` with files / added / removed / rationale.
@@ -499,45 +499,45 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
   - **`code-import` atom (Phase 7 entry slice).** New `runCodeImport({ repoPath, cwd })` walks a real repo and writes a normalised `<cwd>/code/index.json` snapshot. Honours a 60 s walk budget; skips `node_modules`, `.git`, `dist`, `build`, `coverage`, etc.; rejects symlinks. Detects framework (next / vite / remix / astro / sveltekit / cra / custom), package manager, style system, and routing model.
   - **`handoff` atom + `ArtifactManifest` provenance fields (Phase 7-8 entry slice).** `ArtifactManifest` gains the spec §11.5.1 reserved fields (`sourcePluginSnapshotId`, `sourcePluginId`, `sourceTaskKind`, `parentArtifactId`, `artifactKind`, `renderKind`, `handoffKind`, `exportTargets[]`, `deployTargets[]`). New `recordHandoff()` helper enforces append-only `exportTargets` / `deployTargets` and monotonic `handoffKind` promotion (`design-only` < `implementation-plan` < `patch` < `deployable-app`). `isDeployableAppEligible()` centralises the §11.5.1 promotion rule (`build.passing` + `tests.passing` + at least one docker / cli export target). Contracts barrel `index.ts` switched to `.js`-suffixed re-exports so daemon NodeNext resolution picks every type up end-to-end.
   - **Bundled scenario plugins (spec §23.3.3).** Four `od.kind: 'scenario'` plugins under `plugins/_official/scenarios/{od-new-generation,od-figma-migration,od-code-migration,od-tune-collab}/` lock the default reference pipeline per `taskKind`. Replacing a default for an enterprise / vertical edition is now a content edit rather than a daemon code change. The bundled boot walker registers them via the existing tier layout.
-- **Plugin & marketplace system — earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **`OD_SNAPSHOT_RETENTION_DAYS` referenced-row TTL (PB2).** `pruneExpiredSnapshots` now retires referenced snapshot rows whose project has been deleted AND whose `applied_at` is older than the configured window. Live-project rows stay pinned forever (reproducibility wins). The GC worker reads `readPluginEnvKnobs().snapshotRetentionDays` so the env-var contract spec PB2 reserved is now end-to-end.
   - **`OD_BUNDLED_ATOM_PROMPTS=1` activates `composeDaemonSystemPrompt`'s atom-block path.** When set AND the run carries an applied snapshot with a non-empty `od.pipeline.stages[*]`, the daemon walks each stage, calls `loadAtomBodies` + `renderActiveStageBlock`, and threads the result as `composeSystemPrompt({ activeStageBlocks })`. Default behaviour (flag unset) is byte-equal to today's prompt.
   - **Phase 6 / 7 / 8 atom SKILL.md substrate.** Nine new `plugins/_official/atoms/<atom>/{SKILL.md, open-design.json}` pairs the bundled boot walker registers on startup: `figma-extract`, `token-map` (Phase 6); `code-import`, `design-extract`, `rewrite-plan`, `patch-edit`, `diff-review`, `build-test` (Phase 7); `handoff` (Phase 8). The fragments teach the agent what each (planned) atom expects so a plugin author who references one of these ids in `od.pipeline.stages[*].atoms[]` sees the canonical fragment without a doctor warning. The matching shell-out implementations stay scheduled per spec §16 Phase 6 / 7 / 8.
-- **Plugin & marketplace system — earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **Per-cloud Helm value overrides.** `tools/pack/helm/open-design/values-{aws,gcp,azure,aliyun,tencent,huawei,self}.yaml` ship the volume + ingress diffs spec §15.5 enumerates. Operators install with `helm install od ./tools/pack/helm/open-design -f values-aws.yaml`.
   - **`composeSystemPrompt({ activeStageBlocks })`.** Both daemon and contracts composers accept a pre-rendered list of `## Active stage` blocks (produced by `renderActiveStageBlock` + `loadAtomBodies`). Substrate slice for the §23.3.2 prompt-fragment migration; the actual call-site wiring stays gated on the next phase so default behaviour is byte-equal to today's prompt.
   - **Plugin-bundled component surface.** `GenUISurfaceRenderer` mounts a `sandbox="allow-scripts"` iframe at `/api/plugins/:id/asset/<path>` when a surface declares `od.genui.surfaces[].component`. Communication is one-way via `postMessage({ kind: 'genui:respond', surfaceId, value })`. The daemon-side asset endpoint serves files from `installed_plugins.fs_path` under the §9.2 preview CSP (`default-src 'none'; connect-src 'none'; frame-ancestors 'self'`) plus `X-Content-Type-Options: nosniff`.
   - **`ProjectStorage` + `DaemonDb` adapter substrate.** New `apps/daemon/src/storage/` module ships the Phase 5 §15.6 interface contracts. `LocalProjectStorage` (v1 default) is fully wired and tested; `S3ProjectStorage` is an interface-locked stub that throws on every op until the AWS SDK wiring lands. `resolveDaemonDbConfig({})` parses `OD_DAEMON_DB` / `OD_PG_*` env vars but the SQLite path remains the only reachable backend in v1.
-- **Plugin & marketplace system — earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **Phase 5 bound-API-token guard.** `startServer()` refuses to bind a non-loopback `OD_BIND_HOST` without `OD_API_TOKEN`; bearer middleware on `/api/*` rejects non-loopback peers without `Authorization: Bearer <OD_API_TOKEN>`. `/api/health`, `/api/version`, `/api/daemon/status` stay open so monitoring probes (kubelet, Compose) work without secrets.
   - **Helm chart templates.** `tools/pack/helm/open-design/templates/` ships Deployment, Service, Secret, ConfigMap, two PVCs, optional Ingress, plus _helpers.tpl + NOTES.txt. The chart installs end-to-end with `helm install od ./tools/pack/helm/open-design --set secrets.apiToken=$(openssl rand -hex 32)`.
   - **`od.genui.surfaces[].component`.** `GenUISurfaceSpecSchema` accepts a `{ path, export?, sandbox? }` field; `genui:custom-component` joins `KNOWN_TOP_LEVEL_CAPABILITIES`; `doctorPlugin()` flags the missing-capability + path-traversal cases. The component path is the v1 substrate for spec §10.3.5 alignment-roadmap row 2; the web sandbox loader stays scheduled.
   - **`.github/workflows/docker-image.yml`.** Multi-arch (linux/amd64 + linux/arm64) build + push to ghcr.io: `:edge` on main, `:<version>` + `:latest` on tag, `:sha-<short>` on every push, smoke build on PRs. Authenticates via GITHUB_TOKEN with `packages:write`.
-- **Plugin & marketplace system — earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **`@open-design/agui-adapter` workspace package + `GET /api/runs/:runId/agui`.** Pure-TS bidirectional bridge between OD's native `PersistedAgentEvent` / `GenUIEvent` / `PluginPipelineStageEvent` union and the [AG-UI canonical event protocol](https://github.com/CopilotKit/CopilotKit). The new SSE endpoint mirrors `/api/runs/:id/events` but pipes every record through `encodeOdEventForAgui` so a CopilotKit / AG-UI client consumes an OD run unmodified. v1 plugins need no change to be consumable inside the AG-UI ecosystem (spec §10.3.5).
   - **`renderActiveStageBlock` + `loadAtomBodies`.** Substrate slice for spec §23.3.2 patch 2: the daemon-side helper reads `<bundled-fsPath>/SKILL.md` for any registered bundled atom and the contracts-side renderer assembles a `## Active stage: <id>` block. The `composeSystemPrompt()` rewiring that consumes them is the next PR; today the helpers are reachable, tested, and the bundled atom plugins from §3.I3 already ship the matching SKILL.md bodies.
   - **Phase 5 Dockerfile + docker-compose + Helm chart entry slice.** `deploy/Dockerfile` now bundles `plugins/_official/` so `registerBundledPlugins()` finds the atom set inside the container. `tools/pack/docker-compose.yml` is the canonical hosted-mode manifest (two-volume layout, OD_API_TOKEN, /api/daemon/status healthcheck). `tools/pack/helm/open-design/` pins the Helm chart parameter surface for the per-cloud value overrides spec §15.5 enumerates; templates land in the Phase 5 follow-up PR.
-- **Plugin & marketplace system — earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - earlier landing.** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **Pipeline runner wired into `POST /api/runs`.** Plugin runs whose snapshot carries `od.pipeline.stages[*]` now emit `pipeline_stage_started` synchronously before the agent process spawns. Subsequent stage events (`pipeline_stage_completed`, per-stage `run_devloop_iterations` audit rows, devloop convergence) fire asynchronously while the agent runs. Stage runner is a converging stub (`critique.score=4`, `preview.ok=true`) so single-pass pipelines walk through every stage in O(stages) time; loop stages still respect `OD_MAX_DEVLOOP_ITERATIONS`. Errors surface as `pipeline_stage_failed` events and never block the agent. **e2e-3** flips from entry-slice to the full §8 contract: `apps/daemon/tests/plugins-headless-run.test.ts` asserts the first SSE event on a pipeline-bearing plugin run is `pipeline_stage_started`.
   - **`od doctor`.** Repo-wide diagnostics: daemon status, installed-plugin doctor sweep, library inventory (skills / design-systems / atoms / craft). Exits 1 when any plugin doctor returns ok=false; exit 64 when the daemon is unreachable.
   - **`od config get/set/list/unset`.** Wraps `GET/PUT /api/app-config`. Top-level keys via positional or `--value`; nested values via `--value-json`.
-  - **Phase 4 / §23 entry slice — bundled atom plugins.** New `plugins/_official/atoms/{discovery-question-form,todo-write,direction-picker,critique-theater}/{SKILL.md,open-design.json}` pairs, plus a daemon boot walker (`apps/daemon/src/plugins/bundled.ts`) that registers each folder under `source_kind='bundled'` / `trust='bundled'` on every startup. Idempotent (upserts), ENOENT-silent (works outside the dev tree). Lays the substrate for the §23.3.2 patch that lifts prompt fragments out of `system.ts`.
-- **Plugin & marketplace system — Phase 2A + 1 + 1.5 + 2B + 2C entry slice + 3 (full) + 4 (scaffold / export / publish / atoms doc / library CLI) + early 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+  - **Phase 4 / §23 entry slice - bundled atom plugins.** New `plugins/_official/atoms/{discovery-question-form,todo-write,direction-picker,critique-theater}/{SKILL.md,open-design.json}` pairs, plus a daemon boot walker (`apps/daemon/src/plugins/bundled.ts`) that registers each folder under `source_kind='bundled'` / `trust='bundled'` on every startup. Idempotent (upserts), ENOENT-silent (works outside the dev tree). Lays the substrate for the §23.3.2 patch that lifts prompt fragments out of `system.ts`.
+- **Plugin & marketplace system - Phase 2A + 1 + 1.5 + 2B + 2C entry slice + 3 (full) + 4 (scaffold / export / publish / atoms doc / library CLI) + early 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **Phase 4 publish.** `od plugin publish <id> --to anthropics-skills|awesome-agent-skills|clawhub|skills-sh [--repo <github>] [--open]` builds the catalog submission URL + PR body and (with `--open`) auto-launches the system browser. The author still goes through the upstream review flow; OD never POSTs anywhere.
   - **CLI parity remainder.** `od atoms list/show`, `od skills list/show`, `od design-systems list/show`, `od craft list/show`, `od status`, `od version`. New HTTP routes `GET /api/craft` + `GET /api/craft/:id` walk the `craft/` directory and return `{ id, label, bytes }` summaries.
   - **`od marketplace search "<query>" [--tag <tag>]`.** Substring match over every configured marketplace's `plugins[]`; powered entirely by the catalog metadata `od marketplace add` already cached, so a code agent can discover plugins without being inside the desktop UI.
-- **Plugin & marketplace system — Phase 2A + 1 + 1.5 + 2B (composer mount + marketplace deep UI) + 2C entry slice + 3 entry slice + 4 (scaffold / export / atoms doc) + early 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - Phase 2A + 1 + 1.5 + 2B (composer mount + marketplace deep UI) + 2C entry slice + 3 entry slice + 4 (scaffold / export / atoms doc) + early 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **Phase 4 author tooling.** `od plugin scaffold --id <id>` writes a starter SKILL.md + open-design.json + README.md (optionally a `.claude-plugin/plugin.json`). `od plugin export <projectId> --as od|claude-plugin|agent-skill --out <dir>` materialises a publish-ready folder from the AppliedPluginSnapshot behind a project (or a snapshot id), so any chat that ran a plugin can be re-published to anthropics/skills, awesome-agent-skills, clawhub, or skills.sh without leaving the terminal. The output's open-design.json carries a provenance block (snapshotId + manifestSourceDigest + appliedAt) that reverse-resolves to the originating run.
   - **Phase 2B marketplace deep UI.** New routes `/marketplace` and `/marketplace/<pluginId>` rendered by `MarketplaceView` (catalog grid + trust filters + configured catalogs panel) and `PluginDetailView` (manifest, capability checklist, connector requirements, declared GenUI surfaces, "Use this plugin" → applyPlugin → Home). `/plugins/<id>` is a parsed alias so the public-site URL scheme reserved in spec §13 already works in-app.
   - **Phase 2B ChatComposer mount.** `ChatComposer` renders `<PluginsSection variant="strip" />` above the input whenever a `projectId` is known. Apply hydrates the draft only when empty so a mid-typing user is never overwritten.
   - **`docs/atoms.md`.** New canonical reference for the first-party atom catalog: implemented vs planned ids, task-kind mapping, how the daemon resolves an atom at run time, the closed `until`-signal vocabulary, and the §22.5 community-plugin → first-party-atom promotion path.
-- **Plugin & marketplace system — Phase 2A finished + Phase 1 follow-up + Phase 1.5 + Phase 2B (composer mount) + Phase 2C entry slice + Phase 3 entry slice + early Phase 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - Phase 2A finished + Phase 1 follow-up + Phase 1.5 + Phase 2B (composer mount) + Phase 2C entry slice + Phase 3 entry slice + early Phase 5 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - **CLI canonical agent-facing API (spec §11.7).** Every UI action now has a CLI equivalent: `od project create/list/info/delete`, `od run start/watch/cancel/list/info` (with `--plugin`, `--inputs`, `--grant-caps`, `--snapshot-id`, `--follow`), `od files list/read/write/upload/delete`, `od conversation list/info`. Plugin runs route through the §3.A1 snapshot resolver.
   - **Phase 1.5 headless lifecycle.** New `od daemon start [--headless] [--serve-web] [--port] [--host]`, `od daemon status [--json]`, `od daemon stop`. Backed by new HTTP routes `GET /api/daemon/status` and `POST /api/daemon/shutdown` (loopback-only). The default `od` (no subcommand) keeps its desktop behaviour for back-compat. e2e-3's headless install→project→run loop is now anchored in a daemon supertest (`apps/daemon/tests/plugins-headless-run.test.ts`).
   - **Phase 3 marketplace plugin install resolution.** `POST /api/plugins/install` with a bare plugin name walks every configured `plugin_marketplaces` row in registration order and re-routes to the canonical `github:…` / `https://…` source recorded in the matched manifest. CLI: `od plugin install <name>` works against any catalog the operator added via `od marketplace add <url>`.
   - **Web composer mount.** New `PluginsSection` widget combines `InlinePluginsRail`, `ContextChipStrip`, `PluginInputsForm`, plus `renderPluginBriefTemplate`'s `{{var}}` substitution. Mounted in `NewProjectPanel` below the project-name input as the Phase 2A discovery surface. Purely additive: the existing Send button rules are unchanged.
   - The earlier work in this changelog block remains in place (snapshot resolver, trust mutation, connector tool-token gate, fallback rejection, GitHub tarball + HTTPS install sources, pipeline runner with cross-conversation cache, marketplace registry, snapshot GC worker, web component primitives, definition-of-done suite, …).
-- **Plugin & marketplace system — Phase 2A → entry slice of Phase 2B/2C/3 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
+- **Plugin & marketplace system - Phase 2A → entry slice of Phase 2B/2C/3 (earlier landing).** Spec: [`docs/plugins-spec.md`](docs/plugins-spec.md). Living plan: [`docs/plans/plugins-implementation.md`](docs/plans/plugins-implementation.md).
   - Snapshot resolver wires `applyPlugin()` into `POST /api/projects` and `POST /api/runs`. Capability gate failures map to HTTP 409 / exit 66; missing inputs map to HTTP 422 / exit 67. The in-memory run object carries `appliedPluginSnapshotId` so connector / replay paths read a frozen view.
   - Trust mutation: new `POST /api/plugins/:id/trust` endpoint plus matching `od plugin trust <id> --capabilities …` CLI. Validates the spec §5.3 capability vocabulary (rejects unknown / malformed strings); preserves the implicit `prompt:inject` floor on revoke.
   - Connector tool-token gate: tokens minted for plugin runs carry `pluginSnapshotId` / `pluginTrust` / `pluginCapabilitiesGranted`. `/api/tools/connectors/execute` re-validates the §5.3 `connector:<id>` rule per call (CONNECTOR_NOT_GRANTED 403 on miss). Trusted plugins implicitly carry `connector:*`; restricted plugins must list each id explicitly.
@@ -547,9 +547,9 @@ A memory-plus-UI release: **auto-memory store** carries agent context across run
   - Pipeline runner emits `pipeline_stage_*` events per stage and persists every iteration into `run_devloop_iterations`. Pre-stage GenUI surfaces auto-derived for not-yet-connected required connectors hit the cross-conversation cache (e2e-5: a second conversation in the same project never re-broadcasts an already-resolved `oauth-prompt`).
   - Marketplace registry minimum verbs: `od marketplace add/list/info/refresh/remove/trust` plus the matching HTTP routes. Default trust tier is `restricted` per spec §9; the Phase 3 follow-up wires `od plugin install <name>` resolution + the trust UI.
   - Web composer surface: `applyPlugin()` state helper, `InlinePluginsRail`, `ContextChipStrip`, `PluginInputsForm`, `GenUISurfaceRenderer` (confirmation + oauth-prompt first-class; form / choice fall back to a JSON Schema preview until Phase 2A.5), `GenUIInbox` drawer.
-  - `od plugin run` apply→start shorthand. CLI structured error helper maps recoverable HTTP 4xx envelopes to the §12.4 exit codes (64–73) so code agents get a stable retry contract.
+  - `od plugin run` apply→start shorthand. CLI structured error helper maps recoverable HTTP 4xx envelopes to the §12.4 exit codes (64-73) so code agents get a stable retry contract.
   - Plan §8 e2es covered at the daemon level: e2e-2 (pure apply across runs), e2e-4 (replay invariance after plugin upgrade via `renderPluginBlock(snapshot)`), e2e-5 (GenUI cross-conversation cache), e2e-6 (connector trust gate; re-validated independently in the token-issuance + execute routes), e2e-7 (API-fallback rejection at every proxy entry), e2e-8 (apply purity regression: 100 applies → 0 FS mutation, +100 snapshot rows). e2e-3 (headless run) stays scheduled for Phase 1.5.
-- **`ib-pitch-book` skill** — investment-banking strategic-alternatives pitch book (Anthropic financial-services Pitch Agent workflow); ships `example.html` and IB layout references.
+- **`ib-pitch-book` skill** - investment-banking strategic-alternatives pitch book (Anthropic financial-services Pitch Agent workflow); ships `example.html` and IB layout references.
 ## [0.6.0] - 2026-05-09
 
 A connectivity-and-iteration release: OpenDesign becomes a fully bidirectional MCP citizen (external MCP client with 39 templates), ships **Cloudflare Pages deployment** for generated artifacts (with custom domains), advances Critique Theater to **Phase 6** (interrupt + project-keyed run registry), and lands a redesigned top bar, draggable file tabs, batch delete, **vector PDF export**, **agent-callable research/search**, and **Orbit activity summaries**. Hyperframes learns the HTML-in-Canvas API. New BYOK provider (Ollama Cloud), new agent capabilities (Gemini 3 preview + GPT-5.1 codex picker + DeepSeek v4), new design systems (BMW M, Slack, Cisco, Webex, Mission Control, Urdu Modern), eight new skill bundles, and Turkish + Thai locales. 136 merged PRs since 0.5.0.
@@ -568,7 +568,7 @@ A connectivity-and-iteration release: OpenDesign becomes a fully bidirectional M
 - Shared `CritiqueRoundSummary` / `CritiqueRunStatus` types via the `@open-design/contracts` package. ([#1016])
 
 #### Web / UI
-- **Top bar redesign** — Share/Present lifted to the top bar, zoom dropdown, and an explicit focus toggle. ([#1048])
+- **Top bar redesign** - Share/Present lifted to the top bar, zoom dropdown, and an explicit focus toggle. ([#1048])
 - **Draggable file tab reordering** in the workspace. ([#936])
 - **Batch delete for selected design files.** ([#783])
 - **Sortable Design Files table columns.** ([#804])
@@ -606,10 +606,10 @@ A connectivity-and-iteration release: OpenDesign becomes a fully bidirectional M
 - Make Azure API version optional. ([#941])
 
 #### Skills, design systems & prompt templates
-- **`ib-pitch-book` skill** — investment-banking strategic-alternatives pitch book (Anthropic financial-services Pitch Agent port). ([#888])
+- **`ib-pitch-book` skill** - investment-banking strategic-alternatives pitch book (Anthropic financial-services Pitch Agent port). ([#888])
 - **`github-dashboard` skill.** ([#666])
 - **`clinical-case-report` skill.** ([#581])
-- **`social-media-matrix-tracker` skill** — live-artifact tracker. ([#810])
+- **`social-media-matrix-tracker` skill** - live-artifact tracker. ([#810])
 - **`trading-analysis` live-artifact dashboard skill.** ([#824])
 - **`otd-operations-brief` live-artifact template.** ([#794])
 - **32 zhangzara HTML deck templates.** ([#704])
@@ -646,7 +646,7 @@ A connectivity-and-iteration release: OpenDesign becomes a fully bidirectional M
 - Hardened security scan findings and upgraded dependencies. ([#806])
 - Strengthened e2e PR coverage and entry/settings automation coverage. ([#796], [#811])
 - Refreshed contributors wall and GitHub metrics. ([#856], [#1004], [#853], [#998])
-- Refined `typography-hierarchy` craft docs — clarify edge cases and make lint measurable. ([#979])
+- Refined `typography-hierarchy` craft docs - clarify edge cases and make lint measurable. ([#979])
 
 ### Fixed
 
@@ -742,27 +742,27 @@ A minor release focused on iteration: live-data dashboards graduate to a first-c
 ### Added
 
 #### Web / UI
-- **Inspect mode** — live per-element style tuning in the HTML preview. ([#362])
-- **Accent color control + launcher** — a global accent persists across the desktop launcher and entry view. ([#683])
-- **Connection tests for execution settings** — verify provider config without launching a chat. ([#507])
+- **Inspect mode** - live per-element style tuning in the HTML preview. ([#362])
+- **Accent color control + launcher** - a global accent persists across the desktop launcher and entry view. ([#683])
+- **Connection tests for execution settings** - verify provider config without launching a chat. ([#507])
 - Replaced the SketchEditor `window.prompt()` text tool with an in-app modal so long prompts stop getting clipped. ([#738])
 
 #### Skills, design systems & prompt templates
-- **`live-dashboard` skill** — generic Live Artifact dashboard template. ([#778])
+- **`live-dashboard` skill** - generic Live Artifact dashboard template. ([#778])
 - **`clinic-console` live-artifact template.** ([#795])
 - **FlowAI live dashboard template skill.** ([#801])
 - **Notion-style team dashboard prompt template (Live Artifact).** ([#799])
 - **`waitlist-page` skill.** ([#555])
 - **`social-media-dashboard` skill + Totality Festival design system.** ([#678])
 - **Five Orbit briefing prompt templates.** ([#671])
-- **Craft `form-validation` module** — generated forms follow modern RHF/Zod patterns instead of 2018 Formik habits. ([#625])
+- **Craft `form-validation` module** - generated forms follow modern RHF/Zod patterns instead of 2018 Formik habits. ([#625])
 
 #### Critique Theater
-- **Phase 5** — panel prompt template + system composer wiring. ([#524])
+- **Phase 5** - panel prompt template + system composer wiring. ([#524])
 
 #### Daemon and agents
 - **Qoder CLI** agent adapter. ([#626])
-- **Project transcript export to disk** for downstream tools (replay, audit, sharing) — prereq for #450. ([#493])
+- **Project transcript export to disk** for downstream tools (replay, audit, sharing) - prereq for #450. ([#493])
 - Override the Codex executable path for nvm / mise / fnm-installed toolchains. ([#755])
 - Codex image projects can use built-in imagegen. ([#622])
 - DeepSeek v4 models in the model catalog. ([#722])
@@ -773,7 +773,7 @@ A minor release focused on iteration: live-data dashboards graduate to a first-c
 - HyperFrames video previews, provider badge, and source filter on the templates surface. ([#293])
 
 #### Linux & packaging
-- **Linux headless lifecycle** — `install` / `start` / `stop` from CLI without a desktop session. ([#686])
+- **Linux headless lifecycle** - `install` / `start` / `stop` from CLI without a desktop session. ([#686])
 - Improved Windows beta packaging and installer flow. ([#768])
 - Migrated beta release publishing to R2. ([#805])
 
@@ -886,18 +886,18 @@ A multi-protocol leap: OpenDesign now ships as an MCP server, ships Critique The
 ### Added
 
 #### MCP & agent integration
-- **`od mcp` — expose OpenDesign as a stdio MCP server.** Coding agents in other repos (Claude Code, Codex, Cursor, VS Code, Antigravity, Zed, Windsurf) can read files from local OpenDesign projects directly, including the project the user has open in the OpenDesign app right now. ([#399])
-- **Link code folder support for agent context** — point agents at any local code folder alongside the design project. ([#455])
+- **`od mcp` - expose OpenDesign as a stdio MCP server.** Coding agents in other repos (Claude Code, Codex, Cursor, VS Code, Antigravity, Zed, Windsurf) can read files from local OpenDesign projects directly, including the project the user has open in the OpenDesign app right now. ([#399])
+- **Link code folder support for agent context** - point agents at any local code folder alongside the design project. ([#455])
 - Kilo CLI (ACP) agent adapter. ([#480])
 - DeepSeek TUI agent adapter. ([#439])
 
 #### Critique workflow
-- **Critique Theater Phase 4** — persistence, transcript, and orchestrator. The "Design Jury" multi-panelist scoring pipeline is now end-to-end. ([#481])
-- Critique Theater foundation — shared contracts and streaming v1 parser (Phases 0–2). ([#387])
+- **Critique Theater Phase 4** - persistence, transcript, and orchestrator. The "Design Jury" multi-panelist scoring pipeline is now end-to-end. ([#481])
+- Critique Theater foundation - shared contracts and streaming v1 parser (Phases 0-2). ([#387])
 
 #### Preview pane
 - **Live-reload preview iframes** when project files change on disk. ([#409])
-- **Tweaks mode for HTML previews** — element picker, pod selection, batched chat attachments. ([#513])
+- **Tweaks mode for HTML previews** - element picker, pod selection, batched chat attachments. ([#513])
 - URL-load HTML preview iframes by default (`?forceInline=1` opt-out). ([#384])
 - **Live artifacts and Composio connector catalog.** ([#381])
 
@@ -1062,7 +1062,7 @@ A fast follow-up to 0.2.0 focused on richer design workflows, packaged-agent rel
 
 ## [0.2.0] - 2026-05-02
 
-A feature-heavy follow-up to 0.1.0 — dark mode, xAI Grok Imagine media generation, headless deploy mode, OpenClaude fallback, four new locales, and a much richer skill / design-system / prompt-template catalog. 45 merged PRs from 27 contributors.
+A feature-heavy follow-up to 0.1.0 - dark mode, xAI Grok Imagine media generation, headless deploy mode, OpenClaude fallback, four new locales, and a much richer skill / design-system / prompt-template catalog. 45 merged PRs from 27 contributors.
 
 ### Added
 
@@ -1109,7 +1109,7 @@ A feature-heavy follow-up to 0.1.0 — dark mode, xAI Grok Imagine media generat
 ### Fixed
 
 #### Daemon
-- Restore `startServer` Promise contract — return `url` / `{ url, server }`. ([#268])
+- Restore `startServer` Promise contract - return `url` / `{ url, server }`. ([#268])
 - Emit `tool_use` from `tool_execution_start` in pi-rpc. ([#186])
 - Clamp Codex reasoning effort to model-supported values. ([#223])
 - Deliver Claude Code prompt via stdin to avoid spawn `E2BIG` / `ENAMETOOLONG`. ([#143])
@@ -1143,7 +1143,7 @@ A feature-heavy follow-up to 0.1.0 — dark mode, xAI Grok Imagine media generat
 
 ## [0.1.0] - 2026-05-01
 
-First public release of OpenDesign — a local-first, open-source alternative to Anthropic's Claude Design. It detects your installed code-agent CLI, runs design skills against curated design systems, and streams artifacts into a sandboxed in-app preview.
+First public release of OpenDesign - a local-first, open-source alternative to Anthropic's Claude Design. It detects your installed code-agent CLI, runs design skills against curated design systems, and streams artifacts into a sandboxed in-app preview.
 
 ### Added
 

@@ -1,6 +1,6 @@
 ---
 name: performance-and-web-vitals
-description: Lighthouse audits and Core Web Vitals — LCP, CLS, INP. Use when optimising page load, layout shift, input delay, images, fonts or render-blocking resources.
+description: Lighthouse audits and Core Web Vitals - LCP, CLS, INP. Use when optimising page load, layout shift, input delay, images, fonts or render-blocking resources.
 metadata:
   priority: 8
   docs:
@@ -58,7 +58,7 @@ retrieval:
 ## Run a Lighthouse Audit
 
 ```bash
-# CLI audit — outputs JSON and HTML report
+# CLI audit - outputs JSON and HTML report
 npx lighthouse https://example.com --output html --output-path ./lighthouse-report.html
 
 # Headless, useful in CI
@@ -82,7 +82,7 @@ Or open Chrome DevTools → Lighthouse tab → Analyse page load.
 
 ## Core Web Vitals
 
-### LCP — Largest Contentful Paint
+### LCP - Largest Contentful Paint
 *How fast does the main content appear?*
 
 **Target: ≤ 2.5s**
@@ -107,16 +107,16 @@ LCP measures when the largest visible element (hero image, heading, video poster
 <img src="hero.webp" alt="..." fetchpriority="high" width="1200" height="600">
 ```
 
-Never use `loading="lazy"` on the LCP image — it delays the most important render.
+Never use `loading="lazy"` on the LCP image - it delays the most important render.
 
 ---
 
-### CLS — Cumulative Layout Shift
+### CLS - Cumulative Layout Shift
 *Does content jump around while loading?*
 
 **Target: ≤ 0.1**
 
-CLS measures unexpected layout shifts — content moving after it has rendered. Caused by images without dimensions, late-loading ads, fonts swapping, or dynamic content injected above existing content.
+CLS measures unexpected layout shifts - content moving after it has rendered. Caused by images without dimensions, late-loading ads, fonts swapping, or dynamic content injected above existing content.
 
 **Common causes and fixes:**
 
@@ -143,7 +143,7 @@ CLS measures unexpected layout shifts — content moving after it has rendered. 
 
 ---
 
-### INP — Interaction to Next Paint
+### INP - Interaction to Next Paint
 *How quickly does the page respond to user input?*
 
 **Target: ≤ 200ms**
@@ -187,10 +187,10 @@ Images are the single biggest performance lever on most pages.
 ```
 
 **Rules:**
-- Always set `width` and `height` — prevents CLS
+- Always set `width` and `height` - prevents CLS
 - Use `loading="lazy"` below the fold, never on LCP image
-- Serve WebP or AVIF — typically 30–50% smaller than JPEG
-- Size images to their display size — do not serve 2000px image for a 400px slot
+- Serve WebP or AVIF - typically 30-50% smaller than JPEG
+- Size images to their display size - do not serve 2000px image for a 400px slot
 - Use a CDN with automatic format conversion where possible
 
 ---
@@ -213,13 +213,13 @@ Web fonts block rendering if not handled correctly.
   font-family: 'Brand';
   src: url('/fonts/brand.woff2') format('woff2');
   font-display: swap;     /* show fallback immediately, swap when loaded */
-  /* font-display: optional; — never swap, use fallback if not cached */
+  /* font-display: optional; - never swap, use fallback if not cached */
 }
 ```
 
-- `font-display: swap` — good for headings, acceptable CLS
-- `font-display: optional` — zero CLS, font only used if cached (best for body text)
-- Subset fonts to the characters actually used — reduces file size by 60–80%
+- `font-display: swap` - good for headings, acceptable CLS
+- `font-display: optional` - zero CLS, font only used if cached (best for body text)
+- Subset fonts to the characters actually used - reduces file size by 60-80%
 
 ---
 
@@ -234,8 +234,8 @@ Web fonts block rendering if not handled correctly.
 <script type="module" src="app.js"></script>
 ```
 
-- `defer`: executes after HTML parsed, in order — use for most scripts
-- `async`: executes as soon as downloaded, out of order — use for independent scripts (analytics)
+- `defer`: executes after HTML parsed, in order - use for most scripts
+- `async`: executes as soon as downloaded, out of order - use for independent scripts (analytics)
 - Never block the main thread with synchronous `<script>` in `<head>`
 
 ---
@@ -273,9 +273,9 @@ lhci autorun --upload.target=temporary-public-storage
 
 - [ ] Lighthouse performance score ≥ 90
 - [ ] Lighthouse accessibility score = 100
-- [ ] LCP ≤ 2.5s — LCP image preloaded, no `loading="lazy"` on it
-- [ ] CLS ≤ 0.1 — all images have `width` and `height`, no layout-shifting animations
-- [ ] INP ≤ 200ms — no heavy synchronous JS on main thread
+- [ ] LCP ≤ 2.5s - LCP image preloaded, no `loading="lazy"` on it
+- [ ] CLS ≤ 0.1 - all images have `width` and `height`, no layout-shifting animations
+- [ ] INP ≤ 200ms - no heavy synchronous JS on main thread
 - [ ] Images served as WebP or AVIF with correct dimensions
 - [ ] `loading="lazy"` on all below-fold images
 - [ ] Web fonts use `font-display: swap` or `optional`

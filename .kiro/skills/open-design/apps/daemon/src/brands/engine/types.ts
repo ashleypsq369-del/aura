@@ -14,7 +14,7 @@
  *  - The brand is reduced to a tiny SeedToken (~20 fields); everything else is
  *    deterministically DERIVED. This is why one URL yields a whole system.
  *  - Variants (light / dark / compact) are the SAME seed run through a
- *    different algorithm — never hand-authored.
+ *    different algorithm - never hand-authored.
  */
 
 // ─────────────────────────── Seed (the minimal input surface) ───────────────
@@ -28,7 +28,7 @@ export interface SeedToken {
   colorInfo: string;
   /** Empty string => falls back to colorInfo at derive time. */
   colorLink: string;
-  /** "#000000" on light themes, "#ffffff" on dark — neutral text is derived from this via alpha. */
+  /** "#000000" on light themes, "#ffffff" on dark - neutral text is derived from this via alpha. */
   colorTextBase: string;
   /** "#ffffff" on light themes, "#000000" on dark. */
   colorBgBase: string;
@@ -212,8 +212,8 @@ export function varRef(tokenKey: string, fallback?: string): string {
 /**
  * True when a scraped font family name is safe to embed in a CSS font stack.
  *
- * Extractors sometimes capture CSS *source text* instead of a real family —
- * e.g. Tailwind v4's `--theme(--default-font-family` — and one unbalanced
+ * Extractors sometimes capture CSS *source text* instead of a real family -
+ * e.g. Tailwind v4's `--theme(--default-font-family` - and one unbalanced
  * parenthesis inside the emitted `--brand-font-family` value swallows every
  * later `:root` declaration, unstyling the whole kit. A real family name
  * (including CJK names) never needs CSS syntax characters, so reject any

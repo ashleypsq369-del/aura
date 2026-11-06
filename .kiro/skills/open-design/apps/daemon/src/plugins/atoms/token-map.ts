@@ -1,4 +1,4 @@
-// Phase 6/7 entry slice / spec §10 / §21.3.1 — token-map atom.
+// Phase 6/7 entry slice / spec §10 / §21.3.1 - token-map atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/token-map/.
 // The runner crosswalks an extracted token bag (output of
@@ -12,8 +12,8 @@
 //   <cwd>/token-map/spacing.json
 //   <cwd>/token-map/radius.json
 //   <cwd>/token-map/shadow.json
-//   <cwd>/token-map/unmatched.json     — { source, reason }[]
-//   <cwd>/token-map/meta.json          — { sourceKind, generatedAt,
+//   <cwd>/token-map/unmatched.json     - { source, reason }[]
+//   <cwd>/token-map/meta.json          - { sourceKind, generatedAt,
 //                                           atomDigest, designSystemId? }
 //
 // Match strategy (deterministic, in this order):
@@ -24,16 +24,16 @@
 //      'ds-' prefixes and lower-cases.
 //
 // Anything else lands in unmatched[] with one of the reasons:
-//   'no-target-equivalent'   — no target with the same value/name.
-//   'target-collision'       — multiple sources map to the same target
+//   'no-target-equivalent'   - no target with the same value/name.
+//   'target-collision'       - multiple sources map to the same target
 //                               (kept for the first source; subsequent
 //                                are listed unmatched with a hint).
-//   'invalid-source'         — source token value is malformed.
+//   'invalid-source'         - source token value is malformed.
 //
 // The atom is intentionally conservative: it never invents targets,
 // never relies on perceptual proximity (the SKILL.md fragment routes
 // that to the visual-diff evaluator). False negatives are preferable
-// to false positives — `unmatched.json` is the audit list the user
+// to false positives - `unmatched.json` is the audit list the user
 // reviews.
 
 import path from 'node:path';
@@ -49,7 +49,7 @@ export interface DesignSystemToken {
   // kinds design-extract emits.
   kind: DesignTokenKind;
   value: string;
-  // Optional human description — surfaced in unmatched.json hints.
+  // Optional human description - surfaced in unmatched.json hints.
   description?: string;
 }
 
@@ -108,7 +108,7 @@ export interface TokenMapOptions {
   // never reads filesystem directly so it stays unit-testable.
   designSystem: DesignSystemTokenBag;
   // Strict mode aborts when ANY source token can't be mapped.
-  // Default 'soft' — populates unmatched[] and continues.
+  // Default 'soft' - populates unmatched[] and continues.
   strict?: boolean;
 }
 

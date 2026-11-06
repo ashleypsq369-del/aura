@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -209,7 +209,7 @@ export default function Patients() {
  {/* Separator */}
  <div style={{ width:1, height:20, background:'var(--card-border)', flexShrink:0 }}/>
 
- {/* Care setting pills — compact */}
+ {/* Care setting pills - compact */}
  <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
  {CARE_SETTING_FILTERS.map(({value:v,label,icon:CSIcon,color})=>{
  const active = filterCareSetting===v;

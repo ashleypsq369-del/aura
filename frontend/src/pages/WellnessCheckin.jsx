@@ -372,8 +372,8 @@ export default function WellnessCheckin() {
  </div>
 
  <div className="flex justify-between mt-2 px-0.5">
- <span className="text-[10px] text-[var(--text-400)] font-medium">0 — None</span>
- <span className="text-[10px] text-[var(--text-400)] font-medium">10 — Worst</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">0 - None</span>
+ <span className="text-[10px] text-[var(--text-400)] font-medium">10 - Worst</span>
  </div>
  </motion.div>
  );

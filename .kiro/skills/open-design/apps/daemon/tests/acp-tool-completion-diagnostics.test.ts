@@ -68,14 +68,14 @@ function expectOutstanding(events: RunEventForDiagnostics[]) {
 }
 
 /**
- * The SETTLED tool transcript — the `tool_use`/`tool_result` pairs that reach
+ * The SETTLED tool transcript - the `tool_use`/`tool_result` pairs that reach
  * Langfuse, PostHog and the persisted conversation.
  *
  * This used to be `type.startsWith('tool_')`, which was the same set back when
  * a settled pair was the only thing the bridge emitted with that prefix. It no
  * longer is: `tool_in_flight` puts a row on screen while a call runs (W123).
  * That event is live-only and deliberately carries no completion evidence, so
- * counting it here would mean these tests were asserting on the wrong thing —
+ * counting it here would mean these tests were asserting on the wrong thing -
  * see `in-flight rows are not completion evidence` below, which holds the
  * coverage the prefix match was incidentally providing.
  */
@@ -208,7 +208,7 @@ describe('ACP tool completion diagnostics', () => {
   it('in-flight rows are not completion evidence', async () => {
     // A row on screen says "this started", never "this produced something".
     // Arming completion here would let a turn that finished with an open tool
-    // be classified as having output — the exact misread `hasOutstandingTool`
+    // be classified as having output - the exact misread `hasOutstandingTool`
     // exists to prevent.
     const attempt = startAttempt();
     attempt.tool('open-tool', 'in_progress');

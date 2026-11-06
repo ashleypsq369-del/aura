@@ -1,4 +1,4 @@
-<!-- Title: conventional commit style — feat(scope): …, fix(scope): …, chore: … -->
+<!-- Title: conventional commit style - feat(scope): …, fix(scope): …, chore: … -->
 
 ## What
 
@@ -12,7 +12,7 @@
 ## Test plan
 
 <!-- How this was verified: `npm test`, a real CLI run against a live site,
-     qa:diff, or the CI smoke — name the concrete command, not "tested". -->
+     qa:diff, or the CI smoke - name the concrete command, not "tested". -->
 
 ## Checklist
 

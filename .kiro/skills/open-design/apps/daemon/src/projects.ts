@@ -5,7 +5,7 @@
 // on-disk content (HTML artifacts, sketches, uploaded images, pasted text).
 //
 // All paths flowing in from HTTP handlers are validated against the project
-// directory to prevent path traversal — see resolveSafe().
+// directory to prevent path traversal - see resolveSafe().
 
 import { constants as fsConstants, createReadStream } from 'node:fs';
 import { link, lstat, mkdir, readdir, readFile, realpath, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
@@ -93,8 +93,8 @@ function hasExternalProjectRoot(metadata?) {
 // the user's OWN directory, so a hidden path segment (.ssh, .aws, .gnupg, …)
 // would let read/write/delete/rename/folder ops reach credential dotfiles that
 // live outside the app's managed data. Reject hidden segments for every such
-// operation — the single choke point every project file/folder mutation and
-// read funnels through — mirroring the rule buildBatchArchive already enforces
+// operation - the single choke point every project file/folder mutation and
+// read funnels through - mirroring the rule buildBatchArchive already enforces
 // for exports. Managed projects (under PROJECTS_DIR, no external baseDir) are
 // unaffected. Callers pass the raw request name; we normalize before checking.
 export function assertVisibleForImportedProject(name, metadata?) {
@@ -154,7 +154,7 @@ export async function listFiles(projectsRoot, projectId, opts = {}) {
   // projects can contain framework installs too; surfacing package HTML like
   // node_modules/tslib/*.html as artifacts produces blank previews.
   await collectFiles(dir, '', out, isIgnoredProjectDirName, dir);
-  // Newest first — matches the visual order users expect after generating.
+  // Newest first - matches the visual order users expect after generating.
   out.sort((a, b) => b.mtime - a.mtime);
   const since = Number(opts.since);
   if (Number.isFinite(since) && since > 0) {
@@ -263,7 +263,7 @@ export async function deleteProjectFolder(projectsRoot, projectId, name, metadat
   await rm(target, { recursive: true, force: true });
 }
 
-// Best-effort entry-file detector — looks for index.html at the root,
+// Best-effort entry-file detector - looks for index.html at the root,
 // then any *.html file. Returns null if nothing obvious is found, in
 // which case the project simply opens to the file panel with no
 // auto-selected tab.
@@ -324,8 +324,8 @@ async function collectFiles(dir, relDir, out, shouldSkipDir?: (name: string) => 
 }
 
 // Build a ZIP of every file under the project directory (or under `root`,
-// if it points at a subdirectory). Mirrors listFiles' filtering — dotfiles
-// and `.artifact.json` sidecars are excluded — so the archive matches what
+// if it points at a subdirectory). Mirrors listFiles' filtering - dotfiles
+// and `.artifact.json` sidecars are excluded - so the archive matches what
 // the user sees in the file panel. Used by the "Download as .zip" share
 // menu item, which exports the user's actual project tree (e.g. the
 // uploaded `ui-design/` folder), not just the rendered HTML.
@@ -361,7 +361,7 @@ export async function createProjectArchiveStream(projectsRoot, projectId, root, 
 
   // Stat the archive root up-front so a missing/non-directory target gives a
   // clear ENOENT/ENOTDIR error. Without this the recursive walk swallows
-  // ENOENT and we'd report the directory as "empty" instead — confusing if
+  // ENOENT and we'd report the directory as "empty" instead - confusing if
   // the project (or a subdir) was deleted concurrently with the download.
   let rootStat;
   try {
@@ -397,7 +397,7 @@ export async function createProjectArchiveStream(projectsRoot, projectId, root, 
   }
   addDesignHandoff(zip, entries, archiveBaseName || path.basename(projectRoot));
   addDesignManifest(zip, entries, archiveBaseName || path.basename(projectRoot));
-  // Level 6 is the zlib default — balances speed and ratio for typical
+  // Level 6 is the zlib default - balances speed and ratio for typical
   // project trees (HTML/CSS/JS plus a handful of assets). Level 9 buys
   // <5% on already-compressed PNGs/fonts at 2-3× CPU; level 1 produces
   // noticeably larger archives. Revisit only if profiling says so.
@@ -506,7 +506,7 @@ export async function createBatchArchiveStream(projectsRoot, projectId, fileName
     eligible.push({ name, filePath, mtime: st.mtimeMs });
   }
 
-  // Fail-fast: any rejected entry means the request is invalid — mirror the
+  // Fail-fast: any rejected entry means the request is invalid - mirror the
   // strict rejection semantics of the panel and full archive.
   if (rejected.length > 0) {
     const err = new Error(
@@ -733,7 +733,7 @@ This archive is the source of truth for turning the design into production code.
 - Supporting assets detected: ${assetFiles.length}
 
 ## Responsive contract
-Validate the implementation across this 2025–2026 viewport matrix:
+Validate the implementation across this 2025-2026 viewport matrix:
 - Mobile compact: 360×800
 - Mobile standard: 390×844
 - Mobile large: 430×932
@@ -794,7 +794,7 @@ ${list(assetFiles)}
 1. Inspect \`${entryFile}\` and \`${DESIGN_MANIFEST_FILENAME}\` first and identify reusable components before coding.
 2. Implement each user-facing screen file as its own route/surface; keep launcher, landing, app, platform, and OS widget files separate.
 3. Extract design tokens into the target stack: colors, type scale, spacing, radius, shadows, and motion.
-4. Implement layout with real 2025–2026 responsive breakpoints, fluid type/spacing, and container-query-aware component behavior; test with no horizontal overflow.
+4. Implement layout with real 2025-2026 responsive breakpoints, fluid type/spacing, and container-query-aware component behavior; test with no horizontal overflow.
 5. Preserve interactive controls, hover/focus/pressed states, form behavior, validation, and copy actions where present.
 6. Implement domain-specific in-app modules with real states; do not flatten them into generic cards.
 7. Keep landing page, product screens, and OS widget/quick-access surfaces separate when present.
@@ -908,7 +908,7 @@ export async function writeProjectFile(
       // and are skipped.
       if (identifier.length > 0 && STUB_GUARDED_MANIFEST_KINDS.has(validatedManifest.kind)) {
         // Scan the directory the new file actually lands in, not the project
-        // root — writeProjectFile accepts nested paths like reports/X.html
+        // root - writeProjectFile accepts nested paths like reports/X.html
         // and a root-only scan would miss prior siblings in subdirectories.
         const guard = await evaluateArtifactStubGuard({
           scanDir: path.dirname(target),
@@ -1573,7 +1573,7 @@ export function sanitizeName(raw) {
 export function decodeMultipartFilename(name) {
   if (!name || typeof name !== 'string') return name ?? '';
   // If any code point exceeds 0xFF the source is already a properly
-  // decoded Unicode string — for example, multer received an RFC 5987
+  // decoded Unicode string - for example, multer received an RFC 5987
   // `filename*` parameter and decoded it as UTF-8. Re-running latin1
   // -> utf8 here would corrupt those names, so exit early.
   for (let i = 0; i < name.length; i++) {
@@ -1591,7 +1591,7 @@ function toProjectPath(raw) {
 // Validates an id string for use as a path segment under a daemon-managed
 // directory (`.od/projects/<id>`, `design-systems/<id>`, etc.). The character
 // class allows dots so ids like `my-project.v2` work, but pure-dot ids
-// (`.`, `..`, `...`) MUST be rejected — they pass the char-class check but
+// (`.`, `..`, `...`) MUST be rejected - they pass the char-class check but
 // resolve to the parent directory when fed into `path.join`. Without the
 // pure-dot guard, an attacker could create a project row with id `..` (or
 // reach this code via a percent-encoded URL like `/api/projects/%2e%2e/...`

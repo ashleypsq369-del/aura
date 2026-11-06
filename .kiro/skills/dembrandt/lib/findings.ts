@@ -1,9 +1,9 @@
 /**
- * Design-system findings — the honest, computable audits that back the report's
+ * Design-system findings - the honest, computable audits that back the report's
  * summary scores. Every gauge number traces to a concrete finding here; nothing
  * is a vanity metric. These are the decay signals product-strategy names: a hex
  * off by a hair (ΔE), a role with no visual hierarchy, a brand colour that fails
- * contrast, an off-scale spacing value. Pure and deterministic — given the same
+ * contrast, an off-scale spacing value. Pure and deterministic - given the same
  * extraction it always returns the same findings, so it is safe to gate on.
  *
  * This mirrors the documented `--lint` categories (development-prompts.md): each
@@ -47,7 +47,7 @@ export function computeFindings(result: BrandingResult): FindingsReport {
   const findings: Finding[] = [];
 
   // 1. Near-duplicate palette colours (ΔE2000 < just-noticeable). The "#133074
-  //    where #133174 should be" decay — two tokens that are visually one colour.
+  //    where #133174 should be" decay - two tokens that are visually one colour.
   const palette = (result.colors?.palette ?? [])
     .map((c) => (c.normalized || c.color || "").toLowerCase())
     .filter((h) => /^#[0-9a-f]{6}$/i.test(h));
@@ -65,13 +65,13 @@ export function computeFindings(result: BrandingResult): FindingsReport {
           category: "duplication",
           group: "Color",
           severity: "warn",
-          message: `${palette[i]} and ${palette[j]} are perceptually identical (ΔE ${d.toFixed(1)}) — likely one token split in two.`,
+          message: `${palette[i]} and ${palette[j]} are perceptually identical (ΔE ${d.toFixed(1)}) - likely one token split in two.`,
         });
       }
     }
   }
 
-  // 2. Type roles with no hierarchy — two distinct roles sharing size + weight.
+  // 2. Type roles with no hierarchy - two distinct roles sharing size + weight.
   //    Only flag where hierarchy is *expected*: two heading levels that collide,
   //    or a heading sharing a size with body. Body/link/ui sharing a size is the
   //    convention, not a smell, so those groups are skipped.
@@ -99,15 +99,15 @@ export function computeFindings(result: BrandingResult): FindingsReport {
         category: "consistency",
         group: "Typography",
         severity: "warn",
-        message: `${roles.slice(0, 4).join(", ")} share ${px}px${weight ? ` / ${weight}` : ""} — no visual hierarchy between them.`,
+        message: `${roles.slice(0, 4).join(", ")} share ${px}px${weight ? ` / ${weight}` : ""} - no visual hierarchy between them.`,
       });
     }
   }
 
-  // 3. Brand colour contrast on white — the default canvas. A primary that can't
+  // 3. Brand colour contrast on white - the default canvas. A primary that can't
   //    meet AA as text on white is the "brand colour fails contrast" decay. Warn
   //    (not error): it may be used only as a fill behind white text, which we
-  //    can't confirm here. Checked against white only — every colour trivially
+  //    can't confirm here. Checked against white only - every colour trivially
   //    clears one of pure black/white, so "best of the two" would never fire.
   const primary = result.colors?.semantic?.primary as string | undefined;
   if (primary) {
@@ -117,12 +117,12 @@ export function computeFindings(result: BrandingResult): FindingsReport {
         category: "contrast",
         group: "Contrast",
         severity: "warn",
-        message: `Primary ${primary} has low contrast on white (${onWhite.toFixed(1)}:1) — fails WCAG AA for text.`,
+        message: `Primary ${primary} has low contrast on white (${onWhite.toFixed(1)}:1) - fails WCAG AA for text.`,
       });
     }
   }
 
-  // 4. Off-scale spacing — values that break the detected base grid.
+  // 4. Off-scale spacing - values that break the detected base grid.
   const scaleType = result.spacing?.scaleType ?? "";
   const base = spacingBase(scaleType);
   if (base) {
@@ -139,7 +139,7 @@ export function computeFindings(result: BrandingResult): FindingsReport {
     }
   }
 
-  // Two scores, each derived from its own findings — never invented. Errors
+  // Two scores, each derived from its own findings - never invented. Errors
   // cost more than warnings. Consistency = type/spacing/duplication; Contrast =
   // accessibility. Both are always computable, so the header is never one lone
   // gauge.

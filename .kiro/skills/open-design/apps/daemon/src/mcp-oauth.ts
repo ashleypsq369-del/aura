@@ -1,7 +1,7 @@
 // Daemon-side OAuth 2.1 client for HTTP / SSE MCP servers.
 //
 // Replaces the per-agent `mcp-remote` subprocess that bound a transient
-// `localhost:<port>` listener — that pattern can never work for a cloud-
+// `localhost:<port>` listener - that pattern can never work for a cloud-
 // deployed daemon (the user's browser can't reach the listener) and it
 // also broke locally because the listener died with the agent turn.
 //
@@ -25,7 +25,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import path from 'node:path';
 
 // ───────────────────────────────────────────────────────────────────────
-// Types — narrow subsets of the relevant RFC payloads.
+// Types - narrow subsets of the relevant RFC payloads.
 // ───────────────────────────────────────────────────────────────────────
 
 /** RFC 9728 `oauth-protected-resource` document fields we use. */
@@ -85,7 +85,7 @@ export interface PendingAuthState {
 // PKCE + state helpers.
 // ───────────────────────────────────────────────────────────────────────
 
-const VERIFIER_LEN = 64; // RFC 7636 §4.1: 43–128 chars
+const VERIFIER_LEN = 64; // RFC 7636 §4.1: 43-128 chars
 
 function base64url(buf: Buffer): string {
   return buf
@@ -340,7 +340,7 @@ export function buildAuthorizeUrl(input: AuthorizeUrlInput): string {
   u.searchParams.set('code_challenge', input.codeChallenge);
   u.searchParams.set('code_challenge_method', 'S256');
   if (input.scope) u.searchParams.set('scope', input.scope);
-  // RFC 8707 resource indicator — narrows the issued token to the MCP
+  // RFC 8707 resource indicator - narrows the issued token to the MCP
   // resource we actually care about. Most authoritative MCP servers
   // require it; harmless when ignored.
   if (input.resource) u.searchParams.set('resource', input.resource);
@@ -408,7 +408,7 @@ async function tokenRequest(
     accept: 'application/json',
   };
   if (clientSecret) {
-    // RFC 6749 §2.3.1 — confidential clients use HTTP Basic with the
+    // RFC 6749 §2.3.1 - confidential clients use HTTP Basic with the
     // client_id we already put in the form. Public clients (PKCE-only)
     // skip this branch.
     const basic = Buffer.from(`${form.get('client_id')}:${clientSecret}`).toString('base64');
@@ -447,8 +447,8 @@ async function safeText(res: Response): Promise<string> {
 
 /**
  * The OAuth dance is split across two HTTP requests on our side:
- *   1. POST /api/mcp/oauth/start          — we mint state + verifier
- *   2. GET  /api/mcp/oauth/callback       — browser returns code + state
+ *   1. POST /api/mcp/oauth/start          - we mint state + verifier
+ *   2. GET  /api/mcp/oauth/callback       - browser returns code + state
  * State has to survive between (1) and (2) on the daemon. We keep it in a
  * Map with a TTL sweeper; persistence isn't needed because the user has
  * to complete auth in the same daemon process anyway (state is single-use).
@@ -464,7 +464,7 @@ export class PendingAuthCache {
     this.startSweeper();
   }
 
-  /** One-shot consume — any successful callback removes the state so a
+  /** One-shot consume - any successful callback removes the state so a
    * replay can't reuse it. */
   consume(state: string): PendingAuthState | null {
     const v = this.store.get(state);
@@ -541,7 +541,7 @@ export async function beginAuth(
 
   // Step 1: ask the MCP server who its auth server is. If the server
   // doesn't publish protected-resource metadata, fall back to assuming
-  // the resource origin IS the auth server — most "stand-alone" MCP
+  // the resource origin IS the auth server - most "stand-alone" MCP
   // providers (Higgsfield etc.) host both at the same host.
   const prm = await discoverProtectedResource(input.serverUrl, fetchImpl);
   const issuerHint = prm?.authorization_servers?.[0];

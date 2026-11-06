@@ -1,4 +1,4 @@
-/**
+﻿/**
  * FocusedAIExplanation
  * ====================
  * Matches the clinical reference design:
@@ -66,7 +66,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
     if (data?.vital_type) return data.vital_type.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) + ' Reading';
     if (data?.symptom_type) return data.symptom_type.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) + ' Assessment';
     if (data?.medication_name) return data.medication_name;
-    return data?.patient_name ? `${data.patient_name} — ${findingLabel}` : 'Clinical Finding';
+    return data?.patient_name ? `${data.patient_name} - ${findingLabel}` : 'Clinical Finding';
   })();
 
   const currentValue = fmtValue(
@@ -177,7 +177,7 @@ export default function FocusedAIExplanation({ data, onClose }) {
             {/* Info row */}
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))',gap:1,borderTop:'1px solid #f1f5f9',borderBottom:'1px solid #f1f5f9',padding:'10px 0'}}>
               {[
-                {label:'PATIENT', value:data?.patient_name||'—'},
+                {label:'PATIENT', value:data?.patient_name||'-'},
                 {label:'FINDING', value:findingLabel.replace(/\b\w/g,c=>c.toUpperCase())},
                 currentValue ? {label:'VALUE', value:currentValue} : null,
                 {label:'RISK', value:rc.label, color:rc.color},
@@ -244,11 +244,11 @@ export default function FocusedAIExplanation({ data, onClose }) {
                   {data.relevant_factors.map((f,i)=>(
                     <div key={i} style={{display:'flex',alignItems:'center',gap:10}}>
                       <span style={{fontSize:11,color:'#94a3b8',width:16,flexShrink:0,fontWeight:700}}>#{i+1}</span>
-                      <span style={{fontSize:12,color:'#334155',flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.feature_name?.replace(/_/g,' ')||'—'}</span>
+                      <span style={{fontSize:12,color:'#334155',flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.feature_name?.replace(/_/g,' ')||'-'}</span>
                       <div style={{width:100,height:5,background:'#e2e8f0',borderRadius:99,flexShrink:0,overflow:'hidden'}}>
                         <div style={{height:'100%',width:`${Math.min(Math.round((f.importance||0.5)*100),100)}%`,background:f.impact==='increases_risk'?'#ef4444':'#10b981',borderRadius:99}}/>
                       </div>
-                      <span style={{fontSize:11,fontWeight:700,color:f.impact==='increases_risk'?'#ef4444':'#10b981',width:56,textAlign:'right',flexShrink:0}}>{f.display_value||'—'}</span>
+                      <span style={{fontSize:11,fontWeight:700,color:f.impact==='increases_risk'?'#ef4444':'#10b981',width:56,textAlign:'right',flexShrink:0}}>{f.display_value||'-'}</span>
                     </div>
                   ))}
                 </div>

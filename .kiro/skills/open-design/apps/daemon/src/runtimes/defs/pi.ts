@@ -6,7 +6,7 @@ export const piAgentDef = {
     name: 'Pi',
     bin: 'pi',
     versionArgs: ['--version'],
-    // On Windows, pi cold-starts in ~5s solo and 11–15s+ under parallel agent
+    // On Windows, pi cold-starts in ~5s solo and 11-15s+ under parallel agent
     // detection load (Windows Defender scans its 593-file node_modules tree on
     // every spawn). The default 3s version-probe timeout is too tight; raise it
     // so detection doesn't silently abort before reaching fetchModels.
@@ -26,7 +26,7 @@ export const piAgentDef = {
         return null;
       }
     },
-    // Fallback models — the most commonly used providers/models when
+    // Fallback models - the most commonly used providers/models when
     // `pi --list-models` fails or times out.
     fallbackModels: [
       DEFAULT_MODEL_OPTION,
@@ -52,7 +52,7 @@ export const piAgentDef = {
     ],
     // pi's RPC mode drives the entire conversation over stdio JSON-RPC.
     // The daemon sends a `prompt` command and pi streams back typed events.
-    // No prompt in argv — avoids ENAMETOOLONG and keeps the protocol clean.
+    // No prompt in argv - avoids ENAMETOOLONG and keeps the protocol clean.
     buildArgs: (
       _prompt,
       _imagePaths,

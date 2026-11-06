@@ -3,8 +3,8 @@
  *
  * Every turn that ends on this machine passes through the run registry's
  * terminal hook. This module classifies the ones the user should hear about
- * wherever they are — a question waiting for their reply, a finished reply, a
- * failure — and keeps them in a small in-memory log the desktop client polls
+ * wherever they are - a question waiting for their reply, a finished reply, a
+ * failure - and keeps them in a small in-memory log the desktop client polls
  * (`GET /api/run-notices`, `od run notices`).
  *
  * Deliberately in memory: the product rule is that notices are never replayed
@@ -31,7 +31,7 @@ export interface RunNoticeSource {
  *  · failed → `failed`;
  *  · ended on a renderable question form → `awaiting_input` (the same
  *    detection the analytics signal uses);
- *  · an OD Next segment the daemon is about to continue → none — only the
+ *  · an OD Next segment the daemon is about to continue → none - only the
  *    final answer counts (N13 ②). The daemon writes the successor into
  *    `strategyTask.nextRunId` before the source run's terminal transition;
  *  · any other success, including a blocked task → `new_reply` (N13 ③).

@@ -1,10 +1,10 @@
-// Regression cover for #8173 — a bundled skill's own files were reported to the
+// Regression cover for #8173 - a bundled skill's own files were reported to the
 // user as "The user rejected permission to use this specific tool call".
 //
 // The staged copy under `<cwd>/.od-skills/` is only the preferred path.
 // `withSkillRootPreamble()` also hands the agent the skill's absolute root as a
 // fallback, and `resolveChatExtraAllowedDirs` built the run-scoped allowlist
-// from `SKILLS_DIR` — the repository's own `skills/` tree — only. A plugin-local
+// from `SKILLS_DIR` - the repository's own `skills/` tree - only. A plugin-local
 // `SKILL.md` is loaded from the bundled plugin folder instead, so every side
 // file it advertises sat outside the allowlist. OpenCode saw an external
 // directory, asked for approval, and a headless run turned that ask into a
@@ -57,7 +57,7 @@ function bundledPluginRecord(): InstalledPluginRecord {
 
 // The manifest's `od.context.assets` is the skill package's own statement about
 // which files the agent will be sent to open. Reconciling the allowlist against
-// that list — rather than against paths this test picks — is what keeps the
+// that list - rather than against paths this test picks - is what keeps the
 // assertion honest if the plugin's layout changes.
 function declaredAssetPaths(record: InstalledPluginRecord): string[] {
   const assets = record.manifest.od?.context?.assets ?? [];
@@ -90,7 +90,7 @@ function externalDirectoryFor(allowedDirectories: string[]): Record<string, stri
   return parsed.permission?.external_directory ?? {};
 }
 
-describe('run-scoped external_directory allowlist — skill roots', () => {
+describe('run-scoped external_directory allowlist - skill roots', () => {
   it('ships the web-prototype assets its manifest declares', () => {
     const declared = declaredAssetPaths(bundledPluginRecord());
 

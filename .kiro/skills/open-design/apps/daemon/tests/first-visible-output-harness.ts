@@ -3,7 +3,7 @@
 // Both suites drive the REAL daemon (`startServer` + a fake agent CLI on the
 // real spawn path) and read the two timing fields off the real PostHog
 // `run_finished` payload, because the bug this instrumentation exists for was
-// never in a helper — it was in which call site owns the mark. Anything that
+// never in a helper - it was in which call site owns the mark. Anything that
 // stubs the emission path would prove the wrong thing.
 import type { Server } from 'node:http';
 import { createServer } from 'node:http';
@@ -64,7 +64,7 @@ export type CaptureSink = {
   /**
    * Resolve the run's `run_finished` timing, or throw. `flush` must drive the
    * daemon's own analytics shutdown (`startServer(...).shutdown`), which awaits
-   * posthog-node's drain — that is what makes delivery deterministic instead of
+   * posthog-node's drain - that is what makes delivery deterministic instead of
    * hostage to an arbitrary sleep. The throw is preserved on purpose: a run
    * that never reports is a real regression, not something to wait out.
    */
@@ -271,7 +271,7 @@ export async function createChatProject(
 }
 
 /**
- * Design project carrying an `automatic_default` strategy binding — the shape
+ * Design project carrying an `automatic_default` strategy binding - the shape
  * the OD Next rollout admits. The binding is asserted rather than assumed, so
  * a project-creation change that silently drops it fails here instead of
  * quietly turning the strategy case into an ordinary run.

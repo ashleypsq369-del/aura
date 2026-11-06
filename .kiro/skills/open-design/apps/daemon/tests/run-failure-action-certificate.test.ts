@@ -7,7 +7,7 @@
  * 这里用的字符串是按 vela 的真实拼装方式复原的:
  *   - `apps/cli/internal/agent/opencode_client.go:875`
  *       fmt.Errorf("opencode session error: %s", string(props))
- *     —— 把 opencode `session.error` 的整个 `properties` JSON 原样带上
+ *     -- 把 opencode `session.error` 的整个 `properties` JSON 原样带上
  *   - `apps/cli/internal/agent/acp_runtime.go:1176-1195`
  *       "opencode event stream: " + sanitized(...)  再包一层,截断到 1024
  * 所以 "certificate" 这个词会原样到达 daemon 的分类器。

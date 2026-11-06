@@ -79,7 +79,7 @@ describe('snapDuration', () => {
   });
 });
 
-describe('buildVideoRequest — seedance family', () => {
+describe('buildVideoRequest - seedance family', () => {
   it('t2v: builds a multimodal content array with the prompt', () => {
     const built = buildVideoRequest(SEEDANCE, { prompt: 'a panda', durationSeconds: 5 });
     expect(built.family).toBe('seedance');
@@ -190,7 +190,7 @@ describe('snapResolutionToken', () => {
   });
 });
 
-describe('buildVideoRequest — wan family (happyhorse / wan*)', () => {
+describe('buildVideoRequest - wan family (happyhorse / wan*)', () => {
   const HAPPYHORSE: ModelCapability = {
     id: 'happyhorse-1.0-i2v',
     apiModel: 'happyhorse-1.0-i2v',
@@ -217,7 +217,7 @@ describe('buildVideoRequest — wan family (happyhorse / wan*)', () => {
     });
     expect(built.family).toBe('wan');
     expect(built.hasReference).toBe(true);
-    // No flat top-level prompt / input_reference — those were the broken shape.
+    // No flat top-level prompt / input_reference - those were the broken shape.
     expect(built.body.prompt).toBeUndefined();
     expect(built.body.input_reference).toBeUndefined();
     expect(built.body).toMatchObject({
@@ -246,8 +246,8 @@ describe('buildVideoRequest — wan family (happyhorse / wan*)', () => {
   });
 });
 
-describe('buildVideoRequest — veo family', () => {
-  it('t2v: seconds is a NUMBER and size only — no aspect_ratio (Gemini shim 400s otherwise)', () => {
+describe('buildVideoRequest - veo family', () => {
+  it('t2v: seconds is a NUMBER and size only - no aspect_ratio (Gemini shim 400s otherwise)', () => {
     // Regression: the chat video tool always derives an aspect-based size AND an
     // aspect_ratio, and the generic branch sent seconds as the string "8". The
     // gateway's OpenAI→Gemini predictLongRunning shim wants an integer and only
@@ -293,7 +293,7 @@ describe('buildVideoRequest — veo family', () => {
   });
 });
 
-describe('buildVideoRequest — generic family (sora)', () => {
+describe('buildVideoRequest - generic family (sora)', () => {
   it('t2v: flat body with seconds string + size, NO aspect_ratio (Sora rejects it), no input_reference', () => {
     const built = buildVideoRequest(SORA, {
       prompt: 'a sunset',
@@ -343,7 +343,7 @@ describe('buildVideoRequest — generic family (sora)', () => {
   });
 });
 
-describe('buildVideoRequest — apiModelI2V + passthrough', () => {
+describe('buildVideoRequest - apiModelI2V + passthrough', () => {
   it('switches to apiModelI2V when a reference image is present', () => {
     const cap: ModelCapability = {
       id: 'wan2.5',

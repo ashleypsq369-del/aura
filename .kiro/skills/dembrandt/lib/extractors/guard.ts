@@ -1,7 +1,7 @@
 /**
  * Fault isolation for the parallel extractors. Each extractor runs inside
- * guardExtractor so a single throw degrades only its own category — recording
- * { stage, reason } and returning a fallback — instead of rejecting Promise.all
+ * guardExtractor so a single throw degrades only its own category - recording
+ * { stage, reason } and returning a fallback - instead of rejecting Promise.all
  * and aborting the entire run. Kept in its own module so the isolation contract
  * is unit-testable without a browser.
  */

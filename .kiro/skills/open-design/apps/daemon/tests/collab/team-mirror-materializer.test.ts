@@ -437,7 +437,7 @@ describe('authorized team mirror SQLite materialization', () => {
  * `MAX(p.updated_at, wp.updated_at)` (see `normalizeWorkspaceProjectRow`'s
  * `lastActivityAt` in routes/project/index.ts, and `listWorkspaceProjects`'
  * own `ORDER BY` in db.ts). So BOTH halves have to answer "when did a person
- * last change this project's content" — a pull that stamps either one with
+ * last change this project's content" - a pull that stamps either one with
  * `Date.now()` is indistinguishable from a real edit.
  *
  * Reported by the owner: a member who opens the client hours later and pulls a

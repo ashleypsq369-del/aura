@@ -1,5 +1,5 @@
-/**
- * Caregivers — Care Team management
+﻿/**
+ * Caregivers - Care Team management
  * Redesigned: underline tab bar, gradient card top bands, Services-style
  * worker cards, gradient avatars, card-surface filter bar, gradient buttons.
  * PageHeader image kept as requested. All functionality preserved.
@@ -95,7 +95,7 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, trust, onBurnoutClic
         display:'flex', flexDirection:'column',
       }}
     >
-      {/* Gradient top band — Services ProviderCard treatment */}
+      {/* Gradient top band - Services ProviderCard treatment */}
       <div style={{ height:4, background:`linear-gradient(to right,${g1},${g2})` }} />
 
       <div style={{ padding:16, display:'flex', flexDirection:'column', gap:12, flex:1 }}>
@@ -408,7 +408,7 @@ export default function Caregivers() {
   const burnoutList  = Array.isArray(burnoutRaw) ? burnoutRaw : burnoutRaw?.caregivers || [];
   const patientList  = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
 
-  /* Batch trust-profile fetch — one query for ALL caregivers, not one per card (fixes B1) */
+  /* Batch trust-profile fetch - one query for ALL caregivers, not one per card (fixes B1) */
   const { data:trustProfilesRaw } = useQuery({
     queryKey: ['trust-profiles-all'],
     queryFn:  () => trustProfileAPI.getAll().then(r => r.data),
@@ -442,10 +442,10 @@ export default function Caregivers() {
   const overloaded    = Object.values(workloadMap).filter(w=>w?.capacity_status==='overloaded').length;
 
   const FILTERS = [
-    { id:'all',       label:'All',       count: isLoading ? '—' : caregivers.length },
-    { id:'available', label:'Available', count: isLoading ? '—' : caregivers.length-overloaded },
-    { id:'burnout',   label:'At Risk',   count: isLoading ? '—' : burnoutAlerts },
-    { id:'overloaded',label:'Overloaded',count: isLoading ? '—' : overloaded },
+    { id:'all',       label:'All',       count: isLoading ? '-' : caregivers.length },
+    { id:'available', label:'Available', count: isLoading ? '-' : caregivers.length-overloaded },
+    { id:'burnout',   label:'At Risk',   count: isLoading ? '-' : burnoutAlerts },
+    { id:'overloaded',label:'Overloaded',count: isLoading ? '-' : overloaded },
   ];
 
   const filtered = useMemo(() => caregivers.filter(cg => {
@@ -623,7 +623,7 @@ export default function Caregivers() {
                         color: active ? '#fff' : '#0f766e',
                         flexShrink:0,
                       }}>
-                        {isLoading ? '—' : caregivers.length}
+                        {isLoading ? '-' : caregivers.length}
                       </span>
                     )}
                     {id==='assignments' && assignments.length > 0 && (
@@ -645,9 +645,9 @@ export default function Caregivers() {
             <div style={{ borderTop:'1px solid var(--card-border)', padding:'12px 16px', display:'flex', flexDirection:'column', gap:8 }}>
               <p style={{ fontSize:10, fontWeight:800, color:'var(--text-300)', textTransform:'uppercase', letterSpacing:'0.1em', margin:0 }}>Team Status</p>
               {[
-                { label:'Available',  value: isLoading?'—':caregivers.length-overloaded, dot:'#10b981', color:'#065f46' },
-                { label:'At Risk',    value: isLoading?'—':burnoutAlerts,                dot: burnoutAlerts>0?'#f59e0b':'var(--card-border)', color: burnoutAlerts>0?'#92400e':'var(--text-400)' },
-                { label:'Overloaded', value: isLoading?'—':overloaded,                   dot: overloaded>0?'#ef4444':'var(--card-border)',    color: overloaded>0?'#991b1b':'var(--text-400)' },
+                { label:'Available',  value: isLoading?'-':caregivers.length-overloaded, dot:'#10b981', color:'#065f46' },
+                { label:'At Risk',    value: isLoading?'-':burnoutAlerts,                dot: burnoutAlerts>0?'#f59e0b':'var(--card-border)', color: burnoutAlerts>0?'#92400e':'var(--text-400)' },
+                { label:'Overloaded', value: isLoading?'-':overloaded,                   dot: overloaded>0?'#ef4444':'var(--card-border)',    color: overloaded>0?'#991b1b':'var(--text-400)' },
               ].map(s => (
                 <div key={s.label} style={{ display:'flex', alignItems:'center', gap:8 }}>
                   <span style={{ width:7, height:7, borderRadius:'50%', background:s.dot, flexShrink:0 }} />
@@ -661,7 +661,7 @@ export default function Caregivers() {
           {/* ── RIGHT: content panel ─────────────────────────────────────── */}
           <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column' }}>
 
-            {/* Content header — title + tab-specific toolbar */}
+            {/* Content header - title + tab-specific toolbar */}
             <div style={{ padding:'12px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', gap:12, flexWrap:'wrap', minHeight:52 }}>
               <p style={{ fontSize:14, fontWeight:700, color:'var(--text-900)', margin:0, flex:1 }}>
                 {tab==='team'?'Care Team':tab==='analytics'?'Team Analytics':tab==='assignments'?'Patient Assignments':'My Patients'}
@@ -766,8 +766,8 @@ export default function Caregivers() {
                       <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
                         {[
                           { l:'Team Size',         v:teamRaw.team_size??caregivers.length,             Icon:Users,         c:'#0d9488' },
-                          { l:'Assigned Patients', v:teamRaw.total_patients_assigned??'—',             Icon:Heart,         c:'#0891b2' },
-                          { l:'Avg per Carer',     v:teamRaw.average_patients_per_caregiver??'—',      Icon:TrendingUp,    c:'#059669' },
+                          { l:'Assigned Patients', v:teamRaw.total_patients_assigned??'-',             Icon:Heart,         c:'#0891b2' },
+                          { l:'Avg per Carer',     v:teamRaw.average_patients_per_caregiver??'-',      Icon:TrendingUp,    c:'#059669' },
                           { l:'Overloaded',        v:teamRaw.overloaded_caregivers??0,                 Icon:AlertTriangle, c:'#ef4444' },
                         ].map(({ l, v, Icon, c }) => (
                           <div key={l} style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 14px', borderRadius:12, border:`1px solid ${c}22`, background:'var(--page-bg)' }}>

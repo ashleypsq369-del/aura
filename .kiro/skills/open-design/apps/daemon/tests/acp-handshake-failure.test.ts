@@ -25,8 +25,8 @@ function classify(errorCode: string | null, error: string) {
  *
  * `deriveRpcCloseReason` in server.ts records `fatal_rpc_error` whenever the
  * host tears the child down after a protocol failure, so every ACP-fatal run
- * reaching the classifier has this event in its stream. Omitting it — as the
- * bare `classify` helper does — hides the branch that decides whether the
+ * reaching the classifier has this event in its stream. Omitting it - as the
+ * bare `classify` helper does - hides the branch that decides whether the
  * failure keeps its retry, which is exactly what the readiness-exit regression
  * turned on.
  */
@@ -100,7 +100,7 @@ describe('withAcpHandshakeFailureGuidance', () => {
     });
     // No CLI build is reported. Naming the version this run started with needs
     // a pre-spawn `--version` read, which this failure deliberately does not
-    // buy — the copy says "the installed version" and stays true without it.
+    // buy - the copy says "the installed version" and stays true without it.
     expect(payload.error.details).not.toHaveProperty('agentCliVersion');
     // A CLI build that refuses `session/new` refuses it again; the payload says so.
     expect(payload.error.retryable).toBe(false);
@@ -198,7 +198,7 @@ describe('ACP handshake rejection classification', () => {
 });
 
 describe('ACP handshake rejection retry policy', () => {
-  it('does not retry a handshake rejection — the same CLI refuses again', () => {
+  it('does not retry a handshake rejection - the same CLI refuses again', () => {
     const decision = retryDecisionFor('json-rpc id 2: Internal error');
     expect(decision.shouldRetry).toBe(false);
     // Classification already marks the handshake rejection non-retryable, so
@@ -261,7 +261,7 @@ describe('ACP handshake rejection retry policy', () => {
 // the code: the CLI answers `initialize`, then rejects `session/new` with
 // `json-rpc id 2: Authentication required`. Because the handshake reading keyed
 // on the JSON-RPC id alone, that user was told to update or reinstall a CLI
-// that was working fine — the one thing they needed to do was sign in.
+// that was working fine - the one thing they needed to do was sign in.
 //
 // Everything in this block is a handshake-numbered failure. What separates
 // these from the CLI-refusal shape above is not *when* they happened but
@@ -335,7 +335,7 @@ describe('handshake failures that name their own remedy', () => {
   });
 
   it('does not retry a signed-out handshake either', () => {
-    // Suppressed as an auth failure rather than as a handshake rejection —
+    // Suppressed as an auth failure rather than as a handshake rejection -
     // a different, more accurate reason for the same outcome. Re-running while
     // still signed out would reproduce it just as reliably.
     const decision = retryDecisionFor(AUTH_REQUIRED);
@@ -378,7 +378,7 @@ describe('handshake failures that name their own remedy', () => {
 
 // The wording of a JSON-RPC rejection is the agent's choice, not a signal. A
 // CLI build that cannot open a session says so as `Internal error`, as `Method
-// not found`, or as `Invalid params` depending on which layer refused — and
+// not found`, or as `Invalid params` depending on which layer refused - and
 // every one of them means the same thing: this build answered `initialize` and
 // then would not start a session.
 //
@@ -499,7 +499,7 @@ describe('handshake rejections the agent did not word as "Internal error"', () =
 // A handshake failure that the run classifier already recognises has a remedy
 // of its own, and that remedy is the one the user must follow. Reading only the
 // three `classifyAgentServiceFailure` classes left every other recognised cause
-// — prompt size above all — looking like an unexplained CLI refusal, so a user
+// - prompt size above all - looking like an unexplained CLI refusal, so a user
 // whose content was too long was told their CLI version was incompatible.
 describe('handshake failures the run classifier already has a remedy for', () => {
   const ALREADY_REMEDIED: ReadonlyArray<readonly [string, string, string]> = [
@@ -571,7 +571,7 @@ describe('handshake failures the run classifier already has a remedy for', () =>
   // The same AMR wrapper text WITHOUT a crash banner, which is the common case:
   // vela's bundled OpenCode simply exited before it answered a health check (a
   // port collision, an OOM kill, a half-written config). vela reports that from
-  // inside `session/new`, so the frame is handshake-numbered — but the agent CLI
+  // inside `session/new`, so the frame is handshake-numbered - but the agent CLI
   // refused nothing, and its build is not the variable. This shape was a
   // retryable `fatal_rpc_error` before the refusal guidance existed, and both
   // halves of the misfire matter: the user is told to replace a healthy CLI,
@@ -609,7 +609,7 @@ describe('handshake failures the run classifier already has a remedy for', () =>
 
   // The wrapper's other startup shapes, from the same two vela call sites
   // (`acp_runtime.go` newSession/loadSession). None of them is a statement
-  // about the agent CLI's own build, and none is deterministic — so the
+  // about the agent CLI's own build, and none is deterministic - so the
   // invariant asserted here is the one that matters to the user, not the
   // bucket: keep the retry, never prescribe a CLI change. Which bucket each
   // lands in is a different question, and an earlier branch that recognises a

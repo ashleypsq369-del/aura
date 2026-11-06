@@ -1,4 +1,4 @@
-// Plan §3.A7 / §3.A8 — pipeline-runner integration test.
+// Plan §3.A7 / §3.A8 - pipeline-runner integration test.
 //
 // Exercises the wiring that joins the pure pipeline scheduler
 // (`pipeline.ts`) onto the run service via:

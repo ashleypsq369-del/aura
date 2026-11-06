@@ -1,5 +1,5 @@
 // Client for the collab cloud (C-lane §D4): the cross-daemon comment relay +
-// member directory. Mirrors the resource-hub integration shape — a factory with
+// member directory. Mirrors the resource-hub integration shape - a factory with
 // injectable fetch/config/timeout, env-scoped config (this file, not
 // app-config.ts, owns OD_COLLAB_CLOUD_*), and a from-env constructor.
 //
@@ -24,7 +24,7 @@ export interface CollabCloudConfig {
 }
 
 /** Read the collab-cloud config from env, or null when no URL is configured
- *  (the single "is collab cloud on?" gate — everything degrades to no-op). */
+ *  (the single "is collab cloud on?" gate - everything degrades to no-op). */
 export function readCollabCloudConfig(
 	env: NodeJS.ProcessEnv = process.env,
 ): CollabCloudConfig | null {
@@ -60,9 +60,9 @@ export interface CollabCloudPullResult {
 	latestSeq: number;
 }
 
-// —— C3-LITE member comment pages ————————————————————————————————————————————
+// -- C3-LITE member comment pages --------------------------------------------
 //
-// One bounded page of the member comment stream (C3-LITE §2–§4). Both
+// One bounded page of the member comment stream (C3-LITE §2-§4). Both
 // transports (Vela CLI and HTTP) return the same typed result so the drain in
 // collab-cloud-service.ts never sees transport details:
 //
@@ -71,7 +71,7 @@ export interface CollabCloudPullResult {
 //   never derived from an envelope we could not read.
 // - Each ITEM is judged on its own. The cloud forwards stored member payloads
 //   verbatim without filling defaults (§6 item 8), so one historical payload
-//   that misses a required field must not reject the page — otherwise the
+//   that misses a required field must not reject the page - otherwise the
 //   cursor can never pass it and sync stops for the whole project. Such items
 //   land in `skipped` and the rest of the page is still applied.
 // - `INVALID_CURSOR`, `CURSOR_STALE` and `SCOPE_CHANGED` are not failures of
@@ -388,7 +388,7 @@ export function parseMemberPage(
 		throw invalidPage("resumeToken invalid");
 	const handoff = p.handoff ?? null;
 	if (p.hasMore) {
-		// An intermediate page — including a legal empty one — only continues.
+		// An intermediate page - including a legal empty one - only continues.
 		if (p.nextPageToken === null || p.resumeToken !== null || handoff !== null)
 			throw invalidPage("intermediate page tokens");
 	} else {
@@ -457,8 +457,8 @@ export function assertMemberPageQuery(
 
 /**
  * Map a transport error to `rebuild-required` when it invalidates the cursor.
- * Everything else — including 400 `INVALID_PAGE_REQUEST`, a programming error
- * that must not be retried into a loop of rebuilds — is rethrown unchanged.
+ * Everything else - including 400 `INVALID_PAGE_REQUEST`, a programming error
+ * that must not be retried into a loop of rebuilds - is rethrown unchanged.
  */
 export function memberPageRebuildResult(
 	error: unknown,

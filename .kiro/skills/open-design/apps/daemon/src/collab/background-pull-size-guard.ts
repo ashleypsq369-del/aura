@@ -1,18 +1,18 @@
 // Size guardrail for BACKGROUND shared-project content pulls (issue #6518,
 // incident #6512): when a teammate publishes a project version, every member
-// daemon proactively materializes the whole tree — hub push lane and catch-up
-// sweep lane alike — with no upper bound. One 7442-file project put its full
+// daemon proactively materializes the whole tree - hub push lane and catch-up
+// sweep lane alike - with no upper bound. One 7442-file project put its full
 // tree on every workspace member's disk. This guard sits in front of the
 // background lanes only (`assessBackgroundContentPull` in
 // proactive-content-pull.ts): it reads the version's manifest entry count
-// through an authorize-only Vela probe — BEFORE any blob download — and
+// through an authorize-only Vela probe - BEFORE any blob download - and
 // defers versions above the threshold to the foreground open-project lane,
 // which never consults it.
 //
 // Fail-closed direction (deliberately inverted relative to the other collab
 // guards): "closed" here is PULL AS BEFORE. Deferring is the new behavior, so
-// every uncertain answer — probe capability missing (old packaged CLI), no
-// count in the output (old server), probe transport failure — degrades to the
+// every uncertain answer - probe capability missing (old packaged CLI), no
+// count in the output (old server), probe transport failure - degrades to the
 // pre-guard pull. A project must never be left permanently unmaterialized
 // because the CLI shipped inside an older client.
 //
@@ -34,7 +34,7 @@ export const BACKGROUND_PULL_MAX_CUMULATIVE_ENTRIES_ENV =
 
 /**
  * Per-process cumulative ceiling for background materialization. Defaults to
- * `0` (disabled), so this ships inert until a deliberate value is chosen —
+ * `0` (disabled), so this ships inert until a deliberate value is chosen -
  * picking that number is a capacity decision that needs production data on
  * real team sizes, not a default inferred from a synthetic workspace.
  */
@@ -92,7 +92,7 @@ export interface BackgroundPullSizeGuardDeps {
    * user actually opens it.
    */
   maxCumulativeEntries?: number;
-  /** Authorize-only manifest probe — must never download blobs. */
+  /** Authorize-only manifest probe - must never download blobs. */
   inspect: (
     scope: BackgroundPullSizeGuardScope,
     version: number,
@@ -107,8 +107,8 @@ export interface BackgroundPullSizeGuardDeps {
     /**
      * Which ceiling deferred this. `oversized` is one project too large on its
      * own; `budget-exhausted` is a small project that simply arrived after the
-     * cumulative budget was spent. They need different responses — raise the
-     * per-project threshold vs. raise the session budget — so a log that
+     * cumulative budget was spent. They need different responses - raise the
+     * per-project threshold vs. raise the session budget - so a log that
      * called both "oversized" sent readers after the wrong one.
      */
     reason: 'oversized' | 'budget-exhausted';
@@ -118,8 +118,8 @@ export interface BackgroundPullSizeGuardDeps {
 
 /**
  * How much this process has let the BACKGROUND lanes materialize. Reported
- * unconditionally — including while the cumulative ceiling is disabled, which
- * is the shipping default — because choosing that ceiling is a capacity
+ * unconditionally - including while the cumulative ceiling is disabled, which
+ * is the shipping default - because choosing that ceiling is a capacity
  * decision that needs real per-launch volume, and a counter that only runs
  * once the ceiling is already set can never supply it.
  */
@@ -127,7 +127,7 @@ export interface BackgroundPullVolume {
   /** Entries cleared for background materialization, summed over every
    *  allowed decision that carried a count. */
   entries: number;
-  /** Allowed decisions that carried a count — pairs with `entries` to give a
+  /** Allowed decisions that carried a count - pairs with `entries` to give a
    *  per-project mean without a second reading. */
   countedProjects: number;
   /**
@@ -158,7 +158,7 @@ export interface BackgroundPullSizeGuard {
 export function createBackgroundPullSizeGuard(
   deps: BackgroundPullSizeGuardDeps,
 ): BackgroundPullSizeGuard {
-  /** Exact resource scope — the same tuple proactive-content-pull keys its
+  /** Exact resource scope - the same tuple proactive-content-pull keys its
    *  cursors by. Two scopes may never share a decision. */
   const scopeKey = (scope: BackgroundPullSizeGuardScope) =>
     JSON.stringify([
@@ -191,7 +191,7 @@ export function createBackgroundPullSizeGuard(
    *  the same version must not re-authorize against the cloud. */
   const allowedVersions = new Map<string, number>();
   /** Once the CLI proves it lacks the probe, stop probing for this daemon's
-   *  lifetime — every decision is 'pull' (status quo) from then on. */
+   *  lifetime - every decision is 'pull' (status quo) from then on. */
   let probeUnavailable = false;
   /** Concurrent lanes assessing the same scope+version share one probe. */
   const probesInFlight = new Map<string, Promise<'pull' | 'defer'>>();
@@ -221,7 +221,7 @@ export function createBackgroundPullSizeGuard(
     }
     // Per-project ceiling FIRST. Exceeding it is a permanent property of the
     // version, so it must be decided (and cached) regardless of how much
-    // budget happens to remain — checking the budget first mislabelled an
+    // budget happens to remain - checking the budget first mislabelled an
     // oversized project as `budget-exhausted` whenever the remainder was
     // smaller than it, and cost a fresh probe on every later round because it
     // never reached the oversized cache.
@@ -250,7 +250,7 @@ export function createBackgroundPullSizeGuard(
       cumulativeEntries + inspection.entryCount > cumulativeLimit
     ) {
       // Remembered like any other deferral. A budget deferral cannot change
-      // until the process restarts, and every map here is process-local — so
+      // until the process restarts, and every map here is process-local - so
       // caching it costs nothing on restart and saves an authorize-only probe
       // (plus a duplicate log line) on every subsequent catch-up round, which
       // otherwise repeat for as long as the head stays unmaterialized.

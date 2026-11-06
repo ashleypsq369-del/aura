@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { classifyVelaCommandFailure } from '../src/collab/public-file-failure.js';
 
-// Vela CLI output contract (vela-cli 0.0.33 – 0.1.3): a failed command exits 1
+// Vela CLI output contract (vela-cli 0.0.33 - 0.1.3): a failed command exits 1
 // and prints `Error: <err>` on stderr; API rejections read
 // `API request failed with status <N>[: <code>]`.
 function rejected(stderr: string): Error {

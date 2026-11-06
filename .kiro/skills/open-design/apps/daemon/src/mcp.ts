@@ -655,13 +655,13 @@ export const TOOL_DEFS = [
   {
     name: 'delete_project',
     description:
-      'Permanently delete an OpenDesign project including its files and conversations. Requires both an explicit project id/name AND confirm:true — there is no active-project fallback because the operation is irreversible.',
+      'Permanently delete an OpenDesign project including its files and conversations. Requires both an explicit project id/name AND confirm:true - there is no active-project fallback because the operation is irreversible.',
     inputSchema: {
       type: 'object',
       properties: {
         project: {
           type: 'string',
-          description: 'Project id (UUID) or name substring. Required — active-context fallback is intentionally disabled.',
+          description: 'Project id (UUID) or name substring. Required - active-context fallback is intentionally disabled.',
         },
         confirm: {
           type: 'boolean',
@@ -698,7 +698,7 @@ export const TOOL_DEFS = [
     annotations: { ...WRITE_ANNOTATIONS, title: 'Create OpenDesign project' },
   },
   // Discovery + generation. An external coding agent does NOT run a
-  // skill itself — it commissions OpenDesign to, via start_run. The
+  // skill itself - it commissions OpenDesign to, via start_run. The
   // daemon then spawns ITS OWN agent (Claude Code / API fallback /…)
   // to do the work. So list_skills / list_plugins exist purely so the
   // caller can discover what it can ask OD to generate; start_run
@@ -707,7 +707,7 @@ export const TOOL_DEFS = [
   // reference material the caller opts into, not something to run.
   {
     name: 'list_skills',
-    description: 'List OpenDesign skills you can pass to start_run as a recipe. Discovery only — OpenDesign runs the skill, not you.',
+    description: 'List OpenDesign skills you can pass to start_run as a recipe. Discovery only - OpenDesign runs the skill, not you.',
     inputSchema: {
       type: 'object',
       properties: { pluginWorkflowId: PLUGIN_WORKFLOW_ID_ARG },
@@ -817,7 +817,7 @@ export const TOOL_DEFS = [
   {
     name: 'get_run',
     description:
-      'Poll a run started by start_run. Returns status (queued|running|succeeded|failed|canceled) plus error info. On success, adds previewUrl (open it in a browser to view the rendered design) and agentMessage (the inner agent\'s textual output reassembled from the event stream — show this when there is no previewUrl, e.g. when the agent asked the user a clarifying question instead of producing files).',
+      'Poll a run started by start_run. Returns status (queued|running|succeeded|failed|canceled) plus error info. On success, adds previewUrl (open it in a browser to view the rendered design) and agentMessage (the inner agent\'s textual output reassembled from the event stream - show this when there is no previewUrl, e.g. when the agent asked the user a clarifying question instead of producing files).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -845,7 +845,7 @@ export const TOOL_DEFS = [
   {
     name: 'list_agents',
     description:
-      'List the agent CLIs OpenDesign can run for start_run.agent. Returns only installed (available) agents by default — pass includeUnavailable:true to also see agents we know about but that are not on PATH (each carries an installUrl for the user). Each entry includes id, name, version, and up to 10 sample models (modelsCount carries the real total).',
+      'List the agent CLIs OpenDesign can run for start_run.agent. Returns only installed (available) agents by default - pass includeUnavailable:true to also see agents we know about but that are not on PATH (each carries an installUrl for the user). Each entry includes id, name, version, and up to 10 sample models (modelsCount carries the real total).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1940,7 +1940,7 @@ async function runMcpStdioImplementation(options: RunMcpOptions): Promise<void> 
         '    Use this to iterate on a file create_artifact already wrote.',
         ' - delete_file(path) to remove one project file (nested paths ok).',
         ' - delete_project(project, confirm:true) for irreversible project',
-        '    removal — requires explicit project + confirm:true.',
+        '    removal - requires explicit project + confirm:true.',
         ' - list_projects to discover what is available on this daemon.',
         ' - get_active_context() if you want the active project/file',
         '    explicitly without making any other tool call.',
@@ -1957,7 +1957,7 @@ async function runMcpStdioImplementation(options: RunMcpOptions): Promise<void> 
         '    If signed out, call the Cloud sign-in tool once, show its activation',
         '    URL/code when present, and poll login status until loggedIn:true.',
         '    The tool and runtime ids are internal protocol; never show them.',
-        ' - list_agents when you need to pass start_run.agent — do not',
+        ' - list_agents when you need to pass start_run.agent - do not',
         '    guess "claude" / "codex" / "opencode"; only agents in the',
         '    returned list will actually spawn on this machine.',
         ' - create_project(name) first if you need a fresh project to',
@@ -1977,19 +1977,19 @@ async function runMcpStdioImplementation(options: RunMcpOptions): Promise<void> 
         '    and a hint to pull the files with get_artifact.',
         ' - cancel_run(runId) aborts an in-flight run.',
         '',
-        'Generation patience: OpenDesign runs typically take 5–30',
+        'Generation patience: OpenDesign runs typically take 5-30',
         'minutes. Polls returning status:running with unchanged file',
         'mtimes is the inner agent thinking, not a hang. Do NOT cancel',
-        'and substitute write_file as a "faster" workaround — that',
+        'and substitute write_file as a "faster" workaround - that',
         'throws away the pipeline\'s design quality and is exactly the',
-        'failure mode this surface is meant to avoid. Poll every 30–60',
+        'failure mode this surface is meant to avoid. Poll every 30-60',
         'seconds, tell the user "still working" between polls, and let',
         'the run finish. Only call cancel_run if the user explicitly',
         'asks you to abort.',
         '',
         'Ambiguous-format requests: words like "PPT" / "deck" / "slides" /',
         '"presentation" / "document" / "PDF" / "doc" map to two different',
-        'deliverables — OpenDesign natively produces browser-viewable',
+        'deliverables - OpenDesign natively produces browser-viewable',
         'HTML/SVG (including HTML-rendered decks), but the user may want a',
         'real binary file (.pptx / .docx / .pdf) which OpenDesign does NOT',
         'produce and which you would have to export yourself from OD\'s',
@@ -2247,7 +2247,7 @@ async function handleMcpToolCall(
         const declaredEntry = project?.metadata?.entryFile ?? null;
         const entryFile = await resolveProjectEntry(baseUrl, id, declaredEntry, headers);
         const previewUrl = rawPreviewUrl(baseUrl, id, entryFile);
-        // Build the studio deep link too — needs the project's
+        // Build the studio deep link too - needs the project's
         // default conversation, which we look up once. Cheap to skip
         // when the daemon has no webBaseUrl configured.
         const webBase = await getWebBaseUrl(baseUrl);
@@ -2462,7 +2462,7 @@ async function deleteProject(
   const json = (await resp.json()) as JsonObject;
   // The tool accepts a name substring (see resolveProjectId), so the
   // caller needs the resolvedProject echo to confirm which project was
-  // actually destroyed — same contract write_file/delete_file follow
+  // actually destroyed - same contract write_file/delete_file follow
   // via withActiveEcho. active is always null here because the
   // active-context fallback is intentionally disabled above.
   return ok(withActiveEcho(json, null, resolved));
@@ -2527,7 +2527,7 @@ async function createProject(
   }
   // Send the workspace pair so the daemon binds the project to the
   // workspace immediately. If workspace authority fails (e.g. the cached
-  // membership went stale between refreshes), retry headerless once — a
+  // membership went stale between refreshes), retry headerless once - a
   // headerless create is always legal and the project is lazy-adopted on
   // the next workspace list.
   try {
@@ -2565,7 +2565,7 @@ async function listPlugins(baseUrl: string): Promise<JsonObject> {
 // Flatten daemon's agent definition into the few fields an external
 // agent needs to pick a value for start_run.agent. Default filters to
 // `available: true` (only installed CLIs) so the outer agent doesn't
-// pick an agent it can't actually run — the failure mode that left us
+// pick an agent it can't actually run - the failure mode that left us
 // with zombie "running" runs whose inner Claude binary never spawned.
 // Models are truncated to 10 with `modelsCount` carrying the full
 // total; that keeps the response token-economical even for agents
@@ -2607,7 +2607,7 @@ function slugifyProjectId(name: string): string {
 
 // Commission a generation run. The caller never runs the skill/plugin
 // itself; we POST to /api/runs and the daemon spawns its own agent.
-// Returns the runId immediately so the caller can poll get_run —
+// Returns the runId immediately so the caller can poll get_run -
 // start+poll because MCP is request/response and generation is
 // minutes-long.
 async function startRun(
@@ -2690,7 +2690,7 @@ async function startRun(
     body,
     { ...options.analyticsHeaders, ...headers },
   );
-  // Build studioUrl (conversation-level — no entry file yet) so the
+  // Build studioUrl (conversation-level - no entry file yet) so the
   // outer agent has a URL to give the user right away. The daemon
   // returns conversationId in the response now that POST /api/runs
   // falls back to the project's default conversation for MCP callers.
@@ -2714,7 +2714,7 @@ async function startRun(
               studioUrlLifetime: 'current_daemon_session',
             }
           : {}),
-        hint: 'Run started. OpenDesign generation normally takes 5–30 minutes. Polls showing status:running with no new files / unchanged file mtimes is the inner agent thinking, NOT a hang — DO NOT cancel_run out of impatience and DO NOT substitute write_file to produce the design yourself; OD\'s pipeline is what gives the result its design quality. Poll get_run(runId) every 30–60 seconds; report "still working" to the user between polls and keep waiting. On terminal status, artifactRef is the durable identity; previewUrl and studioUrl are browser links for the current OpenDesign runtime and must be refreshed with get_run after OpenDesign restarts.',
+        hint: 'Run started. OpenDesign generation normally takes 5-30 minutes. Polls showing status:running with no new files / unchanged file mtimes is the inner agent thinking, NOT a hang - DO NOT cancel_run out of impatience and DO NOT substitute write_file to produce the design yourself; OD\'s pipeline is what gives the result its design quality. Poll get_run(runId) every 30-60 seconds; report "still working" to the user between polls and keep waiting. On terminal status, artifactRef is the durable identity; previewUrl and studioUrl are browser links for the current OpenDesign runtime and must be refreshed with get_run after OpenDesign restarts.',
       },
       active,
       resolved,
@@ -2724,7 +2724,7 @@ async function startRun(
 
 // Poll a run. On terminal status we enrich the daemon's status body
 // with three things the outer agent needs to actually close the loop:
-// (1) previewUrl when there's an entry file — open this in a browser,
+// (1) previewUrl when there's an entry file - open this in a browser,
 // (2) agentMessage = the inner agent's textual output reassembled from
 //     the SSE event stream, so when the inner agent asked a discovery
 //     question back instead of producing files, the outer agent can
@@ -2757,10 +2757,10 @@ async function getRun(
     }
     if (typeof status.eventsLogPath === 'string' && status.eventsLogPath.length > 0) {
       if (status.failureAction !== 'recharge') {
-        enriched.hint = 'Run still in flight. Tail eventsLogPath in your own shell (e.g. `tail -n 50 -f "' + status.eventsLogPath + '"`) to see live text_delta / tool_use events from the inner agent — that is your in-flight progress signal. Keep polling get_run every 30–60s; do not cancel because file mtimes look static, that is the agent thinking between writes.';
+        enriched.hint = 'Run still in flight. Tail eventsLogPath in your own shell (e.g. `tail -n 50 -f "' + status.eventsLogPath + '"`) to see live text_delta / tool_use events from the inner agent - that is your in-flight progress signal. Keep polling get_run every 30-60s; do not cancel because file mtimes look static, that is the agent thinking between writes.';
       }
       if (studioUrl) {
-        enriched.hint += ` While the run is in flight, studioUrl can be used as an optional workspace progress link — render it as \`[Watch progress in OpenDesign studio](${studioUrl})\` if you choose to show it. This URL is valid for the current OpenDesign runtime; call get_run again after OpenDesign restarts.`;
+        enriched.hint += ` While the run is in flight, studioUrl can be used as an optional workspace progress link - render it as \`[Watch progress in OpenDesign studio](${studioUrl})\` if you choose to show it. This URL is valid for the current OpenDesign runtime; call get_run again after OpenDesign restarts.`;
       }
     }
     return ok(enriched);
@@ -2805,8 +2805,8 @@ async function getRun(
     enriched.studioUrlLifetime = 'current_daemon_session';
   }
   enriched.hint = previewUrl
-    ? `Run finished. artifactRef is the durable project/file identity. previewUrl and studioUrl are browser links for the current OpenDesign runtime only; if either stops working after OpenDesign restarts, call get_run again with this runId to obtain current links. Render previewUrl as a clickable link now. agentMessage carries the inner agent's explanation; show it alongside the link. Call get_artifact({ project: "${status.projectId}" }) when you need the source files — always pass project explicitly; omitting it falls back to the active project, which may differ. eventsLogPath, when present, holds the full inner-agent event log for forensics.`
-    : 'Run finished but produced no files. The inner agent\'s output is in agentMessage — relay it to the user verbatim. Most often this is a clarifying question (e.g. a <question-form>) you should answer by calling start_run again with a more specific prompt or a chosen plugin. When studioUrl is present, show it as a clickable markdown link (`[Open OpenDesign studio](STUDIO_URL)`) so the user can navigate to the OD page that shows the chat history — never render it as inline code. eventsLogPath, when present, holds the full event log if you need to inspect what happened.';
+    ? `Run finished. artifactRef is the durable project/file identity. previewUrl and studioUrl are browser links for the current OpenDesign runtime only; if either stops working after OpenDesign restarts, call get_run again with this runId to obtain current links. Render previewUrl as a clickable link now. agentMessage carries the inner agent's explanation; show it alongside the link. Call get_artifact({ project: "${status.projectId}" }) when you need the source files - always pass project explicitly; omitting it falls back to the active project, which may differ. eventsLogPath, when present, holds the full inner-agent event log for forensics.`
+    : 'Run finished but produced no files. The inner agent\'s output is in agentMessage - relay it to the user verbatim. Most often this is a clarifying question (e.g. a <question-form>) you should answer by calling start_run again with a more specific prompt or a chosen plugin. When studioUrl is present, show it as a clickable markdown link (`[Open OpenDesign studio](STUDIO_URL)`) so the user can navigate to the OD page that shows the chat history - never render it as inline code. eventsLogPath, when present, holds the full event log if you need to inspect what happened.';
   return ok(enriched);
 }
 
@@ -2859,7 +2859,7 @@ async function fetchRunAgentMessage(
 // every delivery lookup: the endpoint already has a small cache keyed by
 // the live packaged web port, while an additional MCP-process cache could
 // return a stale localhost URL immediately after the runtime rebinds.
-// Returns null when any required piece is missing — callers omit the field
+// Returns null when any required piece is missing - callers omit the field
 // rather than emit a half-built URL.
 
 async function getWebBaseUrl(daemonBaseUrl: string): Promise<string | null> {
@@ -2901,7 +2901,7 @@ function buildStudioUrl(
 // For get_project / start_run: pick the project's first / default
 // conversation so the studio link lands the user on a coherent page.
 // create_project seeds a default conversation per project; this just
-// reads the same one back. Returns null on any lookup failure — caller
+// reads the same one back. Returns null on any lookup failure - caller
 // omits studioUrl.
 async function getDefaultConversationId(
   baseUrl: string,
@@ -2924,7 +2924,7 @@ async function getDefaultConversationId(
 // set and falling back to scanning the file list. This matters because
 // real-world writes (write_file, half-finished inner-agent runs)
 // leave metadata.entryFile null even when a perfectly viewable
-// index.html exists at the project root — without the fallback,
+// index.html exists at the project root - without the fallback,
 // get_project/get_run would silently omit previewUrl and force the
 // outer agent to guess a file:// path.
 async function resolveProjectEntry(
@@ -2940,7 +2940,7 @@ async function resolveProjectEntry(
       headers,
     );
     const files = data?.files ?? [];
-    // index.html wins at any level — the conventional entry signal.
+    // index.html wins at any level - the conventional entry signal.
     const indexHtml = files.find((f) => f?.path === 'index.html' || f?.name === 'index.html');
     if (indexHtml?.path) return indexHtml.path;
     // Otherwise: if exactly one .html sits at the project root, that
@@ -2959,7 +2959,7 @@ async function resolveProjectEntry(
 // serves it with the right Content-Type and resolves sibling
 // CSS/JS/img relative to the same dir, so this URL opens directly in a
 // browser (HTML entries render; bare JSX entries that rely on
-// host-injected React/Babel do not — those still need the OpenDesign
+// host-injected React/Babel do not - those still need the OpenDesign
 // UI). Returns null when there's no entry file. Pure: no I/O, so
 // get_project can call it from project data it already has.
 function rawPreviewUrl(baseUrl: string, projectId: string, entry: unknown): string | null {

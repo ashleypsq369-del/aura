@@ -337,7 +337,7 @@ const RESERVED_READ_JSON_SEGMENTS = new Set(['.live-artifacts']);
 // project_files.read_json resolves a selector, feeds it to validateProjectPath()
 // (refresh.ts → projects.ts), and then requires a .json extension. validateRelativePath
 // alone misses single-dot segments, reserved segments, and the extension, so mirror the
-// remaining static rules here — otherwise sources like { path: './report.json' } or
+// remaining static rules here - otherwise sources like { path: './report.json' } or
 // { file: '.live-artifacts/cache.json' } pass creation yet fail every refresh, recreating
 // the persisted-but-unrefreshable artifact class this validation exists to prevent.
 function validateReadJsonSelector(value: string, path: string, issues: LiveArtifactValidationIssue[]): void {
@@ -499,7 +499,7 @@ function validateDaemonRefreshRequiredInput(
   if (effectiveTool !== 'project_files.read_json') return;
   // Mirror selectJsonPath (refresh.ts) precedence AND type rules. It reads
   // path → file → name through optionalString() + `??`, so the first alias that
-  // is *present* (not undefined) is the selector — even a non-string or empty
+  // is *present* (not undefined) is the selector - even a non-string or empty
   // value, which makes optionalString()/validateProjectPath() throw at refresh
   // rather than falling through to a later alias. Resolving by "first non-empty
   // string" instead would accept e.g. { path: 123, file: 'ok.json' } here while
@@ -522,8 +522,8 @@ function validateDaemonRefreshRequiredInput(
   }
   // Validate the resolved selector with the same static rules the runtime applies
   // (validateProjectPath + .json extension). path/file also pass through
-  // validateSourceInputPaths' key filter; name does not — and none of the three are
-  // checked for single-dot/reserved segments or the extension there — so do it here
+  // validateSourceInputPaths' key filter; name does not - and none of the three are
+  // checked for single-dot/reserved segments or the extension there - so do it here
   // on whichever alias selectJsonPath would actually read.
   validateReadJsonSelector(selector, `${path}.${selectorKey}`, issues);
 }

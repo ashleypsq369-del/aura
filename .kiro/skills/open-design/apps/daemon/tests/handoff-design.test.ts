@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Tests for `apps/daemon/src/handoff-design.ts` — the synthesis pipeline
+// Tests for `apps/daemon/src/handoff-design.ts` - the synthesis pipeline
 // behind `POST /api/projects/:id/handoff`. Mirrors the finalize-design
 // test layout: a prompt-builder block, then a full-pipeline block with
 // mocked Anthropic upstream.
@@ -229,7 +229,7 @@ describe('synthesizeHandoffPrompt (pipeline)', () => {
     ).rejects.toMatchObject({ name: 'FinalizeUpstreamError', status: 502 });
   });
 
-  it('honors a caller-supplied AbortSignal — aborting the call surfaces an AbortError', async () => {
+  it('honors a caller-supplied AbortSignal - aborting the call surfaces an AbortError', async () => {
     const { db, projectsRoot } = setupProjectFixture();
     seedConversation(db);
 
@@ -277,7 +277,7 @@ describe('synthesizeHandoffPrompt (pipeline)', () => {
     await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
   });
 
-  it('keeps the timeout armed through the body read — a stalled response body aborts instead of hanging', async () => {
+  it('keeps the timeout armed through the body read - a stalled response body aborts instead of hanging', async () => {
     const { db, projectsRoot } = setupProjectFixture();
     seedConversation(db);
 
@@ -309,7 +309,7 @@ describe('synthesizeHandoffPrompt (pipeline)', () => {
     });
 
     // If clearTimeout runs before response.json() (the regressed bug), the
-    // timeout is disarmed and the stalled body read hangs forever — 'hung'
+    // timeout is disarmed and the stalled body read hangs forever - 'hung'
     // would win this race. The timeout must stay armed and abort the read.
     let hangTimer: ReturnType<typeof setTimeout>;
     const outcome = await Promise.race([
@@ -389,7 +389,7 @@ describe('synthesizeHandoffPrompt (pipeline)', () => {
         fetchImpl,
       }),
     ).rejects.toBeInstanceOf(EmptyTranscriptError);
-    // The guard must fire before the upstream call — no tokens spent.
+    // The guard must fire before the upstream call - no tokens spent.
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 });

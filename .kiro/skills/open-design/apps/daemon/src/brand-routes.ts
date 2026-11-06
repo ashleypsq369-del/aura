@@ -1,13 +1,13 @@
-// Brands HTTP surface — list / extract / finalize / detail / delete / logo.
+// Brands HTTP surface - list / extract / finalize / detail / delete / logo.
 //
 // A "brand" = brand metadata (brand.json + meta.json under
 // `<brandsRoot>/<id>/`) PLUS a registered user design system. These routes are
 // a thin HTTP wrapper over the agent-driven engine in `./brands/index.js`; they
 // hold no brand business logic of their own.
 //
-//   POST /api/brands           — reserve the brand + stand up the extraction
+//   POST /api/brands           - reserve the brand + stand up the extraction
 //                                 project (browser tab + seeded prompt). JSON.
-//   POST /api/brands/:id/finalize — register the agent's brand kit. JSON.
+//   POST /api/brands/:id/finalize - register the agent's brand kit. JSON.
 
 import fs from 'node:fs';
 import { randomUUID } from 'node:crypto';
@@ -48,9 +48,9 @@ import { patchMeta } from './brands/store.js';
 import type { BrandDetailResponse, BrandMeta, BrandSummary } from '@open-design/contracts';
 
 export interface BrandRoutesDeps {
-  /** `<dataDir>/brands` — root of all brand directories. */
+  /** `<dataDir>/brands` - root of all brand directories. */
   brandsRoot: string;
-  /** `<dataDir>/design-systems` — where extracted brands register their
+  /** `<dataDir>/design-systems` - where extracted brands register their
    *  `user:<id>` design system, so selecting a brand in the composer reuses
    *  the existing design-system apply flow. */
   userDesignSystemsRoot: string;
@@ -87,19 +87,19 @@ export interface BrandRoutesDeps {
   ) => Promise<boolean>;
   /** Exact read gate for logo bytes served from the backing project. */
   authorizeProjectRequest?: AuthorizeProjectRequest;
-  /** `<dataDir>/projects` — backing brand-extraction projects. */
+  /** `<dataDir>/projects` - backing brand-extraction projects. */
   projectsRoot: string;
   /**
    * Where a brand-extraction project belongs. Verifies an asserted workspace
    * identity, then degrades to the daemon's own signed-in workspace rather than
-   * refusing — see `createdProjectWorkspaceHome` in
+   * refusing - see `createdProjectWorkspaceHome` in
    * `collab/created-project-workspace.ts`.
    */
   resolveCreatedProjectHome?: CreatedProjectWorkspaceResolver;
-  /** Skills root — the agent-driven kit page is rendered from the bundled
+  /** Skills root - the agent-driven kit page is rendered from the bundled
    *  `brand-extract` template under here. */
   skillsRoot: string;
-  /** Runtime data dir — passed to `finalizeBrand` so a finalized brand is
+  /** Runtime data dir - passed to `finalizeBrand` so a finalized brand is
    *  sedimented into `<dataDir>/memory`. */
   dataDir: string;
   /** Shared app database used to register the backing project + conversation. */
@@ -163,7 +163,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
 
   /**
    * Bind a freshly started brand-extraction project into the SAME workspace
-   * the request that created it is acting in — mirroring `POST /api/projects`
+   * the request that created it is acting in - mirroring `POST /api/projects`
    * (`routes/project/index.ts`'s `workspaceIdForCreate` handling) and
    * `bindDuplicateIntoRequestWorkspace` (the same file's duplicate/design-
    * system-copy routes).
@@ -172,7 +172,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
    * directly and has never called `ensureWorkspaceProject`: the function takes
    * a plain options object, not an Express `Request`, so it has no workspace
    * headers to bind against, and nothing downstream filled the gap. A project
-   * with no `workspace_projects` row is not a harmless default — as of the
+   * with no `workspace_projects` row is not a harmless default - as of the
    * POST /api/runs and POST /api/chat workspace-identity gate
    * (`enforceWorkspaceResourceMutation`, resourceType 'project'), an unbound
    * project is UNCONDITIONALLY denied a run whenever the caller's client
@@ -180,8 +180,8 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
    * `canMutate: false` regardless of who created it), not merely "ungated
    * either way" as pre-existing call sites assumed. A team member who just
    * asked the composer to extract a brand/design system could never get the
-   * agent to write anything into it — including the very `assets/` write
-   * spec 04 §9.3's asset sync depends on — because their own first chat turn
+   * agent to write anything into it - including the very `assets/` write
+   * spec 04 §9.3's asset sync depends on - because their own first chat turn
    * 403s before the agent ever runs.
    *
    * Scoped to an ACTIVE member only, matching `POST /api/projects`. A
@@ -268,7 +268,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
   // wall (or waits) and clicks Continue again, or hands off to the agent. Keep
   // the brand in the calm, retryable `needs_input` state and render the kit as
   // the in-progress "extracting" view rather than flashing the red
-  // "Extraction failed" terminal — the actionable transcript still offers
+  // "Extraction failed" terminal - the actionable transcript still offers
   // Continue / agent. The route still answers 422 so the web surfaces a retry
   // toast.
   async function markBrowserHtmlExtractionUnresolved(brandId: string, previousMeta: BrandMeta): Promise<void> {
@@ -310,7 +310,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     });
   }
 
-  // GET /api/brands — list every stored brand as a summary.
+  // GET /api/brands - list every stored brand as a summary.
   app.get('/api/brands', (_req: Request, res: Response) => {
     try {
       const statusContext = createBrandStatusContext(deps);
@@ -324,7 +324,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands { url?, description?, designMd? } — reserve the brand and stand up its extraction
+  // POST /api/brands { url?, description?, designMd? } - reserve the brand and stand up its extraction
   // project (target site open in a browser tab + a seeded prompt that drives an
   // agent through the extraction chain). Returns the ids to navigate into.
   app.post('/api/brands', async (req: Request, res: Response) => {
@@ -393,7 +393,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands/:id/continue-extraction — restart the deterministic
+  // POST /api/brands/:id/continue-extraction - restart the deterministic
   // programmatic pass against the existing brand/project/design-system. Unlike
   // POST /api/brands, this never creates a duplicate design system item.
   app.post('/api/brands/:id/continue-extraction', async (req: Request, res: Response) => {
@@ -431,7 +431,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands/:id/cancel-extraction — stop the daemon-owned
+  // POST /api/brands/:id/cancel-extraction - stop the daemon-owned
   // programmatic-first pass. This mirrors chat Stop for the synthetic transcript
   // row: the web marks the message canceled locally, while the daemon aborts
   // pending harvest/finalize work and moves the brand out of extracting.
@@ -489,7 +489,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands/:id/preview — re-render brand.html from the project's
+  // POST /api/brands/:id/preview - re-render brand.html from the project's
   // current brand.json. The extraction agent calls this (`od brand preview`)
   // after each measurement pass so the kit page fills in live.
   app.post('/api/brands/:id/preview', async (req: Request, res: Response) => {
@@ -520,7 +520,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands/:id/finalize — register the agent's extracted brand kit
+  // POST /api/brands/:id/finalize - register the agent's extracted brand kit
   // (brand.json + assets in the backing project) as a `user:<id>` design system
   // and mark the brand ready. Called by the agent / `od brand finalize`.
   app.post('/api/brands/:id/finalize', async (req: Request, res: Response) => {
@@ -557,7 +557,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // POST /api/brands/:id/extract-from-html { html, css?, baseUrl? } — re-run the
+  // POST /api/brands/:id/extract-from-html { html, css?, baseUrl? } - re-run the
   // programmatic harvest against HTML the web read out of the in-app browser tab
   // after the user cleared an anti-bot wall, instead of a fresh (blocked) fetch.
   // Registers the `user:<id>` design system and marks the brand `ready`.
@@ -611,7 +611,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // GET /api/brands/:id — full detail (meta + brand + guide). 404 if missing.
+  // GET /api/brands/:id - full detail (meta + brand + guide). 404 if missing.
   app.get('/api/brands/:id', (req: Request, res: Response) => {
     try {
       const detail = readBrandDetail(brandsRoot, String(req.params.id));
@@ -625,7 +625,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // DELETE /api/brands/:id — remove the brand and its registered design system.
+  // DELETE /api/brands/:id - remove the brand and its registered design system.
   app.delete('/api/brands/:id', async (req: Request, res: Response) => {
     try {
       const id = String(req.params.id);
@@ -665,7 +665,7 @@ export function registerBrandRoutes(app: Application, deps: BrandRoutesDeps): vo
     }
   });
 
-  // GET /api/brands/:id/logo — serve the primary logo image. 404 if none.
+  // GET /api/brands/:id/logo - serve the primary logo image. 404 if none.
   app.get('/api/brands/:id/logo', async (req: Request, res: Response) => {
     try {
       const id = String(req.params.id);
@@ -855,7 +855,7 @@ function reconcileBrandMetaStatus(
   }
   if (nextMeta.status !== 'extracting') return nextMeta;
   // The backing run paused on a question form (anti-bot wall / clarifying
-  // question). Surface it as needs_input WITHOUT persisting — answering the
+  // question). Surface it as needs_input WITHOUT persisting - answering the
   // question resumes extraction, so the brand must be free to flip back.
   const isAwaitingInput = nextMeta.extractionConversationId
     ? context.awaitingInputByConversation.has(nextMeta.extractionConversationId)

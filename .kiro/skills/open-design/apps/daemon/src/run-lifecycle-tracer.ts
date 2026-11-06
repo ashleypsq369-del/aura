@@ -123,13 +123,13 @@ export function runLifecycleMarkersForStreamEvent(
     };
   }
   return {
-    // The plain / BYOK / antigravity family has no structured `agent` stream —
+    // The plain / BYOK / antigravity family has no structured `agent` stream -
     // its reply reaches the user as `stdout` chunks, already control-stripped,
     // title-stripped and role-guarded by the time they are sent. Without this,
     // those runs would report no visible output at all and fall back to the
     // first token, which is exactly wrong for antigravity: it buffers stdout
     // until close, so its first token and its first visible byte can be a whole
-    // run apart. `stderr` stays out — it is a diagnostic channel, not the
+    // run apart. `stderr` stays out - it is a diagnostic channel, not the
     // model's answer.
     firstVisibleOutput: event === 'stdout',
     firstArtifactWrite: event === 'live_artifact',

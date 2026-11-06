@@ -1,14 +1,14 @@
 // Persisted event shape under test is `PersistedAgentEvent` from
 // packages/contracts/src/api/chat.ts (the discriminator is `kind`, the
 // thinking field is `text`). The daemon's claude-stream emits a different
-// `type:`-shaped wire format — those events are translated to the persisted
+// `type:`-shaped wire format - those events are translated to the persisted
 // `kind:` shape by the web client before being PUT back for storage.
 //
 // All seeded events here mirror the canonical persisted shape, exactly as
 // they appear in `messages.events_json` in production databases.
 //
 // Note on fs imports: both this file and `transcript-export.ts` use
-// `import fs from 'node:fs'` (default import — the CJS module exports
+// `import fs from 'node:fs'` (default import - the CJS module exports
 // object) so that `vi.spyOn(fs, '<fn>')` in the failure-injection tests can
 // actually redefine properties. ESM namespace imports of `node:fs` (`import
 // * as fs from 'node:fs'`) produce a frozen Module Namespace Object that
@@ -367,7 +367,7 @@ describe('exportProjectTranscript', () => {
   });
 
   it('restricts the export to a single conversation when options.conversationId is set', () => {
-    // The handoff/resume flow scopes to one conversation — a project-wide
+    // The handoff/resume flow scopes to one conversation - a project-wide
     // export would blend unrelated chats. The unrelated conversation must
     // not appear in the output at all.
     const { db, projectsRoot } = setup();
@@ -403,7 +403,7 @@ describe('exportProjectTranscript', () => {
 
     const dirEntries = fs.readdirSync(path.join(projectsRoot, PROJECT_ID));
     const tmps = dirEntries.filter((n) => n.startsWith('.transcript.jsonl.tmp.'));
-    // Only the orphan should remain — our run's tmp must have been renamed away.
+    // Only the orphan should remain - our run's tmp must have been renamed away.
     expect(tmps).toEqual(['.transcript.jsonl.tmp.99999.deadbeef']);
     expect(fs.readFileSync(orphan, 'utf8')).toBe('leftover');
     expect(dirEntries).toContain('.transcript.jsonl');
@@ -553,7 +553,7 @@ describe('exportProjectTranscript', () => {
     const result1 = exportProjectTranscript(db, projectsRoot, PROJECT_ID, { now: FIXED_NOW });
     const finalPath = result1.path;
 
-    // Inject a sentinel — a downstream consumer / older transcript.
+    // Inject a sentinel - a downstream consumer / older transcript.
     fs.writeFileSync(finalPath, '{"sentinel":true}\n');
     expect(fs.readFileSync(finalPath, 'utf8')).toContain('sentinel');
 
@@ -586,7 +586,7 @@ describe('exportProjectTranscript', () => {
     // No transcript should have been written while the lock was held.
     expect(fs.existsSync(finalPath)).toBe(false);
 
-    // Release the lock — a subsequent export must succeed.
+    // Release the lock - a subsequent export must succeed.
     fs.unlinkSync(lockPath);
 
     const result = exportProjectTranscript(db, projectsRoot, PROJECT_ID, { now: FIXED_NOW });

@@ -1,5 +1,5 @@
-/**
- * useConfirmDialog — replaces all window.confirm() calls with a proper modal
+﻿/**
+ * useConfirmDialog - replaces all window.confirm() calls with a proper modal
  * Usage:
  *   const { confirm, ConfirmDialog } = useConfirmDialog();
  *   // In JSX: <ConfirmDialog />

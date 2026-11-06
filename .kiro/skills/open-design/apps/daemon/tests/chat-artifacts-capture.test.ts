@@ -181,7 +181,7 @@ describe('chat artifact capture (two-phase commit)', () => {
   // been handed: `run-capture` only reaches this function for kinds whose
   // originals ARE the message evidence, and `html` is not one of them. The
   // fixture was a placeholder for "some file at a path". It is an image now so
-  // it matches a record this function can really receive — the assertion under
+  // it matches a record this function can really receive - the assertion under
   // test (the fingerprint precondition) is unchanged.
   it('captures from a path whose fingerprint still matches the expectation', async () => {
     const d = deps();

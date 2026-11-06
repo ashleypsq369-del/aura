@@ -275,8 +275,8 @@ export async function detectAcpModels({
       if (rpcErr) {
         // JSON-RPC -32603 "Internal error" during model detection:
         // If this is for the current expected-id (initialize/session/new),
-        // it's a real probe failure — reject immediately.
-        // Otherwise it's cleanup noise — suppress it.
+        // it's a real probe failure - reject immediately.
+        // Otherwise it's cleanup noise - suppress it.
         if (error?.code === -32603 && obj?.id !== expectedId) return;
         fail(rpcErr);
         return;

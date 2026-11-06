@@ -8,8 +8,8 @@ import { listMessages } from '../src/db.js';
  * `listMessages` decorates each message with the artifact snapshots that belong
  * to it. That decoration is a nice-to-have: the refs point at a separate
  * snapshot store, and losing them costs a thumbnail, not a message. The guard in
- * `conversationChatArtifactRefs` says exactly that — "a snapshot store problem
- * must never make a conversation unreadable" — but it originally sat AROUND the
+ * `conversationChatArtifactRefs` says exactly that - "a snapshot store problem
+ * must never make a conversation unreadable" - but it originally sat AROUND the
  * ref query only, with the owning-project lookup in front of it. That lookup
  * reads a different table and can fail on its own, and when it did the throw
  * travelled out of `listMessages` and the caller got nothing.
@@ -84,7 +84,7 @@ describe('listMessages when the artifact-ref lookup fails', () => {
   });
 
   it('still returns the transcript when the ref query itself throws', () => {
-    // The half that was always guarded — kept as the control, so a regression
+    // The half that was always guarded - kept as the control, so a regression
     // in the guard shows up as one failure and not two.
     const db = dbWithFailingQuery(/chat_artifact/i, [MESSAGE_ROW]);
 

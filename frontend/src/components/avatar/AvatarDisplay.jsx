@@ -1,5 +1,5 @@
-/**
- * AvatarDisplay — profile photo with 3-tier fallback
+﻿/**
+ * AvatarDisplay - profile photo with 3-tier fallback
  * 1. Real uploaded photo from /uploads/profiles/
  * 2. DiceBear role+gender cartoon (auto-generated)
  * 3. Initials circle
@@ -64,12 +64,12 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
     return () => window.removeEventListener('avatar:updated', handler);
   }, []);
 
-  // Background query — populates on load / after page refresh
+  // Background query - populates on load / after page refresh
   const { data: profile } = useQuery({
     queryKey:  ['profile-avatar', targetId],
     queryFn:   () => apiClient.get('/api/profile').then(r => r.data),
     enabled:   !!targetId && !userId,
-    staleTime: 30 * 1000,   // 30s — short but not 0 (avoids thrashing)
+    staleTime: 30 * 1000,   // 30s - short but not 0 (avoids thrashing)
     retry:     false,
   });
 
@@ -97,7 +97,7 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
   // 1. Real photo
   if (avatarUrl && !imgErr) {
     const base = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
-    // Cache-bust: use last 8 chars of UUID filename — stable across renders, changes per upload
+    // Cache-bust: use last 8 chars of UUID filename - stable across renders, changes per upload
     const bust = avatarUrl.split('/').pop()?.replace(/\.[^.]+$/, '').slice(-8) || '1';
     return (
       <div style={wrap} className={className} onClick={onClick}>

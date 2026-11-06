@@ -15,8 +15,8 @@ import { createDiagnosticsExportHandler } from '../src/diagnostics-export.js';
 /**
  * Why this file exists
  * --------------------
- * The chat scroll freeze lives entirely in the renderer — DOM, computed styles,
- * running animations, the freeze probe's own state — and none of it is on disk,
+ * The chat scroll freeze lives entirely in the renderer - DOM, computed styles,
+ * running animations, the freeze probe's own state - and none of it is on disk,
  * so the daemon cannot collect it the way it collects logs. Both export paths
  * (browser download and the packaged app's native save dialog) reach the daemon
  * as a bodyless GET, so the only shape that carries renderer evidence into the

@@ -3,8 +3,8 @@
 //
 // The packaged smoke used to run on the same runner that produced the package,
 // against `<toolsPackDir>/out/...` as electron-builder left it. That coupled the
-// smoke to the build job — which is what kept the release workflow's
-// repository-wide concurrency group held long after the package had shipped —
+// smoke to the build job - which is what kept the release workflow's
+// repository-wide concurrency group held long after the package had shipped -
 // and it tested a directory tree no user ever sees.
 //
 // `tools-pack <platform> install` reads exactly one file, at a path it derives
@@ -14,8 +14,8 @@
 // happened here.
 //
 // Two modes:
-//   plan  — read the published version metadata and report which targets exist
-//   stage — download one target's artifact into the tools-pack layout
+//   plan  - read the published version metadata and report which targets exist
+//   stage - download one target's artifact into the tools-pack layout
 //
 // Both read the metadata.json that `tools-release publish-metadata` wrote, so
 // the artifact URL is the published one rather than a name reconstructed here.

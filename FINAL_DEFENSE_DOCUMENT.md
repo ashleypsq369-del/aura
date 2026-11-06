@@ -125,9 +125,9 @@ No reviewed system combined all four. Existing tools - Alora, CareSmartz360, Net
 
 **How the Aura AI Engine actually works (from `aura_ai_engine.py`):**
 1. `_preprocess(text)` - lowercase, tokenise, remove stopwords, apply Porter stemmer
-2. `TfidfVectorizer` (ngrams 1–2) trained on all labelled intent examples
+2. `TfidfVectorizer` (ngrams 1-2) trained on all labelled intent examples
 3. `classify_intent(text)` - cosine similarity against TF-IDF matrix → top-N (intent, confidence) pairs
-4. `extract_entities(text)` - regex for pain scale 0–10, named symptoms, medication names (30+ drugs), time references, body parts
+4. `extract_entities(text)` - regex for pain scale 0-10, named symptoms, medication names (30+ drugs), time references, body parts
 5. `is_crisis(text)` - hardcoded keyword guard runs first, always, before any other processing
 6. Response built from `KNOWLEDGE_BASE` (500+ Q&A) matched by intent + entity
 
@@ -218,10 +218,10 @@ Most recent vitals (HR, BP, SpO2, Temp, RR) + ESAS scores + PPS score + Barthel 
 **Why lower precision on pain/symptom/admission is intentional:**
 In palliative care, a false positive (unnecessary clinical review) costs time. A false negative (missing a deteriorating patient) costs a life. The system deliberately biases toward recall. The 6-hour alert deduplication window manages false-positive alert volume.
 
-**Real-world benchmark:** Published XGBoost on real palliative data reports AUC 0.75–0.88. Our figures show the models correctly learned their training distributions - not that they will achieve this on a real hospital population.
+**Real-world benchmark:** Published XGBoost on real palliative data reports AUC 0.75-0.88. Our figures show the models correctly learned their training distributions - not that they will achieve this on a real hospital population.
 
 **Overall risk aggregation:**
-Weighted sum of 8 domain scores → Critical >70%, High 50–70%, Moderate 30–50%, Low <30%
+Weighted sum of 8 domain scores → Critical >70%, High 50-70%, Moderate 30-50%, Low <30%
 
 **Proactive background scan:** Runs across all active/stable/deteriorating patients. 6-hour deduplication - same patient not re-alerted within 6 hours of a previous alert.
 
@@ -375,7 +375,7 @@ The care plan engine detects disease profile from diagnosis text:
 - Zarit → caregiver burden level
 - Active medications → drug interaction checks
 
-**Output:** Structured `CarePlan` with `CarePlanGoal[]` (each with priority, category, progress 0–100) and `CarePlanIntervention[]` (each with frequency and responsible role)
+**Output:** Structured `CarePlan` with `CarePlanGoal[]` (each with priority, category, progress 0-100) and `CarePlanIntervention[]` (each with frequency and responsible role)
 
 ---
 
@@ -385,17 +385,17 @@ The care plan engine detects disease profile from diagnosis text:
 
 | Tool | Full Name | Score Range | Clinical Threshold | Why it's in the system |
 |---|---|---|---|---|
-| **ESAS** | Edmonton Symptom Assessment System | 9 symptoms × 0–10 | Total >50 → Escalation phase trigger | Gold standard for palliative symptom assessment; developed specifically for this population |
-| **PPS** | Palliative Performance Scale | 0–100% in 10% steps | <40 → Escalation; <20 → Transition phase | Directly predicts prognosis; drives care phase placement in journey tracker |
-| **PHQ-9** | Patient Health Questionnaire-9 | 0–27 (9 items × 0–3) | ≥10 moderate depression; Q9 = suicidality → crisis alert | Depression is undertreated in palliative care; Q9 detects suicidal ideation |
-| **GAD-7** | Generalised Anxiety Disorder-7 | 0–21 (7 items × 0–3) | ≥10 moderate anxiety | Anxiety one of the most distressing and undertreated palliative symptoms |
-| **Barthel Index** | Barthel Activities of Daily Living | 0–100 (10 ADL items) | 0–20: total dependence; 91–100: independent | Determines practical care needs; drives caregiver assignment |
-| **MMSE** | Mini-Mental State Examination | 0–30 | <24 suggests cognitive impairment | Dementia affects ability to self-report symptoms accurately |
-| **MoCA** | Montreal Cognitive Assessment | 0–30 (+1 if ≤12yrs education) | <26 suggests impairment | More sensitive than MMSE for mild impairment |
+| **ESAS** | Edmonton Symptom Assessment System | 9 symptoms × 0-10 | Total >50 → Escalation phase trigger | Gold standard for palliative symptom assessment; developed specifically for this population |
+| **PPS** | Palliative Performance Scale | 0-100% in 10% steps | <40 → Escalation; <20 → Transition phase | Directly predicts prognosis; drives care phase placement in journey tracker |
+| **PHQ-9** | Patient Health Questionnaire-9 | 0-27 (9 items × 0-3) | ≥10 moderate depression; Q9 = suicidality → crisis alert | Depression is undertreated in palliative care; Q9 detects suicidal ideation |
+| **GAD-7** | Generalised Anxiety Disorder-7 | 0-21 (7 items × 0-3) | ≥10 moderate anxiety | Anxiety one of the most distressing and undertreated palliative symptoms |
+| **Barthel Index** | Barthel Activities of Daily Living | 0-100 (10 ADL items) | 0-20: total dependence; 91-100: independent | Determines practical care needs; drives caregiver assignment |
+| **MMSE** | Mini-Mental State Examination | 0-30 | <24 suggests cognitive impairment | Dementia affects ability to self-report symptoms accurately |
+| **MoCA** | Montreal Cognitive Assessment | 0-30 (+1 if ≤12yrs education) | <26 suggests impairment | More sensitive than MMSE for mild impairment |
 | **BPI** | Brief Pain Inventory | Severity + Interference subscales | Severity >7 = severe pain | Captures both pain intensity AND functional impact - not just a number |
-| **FACT-G** | Functional Assessment of Cancer Therapy – General | Physical/Social/Emotional/Functional | Per-subscale interpretation | WHO defines palliative care as improving quality of life - QoL must be measured |
-| **Zarit Burden Interview** | Zarit Caregiver Burden Scale | 0–48 (12 items × 0–4) | 0–20: little burden; 41–48: severe | Families carry all caregiving in Ghana with no support; measuring burden is central |
-| **PG-13** | Prolonged Grief-13 | 13–65 (13 items × 1–5) | ≥30 → prolonged grief referral | Finucane (2024): 40% of bereaved need formal support; PG-13 identifies which ones |
+| **FACT-G** | Functional Assessment of Cancer Therapy - General | Physical/Social/Emotional/Functional | Per-subscale interpretation | WHO defines palliative care as improving quality of life - QoL must be measured |
+| **Zarit Burden Interview** | Zarit Caregiver Burden Scale | 0-48 (12 items × 0-4) | 0-20: little burden; 41-48: severe | Families carry all caregiving in Ghana with no support; measuring burden is central |
+| **PG-13** | Prolonged Grief-13 | 13-65 (13 items × 1-5) | ≥30 → prolonged grief referral | Finucane (2024): 40% of bereaved need formal support; PG-13 identifies which ones |
 | **Motor Skills** | Physical Function Assessment | Grip strength, TUG, gait speed, balance | Falls risk classification | Falls are a major safety risk, especially for dementia patients |
 
 ---
@@ -482,7 +482,7 @@ Say this confidently when asked "what is new?":
 
 6. **Consent enforced at rendering level** - when patient declines AI consent, widgets are removed from the DOM. Not just blocked when clicked. Addresses consent-deficit failure Kocaballi et al. (2019) identified.
 
-7. **Honest synthetic-data reporting** - states real-world AUC benchmark (0.75–0.88) alongside prototype figures. More transparent than most published clinical AI work.
+7. **Honest synthetic-data reporting** - states real-world AUC benchmark (0.75-0.88) alongside prototype figures. More transparent than most published clinical AI work.
 
 ---
 
@@ -492,7 +492,7 @@ Say this confidently when asked "what is new?":
 
 | Limitation | Honest statement |
 |---|---|
-| Synthetic training data | Models learned their training distribution correctly. Real-world validation requires real patient data and ethics approval. Real-world AUC benchmark is 0.75–0.88. |
+| Synthetic training data | Models learned their training distribution correctly. Real-world validation requires real patient data and ethics approval. Real-world AUC benchmark is 0.75-0.88. |
 | No user study | "User-friendly" is a design claim. Usability requires SUS testing with real clinical populations - primary recommendation for future work. |
 | No accessibility audit | Features are implemented. Formal NVDA/VoiceOver audit is future work. |
 | No penetration testing | Security architecture follows best practices. Formal pentest before any deployment. |
@@ -509,7 +509,7 @@ Say this confidently when asked "what is new?":
 2. **Formal usability study** - System Usability Scale (SUS) with clinicians, patients, families at a Ghanaian facility
 3. **Formal accessibility audit** - NVDA and VoiceOver with actual users with visual/motor impairment
 4. **Penetration testing** - before any production deployment
-5. **Model retraining on real data** - replace synthetic training data; expect AUC 0.75–0.88
+5. **Model retraining on real data** - replace synthetic training data; expect AUC 0.75-0.88
 6. **GHS Ethics Committee approval + DCB0129** - required before deployment with real patients
 7. **Federated learning** - train models across facilities without sharing raw patient data (Alamri et al., 2025)
 8. **NHIS database integration** - automatic insurance verification at patient registration

@@ -5,7 +5,7 @@
 // `request()`; on a hit at the matching tier with a matching schema digest
 // and unexpired row, the daemon short-circuits with `respondedBy: 'cache'`
 // and never broadcasts. Callers must NOT issue `INSERT/UPDATE` against
-// `genui_surfaces` from anywhere else — the F8 invariant relies on a single
+// `genui_surfaces` from anywhere else - the F8 invariant relies on a single
 // writer.
 
 import type Database from 'better-sqlite3';

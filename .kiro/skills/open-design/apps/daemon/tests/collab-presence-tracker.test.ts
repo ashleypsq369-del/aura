@@ -35,7 +35,7 @@ describe('CollabPresenceTracker', () => {
     tracker.heartbeat('p1', { memberId: 'm1' });
     clock += 90;
     tracker.heartbeat('p1', { memberId: 'm1' }); // refresh
-    clock += 90; // 90ms since the refresh — still present despite 180ms total
+    clock += 90; // 90ms since the refresh - still present despite 180ms total
     expect(ids(tracker.present('p1'))).toEqual(['m1']);
   });
 
@@ -67,7 +67,7 @@ describe('CollabPresenceTracker', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(ids(onChange.mock.calls[0]![0].present)).toEqual(['m1']);
 
-    tracker.heartbeat('p1', { memberId: 'm1' }); // refresh — no membership change
+    tracker.heartbeat('p1', { memberId: 'm1' }); // refresh - no membership change
     expect(onChange).toHaveBeenCalledTimes(1);
 
     tracker.heartbeat('p1', { memberId: 'm2' }); // join

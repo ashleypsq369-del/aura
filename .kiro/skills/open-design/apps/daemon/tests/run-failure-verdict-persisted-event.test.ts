@@ -47,7 +47,7 @@ describe('persistRunFailureClassification carries the daemon verdict', () => {
   });
 
   /** Seed the assistant message with the bare error frame the child-close
-   *  handler persists BEFORE finalize — the exact state the enrichment runs on. */
+   *  handler persists BEFORE finalize - the exact state the enrichment runs on. */
   function seedFailedMessage(id: string, detail: string): string {
     db.prepare(
       `INSERT INTO messages (id, conversation_id, role, content, position, created_at, events_json)
@@ -130,7 +130,7 @@ describe('persistRunFailureClassification carries the daemon verdict', () => {
       failureDetail: 'spawn_enoexec',
     });
 
-    // 精确相等,不用否定式匹配 —— 「多长出一个 undefined 字段」也算回归。
+    // 精确相等,不用否定式匹配 -- 「多长出一个 undefined 字段」也算回归。
     expect(storedErrorEvent(messageId)).toEqual({
       kind: 'status',
       label: 'error',

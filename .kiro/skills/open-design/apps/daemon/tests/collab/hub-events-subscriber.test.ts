@@ -21,7 +21,7 @@ function sseResponse(frames: string[], opts: { holdOpen?: boolean } = {}) {
         return;
       }
       if (!opts.holdOpen) controller.close();
-      // holdOpen: never enqueue again — simulates a silent zombie stream.
+      // holdOpen: never enqueue again - simulates a silent zombie stream.
       await new Promise(() => undefined);
     },
   });

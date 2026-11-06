@@ -223,7 +223,7 @@ export function deltaE(hex1, hex2) {
 }
 
 /**
- * Perceptual color distance using CIEDE2000 — the accurate successor to the
+ * Perceptual color distance using CIEDE2000 - the accurate successor to the
  * CIE76 Euclidean distance in deltaE(). Accepts hex or rgb()/rgba() strings.
  * Returns 0 for identical inputs and 100 when either color cannot be parsed.
  * A just-noticeable difference is ~2.3.

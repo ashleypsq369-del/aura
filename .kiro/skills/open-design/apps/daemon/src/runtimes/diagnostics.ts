@@ -74,7 +74,7 @@ export function buildNotInvocableDiagnostic(
   return {
     reason: 'shim-broken',
     severity: 'error',
-    message: `${def.name} was found but could not be launched — its wrapper or shim points at a missing target.`,
+    message: `${def.name} was found but could not be launched - its wrapper or shim points at a missing target.`,
     ...(launch.launchPath ? { detail: launch.launchPath } : {}),
     fixActions: [...setEnvIntent(def.id), { kind: 'openDocs' }, { kind: 'rescan' }],
   };

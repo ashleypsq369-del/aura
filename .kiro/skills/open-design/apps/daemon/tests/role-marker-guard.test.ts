@@ -35,15 +35,15 @@ describe('FABRICATED_ROLE_MARKER_RE', () => {
     expect(FABRICATED_ROLE_MARKER_RE.test('text\n##\tuser\nfabricated')).toBe(true);
   });
 
-  it('matches ## assistantReading (glued — uppercase letter after role)', () => {
+  it('matches ## assistantReading (glued - uppercase letter after role)', () => {
     expect(FABRICATED_ROLE_MARKER_RE.test('text\n## assistantReading the file')).toBe(true);
   });
 
-  it('matches ## assistant. (glued — punctuation after role)', () => {
+  it('matches ## assistant. (glued - punctuation after role)', () => {
     expect(FABRICATED_ROLE_MARKER_RE.test('text\n## assistant. Doing the thing.')).toBe(true);
   });
 
-  // ── Title-Case Markdown headings (must NOT match — review r3324151877)
+  // ── Title-Case Markdown headings (must NOT match - review r3324151877)
   // The chat host's turn-boundary delimiter is lowercase. Title-Case
   // headings are legitimate Markdown content (LLMs emit these
   // constantly in technical writing).
@@ -64,7 +64,7 @@ describe('FABRICATED_ROLE_MARKER_RE', () => {
     expect(FABRICATED_ROLE_MARKER_RE.test('intro\n## USER NOTES\n…')).toBe(false);
   });
 
-  // ── Prefix-of-longer-word headings (must NOT match — negative lookahead)
+  // ── Prefix-of-longer-word headings (must NOT match - negative lookahead)
   // Catches the `## users guide` / `## userland` / `## systemd` family
   // that the alternation would otherwise prefix-match.
 
@@ -91,7 +91,7 @@ describe('FABRICATED_ROLE_MARKER_RE', () => {
   });
 
   // ── Chat-style markers (deliberately out of scope) ─────────────────
-  // These are documented as intentionally excluded — see docblock in
+  // These are documented as intentionally excluded - see docblock in
   // role-marker-guard.ts. The host doesn't parse them as turn boundaries
   // and they collide with legitimate output too often to be paired with
   // kill-on-detection.
@@ -369,7 +369,7 @@ describe('createRoleMarkerGuard', () => {
     expect(r1).toBe('OK');
     expect(guard.contaminated).toBe(false);
 
-    // Chunk 2 brings the lookahead char (newline) — confirms the marker.
+    // Chunk 2 brings the lookahead char (newline) - confirms the marker.
     const r2 = guard.feedText('\nfabricated');
     expect(r2).toBe('');
     expect(guard.contaminated).toBe(true);
@@ -382,7 +382,7 @@ describe('createRoleMarkerGuard', () => {
     expect(r1).toBe('Hello');
     expect(guard.contaminated).toBe(false);
 
-    // Next char is lowercase `l` — turns `user` into `userland`, NOT a
+    // Next char is lowercase `l` - turns `user` into `userland`, NOT a
     // role marker. Deferred suffix is released and emitted alongside.
     const r2 = guard.feedText('land thoughts');
     expect(r2).toBe('\n## userland thoughts');
@@ -401,9 +401,9 @@ describe('createRoleMarkerGuard', () => {
     expect(guard.warningEvent()!.marker).toBe('## assistant');
   });
 
-  it('does not withhold `## User` (Title-Case) — pending regex is also case-sensitive', () => {
+  it('does not withhold `## User` (Title-Case) - pending regex is also case-sensitive', () => {
     const guard = createRoleMarkerGuard('msg-pending-4');
-    // Title-Case heading must pass through unconditionally — not even
+    // Title-Case heading must pass through unconditionally - not even
     // the pending deferral should swallow it.
     const r = guard.feedText('intro\n## User');
     expect(r).toBe('intro\n## User');

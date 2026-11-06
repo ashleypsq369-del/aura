@@ -1,5 +1,5 @@
-/**
- * EmptyState — premium empty state component
+﻿/**
+ * EmptyState - premium empty state component
  * Used when a list/table/section has no data.
  * 
  * Design: centered icon + title + description + optional CTA

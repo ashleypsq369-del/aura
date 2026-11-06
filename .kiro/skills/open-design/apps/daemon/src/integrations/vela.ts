@@ -290,7 +290,7 @@ export interface VelaLoginStatus {
   browserOpenFailed?: boolean;
   /**
    * Origin of the vela web console this runtime talks to, when it was given
-   * one. See {@link resolveVelaConsoleOrigin} — the client needs it to build
+   * one. See {@link resolveVelaConsoleOrigin} - the client needs it to build
    * wallet / plans / upgrade links for a non-public AMR environment.
    */
   consoleOrigin?: string;
@@ -641,7 +641,7 @@ const LIVE_ACCOUNT_TTL_MS = 60_000;
 /**
  * Cache key for the live account. Derived from the full credential revision
  * (auth source + profile + signed-in user + config mtime), NOT just the
- * profile — so a logout or an account switch on the same profile produces a
+ * profile - so a logout or an account switch on the same profile produces a
  * fresh key and the previous account's plan/balance can never leak into a new
  * session before the background refresh completes.
  */
@@ -762,7 +762,7 @@ function readRawVelaCredentialRevision(
     userEmail: status.user?.email ?? '',
     // Include the config mtime even for env-backed auth: the live billing
     // summary is fetched with the config profile's controlKey, so a config
-    // rewrite (account switch) must invalidate the cached plan/balance — even
+    // rewrite (account switch) must invalidate the cached plan/balance - even
     // when VELA_RUNTIME_KEY is the active runtime credential. Otherwise an
     // env-backed session keeps serving the previous account's plan/balance.
     configMtimeMs: existsSync(status.configPath)
@@ -953,7 +953,7 @@ const LOGIN_CANCEL_KILL_GRACE_MS = 2000;
 // How long the login request blocks waiting for the direct attempt's activation
 // URL before returning and letting the UI poll /status. Overridable so tests can
 // exercise the slow-direct path without a multi-second wait. Never used to kill
-// the direct attempt — see waitForLoginActivationSteadyState.
+// the direct attempt - see waitForLoginActivationSteadyState.
 function resolveLoginActivationGraceMs(baseEnv: NodeJS.ProcessEnv): number {
   const raw = Number(baseEnv.OD_AMR_LOGIN_ACTIVATION_GRACE_MS);
   return Number.isFinite(raw) && raw >= 0 ? raw : LOGIN_ACTIVATION_GRACE_MS;
@@ -1017,8 +1017,8 @@ function appendHumanVelaLoginStdout(
 // Attach lifetime listeners that accumulate the child's stdout/stderr and keep
 // re-parsing the activation URL/code/warning as output streams in. Unlike
 // `waitForImmediateLoginFailure` (which only reads the first 250ms), this lives
-// for the whole login so a slow CreateDeviceAuthorization round-trip — common on
-// constrained networks, exactly where the browser handoff also tends to fail —
+// for the whole login so a slow CreateDeviceAuthorization round-trip - common on
+// constrained networks, exactly where the browser handoff also tends to fail -
 // still surfaces the URL once it finally prints.
 function beginLoginActivationCapture(
   child: ChildProcess,
@@ -1296,13 +1296,13 @@ async function waitForImmediateLoginFailure(
 }
 
 // Wait for the direct `vela login` attempt to either print its device-auth
-// activation URL (healthy — the direct path works even on the transparent-proxy
+// activation URL (healthy - the direct path works even on the transparent-proxy
 // networks this fix targets, just possibly slowly) or exit/error BEFORE printing
 // it (a real failure the caller can retry through the IPv4 proxy). Crucially, a
 // merely slow-but-still-running direct login is NOT killed: once the grace
 // elapses we simply stop blocking the request and let it keep running (the UI
 // polls /status). Killing a slow-healthy direct login and re-routing it through
-// the proxy is exactly the regression this avoids — on a corporate transparent
+// the proxy is exactly the regression this avoids - on a corporate transparent
 // proxy the proxy hop loses the client IP and the upstream 502s. Only an
 // explicit pre-activation exit/error triggers the proxy fallback.
 async function waitForLoginActivationSteadyState(
@@ -1346,7 +1346,7 @@ async function waitForLoginActivationSteadyState(
   // device-auth attempt merely because the child exited immediately after it.
   if (capture.activation.activationUrl) return;
   // Slow but still alive: leave the direct attempt running and let the request
-  // return — do NOT kill it or fall back to the proxy.
+  // return - do NOT kill it or fall back to the proxy.
   if (result.kind === 'still-running') return;
   if (result.kind === 'error') {
     throw new Error(`vela login failed to start: ${result.error.message}`);

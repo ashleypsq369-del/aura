@@ -6,13 +6,13 @@
  * skill, the drift engine) must be able to reason about the *output format*
  * without coupling to which CLI release produced it.
  *
- *  - toolVersion   — the dembrandt CLI release (package.json version, e.g.
+ *  - toolVersion   - the dembrandt CLI release (package.json version, e.g.
  *                    "0.16.0"). Surfaced as meta.dembrandtVersion. Changes on
  *                    every npm publish, including pure refactors.
- *  - schemaVersion — the dembrandt OUTPUT CONTRACT. Bumps only when the JSON
+ *  - schemaVersion - the dembrandt OUTPUT CONTRACT. Bumps only when the JSON
  *                    shape changes in a way a consumer must adapt to. A tool
  *                    release that does not change the shape leaves this alone.
- *  - specVersion   — the W3C DTCG spec revision the `--dtcg` export targets.
+ *  - specVersion   - the W3C DTCG spec revision the `--dtcg` export targets.
  *
  * Version info is surfaced through the two extraction chokepoints, so every
  * consumer inherits it without special-casing:
@@ -36,7 +36,7 @@
 /**
  * dembrandt output contract version. Bump per the policy documented above.
  *
- *  1.19.0 — four additions in one unreleased step. colors.semanticEvidence
+ *  1.19.0 - four additions in one unreleased step. colors.semanticEvidence
  *          .primary records how the primary was decided: `elected` with the
  *          rule, reason, declaring tokens and runners-up, or `refused` with the
  *          candidates that lost. colors.occurrences counts every colour per
@@ -69,7 +69,7 @@
  *          of a palette entry or keeps one name per value, so alias tokens and
  *          dark-mode values keep their names; palette.tokens carries every
  *          name merged into an entry. Palette and semantic values unmoved.
- *  1.18.0 — frameworks entries gain `category`, `version` and `coverage` (the
+ *  1.18.0 - frameworks entries gain `category`, `version` and `coverage` (the
  *          share of the page under that framework's mount points), iconSystem
  *          entries gain `version`. Additive: 1.17.x consumers ignore them.
  *          BEHAVIOR: detection also reads the files the page loaded, and
@@ -87,7 +87,7 @@
  *          that leaves the page, and give up on a frame that never answers.
  *          Sites where a click used to carry the run to another site, or a
  *          stalled embed hung it, now extract from the page that was asked for.
- *  1.17.0 — colors.palette entries gain `tokens`: the custom property names
+ *  1.17.0 - colors.palette entries gain `tokens`: the custom property names
  *          that declare this exact colour. Additive: 1.16.x consumers ignore
  *          it. BEHAVIOR: declared tokens are read from body as well as :root,
  *          the name gate (color/bg/text/brand) is gone, and color-mix()
@@ -103,7 +103,7 @@
  *          site that reported no primary now reports one. Two corpus sites
  *          move from no primary to their black; a baseline with a null
  *          primary drifts on that role. Drift on dembrandt.com: 0.
- *  1.16.0 — meta.crawl gains `pages`: the landed URL of every page merged into
+ *  1.16.0 - meta.crawl gains `pages`: the landed URL of every page merged into
  *          the result, in merge order. A count cannot be checked, reproduced or
  *          re-read, and a merged palette is not interpretable without knowing
  *          which pages produced it.
@@ -117,10 +117,10 @@
  *          corpus. Palettes shrink on most sites and primary moves on some; two
  *          large consumer brands move onto the colour they actually use.
  *
- *  (unversioned) — `voice` / `voiceSkipped` ship behind a hidden, opt-in flag
+ *  (unversioned) - `voice` / `voiceSkipped` ship behind a hidden, opt-in flag
  *          and deliberately do not bump the contract. Bump when the flag is
  *          documented, not before.
- *  1.15.0 — two scoring checks that were dead in the field start firing, so a
+ *  1.15.0 - two scoring checks that were dead in the field start firing, so a
  *          site that changed nothing reports differently than it did on 1.14.0.
  *
  *          findings off-scale spacing ran only when spacing.scaleType read
@@ -134,7 +134,7 @@
  *          a real palette scored stable and exited 0. Only changed, added and
  *          removed entries carry weight now, matching compareSemantic. Drift
  *          scores rise across the board and gates that passed may fail.
- *  1.14.0 — three extraction-accuracy changes that move values for an unchanged
+ *  1.14.0 - three extraction-accuracy changes that move values for an unchanged
  *          site. They ship together so a consumer re-approves one baseline, not
  *          three.
  *
@@ -164,7 +164,7 @@
  *          error, so both were inspected individually.
  *
  *          No field is added or removed. Values move for an unchanged site.
- *  1.13.0 — wcag pairs gain fontSize, fontWeight, large, requiredAA, passAA and
+ *  1.13.0 - wcag pairs gain fontSize, fontWeight, large, requiredAA, passAA and
  *          passAAA: the observed text size decides which 1.4.3 / 1.4.6
  *          threshold governs a pair, so passAA is a verdict where aa was only
  *          a fixed 4.5:1 test. BEHAVIOR: pairs are now keyed by size class, so
@@ -191,13 +191,13 @@
  *          optimizer's rewritten url, and a pre-1.13.0 baseline that has no
  *          bytes, are not reported as a changed logo.
  *
- *  1.12.0 — colors.detected entries gain areaFrac: the colour's share of painted
+ *  1.12.0 - colors.detected entries gain areaFrac: the colour's share of painted
  *          background area, alongside the existing element-count usageFrac, so
  *          a hero fill is not outranked by sixty icons. BEHAVIOR, and it is a
  *          shape change in the DTCG export: a shadow token's $value is an array
  *          of layers when the shadow has more than one, where every earlier
  *          release emitted a single object built by splitting the string on
- *          whitespace — which read a computed shadow's leading colour as its
+ *          whitespace - which read a computed shadow's leading colour as its
  *          offsetX and folded multi-layer shadows into one. A consumer reading
  *          $value.offsetX must branch on Array.isArray. Tailwind's shadow
  *          ladder is also reordered by depth (blur + |offsetY| + spread)
@@ -218,45 +218,45 @@
  *          (foreground-primary, text-primary, border-primary). colors._raw, an
  *          internal scratch set that had shipped in every extraction since at
  *          least 0.17.0, is removed from the output and dropped at ingest.
- *          DRIFT: none of these reach the drift engine — radius pills are
+ *          DRIFT: none of these reach the drift engine - radius pills are
  *          filtered by the ≤500px realism guard on both sides, typography is
  *          compared on family/size/weight only, and the removed field was never
  *          compared. No baseline needs re-approval.
- *  1.11.0 — meta gains robotsWarnings: human-readable notes on pages robots.txt
+ *  1.11.0 - meta gains robotsWarnings: human-readable notes on pages robots.txt
  *          disallowed, whether that was the entry URL or a page discovered
  *          during --crawl/--sitemap/MCP pages. The check stays advisory (it
  *          never blocks extraction), so this is the only record of what it
  *          flagged. Additive: 1.10.x consumers ignore it. DRIFT: not read by
  *          the drift engine.
- *  1.10.0 — colors.palette entries gain contrastAgainst: [{bg, ratio, aa}],
+ *  1.10.0 - colors.palette entries gain contrastAgainst: [{bg, ratio, aa}],
  *          the WCAG pairs (from `wcag`, --wcag only) this candidate was
  *          actually observed against on the page, sorted by ratio descending
  *          and deduped by the other colour. Behind --wcag, same as `wcag`
  *          itself: absent entirely when the flag is off. Additive: 1.9.x
  *          consumers ignore it. BEHAVIOR: `wcag` pairs and colors.palette's
  *          new contrastAgainst now reflect the effective, alpha-composited
- *          color a viewer actually sees rather than the raw declared value —
+ *          color a viewer actually sees rather than the raw declared value -
  *          a translucent background or text color was previously read as
  *          opaque. DRIFT: neither is read by the drift engine; candidate
  *          colour values and ordering are unchanged.
- *  1.9.0 — meta gains requestedUrl (the URL as passed on the command line,
+ *  1.9.0 - meta gains requestedUrl (the URL as passed on the command line,
  *          before redirect resolution), contentLength (extracted page text
  *          length, for spotting thin/bot-wall pages) and timeouts (present
  *          only when at least one occurred, naming which wait timed out).
  *          meta.crawl (technique, pagesRequested, pagesFound) is new when
  *          --crawl, --sitemap or explicit paths are used. Additive: 1.8.x
  *          consumers ignore all of it. DRIFT: none of these are read by the
- *          drift engine, and no existing value's meaning changed —
+ *          drift engine, and no existing value's meaning changed -
  *          dembrandt.com and stripe.com reference extractions scored 0
  *          churn against the previous release.
- *  1.8.0 — no shape change. BEHAVIOR: the drift engine compares colors.semantic
+ *  1.8.0 - no shape change. BEHAVIOR: the drift engine compares colors.semantic
  *          role by role. It previously read that map only to attach role labels
  *          to palette entries, so a changed brand primary produced no drift at
  *          all (DEM-208). DriftReport.changes can now carry entries labelled
  *          `semantic.<role>`, and colour scores rise wherever a role moved.
  *          A baseline whose primary differs from the candidate's starts
  *          reporting that difference on upgrade, which is the point.
- *  1.7.0 — typography.styles entries gain count (elements rendering that exact
+ *  1.7.0 - typography.styles entries gain count (elements rendering that exact
  *          style) and typography.sources gains filteredFamilies. Additive: 1.6.x
  *          consumers ignore both. BEHAVIOR, and it moves existing values:
  *          a palette colour seen once can no longer be "high" confidence and a
@@ -266,47 +266,47 @@
  *          2% of counted text (minimum 3 elements) is dropped from styles and
  *          listed in filteredFamilies instead. Baselines from 1.6.x will show
  *          typography and colour drift once on upgrade.
- *  1.6.0 — typography.sources gains urls: the resolved http(s) font asset and
+ *  1.6.0 - typography.sources gains urls: the resolved http(s) font asset and
  *          webfont-provider stylesheet URLs seen during extraction, sorted and
  *          deduped. Lets a consumer re-fetch, cache or verify the actual font
  *          files instead of guessing from family names. Additive: 1.5.x
  *          consumers ignore it. Not read by the drift engine, so it introduces
- *          no baseline churn — which matters, because cache-busting query
+ *          no baseline churn - which matters, because cache-busting query
  *          strings make these URLs change on every deploy of a site.
- *  1.5.0 — meta gains httpStatus (the page.goto() navigation response status;
+ *  1.5.0 - meta gains httpStatus (the page.goto() navigation response status;
  *          null when Playwright returns no response). Lets consumers reject
  *          extractions that came from a bot-wall/WAF error page instead of
  *          persisting a styled 403/404 as if it were the real brand.
  *          Additive: 1.4.x consumers ignore it.
- *  1.4.0 — colors.cssVariables entries gain `hex` (parseable identity beside
+ *  1.4.0 - colors.cssVariables entries gain `hex` (parseable identity beside
  *          the authored token value, which may be a modern colour function).
  *          Additive: 1.3.x consumers ignore it. BEHAVIOR: modern CSS colour
  *          functions (oklab/oklch/lab/lch/color/hwb) now normalise instead of
  *          leaking raw strings or being dropped; palette/semantic originals
  *          serialise as legacy rgb()/rgba() with alpha preserved; emitted
- *          lch() strings are D50 per the CSS spec (previously D65 — every lch
+ *          lch() strings are D50 per the CSS spec (previously D65 - every lch
  *          value changes; hex/rgb/oklch are unaffected). Shipped in CLI 0.26.0
  *          which erroneously still declared 1.3.0.
- *  1.3.0 — meta gains snapshotId (canonical snapshot key: pin/dedupe on this,
+ *  1.3.0 - meta gains snapshotId (canonical snapshot key: pin/dedupe on this,
  *          not on extractedAt or storage timestamps), viewport (extraction
  *          width/height; mismatched widths produce false layout drift),
  *          fontsReady and pendingFonts (false = typography families may be OS
  *          fallbacks). DriftReport gains warnings[] (comparison-validity
  *          caveats) and inconclusive. Additive: 1.2.x consumers ignore the new
- *          keys. BEHAVIOR: drift scores recalibrated — categories empty on
+ *          keys. BEHAVIOR: drift scores recalibrated - categories empty on
  *          both sides no longer dilute the average, and typography severities
  *          changed; an approved baseline may need re-approval after upgrade.
- *  1.2.0 — added colors.semantic.background, colors.semantic.text and
+ *  1.2.0 - added colors.semantic.background, colors.semantic.text and
  *          colors.semantic.accent (canonical page surface, body text, and a
  *          hue-distinct brand accent). Typography gains a "text" context value
  *          for body-eligible text whose family is not the dominant body font.
  *          Additive: 1.1.x consumers ignore the new keys and treat "text" as
  *          body-like.
- *  1.1.0 — added SpacingValue.display, a guaranteed "Npx" string for rendering.
+ *  1.1.0 - added SpacingValue.display, a guaranteed "Npx" string for rendering.
  *          Additive: 1.0.x consumers ignore it. Read `display` instead of
  *          formatting `px`, whose type narrows from "16px" to a number through
  *          normalizeExtraction().
- *  1.0.0 — baselined on the 0.16.0 shape.
+ *  1.0.0 - baselined on the 0.16.0 shape.
  */
 export const SCHEMA_VERSION = '1.19.0';
 

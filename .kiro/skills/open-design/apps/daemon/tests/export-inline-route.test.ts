@@ -7,7 +7,7 @@ import { inlineRelativeAssets, type InlineAssetReader } from '../src/inline-asse
 import { startServer } from '../src/server.js';
 
 // ---------------------------------------------------------------------------
-// Unit — inlineRelativeAssets pure helper
+// Unit - inlineRelativeAssets pure helper
 // ---------------------------------------------------------------------------
 //
 // These tests pin the behavior contract documented in
@@ -153,7 +153,7 @@ describe('inlineRelativeAssets', () => {
   });
 
   it('HTML-escapes the href value in data-od-inline-asset attr', async () => {
-    // Using `&` only — the realistic case for filenames that need escaping.
+    // Using `&` only - the realistic case for filenames that need escaping.
     // `<`, `>`, `"` are forbidden in real filenames on most platforms and
     // additionally break the tag-matching regex (a limitation inherited
     // from the web client at FileViewer.tsx:5271). The escapeHtmlAttr fn
@@ -173,7 +173,7 @@ describe('inlineRelativeAssets', () => {
     // by another whitespace char, satisfies the lookahead. A source
     // tag like
     //   <link rel=stylesheet href=x.css data-note="content disabled stuff">
-    // would then emit a <style disabled> block — silently disabling
+    // would then emit a <style disabled> block - silently disabling
     // a stylesheet the author wrote without that attr.
     const html =
       '<link rel="stylesheet" href="x.css" data-note="content disabled stuff">';
@@ -269,7 +269,7 @@ describe('inlineRelativeAssets', () => {
       }),
       { maxAssetBytes: 1000 },
     );
-    // Oversized asset stays as a URL ref (graceful — the export still
+    // Oversized asset stays as a URL ref (graceful - the export still
     // succeeds; the consumer sees an un-inlined link instead of inflated
     // memory or a 413 for one bad asset).
     expect(out).toContain('<link rel="stylesheet" href="big.css">');
@@ -297,7 +297,7 @@ describe('inlineRelativeAssets', () => {
 
   it('checks maxAssetBytes via handle.size BEFORE invoking handle.read()', async () => {
     // PR #1312 round-4 (lefarcen P2): the maxAssetBytes cap must fire
-    // pre-buffer. A reader whose read() throws is fine — the helper
+    // pre-buffer. A reader whose read() throws is fine - the helper
     // must not invoke it once the stat-side size exceeds the cap.
     let readsAttempted = 0;
     const sizeOnlyReader = async (relPath: string) => ({
@@ -344,14 +344,14 @@ describe('inlineRelativeAssets', () => {
     expect(reads).toBeLessThanOrEqual(2);
   });
 
-  it('reconciles handle.size with actual content bytes — trips total abort post-read on stat-lying readers', async () => {
+  it('reconciles handle.size with actual content bytes - trips total abort post-read on stat-lying readers', async () => {
     // PR #1312 round-5 (lefarcen P3 confirmed at PR-1312#issuecomment-4424868413
     // follow-up, path-a): the helper must reconcile handle.size with the
     // actual byte length of `content` AFTER `read()`, not just trust the
     // stat-side number. A reader that under-reports size (stale stat,
     // UTF-8 expansion at decode, sparse file, deliberate lie) would
     // otherwise let many strings materialize before the concat-time
-    // guard at the bottom of the helper throws — defeating the round-4
+    // guard at the bottom of the helper throws - defeating the round-4
     // pre-buffer cap intent.
     //
     // Discriminator: read count. Pre-fix the helper trusts handle.size
@@ -369,7 +369,7 @@ describe('inlineRelativeAssets', () => {
     // workers.
     let reads = 0;
     const lyingReader: InlineAssetReader = async (_relPath: string) => ({
-      size: 10, // stat lies — actual is 100x
+      size: 10, // stat lies - actual is 100x
       read: async () => {
         reads += 1;
         return 'x'.repeat(1000);
@@ -420,14 +420,14 @@ describe('inlineRelativeAssets', () => {
     // looper + codex bot): the previous reduce/split-join approach
     // re-scanned the progressively mutated HTML, so a tag literal that
     // happened to appear inside an inlined asset body got the inner
-    // literal also replaced — corrupting the body.
+    // literal also replaced - corrupting the body.
     //
     // The reproducer uses two <link rel=stylesheet> tags where a.css's
     // body contains the literal text of b.css's <link> tag (e.g. inside
     // a CSS comment or content: declaration). The </style escape on
     // CSS bodies doesn't touch <link>, so split/join over the mutated
     // HTML finds the literal inside a.css's inline body and replaces
-    // it on the second pass — injecting b.css's inline body where the
+    // it on the second pass - injecting b.css's inline body where the
     // literal comment text used to be.
     const html =
       '<link rel="stylesheet" href="a.css"><link rel="stylesheet" href="b.css">';
@@ -439,11 +439,11 @@ describe('inlineRelativeAssets', () => {
       readerFrom({ 'a.css': aCssBody, 'b.css': bCssBody }),
     );
     // The literal <link> string inside a.css's comment must survive
-    // verbatim — position-based replacement only touches the original
+    // verbatim - position-based replacement only touches the original
     // outer-tag spans, not text introduced by earlier replacements.
     expect(out).toContain('/* see also <link rel="stylesheet" href="b.css"> */');
     // b.css's body is inlined exactly once, at the real outer tag's
-    // position — not injected inside a.css's inline body.
+    // position - not injected inside a.css's inline body.
     expect(out.match(/body\{color:red\}/g)?.length).toBe(1);
     // Neither original outer <link href="…"> survives as a URL ref.
     expect(out).not.toMatch(/<link\b[^>]*\bhref="a\.css"/);
@@ -452,7 +452,7 @@ describe('inlineRelativeAssets', () => {
 });
 
 // ---------------------------------------------------------------------------
-// HTTP integration — GET /api/projects/:id/export/*?inline=1
+// HTTP integration - GET /api/projects/:id/export/*?inline=1
 // ---------------------------------------------------------------------------
 
 describe('GET /api/projects/:id/export/*?inline=1 route', () => {
@@ -676,7 +676,7 @@ describe('GET /api/projects/:id/export/*?inline=1 route', () => {
     // the exported document runs with daemon-origin privileges (access
     // to /api/, cookies, localStorage). CSP `sandbox allow-scripts`
     // treats the response like a sandboxed iframe with an opaque origin:
-    // scripts execute (which the export needs — that's the whole point
+    // scripts execute (which the export needs - that's the whole point
     // of inlining JS) but cannot read cookies, hit /api/, or otherwise
     // escalate to the daemon's origin.
     const res = await fetch(exportUrl('index.html'));
@@ -714,7 +714,7 @@ describe('GET /api/projects/:id/export/*?inline=1 route', () => {
     expect(body.error.code).toBe('PAYLOAD_TOO_LARGE');
   });
 
-  it('returns 413 (not 415) for an oversize non-HTML file — proves owner cap fires pre-buffer', async () => {
+  it('returns 413 (not 415) for an oversize non-HTML file - proves owner cap fires pre-buffer', async () => {
     // PR #1312 round-5 (lefarcen P2): the route must stat the owner with
     // resolveProjectFilePath BEFORE readProjectFile and reject sizes
     // above MAX_INLINE_OWNER_BYTES with 413 PAYLOAD_TOO_LARGE. The

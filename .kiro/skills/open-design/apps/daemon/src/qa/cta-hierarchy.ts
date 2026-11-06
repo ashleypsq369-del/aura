@@ -1,7 +1,7 @@
 // Post-generation static QA pass for CTA (call-to-action) hierarchy.
 //
 // Background: OpenDesign's generated HTML/CSS prototypes are sometimes
-// "functionally correct but feel unfinished" — a primary commerce action
+// "functionally correct but feel unfinished" - a primary commerce action
 // renders as a neutral button, two equally-styled CTAs compete for the
 // same conversion slot, or a "Learn more" link is styled like the buy
 // button. See nexu-io/open-design#2251 for the motivating bug report.
@@ -41,7 +41,7 @@ export interface CtaHierarchyReport {
  *
  * The function is deterministic and side-effect free. Returns an empty
  * report (no issues, zero counts) when the document has no CTA-shaped
- * elements. The set of rules is intentionally narrow — see the issue list
+ * elements. The set of rules is intentionally narrow - see the issue list
  * in this file for the categories we currently surface.
  */
 export function analyseCtaHierarchy(html: string): CtaHierarchyReport {
@@ -100,7 +100,7 @@ const CTA_KEYWORDS = [
   'checkout',
   'continue',
   'submit',
-  // Secondary English (still CTA-shaped — flagged separately below).
+  // Secondary English (still CTA-shaped - flagged separately below).
   'learn more',
   'read more',
   'more info',
@@ -150,7 +150,7 @@ function collectCtaCandidates($: CheerioAPI): CtaCandidate[] {
     //   (a) its class list contains a btn/button/cta marker, OR
     //   (b) its tag is <button> AND the copy matches a CTA keyword, OR
     //   (c) it carries role="button".
-    // Plain anchors without any of these signals are skipped — there are
+    // Plain anchors without any of these signals are skipped - there are
     // usually many of them in nav menus and they'd produce noise.
     const hasButtonClass = classes.some((c) => /(^|-)btn$|(^|-)button$|(^|-)cta$|^btn(-|$)|^button(-|$)|^cta(-|$)/i.test(c));
     const isButtonTag = tag.toLowerCase() === 'button';
@@ -187,7 +187,7 @@ function collectCtaCandidates($: CheerioAPI): CtaCandidate[] {
 }
 
 function classifyWeight(classes: string[], inlineStyle: string): Weight {
-  // Class-name signals are the strongest tell — design systems almost
+  // Class-name signals are the strongest tell - design systems almost
   // always tag the primary variant with one of these tokens.
   const PRIMARY_CLASS_TOKENS = /(^|[-_])(primary|solid|filled|accent|cta)([-_]|$)/i;
   if (classes.some((c) => PRIMARY_CLASS_TOKENS.test(c))) {
@@ -196,7 +196,7 @@ function classifyWeight(classes: string[], inlineStyle: string): Weight {
 
   // Otherwise infer from inline style: a non-transparent background colour
   // is the dominant visual signal users read as "this is the main button".
-  // We don't try to evaluate computed CSS — that would require a full
+  // We don't try to evaluate computed CSS - that would require a full
   // rendering layer; inline style is enough for the precision-biased pass.
   if (hasNonTransparentBackground(inlineStyle)) {
     return 'primary';
@@ -217,7 +217,7 @@ function hasNonTransparentBackground(inlineStyle: string): boolean {
 
 function extractStyleValue(inlineStyle: string, property: string): string | null {
   if (!inlineStyle) return null;
-  // Tolerant declaration parser — we don't need full CSS fidelity here.
+  // Tolerant declaration parser - we don't need full CSS fidelity here.
   const declarations = inlineStyle.split(';');
   for (const decl of declarations) {
     const colon = decl.indexOf(':');

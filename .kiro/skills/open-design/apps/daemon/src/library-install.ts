@@ -86,7 +86,7 @@ async function installFromGithub(url, userDir, manifest) {
       return { ok: false, error: `A ${manifest === 'SKILL.md' ? 'skill' : 'design system'} named "${dirName}" is already installed` };
     }
   } catch {
-    // Doesn't exist — good.
+    // Doesn't exist - good.
   }
 
   // Shallow clone
@@ -167,7 +167,7 @@ async function installFromLocal(localPath, userDir, manifest) {
     fs.statSync(linkPath);
     return { ok: false, error: `A ${manifest === 'SKILL.md' ? 'skill' : 'design system'} named "${dirName}" is already installed` };
   } catch {
-    // Doesn't exist — good.
+    // Doesn't exist - good.
   }
 
   // Create symlink

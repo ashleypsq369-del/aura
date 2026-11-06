@@ -6,7 +6,7 @@
 // under LIBRARY_DIR (content-addressed); referenced assets only point at a
 // file already living inside a project / design system.
 //
-// This module is pure persistence — no filesystem writes, no hashing, no HTTP.
+// This module is pure persistence - no filesystem writes, no hashing, no HTTP.
 // Higher-level orchestration (storage, enrichment) lives in `library.ts`.
 
 import type Database from 'better-sqlite3';
@@ -178,7 +178,7 @@ export interface LibraryAssetRecord extends LibraryAsset {
 }
 
 function normalizeAsset(raw: RawAssetRow, sources: LibraryAssetSource[]): LibraryAssetRecord {
-  // Build with required fields, then add optionals only when present — the
+  // Build with required fields, then add optionals only when present - the
   // daemon compiles under exactOptionalPropertyTypes, which rejects an
   // explicit `undefined` on an optional property.
   const asset: LibraryAssetRecord = {
@@ -325,7 +325,7 @@ export function getLibraryAsset(db: SqliteDb, id: string): LibraryAssetRecord | 
 /**
  * The referenced asset that already mirrors a project file, keyed by its origin
  * (`origin_project_id` + `rel_path`). The reconcile sync uses this to skip files
- * it has already indexed *without* reading/hashing their bytes — the cheap guard
+ * it has already indexed *without* reading/hashing their bytes - the cheap guard
  * that keeps auto-reconcile-on-open near-free on a large workspace. Rides the
  * existing `idx_library_assets_origin` index.
  */

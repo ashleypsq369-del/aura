@@ -20,7 +20,7 @@ import { startServer } from '../src/server.js';
 //      re-seeded with the full transcript.
 //
 // On origin/main OpenCode is not `resumesSessionViaCli`, so it always runs
-// plain `run` and re-pays the whole transcript — turn-2 here would carry no
+// plain `run` and re-pays the whole transcript - turn-2 here would carry no
 // `-s` and would include the prior reply, going red.
 
 type StartedServer = {
@@ -90,7 +90,7 @@ describe('opencode native session resume', () => {
     expect(runs).toHaveLength(2);
     const [create, resume] = runs as [RunInvocation, RunInvocation];
 
-    // Turn 1 is a fresh `run` — no `-s`, no leaked id.
+    // Turn 1 is a fresh `run` - no `-s`, no leaked id.
     expect(create.argv[0]).toBe('run');
     expect(create.argv).not.toContain('-s');
     expect(create.argv).not.toContain(SESSION);
@@ -127,7 +127,7 @@ describe('opencode native session resume', () => {
     // not found" and exits 0, exercising the exit-0 resume-failure path). The
     // daemon must NOT surface an error: it clears the dead handle and
     // TRANSPARENTLY re-runs the same turn as a fresh `run` (full transcript),
-    // within this one run. The user sees a succeeded turn — no turn 3.
+    // within this one run. The user sees a succeeded turn - no turn 3.
     const turn2 = await sendRunAndWait(started.url, conversationId, 'second request');
     expect(turn2.status).toBe('succeeded');
 
@@ -208,7 +208,7 @@ async function writeCapturingOpencode(
 }
 
 // Fake opencode CLI: succeeds on a create turn (persisting the session), but a
-// resume turn (`-s`) prints "Session not found" to stderr and exits 0 — the
+// resume turn (`-s`) prints "Session not found" to stderr and exits 0 - the
 // real OpenCode behavior for a missing session.
 async function writeMissingSessionOpencode(
   dir: string,

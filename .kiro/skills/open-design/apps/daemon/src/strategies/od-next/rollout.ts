@@ -193,7 +193,7 @@ export function evaluateOdNextRollout(input: {
  * What decides OD Next for this daemon, and what that decision came out as.
  *
  * Derived, with nothing persisted behind it. This used to consult a
- * `strategy_rollout_controls` row — a stop latch that outranked the saved mode
+ * `strategy_rollout_controls` row - a stop latch that outranked the saved mode
  * for the whole daemon instance and survived restart. That row is gone, so the
  * effective mode is a pure function of the requested mode and the two content
  * flags, and two callers reading this at the same moment cannot disagree.

@@ -1,22 +1,22 @@
-/*
- * ghana-theme.css — Project Aura Ghana Cultural Design System
+﻿/*
+ * ghana-theme.css - Project Aura Ghana Cultural Design System
  * =============================================================
  * Inspired by Kente cloth, Adinkra symbols, and Ghanaian healthcare
  * aesthetics from homecaregh.com, advancehealthcaregh.net, imperialnursinggh.com
  *
  * Kente Colors:
- *   Gold:    #D4A017  (Ashanti royalty — wisdom, wealth, high status)
+ *   Gold:    #D4A017  (Ashanti royalty - wisdom, wealth, high status)
  *   Forest:  #1B4332  (Life, renewal, growth)
  *   Teal:    #0D7377  (Healthcare, trust)
- *   Red:     #8B1A1A  (Political struggle, sacrifice — used sparingly)
+ *   Red:     #8B1A1A  (Political struggle, sacrifice - used sparingly)
  *   Black:   #1A1A1A  (Maturity, spiritual energy)
  *
  * Adinkra meanings relevant to palliative care:
- *   Gye Nyame = "Only God" — Omnipotence (used in backgrounds)
- *   Nyame Dua = Tree of Life — Divine presence, protection
- *   Fawohodie = Freedom — Independence, emancipation
- *   Nkyinkyim = Adaptability — Versatility, resilience
- *   Aya = Fern — Endurance, resourcefulness
+ *   Gye Nyame = "Only God" - Omnipotence (used in backgrounds)
+ *   Nyame Dua = Tree of Life - Divine presence, protection
+ *   Fawohodie = Freedom - Independence, emancipation
+ *   Nkyinkyim = Adaptability - Versatility, resilience
+ *   Aya = Fern - Endurance, resourcefulness
  */
 
 /* ── 1. KENTE COLOR TOKENS ───────────────────────────────────────────────── */
@@ -32,7 +32,7 @@
   --ghana-red-lt:     #FEE2E2;
   --ghana-black:      #1A1A1A;
 
-  /* Kente strip accent colors — used in border stripes */
+  /* Kente strip accent colors - used in border stripes */
   --kente-1: #D4A017;   /* gold */
   --kente-2: #0D7377;   /* teal */
   --kente-3: #1B4332;   /* forest */
@@ -40,7 +40,7 @@
   --kente-5: #1A1A1A;   /* black */
 }
 
-/* ── 2. KENTE STRIP — signature horizontal accent ────────────────────────── */
+/* ── 2. KENTE STRIP - signature horizontal accent ────────────────────────── */
 /* A thin 4-color Kente-inspired strip. Use as top border on cards, headers. */
 .kente-strip {
   height: 4px;
@@ -85,7 +85,7 @@
 
 /* ── 3. ADINKRA PATTERN BACKGROUNDS ─────────────────────────────────────── */
 /*
- * Gye Nyame pattern — simplified geometric SVG as data URI
+ * Gye Nyame pattern - simplified geometric SVG as data URI
  * Used as subtle watermark on card backgrounds
  * The pattern is a stylised cross/star representing divine presence
  */
@@ -179,7 +179,7 @@ html.dark .card-ghana-forest {
 }
 
 /* ── 5. GHANA BUTTON SYSTEM ──────────────────────────────────────────────── */
-/* Teal + Gold CTA — warm, confident, Ghanaian palette */
+/* Teal + Gold CTA - warm, confident, Ghanaian palette */
 
 .btn-ghana-primary {
   background: linear-gradient(135deg, #0D7377, #0d9488);
@@ -350,22 +350,22 @@ html.dark .heading-ghana {
   color: #6ee7b7;
 }
 
-/* ── 11. GLOBAL CARD SYSTEM — teal-tinted instead of pure white ──────────── */
+/* ── 11. GLOBAL CARD SYSTEM - teal-tinted instead of pure white ──────────── */
 /*
  * The global .card, .stat-card etc. in index.css stay white.
  * But Tailwind classes like bg-white border rounded-xl get a teal micro-tint
- * on light mode — giving the app warmth without being garish.
+ * on light mode - giving the app warmth without being garish.
  * This is applied to the main content cards only, not inputs/modals.
  */
 
-/* Main content area cards — very subtle teal wash */
+/* Main content area cards - very subtle teal wash */
 .min-h-screen > * .bg-white.rounded-xl,
 .min-h-screen > * .bg-white.rounded-2xl {
   background-color: #f9fdfd; /* near-white with micro teal tint */
 }
 
 /* ── 12. GHANA-THEMED SIDEBAR ────────────────────────────────────────────── */
-/* The sidebar already has a teal/forest gradient — keep but add Kente strip */
+/* The sidebar already has a teal/forest gradient - keep but add Kente strip */
 
 aside::after,
 .sidebar-root::after {
@@ -389,11 +389,11 @@ aside::after,
   pointer-events: none;
 }
 
-/* ── 13. PAGE BACKGROUND — warm teal-cool grey ───────────────────────────── */
-/* Slightly warmer than pure cool grey — the teal tint evokes Ghanaian fabrics */
+/* ── 13. PAGE BACKGROUND - warm teal-cool grey ───────────────────────────── */
+/* Slightly warmer than pure cool grey - the teal tint evokes Ghanaian fabrics */
 
 body {
-  background: #eef4f4 !important; /* very subtle teal-grey — warmer than #f0f4f8 */
+  background: #eef4f4 !important; /* very subtle teal-grey - warmer than #f0f4f8 */
 }
 
 html.dark body {
@@ -421,13 +421,13 @@ html.dark .skeleton {
   ) !important;
 }
 
-/* ── 15. FOCUS RING — Ghana teal ─────────────────────────────────────────── */
+/* ── 15. FOCUS RING - Ghana teal ─────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid #0D7377 !important;
   outline-offset: 2px !important;
 }
 
-/* ── 16. SCROLLBAR — Ghana teal ─────────────────────────────────────────── */
+/* ── 16. SCROLLBAR - Ghana teal ─────────────────────────────────────────── */
 ::-webkit-scrollbar-thumb {
   background: rgba(13,115,119,0.35) !important;
 }
@@ -439,7 +439,7 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 
 /* ── 17. GHANA HEADER GRADIENT UPGRADE ───────────────────────────────────── */
-/* The main nav header — add the Kente strip at the bottom */
+/* The main nav header - add the Kente strip at the bottom */
 header[role="banner"] {
   background: linear-gradient(
     to right, #0b2d26, #0d6b5e, #0D7377, #1a3a6e

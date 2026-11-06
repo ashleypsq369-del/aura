@@ -1,5 +1,5 @@
 /**
- * Tool-loop guard — detects an agent stuck repeating failing tool calls and
+ * Tool-loop guard - detects an agent stuck repeating failing tool calls and
  * lets the run loop intervene before it grinds through dozens of identical
  * attempts.
  *
@@ -7,7 +7,7 @@
  * button into a titlebar element it believed was called `titlebar-left`. The
  * real class was `tb-left`. It wrote a shell verification that asserted
  * `titlebar-left` exists, the assertion failed, it concluded the edit hadn't
- * landed, re-read, and retried the SAME wrong assumption — 80+ tool calls,
+ * landed, re-read, and retried the SAME wrong assumption - 80+ tool calls,
  * ~19 of them errors, all looping on one invented identifier. Nothing in the
  * autonomous agent-CLI path noticed or stepped in; the daemon faithfully
  * streamed every attempt. (The BYOK proxy path already bounds its tool loop at
@@ -19,12 +19,12 @@
  * pure and synchronous: feed it events, it returns a verdict the moment a loop
  * signature crosses a threshold. Two independent triggers:
  *
- *   1. CONSECUTIVE failures — N tool_results in a row are errors with no
+ *   1. CONSECUTIVE failures - N tool_results in a row are errors with no
  *      successful tool call between them. Catches "everything it tries fails"
  *      even when the agent keeps varying the command. Reset to zero on any
  *      successful tool_result, because a success is real progress.
  *
- *   2. REPEATED failure — the SAME (tool, action) signature errors K times.
+ *   2. REPEATED failure - the SAME (tool, action) signature errors K times.
  *      Catches fixation: re-running the identical failing Edit/Bash over and
  *      over (the titlebar-left case). A read-only success (Read/Glob/LS/Grep,
  *      TodoWrite, …) does NOT clear this tally: a stuck agent often re-reads the
@@ -38,9 +38,9 @@
  *      retries of the same command (fix, re-run, fix, re-run) never trip it.
  *
  * Two escalation tiers per trigger:
- *   - WARN  — emit a one-shot heads-up event so the UI/CLI surfaces "this run
+ *   - WARN  - emit a one-shot heads-up event so the UI/CLI surfaces "this run
  *             may be stuck" while it is still cheap to stop. Never destructive.
- *   - HALT  — at a hard ceiling, terminate the child so the worst case is
+ *   - HALT  - at a hard ceiling, terminate the child so the worst case is
  *             bounded instead of open-ended. Opt-in: the daemon defaults to
  *             warn (heads-up only); operators enable the hard stop via
  *             OD_TOOL_LOOP_GUARD=halt.
@@ -48,7 +48,7 @@
  * Latching: WARN fires at most once; after it, continued failures can still
  * escalate to HALT (also once). HALT supersedes WARN if the first counted
  * failure already crosses the ceiling. Once halted, further observations are
- * inert — the run is being torn down.
+ * inert - the run is being torn down.
  */
 
 /** Why the guard tripped. */
@@ -108,7 +108,7 @@ export interface ToolLoopGuard {
 // ones: re-running the IDENTICAL failing action is a stronger loop signal than
 // a streak of different-but-failing actions, so it should trip sooner. All are
 // generous enough that ordinary iterative work (try, fail, fix, succeed) never
-// crosses them — a real fix changes the signature and lands a success, both of
+// crosses them - a real fix changes the signature and lands a success, both of
 // which break the count.
 const DEFAULTS = {
   warnConsecutive: 5,
@@ -132,7 +132,7 @@ const MAX_TRACKED_SIGNATURES = 512;
 
 const SIGNATURE_MAX_LEN = 160;
 
-/** Collapse runs of whitespace to single spaces and trim — so trivially
+/** Collapse runs of whitespace to single spaces and trim - so trivially
  *  reformatted-but-identical actions still hash to the same signature. */
 function collapseWhitespace(value: string): string {
   return value.replace(/\s+/gu, ' ').trim();
@@ -143,7 +143,7 @@ function collapseWhitespace(value: string): string {
 // re-read-between-failures fixation loop still trips). The default leans toward
 // "progress": only EXPLICIT inspections are treated as non-progress, so the
 // guard never halts a run that is genuinely fixing things. (PR #3375 review:
-// agents change state through the shell — sed -i, pnpm install, git commit — so
+// agents change state through the shell - sed -i, pnpm install, git commit - so
 // a name-only allowlist that excluded Bash wrongly carried failures forward
 // through real fixes.)
 
@@ -152,7 +152,7 @@ const READ_ONLY_TOOL_NAMES = new Set([
   'read', 'glob', 'ls', 'grep', 'notebookread', 'webfetch', 'websearch', 'todowrite', 'askuserquestion',
 ]);
 
-// Tool names that run a shell command — the command itself decides progress.
+// Tool names that run a shell command - the command itself decides progress.
 const SHELL_TOOL_NAMES = new Set([
   'bash', 'shell', 'sh', 'run_command', 'run_terminal_cmd', 'execute_command', 'terminal',
 ]);
@@ -167,7 +167,7 @@ const READ_ONLY_SHELL_BINARIES = new Set([
   'true', 'false', 'basename', 'dirname', 'realpath', 'readlink', 'cut', 'sort', 'uniq', 'column', 'cmp',
 ]);
 
-// `find` actions that delete, run a command, or write a file — these mutate, so
+// `find` actions that delete, run a command, or write a file - these mutate, so
 // a successful `find` carrying one is progress, not an inspection. `fprint\w*`
 // covers the whole file-writing family (-fprint, -fprintf, -fprint0) in one go.
 const MUTATING_FIND_ACTION = /\s-(?:delete|exec|execdir|ok|okdir|fprint\w*|fls)\b/u;
@@ -213,7 +213,7 @@ function unwrapEnvPrefix(segment: string): string {
  * Heuristic: does this shell command ONLY inspect state? A successful read-only
  * shell call must not clear the repeated-failure tally, while a state-changing
  * one (sed -i, mv, pnpm install, a build, a redirect to a file, git add/commit)
- * should. Conservative by design — anything not recognised as a pure inspection
+ * should. Conservative by design - anything not recognised as a pure inspection
  * is treated as a state change (progress), so the guard never halts a run that
  * is making real changes through the shell.
  */
@@ -299,11 +299,11 @@ export function computeToolSignature(name: string, input: unknown): string {
     } else {
       try {
         const serialized = JSON.stringify(record) ?? '';
-        // An empty object carries no action identity — sign as the tool name
+        // An empty object carries no action identity - sign as the tool name
         // alone so e.g. ExitPlanMode {} clusters with other ExitPlanMode calls.
         detail = serialized === '{}' ? '' : serialized;
       } catch {
-        // Circular / non-serializable input — name alone still gives a usable
+        // Circular / non-serializable input - name alone still gives a usable
         // (coarser) signature, and the consecutive trigger backs it up.
         detail = '';
       }
@@ -394,7 +394,7 @@ export function createToolLoopGuard(options: ToolLoopGuardOptions = {}): ToolLoo
       //     progress on a failing action, so the tallies are kept. Without this a
       //     fixation loop that re-reads between identical failing calls
       //     (fail -> read(ok) -> same fail -> …) would reset every round and
-      //     never trip — exactly the "re-read, retry the same wrong assumption"
+      //     never trip - exactly the "re-read, retry the same wrong assumption"
       //     shape from the motivating report. (PR #3375 review.)
       if (!isError) {
         consecutiveErrors = 0;

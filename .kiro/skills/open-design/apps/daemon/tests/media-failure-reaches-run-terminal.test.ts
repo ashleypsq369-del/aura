@@ -2,7 +2,7 @@
  * 一轮任务实际失败了,界面却显示「已完成 + 绿勾」。
  *
  * 生产现场(用户诊断包 `logs/daemon/latest.log`):daemon 自己**清清楚楚知道**这一轮
- * 的生图失败了,而且知道它属于哪个 run ——
+ * 的生图失败了,而且知道它属于哪个 run --
  *
  *     [media] {"event":"failed","task_id":"6393c0cb-…",
  *              "run_id":"6dc36917-57de-49b9-aef3-d6d6199dd14a",
@@ -16,20 +16,20 @@
  *
  * 两个洞,同一条不变量的两半:
  *
- *   洞 1 —— `routes/media.ts` 的失败路径只做三件事(标 task failed / 发埋点 /
+ *   洞 1 -- `routes/media.ts` 的失败路径只做三件事(标 task failed / 发埋点 /
  *     打日志),**没有任何回写**。`runId` 就在手上(`options.grant.runId`),却只喂给
  *     了埋点。于是 run 的终态只由子进程退出码决定,agent 道完歉退出 0,就是
  *     succeeded。
  *
- *   洞 2 —— 完成标记(`<od-done key=…/>` + 其后非空文字)对「未完成」有**一票否决
+ *   洞 2 -- 完成标记(`<od-done key=…/>` + 其后非空文字)对「未完成」有**一票否决
  *     权**,而判据从不看那段文字说了什么。这一轮里标记后面那段非空文字**恰好就是那句
  *     道歉**,而那句道歉是**我们自己写进系统提示词、要求模型逐字照抄的**
  *     (`prompts/media-contract.ts`,设计文档 S22)。也就是说:**道歉本身把「未完成」
- *     压掉了**。同一轮的最后一次 TodoWrite 里还有一项是 `cancelled` —— 本该算未完成,
+ *     压掉了**。同一轮的最后一次 TodoWrite 里还有一项是 `cancelled` -- 本该算未完成,
  *     被标记挡掉了。
  *
  * 所以这里的判据必须来自 **daemon 自己的事实**(本 run 有它亲眼看着失败的 media
- * task),**绝不能去解析模型那句话说了什么** —— 文案是产品文案,改一次判据就静默失效。
+ * task),**绝不能去解析模型那句话说了什么** -- 文案是产品文案,改一次判据就静默失效。
  *
  * 层次:daemon HTTP 边界(`startServer` 起真 daemon,真 `POST /api/chat`,真
  * `POST /api/tools/media/generate`),provider 是本地起的一个**必定 400** 的
@@ -46,19 +46,19 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { startServer } from '../src/server.js';
 
-/** provider 回一张真 1x1 PNG —— 成功那条对照组要真的写出字节来。 */
+/** provider 回一张真 1x1 PNG -- 成功那条对照组要真的写出字节来。 */
 const ONE_BY_ONE_PNG_B64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 
 /**
- * 生产那一轮里,模型在完成标记后面写的**就是这句** —— 逐字来自
+ * 生产那一轮里,模型在完成标记后面写的**就是这句** -- 逐字来自
  * `apps/daemon/src/prompts/media-contract.ts`(镜像在 contracts 侧)。
  *
  * 它出现在这里不是为了被解析,恰恰相反:它在这里是为了证明**没有人解析它**。
  * 判据换成任何别的句子,结论都必须一模一样。
  */
 const S22_APOLOGY =
-  '图片没生成出来,不是你的操作有误 —— 这次是 Open Design 自己的问题,我们已经记下了。重试一般能恢复;反复出现的话联系我们。';
+  '图片没生成出来,不是你的操作有误 -- 这次是 Open Design 自己的问题,我们已经记下了。重试一般能恢复;反复出现的话联系我们。';
 
 let baseUrl: string;
 let server: http.Server;
@@ -83,7 +83,7 @@ interface TurnPlan {
  * 把一份 TurnPlan 编成假 `opencode` 的脚本。
  *
  * 完成标记的 key 是**每轮新铸**的 nonce,只出现在这一轮自己的提示词里(经 stdin 送进
- * 来)。脚本把它读出来再原样发回去 —— 这是唯一能造出「合法完成标记」的办法,也正是
+ * 来)。脚本把它读出来再原样发回去 -- 这是唯一能造出「合法完成标记」的办法,也正是
  * 生产里模型走的那条路。伪造不出来的东西,测试也不该伪造。
  */
 function agentScript(plan: TurnPlan): string {
@@ -273,7 +273,7 @@ async function runTurn(plan: TurnPlan & { message?: string }): Promise<{
     const key = /donekey=([0-9a-f]{4,64})=donekey/.exec(narration)?.[1];
     expect(
       key,
-      '假 agent 没能从这一轮的提示词里读到 done key,发出去的就不是合法完成标记 —— '
+      '假 agent 没能从这一轮的提示词里读到 done key,发出去的就不是合法完成标记 -- '
         + '这条测试的前提不成立',
     ).toBeTruthy();
   }
@@ -360,7 +360,7 @@ describe('a media generation the host watched fail reaches its run terminal', ()
   });
 
   /**
-   * 洞 1 —— 失败必须回流到 run。
+   * 洞 1 -- 失败必须回流到 run。
    *
    * daemon 在日志里写下 `run_id` 的那一刻就已经知道是哪一轮了;这条测试要的是同一个
    * 事实出现在这一轮**自己的终态**里,而不是只出现在日志和埋点里。有了它,壳头才有
@@ -390,7 +390,7 @@ describe('a media generation the host watched fail reaches its run terminal', ()
   }, 90_000);
 
   /**
-   * 洞 2 —— 完成标记不能在宿主自己握着反证时压掉「未完成」。
+   * 洞 2 -- 完成标记不能在宿主自己握着反证时压掉「未完成」。
    *
    * 这条是生产那一轮的**完整复刻**:合法的完成标记 + 标记后面那句我们自己让模型逐字
    * 照抄的道歉 + 一项 `cancelled` 的 todo。今天的判据只看「标记对得上 key + 后面还有
@@ -418,7 +418,7 @@ describe('a media generation the host watched fail reaches its run terminal', ()
   }, 90_000);
 
   /**
-   * 反向锚点 1 —— 真正成功的一轮不许被牵连。
+   * 反向锚点 1 -- 真正成功的一轮不许被牵连。
    *
    * 同一条路、同一个 provider、同一枚完成标记,只是生图这次真的成功了。
    */
@@ -441,10 +441,10 @@ describe('a media generation the host watched fail reaches its run terminal', ()
   }, 90_000);
 
   /**
-   * 反向锚点 2 —— 别把修复做成「有 done 标记也一律不信」。
+   * 反向锚点 2 -- 别把修复做成「有 done 标记也一律不信」。
    *
    * 完全没有媒体任务的普通一轮:一项 todo 还开着,但模型发了合法的完成标记。今天这
-   * 一轮读作「已完成」,修完之后必须**一个字节都不变** —— 宿主手里没有任何反证,标记
+   * 一轮读作「已完成」,修完之后必须**一个字节都不变** -- 宿主手里没有任何反证,标记
    * 的否决权原样保留。这条锚点要是红了,说明修复把所有正常完成的任务都变成了未完成。
    */
   it('keeps the marker authoritative when the host holds no counter-evidence', async () => {
@@ -461,13 +461,13 @@ describe('a media generation the host watched fail reaches its run terminal', ()
     expect(terminal.status).toBe('succeeded');
     expect(
       terminal.endedWithUnfinishedWork,
-      '没有任何宿主反证的一轮被判成了未完成 —— 修复把完成标记一律不信了',
+      '没有任何宿主反证的一轮被判成了未完成 -- 修复把完成标记一律不信了',
     ).toBe(false);
     expect(terminal.mediaTaskFailures ?? []).toEqual([]);
   }, 90_000);
 
   /**
-   * 反向锚点 3 —— 完全没有媒体任务的一轮,行为不变。
+   * 反向锚点 3 -- 完全没有媒体任务的一轮,行为不变。
    */
   it('leaves a plain text-only turn alone', async () => {
     const { terminal } = await runTurn({
@@ -481,9 +481,9 @@ describe('a media generation the host watched fail reaches its run terminal', ()
   }, 90_000);
 
   /**
-   * 反向锚点 4 —— 用户主动取消的一轮,行为不变。
+   * 反向锚点 4 -- 用户主动取消的一轮,行为不变。
    *
-   * 取消掉的一轮,终态由「谁停的」决定,不由这一轮里失败了什么决定 —— 和完成标记、
+   * 取消掉的一轮,终态由「谁停的」决定,不由这一轮里失败了什么决定 -- 和完成标记、
    * 提问收尾那两条已有规则的 `succeeded` 闸门是同一个道理。
    */
   it('leaves a user-canceled turn alone', async () => {
@@ -508,7 +508,7 @@ describe('a media generation the host watched fail reaches its run terminal', ()
           }),
         }).catch(() => null);
 
-        // Cancel only once the host has actually recorded the failure — the
+        // Cancel only once the host has actually recorded the failure - the
         // anchor is "a canceled run keeps its own verdict EVEN THEN", not
         // "we canceled before there was anything to see".
         const runId = (await waitFor(
@@ -532,7 +532,7 @@ describe('a media generation the host watched fail reaches its run terminal', ()
         expect(terminal.status).toBe('canceled');
         expect(
           terminal.endedWithUnfinishedWork,
-          '用户取消的一轮被改判了 —— 反证的 succeeded 闸门没有生效',
+          '用户取消的一轮被改判了 -- 反证的 succeeded 闸门没有生效',
         ).toBe(false);
         expect((terminal.mediaTaskFailures ?? []).length).toBe(1);
         await chat;

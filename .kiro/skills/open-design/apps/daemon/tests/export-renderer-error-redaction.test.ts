@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { describeDesktopRendererFailure } from '../src/import-export-routes.js';
 
 /**
- * W84 ② — the daemon's own error was leaking an absolute socket path into the
+ * W84 ② - the daemon's own error was leaking an absolute socket path into the
  * model's context.
  *
  * The reported string was:
@@ -23,10 +23,10 @@ import { describeDesktopRendererFailure } from '../src/import-export-routes.js';
  * defence in depth behind it.
  *
  * Three things have to hold at once, and the third is the one that makes this
- * hard — redaction must not cost us anything we actually use:
+ * hard - redaction must not cost us anything we actually use:
  *
  *   1. no filesystem path / port / pid survives into the response message;
- *   2. the raw error still reaches the daemon log — and it is the ONLY copy.
+ *   2. the raw error still reaches the daemon log - and it is the ONLY copy.
  *      `sendApiError` does not log, `recordApiFailure` stores just
  *      {method, route, status, code} and drops the message entirely, and the
  *      sidecar's own `traceJsonIpc` is gated behind OD_JSON_IPC_TRACE. Redact
@@ -47,7 +47,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('desktop renderer failure — what leaves the daemon', () => {
+describe('desktop renderer failure - what leaves the daemon', () => {
   it('drops the unix socket path from the message the agent reads', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const message = describeDesktopRendererFailure(
@@ -61,7 +61,7 @@ describe('desktop renderer failure — what leaves the daemon', () => {
     expect(message).toContain('ENOENT');
   });
 
-  it('keeps the raw path in the daemon log — the only copy of it', () => {
+  it('keeps the raw path in the daemon log - the only copy of it', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     describeDesktopRendererFailure(
       new Error('connect ENOENT /tmp/open-design/ipc/chatnext/desktop.sock'),

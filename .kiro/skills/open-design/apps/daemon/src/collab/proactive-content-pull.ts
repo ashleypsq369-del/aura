@@ -1,12 +1,12 @@
 // Hub push-channel consumer for 'project-content-changed' (recvqmKQRiIlYf):
 // a teammate published a new version of a shared project, so THIS daemon
-// pulls the content proactively — no open tab required — instead of leaving
+// pulls the content proactively - no open tab required - instead of leaving
 // freshness to the member web's ~5s status polling. That polling stays
 // running untouched as the fallback (and as the ONLY mechanism while the hub
 // channel is down); everything here degrades to it: a guard skip, a failed
 // pull, or a revoked project simply leaves freshness to the poll loop.
 //
-// Guard boundary (all fail CLOSED — an uncertain answer skips the pull):
+// Guard boundary (all fail CLOSED - an uncertain answer skips the pull):
 //   - An existing local binding must be a team binding. A newly-shared project
 //     with no local binding may bootstrap only from an explicitly scoped hub
 //     event. That exact Workspace is resolved through authoritative membership
@@ -28,7 +28,7 @@
 // pull materialized, so repeated/out-of-order events for an already-landed
 // head are no-ops; an event racing an in-flight pull waits it out and re-runs
 // AT MOST once when the cursor is still behind (a newer head arrived while
-// pulling). The cursor only advances on a successful pull — failures keep it
+// pulling). The cursor only advances on a successful pull - failures keep it
 // behind so the same-version retry stays possible.
 
 const WITNESS_MAX_AGE_MS = 5_000;
@@ -193,7 +193,7 @@ export function isFreshProactivePullAuthorizationWitness(
   );
 }
 
-/** Outcome contract of the injected pull — structurally the same shape
+/** Outcome contract of the injected pull - structurally the same shape
  *  `CollabSyncRoutesHandle.pullSharedProject` (routes/collab-sync.ts)
  *  resolves with, redeclared here so this module stays free of the routes
  *  layer. */
@@ -233,7 +233,7 @@ export interface ProactiveContentPullDeps {
     projectId: string,
     workspaceId: string,
   ) => Promise<string | null>;
-  /** The shared pull flow (revocation gate → pull → register → signals) —
+  /** The shared pull flow (revocation gate → pull → register → signals) -
    *  `CollabSyncRoutesHandle.pullSharedProject` in production wiring. */
   pullSharedProject: (
     target: ProactiveContentPullTarget,
@@ -264,8 +264,8 @@ export interface ProactiveContentPullDeps {
   /**
    * Background content-size policy (issue #6518, incident #6512), consulted
    * immediately before this module executes a content pull. EVERY pull this
-   * module drives is background work — the live hub push lane and the broad
-   * or targeted catch-up sweeps all converge here — while the foreground
+   * module drives is background work - the live hub push lane and the broad
+   * or targeted catch-up sweeps all converge here - while the foreground
    * open-project lane (`POST /api/projects/:id/collab/pull` in
    * routes/collab-sync.ts) never flows through this module and therefore
    * never consults this policy. 'defer' skips the download and settles the
@@ -275,9 +275,9 @@ export interface ProactiveContentPullDeps {
    *
    * Fail-closed direction is deliberately INVERTED relative to this module's
    * other guards: for the size policy, "closed" means PULL AS BEFORE (the
-   * pre-guard status quo). Skipping is the new behavior, so any uncertainty —
+   * pre-guard status quo). Skipping is the new behavior, so any uncertainty -
    * the policy throwing, an unknown entry count, an old CLI without the
-   * probe, or a versionless event — must degrade to the existing pull and
+   * probe, or a versionless event - must degrade to the existing pull and
    * may never leave a project permanently unmaterialized.
    */
   assessBackgroundContentPull?: (
@@ -818,7 +818,7 @@ export function createProactiveContentPull(
         outcome = await deps.pullSharedProject(targetForPull, event.version);
         if (outcome?.status !== 'pulled') return { scopeKey, outcome };
         // Advance the cursor only with the version the pull itself reported
-        // as materialized — trusting the event's number here could mark
+        // as materialized - trusting the event's number here could mark
         // content as landed that never reached disk.
         if (outcome.version == null) return { scopeKey, outcome };
         const cursor = pulledVersions.get(scopeKey);
@@ -1160,7 +1160,7 @@ export function createProactiveContentPull(
       // immediately before content-pull execution. Only an exact-version
       // decision is possible (the probe authorizes one exact version), so a
       // versionless event keeps the pre-guard behavior. The policy failing
-      // fails OPEN into the pull — see `assessBackgroundContentPull`'s doc
+      // fails OPEN into the pull - see `assessBackgroundContentPull`'s doc
       // for why the closed direction is the status quo here.
       if (
         deps.assessBackgroundContentPull &&
@@ -1274,8 +1274,8 @@ export function createProactiveContentPull(
       ) {
         continue;
       }
-      // A size-deferred version settles like a satisfied one — no retry
-      // timer, no broad-head cooldown — except the cursor stays behind so a
+      // A size-deferred version settles like a satisfied one - no retry
+      // timer, no broad-head cooldown - except the cursor stays behind so a
       // foreground pull or a newer head still materializes content. A newer
       // event that merged in while the policy probe was in flight re-loops
       // and gets its own fresh decision.

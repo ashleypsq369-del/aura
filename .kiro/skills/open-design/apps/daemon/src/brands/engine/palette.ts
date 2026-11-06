@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * Palette engine — a faithful, dependency-free port of the @ant-design/colors
+ * Palette engine - a faithful, dependency-free port of the @ant-design/colors
  * `generate()` HSV algorithm.
  *
  * One seed color → a deterministic 10-step ladder `[5 lighter, base, 4 darker]`
@@ -128,9 +128,9 @@ function mix(back: RGB, front: RGB, amount: number): RGB {
   };
 }
 
-// ─────────────────────────── generate() — the Ant HSV ladder ────────────────
+// ─────────────────────────── generate() - the Ant HSV ladder ────────────────
 
-/** Hue step: cooler region (60–240°) shifts opposite to the warm region. */
+/** Hue step: cooler region (60-240°) shifts opposite to the warm region. */
 function getHue(hsv: HSV, i: number, light: boolean): number {
   let hue: number;
   // 根据色相不同,色相转向不同

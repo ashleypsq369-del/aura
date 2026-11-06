@@ -3,7 +3,7 @@
  *
  * playwright-core (the driver, ~10MB, no browser download) is a regular
  * dependency, so the import resolves on a plain install without pulling the
- * ~150MB browser binaries onto every consumer — library-only importers
+ * ~150MB browser binaries onto every consumer - library-only importers
  * (drift, types, normalize, dtcg) and Vercel/CI installs stay lean. The actual
  * browser binary is fetched on demand, by `dembrandt install-browser` or by the
  * first extraction that finds it missing, so only callers that really extract

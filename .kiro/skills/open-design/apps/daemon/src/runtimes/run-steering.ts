@@ -1,5 +1,5 @@
 /**
- * B11 「引导对话」 — steer a turn that is still running.
+ * B11 「引导对话」 - steer a turn that is still running.
  *
  * The chat queue's third action is NOT "cancel and resend". Steering writes one
  * more JSONL `user` frame onto the agent child's stdin while the turn is still
@@ -10,7 +10,7 @@
  * fails silently if we guess:
  *
  *  1. The runtime delivers its prompt as `stream-json`. That is the only writer
- *     that leaves stdin open past the opening prompt — every other plain-text
+ *     that leaves stdin open past the opening prompt - every other plain-text
  *     runtime gets its whole prompt as a file-backed stdin at spawn
  *     (`spawnAgentProcess`), so there is no pipe left to write to.
  *     This is a permanent property of the agent, so callers should stop
@@ -18,7 +18,7 @@
  *  2. The run is still live.
  *  3. `run.stdinOpen` is still true. A clean turn terminal closes stdin (see
  *     `applyClaudeStreamJsonRunBookkeeping`); a `stop_reason: 'tool_use'` pause
- *     deliberately does NOT — the model is parked mid-tool and still reading,
+ *     deliberately does NOT - the model is parked mid-tool and still reading,
  *     which is exactly when steering is worth the most.
  *
  *     "Turn terminal" is either a `turn_end` or a `usage` event, and which one
@@ -28,7 +28,7 @@
  *     `--include-partial-messages` was negotiated; without that flag the first
  *     terminal of the turn is the `usage` event synthesized from the `result`
  *     frame. `chat-run-lifecycle.ts` treats the two as equals for exactly this
- *     reason — see `claude-stream.ts`'s `emitTurnEndOnce` for the full
+ *     reason - see `claude-stream.ts`'s `emitTurnEndOnce` for the full
  *     three-source contract and the recordings that pin it down.
  *
  *     Practical consequence for callers: the steering window closes at the
@@ -52,7 +52,7 @@ export type RunSteeringVerdict =
   | { ok: false; refusal: RunSteeringRefusal };
 
 /**
- * Minimal shape of a runtime def this module needs — keeps it unit-testable.
+ * Minimal shape of a runtime def this module needs - keeps it unit-testable.
  * The index signature is deliberate: callers hand us whole `RuntimeAgentDef`
  * objects (closures and all), and a bare optional-only type would trip
  * TypeScript's weak-type check on every one of them.
@@ -109,11 +109,11 @@ type SteerableStdin = {
 
 /**
  * Write one steering frame. Returns whether it actually reached the pipe, plus
- * whether the OS buffered it (the child is not draining stdin — the same
+ * whether the OS buffered it (the child is not draining stdin - the same
  * corroborating signal `run.stdinBackpressure` records for the opening prompt).
  *
  * A buffered write is still delivered; a destroyed pipe or an EPIPE is not, and
- * must surface as a refusal rather than a thrown 500 — the child racing to exit
+ * must surface as a refusal rather than a thrown 500 - the child racing to exit
  * is an expected outcome here, not a daemon bug.
  */
 export function writeSteeringUserMessage(

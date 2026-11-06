@@ -12,7 +12,7 @@ import {
 
 function isNonPublicHost(host: string): boolean {
   const h = host.toLowerCase();
-  // IPv6 multicast (ff00::/8) — not covered by isBlockedExternalApiHostname,
+  // IPv6 multicast (ff00::/8) - not covered by isBlockedExternalApiHostname,
   // which only special-cases `::`, ULA and link-local IPv6.
   if (/^ff[0-9a-f]{2}:/.test(h)) return true;
   // isLoopbackApiHost → 127.0.0.0/8, ::1, localhost.
@@ -27,7 +27,7 @@ function isIpLiteral(host: string): boolean {
 }
 
 /**
- * Throw unless `url` is an http(s) URL whose host is a public address — checked
+ * Throw unless `url` is an http(s) URL whose host is a public address - checked
  * both as the literal host and, for a hostname, against every DNS answer.
  */
 export async function assertPublicAssetUrl(url: string, signal?: AbortSignal): Promise<void> {
@@ -75,7 +75,7 @@ type DnsLookupCb = typeof dnsLookupCb;
 /**
  * Wrap a `dns.lookup`-shaped resolver so the resolved address is rejected when
  * it is non-public. Installed as the undici Agent's connection-time `lookup`, so
- * the address we validate IS the one the socket connects to — closing the
+ * the address we validate IS the one the socket connects to - closing the
  * DNS-rebinding / TOCTOU gap that a separate pre-validation lookup leaves open
  * (an attacker-controlled name answering public for the check and private for
  * the connect). Uses the same `isNonPublicHost` predicate as
@@ -117,7 +117,7 @@ const MAX_ASSET_REDIRECTS = 5;
 
 // Pin SSRF validation to the actual outbound connection: the Agent resolves each
 // host once at connect time and refuses the socket if that exact address is
-// non-public. This is what defeats DNS rebinding — there is no separate
+// non-public. This is what defeats DNS rebinding - there is no separate
 // pre-validation resolve to race. A single long-lived dispatcher (like
 // plugins/plugin-asset-cache.ts) is reused across calls: it must NOT be closed
 // per-request, since closing an undici Agent waits for the in-flight request,

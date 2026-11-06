@@ -1,11 +1,11 @@
 // Plugin installer. Spec §7.2:
 //
-//   - `./folder` / `/abs/path`     — local-copy backend (Phase 1).
-//   - `github:owner/repo[@ref][/subpath]` — fetched from
+//   - `./folder` / `/abs/path`     - local-copy backend (Phase 1).
+//   - `github:owner/repo[@ref][/subpath]` - fetched from
 //     codeload.github.com as a tar.gz, extracted into a temp dir, then
 //     copied into the daemon data-root-derived plugin registry via the local
 //     backend.
-//   - `https://…tar.gz` / `…tgz`   — same extraction path, no path-rewrite.
+//   - `https://…tar.gz` / `…tgz`   - same extraction path, no path-rewrite.
 //
 // Hard install constraints (spec §7.2 / plan §3.A6):
 //   - Reject path-traversal segments inside the source folder when copying.
@@ -88,7 +88,7 @@ export interface InstallOptions {
   // Pluggable network fetcher for tests. Production injects globalThis.fetch.
   // The contract: returns a ReadableStream of the gzipped tar bytes.
   fetcher?: ArchiveFetcher;
-  // Plan §3.JJ1 — emit 'plugin.installed' (default) or
+  // Plan §3.JJ1 - emit 'plugin.installed' (default) or
   // 'plugin.upgraded' from the producer hook. The upgrade route
   // sets this to 'upgraded' so consumers can distinguish the two
   // operations in the live event stream.
@@ -598,7 +598,7 @@ async function* installFromArchiveUrl(
     if (symlinkSeen) {
       yield {
         kind: 'error',
-        message: 'Archive contains symbolic / hard links — refusing to stage non-local pointers',
+        message: 'Archive contains symbolic / hard links - refusing to stage non-local pointers',
         warnings: [],
       };
       return;
@@ -606,7 +606,7 @@ async function* installFromArchiveUrl(
     if (traversalSeen) {
       yield {
         kind: 'error',
-        message: 'Archive contains path-traversal segments — refusing to stage',
+        message: 'Archive contains path-traversal segments - refusing to stage',
         warnings: [],
       };
       return;
@@ -837,7 +837,7 @@ export async function* installFromLocalFolder(
     await upsertPluginLockfileEntry(opts.lockfilePath, parsed.record);
   }
 
-  // Plan §3.II1 / §3.JJ1 — emit 'plugin.installed' OR
+  // Plan §3.II1 / §3.JJ1 - emit 'plugin.installed' OR
   // 'plugin.upgraded' (per opts.eventKind) so ops dashboards +
   // `od plugin events tail` see the operation land in the in-
   // memory ring buffer. Best-effort; recordPluginEvent never
@@ -879,7 +879,7 @@ export async function uninstallPlugin(
   id: string,
   roots: RegistryRoots = defaultRegistryRoots(),
 ): Promise<UninstallResult> {
-  // A plugin id is a single safe folder name — never a path. Validate it
+  // A plugin id is a single safe folder name - never a path. Validate it
   // BEFORE it reaches `path.join(...) + rm -rf`, so an id carrying traversal
   // segments (e.g. a URL-encoded `../../…`) cannot escape the plugin registry
   // root and recursively delete an arbitrary directory. This mirrors the guard
@@ -889,7 +889,7 @@ export async function uninstallPlugin(
     return { ok: false, warning: `Plugin id '${id}' is not a safe folder name` };
   }
   const removed = deleteInstalledPlugin(db, id);
-  // Clean up the workspace_resources binding row too — this table has no
+  // Clean up the workspace_resources binding row too - this table has no
   // FOREIGN KEY ... ON DELETE CASCADE (a resource_id can point at any of
   // several tables depending on resource_type, so SQLite cannot enforce a
   // polymorphic FK), so skipping this would leave an orphan binding that
@@ -899,13 +899,13 @@ export async function uninstallPlugin(
   // daemon db goes through db.ts's full `migrate()`, which always creates
   // `workspace_resources`). Guarded here only for narrow-schema test
   // doubles that run `migratePlugins(db)` in isolation (e.g.
-  // tests/plugins-installer.test.ts) without the rest of db.ts's schema —
+  // tests/plugins-installer.test.ts) without the rest of db.ts's schema -
   // mirrors the same "table may not exist yet" tolerance server.ts's
   // `collectBundledScenarios` already uses for `installed_plugins`.
   try {
     deleteWorkspaceResourceByResourceId(db, 'plugin', id);
   } catch {
-    // Table not present in this db — nothing to clean up.
+    // Table not present in this db - nothing to clean up.
   }
   const folder = path.join(roots.userPluginsRoot, id);
   // Defence in depth: even a SAFE_BASENAME-passing id must resolve to a direct
@@ -926,7 +926,7 @@ export async function uninstallPlugin(
   } catch (err) {
     return { ok: removed, warning: `Folder ${folder} removal failed: ${(err as Error).message}` };
   }
-  // Plan §3.II1 — emit a 'plugin.uninstalled' event when the
+  // Plan §3.II1 - emit a 'plugin.uninstalled' event when the
   // registry row was actually removed. We skip the event when
   // both removed=false AND folder didn't exist (no-op uninstall).
   if (removed || removedFolder !== undefined) {
@@ -969,7 +969,7 @@ async function safeCopyTree(src: string, dest: string, maxBytes: number): Promis
       await fsp.copyFile(from, to);
       continue;
     }
-    // Sockets / fifos / devices — refuse.
+    // Sockets / fifos / devices - refuse.
     throw new Error(`Unsupported file type at ${from}`);
   }
 }

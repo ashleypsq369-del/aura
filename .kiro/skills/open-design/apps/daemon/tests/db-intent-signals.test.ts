@@ -14,11 +14,11 @@ import {
 } from '../src/db.js';
 
 // Storage contract for the per-conversation intent-signal latch
-// (specs/current/intent-signal-cache-hotfix.md R2): monotonic ON, merge —
-// never replace — against the stored value, so a latch carrying one signal
+// (specs/current/intent-signal-cache-hotfix.md R2): monotonic ON, merge -
+// never replace - against the stored value, so a latch carrying one signal
 // can never clobber a previously latched different signal (PR #5709 review).
-// A deterministic in-thread race is not constructible — better-sqlite3 is
-// synchronous, so two latch calls cannot interleave mid-function — hence
+// A deterministic in-thread race is not constructible - better-sqlite3 is
+// synchronous, so two latch calls cannot interleave mid-function - hence
 // these tests pin the observable merge semantics, including across two
 // separate connections to the same database file, and the latch itself runs
 // under BEGIN IMMEDIATE so the write lock precedes the read.
@@ -121,7 +121,7 @@ describe('conversation device-platform latch', () => {
     const off = { deck: false, media: false, platform: false };
 
     // Turn 1 names iOS; turn 2 ("make the button blue") names nothing; turn 3
-    // names Android — the shell quoted into the stable context must not flip.
+    // names Android - the shell quoted into the stable context must not flip.
     expect(latchConversationIntentSignals(db, 'conv-1', { ...off, devicePlatform: 'ios' }))
       .toEqual({ ...off, devicePlatform: 'ios' });
     expect(latchConversationIntentSignals(db, 'conv-1', { ...off, devicePlatform: null }))

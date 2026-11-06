@@ -4,7 +4,7 @@ name: release-prerelease-tests
 # produced it.
 #
 # These four jobs used to live in release-prerelease.yml. They never gated
-# delivery there — build and publish deliberately ignore them — but they still
+# delivery there - build and publish deliberately ignore them - but they still
 # held the workflow open, and release-prerelease.yml's concurrency group is one
 # repository-wide string with cancel-in-progress: false. So a 45-minute test
 # suite did not delay one prerelease, it delayed the NEXT one from starting.
@@ -44,7 +44,7 @@ permissions:
 
 concurrency:
   # Scoped to the origin run, never repository-wide: this workflow must not be
-  # able to queue behind — or ahead of — anything. Two prereleases in flight get
+  # able to queue behind - or ahead of - anything. Two prereleases in flight get
   # two independent test runs.
   group: release-prerelease-tests-${{ inputs.origin_run_id || inputs.commit }}
   cancel-in-progress: false

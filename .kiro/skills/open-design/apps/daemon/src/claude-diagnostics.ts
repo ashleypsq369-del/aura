@@ -137,14 +137,14 @@ export function diagnoseClaudeCliFailure(
         : 'remove ANTHROPIC_BASE_URL to retry with standard Claude Code auth.';
       return withContext(
         `${runtimeLabel} lost its connection to the configured custom Anthropic endpoint before the response finished.`,
-        `The connection to ANTHROPIC_BASE_URL was closed mid-stream — often a proxy or relay that drops long-lived streaming requests, and most likely on large generations. Retry; if it keeps happening, raise the proxy idle/stream timeout, or ${customEndpointFallback}`,
+        `The connection to ANTHROPIC_BASE_URL was closed mid-stream - often a proxy or relay that drops long-lived streaming requests, and most likely on large generations. Retry; if it keeps happening, raise the proxy idle/stream timeout, or ${customEndpointFallback}`,
         input,
         'AGENT_CONNECTION_DROPPED',
       );
     }
     return withContext(
       `${runtimeLabel} lost its connection to ${defaultEndpointLabel} before the response finished.`,
-      'The network connection was closed mid-response — common on unstable networks, VPNs, or proxies that drop long-lived streaming requests, and most likely on large generations. Retry the request.',
+      'The network connection was closed mid-response - common on unstable networks, VPNs, or proxies that drop long-lived streaming requests, and most likely on large generations. Retry the request.',
       input,
       'AGENT_CONNECTION_DROPPED',
     );

@@ -84,7 +84,7 @@ describe('CollabPublishScheduler', () => {
     await vi.advanceTimersByTimeAsync(50);
     expect(onError).toHaveBeenCalledWith({ projectId: 'p1', error: boom });
 
-    // A later change still publishes — a failed publish must not wedge the scheduler.
+    // A later change still publishes - a failed publish must not wedge the scheduler.
     scheduler.notifyChanged('p1');
     await vi.advanceTimersByTimeAsync(50);
     expect(publish).toHaveBeenCalledTimes(2);
@@ -136,7 +136,7 @@ describe('CollabPublishScheduler publish-failure retry', () => {
     expect(publish).toHaveBeenLastCalledWith({ projectId: 'p1', reason: 'edit' });
     expect(onPublished).toHaveBeenCalledWith({ projectId: 'p1', version: 3, reason: 'edit' });
 
-    // Success ends the recovery — nothing else fires afterwards.
+    // Success ends the recovery - nothing else fires afterwards.
     await vi.advanceTimersByTimeAsync(3_600_000);
     expect(publish).toHaveBeenCalledTimes(2);
   });
@@ -184,7 +184,7 @@ describe('CollabPublishScheduler publish-failure retry', () => {
     expect(publish).toHaveBeenCalledTimes(2);
 
     scheduler.notifyChanged('p1');
-    await vi.advanceTimersByTimeAsync(100); // fails again — a NEW streak
+    await vi.advanceTimersByTimeAsync(100); // fails again - a NEW streak
     expect(publish).toHaveBeenCalledTimes(3);
     // The retry fires at the first backoff step again, not deeper in the schedule.
     await vi.advanceTimersByTimeAsync(5_000);

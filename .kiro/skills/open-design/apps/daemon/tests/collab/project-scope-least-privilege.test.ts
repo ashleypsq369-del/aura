@@ -5,7 +5,7 @@
 // 链路(2026-09-07 逐段核实):
 //
 //   1. `resolveLocalProjectWorkspaceScope` 产出项目 scope 的上下文,`role`
-//      是一个最小权限占位 —— 那个函数的文档注释第一句就是「without
+//      是一个最小权限占位 -- 那个函数的文档注释第一句就是「without
 //      consulting the membership directory」,它根本不知道真实角色。
 //   2. web 把这份上下文当作项目请求的工作区身份,`workspaceProjectHeaders`
 //      把 `role` 原样放进 `x-od-workspace-role`
@@ -20,7 +20,7 @@
 //
 // 于是那一行看起来像「明显该修的硬编码」:下一个人把它改成解析出的真实角色,
 // 工作区 owner 就对工作区里**每一个**项目可写(包括不是他创建的),只读区分
-// 静默消失,而 CI 全绿 —— 因为在这条测试存在之前,没有任何东西钉住它。
+// 静默消失,而 CI 全绿 -- 因为在这条测试存在之前,没有任何东西钉住它。
 //
 // 用户 2026-09-07 原话:「单个 project 的创建者和非创建者, 进入 project 会有
 // 非 readonly 和 readonly 之分的, 这个要注意,不能破坏这个, 并且这个身份模型
@@ -95,7 +95,7 @@ describe('项目 scope 的最小权限占位是只读模型的承重结构', () 
   });
 
   // **判据能不能看见缺陷。** 上面那条「非创建者只读」是被 role 占位偶然保证的;
-  // 把占位换成真实的 owner,同一条闸门立刻放行 —— 这一步证明第一条测试不是
+  // 把占位换成真实的 owner,同一条闸门立刻放行 -- 这一步证明第一条测试不是
   // 恒真的,它咬住的正是那个占位。
   it('占位一旦变成真实的 owner,同一条闸门就会放行非创建者(所以它不许被「修好」)', () => {
     const scope = resolveLocalProjectWorkspaceScope({
@@ -152,7 +152,7 @@ describe('项目 scope 的最小权限占位是只读模型的承重结构', () 
   });
 
   // 用户的第二条约束:「不能等半天错误的身份模型再显示正确的」。这条判定必须
-  // 是本机同步的 —— 网络一断也照样立刻给出同一个答案。
+  // 是本机同步的 -- 网络一断也照样立刻给出同一个答案。
   it('只读判定不依赖任何网络请求', () => {
     const fetchSpy = vi.fn(() => {
       throw new Error('readonly resolution must not reach the network');

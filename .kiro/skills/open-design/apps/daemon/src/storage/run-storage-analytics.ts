@@ -1,7 +1,7 @@
 // Content-free storage summary for one run, attached to `run_finished`.
 //
 // Every measurement is an `octet_length` computed inside SQLite, so no stored
-// text is copied into the JS heap — the very pressure this summary exists to
+// text is copied into the JS heap - the very pressure this summary exists to
 // explain. Each query is isolated: a missing table (lightweight test adapters,
 // databases migrated before append-only batches) or any other failure omits
 // only that group of fields. Nothing here can throw to the caller.

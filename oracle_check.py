@@ -87,7 +87,7 @@ for mod, cls in checks:
         getattr(m, cls)
         print(f"  OK   {mod}")
     except Exception as e:
-        print(f"  FAIL {mod} — {e}")
+        print(f"  FAIL {mod} - {e}")
 
 # 6. Web app
 print("\n[6] WEB APP")
@@ -144,18 +144,18 @@ if db_path.exists():
     if "team_params" in all_tables:
         n = conn.execute("SELECT COUNT(*) FROM team_params").fetchone()[0]
         if n == 0:
-            issues.append("CRITICAL: team_params is EMPTY — Dixon-Coles model NOT trained. "
+            issues.append("CRITICAL: team_params is EMPTY - Dixon-Coles model NOT trained. "
                           "Run: python scripts/train_model.py")
         else:
             leagues = conn.execute("SELECT DISTINCT league FROM team_params").fetchall()
             print(f"\n  Trained leagues: {[l[0] for l in leagues]}")
     else:
-        issues.append("CRITICAL: team_params table missing — run setup_db.py first")
+        issues.append("CRITICAL: team_params table missing - run setup_db.py first")
 
     if "results" in all_tables:
         n = conn.execute("SELECT COUNT(*) FROM results").fetchone()[0]
         if n == 0:
-            issues.append("WARNING: results table empty — self-learning has no feedback data")
+            issues.append("WARNING: results table empty - self-learning has no feedback data")
 
     if "predictions" in all_tables:
         n = conn.execute("SELECT COUNT(*) FROM predictions").fetchone()[0]
@@ -169,10 +169,10 @@ if missing_pkgs:
 
 # Check for run_daily.py
 if not (ROOT / "scripts" / "run_daily.py").exists():
-    issues.append("WARNING: scripts/run_daily.py missing — no daily automation script")
+    issues.append("WARNING: scripts/run_daily.py missing - no daily automation script")
 
 if not (ROOT / "scripts" / "backtest.py").exists():
-    issues.append("WARNING: scripts/backtest.py missing — no backtesting script")
+    issues.append("WARNING: scripts/backtest.py missing - no backtesting script")
 
 if issues:
     for i, iss in enumerate(issues, 1):

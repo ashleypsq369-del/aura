@@ -1,4 +1,4 @@
-// Team collaboration presence — the "presence" overlay: who is currently viewing a
+// Team collaboration presence - the "presence" overlay: who is currently viewing a
 // shared project. Decoupled from the resource/sync layer: it is a
 // lightweight, poll-friendly heartbeat set, not a realtime-cursor engine (live
 // cursors were cut; content is polled).
@@ -71,7 +71,7 @@ export class CollabPresenceTracker {
     this.emit(projectId);
   }
 
-  /** Members present now — sweeps any whose heartbeat aged past the TTL. */
+  /** Members present now - sweeps any whose heartbeat aged past the TTL. */
   present(projectId: string): PresenceMember[] {
     const entries = this.projects.get(projectId);
     if (!entries) return [];

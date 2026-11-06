@@ -35,7 +35,7 @@ export function parseLineSeparatedModels(stdout: string): RuntimeModelOption[] {
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => line.length > 0 && !line.startsWith('#'));
-  // De-dupe while preserving order — some CLIs print near-duplicates.
+  // De-dupe while preserving order - some CLIs print near-duplicates.
   const seen = new Set();
   const out = [DEFAULT_MODEL_OPTION];
   for (const id of ids) {

@@ -1,4 +1,4 @@
-// Phase 7 entry slice / spec §10 / §21.3.2 — code-import runner.
+// Phase 7 entry slice / spec §10 / §21.3.2 - code-import runner.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile, symlink } from 'node:fs/promises';

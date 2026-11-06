@@ -15,7 +15,7 @@ import { createProjectFileVersion } from '../src/project-file-versions.js';
 import { startServer } from '../src/server.js';
 
 // ---------------------------------------------------------------------------
-// Screenshot export — desktop renderer file handoff.
+// Screenshot export - desktop renderer file handoff.
 //
 // The daemon hands the desktop renderer a scratch `outputDir` under the data
 // root, the renderer writes image files there (instead of pushing base64
@@ -422,7 +422,7 @@ describe('screenshot export desktop renderer file handoff', () => {
     const res = await exportImage();
     await res.arrayBuffer();
     const used = seenDirs.at(-1)!;
-    // Cleanup runs in the handler's finally, after the response is flushed —
+    // Cleanup runs in the handler's finally, after the response is flushed -
     // poll for eventual removal rather than asserting synchronously.
     expect(await waitFor(() => !existsSync(used))).toBe(true);
     const remaining = existsSync(exportRenderRoot) ? await readdir(exportRenderRoot) : [];
@@ -434,7 +434,7 @@ describe('screenshot export desktop renderer file handoff', () => {
     await Promise.all(Array.from({ length: 5 }, () => exportImage().then((r) => r.arrayBuffer())));
     const fresh = seenDirs.slice(before);
     expect(fresh.length).toBe(5);
-    expect(new Set(fresh).size).toBe(5); // all unique — no collision across concurrent exports
+    expect(new Set(fresh).size).toBe(5); // all unique - no collision across concurrent exports
   });
 
   it('rejects a renderer slide path outside the scratch dir (no path-traversal read)', async () => {
@@ -489,7 +489,7 @@ describe('screenshot export desktop renderer file handoff', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fileName: 'index.html' }),
     });
-    // 200 (image streamed back) proves the file was resolved via baseDir — a
+    // 200 (image streamed back) proves the file was resolved via baseDir - a
     // regression would surface as 404 FILE_NOT_FOUND.
     expect(res.status).toBe(200);
     expect(res.headers.get('content-type')).toContain('image/png');

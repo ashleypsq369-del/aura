@@ -45,7 +45,7 @@ retrieval:
 
 # Motion and Storytelling in UI
 
-Animation and motion are not decoration — they are communication. When applied with the same discipline as typography or colour, they tell the user what is happening, where to look, and what the product feels like to use. The source material — Disney's 12 principles, cinematic language, comic book conventions — is centuries of accumulated knowledge about how to communicate through movement and sequence.
+Animation and motion are not decoration - they are communication. When applied with the same discipline as typography or colour, they tell the user what is happening, where to look, and what the product feels like to use. The source material - Disney's 12 principles, cinematic language, comic book conventions - is centuries of accumulated knowledge about how to communicate through movement and sequence.
 
 The key word is **subtlety**. In UI, motion should be felt, not watched.
 
@@ -61,19 +61,19 @@ button:active { transform: scale(0.96); }
 button { transition: transform 80ms ease-out; }
 ```
 
-Use sparingly — reserved for primary CTAs and satisfying confirmations.
+Use sparingly - reserved for primary CTAs and satisfying confirmations.
 
 ### 2. Anticipation
 A small preparatory movement before the main action. In UI: a menu item shifting slightly before opening, or a loading indicator appearing before a transition begins, prepares the user for what is coming.
 
 ### 3. Staging
-Present one idea clearly at a time. In UI: entrance animations should direct attention to the new content, not compete with existing content. When a modal opens, the rest of the page dims — that is staging.
+Present one idea clearly at a time. In UI: entrance animations should direct attention to the new content, not compete with existing content. When a modal opens, the rest of the page dims - that is staging.
 
 ### 4. Straight Ahead vs Pose to Pose
-**Pose to pose** — defining start and end states and letting the system interpolate — is the CSS/JS approach. Define clear initial and final states; let `transition` or a spring physics library handle the in-between.
+**Pose to pose** - defining start and end states and letting the system interpolate - is the CSS/JS approach. Define clear initial and final states; let `transition` or a spring physics library handle the in-between.
 
 ### 5. Follow-Through and Overlapping Action
-Elements don't all stop at the same time. In UI: staggered list item entrances (each item enters 40–60ms after the previous) feel more natural than all items appearing simultaneously.
+Elements don't all stop at the same time. In UI: staggered list item entrances (each item enters 40-60ms after the previous) feel more natural than all items appearing simultaneously.
 
 ```css
 .item:nth-child(1) { animation-delay: 0ms; }
@@ -86,12 +86,12 @@ Nothing in nature starts or stops instantly. Use easing curves, not linear trans
 
 | Easing | Use for |
 |---|---|
-| `ease-out` (fast start, slow end) | Elements entering the screen — feels natural arrival |
-| `ease-in` (slow start, fast end) | Elements leaving the screen — feels intentional exit |
+| `ease-out` (fast start, slow end) | Elements entering the screen - feels natural arrival |
+| `ease-in` (slow start, fast end) | Elements leaving the screen - feels intentional exit |
 | `ease-in-out` | Elements moving between positions on screen |
 | Spring physics | Interactive elements that respond to touch/drag |
 
-Never use `linear` for UI motion — it reads as mechanical and unfinished.
+Never use `linear` for UI motion - it reads as mechanical and unfinished.
 
 ### 7. Arcs
 Natural movement follows arcs, not straight lines. Tooltips and popovers that scale from their origin point (rather than fading uniformly) follow this principle. `transform-origin` matters.
@@ -104,27 +104,27 @@ Duration is meaning. Fast = responsive, energetic. Slow = weighty, important.
 
 | Duration | Use for |
 |---|---|
-| 80–120ms | Micro-interactions (button press, hover) |
-| 150–250ms | Component transitions (dropdown open, tooltip) |
-| 250–400ms | Page-level transitions, modal entrance |
-| 400–600ms | Hero animations, onboarding sequences |
-| > 600ms | Almost always too long — the user is waiting |
+| 80-120ms | Micro-interactions (button press, hover) |
+| 150-250ms | Component transitions (dropdown open, tooltip) |
+| 250-400ms | Page-level transitions, modal entrance |
+| 400-600ms | Hero animations, onboarding sequences |
+| > 600ms | Almost always too long - the user is waiting |
 
 ### 10. Exaggeration
-A small, deliberate overstatement makes an action feel satisfying. In UI: a success checkmark that overshoots slightly before settling, or a notification badge that pops just slightly larger than its final size. The exaggeration is 10–15%, not theatrical.
+A small, deliberate overstatement makes an action feel satisfying. In UI: a success checkmark that overshoots slightly before settling, or a notification badge that pops just slightly larger than its final size. The exaggeration is 10-15%, not theatrical.
 
 ### 11. Solid Drawing (Solid Design)
-Respect the depth and layering of the interface. Elements should move in ways consistent with their perceived layer — a bottom sheet slides up from below because it lives below the content, not from the side. A tooltip appears near its trigger, not across the screen.
+Respect the depth and layering of the interface. Elements should move in ways consistent with their perceived layer - a bottom sheet slides up from below because it lives below the content, not from the side. A tooltip appears near its trigger, not across the screen.
 
 ### 12. Appeal
-The overall motion should feel right for the brand. A playful consumer app can use bouncier, springier motion. A financial tool uses precise, controlled transitions. Appeal is not decoration — it is brand personality expressed through time.
+The overall motion should feel right for the brand. A playful consumer app can use bouncier, springier motion. A financial tool uses precise, controlled transitions. Appeal is not decoration - it is brand personality expressed through time.
 
 ---
 
 ## Cinematic Techniques
 
 ### Reveal and Entrance
-Content that enters the viewport has more impact when it arrives, rather than simply existing. Scroll-triggered entrance animations — a section fading up as the user scrolls into it — borrow from cinematic reveals. The key: **the content drives in from a meaningful direction** (below, because that's where the user is scrolling from).
+Content that enters the viewport has more impact when it arrives, rather than simply existing. Scroll-triggered entrance animations - a section fading up as the user scrolls into it - borrow from cinematic reveals. The key: **the content drives in from a meaningful direction** (below, because that's where the user is scrolling from).
 
 ```css
 @keyframes fade-up {
@@ -134,11 +134,11 @@ Content that enters the viewport has more impact when it arrives, rather than si
 ```
 
 ### Parallax
-Background elements moving slower than foreground elements creates depth. In web: a hero background image moving at 50% scroll speed while content moves at 100% creates a sense of layers. Use subtly — aggressive parallax causes motion sickness.
+Background elements moving slower than foreground elements creates depth. In web: a hero background image moving at 50% scroll speed while content moves at 100% creates a sense of layers. Use subtly - aggressive parallax causes motion sickness.
 
 ### Cut vs Dissolve
 - **Hard cut** (instant state change): fast, decisive, efficient. Use for navigation between pages, closing modals.
-- **Dissolve / crossfade**: gradual, considered, connected. Use when two states are related — a tab switching, an image gallery transitioning.
+- **Dissolve / crossfade**: gradual, considered, connected. Use when two states are related - a tab switching, an image gallery transitioning.
 
 ### Scene Setting
 The first frame of a section sets the scene before detail appears. A hero with a strong image and large type, followed by supporting details appearing after a brief delay, is a cinematic opening. The user's eye is directed to the subject before reading begins.
@@ -148,22 +148,22 @@ The first frame of a section sets the scene before detail appears. A hero with a
 ## Comic Book Conventions
 
 ### Panel Sequence
-Comics tell stories through a sequence of static frames that imply motion between them. In UI: step indicators, onboarding carousels, and progress flows use the same logic — each "panel" is a moment in a sequence, and the user's eye moves between them.
+Comics tell stories through a sequence of static frames that imply motion between them. In UI: step indicators, onboarding carousels, and progress flows use the same logic - each "panel" is a moment in a sequence, and the user's eye moves between them.
 
 ### Speed Lines and Energy
 Emphasis lines, radial gradients, and directional blur suggest motion and energy without actual animation. A button with a subtle directional gradient implies it is pointing somewhere. A loading indicator with trailing opacity implies direction.
 
 ### Typography as Tone
-In comics, the size, weight, and style of lettering communicates emotion — a shout is set in large bold caps, a whisper in thin small italics. In UI: oversized display type for a hero carries energy; small muted caption text recedes. This is micro-typography as emotional register, not just hierarchy.
+In comics, the size, weight, and style of lettering communicates emotion - a shout is set in large bold caps, a whisper in thin small italics. In UI: oversized display type for a hero carries energy; small muted caption text recedes. This is micro-typography as emotional register, not just hierarchy.
 
 ### The Gutter
-In comics, the reader's imagination fills the space between panels. In UI, transitions are the gutter — what happens between states. A smooth transition lets the user's brain construct a coherent mental model. A jarring jump forces them to re-orient.
+In comics, the reader's imagination fills the space between panels. In UI, transitions are the gutter - what happens between states. A smooth transition lets the user's brain construct a coherent mental model. A jarring jump forces them to re-orient.
 
 ---
 
 ## Practical Rules
 
-1. **Respect `prefers-reduced-motion`** — always. Users with vestibular disorders or motion sensitivity must be able to use the product without animation.
+1. **Respect `prefers-reduced-motion`** - always. Users with vestibular disorders or motion sensitivity must be able to use the product without animation.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -178,7 +178,7 @@ In comics, the reader's imagination fills the space between panels. In UI, trans
 
 3. **Duration under 400ms for almost everything.** If an animation takes longer, it is slowing the user down.
 
-4. **Never animate layout properties** (`width`, `height`, `padding`, `top`, `left`) — they cause reflow. Animate `transform` and `opacity` only — they run on the GPU.
+4. **Never animate layout properties** (`width`, `height`, `padding`, `top`, `left`) - they cause reflow. Animate `transform` and `opacity` only - they run on the GPU.
 
 5. **One motion at a time per region.** Simultaneous competing animations create visual noise. Stage them.
 

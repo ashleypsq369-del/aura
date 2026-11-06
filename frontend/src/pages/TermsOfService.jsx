@@ -1,5 +1,5 @@
-/**
- * TermsOfService.jsx — Project Aura Terms of Service
+﻿/**
+ * TermsOfService.jsx - Project Aura Terms of Service
  * Public route: /terms
  * Linked from Register.jsx checkbox and any footer
  */
@@ -18,7 +18,7 @@ const SECTIONS = [
     icon: Heart,
     color: '#e11d48',
     title: '2. Nature of the Service',
-    body: `Project Aura is a palliative care coordination platform designed to support healthcare professionals and families managing serious illness care in Ghana and beyond. The Platform facilitates communication, symptom tracking, care planning, and resource access. It is a support tool only — it does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals.`,
+    body: `Project Aura is a palliative care coordination platform designed to support healthcare professionals and families managing serious illness care in Ghana and beyond. The Platform facilitates communication, symptom tracking, care planning, and resource access. It is a support tool only - it does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals.`,
   },
   {
     icon: Users,
@@ -30,7 +30,7 @@ const SECTIONS = [
     icon: Lock,
     color: '#0891b2',
     title: '4. Health Information & Consent',
-    body: `By using the Platform, you consent to your health information being stored and used for the purposes of care coordination, clinical monitoring, and personalisation of your care experience. Health data is processed in accordance with our Privacy Policy. Clinicians and caregivers access only information relevant to patients under their care. You may withdraw consent at any time by contacting us — this will result in account deactivation.`,
+    body: `By using the Platform, you consent to your health information being stored and used for the purposes of care coordination, clinical monitoring, and personalisation of your care experience. Health data is processed in accordance with our Privacy Policy. Clinicians and caregivers access only information relevant to patients under their care. You may withdraw consent at any time by contacting us - this will result in account deactivation.`,
   },
   {
     icon: Shield,

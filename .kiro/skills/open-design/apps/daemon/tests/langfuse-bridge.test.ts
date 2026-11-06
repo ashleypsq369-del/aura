@@ -915,7 +915,7 @@ describe('langfuse-bridge.reportRunCompletedFromDaemon', () => {
     expect(JSON.stringify(batch)).not.toContain('brand.pdf');
     // Core tags must be present. The bridge also tacks on an `os:<...>`
     // tag derived from the host (`darwin` / `linux` / `win32`), which is
-    // useful telemetry but varies between dev / CI environments — assert
+    // useful telemetry but varies between dev / CI environments - assert
     // its presence by prefix rather than pinning a value.
     expect(trace.tags).toEqual(
       expect.arrayContaining(['open-design', 'project:proj-1', 'agent:qoder']),
@@ -2268,7 +2268,7 @@ describe('langfuse-bridge.reportRunCompletedFromDaemon', () => {
             {
               id: 'user-2',
               role: 'user',
-              content: '[form answers — discovery]\nBuild the artifact.',
+              content: '[form answers - discovery]\nBuild the artifact.',
             },
             {
               id: 'msg-1',
@@ -2290,12 +2290,12 @@ describe('langfuse-bridge.reportRunCompletedFromDaemon', () => {
             },
             promptTelemetry: buildPromptStackTelemetry({
               composedPrompt:
-                '# Instructions\n\nBuild the artifact.\n\n---\n# User request\n\n[form answers — discovery]\nBuild the artifact.',
+                '# Instructions\n\nBuild the artifact.\n\n---\n# User request\n\n[form answers - discovery]\nBuild the artifact.',
               sections: [
                 { kind: 'daemonSystemPrompt', content: 'Build the artifact.' },
                 {
                   kind: 'userRequest',
-                  content: '[form answers — discovery]\nBuild the artifact.',
+                  content: '[form answers - discovery]\nBuild the artifact.',
                 },
               ],
             }),
@@ -2915,7 +2915,7 @@ describe('langfuse-bridge.reportRunCompletedFromDaemon', () => {
     try {
       const run = makeRun({
         // Request did not pin a model (the `default` placeholder), so the
-        // resolved model must come from the agent's reported status event —
+        // resolved model must come from the agent's reported status event -
         // matching the agent-reported fallback server.ts uses for PostHog.
         model: 'default',
       }) as any;
@@ -2996,7 +2996,7 @@ describe('langfuse-bridge.reportRunCompletedFromDaemon', () => {
     process.env.LANGFUSE_SECRET_KEY = 'sk';
     try {
       const run = makeRun() as any;
-      // A provider that only reports an aggregate total — no input/output
+      // A provider that only reports an aggregate total - no input/output
       // breakdown. scanRunEventsForUsageAnalytics still surfaces total_tokens,
       // and the bridge must carry it through to Langfuse so the per-trace UI
       // does not lose token visibility and stays consistent with PostHog.

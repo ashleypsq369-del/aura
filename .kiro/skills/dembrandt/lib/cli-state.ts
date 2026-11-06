@@ -2,7 +2,7 @@
  * Tiny persistent CLI state, used only to stop one-time hints from repeating.
  *
  * Deliberately not telemetry: nothing is sent anywhere and nothing identifying
- * is stored — the file holds counters for hints already shown on this machine,
+ * is stored - the file holds counters for hints already shown on this machine,
  * the same shape as update-notifier's configstore. Stored under XDG_CONFIG_HOME
  * (falling back to ~/.config) so it never lands in the home directory root.
  *
@@ -45,7 +45,7 @@ function writeState(next: CliState): void {
     mkdirSync(stateDir(), { recursive: true });
     writeFileSync(statePath(), JSON.stringify(next, null, 2));
   } catch {
-    /* unwritable config dir — the hint simply repeats, nothing breaks */
+    /* unwritable config dir - the hint simply repeats, nothing breaks */
   }
 }
 

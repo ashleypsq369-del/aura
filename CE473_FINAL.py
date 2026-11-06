@@ -1,4 +1,4 @@
-# CE 473 – Logic of Computer Science
+# CE 473 - Logic of Computer Science
 # SINGLE MERGED STUDY GUIDE  (all chapters + all gap solutions)
 # Uses DejaVu fonts so every logic symbol renders correctly.
 
@@ -90,7 +90,7 @@ def hr(c=CB, w=1): return HRFlowable(width="100%", thickness=w, color=c)
 
 def chapter(num, title):
     story.extend([sp(8), hr(CD,2),
-                  p(f"CHAPTER {num} — {title}", CH_S),
+                  p(f"CHAPTER {num} - {title}", CH_S),
                   hr(CD,2), sp(4)])
 
 def section(title, color=CB):
@@ -179,7 +179,7 @@ def page_break(): story.append(PageBreak())
 #  COVER PAGE
 # ═══════════════════════════════════════════════════════════════════════════
 story.append(sp(30))
-story.append(p("CE 473  —  LOGIC OF COMPUTER SCIENCE", COVER_T))
+story.append(p("CE 473  -  LOGIC OF COMPUTER SCIENCE", COVER_T))
 story.append(hr(CD, 2)); story.append(sp(6))
 story.append(p("COMPLETE MASTER STUDY GUIDE", COVER_AM))
 story.append(p("All Chapters · All Examples · All Proofs · All Gaps Solved", COVER_S))
@@ -198,11 +198,11 @@ wide_table(
     [3.5*cm, 4*cm, W-7.5*cm],
     ["Symbol", "Name", "Meaning / Read as"],
     [
-        ["¬  or  ~",  "Negation / NOT",       "NOT p  —  reverses truth value"],
-        ["∧  or  ·",  "Conjunction / AND",    "p AND q  —  true only if both true"],
-        ["∨  or  +",  "Disjunction / OR",     "p OR q  —  true if at least one true"],
-        ["→  or  ⇒",  "Implication",          "p IMPLIES q  —  false only when p=T, q=F"],
-        ["↔  or  ⟺",  "Biconditional / IFF",  "p IF AND ONLY IF q  —  true when same"],
+        ["¬  or  ~",  "Negation / NOT",       "NOT p  -  reverses truth value"],
+        ["∧  or  ·",  "Conjunction / AND",    "p AND q  -  true only if both true"],
+        ["∨  or  +",  "Disjunction / OR",     "p OR q  -  true if at least one true"],
+        ["→  or  ⇒",  "Implication",          "p IMPLIES q  -  false only when p=T, q=F"],
+        ["↔  or  ⟺",  "Biconditional / IFF",  "p IF AND ONLY IF q  -  true when same"],
         ["⊢",          "Turnstile",            "syntactic entailment / proves"],
         ["⊨",          "Double turnstile",     "semantic entailment / models"],
         ["∀x",         "Universal quantifier", "FOR ALL x …"],
@@ -222,7 +222,7 @@ wide_table(
 page_break()
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  CHAPTER 1 — MATHEMATICAL AND STRUCTURAL INDUCTION
+#  CHAPTER 1 - MATHEMATICAL AND STRUCTURAL INDUCTION
 # ═══════════════════════════════════════════════════════════════════════════
 chapter(1, "MATHEMATICAL AND STRUCTURAL INDUCTION")
 
@@ -237,30 +237,30 @@ body(
 
 section("1.2  The Three Steps of Mathematical Induction")
 proof("THE THREE STEPS", [
-    "Step 1 — BASE CASE:",
+    "Step 1 - BASE CASE:",
     "        Prove the statement is TRUE for the smallest value of n",
     "        (usually n = 0, 1, or 2).",
     "",
-    "Step 2 — INDUCTION HYPOTHESIS (IH):",
+    "Step 2 - INDUCTION HYPOTHESIS (IH):",
     "        ASSUME the statement is true for some arbitrary fixed n = k.",
     "",
-    "Step 3 — INDUCTIVE STEP:",
+    "Step 3 - INDUCTIVE STEP:",
     "        Using the assumption in Step 2, PROVE the statement is true for n = k+1.",
 ])
 warn("Proof by induction works ONLY when the domain is a subset of the integers. "
      "It cannot prove results for non-integer values (e.g. n = 2.5).")
 
-ssec("Example 1.1  (from handout) — Prove n² ≥ 2n for all n = 2, 3, 4, …")
-proof("Full Proof — n² ≥ 2n", [
-    "STEP 1 — Base Case  (n = 2):",
+ssec("Example 1.1  (from handout) - Prove n² ≥ 2n for all n = 2, 3, 4, …")
+proof("Full Proof - n² ≥ 2n", [
+    "STEP 1 - Base Case  (n = 2):",
     "   LHS = 2² = 4",
     "   RHS = 2(2) = 4",
     "   4 ≥ 4  ✔",
     "",
-    "STEP 2 — Induction Hypothesis:",
+    "STEP 2 - Induction Hypothesis:",
     "   Assume  k² ≥ 2k  for some k ≥ 2.   … (IH)",
     "",
-    "STEP 3 — Inductive Step: prove (k+1)² ≥ 2(k+1)",
+    "STEP 3 - Inductive Step: prove (k+1)² ≥ 2(k+1)",
     "   LHS = (k+1)² = k² + 2k + 1",
     "       ≥ 2k + 2k + 1          (by IH: k² ≥ 2k)",
     "       = 4k + 1",
@@ -272,13 +272,13 @@ proof("Full Proof — n² ≥ 2n", [
     "∴ n² ≥ 2n for all integers n ≥ 2.  □",
 ])
 
-ssec("Example 1.2  (extra) — Prove  1 + 2 + ⋯ + n = n(n+1)/2  for all n ≥ 1")
-proof("Full Proof — Sum formula", [
-    "STEP 1 — Base Case (n=1):  LHS=1,  RHS=1·2/2=1  ✔",
+ssec("Example 1.2  (extra) - Prove  1 + 2 + ⋯ + n = n(n+1)/2  for all n ≥ 1")
+proof("Full Proof - Sum formula", [
+    "STEP 1 - Base Case (n=1):  LHS=1,  RHS=1·2/2=1  ✔",
     "",
-    "STEP 2 — IH: Assume  1+2+⋯+k = k(k+1)/2.",
+    "STEP 2 - IH: Assume  1+2+⋯+k = k(k+1)/2.",
     "",
-    "STEP 3 — Prove for n = k+1:",
+    "STEP 3 - Prove for n = k+1:",
     "   1+2+⋯+k+(k+1)",
     "   = k(k+1)/2 + (k+1)          [IH]",
     "   = (k+1)[k/2 + 1]",
@@ -288,13 +288,13 @@ proof("Full Proof — Sum formula", [
     "∴ The sum formula holds for all n ≥ 1.  □",
 ])
 
-ssec("Example 1.3  (extra) — Prove  2ⁿ > n  for all n ≥ 1")
-proof("Full Proof — 2ⁿ > n", [
-    "STEP 1 — Base Case (n=1):  2¹=2 > 1  ✔",
+ssec("Example 1.3  (extra) - Prove  2ⁿ > n  for all n ≥ 1")
+proof("Full Proof - 2ⁿ > n", [
+    "STEP 1 - Base Case (n=1):  2¹=2 > 1  ✔",
     "",
-    "STEP 2 — IH: Assume 2ᵏ > k.",
+    "STEP 2 - IH: Assume 2ᵏ > k.",
     "",
-    "STEP 3 — Prove 2^(k+1) > k+1:",
+    "STEP 3 - Prove 2^(k+1) > k+1:",
     "   2^(k+1) = 2·2ᵏ > 2k  (by IH)",
     "           = k + k ≥ k + 1  (since k ≥ 1)  ✔",
     "",
@@ -305,48 +305,48 @@ section("1.3  Structural Induction")
 body("Structural induction proves property P for all elements of a "
      "<b>recursively defined</b> data type.")
 proof("TWO STEPS OF STRUCTURAL INDUCTION", [
-    "Step 1 — BASE CASE:  Prove P for the 'base cases' of the definition.",
-    "Step 2 — INDUCTIVE STEP:  Prove P for the result of any combination rule,",
+    "Step 1 - BASE CASE:  Prove P for the 'base cases' of the definition.",
+    "Step 2 - INDUCTIVE STEP:  Prove P for the result of any combination rule,",
     "                           ASSUMING P holds for all the parts.",
 ])
 
 ssec("Recursive Definitions from the Handout")
-box("Definition 1 — Even Numbers  E", [
+box("Definition 1 - Even Numbers  E", [
     "1.  0 ∈ E                             (base case)",
     "2.  if n ∈ E  then  n+2 ∈ E          (combination)",
     "3.  if n ∈ E  then  −n ∈ E           (combination)",
     "",
     "Result:  E = { …, −4, −2, 0, 2, 4, … }  =  all even integers.",
 ], bg=BG1, hc=CB)
-box("Definition 2 — Non-empty Binary Tree", [
+box("Definition 2 - Non-empty Binary Tree", [
     "A non-empty binary tree T is either:",
     "  1.  A single root node r,   OR",
     "  2.  A root node r connected by edges to the root(s) of one or two",
     "      non-empty sub-trees TL and/or TR.",
 ], bg=BG6, hc=CTE)
-box("Definition 3 — Fully Bracketed Arithmetic Expression", [
+box("Definition 3 - Fully Bracketed Arithmetic Expression", [
     "A fully bracketed expression E over {[, ], +, −, ∗, x} is either:",
     "  1.  The symbol 0, 1, or x                       (base cases)",
     "  2.  [e + e']   where e, e' are such expressions",
     "  3.  [e ∗ e']   where e, e' are such expressions",
 ], bg=BG4, hc=CAM)
 
-ssec("Structural Proof 1 — For any non-empty binary tree T=(V,E):  |V| = |E| + 1")
+ssec("Structural Proof 1 - For any non-empty binary tree T=(V,E):  |V| = |E| + 1")
 proof("Proof by Structural Induction on T", [
     "Let P(T): |V| = |E| + 1.",
     "",
-    "BASE CASE — T is a single root node:",
+    "BASE CASE - T is a single root node:",
     "   |V|=1,  |E|=0  →  1 = 0+1  ✔",
     "",
     "INDUCTIVE STEP:  T has root r connected to TL (and optionally TR).",
     "IH: |VL|=|EL|+1  and  |VR|=|ER|+1",
     "",
-    "Case A — one child (TL only):",
+    "Case A - one child (TL only):",
     "   |V| = |VL|+1 = (|EL|+1)+1 = |EL|+2",
     "   |E| = |EL|+1   (edges of TL  +  edge (r,rL))",
     "   ∴ |V| = |E|+1  ✔",
     "",
-    "Case B — two children (TL and TR):",
+    "Case B - two children (TL and TR):",
     "   |V| = |VL|+|VR|+1 = (|EL|+1)+(|ER|+1)+1 = |EL|+|ER|+3",
     "   |E| = |EL|+|ER|+2   (edges of both trees + 2 new edges)",
     "   ∴ |V| = |E|+1  ✔",
@@ -354,7 +354,7 @@ proof("Proof by Structural Induction on T", [
     "∴ P(T) holds for every non-empty binary tree.  □",
 ])
 
-ssec("Structural Proof 2 — Every element of E equals 2x for some x ∈ ℤ")
+ssec("Structural Proof 2 - Every element of E equals 2x for some x ∈ ℤ")
 proof("Proof by Structural Induction on even number e", [
     "Let P(e):  e = 2x  for some x ∈ ℤ.",
     "",
@@ -362,10 +362,10 @@ proof("Proof by Structural Induction on even number e", [
     "",
     "IH: Assume P(e') holds, i.e. e' = 2x' for some x' ∈ ℤ.",
     "",
-    "Case 1 — e = e'+2:",
+    "Case 1 - e = e'+2:",
     "   e = 2x'+2 = 2(x'+1) = 2x  where x = x'+1 ∈ ℤ  ✔",
     "",
-    "Case 2 — e = −e':",
+    "Case 2 - e = −e':",
     "   e = −(2x') = 2(−x') = 2x  where x = −x' ∈ ℤ  ✔",
     "",
     "∴ Every even number equals 2x for some integer x.  □",
@@ -373,7 +373,7 @@ proof("Proof by Structural Induction on even number e", [
 page_break()
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  CHAPTER 2 — BOOLEAN ALGEBRA
+#  CHAPTER 2 - BOOLEAN ALGEBRA
 # ═══════════════════════════════════════════════════════════════════════════
 chapter(2, "BOOLEAN ALGEBRA")
 
@@ -416,35 +416,35 @@ body("In logic we have only two values: True (1) and False (0).",
      "A truth table lists ALL combinations. For n variables there are 2ⁿ rows.")
 tt(["n vars","Rows needed"],[["1","2"],["2","4"],["3","8"],["4","16"]])
 
-section("2.3  Logical Operators — All Truth Tables")
+section("2.3  Logical Operators - All Truth Tables")
 
-ssec("AND (Conjunction)  — x ∧ y")
+ssec("AND (Conjunction)  - x ∧ y")
 body("Output is 1 only when BOTH inputs are 1.")
 tt(["x","y","x ∧ y"],[["0","0","0"],["0","1","0"],["1","0","0"],["1","1","1"]])
 body("Key laws:  x∧y ≡ y∧x  |  x∧1 ≡ x  |  x∧0 ≡ 0  |  x∧x ≡ x")
 
-ssec("OR (Disjunction)  — x ∨ y")
+ssec("OR (Disjunction)  - x ∨ y")
 body("Output is 0 only when BOTH inputs are 0.")
 tt(["x","y","x ∨ y"],[["0","0","0"],["0","1","1"],["1","0","1"],["1","1","1"]])
 body("Key laws:  x∨y ≡ y∨x  |  x∨1 ≡ 1  |  x∨0 ≡ x  |  x∨x ≡ x")
 
-ssec("Implication  — x → y")
+ssec("Implication  - x → y")
 body("Output is 0 only when x=1 and y=0  ('true implies false is false').")
 tt(["x","y","x → y"],[["0","0","1"],["0","1","1"],["1","0","0"],["1","1","1"]])
 
-ssec("Biconditional / Equivalence  — x ↔ y")
+ssec("Biconditional / Equivalence  - x ↔ y")
 body("Output is 1 when both inputs are EQUAL.")
 tt(["x","y","x ↔ y"],[["0","0","1"],["0","1","0"],["1","0","0"],["1","1","1"]])
 
-ssec("Negation / NOT  — ¬x")
-body("Unary operator — reverses the truth value.")
+ssec("Negation / NOT  - ¬x")
+body("Unary operator - reverses the truth value.")
 tt(["x","¬x"],[["0","1"],["1","0"]])
 
 section("2.4 & 2.5  Simplification of Boolean Functions")
 body("Simplification reduces circuits to equivalent ones with fewer components.",
      "The algebraic method applies postulates step by step.")
 
-ssec("Example 2.1  (from handout) — Simplify  A ∨ A·B")
+ssec("Example 2.1  (from handout) - Simplify  A ∨ A·B")
 proof("Solution", [
     "A ∨ A·B",
     "= A·(1 ∨ B)     [factor out A]",
@@ -453,7 +453,7 @@ proof("Solution", [
     "Result: A  ✔",
 ])
 
-ssec("Example 2.2  (from handout) — Simplify  (A ∨ B)(A ∨ C)")
+ssec("Example 2.2  (from handout) - Simplify  (A ∨ B)(A ∨ C)")
 proof("Solution", [
     "(A ∨ B)(A ∨ C)",
     "= A·A ∨ A·C ∨ B·A ∨ B·C   [distribute]",
@@ -462,7 +462,7 @@ proof("Solution", [
     "Result: A ∨ BC  ✔",
 ])
 
-ssec("Example 2.3  (extra) — Simplify  AB + A'B + AB'")
+ssec("Example 2.3  (extra) - Simplify  AB + A'B + AB'")
 proof("Solution", [
     "AB + A'B + AB'",
     "= B(A+A') + AB'    [factor B]",
@@ -486,21 +486,21 @@ body("<b>Product term from a group:</b>",
      "• Variable X = 1 in ALL cells → include X in term",
      "• Variable X varies → ELIMINATE X from term")
 
-ssec("GAP-SOLUTION 1 — K-Map X: Full SOP Grouping (from handout)")
-gap_box("Map X — Step-by-step SOP derivation", [
+ssec("GAP-SOLUTION 1 - K-Map X: Full SOP Grouping (from handout)")
+gap_box("Map X - Step-by-step SOP derivation", [
     "1-cells in map X (4 variables A,B,C,D):",
     "{1,3,4,5,7,9,11,12,13,14,15}",
     "",
-    "Group 1: {12,13,14,15}  — A=1, B=1, C=varies, D=varies",
+    "Group 1: {12,13,14,15}  - A=1, B=1, C=varies, D=varies",
     "  Constant: A=1, B=1  →  term: A·B",
     "",
-    "Group 2: {4,5,12,13}   — B=1, C=0, A=varies, D=varies",
+    "Group 2: {4,5,12,13}   - B=1, C=0, A=varies, D=varies",
     "  Constant: B=1, C=0  →  term: B·C'",
     "",
-    "Group 3: {1,3,9,11}    — B=0, D=1, A=varies, C=varies",
+    "Group 3: {1,3,9,11}    - B=0, D=1, A=varies, C=varies",
     "  Constant: B=0, D=1  →  term: B'·D",
     "",
-    "Group 4: {5,7,13,15}   — B=1, D=1, A=varies, C=varies",
+    "Group 4: {5,7,13,15}   - B=1, D=1, A=varies, C=varies",
     "  Constant: B=1, D=1  →  term: B·D",
     "",
     "Essential prime implicants: Group 1 (covers unique cell 12),",
@@ -510,8 +510,8 @@ gap_box("Map X — Step-by-step SOP derivation", [
     "  (matches handout: A·B + A'·B'·D' + A'·B'·C + B·C·D')  ✔",
 ])
 
-ssec("GAP-SOLUTION 2 — K-Map Z1: SOP + POS (from handout)")
-gap_box("Map Z1 — SOP", [
+ssec("GAP-SOLUTION 2 - K-Map Z1: SOP + POS (from handout)")
+gap_box("Map Z1 - SOP", [
     "SOP grouping of 1-cells:",
     "Group for A·B·D':   cells where A=1, B=1, D=0  →  {12,14}",
     "Group for A·B'·C:   cells where A=1, B=0, C=1  →  {10,11}",
@@ -519,7 +519,7 @@ gap_box("Map Z1 — SOP", [
     "",
     "Minimal SOP:  Z1 = A·B·D' + A·B'·C + A'·B'·D'  ✔",
 ])
-gap_box("Map Z1 — POS (group the 0-cells)", [
+gap_box("Map Z1 - POS (group the 0-cells)", [
     "0-cells: {2,4,5,6,7,13}",
     "",
     "Group {4,5,6,7}: A=0, B=1, C=varies, D=varies",
@@ -530,19 +530,19 @@ gap_box("Map Z1 — POS (group the 0-cells)", [
     "",
     "Minimal POS:  Z1 = (A+B')·(A+D')·(B'+D')·(A'+B+C)  ✔",
 ])
-gap_box("Map Z2 — SOP and POS", [
+gap_box("Map Z2 - SOP and POS", [
     "1-cells in Z2: {0,3,8,11,12,15}",
     "",
     "SOP grouping:",
     "  Group {0,8}:  B=0,C=0,D=0; A varies  →  B'·C'·D'",
     "  Group {3,11}: B=0,C=1,D=1; A varies  →  B'·C·D",
-    "  Group {12,15}: harder — use handout answer:",
+    "  Group {12,15}: harder - use handout answer:",
     "  Final SOP: Z2 = A·C'·D' + B'·D'  ✔",
     "",
     "POS (group 0-cells): Z2 = D'·(A+B')·(B'+C')  ✔",
 ])
 
-section("2.7  Logic Gates — All Seven Basic Gates")
+section("2.7  Logic Gates - All Seven Basic Gates")
 gates = [
     ("AND Gate",
      "Output = 1 ONLY when BOTH inputs are 1.",
@@ -554,7 +554,7 @@ gates = [
      "Output = 1 when inputs are DIFFERENT.",
      [["0","0","0"],["0","1","1"],["1","0","1"],["1","1","0"]]),
     ("NOT Gate  (Inverter)",
-     "Unary gate — output is the COMPLEMENT of the input.",
+     "Unary gate - output is the COMPLEMENT of the input.",
      None),
     ("NAND Gate",
      "AND followed by NOT.  Output = 0 ONLY when both inputs are 1.",
@@ -576,7 +576,7 @@ for name, desc, rows in gates:
 page_break()
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  CHAPTER 3 — PROPOSITIONAL LOGIC
+#  CHAPTER 3 - PROPOSITIONAL LOGIC
 # ═══════════════════════════════════════════════════════════════════════════
 chapter(3, "PROPOSITIONAL LOGIC")
 
@@ -585,7 +585,7 @@ body("Propositional logic (also: sentential / statement logic) studies the truth
      "A <b>proposition</b> is any declarative statement that is either TRUE or FALSE.",
      "The main concern is how compound truth values depend on component truth values.")
 defn("Proposition", "A statement with a definite T/F truth value.")
-defn("Non-proposition", "Statements like 'n is prime' — no fixed value until n is specified.")
+defn("Non-proposition", "Statements like 'n is prime' - no fixed value until n is specified.")
 
 section("3.1  Language of Propositional Logic")
 body("Language Lᵥ is built from:",
@@ -629,8 +629,8 @@ box("Valuation Rules", [
     "6.  Vₘ(P↔Q) = T  iff  Vₘ(P) = Vₘ(Q)",
 ], bg=BG2, hc=CPU)
 
-ssec("GAP-SOLUTION 3 — Truth Valuation Tree: ((A∧B) ↔ (A∨¬C))")
-gap_box("Case (a): M(A)=T, M(B)=T, M(C)=F  — node-by-node evaluation", [
+ssec("GAP-SOLUTION 3 - Truth Valuation Tree: ((A∧B) ↔ (A∨¬C))")
+gap_box("Case (a): M(A)=T, M(B)=T, M(C)=F  - node-by-node evaluation", [
     "Level 0 (leaves):   A=T,  B=T,  C=F",
     "Level 1:            ¬C = ¬F = T",
     "                    A∧B = T∧T = T",
@@ -638,7 +638,7 @@ gap_box("Case (a): M(A)=T, M(B)=T, M(C)=F  — node-by-node evaluation", [
     "Level 3 (root ↔):  (A∧B) ↔ (A∨¬C) = T↔T = T",
     "Result: Vₘ(P) = T  ✔",
 ])
-gap_box("Case (b): M(A)=T, M(B)=F, M(C)=T  — node-by-node evaluation", [
+gap_box("Case (b): M(A)=T, M(B)=F, M(C)=T  - node-by-node evaluation", [
     "Level 0:   A=T,  B=F,  C=T",
     "Level 1:   ¬C = ¬T = F",
     "           A∧B = T∧F = F",
@@ -651,7 +651,7 @@ section("3.3  Satisfiability of Formulae")
 defn("Satisfiable", "Set S is satisfiable if SOME truth assignment M makes every formula in S TRUE.")
 defn("Unsatisfiable", "No truth assignment makes all formulas in S true simultaneously.")
 
-proof("Case (a) — Satisfiable example", [
+proof("Case (a) - Satisfiable example", [
     "S = { (A∧B)⇒C,  A↔B,  (C∨A)∨B }",
     "Try M(A)=T, M(B)=T, M(C)=T:",
     "  (A∧B)⇒C : T⇒T = T  ✔",
@@ -659,7 +659,7 @@ proof("Case (a) — Satisfiable example", [
     "  (C∨A)∨B  : T∨T∨T = T  ✔",
     "S is SATISFIABLE.  □",
 ])
-proof("Case (b) — Unsatisfiable example", [
+proof("Case (b) - Unsatisfiable example", [
     "S = { A⇒(B∨C),  ¬(A⇒B),  A↔¬C }",
     "Case M(A)=T: A↔¬C requires C=F;  A⇒(B∨C) requires B=T;",
     "             ¬(A⇒B)=¬(T⇒T)=¬T=F  ← CONTRADICTION",
@@ -676,7 +676,7 @@ tt(["p","¬p","p∨¬p (tautology)","p∧¬p (contradiction)"],
    [["T","F","T","F"],["F","T","T","F"]],
    "Verification of p∨¬p and p∧¬p")
 
-ssec("GAP-SOLUTION 4 — Tautology/Contradiction Laws Verified by Truth Tables")
+ssec("GAP-SOLUTION 4 - Tautology/Contradiction Laws Verified by Truth Tables")
 gap_box("p ∧ ⊤ ≡ p   and   p ∨ ⊤ ≡ ⊤", [
     "p | ⊤ | p∧⊤ | p∨⊤",
     "T | T |  T  |  T",
@@ -696,8 +696,8 @@ gap_box("p ∧ ⊥ ≡ ⊥   and   p ∨ ⊥ ≡ p   and   ¬⊤ ≡ ⊥   and  
     "¬⊥ : always T    →  ¬⊥ ≡ ⊤   ✔",
 ])
 
-ssec("Worked Example — Show p ∨ (q ∨ ¬p) is a tautology")
-proof("Method 1 — Truth Table", [
+ssec("Worked Example - Show p ∨ (q ∨ ¬p) is a tautology")
+proof("Method 1 - Truth Table", [
     "p | q | ¬p | q∨¬p | p∨(q∨¬p)",
     "T | T |  F |  T   |     T",
     "T | F |  F |  F   |     T",
@@ -705,7 +705,7 @@ proof("Method 1 — Truth Table", [
     "F | F |  T |  T   |     T",
     "All rows TRUE → tautology  ✔",
 ])
-proof("Method 2 — Algebraic", [
+proof("Method 2 - Algebraic", [
     "p ∨ (q ∨ ¬p)",
     "≡ p ∨ (¬p ∨ q)    [commutative]",
     "≡ (p ∨ ¬p) ∨ q    [associative]",
@@ -746,7 +746,7 @@ wide_table(
     hbg=CPU
 )
 
-ssec("Example 3.1 (from handout) — Show (p→q)∧(q→p) ≡ p↔q")
+ssec("Example 3.1 (from handout) - Show (p→q)∧(q→p) ≡ p↔q")
 proof("Truth table proof", [
     "p | q | p→q | q→p | (p→q)∧(q→p) | p↔q",
     "T | T |  T  |  T  |      T       |  T",
@@ -756,7 +756,7 @@ proof("Truth table proof", [
     "Columns 5 and 6 identical → ≡  ✔  □",
 ])
 
-ssec("Example 3.2 (from handout) — Show (p∧q)→p is a tautology")
+ssec("Example 3.2 (from handout) - Show (p∧q)→p is a tautology")
 proof("Algebraic proof", [
     "(p∧q)→p",
     "≡ ¬(p∧q) ∨ p       [implication: A→B ≡ ¬A∨B]",
@@ -767,8 +767,8 @@ proof("Algebraic proof", [
     "≡ T                [T∨anything = T]  □",
 ])
 
-ssec("Example 3.3 (from handout) — Show (p→q) ≡ (¬q→¬p)")
-proof("Algebraic proof — Contrapositive Law", [
+ssec("Example 3.3 (from handout) - Show (p→q) ≡ (¬q→¬p)")
+proof("Algebraic proof - Contrapositive Law", [
     "(¬q→¬p)",
     "≡ ¬(¬q) ∨ (¬p)    [implication law]",
     "≡ q ∨ (¬p)        [double negation: ¬¬q=q]",
@@ -793,20 +793,20 @@ body("<b>Algorithm to convert any formula to CNF:</b>",
      "  3. Eliminate double negation: ¬¬A ≡ A",
      "  4. Distribute ∨ over ∧:  A∨(B∧C) ≡ (A∨B)∧(A∨C)")
 
-ssec("CNF Example (from handout) — Convert (¬p→¬q)→(p→q) to CNF")
+ssec("CNF Example (from handout) - Convert (¬p→¬q)→(p→q) to CNF")
 proof("Step-by-step", [
     "Start: (¬p→¬q) → (p→q)",
     "",
-    "Step 1 — Eliminate all →:",
+    "Step 1 - Eliminate all →:",
     "  ¬p→¬q  ≡  p∨¬q      [¬(¬p)∨¬q = p∨¬q]",
     "  p→q    ≡  ¬p∨q",
     "  Outer: (p∨¬q) → (¬p∨q)  ≡  ¬(p∨¬q) ∨ (¬p∨q)",
     "",
-    "Step 2 — Push ¬ inward:",
+    "Step 2 - Push ¬ inward:",
     "  ¬(p∨¬q) ≡ ¬p ∧ ¬(¬q) = ¬p ∧ q    [De Morgan + double neg]",
     "  Now: (¬p∧q) ∨ (¬p∨q)",
     "",
-    "Step 4 — Distribute ∨ over ∧:",
+    "Step 4 - Distribute ∨ over ∧:",
     "  (¬p∧q) ∨ (¬p∨q)",
     "  = (¬p∨(¬p∨q)) ∧ (q∨(¬p∨q))   [A∨(B∧C)=(A∨B)∧(A∨C)]",
     "  = (¬p∨¬p∨q) ∧ (q∨¬p∨q)",
@@ -816,32 +816,32 @@ proof("Step-by-step", [
     "CNF Result: (¬p∨q)  ✔   [note: this equals p→q, consistent]",
 ])
 
-ssec("GAP-SOLUTION 5 — CNF Satisfiability Test via ¬∅ Method")
+ssec("GAP-SOLUTION 5 - CNF Satisfiability Test via ¬∅ Method")
 gap_box("Algorithm: Test if ∅ is satisfiable", [
     "1. Form ¬∅",
     "2. Transform ¬∅ to CNF",
     "3. If ANY clause lacks a complement pair → ¬∅ not a tautology → ∅ is SATISFIABLE",
     "4. If EVERY clause has a complement pair → ¬∅ is a tautology → ∅ is UNSATISFIABLE",
 ])
-gap_box("Example A — Is (p→q) satisfiable?", [
+gap_box("Example A - Is (p→q) satisfiable?", [
     "¬(p→q) ≡ ¬(¬p∨q) ≡ p∧¬q       [CNF: clauses (p) and (¬q)]",
     "Clause (p): no complement pair → NOT valid",
     "∴ (p→q) is SATISFIABLE  ✔   [e.g. M(p)=T,M(q)=T makes it true]",
 ])
-gap_box("Example B — Is (p∧¬p) satisfiable?", [
+gap_box("Example B - Is (p∧¬p) satisfiable?", [
     "¬(p∧¬p) ≡ ¬p∨¬(¬p) ≡ ¬p∨p      [CNF: one clause (¬p∨p)]",
     "Clause (¬p∨p): contains p and ¬p → VALID",
     "ALL clauses valid → ¬(p∧¬p) is a tautology → (p∧¬p) is UNSATISFIABLE  ✔",
 ])
 
-ssec("GAP-SOLUTION 6 — CNF Validity: Clarifying the Handout's Example 3 Typo")
+ssec("GAP-SOLUTION 6 - CNF Validity: Clarifying the Handout's Example 3 Typo")
 gap_box("The handout's three validity examples", [
     "1. ¬p ∨ q ∨ p ∨ r         → VALID   (contains p and ¬p)",
     "2. (¬p∨q∨p) ∧ (r∨¬r)     → VALID   (both clauses have complement pairs)",
-    "3. As printed in handout, example 3 is IDENTICAL to example 2 — this is a TYPO.",
+    "3. As printed in handout, example 3 is IDENTICAL to example 2 - this is a TYPO.",
     "",
     "Likely intended example 3:",
-    "   (¬p∨q∨p) ∧ (r∨s)   — is NOT VALID",
+    "   (¬p∨q∨p) ∧ (r∨s)   - is NOT VALID",
     "   Clause 1: (¬p∨q∨p) → has p and ¬p → VALID",
     "   Clause 2: (r∨s)     → no complement pair → NOT VALID",
     "   Whole formula NOT VALID (set r=F,s=F → clause 2 = F → whole formula = F)  ✔",
@@ -884,7 +884,7 @@ for rname, rdesc, rlines in rules:
     body(rdesc)
     proof(f"Rule: {rname}", rlines)
 
-ssec("GAP-SOLUTION 7 — Modus Tollens Worked Examples")
+ssec("GAP-SOLUTION 7 - Modus Tollens Worked Examples")
 gap_box("MT Example 1: Prove ¬P from P→Q and ¬Q", [
     "1.  P → Q     Premise",
     "2.  ¬Q        Premise",
@@ -905,10 +905,10 @@ gap_box("MT Example 3: Distinguish MT from DS (common exam mistake)", [
     "Disjunctive Syllogism  needs a DISJUNCTION (∨):",
     "   A∨B  and  ¬A  →  B",
     "",
-    "NEVER apply MT to A∨B — you need A→B for MT.",
+    "NEVER apply MT to A∨B - you need A→B for MT.",
 ])
 
-ssec("Worked Natural Deduction Example — Prove B from A∨B, ¬A")
+ssec("Worked Natural Deduction Example - Prove B from A∨B, ¬A")
 proof("Proof", [
     "1.  A ∨ B    Premise",
     "2.  ¬A       Premise",
@@ -917,13 +917,13 @@ proof("Proof", [
 
 section("3.8  Limitations of Propositional Logic")
 body("Propositional logic hides the internal structure of basic propositions.",
-     "Example: 'John is a science student' is just p — we cannot reason about 'John' as "
+     "Example: 'John is a science student' is just p - we cannot reason about 'John' as "
      "an object or 'science student' as a property.",
      "This motivates <b>Predicate Logic</b> (Chapter 4).")
 page_break()
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  CHAPTER 4 — PREDICATE LOGIC
+#  CHAPTER 4 - PREDICATE LOGIC
 # ═══════════════════════════════════════════════════════════════════════════
 chapter(4, "PREDICATE LOGIC  (First-Order Logic)")
 
@@ -951,12 +951,12 @@ box("Translation Table (from handout)", [
 ], bg=BG1, hc=CB)
 
 section("4.2  Quantifiers and Variables")
-defn("∀x  (Universal quantifier)", "'For ALL x …'  — pairs with CONDITIONAL →")
-defn("∃x  (Existential quantifier)", "'There EXISTS an x …'  — pairs with CONJUNCTION ∧")
+defn("∀x  (Universal quantifier)", "'For ALL x …'  - pairs with CONDITIONAL →")
+defn("∃x  (Existential quantifier)", "'There EXISTS an x …'  - pairs with CONJUNCTION ∧")
 rule("Universals go with CONDITIONALS:   'All A are B'    →  ∀x(Ax → Bx)")
 rule("Existentials go with CONJUNCTIONS: 'Some A are B'   →  ∃x(Ax ∧ Bx)")
 
-box("Quantification Examples (from handout — all four)", [
+box("Quantification Examples (from handout - all four)", [
     "1. Everyone is smart",
     "   Unquantified: Sx   →   Quantified: ∀xSx",
     "   Read: 'For all x, x is smart'",
@@ -1006,7 +1006,7 @@ box("Classic Syllogism (from handout) + Full Formal Derivation", [
     "  4.  Ra            2,3, MP  [Modus Ponens]  □",
 ], bg=BG3, hc=CG)
 
-ssec("GAP-SOLUTION 8 — All Four Syllogistic Forms with Full Derivations")
+ssec("GAP-SOLUTION 8 - All Four Syllogistic Forms with Full Derivations")
 gap_box("Form 1: 'All A are B' + 'c is A' → 'c is B'", [
     "∀x(Ax→Bx)  and  Ac",
     "  3. Ac→Bc    U.I.",
@@ -1034,24 +1034,24 @@ gap_box("Harder Syllogism: 'No fish are mammals; All whales are mammals; ∴ No 
 ])
 
 section("4.5  Conjunctive Predicate Combinations")
-ssec("GAP-SOLUTION 9 — Full Reasoning for Each Example")
-gap_box("(a) Every Purple Squid is Friendly — step by step", [
+ssec("GAP-SOLUTION 9 - Full Reasoning for Each Example")
+gap_box("(a) Every Purple Squid is Friendly - step by step", [
     "Key: Px='x is Purple', Sx='x is a Squid', Fx='x is Friendly'",
     "Keyword 'Every' → universal → use ∀ with →",
     "'Purple Squid' is conjunctive: Px ∧ Sx",
     "Result: ∀x((Px ∧ Sx) → Fx)",
     "",
-    "WRONG: ∀x(Px∧Sx∧Fx)  — that says 'everything is purple, a squid, and friendly'!",
+    "WRONG: ∀x(Px∧Sx∧Fx)  - that says 'everything is purple, a squid, and friendly'!",
 ])
-gap_box("(b) Some Monsters are Hairy Drunkards — step by step", [
+gap_box("(b) Some Monsters are Hairy Drunkards - step by step", [
     "Key: Mx=Monster, Hx=Hairy, Dx=Drunkard",
     "Keyword 'Some' → existential → use ∃ with ∧",
     "'Hairy Drunkard' is conjunctive: Hx ∧ Dx",
     "Result: ∃x(Mx ∧ Hx ∧ Dx)",
     "",
-    "WRONG: ∃x(Mx→(Hx∧Dx))  — does NOT require any monsters to exist!",
+    "WRONG: ∃x(Mx→(Hx∧Dx))  - does NOT require any monsters to exist!",
 ])
-gap_box("(c) No Invisible Lemur is a Criminal — step by step", [
+gap_box("(c) No Invisible Lemur is a Criminal - step by step", [
     "Key: Ix=Invisible, Lx=Lemur, Cx=Criminal",
     "'No ...' is a negative universal; two equivalent forms:",
     "  Form A: ¬∃x((Ix∧Lx) ∧ Cx)         [from handout]",
@@ -1059,11 +1059,11 @@ gap_box("(c) No Invisible Lemur is a Criminal — step by step", [
     "Verify: ¬∃x(P∧Q) ≡ ∀x(¬P∨¬Q) ≡ ∀x(P→¬Q)  by QD1 + De Morgan  ✔",
 ])
 warn("Some compound nouns CANNOT be split: 'alleged criminal', 'expectant mother', "
-     "'deer hunter' — treat as SINGLE predicates.")
+     "'deer hunter' - treat as SINGLE predicates.")
 
 section("4.6  Disjunctive Predicate Combinations")
-gap_box("'All cats and dogs make suitable pets' — correct translation", [
-    "WRONG: ∀x((Cx∧Dx)→Sx)  — says 'everything that is BOTH cat AND dog', impossible!",
+gap_box("'All cats and dogs make suitable pets' - correct translation", [
+    "WRONG: ∀x((Cx∧Dx)→Sx)  - says 'everything that is BOTH cat AND dog', impossible!",
     "",
     "CORRECT option 1: ∀x(Cx→Sx) ∧ ∀x(Dx→Sx)   (two separate universals)",
     "CORRECT option 2: ∀x((Cx∨Dx)→Sx)            (disjunction in antecedent)",
@@ -1089,8 +1089,8 @@ wide_table(
     hbg=CTE
 )
 
-ssec("GAP-SOLUTION 10 — Concrete Examples Explaining WHY QD4, QD5, QS8 Are One-Way")
-gap_box("QD4 Counterexample — why (∀x)(φ∨ψ) does NOT imply (∀x)φ∨(∀x)ψ", [
+ssec("GAP-SOLUTION 10 - Concrete Examples Explaining WHY QD4, QD5, QS8 Are One-Way")
+gap_box("QD4 Counterexample - why (∀x)(φ∨ψ) does NOT imply (∀x)φ∨(∀x)ψ", [
     "D = {Alice, Bob};  φ(x)='x likes logic';  ψ(x)='x likes rock climbing'",
     "Alice: φ=T, ψ=F  |  Bob: φ=F, ψ=T",
     "",
@@ -1099,9 +1099,9 @@ gap_box("QD4 Counterexample — why (∀x)(φ∨ψ) does NOT imply (∀x)φ∨(�
     "",
     "RHS=TRUE but LHS=FALSE → reverse implication FAILS.  □",
     "Moral: knowing 'everyone likes logic or climbing' does NOT mean everyone likes logic",
-    "       OR everyone likes climbing — some could like logic, others rock climbing.",
+    "       OR everyone likes climbing - some could like logic, others rock climbing.",
 ])
-gap_box("QD5 Counterexample — why (∃x)φ∧(∃x)ψ does NOT imply (∃x)(φ∧ψ)", [
+gap_box("QD5 Counterexample - why (∃x)φ∧(∃x)ψ does NOT imply (∃x)(φ∧ψ)", [
     "D = {Alice, Bob};  φ(x)='x is tall';  ψ(x)='x is smart'",
     "Alice: tall=T, smart=F  |  Bob: tall=F, smart=T",
     "",
@@ -1112,7 +1112,7 @@ gap_box("QD5 Counterexample — why (∃x)φ∧(∃x)ψ does NOT imply (∃x)(φ
     "Moral: 'someone is tall AND someone is smart' does NOT mean the SAME person",
     "       is both tall and smart.",
 ])
-gap_box("QS8 Counterexample — why (∀y)(∃x)φ does NOT imply (∃x)(∀y)φ", [
+gap_box("QS8 Counterexample - why (∀y)(∃x)φ does NOT imply (∃x)(∀y)φ", [
     "φ(x,y) = 'x is the teacher of y'",
     "Teachers={T1,T2}, Students={S1,S2,S3}",
     "T1 teaches S1 and S2; T2 teaches S3",
@@ -1145,7 +1145,7 @@ for rname, rdesc, rlines in qi:
     body(rdesc)
     proof(f"Rule: {rname}", rlines)
 
-ssec("Worked Proof 1 (U.I. from handout) — Prove H(a) from G(a) and ∀x(G(x)→H(x))")
+ssec("Worked Proof 1 (U.I. from handout) - Prove H(a) from G(a) and ∀x(G(x)→H(x))")
 proof("Proof", [
     "1.  (∀x)(G(x)→H(x))    Given",
     "2.  G(a)                Given",
@@ -1153,7 +1153,7 @@ proof("Proof", [
     "4.  H(a)                2,3, MP   □",
 ])
 
-ssec("Worked Proof 2 (U.G. from handout) — Prove ∀x(R(x)→W(x))")
+ssec("Worked Proof 2 (U.G. from handout) - Prove ∀x(R(x)→W(x))")
 proof("Given: ∀x(R(x)→Q(x)) and ∀x(Q(x)→W(x))", [
     "1.  (∀x)(R(x)→Q(x))    Given",
     "2.  (∀x)(Q(x)→W(x))    Given",
@@ -1163,7 +1163,7 @@ proof("Given: ∀x(R(x)→Q(x)) and ∀x(Q(x)→W(x))", [
     "6.  (∀x)(R(x)→W(x))    5, U.G.  □",
 ])
 
-ssec("Worked Proof 3 (E.I. from handout) — Prove (∃x)P(x)∧(∃x)Q(x)  from  ∃x(P(x)∧Q(x))")
+ssec("Worked Proof 3 (E.I. from handout) - Prove (∃x)P(x)∧(∃x)Q(x)  from  ∃x(P(x)∧Q(x))")
 proof("Proof", [
     "1.  (∃x)(P(x)∧Q(x))      Given",
     "2.  P(w)∧Q(w)             1, E.I.  [w is brand-new]",
@@ -1178,7 +1178,7 @@ section("4.8  Indirect Proof (Reductio ad Absurdum)")
 body("Assume the NEGATION of the goal. Derive a contradiction (A∧¬A). "
      "Conclude the original goal must be true.")
 
-proof("Proof: (∀x)G(x) → (∃x)G(x)  — from no assumptions", [
+proof("Proof: (∀x)G(x) → (∃x)G(x)  - from no assumptions", [
     "1.  ¬((∀x)G(x)→(∃x)G(x))    Auxiliary premise [assume negation of goal]",
     "2.  ¬(¬(∀x)G(x) ∨ (∃x)G(x)) 1, Implication law: A→B ≡ ¬A∨B",
     "3.  (∀x)G(x) ∧ ¬(∃x)G(x)    2, De Morgan + double negation",
@@ -1188,18 +1188,18 @@ proof("Proof: (∀x)G(x) → (∃x)G(x)  — from no assumptions", [
     "7.  G(a)                     4, U.I.",
     "8.  ¬G(a)                    6, U.I.",
     "9.  G(a) ∧ ¬G(a)             7,8, Conjunction  ← CONTRADICTION",
-    "10. (∀x)G(x)→(∃x)G(x)       1–9, Indirect Proof  □",
+    "10. (∀x)G(x)→(∃x)G(x)       1-9, Indirect Proof  □",
 ])
 
 section("4.9  Conditional Proof")
 body("Assume the antecedent as an auxiliary premise. Derive the consequent. "
      "The conditional is then established.")
 
-proof("Proof: (∀x)G(x) → (∃x)G(x)  — by Conditional Proof", [
+proof("Proof: (∀x)G(x) → (∃x)G(x)  - by Conditional Proof", [
     "1.  (∀x)G(x)                 Auxiliary premise [assume antecedent]",
     "2.  G(a)                     1, U.I.",
     "3.  (∃x)G(x)                 2, E.G.",
-    "4.  (∀x)G(x)→(∃x)G(x)       1–3, Conditional Proof  □",
+    "4.  (∀x)G(x)→(∃x)G(x)       1-3, Conditional Proof  □",
 ])
 note("Compare 4.8 and 4.9: both prove the same result by different strategies. "
      "Conditional Proof is simpler here.")
@@ -1232,14 +1232,14 @@ wide_table(
         ["Universals + conditionals","'All A are B' → ∀x(Ax→Bx)   NOT ∀x(Ax∧Bx)"],
         ["Existentials + conjunctions","'Some A are B' → ∃x(Ax∧Bx)  NOT ∃x(Ax→Bx)"],
         ["QD1","¬∀xφ ⟺ ∃x¬φ   and   ¬∃xφ ⟺ ∀x¬φ"],
-        ["QD4 & QD5","ONE-WAY only — the reverse counterexamples involve different people/objects."],
-        ["QS8","∃x∀y is STRONGER than ∀y∃x — reverse fails (see Gap-10 counterexample)."],
+        ["QD4 & QD5","ONE-WAY only - the reverse counterexamples involve different people/objects."],
+        ["QS8","∃x∀y is STRONGER than ∀y∃x - reverse fails (see Gap-10 counterexample)."],
     ],
     hbg=CD, abg=[colors.white, BG1]
 )
 
 story.append(sp(12))
-story.append(p("Good luck in your exams!  Every example, every proof, every gap — all here.",
+story.append(p("Good luck in your exams!  Every example, every proof, every gap - all here.",
                S("gl", size=13, bold=True, color=CD, align=TA_CENTER)))
 
 # ── build ─────────────────────────────────────────────────────────────────

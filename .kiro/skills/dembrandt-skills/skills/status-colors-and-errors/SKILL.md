@@ -49,7 +49,7 @@ retrieval:
 
 ## Keep the Colour Set Small
 
-Every status colour added to a system is a cognitive burden on the user. They must learn what each colour means, remember it, and interpret it correctly under stress — which is exactly when errors occur.
+Every status colour added to a system is a cognitive burden on the user. They must learn what each colour means, remember it, and interpret it correctly under stress - which is exactly when errors occur.
 
 **The minimal set that covers almost everything:**
 
@@ -64,7 +64,7 @@ Every status colour added to a system is a cognitive burden on the user. They mu
 
 **Every status tone must be visibly distinct from the others.** If two tokens render alike, keep one. A second name for the same visible colour is not a second status: authors pick either, users read one state, and the name becomes a lie. Draft and pending states take neutral, not the warning tone.
 
-When in doubt, cut the colour — neutral grey communicates status without semantic weight, and neutral is better than a misused semantic colour.
+When in doubt, cut the colour - neutral grey communicates status without semantic weight, and neutral is better than a misused semantic colour.
 
 ## Orange Is Always a Warning
 
@@ -82,9 +82,9 @@ If orange appears in the UI, the user should immediately know it requires their 
 
 ### Error message anatomy
 Every error should answer three questions:
-1. **What went wrong?** — plain language, no error codes
-2. **Why did it happen?** — if useful and known
-3. **What should the user do next?** — specific, actionable
+1. **What went wrong?** - plain language, no error codes
+2. **Why did it happen?** - if useful and known
+3. **What should the user do next?** - specific, actionable
 
 ```
 ❌ "Error 500"
@@ -101,7 +101,7 @@ Every error should answer three questions:
 
 ## Prevent Large Errors Before They Happen
 
-The most damaging errors — data loss, irreversible actions, broken state — should be prevented at the design level, not handled after the fact.
+The most damaging errors - data loss, irreversible actions, broken state - should be prevented at the design level, not handled after the fact.
 
 - **Confirm before irreversible actions:** "Delete this project and all 47 tasks? This cannot be undone."
 - **Disable unavailable actions** rather than letting users trigger them and hit an error
@@ -111,9 +111,9 @@ The most damaging errors — data loss, irreversible actions, broken state — s
 **State the consequences *before* the user acts, not after.** Fear comes from not knowing what a control will do. Make the outcome legible ahead of the action so the user commits with confidence:
 - **Plain-language consequence text** next to or inside the control: "This will email all 240 subscribers", "Publishing makes this visible to everyone".
 - **Staged guidance** for anything multi-step or heavy: break it into steps and tell the user what each one will do before they proceed, so the whole operation is predictable rather than a leap.
-- Reserve the strong interruptions (confirm dialogs, typed confirmation) for the genuinely dangerous cases above; for everyday actions, a quiet line of helper text is enough. The goal is the same — no surprises, so nothing feels scary.
+- Reserve the strong interruptions (confirm dialogs, typed confirmation) for the genuinely dangerous cases above; for everyday actions, a quiet line of helper text is enough. The goal is the same - no surprises, so nothing feels scary.
 
-## Levels of Severity — Use Sparingly
+## Levels of Severity - Use Sparingly
 
 Not every problem is equal. Match the visual weight of the feedback to the severity.
 
@@ -123,9 +123,9 @@ Not every problem is equal. Match the visual weight of the feedback to the sever
 | **Inline error** | Red text below a field | Form field validation failure |
 | **Toast / snackbar** | Temporary notification, bottom of screen | Transient failure the user should know about but can dismiss |
 | **Alert banner** | Persistent bar at top of section | Ongoing issue affecting the current context |
-| **Empty state** | Illustrated or descriptive empty screen | No data yet — use as an opportunity for guidance, not just a blank |
+| **Empty state** | Illustrated or descriptive empty screen | No data yet - use as an opportunity for guidance, not just a blank |
 
-Avoid showing multiple simultaneous error types at once — one clear message is more useful than three overlapping alerts.
+Avoid showing multiple simultaneous error types at once - one clear message is more useful than three overlapping alerts.
 
 ## Degree of Likeness Is One Hue, Never Red to Green
 

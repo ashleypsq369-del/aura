@@ -1,5 +1,5 @@
 /**
- * I3 — Existing oversized run-event rows are healed once.
+ * I3 - Existing oversized run-event rows are healed once.
  *
  * Before the run-event payload budget (`runtimes/run-event-payload-budget.ts`)
  * the daemon stored agent tool lines verbatim; a long cursor-agent
@@ -11,13 +11,13 @@
  * - started after the daemon is listening, never on a request path;
  * - ONE row per transaction (`healOversizedMessageEvents` /
  *   `healOversizedMessageEventBatch` in `db.ts`), streaming each row's events
- *   out of SQLite one element at a time — never a whole conversation, never a
+ *   out of SQLite one element at a time - never a whole conversation, never a
  *   whole event log in JS;
  * - yields to the event loop between rows, so request handling interleaves;
  * - skips rows whose run is still queued/running (their writer owns them);
  * - idempotent: an already-bounded row is not rewritten, and once a pass has
  *   covered every row without skipping any, a completion marker stops later
- *   starts from rescanning. Dying mid-way is safe — each row is either as it
+ *   starts from rescanning. Dying mid-way is safe - each row is either as it
  *   was or fully healed, and the next start resumes.
  */
 import type Database from 'better-sqlite3';

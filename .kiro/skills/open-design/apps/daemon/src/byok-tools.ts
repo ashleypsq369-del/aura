@@ -37,7 +37,7 @@ import {
   type ModelCapability,
 } from './media-adapters/index.js';
 
-// SenseAudio image model allowlist — derived from the shared media-models
+// SenseAudio image model allowlist - derived from the shared media-models
 // registry so adding a new SenseAudio image model in one place (media-models)
 // auto-extends the BYOK tool param enum, the Settings dropdown, and the
 // daemon-side validation. No drift, no hand-maintained constant.
@@ -46,7 +46,7 @@ export const BYOK_SENSEAUDIO_IMAGE_MODELS: readonly string[] = IMAGE_MODELS
   .map((m) => m.id);
 
 // Default falls back to the first entry from the registry (today
-// `senseaudio-image-2.0-260319` — the multi-aspect latest). Kept as a
+// `senseaudio-image-2.0-260319` - the multi-aspect latest). Kept as a
 // computed constant so re-ordering the registry rotates the default
 // without code edits here.
 export const BYOK_SENSEAUDIO_DEFAULT_IMAGE_MODEL =
@@ -56,7 +56,7 @@ export function isSenseAudioImageModel(value: unknown): value is string {
   return typeof value === 'string' && BYOK_SENSEAUDIO_IMAGE_MODELS.includes(value);
 }
 
-// AIHubMix image-model allowlist — same registry-derived pattern as SenseAudio
+// AIHubMix image-model allowlist - same registry-derived pattern as SenseAudio
 // so a new `provider: 'aihubmix'` image entry auto-extends the chat tool enum,
 // the Settings dropdown, and the daemon-side validation with no hand edits.
 export const BYOK_AIHUBMIX_IMAGE_MODELS: readonly string[] = IMAGE_MODELS
@@ -75,8 +75,8 @@ export function isAIHubMixImageModel(value: unknown): value is string {
     && (value.startsWith('aihubmix-') || BYOK_AIHUBMIX_IMAGE_MODELS.includes(value));
 }
 
-// AIHubMix video models are discovered live (the `?type=video` catalogue), so —
-// like image models — we accept the whole `aihubmix-` namespace rather than a
+// AIHubMix video models are discovered live (the `?type=video` catalogue), so -
+// like image models - we accept the whole `aihubmix-` namespace rather than a
 // hand-maintained list. The prefix is stripped to the wire name before the
 // `/videos` call. When neither the composer picker nor the LLM supplies one,
 // the executor falls back to BYOK_AIHUBMIX_DEFAULT_VIDEO_MODEL.
@@ -89,7 +89,7 @@ export function isAIHubMixVideoModel(value: unknown): value is string {
 // available text/image-to-video model on the gateway today.
 export const BYOK_AIHUBMIX_DEFAULT_VIDEO_MODEL = 'aihubmix-doubao-seedance-2-0-fast-260128';
 
-// AIHubMix speech (TTS) models — discovered live via `?type=tts`; like image and
+// AIHubMix speech (TTS) models - discovered live via `?type=tts`; like image and
 // video we accept the whole `aihubmix-` namespace (prefix stripped to the wire
 // name). Falls back to BYOK_AIHUBMIX_DEFAULT_SPEECH_MODEL when unset.
 export function isAIHubMixSpeechModel(value: unknown): value is string {
@@ -136,7 +136,7 @@ function appendSenseAudioApiPath(baseUrl: string, path: string): string {
   return url.toString();
 }
 
-// SenseAudio video — the API only documents one model today, so the
+// SenseAudio video - the API only documents one model today, so the
 // wire id is a const. The chat tool's `generate_video` param surface
 // (prompt, aspect_ratio, duration, resolution, generate_audio) covers
 // every knob the doubao-seedance gateway accepts.
@@ -146,16 +146,16 @@ const SENSEAUDIO_VIDEO_RESOLUTIONS = ['480p', '720p', '1080p'] as const;
 const SENSEAUDIO_VIDEO_DURATION_MIN = 4;
 const SENSEAUDIO_VIDEO_DURATION_MAX = 15;
 const SENSEAUDIO_VIDEO_DURATION_DEFAULT = 5;
-// Polling: SenseAudio docs recommend 5–10 s intervals; we pick 5 s and
+// Polling: SenseAudio docs recommend 5-10 s intervals; we pick 5 s and
 // cap total attempts so a stuck job can't pin the chat stream forever.
-// 120 attempts × 5 s = 10 min ceiling — covers the real-world
+// 120 attempts × 5 s = 10 min ceiling - covers the real-world
 // doubao-seedance latency range (1080p + audio jobs frequently spend
-// 3–8 min on the gateway). Below this, the 5-min cap timed out otherwise
+// 3-8 min on the gateway). Below this, the 5-min cap timed out otherwise
 // valid jobs; above this the chat surface starts feeling stuck.
 const SENSEAUDIO_VIDEO_POLL_INTERVAL_MS_DEFAULT = 5000;
 const SENSEAUDIO_VIDEO_MAX_POLLS = 120;
 // Periodic progress log every N polls so a long-running job emits some
-// signal to the daemon log — without flooding it with one line per
+// signal to the daemon log - without flooding it with one line per
 // 5 s. 6 polls = ~30 s between progress lines.
 const SENSEAUDIO_VIDEO_PROGRESS_LOG_EVERY = 6;
 
@@ -179,7 +179,7 @@ const ASPECT_TO_SIZE: Record<string, string> = {
  * the upstream `tools` array on every /api/proxy/senseaudio/stream
  * request so the LLM can decide on its own when to call it. The
  * description deliberately tells the model to embed the returned URL
- * in markdown — the chat UI already renders markdown images inline,
+ * in markdown - the chat UI already renders markdown images inline,
  * so no client-side wiring is required for the bytes to show up.
  */
 export const BYOK_SENSEAUDIO_TOOLS = [
@@ -188,7 +188,7 @@ export const BYOK_SENSEAUDIO_TOOLS = [
     function: {
       name: 'generate_image',
       description:
-        'Generate an image from a text prompt using SenseAudio image models. Returns a URL pointing to the rendered PNG. After this tool succeeds, embed the URL in your reply with markdown image syntax — ![alt](url) — so the user sees the image inline. Use this whenever the user asks to draw, create, generate, design, or illustrate something visual.',
+        'Generate an image from a text prompt using SenseAudio image models. Returns a URL pointing to the rendered PNG. After this tool succeeds, embed the URL in your reply with markdown image syntax - ![alt](url) - so the user sees the image inline. Use this whenever the user asks to draw, create, generate, design, or illustrate something visual.',
       parameters: {
         type: 'object',
         properties: {
@@ -207,7 +207,7 @@ export const BYOK_SENSEAUDIO_TOOLS = [
             type: 'string',
             enum: [...BYOK_SENSEAUDIO_IMAGE_MODELS],
             description:
-              'Optional model override. Omit this to use the user-configured default from Settings (or the SenseAudio 2.0 multi-aspect model when unset). Choose senseaudio-image-2.0-260319 for multi-aspect generation, senseaudio-image-1.0-260319 for standard sizes, or doubao-seedream-5-0-260128 for high-resolution output through the ByteDance Seedream gateway. The user explicitly picked a default in their Settings — only override when the user asks for a different style/resolution.',
+              'Optional model override. Omit this to use the user-configured default from Settings (or the SenseAudio 2.0 multi-aspect model when unset). Choose senseaudio-image-2.0-260319 for multi-aspect generation, senseaudio-image-1.0-260319 for standard sizes, or doubao-seedream-5-0-260128 for high-resolution output through the ByteDance Seedream gateway. The user explicitly picked a default in their Settings - only override when the user asks for a different style/resolution.',
           },
         },
         required: ['prompt'],
@@ -243,7 +243,7 @@ export const BYOK_SENSEAUDIO_TOOLS = [
     function: {
       name: 'generate_video',
       description:
-        'Generate a short video (4–15 seconds) from a text prompt using SenseAudio\'s ByteDance Seedance gateway. This is an asynchronous call that can take 30 s to a few minutes — the daemon polls the job for you, so the user just sees the chat waiting. After this tool succeeds, embed the returned URL in your reply as a markdown link, e.g. `[▶ Play video](url)`, because the chat\'s markdown renderer does not currently render `<video>` tags inline. Use this whenever the user asks for a video, clip, animation, or motion graphic.',
+        'Generate a short video (4-15 seconds) from a text prompt using SenseAudio\'s ByteDance Seedance gateway. This is an asynchronous call that can take 30 s to a few minutes - the daemon polls the job for you, so the user just sees the chat waiting. After this tool succeeds, embed the returned URL in your reply as a markdown link, e.g. `[▶ Play video](url)`, because the chat\'s markdown renderer does not currently render `<video>` tags inline. Use this whenever the user asks for a video, clip, animation, or motion graphic.',
       parameters: {
         type: 'object',
         properties: {
@@ -263,7 +263,7 @@ export const BYOK_SENSEAUDIO_TOOLS = [
             minimum: SENSEAUDIO_VIDEO_DURATION_MIN,
             maximum: SENSEAUDIO_VIDEO_DURATION_MAX,
             description:
-              `Video length in seconds (integer). Allowed range ${SENSEAUDIO_VIDEO_DURATION_MIN}–${SENSEAUDIO_VIDEO_DURATION_MAX}; defaults to ${SENSEAUDIO_VIDEO_DURATION_DEFAULT}. Shorter durations finish faster.`,
+              `Video length in seconds (integer). Allowed range ${SENSEAUDIO_VIDEO_DURATION_MIN}-${SENSEAUDIO_VIDEO_DURATION_MAX}; defaults to ${SENSEAUDIO_VIDEO_DURATION_DEFAULT}. Shorter durations finish faster.`,
           },
           resolution: {
             type: 'string',
@@ -296,7 +296,7 @@ export const BYOK_AIHUBMIX_TOOLS = [
     function: {
       name: 'generate_image',
       description:
-        'Generate an image from a text prompt using AIHubMix image models (OpenAI-compatible). Returns a URL pointing to the rendered PNG. After this tool succeeds, embed the URL in your reply with markdown image syntax — ![alt](url) — so the user sees the image inline. Use this whenever the user asks to draw, create, generate, design, or illustrate something visual.',
+        'Generate an image from a text prompt using AIHubMix image models (OpenAI-compatible). Returns a URL pointing to the rendered PNG. After this tool succeeds, embed the URL in your reply with markdown image syntax - ![alt](url) - so the user sees the image inline. Use this whenever the user asks to draw, create, generate, design, or illustrate something visual.',
       parameters: {
         type: 'object',
         properties: {
@@ -356,7 +356,7 @@ export const BYOK_AIHUBMIX_TOOLS = [
     function: {
       name: 'generate_video',
       description:
-        'Generate a short video (4–15 seconds) from a text prompt using AIHubMix video models (e.g. the ByteDance Seedance gateway). This is an asynchronous call that can take 30 s to a few minutes — the daemon polls the job for you, so the user just sees the chat waiting. After this tool succeeds, embed the returned URL in your reply as a markdown link, e.g. `[▶ Play video](url)`, because the chat\'s markdown renderer does not currently render `<video>` tags inline. Use this whenever the user asks for a video, clip, animation, or motion graphic.',
+        'Generate a short video (4-15 seconds) from a text prompt using AIHubMix video models (e.g. the ByteDance Seedance gateway). This is an asynchronous call that can take 30 s to a few minutes - the daemon polls the job for you, so the user just sees the chat waiting. After this tool succeeds, embed the returned URL in your reply as a markdown link, e.g. `[▶ Play video](url)`, because the chat\'s markdown renderer does not currently render `<video>` tags inline. Use this whenever the user asks for a video, clip, animation, or motion graphic.',
       parameters: {
         type: 'object',
         properties: {
@@ -376,7 +376,7 @@ export const BYOK_AIHUBMIX_TOOLS = [
             minimum: AIHUBMIX_VIDEO_DURATION_MIN,
             maximum: AIHUBMIX_VIDEO_DURATION_MAX,
             description:
-              `Video length in seconds (integer). Allowed range ${AIHUBMIX_VIDEO_DURATION_MIN}–${AIHUBMIX_VIDEO_DURATION_MAX}; defaults to ${AIHUBMIX_VIDEO_DURATION_DEFAULT}. Shorter durations finish faster.`,
+              `Video length in seconds (integer). Allowed range ${AIHUBMIX_VIDEO_DURATION_MIN}-${AIHUBMIX_VIDEO_DURATION_MAX}; defaults to ${AIHUBMIX_VIDEO_DURATION_DEFAULT}. Shorter durations finish faster.`,
           },
           model: {
             type: 'string',
@@ -386,7 +386,7 @@ export const BYOK_AIHUBMIX_TOOLS = [
           image_url: {
             type: 'string',
             description:
-              'Reference image for image-to-video (i2v) models — the first frame / character the video animates. Pass the daemon file URL of an image already in this project (e.g. an uploaded reference or a previously generated image, like /api/projects/<id>/files/<name>.png). REQUIRED when the selected model is an i2v model (its id contains "i2v"); for those models, if you omit it the daemon falls back to the most recent image in the project.',
+              'Reference image for image-to-video (i2v) models - the first frame / character the video animates. Pass the daemon file URL of an image already in this project (e.g. an uploaded reference or a previously generated image, like /api/projects/<id>/files/<name>.png). REQUIRED when the selected model is an i2v model (its id contains "i2v"); for those models, if you omit it the daemon falls back to the most recent image in the project.',
           },
         },
         required: ['prompt'],
@@ -401,7 +401,7 @@ export const BYOK_AIHUBMIX_TOOLS = [
  * can be unit-tested with a temp directory.
  */
 export interface BYOKToolContext {
-  /** Daemon project root — used to look up media-config when the chat
+  /** Daemon project root - used to look up media-config when the chat
    *  session key is missing. */
   projectRoot: string;
   /** Daemon's PROJECTS_DIR (the `<projectRoot>/.od/projects/` folder
@@ -410,12 +410,12 @@ export interface BYOKToolContext {
    *  FileViewer / DesignFilesPanel discover them automatically and
    *  the file travels with the project on export, archive, rename. */
   projectsRoot: string;
-  /** Active project id from the chat surface. Required — the BYOK
+  /** Active project id from the chat surface. Required - the BYOK
    *  chat always runs inside a project, so the tool dispatch refuses
    *  to fire without one rather than dump bytes into a global cache.
    *  Validated upstream via `isSafeId`. */
   projectId: string;
-  /** The BYOK chat session's API key — first credential we try. Bypasses
+  /** The BYOK chat session's API key - first credential we try. Bypasses
    *  the media-config indirection so the same key the user just pasted
    *  for chat is the same key the image call uses. */
   upstreamApiKey: string;
@@ -423,7 +423,7 @@ export interface BYOKToolContext {
    *  back to api.senseaudio.cn. */
   upstreamBaseUrl?: string;
   /** Default image model the user picked in BYOK Settings, used when the
-   *  LLM didn't pass `model` in tool args. Validated upstream — anything
+   *  LLM didn't pass `model` in tool args. Validated upstream - anything
    *  outside `BYOK_SENSEAUDIO_IMAGE_MODELS` is dropped so a stale
    *  client-side config can't smuggle an unregistered model id through.
    *  Falls back to `BYOK_SENSEAUDIO_DEFAULT_IMAGE_MODEL` (the registry's
@@ -441,7 +441,7 @@ export interface BYOKToolContext {
    *  LLM nor the caller supplies a `voice_id`. */
   defaultSpeechVoice?: string;
   /** Test-only override for the video polling interval (ms). Production
-   *  uses 5 s (SenseAudio's recommendation) — tests pass small values
+   *  uses 5 s (SenseAudio's recommendation) - tests pass small values
    *  (e.g. 1 ms) to keep the suite fast without changing the polling
    *  semantics. */
   videoPollIntervalMs?: number;
@@ -450,7 +450,7 @@ export interface BYOKToolContext {
    *  signal into every upstream fetch the BYOK tool executor performs,
    *  so a disconnected client stops the tool loop's paid work.
    *
-   *  Exception — asset downloads: when a provider result URL is fetched
+   *  Exception - asset downloads: when a provider result URL is fetched
    *  through `assertAndFetchExternalAsset` (connectionTest.ts), that
    *  helper intentionally OVERRIDES `init.dispatcher` with the shared
    *  asset-validating dispatcher whose connect-time DNS lookup rejects
@@ -582,7 +582,7 @@ function sanitizeAspectRatio(raw: unknown): string {
 /**
  * Execute the `generate_image` tool. Calls SenseAudio /v1/image/sync,
  * downloads the rendered bytes, writes them to <byokImagesDir>/<id>.png,
- * and returns a daemon-served URL. Pure async — caller is responsible
+ * and returns a daemon-served URL. Pure async - caller is responsible
  * for emitting any SSE events (e.g. "tool result ready").
  *
  * Failure modes return `{ok: false, error}` rather than throwing so the
@@ -604,9 +604,9 @@ export async function executeGenerateImage(
   const aspect = sanitizeAspectRatio(args.aspect_ratio);
   const size = ASPECT_TO_SIZE[aspect];
 
-  // Model resolution order — LLM args > user's Settings default > registry
+  // Model resolution order - LLM args > user's Settings default > registry
   // default. The allowlist guards every step so a hallucinated or stale id
-  // can never reach the senseaudio /v1/image/sync wire — the catalogue is
+  // can never reach the senseaudio /v1/image/sync wire - the catalogue is
   // the source of truth.
   const senseAudioImageModel = isSenseAudioImageModel(args.model)
     ? args.model
@@ -720,7 +720,7 @@ export async function executeGenerateImage(
   }
 
   // Persist into the active project's folder. `dir` was resolved up
-  // front via ensureProject — no DB write, no metadata side-effects —
+  // front via ensureProject - no DB write, no metadata side-effects -
   // and the resulting path slots straight into the existing project
   // file plumbing: listFiles enumerates it for the FileViewer,
   // readProjectFile serves it via GET /api/projects/<id>/files/<filename>,
@@ -737,7 +737,7 @@ export async function executeGenerateImage(
   // Return a relative URL through the project file serving route. The
   // web's Next.js rewrites `/api/:path*` to the daemon (see
   // apps/web/next.config.ts), so the chat UI loads the image
-  // same-origin — satisfying the strict CSP (`img-src 'self' data:
+  // same-origin - satisfying the strict CSP (`img-src 'self' data:
   // blob:`) without any CORS plumbing.
   return {
     ok: true,
@@ -781,7 +781,7 @@ const sleep = (ms: number): Promise<void> =>
  *
  * The chat tool waits for the whole loop, so the daemon's outbound
  * SSE response from /api/proxy/senseaudio/stream stays open for the
- * duration. That's intentional — the next chat turn cannot begin
+ * duration. That's intentional - the next chat turn cannot begin
  * until we have a URL to feed back into the tool_result.
  */
 export async function executeGenerateVideo(
@@ -911,7 +911,7 @@ export async function executeGenerateVideo(
         error: `senseaudio video failed: ${data.error_message || 'unknown reason'}`,
       };
     }
-    // pending / processing — continue polling. Emit a periodic log line
+    // pending / processing - continue polling. Emit a periodic log line
     // so a stuck job surfaces in the daemon log instead of silently
     // burning attempts.
     if ((attempt + 1) % SENSEAUDIO_VIDEO_PROGRESS_LOG_EVERY === 0) {
@@ -1284,7 +1284,7 @@ const IMAGE_EXT_MIME: Record<string, string> = {
 // We resolve a project-local reference image to raw bytes + mime + filename,
 // then hand a base64 data URL to the media-adapters builder. Each video family
 // places it differently (seedance: content[].image_url; wan: input.media[];
-// generic: input_reference) — all as an inline data URL, no multipart upload.
+// generic: input_reference) - all as an inline data URL, no multipart upload.
 interface ReferenceImagePart {
   bytes: Buffer;
   mime: string;
@@ -1412,8 +1412,8 @@ function aihubmixVideoCapabilityFor(catalogModel: string): ModelCapability {
 
 /**
  * AIHubMix in-chat video generation. Mirrors renderAIHubMixVideo (media.ts) for
- * the wire shape — POST {base}/videos → poll GET {base}/videos/{id} → download
- * the inline URL or {base}/videos/{id}/content — and executeGenerateVideo above
+ * the wire shape - POST {base}/videos → poll GET {base}/videos/{id} → download
+ * the inline URL or {base}/videos/{id}/content - and executeGenerateVideo above
  * for the chat-executor scaffolding (project storage, proxy dispatcher
  * forwarding, SSRF re-validation of the returned asset URL). Supports both
  * text-to-video and image-to-video: i2v models (id contains "i2v") take a
@@ -1469,10 +1469,10 @@ export async function executeAIHubMixGenerateVideo(
   const cap = aihubmixVideoCapabilityFor(catalogModel);
 
   // Image-to-video reference handling, split into two independent properties:
-  //   • requiresReference — i2v-ONLY models (name contains "i2v", e.g.
+  //   • requiresReference - i2v-ONLY models (name contains "i2v", e.g.
   //     wan2.7-i2v / happyhorse-1.0-i2v) FAIL without a first frame, so we
   //     auto-grab the newest project image when none was passed.
-  //   • acceptsReference — whether sending a reference is allowed AT ALL
+  //   • acceptsReference - whether sending a reference is allowed AT ALL
   //     (cap.caps includes 'i2v'). veo-3.1-lite is text-to-video only and the
   //     Gemini shim 400s on a reference ("`referenceImages` isn't supported");
   //     veo-3.1-generate-preview keeps i2v. t2v-dual models (seedance/sora/veo)
@@ -1581,7 +1581,7 @@ export async function executeAIHubMixGenerateVideo(
       break;
     }
     if (status === 'failed' || status === 'cancelled' || status === 'error') {
-      // Dump the full upstream payload — the surfaced reason is often just the
+      // Dump the full upstream payload - the surfaced reason is often just the
       // opaque "Video generation failed"; the body may carry a code / detail
       // (e.g. an unsupported model or a bad reference image) that we need to
       // diagnose without re-running a billed generation.
@@ -1609,12 +1609,12 @@ export async function executeAIHubMixGenerateVideo(
         // URL of a project-local file (which AIHubMix can't fetch by URL). Doubao
         // Seedance accepts the inline data URL, so it's the reliable i2v path.
         const error = refImage
-          ? `${wireModel} did not accept the reference image — AIHubMix dropped the request parameters `
+          ? `${wireModel} did not accept the reference image - AIHubMix dropped the request parameters `
             + `and it failed with no specific reason. This model likely needs a publicly reachable image `
             + `URL for image-to-video, but the project image is sent inline as a data URL. Use `
             + `doubao-seedance-2-0-260128 for image-to-video (it accepts the inline image); `
             + `${wireModel.replace(/-(i2v|r2v)$/, '-t2v')} may still work for text-to-video.`
-          : `${wireModel} is not supported by AIHubMix's unified video API — it ignored the request `
+          : `${wireModel} is not supported by AIHubMix's unified video API - it ignored the request `
             + `parameters (the prompt came back empty) and failed with no specific reason. Switch to a `
             + `supported model such as doubao-seedance-2-0-260128, sora-2, or a wan2.x model.`;
         return { ok: false, error };
@@ -1658,7 +1658,7 @@ export async function executeAIHubMixGenerateVideo(
       );
       // Fallback: an unauthenticated download rejected as 401/403 from the same
       // registrable domain (e.g. a different AIHubMix sub-host) is retried with
-      // the key — the asset was clearly meant to be fetched authenticated.
+      // the key - the asset was clearly meant to be fetched authenticated.
       if (!dl.ok && !sendAuth && (dl.status === 401 || dl.status === 403)
           && sameRegistrableDomain(directUrl, trimmedBase)) {
         dl = await assertAndFetchExternalAsset(directUrl, withToolRequestInit(ctx, { headers: { ...aihubmixHeaders(apiKey) } }));

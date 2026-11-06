@@ -9,7 +9,7 @@
  * turn. P1/P2 findings are advisories.
  *
  * The linter is deliberately greppy: cheap, deterministic, and trivial
- * to extend. It does NOT parse HTML — false positives are tolerable
+ * to extend. It does NOT parse HTML - false positives are tolerable
  * because each finding includes a snippet so the agent can verify.
  *
  * Wired into the artifact save flow (POST /api/artifacts/save) and
@@ -36,10 +36,10 @@ type CssTokenScope = {
 };
 
 const PURPLE_HEXES = [
-  // Tailwind violet / purple — the original AI-slop palette.
+  // Tailwind violet / purple - the original AI-slop palette.
   '#a855f7', '#9333ea', '#7c3aed', '#6d28d9', '#581c87',
   '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe', '#ede9fe',
-  // Tailwind indigo — Refero's #1 reported AI tell. Common solid uses
+  // Tailwind indigo - Refero's #1 reported AI tell. Common solid uses
   // (button fill, accent badge), not just gradients, are flagged
   // separately by `ai-default-indigo` below.
   '#6366f1', '#4f46e5', '#4338ca', '#3730a3', '#312e81',
@@ -55,25 +55,25 @@ const PURPLE_HEXES = [
 // `craft/anti-ai-slop.md` explicitly flags it. The `trust-gradient`
 // rule below pairs these against each other to close the gap.
 const TRUST_GRADIENT_BLUE_HEXES = [
-  // Tailwind blue 500–900 + 400/300/200.
+  // Tailwind blue 500-900 + 400/300/200.
   '#3b82f6', '#2563eb', '#1d4ed8', '#1e40af', '#1e3a8a',
   '#60a5fa', '#93c5fd', '#bfdbfe',
-  // Tailwind sky 400–700 — the same blue→cyan ramp under a different name.
+  // Tailwind sky 400-700 - the same blue→cyan ramp under a different name.
   '#0ea5e9', '#0284c7', '#0369a1', '#38bdf8', '#7dd3fc',
 ];
 const TRUST_GRADIENT_CYAN_HEXES = [
-  // Tailwind cyan 500–900 + 400/300/200.
+  // Tailwind cyan 500-900 + 400/300/200.
   '#06b6d4', '#0891b2', '#0e7490', '#155e75', '#164e63',
   '#22d3ee', '#67e8f9', '#a5f3fc',
 ];
 
 // Subset of PURPLE_HEXES that constitute the canonical "default LLM
-// accent" — even a single solid use is a tell. The DESIGN.md provides
+// accent" - even a single solid use is a tell. The DESIGN.md provides
 // `var(--accent)`; if a brief truly needs indigo, the design system
 // should encode it explicitly so we know it's intentional.
 //
 // Keep this in sync with the explicit list in `craft/anti-ai-slop.md`'s
-// "Default Tailwind indigo as accent" cardinal-sin entry — the prompt
+// "Default Tailwind indigo as accent" cardinal-sin entry - the prompt
 // contract documents the exact set the lint enforces.
 const AI_DEFAULT_INDIGO = [
   '#6366f1', '#4f46e5', '#4338ca', '#3730a3',
@@ -121,7 +121,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
   const out: LintFinding[] = [];
   if (typeof rawHtml !== 'string' || rawHtml.length === 0) return out;
 
-  // Strip HTML comments before any pattern matching — comments often contain
+  // Strip HTML comments before any pattern matching - comments often contain
   // pedagogical examples ("paste a `<section class="slide">` here") that
   // would otherwise fire false positives for the section / slide checks.
   const html = rawHtml.replace(/<!--[\s\S]*?-->/g, '');
@@ -138,7 +138,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
       out.push({
         severity: 'P0',
         id: 'purple-gradient',
-        message: `Found a violet/purple gradient using ${hex} — anti-slop list says no.`,
+        message: `Found a violet/purple gradient using ${hex} - anti-slop list says no.`,
         fix: 'Replace the gradient with a flat surface (var(--bg) or var(--surface)) or use the active accent at a single intensity, not in a gradient.',
         snippet: clip(m[0]),
       });
@@ -152,7 +152,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
       out.push({
         severity: 'P0',
         id: 'purple-gradient',
-        message: `Found a "${m[1]}" keyword inside a gradient — anti-slop.`,
+        message: `Found a "${m[1]}" keyword inside a gradient - anti-slop.`,
         fix: 'Remove the gradient or swap to a single solid color from the active design tokens.',
         snippet: clip(m[0]),
       });
@@ -161,7 +161,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
 
   // ── P0-1c: blue→cyan "trust" two-stop gradient ─────────────────────
   // craft/anti-ai-slop.md documents three flavours of the two-stop
-  // "trust" gradient — purple→blue, blue→cyan, indigo→pink. The first
+  // "trust" gradient - purple→blue, blue→cyan, indigo→pink. The first
   // and third are caught by `purple-gradient` above because the
   // relevant indigo/violet hex appears in PURPLE_HEXES, but a pure
   // blue→cyan gradient has no overlap with that list and slipped
@@ -175,7 +175,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
       out.push({
         severity: 'P0',
         id: 'trust-gradient',
-        message: `Found a blue→cyan two-stop "trust" gradient — anti-slop list says no.`,
+        message: `Found a blue→cyan two-stop "trust" gradient - anti-slop list says no.`,
         fix: 'Replace the gradient with a flat surface (var(--bg) or var(--surface)) or use a single design-token color. Two-stop blue→cyan trust gradients are a SaaS hero cliché.',
         snippet: clip(tg),
       });
@@ -203,7 +203,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
         out.push({
           severity: 'P0',
           id: 'ai-default-indigo',
-          message: `Found a default LLM accent color (${hex}) — this is the most-reported AI design tell.`,
+          message: `Found a default LLM accent color (${hex}) - this is the most-reported AI design tell.`,
           fix: 'Replace with var(--accent) from the active DESIGN.md. If the brief truly requires indigo, encode it as the design system\'s accent so it reads as intentional, not default.',
           snippet: clip(m[0]),
         });
@@ -215,8 +215,8 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
   // ── P0-2: emoji used as feature/UI icons ──────────────────────────
   for (const e of SLOP_EMOJI) {
     if (html.includes(e)) {
-      // Only flag if it appears in a structural context — heading,
-      // button, list item — not in body prose.
+      // Only flag if it appears in a structural context - heading,
+      // button, list item - not in body prose.
       const re = new RegExp(
         `<(?:h[1-6]|button|li|span class="[^"]*icon[^"]*")[^>]*>[^<]*${escapeRe(e)}`,
         'i',
@@ -226,8 +226,8 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
         out.push({
           severity: 'P0',
           id: 'emoji-icon',
-          message: `Emoji "${e}" used as a UI icon — anti-slop list says SVG monoline only.`,
-          fix: 'Replace with a small inline SVG icon (1.6–1.8px stroke, currentColor) or remove the icon entirely.',
+          message: `Emoji "${e}" used as a UI icon - anti-slop list says SVG monoline only.`,
+          fix: 'Replace with a small inline SVG icon (1.6-1.8px stroke, currentColor) or remove the icon entirely.',
           snippet: clip(m[0]),
         });
         break;
@@ -243,7 +243,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     out.push({
       severity: 'P0',
       id: 'left-accent-card',
-      message: 'Rounded card with a coloured left border — the canonical AI-slop card pattern.',
+      message: 'Rounded card with a coloured left border - the canonical AI-slop card pattern.',
       fix: 'Drop either the border-radius (set 0px) or the border-left. Cards in the OD seed use hairline borders all-round, no left accent.',
       snippet: clip(lam[0]),
     });
@@ -257,7 +257,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     out.push({
       severity: 'P0',
       id: 'sans-display',
-      message: 'A heading rule uses Inter / Roboto / system-sans as the display face — not the serif the seed binds.',
+      message: 'A heading rule uses Inter / Roboto / system-sans as the display face - not the serif the seed binds.',
       fix: 'Use `font-family: var(--font-display)` on h1/h2/h3 and let the active design system pick the serif. Override only if the active direction is "tech / utility" or "modern minimal".',
       snippet: clip(dm[0]),
     });
@@ -271,7 +271,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
         severity: 'P0',
         id: 'invented-metric',
         message: `Suspected invented metric: "${m[0]}". Anti-slop list says: no numbers without a real source.`,
-        fix: 'Either remove the claim or replace with a placeholder (— or a labelled stub) until the user supplies a real number.',
+        fix: 'Either remove the claim or replace with a placeholder (- or a labelled stub) until the user supplies a real number.',
         snippet: clip(m[0]),
       });
       break;
@@ -298,7 +298,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     out.push({
       severity: 'P0',
       id: 'scroll-into-view',
-      message: 'Element.scrollIntoView() detected — yanks the host page when an iframe boundary is crossed.',
+      message: 'Element.scrollIntoView() detected - yanks the host page when an iframe boundary is crossed.',
       fix: 'Use `scrollTo({ left, top, behavior: "smooth" })` on the actual scroller (see simple-deck seed for the proven pattern).',
     });
   }
@@ -332,7 +332,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     // `@media (...) { .display { font-size: 48px; text-transform:
     // uppercase; … } }` matches as a single rule whose selector is the
     // `@media (...)` wrapper and whose body begins with `.display {
-    // font-size: …` — so `parseDeclarations()` sees the first property
+    // font-size: …` - so `parseDeclarations()` sees the first property
     // as `.display { font-size`, not `font-size`, the same-rule
     // font-size is lost, and `hasAdequateUppercaseTracking()` falls
     // back to the lenient inherited-size path that accepts 1px
@@ -349,7 +349,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
           severity: 'P1',
           id: 'all-caps-no-tracking',
           message: `Selector \`${selector.slice(0, 60)}\` sets text-transform: uppercase without sufficient letter-spacing (≥0.06em).`,
-          fix: 'Add `letter-spacing: 0.08em` (typical) to the same rule. ALL CAPS without tracking looks cramped — Refero\'s typography rules call this out as a top-tier amateur tell.',
+          fix: 'Add `letter-spacing: 0.08em` (typical) to the same rule. ALL CAPS without tracking looks cramped - Refero\'s typography rules call this out as a top-tier amateur tell.',
           snippet: clip(`${selector} { ${body.trim()} }`),
         });
         break outer;
@@ -363,7 +363,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
   // browser still renders ALL CAPS. craft/typography.md treats the
   // tracking floor as having no exceptions, so the inline form runs
   // through the same `hasAdequateUppercaseTracking` check used by the
-  // <style>-block branch — no separate threshold. Only fire if the
+  // <style>-block branch - no separate threshold. Only fire if the
   // <style>-block scan above didn't already produce this id, so the
   // agent gets a single corrective signal per artifact.
   if (out.find((f) => f.id === 'all-caps-no-tracking') === undefined) {
@@ -378,7 +378,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
           id: 'all-caps-no-tracking',
           message:
             'Inline style sets text-transform: uppercase without sufficient letter-spacing (≥0.06em).',
-          fix: 'Add `letter-spacing: 0.08em` (typical) to the same inline style. ALL CAPS without tracking looks cramped — Refero\'s typography rules call this out as a top-tier amateur tell.',
+          fix: 'Add `letter-spacing: 0.08em` (typical) to the same inline style. ALL CAPS without tracking looks cramped - Refero\'s typography rules call this out as a top-tier amateur tell.',
           snippet: clip(decl.trim()),
         });
         break;
@@ -396,7 +396,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     out.push({
       severity: 'P1',
       id: 'external-image',
-      message: 'External placeholder image CDN detected — fragile, looks fake when it 404s.',
+      message: 'External placeholder image CDN detected - fragile, looks fake when it 404s.',
       fix: 'Use the .ph-img placeholder class shipped in the seed templates instead.',
       snippet: clip(extImg[0]),
     });
@@ -414,14 +414,14 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     const hexes = cssWithoutRoot.match(/#[0-9a-fA-F]{3,8}\b/g) ?? [];
     // Allow up to ~12 raw hex values outside :root. Device chrome
     // (mobile-app frame: bezel gradient, side rails, status icons) has
-    // legitimate hardware-specific values in the 8–10 range; raise the
+    // legitimate hardware-specific values in the 8-10 range; raise the
     // threshold so seed templates pass without ceremony. More than ~12
     // signals tokens weren't honoured by the agent's generation.
     if (hexes.length > 12) {
       out.push({
         severity: 'P1',
         id: 'raw-hex',
-        message: `${hexes.length} raw hex values found outside :root — design tokens probably not honoured.`,
+        message: `${hexes.length} raw hex values found outside :root - design tokens probably not honoured.`,
         fix: 'Move every color into the :root token block (--bg / --surface / --fg / --muted / --border / --accent) and reference via var(). Use color-mix() for derived tones.',
         snippet: hexes.slice(0, 6).join(' '),
       });
@@ -430,7 +430,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
 
   // ── P1-3: too many accent uses in the rendered body ───────────────
   // Approximation: count `var(--accent)` references that appear OUTSIDE
-  // the <style> block — i.e. inline styles in the rendered DOM, not the
+  // the <style> block - i.e. inline styles in the rendered DOM, not the
   // class system definitions. The seed's <style> block defines the
   // accent on many class selectors that won't all render on one page;
   // the body is what the user actually sees.
@@ -440,7 +440,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
     out.push({
       severity: 'P1',
       id: 'accent-overuse',
-      message: `var(--accent) used ${accentUsesInBody} times inline in the body — likely overused per screen.`,
+      message: `var(--accent) used ${accentUsesInBody} times inline in the body - likely overused per screen.`,
       fix: 'Cap accent usage at 2 visible uses per screen (one eyebrow + one CTA, OR one accent card + one tab). Demote the rest to var(--fg) or var(--muted).',
     });
   }
@@ -498,7 +498,7 @@ export function lintArtifact(rawHtml: unknown): LintFinding[] {
         out.push({
           severity: 'P1',
           id: 'slide-rhythm',
-          message: `Three same-theme slides in a row at position ${i + 1}–${i + 3} — visual fatigue.`,
+          message: `Three same-theme slides in a row at position ${i + 1}-${i + 3} - visual fatigue.`,
           fix: 'Swap the middle slide to the opposite theme (light → dark, or dark → light). For 8+ slides, mix in at least one hero light AND one hero dark.',
         });
         break;
@@ -523,11 +523,11 @@ export function renderFindingsForAgent(findings: LintFinding[]): string {
     '<artifact-lint>',
     'The artifact you just produced has the following anti-slop / design-token issues.',
     `${findings.filter((f) => f.severity === 'P0').length} P0 (must fix), ${findings.filter((f) => f.severity === 'P1').length} P1 (should fix), ${findings.filter((f) => f.severity === 'P2').length} P2 (nice to have).`,
-    'Re-emit a corrected `<artifact>` in your next turn — do not write a separate explanation; the user has the previous version already.',
+    'Re-emit a corrected `<artifact>` in your next turn - do not write a separate explanation; the user has the previous version already.',
     '',
   ];
   for (const f of sorted) {
-    lines.push(`**[${f.severity}] ${f.id}** — ${f.message}`);
+    lines.push(`**[${f.severity}] ${f.id}** - ${f.message}`);
     lines.push(`  Fix: ${f.fix}`);
     if (f.snippet) lines.push(`  Snippet: \`${f.snippet}\``);
     lines.push('');
@@ -575,11 +575,11 @@ function detectBlueCyanTrustGradient(html: string): string | null {
 // True when the declaration body has letter-spacing satisfying the
 // craft rule: `letter-spacing >= 0.06em` of the element's own font.
 //
-// `em` maps directly to the 0.06 floor — it is relative to the
+// `em` maps directly to the 0.06 floor - it is relative to the
 // element's own font-size, which is what the rule measures against.
 //
 // `rem` and `px` are absolute relative to the element: `rem` resolves
-// against the root font-size (assumed 16px — the browser default and
+// against the root font-size (assumed 16px - the browser default and
 // the value all OD seed templates use), so `0.06rem` on a 48px heading
 // is `0.96px`, only `0.02em` of the element. Treating `rem` like `em`
 // (the previous behaviour) accepts that as compliant when the rule
@@ -589,7 +589,7 @@ function detectBlueCyanTrustGradient(html: string): string | null {
 // px (and the converted-rem path) resolve in three steps:
 //   1. If the same rule body declares `font-size` in `px` or `rem`
 //      (after `var()` resolution), convert it to absolute px and
-//      compare px tracking against `fs * 0.06` — exact translation
+//      compare px tracking against `fs * 0.06` - exact translation
 //      of the em rule. `rem` font sizes resolve via the same root
 //      assumption used for tracking, so a `font-size: 3rem` heading
 //      enforces a 2.88px floor instead of the lenient body fallback.
@@ -597,7 +597,7 @@ function detectBlueCyanTrustGradient(html: string): string | null {
 //      can't resolve (`em`, `%`, `calc(...)`, an unresolved var,
 //      etc.), refuse the lenient fallback: the heading might be
 //      arbitrarily large, in which case 1px tracking is well below
-//      0.06em. Treat as missing tracking — the agent can either
+//      0.06em. Treat as missing tracking - the agent can either
 //      switch to `em` letter-spacing or declare an explicit px/rem
 //      font-size we can verify.
 //   3. Otherwise (no font-size declared at all, font-size inherited),
@@ -613,7 +613,7 @@ function detectBlueCyanTrustGradient(html: string): string | null {
 // themes the scope applies to. Per-theme effective maps are built
 // here via `buildResolvedThemes` so simple `var(--name)` (and
 // `var(--name, fallback)`) references in the body resolve to the
-// value the browser would render in that theme — keeping values
+// value the browser would render in that theme - keeping values
 // declared in the same scope paired together. References without a
 // matching token but with an inline fallback (`var(--x, 0.08em)`)
 // resolve to the fallback; unresolved references with no fallback
@@ -630,7 +630,7 @@ function detectBlueCyanTrustGradient(html: string): string | null {
 // renders below it. Crucially, theme maps preserve the scope-internal
 // relationship between tokens, so a paired declaration such as
 // `:root { --display-size: 16px; --caps-tracking: 1px }` is judged
-// against (16px, 1px) — never against the impossible cross-theme
+// against (16px, 1px) - never against the impossible cross-theme
 // pairing (48px, 1px) that an independent per-token cartesian would
 // emit.
 const ROOT_FONT_PX = 16;
@@ -647,7 +647,7 @@ function hasAdequateUppercaseTracking(body: string, scopes?: CssTokenScope[]): b
 // exact property names (so token-name declarations such as
 // `--letter-spacing: 0.08em` cannot satisfy the rule) and selects the
 // LAST matching `letter-spacing` and `font-size` declarations to model
-// CSS source-order cascade — `.eyebrow { letter-spacing: 0.08em;
+// CSS source-order cascade - `.eyebrow { letter-spacing: 0.08em;
 // letter-spacing: 0.02em }` renders the noncompliant `0.02em` value,
 // so the lint must judge against the last declaration, not the first.
 function isResolvedTrackingAdequate(body: string): boolean {
@@ -681,7 +681,7 @@ function isResolvedTrackingAdequate(body: string): boolean {
 // source order so the final value reflects the cascade the browser
 // would render.
 //
-// Returned as an array — one map per theme. The lint passes only when
+// Returned as an array - one map per theme. The lint passes only when
 // every theme map satisfies the rule, so a default-theme value below
 // the floor flags even if a variant overrides it above the floor (and
 // vice versa). Building per-theme maps preserves the scope-internal
@@ -838,7 +838,7 @@ function extractCssTokens(html: string): CssTokenScope[] {
 // few times so a token whose value is itself another `var(--...)`
 // resolves through one or two hops; bounded depth so a cyclic
 // definition (`--a: var(--b); --b: var(--a)`) terminates instead of
-// looping forever. Only one-level fallbacks are recognised — enough
+// looping forever. Only one-level fallbacks are recognised - enough
 // for the typography pattern this lint cares about, and keeps the
 // regex linear-time on artifact-sized inputs.
 const VAR_RESOLVE_MAX_DEPTH = 4;
@@ -861,7 +861,7 @@ function resolveCssVars(body: string, tokens: Map<string, string>): string {
 }
 
 // Remove CSS rule blocks that look like design-token definitions.
-// Operates only on CSS extracted from <style> blocks — running the
+// Operates only on CSS extracted from <style> blocks - running the
 // rule-shaped regex against the full HTML string makes the first
 // selector capture include leading text like `<style>`, which then
 // fails the `:root` selector test.
@@ -869,10 +869,10 @@ function resolveCssVars(body: string, tokens: Map<string, string>): string {
 // A rule is treated as a token block only when ALL THREE conditions hold:
 //   1. every selector in the list is a global theme-scope selector
 //      (`:root`, `:root[data-theme="..."]`, `html`, `body`, or a bare
-//      attribute selector for a known global-theme switch —
+//      attribute selector for a known global-theme switch -
 //      `data-theme`, `data-color-scheme`, `data-mode`). Selector lists
-//      that mix in a component selector — e.g.
-//      `:root, .cta { --cta-bg: #6366f1 }` — or that target an
+//      that mix in a component selector - e.g.
+//      `:root, .cta { --cta-bg: #6366f1 }` - or that target an
 //      arbitrary component/state attribute like `[data-variant="primary"]`
 //      or `[aria-current="page"]` fail this test, so indigo laundered
 //      through a local var or rule still trips the lint.
@@ -906,9 +906,9 @@ function stripTokenBlocksFromCss(css: string): string {
   const cleaned = css.replace(/\/\*[\s\S]*?\*\//g, '');
   // The body alternation is `[^{}]*` (not `[^}]*`) so the regex matches
   // only innermost `selector { body }` rules. That lets us recognize
-  // global token blocks nested inside at-rule wrappers — e.g.
+  // global token blocks nested inside at-rule wrappers - e.g.
   // `@media (prefers-color-scheme: dark) { :root { --accent: #6366f1 } }`
-  // — by matching the inner `:root { ... }` directly. The outer
+  // - by matching the inner `:root { ... }` directly. The outer
   // `@media` wrapper is preserved with the inner token block stripped,
   // so the indigo scan no longer fires on legitimate responsive theme
   // declarations.
@@ -947,7 +947,7 @@ function declarationLaundersIndigo(decl: string): boolean {
 }
 
 function isTokenShapedDeclaration(decl: string): boolean {
-  // CSS custom property — the canonical token shape.
+  // CSS custom property - the canonical token shape.
   if (/^--[\w-]+\s*:/.test(decl)) return true;
   // Global-theme metadata that legitimately accompanies tokens in
   // `:root` / `html` / `[data-theme="..."]` and whose values are
@@ -962,7 +962,7 @@ function selectorListIsGlobalThemeScope(selector: string): boolean {
   return parts.every(isGlobalThemeScopeSelector);
 }
 
-// Attribute selectors — bare or attached to `:root`/`html`/`body` —
+// Attribute selectors - bare or attached to `:root`/`html`/`body` -
 // are exempted only when the attribute is one of the known
 // global-theme switches. A broader exemption would also strip
 // arbitrary component/state attribute rules

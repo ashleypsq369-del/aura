@@ -22,10 +22,10 @@ import {
  *
  * It started (OPEND-3371) as a bandwidth optimization: hold the bytes of a
  * content package the daemon already downloaded so a steady-state production
- * refresh can ask Vela to omit them. OPEND-3436 added the second half —
+ * refresh can ask Vela to omit them. OPEND-3436 added the second half -
  * the store now also holds the server's own `startsAt`/`endsAt`/`serverTime`/
  * `authorizationExpiresAt`, the activity/deployment/content identity, and the
- * decision envelope — so that a client which cannot reach the runtime at all
+ * decision envelope - so that a client which cannot reach the runtime at all
  * can go on showing the activity it was already authorized for, and stop the
  * moment that authorization runs out.
  *
@@ -49,7 +49,7 @@ import {
  * Content assembly remains best-effort. Production authority admission requires
  * durable pre-dispatch evidence; a failed journal/ownership check refuses the
  * protected request. A content miss, an unreadable file, a
- * digest that does not match, a read-only data directory — each one returns
+ * digest that does not match, a read-only data directory - each one returns
  * `null` (or does nothing) and the caller falls back to the full request it
  * would have made anyway after durable admission. No content failure alone
  * should suppress an otherwise authorized online campaign.
@@ -252,7 +252,7 @@ const scopeName = (scope: string): string =>
   createHash('sha256').update(scope).digest('hex').slice(0, 32);
 /**
  * The decision minus its content, which is exactly the shape `rebuild` splices
- * content back into — so an offline replay and a trimmed-response rebuild go
+ * content back into - so an offline replay and a trimmed-response rebuild go
  * through one code path.
  */
 const envelopeOf = (response: Record<string, unknown>): Record<string, unknown> => {
@@ -371,7 +371,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
         // `rebuild` dereferences this with `Object.entries`. A record that is
         // valid JSON of the right version but structurally damaged here would
         // otherwise throw from inside the proxy's upstream error handlers,
-        // where nothing catches it — turning a documented cache miss into a
+        // where nothing catches it - turning a documented cache miss into a
         // dead daemon. Everything this module reads unguarded is validated
         // here, so a damaged record is a miss and never an exception.
         !isRecord(record.envelope) ||
@@ -409,7 +409,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    * into a permanent "offer the held version, fail to rebuild it, refetch in
    * full" cycle that costs more than having no cache at all, and nothing in
    * this module reports it. Rewriting is idempotent, atomic, and only ever
-   * reached on a full response — never on the steady-state trimmed one.
+   * reached on a full response - never on the steady-state trimmed one.
    */
   const storeBlob = (dir: string, digest: string, data: Buffer): boolean => {
     const name = blobName(digest);
@@ -489,7 +489,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    * rebuild.
    *
    * The survivors are read AFTER the record is unlinked, so a record being
-   * written concurrently can only be missed in one direction — a blob it needs
+   * written concurrently can only be missed in one direction - a blob it needs
    * may be removed a moment after it was written. That degrades to a refetch
    * (`held` checks existence before offering anything), never to a package
    * assembled out of the wrong bytes.
@@ -519,8 +519,8 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    * The record stored in `file`, after retiring it if its window has closed.
    *
    * Expiry is evaluated on every read, not only on a timer, because the cases
-   * that matter most — a device asleep past the end of an activity, a daemon
-   * that was not running, a client with no network to ask — are exactly the
+   * that matter most - a device asleep past the end of an activity, a daemon
+   * that was not running, a client with no network to ask - are exactly the
    * ones where no timer of ours ever fired. The expiry timer and the startup
    * sweep call this same function, so there is one definition of "ended".
    * `null` therefore means "nothing to show", and by the time it is returned
@@ -545,7 +545,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
     // BEHIND it: `max` pins `now` to the mark, `elapsed` stops growing, and an
     // activity keeps its authority for as long as the clock stays wound back.
     // Anchoring the mark to this process's monotonic reading is what makes the
-    // wait count. The anchor is per key and per process — a mark adopted for
+    // wait count. The anchor is per key and per process - a mark adopted for
     // one placement is not evidence about another, and nothing survives a
     // restart except the persisted mark itself.
     const monotonicNow = performance.now();
@@ -771,7 +771,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    * Two requests for one placement can be in flight at once, and their answers
    * need not arrive in the order the server gave them. The record is one
    * answer, REPLACED wholesale, so an older answer landing last would overwrite
-   * a newer one — and when the newer one ended the activity early, the older
+   * a newer one - and when the newer one ended the activity early, the older
    * one restores the long `endsAt`, re-arms expiry against it, and offline
    * replay outlives the real end. The server's own clock orders its answers;
    * the order they reach the daemon does not.
@@ -797,8 +797,8 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
   };
 
   /**
-   * Retires every record whose window closed while nobody was reading it —
-   * the daemon was not running, or the device slept through `endsAt` — and
+   * Retires every record whose window closed while nobody was reading it -
+   * the daemon was not running, or the device slept through `endsAt` - and
    * arms expiry for the ones still live, before the first request arrives.
    *
    * Walks the directory rather than the keys, because a record's file name is
@@ -1202,8 +1202,8 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
           // display by accident". It converts every early finish an operator
           // orders into a no-op for every client that already cached the long
           // version. Vela's own lease renewal takes `greatest()` and is right
-          // to — a grant the SERVER issues must never move backwards under a
-          // slow request — but that is the server defending its own monotonic
+          // to - a grant the SERVER issues must never move backwards under a
+          // slow request - but that is the server defending its own monotonic
           // guarantee, not a client deciding which of the server's answers it
           // prefers. Opposite directions, on purpose.
           schedule: touchpointScheduleOf(response),
@@ -1306,7 +1306,7 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    *
    * The bytes are unchanged by construction (the server trimmed against the
    * very version `held` named), so only the envelope, schedule, identity and
-   * clock are replaced — with the same REPLACE, never-merge rule `remember`
+   * clock are replaced - with the same REPLACE, never-merge rule `remember`
    * follows, so a renewal that ends the activity early takes effect offline
    * too. Failing to persist retires offline authority; the rebuilt online
    * answer remains available to the caller.
@@ -1339,8 +1339,8 @@ export function createTouchpointContentCache(runtimeDataDir: string): Touchpoint
    * Splices this record's content back into a decision envelope.
    *
    * Shared by the trimmed-response path and the offline replay, so the object
-   * the browser parses has the same field order — `content` exactly where
-   * `contentOmitted` stood — whichever way it was produced.
+   * the browser parses has the same field order - `content` exactly where
+   * `contentOmitted` stood - whichever way it was produced.
    */
   function rebuild(
     key: TouchpointContentKey,

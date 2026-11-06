@@ -21,8 +21,8 @@ export function registerDeployRoutes(app: Express, ctx: RegisterDeployRoutesDeps
    * CF_ASSET_TOO_LARGE, VERCEL_TOKEN_REQUIRED, …). Pass it through instead of
    * flattening every failure to BAD_REQUEST: the client mirrors the envelope
    * code into `artifact_deploy_result.error_code`, so without this every
-   * distinct cause — missing token, non-HTML file, unresolved asset reference,
-   * oversized asset — collapsed into one opaque HTTP_400 bucket.
+   * distinct cause - missing token, non-HTML file, unresolved asset reference,
+   * oversized asset - collapsed into one opaque HTTP_400 bucket.
    *
    * Provider transport failures deliberately arrive WITHOUT a code (see
    * cloudflareError / vercelError in apps/daemon/src/deploy.ts): they fall back
@@ -107,7 +107,7 @@ export function registerDeployRoutes(app: Express, ctx: RegisterDeployRoutesDeps
       }
       const target: 'preview' | 'production' = rawTarget === 'preview' ? 'preview' : 'production';
       // Vercel production-target deploys are out of scope for this PR (P2 review
-      // finding on PR #4576) — deployToVercel() never receives `target` and
+      // finding on PR #4576) - deployToVercel() never receives `target` and
       // always behaves as preview, so an explicit target=production request
       // must be rejected before any deploy call instead of silently deploying
       // as preview. Only the explicitly-supplied raw value gates this: the

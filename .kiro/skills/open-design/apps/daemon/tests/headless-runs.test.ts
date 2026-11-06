@@ -746,7 +746,7 @@ describe('POST /api/runs headless fallbacks', () => {
     };
 
     // Minimal omit-pin client: empty text, optional currentPrompt omitted,
-    // but attachment metadata present — must still seed the user turn with
+    // but attachment metadata present - must still seed the user turn with
     // the original empty content (not a scenario plugin brief).
     const runResponse = await fetch(`${started.url}/api/runs`, {
       method: 'POST',
@@ -780,7 +780,7 @@ describe('POST /api/runs headless fallbacks', () => {
       }>;
     };
     // Default scenario may fill the run prompt, but visible user content must
-    // remain the original empty message — never the rendered plugin brief.
+    // remain the original empty message - never the rendered plugin brief.
     const emptyAttachmentTurn = messagesBody.messages.find(
       (m) => m.role === 'user' && m.content === '',
     );

@@ -822,7 +822,7 @@ describe('ConnectorDetail.allowedToolNames (issue #748)', () => {
       name: `external_docs.bulk_op_${index}`,
       title: `Bulk op ${index}`,
       requiredScopes: ['docs:write'],
-      // Mark these as write — i.e. NOT auto-allowed for the agent — so
+      // Mark these as write - i.e. NOT auto-allowed for the agent - so
       // they belong in `tools` but never in `allowedToolNames`. This
       // mirrors the Composio shape where most provider-discovered tools
       // are write/destructive and therefore get gated out of the
@@ -844,7 +844,7 @@ describe('ConnectorDetail.allowedToolNames (issue #748)', () => {
     // so this single number is the one users see in the connector card.
     expect(detail.allowedToolNames!.length).toBe(1);
     // Sanity: the wider inventory is still on the wire for the detail
-    // drawer to enumerate — we're just no longer using its length for
+    // drawer to enumerate - we're just no longer using its length for
     // the badge.
     expect(detail.tools.length).toBe(801);
 
@@ -854,7 +854,7 @@ describe('ConnectorDetail.allowedToolNames (issue #748)', () => {
     expect(detail.allowedToolNames).not.toContain('external_docs.bulk_op_799');
 
     // refreshEligible classification stays a property of the definition,
-    // not of the badge surface — confirm the helper still agrees so a
+    // not of the badge surface - confirm the helper still agrees so a
     // future refactor can't quietly let write tools into the allowlist
     // via a different code path. Bind through a defined-checked local so
     // the daemon's `noUncheckedIndexedAccess` strict tsconfig doesn't
@@ -902,7 +902,7 @@ describe('ConnectorDetail.allowedToolNames (issue #748)', () => {
       ...readOnlyDefinition(),
       // `curatedToolNames` is the source of truth for the badge.
       curatedToolNames: ['docs.search'],
-      // `allowedToolNames` is the runtime execution gate — extended
+      // `allowedToolNames` is the runtime execution gate - extended
       // by the (simulated) auto-allow path.
       allowedToolNames: ['docs.search', ...autoAllowedReadTools],
     };

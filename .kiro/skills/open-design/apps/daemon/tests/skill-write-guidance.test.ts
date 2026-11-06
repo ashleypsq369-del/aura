@@ -6,7 +6,7 @@ import { composeSystemPrompt } from '../src/prompts/system.js';
 // Regression cover for the "skills are read-only and the agent was never told"
 // report (0.21.0, packaged stable). A user asked the agent to update one of his
 // own skills under the daemon data dir. Every write came back `Operation not
-// permitted` — by design: `resolveChatExtraAllowedDirs` deliberately keeps skill
+// permitted` - by design: `resolveChatExtraAllowedDirs` deliberately keeps skill
 // roots out of the agent's writable allowlist, and Codex gets no skill dir at
 // all (PR #622: "Do not add read-only resource/reference directories to Codex
 // --add-dir").
@@ -14,20 +14,20 @@ import { composeSystemPrompt } from '../src/prompts/system.js';
 // Nothing in the composed system prompt said so. With no stated boundary and no
 // stated exit, the agent invented one: it told the user to open Open Design's
 // settings and add the directory to a "文件系统 / 工作区 / 可写目录 / writable
-// roots" option. No such setting exists — not for writable roots, not for a
+// roots" option. No such setting exists - not for writable roots, not for a
 // sandbox mode, not for an approval policy. The user hunted for it, could not
 // find it, and filed a diagnostics bundle.
 //
 // These tests pin the three things the prompt must state so the failure mode
 // cannot come back:
-//   1. the boundary  — skill directories are not writable through file tools;
-//   2. the staged copy — `.od-skills/<folder>/` is the one skill path the
+//   1. the boundary  - skill directories are not writable through file tools;
+//   2. the staged copy - `.od-skills/<folder>/` is the one skill path the
 //      permission error does NOT cover. `withSkillRootPreamble` advertises it
 //      as the primary **Skill root** and it lives inside the agent's writable
 //      project cwd, so a write there succeeds, looks like an install, and is
-//      wiped when `stageActiveSkill` re-stages next turn — the same
+//      wiped when `stageActiveSkill` re-stages next turn - the same
 //      misdirection as the invented setting, without the error to stop it;
-//   3. the exit      — where a human actually edits a skill in the UI;
+//   3. the exit      - where a human actually edits a skill in the UI;
 //   4. the prohibition on inventing product settings, worded so it stays a
 //      statement about today rather than a promise we never make one.
 //
@@ -54,7 +54,7 @@ function composedSkillGuidance(): string {
   return skillGuidanceSection(composeSystemPrompt({ metadata: { kind: 'prototype' } }));
 }
 
-describe('composeSystemPrompt — skill write guidance', () => {
+describe('composeSystemPrompt - skill write guidance', () => {
   it('emits a dedicated skill-editing section', () => {
     expect(composedSkillGuidance()).not.toBe('');
   });
@@ -89,7 +89,7 @@ describe('composeSystemPrompt — skill write guidance', () => {
 
   it('points at the real UI location where a skill is edited', () => {
     // The actual entry point is the Integration view's Skills tab
-    // (`IntegrationsView.tsx`, `integrations.tabLabel.skills`) — NOT a
+    // (`IntegrationsView.tsx`, `integrations.tabLabel.skills`) - NOT a
     // "Settings > Skills" page, which does not exist. Naming the wrong
     // surface here would reproduce the original bug in our own voice.
     expect(composedSkillGuidance()).toMatch(/Integration[^.]{0,40}Skills/i);
@@ -129,13 +129,13 @@ describe('composeSystemPrompt — skill write guidance', () => {
 //     : composeSystemPrompt(systemPromptInputs);
 //
 // so everything the suite above pins is absent whenever the OD Next strategy
-// is assigned — `composeSystemPrompt` is not called at all, and there is no
+// is assigned - `composeSystemPrompt` is not called at all, and there is no
 // third always-resident block to fall back on. OD Next is not a path where
 // this is hypothetical: `materializeFrozenSkillPackage` writes the frozen
 // Skill package into `<cwd>/.od-skills/`, and the strategy prompt hands the
 // agent those exact roots (`materializedRoot` in the Skill roster,
 // `Frozen side-file root:` in each Skill body). Writable directory,
-// advertised path, no stated boundary — the original report's setup, with a
+// advertised path, no stated boundary - the original report's setup, with a
 // frozen-identity break on top.
 //
 // The OD Next core prompt is a bundled plugin asset rather than a TypeScript
@@ -162,7 +162,7 @@ function odNextBoundarySection(): string {
   return section.replaceAll(/\s+/gu, ' ');
 }
 
-describe('OD Next core strategy prompt — skill write guidance', () => {
+describe('OD Next core strategy prompt - skill write guidance', () => {
   // Locator sanity only: the heading predates this change, so this one stays
   // green on `main`. The guards that can actually go red are below it.
   it('locates the section the guidance belongs to', () => {

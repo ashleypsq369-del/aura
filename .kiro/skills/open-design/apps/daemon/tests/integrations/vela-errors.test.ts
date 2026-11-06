@@ -10,8 +10,8 @@ import {
 
 describe('AMR account failure classification', () => {
   // The recharge link the daemon hands to the client is a real destination a
-  // user clicks. Product retired the console's wallet page — balance and manual
-  // top-up report on its dashboard now (vela #1055) — so pin the literal here:
+  // user clicks. Product retired the console's wallet page - balance and manual
+  // top-up report on its dashboard now (vela #1055) - so pin the literal here:
   // every other assertion in this file references the constant symbolically and
   // would keep passing while pointing users at a surface the product no longer
   // navigates to.
@@ -290,12 +290,12 @@ describe('AMR account failure classification', () => {
     expect(classifyAmrAccountFailure('temporary wallet balance lookup outage')).toBeNull();
   });
 
-  // The surviving members of the old synonym list — each one is a shape vela
+  // The surviving members of the old synonym list - each one is a shape vela
   // actually emits. The synonyms that had no upstream origin were removed; see
   // `does not invent AMR sign-in synonyms upstream never sends` below.
   it('classifies vela auth codes and vela sign-in reports as AMR auth errors', () => {
     for (const text of [
-      // vela apps/cli/internal/agent — the account-action code OD's own
+      // vela apps/cli/internal/agent - the account-action code OD's own
       // structured branch (`classifyAmrAccountFailureDetails`) accepts.
       'auth_required: please reconnect AMR Cloud',
       // vela services/api/src/app.ts:723 answers 401 with `{"error":"unauthenticated"}`.
@@ -313,13 +313,13 @@ describe('AMR account failure classification', () => {
   });
 
   // R-053 (`specs/current/run-error-catalog.md:215`). vela's link gateway turns
-  // an upstream 401/403 into its OWN code on an HTTP 500 —
+  // an upstream 401/403 into its OWN code on an HTTP 500 -
   // `services/link/internal/handlers/openai.go:2074` `normalizeUpstreamAuthFailure`
   // returns `upstream_provider_unauthenticated` / `upstream_provider_forbidden`
   // with the message "Upstream provider credentials are missing or invalid."
   // The credentials it names are the PLATFORM's, configured in the gateway. A
   // bare `includes('unauthenticated')` read that as the caller's, so a
-  // misconfigured gateway told the user "Sign-in required" — and no amount of
+  // misconfigured gateway told the user "Sign-in required" - and no amount of
   // signing in changes a credential the user does not hold.
   it('does not read the gateway own broken provider credentials as an AMR sign-in failure', () => {
     for (const text of [
@@ -340,7 +340,7 @@ describe('AMR account failure classification', () => {
   // failure each one produces "Sign in to AMR Cloud again".
   it('does not read another service sign-in report as an AMR sign-in failure', () => {
     for (const text of [
-      // vela's own per-user MCP OAuth code (bifrost `mcp/agent.go:333`) — it
+      // vela's own per-user MCP OAuth code (bifrost `mcp/agent.go:333`) - it
       // means "this MCP tool needs ITS own OAuth", not "your AMR login expired".
       'json-rpc id 4: opencode event stream: tool error: {"extra_fields":{"mcp_auth_required":{"kind":"oauth","authorize_url":"https://figma.com/oauth"}}}',
       // bifrost `mcp/credstore/per_user_oauth.go:76` composes this per tool.
@@ -373,7 +373,7 @@ describe('AMR account failure classification', () => {
   // `session/load`, `sessionId`). Only the first is something a relogin fixes.
   //
   // `apps/daemon/src/agent-protocol/acp/session.ts` composes the line below
-  // verbatim when an agent answers `session/new` without a session id — a pure
+  // verbatim when an agent answers `session/new` without a session id - a pure
   // protocol violation by the agent's own build. Classified as an account
   // failure it becomes `auth / auth_required / user_action: login`, so the chat
   // card tells the user to sign in again for a defect no sign-in can touch.
@@ -382,7 +382,7 @@ describe('AMR account failure classification', () => {
       // session.ts:`fail(\`invalid session/new response: ${rawLine}\`)`
       'invalid session/new response: {"jsonrpc":"2.0","id":2,"result":{}}',
       'invalid session/new response: {"error":"HTTP 503 Service Unavailable"}',
-      // Same collision, other ACP methods and fields — the class, not the one
+      // Same collision, other ACP methods and fields - the class, not the one
       // string that was reported.
       'invalid session/load response: {}',
       'invalid session/prompt payload from agent',
@@ -395,17 +395,17 @@ describe('AMR account failure classification', () => {
 
   // The reverse guard for the test above. Tightening a sign-in predicate fails
   // by dropping the real thing, so pin the shapes that are actually evidenced
-  // upstream — each entry names where it comes from.
+  // upstream - each entry names where it comes from.
   it('still recognises real AMR sign-in failures reported by vela', () => {
     for (const text of [
-      // vela apps/cli/internal/commands/control.go:92 — the CLI refuses to run
+      // vela apps/cli/internal/commands/control.go:92 - the CLI refuses to run
       // when the selected profile carries no stored login.
       'profile "default" is not logged in; run `vela login`',
       // vela services/api answers 401 with this body (app.ts:723, :792, :863…;
       // runtime-keys.ts:51; workspaces/routes.ts:119). `apps/cli` surfaces it
       // through `client.ParseAPIError` (client.go:47), whose `Error()`
       // (client.go:40) renders `API request failed with status 401:
-      // unauthenticated` — the code, standing on its own, is the signal.
+      // unauthenticated` - the code, standing on its own, is the signal.
       '{"error":"unauthenticated"}',
       'API request failed with status 401: unauthenticated',
       // vela console copy for a sign-in that aged out
@@ -431,7 +431,7 @@ describe('AMR account failure classification', () => {
   // (`/Users/elian/Documents/nexu/vela`, both `apps/cli` and `services/`) plus
   // this repository's own message sources found no upstream that emits it: they
   // are synonyms someone supplied for shapes upstream never sends. They are not
-  // free — every one of them is live against arbitrary tool output.
+  // free - every one of them is live against arbitrary tool output.
   //
   // Dropping them does not drop coverage of a real signed-out agent: the
   // agent-agnostic `classifyAgentServiceFailure` (`runtimes/auth.ts:323`) still
@@ -449,7 +449,7 @@ describe('AMR account failure classification', () => {
       'signin required before calling session/prompt',
       'Your token has expired. Please sign in again.',
       'expired token',
-      // `authentication required` is not unevidenced — but its only evidenced
+      // `authentication required` is not unevidenced - but its only evidenced
       // producer is bifrost's per-user MCP credential store
       // (`mcp/credstore/per_user_headers.go:106`, `per_user_oauth.go:76`),
       // which is a different principal's credential.

@@ -18,7 +18,7 @@
 // localhost, and literal private IPs up-front. The authoritative guard against
 // DNS rebinding / TOCTOU is `createValidatingLookup`: it is installed as the
 // undici Agent's connection-time `lookup`, so the address that is *validated*
-// is the exact address the socket *connects to* — there is no separate
+// is the exact address the socket *connects to* - there is no separate
 // validation lookup a rebinding resolver could diverge from.
 
 import { createHash } from 'node:crypto';
@@ -81,7 +81,7 @@ export class AssetCacheError extends Error {
 /** Expand an IPv6 literal (with `::` compression and/or an embedded dotted
  *  IPv4 tail) into its eight 16-bit groups, or null if it does not parse.
  *  Node's URL parser normalizes mapped literals to hex (`::ffff:127.0.0.1` →
- *  `::ffff:7f00:1`), so a string regex can't reliably spot the mapped range —
+ *  `::ffff:7f00:1`), so a string regex can't reliably spot the mapped range -
  *  we have to canonicalize. */
 function expandIpv6(addr: string): number[] | null {
   let s = addr.toLowerCase().split('%')[0] ?? '';
@@ -139,7 +139,7 @@ export function isPrivateAddress(addr: string): boolean {
     const groups = expandIpv6(addr);
     if (!groups) return true; // can't canonicalize a "valid" v6 → refuse
     // IPv4-mapped (`::ffff:0:0/96`) and the deprecated IPv4-compatible
-    // (`::0:0/96`, excluding :: / ::1) carry an embedded IPv4 — classify it by
+    // (`::0:0/96`, excluding :: / ::1) carry an embedded IPv4 - classify it by
     // its real v4 range so `::ffff:7f00:1` (== 127.0.0.1) is caught.
     const topZero = groups.slice(0, 5).every((g) => g === 0);
     if (topZero && (groups[5] === 0xffff || groups[5] === 0)) {
@@ -154,17 +154,17 @@ export function isPrivateAddress(addr: string): boolean {
     if (groups.every((g) => g === 0)) return true; // ::  (unspecified)
     if (groups.slice(0, 7).every((g) => g === 0) && groups[7] === 1) return true; // ::1 loopback
     const first = groups[0] ?? 0;
-    if ((first & 0xffc0) === 0xfe80) return true; // link-local fe80::/10 (fe80–febf)
+    if ((first & 0xffc0) === 0xfe80) return true; // link-local fe80::/10 (fe80-febf)
     if ((first & 0xfe00) === 0xfc00) return true; // unique-local fc00::/7
     if ((first & 0xff00) === 0xff00) return true; // multicast ff00::/8
     return false;
   }
-  return true; // not a literal IP — caller must resolve before trusting it
+  return true; // not a literal IP - caller must resolve before trusting it
 }
 
 /** Cheap up-front rejection: enforce http(s), no embedded credentials, no
  *  localhost, and no *literal* private IP. This is NOT the DNS-rebinding guard
- *  (that is `createValidatingLookup`, applied at connection time) — it only
+ *  (that is `createValidatingLookup`, applied at connection time) - it only
  *  fast-fails the obvious cases before any socket is opened. */
 export function assertSafePublicUrl(raw: string): URL {
   let url: URL;
@@ -194,7 +194,7 @@ type DnsLookupCb = typeof dnsLookupCb;
 
 /** Wrap a `dns.lookup`-shaped resolver so the resolved address is rejected when
  *  it is private. Installed as the undici Agent's connection-time `lookup`, so
- *  the validated address IS the one the socket connects to — closing the
+ *  the validated address IS the one the socket connects to - closing the
  *  DNS-rebinding / TOCTOU gap a separate pre-validation lookup would leave open.
  *  Exported so the guard can be unit-tested without standing up a server. */
 export function createValidatingLookup(lookupImpl: DnsLookupCb = dnsLookupCb) {
@@ -255,7 +255,7 @@ let sharedSsrfDispatcher: Agent | undefined;
  * Fetch a user-influenced external URL with SSRF protection. Rejects
  * private/loopback/link-local/metadata hosts, bad schemes, and embedded
  * credentials up front (`assertSafePublicUrl`), and pins every outbound
- * connection — including redirect hops, since `follow` re-connects per hop —
+ * connection - including redirect hops, since `follow` re-connects per hop -
  * to a validating DNS lookup so a hostname cannot rebind to a private address.
  *
  * Every daemon fetch of a user-supplied URL must route through this instead of
@@ -334,7 +334,7 @@ export function createPluginAssetCache(opts: PluginAssetCacheOptions): PluginAss
 
   /** Drain the body, aborting the moment the accumulated size exceeds
    *  `maxBytes`. A response without a trustworthy Content-Length must never be
-   *  fully buffered first — that would turn this caller-supplied proxy into a
+   *  fully buffered first - that would turn this caller-supplied proxy into a
    *  memory-exhaustion path. */
   async function readBodyCapped(response: Response, controller: AbortController): Promise<Buffer> {
     const body = response.body;
@@ -362,7 +362,7 @@ export function createPluginAssetCache(opts: PluginAssetCacheOptions): PluginAss
       try {
         await reader.cancel();
       } catch {
-        // reader already closed / errored — nothing to release
+        // reader already closed / errored - nothing to release
       }
     }
     return Buffer.concat(chunks);

@@ -26,19 +26,19 @@ import {
 // started producing, how long until the user could actually SEE something?".
 // It was published for months as a copy of `time_to_first_token_ms`, because
 // `noteFirstTokenAt()` stamped BOTH `first_token` and `first_visible_output`
-// from the same call with the same timestamp — so the difference was 0 for
+// from the same call with the same timestamp - so the difference was 0 for
 // every run ever recorded (205,795 `run_finished` events over 7 days, p50 =
 // p90 = p99 = max = 0).
 //
 // The daemon does NOT emit every token it decodes. Between "this is a token"
 // and "these bytes left the daemon" sit filters that can withhold output: the
 // `<od-title>` marker stripper, the fabricated-role-marker safety guard
-// (#3247), and — when the OD Next strategy is running the turn — the machine
+// (#3247), and - when the OD Next strategy is running the turn - the machine
 // marker filter, which buffers unterminated lines and strips reserved blocks.
 //
 // These tests drive the REAL wiring (`startServer` + a fake opencode CLI) and
 // read the two fields off the real PostHog `run_finished` payload, because the
-// bug was never in a helper — it was in which call site owns the mark.
+// bug was never in a helper - it was in which call site owns the mark.
 //
 // Every case names the OD Next rollout mode it runs under. Neither the
 // strategy-off nor the strategy-active coverage may rest on whatever
@@ -112,7 +112,7 @@ describe('first_visible_output is stamped at emission, not at first token', () =
     const gap =
       timing.time_to_first_visible_output_ms! - timing.time_to_first_token_ms!;
     // And no manufactured gap. The residue is the daemon's own SSE fan-out for
-    // one delta — sub-millisecond when idle, a few ms on a loaded box — which is
+    // one delta - sub-millisecond when idle, a few ms on a loaded box - which is
     // an order of magnitude below the withheld window the metric reports.
     expect(gap).toBeLessThan(100);
   }, TEST_BUDGET_MS);
@@ -204,7 +204,7 @@ describe('first_visible_output is stamped at emission, not at first token', () =
       `render ${options.label}`,
     );
     // Prove the mode the case claims to be in. Without this the strategy case
-    // could quietly degrade into an ordinary run — admission has many gates —
+    // could quietly degrade into an ordinary run - admission has many gates -
     // and keep passing for the wrong reason.
     if (options.strategyRollout === 'active') {
       expect(created.pluginId).toBe('od-next-strategy');

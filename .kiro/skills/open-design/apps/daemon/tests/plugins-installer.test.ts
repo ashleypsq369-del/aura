@@ -79,7 +79,7 @@ describe('installFromLocalFolder', () => {
     expect(list[0]?.id).toBe('sample-plugin');
     expect(list[0]?.sourceKind).toBe('local');
     // Local installs are implicitly trusted (the user copied the folder here
-    // themselves) — see trust.ts defaultTrustForRecord / resolvePluginFolder.
+    // themselves) - see trust.ts defaultTrustForRecord / resolvePluginFolder.
     expect(list[0]?.trust).toBe('trusted');
     expect(list[0]?.fsPath).toBe(path.join(pluginsRoot, 'sample-plugin'));
   });
@@ -116,7 +116,7 @@ describe('installFromLocalFolder', () => {
   });
 
   it('rejects symbolic links inside the source tree', async () => {
-    // Create a benign symlink — the installer must refuse anything that
+    // Create a benign symlink - the installer must refuse anything that
     // could escape the staged folder.
     const linkPath = path.join(sourceFolder, 'evil-link');
     await mkdir(path.dirname(linkPath), { recursive: true });

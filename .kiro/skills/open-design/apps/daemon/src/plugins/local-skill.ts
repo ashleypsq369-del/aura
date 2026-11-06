@@ -7,7 +7,7 @@
 //
 // This module is the lone reader of plugin-local SKILL.md files. It
 // stays separate from `apply.ts` because apply.ts is intentionally pure
-// (no filesystem reads) — the daemon calls this loader during prompt
+// (no filesystem reads) - the daemon calls this loader during prompt
 // composition, not during snapshot apply.
 //
 // The returned record mirrors the shape `composeDaemonSystemPrompt`
@@ -23,7 +23,7 @@ import { skillBodyWithRootPreamble } from '../skills.js';
 export interface PluginLocalSkill {
   body: string;
   name: string;
-  // Absolute directory containing the SKILL.md — used by
+  // Absolute directory containing the SKILL.md - used by
   // `stageActiveSkill` to copy companion files into the project cwd.
   dir: string;
   // Relative path inside the plugin folder, kept for debugging /
@@ -38,7 +38,7 @@ export async function loadPluginLocalSkill(
   const relpath = pickFirstLocalSkillPath(manifest);
   if (!relpath) return null;
   const safeRel = stripLeadingDotSlash(relpath);
-  // Guard against path traversal — the manifest is trusted but we still
+  // Guard against path traversal - the manifest is trusted but we still
   // refuse `..` escapes so a bad plugin author can't reach outside its
   // own fsPath.
   if (safeRel.split('/').some((segment) => segment === '..')) return null;

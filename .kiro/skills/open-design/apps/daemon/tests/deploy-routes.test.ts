@@ -1012,7 +1012,7 @@ describe('deploy provider routes', () => {
     try {
       const projectId = await setupProjectAndCfConfig(stateRoot, 'cf-invalid-typo', 'Invalid target typo test');
 
-      // Stub fetch so any accidental external call fails loudly — the route
+      // Stub fetch so any accidental external call fails loudly - the route
       // must return 400 BEFORE attempting a Cloudflare API call.
       const realFetch = globalThis.fetch;
       const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
@@ -1033,7 +1033,7 @@ describe('deploy provider routes', () => {
           body: JSON.stringify({
             fileName: 'index.html',
             providerId: CLOUDFLARE_PAGES_PROVIDER_ID,
-            target: 'preveiw', // deliberate typo — not 'preview' or 'production'
+            target: 'preveiw', // deliberate typo - not 'preview' or 'production'
           }),
         });
         // Must reject with 400, not silently coerce to 'production'
@@ -1080,7 +1080,7 @@ describe('deploy provider routes', () => {
           body: JSON.stringify({
             fileName: 'index.html',
             providerId: CLOUDFLARE_PAGES_PROVIDER_ID,
-            target: '', // supplied but empty — not a valid value, not the same as omitted
+            target: '', // supplied but empty - not a valid value, not the same as omitted
           }),
         });
         // An explicitly supplied empty string is an invalid target; must be 400
@@ -1100,7 +1100,7 @@ describe('deploy provider routes', () => {
     }
   });
 
-  // Regression guards — these must PASS both before and after the fix to pin
+  // Regression guards - these must PASS both before and after the fix to pin
   // the correct contract for the two valid explicit values and the omitted case.
 
   it('defaults to target=production and records production in the deployment when no target is sent', async () => {
@@ -1151,7 +1151,7 @@ describe('deploy provider routes', () => {
           body: JSON.stringify({
             fileName: 'index.html',
             providerId: CLOUDFLARE_PAGES_PROVIDER_ID,
-            // no target field — should default to production
+            // no target field - should default to production
           }),
         });
         const deployBody = await deployResp.text();
@@ -1250,7 +1250,7 @@ describe('deploy provider routes', () => {
   // Every deploy failure used to flatten to the envelope's BAD_REQUEST, so a
   // missing token, a non-HTML file, an unresolved asset reference and an
   // oversized asset were indistinguishable once the client mirrored the code
-  // into `artifact_deploy_result.error_code` — in production that collapsed
+  // into `artifact_deploy_result.error_code` - in production that collapsed
   // into one opaque HTTP_400 bucket we could not act on. Distinct causes must
   // carry distinct codes.
   it('surfaces a specific error code for a non-HTML deploy instead of a generic BAD_REQUEST', async () => {
@@ -1284,7 +1284,7 @@ describe('deploy provider routes', () => {
   // rejected is classified by ITS HTTP status client-side (HTTP_403 /
   // HTTP_429 / HTTP_502), and the client only falls back to that status when
   // the envelope code is generic. So the provider catch-alls must NOT stamp a
-  // structured code — doing so would fold auth, quota and upstream faults into
+  // structured code - doing so would fold auth, quota and upstream faults into
   // one bucket, which is coarser than what production already had.
   it('leaves a provider-rejected deploy on the generic envelope code so the client keeps status bucketing', async () => {
     const stateRoot = await mkdtemp(path.join(os.tmpdir(), 'od-deploy-route-provider-status-'));
@@ -1399,7 +1399,7 @@ describe('deploy provider routes', () => {
     }
   });
 
-  // A provider failure whose CAUSE is known — not merely its status — still
+  // A provider failure whose CAUSE is known - not merely its status - still
   // earns a specific code.
   it('reports PROVIDER_FORBIDDEN when the provider names a permission failure', async () => {
     const stateRoot = await mkdtemp(path.join(os.tmpdir(), 'od-deploy-route-provider-forbidden-'));
@@ -1442,7 +1442,7 @@ describe('deploy provider routes', () => {
   });
 
   // The config-save route is the only place CF_TOKEN_REQUIRED can surface, so
-  // it needs the same passthrough as the deploy route — otherwise the code is
+  // it needs the same passthrough as the deploy route - otherwise the code is
   // dead on arrival.
   it('surfaces CF_TOKEN_REQUIRED when saving a Cloudflare Pages config without a token', async () => {
     const stateRoot = await mkdtemp(path.join(os.tmpdir(), 'od-deploy-route-cf-token-'));
@@ -1473,7 +1473,7 @@ describe('deploy provider routes', () => {
       const projectId = await setupProjectAndVercelConfig('vercel-prod-reject', 'Vercel production reject test');
 
       // Use a fetch mock that WOULD happily complete a Vercel deploy if the
-      // route called it — this is the same mock the "still works" companion
+      // route called it - this is the same mock the "still works" companion
       // tests use for a legitimate preview deploy. If the route's guard is
       // missing (today's bug), the deploy proceeds and this mock lets it
       // succeed with 200, which is exactly the silent-preview-deploy bug
@@ -1498,7 +1498,7 @@ describe('deploy provider routes', () => {
         expect(body.error?.code).toBe('BAD_REQUEST');
         expect(body.error?.message).toMatch(/production|target/i);
 
-        // The Vercel deploy endpoint must never have been called — the route
+        // The Vercel deploy endpoint must never have been called - the route
         // must reject before attempting any deploy call.
         const vercelDeployCalls = fetchMock.mock.calls.filter((args) => {
           const u = typeof args[0] === 'string' ? args[0] : args[0] instanceof Request ? args[0].url : String(args[0]);
@@ -1568,7 +1568,7 @@ describe('deploy provider routes', () => {
           body: JSON.stringify({
             fileName: 'index.html',
             providerId: VERCEL_PROVIDER_ID,
-            // no target field — must keep working exactly as before the fix.
+            // no target field - must keep working exactly as before the fix.
           }),
         });
         const bodyText = await deployResp.text();

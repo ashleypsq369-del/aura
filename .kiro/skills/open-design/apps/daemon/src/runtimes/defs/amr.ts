@@ -30,9 +30,9 @@ const OPENCODE_MODEL_PRICE_PROVIDER_PRIORITY = [
 // AMR is the vela CLI's ACP stdio mode. `vela agent run`
 // starts a private OpenCode server and forwards stream-json over ACP JSON-RPC.
 // Required env (set on the daemon process or via Settings → CLI env):
-//   VELA_RUNTIME_KEY  — OpenRouter (or compatible) API key
-//   VELA_LINK_URL     — OpenAI-compatible endpoint, e.g. https://openrouter.ai/api/v1
-//   VELA_OPENCODE_BIN — optional; absolute path to opencode when not on PATH
+//   VELA_RUNTIME_KEY  - OpenRouter (or compatible) API key
+//   VELA_LINK_URL     - OpenAI-compatible endpoint, e.g. https://openrouter.ai/api/v1
+//   VELA_OPENCODE_BIN - optional; absolute path to opencode when not on PATH
 // See docs/new-agent-runtime-acp.md and the vela
 // `specs/current/runtime/manual-agent-run-openrouter.md`.
 //
@@ -628,7 +628,7 @@ export interface VelaBillingSummary {
 }
 
 /**
- * Read the signed-in account's billing summary via the vela CLI — the same
+ * Read the signed-in account's billing summary via the vela CLI - the same
  * data source used for models, so balance/tier come through the versioned CLI
  * contract rather than a separate HTTP call. Returns total available balance
  * and the real membership tier.
@@ -647,8 +647,8 @@ export async function fetchVelaBillingSummary(
     totalAvailableCreditsUsd?: unknown;
     membershipTier?: unknown;
   };
-  // Use `balanceUsd` — the same field the console wallet page renders as the
-  // headline "余额" — so the two surfaces always agree. Fall back to the total
+  // Use `balanceUsd` - the same field the console wallet page renders as the
+  // headline "余额" - so the two surfaces always agree. Fall back to the total
   // available only if `balanceUsd` is missing.
   const balanceUsd =
     typeof data.balanceUsd === 'string'
@@ -657,7 +657,7 @@ export async function fetchVelaBillingSummary(
         ? data.totalAvailableCreditsUsd
         : null;
   // `membershipTier` is omitted for free accounts. A SUCCESSFUL summary with no
-  // tier therefore means "free" — normalize to the explicit sentinel so the UI
+  // tier therefore means "free" - normalize to the explicit sentinel so the UI
   // shows the plan and the Upgrade CTA for free users. "Unknown" (billing
   // unavailable) is signalled separately by the fetch rejecting → null account,
   // never by an absent tier on a successful read.

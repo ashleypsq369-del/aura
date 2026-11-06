@@ -21,7 +21,7 @@ export const POST_TOOL_RESUME_CONTINUATION_PROMPT =
   'Continue from the latest tool result and finish the original user request.';
 
 // Backoff before a same-run retry restart. An immediate retry of a transient
-// failure — especially a 429 — tends to re-hit the same limit, so the policy
+// failure - especially a 429 - tends to re-hit the same limit, so the policy
 // waits before restarting. `rate_limit` gets a larger base than other
 // transient classes because the upstream is explicitly asking us to slow down.
 // The delay grows exponentially by attempt index and is capped, then equal
@@ -206,8 +206,8 @@ function transientSuppressedReason(
     // opened (`session_init`) is deterministic: the agent CLI refused the
     // handshake, so nothing streamed and re-running the identical request
     // against the identical CLI build only reproduces the same rejection.
-    // Every other protocol failure reaches `child_close` — after a session
-    // existed — and stays transient. Scoped to this one detail so the other
+    // Every other protocol failure reaches `child_close` - after a session
+    // existed - and stays transient. Scoped to this one detail so the other
     // process-exit shapes (and a resume-expired session, which recovers by
     // reseeding) keep retrying at any stage.
     if (detail === 'agent_protocol_error') {

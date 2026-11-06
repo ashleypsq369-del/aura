@@ -1,4 +1,4 @@
-// media-adapters — public entrypoint (Phase 1, in-repo; extract to a package later).
+// media-adapters - public entrypoint (Phase 1, in-repo; extract to a package later).
 export * from './types.js';
 export * from './capabilities.js';
 export * from './video.js';

@@ -34,9 +34,9 @@ export type ResolveLocalPluginBySource = (
  * itself happens in `captureOdNextSessionSkillPackage`, because a task freezes
  * ONE package across every channel the session selected material through.
  *
- * It is deliberately fail-soft. Every reason resolution can fail — the example
+ * It is deliberately fail-soft. Every reason resolution can fail - the example
  * was uninstalled, its manifest moved on from the digest the project pinned,
- * the folder is unreadable — is a reason to run this task without the example,
+ * the folder is unreadable - is a reason to run this task without the example,
  * never a reason to fail the user's run or to divert it off the automatic
  * route it already qualified for. Failures are warned about, then swallowed,
  * and null means "run without the card".
@@ -90,7 +90,7 @@ export async function resolveProjectExampleSkillSource(input: {
 /**
  * The card's own answers to its declared inputs.
  *
- * `od.useCase.query` is a template — `example-web-prototype`'s brief alone
+ * `od.useCase.query` is a template - `example-web-prototype`'s brief alone
  * carries `{{artifactKind}}`, `{{fidelity}}`, `{{audience}}`, `{{designSystem}}`
  * and `{{template}}`. The ordinary plugin route fills those from the applied
  * snapshot's `inputs`; an example card deliberately creates no snapshot, so
@@ -131,7 +131,7 @@ function manifestInputDefaults(
  * the short human-readable description instead). Carry it here or the run
  * keeps the craft and loses the brief.
  *
- * Returns undefined — omitting the fact entirely — when the record does not
+ * Returns undefined - omitting the fact entirely - when the record does not
  * re-resolve to the exact bound identity: an example that no longer resolves
  * must go unnamed rather than let a same-id record from somewhere else speak
  * for it.

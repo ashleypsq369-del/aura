@@ -1,4 +1,4 @@
-// Phase 8 entry slice — runHandoffAtom() pipeline-driven bridge.
+// Phase 8 entry slice - runHandoffAtom() pipeline-driven bridge.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
@@ -51,7 +51,7 @@ async function writeDecision(decision: 'accept' | 'reject' | 'partial') {
   );
 }
 
-describe('runHandoffAtom — promotion ladder', () => {
+describe('runHandoffAtom - promotion ladder', () => {
   it("decision='reject' \u2192 handoffKind='design-only'", async () => {
     await writeDecision('reject');
     const out = await runHandoffAtom({ cwd, manifest: baseManifest() });
@@ -115,7 +115,7 @@ describe('runHandoffAtom — promotion ladder', () => {
   });
 });
 
-describe('runHandoffAtom — append-only contract', () => {
+describe('runHandoffAtom - append-only contract', () => {
   it('preserves existing exportTargets[] + appends without duplicates', async () => {
     await writeDecision('accept');
     const incoming: ArtifactExportTarget = { surface: 'cli', target: '/p/a.html', exportedAt: 1 };
@@ -142,7 +142,7 @@ describe('runHandoffAtom — append-only contract', () => {
   });
 });
 
-describe('runHandoffAtom — signals', () => {
+describe('runHandoffAtom - signals', () => {
   it('forwards parsed build/test signals when present', async () => {
     await writeDecision('accept');
     await writeBuildTestReport(true, false);

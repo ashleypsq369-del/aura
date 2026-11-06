@@ -2,7 +2,7 @@
 //
 // 为什么不能只靠客户端 PUT 带上来:客户端按停之后会先把自己那条消息标成
 // `canceled` 并 PUT 一次,状态闩由此落定;而「是谁停的」这件事客户端根本答不出来
-// —— `runStatus: 'canceled'` 分不出用户按停与 daemon 关机 / 项目清理杀掉。
+// -- `runStatus: 'canceled'` 分不出用户按停与 daemon 关机 / 项目清理杀掉。
 // daemon 是唯一的证人,所以它在 run 落终态时**无条件**补写这一列,
 // 不受「状态还没落定」那道闩的限制。
 //
@@ -61,7 +61,7 @@ describe('reconcileAssistantMessageOnRunEnd records who cancelled', () => {
 
   it('writes the origin even when the client already latched `canceled`', async () => {
     const db = openDatabase(tempDir, { dataDir: tempDir });
-    // The client stopped its own stream first — this is the normal ordering.
+    // The client stopped its own stream first - this is the normal ordering.
     seed(db, 'canceled');
 
     reconcileAssistantMessageOnRunEnd(

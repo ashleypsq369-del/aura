@@ -64,11 +64,11 @@ retrieval:
 
 ---
 
-## Step 1 — Extract
+## Step 1 - Extract
 
 **If a URL is provided and Dembrandt MCP is available:**
 
-All MCP extraction tools are async — they return a `job_id` immediately. Poll `get_job_status` until `status` is `"completed"`, then read `result`.
+All MCP extraction tools are async - they return a `job_id` immediately. Poll `get_job_status` until `status` is `"completed"`, then read `result`.
 
 ```
 { job_id } = get_design_tokens({ url })
@@ -85,11 +85,11 @@ get_design_tokens, get_color_palette, get_typography, get_component_styles, get_
 npx dembrandt <url> --design-md --crawl 3
 ```
 
-**If DESIGN.md already exists:** parse it directly — skip extraction.
+**If DESIGN.md already exists:** parse it directly - skip extraction.
 
 ---
 
-## Step 2 — Normalize Tokens
+## Step 2 - Normalize Tokens
 
 Do not use raw extracted values directly. Map them to a semantic system first.
 
@@ -105,19 +105,19 @@ Identify the role of each extracted colour:
 | `color-border` | Border / divider | Input borders, separators |
 | `color-text` | Primary text | Body copy |
 | `color-text-secondary` | Secondary text | Labels, metadata, captions |
-| `color-error` | Error state | Red — do not assign to any other role |
-| `color-warning` | Warning state | Orange/amber — do not assign to any other role |
-| `color-success` | Success state | Green — do not assign to any other role |
+| `color-error` | Error state | Red - do not assign to any other role |
+| `color-warning` | Warning state | Orange/amber - do not assign to any other role |
+| `color-success` | Success state | Green - do not assign to any other role |
 
 **Decision rule:** if the extracted palette has more than 2 brand colours competing for `color-primary`, pick the one with highest usage on interactive elements.
 
 ### Typography
-Map extracted sizes to a scale. Verify ratio coherence — if sizes do not follow a consistent ratio, round them to the nearest modular scale step (base 16px, ratio 1.25 recommended).
+Map extracted sizes to a scale. Verify ratio coherence - if sizes do not follow a consistent ratio, round them to the nearest modular scale step (base 16px, ratio 1.25 recommended).
 
 | Token | Min size | Role |
 |---|---|---|
-| `text-base` | 16px | Body copy — never below 16px |
-| `text-sm` | 14px | Labels, captions — use sparingly |
+| `text-base` | 16px | Body copy - never below 16px |
+| `text-sm` | 14px | Labels, captions - use sparingly |
 | `text-lg` | 20px | Lead paragraph |
 | `text-h4` | 25px | Section subheading |
 | `text-h3` | 31px | Section heading |
@@ -136,11 +136,11 @@ scale = base × 1, 2, 3, 4, 6, 8, 12, 16
 ```
 
 ### Border Radius
-Extract the most common radius value used on interactive elements (buttons, inputs). This becomes `--radius-button` — applied uniformly to all buttons regardless of variant.
+Extract the most common radius value used on interactive elements (buttons, inputs). This becomes `--radius-button` - applied uniformly to all buttons regardless of variant.
 
 ---
 
-## Step 3 — Apply UX Decisions
+## Step 3 - Apply UX Decisions
 
 With normalized tokens, make the following decisions explicitly. Do not leave these open:
 
@@ -165,11 +165,11 @@ If any fail, darken or lighten the token to meet the threshold. Document the adj
 ### Error / Status Colours
 - Confirm `color-error` is red and used only for errors
 - Confirm `color-warning` is orange/amber and used only for warnings
-- If the brand uses orange as a primary colour, it cannot double as a warning — a distinct amber must be defined for warning states
+- If the brand uses orange as a primary colour, it cannot double as a warning - a distinct amber must be defined for warning states
 
 ---
 
-## Step 4 — Output UI Spec
+## Step 4 - Output UI Spec
 
 Produce a concrete, copy-pasteable output. Choose the format that fits the request:
 
@@ -263,18 +263,18 @@ Error states: inline, adjacent to field, red text + icon
 
 Building **several brands from one pipeline**, don't treat each as a fresh start. **One system, many skins:** every brand generates from the same semantic tokens; only primitives (colour, type, radius) change per brand. A fix propagates everywhere.
 
-**Consolidate periodically — token systems drift.** Across many brands and over time, tokens fork, one-off values creep in, and the systems diverge. Schedule a recurring consolidation pass:
+**Consolidate periodically - token systems drift.** Across many brands and over time, tokens fork, one-off values creep in, and the systems diverge. Schedule a recurring consolidation pass:
 - **Re-extract and compare** the live sites (use Dembrandt's extract + drift/compute-drift tooling, plus plain visual inspection and benchmarking against each other and against current design trends and best practice).
 - **Fold divergences back** into the shared semantic layer where they should be common; keep genuinely brand-specific values as primitive overrides only.
-- **Feed in a point of view.** Consolidation isn't just mechanical de-duplication — bring UX / visual-design opinion and a clear direction for where each product should go, not just where it is.
+- **Feed in a point of view.** Consolidation isn't just mechanical de-duplication - bring UX / visual-design opinion and a clear direction for where each product should go, not just where it is.
 
-**When design eras conflict, recency is the tiebreaker.** A product built over years carries pages from different design generations. The newest pages and components are the best available evidence of current design intent — migrate old toward new; never average the eras into a compromise style. Recency is a default, not a verdict: the newest surface can be an unreviewed one-off. Confirm with the user before promoting a style to canonical or marking an old one deprecated.
+**When design eras conflict, recency is the tiebreaker.** A product built over years carries pages from different design generations. The newest pages and components are the best available evidence of current design intent - migrate old toward new; never average the eras into a compromise style. Recency is a default, not a verdict: the newest surface can be an unreviewed one-off. Confirm with the user before promoting a style to canonical or marking an old one deprecated.
 
-**Deprecate on touch, not big-bang.** Keep a short list of deprecated styles — the old radius, the old shadow, the retired button variant. When work already touches an old-generation page, lift it to the current style in the same pass. Every touch moves the product one page closer to one system, with no rewrite project on the roadmap.
+**Deprecate on touch, not big-bang.** Keep a short list of deprecated styles - the old radius, the old shadow, the retired button variant. When work already touches an old-generation page, lift it to the current style in the same pass. Every touch moves the product one page closer to one system, with no rewrite project on the roadmap.
 
-**Two or three occurrences make a pattern.** When the same visual treatment appears independently in 2–3 places, it is no longer a coincidence — name it, tokenise it, and make it available everywhere. Promoting it is cheaper than a fourth hand-rolled copy. Once promoted, the pattern belongs to the design language: new components may use it as-is or adapt it, as long as the adaptation stays recognisably true to the original.
+**Two or three occurrences make a pattern.** When the same visual treatment appears independently in 2-3 places, it is no longer a coincidence - name it, tokenise it, and make it available everywhere. Promoting it is cheaper than a fourth hand-rolled copy. Once promoted, the pattern belongs to the design language: new components may use it as-is or adapt it, as long as the adaptation stays recognisably true to the original.
 
-**Track feature usage and deprecate the dead weight.** The same discipline applies to features, not just tokens: instrument what actually gets used, and **deprecate the features/components with little real usage** rather than maintaining them forever. A shared system stays healthy only if it's pruned — every unused component is drift waiting to happen and a cost on every future change.
+**Track feature usage and deprecate the dead weight.** The same discipline applies to features, not just tokens: instrument what actually gets used, and **deprecate the features/components with little real usage** rather than maintaining them forever. A shared system stays healthy only if it's pruned - every unused component is drift waiting to happen and a cost on every future change.
 
 ---
 

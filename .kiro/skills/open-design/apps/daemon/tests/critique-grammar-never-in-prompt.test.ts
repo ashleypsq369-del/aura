@@ -6,14 +6,14 @@
  *
  *   2026-06-21  #4454  `critique-theater` 的 atom + SKILL.md + 进默认 stage 列表,一起进来
  *   2026-07-18  #5829  「Do not emit prose outside the envelope」写进 SKILL.md
- *   2026-08-26  52131c2cf6  总闸关掉(`CRITIQUE_THEATER_RETIRED`)—— 只关了协议注入
+ *   2026-08-26  52131c2cf6  总闸关掉(`CRITIQUE_THEATER_RETIRED`)-- 只关了协议注入
  *                           (`renderPanelPrompt`),**没关 atom 那条路**
  *
  * 两条路在代码上没有任何关联,`isCritiqueEnabled()` 只被其中一处消费。于是:
  * `plugins/_official/atoms/critique-theater/SKILL.md` 的正文照旧被
  * `loadAtomBodies` → `renderActiveStageBlocks` 原样内联进系统提示词,标题叫
  * `## Active stage: critique`。模型被告知「Follow the daemon-injected tagged
- * protocol exactly」,却**永远拿不到那份协议**(它被闸关掉了)—— 于是它照着
+ * protocol exactly」,却**永远拿不到那份协议**(它被闸关掉了)-- 于是它照着
  * SKILL.md 的英文散文**把语法现编了出来**。
  *
  * 编出来的东西和真协议逐项对不上,这正是"现编"的铁证:
@@ -26,14 +26,14 @@
  * ── 这个文件为什么长这样 ──
  *
  * `critique-composer.test.ts` 早就断言过「关掉时不含 `<CRITIQUE_RUN`」。它一直是绿的,
- * 五次复发一次都没照出来 —— 因为它只喂 `renderPanelPrompt` 那条路,**不喂
+ * 五次复发一次都没照出来 -- 因为它只喂 `renderPanelPrompt` 那条路,**不喂
  * `activeStageBlocks`**。等于证明了门是关的,而窗户开着。
  *
  * 所以这里断言的是**最终组装出来的系统提示词文本**,而且喂进去的是磁盘上**真实的**
  * scenario pipeline + 真实的 SKILL.md。判据不绑任何一条代码路径:将来任何新入口
  * 把这套语法塞回提示词,这里都会红。
  *
- * 禁用词表是**写死的字面量**,不复用 `CRITIQUE_GRAMMAR_TAGS` —— 复用等于拿实现当判据,
+ * 禁用词表是**写死的字面量**,不复用 `CRITIQUE_GRAMMAR_TAGS` -- 复用等于拿实现当判据,
  * 实现漏了哪个标签,测试就跟着漏哪个。这个坑上一轮已经踩过一次(`MUSTFIX` 少了下划线)。
  */
 import { promises as fsp } from 'node:fs';
@@ -50,7 +50,7 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..
 /**
  * 一个都不许出现在系统提示词里。
  *
- * 前四条是线格式本身;最后一条是**收尾文案消失**的根因 —— 用户报「Done 8m 17s,
+ * 前四条是线格式本身;最后一条是**收尾文案消失**的根因 -- 用户报「Done 8m 17s,
  * 回合外面一行文案都没有」,因为模型被这句话明确要求不许在 envelope 外写散文。
  */
 const FORBIDDEN = [
@@ -67,14 +67,14 @@ function assertNoTheaterGrammar(text: string, what: string): void {
   }
 }
 
-/** 和 `loadAtomBodies` 同口径地剥掉 frontmatter —— 这里直接读盘,不经过 SQLite */
+/** 和 `loadAtomBodies` 同口径地剥掉 frontmatter -- 这里直接读盘,不经过 SQLite */
 function stripFrontmatter(raw: string): string {
   const m = /^---\r?\n[\s\S]*?\r?\n---\r?\n?/.exec(raw);
   return (m ? raw.slice(m[0].length) : raw).trim();
 }
 
 /**
- * 读不到就当空 —— 和 `loadAtomBodies` 同口径(它对查不到的 atom 是 `continue`)。
+ * 读不到就当空 -- 和 `loadAtomBodies` 同口径(它对查不到的 atom 是 `continue`)。
  * pipeline 里有几个 atom(`file-write` / `live-artifact` / `media-*`)还没有自己的
  * SKILL.md 目录,那是正常状态,不是夹具坏了。
  */
@@ -118,7 +118,7 @@ async function buildActiveStageBlocks(
 }
 
 describe('评审剧场语法永远不许进系统提示词', () => {
-  // 默认 scenario 覆盖了几乎每一次设计生成 run —— 用户中招的就是这条路
+  // 默认 scenario 覆盖了几乎每一次设计生成 run -- 用户中招的就是这条路
   for (const scenario of ['od-default', 'od-new-generation']) {
     it(`${scenario}:闸关着时,组装出来的系统提示词里一个剧场标签都没有`, async () => {
       const activeStageBlocks = await buildActiveStageBlocks(scenario, {
@@ -140,10 +140,10 @@ describe('评审剧场语法永远不许进系统提示词', () => {
   /*
    * 闸开着的那一半也要钉住。
    *
-   * 规矩是「**协议注入了,body 才注入**」—— 两者必须同生同死。上一次出事正是因为
+   * 规矩是「**协议注入了,body 才注入**」-- 两者必须同生同死。上一次出事正是因为
    * 它们能各走各的:body 在、协议不在,模型只好现编。
    */
-  it('闸开着时 body 照常注入 —— 这个门不是「永远关闭」,是「跟着协议走」', async () => {
+  it('闸开着时 body 照常注入 -- 这个门不是「永远关闭」,是「跟着协议走」', async () => {
     const blocks = await buildActiveStageBlocks('od-new-generation', {
       critiqueEnabled: true,
     });
@@ -165,7 +165,7 @@ describe('atomsForPrompt', () => {
     expect(atomsForPrompt(atoms, { critiqueEnabled: true })).toEqual(atoms);
   });
 
-  it('大小写不敏感 —— atom id 在 loadAtomBodies 里是按小写查的', () => {
+  it('大小写不敏感 -- atom id 在 loadAtomBodies 里是按小写查的', () => {
     expect(atomsForPrompt(['Critique-Theater'], { critiqueEnabled: false })).toEqual([]);
   });
 
@@ -180,7 +180,7 @@ describe('critique-theater 的 SKILL.md 本身', () => {
    * 第二道锁,和上面那条互相独立。
    *
    * 上面那条挡的是「body 进了提示词」;这条挡的是「body 里写着线格式」。任何一条单独
-   * 成立都能拦住这次的事故 —— 但两条都要有:将来谁重新打开这个 stage(那是合法操作),
+   * 成立都能拦住这次的事故 -- 但两条都要有:将来谁重新打开这个 stage(那是合法操作),
    * 只剩这一条在守着。
    */
   it('正文里不许拼出线格式,也不许有那句「不许写散文」', async () => {
@@ -190,7 +190,7 @@ describe('critique-theater 的 SKILL.md 本身', () => {
     );
   });
 
-  it('但它仍然要说清楚这一阶段要干什么 —— 不是把文件掏空', async () => {
+  it('但它仍然要说清楚这一阶段要干什么 -- 不是把文件掏空', async () => {
     const body = await readAtomBody(CRITIQUE_THEATER_ATOM_ID);
     expect(body.length).toBeGreaterThan(200);
     expect(body).toMatch(/accessib/i);

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AIAssistant.jsx - Clinical Copilot v5
  * Sky-blue theme · for clinicians/admins/caregivers.
  * Purpose: summarise patients, explain AI predictions, answer clinical questions,
@@ -250,7 +250,7 @@ export default function AIAssistant() {
  }}
  onClick={e=>e.stopPropagation()}>
 
- {/* ── Header — single 56px row, sky-blue gradient ── */}
+ {/* ── Header - single 56px row, sky-blue gradient ── */}
  <div className="flex-shrink-0 flex items-center gap-3 px-4"
  style={{
  height: 56,
@@ -323,12 +323,12 @@ export default function AIAssistant() {
  </div>
  </div>
 
- {/* Disclaimer — slim */}
+ {/* Disclaimer - slim */}
  <div className="flex-shrink-0 flex items-center gap-2 px-4"
  style={{ height: 28, background: '#fef3c7', borderBottom: '1px solid #fde68a' }}>
  <AlertTriangle size={10} style={{ color: '#d97706', flexShrink: 0 }}/>
  <p style={{ fontSize: 11, fontWeight: 500, color: '#92400e', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
- AI suggestions only — always apply clinical judgement · Emergency: <strong>193</strong>
+ AI suggestions only - always apply clinical judgement · Emergency: <strong>193</strong>
  </p>
  </div>
 
@@ -386,7 +386,7 @@ export default function AIAssistant() {
  <p className="text-xs leading-relaxed max-w-xs mx-auto" style={{color:T.subText}}>Summarise patients, explain AI predictions, flag drug interactions, draft clinical notes.</p>
  </div>
 
- {/* Stats — compact inline strip */}
+ {/* Stats - compact inline strip */}
  {isClinical&&dashSummary&&(
  <div style={{
  display:'flex', alignItems:'stretch', gap:0,
@@ -395,10 +395,10 @@ export default function AIAssistant() {
  borderRadius:10, overflow:'hidden', alignSelf:'stretch',
  }}>
  {[
- {label:'Patients', value: dashSummary.stats?.total_patients ?? dashSummary.total_patients ?? '—', color:'#7c3aed'},
+ {label:'Patients', value: dashSummary.stats?.total_patients ?? dashSummary.total_patients ?? '-', color:'#7c3aed'},
  {label:'Critical', value: critical || '0', color:'#dc2626'},
- {label:'Alerts', value: dashSummary.stats?.active_alerts ?? dashSummary.active_alerts ?? '—', color:'#d97706'},
- {label:'High Risk', value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '—', color:C.accent},
+ {label:'Alerts', value: dashSummary.stats?.active_alerts ?? dashSummary.active_alerts ?? '-', color:'#d97706'},
+ {label:'High Risk', value: dashSummary.stats?.high_risk_patients ?? dashSummary.high_risk_patients ?? '-', color:C.accent},
  ].map((s,i)=>(
  <div key={s.label} style={{
  flex:1, display:'flex', flexDirection:'column', alignItems:'center',
@@ -431,7 +431,7 @@ export default function AIAssistant() {
  </div>
  </div>
 
- {/* Capability hint grid — compact 2-col */}
+ {/* Capability hint grid - compact 2-col */}
  <div className="w-full grid grid-cols-2 gap-1.5">
  {[
  {icon:TrendingUp, label:'Summarise patients', desc:'Risk levels', q:'Summarise all patients by risk level'},
@@ -521,7 +521,7 @@ export default function AIAssistant() {
  <div ref={msgEndRef}/>
  </div>
 
- {/* Scroll pill — compact, above input */}
+ {/* Scroll pill - compact, above input */}
  <AnimatePresence>
  {!atBottom&&(
  <motion.button initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} onClick={scrollToBottom}

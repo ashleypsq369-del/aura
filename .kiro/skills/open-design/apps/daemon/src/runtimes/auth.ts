@@ -9,7 +9,7 @@ export type AgentAuthProbeResult = {
   // Output captured from the probe child process (e.g.
   // `cursor-agent status`). Exposed so callers like the connection
   // test layer can fold the probe's own stderr/exit context into their
-  // structured diagnostics — the probe runs before the smoke spawn,
+  // structured diagnostics - the probe runs before the smoke spawn,
   // so without this the diagnostics block would otherwise drop the
   // probe output entirely.
   stdoutTail?: string;
@@ -30,15 +30,15 @@ const DEEPSEEK_HARNESS_AUTH_GUIDANCE =
 // agy's print mode (`-p`) detects a missing OAuth token, prints the
 // Google sign-in URL to stdout, waits 30s for completion, then exits
 // "Error: authentication timed out." That URL points at a callback page
-// that asks the user to paste the resulting auth code BACK into agy —
+// that asks the user to paste the resulting auth code BACK into agy -
 // which only works in the interactive TUI. So in OD's chat, surfacing
 // the raw URL is a dead end (no input field to paste the code into).
 // Instead we ask the user to run `agy` in a terminal once, which opens
 // the browser, completes OAuth, and writes the credentials to the
-// system keyring — both `-p` and TUI invocations read from there
+// system keyring - both `-p` and TUI invocations read from there
 // afterward, so the chat run can succeed on retry.
 const ANTIGRAVITY_AUTH_GUIDANCE =
-  'Antigravity needs to sign in. The agy CLI\'s keyring entry has expired or been cleared, and `-p` print mode cannot complete OAuth on its own (it has no field to paste the auth code into).\n\nFix: open a terminal and run `agy` once — it will open Google sign-in in your browser, accept the redirect, and store the token in your system keyring. After you finish, return here and retry this chat. You only need to do this once; the keyring entry persists across both terminal and OpenDesign runs.';
+  'Antigravity needs to sign in. The agy CLI\'s keyring entry has expired or been cleared, and `-p` print mode cannot complete OAuth on its own (it has no field to paste the auth code into).\n\nFix: open a terminal and run `agy` once - it will open Google sign-in in your browser, accept the redirect, and store the token in your system keyring. After you finish, return here and retry this chat. You only need to do this once; the keyring entry persists across both terminal and OpenDesign runs.';
 
 // agy's account-level quota is per-model (consumer accounts get a
 // separate quota for Gemini 3 Pro vs Flash vs Claude vs GPT-OSS), and
@@ -50,7 +50,7 @@ const ANTIGRAVITY_AUTH_GUIDANCE =
 // Guidance points the user at agy's TUI Switch-Model picker because
 // (a) different models have separate quotas, and (b) we can't drive
 // the picker from OD until upstream issue #35 ships a `--model`
-// flag — see antigravity.ts notes.
+// flag - see antigravity.ts notes.
 const ANTIGRAVITY_QUOTA_GUIDANCE =
   'Antigravity returned "RESOURCE_EXHAUSTED: Individual quota reached" for the current model. Each Antigravity model (Gemini 3 Pro / Flash, Claude 4.6, GPT-OSS) has its own quota.\n\nFix: open `agy` in a terminal and use its Switch Model picker (the menu at the bottom of the TUI) to pick a model with available quota, then retry here. OpenDesign uses whatever model you pick in agy\'s TUI when the Settings model picker is left on "Default". Quotas reset automatically on Antigravity\'s schedule.';
 
@@ -112,7 +112,7 @@ export function isCursorAuthFailureText(text: string): boolean {
 // stream-json runs fail fast instead (recorded from agy 1.3.1):
 //   stderr: "Error: authentication required. Run 'agy' to log in, then retry."
 //   result: {"status":"ERROR","error":"authentication failed or timed out"}
-// Any of these is sufficient signal — match conservatively so the regex
+// Any of these is sufficient signal - match conservatively so the regex
 // doesn't fire on prose containing the word "authentication" by accident.
 export function isAntigravityAuthFailureText(text: string): boolean {
   const value = String(text || '');
@@ -280,19 +280,19 @@ export function classifyAgentAuthFailure(
 // other CLI agent (Claude Code, codex, …) used to collapse auth / quota /
 // upstream failures into the generic `AGENT_EXECUTION_FAILED`. This agent-
 // agnostic, text-based classifier recovers the specific class so the chat
-// shows an accurate reason — and so the hosted-AMR nudge can key off it.
+// shows an accurate reason - and so the hosted-AMR nudge can key off it.
 export type AgentServiceFailureCode =
   | 'AGENT_AUTH_REQUIRED'
   | 'RATE_LIMITED'
   | 'UPSTREAM_UNAVAILABLE';
 
 // A bare HTTP status number (`500`, `429`, …) is too noisy to trust on its own
-// — agent stderr is full of unrelated numbers (`line 500`, `read 502 bytes`,
+// - agent stderr is full of unrelated numbers (`line 500`, `read 502 bytes`,
 // `took 503ms`, `exit code 401`, `process exited with code 429`). Only treat a
 // status number as a signal when it carries explicit HTTP-status context
 // (`HTTP 500`, `status 429`, `status code 401`, `error code 502`,
 // `server error 503`, or a punctuation-bound `code: 401`). Crucially `code`
-// alone is NOT enough — that would still match process-exit lines like `exit
+// alone is NOT enough - that would still match process-exit lines like `exit
 // code 401`; it only counts when qualified (status/error/response code) or
 // immediately followed by `:`/`=`/`#`. Phrasing per review on #3083.
 const STATUS_CTX =
@@ -309,7 +309,7 @@ const AGENT_AUTH_FAILURE_RE = new RegExp(
   'i',
 );
 
-// Quota / rate limit / billing balance — the wall the hosted gateway avoids.
+// Quota / rate limit / billing balance - the wall the hosted gateway avoids.
 const AGENT_RATE_FAILURE_RE = new RegExp(
   `(\\b(rate[ _-]?limit|too many requests|quota|insufficient[ _-]?(?:quota|balance|credit|funds)|credit balance is too low|exceeded your current quota|usage limit|session limit|limit reached|billing (?:hard )?limit)\\b|${STATUS_CTX}429\\b)`,
   'i',
@@ -325,7 +325,7 @@ const AGENT_UPSTREAM_FAILURE_RE = new RegExp(
  * A tool invocation, as the AGENT itself frames it.
  *
  * `tool bash failed:` / `tool error:` / `tool_use_error:` are the agent saying
- * "a tool I ran failed" — it is the authority on whether it was mid-tool, so
+ * "a tool I ran failed" - it is the authority on whether it was mid-tool, so
  * this is the strongest attribution available in the text. `mcp` / `connector`
  * / `plugin` are the daemon's own words for "a service the agent operates":
  * `run-failure-classification.ts` `isToolErrorText` already reads exactly this
@@ -339,7 +339,7 @@ const TOOL_INVOCATION_MARKER =
 /**
  * A program identifying ITSELF as the speaker: the Unix `progname: message`
  * convention, plus npm's `npm ERR!` variant of it. `gh:`, `curl:`, `docker:`,
- * `psql:` and `npm ERR!` all carry it, and so will the next tool — that is what
+ * `psql:` and `npm ERR!` all carry it, and so will the next tool - that is what
  * the convention is for, which is why this is a shape and not a roster of tool
  * names.
  *
@@ -347,14 +347,14 @@ const TOOL_INVOCATION_MARKER =
  * is foreign: `dsh: MISSING_CREDENTIAL: …` is DeepSeek Harness in exactly the
  * same shape, so the caller has to check the name against
  * `OWN_AGENT_COMMAND_NAMES`. An earlier cut of this predicate assumed the agent
- * would never prefix itself and dropped that row —
+ * would never prefix itself and dropped that row -
  * `tests/runtimes/service-failure-classification.test.ts` caught it, and the
  * row is pinned as A18 in the landing table.
  *
  * Two kinds of leading token are not names at all and are rejected by the
  * caller: severities (`Error:`, `warning:`, `fatal:`) name how bad the line is,
  * and status reason phrases (`Unauthorized:`) name what the server answered.
- * That rejection is load-bearing — vela's real model-service 401 arrives as
+ * That rejection is load-bearing - vela's real model-service 401 arrives as
  * `Error: list Link models: API request failed with status 401: invalid_api_key`
  * (`acp-service-failure.test.ts` row A14).
  */
@@ -368,21 +368,21 @@ const SEVERITY_LABELS = new Set([
 ]);
 
 /**
- * Every command name Open Design's own agent CLIs answer to — each shipped
+ * Every command name Open Design's own agent CLIs answer to - each shipped
  * adapter's `id` and its `bin`.
  *
  * This is the half of the attribution the text cannot supply, and the reason
  * the program-prefix shape alone is not enough: `dsh: MISSING_CREDENTIAL:
  * llm-deepseek: no API key for provider route …` wears exactly the same prefix
  * as `gh: not authenticated`, and it is DeepSeek Harness reporting its OWN
- * model key. Position does not separate them either — echoed tool output and
+ * model key. Position does not separate them either - echoed tool output and
  * the agent's own lines are both line-initial. Only the name does.
  *
  * It is an allowlist of OURS, not a blocklist of tools, and that direction is
  * what makes it hold: everything the daemon did not spawn is foreign by
  * default, so the next `terraform:` or `kubectl:` needs no amendment here. The
  * only list that has to stay current is the adapter registry, which the daemon
- * maintains anyway — and
+ * maintains anyway - and
  * `tests/runtimes/tool-vs-agent-auth-snapshot.test.ts` reads the real
  * `SHIPPED_AGENT_DEFS` and goes red if this falls behind it. Kept as a literal
  * rather than derived from `registry.ts` because that module imports every
@@ -404,14 +404,14 @@ export const OWN_AGENT_COMMAND_NAMES: ReadonlySet<string> = new Set([
  * rather than to the agent's own credential.
  *
  * This is an attribution question, not a vocabulary question, and the
- * distinction is the whole point. `AGENT_AUTH_REQUIRED` means "sign in" — an
+ * distinction is the whole point. `AGENT_AUTH_REQUIRED` means "sign in" - an
  * offer to fix a credential the daemon can reach (the agent's CLI login, or the
  * AMR Cloud session the web resolves it to,
  * `apps/web/src/runtime/amr-guidance.ts`). A run's failure text is not a clean
  * channel for that claim: `collectFailureText`
  * (`run-failure-classification.ts:177`) folds `stderr` events into the corpus
  * (:188), and the ACP bridge folds whatever the agent wrote into its JSON-RPC
- * error frame — so `gh`, `npm`, `curl` and MCP output are read here too, in the
+ * error frame - so `gh`, `npm`, `curl` and MCP output are read here too, in the
  * same auth vocabulary the agent's own failures use. Answering "sign in" to one
  * of those sends the user to log in to Open Design for a `gh` token in their
  * own shell: a fix guaranteed not to work.
@@ -419,20 +419,20 @@ export const OWN_AGENT_COMMAND_NAMES: ReadonlySet<string> = new Set([
  * The rule is: **when the report names the credential's holder, believe it; the
  * daemon may supply "the agent" only when the report names nobody.** A holder
  * is named in exactly two ways, and both are the text identifying its own
- * speaker rather than us guessing from prose — the same precedence
+ * speaker rather than us guessing from prose - the same precedence
  * `reportsPlatformProviderCredentialFault` established for R-053, where a
  * self-identifying machine code outranked the sentence it travelled with.
  *
  * Line scope, not whole-text scope: an unrelated `npm ERR!` elsewhere in a long
  * stderr tail must not vouch for the agent's own 401 on another line. And the
- * program prefix must be the SPEAKER of the complaint, not the complaint — so
+ * program prefix must be the SPEAKER of the complaint, not the complaint - so
  * the auth vocabulary has to appear after it. That is what keeps vela's own
  * `auth_required: please reconnect AMR Cloud` from reading as a program named
  * `auth_required`.
  *
- * Exported because the two classifiers that read the same corpus —
+ * Exported because the two classifiers that read the same corpus -
  * `classifyAgentServiceFailure` here and `run-failure-classification.ts`'s
- * `isAuthDetailText` branch — have to agree about whose credential it is.
+ * `isAuthDetailText` branch - have to agree about whose credential it is.
  */
 export function reportsToolPrincipalAuthFailure(text: string): boolean {
   const value = String(text || '');
@@ -446,7 +446,7 @@ export function reportsToolPrincipalAuthFailure(text: string): boolean {
     // A severity (`Error:`) or a status reason phrase (`Unauthorized:`) is a
     // LABEL, not a name: it says how bad the line is, or what the server
     // answered, never who wrote it. Reading either as a speaker would drop a
-    // real model-service 401 — vela's arrives as `Error: list Link models: API
+    // real model-service 401 - vela's arrives as `Error: list Link models: API
     // request failed with status 401: invalid_api_key`.
     if (SEVERITY_LABELS.has(speaker)) continue;
     if (AGENT_AUTH_FAILURE_RE.test(speaker)) continue;
@@ -460,7 +460,7 @@ export function reportsToolPrincipalAuthFailure(text: string): boolean {
 // Returns the model-service failure class implied by an agent's combined
 // stdout/stderr/error text, or null when the text looks like an ordinary
 // process failure. Auth is checked before rate/upstream so a `401` is never
-// misread as a `5xx`. Pure text match — no agent-specific assumptions — so it
+// misread as a `5xx`. Pure text match - no agent-specific assumptions - so it
 // applies uniformly to any CLI agent.
 export function classifyAgentServiceFailure(
   text: string,
@@ -471,13 +471,13 @@ export function classifyAgentServiceFailure(
   // sentence beside it does not. vela's link gateway answers an upstream
   // 401/403 with `upstream_provider_unauthenticated` /
   // `upstream_provider_forbidden` on an HTTP 500, worded "Upstream provider
-  // credentials are missing or invalid." — which satisfies this file's
+  // credentials are missing or invalid." - which satisfies this file's
   // `credentials (?:are )?missing` alternative and so reported the platform's
   // own misconfiguration to the user as "Sign-in required" (catalogue R-053).
   // A self-identifying machine code outranks a class read off prose; the same
   // precedence the daemon records as `evidenceLevel: 'structured_code'`.
   if (reportsPlatformProviderCredentialFault(value)) return 'UPSTREAM_UNAVAILABLE';
-  // The auth class is a claim about THIS agent's credential — the web turns it
+  // The auth class is a claim about THIS agent's credential - the web turns it
   // into a sign-in offer. A report that names a different holder (a tool the
   // agent ran) is answering a different question, so it does not reach the auth
   // branch. It is scoped to the auth branch on purpose: rate limit and upstream
@@ -592,7 +592,7 @@ function classifyProbedAuthFailure(
 
 // Run an adapter's declared authentication probe (a cheap, side-effect-free
 // status/whoami command) and classify the result. Returns null when the
-// adapter declares no `authProbe` — those agents are never actively probed;
+// adapter declares no `authProbe` - those agents are never actively probed;
 // their auth status is inferred only from a real chat failure's error text.
 export async function probeAgentAuthStatus(
   def: Pick<RuntimeAgentDef, 'id' | 'name' | 'authProbe'>,

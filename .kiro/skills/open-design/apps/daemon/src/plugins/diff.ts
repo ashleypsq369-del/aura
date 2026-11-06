@@ -1,4 +1,4 @@
-// Phase 4 / spec §11.5 / plan §3.AA1 — plugin diff helper.
+// Phase 4 / spec §11.5 / plan §3.AA1 - plugin diff helper.
 //
 // Pure helper that compares two InstalledPluginRecord values (or
 // two AppliedPluginSnapshot values) and returns a structured
@@ -62,7 +62,7 @@ export function diffPlugins(input: DiffPluginsInput): PluginDiffReport {
   diffScalar(out, 'trust',     input.a.trust,             input.b.trust);
   diffArray(out,  'capabilitiesGranted', input.a.capabilitiesGranted, input.b.capabilitiesGranted);
 
-  // Manifest body — the field set the prompt + apply paths read.
+  // Manifest body - the field set the prompt + apply paths read.
   diffManifest(out, input.a.manifest, input.b.manifest);
 
   out.sort((a, b) => a.field.localeCompare(b.field));

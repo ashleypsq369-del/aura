@@ -1,6 +1,6 @@
 export async function extractButtonStyles(page) {
   return await page.evaluate(() => {
-    // Only real interactive buttons — not tabs, menus, dropdowns
+    // Only real interactive buttons - not tabs, menus, dropdowns
     const candidates = Array.from(document.querySelectorAll(
       'button, a[href], [role="button"]'
     ));
@@ -23,7 +23,7 @@ export async function extractButtonStyles(page) {
         if (['tab', 'menuitem', 'option', 'switch', 'treeitem'].includes(role)) continue;
         if (el.closest('[role="tablist"], [role="menu"], [role="menubar"], nav, footer')) continue;
 
-        // Must have a visible background or border — not just inherited
+        // Must have a visible background or border - not just inherited
         const bg = computed.backgroundColor;
         const borderWidth = Math.max(...[computed.borderTopWidth, computed.borderRightWidth, computed.borderBottomWidth, computed.borderLeftWidth].map((w) => parseFloat(w) || 0));
         const hasBackground = !isTransparent(bg);

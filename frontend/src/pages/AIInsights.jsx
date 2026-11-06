@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AIInsights · Clinical Intelligence Hub v3
  * ==========================================
  * Design: Premium medical dark-header + card-based layout
@@ -1081,7 +1081,7 @@ export default function AIInsights() {
  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
  style={{ minHeight:'100vh', paddingBottom:32, background:'var(--page-bg)' }}>
 
- {/* PageHeader with image — kept */}
+ {/* PageHeader with image - kept */}
  <PageHeader
  image="/resources/headers/header-ai-insights.jpg"
  title="AI Clinical Intelligence"
@@ -1094,7 +1094,7 @@ export default function AIInsights() {
  { label:'Stable',   value:kpi.stable,   color:'#4ade80', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('stable');} },
  ]}
  >
- {/* Risk tab search + filter — only shown when on risk tab */}
+ {/* Risk tab search + filter - only shown when on risk tab */}
  {activeTab === 'risk' && (
  <>
  <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:300 }}>
@@ -1121,7 +1121,7 @@ export default function AIInsights() {
  </div>
  </>
  )}
- {/* Action buttons — always visible */}
+ {/* Action buttons - always visible */}
  <div style={{ display:'flex', gap:6, marginLeft:'auto', flexShrink:0 }}>
  <button onClick={()=>{refetchSys();queryClient.invalidateQueries(['batch-risk']);toast.success('Refreshed');}} style={{
  display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
@@ -1148,7 +1148,7 @@ export default function AIInsights() {
  <div style={{ maxWidth:1300, margin:'16px auto 0', padding:'0 20px 40px' }}>
    <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
-     {/* Tab bar — pill segment control */}
+     {/* Tab bar - pill segment control */}
      <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
        <div style={{ display:'flex', gap:2, padding:'10px 0' }}>
          {[

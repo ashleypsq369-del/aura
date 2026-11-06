@@ -31,9 +31,9 @@ const DEFAULT_RESPONSE_SIZE_CAP_BYTES = 4 * 1024 * 1024;
  * runId that belongs to p2.
  *
  * Status semantics:
- *   200 — happy path; body is the artifact bytes with the right mime.
- *   400 — projectId/runId missing or whitespace-only.
- *   404 — run not found, cross-project leak, no artifact persisted, or
+ *   200 - happy path; body is the artifact bytes with the right mime.
+ *   400 - projectId/runId missing or whitespace-only.
+ *   404 - run not found, cross-project leak, no artifact persisted, or
  *         the on-disk file disappeared (bytes never made it to the row).
  *
  * @see specs/current/critique-theater.md § rerun endpoint (Task 6.2)

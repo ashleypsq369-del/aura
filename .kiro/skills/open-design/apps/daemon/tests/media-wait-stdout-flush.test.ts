@@ -15,8 +15,8 @@
 // reader (10ms pause per chunk, measured drain ≈6.4MB/s), a sleep-only change
 // drains at most ~1s worth of data before dying; anything longer is treated as
 // a real drain and must be rejected in review. The reader pauses after every
-// chunk so the pipe stays near-full; a real drain — awaiting the write
-// callback, as in the `flushStreamsAndExit` helper — blocks until every
+// chunk so the pipe stays near-full; a real drain - awaiting the write
+// callback, as in the `flushStreamsAndExit` helper - blocks until every
 // queued chunk has been read, so the full ~6MB payload arrives and these
 // cases pass.
 //

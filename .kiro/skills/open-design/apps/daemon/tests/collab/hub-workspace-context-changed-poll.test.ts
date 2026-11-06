@@ -27,11 +27,11 @@ describe('handleHubVerifiedConnection', () => {
 
 // Regression coverage for the fix wiring the hub's real `workspace-context-changed`
 // push (`startHubEventsSubscriber`'s `onEvent` in server.ts) to an immediate
-// `workspaceInvalidationPoller.pollOnce()` — the same catch-up `onReconnect`
+// `workspaceInvalidationPoller.pollOnce()` - the same catch-up `onReconnect`
 // already runs. Before this fix, the event only forwarded a thin SSE nudge to
 // the web; the daemon's own last-known-membership cache (consumed by
 // `enforceWorkspaceProjectMutation`'s mutation gate) had no accelerated path
-// and stayed stale for up to the poller's ~15s cadence — e.g. a member removed
+// and stayed stale for up to the poller's ~15s cadence - e.g. a member removed
 // from a team kept passing the mutation gate for that long even though Vela
 // had already told this daemon something changed.
 describe('handleHubWorkspaceContextChanged', () => {
@@ -120,7 +120,7 @@ describe('handleHubWorkspaceAccessRevoked', () => {
 // `billing-changed`, `project-metadata-changed`, and `project-content-changed`
 // already have their own handling and must not gain a redundant immediate
 // poll trigger as a side effect of this change (or of some later edit next to
-// it) — each keeps costing exactly the requests its own case already made.
+// it) - each keeps costing exactly the requests its own case already made.
 describe('hub events onEvent switch (source boundary)', () => {
   const serverSourcePath = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),

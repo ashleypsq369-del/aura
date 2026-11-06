@@ -1,11 +1,11 @@
-// Video request builder (layer ②) — pure, transport-free.
+// Video request builder (layer ②) - pure, transport-free.
 //
 // Mirrors aihubmix-video's lib/server/video/create-task.ts family branching:
 //   • seedance (apiModel starts `doubao-seedance-`) → JSON with a multimodal
 //     `content[]` array (text + image_url{url,role:first_frame}); duration/ratio/resolution.
-//   • wan (wan* / happyhorse* — both DashScope/wanx-backed on the gateway) →
+//   • wan (wan* / happyhorse* - both DashScope/wanx-backed on the gateway) →
 //     { model, input:{ prompt, media:[{type:first_frame,url}] }, parameters:{ resolution, duration, prompt_extend, watermark } }.
-//   • veo (veo* — Google Veo via the Gemini predictLongRunning link) → flat JSON
+//   • veo (veo* - Google Veo via the Gemini predictLongRunning link) → flat JSON
 //     { model, prompt, seconds (NUMBER), size?, input_reference? }. The gateway's
 //     OpenAI→Gemini shim wants seconds as an integer and only honours `size`;
 //     sending the string "8" or an extra `aspect_ratio` makes it fail.
@@ -46,7 +46,7 @@ export function deriveVideoFamily(wireModel: string, cap?: ModelCapability): Med
 
 /**
  * Snap a requested duration to the model's allowed set (e.g. Veo 4/6/8, wan 5/10).
- * Falls back to a 3–12 clamp when the model declares no constraint. Ties prefer
+ * Falls back to a 3-12 clamp when the model declares no constraint. Ties prefer
  * the shorter value.
  */
 export function snapDuration(cap: ModelCapability, requested: number | undefined): number {
@@ -89,7 +89,7 @@ export function snapResolutionToken(
 
 /**
  * Veo (via the gateway's Gemini predictLongRunning shim) only accepts a handful
- * of `size` values — the gateway derives `resolution` from `size`, and anything
+ * of `size` values - the gateway derives `resolution` from `size`, and anything
  * that maps outside 720p/1080p (e.g. a 1:1 `1024x1024`) 400s with
  * "The string value `1024p` for `resolution` is invalid". Snap whatever the
  * caller hands us to the nearest valid Veo size by orientation; default to
@@ -106,7 +106,7 @@ export function snapVeoSize(size: string | undefined): string {
 
 /**
  * Snap a requested `size` to the model's declared `supportedSizes` by
- * orientation. Sora 400s on an unsupported size (e.g. a 1:1 `1024x1024` —
+ * orientation. Sora 400s on an unsupported size (e.g. a 1:1 `1024x1024` -
  * "Supported values are: '720x1280','1280x720',…"), so a caller-derived size
  * that isn't on the list is mapped to a supported one of the same orientation
  * (portrait↔portrait, else landscape). Returns the size unchanged when the
@@ -215,15 +215,15 @@ export function buildVideoRequest(cap: ModelCapability, input: VideoBuildInput):
   } else if (family === 'veo') {
     // Google Veo via the gateway's OpenAI→Gemini predictLongRunning shim. Unlike
     // the generic branch, `seconds` MUST be a number and `size` is the only size
-    // hint it honours — sending the string "8" or an extra `aspect_ratio` makes
+    // hint it honours - sending the string "8" or an extra `aspect_ratio` makes
     // it fail. TEXT-TO-VIDEO ONLY: every reference-image form (inlineData /
-    // referenceImages) is rejected by the shim, so we never attach one here —
+    // referenceImages) is rejected by the shim, so we never attach one here -
     // the caller gates i2v out via the capability's caps.
     body = {
       model: wireModel,
       prompt: input.prompt,
       seconds,
-      // Always a valid Veo size — the gateway derives resolution from it, so a
+      // Always a valid Veo size - the gateway derives resolution from it, so a
       // 1:1/4:3 pixel string would 400 as an invalid resolution.
       size: snapVeoSize(input.size),
     };
@@ -231,7 +231,7 @@ export function buildVideoRequest(cap: ModelCapability, input: VideoBuildInput):
     if (typeof input.seed === 'number') body.seed = input.seed;
   } else {
     // Generic OpenAI-style /videos (sora). `seconds` is a STRING here (Sora's
-    // enum "4"/"8"/"12") and the size hint is `size` — NOT `aspect_ratio`, which
+    // enum "4"/"8"/"12") and the size hint is `size` - NOT `aspect_ratio`, which
     // Sora rejects with "Unknown parameter: 'aspect_ratio'". Reference rides as
     // input_reference (data URL).
     body = {

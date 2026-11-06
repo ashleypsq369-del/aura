@@ -1,5 +1,5 @@
 ﻿/**
- * Services — World-class healthcare provider marketplace
+ * Services - World-class healthcare provider marketplace
  * Inspired by: Zocdoc, Care.com, Bark.com, Thumbtack, Doctorspring,
  *              HomeCare GH, HealthMatch, Maven Clinic, Teladoc
  *
@@ -37,7 +37,7 @@ import toast from '../utils/toast';
 const ICON_MAP = { Stethoscope, Activity, Heart, Brain, Users, Hand, FileText };
 
 const TYPE_META = {
-  // Pexels photos — African/diverse healthcare contexts
+  // Pexels photos - African/diverse healthcare contexts
   nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',
     icon:Stethoscope,
     img:'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop&crop=faces,top' },
@@ -71,8 +71,8 @@ const HERO_HEADLINES = [
   { text:'Trusted physicians across Ghana',   sub:'Palliative physicians in every region' },
 ];
 
-// African/diverse healthcare Pexels photos — one per role (exact fit)
-// opacity kept at 1 — shown in CARDS, not as overlays
+// African/diverse healthcare Pexels photos - one per role (exact fit)
+// opacity kept at 1 - shown in CARDS, not as overlays
 const HERO_SLIDES = [
   'https://images.pexels.com/photos/7659564/pexels-photo-7659564.jpeg?auto=compress&cs=tinysrgb&w=1400',
   'https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=1400',
@@ -81,7 +81,7 @@ const HERO_SLIDES = [
 ];
 
 const TESTIMONIALS = [
-  { name:'Efua Acheampong', role:'Family caregiver, Accra', text:'Abena came to our home within 48 hours. The wound care she provided was exceptional — she treated my mother with such dignity. I cannot recommend this service enough.', rating:5, avatar:'EA', color:'#0d9488' },
+  { name:'Efua Acheampong', role:'Family caregiver, Accra', text:'Abena came to our home within 48 hours. The wound care she provided was exceptional - she treated my mother with such dignity. I cannot recommend this service enough.', rating:5, avatar:'EA', color:'#0d9488' },
   { name:'Kwabena Asante', role:'Patient, Kumasi', text:'Dr. Efua visited twice a week and managed my pain so well that I was able to attend my granddaughter\'s graduation. Booking through Aura was simple and fast.', rating:5, avatar:'KA', color:'#0891b2' },
   { name:'Adwoa Mensah', role:'Social worker referral, Takoradi', text:'The physiotherapist Emmanuel has completely transformed how my father moves around the house. Professional, punctual, and genuinely compassionate.', rating:5, avatar:'AM', color:'#059669' },
   { name:'Ibrahim Al-Hassan', role:'Family, Tamale', text:'Imam Rahman\'s spiritual support during our most difficult days brought our family so much peace. He understood our faith and our grief simultaneously.', rating:5, avatar:'IA', color:'#0369a1' },
@@ -173,7 +173,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       }}
       onClick={() => onView(p)}
     >
-      {/* ── PHOTO AREA — top 48% of card, like Style A ── */}
+      {/* ── PHOTO AREA - top 48% of card, like Style A ── */}
       <div style={{ position:'relative', height:170, flexShrink:0, overflow:'hidden', background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
 
         {/* Individual avatar first, fall back to role category image */}
@@ -198,7 +198,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           </div>
         )}
 
-        {/* ⭐ Rating badge — top right, like Style A */}
+        {/* ⭐ Rating badge - top right, like Style A */}
         {rating && (
           <div style={{
             position:'absolute', top:10, right:10, zIndex:2,
@@ -222,7 +222,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           }}>Featured</div>
         )}
 
-        {/* Save / bookmark icon — top right under rating if no rating */}
+        {/* Save / bookmark icon - top right under rating if no rating */}
         <button onClick={e => e.stopPropagation()}
           style={{
             position:'absolute', bottom:10, right:10, zIndex:2,
@@ -251,7 +251,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         {/* Role */}
         <p style={{ fontSize:11, color:'var(--text-500)', margin:'0 0 7px', fontWeight:500 }}>{meta.label}</p>
 
-        {/* Bio — 2 lines max */}
+        {/* Bio - 2 lines max */}
         {p.bio && (
           <p style={{
             fontSize:11, color:'var(--text-500)', lineHeight:1.55, margin:'0 0 10px',
@@ -295,7 +295,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         )}
       </div>
 
-      {/* ── CTA buttons — dark card style ── */}
+      {/* ── CTA buttons - dark card style ── */}
       <div style={{ padding:'0 14px 14px' }}>
         <button
           onClick={e => { e.stopPropagation(); onBook(p); }}
@@ -357,7 +357,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           display:'flex', flexDirection:'column', overflowY:'auto',
         }}
       >
-        {/* ── Photo hero header — large, clean, like the card ── */}
+        {/* ── Photo hero header - large, clean, like the card ── */}
         <div style={{ height:230, position:'relative', overflow:'hidden', flexShrink:0, background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
         {/* Individual avatar first, fall back to role category image */}
           {(p.avatar_url || meta.img) && (
@@ -372,7 +372,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
               }}
             />
           )}
-          {/* Only bottom gradient — no dark overlay on the whole photo */}
+          {/* Only bottom gradient - no dark overlay on the whole photo */}
           <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)' }}/>
 
           {/* Close */}
@@ -515,7 +515,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           </div>
         </div>
 
-        {/* ── Sticky CTA footer — same style as card ── */}
+        {/* ── Sticky CTA footer - same style as card ── */}
         <div style={{ padding:'14px 20px 20px', borderTop:'1px solid var(--card-border)', background:'var(--card-bg)', flexShrink:0 }}>
           <button onClick={() => onBook(p)} style={{
             width:'100%', padding:'14px', borderRadius:14, fontSize:14, fontWeight:800,
@@ -868,7 +868,7 @@ export default function Services() {
   const featured = providers.slice(0, 4);
 
   const handleMessage = (p) => {
-    // Navigate to messages with userId param — Messages.jsx will find or create the conversation
+    // Navigate to messages with userId param - Messages.jsx will find or create the conversation
     navigate(`/messages?userId=${p.id}`);
   };
 
@@ -922,13 +922,13 @@ export default function Services() {
       </AnimatePresence>
 
       {/* ══════════════════════════════════════════════
-          HERO — dark gradient, animated text, compact
+          HERO - dark gradient, animated text, compact
       ══════════════════════════════════════════════ */}
       <div style={{
         position:'relative', overflow:'hidden',
         background:'linear-gradient(135deg,#071520 0%,#0b3028 45%,#0d6b5e 75%,#0a4a6e 100%)',
       }}>
-        {/* Soft radial glow — no floating dots */}
+        {/* Soft radial glow - no floating dots */}
         <div style={{ position:'absolute', inset:0, backgroundImage:'radial-gradient(ellipse at 15% 60%, rgba(13,148,136,0.22) 0%, transparent 55%), radial-gradient(ellipse at 85% 30%, rgba(8,145,178,0.18) 0%, transparent 45%)' }}/>
         {/* Bottom wave */}
         <div style={{ position:'absolute', bottom:-1, left:0, right:0, height:48, background:'var(--page-bg)', clipPath:'ellipse(55% 100% at 50% 100%)' }}/>
@@ -946,7 +946,7 @@ export default function Services() {
                 <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:999, background:'rgba(94,234,212,0.15)', color:'#5eead4', border:'1px solid rgba(94,234,212,0.3)' }}>NMC Verified</span>
               </motion.div>
 
-              {/* Animated headline — h1 + subtitle, fixed height container */}
+              {/* Animated headline - h1 + subtitle, fixed height container */}
               <div style={{ height:110, overflow:'hidden', marginBottom:24 }}>
                 <AnimatePresence mode="wait">
                   <motion.div key={heroIdx}
@@ -975,7 +975,7 @@ export default function Services() {
                 </button>
               </div>
 
-              {/* Popular + slide dots — single line, no wrap */}
+              {/* Popular + slide dots - single line, no wrap */}
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:12, gap:10 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:6, overflow:'hidden' }}>
                   <span style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontWeight:600, flexShrink:0 }}>Popular:</span>
@@ -989,7 +989,7 @@ export default function Services() {
               </div>
             </div>
 
-            {/* RIGHT — compact stat strip */}
+            {/* RIGHT - compact stat strip */}
             <div style={{ display:'flex', flexDirection:'column', gap:10, flexShrink:0, paddingTop:4 }}>
               {[
                 { color:'#0d9488', val:<Counter to={16} suffix="+"/>, label:'Providers' },
@@ -1017,7 +1017,7 @@ export default function Services() {
 
         {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizontal) ── */}
         <section style={{ paddingTop:24, paddingBottom:24 }}>
-          {/* Header — title only, no pills here */}
+          {/* Header - title only, no pills here */}
           <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:12 }}>
             <div>
               <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
@@ -1025,7 +1025,7 @@ export default function Services() {
             </div>
           </div>
 
-          {/* Single crossfading image card — full width, fixed height */}
+          {/* Single crossfading image card - full width, fixed height */}
           <div style={{ position:'relative', borderRadius:18, overflow:'hidden', height:220, cursor:'pointer' }}
             onClick={() => { const e = Object.entries(TYPE_META); const [k] = e[slideIdx%e.length]; setFilterType(k); setPage(1); setTab('browse'); }}>
 
@@ -1043,7 +1043,7 @@ export default function Services() {
                     transition={{ duration:0.7, ease:'easeInOut' }}>
                     <img src={meta.img} alt={meta.label}
                       style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%' }}/>
-                    {/* Bottom gradient only — minimal overlay */}
+                    {/* Bottom gradient only - minimal overlay */}
                     <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.08) 50%, transparent 100%)' }}/>
                     {/* Left side: role badge + name */}
                     <div style={{ position:'absolute', bottom:16, left:18, right:100 }}>
@@ -1070,7 +1070,7 @@ export default function Services() {
               })()}
             </AnimatePresence>
 
-            {/* Dot indicators — bottom centre */}
+            {/* Dot indicators - bottom centre */}
             <div style={{ position:'absolute', bottom:10, left:'50%', transform:'translateX(-50%)', display:'flex', gap:5, zIndex:3 }}>
               {Object.keys(TYPE_META).map((_,i) => (
                 <button key={i} onClick={e => { e.stopPropagation(); setSlideIdx(i); }}
@@ -1079,7 +1079,7 @@ export default function Services() {
             </div>
           </div>
 
-          {/* ── Pill filter strip — BELOW the card, full width, contained ── */}
+          {/* ── Pill filter strip - BELOW the card, full width, contained ── */}
           <div style={{ display:'flex', gap:7, overflowX:'auto', paddingTop:14, paddingBottom:4, scrollbarWidth:'none', msOverflowStyle:'none' }}>
             <motion.button whileTap={{ scale:0.93 }}
               onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
@@ -1128,7 +1128,7 @@ export default function Services() {
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap', marginBottom:20 }}>
               <p style={{ fontSize:13, color:'#64748b' }}>
                 {providersError
-                  ? <span style={{color:'#dc2626'}}>⚠ Could not load providers — {providersError?.response?.status === 401 ? 'please log in again' : 'check connection'}</span>
+                  ? <span style={{color:'#dc2626'}}>⚠ Could not load providers - {providersError?.response?.status === 401 ? 'please log in again' : 'check connection'}</span>
                   : <><strong style={{ color:'var(--text-900)' }}>{total}</strong> provider{total!==1?'s':''}{filterType && <> in <strong style={{ color: TYPE_META[filterType]?.color }}>{TYPE_META[filterType]?.label}</strong></>}</>
                 }
               </p>

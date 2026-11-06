@@ -1,4 +1,4 @@
-// brandToDesignMd — render a Brand as a DESIGN.md the design-systems registry
+// brandToDesignMd - render a Brand as a DESIGN.md the design-systems registry
 // can parse. The frontmatter carries a `colors:` map (so the picker shows
 // swatches) plus name/category/surface; the body opens with an `# <name>` H1
 // (the registry's title source) followed by Color Palette, Typography, Voice &
@@ -31,7 +31,7 @@ function colorKey(color: BrandColor, used: Set<string>): string {
   return key;
 }
 
-/** Frontmatter `colors:` block — a `<name>: <hex>` map the registry reads to
+/** Frontmatter `colors:` block - a `<name>: <hex>` map the registry reads to
  *  derive swatches. */
 function colorsFrontmatter(colors: BrandColor[]): string {
   if (colors.length === 0) return '';
@@ -46,9 +46,9 @@ function colorsFrontmatter(colors: BrandColor[]): string {
 function fontLine(label: string, spec: BrandFontSpec | undefined): string {
   if (!spec) return '';
   const weights = spec.weights.length > 0 ? spec.weights.join(', ') : '400, 700';
-  const fallbacks = spec.fallbacks.length > 0 ? ` — fallbacks: ${spec.fallbacks.join(', ')}` : '';
+  const fallbacks = spec.fallbacks.length > 0 ? ` - fallbacks: ${spec.fallbacks.join(', ')}` : '';
   const notes = spec.notes ? ` (${spec.notes})` : '';
-  return `- **${label}:** ${spec.family} — weights ${weights}${fallbacks}${notes}`;
+  return `- **${label}:** ${spec.family} - weights ${weights}${fallbacks}${notes}`;
 }
 
 function bulletList(items: string[]): string {
@@ -73,7 +73,7 @@ export function brandToDesignMd(brand: Brand): string {
   ].join('\n');
 
   const paletteRows = brand.colors
-    .map((c) => `| ${c.role} | ${c.name} | \`${c.hex}\` | ${c.usage || '—'} |`)
+    .map((c) => `| ${c.role} | ${c.name} | \`${c.hex}\` | ${c.usage || '-'} |`)
     .join('\n');
 
   const sections: string[] = [];
@@ -151,18 +151,18 @@ export function brandToDesignMd(brand: Brand): string {
 
 /**
  * Short prose brand guide, stored alongside brand.json and surfaced as the
- * BrandDetailResponse `guide`. A light wrapper over the same fields — the rich
+ * BrandDetailResponse `guide`. A light wrapper over the same fields - the rich
  * agent-authored guide can replace it during a later enrichment pass.
  */
 export function brandGuideMd(brand: Brand): string {
-  const lines: string[] = [`# ${brand.name} — Brand Guide`, ''];
+  const lines: string[] = [`# ${brand.name} - Brand Guide`, ''];
   if (brand.tagline) lines.push(`*${brand.tagline}*`, '');
   if (brand.description) lines.push(brand.description, '');
   if (brand.sourceUrl) lines.push(`Extracted from ${brand.sourceUrl}.`, '');
 
   lines.push('## Color roles', '');
   for (const c of brand.colors) {
-    lines.push(`- **${c.name}** (\`${c.hex}\`) — ${c.role}${c.usage ? `: ${c.usage}` : ''}`);
+    lines.push(`- **${c.name}** (\`${c.hex}\`) - ${c.role}${c.usage ? `: ${c.usage}` : ''}`);
   }
   lines.push('');
 

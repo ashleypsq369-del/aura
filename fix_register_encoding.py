@@ -29,8 +29,8 @@ BYTE_FIXES = [
     (b'\xe2\x94\xac\xe2\x95\x97', b'\xc2\xb7'),        # ┬╖ → ·
     # … ellipsis (ΓÇª)
     (b'\xce\x93\xc3\x87\xc2\xaa', b'\xe2\x80\xa6'),    # ΓÇª → …
-    # — em dash (ΓÇö)
-    (b'\xce\x93\xc3\x87\xc3\xb6', b'\xe2\x80\x94'),    # ΓÇö → —
+    # - em dash (ΓÇö)
+    (b'\xce\x93\xc3\x87\xc3\xb6', b'\xe2\x80\x94'),    # ΓÇö → -
     # ' right single quote (ΓÇÖ)
     (b'\xce\x93\xc3\x87\xc3\x96', b'\xe2\x80\x99'),    # ΓÇÖ → '
     # ↩ return arrow (â†©)
@@ -65,7 +65,7 @@ TEXT_FIXES = [
     # Ellipsis
     ("\u0393\u00c7\u00aa", "\u2026"),   # ΓÇª -> …
     # Em dash
-    ("\u0393\u00c7\u00f6", "\u2014"),   # ΓÇö -> —
+    ("\u0393\u00c7\u00f6", "\u2014"),   # ΓÇö -> -
     # Right single quote
     ("\u0393\u00c7\u0096", "\u2019"),   # ΓÇÖ -> '
     # Left double quote

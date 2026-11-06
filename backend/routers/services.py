@@ -1,4 +1,4 @@
-"""
+﻿"""
 Services Provider Marketplace Router
 Routes: /api/services/*
 
@@ -241,7 +241,7 @@ def get_provider_slots(
     try:
         target_date = datetime.strptime(date, "%Y-%m-%d").date()
     except ValueError:
-        raise HTTPException(400, "Invalid date format — use YYYY-MM-DD")
+        raise HTTPException(400, "Invalid date format - use YYYY-MM-DD")
 
     day_of_week = target_date.weekday()  # 0=Monday
 
@@ -726,7 +726,7 @@ def submit_rating(
     if not booking:
         raise HTTPException(404, "Booking not found")
 
-    # Reuse CaregiverRating model — appointment_id maps to booking's appointment_id
+    # Reuse CaregiverRating model - appointment_id maps to booking's appointment_id
     # Use patient_id=1 as placeholder if not a patient booking
     existing = db.query(CaregiverRating).filter(
         CaregiverRating.caregiver_id == data.provider_id,

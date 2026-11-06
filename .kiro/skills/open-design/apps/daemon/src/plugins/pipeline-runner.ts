@@ -1,4 +1,4 @@
-// Pipeline runner — bridges the pure pipeline scheduler in `pipeline.ts`
+// Pipeline runner - bridges the pure pipeline scheduler in `pipeline.ts`
 // onto a live run's SSE event stream and the `genui_surfaces` cache.
 //
 // Plan §3.A7 / spec §10.1 / §10.2. Today the agent loop owns the actual

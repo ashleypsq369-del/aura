@@ -91,7 +91,7 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
 
     const { run, projectId } = await createAndWaitForRun(started.url);
 
-    // Sanity: the run itself completed cleanly — the loss is silent, not a
+    // Sanity: the run itself completed cleanly - the loss is silent, not a
     // side effect of a failed run.
     expect(run.status).toBe('succeeded');
     expect(run.exitCode).toBe(0);
@@ -125,7 +125,7 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
     );
     expect(
       names,
-      `expected project files to include ${ARTIFACT_FILE_NAME} — the agent ` +
+      `expected project files to include ${ARTIFACT_FILE_NAME} - the agent ` +
         `streamed a complete <artifact> block early in the run, but it fell out ` +
         `of the 2000-event run.events ring buffer before the plain-stream ` +
         `finalizer re-scanned it, so the artifact was silently never persisted`,
@@ -135,12 +135,12 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
   // Regression guard for the accumulator cap (raised by review on #5850): the
   // truncation-proof stdout accumulator is head-biased (keeps the first CAP
   // bytes). If an <artifact> first appears AFTER a >CAP prose/log prefix, it is
-  // NOT in the capped buffer — but it may still be in the last 2000 run.events.
+  // NOT in the capped buffer - but it may still be in the last 2000 run.events.
   // A naive "always prefer the accumulator" finalizer would newly drop it (a
   // regression in the very path this PR fixes). The finalizer must fall back to
   // run.events when the accumulator was capped and lacks the tag. Here the big
   // prefix is written as a few large chunks, so the event count stays tiny and
-  // the artifact tag survives in the ring — the fallback must find it.
+  // the artifact tag survives in the ring - the fallback must find it.
   it('persists an artifact that first appears after a >8 MiB prefix (accumulator cap must fall back to the ring)', async () => {
     binDir = await mkdtemp(path.join(os.tmpdir(), 'od-plain-cap-bin-'));
     const fakeDeepseek = await writeBigPrefixThenArtifactDeepseek(binDir, 'deepseek-cap');
@@ -184,7 +184,7 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
     );
     expect(
       names,
-      `expected project files to include ${ARTIFACT_FILE_NAME} — the artifact ` +
+      `expected project files to include ${ARTIFACT_FILE_NAME} - the artifact ` +
         `first appeared after a >8 MiB prefix, so it is absent from the capped ` +
         `accumulator; the finalizer must fall back to run.events (where the tag ` +
         `still lives) rather than trusting the capped buffer's absence of it`,
@@ -192,7 +192,7 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
   });
 
   // Regression guard #2 for the accumulator cap (raised by review on #5850): two
-  // artifacts split across the cap boundary — `A -> >8 MiB prose -> B`. The
+  // artifacts split across the cap boundary - `A -> >8 MiB prose -> B`. The
   // head-biased accumulator holds A (so it DOES contain `<artifact`), but B is
   // past the cap and only survives in the tail-biased run.events. A finalizer
   // that trusts the accumulator whenever it contains any tag would persist only
@@ -236,7 +236,7 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
     expect(names, 'the early artifact A (in the capped head) must persist').toContain('split-a.html');
     expect(
       names,
-      'the late artifact B (past the cap, only in the tail ring) must ALSO persist — ' +
+      'the late artifact B (past the cap, only in the tail ring) must ALSO persist - ' +
         'the finalizer must union head and tail artifact sets, not stop at A',
     ).toContain('split-b.html');
   });
@@ -285,11 +285,11 @@ describe('plain-stream artifact persistence vs run.events ring-buffer truncation
     expect(
       dupFiles.length,
       `both same-identifier same-body artifacts must persist as distinct files ` +
-        `(got ${JSON.stringify(dupFiles)}) — a value-level dedup would keep only one`,
+        `(got ${JSON.stringify(dupFiles)}) - a value-level dedup would keep only one`,
     ).toBe(2);
   });
 
-  // Control: identical run WITHOUT the flood — the artifact tag stays inside
+  // Control: identical run WITHOUT the flood - the artifact tag stays inside
   // the ring buffer and persistence works. This passes on origin/main and
   // isolates the >2000-event truncation as the only variable that flips the
   // behavioral assertion above red.
@@ -348,7 +348,7 @@ if (process.argv.includes('--version')) { console.log('deepseek 4.0.0-trunc'); p
 if (process.argv.includes('--help')) { console.log('Usage: deepseek exec [--auto] <prompt>'); process.exit(0); }
 // Synchronous writes so every chunk is delivered before the process exits.
 const W = (s) => fs.writeSync(1, s);
-// The artifact comes FIRST — a complete, well-formed block.
+// The artifact comes FIRST - a complete, well-formed block.
 W('<artifact identifier="${ARTIFACT_IDENTIFIER}" title="Trunc Repro" type="text/html">\\n');
 W('<!doctype html><html><body>ring-buffer truncation repro</body></html>\\n');
 W('</artifact>\\n');
@@ -368,7 +368,7 @@ W('</artifact>\\n');
 }
 
 // Writes >8 MiB of prose FIRST (in a few large chunks, so the daemon reads it
-// as a handful of run events — the ring buffer is NOT truncated), THEN a
+// as a handful of run events - the ring buffer is NOT truncated), THEN a
 // complete artifact block, then exits. This overruns the head-biased stdout
 // accumulator's cap while leaving the artifact tag inside run.events.
 async function writeBigPrefixThenArtifactDeepseek(dir: string, name: string): Promise<string> {
@@ -393,7 +393,7 @@ process.exit(0);
 
 // Writes artifact A, THEN a >8 MiB prose block (few large chunks so the ring is
 // not truncated), THEN artifact B, then exits. A lands in the capped head
-// accumulator; B is past the cap and survives only in the tail-biased ring —
+// accumulator; B is past the cap and survives only in the tail-biased ring -
 // the finalizer must union both.
 async function writeArtifactBigPrefixArtifactDeepseek(dir: string, name: string): Promise<string> {
   const bin = path.join(dir, name);

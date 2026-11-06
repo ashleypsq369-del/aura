@@ -4,7 +4,7 @@ import type { WhatsNewContent, WhatsNewLocaleContent } from '@open-design/contra
 // on a dedicated R2 bucket. Operators edit that one file after a release; the
 // document carries an `id` that drives the home card's once-per-highlight
 // behavior (see apps/web/src/lib/whats-new.ts). This service does not know
-// about release channels or the running version — content identity is the
+// about release channels or the running version - content identity is the
 // only thing that matters. A missing, unreachable, or malformed document
 // resolves to `{ id: null, content: null }`; this endpoint must never fail the
 // home surface.

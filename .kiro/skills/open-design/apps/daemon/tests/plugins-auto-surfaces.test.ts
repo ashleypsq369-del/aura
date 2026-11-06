@@ -1,4 +1,4 @@
-// Phase 8 entry slice — auto-derived choice surface for diff-review.
+// Phase 8 entry slice - auto-derived choice surface for diff-review.
 
 import { describe, expect, it } from 'vitest';
 import type {
@@ -36,7 +36,7 @@ const consumer = (od: NonNullable<PluginManifest['od']>): InstalledPluginRecord 
   } as PluginManifest,
 });
 
-describe('deriveAutoAtomSurfaces — diff-review choice', () => {
+describe('deriveAutoAtomSurfaces - diff-review choice', () => {
   it('emits one __auto_diff_review_<stageId> per stage that contains diff-review', () => {
     const out = deriveAutoAtomSurfaces({
       pipeline: {
@@ -71,7 +71,7 @@ describe('deriveAutoAtomSurfaces — diff-review choice', () => {
   });
 });
 
-describe('applyPlugin — diff-review auto-surface integration', () => {
+describe('applyPlugin - diff-review auto-surface integration', () => {
   it('lands the auto-surface on AppliedPluginSnapshot.genuiSurfaces when the plugin pipeline declares diff-review', () => {
     const out = applyPlugin({
       plugin: consumer({

@@ -1,4 +1,4 @@
-// Plan §3.BB2 — diffSnapshots() pure helper.
+// Plan §3.BB2 - diffSnapshots() pure helper.
 
 import { describe, expect, it } from 'vitest';
 import type { AppliedPluginSnapshot } from '@open-design/contracts';
@@ -46,7 +46,7 @@ function strategy(profileDigest: string) {
   };
 }
 
-describe('diffSnapshots — equivalence + invariance', () => {
+describe('diffSnapshots - equivalence + invariance', () => {
   it('reports digestEqual=true and zero entries on byte-equal snapshots', () => {
     const a = make({ inputs: { topic: 'x' } });
     const b = make({ inputs: { topic: 'x' } });
@@ -70,7 +70,7 @@ describe('diffSnapshots — equivalence + invariance', () => {
   });
 });
 
-describe('diffSnapshots — input map', () => {
+describe('diffSnapshots - input map', () => {
   it("reports added / removed / changed inputs in one summary entry", () => {
     const a = make({ inputs: { keep: 'same', drop: 'gone', edit: 'old' } });
     const b = make({ inputs: { keep: 'same',                  edit: 'new', add: 'new' } });
@@ -81,7 +81,7 @@ describe('diffSnapshots — input map', () => {
   });
 });
 
-describe('diffSnapshots — strategy identity', () => {
+describe('diffSnapshots - strategy identity', () => {
   it('reports only strategy identity, package hash, and selected profile digest drift', () => {
     const a = make({ strategy: strategy('b'.repeat(64)) });
     const b = make({ strategy: strategy('c'.repeat(64)) });
@@ -98,7 +98,7 @@ describe('diffSnapshots — strategy identity', () => {
   });
 });
 
-describe('diffSnapshots — capability + connector arrays', () => {
+describe('diffSnapshots - capability + connector arrays', () => {
   it('detects added / removed entries on capabilitiesGranted', () => {
     const a = make({ capabilitiesGranted: ['fs:read'] });
     const b = make({ capabilitiesGranted: ['fs:read', 'connector:slack'] });
@@ -121,7 +121,7 @@ describe('diffSnapshots — capability + connector arrays', () => {
   });
 });
 
-describe('diffSnapshots — pipeline', () => {
+describe('diffSnapshots - pipeline', () => {
   it('detects pipeline added / removed / per-stage atoms churn', () => {
     const a = make({
       pipeline: { stages: [
@@ -150,7 +150,7 @@ describe('diffSnapshots — pipeline', () => {
   });
 });
 
-describe('diffSnapshots — output shape', () => {
+describe('diffSnapshots - output shape', () => {
   it('sorts entries by field path lexicographically', () => {
     const a = make();
     const b = make({ snapshotId: 'snap-2', pluginVersion: '0.2.0', taskKind: 'code-migration' });

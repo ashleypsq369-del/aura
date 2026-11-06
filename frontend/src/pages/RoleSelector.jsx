@@ -1,5 +1,5 @@
-/**
- * RoleSelector — "Who are you?" pre-registration screen
+﻿/**
+ * RoleSelector - "Who are you?" pre-registration screen
  * Premium motion: staggered entrance, spring hover, selection burst, gradient shimmer
  * Route: /get-started  (public)
  */
@@ -49,7 +49,7 @@ const ROLES = [
   {
     key: 'clinician',
     label: 'I am a Clinician',
-    sublabel: 'Doctor, nurse — contact your admin',
+    sublabel: 'Doctor, nurse - contact your admin',
     icon: Stethoscope,
     gradient: ['#4338ca', '#1d4ed8'],
     route: null,
@@ -169,7 +169,7 @@ export default function RoleSelector() {
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--page-bg)' }}>
 
-      {/* Left slideshow — desktop only */}
+      {/* Left slideshow - desktop only */}
       <div className="hidden lg:block w-5/12 flex-shrink-0">
         <LoginSlideshow />
       </div>

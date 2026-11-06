@@ -1,4 +1,4 @@
-// Plan §3.NN1 — purgePluginEventBuffer().
+// Plan §3.NN1 - purgePluginEventBuffer().
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {

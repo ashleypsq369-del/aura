@@ -37,12 +37,12 @@ export interface RegisterProjectCommentRoutesDeps extends RouteDeps<'db' | 'proj
   /**
    * Gate POST (create/edit)/PATCH status/DELETE on the caller's WORKSPACE
    * identity, before the author-identity logic below ever runs (spec 04 §10
-   * fix #4/#6 — recvqbklNGDqYY: a comment had zero `enforceWorkspace*`
+   * fix #4/#6 - recvqbklNGDqYY: a comment had zero `enforceWorkspace*`
    * coverage, the one fully-unguarded write path among the four resource
    * types). A comment has no workspace binding of its own, so this borrows
    * the PARENT PROJECT's binding via `getWorkspaceProject`/
    * `getWorkspaceProjectByProjectId` (both already available on
-   * `ctx.projectStore`) — the same instance `routes/project/index.ts` built
+   * `ctx.projectStore`) - the same instance `routes/project/index.ts` built
    * for its own project routes (cross-check against the daemon's own
    * last-known membership included), threaded down through
    * `registerProjectConversationRoutes` rather than re-derived here.
@@ -50,12 +50,12 @@ export interface RegisterProjectCommentRoutesDeps extends RouteDeps<'db' | 'proj
    * Optional, and a no-op when omitted, so fixtures that only exercise
    * comment CRUD semantics (most of this file's existing tests, which use
    * plain non-workspace-bound projects) keep compiling and behaving exactly
-   * as before — an unbound project's comments were never gated either way,
+   * as before - an unbound project's comments were never gated either way,
    * since `enforceWorkspaceResourceMutation` itself passes a `row === null`
    * lookup straight through regardless of ctx.
    */
   enforceWorkspaceProjectMutation?: BoundWorkspaceResourceMutationGate;
-  /** Paired with `enforceWorkspaceProjectMutation` above — see that field. */
+  /** Paired with `enforceWorkspaceProjectMutation` above - see that field. */
   sendApiError?: (res: any, status: number, code: string, message: string) => unknown;
   /**
    * Resolve and authorize the PERSISTED project's Workspace scope. Production
@@ -89,7 +89,7 @@ export interface RegisterProjectCommentRoutesDeps extends RouteDeps<'db' | 'proj
   ) => Promise<ProjectCommentWorkspaceContextResolution>;
   /**
    * Resolve the CURRENT caller's workspaceMemberId from the request identity
-   * (workspace context). Server-authoritative — used both to stamp the author on
+   * (workspace context). Server-authoritative - used both to stamp the author on
    * a new/edited comment and to gate status/delete on the caller's identity.
    * Optional: off-team it returns undefined and comments are stored without an
    * author and no permission gating applies.
@@ -119,7 +119,7 @@ export interface RegisterProjectCommentRoutesDeps extends RouteDeps<'db' | 'proj
   ) => Promise<boolean>;
   /**
    * Fired after a comment is created OR edited (body upsert), so the collab-cloud
-   * service can push it to the cross-daemon relay (best-effort — a push failure
+   * service can push it to the cross-daemon relay (best-effort - a push failure
    * must not fail the local save). No-op off-team / when the collab cloud is
    * unconfigured.
    */
@@ -305,7 +305,7 @@ export function registerProjectCommentRoutes(app: Express, ctx: RegisterProjectC
    * Workspace-identity gate for a comment mutation, borrowing the PARENT
    * PROJECT's binding (see `enforceWorkspaceProjectMutation` on
    * `RegisterProjectCommentRoutesDeps` above). Writes the 401/403 response
-   * itself and returns false when denied — callers return immediately on
+   * itself and returns false when denied - callers return immediately on
    * `false` without running their own author-identity logic. A no-op (always
    * allows) when the gate wasn't wired up, matching how an unbound project's
    * comments behaved before this fix existed either way.
@@ -658,7 +658,7 @@ export function registerProjectCommentRoutes(app: Express, ctx: RegisterProjectC
       }
       // Resolved BEFORE the upsert (not just before the push below) so a
       // genuinely new comment's pin_seq starts unconfirmed on a team-shared
-      // project — see UpsertPreviewCommentOptions in db.ts. Ignored on the
+      // project - see UpsertPreviewCommentOptions in db.ts. Ignored on the
       // edit branch, so computing it here for an edit-via-POST is harmless.
       const syncEnabled = isLocalTeamRelayCandidate(
         req.params.id,
@@ -836,7 +836,7 @@ export function registerProjectCommentRoutes(app: Express, ctx: RegisterProjectC
         // Drift-ladder write-back: the client resolves anchor state each render
         // and reports it here. This is a per-daemon DERIVED read-back (each
         // daemon anchors against its own content), not a user edit or a synced
-        // field — so it is neither permission-gated nor pushed to the relay, and
+        // field - so it is neither permission-gated nor pushed to the relay, and
         // it does not bump updated_at.
         const existing = getRequestPreviewComment(
           req.params.id,
@@ -884,7 +884,7 @@ export function registerProjectCommentRoutes(app: Express, ctx: RegisterProjectC
         // content edit: unlike status change/delete, it is not gated on
         // authorship (any member may reorder their OWN view of a shared
         // project's comments), does not bump updated_at, and is never pushed
-        // to the collab-cloud relay — see PreviewComment.sortKey.
+        // to the collab-cloud relay - see PreviewComment.sortKey.
         const existing = getRequestPreviewComment(
           req.params.id,
           req.params.cid,

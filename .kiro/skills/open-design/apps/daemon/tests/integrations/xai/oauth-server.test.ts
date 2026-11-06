@@ -6,7 +6,7 @@ import {
   type CallbackOutcome,
 } from '../../../src/integrations/xai-oauth-server.js';
 
-// Use port 0 in tests so the OS picks a free ephemeral port — avoids
+// Use port 0 in tests so the OS picks a free ephemeral port - avoids
 // collisions with a real Hermes / OD OAuth flow that may already own
 // 127.0.0.1:56121.
 const TEST_PORT = 0;
@@ -115,7 +115,7 @@ describe('startCallbackListener', () => {
 
   it('keeps the listener open on ?error= replays with a mismatched state', async () => {
     // Browser history replay of an OLD `/callback?error=…&state=stale`
-    // must not close the listener — the current dance still has a real
+    // must not close the listener - the current dance still has a real
     // xAI redirect coming, and the singleton :56121 socket can't be
     // re-bound by a follow-up Sign in until the listener releases.
     let onCallbackCount = 0;
@@ -187,7 +187,7 @@ describe('startCallbackListener', () => {
       port: TEST_PORT,
     });
 
-    // /callback with neither code nor state — e.g. browser prefetch or
+    // /callback with neither code nor state - e.g. browser prefetch or
     // a malformed redirect. Must not consume the listener.
     const empty = await fetchCallback(listener.address, {});
     expect(empty.status).toBe(400);
@@ -266,7 +266,7 @@ describe('startCallbackListener', () => {
     expect(first.status).toBe(200);
 
     // Second hit either races the close or returns 410 / connection
-    // refused — we just assert outcomes stays at 1.
+    // refused - we just assert outcomes stays at 1.
     await new Promise((r) => setTimeout(r, 60));
     await fetchCallback(listener.address, {
       code: 'c2',

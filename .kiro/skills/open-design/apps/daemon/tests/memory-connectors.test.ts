@@ -1034,7 +1034,7 @@ process.stdout.write(JSON.stringify({
     // Model the real `opencode run` arg parser: `-f, --file` is a yargs
     // *array* option, so it greedily swallows every following non-flag
     // token as a file path. Any captured path that doesn't exist makes the
-    // real CLI exit 1 with "File not found: <token>" — which is exactly how
+    // real CLI exit 1 with "File not found: <token>" - which is exactly how
     // a trailing positional message after `--file` crashed extraction. The
     // supported one-shot shape is bare `run` with the prompt on stdin.
     await fsp.writeFile(

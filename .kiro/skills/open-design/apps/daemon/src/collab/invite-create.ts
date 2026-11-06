@@ -10,7 +10,7 @@ import { readVelaControlApiContext } from '../integrations/vela.js';
 // workspaceId from the workspace context and calls this helper once per invite.
 // The helper proves identity with the SAME signed-in vela session the rest of C
 // uses (never a client-supplied one) and POSTs to B's create-invite endpoint.
-// Any failure degrades to a typed outcome the route maps onto HTTP — it never
+// Any failure degrades to a typed outcome the route maps onto HTTP - it never
 // throws into the caller. In particular, B's create endpoint may not exist on a
 // local backend yet. Safe, explicitly allowlisted business errors retain their
 // typed code; every other non-2xx becomes `create_<status>` instead of leaking

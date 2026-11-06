@@ -11,7 +11,7 @@ export const copilotAgentDef = {
     // `copilot -p <body>` ships the full composed prompt as a single
     // argv entry, and CreateProcess caps `lpCommandLine` at ~32 KB
     // direct or ~8 KB through a `.cmd` shim. Any non-trivial Open
-    // Design prompt blows past that — even a "Hi" expands to several
+    // Design prompt blows past that - even a "Hi" expands to several
     // thousand chars after skills + design-system context are composed
     // in.
     //
@@ -23,7 +23,7 @@ export const copilotAgentDef = {
     // (PR #466) both pre-dated that confirmation: `-p -` made Copilot
     // interpret `-` as a literal one-character prompt, but omitting
     // `-p` entirely is a separate code path that does delegate to
-    // stdin under a non-TTY pipe — which is exactly how the daemon
+    // stdin under a non-TTY pipe - which is exactly how the daemon
     // spawns the child (`stdio: ['pipe', 'pipe', 'pipe']`).
     //
     // `--allow-all-tools` is still required for non-interactive runs:
@@ -42,7 +42,7 @@ export const copilotAgentDef = {
     //
     // No `models` subcommand; the CLI accepts whatever the user's
     // Copilot subscription exposes. Ship a small evidence-based hint
-    // list — the default we observed in the JSON stream and the
+    // list - the default we observed in the JSON stream and the
     // example from `copilot --help`. Users can paste any other id via
     // Settings.
     fallbackModels: [
@@ -69,7 +69,7 @@ export const copilotAgentDef = {
     streamFormat: 'copilot-stream-json',
     // GitHub Copilot's deck-generation and large-prompt turns go silent
     // (no stdout, no streamed events) for stretches that exceed the
-    // 10-minute global default — the model is still working but the
+    // 10-minute global default - the model is still working but the
     // CLI does not emit keepalive frames. The default watchdog used to
     // kill those runs as `stalled` even though the agent was healthy
     // (issue #2467: "GitHub Copilot agent getting stuck after 10 mins

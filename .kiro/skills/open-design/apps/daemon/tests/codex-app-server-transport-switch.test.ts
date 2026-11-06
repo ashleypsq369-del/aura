@@ -14,12 +14,12 @@ import {
  * load-bearing and are asserted here rather than argued in a PR body:
  *
  *  1. With the switch forced off the codex runtime definition is the SAME OBJECT the
- *     registry has always exported — not a copy that happens to hold equal
+ *     registry has always exported - not a copy that happens to hold equal
  *     fields. Object identity is the strongest available proof that no code
  *     path downstream of the def can observe a difference.
  *  2. The switch is resolved from the process environment at run time. The
  *     app-server transport is the shipping default; an operator can roll back
- *     with `OD_CODEX_TRANSPORT=exec-json` and a daemon restart — no rebuild or
+ *     with `OD_CODEX_TRANSPORT=exec-json` and a daemon restart - no rebuild or
  *     code edit, and both transports stay reachable.
  */
 describe('codex transport switch', () => {
@@ -55,7 +55,7 @@ describe('codex transport switch', () => {
       // rust-v0.64.0 is where `thread/tokenUsage/updated` starts being emitted
       // and rust-v0.59.0 where `item/agentMessage/delta` does, but the floor
       // sits at the release where `initialize` first accepts a `capabilities`
-      // object — see CODEX_APP_SERVER_MIN_VERSION for why.
+      // object - see CODEX_APP_SERVER_MIN_VERSION for why.
       expect(codexAppServerSupportsVersion('0.94.0')).toBe(false);
       expect(codexAppServerSupportsVersion('0.64.0')).toBe(false);
       expect(codexAppServerSupportsVersion('0.58.0')).toBe(false);

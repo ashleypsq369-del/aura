@@ -30,7 +30,7 @@ describe('host tools open-in launch plans', () => {
   });
 });
 
-describe('platform gate — Warp is darwin-only, cross-platform tools stay available everywhere', () => {
+describe('platform gate - Warp is darwin-only, cross-platform tools stay available everywhere', () => {
   it('CATALOGUE includes a warp entry', () => {
     const warp = CATALOGUE.find((e: CatalogueEntry) => e.id === 'warp');
     expect(warp).toBeDefined();
@@ -51,13 +51,13 @@ describe('platform gate — Warp is darwin-only, cross-platform tools stay avail
     expect(applicableForPlatform(warp, 'darwin' as Platform)).toBe(true);
   });
 
-  it('cursor remains applicable on win32 (regression guard — no platforms restriction)', () => {
+  it('cursor remains applicable on win32 (regression guard - no platforms restriction)', () => {
     const cursor = CATALOGUE.find((e: CatalogueEntry) => e.id === 'cursor')!;
     expect(cursor).toBeDefined();
     expect(applicableForPlatform(cursor, 'win32' as Platform)).toBe(true);
   });
 
-  it('cursor remains applicable on darwin (regression guard — no platforms restriction)', () => {
+  it('cursor remains applicable on darwin (regression guard - no platforms restriction)', () => {
     const cursor = CATALOGUE.find((e: CatalogueEntry) => e.id === 'cursor')!;
     expect(applicableForPlatform(cursor, 'darwin' as Platform)).toBe(true);
   });

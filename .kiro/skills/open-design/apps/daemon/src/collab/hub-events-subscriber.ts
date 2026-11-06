@@ -5,7 +5,7 @@
 // else uses) and surfaces thin invalidation events. This replaces "poll every
 // 5-15s and diff" as the PRIMARY freshness mechanism; the pollers stay alive
 // as a lower-frequency safety net and as the sole mechanism while this
-// channel is down — the channel's health is exposed through `onStateChange`
+// channel is down - the channel's health is exposed through `onStateChange`
 // so the caller can switch poll cadences.
 //
 // Reliability model (mirrors the daemon→web thin-event contract):
@@ -82,7 +82,7 @@ export interface HubWorkspaceEvent {
   projectId?: string;
   resourceId?: string;
   /** Set on 'team-resources-changed': `resource_hub.resources.kind` at emit
-   *  time — 'design_system' | 'plugin' | 'skill' | 'project' | any future
+   *  time - 'design_system' | 'plugin' | 'skill' | 'project' | any future
    *  kind. Opaque here by design (mirrors vela's own `WorkspaceEvent.
    *  resourceKind`); this daemon's `onEvent` handler owns the kind→reconciler
    *  routing. */
@@ -314,7 +314,7 @@ export interface HubEventsSubscriberOptions {
     identityKey?: string;
     reason?: string;
   }) => void;
-  /** Channel health transitions — drives poll-cadence switching. */
+  /** Channel health transitions - drives poll-cadence switching. */
   onStateChange?: (
     state: 'connected' | 'disconnected',
     connection: { identityKey?: string },
@@ -761,7 +761,7 @@ export function startHubEventsSubscriber(options: HubEventsSubscriberOptions): H
         // Never open the now-stale scope; resolve again from current identity.
         if (generation !== endpointGeneration) continue;
         if (!endpoint) {
-          // Signed out / no team workspace — idle at max backoff, keep probing.
+          // Signed out / no team workspace - idle at max backoff, keep probing.
           await sleep(jitteredBackoff(backoffMaxMs));
           continue;
         }
@@ -770,7 +770,7 @@ export function startHubEventsSubscriber(options: HubEventsSubscriberOptions): H
           backoffMs = backoffMinMs;
           continue;
         }
-        // Server closed cleanly (deploy/restart) — reconnect promptly. A
+        // Server closed cleanly (deploy/restart) - reconnect promptly. A
         // terminal revocation or untrusted ready frame must not become a
         // one-request-per-second loop; probe only at the bounded maximum until
         // membership, deployment, or scope changes.

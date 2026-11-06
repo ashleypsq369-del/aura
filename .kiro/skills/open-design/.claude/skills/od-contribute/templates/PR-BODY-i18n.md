@@ -9,9 +9,9 @@
 ## What I preserved
 
 - Every Markdown structure element (headings, lists, tables, callouts, link/image targets)
-- Code blocks — left untranslated
-- Brand names and product names — left untranslated
-- Internal cross-links — adjusted to point to the localized file when one exists, else to the English source
+- Code blocks - left untranslated
+- Brand names and product names - left untranslated
+- Internal cross-links - adjusted to point to the localized file when one exists, else to the English source
 
 ## What I changed
 

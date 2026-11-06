@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Appointments - redesigned to match Alerts.jsx design system
  * Pattern: motion.div min-h-screen space-y-5 pb-8, px-6 sections
  */
@@ -376,7 +376,7 @@ export default function Appointments() {
  subtitle={
  isPatient ? "Your upcoming visits, today's schedule and past appointments" :
  isFamily ? "Your loved one's appointment schedule" :
- "Patient appointments — schedule, complete, cancel and track visits"
+ "Patient appointments - schedule, complete, cancel and track visits"
  }
  icon={Calendar}
  stats={[
@@ -410,7 +410,7 @@ export default function Appointments() {
  onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
  onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
  </div>
- {/* Status pills — keep All option not covered by stats */}
+ {/* Status pills - keep All option not covered by stats */}
  <div style={{ display:'flex', gap:4 }}>
  {[['active','Upcoming'],['all','All'],['resolved','Completed']].map(([v,l])=>(
  <button key={v} onClick={()=>setFilterStatus(v)} style={{
@@ -467,7 +467,7 @@ export default function Appointments() {
  </div>
  )}
 
- {/* KPI cards removed — stats moved into PageHeader */}
+ {/* KPI cards removed - stats moved into PageHeader */}
 
  {/* Personalisation */} {/* Today's reminders */}
  {todayReminders.length > 0 && (

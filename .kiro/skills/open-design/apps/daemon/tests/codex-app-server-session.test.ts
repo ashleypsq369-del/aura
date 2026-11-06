@@ -254,7 +254,7 @@ describe('codex app-server session', () => {
     // `codex app-server` is a SERVER: unlike `codex exec` it does not exit when
     // the turn ends, so nothing would ever close the run. Measured on
     // codex-cli 0.149.1, it exits with code 0 roughly 250ms after stdin EOF,
-    // which is the cleanest available shutdown — no signal, no null exit code,
+    // which is the cleanest available shutdown - no signal, no null exit code,
     // and no special-casing in the run's close classifier.
     it('closes stdin once the turn completes so the server exits', () => {
       const { child, marks } = harness();
@@ -434,7 +434,7 @@ describe('codex app-server session', () => {
     // the session-capture status channel THIS turn. `thread/start` is followed
     // by a `thread/started` notification, but `thread/resume` answers with the
     // thread in its RPC result and (measured on codex-cli 0.149.1) sends no
-    // such notification — so a resumed turn would report no handle at all and
+    // such notification - so a resumed turn would report no handle at all and
     // the stored one would go stale.
     it('reports the handle on a resumed turn, where no notification arrives', () => {
       const { child, agentEvents } = harness({ resumeSessionId: 'th-prev' });

@@ -1,4 +1,4 @@
-// Connector capability gate — spec §9 / §11.3 connector-gate.
+// Connector capability gate - spec §9 / §11.3 connector-gate.
 //
 // Three responsibilities:
 //
@@ -45,7 +45,7 @@ export interface ConnectorCatalogEntry {
 
 export interface ConnectorProbe {
   // Sync lookup over the FAST catalog + status maps. Returns undefined
-  // when the id is unknown — apply.ts surfaces that as a doctor warning.
+  // when the id is unknown - apply.ts surfaces that as a doctor warning.
   get(connectorId: string): ConnectorCatalogEntry | undefined;
 }
 
@@ -96,7 +96,7 @@ export function resolveConnectorBindings(
 // Auto-derive `oauth-prompt` GenUI surfaces for required connectors that
 // are not yet connected. Keeps the implicit `__auto_connector_<id>` /
 // `persist: 'project'` shape locked by spec §10.3.1. Plugin-declared
-// surfaces with the same id win — the apply path filters those out
+// surfaces with the same id win - the apply path filters those out
 // before passing into this function (see `mergeAutoOAuthPrompts`).
 export function deriveAutoOAuthPrompts(
   bindings: PluginConnectorBinding[],
@@ -152,7 +152,7 @@ export function validateConnectorRefs(
       issues.push({
         connectorId: ref.id,
         code:        'unknown-connector',
-        message:     `Unknown connector "${ref.id}" — no entry in connectorService.listAll()`,
+        message:     `Unknown connector "${ref.id}" - no entry in connectorService.listAll()`,
       });
       continue;
     }
@@ -202,6 +202,6 @@ export function checkConnectorTokenIssuance(args: {
   if (granted.has(cap)) return { ok: true };
   return {
     ok: false,
-    reason: `restricted plugin lacks "${cap}" — Grant the capability via /api/plugins/:id/trust before issuing a token`,
+    reason: `restricted plugin lacks "${cap}" - Grant the capability via /api/plugins/:id/trust before issuing a token`,
   };
 }

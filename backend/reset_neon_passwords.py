@@ -1,4 +1,4 @@
-"""Reset all demo account passwords on the Neon production database."""
+﻿"""Reset all demo account passwords on the Neon production database."""
 import sys, os
 sys.path.insert(0, '.')
 os.environ['DATABASE_URL'] = (
@@ -61,4 +61,4 @@ for username, pwd in resets:
 
 db.close()
 print()
-print('Done — production Neon DB updated.')
+print('Done - production Neon DB updated.')

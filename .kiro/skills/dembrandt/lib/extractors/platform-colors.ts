@@ -5,11 +5,11 @@
  * are auditable without researching specs from scratch.
  *
  * Sources covered:
- *   theme-color          W3C / Chrome Android, Safari 15+, Edge — most common
+ *   theme-color          W3C / Chrome Android, Safari 15+, Edge - most common
  *   theme-color (dark)   Same tag with media="(prefers-color-scheme: dark)"
- *   mask-icon color      Safari pinned tab — explicit brand hex, high signal
- *   msapplication-*      IE11 / Windows pinned tiles — legacy but widespread
- *   apple-mobile-web-app-status-bar-style  iOS Safari — value is black|default|#hex
+ *   mask-icon color      Safari pinned tab - explicit brand hex, high signal
+ *   msapplication-*      IE11 / Windows pinned tiles - legacy but widespread
+ *   apple-mobile-web-app-status-bar-style  iOS Safari - value is black|default|#hex
  *   og:image             Not a color, skip
  */
 
@@ -49,7 +49,7 @@ export const DOM_COLOR_SNAPSHOT_SCRIPT = `(() => {
 /**
  * Returns color hints ordered by trust: manifest (already handled upstream) >
  * explicit hex sources > inferred. Only includes entries with a non-empty value
- * that looks like a color (hex, rgb, named). Does NOT normalize — caller normalizes
+ * that looks like a color (hex, rgb, named). Does NOT normalize - caller normalizes
  * via page.evaluate so CSS named colors resolve correctly.
  */
 export function extractPlatformColors(snap: DomColorSnapshot): PlatformColorHint[] {
@@ -77,10 +77,10 @@ export function extractPlatformColors(snap: DomColorSnapshot): PlatformColorHint
     }
   };
 
-  // 1. theme-color — covers all media variants in one pass
+  // 1. theme-color - covers all media variants in one pass
   addMeta('theme-color', 'meta:theme-color');
 
-  // 2. Safari pinned tab — <link rel="mask-icon" color="#hex"> — explicit, high trust
+  // 2. Safari pinned tab - <link rel="mask-icon" color="#hex"> - explicit, high trust
   for (const l of snap.links) {
     if (l.rel?.toLowerCase().includes('mask-icon') && l.color?.trim()) {
       hints.push({ value: l.color.trim(), source: 'link:mask-icon' });
@@ -91,8 +91,8 @@ export function extractPlatformColors(snap: DomColorSnapshot): PlatformColorHint
   addMeta('msapplication-TileColor', 'meta:msapplication-TileColor');
   addMeta('msapplication-navbutton-color', 'meta:msapplication-navbutton-color');
 
-  // 4. iOS status bar — value is usually "black", "default", or "black-translucent",
-  //    but some sites set a hex. Skip non-hex values — they carry no color information.
+  // 4. iOS status bar - value is usually "black", "default", or "black-translucent",
+  //    but some sites set a hex. Skip non-hex values - they carry no color information.
   for (const m of snap.metas) {
     if (m.name?.toLowerCase() !== 'apple-mobile-web-app-status-bar-style') continue;
     const val = m.content?.trim();
@@ -106,7 +106,7 @@ export function extractPlatformColors(snap: DomColorSnapshot): PlatformColorHint
 
 /**
  * Collapse hints into { themeColor, darkThemeColor, backgroundColor } using source
- * priority. Manifest values (already in manifestMeta upstream) take precedence — pass
+ * priority. Manifest values (already in manifestMeta upstream) take precedence - pass
  * them as `existing` so this function only fills gaps.
  */
 export function resolvePlatformColors(
@@ -127,7 +127,7 @@ export function resolvePlatformColors(
     }
   }
 
-  // Dark variant — always populate if present, no upstream equivalent
+  // Dark variant - always populate if present, no upstream equivalent
   const darkMatch = hints.find(h => h.scheme === 'dark' && h.source === 'meta:theme-color');
   if (darkMatch) result.darkThemeColor = darkMatch.value;
 

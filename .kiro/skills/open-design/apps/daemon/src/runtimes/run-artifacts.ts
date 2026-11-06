@@ -2,8 +2,8 @@
 // run produced or modified. Fed into v2 `run_finished.artifact_count`.
 //
 // "Artifact" = a user-facing output file: HTML (prototypes / live artifacts /
-// slide decks all render from `.html`), plus generated media — images, video,
-// and audio — so media-kind projects no longer report a false zero. Supporting
+// slide decks all render from `.html`), plus generated media - images, video,
+// and audio - so media-kind projects no longer report a false zero. Supporting
 // assets an HTML run happens to write (e.g. `assets/*.png`) are also counted;
 // the metric's primary use is the boolean "did this run produce any artifact?"
 // funnel, where over-counting the exact number is harmless and under-counting
@@ -212,7 +212,7 @@ export function countNewArtifacts(events: readonly RunEventLike[]): number {
   return collectWrittenPathsMatching(events, isArtifactPath).size;
 }
 
-// Count of distinct files of ANY type the run successfully wrote or edited —
+// Count of distinct files of ANY type the run successfully wrote or edited -
 // the tool-stream fallback for `run_finished.files_written_count` (the
 // filesystem-diff primary lives in `run-artifact-fs.ts#diffRunArtifacts`).
 // Unlike `countNewArtifacts` there is no extension filter: a run that only
@@ -234,7 +234,7 @@ export function countWrittenFiles(events: readonly RunEventLike[]): number {
 // the unified question-form flow; see `apps/web/src/artifacts/question-form.ts`
 // and the `awaiting_input` detection in `apps/daemon/src/db.ts`). Assistant
 // text arrives as `text_delta` chunks, so the marker can straddle a chunk
-// boundary — concatenate the run's text before testing for it.
+// boundary - concatenate the run's text before testing for it.
 //
 // Two correctness points enforced here:
 //   1. Persisted `text_delta` events carry the chunk on `delta`
@@ -244,7 +244,7 @@ export function countWrittenFiles(events: readonly RunEventLike[]): number {
 //      `text` field for any runtime that emits a whole-text event.
 //   2. We require a *renderable* closed `<question-form>`/`<ask-question>`
 //      block (shared `emittedRenderableQuestionForm`), not a raw open-tag
-//      match — so a run that merely shows the literal markup inside a generated
+//      match - so a run that merely shows the literal markup inside a generated
 //      doc, code sample, or HTML artifact is not misclassified as a
 //      clarification turn and wrongly excluded from the artifact funnel. The
 //      `<ask-question>` alias is covered by that shared matcher.
@@ -258,7 +258,7 @@ export function runAskedUserQuestion(
 // Reassemble the assistant's streamed text from a run's event log. Text
 // arrives as `text_delta` chunks (carried on `delta`; some runtimes emit a
 // whole-text `text` event instead), so markers like `<od-card>` can straddle
-// a chunk boundary — callers must concatenate before scanning. Used by the
+// a chunk boundary - callers must concatenate before scanning. Used by the
 // POST self-verify enforcement (memory-verify) to find the scorecard card.
 export function reconstructAssistantText(
   events: readonly RunEventLike[],
@@ -285,12 +285,12 @@ export function reconstructAssistantText(
 // Two milestones the growth funnel needs to segment a user without replaying
 // their whole event history:
 //
-//   - `first_artifact_at`        — first run, observed since this stamp shipped,
+//   - `first_artifact_at`        - first run, observed since this stamp shipped,
 //                                  in which the user produced an artifact
-//   - `first_design_system_at`   — first run, observed since this stamp shipped,
+//   - `first_design_system_at`   - first run, observed since this stamp shipped,
 //                                  in which the user generated a design system
 //
-// IMPORTANT — "first observed since rollout", NOT "first ever". `$set_once`
+// IMPORTANT - "first observed since rollout", NOT "first ever". `$set_once`
 // only writes a key that does not already exist on the person, and this is the
 // only writer, so the timestamp is pinned to the user's first qualifying run
 // AFTER this code ships. For users who onboard after rollout that equals their
@@ -299,22 +299,22 @@ export function reconstructAssistantText(
 // artifact before rollout gets the timestamp of their next qualifying run
 // instead. There is no historical backfill in this path, so cohorts and
 // time-to-first-value built on these keys are only sound for post-rollout
-// users — segment older accounts by first-seen date before relying on them
+// users - segment older accounts by first-seen date before relying on them
 // (nettee review on PR #4362).
 //
 // The two are independent: a single design-system run that also emits HTML
 // artifacts legitimately crosses both at once.
 //
-// Only a SUCCESSFUL run counts — a failed/cancelled run that happened to touch
+// Only a SUCCESSFUL run counts - a failed/cancelled run that happened to touch
 // a file is not a milestone (mirrors the `artifact_count` funnel's "generation
 // success → artifact produced" framing).
 //
 // The design-system milestone must mirror the EXACT condition under which
 // `run_finished` emits `design_system_created`, which is gated on
 // `isDesignSystemRun` (server.ts only includes the field for DS runs). A plain
-// chat run can also write a `DESIGN.md` — `finalize-design.ts` lands one under
+// chat run can also write a `DESIGN.md` - `finalize-design.ts` lands one under
 // the project dir, and a user can edit an existing `DESIGN.md` from the chat
-// composer — so `designSystemCreated` alone (the raw "a DESIGN.md was written"
+// composer - so `designSystemCreated` alone (the raw "a DESIGN.md was written"
 // signal) would stamp `first_design_system_at` on runs whose `run_finished`
 // reports no `design_system_created`, drifting the person property away from
 // the metric and overstating DS activation. Gating on `isDesignSystemRun`

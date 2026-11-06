@@ -44,8 +44,8 @@ const RUNTIME_MODULE_PROJECT_ROOT = resolveProjectRootFromNestedModule(
 //    official default endpoint.
 // When the daemon launches the vela (amr) CLI, forward this installation's id
 // so vela's analytics can be correlated back to it. spawnEnvForAgent is
-// synchronous, so this uses readAppConfigSync — the synchronous mirror of
-// readAppConfig — to resolve consent and the installationId through the exact
+// synchronous, so this uses readAppConfigSync - the synchronous mirror of
+// readAppConfig - to resolve consent and the installationId through the exact
 // same parsing/validation/defaulting the daemon and web analytics config use.
 // That keeps vela's correlation in lockstep with what the web side already
 // emits: telemetry defaults to on (opt-out), the id is withheld only when the
@@ -92,9 +92,9 @@ function amrAnalyticsIdentityEnv(
  * canonical `TodoWrite` snapshot, so nothing downstream has to know which
  * dialect the installed build speaks.
  *
- * Setting it is monotone — inside Claude Code the check is an early
+ * Setting it is monotone - inside Claude Code the check is an early
  * `return true`, so it can only ever ADD the family, never remove `TodoWrite`
- * from a build that still has it — and builds that predate the variable ignore
+ * from a build that still has it - and builds that predate the variable ignore
  * an unknown env key. A value the user set (inherited env, or Settings → Local
  * CLI → Advanced) wins, per the precedence rules above.
  */
@@ -126,7 +126,7 @@ export function spawnEnvForAgent(
     // `execAgentFile` REPLACES the child environment (execFile with `env`
     // set), so anything missing here is genuinely absent for vela. `vela model
     // list` resolves its config home up front and exits non-zero with
-    // "$HOME is not defined" when HOME is unset — while `vela model preset`
+    // "$HOME is not defined" when HOME is unset - while `vela model preset`
     // and `vela --version` do not need it. A packaged daemon spawned with a
     // stripped env (or any caller that did not forward HOME) would therefore
     // detect AMR and seed the picker from preset, yet fail every run's remote
@@ -177,7 +177,7 @@ export function spawnEnvForAgent(
     // evidence is read back from `<CODEX_HOME>/sessions/.../rollout-*.jsonl`,
     // and `collectCodexChildEvidence` deliberately refuses a homedir fallback
     // so it can never attribute one install's sessions to another. That leaves
-    // the caller owing it an explicit root — which nothing supplied, so the
+    // the caller owing it an explicit root - which nothing supplied, so the
     // collector's `CODEX_HOME` guard was false on every default install and a
     // complex Run's native Children went unobserved. The plan still locked
     // complex, then failed certification for evidence the daemon simply never
@@ -201,7 +201,7 @@ export function spawnEnvForAgent(
     // or a project nested inside it), the install replaces the pnpm `.pnpm` store
     // with a bun `node_modules/.bun` + `bun.lock` and breaks the workspace.
     // Disable project-config discovery (and its install) so OpenCode only honors
-    // the config the daemon injects via OPENCODE_CONFIG_CONTENT — this is exactly
+    // the config the daemon injects via OPENCODE_CONFIG_CONTENT - this is exactly
     // what the AMR path already does for its private OpenCode server.
     if (!env.OPENCODE_DISABLE_PROJECT_CONFIG?.trim()) {
       env.OPENCODE_DISABLE_PROJECT_CONFIG = 'true';

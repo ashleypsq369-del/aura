@@ -9,18 +9,18 @@
 // shape that mcp-routes.ts uses.
 //
 // Endpoints:
-//   POST /api/xai/oauth/start       — mint PKCE state, open :56121
+//   POST /api/xai/oauth/start       - mint PKCE state, open :56121
 //                                     listener, return authorize URL
-//   POST /api/xai/oauth/complete    — manual paste-back of {state, code}
+//   POST /api/xai/oauth/complete    - manual paste-back of {state, code}
 //                                     when xAI shows a code instead of
 //                                     redirecting (the common case for
 //                                     loopback redirect_uri)
-//   POST /api/xai/oauth/cancel      — stop the in-flight :56121 listener
+//   POST /api/xai/oauth/cancel      - stop the in-flight :56121 listener
 //                                     without touching any stored token
 //                                     (UI Cancel button)
-//   GET  /api/xai/auth/status       — has-token / expiry / in-flight bit
-//   POST /api/xai/oauth/disconnect  — wipe stored token, stop listener
-//   POST /api/xai/search            — search X posts via Grok's native
+//   GET  /api/xai/auth/status       - has-token / expiry / in-flight bit
+//   POST /api/xai/oauth/disconnect  - wipe stored token, stop listener
+//   POST /api/xai/search            - search X posts via Grok's native
 //                                     x_search tool, gated on the user's
 //                                     SuperGrok subscription bearer
 
@@ -115,7 +115,7 @@ export function registerXaiRoutes(app: Express, ctx: RegisterXaiRoutesDeps) {
     if (!isLocalSameOrigin(req, getResolvedPort())) {
       return res.status(403).json({ error: 'cross-origin request rejected' });
     }
-    // Only one OAuth dance can be in flight at a time — :56121 is
+    // Only one OAuth dance can be in flight at a time - :56121 is
     // singleton. Stop any prior listener (e.g. user closed the browser
     // tab and clicked Sign in again) before opening a new one.
     await stopActiveListener();
@@ -223,7 +223,7 @@ export function registerXaiRoutes(app: Express, ctx: RegisterXaiRoutesDeps) {
       return res.status(403).json({ error: 'cross-origin request rejected' });
     }
     // Cancel only stops the in-flight loopback listener. It must NOT
-    // wipe the stored token — a user clicking Cancel mid-Reconnect
+    // wipe the stored token - a user clicking Cancel mid-Reconnect
     // would otherwise lose their existing SuperGrok grant. Disconnect
     // is the destructive path; this one only releases the singleton
     // :56121 port so a new Sign in (or Hermes) can grab it.
@@ -270,7 +270,7 @@ export function registerXaiRoutes(app: Express, ctx: RegisterXaiRoutesDeps) {
     if (!apiKey) {
       return res.status(401).json({
         error:
-          'no xAI credentials — sign in with your SuperGrok subscription, set XAI_API_KEY, or configure a key in Settings',
+          'no xAI credentials - sign in with your SuperGrok subscription, set XAI_API_KEY, or configure a key in Settings',
       });
     }
 
@@ -350,7 +350,7 @@ export function registerXaiRoutes(app: Express, ctx: RegisterXaiRoutesDeps) {
   });
 }
 
-// xAI Responses API helpers — narrow shapes pulled out so tests can
+// xAI Responses API helpers - narrow shapes pulled out so tests can
 // assert against them and the route handler stays readable.
 
 const X_SEARCH_DEFAULT_MODEL = 'grok-4.20-reasoning';

@@ -21,7 +21,7 @@ import {
 /*
  * Invariant pinned here (I3): rows that 0.22.x already wrote with unbounded
  * run-event payloads are healed once, in the background, by the same budget
- * the writer now applies — one row per transaction, never a whole
+ * the writer now applies - one row per transaction, never a whole
  * conversation, never a row whose run is still active, and a second pass
  * changes nothing. The seeded rows are exactly what 0.22.x left on disk:
  * verbatim event lists written straight into the daemon's own tables.

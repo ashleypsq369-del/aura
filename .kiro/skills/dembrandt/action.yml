@@ -7,14 +7,14 @@ branding:
 
 inputs:
   url:
-    description: "URL to extract — typically the PR's preview deployment."
+    description: "URL to extract - typically the PR's preview deployment."
     required: true
   baseline:
     description: "Drift baseline: path to a committed baseline JSON, or an App baseline id. Omit to extract without gating."
     required: false
     default: ""
   key:
-    description: "Dembrandt API key (dembrandt.com/app/api-keys) — uploads the snapshot to your account for drift history. Pass a secret."
+    description: "Dembrandt API key (dembrandt.com/app/api-keys) - uploads the snapshot to your account for drift history. Pass a secret."
     required: false
     default: ""
   args:
@@ -62,7 +62,7 @@ runs:
       #
       # The browser revision must match the playwright-core version that npm
       # actually resolved for the CLI (its ranges float), so derive it from the
-      # installed tree instead of hardcoding — same rule as README "Continuous
+      # installed tree instead of hardcoding - same rule as README "Continuous
       # integration".
       env:
         CLI_VERSION: ${{ inputs.cli-version }}
@@ -113,6 +113,6 @@ runs:
         echo "score=$score" >> "$GITHUB_OUTPUT"
         # Exit code carries the verdict: 0 stable, 1 drift, 2/67 extraction
         # problems (see README "Exit codes"). Drift annotations render on the
-        # PR automatically — the CLI emits workflow commands under
+        # PR automatically - the CLI emits workflow commands under
         # GITHUB_ACTIONS.
         exit $rc

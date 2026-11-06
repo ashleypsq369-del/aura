@@ -1,5 +1,5 @@
-/**
- * ServicesWidget — compact services roleshow card for PatientPortal / Dashboard
+﻿/**
+ * ServicesWidget - compact services roleshow card for PatientPortal / Dashboard
  * Shows the auto-rotating role image slideshow with a CTA to browse providers.
  * For providers: shows their own booking count + edit profile shortcut.
  */
@@ -239,6 +239,6 @@ export default function ServicesWidget() {
     return <ProviderDashboard navigate={navigate}/>;
   }
 
-  // patient, family, caregiver — show the slideshow
+  // patient, family, caregiver - show the slideshow
   return <ServicesSlideshow navigate={navigate}/>;
 }

@@ -13,7 +13,7 @@
 //   - validates state matches the in-flight OAuth dance, invokes
 //     onCallback, then closes itself
 //   - times out after 30 min if the user never returns from the browser
-//   - returns a 4xx + diagnostic HTML if state doesn't match — guards
+//   - returns a 4xx + diagnostic HTML if state doesn't match - guards
 //     against stale browser tabs replaying an old code
 
 import http from 'node:http';
@@ -138,13 +138,13 @@ export async function startCallbackListener(
     // Decide whether this hit *consumes* the listener. A stray browser
     // tab replaying an old `/callback?state=…` (or `?error=…&state=…`)
     // would otherwise close the singleton :56121 listener before the
-    // real xAI redirect can arrive — we share a fixed port, so killing
+    // real xAI redirect can arrive - we share a fixed port, so killing
     // it on a stale request strands the in-flight authorization. Keep
     // the listener open on stale/malformed requests; the real callback
     // will still find it. Consume on:
     //   - ok callback (matched state, code present)
     //   - explicit ?error= without a state (xAI rejected before issuing
-    //     state, so there's nothing to match against — safe to consume)
+    //     state, so there's nothing to match against - safe to consume)
     //   - explicit ?error= with state matching our expectedState (xAI
     //     told the user the dance failed; propagate now instead of
     //     waiting for the 30 min timeout)
@@ -162,7 +162,7 @@ export async function startCallbackListener(
     res.end(renderResultPage(outcome));
 
     if (!consumesListener) {
-      // Stale-tab replay or malformed request — don't surface to the
+      // Stale-tab replay or malformed request - don't surface to the
       // caller and don't tear down the listener. The browser sees the
       // 400 page; the real flow can still complete on a later hit.
       return;
@@ -186,7 +186,7 @@ export async function startCallbackListener(
       if (err.code === 'EADDRINUSE') {
         reject(
           new Error(
-            `Port ${port} is already in use — close any other process listening on ${host}:${port} (e.g. an in-flight Hermes or OpenDesign OAuth flow) and try again`,
+            `Port ${port} is already in use - close any other process listening on ${host}:${port} (e.g. an in-flight Hermes or OpenDesign OAuth flow) and try again`,
           ),
         );
       } else {
@@ -205,7 +205,7 @@ export async function startCallbackListener(
     Promise.resolve(
       input.onCallback({
         kind: 'error',
-        error: 'OAuth timed out — sign in again',
+        error: 'OAuth timed out - sign in again',
       }),
     ).catch(() => {
       // already logging in handle(); this branch is best-effort cleanup.
@@ -225,7 +225,7 @@ export async function startCallbackListener(
 function renderResultPage(outcome: CallbackOutcome): string {
   if (outcome.kind === 'ok') {
     return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>OpenDesign — xAI authorized</title></head>
+<html lang="en"><head><meta charset="utf-8"><title>OpenDesign - xAI authorized</title></head>
 <body style="font:14px system-ui;padding:40px;max-width:480px;margin:auto;text-align:center;color:#222;">
   <h1 style="font-size:18px;margin:0 0 12px;">Authorized!</h1>
   <p style="color:#666;">OpenDesign now has access to your SuperGrok subscription. You can close this tab and return to OpenDesign.</p>
@@ -233,7 +233,7 @@ function renderResultPage(outcome: CallbackOutcome): string {
   }
   const reason = escapeHtml(outcome.error || 'unknown error');
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>OpenDesign — sign-in failed</title></head>
+<html lang="en"><head><meta charset="utf-8"><title>OpenDesign - sign-in failed</title></head>
 <body style="font:14px system-ui;padding:40px;max-width:480px;margin:auto;text-align:center;color:#222;">
   <h1 style="font-size:18px;margin:0 0 12px;">Sign-in failed</h1>
   <p style="color:#c00;">${reason}</p>

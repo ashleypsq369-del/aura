@@ -6,17 +6,17 @@
  * an agent does not die with the daemon: every in-daemon kill path
  * (`killChild`, `terminateProcessTree`, `shutdownActive` from the SIGINT/SIGTERM
  * handlers) needs a live daemon, and a daemon killed by SIGKILL or a V8
- * out-of-memory abort runs none of them. The reparented agent — often running
- * with auto-approved file edits — keeps working unsupervised until it exits on
+ * out-of-memory abort runs none of them. The reparented agent - often running
+ * with auto-approved file edits - keeps working unsupervised until it exits on
  * its own or the next daemon starts. In the 2026-09-14 incident it did so on a
  * prompt truncated to the first 64 KiB, which ended right after the
  * conversation's FIRST request, and re-executed it.
  *
  * Two invariants bound that, one helper each:
  *
- * - `openCompletePromptAsStdin` — an agent receives the complete prompt or
+ * - `openCompletePromptAsStdin` - an agent receives the complete prompt or
  *   nothing, whatever happens to the daemon after the spawn.
- * - `reapLeftoverAgentProcesses` — every running agent is on record, and the
+ * - `reapLeftoverAgentProcesses` - every running agent is on record, and the
  *   next daemon start terminates the ones a dead daemon left behind.
  *
  * `spawnAgentProcess` is the one spawn path that composes them; the daemon's
@@ -54,7 +54,7 @@ const IDENTITY_TOLERANCE_MS = 2_000;
  * The owner's creation time is estimated from `process.uptime()`, which starts
  * a little after the OS created the process (Electron boots before Node). A
  * PID can only be recycled after its owner exited, so a generous window here
- * errs toward "owner still alive" — leaving agents alone — never toward a kill.
+ * errs toward "owner still alive" - leaving agents alone - never toward a kill.
  */
 const OWNER_IDENTITY_TOLERANCE_MS = 10_000;
 
@@ -88,7 +88,7 @@ export type StagedPromptStdin = {
  * and unlinks the file right after spawn; the startup sweep removes any file a
  * dead daemon staged but never handed over.
  *
- * Throws when the prompt cannot be staged — the run then fails before any
+ * Throws when the prompt cannot be staged - the run then fails before any
  * child exists, which is the "nothing" half of the invariant.
  */
 export function openCompletePromptAsStdin(runDir: string, prompt: string): StagedPromptStdin {
@@ -248,8 +248,8 @@ export type SpawnAgentProcessRequest = {
   windowsVerbatimArguments?: boolean | undefined;
   /**
    * `'pipe'` for runtimes that speak a framed protocol on stdin (stream-json,
-   * JSON-RPC) — a truncated frame is unparseable, so those cannot act on a
-   * partial prompt — `'ignore'` for argv/file prompts, and `{ prompt }` for
+   * JSON-RPC) - a truncated frame is unparseable, so those cannot act on a
+   * partial prompt - `'ignore'` for argv/file prompts, and `{ prompt }` for
    * runtimes that read a plain-text prompt from stdin.
    */
   stdin: AgentProcessStdin;

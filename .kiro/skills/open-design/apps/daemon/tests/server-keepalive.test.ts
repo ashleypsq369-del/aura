@@ -6,7 +6,7 @@ import { startServer } from '../src/server.js';
 // AGENTS.md → "Bug follow-up workflow" asks risk/high daemon bugfixes to
 // lead with a falsifiable spec. The bug being fixed is a 5s default
 // `server.keepAliveTimeout` that's tighter than the in-band SSE keepalive
-// cadence (`SSE_KEEPALIVE_INTERVAL_MS = 25_000`) — a future refactor of
+// cadence (`SSE_KEEPALIVE_INTERVAL_MS = 25_000`) - a future refactor of
 // the `listen` callback could silently restore the Node default and the
 // regression would not surface in any other test.
 describe('startServer HTTP keep-alive tuning', () => {

@@ -5,7 +5,7 @@
 // well-defined token shape with extremely low false-positive rate (API
 // keys have a fixed prefix, JWTs have the "header.payload.signature"
 // triple, credit-card matches go through a Luhn check). What this file
-// does NOT do — and the user-facing copy must reflect that — is detect
+// does NOT do - and the user-facing copy must reflect that - is detect
 // names, addresses, business secrets, or anything that requires
 // understanding the meaning of the surrounding text. That's an ML / LLM
 // problem the daemon can't take on.
@@ -46,7 +46,7 @@ const PATTERNS: readonly Pattern[] = [
 
   // GitHub legacy 40-hex personal access tokens that ship with no prefix
   // are indistinguishable from a sha1 hash, so we don't try to match them
-  // here — false positives would be brutal in commit logs / artifact slugs.
+  // here - false positives would be brutal in commit logs / artifact slugs.
 
   // AWS access key id. The matching secret access key is just 40 base64
   // chars with no fixed shape, so we cannot reliably redact it without
@@ -54,7 +54,7 @@ const PATTERNS: readonly Pattern[] = [
   // signals a paste happened.
   { name: 'aws_access_key', regex: /\bAKIA[0-9A-Z]{16}\b/g },
 
-  // Google API keys — legacy AIza… (Maps / AI Studio) and service-account-
+  // Google API keys - legacy AIza… (Maps / AI Studio) and service-account-
   // bound AQ.… keys AI Studio now issues. AQ. must run before the generic
   // sk_ rule would mis-label unrelated tokens.
   { name: 'google_api_key', regex: /\bAQ\.[A-Za-z0-9_-]{20,}\b/g },
@@ -91,7 +91,7 @@ const PATTERNS: readonly Pattern[] = [
 
   // Phone numbers. Tight US-leaning shape; a global PII detector would
   // need a real lib. We keep this so US-based test prompts ('call me at
-  // (415) 555-...') don't ship. Note: no leading \b — '(' isn't a word
+  // (415) 555-...') don't ship. Note: no leading \b - '(' isn't a word
   // char, so a starting boundary would refuse to match `(415)`. We
   // require a non-digit (or start of string) before the run instead.
   {
@@ -140,7 +140,7 @@ function redactApiKeyHeaderValue(
 
 /**
  * Returns `input` with every recognised secret / PII pattern replaced by
- * a `[REDACTED:<kind>]` marker. Idempotent — re-running on already
+ * a `[REDACTED:<kind>]` marker. Idempotent - re-running on already
  * redacted text only matches new tokens.
  *
  * Empty / non-string input passes through unchanged so the caller can

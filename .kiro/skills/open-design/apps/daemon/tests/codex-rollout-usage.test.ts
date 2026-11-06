@@ -37,12 +37,12 @@ describe('extractCodexLastTurnFirstCallUsage', () => {
     const rollout = [
       taskStarted(),
       tokenCount(13137, 2432), // turn-1 first call
-      tokenCount(13160, 2560), // within-turn-1 follow-up — must be ignored
+      tokenCount(13160, 2560), // within-turn-1 follow-up - must be ignored
       taskStarted(),
       tokenCount(13171, 12672), // turn-2 first call (the 96% spec number)
       taskStarted(),
-      tokenCount(13342, 12672), // turn-3 first call — this is what we want
-      tokenCount(20000, 18000), // within-turn-3 follow-up — must be ignored
+      tokenCount(13342, 12672), // turn-3 first call - this is what we want
+      tokenCount(20000, 18000), // within-turn-3 follow-up - must be ignored
     ].join('\n');
 
     const result = extractCodexLastTurnFirstCallUsage(rollout);
@@ -56,7 +56,7 @@ describe('extractCodexLastTurnFirstCallUsage', () => {
   it('skips zero-input placeholder calls and uses the turn’s real first call', () => {
     const rollout = [
       taskStarted(),
-      tokenCount(0, 0), // interrupted/placeholder call — no usable ratio
+      tokenCount(0, 0), // interrupted/placeholder call - no usable ratio
       tokenCount(40318, 15744), // the turn’s real opening call
     ].join('\n');
 

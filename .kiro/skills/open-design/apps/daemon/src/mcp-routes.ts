@@ -42,7 +42,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
   // exact same fields into `codex mcp add` so the one-click install
   // configures Codex with byte-for-byte the same command as the copy
   // snippet would). Keeping this in one place is the whole point of
-  // the factoring — divergence here would mean Codex behaves
+  // the factoring - divergence here would mean Codex behaves
   // differently depending on which install path the user took.
   function computeInstallPayload(): McpInstallPayload {
     const cliPath = OD_BIN;
@@ -65,7 +65,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
     // tools-dev / packaged launchers export OD_WEB_PORT so the daemon
     // knows where the browser-facing OpenDesign studio is running.
     // CLI-only / headless launches set neither and webBaseUrl falls
-    // through as null — MCP clients then just omit the studio deep
+    // through as null - MCP clients then just omit the studio deep
     // link from their responses.
     const webPortRaw = process.env[SIDECAR_ENV.WEB_PORT];
     const webPortNum = webPortRaw ? Number(webPortRaw) : Number.NaN;
@@ -113,7 +113,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
 
   // Codex one-click install. Codex CLI exposes `codex mcp add/remove/get`,
   // so we shell out to it rather than rewriting ~/.codex/config.toml
-  // ourselves — that way we inherit Codex's merge / validation rules
+  // ourselves - that way we inherit Codex's merge / validation rules
   // and only need to track its argv. See apps/daemon/src/codex-cli.ts.
   const CODEX_MCP_NAME = 'open-design';
 
@@ -217,7 +217,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
   });
 
   // ─────────────────────────────────────────────────────────────────
-  // External MCP server OAuth — daemon-owned authorization flow.
+  // External MCP server OAuth - daemon-owned authorization flow.
   //
   // Replaces per-spawn `mcp-remote` subprocesses. The token is stored
   // server-side in <dataDir>/mcp-tokens.json and injected as a Bearer
@@ -282,7 +282,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
     }
   });
 
-  // Public endpoint — the OAuth provider's user-agent redirect lands here
+  // Public endpoint - the OAuth provider's user-agent redirect lands here
   // after the user approves. We deliberately do NOT enforce
   // isLocalSameOrigin: in cloud the daemon IS the public origin, and even
   // locally the request comes back from the OAuth provider's redirect
@@ -300,7 +300,7 @@ export function registerMcpRoutes(app: Express, ctx: RegisterMcpRoutesDeps) {
     if (!code || !state) {
       return res.status(400).type('html').send(renderOAuthResultPage({
         ok: false,
-        message: 'Missing code or state — open Settings → External MCP servers and click Connect again.',
+        message: 'Missing code or state - open Settings → External MCP servers and click Connect again.',
       }));
     }
     const pending = pendingAuth.consume(state);
@@ -426,7 +426,7 @@ function renderOAuthResultPage(opts: any) {
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>${escapeHtml(title)} — OpenDesign</title>
+<title>${escapeHtml(title)} - OpenDesign</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root { color-scheme: light dark; }

@@ -113,7 +113,7 @@ describe('buildOrbitSystemPrompt', () => {
 
     const prompt = renderOrbitTemplateSystemPrompt(template);
 
-    expect(prompt).toContain('Selected Orbit template skill — orbit-general');
+    expect(prompt).toContain('Selected Orbit template skill - orbit-general');
     expect(prompt).toContain('Treat it as authoritative');
     expect(prompt).toContain('must not override the selected template');
     expect(prompt).toContain('opts out of external design-system injection');

@@ -2,7 +2,7 @@
  * Coverage for the request-lifecycle abort wiring on
  * `POST /api/projects/:id/finalize/anthropic` (mrcfps's PR #974 P1
  * review on server.ts:3831-3837). Without this wiring, a UI-side
- * cancel only aborts the browser fetch — the daemon's 60–120 s
+ * cancel only aborts the browser fetch - the daemon's 60-120 s
  * Anthropic call keeps running and still writes DESIGN.md after the
  * UI returns to idle.
  *
@@ -24,7 +24,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 
 import { startServer } from '../src/server.js';
 
-describe('POST /api/projects/:id/finalize/anthropic — request-lifecycle abort', () => {
+describe('POST /api/projects/:id/finalize/anthropic - request-lifecycle abort', () => {
   let server: http.Server;
   let baseUrl: string;
   const PROJECT_ID = 'finalize-abort-fixture';
@@ -119,7 +119,7 @@ describe('POST /api/projects/:id/finalize/anthropic — request-lifecycle abort'
         if (capture.signal) {
           capture.signal.addEventListener('abort', () => abortReceived?.());
         }
-        // Never resolve under normal conditions — the abort is the
+        // Never resolve under normal conditions - the abort is the
         // only way out. If the signal is already aborted (rare), reject
         // immediately to mirror real fetch's behavior.
         return new Promise((_resolve, reject) => {
@@ -157,7 +157,7 @@ describe('POST /api/projects/:id/finalize/anthropic — request-lifecycle abort'
           'Content-Length': Buffer.byteLength(body),
         },
       },
-      // We never actually receive a response — by design, the server
+      // We never actually receive a response - by design, the server
       // is hung on the mocked Anthropic call until we destroy the
       // socket. The response handler is registered defensively.
       () => {},

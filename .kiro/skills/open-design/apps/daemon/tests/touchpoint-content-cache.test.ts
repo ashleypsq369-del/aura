@@ -4,7 +4,7 @@
 // Every case here exists to pin the same property from a different angle: the
 // cache is allowed to say "no", and it is never allowed to say something wrong.
 // A miss, a corrupted blob, a digest that does not describe its own bytes, an
-// unwritable data directory — each has to leave the caller in exactly the
+// unwritable data directory - each has to leave the caller in exactly the
 // position it would be in with no cache at all.
 
 import { createHash } from 'node:crypto';

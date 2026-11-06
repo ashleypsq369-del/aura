@@ -1,5 +1,5 @@
-/**
- * CareSettings.jsx — Palliative Care Delivery Models
+﻿/**
+ * CareSettings.jsx - Palliative Care Delivery Models
  * Fixed: dead ProStatCard import removed, dynamic border-${color}-500 → inline styles,
  * ChangeRequestsPanel filtered API, SettingCard keyboard accessible, img-heading removed
  * from modal headings, filterRole resets on tab change, empty state ternary fixed,
@@ -88,7 +88,7 @@ export default function CareSettings() {
   const requestChangeMutation = useMutation({
     mutationFn: ({ setting, reason }) => careSettingsAPI.requestChange({ care_setting: setting, reason }),
     onSuccess: () => {
-      toast.success('Change request submitted — an admin will review it shortly');
+      toast.success('Change request submitted - an admin will review it shortly');
       setShowRequestModal(false); setRequestedSetting(''); setRequestReason('');
     },
     onError: e => toast.error(e.response?.data?.detail || 'Request failed'),
@@ -183,13 +183,13 @@ export default function CareSettings() {
         subtitle="5 evidence-based care delivery models · hospital, hospice, home, clinic & residential"
         icon={Stethoscope}
         stats={isStaff ? [
-          { label:'Total patients', value: dashboardData?.total_patients ?? '—', color:'#2dd4bf' },
-          { label:'Assigned',       value: dashboardData?.total_assigned  ?? '—', color:'#4ade80' },
-          { label:'Unassigned',     value: dashboardData?.unassigned      ?? '—', color: (dashboardData?.unassigned ?? 0) > 0 ? '#fbbf24' : 'rgba(255,255,255,0.5)' },
+          { label:'Total patients', value: dashboardData?.total_patients ?? '-', color:'#2dd4bf' },
+          { label:'Assigned',       value: dashboardData?.total_assigned  ?? '-', color:'#4ade80' },
+          { label:'Unassigned',     value: dashboardData?.unassigned      ?? '-', color: (dashboardData?.unassigned ?? 0) > 0 ? '#fbbf24' : 'rgba(255,255,255,0.5)' },
           { label:'Settings',       value: 5,                                      color:'#a78bfa' },
         ] : undefined}
       >
-        {/* Role filter pills — only shown on matrix tab */}
+        {/* Role filter pills - only shown on matrix tab */}
         {activeTab === 'matrix' && (
           <>
             <span style={{ fontSize:11, fontWeight:600, color:'var(--text-400)', whiteSpace:'nowrap' }}>Role</span>
@@ -218,7 +218,7 @@ export default function CareSettings() {
       <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px 40px' }}>
         <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
 
-          {/* Tab bar — pill segment control */}
+          {/* Tab bar - pill segment control */}
           <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
             <div style={{ display:'flex', overflowX:'auto', scrollbarWidth:'none', gap:2, padding:'10px 0' }}>
               {tabs.map(tab => {
@@ -256,7 +256,7 @@ export default function CareSettings() {
         {/* ── OVERVIEW ── */}
         {activeTab === 'overview' && isStaff && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-            {/* Distribution card — stats already in PageHeader, no duplicate strip */}
+            {/* Distribution card - stats already in PageHeader, no duplicate strip */}
             <div style={{ borderRadius:16, border:'1px solid var(--card-border)', background:'var(--card-bg)', overflow:'hidden', boxShadow:'0 2px 10px rgba(0,0,0,0.05)' }}>
               <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2,#059669)' }} />
               <div style={{ padding:'14px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', gap:8 }}>
@@ -315,7 +315,7 @@ export default function CareSettings() {
               </div>
             )}
 
-            {/* Portal modal — follows FocusedAIExplanation pattern */}
+            {/* Portal modal - follows FocusedAIExplanation pattern */}
             {selectedTemplate && detailData && (
               <SettingDetailPanel
                 detail={detailData}
@@ -419,7 +419,7 @@ export default function CareSettings() {
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-4">
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-amber-900">Need a different care setting?</p>
-                      <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request — an admin will review and approve it.</p>
+                      <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request - an admin will review and approve it.</p>
                     </div>
                     <button onClick={() => setShowRequestModal(true)}
                       className="flex-shrink-0 px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition">
@@ -584,7 +584,7 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
   );
 }
 
-/* ── SettingDetailPanel — portal modal matching FocusedAIExplanation DNA ─── */
+/* ── SettingDetailPanel - portal modal matching FocusedAIExplanation DNA ─── */
 function SettingDetailPanel({ detail: t, userRole, onClose }) {
   const c    = COLOR[t.color] || COLOR.gray;
   const Icon = ICON_MAP[t.icon] || Stethoscope;
@@ -807,7 +807,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
 
   const EXPECT = {
     hospital_based:       ['Daily clinical rounds by your care team','Specialist consultations available on-site','24/7 nursing support and vital monitoring','Family meetings to discuss your goals of care'],
-    hospice:              ['Comfort-focused care — no curative treatment','Spiritual and emotional support available','Family caregivers supported and trained','Bereavement support for loved ones after you pass'],
+    hospice:              ['Comfort-focused care - no curative treatment','Spiritual and emotional support available','Family caregivers supported and trained','Bereavement support for loved ones after you pass'],
     home_based:           ['Regular home visits from nurse or clinician','You manage daily care in your own environment','Remote symptom monitoring via this portal','Community caregiver provides daily assistance'],
     outpatient_clinic:    ['Scheduled clinic appointments (not admitted)','Assessments and medication reviews each visit','Between visits: submit symptoms via My Journey','Contact your care team via Messages anytime'],
     long_term_residential:['24/7 personal care and nursing support on-site','Monthly care plan reviews with your team','Social activities and community engagement','Family visits encouraged and supported'],
@@ -893,7 +893,7 @@ function CurrentSettingBanner({ setting, onRequestChange, navigate, isFamily = f
         </div>
       </div>
 
-      {/* What to expect — right column */}
+      {/* What to expect - right column */}
       {bullets.length > 0 && (
         <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl p-4 h-full">
           <h3 className="text-sm font-semibold text-[var(--text-700)] mb-3 flex items-center gap-2">
@@ -1021,7 +1021,7 @@ function AssignFormFields({ patients, templates, assignForm, setAssignForm, assi
       <div>
         <label className="block text-xs font-semibold text-[var(--text-600)] mb-1.5">Reason for Transition</label>
         <input type="text" value={f.transition_reason} onChange={e => set('transition_reason', e.target.value)}
-          placeholder="e.g., Symptoms stabilised — moving to home-based care"
+          placeholder="e.g., Symptoms stabilised - moving to home-based care"
           className="w-full px-3 py-2 border border-[var(--card-border)] rounded-xl focus:border-teal-500 focus:ring-1 focus:ring-teal-100 focus:outline-none transition text-sm" />
       </div>
       <div>

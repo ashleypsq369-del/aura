@@ -1,18 +1,18 @@
 // @ts-nocheck
 /**
- * newsletter — a restrained multi-story digest, built to email.md.
+ * newsletter - a restrained multi-story digest, built to email.md.
  *
  * email.md applied to a digest: win the open (subject/preheader), then win the
  * click. Two gates → one job → ONE primary CTA, surfaced above the fold and
  * echoed once at the end (same action). The body is a masthead + an
  * inverted-pyramid lede + three numbered stories, each a benefit headline + a
- * 2-sentence scannable blurb + a "read more" — clearly separated (the doc's
+ * 2-sentence scannable blurb + a "read more" - clearly separated (the doc's
  * newsletter checklist item). Every text slot is pulled from the Brand with
  * production-quality fallbacks, so different brands fill the SAME structure.
  *
  * Email constraints: single column, ~600px, table layout for the CTA button,
  * inline styles, all keyed to `--brand-*` so it re-skins with the tokens. The
- * only ornaments are line/numeral motifs — no emoji-as-icons, no images.
+ * only ornaments are line/numeral motifs - no emoji-as-icons, no images.
  *
  * Pure & deterministic: `(brand, tokens) -> string`, no network / Date / random.
  */
@@ -41,7 +41,7 @@ function issueLabel(brand: Brand): string {
 }
 
 /**
- * The lede headline (the inverted-pyramid first line — "what's in this issue,
+ * The lede headline (the inverted-pyramid first line - "what's in this issue,
  * for you"). Prefers a real pillar/tagline; the fallback still reads like a
  * human wrote it, never lorem.
  */
@@ -52,7 +52,7 @@ function ledeHeadline(brand: Brand): string {
   return tag || `Three things worth your time from ${brand.name}`;
 }
 
-/** 1–2 sentence expansion of the lede — "why this is relevant to you". */
+/** 1-2 sentence expansion of the lede - "why this is relevant to you". */
 function ledeBlurb(brand: Brand): string {
   return brandBlurb(brand);
 }
@@ -84,7 +84,7 @@ function twoSentences(text: string): string {
 
 const PAD_X = varRef("sizeXXL");
 
-/** A hairline rule keyed to the border token — the digest's only divider. */
+/** A hairline rule keyed to the border token - the digest's only divider. */
 function rule(): string {
   return `<div style="height:${varRef("lineWidth")};background:${varRef(
     "colorBorderSecondary",
@@ -102,7 +102,7 @@ function ctaRow(label: string): string {
           </table>`;
 }
 
-/** A single numbered story block — kicker(№) + benefit headline + 2 sentences + read-more. */
+/** A single numbered story block - kicker(№) + benefit headline + 2 sentences + read-more. */
 function storyBlock(
   story: { headline: string; blurb: string; cta: string },
   index: number,
@@ -152,7 +152,7 @@ export function renderNewsletter(brand: Brand, tokens: DesignTokens): string {
     .map((s, i) => `${i > 0 ? `      <tr><td>${rule()}</td></tr>\n` : ""}${storyBlock(s, i)}`)
     .join("\n");
 
-  // Preheader: supplements (not repeats) the masthead — email.md preheader rule.
+  // Preheader: supplements (not repeats) the masthead - email.md preheader rule.
   const preheader = brandTagline(brand);
 
   const inner = `      <!-- preheader: shown in the inbox preview, hidden in body -->
@@ -182,7 +182,7 @@ export function renderNewsletter(brand: Brand, tokens: DesignTokens): string {
           )};text-transform:uppercase;letter-spacing:0.2em;">${esc(issue)}</div>
         </td></tr>
 
-        <!-- lede: inverted pyramid — core line + why-relevant, above the fold -->
+        <!-- lede: inverted pyramid - core line + why-relevant, above the fold -->
         <tr><td style="padding:${varRef("sizeXL")} ${PAD_X} ${varRef("sizeMD")};">
           <p style="margin:0 0 ${varRef("sizeXS")};text-transform:uppercase;letter-spacing:0.16em;font-size:${varRef(
             "fontSizeSM",
@@ -235,5 +235,5 @@ ${inner}
       </div>
     </div>`;
 
-  return document({ title: `${brand.name} — Newsletter`, tokens, brand, body });
+  return document({ title: `${brand.name} - Newsletter`, tokens, brand, body });
 }

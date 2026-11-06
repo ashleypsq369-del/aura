@@ -2,8 +2,8 @@
 //
 // The agent does the authoritative measurement, but it takes a while to drive
 // the browser, so the live `brand.html` shows all-skeleton modules for the
-// first few seconds and "feels stuck". To give the page a real first paint —
-// colors and fonts already visible before the agent writes anything — this
+// first few seconds and "feels stuck". To give the page a real first paint -
+// colors and fonts already visible before the agent writes anything - this
 // module harvests the site's CSS server-side and derives:
 //   - an initial semantic color palette from the page's CSS custom properties /
 //     prominent computed color literals (and the `theme-color` meta), mapped to
@@ -13,7 +13,7 @@
 //
 // Everything is timeout-bounded and failure-tolerant: offline or a hostile
 // origin just yields an empty result, preserving the prior all-skeleton
-// behavior — it never throws. It mirrors `logo-fallback.ts` /
+// behavior - it never throws. It mirrors `logo-fallback.ts` /
 // `imagery-fallback.ts` and is injectable so tests run offline.
 
 import type { BrandColor, BrandColorRole, BrandFontSpec } from '@open-design/contracts';
@@ -102,7 +102,7 @@ function luma({ r, g, b }: Rgb): number {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
-/** HSL-style saturation 0..1 — distinguishes chromatic accents from grays. */
+/** HSL-style saturation 0..1 - distinguishes chromatic accents from grays. */
 function saturation({ r, g, b }: Rgb): number {
   const max = Math.max(r, g, b) / 255;
   const min = Math.min(r, g, b) / 255;
@@ -147,7 +147,7 @@ function color(role: BrandColorRole, hex: string, name: string, usage: string): 
 /**
  * Derive an initial seven-role palette from frequency-ranked color literals and
  * an optional `theme-color`. Heuristic and best-effort: it never fabricates a
- * palette from memory — every role traces to a measured color (or a blend of
+ * palette from memory - every role traces to a measured color (or a blend of
  * two measured colors). Returns [] when no usable color was measured so the kit
  * keeps its palette skeletons rather than showing a fake palette.
  */
@@ -185,7 +185,7 @@ export function deriveSeedPalette(
   const background = darkCast
     ? [...darkBgSet].sort((a, b) => b.count - a.count)[0] ?? byDark[0] ?? null
     : [...lightSet].sort((a, b) => b.count - a.count)[0] ?? byLight[0] ?? null;
-  // Foreground: the high-contrast counterpart to the background — darkest
+  // Foreground: the high-contrast counterpart to the background - darkest
   // frequent color on a light page, lightest frequent color on a dark page.
   const darkSet = ranked.filter((c) => c.l <= 0.25);
   const lightFgSet = ranked.filter((c) => c.l >= 0.85);
@@ -217,7 +217,7 @@ export function deriveSeedPalette(
   out.push(color('background', toHex(bgRgb), 'Background', 'page background'));
   out.push(color('surface', toHex(surfaceRgb), 'Surface', 'cards, panels'));
   out.push(color('foreground', toHex(fgRgb), 'Foreground', 'primary text'));
-  // Muted: midpoint between fg and bg — a measured-derived secondary text tone.
+  // Muted: midpoint between fg and bg - a measured-derived secondary text tone.
   out.push(color('muted', toHex(mix(fgRgb, bgRgb, 0.45)), 'Muted', 'secondary text'));
   // Border: close to the background, nudged toward the foreground for a hairline.
   out.push(color('border', toHex(mix(bgRgb, fgRgb, 0.12)), 'Border', 'borders, dividers'));
@@ -269,7 +269,7 @@ export function deriveSeedTypography(
   for (const f of [...fonts.map((f) => f.family), ...fontFaceFamilies]) {
     const fam = f.trim();
     const key = fam.toLowerCase();
-    // Drop icon/symbol faces — they are UI chrome, not brand typography, and
+    // Drop icon/symbol faces - they are UI chrome, not brand typography, and
     // render as illegible glyph soup in the specimen tiles.
     if (!fam || seen.has(key) || ICON_FAMILY_RE.test(fam)) continue;
     seen.add(key);
@@ -315,7 +315,7 @@ async function gatherCss(
       if (/fonts\.googleapis\.com/i.test(abs)) googleFontsUrls.push(abs);
       else cssLinks.push(abs);
     } catch {
-      // Unresolvable href — skip.
+      // Unresolvable href - skip.
     }
   }
 

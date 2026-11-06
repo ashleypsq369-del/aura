@@ -279,12 +279,12 @@ export interface CollabPresenceCloudTransport {
 
 /**
  * Bind a collab transport to a per-project workspace scope, producing the
- * `cloud` dependency below — or nothing when this run has no cloud transport.
+ * `cloud` dependency below - or nothing when this run has no cloud transport.
  *
  * The invariant: **a `cloud` dependency exists if and only if a transport
  * exists.** Every endpoint below reads a present `cloud` as "the cloud owns
  * presence for this run" and stops consulting the process-local tracker
- * entirely. So a relay built over an absent transport is not merely useless —
+ * entirely. So a relay built over an absent transport is not merely useless -
  * it turns the in-process fallback into dead code and every gated presence
  * request into a 502. Returning `null` is what keeps that fallback reachable
  * for the runs that have no transport, which is every build that has not
@@ -406,7 +406,7 @@ function readPresenceSequence(
  * rejections keep their meaning (403/404) so the web client's existing
  * forbidden-request handling applies; only genuine infrastructure failures
  * stay 502/503. The response body is intentionally free of transport
- * internals — the spawned command line and stderr stay in the daemon log
+ * internals - the spawned command line and stderr stay in the daemon log
  * (see {@link cloudError}).
  */
 function sendClassifiedCloudError(
@@ -457,7 +457,7 @@ function cloudError(res: Response, error: unknown) {
 }
 
 const DEFAULT_PRESENCE_UPSTREAM_COOLDOWN_MS = 20_000;
-/** Failures must be consecutive — one transient blip never opens the cache. */
+/** Failures must be consecutive - one transient blip never opens the cache. */
 const PRESENCE_UPSTREAM_FAILURE_THRESHOLD = 2;
 const MAX_PRESENCE_UPSTREAM_FAILURE_ENTRIES = 256;
 
@@ -698,7 +698,7 @@ function createPresenceSessionFence() {
 /**
  * Team collaboration presence (presence) capability. Members heartbeat while viewing a
  * shared project; clients poll the present set (live cursors were cut, content
- * is polled — the spec). The set is process-local in {@link CollabRuntime}.
+ * is polled - the spec). The set is process-local in {@link CollabRuntime}.
  */
 export function registerCollabPresenceRoutes(
   app: Express,
@@ -871,7 +871,7 @@ export function registerCollabPresenceRoutes(
       }
       if (cloud) {
         // A project whose upstream keeps failing must not spawn another
-        // transport process on every 10s beat — replay the classified failure
+        // transport process on every 10s beat - replay the classified failure
         // until the cooldown lets the next probe through.
         const blocked = upstreamFailures.active(req.params.id, context);
         if (blocked && !presenceSessions.isClosed(heartbeatFence)) {

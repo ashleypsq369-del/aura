@@ -173,11 +173,11 @@ Observed unrelated test friction:
   - Browser menu actions render and enabled/disabled states make sense.
   - In desktop runtime, webview loads and screenshot/page brief/task save into Design Files.
 
-## Completion Pass — Workflow + Runtime Verification (2026-05-30, follow-up agent)
+## Completion Pass - Workflow + Runtime Verification (2026-05-30, follow-up agent)
 
 ### Static audit (multi-agent workflow)
 
-Ran a 5-phase audit/verify/implement workflow over all acceptance requirements. Result: **42/45 requirements met, 0 defects** in static analysis; remaining 3 are partial/judgment (i18n debt, CLI dual-track N/A for an interactive render surface, CSS global-vs-module precedent). The workflow added `apps/web/tests/components/DesignBrowserPanel.test.tsx` (34 cases over the pure helpers — `normalizeBrowserAddress` every branch, history round-trip, harness/brief markdown, etc.) and made those helpers named exports.
+Ran a 5-phase audit/verify/implement workflow over all acceptance requirements. Result: **42/45 requirements met, 0 defects** in static analysis; remaining 3 are partial/judgment (i18n debt, CLI dual-track N/A for an interactive render surface, CSS global-vs-module precedent). The workflow added `apps/web/tests/components/DesignBrowserPanel.test.tsx` (34 cases over the pure helpers - `normalizeBrowserAddress` every branch, history round-trip, harness/brief markdown, etc.) and made those helpers named exports.
 
 ### Real runtime verification (computer-use against the live Electron desktop app)
 
@@ -187,9 +187,9 @@ Drove the running desktop runtime via `pnpm tools-dev inspect desktop eval/scree
 
 All in `apps/web/src/components/DesignBrowserPanel.tsx`:
 
-1. **`allowpopups` React warning** — bare boolean JSX attr tripped "Received `true` for a non-boolean attribute" when the webview branch mounts. Fixed by setting `allowpopups` imperatively in the ref callback.
-2. **`dom-ready` crash** — `updateNavigationState` (and the reload button) called `canGoBack()`/`canGoForward()`/`isLoading()`/`reload()` before the webview attached, throwing "The WebView must be attached…". Guarded with try/catch (matching the existing `safeGetWebviewUrl/Title` pattern).
-3. **`ERR_ABORTED (-3)` blank page (critical / made the feature unusable)** — `src={currentUrl}` + a `did-navigate` handler that wrote the committed (trailing-slash) URL back into `currentUrl` caused Electron to re-navigate mid-load and abort it, leaving a blank pane. Fixed by splitting state into `loadUrl` (drives `src`, changes only on user navigation) and `currentUrl` (address bar / history, synced from webview events). Covered by a red→green regression test: `apps/web/tests/components/DesignBrowserPanel.webview.test.tsx`.
+1. **`allowpopups` React warning** - bare boolean JSX attr tripped "Received `true` for a non-boolean attribute" when the webview branch mounts. Fixed by setting `allowpopups` imperatively in the ref callback.
+2. **`dom-ready` crash** - `updateNavigationState` (and the reload button) called `canGoBack()`/`canGoForward()`/`isLoading()`/`reload()` before the webview attached, throwing "The WebView must be attached…". Guarded with try/catch (matching the existing `safeGetWebviewUrl/Title` pattern).
+3. **`ERR_ABORTED (-3)` blank page (critical / made the feature unusable)** - `src={currentUrl}` + a `did-navigate` handler that wrote the committed (trailing-slash) URL back into `currentUrl` caused Electron to re-navigate mid-load and abort it, leaving a blank pane. Fixed by splitting state into `loadUrl` (drives `src`, changes only on user navigation) and `currentUrl` (address bar / history, synced from webview events). Covered by a red→green regression test: `apps/web/tests/components/DesignBrowserPanel.webview.test.tsx`.
 
 ### Final verification (all green after fixes)
 

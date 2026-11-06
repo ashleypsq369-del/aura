@@ -52,7 +52,7 @@ retrieval:
 
 # Operational Expert Tool UI
 
-An operational expert tool is software used by trained domain specialists — warehouse operators, dispatchers, planners, analysts — as their primary work surface, often for the entire working day. These users are not beginners discovering a product; they are professionals executing a defined job with the tool as their instrument.
+An operational expert tool is software used by trained domain specialists - warehouse operators, dispatchers, planners, analysts - as their primary work surface, often for the entire working day. These users are not beginners discovering a product; they are professionals executing a defined job with the tool as their instrument.
 
 This is a fundamentally different design context from consumer software or occasional-use SaaS. The design priorities are reversed: density and speed of action take precedence over discoverability and visual spaciousness.
 
@@ -62,11 +62,11 @@ This is a fundamentally different design context from consumer software or occas
 
 ### 1. Information over whitespace
 
-An expert user does not need breathing room to orient themselves — they know the tool. Every pixel of empty space is a missed opportunity to show data they need to act on.
+An expert user does not need breathing room to orient themselves - they know the tool. Every pixel of empty space is a missed opportunity to show data they need to act on.
 
-- Use compact row heights (28–36px) for data tables
+- Use compact row heights (28-36px) for data tables
 - Show secondary attributes (status, type, date) inline, not on hover or in a detail panel
-- Prefer text labels over icons alone — experts read fast, icon-only UIs slow them down at the margins
+- Prefer text labels over icons alone - experts read fast, icon-only UIs slow them down at the margins
 
 ### 2. Workflow linearity
 
@@ -82,7 +82,7 @@ The UI should make the next step obvious at every point, without hiding it behin
 
 Filters, column widths, view modes, and open/closed panels are part of the operator's work context. They should survive page reloads and be consistent between sessions unless the user explicitly resets them.
 
-Do not reset the UI on every visit — the expert has spent time configuring it to their workflow.
+Do not reset the UI on every visit - the expert has spent time configuring it to their workflow.
 
 ---
 
@@ -99,11 +99,11 @@ Many operational domains have naturally hierarchical data: an order contains lin
 ```
 
 **Why accordion over page navigation:**
-- Context is preserved — the operator can see multiple orders simultaneously
+- Context is preserved - the operator can see multiple orders simultaneously
 - Status across siblings is visible without navigating back
 - Keyboard navigation (expand/collapse with arrow keys) keeps hands on the keyboard
 
-**Per-row inclusion toggles:** In planning and staging workflows, each row may need to be explicitly included or excluded from a batch operation. Use a checkbox or toggle per row that is always visible — not hidden on hover.
+**Per-row inclusion toggles:** In planning and staging workflows, each row may need to be explicitly included or excluded from a batch operation. Use a checkbox or toggle per row that is always visible - not hidden on hover.
 
 ---
 
@@ -114,11 +114,11 @@ Operators make decisions based on status. Status should be visible without inter
 | Good | Avoid |
 |---|---|
 | Coloured dot or pill always visible in the row | Status only visible on hover or in a tooltip |
-| 2–3 status states with distinct colours | More than 5 status colours (hard to memorise) |
+| 2-3 status states with distinct colours | More than 5 status colours (hard to memorise) |
 | Status label beside colour for accessibility | Colour alone as the only indicator |
 | Consistent colour semantics across the whole tool | Same colour meaning different things in different tables |
 
-Status colour conventions should align with `status-colors-and-errors` — green for ready/complete, amber for warning/pending, red for error/blocked, grey for inactive.
+Status colour conventions should align with `status-colors-and-errors` - green for ready/complete, amber for warning/pending, red for error/blocked, grey for inactive.
 
 ---
 
@@ -130,7 +130,7 @@ Expert tools often have two distinct types of filters that should be treated dif
 
 **Search filters** find a specific item within the current scope. They are transient. Place these in a search input that can be cleared quickly.
 
-Do not merge these into a single filter UI — the operator switches mental mode between "what scope am I working in?" and "where is that specific item?"
+Do not merge these into a single filter UI - the operator switches mental mode between "what scope am I working in?" and "where is that specific item?"
 
 ```
 [Workflow scope: Today ▾]  [Status: Unassigned ▾]  [Stock: Available ▾]
@@ -151,7 +151,7 @@ Expert users learn keyboard shortcuts. They should not be required, but they dra
 - Escape closes an open panel or dialog
 - Common actions have discoverable shortcuts (shown in tooltips: `Delete [Del]`, `Include [Space]`)
 
-Do not rely on right-click context menus as the only path to actions — they are not discoverable and break keyboard-only workflows.
+Do not rely on right-click context menus as the only path to actions - they are not discoverable and break keyboard-only workflows.
 
 ---
 
@@ -160,10 +160,10 @@ Do not rely on right-click context menus as the only path to actions — they ar
 When an operation affects many items (batch assign, mass status update), the feedback must be proportional:
 
 - For fewer than ~10 items: inline confirmation is sufficient
-- For 10–100 items: a toast notification with count ("42 orders updated")
+- For 10-100 items: a toast notification with count ("42 orders updated")
 - For 100+ items: a progress indicator during the operation, then a summary on completion
 
-Never silently complete a bulk operation with no feedback — the expert needs to confirm their action took effect.
+Never silently complete a bulk operation with no feedback - the expert needs to confirm their action took effect.
 
 ---
 

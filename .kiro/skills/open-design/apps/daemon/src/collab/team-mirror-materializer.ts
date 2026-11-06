@@ -344,7 +344,7 @@ export function materializePulledTeamMirror(
       resourceHubResourceId,
       cloudTombstonedAt: null,
       syncState: 'synced' as const,
-      // The ORIGIN's content time, exactly like the project row above — never
+      // The ORIGIN's content time, exactly like the project row above - never
       // this pull's clock. The project list answers a card's one relative time
       // as `MAX(p.updated_at, wp.updated_at)`, so carrying the origin into the
       // project row alone was not enough: the binding written in this same

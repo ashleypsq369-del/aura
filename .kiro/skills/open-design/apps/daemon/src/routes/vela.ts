@@ -127,8 +127,8 @@ function hasLegacySimulatedRuntimeInput(req: Request): boolean {
  * fetchVelaBillingSummary) and every logout clears the live-account cache
  * (see `clearAllVelaLiveAccounts`), so "sign out then sign back in" always
  * lands here cold. Without a bound, a slow or hung billing probe delays the
- * whole login-status response — the very check the avatar/menu/settings
- * surfaces need FIRST — by however long the subprocess takes. Kept short
+ * whole login-status response - the very check the avatar/menu/settings
+ * surfaces need FIRST - by however long the subprocess takes. Kept short
  * (well under the exec timeout) so /status stays fast even when billing is
  * slow; the single-flight fetch is NOT canceled when the wait lapses, so it
  * keeps running and populates the cache (see `setVelaLiveAccount`) for the
@@ -144,10 +144,10 @@ const VELA_LIVE_ACCOUNT_PENDING = Symbol('vela-live-account-pending');
 
 /**
  * Race an in-flight live-account fetch against a short timeout. Resolves with
- * the fetched account (or null on failure — the fetch itself never rejects,
+ * the fetched account (or null on failure - the fetch itself never rejects,
  * see {@link fetchVelaLiveAccountSingleFlight}'s `.catch`) when it lands
  * before `timeoutMs`; otherwise resolves with the pending sentinel WITHOUT
- * touching `pending` — the fetch keeps running and still populates the
+ * touching `pending` - the fetch keeps running and still populates the
  * live-account cache when it eventually settles.
  */
 function raceVelaLiveAccountFetch(
@@ -281,7 +281,7 @@ function isProxyHopByHopHeader(name: string, connectionTokens: Set<string>): boo
  * Pipe one leg of the AMR proxy with an explicit source-error guard.
  *
  * `.pipe()` does NOT forward a source `'error'` to the destination, and a
- * stream that emits `'error'` with no listener throws — crashing the privileged
+ * stream that emits `'error'` with no listener throws - crashing the privileged
  * daemon. Both legs of this proxy have real-world error paths: the upstream
  * response body can `ECONNRESET` mid-stream (a network drop, routine), and the
  * inbound request body errors when a client aborts an upload. Routing the
@@ -457,7 +457,7 @@ function proxyVelaMessageCenterRequest(
  * and it can only ever produce a package the browser's own budget accepts
  * (`MAX_CONTENT_BYTES`, mirrored by the web host). A body that cannot fit that
  * budget is un-assemblable by construction, so holding it buys nothing and
- * costs the daemon its memory — and, through the synchronous decompressors
+ * costs the daemon its memory - and, through the synchronous decompressors
  * below, its event loop, which for a privileged local process means the whole
  * app stops. Past this ceiling the route degrades back to what it replaced: a
  * stream. Base64 inflates resource bytes by 4/3 and the decision carries
@@ -470,7 +470,7 @@ const MAX_BUFFERED_DECISION_BYTES = 4 * MAX_CONTENT_BYTES;
  *
  * Returns `null` for an encoding this build cannot decode, and for one whose
  * decoded size passes `maxOutputBytes`. Both mean the same thing to the caller
- * — "hand the original bytes back untouched" — because reading the body is an
+ * - "hand the original bytes back untouched" - because reading the body is an
  * optimization, never a precondition for answering the browser. Refusing on
  * size matters because compression ratios are unbounded: a 200KB reply can name
  * 200MB of output, and without a limit zlib allocates every byte of it before
@@ -533,7 +533,7 @@ function decodableAcceptEncoding(value: string | string[] | undefined): string |
  * web lifecycle does after 15s (`REQUEST_TIMEOUT_MS`, a budget for a whole
  * round). The socket's 30s idle timeout ran out after it: the browser
  * abandoned the attempt at 15s, `abortUpstream` then killed the upstream, and
- * the offline replay that exists for exactly this case was never delivered —
+ * the offline replay that exists for exactly this case was never delivered -
  * so a hung runtime hid a campaign whose schedule was still running.
  *
  * It is a deadline for the request as a whole, not an idle timeout, so neither
@@ -570,7 +570,7 @@ function touchpointContentKeyForRequest(url: URL, scope: string): TouchpointCont
  * be the more natural identifier and is the wrong one here: it is populated on
  * some of the paths that build a control context and `null` on others, so a
  * single account would flip between two scopes depending on which read
- * answered — and a flip means a cache that is silently never hit.
+ * answered - and a flip means a cache that is silently never hit.
  *
  * The cost is that rotating the key orphans that account's packages. That is
  * one refetch, on a path the user is already reauthenticating through, and it
@@ -733,7 +733,7 @@ function proxyTouchpointRuntimeRequest(
   /**
    * `fallback` is the one retry the assembly path is allowed: a trimmed reply
    * the daemon cannot rebuild is re-asked as today's full request. Clearing it
-   * on that retry is what keeps the guarantee bounded — the daemon can never
+   * on that retry is what keeps the guarantee bounded - the daemon can never
    * loop between a server that trims and a cache that cannot assemble.
    */
   const send = (held: HeldContentRef | null, fallback: boolean): void => {
@@ -755,7 +755,7 @@ function proxyTouchpointRuntimeRequest(
     // Touchpoint decisions carry base64 content and run to megabytes, and this
     // proxy pipes the upstream body through verbatim. Building the request
     // headers from scratch dropped the caller's `accept-encoding`, so every
-    // refresh pulled the payload uncompressed — measured at 383KB against 214KB
+    // refresh pulled the payload uncompressed - measured at 383KB against 214KB
     // for the same decision. Forward the caller's preference and hand its
     // `content-encoding` back, so the body stays labelled the way it is framed.
     // Only codings the daemon can read are forwarded; see `decodableAcceptEncoding`.
@@ -796,8 +796,8 @@ function proxyTouchpointRuntimeRequest(
     let cutShortSettled = false;
     let bodyEnded = false;
     /**
-     * Settles an attempt whose body ended in an error — the decision budget,
-     * a reset socket, a truncated stream — before it could be answered.
+     * Settles an attempt whose body ended in an error - the decision budget,
+     * a reset socket, a truncated stream - before it could be answered.
      *
      * An authoritative status is answered as itself, never from the store. A
      * 410 also reclaims what the normal `end` path would have: its receipt is
@@ -903,9 +903,9 @@ function proxyTouchpointRuntimeRequest(
        *
        * Degrading to streaming sends headers, and sending headers retires the
        * status block in the `end` handler below. So a 410 that outgrew the
-       * buffer would never reclaim — the browser clears the screen while the
+       * buffer would never reclaim - the browser clears the screen while the
        * stored package survives its own withdrawal, ready to replay the next
-       * time the daemon cannot reach the runtime — and an oversized 5xx would
+       * time the daemon cannot reach the runtime - and an oversized 5xx would
        * be forwarded instead of answered from cache, which is precisely the
        * outage this route exists to survive.
        *
@@ -985,7 +985,7 @@ function proxyTouchpointRuntimeRequest(
           // answer that licenses destroying a stored package. Which 410s do so
           // is `touchpointWithdrawalReclaims`, stated once in the contract so
           // the daemon and the browser cannot disagree about what a 410 means.
-          // The 410 itself is forwarded either way — deciding what the browser
+          // The 410 itself is forwarded either way - deciding what the browser
           // does with it is not this proxy's job.
           if (status === 410) {
             let body: unknown = null;
@@ -997,7 +997,7 @@ function proxyTouchpointRuntimeRequest(
             settleWithdrawal(body);
           }
           // 5xx is "temporarily unavailable", which is a transport condition
-          // wearing a status code. Everything else — 401, 403, 404, 410 — is an
+          // wearing a status code. Everything else - 401, 403, 404, 410 - is an
           // answer, and a cache may never overrule one.
           else if (touchpointStatusIsTransient(status)) {
             finishOperation();
@@ -1142,7 +1142,7 @@ export function registerVelaRoutes(app: Express, deps: RegisterVelaRoutesDeps): 
   // `peekVelaLiveAccount(key) === null` as the cold signal (rather than the
   // refresh throttle) means a concurrent second /status that arrives during the
   // first fetch awaits the SAME promise instead of slipping past the throttle
-  // and returning config-only — which the read-once surfaces can't recover from.
+  // and returning config-only - which the read-once surfaces can't recover from.
   const inFlightVelaAccountFetches = new Map<
     string,
     Promise<VelaLiveAccount | null>
@@ -1178,7 +1178,7 @@ export function registerVelaRoutes(app: Express, deps: RegisterVelaRoutesDeps): 
         // is read by focus/menu/login surfaces, so a persistent optional
         // billing failure must not make every poll await the same slow probe.
         // Billing is display-only (OPEND-3553): a failed `vela billing
-        // summary` — even an auth-shaped one — must never expire the AMR
+        // summary` - even an auth-shaped one - must never expire the AMR
         // session. Genuine credential expiry is detected by the non-billing
         // workspace directory path.
         console.warn('[amr] live account fetch failed', err);
@@ -1274,7 +1274,7 @@ export function registerVelaRoutes(app: Express, deps: RegisterVelaRoutesDeps): 
           // polls degrade to config-only instead of each awaiting the same
           // slow probe. If billing is genuinely slow (or hung), the wait
           // lapses and this response goes out with `account` absent rather
-          // than blocking the login-status check itself — the fetch is left
+          // than blocking the login-status check itself - the fetch is left
           // running and populates the cache for the next /status read (see
           // VELA_STATUS_LIVE_ACCOUNT_WAIT_MS's docblock for why that is
           // always reached soon after).
@@ -1489,7 +1489,7 @@ export function registerVelaRoutes(app: Express, deps: RegisterVelaRoutesDeps): 
       // "502: Invalid IP address: undefined", even though the direct path
       // resolves fine. So only fall back to the proxy when the direct child
       // actually terminates before activation (including after this request
-      // returns) — never merely because it is slow, already activated, or a
+      // returns) - never merely because it is slow, already activated, or a
       // login is already in flight.
       const spawned = await spawnVelaLoginWithFallback({
         authAttemptId: requestAuthAttemptId,

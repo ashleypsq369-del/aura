@@ -118,7 +118,7 @@ async function recoverInMemoryIntent(
       finishReady(deps, row, digest, installedKey, byteSize, now);
       return 'completed';
     } catch {
-      // Missing, truncated, or a different digest — all mean the exact bytes
+      // Missing, truncated, or a different digest - all mean the exact bytes
       // are unrecoverable. Provider bytes lived in RAM; there is no source to
       // re-read, and the current file is a different version by definition.
       if (row.tempKey) await deps.blobs.discardTemp(row.tempKey);

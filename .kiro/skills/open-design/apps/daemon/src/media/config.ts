@@ -29,7 +29,7 @@
 // the file once or set OD_MEDIA_CONFIG_DIR=<projectRoot>/.od to keep
 // the old location.
 //
-// The file is intentionally simple JSON — no encryption, no schema
+// The file is intentionally simple JSON - no encryption, no schema
 // versioning yet. The daemon listens on 127.0.0.1 only and the workspace
 // is already trusted, so adding a vault here would mostly be theatre.
 // We DO mask keys when reading via the GET endpoint so the UI doesn't
@@ -71,7 +71,7 @@ function errorCode(err: unknown): string | undefined {
 const ENV_KEYS: Record<string, string[]> = {
   // OPENAI_API_KEY is the canonical env for the standard OpenAI API.
   // AZURE_API_KEY / AZURE_OPENAI_API_KEY are the canonical envs Azure
-  // OpenAI examples use — we share the openai provider slot so a user
+  // OpenAI examples use - we share the openai provider slot so a user
   // who pastes an Azure deployment URL into the OpenAI Base URL field
   // gets the credential picked up automatically.
   openai: [
@@ -83,7 +83,7 @@ const ENV_KEYS: Record<string, string[]> = {
   volcengine: ['OD_VOLCENGINE_API_KEY', 'ARK_API_KEY', 'VOLCENGINE_API_KEY'],
   // OD_GROK_API_KEY first (the project-reserved override, same shape as
   // every other provider above), then XAI_API_KEY as the canonical
-  // upstream env per docs.x.ai quickstart — so users who already export
+  // upstream env per docs.x.ai quickstart - so users who already export
   // it for the official SDK don't have to re-paste into Settings.
   grok: ['OD_GROK_API_KEY', 'XAI_API_KEY'],
   nanobanana: ['OD_NANOBANANA_API_KEY', 'GOOGLE_API_KEY', 'GEMINI_API_KEY'],
@@ -219,7 +219,7 @@ function readEnvAliases(): ModelAliasMap {
   try {
     return coerceAliasMap(JSON.parse(raw));
   } catch {
-    // Malformed JSON is non-fatal — the user can fix the env var
+    // Malformed JSON is non-fatal - the user can fix the env var
     // without restarting the daemon mid-generation, and silent fall-
     // through to the on-disk map matches the precedent of the rest
     // of the env / stored config resolution in this module.
@@ -327,7 +327,7 @@ async function resolveXAIOAuthCredential(
   // 2. Borrow the xAI OAuth token Hermes wrote to ~/.hermes/auth.json
   //    when the user ran `hermes auth add xai-oauth`. A user who has already authorized
   //    Hermes doesn't have to run a second OAuth dance inside OD.
-  //    (No proactive refresh here — Hermes itself maintains the token,
+  //    (No proactive refresh here - Hermes itself maintains the token,
   //    and we only borrow what is currently fresh.)
   const home = os.homedir();
   const hermesAuth = await readJsonIfPresent(
@@ -500,7 +500,7 @@ export async function writeConfig(projectRoot: string, body: unknown) {
  *   * No-op when an apiKey is ALREADY stored for `providerId` (the user
  *     may have configured Media independently and we never overwrite).
  *   * No-op when an env-var key resolves for `providerId` (env wins
- *     regardless of disk state — seeding would be invisible).
+ *     regardless of disk state - seeding would be invisible).
  *   * No-op when the incoming `apiKey` is empty (we only seed values
  *     the chat layer has just verified upstream).
  *   * Otherwise merge `{ [providerId]: entry }` into the existing
@@ -508,7 +508,7 @@ export async function writeConfig(projectRoot: string, body: unknown) {
  *     are preserved byte-for-byte.
  *
  * Returns `true` when a write happened (caller can log), `false` when
- * the call was a no-op. Errors are surfaced — the caller decides
+ * the call was a no-op. Errors are surfaced - the caller decides
  * whether to swallow them (fire-and-forget) or propagate.
  */
 export async function seedProviderIfMissing(

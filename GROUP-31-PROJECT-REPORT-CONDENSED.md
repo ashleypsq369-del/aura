@@ -1466,10 +1466,10 @@ figures.
 Table 5.2: Illustrative synthetic feature distributions and label-assignment rules
 
 Feature or Rule                  Specification Used in Model Training
-Patient age                      Normal distribution, mean 72, SD 12, clipped to 18–100
-PPS score                        Normal distribution, mean 55, SD 20, clipped to 10–100
-ESAS pain score                  Normal distribution, mean 4, SD 3, clipped to 0–10
-Zarit caregiver burden score     Normal distribution, mean 32, SD 15, clipped to 0–88
+Patient age                      Normal distribution, mean 72, SD 12, clipped to 18-100
+PPS score                        Normal distribution, mean 55, SD 20, clipped to 10-100
+ESAS pain score                  Normal distribution, mean 4, SD 3, clipped to 0-10
+Zarit caregiver burden score     Normal distribution, mean 32, SD 15, clipped to 0-88
 Pain risk label                  Positive if SpO2 < 90%, HR > 120 bpm, RR > 22/min,
                                  or temperature > 38.5 °C
 Admission risk label             Positive if PPS < 40, ESAS total > 45, and ED visits
@@ -1674,7 +1674,7 @@ Abbas, Q., Jeong, W., and Lee, S. W. (2025), "Explainable AI in Clinical Decisio
 
 Alamri, A., Hassan, M., and Al-Otaibi, S. (2025), "Privacy-Preserving Architectures for
     Healthcare AI Systems", IEEE Transactions on Medical Informatics, Vol. 12, No. 2,
-    pp. 45 – 59.
+    pp. 45 - 59.
 
 Alora Health (2025), Alora Hospice Software, Alora Health. Available at:
     https://www.alorahealth.com/hospice-software/. Accessed: 13 April 2026.
@@ -1692,34 +1692,34 @@ Antoniadi, A. M., Du, Y., Guendouz, Y., Wei, L., Mazo, C., Dwyer, T., and Mooney
 Boddaert, M. S., Pereira, C., Adema, J., Vissers, K. C. P., van der Linden, Y. M.,
     Raijmakers, N. J. H., and Fransen, H. P. (2022), "Inappropriate End-of-Life Cancer
     Care in a Generalist and Specialist Palliative Care Model", BMJ Supportive and
-    Palliative Care, Vol. 12, No. e1, pp. e137 – e145.
+    Palliative Care, Vol. 12, No. e1, pp. e137 - e145.
 
 CareSmartz360 (2025), CareSmartz360 Home Care Agency Software, CareSmartz360.
     Available at: https://www.caresmartz.com/. Accessed: 13 April 2026.
 
 Chen, T., and Guestrin, C. (2016), "XGBoost: A Scalable Tree Boosting System",
     Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge
-    Discovery and Data Mining, pp. 785 – 794.
+    Discovery and Data Mining, pp. 785 - 794.
 
 Coghlan, S., Loi, M., Ravn, M. N., and Leins, K. (2023), "Vulnerability and Affective
-    Risks in Healthcare Chatbot Systems", AI and Society, Vol. 38, No. 2, pp. 567 – 578.
+    Risks in Healthcare Chatbot Systems", AI and Society, Vol. 38, No. 2, pp. 567 - 578.
 
 Finucane, A., Canny, A., Arcari Mair, A. P., Harrop, E., Selman, L. E., Swash, B.,
     Wakefield, D., and Gillanders, D. (2024), "A Rapid Review of the Evidence for
     Online Interventions for Bereavement Support", Palliative Medicine, Vol. 39,
-    No. 1, pp. 31 – 52.
+    No. 1, pp. 31 - 52.
 
 Gerke, S., Minssen, T., and Cohen, G. (2020), "Ethical and Legal Challenges of Artificial
-    Intelligence in Healthcare", Artificial Intelligence in Healthcare, pp. 295 – 336.
+    Intelligence in Healthcare", Artificial Intelligence in Healthcare, pp. 295 - 336.
 
 Gris, G., Ramirez, M., and Sanchez, L. (2023), "Ethical Challenges of AI in Dementia and
-    Palliative Care", Dementia, Vol. 22, No. 3, pp. 499 – 514.
+    Palliative Care", Dementia, Vol. 22, No. 3, pp. 499 - 514.
 
 Hevner, A. R., March, S. T., Park, J., and Ram, S. (2004), "Design Science in Information
-    Systems Research", MIS Quarterly, Vol. 28, No. 1, pp. 75 – 105.
+    Systems Research", MIS Quarterly, Vol. 28, No. 1, pp. 75 - 105.
 
 Hildt, E. (2025), "Explainability as a Moral Imperative in Medical AI", AI and Ethics,
-    Vol. 5, No. 1, pp. 1 – 11.
+    Vol. 5, No. 1, pp. 1 - 11.
 
 Kocaballi, A. B., Berkovsky, S., Quiroz, J. C., Laranjo, L., Tong, H. L., Rezazadegan, D.,
     Briatore, A., and Coiera, E. (2019), "The Personalization of Conversational Agents
@@ -1727,14 +1727,14 @@ Kocaballi, A. B., Berkovsky, S., Quiroz, J. C., Laranjo, L., Tong, H. L., Rezaza
     No. 11, p. e15360.
 
 Lewis, J. (2000), "The Role of Care Coordinators in Continuity of End-of-Life Care",
-    Journal of Palliative Medicine, Vol. 3, No. 2, pp. 201 – 212.
+    Journal of Palliative Medicine, Vol. 3, No. 2, pp. 201 - 212.
 
 Lundberg, S. M., and Lee, S. I. (2017), "A Unified Approach to Interpreting Model
     Predictions", Advances in Neural Information Processing Systems, Vol. 30,
-    pp. 4765 – 4774.
+    pp. 4765 - 4774.
 
 Maguraushe, K., and Ndlovu, S. (2024), "Privacy Risks in Smart Technologies Applied
-    to Palliative Care", International Journal of Medical Informatics, Vol. 183, pp. 1 – 10.
+    to Palliative Care", International Journal of Medical Informatics, Vol. 183, pp. 1 - 10.
 
 National Health Insurance Authority (2025), "NHIS Active Membership Hits 56 Percent
     Coverage", NHIA Stakeholder Conference, Accra. Available at:
@@ -1746,30 +1746,30 @@ Netsmart (2025), Palliative Care EHR Software, Netsmart Technologies. Available 
 
 Parsons, M., Rens, B., and Chen, Y. (2025), "Explainability in Clinical Decision Support
     Systems: A Systematic Review", Journal of the American Medical Informatics
-    Association, Vol. 32, No. 1, pp. 112 – 126.
+    Association, Vol. 32, No. 1, pp. 112 - 126.
 
 Pinto, S., Caldas, A., and Morais, A. (2025), "Artificial Intelligence in Palliative Care
     Communication and Decision-Making: A Narrative Review", Palliative and
-    Supportive Care, Vol. 23, No. 1, pp. 1 – 14.
+    Supportive Care, Vol. 23, No. 1, pp. 1 - 14.
 
 Royce, W. W. (1970), "Managing the Development of Large Software Systems",
-    Proceedings of IEEE WESCON, Vol. 26, pp. 1 – 9.
+    Proceedings of IEEE WESCON, Vol. 26, pp. 1 - 9.
 
 Singer, P. A., Martin, D. K., and Kelner, M. (2016), "Multidisciplinary Continuity and
-    Quality of End-of-Life Care", JAMA, Vol. 315, No. 1, pp. 60 – 70.
+    Quality of End-of-Life Care", JAMA, Vol. 315, No. 1, pp. 60 - 70.
 
 Stange, K. C. (2009), "The Problem of Fragmentation and the Need for Integrative
-    Solutions", Annals of Family Medicine, Vol. 7, No. 2, pp. 100 – 103.
+    Solutions", Annals of Family Medicine, Vol. 7, No. 2, pp. 100 - 103.
 
 Tan, Y., Liang, X., Ming, W., Xing, H., Wang, Y., and Gao, Y. (2024), "A Scoping Review
     of Digital Technology Applications in Palliative Care", BMC Palliative Care,
     Vol. 23, p. 290.
 
 Templin, N., Wernecke, K. D., and Walther, C. (2024), "Challenges in Personalised
-    Health AI Deployment", npj Digital Medicine, Vol. 7, No. 1, pp. 1 – 10.
+    Health AI Deployment", npj Digital Medicine, Vol. 7, No. 1, pp. 1 - 10.
 
 Tilala, M., Reddy, V., and Rao, K. (2024), "Biomedical Ethics and the Design of Healthcare
-    AI Systems", AI in Healthcare, Vol. 9, No. 3, pp. 221 – 234.
+    AI Systems", AI in Healthcare, Vol. 9, No. 3, pp. 221 - 234.
 
 United Nations (2015), Transforming Our World: The 2030 Agenda for Sustainable
     Development, United Nations, New York, 41 pp.
@@ -1777,11 +1777,11 @@ United Nations (2015), Transforming Our World: The 2030 Agenda for Sustainable
 Wang, S. Y., Aldridge, M. D., Gross, C. P., Canavan, M., Cherlin, E., Johnson-Hurzeler, R.,
     and Bradley, E. (2016), "Transitions Between Healthcare Settings of Hospice
     Enrollees at the End of Life", Journal of the American Geriatrics Society, Vol. 64,
-    No. 2, pp. 314 – 322.
+    No. 2, pp. 314 - 322.
 
 Wang, L., Li, J., and Chen, H. (2023), "Humanistic Ethics in Healthcare AI: Empathy,
     Relationships, and the Limits of Algorithms", Ethics and Information Technology,
-    Vol. 25, No. 1, pp. 1 – 12.
+    Vol. 25, No. 1, pp. 1 - 12.
 
 World Health Organization (2024), Palliative Care: Key Facts, World Health Organization,
     Geneva. Available at: https://www.who.int/news-room/fact-sheets/detail/palliative-care.

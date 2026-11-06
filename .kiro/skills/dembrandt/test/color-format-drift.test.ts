@@ -93,7 +93,7 @@ test('a semantic role appearing or disappearing counts as a full change', () => 
 
 // Regression: an UNCHANGED semantic map must not touch the score. Adding every
 // role's weight to the denominator let a stable semantic map dilute real palette
-// drift, turning a measured 11 (drift) into 9 (stable) — a fix for an invisible
+// drift, turning a measured 11 (drift) into 9 (stable) - a fix for an invisible
 // gate that could flip an existing gate from red to green.
 
 function sample(palette: string[], semantic: Record<string, string>) {

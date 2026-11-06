@@ -1,7 +1,7 @@
 /**
  * Build a showcase HTML page from a DESIGN.md so the user can see what each
  * design system looks like *before* generating anything. We don't try to
- * render a unique product mockup — we extract the palette, typography, and
+ * render a unique product mockup - we extract the palette, typography, and
  * a couple of component conventions, then drop them into one fixed
  * template. The full DESIGN.md is rendered below as prose for reference.
  *
@@ -55,7 +55,7 @@ export function renderDesignSystemPreview(id: string, raw: string): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(title)} — design system preview</title>
+  <title>${escapeHtml(title)} - design system preview</title>
   <style>
     :root {
       --bg: ${bg};
@@ -265,7 +265,7 @@ export function renderDesignSystemPreview(id: string, raw: string): string {
       </div>
       <div class="typo-row">
         <span class="label">Body</span>
-        <div class="typo-body">Body copy reads at sixteen pixels with a 1.55 leading. Restraint and rhythm matter more than novelty — pick a stack that earns the page.</div>
+        <div class="typo-body">Body copy reads at sixteen pixels with a 1.55 leading. Restraint and rhythm matter more than novelty - pick a stack that earns the page.</div>
       </div>
       <div class="typo-row">
         <span class="label">Mono</span>
@@ -334,7 +334,7 @@ function extractColors(raw: string): ColorToken[] {
   let m;
   while ((m = reA.exec(raw)) !== null) push(m[1] ?? '', m[2] ?? '');
 
-  // Form B: "**Stripe Purple** (`#533afd`)" — common in awesome-design-md.
+  // Form B: "**Stripe Purple** (`#533afd`)" - common in awesome-design-md.
   // Token name is whatever's bolded; the hex follows in parens/backticks.
   const reB = /\*\*([A-Za-z][A-Za-z0-9 /&()+_-]{1,40}?)\*\*\s*\(?\s*`?(#[0-9a-fA-F]{3,8})/g;
   while ((m = reB.exec(raw)) !== null) push(m[1] ?? '', m[2] ?? '');
@@ -413,7 +413,7 @@ function escapeHtml(s: string): string {
   );
 }
 
-// Tiny markdown renderer — enough for our DESIGN.md prose: H1–H4, paragraphs,
+// Tiny markdown renderer - enough for our DESIGN.md prose: H1-H4, paragraphs,
 // bullet/ordered lists, blockquotes, fenced code, GFM pipe tables, horizontal
 // rules, inline `code` / **bold** / *italic* / [link](url). Not a full markdown
 // implementation but covers everything the DESIGN.md files actually use.
@@ -467,7 +467,7 @@ function renderMarkdownLite(src: string): string {
       continue;
     }
 
-    // GFM pipe table — at least a header row, a separator row of dashes,
+    // GFM pipe table - at least a header row, a separator row of dashes,
     // and one body row. Look ahead from `i` so we can consume the whole
     // block in one step.
     if (looksLikeTableHeader(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1] ?? '')) {

@@ -12,7 +12,7 @@ import {
   upsertMessage,
 } from '../src/db.js';
 
-// #1247 / #1060 — the project-status projection must read a terminal `succeeded`
+// #1247 / #1060 - the project-status projection must read a terminal `succeeded`
 // run that ended with unfinished declared work as `incomplete`, never as
 // `succeeded`, and it must survive reload because it derives the verdict from the
 // persisted `events_json` (the same TodoWrite snapshots the chat footer reads).

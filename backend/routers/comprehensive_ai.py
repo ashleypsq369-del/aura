@@ -1,4 +1,4 @@
-"""
+﻿"""
 COMPREHENSIVE AI RISK MONITORING SYSTEM
 ========================================
 Monitors ALL patient data and provides SHAP explanations for every prediction
@@ -1731,11 +1731,11 @@ async def explain_symptom_focus(patient, focus_data: dict, db):
 
     rec_map = {
         'pain':                    ["Consider breakthrough pain medication if score >= 7",
-                                    "Review WHO analgesic ladder — step up if needed",
+                                    "Review WHO analgesic ladder - step up if needed",
                                     "Non-pharmacological: positioning, heat/cold, relaxation"],
         'nausea':                  ["Administer prescribed antiemetic",
                                     "Small frequent meals, avoid strong odours",
-                                    "Check if opioid-induced — consider dose reduction"],
+                                    "Check if opioid-induced - consider dose reduction"],
         'breathlessness':          ["Check SpO2 immediately",
                                     "Position patient upright at 30-45 degrees",
                                     "Consider supplemental oxygen if SpO2 < 95%"],
@@ -1746,7 +1746,7 @@ async def explain_symptom_focus(patient, focus_data: dict, db):
                                     "Ensure patient feels safe and informed",
                                     "Review anxiolytic prescription with clinician"],
         'fatigue':                 ["Energy conservation and pacing strategies",
-                                    "Check haemoglobin — may indicate anaemia",
+                                    "Check haemoglobin - may indicate anaemia",
                                     "Review medications for fatigue side-effects"],
     }
     recommendations.extend(rec_map.get(symptom_type, ["Continue monitoring and document changes"]))

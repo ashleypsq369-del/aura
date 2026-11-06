@@ -199,7 +199,7 @@ function createRunsServiceStub() {
           : {}),
       });
     },
-    // Intentionally does NOT invoke `starter` — this test only asserts on the
+    // Intentionally does NOT invoke `starter` - this test only asserts on the
     // HTTP response to POST /api/runs, not on real agent-process spawning.
     start: (run: any) => run,
     fail: (run: any, code: string, message: string) => {
@@ -293,7 +293,7 @@ async function startServer(opts?: {
     visibility: 'personal',
     createdByWorkspaceMemberId: OWNER_MEMBER_ID,
   });
-  // UNBOUND_PROJECT deliberately gets no `workspace_projects` row — the
+  // UNBOUND_PROJECT deliberately gets no `workspace_projects` row - the
   // "legacy / never claimed" control case the gate must leave alone
   // (personal / solo usage with no workspace at all).
 
@@ -443,7 +443,7 @@ async function startServer(opts?: {
   return `http://127.0.0.1:${port}`;
 }
 
-describe('POST /api/runs — workspace mutation gate', () => {
+describe('POST /api/runs - workspace mutation gate', () => {
   it.each(['/api/runs', '/api/chat'])(
     'keeps project and local plugin gates off the remote Workspace directory through %s',
     async (route) => {
@@ -1353,7 +1353,7 @@ describe('Workspace-bound run lifecycle authority', () => {
   );
 });
 
-describe('POST /api/runs — delegates membership and balance eligibility to Vela/AMR', () => {
+describe('POST /api/runs - delegates membership and balance eligibility to Vela/AMR', () => {
   it('does not let an ambient directory verdict override the persisted project billing binding', async () => {
     const baseUrl = await startServer({
       enforceWorkspaceProjectMutation: createEnforceWorkspaceProjectMutation(async () => ({
@@ -1399,7 +1399,7 @@ describe('POST /api/runs — delegates membership and balance eligibility to Vel
   });
 });
 
-describe('POST /api/runs — one-time Personal adoption for signed-in AMR', () => {
+describe('POST /api/runs - one-time Personal adoption for signed-in AMR', () => {
   it.each(['/api/runs', '/api/chat'])(
     'transactionally binds an unbound historical project to the exact local Personal Workspace through %s',
     async (route) => {

@@ -2,14 +2,14 @@
 //
 // The logo extractor runs almost entirely inside `page.evaluate()`, a browser sandbox
 // that cannot import modules. To keep a single source of truth AND make the decision
-// logic unit-testable, each function here is written to be fully self-contained — no
+// logic unit-testable, each function here is written to be fully self-contained - no
 // imports, no closures over module scope, no `this`. `LOGO_HEURISTICS_SOURCE` serializes
 // them so `logo.ts` can re-hydrate the exact same code inside the page with `new
 // Function`. Tests import the functions directly; production runs their serialized twins.
 //
 // Because the source is re-hydrated in a foreign context, every function must also be
 // defensive: it receives values that crossed a DOM boundary and may be null, NaN,
-// unexpected types, or malformed strings. None of these may throw — a thrown heuristic
+// unexpected types, or malformed strings. None of these may throw - a thrown heuristic
 // would abort logo extraction for the whole page.
 
 export type LogoContext = 'header' | 'footer' | 'hero' | 'body';
@@ -26,7 +26,7 @@ export function isHomeHref(href: unknown, origin: unknown): boolean {
   if (!h) return false;
   if (h === '/' || h === './') return true;
   const o = (typeof origin === 'string' ? origin : '').trim().toLowerCase().replace(/\/+$/, '');
-  // an absolute URL to our own origin — reduce it to its path so the locale check applies
+  // an absolute URL to our own origin - reduce it to its path so the locale check applies
   if (o && (h === o || h.startsWith(o + '/'))) { h = h.slice(o.length) || '/'; }
   if (h === '/' || h === './') return true;
   // a localized homepage root: /en, /de, /en-us, /fr_ca (many i18n sites link the logo here)
@@ -36,7 +36,7 @@ export function isHomeHref(href: unknown, origin: unknown): boolean {
 /**
  * Classify a mark by its vertical position in the document. Above the fold it belongs to
  * the header; deep at the bottom, the footer; otherwise the body. Position shapes ranking
- * elsewhere — this only names the region.
+ * elsewhere - this only names the region.
  */
 export function classifyContextByPosition(top: unknown, docHeight: unknown, foldY = 500): LogoContext {
   const t = Number(top);
@@ -52,7 +52,7 @@ export function classifyContextByPosition(top: unknown, docHeight: unknown, fold
  * If an image's alt text names a brand that is NOT this site, return that squashed brand
  * name; otherwise null. Catches customer / integration / testimonial logos on marketing
  * pages (a single-word brand, or multi-word like "Acme Widgets Logo"). Multi-word
- * names must survive — the older single-word pattern let them through as our own brand.
+ * names must survive - the older single-word pattern let them through as our own brand.
  * A home-linked mark is never third-party and must be checked by the caller first.
  */
 export function thirdPartyBrandFromAlt(altText: unknown, siteDomain: unknown): string | null {
@@ -98,7 +98,7 @@ export function positionFraction(token: unknown): number {
  * paint the whole box, so the content box IS the painted box.
  *
  * All-defensive: missing/zero/NaN intrinsic size, or an unfamiliar fit, returns the
- * content box unchanged — never throws, never returns a degenerate negative box.
+ * content box unchanged - never throws, never returns a degenerate negative box.
  */
 export function fitPaintedBox(
   content: Box,
@@ -148,7 +148,7 @@ export function isLogoSized(width: unknown, height: unknown, minLongEdge = 24): 
 
 /**
  * Does this alt text or filename explicitly name the site's OWN brand? The below-fold
- * pre-scan otherwise drops every non-home-linked mark to keep out partner/customer walls —
+ * pre-scan otherwise drops every non-home-linked mark to keep out partner/customer walls -
  * but a footer logo is often not wrapped in a home link at all, and gets discarded along
  * with them. A mark that self-identifies as the site's own brand should survive that guard
  * even without a home link.
@@ -161,7 +161,7 @@ export function isOwnBrandMark(altText: unknown, fileUrl: unknown, siteDomain: u
     .replace(/[^a-z0-9]+/gi, '')
     .toLowerCase();
   // Strip non-alphanumerics from the domain root so a hyphenated brand
-  // ("my-shop.com") still matches "My Shop logo" — but skip the noise-word
+  // ("my-shop.com") still matches "My Shop logo" - but skip the noise-word
   // and variant-number removal from squash(), which is tuned for filenames
   // and alt text: a purely numeric root ("123.com") would otherwise be
   // stripped to nothing by the "[0-9]{1,4}" variant-suffix rule.
@@ -170,7 +170,7 @@ export function isOwnBrandMark(altText: unknown, fileUrl: unknown, siteDomain: u
     .toLowerCase();
   if (!root || root.length < 2) return false;
   // A root under 4 chars (ba, hp, ge...) is too common a substring of
-  // unrelated words to trust with includes() ("zex" inside "Buzzexchange") —
+  // unrelated words to trust with includes() ("zex" inside "Buzzexchange") -
   // require it to stand as a whole word instead. squash() already strips
   // word boundaries, so the word check runs on the un-squashed, merely
   // tokenized text.

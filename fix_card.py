@@ -6,8 +6,8 @@ with new Style-A card + full-detail slide-in sheet.
 path = "frontend/src/pages/Services.jsx"
 lines = open(path, encoding='utf-8').readlines()
 
-# ProviderCard: lines 153–345 (1-indexed) = indices 152–344
-# ProfileSheet: lines 346–572 (1-indexed) = indices 345–571
+# ProviderCard: lines 153-345 (1-indexed) = indices 152-344
+# ProfileSheet: lines 346-572 (1-indexed) = indices 345-571
 before      = lines[:152]           # everything before ProviderCard
 after_sheet = lines[572:]           # everything after ProfileSheet closing }
 
@@ -34,10 +34,10 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
       }}
       onClick={() => onView(p)}
     >
-      {/* ── PHOTO AREA — top 48% of card, like Style A ── */}
+      {/* ── PHOTO AREA - top 48% of card, like Style A ── */}
       <div style={{ position:'relative', height:170, flexShrink:0, overflow:'hidden', background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
 
-        {/* Role image fills the area — NO dark overlay on top half */}
+        {/* Role image fills the area - NO dark overlay on top half */}
         {meta.img && (
           <img src={meta.img} alt={meta.label}
             style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
@@ -50,7 +50,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           </div>
         )}
 
-        {/* ⭐ Rating badge — top right, like Style A */}
+        {/* ⭐ Rating badge - top right, like Style A */}
         {rating && (
           <div style={{
             position:'absolute', top:10, right:10, zIndex:2,
@@ -74,7 +74,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           }}>Featured</div>
         )}
 
-        {/* Save / bookmark icon — top right under rating if no rating */}
+        {/* Save / bookmark icon - top right under rating if no rating */}
         <button onClick={e => e.stopPropagation()}
           style={{
             position:'absolute', bottom:10, right:10, zIndex:2,
@@ -103,7 +103,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         {/* Role */}
         <p style={{ fontSize:11, color:'#64748b', margin:'0 0 8px', fontWeight:500 }}>{meta.label}</p>
 
-        {/* Bio — 2 lines max */}
+        {/* Bio - 2 lines max */}
         {p.bio && (
           <p style={{
             fontSize:11, color:'#64748b', lineHeight:1.55, margin:'0 0 12px',
@@ -113,7 +113,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
           </p>
         )}
 
-        {/* Stats row — like the "20k Reviews · 50+ Projects · $50/hr" row in Style A */}
+        {/* Stats row - like the "20k Reviews · 50+ Projects · $50/hr" row in Style A */}
         <div style={{
           display:'flex', alignItems:'center', gap:0,
           borderTop:'1px solid #f1f5f9', paddingTop:10, marginBottom:12,
@@ -147,7 +147,7 @@ function ProviderCard({ p, onView, onBook, onMessage, featured }) {
         )}
       </div>
 
-      {/* ── CTA — full-width dark button like Style A ── */}
+      {/* ── CTA - full-width dark button like Style A ── */}
       <div style={{ padding:'0 16px 14px' }}>
         <button
           onClick={e => { e.stopPropagation(); onBook(p); }}
@@ -209,12 +209,12 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           display:'flex', flexDirection:'column', overflowY:'auto',
         }}
       >
-        {/* ── Photo hero header — large, clean, like the card ── */}
+        {/* ── Photo hero header - large, clean, like the card ── */}
         <div style={{ height:230, position:'relative', overflow:'hidden', flexShrink:0, background:`linear-gradient(135deg,${meta.color}cc,${meta.color}88)` }}>
           {meta.img && (
             <img src={meta.img} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 20%' }}/>
           )}
-          {/* Only bottom gradient — no dark overlay on the whole photo */}
+          {/* Only bottom gradient - no dark overlay on the whole photo */}
           <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)' }}/>
 
           {/* Close */}
@@ -357,7 +357,7 @@ function ProfileSheet({ provider, onClose, onBook, onMessage }) {
           </div>
         </div>
 
-        {/* ── Sticky CTA footer — same style as card ── */}
+        {/* ── Sticky CTA footer - same style as card ── */}
         <div style={{ padding:'14px 20px 20px', borderTop:'1px solid #f1f5f9', background:'#fff', flexShrink:0 }}>
           <button onClick={() => onBook(p)} style={{
             width:'100%', padding:'14px', borderRadius:14, fontSize:14, fontWeight:800,

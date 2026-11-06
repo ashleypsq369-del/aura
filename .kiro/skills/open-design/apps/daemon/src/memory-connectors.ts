@@ -74,7 +74,7 @@ Do NOT save:
 - Secrets, access tokens, private credentials, or sensitive personal content.
 - Anything already captured in existing memory.
 
-Output STRICT JSON in this exact shape — nothing else, no prose, no markdown fences:
+Output STRICT JSON in this exact shape - nothing else, no prose, no markdown fences:
 {
   "entries": [
     { "type": "user|feedback|project|reference", "name": "short title (≤ 60 chars)", "description": "one-line summary (≤ 140 chars)", "body": "the actual remembered fact, 1-3 sentences" }

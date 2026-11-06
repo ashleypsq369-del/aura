@@ -13,7 +13,7 @@ import type { RunEventForFailureClassification } from '../src/run-failure-classi
  * The failure this pins (real user run `500540ac`, 0.22.0-prerelease.19): a
  * `Write` tool call sat for 1800.05s producing zero bytes, the ACP stage
  * watchdog gave up and killed the child, and after 40 minutes the user got the
- * generic 「任务执行失败」 card with no Retry — for a failure whose entire
+ * generic 「任务执行失败」 card with no Retry - for a failure whose entire
  * remedy is a retry.
  *
  * The watchdog is the DAEMON's own verdict: nothing upstream reported anything,
@@ -22,7 +22,7 @@ import type { RunEventForFailureClassification } from '../src/run-failure-classi
  * could still recover "this run timed out" downstream was a regex over that
  * English sentence (`isTimeoutText`). Every path that rewrites, wraps or drops
  * an ACP error message therefore re-filed a watchdog kill as an opaque
- * `process_exit / exit_code` — `retryable: false`, `user_action: 'none'` —
+ * `process_exit / exit_code` - `retryable: false`, `user_action: 'none'` -
  * which is exactly the no-Retry card.
  *
  * So the invariant is not "the sentence is right", it is: the verdict survives
@@ -72,14 +72,14 @@ async function stallPastStageWatchdog(): Promise<Emitted[]> {
   });
   writeResult(child, 1, {});
   writeResult(child, 2, { sessionId: 'session-1' });
-  // `session/prompt` is never answered — the real shape of the reported run.
+  // `session/prompt` is never answered - the real shape of the reported run.
   await vi.advanceTimersByTimeAsync(1_500);
   return events;
 }
 
 /**
  * Drive the same real session and let the AGENT answer `session/prompt` with a
- * JSON-RPC error carrying `error.data` — the one channel an ACP agent controls.
+ * JSON-RPC error carrying `error.data` - the one channel an ACP agent controls.
  * Returns the error frame the bridge actually emitted, so a test can classify
  * the daemon's real output instead of a hand-built approximation of it.
  *
@@ -154,7 +154,7 @@ describe('ACP stage watchdog names its own verdict', () => {
       assert.ok(error, 'expected a stage-timeout error event');
       const frame = error.payload as ErrorFrame;
 
-      // The sentence is still the sentence — it is what the details drawer
+      // The sentence is still the sentence - it is what the details drawer
       // shows and what telemetry reads. Naming the failure must not reword it.
       expect(frame.message).toMatch(/ACP session\/prompt timed out after 1000ms/);
 
@@ -175,7 +175,7 @@ describe('ACP stage watchdog names its own verdict', () => {
   });
 
   it('keeps the timeout verdict when the message no longer says "timed out"', () => {
-    // The same watchdog kill, with its sentence gone — wrapped, localized,
+    // The same watchdog kill, with its sentence gone - wrapped, localized,
     // truncated, or lost on one of the paths that rewrite an ACP error frame.
     // The structured verdict is the only evidence left, and it has to be
     // enough: this is the case that produced the generic no-Retry card.
@@ -290,7 +290,7 @@ describe('the timeout verdict does not spread to failures that are not timeouts'
   });
 
   /**
-   * This replaces a test that asserted the same thing against `error.data` —
+   * This replaces a test that asserted the same thing against `error.data` -
    * a shape the session bridge never emits. `fail()` copies an agent's
    * JSON-RPC `error.data` straight into the `error.details` slot
    * (`fail(rpcErr, { details: rpcErrorData(obj) })`), so the frame the

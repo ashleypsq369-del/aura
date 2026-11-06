@@ -1573,7 +1573,7 @@ describe('API proxy routes', () => {
         });
       }
 
-      // Upstream chat completions — capture bodies, return different SSE per call
+      // Upstream chat completions - capture bodies, return different SSE per call
       if (url === 'https://api.senseaudio.cn/v1/chat/completions') {
         upstreamChatBodies.push(JSON.parse(String(init?.body || '{}')));
         chatCallIndex++;
@@ -1791,7 +1791,7 @@ describe('API proxy routes', () => {
       }
       if (url === 'https://api.senseaudio.cn/v1/chat/completions') {
         chatCallIndex++;
-        // Always return tool_calls — the model never returns text
+        // Always return tool_calls - the model never returns text
         return sseResponse([
           `data: {"choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_${chatCallIndex}","type":"function","function":{"name":"generate_image","arguments":"{\\"prompt\\":\\"x\\"}"}}]},"finish_reason":null}]}`,
           '',
@@ -1894,7 +1894,7 @@ describe('API proxy routes', () => {
     await proxyRes.text();
 
     expect(capturedUrl).toBeDefined();
-    // The URL the tool emits is relative — same-origin via Next.js
+    // The URL the tool emits is relative - same-origin via Next.js
     // rewrite in production, hits this test server directly here.
     // We GET the captured URL through the standard project file route
     // and assert the bytes come back. This proves both halves:
@@ -1920,7 +1920,7 @@ describe('API proxy routes', () => {
         apiKey: 'sa-test',
         model: 'senseaudio-s2',
         messages: [{ role: 'user', content: 'hi' }],
-        // no projectId — should 400
+        // no projectId - should 400
       }),
     });
 
@@ -2000,8 +2000,8 @@ describe('API proxy routes', () => {
 
   // A client that disconnects (Stop / closed tab) must not keep the upstream
   // request billing. Every upstream proxy fetch has to carry an AbortSignal
-  // tied to the client connection so the in-flight completion — and any
-  // BYOK tool loop that would otherwise fire further paid rounds — unwinds
+  // tied to the client connection so the in-flight completion - and any
+  // BYOK tool loop that would otherwise fire further paid rounds - unwinds
   // when the client goes away.
   it('passes a client-cancellation signal to the upstream on a simple proxy stream', async () => {
     let upstreamInit: FetchInit | undefined;

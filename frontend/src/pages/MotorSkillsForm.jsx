@@ -1,5 +1,5 @@
-/**
- * MotorSkillsForm.jsx — Physical Function & Mobility Tests
+﻿/**
+ * MotorSkillsForm.jsx - Physical Function & Mobility Tests
  * Redesigned: PageHeader + clean test cards + auto-calculated fall risk
  */
 import { useState } from 'react';
@@ -92,7 +92,7 @@ export default function MotorSkillsForm() {
       return apiClient.post('/api/assessments/motor-skills', data);
     },
     onSuccess: (res) => {
-      if (res.offline) toast.success('Saved offline — will sync when online', { duration: 5000 });
+      if (res.offline) toast.success('Saved offline - will sync when online', { duration: 5000 });
       else {
         toast.success('Motor Skills assessment saved');
         if (res.data.alerts_generated?.length > 0)
@@ -142,8 +142,8 @@ export default function MotorSkillsForm() {
         subtitle={`Physical Function & Mobility${patient?.full_name ? ` · ${patient.full_name}` : ''}`}
         icon={Activity}
         stats={[
-          { label: 'TUG Fall Risk', value: fallRisk || '—', color: fallRisk === 'High Risk' ? '#f87171' : fallRisk === 'Moderate Risk' ? '#fbbf24' : '#2dd4bf' },
-          { label: 'Walk Distance', value: walkDistance ? `${walkDistance}m` : '—', color: '#818cf8' },
+          { label: 'TUG Fall Risk', value: fallRisk || '-', color: fallRisk === 'High Risk' ? '#f87171' : fallRisk === 'Moderate Risk' ? '#fbbf24' : '#2dd4bf' },
+          { label: 'Walk Distance', value: walkDistance ? `${walkDistance}m` : '-', color: '#818cf8' },
         ]}
       >
         <button onClick={() => navigate(`/assessments/${patientId}`)}
@@ -156,7 +156,7 @@ export default function MotorSkillsForm() {
         <div className="flex items-start gap-3 px-4 py-3 bg-orange-50 rounded-xl border border-orange-200">
           <Activity size={15} className="text-orange-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-orange-800">
-            Complete at least one test. All tests are optional — document those applicable to this patient.
+            Complete at least one test. All tests are optional - document those applicable to this patient.
             Fall risk is automatically calculated from TUG time.
           </p>
         </div>
@@ -217,7 +217,7 @@ export default function MotorSkillsForm() {
             </div>
             {tugTime && (
               <p className="text-xs text-[var(--text-400)] mt-2">
-                Auto-calculated: ≤10s Low · 10–14s Moderate · &gt;14s High fall risk
+                Auto-calculated: ≤10s Low · 10-14s Moderate · &gt;14s High fall risk
               </p>
             )}
           </div>
@@ -235,11 +235,11 @@ export default function MotorSkillsForm() {
                 <NumInput value={walkDistance} onChange={setWalkDistance} placeholder="e.g. 320" unit="metres" />
               </FieldRow>
               <div className="col-span-2 grid grid-cols-2 gap-3">
-                <FieldRow label="Dyspnoea before" hint="Borg 0–10">
-                  <NumInput value={dyspneaBefore} onChange={setDyspneaBefore} placeholder="0–10" min={0} />
+                <FieldRow label="Dyspnoea before" hint="Borg 0-10">
+                  <NumInput value={dyspneaBefore} onChange={setDyspneaBefore} placeholder="0-10" min={0} />
                 </FieldRow>
-                <FieldRow label="Dyspnoea after" hint="Borg 0–10">
-                  <NumInput value={dyspneaAfter} onChange={setDyspneaAfter} placeholder="0–10" min={0} />
+                <FieldRow label="Dyspnoea after" hint="Borg 0-10">
+                  <NumInput value={dyspneaAfter} onChange={setDyspneaAfter} placeholder="0-10" min={0} />
                 </FieldRow>
                 <FieldRow label="O₂ saturation before">
                   <NumInput value={o2SatBefore} onChange={setO2SatBefore} placeholder="e.g. 97" unit="%" />
@@ -254,7 +254,7 @@ export default function MotorSkillsForm() {
                 className="mt-3 flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-lg border border-orange-200">
                 <AlertTriangle size={13} className="text-orange-600 flex-shrink-0" />
                 <p className="text-xs text-orange-800 font-semibold">
-                  O₂ desaturation of {o2Drop}% — consider stopping test / monitoring closely
+                  O₂ desaturation of {o2Drop}% - consider stopping test / monitoring closely
                 </p>
               </motion.div>
             )}
@@ -269,11 +269,11 @@ export default function MotorSkillsForm() {
               <p className="text-sm font-bold text-[var(--text-900)]">Balance &amp; Coordination</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <FieldRow label="Balance score" hint="0–10 clinical rating">
-                <NumInput value={balanceScore} onChange={setBalanceScore} placeholder="0–10" min={0} />
+              <FieldRow label="Balance score" hint="0-10 clinical rating">
+                <NumInput value={balanceScore} onChange={setBalanceScore} placeholder="0-10" min={0} />
               </FieldRow>
-              <FieldRow label="Coordination score" hint="0–10 clinical rating">
-                <NumInput value={coordinationScore} onChange={setCoordinationScore} placeholder="0–10" min={0} />
+              <FieldRow label="Coordination score" hint="0-10 clinical rating">
+                <NumInput value={coordinationScore} onChange={setCoordinationScore} placeholder="0-10" min={0} />
               </FieldRow>
             </div>
           </div>

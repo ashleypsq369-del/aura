@@ -108,7 +108,7 @@ export const EMPTY_SLUG_FALLBACK_NAME = 'artifact';
 // slug form keeps the "Landing Page" <-> "landing-page" bridge while
 // rejecting truncation-induced collisions. Empty-slug equivalence
 // (e.g. "测试" vs "首页") is also not treated as a match for the same
-// reason — distinct identifiers can both strip to empty.
+// reason - distinct identifiers can both strip to empty.
 export function artifactIdentifiersMatch(a: string, b: string): boolean {
   if (a === b) return true;
   const slugA = slugifyArtifactIdentifier(a);
@@ -120,7 +120,7 @@ export function artifactIdentifiersMatch(a: string, b: string): boolean {
 
 // Reads the canonical identifier from a sibling's `.artifact.json`
 // sidecar. Returns null when the sidecar is absent, malformed, or
-// missing a string identifier — callers fall back to filename-derived
+// missing a string identifier - callers fall back to filename-derived
 // inference for legacy artifacts that pre-date the sidecar era.
 async function readSidecarIdentifier(scanDir: string, entryName: string): Promise<string | null> {
   try {
@@ -150,7 +150,7 @@ function syntheticIdentifierFromFilename(name: string): string {
 // `phase-2.html` is genuinely ambiguous: it could be the identifier
 // `phase` with a `-2` collision suffix, or the standalone identifier
 // `phase-2`. Without a sidecar to disambiguate, both interpretations
-// are valid candidates — the guard accepts the file as a prior if
+// are valid candidates - the guard accepts the file as a prior if
 // either matches the input identifier. Visible false positives
 // (rejecting a legitimate write the user can override via env) are
 // preferable to silent false negatives (stub bypasses the guard).
@@ -166,7 +166,7 @@ function legacyCandidateIdentifiers(filename: string): string[] {
 // Finds prior HTML siblings on disk that share an identifier with a
 // newly-written artifact. The frontend's collision-suffixing scheme means
 // related entries match `<identifier>(-\d+)?\.html?`. The scan deliberately
-// includes any file at the same path as the new write — when an agent
+// includes any file at the same path as the new write - when an agent
 // overwrites `dashboard.html` with the same name, the file currently on
 // disk is the prior content (the overwrite happens after this scan).
 export async function findPriorArtifactSiblings(

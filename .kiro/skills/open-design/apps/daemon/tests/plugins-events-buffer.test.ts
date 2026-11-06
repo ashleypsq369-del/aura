@@ -1,4 +1,4 @@
-// Plan §3.II1 — plugin event ring buffer.
+// Plan §3.II1 - plugin event ring buffer.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {

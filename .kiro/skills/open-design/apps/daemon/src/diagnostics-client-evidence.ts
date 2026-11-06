@@ -5,8 +5,8 @@
  * ------------------------------
  * The diagnostics bundle is built here, from files this process can read. The
  * chat scroll freeze is the opposite kind of fact: it lives entirely in the
- * renderer — DOM, computed styles, running animations, the freeze probe's own
- * state — and none of it is on disk anywhere.
+ * renderer - DOM, computed styles, running animations, the freeze probe's own
+ * state - and none of it is on disk anywhere.
  *
  * Both export paths funnel through `GET /api/diagnostics/export`. In the
  * packaged app the click goes renderer -> preload -> Electron main -> native
@@ -48,7 +48,7 @@ export const NO_RENDERER_CAPTURE_NOTE =
 
 export interface StoredChatScrollForensics {
   receivedAtIso: string;
-  /** Opaque here on purpose — the renderer owns the shape. */
+  /** Opaque here on purpose - the renderer owns the shape. */
   payload: unknown;
 }
 

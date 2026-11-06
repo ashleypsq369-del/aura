@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TaskStatusBar - Universal task completion widget
  * ================================================
  * compact - header pill: fits the dark teal nav bar
@@ -50,7 +50,7 @@ function Ring({ pct, size = 38, light = false }) {
  strokeLinecap="round"
  transform={`rotate(-90 ${cx} ${cy})`}
  style={{ transition: 'stroke-dashoffset 0.6s ease' }}/>
- {/* Percentage — bold, crisp */}
+ {/* Percentage - bold, crisp */}
  <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle"
  fontSize={size <= 28 ? '9' : '10'} fontWeight="900"
  fontFamily="system-ui, sans-serif"

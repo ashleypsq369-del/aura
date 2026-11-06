@@ -8,7 +8,7 @@
 //   - colorBgBase   : the inverse cast
 //   - primaryFontFamily : the first measured font family (else "")
 //
-// No SeedToken / Ant-Design coupling — just plain hex strings + a family name.
+// No SeedToken / Ant-Design coupling - just plain hex strings + a family name.
 
 import type { PrefetchResult } from './prefetch.js';
 
@@ -219,7 +219,7 @@ function chooseSecondary(candidates: SeedCandidate[], primaryHex: string): strin
 
 /**
  * Deterministically infer a small brand seed from raw prefetch material.
- * Same input always yields the same seed — no Date/random, no network.
+ * Same input always yields the same seed - no Date/random, no network.
  */
 export function seedFromMaterial(material: PrefetchResult): BrandSeed {
   const candidates = (material.colors ?? [])
@@ -240,9 +240,9 @@ export function seedFromMaterial(material: PrefetchResult): BrandSeed {
   const linkHex = chooseSecondary(candidates, primaryHex);
 
   // ── light vs dark cast: count-weighted mean luminance over the measured
-  // colors. Extremes are kept here on purpose — they reveal whether the canvas
+  // colors. Extremes are kept here on purpose - they reveal whether the canvas
   // itself is light or dark, which is exactly the background/text decision.
-  // The threshold is biased light (0.45) — a wrong dark canvas is far more
+  // The threshold is biased light (0.45) - a wrong dark canvas is far more
   // jarring than a wrong light one. ──
   let dark = false;
   const totalCount = candidates.reduce((sum, c) => sum + c.count, 0);

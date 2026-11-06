@@ -2,8 +2,8 @@
 // `result` + `error_code` shape that v2 `run_finished` analytics events
 // expect.
 //
-// Extracted from `server.ts` so the invariant — `result === 'failed'`
-// MUST emit a non-empty `error_code` — can be exercised by unit tests
+// Extracted from `server.ts` so the invariant - `result === 'failed'`
+// MUST emit a non-empty `error_code` - can be exercised by unit tests
 // without spinning up the full Express app. Several failure paths in the
 // child-process lifecycle call `finish('failed', ...)` directly without
 // first emitting an SSE `error` event (ACP fatal, agentStreamError fall

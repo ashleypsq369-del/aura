@@ -6,7 +6,7 @@ import {
 
 // B's web console takes ?workspaceId deep links (target page opens directly
 // when it matches the account's Active Workspace; otherwise the web asks the
-// user to confirm the switch). Console links must pin the id — a bare
+// user to confirm the switch). Console links must pin the id - a bare
 // /settings link depends on whatever workspace another device left active.
 describe('resolveWorkspaceSettingsUrl', () => {
   it('builds the settings deep link with the workspace id pinned', () => {

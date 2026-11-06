@@ -8,7 +8,7 @@ name: whats-new-publish
 # Standalone (not part of ci.yml): this workflow performs a trusted write and
 # must stay outside the low-privilege PR gate.
 #
-# TRUST BOUNDARY — the card is visible to every installed client the moment it
+# TRUST BOUNDARY - the card is visible to every installed client the moment it
 # lands, so "published" must imply "reviewed". `workflow_dispatch` can be run
 # from any ref, and a dispatch runs the workflow file *from that ref*, so any
 # check written in this file is editable by the person triggering it. Nothing
@@ -21,14 +21,14 @@ name: whats-new-publish
 # that drops the declaration to get around that no longer receives
 # the secrets. The publish job is the only job that declares it, and it is the
 # only job that touches credentials. The assertions below additionally require
-# an exact release/vX.Y.Z branch name — not an arbitrary release/v* suffix.
+# an exact release/vX.Y.Z branch name - not an arbitrary release/v* suffix.
 #
-# Reachability — `validate` has no `needs` and no `if`, so it always runs.
+# Reachability - `validate` has no `needs` and no `if`, so it always runs.
 # `publish` is skipped when `validate` fails or is cancelled, which is the
 # intended fail-closed behavior: `always() && !cancelled()` is deliberately
 # NOT used here, because "publish anyway" is exactly what must not happen.
 # Within `validate`, a condition that would otherwise skip silently is a step
-# that exits 1 instead — a publish that quietly does nothing looks green and
+# that exits 1 instead - a publish that quietly does nothing looks green and
 # leaves the old card up.
 
 on:
@@ -132,7 +132,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     # The trust boundary. Deployment-branch policy: `main` and `release/v*`. The R2
-    # credentials are secrets ON THIS ENVIRONMENT, not repository secrets —
+    # credentials are secrets ON THIS ENVIRONMENT, not repository secrets -
     # repository secrets would be readable from any job on any branch and
     # would defeat the whole control.
     environment: whats-new-publish

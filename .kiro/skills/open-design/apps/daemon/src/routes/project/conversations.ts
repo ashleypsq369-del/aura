@@ -23,7 +23,7 @@ import {
 
 export interface RegisterProjectConversationRoutesDeps extends RouteDeps<'db' | 'design' | 'http' | 'paths' | 'projectStore' | 'conversations' | 'ids' | 'telemetry' | 'appConfig' | 'agents'> {
   /**
-   * Threaded straight through to `registerProjectCommentRoutes` — a comment
+   * Threaded straight through to `registerProjectCommentRoutes` - a comment
    * has no workspace binding of its own, so it borrows its PARENT PROJECT's
    * `enforceWorkspaceProjectMutation` gate (built once in
    * `registerProjectRoutes`, complete with the last-known-membership
@@ -33,7 +33,7 @@ export interface RegisterProjectConversationRoutesDeps extends RouteDeps<'db' | 
   enforceWorkspaceProjectMutation?: BoundWorkspaceResourceMutationGate;
   authorizeProjectRequest?: AuthorizeProjectRequest;
   /**
-   * Passed alongside `enforceWorkspaceProjectMutation` above — the gate calls
+   * Passed alongside `enforceWorkspaceProjectMutation` above - the gate calls
    * this to write the 401/403 response body when it denies a mutation. Kept
    * as its own field (rather than requiring the full `http` dep bag) so
    * fixtures that only exercise comment CRUD semantics, not workspace
@@ -53,13 +53,13 @@ function isChatSessionMode(value: unknown): value is ChatSessionMode {
 /**
  * 分叉复制一条消息时,这一轮**到底成没成**要跟着走;指向那次 run 的把手不跟着走。
  *
- * `runId` / `lastRunEventId` 是**指针** —— 重连、完成通知去重、SSE 续流都拿 runId
+ * `runId` / `lastRunEventId` 是**指针** -- 重连、完成通知去重、SSE 续流都拿 runId
  * 认人,带到新会话就是给它挂了一个不属于它的把手,所以照旧摘掉。
  * `runStatus` 不是指针,是**结论**。丢掉它,前端就没有任何东西宣布这一轮结束了,
  * 只能回退到「从事件里猜」(`AssistantMessage.legacyTurnFailed`):那条判据看到任何
  * 一条报错的 `tool_result` 就判整轮失败。于是一轮明明成功、只是中途某个工具报过错的
  * 回答,分叉之后壳头变成红色的「运行失败」(真机 2026-08-27,那一次是
- * `desktop renderer unavailable`)—— 把「不知道」显示成了「失败」。
+ * `desktop renderer unavailable`)-- 把「不知道」显示成了「失败」。
  *
  * 只带**终态**:`queued` / `running` 说的是「源会话此刻还在跑」,那是活的运行状态,
  * 复制过来会让新会话里那一条永远转圈(原注释担心的正是这个),所以仍然不带。
@@ -73,7 +73,7 @@ function settledForkVerdict(status: unknown): string | undefined {
  * already owns a DIFFERENT assistant row in this conversation.
  *
  * A daemon-backed assistant row holds the stream of exactly one physical Run.
- * One logical OD Next turn, though, spans several Runs — the daemon gives each
+ * One logical OD Next turn, though, spans several Runs - the daemon gives each
  * its own row (`odnext_assistant_<hash>` for an automatic continuation) while
  * the client renders them as one turn and keeps appending the successor's
  * stream into the message object already on screen, which is the PREDECESSOR's
@@ -81,14 +81,14 @@ function settledForkVerdict(status: unknown): string | undefined {
  * freshly opened project then renders the conclusion two times.
  *
  * The claim-keyed check above (`incoming.runId !== stored.runId`) misses this
- * whenever the client sends the row's own `runId` — which is exactly what it
+ * whenever the client sends the row's own `runId` - which is exactly what it
  * holds after a conversation refresh hands the server's `runId` and terminal
  * `runStatus` back to a message the stream is still writing into. So this test
  * is keyed on the PAYLOAD instead: a sibling row's own `done_key` appearing in
  * this row's events can only mean the client folded that sibling's Run in.
  *
- * Retries are unaffected: a re-driven attempt keeps the same Run — and
- * therefore the same key — on the same row.
+ * Retries are unaffected: a re-driven attempt keeps the same Run - and
+ * therefore the same key - on the same row.
  */
 function payloadCarriesAnotherRowsRunStream(
   incomingEvents: unknown,
@@ -244,14 +244,14 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
     /*
      * 从一条回复新开的会话由 **daemon** 起名(「{源标题} (n)」,见
      * `../../conversation-fork-title.js`)。编号要唯一就得先看一眼这个项目里已有
-     * 哪些标题,而那份名单只有这里是权威的 —— 客户端手上的是可能过期的快照,
+     * 哪些标题,而那份名单只有这里是权威的 -- 客户端手上的是可能过期的快照,
      * 两个客户端各算各的必然撞号。
      *
      * 「读名单 → 算号 → 落库」这三步中间**一个 await 都没有**,better-sqlite3 又是
      * 同步的,所以同进程内它就是原子的:同一秒连点两下拿到的是 (1) 和 (2)。
      * 在这中间插入任何异步调用都会把这个性质弄没。
      *
-     * 客户端显式传了标题就照传的来 —— 重命名、导入这些「我知道我要叫什么」的
+     * 客户端显式传了标题就照传的来 -- 重命名、导入这些「我知道我要叫什么」的
      * 调用点不该被编号盖掉。
      */
     const resolvedTitle =
@@ -279,14 +279,14 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
     // original conversation. Unsupported runtimes, historical fork-point
     // mismatches, and clone failures must keep today's transcript-reseed path.
     // Side Chat: inherit the source conversation's context by copying its
-    // messages into the fresh conversation. Be defensive — a missing or
+    // messages into the fresh conversation. Be defensive - a missing or
     // cross-project source id silently yields an empty conversation.
     if (conv && seedMessages.length > 0) {
       /*
        * 分叉分界线落在**新会话**里,盖在带过来的最后一条上(交付稿第 38 格)。
        *
        * 为什么是新会话而不是源会话:点完分叉页面就跳到新会话,人此刻站在这里。
-       * 那行脚注写的是「上文已带过来,接着说就行」—— 这句只有对着**新会话**里
+       * 那行脚注写的是「上文已带过来,接着说就行」-- 这句只有对着**新会话**里
        * 那一截复制过来的上下文说才成立;盖在源会话上等于对着原地没动的人说
        * 「已经带过来了」。标题用**源会话**的标题:这条线回答的是「上面这些是从哪来的」。
        *
@@ -300,7 +300,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
       seedMessages.forEach((m, index) => {
         // Fresh id per copied message; upsertMessage assigns the next
         // position so role/content ordering is preserved. Drop the source's
-        // run pointers (runId/lastRunEventId) but keep each turn's verdict —
+        // run pointers (runId/lastRunEventId) but keep each turn's verdict -
         // see `settledForkVerdict`.
         upsertMessage(db, conv.id, {
           ...m,
@@ -308,7 +308,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
           runId: undefined,
           runStatus: settledForkVerdict(m.runStatus),
           lastRunEventId: undefined,
-          /* 拿不到源标题就不盖 —— 没有标题的分界线是两条发丝线夹一行空白 */
+          /* 拿不到源标题就不盖 -- 没有标题的分界线是两条发丝线夹一行空白 */
           forkedInto:
             index === boundaryAt && inheritedTitle && seedFromConversationId
               ? { title: inheritedTitle, conversationId: seedFromConversationId }
@@ -370,8 +370,8 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
     const project = getProject(db, req.params.id);
     // COUNT(*) rather than listMessages(...).length: the backfill only needs to
     // know whether the conversation is empty, and loading every message to
-    // answer that parses each one's JSON columns — including event logs that
-    // grow with tool output — before throwing the result away.
+    // answer that parses each one's JSON columns - including event logs that
+    // grow with tool output - before throwing the result away.
     if (project && countMessages(db, req.params.cid) === 0) {
       const config = await readAppConfig(ctx.paths.RUNTIME_DATA_DIR).catch(() => ({}));
       const agentId = typeof config.agentId === 'string' && config.agentId ? config.agentId : null;
@@ -437,12 +437,12 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
   // message's run events / content / last-run-event id / run status. A stale
   // web-client snapshot (captured in memory before a reconnect or project
   // switch, then PUT after the daemon appended more events) must never regress
-  // those fields — that's how the early `status:model` event got wiped.
+  // those fields - that's how the early `status:model` event got wiped.
   //
   // The guard is a "no regression" rule, not a blanket write-ownership rule,
   // and it has two independent triggers:
   //   1. Run events are append-only, so a stale snapshot can only SHRINK the
-  //      stored list — preserve stored events/content when the incoming
+  //      stored list - preserve stored events/content when the incoming
   //      snapshot would drop already-persisted events.
   //   2. Terminal run status is a daemon-owned latch: the daemon writes it
   //      separately (no event appended), so a snapshot captured after the
@@ -454,7 +454,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
   // protected path on the next stale PUT.
   //
   // A web write that carries at least as many events and a non-regressing
-  // status still flows through — which keeps mock-agent flows working (the
+  // status still flows through - which keeps mock-agent flows working (the
   // daemon never persisted events/status there, so the web is the legitimate
   // writer) and lets UI metadata (feedback, comment attachments, telemetry)
   // land on every PUT.
@@ -483,7 +483,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
       };
     }
     // A delayed PUT from a superseded run generation (incoming.runId differs
-    // from the stored, current run — e.g. an old attempt's snapshot landing
+    // from the stored, current run - e.g. an old attempt's snapshot landing
     // after a retry pinned run B) must not repopulate the current run's data.
     // Keep the stored run fields; metadata/feedback from the incoming snapshot
     // still land (nettee P2 on #6418).
@@ -534,7 +534,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
       incomingStatus !== null && TERMINAL_RUN_STATUSES.has(incomingStatus);
     // A stale whole-message PUT can omit `runStatus` entirely (which would
     // otherwise null the DB column), so arbitration must not depend on the
-    // stored status being defined — a terminal snapshot against any
+    // stored status being defined - a terminal snapshot against any
     // non-terminal (or status-less) stored row is keyed on what the daemon
     // positively knows (nettee 8/10 on #6418).
     const storedNonTerminal =
@@ -642,9 +642,9 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
       };
     }
     // Daemon-written lifecycle timestamps. startedAt is the daemon's first
-    // start (COALESCE keeps it), so a stale snapshot must never regress it —
+    // start (COALESCE keeps it), so a stale snapshot must never regress it -
     // keep the stored value unconditionally. endedAt is a watermark that only
-    // advances: a stale snapshot carrying an older endedAt — or omitting it —
+    // advances: a stale snapshot carrying an older endedAt - or omitting it -
     // must not regress the daemon's value, while a metadata update that
     // genuinely advances endedAt (e.g. the retry flow) still lands.
     const incomingEndedAt = typeof incoming.endedAt === 'number' ? incoming.endedAt : null;
@@ -718,7 +718,7 @@ export function registerProjectConversationRoutes(app: Express, ctx: RegisterPro
     // it owns a payload whose identity is decided before the send (an inline
     // question form's answer belongs to one occurrence), and it cannot make
     // "read, then write" atomic against a second tab. Refusing the overwrite
-    // here — the one place the check and the write are the same operation —
+    // here - the one place the check and the write are the same operation -
     // keeps the first accepted answer authoritative, and returning the stored
     // row tells the loser what actually ran instead of leaving it showing an
     // answer no run ever saw.

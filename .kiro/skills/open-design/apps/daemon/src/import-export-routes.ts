@@ -200,7 +200,7 @@ export function registerImportRoutes(app: Express, ctx: RegisterImportRoutesDeps
 
   // Import an existing local folder as a project. The user picks a folder
   // and OD works inside it directly: every write goes to metadata.baseDir.
-  // No copy, no shadow tree — the user owns the workspace and is
+  // No copy, no shadow tree - the user owns the workspace and is
   // responsible for their own version control (git, time machine, etc.),
   // mirroring how Cursor / Claude Code / Aider behave.
   // Replace an existing project's working directory in-place. Mirrors
@@ -599,9 +599,9 @@ function stripHostDetail(value: string): string {
  * path stops being a leak by ceasing to exist anywhere.
  *
  * What survives redaction is deliberate. `apps/web/src/analytics/export-error-code.ts`
- * buckets export failures by matching this message — `unknown \w+ sidecar
+ * buckets export failures by matching this message - `unknown \w+ sidecar
  * message` is the daemon↔desktop version-skew signal, `renderer unavailable`
- * and `timed out` are the others — so this returns a redacted sentence rather
+ * and `timed out` are the others - so this returns a redacted sentence rather
  * than a fixed one. Flattening it would silently empty those buckets.
  */
 export function describeDesktopRendererFailure(err: unknown): string {
@@ -827,7 +827,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
     if (rendered.errorCode === 'NO_SLIDES' || (format === 'pptx' && isNoSlideDeckRenderError(rendered))) {
       return {
         status: 422,
-        message: 'this artifact is not a slide deck — export it as PDF or an image instead',
+        message: 'this artifact is not a slide deck - export it as PDF or an image instead',
       };
     }
     if (rendered.errorCode === 'SLIDE_INDEX_OUT_OF_RANGE') {
@@ -997,7 +997,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
   // Shared screenshot-export flow: render the deck to one PNG per slide via the
   // desktop's Electron Chromium, then assemble the requested binary. Both the
   // .pptx and raster-.pdf routes funnel through here. Like the PDF route, it
-  // requires the desktop runtime — there is no headless renderer in a bare
+  // requires the desktop runtime - there is no headless renderer in a bare
   // daemon yet, so a web-only deployment gets a clear 501.
   async function handleScreenshotExport(
     res: Response,
@@ -1166,7 +1166,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
         await buildDeckRenderInput(renderOptions);
       // The renderer call crosses the sidecar client boundary (600s). A
       // missing desktop process, broken socket, or timeout is an upstream
-      // renderer outage — surface it as 502 UPSTREAM_UNAVAILABLE (matching the
+      // renderer outage - surface it as 502 UPSTREAM_UNAVAILABLE (matching the
       // `!rendered.ok` branch below), not the outer 400 BAD_REQUEST which is for
       // genuine request-validation / assembly errors.
       let rendered;
@@ -1193,7 +1193,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
       }
 
       // Editable PPTX: the renderer wrote a finished .pptx (native shapes/text)
-      // to the scratch dir. Stream it directly — no image assembly. Confine the
+      // to the scratch dir. Stream it directly - no image assembly. Confine the
       // path to the scratch dir, same defense as the image handoff.
       if (renderOptions.editable) {
         if (!rendered.ok || typeof rendered.pptxFile !== 'string') {
@@ -1254,12 +1254,12 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
           res,
           422,
           'BAD_REQUEST',
-          'this artifact is not a slide deck — export it as PDF or an image instead',
+          'this artifact is not a slide deck - export it as PDF or an image instead',
         );
       }
       // Prefer the on-disk file handoff; fall back to base64 data URLs for older
       // desktop builds that don't honor outputDir. Confine the handoff files to
-      // the canonical scratch dir before reading — a malformed renderer response
+      // the canonical scratch dir before reading - a malformed renderer response
       // must not make the daemon read & stream back arbitrary files (path
       // traversal / symlink escape), since cleanup only removes renderOutputDir.
       let images: Awaited<ReturnType<typeof readSlideFiles>>;
@@ -1362,7 +1362,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
         ctx.projectPreviewScopes.revoke(renderPreviewScope);
         renderPreviewScope = null;
       }
-      // Remove the scratch render dir regardless of success — these files are
+      // Remove the scratch render dir regardless of success - these files are
       // pure transient handoff, never served or persisted.
       if (renderOutputDir) {
         await fs.promises.rm(renderOutputDir, { recursive: true, force: true }).catch(() => {});
@@ -1371,8 +1371,8 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
   }
 
   // Streams a ZIP of the project's on-disk tree so the "Download as .zip"
-  // share menu can hand the user the actual files they uploaded — e.g. the
-  // imported `ui-design/` folder — instead of a one-file snapshot of the
+  // share menu can hand the user the actual files they uploaded - e.g. the
+  // imported `ui-design/` folder - instead of a one-file snapshot of the
   // rendered HTML. `root` scopes the archive to a subdirectory; without
   // it, the whole project is packed.
   app.get('/api/projects/:id/archive', async (req, res) => {
@@ -1547,7 +1547,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
 
   // Programmatic image export: a single pixel-perfect PNG. For a deck it renders
   // the requested slide (`index`) at 1920x1080; for an ordinary page it renders
-  // the whole document at natural size. Viewport-independent — unlike the
+  // the whole document at natural size. Viewport-independent - unlike the
   // host-compositor snapshot, the size never depends on the preview pane.
   app.post('/api/projects/:id/export/image', async (req, res) => {
     const authority = await authorizeExportRead(req, res, {
@@ -1614,7 +1614,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
 
   // Export endpoint: serves an HTML body with every same-project
   // top-level `<link rel=stylesheet>` / `<script src>` inlined.
-  // Counterpart to GET /api/projects/:id/raw/* — that route stays
+  // Counterpart to GET /api/projects/:id/raw/* - that route stays
   // URL-load (one request per asset; FileViewer's default since
   // PR #384). This route exists for explicit "Inline top-level
   // CSS/JS" exports + the screenshot path where the headless browser
@@ -1623,13 +1623,13 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
   // Scope is intentionally narrow: only `<link rel=stylesheet>` and
   // `<script src>` are rewritten. `<img src>`, CSS `url(...)` refs,
   // `@import`, ES module imports, font sources, and similar remain
-  // external in the response — see the docstring on
+  // external in the response - see the docstring on
   // `apps/daemon/src/inline-assets.ts` for the full not-rewritten list
   // and rationale. A fully offline "self-contained" export with image
   // and font bundling would be a follow-up issue.
   //
   // Null-origin (sandboxed iframe srcdoc) callers are intentionally
-  // NOT supported — the only consumers are the daemon UI (same-origin)
+  // NOT supported - the only consumers are the daemon UI (same-origin)
   // and server-side screenshot tooling (no Origin header). The
   // response also carries `Content-Security-Policy: sandbox
   // allow-scripts` so top-level browser navigation (no Origin header,
@@ -1667,7 +1667,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
       // The size check + mime check both run pre-buffer here, mirroring
       // the sibling-asset stat-then-read contract round 4 already
       // applied via AssetHandle. Size fires before mime so an oversize
-      // non-HTML file returns 413 (not 415) — that ordering is the
+      // non-HTML file returns 413 (not 415) - that ordering is the
       // observable Red→Green for this round.
       //
       // The helper's ownerBytes check (inline-assets.ts:127-133) stays
@@ -1806,7 +1806,7 @@ export function registerProjectExportRoutes(app: Express, ctx: RegisterProjectEx
       // through. Without a CSP, any JS in the exported document would
       // run at daemon origin with access to /api/, cookies, localStorage,
       // etc. `sandbox allow-scripts` treats the response like a sandboxed
-      // iframe with an opaque origin — scripts execute (that's the point
+      // iframe with an opaque origin - scripts execute (that's the point
       // of inlining JS for screenshot tooling), but cannot read cookies,
       // hit /api/, or escalate to daemon-origin privileges.
       res.setHeader('Content-Security-Policy', 'sandbox allow-scripts');

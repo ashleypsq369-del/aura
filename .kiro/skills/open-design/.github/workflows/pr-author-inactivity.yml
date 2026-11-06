@@ -29,8 +29,8 @@ name: PR author inactivity
 # Bot feedback note: trusted human reviewers / maintainers are the trigger for
 # this workflow. Bot-authored reviews and comments (e.g. CodeRabbit, Codex) are
 # intentionally excluded from the feedback signal so authors are not pressured
-# by automated nits alone. Trusted human review feedback — whether top-level or
-# inline — is what starts the inactivity clock.
+# by automated nits alone. Trusted human review feedback - whether top-level or
+# inline - is what starts the inactivity clock.
 
 on:
   schedule:

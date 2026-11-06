@@ -5,7 +5,7 @@ import { createSwrCache } from '../src/collab/swr-cache.js';
 // `GET /api/workspace/projects/team` is the DISPLAY read: the Home team-project
 // grid and the deep-link "is this project shared to my team?" check both go
 // through it. Measured against a live vela Team workspace it costs ~1.1s every
-// single call — cold and warm alike — because each one spawns
+// single call - cold and warm alike - because each one spawns
 // `vela team-projects list` and waits for a round trip to the API.
 //
 // server.ts already builds `teamProjectsDisplayCache` for exactly this, and its

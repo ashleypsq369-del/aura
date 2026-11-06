@@ -2,7 +2,7 @@
 
 This page describes what data the OpenDesign desktop and web app collects,
 when it collects it, and how you stay in control. It documents the behavior
-shipped in the app — the same controls live under **Settings → Privacy**.
+shipped in the app - the same controls live under **Settings → Privacy**.
 
 OpenDesign is **local-first**. Your projects, generated files, and BYOK API
 keys stay on your machine. Local project/file workflows remain available when
@@ -40,7 +40,7 @@ When optional sharing is enabled, the app may send the following to the Open
 Design team. The two Settings controls are **Anonymous metrics** and
 **Conversation and tool content**.
 
-- **Anonymous metrics** — run counts, token usage, error rate, and duration.
+- **Anonymous metrics** - run counts, token usage, error rate, and duration.
   This channel also covers product interaction events, page transitions, web
   performance, and privacy-masked session replay. Replay masks every text node
   and input value and blocks embedded iframes, so prompts, keys, project text,
@@ -48,7 +48,7 @@ Design team. The two Settings controls are **Anonymous metrics** and
   Share and comment metrics can include opaque project, share-link and saved-comment
   identifiers, published versions, and interaction results. These metrics do not
   include comment text, author names, full share URLs or credentials.
-- **Conversation and tool content** — your prompts, assistant responses, tool
+- **Conversation and tool content** - your prompts, assistant responses, tool
   inputs, tool outputs, prompt-stack context, and attachment/artifact manifest
   metadata needed for quality review. Content is truncated and scrubbed; tool
   payloads known to carry artifact contents are replaced with redaction
@@ -122,7 +122,7 @@ They are not telemetry fields and are never sent to the OpenDesign team.
 “OpenDesign AMR” is OpenDesign’s official, first-party model service. Because
 the two are part of the same product family operated by the same team, we may
 share information between them as needed to provide, connect, and improve the
-combined experience — for example, to recognize that you arrived from Open
+combined experience - for example, to recognize that you arrived from Open
 Design, to help you get set up, and to keep the products working well together.
 This sharing is between our own products, not with unrelated third parties, and
 any data involved still follows the controls described on this page.

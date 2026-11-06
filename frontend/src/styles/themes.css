@@ -14,11 +14,11 @@
   --surface-input:     #ffffff;
   --surface-hover:     #f1f5f9;
 
-  /* Text — WCAG AA on white: >= 4.5:1 */
+  /* Text - WCAG AA on white: >= 4.5:1 */
   --text-primary:      #0f172a;   /* 18:1 on white */
   --text-secondary:    #334155;   /* 9:1 on white  */
   --text-muted:        #64748b;   /* 5.7:1 on white */
-  --text-subtle:       #94a3b8;   /* 3.1:1 — use only for placeholder/hint */
+  --text-subtle:       #94a3b8;   /* 3.1:1 - use only for placeholder/hint */
   --text-inverse:      #ffffff;
 
   /* Borders */
@@ -26,7 +26,7 @@
   --border-medium:     #cbd5e1;
   --border-strong:     #94a3b8;
 
-  /* Brand accent — teal */
+  /* Brand accent - teal */
   --accent:            #0d9488;
   --accent-hover:      #0f766e;
   --accent-light:      #ccfbf1;
@@ -42,32 +42,32 @@
 }
 
 html.dark {
-  /* Surfaces — navy-slate dark theme */
+  /* Surfaces - navy-slate dark theme */
   --surface-bg:        #0f172a;
   --surface-card:      #1e293b;
   --surface-elevated:  #263347;
   --surface-input:     #1e293b;
   --surface-hover:     #2d3f55;
 
-  /* Text — WCAG AA on #1e293b: >= 4.5:1 */
-  --text-primary:      #f8fafc;   /* near white — max readability */
+  /* Text - WCAG AA on #1e293b: >= 4.5:1 */
+  --text-primary:      #f8fafc;   /* near white - max readability */
   --text-secondary:    #e2e8f0;   /* clearly visible */
-  --text-muted:        #b0c4d4;   /* body text — BOOSTED from #94a3b8 */
+  --text-muted:        #b0c4d4;   /* body text - BOOSTED from #94a3b8 */
   --text-subtle:       #7c93a8;   /* hints only */
   --text-inverse:      #0f172a;
 
-  /* Borders — visible on dark */
+  /* Borders - visible on dark */
   --border-light:      #1e293b;
   --border-medium:     #334155;
   --border-strong:     #475569;
 
-  /* Brand accent — brighter teal in dark */
+  /* Brand accent - brighter teal in dark */
   --accent:            #2dd4bf;
   --accent-hover:      #5eead4;
   --accent-light:      rgba(45,212,191,0.15);
   --accent-text:       #ccfbf1;
 
-  /* Shadows — deeper */
+  /* Shadows - deeper */
   --shadow-sm:   0 1px 3px rgba(0,0,0,0.40);
   --shadow-md:   0 4px 6px rgba(0,0,0,0.50);
   --shadow-lg:   0 10px 20px rgba(0,0,0,0.60);
@@ -92,7 +92,7 @@ html.dark .bg-white\/95       { background-color: rgba(30,41,59,0.97)     !impor
 html.dark .bg-white\/90       { background-color: rgba(30,41,59,0.92)     !important; }
 html.dark .bg-white\/80       { background-color: rgba(30,41,59,0.85)     !important; }
 
-/* Colored tint backgrounds — dark equivalents with subtle hue */
+/* Colored tint backgrounds - dark equivalents with subtle hue */
 html.dark .bg-teal-50         { background-color: rgba(13,148,136,0.12)   !important; }
 html.dark .bg-green-50        { background-color: rgba(5,150,105,0.12)    !important; }
 html.dark .bg-blue-50         { background-color: rgba(29,78,216,0.12)    !important; }
@@ -121,7 +121,7 @@ html.dark .bg-emerald-100     { background-color: rgba(5,150,105,0.20)    !impor
 html.dark .bg-rose-100        { background-color: rgba(225,29,72,0.20)    !important; }
 html.dark .bg-orange-100      { background-color: rgba(234,88,12,0.20)    !important; }
 
-/* Gradient backgrounds — map to solid dark equivalents */
+/* Gradient backgrounds - map to solid dark equivalents */
 html.dark .bg-gradient-to-br.from-white,
 html.dark .bg-gradient-to-b.from-slate-50,
 html.dark .bg-gradient-to-r.from-slate-50  { background: var(--surface-elevated) !important; }
@@ -130,8 +130,8 @@ html.dark .bg-gradient-to-br.from-teal-50,
 html.dark .bg-gradient-to-br.from-purple-50 { background: var(--surface-elevated) !important; }
 html.dark .bg-gradient-to-br.from-blue-50  { background: rgba(29,78,216,0.10) !important; }
 
-/* ── 4. TEXT COLORS — WCAG AA throughout ───────────────────────────────── */
-/* Primary text — headings, strong labels */
+/* ── 4. TEXT COLORS - WCAG AA throughout ───────────────────────────────── */
+/* Primary text - headings, strong labels */
 html.dark .text-slate-900,
 html.dark .text-gray-900       { color: #f8fafc !important; }   /* near white */
 html.dark .text-slate-800,
@@ -139,15 +139,15 @@ html.dark .text-gray-800       { color: #f1f5f9 !important; }   /* very light */
 html.dark .text-slate-700,
 html.dark .text-gray-700       { color: #e2e8f0 !important; }   /* light */
 
-/* Secondary / body text — BOOSTED for readability */
+/* Secondary / body text - BOOSTED for readability */
 html.dark .text-slate-600,
-html.dark .text-gray-600       { color: #cbd5e1 !important; }   /* 8:1 — clear */
+html.dark .text-gray-600       { color: #cbd5e1 !important; }   /* 8:1 - clear */
 html.dark .text-slate-500,
-html.dark .text-gray-500       { color: #b0c4d4 !important; }   /* 5.5:1 — AA */
+html.dark .text-gray-500       { color: #b0c4d4 !important; }   /* 5.5:1 - AA */
 
-/* Subtle — still readable, not invisible */
+/* Subtle - still readable, not invisible */
 html.dark .text-slate-400,
-html.dark .text-gray-400       { color: #94a3b8 !important; }   /* 4.8:1 — AA */
+html.dark .text-gray-400       { color: #94a3b8 !important; }   /* 4.8:1 - AA */
 html.dark .text-slate-300,
 html.dark .text-gray-300       { color: #94a3b8 !important; }   /* promote */
 html.dark .text-slate-200,
@@ -166,9 +166,9 @@ html.dark h4:not([class*="text-white"]),
 html.dark h5:not([class*="text-white"]),
 html.dark h6:not([class*="text-white"]) { color: var(--text-primary) !important; }
 
-/* Paragraphs/spans with specific slate classes — use above rules */
+/* Paragraphs/spans with specific slate classes - use above rules */
 
-/* ── 5. BRAND / ACCENT COLORS — brighter in dark ──────────────────────── */
+/* ── 5. BRAND / ACCENT COLORS - brighter in dark ──────────────────────── */
 html.dark .text-teal-900       { color: #99f6e4 !important; }
 html.dark .text-teal-800       { color: #5eead4 !important; }
 html.dark .text-teal-700       { color: #2dd4bf !important; }
@@ -226,7 +226,7 @@ html.dark .border-slate-300,
 html.dark .border-gray-300     { border-color: #475569 !important; }
 html.dark .border-slate-400    { border-color: #64748b !important; }
 
-/* Colored borders — keep vivid */
+/* Colored borders - keep vivid */
 html.dark .border-teal-200     { border-color: rgba(45,212,191,0.35) !important; }
 html.dark .border-teal-300     { border-color: rgba(45,212,191,0.50) !important; }
 html.dark .border-teal-400     { border-color: rgba(45,212,191,0.70) !important; }
@@ -241,7 +241,7 @@ html.dark .border-rose-200     { border-color: rgba(253,164,175,0.35) !important
 html.dark .border-orange-200   { border-color: rgba(253,186,116,0.35) !important; }
 html.dark .border-indigo-200   { border-color: rgba(165,180,252,0.35) !important; }
 
-/* Colored left accent borders — full vivid */
+/* Colored left accent borders - full vivid */
 html.dark .border-l-teal-500   { border-left-color: #14b8a6 !important; }
 html.dark .border-l-teal-600   { border-left-color: #0d9488 !important; }
 html.dark .border-l-red-500    { border-left-color: #ef4444 !important; }
@@ -264,11 +264,11 @@ html.dark .shadow-lg  { box-shadow: 0 8px 16px rgba(0,0,0,0.60) !important; }
 html.dark .shadow-xl  { box-shadow: 0 16px 32px rgba(0,0,0,0.65) !important; }
 html.dark .shadow-2xl { box-shadow: 0 25px 50px rgba(0,0,0,0.70) !important; }
 
-/* Remove the shadow-only override on rounded cards from old code — was hiding bg */
+/* Remove the shadow-only override on rounded cards from old code - was hiding bg */
 html.dark .rounded-xl,
 html.dark .rounded-2xl,
 html.dark .rounded-lg,
-html.dark .rounded-3xl { /* no background override — let bg-* classes handle it */ }
+html.dark .rounded-3xl { /* no background override - let bg-* classes handle it */ }
 
 /* ── 8. FORMS ────────────────────────────────────────────────────────────── */
 html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
@@ -301,11 +301,11 @@ html.dark td                       { color: #cbd5e1 !important; }   /* boosted f
 html.dark tbody tr:hover           { background-color: #1e293b !important; }
 html.dark tbody tr:nth-child(even) { background-color: rgba(13,148,136,0.05) !important; }
 
-/* Ensure ALL th children of dark tables are visible — belt+braces */
+/* Ensure ALL th children of dark tables are visible - belt+braces */
 html.dark table thead tr th,
 html.dark table thead th { color: #f1f5f9 !important; font-weight: 700 !important; }
 
-/* tr.bg-slate-50 inside thead — catches the border-b-3 pattern */
+/* tr.bg-slate-50 inside thead - catches the border-b-3 pattern */
 html.dark thead tr.bg-slate-50,
 html.dark thead tr.bg-slate-100,
 html.dark thead tr.bg-gray-50 {
@@ -320,7 +320,7 @@ html.dark [role="alertdialog"]     {
   color:            var(--text-primary)  !important;
 }
 
-/* Panel/container overrides — dropdowns and popovers ONLY, not img overlays */
+/* Panel/container overrides - dropdowns and popovers ONLY, not img overlays */
 /* Scoped tightly: must have bg-white class AND be absolute-positioned panel */
 html.dark .absolute.bg-white:not([aria-hidden="true"]) {
   background-color: var(--surface-card) !important;
@@ -331,11 +331,11 @@ html.dark .absolute.bg-white\/95 { background-color: rgba(30,41,59,0.97) !import
 html.dark .fixed.bg-white,
 html.dark .fixed.bg-slate-50       { background-color: var(--surface-card) !important; }
 
-/* ── 11. IMAGE CARDS — NEVER override, always preserve ─────────────────── */
-/* The img-card root must NOT have background-color set — let img show */
+/* ── 11. IMAGE CARDS - NEVER override, always preserve ─────────────────── */
+/* The img-card root must NOT have background-color set - let img show */
 html.dark .img-card                { /* no background override */ }
 
-/* The fallback color layer sits behind the img — make transparent in dark */
+/* The fallback color layer sits behind the img - make transparent in dark */
 html.dark .img-card-bg             { background-color: transparent !important; opacity: 0 !important; }
 
 /* PageHeader is also an img-card */
@@ -343,7 +343,7 @@ html.dark .img-card.relative,
 html.dark [class*="h-40"].img-card,
 html.dark [class*="h-32"].img-card { background-color: transparent !important; }
 
-/* img tags in dark mode — always visible, slight brightness boost */
+/* img tags in dark mode - always visible, slight brightness boost */
 html.dark img                       { visibility: visible !important; display: block !important; }
 html.dark img[aria-hidden="true"]   { filter: brightness(1.10) saturate(1.04) !important; }
 
@@ -375,7 +375,7 @@ html.dark ::-webkit-scrollbar-track { background: #1e293b; }
 html.dark ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
 html.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-/* ── 15. SEVERITY BADGES — higher contrast in dark ────────────────────── */
+/* ── 15. SEVERITY BADGES - higher contrast in dark ────────────────────── */
 html.dark .badge-critical {
   background: rgba(220,38,38,0.25) !important;
   color: #fca5a5 !important;
@@ -407,7 +407,7 @@ html.dark .badge-info {
   border-color: #312e81 !important;
 }
 
-/* ── 16. CHIPS — colored labels ────────────────────────────────────────── */
+/* ── 16. CHIPS - colored labels ────────────────────────────────────────── */
 html.dark .chip-teal   { background: rgba(13,148,136,0.20) !important; color: #2dd4bf !important; border-color: rgba(45,212,191,0.40) !important; }
 html.dark .chip-violet { background: rgba(124,58,237,0.20) !important; color: #c084fc !important; border-color: rgba(192,132,252,0.40) !important; }
 html.dark .chip-rose   { background: rgba(225,29,72,0.20)  !important; color: #fda4af !important; border-color: rgba(253,164,175,0.40) !important; }
@@ -419,7 +419,7 @@ html.dark .chip-orange { background: rgba(234,88,12,0.20)  !important; color: #f
 html.dark .chip-cyan   { background: rgba(8,145,178,0.20)  !important; color: #67e8f9 !important; border-color: rgba(103,232,249,0.40) !important; }
 html.dark .chip-indigo { background: rgba(67,56,202,0.20)  !important; color: #a5b4fc !important; border-color: rgba(165,180,252,0.40) !important; }
 
-/* ── 17. STAT CARDS — dark backgrounds with vivid accent borders ────────── */
+/* ── 17. STAT CARDS - dark backgrounds with vivid accent borders ────────── */
 html.dark .stat-card-teal    { background: linear-gradient(135deg,#0a1f1d,#0d2420) !important; border-left-color: #14b8a6 !important; }
 html.dark .stat-card-violet  { background: linear-gradient(135deg,#120a22,#1a0d2e) !important; border-left-color: #a855f7 !important; }
 html.dark .stat-card-rose    { background: linear-gradient(135deg,#1f0a0a,#2e0d0d) !important; border-left-color: #f43f5e !important; }
@@ -435,7 +435,7 @@ html.dark .stat-card-red     { background: linear-gradient(135deg,#1f0a0a,#2e0d0
 html.dark .stat-card-green   { background: linear-gradient(135deg,#0a1810,#0d2014) !important; border-left-color: #22c55e !important; }
 html.dark .stat-card-slate   { background: linear-gradient(135deg,#111827,#1e293b) !important; border-left-color: #64748b !important; }
 
-/* Stat card text — make numbers pop */
+/* Stat card text - make numbers pop */
 html.dark .stat-card-teal .text-3xl,
 html.dark .stat-card-violet .text-3xl,
 html.dark .stat-card-rose .text-3xl,
@@ -455,7 +455,7 @@ html.dark .severity-filter-bar {
   border-color: var(--border-medium) !important;
 }
 
-/* ── 19. PAGE TINT BACKGROUNDS — disabled in dark (use body bg) ────────── */
+/* ── 19. PAGE TINT BACKGROUNDS - disabled in dark (use body bg) ────────── */
 html.dark .page-tint-dashboard,
 html.dark .page-tint-patients,
 html.dark .page-tint-alerts,
@@ -465,7 +465,7 @@ html.dark .page-tint-resources,
 html.dark .page-tint-community,
 html.dark .page-tint-journey  { background: transparent !important; }
 
-/* ── 20. ICON CIRCLES — lighter bg with vivid icon color ───────────────── */
+/* ── 20. ICON CIRCLES - lighter bg with vivid icon color ───────────────── */
 html.dark .icon-teal    { background: rgba(13,148,136,0.20) !important;   color: #2dd4bf !important; }
 html.dark .icon-violet  { background: rgba(124,58,237,0.20) !important;   color: #c084fc !important; }
 html.dark .icon-rose    { background: rgba(225,29,72,0.20) !important;    color: #fda4af !important; }
@@ -509,19 +509,19 @@ html.dark .hover\:bg-red-50:hover     { background-color: rgba(239,68,68,0.10)  
 html.dark .hover\:bg-slate-50:hover   { background-color: var(--surface-hover)  !important; }
 html.dark .hover\:bg-slate-100:hover  { background-color: var(--surface-elevated) !important; }
 
-/* Focus visible — teal glow */
+/* Focus visible - teal glow */
 html.dark *:focus-visible {
   outline: 2px solid #2dd4bf !important;
   outline-offset: 2px !important;
 }
 
-/* ── 22. PROGRESS BARS — keep colored ──────────────────────────────────── */
+/* ── 22. PROGRESS BARS - keep colored ──────────────────────────────────── */
 /* track background */
 html.dark .bg-slate-200.rounded-full { background-color: #334155 !important; }
 html.dark .bg-gray-200.rounded-full  { background-color: #334155 !important; }
 html.dark .bg-slate-100.rounded-full { background-color: #263347 !important; }
 
-/* ── 23. GRADIENT TEXT — unsupported in dark, fallback to solid ─────────── */
+/* ── 23. GRADIENT TEXT - unsupported in dark, fallback to solid ─────────── */
 html.dark .gradient-text-teal {
   background: none !important;
   -webkit-background-clip: unset !important;
@@ -538,8 +538,8 @@ html.dark .gradient-text-rose {
   color: #fda4af !important;
 }
 
-/* ── 24. THEME TRANSITION — scoped only to layout elements ──────────────── */
-/* DO NOT use * selector — it breaks Framer Motion inline styles */
+/* ── 24. THEME TRANSITION - scoped only to layout elements ──────────────── */
+/* DO NOT use * selector - it breaks Framer Motion inline styles */
 body,
 header,
 aside,
@@ -580,25 +580,25 @@ html.light-theme .bg-slate-50, html.light-theme .bg-gray-50        { background-
 /* Global bg-slate-50 warm tint for all light mode */
 html:not(.dark) .bg-slate-50,
 html:not(.dark) .bg-gray-50 { background-color: #f5f4f2 !important; }
-/* bg-slate-100 — subtle warm grey, not too yellow */
+/* bg-slate-100 - subtle warm grey, not too yellow */
 html:not(.dark) .bg-slate-100 { background-color: #f0eeec !important; }
 html:not(.dark) .bg-gray-100  { background-color: #f2f1ef !important; }
 
-/* ── 26. GLOBAL SUBTEXT CONTRAST BOOST — light mode default ──────────────
+/* ── 26. GLOBAL SUBTEXT CONTRAST BOOST - light mode default ──────────────
    text-slate-400 (#94a3b8) fails WCAG AA on white (2.9:1).
    Globally promote to slate-500 (#64748b = 4.6:1) in light mode.          */
 html:not(.dark) .text-slate-400,
 html:not(.dark) .text-gray-400 {
-  color: #6b7280 !important;  /* gray-500 = 4.6:1 on white — WCAG AA */
+  color: #6b7280 !important;  /* gray-500 = 4.6:1 on white - WCAG AA */
 }
 
-/* Section labels / uppercase trackers — slightly darker than body subtext */
+/* Section labels / uppercase trackers - slightly darker than body subtext */
 html:not(.dark) .text-slate-400.uppercase,
 html:not(.dark) .text-gray-400.uppercase {
   color: #6b7280 !important;
 }
 
-/* Very small text (10px–11px) needs even better contrast — WCAG 2.1 §1.4.3 */
+/* Very small text (10px-11px) needs even better contrast - WCAG 2.1 §1.4.3 */
 html:not(.dark) .text-\[10px\].text-slate-400,
 html:not(.dark) .text-\[10px\].text-gray-400,
 html:not(.dark) .text-\[11px\].text-slate-400,
@@ -630,17 +630,17 @@ html.light-theme .text-teal-600 { color: #0d9488 !important; }
 }
 .notif-dismiss-btn:hover { background: none !important; }
 
-/* ── 27. DARK MODE — variable-driven color tokens used by components ─────── */
+/* ── 27. DARK MODE - variable-driven color tokens used by components ─────── */
 /* These are consumed by components that use var(--surface-*) or var(--text-*) */
 html.dark { color-scheme: dark; }
 html:not(.dark) { color-scheme: light; }
 
-/* ── 28. LEGACY / CONTINUITY BRIDGE — #6B4F7A purple ─────────────────── */
+/* ── 28. LEGACY / CONTINUITY BRIDGE - #6B4F7A purple ─────────────────── */
 /* This purple appears throughout ContinuityBridge, HeirManagement, LegacySetup */
 /* In dark mode make it lighter/more visible */
 html.dark [style*="#6B4F7A"],
 html.dark [style*="#6b4f7a"] {
-  /* Can't override inline style directly — handled via CSS var below */
+  /* Can't override inline style directly - handled via CSS var below */
 }
 
 /* Targeted class overrides for pages using this color */
@@ -651,12 +651,12 @@ html.dark .bg-white\/80      { background-color: rgba(30,41,59,0.85) !important;
 html.dark .bg-white\/70      { background-color: rgba(30,41,59,0.75) !important; }
 html.dark .bg-purple-100     { background-color: rgba(124,58,237,0.20) !important; }
 
-/* ── 29. FORM FOCUS RING — teal in dark ──────────────────────────────── */
+/* ── 29. FORM FOCUS RING - teal in dark ──────────────────────────────── */
 html.dark .focus\:ring-teal-500:focus        { --tw-ring-color: rgba(45,212,191,0.35) !important; }
 html.dark .focus\:border-teal-500:focus      { border-color: #2dd4bf !important; }
 html.dark .focus\:ring-2:focus               { box-shadow: 0 0 0 3px rgba(45,212,191,0.25) !important; }
 
-/* ── 30. RECHARTS — chart text in dark mode ─────────────────────────── */
+/* ── 30. RECHARTS - chart text in dark mode ─────────────────────────── */
 html.dark .recharts-text,
 html.dark .recharts-cartesian-axis-tick text { fill: #94a3b8 !important; }
 html.dark .recharts-cartesian-grid line      { stroke: #334155 !important; }
@@ -766,8 +766,8 @@ html.dark .border-b.border-slate-100 { border-bottom-color: #1e293b !important; 
 /* ── 47. EMPTY STATE PANELS ──────────────────────────────────────────── */
 html.dark .text-slate-300 { color: #475569 !important; }
 
-/* ── 48. PATIENT AVATAR GRADIENTS — keep vivid ───────────────────────── */
-/* Inline style gradients on avatars are unaffected — correct behavior */
+/* ── 48. PATIENT AVATAR GRADIENTS - keep vivid ───────────────────────── */
+/* Inline style gradients on avatars are unaffected - correct behavior */
 
 /* ── 49. SWITCH TOGGLE ───────────────────────────────────────────────── */
 html.dark .peer:checked ~ .peer-checked\:bg-teal-600 { background-color: #0d9488 !important; }
@@ -804,13 +804,13 @@ html.dark [style*="linear-gradient(to right, #fffbeb"] {
 html.dark .bg-slate-50.border-b  { background-color: #1a2744 !important; }
 html.dark thead.bg-slate-50       { background-color: #1a2744 !important; }
 
-/* ── 53. FAMILY DASHBOARD — live events panel ─────────────────────────── */
+/* ── 53. FAMILY DASHBOARD - live events panel ─────────────────────────── */
 html.dark .bg-rose-50.border-b    { background-color: rgba(225,29,72,0.10) !important; }
 html.dark .from-rose-50           { --tw-gradient-from: rgba(225,29,72,0.10); }
 html.dark .bg-gradient-to-r.from-slate-800 { background: linear-gradient(to right,#0f172a,#1e293b) !important; }
 
 /* ── 54. INLINE GRADIENT HEADERS (inline style overrides via attribute) ── */
-/* Cannot override inline style in CSS — handled by removing them in JS */
+/* Cannot override inline style in CSS - handled by removing them in JS */
 
 /* ── 55. BEREAVEMENT / GRIEF FORMS ───────────────────────────────────────
    bg-purple-50 is handled in section 3 above (rgba 12%)
@@ -895,7 +895,7 @@ html.dark label.border-2.border-blue-400 {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 61: NUCLEAR TEXT READABILITY — catches everything CSS missed
+   SECTION 61: NUCLEAR TEXT READABILITY - catches everything CSS missed
    Applied last so it beats all other rules.
    Target: any text sitting on a dark card surface (#1e293b / #263347 range)
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -917,14 +917,14 @@ html.dark blockquote {
   color: inherit;
 }
 
-/* Input/textarea text in dark — must be explicitly light */
+/* Input/textarea text in dark - must be explicitly light */
 html.dark input,
 html.dark textarea,
 html.dark select {
   color: #f1f5f9 !important;
 }
 
-/* Placeholder — boost to clearly visible gray */
+/* Placeholder - boost to clearly visible gray */
 html.dark input::placeholder   { color: #64748b !important; opacity: 1 !important; }
 html.dark textarea::placeholder { color: #64748b !important; opacity: 1 !important; }
 
@@ -933,11 +933,11 @@ html.dark small  { color: #94a3b8 !important; }
 html.dark em     { color: inherit; }
 html.dark strong { color: inherit; font-weight: 700; }
 
-/* ── Strong text — make bold labels pop in dark ──────────────────────── */
+/* ── Strong text - make bold labels pop in dark ──────────────────────── */
 html.dark strong.text-slate-900,
 html.dark strong.text-gray-900  { color: #f8fafc !important; }
 
-/* ── Form labels — always clearly visible ────────────────────────────── */
+/* ── Form labels - always clearly visible ────────────────────────────── */
 html.dark label { color: #e2e8f0 !important; }
 html.dark .block.text-sm.font-semibold,
 html.dark .block.text-sm.font-bold,
@@ -1024,10 +1024,10 @@ html.dark .dropdown-menu-content .text-xs.text-slate-400 { color: #64748b !impor
 html.dark .dropdown-menu-content .bg-slate-100 { background-color: #334155 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 63: MESSAGES PAGE — CONVERSATION LIST
+   SECTION 63: MESSAGES PAGE - CONVERSATION LIST
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Selected conversation — dark teal bg */
+/* Selected conversation - dark teal bg */
 html.dark .border-l-teal-500.bg-teal-900\/30 {
   background-color: rgba(13,148,136,0.18) !important;
 }
@@ -1037,7 +1037,7 @@ html.dark .hover\:bg-slate-100:hover {
   background-color: #263347 !important;
 }
 
-/* Message sidebar — all bg-white cards */
+/* Message sidebar - all bg-white cards */
 html.dark .border-b.border-slate-100 {
   border-color: #1e293b !important;
 }
@@ -1047,7 +1047,7 @@ html.dark .font-semibold.text-slate-900 { color: #f1f5f9 !important; }
 html.dark .text-sm.text-slate-500       { color: #94a3b8 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 64: AIINSIGHTS — TABLE COLUMN HEADERS
+   SECTION 64: AIINSIGHTS - TABLE COLUMN HEADERS
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Force table headers to be clearly visible */
@@ -1058,7 +1058,7 @@ html.dark .uppercase.tracking-wider { color: #94a3b8 !important; }
 html.dark .bg-slate-50.border-b.border-slate-200 th { color: #cbd5e1 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 65: LIGHT GRADIENT INLINE STYLES — CSS ATTRIBUTE SELECTORS
+   SECTION 65: LIGHT GRADIENT INLINE STYLES - CSS ATTRIBUTE SELECTORS
    These catch common inline gradient patterns that look white in dark mode
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1126,7 +1126,7 @@ html.dark button.border.border-slate-300:hover {
 html.dark button.border-slate-300 .text-slate-600 { color: #94a3b8 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 68: MESSAGES — CHAT PANEL RIGHT SIDE EMPTY STATE
+   SECTION 68: MESSAGES - CHAT PANEL RIGHT SIDE EMPTY STATE
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* The right panel "select a conversation" bg */
@@ -1147,7 +1147,7 @@ html.dark .bg-white.text-slate-600.hover\:bg-slate-50:hover {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 70: TABLE HEADERS (bg-slate-100) — now use darker bg in dark mode
+   SECTION 70: TABLE HEADERS (bg-slate-100) - now use darker bg in dark mode
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html.dark thead.bg-slate-100,
@@ -1176,7 +1176,7 @@ html.dark .bg-slate-100.border-t {
 html.dark .bg-slate-100.border-t .text-slate-500 { color: #94a3b8 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 71: MESSAGES CHAT AREA — bg-slate-50 panel
+   SECTION 71: MESSAGES CHAT AREA - bg-slate-50 panel
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html.dark .flex-1.overflow-y-auto.p-3.bg-slate-50 {
@@ -1185,7 +1185,7 @@ html.dark .flex-1.overflow-y-auto.p-3.bg-slate-50 {
 html.dark .flex-1.flex.items-center.justify-center.bg-slate-50 {
   background-color: var(--surface-bg) !important;
 }
-/* Chat message area — make body more distinct */
+/* Chat message area - make body more distinct */
 html.dark .space-y-2\.5.bg-slate-50 { background-color: #0f172a !important; }
 
 /* Received message bubble (white bg in chat) */
@@ -1211,7 +1211,7 @@ html.dark .bg-gray-100  { background-color: #263347 !important; }
 /* But NOT on table headers (already handled above with more specific rules) */
 /* And NOT on inputs (handled separately) */
 
-/* hover:bg-slate-100 — slightly lighter than surface-elevated */
+/* hover:bg-slate-100 - slightly lighter than surface-elevated */
 html.dark .hover\:bg-slate-100:hover { background-color: #2d3f55 !important; }
 html.dark .hover\:bg-gray-100:hover  { background-color: #2d3f55 !important; }
 
@@ -1252,7 +1252,7 @@ html.dark .text-xs.text-slate-400 { color: #64748b !important; }
    SECTION 75: REMAINING from-slate-50 / from-slate-100 gradient patterns
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* from-slate-50 to-white — section headers, card tops, sticky panels */
+/* from-slate-50 to-white - section headers, card tops, sticky panels */
 html.dark .bg-gradient-to-r.from-slate-50,
 html.dark .bg-gradient-to-r.from-slate-50.to-white,
 html.dark .bg-gradient-to-r.from-slate-50.to-slate-100 {
@@ -1295,7 +1295,7 @@ html.dark .px-4.py-3.border-b.border-slate-200.bg-gradient-to-r.from-slate-50 {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 76: STAT CARD VALUES — ensure numbers are always visible
+   SECTION 76: STAT CARD VALUES - ensure numbers are always visible
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html.dark .stat-card-teal    .text-3xl,
@@ -1337,7 +1337,7 @@ html.dark .notif-row-unread { background-color: #1e3252                 !importa
 html.dark .border-b-3 { border-bottom-width: 3px; border-bottom-color: #334155 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 79: DARK MODE — FINAL SAFETY NET
+   SECTION 79: DARK MODE - FINAL SAFETY NET
    Any remaining bg-white or bg-slate-50 not caught by existing rules
    that appear as white blobs on dark background
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -1347,7 +1347,7 @@ html.dark .bg-white   { transition: background-color 0.20s ease !important; }
 html.dark .bg-slate-50 { transition: background-color 0.20s ease !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 80: MESSAGES PAGE OUTER WRAPPER — h-[calc] flex container
+   SECTION 80: MESSAGES PAGE OUTER WRAPPER - h-[calc] flex container
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html.dark .h-\[calc\(100vh-100px\)\].flex {
@@ -1359,8 +1359,8 @@ html.dark .w-2\/5.bg-white.border-r { background-color: var(--surface-card) !imp
 html.dark .border-r.border-slate-200 { border-color: #334155 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 81: DASHBOARD TABLE/CARD HEADER STRIPS — removed inline gradients
-   The div had style removed — needs explicit dark bg now via bg-white cascade
+   SECTION 81: DASHBOARD TABLE/CARD HEADER STRIPS - removed inline gradients
+   The div had style removed - needs explicit dark bg now via bg-white cascade
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* Section header strips inside white cards */
@@ -1379,10 +1379,10 @@ html.dark .px-4.py-3.border-b.border-slate-200 {
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SECTION 82: WELLNESS CHECKIN SUCCESS SCREEN / JOURNAL / CONTINUITY
-   These pages had inline gradients removed — need bg-white fallback in dark
+   These pages had inline gradients removed - need bg-white fallback in dark
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* min-h-full flex items-center justify-center — portal-like centered pages */
+/* min-h-full flex items-center justify-center - portal-like centered pages */
 html.dark .min-h-full.flex.items-center.justify-center {
   background-color: var(--surface-bg) !important;
 }
@@ -1391,7 +1391,7 @@ html.dark .min-h-screen.flex.items-center.justify-center {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 83: AIINSIGHTS TABLE HEADER — removed inline gradient
+   SECTION 83: AIINSIGHTS TABLE HEADER - removed inline gradient
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* The div that wraps Zap icon + title in ML table */
@@ -1400,14 +1400,14 @@ html.dark .flex.items-center.justify-between.flex-wrap.gap-3.px-4.py-3 {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 84: MEDICATION ICON CIRCLES — light rose bg
+   SECTION 84: MEDICATION ICON CIRCLES - light rose bg
    ═══════════════════════════════════════════════════════════════════════════ */
 
 html.dark .bg-rose-100 { background-color: rgba(225,29,72,0.15) !important; }
 html.dark .bg-red-100  { background-color: rgba(239,68,68,0.15) !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 85: FINAL PASS — any bg-white/80 or bg-white/70 remaining
+   SECTION 85: FINAL PASS - any bg-white/80 or bg-white/70 remaining
    These are glassmorphism cards that appear white in dark
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1418,7 +1418,7 @@ html.dark .bg-white\/50 { background-color: rgba(30,41,59,0.65) !important; }
 html.dark .bg-white\/95 { background-color: rgba(30,41,59,0.97) !important; }
 html.dark .bg-white\/90 { background-color: rgba(30,41,59,0.94) !important; }
 
-/* Text inside glassmorphism cards — must be readable */
+/* Text inside glassmorphism cards - must be readable */
 html.dark .bg-white\/80 .text-gray-600 { color: #b0c4d4 !important; }
 html.dark .bg-white\/80 .text-gray-700 { color: #cbd5e1 !important; }
 html.dark .bg-white\/80 .text-gray-800 { color: #e2e8f0 !important; }
@@ -1426,7 +1426,7 @@ html.dark .bg-white\/80 h2 { color: #f1f5f9 !important; }
 html.dark .bg-white\/80 h3 { color: #f1f5f9 !important; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SECTION 86: LIGHT MODE — card depth vs blue-gray body background
+   SECTION 86: LIGHT MODE - card depth vs blue-gray body background
    Cards need to be slightly off-white so they float above the page bg.
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -1436,10 +1436,10 @@ html:not(.dark) .bg-white {
   background-color: #ffffff !important;   /* white cards on tinted bg = clear hierarchy */
 }
 
-/* Page backgrounds between cards — use the body gradient, don't override */
+/* Page backgrounds between cards - use the body gradient, don't override */
 html.light-theme body,
 html:not(.dark) body {
-  /* body gradient is set in index.css — don't fight it here */
+  /* body gradient is set in index.css - don't fight it here */
 }
 
 /* Slight elevation on cards to make them pop off the warm bg */
@@ -1449,7 +1449,7 @@ html:not(.dark) .bg-white.rounded-lg {
   box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04) !important;
 }
 
-/* Stat cards in light mode — tinted bg gives depth */
+/* Stat cards in light mode - tinted bg gives depth */
 html:not(.dark) .stat-card-teal    { background: linear-gradient(135deg, #f0fdfa, #ccfbf1) !important; }
 html:not(.dark) .stat-card-rose    { background: linear-gradient(135deg, #fff1f2, #ffe4e6) !important; }
 html:not(.dark) .stat-card-amber   { background: linear-gradient(135deg, #fffbeb, #fef3c7) !important; }
@@ -1457,7 +1457,7 @@ html:not(.dark) .stat-card-emerald { background: linear-gradient(135deg, #f0fdf4
 html:not(.dark) .stat-card-blue    { background: linear-gradient(135deg, #eff6ff, #dbeafe) !important; }
 html:not(.dark) .stat-card-violet  { background: linear-gradient(135deg, #faf5ff, #ede9fe) !important; }
 
-/* Page tints — remove tints in light mode, use warm off-white */
+/* Page tints - remove tints in light mode, use warm off-white */
 html:not(.dark) .page-tint-dashboard,
 html:not(.dark) .page-tint-patients,
 html:not(.dark) .page-tint-alerts,
@@ -1471,16 +1471,16 @@ html:not(.dark) .page-tint-journey { background: #f8f7f5 !important; }
 html:not(.dark) .border-slate-100 { border-color: #e8e6e3 !important; }
 html:not(.dark) .border-slate-200 { border-color: #d6d3cf !important; }
 
-/* Table alternating rows — very subtle warm */
+/* Table alternating rows - very subtle warm */
 html:not(.dark) table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015) !important; }
 html:not(.dark) thead.bg-slate-100 { background-color: #f0eeeb !important; }
 html:not(.dark) thead.bg-slate-50  { background-color: #f5f4f2 !important; }
 
-/* Sidebar — keep forest green always */
+/* Sidebar - keep forest green always */
 html:not(.dark) aside,
 html:not(.dark) .sidebar-root { /* sidebar stays as defined */ }
 
-/* Filter pill bg in light mode — warm neutral */
+/* Filter pill bg in light mode - warm neutral */
 html:not(.dark) .bg-slate-100.rounded-xl,
 html:not(.dark) .bg-slate-100.rounded-lg,
 html:not(.dark) .bg-slate-100.p-1 {

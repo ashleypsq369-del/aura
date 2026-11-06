@@ -1,6 +1,6 @@
 ---
 name: micro-interactions
-description: Small purposeful animations — toggles, animated icons, success moments. Use when designing interactive feedback, success states or loaders.
+description: Small purposeful animations - toggles, animated icons, success moments. Use when designing interactive feedback, success states or loaders.
 metadata:
   priority: 6
   pathPatterns:
@@ -46,7 +46,7 @@ retrieval:
 
 # Micro-Interactions
 
-A micro-interaction is a moment. A checkbox that draws its checkmark. A heart that pulses when liked. A toggle that eases into place with a little overshoot. A confetti burst on completing a goal. These moments are small in duration — 200–600ms — but they communicate that the product was made by people who cared.
+A micro-interaction is a moment. A checkbox that draws its checkmark. A heart that pulses when liked. A toggle that eases into place with a little overshoot. A confetti burst on completing a goal. These moments are small in duration - 200-600ms - but they communicate that the product was made by people who cared.
 
 The reference is always the natural world. Nothing in nature snaps instantly. Everything has weight, momentum, and a moment of settling.
 
@@ -56,10 +56,10 @@ The reference is always the natural world. Nothing in nature snaps instantly. Ev
 
 A micro-interaction earns its place when it:
 
-1. **Confirms an action** — makes the result of a click, tap, or input unmistakably clear
-2. **Rewards a milestone** — celebrates something the user worked toward
-3. **Reveals something** — unfolds information in a way that aids understanding
-4. **Adds texture** — makes an otherwise flat moment feel physical and real
+1. **Confirms an action** - makes the result of a click, tap, or input unmistakably clear
+2. **Rewards a milestone** - celebrates something the user worked toward
+3. **Reveals something** - unfolds information in a way that aids understanding
+4. **Adds texture** - makes an otherwise flat moment feel physical and real
 
 It fails when it:
 - Delays the user (animation blocks the next action)
@@ -81,7 +81,7 @@ Physical objects have inertia, springiness, and weight. UI that borrows these pr
 | A bell ringing | Icon that briefly oscillates (shakes) on trigger |
 | A stamp pressing paper | Inner element shift (e.g. icon nudge) without shifting button bounds |
 
-The motion should feel *inevitable* — as if the element has physical properties and cannot behave any other way.
+The motion should feel *inevitable* - as if the element has physical properties and cannot behave any other way.
 
 ---
 
@@ -116,7 +116,7 @@ Icons that animate on trigger communicate state change more vividly than a stati
 
 **Bell shake on notification:** A brief oscillating rotation.
 
-**Loading spinner:** Rotate with easing rather than linear — a spring rotation feels alive; linear feels mechanical.
+**Loading spinner:** Rotate with easing rather than linear - a spring rotation feels alive; linear feels mechanical.
 
 ### Toggle / Switch
 
@@ -125,21 +125,21 @@ A toggle should feel like a physical switch, not a state change.
 ```css
 .toggle-thumb {
   transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  /* cubic-bezier with overshoot — the thumb slides and bounces slightly */
+  /* cubic-bezier with overshoot - the thumb slides and bounces slightly */
 }
 .toggle:checked .toggle-thumb {
   transform: translateX(20px);
 }
 ```
 
-The cubic-bezier `(0.34, 1.56, 0.64, 1)` produces a spring effect — the thumb overshoots and settles. This is the difference between a switch that feels cheap and one that feels premium.
+The cubic-bezier `(0.34, 1.56, 0.64, 1)` produces a spring effect - the thumb overshoots and settles. This is the difference between a switch that feels cheap and one that feels premium.
 
 ### Success / Completion
 
-Mark moments of genuine completion — a form submitted, an onboarding step finished, a goal reached.
+Mark moments of genuine completion - a form submitted, an onboarding step finished, a goal reached.
 
 - **Checkmark animation** that draws on
-- **Subtle confetti** for high-value milestones (first purchase, account created, goal achieved) — use sparingly, never for routine actions
+- **Subtle confetti** for high-value milestones (first purchase, account created, goal achieved) - use sparingly, never for routine actions
 - **Green fill transition** on a progress bar completing
 - **Number count-up** when a stat reaches its final value
 
@@ -181,7 +181,7 @@ The button remains rock-solid in the layout. Feedback is conveyed through colour
 
 ### Skeleton → Content Transition
 
-When content loads, do not flash it in. Fade it over the skeleton at 150–200ms. The skeleton dissolves, the content arrives.
+When content loads, do not flash it in. Fade it over the skeleton at 150-200ms. The skeleton dissolves, the content arrives.
 
 ```css
 .content-loaded {
@@ -195,11 +195,11 @@ When content loads, do not flash it in. Fade it over the skeleton at 150–200ms
 
 ### Attracting Attention to Remote Changes
 
-Users often miss updates that occur far away from their current focus or click area (change blindness). If an area changes that the user is not currently looking at—such as a notification in a distant corner—use a subtle animation to guide their eye.
+Users often miss updates that occur far away from their current focus or click area (change blindness). If an area changes that the user is not currently looking at-such as a notification in a distant corner-use a subtle animation to guide their eye.
 
 - **Notification Badge Bloom:** When a new notification arrives, briefly scale the badge up (1.2) and settle back to 1.0.
-- **Background Highlight Fade:** If a list item updates or a new row is added, highlight its background with a subtle brand tint and fade it to transparent over 1–2 seconds.
-- **Subtle Shake:** A very small horizontal shake (2–4px) can draw attention to a sidebar or toolbar item without being aggressive.
+- **Background Highlight Fade:** If a list item updates or a new row is added, highlight its background with a subtle brand tint and fade it to transparent over 1-2 seconds.
+- **Subtle Shake:** A very small horizontal shake (2-4px) can draw attention to a sidebar or toolbar item without being aggressive.
 
 **Rule:** The animation should be non-looping. Once the eye is caught, the motion must stop to avoid becoming a permanent distraction.
 
@@ -207,7 +207,7 @@ Users often miss updates that occur far away from their current focus or click a
 
 ## The Sacred Rule of Component Stability
 
-Interactive elements — especially buttons — must be layout-stable.
+Interactive elements - especially buttons - must be layout-stable.
 
 - **No Scaling:** Never use `transform: scale()` on hover or click for buttons. It causes visual vibrating and can feel "squishy" rather than premium.
 - **No Shifting:** Never use `translate` or margins that change the element's position relative to its neighbors.
@@ -217,9 +217,9 @@ Interactive elements — especially buttons — must be layout-stable.
 
 ## How to Declare the Motion
 
-**Transitions for state, keyframes for sequences.** A CSS transition can be interrupted: move the cursor away mid-hover and the element turns around from where it is. A keyframe animation cannot — it plays to the end, then snaps. Every hover, focus, active and selected state is a transition. Reserve `@keyframes` for a staged entrance or a loop that runs on its own.
+**Transitions for state, keyframes for sequences.** A CSS transition can be interrupted: move the cursor away mid-hover and the element turns around from where it is. A keyframe animation cannot - it plays to the end, then snaps. Every hover, focus, active and selected state is a transition. Reserve `@keyframes` for a staged entrance or a loop that runs on its own.
 
-**Name the properties.** `transition: all` animates whatever happens to change, including layout properties that force the browser to re-lay-out the page every frame — and it is how a component starts sliding when an unrelated class lands on it.
+**Name the properties.** `transition: all` animates whatever happens to change, including layout properties that force the browser to re-lay-out the page every frame - and it is how a component starts sliding when an unrelated class lands on it.
 
 ```css
 /* the element decides what moves */
@@ -236,10 +236,10 @@ transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 
 Micro-interactions are seasoning, not the meal.
 
-- **Once per trigger** — a checkmark animates once on save, not on every render
-- **Skip on repeat actions** — a bulk delete of 50 items should not animate 50 times
-- **No blocking animations** — the user must be able to continue immediately; the animation runs alongside, not instead of, the result
-- **Respect `prefers-reduced-motion`** — always
+- **Once per trigger** - a checkmark animates once on save, not on every render
+- **Skip on repeat actions** - a bulk delete of 50 items should not animate 50 times
+- **No blocking animations** - the user must be able to continue immediately; the animation runs alongside, not instead of, the result
+- **Respect `prefers-reduced-motion`** - always
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -255,9 +255,9 @@ Micro-interactions are seasoning, not the meal.
 
 - [ ] **Sacred Rule:** Do buttons and interactive elements remain perfectly stable (no size change, no shifting) during hover and click?
 - [ ] Does each micro-interaction confirm an action, reward a milestone, or aid understanding?
-- [ ] Is the duration 200–600ms — not instant, not slow enough to feel like waiting?
+- [ ] Is the duration 200-600ms - not instant, not slow enough to feel like waiting?
 - [ ] Does motion reference natural physics (spring, ease-out, overshoot) rather than linear timing?
-- [ ] Is the animation non-blocking — the user can continue immediately?
+- [ ] Is the animation non-blocking - the user can continue immediately?
 - [ ] Is `prefers-reduced-motion` respected?
 - [ ] Are high-effort celebrations (confetti, bloom effects) reserved for genuine milestones?
 - [ ] Do animated icons clearly communicate the state change they represent?

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Database layer for Project Aura - COMPLETE KIRO SPECIFICATION
 All 21 tables - SIMPLIFIED (no circular relationships)
 """
@@ -1339,7 +1339,7 @@ class PatientJourneyEvent(Base):
 
 
 # ============================================================================
-# NEW PALLIATIVE CARE MODULES - Tables 31–34
+# NEW PALLIATIVE CARE MODULES - Tables 31-34
 # ============================================================================
 
 class AdvanceCarePlan(Base):
@@ -1612,7 +1612,7 @@ class ServiceTypeConfig(Base):
 
 
 class ProviderApplication(Base):
-    """Provider self-registration — pending admin review"""
+    """Provider self-registration - pending admin review"""
     __tablename__ = 'provider_applications'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)

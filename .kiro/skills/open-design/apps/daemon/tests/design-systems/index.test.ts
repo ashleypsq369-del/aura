@@ -53,7 +53,7 @@ describe('design systems registry', () => {
 
   it('parses a DESIGN.md with a pathological marker run without catastrophic backtracking', async () => {
     // Regression: the swatch parser's Form A regex had overlapping star-consumers
-    // (`[\s>*-]*\**\s*`), so a long run of `*` at a line start was O(n^2) — a large
+    // (`[\s>*-]*\**\s*`), so a long run of `*` at a line start was O(n^2) - a large
     // installed DESIGN.md could hang the daemon during `listDesignSystems`
     // (reachable via GET /api/design-systems). The collapsed prefix is linear.
     await mkdir(path.join(root, 'acme'), { recursive: true });
@@ -604,7 +604,7 @@ describe('design systems registry', () => {
 
   // recvqb6mfyqXLD: `isTeamSyncedUserDesignSystem` is the signal routes use to
   // decide whether a `user:`-prefixed system needs the team-share permission
-  // check before PATCH/DELETE — it must read the exact flag
+  // check before PATCH/DELETE - it must read the exact flag
   // `markTeamSynced` (server.ts) writes onto a pulled system's metadata.json.
   describe('isTeamSyncedUserDesignSystem', () => {
     it('is false for a system the caller authored themselves', async () => {

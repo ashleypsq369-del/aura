@@ -19,14 +19,14 @@ function promptArgvBudgetMessage(
 
 // `maxPromptArgBytes` is sized for Windows' ~32 KB CreateProcess
 // command-line limit (see deepseek.ts). On POSIX the per-arg ceiling is far
-// higher — Linux's MAX_ARG_STRLEN is 128 KB and macOS's ARG_MAX is 256 KB
-// (total argv+env) — and the *real* Windows command-line cap is guarded
+// higher - Linux's MAX_ARG_STRLEN is 128 KB and macOS's ARG_MAX is 256 KB
+// (total argv+env) - and the *real* Windows command-line cap is guarded
 // precisely post-buildArgs by checkWindowsCmdShim/DirectExeCommandLineBudget.
 // So applying the conservative Windows byte budget unconditionally on
 // macOS/Linux false-positives on normal projects (system prompt + DESIGN.md +
 // skills ≈ 50-70 KB) with a confusing "prompt too long" (issue #4473). On
-// POSIX we keep a much larger guard — still below Linux's 128 KiB per-arg
-// ceiling — purely so a runaway prompt still fails fast with the actionable
+// POSIX we keep a much larger guard - still below Linux's 128 KiB per-arg
+// ceiling - purely so a runaway prompt still fails fast with the actionable
 // message instead of a generic spawn E2BIG.
 const POSIX_ARGV_PROMPT_BUDGET = 120_000;
 
@@ -61,7 +61,7 @@ export function checkPromptArgvBudget(
 // Mirror of packages/platform's `quoteWindowsCommandArg`, kept local so
 // `checkWindowsCmdShimCommandLineBudget` can run on macOS/Linux against
 // a fake `.cmd` path in tests without forking on `process.platform`.
-// Must stay byte-for-byte identical to the platform copy — the helper's
+// Must stay byte-for-byte identical to the platform copy - the helper's
 // whole point is to compute the exact `cmd.exe /d /s /c "<inner>"` line
 // the spawn path will produce on Windows. The `%` → `"^%"` substitution
 // neutralizes cmd.exe's percent-expansion for prompts that ride argv
@@ -88,7 +88,7 @@ function quoteForWindowsDirectExe(value: unknown): string {
   // libuv emits a literal `""` for an empty argv entry so it survives
   // CommandLineToArgvW round-tripping; mirror that.
   if (str.length === 0) return '""';
-  // Fast path: no whitespace and no quote — pass through unchanged. This
+  // Fast path: no whitespace and no quote - pass through unchanged. This
   // matches libuv's `wcspbrk(source, L" \t\"")` early return.
   if (!/[\s"]/.test(str)) return str;
   // No quote, no backslash: simple wrap, no per-char escaping needed.
@@ -121,7 +121,7 @@ function quoteForWindowsDirectExe(value: unknown): string {
 // Windows' CreateProcess caps `lpCommandLine` at 32_767 chars. Going
 // through a `.cmd` / `.bat` shim adds a `cmd.exe /d /s /c "<inner>"`
 // wrapper, and `quoteForWindowsCmdShim` doubles every embedded `"` plus
-// wraps any whitespace/special-char arg in outer quotes — so a prompt
+// wraps any whitespace/special-char arg in outer quotes - so a prompt
 // well under `maxPromptArgBytes` can still expand past the kernel cap
 // once it's run through the shim. Leave headroom for any per-CLI flag
 // the adapter might tack on at exec time and for cmd.exe's own framing.
@@ -130,8 +130,8 @@ const WINDOWS_CREATE_PROCESS_HEADROOM = 256;
 
 // Post-buildArgs guard for argv-bound adapters whose binary resolves to
 // a Windows `.cmd` / `.bat` shim. Computes the exact command line shape
-// `createCommandInvocation` (in packages/platform) hands to `spawn` —
-// `cmd.exe /d /s /c "<quoted command + quoted args>"` — and refuses the
+// `createCommandInvocation` (in packages/platform) hands to `spawn` -
+// `cmd.exe /d /s /c "<quoted command + quoted args>"` - and refuses the
 // run when that line would exceed the CreateProcess limit (less a small
 // headroom). Returns the same `AGENT_PROMPT_TOO_LARGE` shape as
 // `checkPromptArgvBudget` so the SSE error path in `/api/chat` doesn't
@@ -157,7 +157,7 @@ export function checkWindowsCmdShimCommandLineBudget(
     return null;
   const argList = Array.isArray(args) ? args : [];
   const inner = [resolvedBin, ...argList].map(quoteForWindowsCmdShim).join(' ');
-  // `cmd.exe /d /s /c "<inner>"` — same shape as buildCmdShimInvocation
+  // `cmd.exe /d /s /c "<inner>"` - same shape as buildCmdShimInvocation
   // in packages/platform; the leading 'cmd.exe ' + '/d /s /c ' framing
   // plus the two outer quote chars rounds out the full command line.
   const commandLineLength = 'cmd.exe /d /s /c '.length + inner.length + 2;
@@ -190,7 +190,7 @@ function looksLikeWindowsPath(p: unknown): boolean {
 // adapters whose binary resolves directly to a Windows executable
 // (a cargo-installed `deepseek.exe`, a hand-built release, or any other
 // non-shim install path). `createCommandInvocation` does *not* wrap the
-// call in `cmd.exe /d /s /c "<inner>"` for those — but Node/libuv still
+// call in `cmd.exe /d /s /c "<inner>"` for those - but Node/libuv still
 // composes a CreateProcess `lpCommandLine` by walking each argv entry
 // through `quote_cmd_arg`, which doubles backslashes adjacent to quotes
 // and escapes every embedded `"` as `\"`. A quote-heavy prompt that fits
@@ -204,7 +204,7 @@ function looksLikeWindowsPath(p: unknown): boolean {
 // No-op when:
 //   - the adapter doesn't declare `maxPromptArgBytes` (stdin adapters
 //     never go through this path);
-//   - the resolved binary is a `.cmd` / `.bat` shim — that's handled by
+//   - the resolved binary is a `.cmd` / `.bat` shim - that's handled by
 //     `checkWindowsCmdShimCommandLineBudget` so we don't double-emit;
 //   - the resolved binary is not a Windows path (no CreateProcess
 //     command-line shape to budget);
@@ -225,7 +225,7 @@ export function checkWindowsDirectExeCommandLineBudget(
   // oversized prompt doesn't trip both guards.
   if (/\.(bat|cmd)$/i.test(resolvedBin)) return null;
   // Only fire for Windows-shaped resolved binaries. On POSIX-shaped
-  // paths, `execvp` accepts each argv entry as a separate buffer —
+  // paths, `execvp` accepts each argv entry as a separate buffer -
   // there's no command-line concatenation step that could expand past a
   // kernel cap, so we have nothing to guard.
   if (!looksLikeWindowsPath(resolvedBin)) return null;

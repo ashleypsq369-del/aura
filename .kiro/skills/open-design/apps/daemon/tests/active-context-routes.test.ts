@@ -31,7 +31,7 @@ function makeDeps(now = 1_000) {
 
 const EMPTY_INPUT = { body: {}, query: {}, params: {} };
 
-describe('active context — POST /api/active', () => {
+describe('active context - POST /api/active', () => {
   it('clears the store when body.active === false', async () => {
     const deps = makeDeps();
     deps.store.current = { projectId: 'p1', fileName: 'a.html', ts: 1 };
@@ -82,7 +82,7 @@ describe('active context — POST /api/active', () => {
   });
 });
 
-describe('active context — GET /api/active', () => {
+describe('active context - GET /api/active', () => {
   it('returns inactive when nothing is stored', async () => {
     const deps = makeDeps();
     const out = await getActiveRoute.handle(undefined, deps);

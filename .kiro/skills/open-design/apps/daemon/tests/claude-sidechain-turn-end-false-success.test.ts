@@ -13,12 +13,12 @@
 // Consequence: when a Task sub-agent finishes its internal turn with
 // `stop_reason: 'end_turn'`, applyClaudeStreamJsonRunBookkeeping
 // (chat-run-lifecycle.ts:98-118) sets `run.turnCompletedCleanly = true` AND
-// closes stdin — while the MAIN turn is still running. Nothing ever resets that
+// closes stdin - while the MAIN turn is still running. Nothing ever resets that
 // flag within the attempt. If the main agent then terminates non-zero WITHOUT a
 // result frame (hard crash / OOM kill / connection-drop abort mid-synthesis),
 // the close handler finds `turnCompletedCleanly === true` and
 // classifyChatRunCloseStatus (chat-run-lifecycle.ts:70) translates the non-zero
-// exit into 'succeeded' — a false success that hides the failure and skips the
+// exit into 'succeeded' - a false success that hides the failure and skips the
 // same-run retry, surfacing the sub-agent's internal scratch as the "answer".
 //
 // A/B: the ONLY difference between the two runs below is the presence of the

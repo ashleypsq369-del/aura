@@ -164,7 +164,7 @@ describe('run diagnostics', () => {
       signal: null,
     });
     expect(result.resume_auto_reseeded).toBe(true);
-    // The reseed succeeded transparently — terminal reason is a clean exit.
+    // The reseed succeeded transparently - terminal reason is a clean exit.
     expect(result.rpc_close_reason).toBe('exit_0');
   });
 

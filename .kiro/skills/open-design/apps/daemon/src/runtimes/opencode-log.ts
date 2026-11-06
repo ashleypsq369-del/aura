@@ -1,6 +1,6 @@
 // OpenCode swallows provider failures in headless `run --format json` mode:
 // on a 429 usage-limit (and similar), it marks the error retryable, retries
-// silently, and emits NOTHING on stdout/stderr — so the daemon only sees an
+// silently, and emits NOTHING on stdout/stderr - so the daemon only sees an
 // inactivity-watchdog timeout with no reason. The real error is recorded
 // only in OpenCode's own session log (`service=llm … error={…}`). This
 // module recovers that signal so the chat UI can show "usage limit reached"
@@ -37,7 +37,7 @@ export function resolveOpenCodeLogDir(
 // written before the run started can only belong to an earlier session, so
 // it is skipped rather than risk surfacing a stale provider error for this
 // run. (This does not disambiguate two OpenCode runs writing into the same
-// HOME concurrently — OpenCode only emits its session id on the stdout
+// HOME concurrently - OpenCode only emits its session id on the stdout
 // stream, which is empty in the silent-stall case, so mtime is the only
 // run-binding signal available here.) The 2 MB tail comfortably holds the
 // final error frame even though

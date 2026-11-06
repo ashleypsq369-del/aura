@@ -1,6 +1,6 @@
 // `listInstalledPlugins`'s workspace-scoped filter (registry.ts): a plugin
 // bound into a DIFFERENT workspace than the one asked about is hidden, but an
-// UNBOUND plugin (no `workspace_resources` row — every plugin installed
+// UNBOUND plugin (no `workspace_resources` row - every plugin installed
 // before workspace isolation shipped looks like this) stays visible from
 // every workspace. Mirrors design-systems' `designSystemVisibleFromWorkspace`
 // rule (design-systems/index.ts) applied to the generic `workspace_resources`
@@ -10,10 +10,10 @@
 // all) and `workspaceId: null` (passed explicitly, e.g. by `GET /api/plugins`
 // when the request carries no `x-od-workspace-id` header) are DIFFERENT
 // signals. Omitted means an internal caller (`od plugin list`, inventory
-// stats, the bundled-scenario scan) never asked to be scoped — stays
+// stats, the bundled-scenario scan) never asked to be scoped - stays
 // unfiltered. Explicit `null` means an HTTP caller DID ask to be scoped but
 // has no identity to offer, and must now see only UNBOUND plugins, not
-// everything — "no scope" must not mean "trust everything"
+// everything - "no scope" must not mean "trust everything"
 // (recvqbeDjAsejl / recvqbklNGDqYY).
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -87,7 +87,7 @@ describe('listInstalledPlugins workspace scope', () => {
     // carries no `x-od-workspace-id` header, so `GET /api/plugins` always
     // passes a DEFINED second argument. That must reach the workspace filter
     // the same as a real workspace id would, not silently take the "omitted"
-    // unfiltered path above — otherwise a signed-out / headerless caller
+    // unfiltered path above - otherwise a signed-out / headerless caller
     // could still see every workspace's claimed plugins.
     const db = openDatabase(tempDir, { dataDir: tempDir });
     upsertInstalledPlugin(db, fakePlugin('plugin-unbound'));

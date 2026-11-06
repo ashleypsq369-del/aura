@@ -355,7 +355,7 @@ function reconcileMessages(
  * Startup reconciliation owes EVERY Run its terminal obligation: message
  * repair, analytics replay, and Langfuse delivery. A task row whose persisted
  * Prompt Bundle can no longer be parsed is one Run's problem, and must never
- * cancel the obligation owed to its siblings — `strategyTaskTurnsForRunIds`
+ * cancel the obligation owed to its siblings - `strategyTaskTurnsForRunIds`
  * already holds this invariant for the message list. Returns whether the
  * record was reconciled; an unreadable record counts as not reconciled rather
  * than as a batch-ending error.
@@ -601,7 +601,7 @@ export async function reconcileDurableRunTerminals(
           : deriveRunErrorCode(state)
         : undefined;
       // A canceled Run is classified too, the way the live path does, so its
-      // replay carries `cancel_origin` / `terminal_trigger` — the SLO
+      // replay carries `cancel_origin` / `terminal_trigger` - the SLO
       // eligibility signal. P0-24 Q5 makes a restart-interrupted Run canceled,
       // and without this its replay would lose the stop reason entirely.
       const failure = failed || state.status === 'canceled'

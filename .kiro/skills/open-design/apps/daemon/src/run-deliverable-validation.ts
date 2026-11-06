@@ -109,7 +109,7 @@ function isHyperFramesProject(
  * shape of what it delivers. For most kinds those coincide; HyperFrames breaks
  * the identity. A HyperFrames project rides on `kind: 'video'` because Video is
  * the surface that offers it, while the artifact the user authors, edits and
- * previews is an HTML composition — the MP4 is a render of that HTML, produced
+ * previews is an HTML composition - the MP4 is a render of that HTML, produced
  * on demand and not necessarily present in the project at all. OD Next already
  * says so on the way in: `DAEMON_OWNED_OUTPUT_KINDS.hyperframes` admits `html`
  * and `source` as supported deliverable kinds at plan time, so rejecting them
@@ -167,11 +167,11 @@ function matchesAcceptedKinds(
 /**
  * The two questions a caller can ask about a project's canonical deliverable.
  *
- * `'run'` — did THIS run produce it? Strict on purpose: the answer decides
+ * `'run'` - did THIS run produce it? Strict on purpose: the answer decides
  * whether the host may accept an Agent's completion claim, so a turn must not
  * be able to pass by pointing at a file an earlier turn wrote.
  *
- * `'project'` — does the user have it, right now? The same filesystem checks
+ * `'project'` - does the user have it, right now? The same filesystem checks
  * without the run-scoped gates. It answers a presentation question ("is there
  * anything to tell the user they lost?"), where the earlier turn's file counts
  * precisely because the user can open it.
@@ -179,7 +179,7 @@ function matchesAcceptedKinds(
  * Splitting them is the whole point: one predicate used to answer both, and
  * the strict answer is the WRONG answer to the loose question. A "继续" turn
  * that verifies finished work and correctly changes nothing scores
- * `no_artifact` under `'run'` — true, and irrelevant to whether the user got
+ * `no_artifact` under `'run'` - true, and irrelevant to whether the user got
  * their deck.
  */
 export type DeliverableValidationScope = 'run' | 'project';
@@ -208,7 +208,7 @@ export function projectDeliverableValidation(
  *
  * Same entry resolution, kind contract and readability check as
  * `validateRunDeliverable`, minus every gate that asks about a particular run.
- * Never use it to accept a completion claim — see `DeliverableValidationScope`.
+ * Never use it to accept a completion claim - see `DeliverableValidationScope`.
  */
 export async function validateProjectDeliverable(
   input: Omit<ValidateRunDeliverableInput, 'runStatus' | 'artifactCount' | 'touchedPaths'>,

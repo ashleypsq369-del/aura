@@ -110,7 +110,7 @@ Because requirements were defined upfront from literature and did not evolve thr
 | **3. System Design** | Database schema (34 SQLAlchemy models, `db.py`). API architecture (FastAPI, 39 routers). ML pipeline design (XGBoost × 8 tasks, SHAP TreeExplainer). UI role-based navigation structure. | `db.py`, API router structure, ML pipeline spec |
 | **4. Implementation** | Backend-first: auth → patient CRUD → vitals → ML → notifications. Frontend: routing → role dashboards → forms → AI integration. | Full-stack system: 39 API endpoints, 8 ML models, 30+ frontend pages |
 | **5. Technical Testing & Validation** | API endpoint testing (`test_api.py`). ML model accuracy: AUC/ROC curves (Fig 5.2), confusion matrices. SHAP value correctness. Accessibility audit (automated). | Test results, Figures 5.1 & 5.2 |
-| **6. Evaluation & Documentation** | System capability review against requirements. Identification of limitations. Dissertation write-up. This documentation. | Dissertation, system docs, figures 3.1–5.2 |
+| **6. Evaluation & Documentation** | System capability review against requirements. Identification of limitations. Dissertation write-up. This documentation. | Dissertation, system docs, figures 3.1-5.2 |
 
 ---
 

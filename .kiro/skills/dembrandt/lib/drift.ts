@@ -1,5 +1,5 @@
 /**
- * Drift engine — the product core.
+ * Drift engine - the product core.
  *
  * Compares two Dembrandt native extracts (a baseline and a candidate) and
  * returns a drift report: a 0-100 score (0 = identical), a pass/fail verdict,
@@ -170,7 +170,7 @@ function semanticHex(value: string): string {
 
 /** A role is present only if it names a colour that actually paints. An empty
  * string is not a value, and a fully transparent one is a role the page does
- * not render — treating rgba(0,0,0,0) as a colour made two different "nothing
+ * not render - treating rgba(0,0,0,0) as a colour made two different "nothing
  * painted" values compare as a delta-100 change, and hid a brand colour being
  * turned invisible (alpha 1 -> 0) as no change at all. */
 function present(value: string | undefined): string | undefined {
@@ -192,7 +192,7 @@ function rgbFromCss(value: string): [number, number, number] | null {
  *
  * The palette pass cannot see this. It matches colours to their nearest
  * neighbour by delta-E, so a rebrand that promotes an existing palette colour to
- * primary leaves the palette set identical and scores zero — the roles moved,
+ * primary leaves the palette set identical and scores zero - the roles moved,
  * the colours did not. The semantic map used to be read only to attach
  * role labels to palette entries, so changing the brand primary produced no
  * drift at all (DEM-208).
@@ -204,7 +204,7 @@ function rgbFromCss(value: string): [number, number, number] | null {
  * A role appearing or disappearing is reported but never scored. Semantic
  * presence is a derived claim, not evidence. `accent` is emitted only when
  * confidence, chroma and hue-distance predicates all pass, and those flip
- * between runs of an unchanged page — scoring that alone produced 11 against a
+ * between runs of an unchanged page - scoring that alone produced 11 against a
  * threshold of 10, a red gate with zero design change. The colour evidence
  * underneath already sits in the palette, which is scored: if the colour truly
  * left the page, the palette charges for it there. Charging again here is
@@ -237,7 +237,7 @@ function compareSemantic(
 
     if (before && after) {
       const d = deltaE(semanticHex(before), semanticHex(after));
-      // An unchanged role contributes NOTHING — not penalty, and not weight.
+      // An unchanged role contributes NOTHING - not penalty, and not weight.
       // Adding its weight to the denominator would let a stable semantic map
       // dilute real palette drift, which turned a measured score of 11 (drift)
       // into 9 (stable) and could flip an existing gate from red to green.
@@ -360,7 +360,7 @@ function fieldDiffs(b: TypographyStyle, c: TypographyStyle, cfg: DriftConfig): n
 //    must exceed 0.4), and mass deletion must flag drift (removal must carry
 //    full weight in the accumulating penalty so 6/10 styles removed → 0.6);
 //  - a single removed style must NOT flag drift (removals are the noisiest
-//    signal live-DOM extraction produces — usually crawl variance), and no
+//    signal live-DOM extraction produces - usually crawl variance), and no
 //    single change may read as the whole type system being replaced (peak
 //    never maxes the category).
 const TYPO_FAMILY_PENALTY = 1.0;
@@ -373,7 +373,7 @@ const TYPO_ADDED_PENALTY = 0.5;
 const TYPO_PEAK_DAMP = 0.5;
 
 // Severity of one style's change, scaled by magnitude (0..1). A doubled font
-// size weighs far more than a 5% nudge — binary field counting hid that, making
+// size weighs far more than a 5% nudge - binary field counting hid that, making
 // a hero-size regression look as mild as a rounding tweak.
 function fieldPenalty(b: TypographyStyle, c: TypographyStyle, cfg: DriftConfig): number {
   let p = 0;
@@ -648,8 +648,8 @@ function paletteEntries(e: ExtractionResult): ColorEntry[] {
   const roleByRgb = new Map<string, string>();
   for (const [role, hex] of Object.entries(e.colors?.semantic ?? {})) {
     // parseColor reads hex and legacy rgb() only. A page that authors its
-    // semantic colours in oklch/lch — what --color-format emits, and what
-    // modern token pipelines write — attached no role at all, so the same
+    // semantic colours in oklch/lch - what --color-format emits, and what
+    // modern token pipelines write - attached no role at all, so the same
     // palette shift scored 30 in hex and 19 in oklch. Use the spec parser.
     const rgb = parseColor(hex) ?? rgbFromCss(hex);
     if (rgb) roleByRgb.set(rgb.join(","), role);
@@ -693,7 +693,7 @@ function viewportWarning(baseline: ExtractionResult, candidate: ExtractionResult
   const c = candidate.meta?.viewport;
   if (!b || !c) return null;
   // Persisted blobs are untrusted: widths may be strings, null, or absent.
-  // Coerce, and stay silent unless both widths are real positive numbers —
+  // Coerce, and stay silent unless both widths are real positive numbers -
   // Number(null) and Number('') are 0, which is finite but not a viewport.
   const px = (v: unknown) => {
     const n = Number(v);
@@ -704,7 +704,7 @@ function viewportWarning(baseline: ExtractionResult, candidate: ExtractionResult
   if (bw === null || cw === null || bw === cw) return null;
   const dim = (v: { width: unknown; height: unknown }) => `${px(v.width)}x${px(v.height) ?? "?"}`;
   return (
-    `baseline extracted at ${dim(b)}, candidate at ${dim(c)} — ` +
+    `baseline extracted at ${dim(b)}, candidate at ${dim(c)} - ` +
     `layout-dependent changes below may be viewport-induced, not design drift. ` +
     `Re-extract both at the same width (--screen-size).`
   );
@@ -725,7 +725,7 @@ function pageMismatchWarning(baseline: ExtractionResult, candidate: ExtractionRe
   const norm = (u: URL) => u.host.replace(/^www\./, "") + u.pathname.replace(/\/+$/, "");
   if (norm(b) === norm(c)) return null;
   return (
-    `baseline was extracted from ${b.href}, candidate from ${c.href} — ` +
+    `baseline was extracted from ${b.href}, candidate from ${c.href} - ` +
     `different pages after redirects, the diff compares two different surfaces.`
   );
 }
@@ -740,7 +740,7 @@ function flagMismatchWarnings(baseline: ExtractionResult, candidate: ExtractionR
     if (b === c) continue;
     const name = flag === "darkMode" ? "--dark-mode" : "--mobile";
     out.push(
-      `${name} was on for the ${b ? "baseline" : "candidate"} only — ` +
+      `${name} was on for the ${b ? "baseline" : "candidate"} only - ` +
       `palette drift may be flag-induced, not design drift. Re-extract with matching flags.`
     );
   }
@@ -759,7 +759,7 @@ function contextMismatchWarning(baseline: ExtractionResult, candidate: Extractio
     .map((d) => `${d} ${String(b[d])} -> ${String(c[d])}`);
   if (moved.length === 0) return null;
   return (
-    `baseline and candidate were measured under different browser contexts (${moved.join(", ")}) — ` +
+    `baseline and candidate were measured under different browser contexts (${moved.join(", ")}) - ` +
     `the diff compares two renderings, not one design over time. Re-extract both under the same context.`
   );
 }
@@ -777,7 +777,7 @@ function fontsWarning(baseline: ExtractionResult, candidate: ExtractionResult): 
   ];
   const detail = pending.length ? ` (pending: ${[...new Set(pending)].join(", ")})` : "";
   return (
-    `web fonts had not finished loading in the ${sides.join(" and ")} extraction${detail} — ` +
+    `web fonts had not finished loading in the ${sides.join(" and ")} extraction${detail} - ` +
     `typography family changes may be fallback fonts, not design drift.`
   );
 }
@@ -913,11 +913,11 @@ export function computeDrift(
     ].filter(Boolean);
     if (degradedSides.length > 0) {
       // Engine rule (see ExtractionMeta.degraded): a degraded category failed
-      // extraction, the brand did not change — its phantom tokens must not
+      // extraction, the brand did not change - its phantom tokens must not
       // enter the score, the change list, the summary, or CI annotations.
       categories.push({ category: cat, score: 0, changed: 0, added: 0, removed: 0 });
       warnings.push(
-        `${cat} extraction was degraded in the ${degradedSides.join(" and ")} — ` +
+        `${cat} extraction was degraded in the ${degradedSides.join(" and ")} - ` +
         `category excluded from the drift score.`
       );
       continue;
@@ -931,11 +931,11 @@ export function computeDrift(
   }
 
   // Degradation can exclude every comparable category. The score is then 0 by
-  // construction, not by evidence — a gate must not treat that as a clean pass.
+  // construction, not by evidence - a gate must not treat that as a clean pass.
   const inconclusive = totalW === 0 && (baseDegraded.size > 0 || candDegraded.size > 0);
   if (inconclusive) {
     warnings.push(
-      "no category could be scored: every comparable category was degraded — " +
+      "no category could be scored: every comparable category was degraded - " +
       "this compare is inconclusive, not stable. Re-extract and retry."
     );
   }

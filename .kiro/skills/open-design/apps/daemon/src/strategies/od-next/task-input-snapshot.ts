@@ -1123,8 +1123,8 @@ export function removeOdNextRunInputProjection(
   // synthetic mount targets behind: empty directories such as `.codex`,
   // `.agents` and `.git`. They are not ours to interpret, but an EMPTY
   // directory carries no caller data, so removing it is safe and keeps the
-  // per-Run root from accumulating forever. Anything else — a file, a symlink,
-  // a directory with content — is left untouched and reported by the root
+  // per-Run root from accumulating forever. Anything else - a file, a symlink,
+  // a directory with content - is left untouched and reported by the root
   // surviving this call.
   for (const entry of fs.readdirSync(projectionAccessRoot)) {
     const candidate = path.join(projectionAccessRoot, entry);

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Medications - redesigned to match Alerts.jsx design system
  * Pattern: motion.div min-h-screen space-y-5 pb-8, px-6 sections
  */
@@ -405,7 +405,7 @@ export default function Medications() {
  onError: () => toast.error('Failed'),
  });
 
- // Mark as taken — per-medication tracking (not shared across all meds)
+ // Mark as taken - per-medication tracking (not shared across all meds)
  const [takenMedIds, setTakenMedIds] = useState(new Set());
  const markTakenMutation = useMutation({
  mutationFn: (medId) => axios.put(
@@ -436,7 +436,7 @@ export default function Medications() {
  subtitle={
  isPatient ? "Your prescribed medications, dose schedule and daily confirmation" :
  isFamily ? "Your loved one's current medications" :
- isCaregiver ? "Patient medications — record doses and flag missed administrations" :
+ isCaregiver ? "Patient medications - record doses and flag missed administrations" :
  "Prescriptions, dosage schedules, reminders and interaction monitoring"
  }
  icon={Pill}

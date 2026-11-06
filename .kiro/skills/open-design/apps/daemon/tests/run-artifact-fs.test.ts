@@ -46,8 +46,8 @@ test('a second-round edit of an existing artifact counts as touched, not zero', 
   const before = snapshotProjectArtifacts(root);
   assert.equal(before.size, 1);
 
-  // Round 2 EDITS the same file — directory still holds exactly one file.
-  fs.writeFileSync(page, '<html>v2 — substantially edited content</html>');
+  // Round 2 EDITS the same file - directory still holds exactly one file.
+  fs.writeFileSync(page, '<html>v2 - substantially edited content</html>');
   const after = snapshotProjectArtifacts(root);
   assert.equal(after.size, 1, 'file count is unchanged by an edit');
 
@@ -120,7 +120,7 @@ test('a touched DESIGN.md sets designSystemCreated but not artifact_count', () =
   });
 
   // Editing it on a later round still flags the design-system signal.
-  fs.writeFileSync(path.join(root, 'DESIGN.md'), '# brand v2 — refined tokens');
+  fs.writeFileSync(path.join(root, 'DESIGN.md'), '# brand v2 - refined tokens');
   const afterEdit = snapshotProjectArtifacts(root);
   assert.equal(diffRunArtifacts(afterCreate, afterEdit).designSystemCreated, true);
 });
@@ -183,7 +183,7 @@ test('an md-only delivery reports files_written while artifact_count stays 0', (
   assert.equal(createDiff.filesWritten, 1);
 
   // A later run that only EDITS the md still reports its write.
-  fs.writeFileSync(path.join(root, 'PROMPTS.md'), '# nine premium backgrounds — revised');
+  fs.writeFileSync(path.join(root, 'PROMPTS.md'), '# nine premium backgrounds - revised');
   const editDiff = diffRunArtifacts(afterCreate, snapshotProjectArtifacts(root));
   assert.equal(editDiff.touched, 0);
   assert.equal(editDiff.filesWritten, 1);
@@ -192,7 +192,7 @@ test('an md-only delivery reports files_written while artifact_count stays 0', (
 test('a same-size rewrite with a preserved mtime is still detected (content hash)', () => {
   // The pathological edit: equal byte length AND the timestamp reset to its
   // original value. size + mtime alone cannot tell this apart, so the content
-  // hash must catch it — otherwise an edit-only turn would silently report 0.
+  // hash must catch it - otherwise an edit-only turn would silently report 0.
   const root = tmpProject();
   const page = path.join(root, 'index.html');
   fs.writeFileSync(page, '<html>AAAA</html>');
@@ -316,7 +316,7 @@ test('contended same-cwd runs are flagged so the caller skips the whole-tree dif
   assert.equal(a?.contended, true, 'the earlier run is retroactively marked contended');
   assert.equal(b?.contended, true, 'the later overlapping run is marked contended');
   assert.equal(c?.contended, false, 'a distinct-cwd run stays uncontended');
-  // take() removes the entry — a second take is empty.
+  // take() removes the entry - a second take is empty.
   assert.equal(reg.take('A'), undefined);
 });
 
@@ -492,7 +492,7 @@ test('an edit to a manifest-backed Markdown export counts as modified', async ()
   fs.writeFileSync(`${doc}.artifact.json`, validMdManifest('report.md'));
   const before = snapshotProjectArtifacts(root);
 
-  fs.writeFileSync(doc, '# report v2 — substantially revised');
+  fs.writeFileSync(doc, '# report v2 - substantially revised');
   const after = await snapshotProjectArtifactsAsync(root);
 
   const diff = diffRunArtifacts(before, after);

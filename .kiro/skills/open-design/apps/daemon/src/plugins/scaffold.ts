@@ -1,4 +1,4 @@
-// Phase 4 / spec §14.1 — `od plugin scaffold` starter folder generator.
+// Phase 4 / spec §14.1 - `od plugin scaffold` starter folder generator.
 //
 // Pure, file-system-side helper that materialises the §17.2 "enriched
 // plugin" shape on disk: SKILL.md (canonical anchor, with the od:
@@ -142,8 +142,8 @@ export async function scaffoldPlugin(input: ScaffoldInput): Promise<ScaffoldResu
     '',
     '## Files',
     '',
-    '- `SKILL.md` — the canonical agent skill body.',
-    '- `open-design.json` — the versioned OpenDesign marketplace sidecar.',
+    '- `SKILL.md` - the canonical agent skill body.',
+    '- `open-design.json` - the versioned OpenDesign marketplace sidecar.',
     '',
     'Edit `SKILL.md` to teach the agent how to perform the workflow.',
     'Edit `open-design.json` to refine the marketplace card and inputs.',

@@ -57,7 +57,7 @@ export function renderResearchCommandContract(
       '```',
       '',
       'For `/search` requests, the first tool action must be the research command with this canonical query.',
-      "If the OD command fails, keep the stderr / exit status in the tool trace and daemon logs, then use your own search capability as fallback. Label the fallback clearly in your answer — the user asked for a search, so they are owed the fact that these results did not come from the research command, but not the provider name or the error text.",
+      "If the OD command fails, keep the stderr / exit status in the tool trace and daemon logs, then use your own search capability as fallback. Label the fallback clearly in your answer - the user asked for a search, so they are owed the fact that these results did not come from the research command, but not the provider name or the error text.",
       'After the command returns JSON or fallback search results, create the Markdown report in Design Files, then summarize the findings with citations.',
     );
   }

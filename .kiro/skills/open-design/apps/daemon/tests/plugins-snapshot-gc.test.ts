@@ -1,4 +1,4 @@
-// Plan §3.A5 / spec §16 Phase 5 / PB2 — snapshot GC behavior test.
+// Plan §3.A5 / spec §16 Phase 5 / PB2 - snapshot GC behavior test.
 //
 // Locks the contract that:
 //   - Unreferenced snapshots stamp expires_at = appliedAt + TTL.
@@ -124,7 +124,7 @@ describe('snapshot GC', () => {
     expect(getSnapshot(db, referenced.snapshotId)).not.toBeNull();
   });
 
-  // Plan §3.M1 / spec PB2 — referenced-row TTL.
+  // Plan §3.M1 / spec PB2 - referenced-row TTL.
   //
   // Operators who opt into OD_SNAPSHOT_RETENTION_DAYS expect referenced
   // snapshots whose project has been deleted to be reaped after the
@@ -162,7 +162,7 @@ describe('snapshot GC', () => {
       expect(getSnapshot(db, referenced.snapshotId)).not.toBeNull();
     });
 
-    it('respects the retentionDays window — recent rows survive even on a deleted project', () => {
+    it('respects the retentionDays window - recent rows survive even on a deleted project', () => {
       const referenced = createSnapshot(db, baseInput());
       linkSnapshotToRun(db, referenced.snapshotId, 'run-r');
       db.pragma('foreign_keys = OFF');

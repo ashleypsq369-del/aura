@@ -1,4 +1,4 @@
-// Plan §3.V1 — OD_BUNDLED_ATOM_PROMPTS default is now ON.
+// Plan §3.V1 - OD_BUNDLED_ATOM_PROMPTS default is now ON.
 //
 // This test pins the contract: a daemon that never sets the env var
 // behaves as if the flag is enabled. Setting it to '0' explicitly

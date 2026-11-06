@@ -13,10 +13,10 @@ import {
  * Red spec: when opencode says a failure IS retryable, we must not record the
  * opposite.
  *
- * Real corpus (user diagnostics bundle, 2026-09-08, two independent runs —
+ * Real corpus (user diagnostics bundle, 2026-09-08, two independent runs -
  * `423140d1` 03:27 and `e9bea966` 04:03): opencode reported a closed upstream
  * socket AFTER exhausting its own three attempts, and said so in machine
- * readable form — `"isRetryable": true`. What the daemon persisted on the `end`
+ * readable form - `"isRetryable": true`. What the daemon persisted on the `end`
  * event was `upstream_unavailable / stream_disconnected` with
  * `retryable: false`, the opposite of what upstream stated.
  *
@@ -33,7 +33,7 @@ import {
  * message rather than as `error.data`. `rpcErrorRetryable` read only
  * `data.retryable`; the classifier's `latestRetryable` reads
  * `error.data.isRetryable` and so never saw it either. With no verdict from
- * either reader, `fail()` fell back to its own default — `retryable: false` —
+ * either reader, `fail()` fell back to its own default - `retryable: false` -
  * and that fabricated verdict is what the whole chain then believed.
  */
 
@@ -119,7 +119,7 @@ describe('an upstream that says "retryable" is recorded as retryable', () => {
 describe('the passthrough does not hand out retries nobody granted', () => {
   it('leaves an upstream that says NOT retryable alone', () => {
     // Same envelope, opposite word. Only `true` is read, and a 4xx is routed to
-    // `upstream_client_error` regardless — a request the provider rejected on
+    // `upstream_client_error` regardless - a request the provider rejected on
     // shape re-fails identically.
     const raw =
       'json-rpc id 4: opencode event stream: opencode session error: '
@@ -178,7 +178,7 @@ describe('the passthrough does not hand out retries nobody granted', () => {
 
 /**
  * The rule above ("only `true` is read") is stated for the message-string
- * reader, and the negative anchors that police it all feed the string form —
+ * reader, and the negative anchors that police it all feed the string form -
  * where `inferRpcErrorRetryable` matches `"isRetryable":true` and returns
  * `undefined` for anything else, so an upstream "no" is correctly left
  * undecided.
@@ -195,7 +195,7 @@ describe('the passthrough does not hand out retries nobody granted', () => {
 describe('a structured isRetryable is read under the same rule as the string form', () => {
   /**
    * Verbatim `error.data` from the real APIError envelope already frozen as row
-   * B5 of the ACP landing table (`acp-service-failure.test.ts`) — the same
+   * B5 of the ACP landing table (`acp-service-failure.test.ts`) - the same
    * bytes the string-form anchor above parses, lifted out of the sentence.
    */
   const APIERROR_404_DATA = {
@@ -224,11 +224,11 @@ describe('a structured isRetryable is read under the same rule as the string for
   /**
    * The consequence, and the reason this is not a style point. `[code=upstream_error]
    * stream idle timeout` is the transport blip already frozen as row B1 with
-   * `retryable: true` / `user_action: 'retry'` — the daemon reads that text and
+   * `retryable: true` / `user_action: 'retry'` - the daemon reads that text and
    * knows it is retryable. Hand it the SDK's coarse `false` structurally and,
    * because `??` stops at a boolean, the message reader that would have said
    * `true` never runs: `fail()` stamps `false`, the classifier adopts it as
-   * `retryableHint`, and `isResumableFailure` withdraws Continue — the exact
+   * `retryableHint`, and `isResumableFailure` withdraws Continue - the exact
    * failure mode this PR exists to remove, reintroduced through the other door.
    */
   const SDK_NO_ON_A_TRANSPORT_BLIP = {
@@ -237,7 +237,7 @@ describe('a structured isRetryable is read under the same rule as the string for
   };
 
   /**
-   * Row B1's text verbatim — the sentence the daemon shows and the only thing
+   * Row B1's text verbatim - the sentence the daemon shows and the only thing
    * the classifier reads. It rides along with the structured `data` above
    * because vela forwards the whole `session.error` envelope in the message
    * regardless; the structural copy is the addition under test.
@@ -249,8 +249,8 @@ describe('a structured isRetryable is read under the same rule as the string for
 
   /**
    * The full chain as `session.ts` runs it: the composed bridge verdict, then
-   * `fail(message, { details, …retryable })` — which stamps
-   * `options.retryable ?? false` and carries `details` on the frame — then the
+   * `fail(message, { details, …retryable })` - which stamps
+   * `options.retryable ?? false` and carries `details` on the frame - then the
    * classifier reading that frame back.
    */
   function classifyStructured(message: string, data: unknown) {
@@ -295,8 +295,8 @@ describe('a structured isRetryable is read under the same rule as the string for
 
   it('still hands out no retry the structural payload did not earn', () => {
     // The other half of the rule: declining to read `false` must not be read as
-    // reading `true`. The adapter shape here is the fullest one — the envelope
-    // kept in the sentence AND its `data` forwarded structurally — so the text
+    // reading `true`. The adapter shape here is the fullest one - the envelope
+    // kept in the sentence AND its `data` forwarded structurally - so the text
     // evidence row B5 was frozen on is present, and `upstream_client_error` is
     // reached from it rather than from any hint. `fail()` still stamps `false`
     // on an undecided frame, so nothing about this row moves.
@@ -313,7 +313,7 @@ describe('a structured isRetryable is read under the same rule as the string for
     // direction must survive.
     expect(rpcErrorRetryable({ isRetryable: true, message: 'socket closed' })).toBe(true);
     // And the ACP-native `retryable` field is a protocol-level statement, not a
-    // coarse SDK flag — it is out of scope here and keeps both of its values.
+    // coarse SDK flag - it is out of scope here and keeps both of its values.
     expect(rpcErrorRetryable({ retryable: false })).toBe(false);
     expect(rpcErrorRetryable({ retryable: true })).toBe(true);
   });

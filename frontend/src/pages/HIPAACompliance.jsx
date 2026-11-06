@@ -1,5 +1,5 @@
-/**
- * HIPAACompliance — Compliance score, checklist & breach incident log
+﻿/**
+ * HIPAACompliance - Compliance score, checklist & breach incident log
  * Route: /admin/hipaa-compliance
  *
  * Built with: AdminPageShell + DataTable (TanStack) + Dialog (Radix) + Recharts
@@ -509,7 +509,7 @@ export default function HIPAACompliance() {
             {/* Top row: Score + Metrics + Breach summary */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
 
-              {/* Score card — Services ProviderCard photo-area style */}
+              {/* Score card - Services ProviderCard photo-area style */}
               <div style={{
                 borderRadius: 16,
                 border: '1px solid var(--card-border)',
@@ -517,7 +517,7 @@ export default function HIPAACompliance() {
                 overflow: 'hidden',
                 boxShadow: '0 4px 20px rgba(13,148,136,0.10)',
               }}>
-                {/* Gradient header strip — like Services card photo area */}
+                {/* Gradient header strip - like Services card photo area */}
                 <div style={{
                   padding: '20px 20px 16px',
                   background: 'linear-gradient(135deg,#0d948808,#0891b208)',
@@ -542,7 +542,7 @@ export default function HIPAACompliance() {
                   ].map(({ label, color, val }) => (
                     <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <StatusDot color={color} label={label} size="sm" />
-                      <span style={{ fontSize: 13, fontWeight: 800, color }}>{val ?? '—'}</span>
+                      <span style={{ fontSize: 13, fontWeight: 800, color }}>{val ?? '-'}</span>
                     </div>
                   ))}
                 </div>
@@ -568,12 +568,12 @@ export default function HIPAACompliance() {
                 ].map(([label, val]) => (
                   <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: 12, color: 'var(--text-600)' }}>{label}</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-800)' }}>{val ?? '—'}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-800)' }}>{val ?? '-'}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Breach summary — red-accent left border like Services availability */}
+              {/* Breach summary - red-accent left border like Services availability */}
               <div style={{
                 borderRadius: 16,
                 border: '1px solid var(--card-border)',

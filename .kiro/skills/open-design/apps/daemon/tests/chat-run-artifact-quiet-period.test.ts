@@ -11,8 +11,8 @@
  * The full watchdog state machine sits inside a deep closure in
  * `startServer`, so these tests pin the emit/handle plumbing at the
  * boundary (via the `__forTest*` exports) and pin the env resolver
- * directly. The integration story — fake agent + live-artifact
- * create over HTTP + run-status check — would require setting up a
+ * directly. The integration story - fake agent + live-artifact
+ * create over HTTP + run-status check - would require setting up a
  * project, minting a tool token, and reproducing the chat-run path;
  * that is covered by manual verification in the PR body.
  */
@@ -99,7 +99,7 @@ describe('live-artifact create → chat-run handle hook (#1451)', () => {
     expect(noteArtifactRegistered).toHaveBeenCalledTimes(1);
   });
 
-  it('does not call noteArtifactRegistered on "updated" — only the first registration shortens the watchdog', () => {
+  it('does not call noteArtifactRegistered on "updated" - only the first registration shortens the watchdog', () => {
     // An updated artifact is the same deliverable being rewritten,
     // not a fresh handoff. The watchdog already switched the first
     // time `created` fired (if it ever did); the chat run's
@@ -195,7 +195,7 @@ describe('resolveActiveInactivityTimeoutMs (#1451 quiet-period switch)', () => {
     ).toBe(ONE_MIN);
   });
 
-  it('treats artifactQuietPeriodMs=0 as "disable the quiet period" — keeps the pre-artifact ceiling after registration', () => {
+  it('treats artifactQuietPeriodMs=0 as "disable the quiet period" - keeps the pre-artifact ceiling after registration', () => {
     // The bug from the #2585 review: when an operator sets
     // OD_CHAT_RUN_ARTIFACT_QUIET_PERIOD_MS=0, the prior implementation
     // dropped the active ceiling to 0 once the artifact was registered,
@@ -397,7 +397,7 @@ describe('classifyChatRunCloseStatus (#1451 close-handler classification)', () =
     // The quiet-period override is signal-only; a non-zero process exit
     // *before the model emitted a clean terminal turn* is a real failure
     // (agent CLI bug, model error, mid-turn crash) and must propagate as
-    // such. `turnCompletedCleanly` stays false here — this is the genuine
+    // such. `turnCompletedCleanly` stays false here - this is the genuine
     // failure case the post-completion carve-out below must NOT swallow.
     expect(
       classifyChatRunCloseStatus({
@@ -422,7 +422,7 @@ describe('classifyChatRunCloseStatus (#1451 close-handler classification)', () =
   // closes stdin and sets `turnCompletedCleanly`), and only THEN a
   // SessionEnd hook (e.g. the Honcho memory plugin) exits non-zero,
   // which makes the `claude` process itself exit with code 1. That
-  // post-result exit is a teardown artifact, not a generation failure —
+  // post-result exit is a teardown artifact, not a generation failure -
   // the deliverable was already produced. This is the same family as
   // the `acpForcedShutdown` and `artifactQuietShutdown` carve-outs:
   // "the work completed; the odd exit is teardown noise."
@@ -470,7 +470,7 @@ describe('classifyChatRunCloseStatus (#1451 close-handler classification)', () =
     // Reproduction of the project-card bug (project c92897e1): the CLI
     // exited 1 during teardown AFTER the HTML artifact was written with a
     // successful tool_result. The deliverable exists on disk, so the run
-    // must report succeeded — not a red `failed` card — even though the
+    // must report succeeded - not a red `failed` card - even though the
     // turn-completed signal was not captured for that run.
     expect(
       classifyChatRunCloseStatus({
@@ -497,7 +497,7 @@ describe('classifyChatRunCloseStatus (#1451 close-handler classification)', () =
     // CRITICAL regression guard. The artifact carve-out is exit-code-only.
     // An external kill / OOM / container shutdown after an artifact write
     // (code === null, SIGKILL/SIGTERM, no daemon quiet-period flag) must
-    // stay failed — an artifact must NOT flip a signal kill to succeeded.
+    // stay failed - an artifact must NOT flip a signal kill to succeeded.
     expect(
       classifyChatRunCloseStatus({
         ...base,
@@ -608,9 +608,9 @@ describe('applyClaudeStreamJsonRunBookkeeping', () => {
 
   it('closes stdin without recording clean completion when usage reports an error termination', () => {
     // Real Claude CLI error terminations (error_during_execution,
-    // error_max_turns, resume failures — the #4275 fixture family) emit a
+    // error_max_turns, resume failures - the #4275 fixture family) emit a
     // result frame with is_error true and stop_reason null. The turn IS over,
-    // so stdin must close — but it did not complete cleanly: marking it clean
+    // so stdin must close - but it did not complete cleanly: marking it clean
     // lets classifyChatRunCloseStatus translate the CLI's exit code 1 into
     // 'succeeded' and the run fails silently with no error surfaced.
     const run = {

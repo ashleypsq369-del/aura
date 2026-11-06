@@ -18,10 +18,10 @@ import {
  * 而注入源没查清、可见文本路径上又没有兜底剥离)。
  *
  * 所以下面这些「哪一层赢」的分层规格**暂时全部退化成同一个期望:关**。
- * 分层逻辑本身没删 —— 要重新启用时,把这些用例的期望改回去即可,原来的分层表还在
+ * 分层逻辑本身没删 -- 要重新启用时,把这些用例的期望改回去即可,原来的分层表还在
  * 源文件的 doc 注释里。
  */
-describe('critique rollout flag resolver (Phase 15) —— 已下线,四层一律关', () => {
+describe('critique rollout flag resolver (Phase 15) -- 已下线,四层一律关', () => {
   it('skill opt-out always wins, even on M3 global rollout', () => {
     expect(
       isCritiqueEnabled({
@@ -137,7 +137,7 @@ describe('critique rollout flag resolver (Phase 15) —— 已下线,四层一�
   });
 
   it('parseEnvEnabled distinguishes truthy / falsy / missing', () => {
-    // 这是**纯解析函数**,和「评审剧场下线」无关 —— 它只负责把环境变量读成三态
+    // 这是**纯解析函数**,和「评审剧场下线」无关 -- 它只负责把环境变量读成三态
     expect(parseEnvEnabled('1')).toBe(true);
     expect(parseEnvEnabled('true')).toBe(true);
     expect(parseEnvEnabled('YES')).toBe(true);

@@ -44,7 +44,7 @@ const DECOY_FIXTURE = `<!doctype html><html><body>
 <button id="cta" onclick="window.__accepted = true">Continue</button>
 <script>window.__accepted = false;</script></body></html>`;
 
-// Consent UI offering reject first — the sweep must never take that path.
+// Consent UI offering reject first - the sweep must never take that path.
 const REJECT_FIRST_FIXTURE = `<!doctype html><html><body>
 <div class="cky-consent-bar">
   <p>We use cookies to improve your experience</p>

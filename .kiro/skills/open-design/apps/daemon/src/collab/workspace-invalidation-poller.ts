@@ -1,4 +1,4 @@
-// Collab realtime hop-2 — daemon-side change source for the WORKSPACE-scoped
+// Collab realtime hop-2 - daemon-side change source for the WORKSPACE-scoped
 // thin invalidation events (`/api/workspace/events`).
 //
 // The daemon already learns cross-user workspace changes by reading Vela (team
@@ -66,7 +66,7 @@ export interface WorkspaceInvalidationPollerDeps {
 const DEFAULT_POLL_INTERVAL_MS = 15_000;
 const DEFAULT_RECOVERY_FLOOR_INTERVAL_MS = 30_000;
 
-/** Stable signature of the workspace context — any change to these fields is a
+/** Stable signature of the workspace context - any change to these fields is a
  *  meaningful `workspace-context-changed`. Whole-object stringify is fine here:
  *  the context is small and we only need change-detection, not a minimal diff. */
 function contextSignature(context: WorkspaceCollabContext | null): string {
@@ -234,7 +234,7 @@ export function createWorkspaceInvalidationPoller(
         return null;
       }),
     ]);
-    // A transient read failure returns null — keep the last baseline rather than
+    // A transient read failure returns null - keep the last baseline rather than
     // emitting a spurious "changed" or clearing the view.
     if (projects) {
       teamProjectsSig = emitIfChanged(teamProjectsSig, teamProjectsSignature(projects), {

@@ -3,12 +3,12 @@
 // for the rule; the apply pipeline must never touch the table directly.
 //
 // Phase 1 ships:
-//   - createSnapshot()  — INSERT a fresh row, stamping expires_at via the
+//   - createSnapshot()  - INSERT a fresh row, stamping expires_at via the
 //     PB2 unreferenced TTL knob.
-//   - getSnapshot()     — read by id.
-//   - linkSnapshotToRun() — once a run starts off the snapshot, pin
+//   - getSnapshot()     - read by id.
+//   - linkSnapshotToRun() - once a run starts off the snapshot, pin
 //     expires_at = NULL and update run_id (the snapshot is now referenced).
-//   - markSnapshotStale() — `od plugin doctor` flips status='stale' after a
+//   - markSnapshotStale() - `od plugin doctor` flips status='stale' after a
 //     plugin upgrade. We never rewrite the resolved_context_json, so historic
 //     reproducibility wins over freshness.
 
@@ -168,7 +168,7 @@ export function linkSnapshotToRun(db: SqliteDb, snapshotId: string, runId: strin
 // Pin a snapshot to a project row. Mirrors `linkSnapshotToRun` but
 // updates `projects.applied_plugin_snapshot_id` (added by `migratePlugins`)
 // and also clears `expires_at` because a project-pinned snapshot is now
-// referenced (PB2 reproducibility-first). Idempotent — re-linking the
+// referenced (PB2 reproducibility-first). Idempotent - re-linking the
 // same id is a no-op.
 export function linkSnapshotToProject(db: SqliteDb, snapshotId: string, projectId: string): void {
   db.prepare(
@@ -267,7 +267,7 @@ export interface PruneExpiredOptions {
   // Does NOT touch rows referenced by a Run or StrategyTaskExecution;
   // the `retentionDays` knob below is the only way to reach Run rows.
   before?: number;
-  // Plan §3.M1 / spec PB2 / §16 Phase 5 — operator-opt-in
+  // Plan §3.M1 / spec PB2 / §16 Phase 5 - operator-opt-in
   // referenced-row TTL. When set, snapshots are eligible for deletion
   // even after they have been linked to a run / conversation / project,
   // provided two conditions:
@@ -325,7 +325,7 @@ export function pruneExpiredSnapshots(
         .all(options.before) as Array<{ id: string }>)
     : [];
 
-  // Plan §3.M1 — referenced-row TTL.
+  // Plan §3.M1 - referenced-row TTL.
   //
   // Pull every snapshot whose `applied_at` is older than
   // `now - retentionDays * 86_400_000` and whose `project_id` no
@@ -348,7 +348,7 @@ export function pruneExpiredSnapshots(
   }
 
   const ids = [...expiredIds, ...beforeIds, ...retentionIds].map((r) => r.id);
-  // Dedupe — a row might match both expires_at and retentionDays.
+  // Dedupe - a row might match both expires_at and retentionDays.
   const unique = Array.from(new Set(ids));
   if (unique.length === 0) return { removed: 0, ids: [] };
   const placeholders = unique.map(() => '?').join(', ');

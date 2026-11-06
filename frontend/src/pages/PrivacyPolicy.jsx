@@ -1,5 +1,5 @@
-/**
- * PrivacyPolicy.jsx — Project Aura Privacy Policy
+﻿/**
+ * PrivacyPolicy.jsx - Project Aura Privacy Policy
  * Public route: /privacy
  */
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ const SECTIONS = [
   {
     icon: Database, color: '#0891b2',
     title: '1. What Data We Collect',
-    body: `We collect: (a) Account information — name, email, phone, username, role; (b) Health data — symptoms, vitals, medications, assessments, care preferences; (c) Usage data — pages visited, features used, timestamps; (d) Device data — browser type, IP address, operating system. We only collect data necessary to provide care coordination services.`,
+    body: `We collect: (a) Account information - name, email, phone, username, role; (b) Health data - symptoms, vitals, medications, assessments, care preferences; (c) Usage data - pages visited, features used, timestamps; (d) Device data - browser type, IP address, operating system. We only collect data necessary to provide care coordination services.`,
   },
   {
     icon: Eye, color: '#0d9488',
@@ -20,7 +20,7 @@ const SECTIONS = [
   {
     icon: Shield, color: '#7c3aed',
     title: '3. Data Storage & Security',
-    body: `All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Health data is stored on secure servers compliant with HIPAA-equivalent standards. We implement role-based access control — clinicians see only their patients' data, family members see only their linked patient. Regular security audits are conducted. In the event of a data breach, we will notify affected users within 72 hours.`,
+    body: `All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Health data is stored on secure servers compliant with HIPAA-equivalent standards. We implement role-based access control - clinicians see only their patients' data, family members see only their linked patient. Regular security audits are conducted. In the event of a data breach, we will notify affected users within 72 hours.`,
   },
   {
     icon: Globe, color: '#059669',
@@ -35,7 +35,7 @@ const SECTIONS = [
   {
     icon: Lock, color: '#e11d48',
     title: '6. Your Rights',
-    body: `You have the right to: (a) Access — request a copy of your personal data; (b) Correction — update inaccurate information; (c) Deletion — request deletion of your data (subject to clinical retention requirements); (d) Portability — receive your data in a structured format; (e) Objection — object to certain processing activities; (f) Withdrawal of consent — stop sharing your data at any time. To exercise these rights, contact: privacy@projectaura.gh`,
+    body: `You have the right to: (a) Access - request a copy of your personal data; (b) Correction - update inaccurate information; (c) Deletion - request deletion of your data (subject to clinical retention requirements); (d) Portability - receive your data in a structured format; (e) Objection - object to certain processing activities; (f) Withdrawal of consent - stop sharing your data at any time. To exercise these rights, contact: privacy@projectaura.gh`,
   },
   {
     icon: Trash2, color: '#64748b',

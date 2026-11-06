@@ -608,7 +608,7 @@ describe('project preview containment routes', () => {
     const html = await bridged.text();
     expect(html.split('data-od-preview-build-focus').length - 1).toBe(1);
     expect(html).toContain('od:preview-build-focus');
-    // Asking for one bridge must not hand out the others — the observability
+    // Asking for one bridge must not hand out the others - the observability
     // bridge in particular reports page errors into a host-wide buffer.
     expect(html).not.toContain('data-od-preview-observability');
     expect(html).not.toContain('data-od-url-scroll-bridge');

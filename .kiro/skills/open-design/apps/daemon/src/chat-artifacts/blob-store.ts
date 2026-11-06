@@ -2,7 +2,7 @@
 //
 // DATA ROOT CONTRACT (see the repository AGENTS.md "Daemon data directory
 // contract"): this module has NO default and NO cwd fallback. The caller must
-// hand it the already-resolved daemon data root — in production that is
+// hand it the already-resolved daemon data root - in production that is
 // `RUNTIME_DATA_DIR` from `server.ts`, and nothing else. Introducing a default
 // here would create a second data root, which the contract forbids.
 //
@@ -40,7 +40,7 @@ export interface TempEntry {
 }
 
 export interface ChatArtifactBlobStore {
-  /** Absolute blob root. Internal diagnostics only — never serialized out. */
+  /** Absolute blob root. Internal diagnostics only - never serialized out. */
   readonly root: string;
   newTempKey(): string;
   storageKeyFor(digest: string): string;
@@ -281,7 +281,7 @@ const storeCache = new Map<string, ChatArtifactBlobStore>();
  * Build (or reuse) the blob store rooted at an explicit daemon data root.
  *
  * `dataDir` is required and must be absolute. There is deliberately no
- * `process.env.OD_DATA_DIR` read and no cwd fallback here — the daemon
+ * `process.env.OD_DATA_DIR` read and no cwd fallback here - the daemon
  * resolves its data root exactly once, in `server.ts`, and every path derives
  * from that single truth source.
  */

@@ -49,7 +49,7 @@ retrieval:
 
 # Coordinated Data Views
 
-Some data has more than one natural representation. A set of locations has both a map and a list. A dependency network has both a diagram and a node table. A dataset has both a chart and a raw table. When both representations are genuinely useful for different tasks, show them simultaneously and keep them synchronized — this is called a coordinated view.
+Some data has more than one natural representation. A set of locations has both a map and a list. A dependency network has both a diagram and a node table. A dataset has both a chart and a raw table. When both representations are genuinely useful for different tasks, show them simultaneously and keep them synchronized - this is called a coordinated view.
 
 The core rule: **any selection or highlight made in one view is immediately reflected in the other.**
 
@@ -59,8 +59,8 @@ The core rule: **any selection or highlight made in one view is immediately refl
 
 Use coordinated views when:
 
-1. The two representations serve different tasks — the table is for finding/scanning; the visual view is for understanding arrangement or relationships
-2. Users will frequently move between the two — not just glance at one occasionally
+1. The two representations serve different tasks - the table is for finding/scanning; the visual view is for understanding arrangement or relationships
+2. Users will frequently move between the two - not just glance at one occasionally
 3. The dataset is large enough that the visual view alone doesn't identify individual items, and the table alone doesn't communicate how they relate
 
 Do not add a coordinated view purely for visual richness. If users only ever look at the table and ignore the visual view, it adds complexity without benefit.
@@ -114,9 +114,9 @@ Both renderers import from the same source. A shared legend appears once in the 
 
 The split between views depends on which is primary:
 
-**Table-primary (exploration, data management):** Table takes 60–70% of the width; visual view is a companion panel on the right or bottom.
+**Table-primary (exploration, data management):** Table takes 60-70% of the width; visual view is a companion panel on the right or bottom.
 
-**Visual-primary (understanding arrangement and relationships):** Visual view takes 60–70%; table is a supporting panel.
+**Visual-primary (understanding arrangement and relationships):** Visual view takes 60-70%; table is a supporting panel.
 
 **Equal weight:** A 50/50 split with a draggable divider. Persist the user's preferred split.
 
@@ -143,10 +143,10 @@ Build a calendar or matrix from one unit, a square cell plus one gap, and put ev
 Controls that affect only the visual representation belong in the visual view panel, not in the table area.
 
 Common visual-specific controls:
-- **Zoom / pan** — navigation (usually handled by the rendering library)
-- **Layer opacity** — reveal overlapping regions on a dense map or diagram
-- **Layer toggle** — show/hide categories or types
-- **Reset view** — fit all elements into view; extent reset for maps
+- **Zoom / pan** - navigation (usually handled by the rendering library)
+- **Layer opacity** - reveal overlapping regions on a dense map or diagram
+- **Layer toggle** - show/hide categories or types
+- **Reset view** - fit all elements into view; extent reset for maps
 
 These controls do not affect the table. Do not put them in the table toolbar.
 
@@ -158,7 +158,7 @@ Controls that affect the shared data (filters, time range, category selection) b
 
 These are distinct states:
 
-**Highlight (hover):** Transient, shown while the pointer is over an element. Does not persist. Both views show a subtle version (e.g. 50% opacity overlay, or a faint row background). No interaction required to clear it — moving the pointer clears it.
+**Highlight (hover):** Transient, shown while the pointer is over an element. Does not persist. Both views show a subtle version (e.g. 50% opacity overlay, or a faint row background). No interaction required to clear it - moving the pointer clears it.
 
 **Selection (click):** Persistent until explicitly cleared. Both views show a strong, unambiguous visual (e.g. bright border, saturated colour, selected row background). Cleared by clicking elsewhere or pressing Escape.
 
@@ -176,16 +176,16 @@ A panel that explains or summarises the data on screen is a coordinated view, no
 
 Coordinated views can trigger expensive re-renders if not carefully managed.
 
-- Debounce hover highlights — do not update on every pointer-move event, only when the target element changes
+- Debounce hover highlights - do not update on every pointer-move event, only when the target element changes
 - Use stable identity for items (a consistent ID) so React (or equivalent) can reconcile without re-creating elements
 - For large datasets (1000+ items), virtualize the table regardless of the visual view
-- For canvas- or WebGL-rendered views, avoid re-creating elements on each highlight — update style properties on the existing ones instead
+- For canvas- or WebGL-rendered views, avoid re-creating elements on each highlight - update style properties on the existing ones instead
 
 ---
 
 ## Review Checklist
 
-- [ ] Is selection state shared between views via a single store — not duplicated?
+- [ ] Is selection state shared between views via a single store - not duplicated?
 - [ ] Does clicking a row highlight the corresponding visual element, and vice versa?
 - [ ] Does clicking a visual element scroll the table to the corresponding row?
 - [ ] Are colour assignments identical in both views, defined from a single source?

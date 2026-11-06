@@ -63,7 +63,7 @@ function readByokProviderProtocol(provider: unknown): string | null {
 // daemon-side run_created/run_finished must stamp it at capture time or the
 // highest-value generation events stay unjoinable against the AMR project's
 // `app_user_id`. Env-configured auth (VELA_RUNTIME_KEY/VELA_LINK_URL) is
-// authorized but carries no profile, so it yields no stamp — only
+// authorized but carries no profile, so it yields no stamp - only
 // file-backed sign-in knows the account id.
 export function amrUserIdForRunAnalytics(
   status: VelaLoginStatus | null,
@@ -542,8 +542,8 @@ interface UsageCacheFields {
 
 // Single source of truth for the provider/runtime cache-token alias matrix.
 // Both the last-call (reverse) scan and the first-call (forward) scan extract
-// usage through this so their effective-input denominators — and therefore
-// `cache_hit_ratio` vs `first_call_cache_hit_ratio` — can never drift apart as
+// usage through this so their effective-input denominators - and therefore
+// `cache_hit_ratio` vs `first_call_cache_hit_ratio` - can never drift apart as
 // new aliases are added.
 function extractUsageCacheFields(usage: Record<string, unknown>): UsageCacheFields {
   const inputTokens = firstNumber(usage, [
@@ -582,7 +582,7 @@ function extractUsageCacheFields(usage: Record<string, unknown>): UsageCacheFiel
     normalizedCachedReadInputTokens ??
     openAiCachedInputTokens;
   // Anthropic-only creation aliases (additive). Do NOT include
-  // `cache_creation_tokens` / `cacheCreationTokens` here — those are the
+  // `cache_creation_tokens` / `cacheCreationTokens` here - those are the
   // OpenAI-like family used by ACP formatUsage and must stay inclusive.
   const anthropicCacheCreationInputTokens = firstNumber(
     usage,
@@ -737,7 +737,7 @@ export function scanRunEventsForUsageAnalytics(
   }
   // Provider-usage is true for any real token field (including thought/cache-only
   // ACP frames). Primary usage is complete only once both input and output are
-  // known — a trailing output-only or input-only frame must keep the reverse
+  // known - a trailing output-only or input-only frame must keep the reverse
   // scan open so earlier frames can fill the missing primary fields (and cache).
   // total alone is not enough to stop; providers often emit it without the pair.
   // Cache counters are independent of the primary pair: a newer complete
@@ -999,7 +999,7 @@ export function scanRunEventsForUsageAnalytics(
 
 /**
  * Canonical tool families shipped to PostHog. Raw ACP/CLI tool names are
- * never forwarded — only this small allowlist (plus `other`).
+ * never forwarded - only this small allowlist (plus `other`).
  */
 const TOOL_ANALYTICS_FAMILIES = [
   'Write',
@@ -1394,7 +1394,7 @@ export function summarizeRunTimingAnalytics(args: {
   // `firstVisibleOutputAt` is stamped at the daemon's emission choke point, so
   // it exists whenever the run put anything on screen and is >= the first token
   // by construction. It is absent only when a run produced a token that the
-  // title-marker stripper or the role-marker guard withheld forever — no
+  // title-marker stripper or the role-marker guard withheld forever - no
   // measurement to report, so fall back to the first token rather than dropping
   // the field. The fallback cannot flatten a real gap: any run with visible
   // output carries its own stamp and never reaches it.

@@ -1,4 +1,4 @@
-// Phase 6/7 entry slice — design-extract atom impl.
+// Phase 6/7 entry slice - design-extract atom impl.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';

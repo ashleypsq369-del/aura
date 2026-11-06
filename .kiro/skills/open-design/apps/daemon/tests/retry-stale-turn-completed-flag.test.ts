@@ -10,7 +10,7 @@
 //
 // Timeline exercised here:
 //   Attempt 1: Claude emits a clean-but-EMPTY turn (stop_reason 'end_turn',
-//     no content) → run.turnCompletedCleanly = true — then HANGS. The
+//     no content) → run.turnCompletedCleanly = true - then HANGS. The
 //     inactivity watchdog fails the attempt (retryable no-output timeout) →
 //     same-run retry.
 //   Attempt 2: the CLI crashes (exit 1, no clean turn, no output).
@@ -81,7 +81,7 @@ describe('same-run retry stale turnCompletedCleanly (review red spec)', () => {
     delete process.env.OPEN_DESIGN_TELEMETRY_RELAY_URL;
     // Trip the no-output watchdog after the empty clean turn. The window must
     // comfortably outlast the time it takes the daemon to parse attempt 1's
-    // `turn_end` and set run.turnCompletedCleanly — otherwise (e.g. a cold
+    // `turn_end` and set run.turnCompletedCleanly - otherwise (e.g. a cold
     // module import) the watchdog can fire first, the flag never gets set, and
     // the run fails for the wrong reason (a false green that hides a regression).
     process.env.OD_CHAT_RUN_INACTIVITY_TIMEOUT_MS = '1200';
@@ -133,7 +133,7 @@ if (attempts === 0) {
   }));
   setTimeout(() => process.exit(0), 60000);
 } else {
-  // Retry attempt: crash mid-run — no clean turn, no output, exit 1.
+  // Retry attempt: crash mid-run - no clean turn, no output, exit 1.
   console.log(JSON.stringify({ type: 'system', subtype: 'init', model: 'claude-stale-flag-test' }));
   setTimeout(() => process.exit(1), 20);
 }

@@ -258,7 +258,7 @@ const WINDOWS_COMMAND_NOT_FOUND_EXIT = 9009;
 // Exit status alone cannot make this call on Windows. A global npm wrapper is
 // a `.CMD`, which OpenDesign runs through `cmd.exe /d /s /c`; when the package
 // behind it has been uninstalled, cmd.exe starts, node starts, and only then
-// does node fail to load the script the wrapper names — a plain exit 1 with
+// does node fail to load the script the wrapper names - a plain exit 1 with
 // MODULE_NOT_FOUND on stderr. Nothing along that chain failed to *start*, so
 // none of the POSIX signals (ENOENT, 126, 127) ever appear, and the wrapper
 // looks indistinguishable from a healthy CLI that dislikes `--version`.
@@ -266,7 +266,7 @@ const WINDOWS_COMMAND_NOT_FOUND_EXIT = 9009;
 // So match the launcher's own vocabulary instead, and only that: node's
 // missing-module report, and cmd.exe / PowerShell's missing-command and
 // missing-path reports. A non-zero exit on its own stays a real answer from
-// the right binary — otherwise a CLI that merely rejects its arguments would
+// the right binary - otherwise a CLI that merely rejects its arguments would
 // be abandoned in favour of some other install of itself.
 //
 // `isCliNotInstalledText` in run-failure-classification.ts reads similar
@@ -312,7 +312,7 @@ function launcherTargetMissing(err: unknown): boolean {
  * `err.code` (`'ENOENT'`, `'EACCES'`, `'ENOTDIR'`) and non-zero exit
  * codes with a *numeric* `err.code` equal to the exit status, so those
  * two arms are unambiguous. Windows wrappers are the case they cannot
- * decide on their own — see `launcherTargetMissing` above.
+ * decide on their own - see `launcherTargetMissing` above.
  *
  * Exported because half of what it decides cannot be reached from a test that
  * spawns a fixture. `9009` and cmd.exe / PowerShell's wording only ever come
@@ -496,7 +496,7 @@ async function probeCapabilities(
     // Scan BOTH streams. Which one carries `--help` is a per-CLI accident of the
     // arg parser: OpenCode writes its entire help to stderr and leaves stdout
     // empty, so a stdout-only scan silently resolved every one of its flags to
-    // `false`. That made the whole capability mechanism dead for OpenCode —
+    // `false`. That made the whole capability mechanism dead for OpenCode -
     // `--dangerously-skip-permissions` was never appended even on builds that
     // support it, and `--dir` (which pins the workspace to the project so the
     // agent stops adopting the enclosing git root) never applied either.
@@ -525,7 +525,7 @@ const HIDDEN_FLAG_PROBE_VALUE = '__od_capability_probe__';
  * ("option '--x <v>' argument '…' is invalid…"). Both exit non-zero before the
  * agent contacts a model, so this costs one spawn and no tokens.
  *
- * Support is only recorded on positive evidence — the failure text has to name
+ * Support is only recorded on positive evidence - the failure text has to name
  * the flag and must not be an unknown-option complaint. A timeout, a missing
  * binary, or any wording this probe does not recognise leaves the capability
  * false, so `buildArgs` keeps the flag off rather than risking a spawn that
@@ -610,8 +610,8 @@ async function probe(
   let outcome = await probeVersionAtPath(def, launch.launchPath, probeEnv);
   // Resolving a name on PATH only proves a file exists there, never that it
   // runs. A directory that ranks earlier in the search order can hold a
-  // wrapper orphaned by a half-finished `npm i -g` — the shim survives, the
-  // package it points at does not — and stopping at that first hit hides a
+  // wrapper orphaned by a half-finished `npm i -g` - the shim survives, the
+  // package it points at does not - and stopping at that first hit hides a
   // perfectly good CLI of the same name further down the list. Walk past
   // every candidate that cannot be executed before declaring the agent
   // unusable. Only spawn-level failures advance the walk: a version that
@@ -630,7 +630,7 @@ async function probe(
     });
     // No candidate left, or the resolver handed back something already
     // proven broken (an explicit override or packaged built-in, which are
-    // deliberately not skippable) — either way there is nothing new to try.
+    // deliberately not skippable) - either way there is nothing new to try.
     if (!next.selectedPath || !next.launchPath) break;
     if (attemptedPaths.includes(next.selectedPath)) break;
     launch = {
@@ -656,8 +656,8 @@ async function probe(
   // Publish every candidate this pass proved cannot be launched, so chat, the
   // connection test, and every other spawn site skip them instead of redoing
   // the naive first-hit-on-PATH walk and landing back on the shim detection
-  // rejected. This restores the invariant stated above — detection probes the
-  // exact path the runtime will spawn — which the candidate walk would
+  // rejected. This restores the invariant stated above - detection probes the
+  // exact path the runtime will spawn - which the candidate walk would
   // otherwise have broken. Recording the dead paths rather than the winner
   // leaves PATH order in charge of every candidate still standing.
   for (const attempted of attemptedPaths) {
@@ -715,7 +715,7 @@ async function probe(
       ? buildVersionDiagnostic(def, outcome.version)
       : null;
   // The version probe must finish first (it gates availability), but the
-  // three post-version probes are independent reads — run them concurrently
+  // three post-version probes are independent reads - run them concurrently
   // so a single agent's detection wall is max(help, models, auth) ≈ 5s rather
   // than the sum ≈ 15s. `--help` capabilities are cached on `agentCapabilities`
   // for buildArgs to consult.
@@ -799,7 +799,7 @@ function stripFns(
   // probe-or-spawn-only metadata and shouldn't bleed into the API response
   // either.
   // Runtime timeout fields are spawn-time hints for chat-run watchdogs and
-  // are not part of the public AgentInfo contract — strip them here so the
+  // are not part of the public AgentInfo contract - strip them here so the
   // runtime registry stays the only consumer.
   const {
     buildArgs,
@@ -831,9 +831,9 @@ export async function detectAgent(
     return await probe(def, configuredEnv);
   } catch {
     // Fault isolation (issue #2297): one adapter's probe blowing up
-    // — e.g. a synchronous filesystem throw during PATH walking on a
+    // - e.g. a synchronous filesystem throw during PATH walking on a
     // packaged Windows daemon, or an async rejection from one of the
-    // post-launch probes — must not collapse the whole agent picker.
+    // post-launch probes - must not collapse the whole agent picker.
     // Without this guard the bare `Promise.all` rejected and the
     // `/api/agents` catch arm returned `[]`, so the UI silently lost
     // every CLI option and fell back to BYOK / Cloud only.

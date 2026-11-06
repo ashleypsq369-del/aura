@@ -47,7 +47,7 @@ export async function fetchRobotsRules(
     if (!res.ok) return { status: "unavailable" };
     body = await res.text();
     // A bot wall answers 200 with HTML, which parses to no rules and would read
-    // as "nothing disallowed" — the inversion of what the site is saying.
+    // as "nothing disallowed" - the inversion of what the site is saying.
     if (looksLikeHtml(body)) return { status: "unavailable" };
   } catch {
     return { status: "unavailable" };

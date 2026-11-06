@@ -1,4 +1,4 @@
-// Phase 6 entry slice / spec §10 / §21.3.1 — figma-extract atom.
+// Phase 6 entry slice / spec §10 / §21.3.1 - figma-extract atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/figma-extract/.
 // The runner pulls a Figma file's node tree via the Figma REST API
@@ -76,7 +76,7 @@ export interface FigmaExtractOptions {
   // OAuth bearer token. Forwarded as 'Authorization: Bearer <t>'.
   // The atom never persists it.
   token: string;
-  // Optional pluggable fetch — tests pass a stub that returns
+  // Optional pluggable fetch - tests pass a stub that returns
   // canned JSON. Defaults to globalThis.fetch.
   fetchFn?: typeof fetch;
   // Offline mode: skip the GET /v1/images call (assets/ stays empty).
@@ -108,7 +108,7 @@ export async function runFigmaExtract(opts: FigmaExtractOptions): Promise<FigmaE
   const fetchFn = opts.fetchFn ?? globalThis.fetch;
   if (!fetchFn) throw new Error('figma-extract: no fetch implementation available');
 
-  // 1. GET /v1/files/<key> — full document tree.
+  // 1. GET /v1/files/<key> - full document tree.
   const url = `https://api.figma.com/v1/files/${encodeURIComponent(fileKey)}`;
   const res = await fetchFn(url, {
     headers: { 'Authorization': `Bearer ${opts.token}` },
@@ -143,7 +143,7 @@ export async function runFigmaExtract(opts: FigmaExtractOptions): Promise<FigmaE
   await fsp.writeFile(path.join(figmaDir, 'tree.json'),   JSON.stringify(tree,   null, 2) + '\n', 'utf8');
   await fsp.writeFile(path.join(figmaDir, 'tokens.json'), JSON.stringify(tokens, null, 2) + '\n', 'utf8');
 
-  // 3. Asset rasterisation pass — GET /v1/images/<key>?ids=<ids>&format=<fmt>.
+  // 3. Asset rasterisation pass - GET /v1/images/<key>?ids=<ids>&format=<fmt>.
   //
   // Honoured only when offlineAssets !== true. Spec §10.3.1: asset
   // exports cover every leaf node the file marks for export; v1
@@ -279,7 +279,7 @@ interface FigmaApiFileResponse {
 
 // Shared with the offline `.fig` decoder (apps/daemon/src/figma/*). The
 // offline decoder rebuilds a `FigmaApiNode` document from the kiwi node-tree
-// so `walkNode` + `liftTokens` apply unchanged — both the REST and offline
+// so `walkNode` + `liftTokens` apply unchanged - both the REST and offline
 // paths terminate in the same `figma/{tree,tokens,meta}.json` snapshot.
 export interface FigmaApiNode {
   id:        string;

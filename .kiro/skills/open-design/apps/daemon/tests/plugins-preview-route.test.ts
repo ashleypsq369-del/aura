@@ -1,4 +1,4 @@
-// Plan §6 Phase 2B / spec §11.6 / §9.2 — `/api/plugins/:id/preview`
+// Plan §6 Phase 2B / spec §11.6 / §9.2 - `/api/plugins/:id/preview`
 // and `/api/plugins/:id/example/:name` sandbox envelope.
 //
 // Tests that:
@@ -90,7 +90,7 @@ beforeEach(async () => {
   server = started.server;
   baseUrl = started.url;
 
-  // Install via SSE — fully drain the stream so the success event
+  // Install via SSE - fully drain the stream so the success event
   // (which is what writes the installed_plugins row) lands before
   // we hit GET /api/plugins/:id.
   const installResp = await fetch(`${baseUrl}/api/plugins/install`, {
@@ -129,7 +129,7 @@ afterEach(async () => {
     db.prepare('DELETE FROM installed_plugins WHERE id = ?').run(PLUGIN_ID);
     db.close();
   } catch {
-    // ignore — the DB might not exist in failure modes
+    // ignore - the DB might not exist in failure modes
   }
 
   await rm(pluginRoot, { recursive: true, force: true });

@@ -1,13 +1,13 @@
-// GenUI surface registry — high-level orchestration over store + events
+// GenUI surface registry - high-level orchestration over store + events
 // (spec §10.3). Houses:
 //
-//   - `schemaDigest()` — stable hex of a JSON Schema (drives F8 cache invalidation)
-//   - `requestOrReuseSurface()` — F8 cache lookup → either reuse + emit a
+//   - `schemaDigest()` - stable hex of a JSON Schema (drives F8 cache invalidation)
+//   - `requestOrReuseSurface()` - F8 cache lookup → either reuse + emit a
 //     `genui_surface_response { respondedBy: 'cache' }` (no broadcast of a
 //     new request) or insert a `pending` row + emit a request event.
-//   - `respondSurface()` — write user / agent / auto answer, emit response
+//   - `respondSurface()` - write user / agent / auto answer, emit response
 //     + state-synced events.
-//   - `revokeSurface()` — flip cross-conversation rows to `invalidated`.
+//   - `revokeSurface()` - flip cross-conversation rows to `invalidated`.
 //
 // All side effects are concentrated here; the underlying SQLite writes go
 // through `store.ts`, the SSE / ND-JSON event emission goes through the

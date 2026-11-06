@@ -168,7 +168,7 @@ async function readComposioLogoBody(
     try {
       await reader.cancel();
     } catch {
-      // reader already closed / errored — nothing to release
+      // reader already closed / errored - nothing to release
     }
   }
   return Buffer.concat(chunks.map((chunk) => Buffer.from(chunk)), totalBytes);

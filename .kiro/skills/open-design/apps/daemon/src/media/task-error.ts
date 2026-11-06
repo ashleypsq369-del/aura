@@ -9,7 +9,7 @@ import type { MediaTaskError } from './tasks.js';
  * with, so anything the producer proved must survive into the snapshot: the
  * stable `code` triage keys on, the optional `subject` naming what a safety
  * policy objected to, and `retryable` so the UI can stop inviting a retry that
- * cannot succeed. Absent fields stay absent rather than being defaulted —
+ * cannot succeed. Absent fields stay absent rather than being defaulted -
  * `retryable: false` invented here would tell a user a transient outage is
  * permanent.
  *
@@ -21,8 +21,8 @@ import type { MediaTaskError } from './tasks.js';
  *
  * Lives outside `routes/media.ts` because it is a pure function about media
  * failures, not about HTTP, and callers (tests included) should not have to
- * load the whole route module — and its Express/SQLite/blob-store dependency
- * graph — to classify one error.
+ * load the whole route module - and its Express/SQLite/blob-store dependency
+ * graph - to classify one error.
  */
 export function mediaTaskErrorFromFailure(
   err: any,

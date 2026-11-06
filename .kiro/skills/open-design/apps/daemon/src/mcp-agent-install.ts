@@ -4,7 +4,7 @@
 // bootstrap that calls it) wires OpenDesign's stdio MCP server into a
 // coding agent's own configuration. Each agent stores MCP servers
 // differently, so this module maps a single resolved launch spec
-// (command/args/env — the same shape buildMcpInstallPayload produces and
+// (command/args/env - the same shape buildMcpInstallPayload produces and
 // the Settings → MCP panel pastes) onto one of three registration
 // strategies:
 //
@@ -56,7 +56,7 @@ export function isAgentSlug(value: string): value is AgentSlug {
   return (AGENT_SLUGS as readonly string[]).includes(value);
 }
 
-/** The resolved stdio launch spec — mirrors the relevant fields of
+/** The resolved stdio launch spec - mirrors the relevant fields of
  *  McpInstallPayload (command/args/env). */
 export interface McpLaunchSpec {
   command: string;
@@ -67,7 +67,7 @@ export interface McpLaunchSpec {
 export interface PlanContext {
   /** Absolute home directory (os.homedir()). Injected for testability. */
   home: string;
-  /** Node platform — selects per-OS config paths (cline / trae). */
+  /** Node platform - selects per-OS config paths (cline / trae). */
   platform: NodeJS.Platform;
   /** MCP server name as it appears in the agent config. */
   serverName: string;
@@ -98,7 +98,7 @@ export interface JsonInstallPlan {
   entry: unknown;
 }
 
-/** Unverified format — print a snippet, never write. */
+/** Unverified format - print a snippet, never write. */
 export interface ManualInstallPlan {
   kind: 'manual';
   slug: AgentSlug;
@@ -139,7 +139,7 @@ function jsonEntry(
 }
 
 /**
- * Build the registration plan for one agent. Pure — all IO happens in the
+ * Build the registration plan for one agent. Pure - all IO happens in the
  * executor. Throws on an unknown slug so callers surface a clear error.
  */
 export function planAgentInstall(
@@ -397,7 +397,7 @@ function claudeDesktopConfigPath(home: string, platform: NodeJS.Platform): strin
   if (platform === 'darwin') {
     return path.join(home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json');
   }
-  // platform === 'win32' — the planAgentInstall case already guards
+  // platform === 'win32' - the planAgentInstall case already guards
   // against unsupported platforms before calling this helper.
   const appData = process.env.APPDATA ?? path.join(home, 'AppData', 'Roaming');
   return path.join(appData, 'Claude', 'claude_desktop_config.json');

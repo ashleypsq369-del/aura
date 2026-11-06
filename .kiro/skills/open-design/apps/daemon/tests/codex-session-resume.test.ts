@@ -23,7 +23,7 @@ import { clearToken, setToken } from '../src/mcp-tokens.js';
 //      turn start a fresh session re-seeded with the full transcript.
 //
 // On origin/main codex is not `resumesSessionViaCli`, so it always runs plain
-// `exec` and re-pays the whole transcript — turn-2 here would carry no
+// `exec` and re-pays the whole transcript - turn-2 here would carry no
 // `resume` and would include the prior reply, going red.
 
 type StartedServer = {
@@ -76,7 +76,7 @@ describe('codex native session resume', () => {
     // leak into later test files and make them suite-order dependent.
     // `writeMcpConfig` unconditionally overwrites to an empty server list and
     // `clearToken` is a documented no-op when the entry is absent, so neither
-    // needs to tolerate "nothing was written" — let a real teardown failure
+    // needs to tolerate "nothing was written" - let a real teardown failure
     // surface instead of silently degrading the isolation guarantee.
     const dataDir = process.env.OD_DATA_DIR;
     if (dataDir) {
@@ -108,13 +108,13 @@ describe('codex native session resume', () => {
 
     // Filter to this conversation's chat-turn `exec` calls (cwd points at its
     // project dir). codex is also used as the daemon's background memory-llm and
-    // for `login status` / `debug models` probes — those run from the repo root
+    // for `login status` / `debug models` probes - those run from the repo root
     // and must not be counted as chat turns.
     const runs = await readChatTurnExecs(logPath, conversationId);
     expect(runs).toHaveLength(2);
     const [create, resume] = runs as [ExecInvocation, ExecInvocation];
 
-    // Turn 1 is a fresh `exec` — no resume, no leaked id.
+    // Turn 1 is a fresh `exec` - no resume, no leaked id.
     expect(create.argv).toContain('exec');
     expect(create.argv).not.toContain('resume');
     expect(create.argv).not.toContain(THREAD);
@@ -154,7 +154,7 @@ describe('codex native session resume', () => {
     // Turn 2 resumes, but the rollout is gone (`no rollout found`). The daemon
     // must NOT surface an error: it clears the dead thread and TRANSPARENTLY
     // re-runs the same turn as a fresh `exec` (full transcript), within this one
-    // run. The user sees a succeeded turn — no "resend" prompt, no turn 3.
+    // run. The user sees a succeeded turn - no "resend" prompt, no turn 3.
     const turn2 = await sendRunAndWait(started.url, conversationId, 'second request');
     expect(turn2.status).toBe('succeeded');
 
@@ -235,7 +235,7 @@ describe('codex native session resume', () => {
     expect((await sendRunAndWait(started.url, conversationId, 'now claude', 'claude')).status)
       .toBe('succeeded');
     // Turn 3: codex returns. Its stored session is behind, so the daemon must
-    // start a fresh `exec` (and reseed the full transcript) — NOT resume the
+    // start a fresh `exec` (and reseed the full transcript) - NOT resume the
     // stale session and silently drop the intervening claude turn.
     expect((await sendRunAndWait(started.url, conversationId, 'codex again', 'codex')).status)
       .toBe('succeeded');
@@ -246,7 +246,7 @@ describe('codex native session resume', () => {
     expect(create.argv).not.toContain('resume');
     // The headline guard (issue raised by @nettee): after a different agent
     // completed a turn the codex session never saw, codex must NOT resume that
-    // stale session — it starts a fresh `exec` so the run is reseeded with the
+    // stale session - it starts a fresh `exec` so the run is reseeded with the
     // full transcript instead of silently dropping the intervening turn.
     expect(afterIntervening.argv).not.toContain('resume');
     expect(afterIntervening.argv[0]).toBe('exec');
@@ -257,7 +257,7 @@ describe('codex native session resume', () => {
   // directive reflects live OAuth Bearer validity, so keeping it in the cached
   // prefix churned the whole prompt-cache prefix (history included) whenever a
   // token expired mid-conversation. Now it must ride in the per-turn slice, i.e.
-  // be re-sent on EVERY turn — including a clean resume, which never re-sends the
+  // be re-sent on EVERY turn - including a clean resume, which never re-sends the
   // cached stable block. On origin/main the directive lived in the stable block,
   // so a clean resume dropped it and the turn-2 assertion below goes red.
   it('re-sends the connected-MCP directive in the per-turn slice on resume turns', async () => {
@@ -310,7 +310,7 @@ describe('codex native session resume', () => {
     expect(runs).toHaveLength(2);
     const [create, resume] = runs as [ExecInvocation, ExecInvocation];
 
-    const MCP_MARKER = 'External MCP servers — already authenticated';
+    const MCP_MARKER = 'External MCP servers - already authenticated';
     // A marker that only appears inside the cached stable block (daemonSystemPrompt).
     const STABLE_BLOCK_MARKER = '# Identity and workflow charter (background)';
 
@@ -568,7 +568,7 @@ async function waitForRun(url: string, runId: string): Promise<RunStatus> {
 
 // Chat-turn `exec` invocations for this conversation, in call order. Identified
 // by the chat turn's cwd (the project working dir, which contains the project
-// id) — this drops the background memory-llm exec (repo-root cwd) and the
+// id) - this drops the background memory-llm exec (repo-root cwd) and the
 // login/models probes. The cwd is set via the spawn, not an argv flag, and on a
 // resume turn there is no `-C` to key off, so cwd is the reliable discriminator.
 async function readChatTurnExecs(

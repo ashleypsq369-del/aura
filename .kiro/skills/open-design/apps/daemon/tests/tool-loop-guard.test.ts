@@ -60,7 +60,7 @@ describe('computeToolSignature', () => {
   });
 });
 
-describe('createToolLoopGuard — repeated-failure trigger', () => {
+describe('createToolLoopGuard - repeated-failure trigger', () => {
   it('warns when the same failing action repeats warnRepeat times', () => {
     const guard = createToolLoopGuard();
     const input = { command: 'python3 verify.py' };
@@ -259,7 +259,7 @@ describe('isReadOnlyShellCommand / isProgressSuccess', () => {
   });
 });
 
-describe('createToolLoopGuard — consecutive-errors trigger', () => {
+describe('createToolLoopGuard - consecutive-errors trigger', () => {
   it('warns after warnConsecutive different failing actions in a row', () => {
     const guard = createToolLoopGuard();
     let verdict = null;
@@ -287,7 +287,7 @@ describe('createToolLoopGuard — consecutive-errors trigger', () => {
   });
 });
 
-describe('createToolLoopGuard — latching and modes', () => {
+describe('createToolLoopGuard - latching and modes', () => {
   it('emits warn at most once, then escalates to halt once', () => {
     const guard = createToolLoopGuard({ mode: 'halt' });
     const input = { command: 'same' };

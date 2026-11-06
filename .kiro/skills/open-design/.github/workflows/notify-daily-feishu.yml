@@ -2,7 +2,7 @@ name: notify-daily-feishu
 
 # Every morning (09:00 Asia/Shanghai) build a beta package off main (the
 # development tip) by reusing release-beta, then post a Feishu card with download
-# links and the changelog since the previously published beta — to the SAME
+# links and the changelog since the previously published beta - to the SAME
 # Feishu bot as the per-push release stream (FEISHU_RELEASE_WEBHOOK). The two
 # streams share one group; their cards stay distinguishable via CHANNEL_LABEL
 # (Beta vs Nightly) and STREAM_LABEL.

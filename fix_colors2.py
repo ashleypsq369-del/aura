@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fix remaining hardcoded colors in Services.jsx — pill strips + modal inputs."""
+"""Fix remaining hardcoded colors in Services.jsx - pill strips + modal inputs."""
 path = "frontend/src/pages/Services.jsx"
 src = open(path, encoding='utf-8').read()
 

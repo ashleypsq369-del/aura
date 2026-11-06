@@ -41,15 +41,15 @@ type BlockState = {
   input: string;
   inputValue?: unknown;
   /**
-   * Reads the write target — and, for whole-file writes, the running line
-   * count — out of `input` as it streams. `null` for every tool that names no
+   * Reads the write target - and, for whole-file writes, the running line
+   * count - out of `input` as it streams. `null` for every tool that names no
    * file. It stays alive for the whole block: the path is announced exactly
    * once (the scanner itself guarantees that), but the line count has to keep
    * coming until the arguments close.
    */
   pathScanner?: ToolInputPathScanner | null;
   /**
-   * 这个内容块开始的时刻 —— 在途那一行的**不动的计时起点**。
+   * 这个内容块开始的时刻 -- 在途那一行的**不动的计时起点**。
    *
    * 秒数在客户端 tick(`build-turn-blocks` 的 `liveEndMs` 每秒一次),daemon 只
    * 负责给一个不变的起点。每条计数事件各盖一个「现在」的话,行上的秒数会被一路
@@ -139,13 +139,13 @@ export function createClaudeStreamHandler(
    * Two paths can emit the same tool: `content_block_stop` (input assembled
    * from `input_json_delta`) and the final `assistant` wrapper, which Claude
    * Code replays at message end. The set used to be written by the delta path
-   * only while being read by the wrapper path — it meant "streamed from deltas"
+   * only while being read by the wrapper path - it meant "streamed from deltas"
    * but was consumed as "already emitted". Whenever the wrapper arrived FIRST it
    * read an empty set, emitted, and left nothing behind, so the later
    * `content_block_stop` emitted the same id a second time. That is not
    * hypothetical: in the 2026-08-28 diagnostics bundle (packaged
-   * `0.21.1-beta.4`) every claude run duplicated every tool — 47 of 47 pairs,
-   * byte-identical inputs 5–25ms apart — which also pins the real frame order on
+   * `0.21.1-beta.4`) every claude run duplicated every tool - 47 of 47 pairs,
+   * byte-identical inputs 5-25ms apart - which also pins the real frame order on
    * that build as wrapper-before-stop.
    *
    * Both paths now check it and both add to it, so the ordering cannot matter.
@@ -162,7 +162,7 @@ export function createClaudeStreamHandler(
   // Message ids that already streamed assistant text/thinking via
   // `stream_event` deltas.
   // When `--include-partial-messages` is OFF (older Claude Code, e.g. 1.0.84
-  // pre-flag), no deltas arrive — only the final `assistant` wrapper carries
+  // pre-flag), no deltas arrive - only the final `assistant` wrapper carries
   // content. The fallback below emits that content once, but we must skip it for
   // newer builds that already streamed deltas, otherwise the message would
   // duplicate.
@@ -173,7 +173,7 @@ export function createClaudeStreamHandler(
   // Per-message role-marker guards for cross-chunk detection (#3247).
   const roleGuards = new Map<string, RoleMarkerGuard>();
   // Task rows in the order the runtime declared them. The key is a slot handle
-  // this module owns, NOT the runtime's task id — the id can be rebound once
+  // this module owns, NOT the runtime's task id - the id can be rebound once
   // the runtime reports it (see `bindRuntimeTaskId`), and re-keying a Map moves
   // the entry to the end, which would silently reorder the user's plan.
   const runtimeTasks = new Map<string, RuntimeTask>();
@@ -216,7 +216,7 @@ export function createClaudeStreamHandler(
    *      `stream_event` frames at all.
    *   2. `assistant` → `message.stop_reason`. The legacy shape. Dead on
    *      2.1.259 (always null there) but it is the only in-stream boundary an
-   *      older CLI — or a fork such as `openclaude` — offers when partial
+   *      older CLI - or a fork such as `openclaude` - offers when partial
    *      messages are not negotiated. Keep it.
    *   3. The terminal `result` frame, surfaced separately as `usage`. Present
    *      on every build and every flag combination, and the only boundary left
@@ -227,7 +227,7 @@ export function createClaudeStreamHandler(
    * `--version` (`detection.ts`), but nothing tells us which Claude Code
    * release stopped filling the wrapper field, and the `fallbackBins` /
    * `local-profiles` forks report version strings on their own schedules. A
-   * capability probe we can trust — is the field populated? — only exists once
+   * capability probe we can trust - is the field populated? - only exists once
    * the frame is in hand, which is precisely what reading all three and
    * deduping does.
    *
@@ -264,8 +264,8 @@ export function createClaudeStreamHandler(
    * wrote anything must start from a clean slate. Leaking the state past a turn
    * boundary silently drops the next turn's genuine inline HTML artifact.
    *
-   * Called from every turn boundary we can observe — `emitTurnEndOnce` and the
-   * terminal `result` frame — because on a build where the in-stream boundary
+   * Called from every turn boundary we can observe - `emitTurnEndOnce` and the
+   * terminal `result` frame - because on a build where the in-stream boundary
    * is missing (2.1.259 without `--include-partial-messages`) `result` is the
    * only one there is, and a held-open stream-json stdin gets one `result` per
    * user turn, not one per process.
@@ -313,8 +313,8 @@ export function createClaudeStreamHandler(
    * Point `id` at `slot`, retiring whatever id that slot answered to before.
    *
    * Retiring the old alias is the load-bearing half. A `TaskCreate` is placed
-   * under a locally minted id because its tool_result — the only place the
-   * runtime states the real one — has not arrived yet. Leaving that placeholder
+   * under a locally minted id because its tool_result - the only place the
+   * runtime states the real one - has not arrived yet. Leaving that placeholder
    * resolvable after the real id lands is what lets a `TaskUpdate` naming a task
    * from an EARLIER run land on a row created in THIS one.
    */
@@ -406,9 +406,9 @@ export function createClaudeStreamHandler(
     return true;
   }
 
-  /** `Task #7 created successfully: Draft copy` — the runtime stating the id. */
+  /** `Task #7 created successfully: Draft copy` - the runtime stating the id. */
   const TASK_CREATED_RESULT_RE = /\bTask\s+#([A-Za-z0-9_-]+)\s+created successfully/;
-  /** `#7 [in_progress] Draft copy` — one row of a `TaskList` result. */
+  /** `#7 [in_progress] Draft copy` - one row of a `TaskList` result. */
   const TASK_LIST_ROW_RE = /^#([A-Za-z0-9_-]+)\s+\[([^\]]*)\]\s*(.*)$/;
 
   function mergeTaskListResult(content: string): boolean {
@@ -417,7 +417,7 @@ export function createClaudeStreamHandler(
       const row = TASK_LIST_ROW_RE.exec(line.trim());
       if (!row) continue;
       const [, id, status, subject] = row;
-      // The pattern has three groups, so a match always fills them — but this
+      // The pattern has three groups, so a match always fills them - but this
       // project builds with `noUncheckedIndexedAccess`, where indexing a match
       // yields `string | undefined`. Narrow once here rather than asserting at
       // each of the six uses below.
@@ -450,13 +450,13 @@ export function createClaudeStreamHandler(
    * Read the runtime's answer to a task tool call.
    *
    * Two things only reach us here and nowhere else: the id a `TaskCreate` was
-   * actually given, and the full list a `TaskList` reports — which is how a plan
+   * actually given, and the full list a `TaskList` reports - which is how a plan
    * written in an earlier run of this resumed session gets back onto the card
    * instead of the card showing only what this turn happened to create.
    */
   function absorbTaskToolResult(toolUseId: unknown, content: string, isError: boolean): void {
     if (typeof toolUseId !== 'string') return;
-    // Retire the pending entry either way — a failed call is still answered, and
+    // Retire the pending entry either way - a failed call is still answered, and
     // leaving it pending would keep the slot waiting for a result that already
     // came. Only a successful result gets to change the plan.
     const pendingSlot = pendingTaskCreateSlots.get(toolUseId);
@@ -512,7 +512,7 @@ export function createClaudeStreamHandler(
    *
    * The delta-assembled input wins when it is present and parses. Claude Code
    * replays finished tool calls in the wrapper "often with empty `{}` inputs",
-   * so once the wrapper is allowed to emit first (it is — see
+   * so once the wrapper is allowed to emit first (it is - see
    * `emittedToolUseIds`), taking its input verbatim would let an empty object
    * overwrite the real command. Assembled JSON that fails to parse means the
    * deltas were truncated, and then the wrapper's own input is the better of
@@ -525,7 +525,7 @@ export function createClaudeStreamHandler(
         try {
           return JSON.parse(open.input);
         } catch {
-          // Truncated stream — fall back to the wrapper's own input below.
+          // Truncated stream - fall back to the wrapper's own input below.
         }
       }
     }
@@ -538,7 +538,7 @@ export function createClaudeStreamHandler(
   // separate `kind: 'thinking'` payload and is never folded into
   // `m.content` by `buildDaemonTranscript` (apps/web/src/providers/daemon.ts),
   // so it cannot be re-serialized as a turn boundary on the next
-  // round-trip — it is not a #3247 re-injection vector. Models
+  // round-trip - it is not a #3247 re-injection vector. Models
   // routinely emit literal `## user` / `## assistant` lines in
   // chain-of-thought when reasoning about conversation structure,
   // and with kill-on-detection wired in server.ts a guard on the
@@ -742,12 +742,12 @@ export function createClaudeStreamHandler(
     }
 
     /**
-     * 「它在想,而且想了多少」 —— extended thinking 唯一一个**只计费、不给字**的
+     * 「它在想,而且想了多少」 -- extended thinking 唯一一个**只计费、不给字**的
      * 档位里,这是屏幕上还说得出口的事实。
      *
      * API 有一档会收下推理 token、照常计费,回来的却只有一个加密签名,`thinking`
      * 一路是空串(真机 CLI 2.1.260:3060 个计费 token、0 个字符)。那一轮用户盯着
-     * 「思考中」和一只空窗看了 57 秒 —— 空窗是**诚实的**,东西真的没来;但 CLI
+     * 「思考中」和一只空窗看了 57 秒 -- 空窗是**诚实的**,东西真的没来;但 CLI
      * 一直在报想了多少,这一行以前把它丢在地上。
      *
      * ⚠️ **读的是这种独立系统帧,不是 `thinking_delta` 上那个同名字段。**
@@ -759,7 +759,7 @@ export function createClaudeStreamHandler(
      * `tests/runtimes/w134-thinking-token-count.test.ts` 的语料守卫一节。
      *
      * 送的是**块内累计值**,不是增量:消费方 last-wins 就够,不必自己加。于是
-     * 重连补帧、丢帧、重放都改不了这个数 —— 求和才会被那些事永久带偏。
+     * 重连补帧、丢帧、重放都改不了这个数 -- 求和才会被那些事永久带偏。
      * 一个 thinking 块 = 屏幕上一格「思考中」,所以「块内累计」正好是「那一格的累计」;
      * 换块时 CLI 自己从小数重新开始,和那一格换新是同一个边界。
      */
@@ -781,7 +781,7 @@ export function createClaudeStreamHandler(
     // `assistant` messages are the "block finished" signal for the current
     // content block. For tool_use blocks whose input finished assembling,
     // emit tool_use now with the final parsed input. For text blocks, emit
-    // the text as a single delta — but only if no streaming deltas already
+    // the text as a single delta - but only if no streaming deltas already
     // covered it (older Claude Code without --include-partial-messages
     // delivers text only here; newer builds stream it and would duplicate).
     if (obj.type === 'assistant' && isRecord(obj.message) && Array.isArray(obj.message.content)) {
@@ -807,12 +807,12 @@ export function createClaudeStreamHandler(
       const textAlreadyStreamed = textMsgId ? textStreamed.has(textMsgId) : false;
       const thinkingAlreadyStreamed = thinkingMsgId ? thinkingStreamed.has(thinkingMsgId) : false;
       // LEGACY turn-boundary source. Claude Code 2.1.259 sets this field to
-      // null on every assistant frame — it now emits one wrapper per content
+      // null on every assistant frame - it now emits one wrapper per content
       // block, and the turn's stop reason is not known yet when the first of
       // them is written. That build carries the real value on
       // `stream_event`/`message_delta` instead (see `emitTurnEndOnce`), so on a
       // current CLI this branch is inert. It stays because it is the only
-      // in-stream boundary an OLDER Claude Code — or an argv-compatible fork —
+      // in-stream boundary an OLDER Claude Code - or an argv-compatible fork -
       // offers when `--include-partial-messages` is not negotiated, and we do
       // not control which build a user has installed.
       //
@@ -919,7 +919,7 @@ export function createClaudeStreamHandler(
       // reading (verified against
       // `tests/fixtures/claude-cli-recordings/claude-2.1.259-*-two-turns.jsonl`,
       // two `result` frames from a single CLI process). So it is a legitimate
-      // per-turn reset point — and on a build with no in-stream boundary at all
+      // per-turn reset point - and on a build with no in-stream boundary at all
       // (2.1.259 without `--include-partial-messages`) it is the ONLY one, which
       // is what keeps the next turn's genuine inline HTML artifact from being
       // mistaken for an echo of a file written in the previous turn.
@@ -978,7 +978,7 @@ export function createClaudeStreamHandler(
     // The turn's real `stop_reason` on Claude Code 2.1.259. It lands after
     // every `content_block_stop` of the message (verified frame-by-frame
     // against the recordings in `tests/fixtures/claude-cli-recordings/`), so by
-    // the time it arrives every tool_use of the turn has already been emitted —
+    // the time it arrives every tool_use of the turn has already been emitted -
     // the ordering the assistant-wrapper path had to be careful about.
     if (ev.type === 'message_delta' && isRecord(ev.delta)) {
       const stopReason = typeof ev.delta.stop_reason === 'string' ? ev.delta.stop_reason : null;
@@ -1033,7 +1033,7 @@ export function createClaudeStreamHandler(
          * reasoning already streamed".
          *
          * Claude Code sends `thinking_delta` frames whose `thinking` is the
-         * empty string — 1508 of 1707 across 32 recorded runs. Marking the
+         * empty string - 1508 of 1707 across 32 recorded runs. Marking the
          * message as streamed on those retired the message-end fallback below,
          * which is the ONLY place the real reasoning arrives, so the whole
          * turn's thinking was dropped: the record head said 「思考中」 over an
@@ -1059,7 +1059,7 @@ export function createClaudeStreamHandler(
             });
             /*
              * Announce WHICH file this write is about, the moment the path is
-             * provably complete — normally within the first few dozen bytes,
+             * provably complete - normally within the first few dozen bytes,
              * while `content` still has tens of kilobytes to go. Without this
              * the call is invisible until the last byte lands, because
              * `tool_use` only fires at `content_block_stop`.
@@ -1067,13 +1067,13 @@ export function createClaudeStreamHandler(
              * The scanner reads the buffer we already keep; the arguments
              * themselves never leave the daemon. `tool_input_delta`'s payload
              * stays a heartbeat nobody renders (see the note on it in
-             * `packages/contracts/src/sse/chat.ts`) — this is a separate,
+             * `packages/contracts/src/sse/chat.ts`) - this is a separate,
              * few-dozen-byte conclusion. The path fires at most once per call;
              * the scanner enforces that itself.
              *
              * 同一趟扫描顺手把正文行数数出来(W120),于是那一行**一边写一边长**,
              * 不再是一个静止的文件名 + 一个秒表。行数走节流后的
-             * `tool_input_progress`,同样只有数字 —— 正文一个字节都不出 daemon。
+             * `tool_input_progress`,同样只有数字 -- 正文一个字节都不出 daemon。
              */
             const update = state.pathScanner?.push(delta.partial_json) ?? null;
             if (update?.path !== undefined) {
@@ -1085,18 +1085,18 @@ export function createClaudeStreamHandler(
                 path: update.path,
                 /*
                  * 起点必须跟着这一条一起走,因为 `Edit` / `MultiEdit` /
-                 * `NotebookEdit` / `replace` **只有**这一条 —— 行数在途算不出来
+                 * `NotebookEdit` / `replace` **只有**这一条 -- 行数在途算不出来
                  * (`−M` 要等 `old_string` 数完),`tool_input_progress` 一条都不
                  * 发。少了它,行上有文件名而秒表不走(`build-turn-blocks` 的
                  * `spanElapsed(undefined, live)` 返回 null),而且落定之后
                  * `dropSupersededInFlightToolUses` 没有可搬的起点,结算行退回
-                 * `emitAgentEvent` 出口盖的时刻 —— 那是**入参传完**的一刻,
+                 * `emitAgentEvent` 出口盖的时刻 -- 那是**入参传完**的一刻,
                  * 整段流式传输被排除在外。真机 2026-09-04 实测(claude 2.1.260,
                  * 27458 字节入参)这一段是 **94.1 秒**,行上却只剩落盘的 0.1 秒。
                  *
                  * 用 `state.startedAt`(块开始那一刻)而不是此刻:此刻是**路径
                  * 扫出来**的时刻,真机那次比块开始晚 0.2 秒。同一次调用的
-                 * `tool_input_progress` 用的也是它,所以两条报的是同一个起点 ——
+                 * `tool_input_progress` 用的也是它,所以两条报的是同一个起点 --
                  * 起点在一次调用里必须不动,否则行上的秒数会被一路按回去。
                  */
                 startedAt: state.startedAt ?? now(),
@@ -1105,7 +1105,7 @@ export function createClaudeStreamHandler(
             /*
              * ⚠️ `state.targetPath !== undefined` **不是运行时守卫,是形状约束**:
              * 扫描器保证路径没出之前不报行数(`dueLineCount` 的 `pathFound`),而
-             * 路径出的那一次 push 就在上面把 `targetPath` 记下了 —— 所以这个条件
+             * 路径出的那一次 push 就在上面把 `targetPath` 记下了 -- 所以这个条件
              * 恒真,撤掉它任何测试都不会红。留着只为一件事:让这条事件在类型上也
              * 不可能带一个 `undefined` 的 `path`。别把它当成第二道判据。
              */
@@ -1129,7 +1129,7 @@ export function createClaudeStreamHandler(
       const key = blockKey(ev.index);
       const state = blocks.get(key);
       // The wrapper may already have published this call (it usually gets here
-      // first — see `emittedToolUseIds`); then this stop is bookkeeping only.
+      // first - see `emittedToolUseIds`); then this stop is bookkeeping only.
       const alreadyEmitted = state?.type === 'tool_use'
         && typeof state.id === 'string'
         && emittedToolUseIds.has(state.id);

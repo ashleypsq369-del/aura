@@ -1,6 +1,6 @@
 // Red-spec for referencing a brand-new (never-generated) project.
 //
-// A managed project is only a DB row until its first file write — its
+// A managed project is only a DB row until its first file write - its
 // `PROJECTS_DIR/<id>` folder does not exist yet. When such a project is picked
 // via "Reference another project", the daemon resolves it to that computed
 // path; the composer's existence probe (`/api/dir-exists`) then reports the
@@ -57,7 +57,7 @@ describe('ensureReferencedProjectDir', () => {
 
     await ensureReferencedProjectDir(projectsRoot, project, ensureProject);
     // The managed path under projectsRoot must not be conjured up for an
-    // external project — its files live in the user's own baseDir.
+    // external project - its files live in the user's own baseDir.
     expect(existsSync(path.join(projectsRoot, project.id))).toBe(false);
   });
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * landing — a long, single-goal marketing page that follows the project's
+ * landing - a long, single-goal marketing page that follows the project's
  * content-structure playbook (docs/content-structures/landing-page.md) to the
  * letter. The 12-module order, top to bottom:
  *
@@ -15,8 +15,8 @@
  *   8  Proof          stat band + named testimonials with results
  *   9  Objection      FAQ that pre-answers the buying worries
  *  10  Pricing        3 tiers, middle highlighted (anchoring)
- *  11  Final CTA      the page's strongest accent — one last, big ask
- *  12  Footer         grey, small, restrained — never competes with the CTA
+ *  11  Final CTA      the page's strongest accent - one last, big ask
+ *  12  Footer         grey, small, restrained - never competes with the CTA
  *
  * Page skeleton = AIDA; the Problem block = PAS (P+A) handing off to the Value
  * block (S); every feature = FAB landing on B. Backgrounds alternate between
@@ -108,7 +108,7 @@ function lineIcon(index: number): string {
   }</svg>`;
 }
 
-/** A small "blueprint" line-grid panel — the on-brand stand-in for a screenshot
+/** A small "blueprint" line-grid panel - the on-brand stand-in for a screenshot
  *  in the How-it-works steps (drawn from div/SVG, never a stock photo). */
 function stepGlyph(index: number): string {
   const c = varRef("colorPrimary");
@@ -125,7 +125,7 @@ function stepGlyph(index: number): string {
 
 // ─────────────────────────── hero product mock ──────────────────────────────
 /** Abstract on-brand product mock: a browser frame with skeleton UI + chart.
- *  This is the hero "visual" — a glimpse of the product, never a stock photo. */
+ *  This is the hero "visual" - a glimpse of the product, never a stock photo. */
 function productMock(brand: Brand): string {
   const bars = [42, 68, 54, 82, 64, 96, 72, 58]
     .map(
@@ -199,7 +199,7 @@ function productMock(brand: Brand): string {
 
 // ─────────────────────────── landing-specific copy slots ────────────────────
 // All slots resolve to brand fields first, then a tasteful fallback. Never
-// lorem ipsum — the fallbacks read like real product copy.
+// lorem ipsum - the fallbacks read like real product copy.
 
 /** Pull a usable adjective for headline math, lowercased. */
 function adjective(brand: Brand, i: number, fallback: string): string {
@@ -207,7 +207,7 @@ function adjective(brand: Brand, i: number, fallback: string): string {
   return list.length ? list[i % list.length] : fallback;
 }
 
-/** Hero headline — the value-prop formula `help {who} {do} {result}`. Prefer a
+/** Hero headline - the value-prop formula `help {who} {do} {result}`. Prefer a
  *  real tagline / first pillar; otherwise build a result-led line, never a
  *  category boast ("the leading AI platform"). */
 function heroHeadline(brand: Brand): string {
@@ -218,13 +218,13 @@ function heroHeadline(brand: Brand): string {
   return `Ship ${adjective(brand, 0, "polished")} work from ${brand.name}, without the busywork`;
 }
 
-/** Hero subhead — 1–2 sentences that ground HOW / for WHOM. */
+/** Hero subhead - 1-2 sentences that ground HOW / for WHOM. */
 function heroSubhead(brand: Brand): string {
   const desc = brand.description?.trim();
   if (desc) return desc;
   const tone = brand.voice.tone?.trim();
   if (tone) return tone;
-  return `${brand.name} gives your team one place to go from idea to launch — ${adjective(
+  return `${brand.name} gives your team one place to go from idea to launch - ${adjective(
     brand,
     0,
     "fast",
@@ -255,7 +255,7 @@ function problemCards(brand: Brand): Array<{ pain: string; cost: string }> {
     },
     {
       pain: "Quality drifts as you scale",
-      cost: "What looked sharp at ten people looks inconsistent at fifty — and customers notice.",
+      cost: "What looked sharp at ten people looks inconsistent at fifty - and customers notice.",
     },
   ];
   return [...fromAvoid, ...fallbacks].slice(0, 3);
@@ -266,12 +266,12 @@ function agitateLine(brand: Brand): string {
   return `Sound familiar? The longer it goes unfixed, the more it quietly taxes everything ${brand.name} is supposed to make easy.`;
 }
 
-/** Exactly 3 value pillars, written FAB — the card body shows the BENEFIT. */
+/** Exactly 3 value pillars, written FAB - the card body shows the BENEFIT. */
 function valuePillars(brand: Brand): Array<{ title: string; body: string }> {
   return featureCards(brand).slice(0, 3);
 }
 
-/** Deep-dive features (zig-zag) — the rest of the feature set, title = benefit. */
+/** Deep-dive features (zig-zag) - the rest of the feature set, title = benefit. */
 function deepFeatures(brand: Brand): Array<{ title: string; body: string }> {
   const all = featureCards(brand);
   const rest = all.slice(3);
@@ -474,7 +474,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </header>
 
-    <!-- 2 · HERO — the 5-piece value prop -->
+    <!-- 2 · HERO - the 5-piece value prop -->
     <main>
     <section class="wrap" style="padding-top:clamp(56px, 9vw, 108px);text-align:center;">
       <div style="max-width:860px;margin:0 auto;">
@@ -500,7 +500,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 3 · SOCIAL PROOF — hugs the hero -->
+    <!-- 3 · SOCIAL PROOF - hugs the hero -->
     <section class="wrap" style="padding:clamp(40px,6vw,64px) 0 8px;">
       <div class="hero-trust" style="margin-bottom:${varRef("sizeLG")};">
         ${stars}
@@ -516,7 +516,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 4 · PROBLEM — PAS (P + A) -->
+    <!-- 4 · PROBLEM - PAS (P + A) -->
     <section class="section">
       <div class="wrap">
         ${sectionHead(
@@ -530,7 +530,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 5 · VALUE PILLARS — PAS (S), FAB so each shows the benefit -->
+    <!-- 5 · VALUE PILLARS - PAS (S), FAB so each shows the benefit -->
     <section id="value" class="section" style="background:${varRef(
       "colorBgContainer",
     )};border-top:${varRef("lineWidth")} solid ${varRef(
@@ -548,7 +548,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 6 · HOW IT WORKS — 3 steps -->
+    <!-- 6 · HOW IT WORKS - 3 steps -->
     <section id="how" class="section">
       <div class="wrap">
         ${sectionHead("How it works", "Up and running in three steps", "No migration project. No six-week rollout.")}
@@ -558,7 +558,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- recurring CTA (~every 1.5 screens) — calm, the loud one is reserved for module 11 -->
+    <!-- recurring CTA (~every 1.5 screens) - calm, the loud one is reserved for module 11 -->
     <section class="wrap" style="padding:0 0 clamp(56px,8vw,88px);">
       <div style="border:${varRef("lineWidth")} solid ${varRef(
         "colorPrimaryBorder",
@@ -575,7 +575,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 7 · FEATURES — zig-zag deep dive -->
+    <!-- 7 · FEATURES - zig-zag deep dive -->
     <section id="features" class="section" style="background:${varRef(
       "colorBgContainer",
     )};border-top:${varRef("lineWidth")} solid ${varRef(
@@ -585,13 +585,13 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
         ${sectionHead(
           "A closer look",
           "Built for the way real teams work",
-          "Every capability earns its place — and translates to something you can feel.",
+          "Every capability earns its place - and translates to something you can feel.",
         )}
         ${zig}
       </div>
     </section>
 
-    <!-- 8 · PROOF — stat band + testimonials -->
+    <!-- 8 · PROOF - stat band + testimonials -->
     <section style="background:${varRef("colorPrimary")};padding:clamp(48px,6vw,64px) 0;">
       <div class="wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:${varRef(
         "sizeXL",
@@ -605,7 +605,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
         ${sectionHead(
           "Proof",
           "Loved by the teams who use it daily",
-          "Real results, in their words — not ours.",
+          "Real results, in their words - not ours.",
         )}
         <div class="grid-3">
         ${testimonials}
@@ -613,7 +613,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 9 · OBJECTION — FAQ -->
+    <!-- 9 · OBJECTION - FAQ -->
     <section id="faq" class="section" style="background:${varRef(
       "colorBgContainer",
     )};border-top:${varRef("lineWidth")} solid ${varRef(
@@ -625,7 +625,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 10 · PRICING — middle tier highlighted -->
+    <!-- 10 · PRICING - middle tier highlighted -->
     <section id="pricing" class="section">
       <div class="wrap">
         ${sectionHead("Pricing", "Plans that scale with you", "Start free. Upgrade only when it earns it.")}
@@ -639,7 +639,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
     </section>
     </main>
 
-    <!-- 11 · FINAL CTA — the page's strongest accent -->
+    <!-- 11 · FINAL CTA - the page's strongest accent -->
     <section class="wrap" style="padding-bottom:clamp(64px,9vw,104px);">
       <div style="background:${varRef("colorPrimary")};border-radius:clamp(18px,2.4vw,28px);padding:clamp(48px,7vw,84px) clamp(24px,5vw,64px);text-align:center;position:relative;overflow:hidden;">
         <div style="position:absolute;top:-100px;right:-90px;width:320px;height:320px;border-radius:50%;background:${varRef(
@@ -672,7 +672,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
       </div>
     </section>
 
-    <!-- 12 · FOOTER — grey, small, restrained -->
+    <!-- 12 · FOOTER - grey, small, restrained -->
     <footer style="background:${varRef("colorBgContainer")};border-top:${varRef(
       "lineWidth",
     )} solid ${varRef("colorBorderSecondary")};padding:clamp(48px,6vw,64px) 0 32px;">
@@ -702,7 +702,7 @@ export function renderLanding(brand: Brand, tokens: DesignTokens): string {
     </footer>`;
 
   return document({
-    title: `${brand.name} — ${brandTagline(brand)}`,
+    title: `${brand.name} - ${brandTagline(brand)}`,
     tokens,
     brand,
     body,

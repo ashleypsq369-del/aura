@@ -26,7 +26,7 @@ import { memoryEvents } from './memory.js';
 
 export interface ActiveRuleForVerify {
   name: string;
-  /** The rule's Check line — the rubric a scorecard row should address. */
+  /** The rule's Check line - the rubric a scorecard row should address. */
   check?: string;
 }
 
@@ -35,7 +35,7 @@ export interface EnforceVerifyInput {
   assistantOutput: string;
   /** Active `rule` memories at enforcement time. */
   activeRules: ActiveRuleForVerify[];
-  /** Whether the turn produced an artifact — enforcement scopes to those. */
+  /** Whether the turn produced an artifact - enforcement scopes to those. */
   hadArtifact: boolean;
   /** The master `verifyEnabled` hook. When false, enforcement is skipped. */
   verifyEnabled: boolean;
@@ -77,7 +77,7 @@ function rowCoversRule(rowText: string, rule: ActiveRuleForVerify): boolean {
   return false;
 }
 
-// Deterministically evaluate the self-verify contract for one turn. Pure —
+// Deterministically evaluate the self-verify contract for one turn. Pure -
 // no I/O, no clock, no provider call.
 export function enforceVerify(input: EnforceVerifyInput): MemoryVerifyResult {
   const activeRules = Array.isArray(input.activeRules) ? input.activeRules : [];
@@ -156,7 +156,7 @@ function emit(record: VerifyEmit): void {
 }
 
 // Record one enforcement outcome and fan it out on the `verify` SSE channel.
-// `skipped` outcomes are NOT persisted — the history is a UX surface for
+// `skipped` outcomes are NOT persisted - the history is a UX surface for
 // enforcement that actually had something to check, not a per-turn audit log.
 export function recordVerify(
   result: MemoryVerifyResult,
@@ -196,7 +196,7 @@ export function clearVerifications(): number {
   return removed;
 }
 
-// Test-only — wipe the buffer for a deterministic starting state.
+// Test-only - wipe the buffer for a deterministic starting state.
 export function __resetVerificationsForTests(): void {
   records.length = 0;
 }

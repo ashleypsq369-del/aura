@@ -1,5 +1,5 @@
 name: cut-patch-release
-# Every Thursday 09:00 Asia/Shanghai, cut the next PATCH release — but only once
+# Every Thursday 09:00 Asia/Shanghai, cut the next PATCH release - but only once
 # the release it would stack on has actually shipped stable.
 #
 # This is the Tuesday cut-release flow with three deltas:
@@ -7,7 +7,7 @@ name: cut-patch-release
 #      (e.g. 0.14.0 -> 0.14.1). Like cut-release, the branch is cut from main HEAD.
 #   2. A pre-flight guard, the same one cut-release applies to the Tuesday minor:
 #      the PREVIOUS release branch must be a PUBLISHED stable GitHub Release
-#      (isDraft=false, isPrerelease=false — i.e. release-stable ran
+#      (isDraft=false, isPrerelease=false - i.e. release-stable ran
 #      `gh release edit --draft=false --latest`). If it is not published yet, do
 #      NOT cut a branch or launch a prerelease publication; instead post a Feishu
 #      notice that the patch cut was skipped, and stop. The independent scheduled
@@ -90,7 +90,7 @@ jobs:
 
       # ---- Skip path: previous release not published yet -> no branch/release build; notify and stop ----
       # feishu-notice.ts imports only node:crypto (no workspace deps), so the
-      # setup-node above is all it needs — no pnpm install, same as feishu.ts.
+      # setup-node above is all it needs - no pnpm install, same as feishu.ts.
       - name: Notify Feishu that the patch cut was skipped
         if: steps.guard.outputs.published != 'true'
         env:
@@ -169,8 +169,8 @@ jobs:
           NOTICE_BODY: |
             **分支**:[`release/v${{ steps.ver.outputs.version }}`](${{ github.server_url }}/${{ github.repository }}/tree/release/v${{ steps.ver.outputs.version }})(从 main 切出,小版本 / patch)
 
-            **Backport label**:`backport release/v${{ steps.ver.outputs.version }}` —— 要回灌到这个版本的修复,给 PR 打这个 label。
+            **Backport label**:`backport release/v${{ steps.ver.outputs.version }}` -- 要回灌到这个版本的修复,给 PR 打这个 label。
 
-            Prerelease 打包已开始(约 20–40 分钟);完成后会再发一张带各平台下载链接的卡片。
+            Prerelease 打包已开始(约 20-40 分钟);完成后会再发一张带各平台下载链接的卡片。
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: node --experimental-strip-types tools/release/src/notifications/feishu-notice.ts

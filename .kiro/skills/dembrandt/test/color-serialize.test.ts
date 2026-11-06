@@ -26,7 +26,7 @@ test('rgbToOklch: white is L=1 C=0, black is all zero', () => {
 test('rgbToOklch: mid grey is achromatic and the hue is pinned to 0', () => {
   // atan2 on denormal a/b yields a stable but meaningless hue for neutrals, so
   // the formatter pins hue to 0 whenever chroma rounds away. Without that, mid
-  // grey emitted oklch(59.99% 0 89.88) — a hue angle on a colourless colour.
+  // grey emitted oklch(59.99% 0 89.88) - a hue angle on a colourless colour.
   const grey = rgbToOklch(128, 128, 128);
   assert.ok(grey.c < 1e-6, String(grey.c));
   assert.equal(formatOklch(grey), 'oklch(59.9871% 0 0)');

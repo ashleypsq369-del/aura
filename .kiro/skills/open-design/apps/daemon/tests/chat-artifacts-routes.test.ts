@@ -15,7 +15,7 @@ import { replaceMessageArtifacts } from '../src/chat-artifacts/store.js';
 //
 // The point of these routes is that a chat card can re-open the EXACT bytes a
 // past turn produced, even after the workspace file at that path was
-// overwritten — and that knowing a snapshot id gets a caller nothing without
+// overwritten - and that knowing a snapshot id gets a caller nothing without
 // read authority over the owning project.
 // ---------------------------------------------------------------------------
 

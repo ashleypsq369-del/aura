@@ -10,12 +10,12 @@
 //
 // The only legal operation on a token is `===` against a token we stored
 // earlier. Never parse one, never read it as a date, never ask which of two is
-// newer — the `count(*)` term exists precisely so a hard delete moves the token
+// newer - the `count(*)` term exists precisely so a hard delete moves the token
 // without moving any timestamp, and that makes ordering meaningless. Empty
 // tables produce values like `'0:0'` / `'0'`, so a token is never SQL null.
 //
 // Only the `vela` workspace-context source has a hub to ask, so a dev daemon
-// pointed at anything else resolves to null rather than dialing production —
+// pointed at anything else resolves to null rather than dialing production -
 // the same gate `startHubEventsSubscriber`'s endpoint resolver uses.
 
 import { readVelaControlApiContext } from '../integrations/vela.js';
@@ -41,9 +41,9 @@ export interface SyncDigest {
  * mismatch unrepresentable.
  */
 export interface SyncDigestReading {
-  /** Vela user id — the account half of the snapshot key. Never empty. */
+  /** Vela user id - the account half of the snapshot key. Never empty. */
   accountId: string;
-  /** Active workspace id — the workspace half of the snapshot key. Never empty. */
+  /** Active workspace id - the workspace half of the snapshot key. Never empty. */
   workspaceId: string;
   digest: SyncDigest;
 }
@@ -67,8 +67,8 @@ export interface SyncDigestReaderOptions {
 // The digest exists to REPLACE a slow read, so it must never become a slow read
 // itself. Two seconds is already longer than the query it stands in for.
 const DEFAULT_TIMEOUT_MS = 2_000;
-// After a failure — transport error, 5xx, or a 404 because this B deployment
-// predates the endpoint — asking again on the very next read would add a round
+// After a failure - transport error, 5xx, or a 404 because this B deployment
+// predates the endpoint - asking again on the very next read would add a round
 // trip to every catalog and member load for nothing. Park briefly instead; the
 // caller degrades to a real fetch either way.
 const DEFAULT_FAILURE_COOLDOWN_MS = 60_000;
@@ -105,7 +105,7 @@ export function parseSyncDigest(value: unknown): SyncDigest | null {
  *
  * Catalog and members are refreshed by the same page load milliseconds apart,
  * so without coalescing one navigation costs two identical digest round-trips.
- * Deliberately in-flight only — no TTL — so a settled reading is never reused:
+ * Deliberately in-flight only - no TTL - so a settled reading is never reused:
  * the whole point of the token is that it is compared against a freshly read
  * one, and a cached token could green-light a snapshot the cloud has already
  * moved past.

@@ -1,16 +1,16 @@
 /**
- * HTML report formatter — a single self-contained HTML file (inline CSS, no
+ * HTML report formatter - a single self-contained HTML file (inline CSS, no
  * external fetches) that renders an extraction and, optionally, a drift diff.
  *
  * This is the pre-platform bridge (DEM-94): a CI artifact you can open offline
  * and attach to a PR, before the hosted dashboard exists. It is a *view* over
- * the same deterministic data the platform will later diff server-side — it
+ * the same deterministic data the platform will later diff server-side - it
  * renders structured tokens and single-render contrast only, never re-derives
  * drift from rendered CSS. Mode B reuses the canonical `computeDrift` engine.
  *
  * The summary header is Lighthouse-style: big score gauges, each backed by a
  * concrete finding (lib/findings.ts) so no number is a vanity metric. The file
- * is the rendered view only — the machine-readable form is `--json-only`.
+ * is the rendered view only - the machine-readable form is `--json-only`.
  */
 
 import type {
@@ -63,7 +63,7 @@ function safeCss(value: unknown): string {
   return "";
 }
 
-/** Only http(s) links may be rendered as `<a>`/`<img src>` — no javascript:/file: URLs from extracted content. */
+/** Only http(s) links may be rendered as `<a>`/`<img src>` - no javascript:/file: URLs from extracted content. */
 function isHttpUrl(u: string): boolean {
   try {
     const p = new URL(u).protocol;
@@ -80,13 +80,13 @@ function isSafeImgSrc(u?: string | null): boolean {
 
 /* -------------------------------- styles -------------------------------- */
 
-// Dembrandt design system (dark, Linear-inspired). This is the report's *chrome* —
+// Dembrandt design system (dark, Linear-inspired). This is the report's *chrome* -
 // a Dembrandt report looks like Dembrandt. The extracted site's tokens are content
 /*
- * Dark by default (matching the App at /app), with a CSS-only light toggle — no
+ * Dark by default (matching the App at /app), with a CSS-only light toggle - no
  * JS, just `:root:has(#theme:checked)` flipping the token block. System fonts,
  * no embedded JSON: stays small at scale. Typography is generic/system on
- * purpose (no Red Hat Display / web fonts — keeps the file light); the fluid
+ * purpose (no Red Hat Display / web fonts - keeps the file light); the fluid
  * type scale, brand surfaces, #38BDF8 accent and tight Linear radii still mirror
  * the App's design system (dembrandt-next/app/globals.css). color-scheme is
  * pinned per theme so a browser's own dark mode can't repaint it. Type steps
@@ -212,13 +212,13 @@ tr.tgrouph td{color:var(--muted);font-weight:600;text-transform:uppercase;letter
 
 /*
  * The report's only JavaScript: click-to-copy. Progressive enhancement over an
- * otherwise CSS-only file — without JS everything still renders, values just
+ * otherwise CSS-only file - without JS everything still renders, values just
  * don't copy. Buttons inside <summary> must not toggle the card.
  */
 const SCRIPT = `document.addEventListener('click',function(e){var t=e.target.closest('[data-copy]');if(!t)return;if(t.closest('summary')){e.preventDefault()}navigator.clipboard.writeText(t.getAttribute('data-copy')).then(function(){t.classList.add('copied');setTimeout(function(){t.classList.remove('copied')},1200)}).catch(function(){})});`;
 
 // Dembrandt brand mark (from dembrandt-next/components/AppMarkIcon.tsx). Inlined,
-// fill=currentColor so it inherits the topbar accent. Self-contained — no asset fetch.
+// fill=currentColor so it inherits the topbar accent. Self-contained - no asset fetch.
 const LOGO = `<svg viewBox="0 0 316.6 310.01" fill="currentColor" aria-hidden="true"><path d="M81.48,20.83h-34.92C20.85,20.83,0,41.68,0,67.39v175.22c0,25.72,20.85,46.56,46.56,46.56h34.92c2.3,0,4.17-1.87,4.17-4.17V25c0-2.3-1.87-4.17-4.17-4.17Z"/><path d="M268.66,0H110.47c-2.3,0-4.17,1.87-4.17,4.17v301.67c0,2.3,1.87,4.17,4.17,4.17h158.18c26.48,0,47.95-21.47,47.95-47.95V47.95c0-26.48-21.47-47.95-47.95-47.95Z"/></svg>`;
 
 /* ------------------------------ components ------------------------------ */
@@ -230,14 +230,14 @@ function confBadge(c?: string): string {
 
 // Collapsible section card (Lighthouse-style, native <details>, self-contained).
 // Open by default; the user can collapse any section. `copyText` adds a
-// "Copy all" button to the header (App parity — every section is exportable).
+// "Copy all" button to the header (App parity - every section is exportable).
 function section(title: string, body: string, id?: string, copyText?: string): string {
   if (!body.trim()) return "";
   const copy = copyText ? `<button class="copyall" data-copy="${esc(copyText)}">Copy all</button>` : "";
   return `<details class="card"${id ? ` id="${esc(id)}"` : ""} open><summary>${esc(title)}${copy}</summary><div class="cardbody">${body}</div></details>`;
 }
 
-/** Lay two (or more) small cards side by side — related scales read together. */
+/** Lay two (or more) small cards side by side - related scales read together. */
 function cardRow(...cards: string[]): string {
   const present = cards.filter((c) => c.trim());
   if (present.length < 2) return present.join("");
@@ -258,7 +258,7 @@ function gauge(value: number, label: string, sub?: string, invert = false, href?
 
 /** A Lighthouse-style fraction tile (e.g. token coverage 6/6). */
 /**
- * The top "ranking" row — Dembrandt's axes, not Lighthouse's. Drift (did it
+ * The top "ranking" row - Dembrandt's axes, not Lighthouse's. Drift (did it
  * change vs a baseline) and Contrast (WCAG AA) appear only when that data
  * exists; Consistency is always computable. Every gauge links to the card that
  * explains it, so no number is a mystery.
@@ -283,7 +283,7 @@ function summaryGauges(result: BrandingResult, fr: FindingsReport, drift?: Drift
   return `<div class="gauges">${g.join("")}</div>`;
 }
 
-/** An at-a-glance executive line of token counts — honest, no score. */
+/** An at-a-glance executive line of token counts - honest, no score. */
 function summaryCounts(result: BrandingResult): string {
   const n = (a: unknown) => (Array.isArray(a) ? a.length : 0);
   const plural = (c: number, one: string, many = one + "s") => `${c} ${c === 1 ? one : many}`;
@@ -320,7 +320,7 @@ function coverageLine(fr: FindingsReport): string {
   return `<p class="counts">Captured <span class="cov">${segs}</span> ${esc(cov.present)}/${esc(cov.total)} token categories</p>`;
 }
 
-/** Actionable findings — the audits behind the scores, Lighthouse-style. */
+/** Actionable findings - the audits behind the scores, Lighthouse-style. */
 function findingsSection(fr: FindingsReport): string {
   if (!fr.findings.length) return "";
   const sev = (s: Finding["severity"]) =>
@@ -446,7 +446,7 @@ function typographySection(result: BrandingResult): string {
   }
   const row = (s: TypographyStyle) => {
     const family = (s.family ?? "").split(",")[0];
-    // Render the family name in its own font (locally installed fonts only —
+    // Render the family name in its own font (locally installed fonts only -
     // the report never fetches web fonts, same caveat as the App shows).
     const fstyle = [safeCss(family) ? `font-family:${safeCss(family)},var(--sans)` : "", s.weight ? `font-weight:${safeCss(s.weight)}` : ""].filter(Boolean).join(";");
     return `<tr><td>${esc(s.context)}</td><td${fstyle ? ` style="${esc(fstyle)}"` : ""}>${esc(family)}</td><td class="mono" data-copy="${esc(s.size)}">${esc(s.size)}</td><td class="mono">${esc(s.weight)}</td><td class="mono">${esc(s.lineHeight ?? "")}</td></tr>`;
@@ -493,7 +493,7 @@ function sortByPx(values: TokenValue[]): TokenValue[] {
   return [...values].sort((a, b) => tokenPx(a) - tokenPx(b));
 }
 
-/** Token label — px may already be a string like "2px" (pre-1.1.0), don't re-append. */
+/** Token label - px may already be a string like "2px" (pre-1.1.0), don't re-append. */
 function tokenLabel(v: TokenValue): string {
   return v.display ?? v.value ?? (typeof v.px === "string" ? v.px : v.px != null ? `${v.px}px` : "");
 }
@@ -501,7 +501,7 @@ function tokenLabel(v: TokenValue): string {
 function spacingSection(result: BrandingResult): string {
   const vals = result.spacing?.commonValues ?? [];
   if (!vals.length) return "";
-  // Proportional bars turn the scale into a visible ramp (App parity) — the
+  // Proportional bars turn the scale into a visible ramp (App parity) - the
   // chip stays as the label, the bar shows relative magnitude.
   const sorted = sortByPx(vals as TokenValue[]);
   const finite = sorted.filter((v) => Number.isFinite(tokenPx(v)));
@@ -764,7 +764,7 @@ function driftSection(drift: DriftReport, result: BrandingResult, baselineLabel?
     .join("");
   const more = drift.changes.length > 120 ? `<p class="sub">… ${drift.changes.length - 120} more changes</p>` : "";
   const legend = capped.length ? `<p class="dlegend"><span class="g-add">+</span> added · <span class="g-rem">−</span> removed · <span class="g-chg">~</span> changed</p>` : "";
-  const empty = capped.length ? "" : `<p class="dempty">✓ No changes detected — tokens match the baseline.</p>`;
+  const empty = capped.length ? "" : `<p class="dempty">✓ No changes detected - tokens match the baseline.</p>`;
   // Comparison-validity warnings (viewport/flags/fonts mismatch) render above
   // the change groups: they qualify everything below.
   const warnings = (drift.warnings ?? [])
@@ -774,7 +774,7 @@ function driftSection(drift: DriftReport, result: BrandingResult, baselineLabel?
   const copyText = capped
     .map((ch) => `${ch.kind === "added" ? "+" : ch.kind === "removed" ? "-" : "~"} [${ch.category}] ${ch.label}${ch.before && ch.after ? `: ${ch.before} -> ${ch.after}` : ch.before || ch.after ? `: ${ch.before ?? ch.after}` : ""}`)
     .join("\n");
-  const copyBtn = capped.length ? `<button class="copyall" data-copy="${esc(`Drift ${drift.score} (threshold ${drift.threshold}) — ${drift.status}\n${copyText}`)}" style="margin-left:auto">Copy report</button>` : "";
+  const copyBtn = capped.length ? `<button class="copyall" data-copy="${esc(`Drift ${drift.score} (threshold ${drift.threshold}) - ${drift.status}\n${copyText}`)}" style="margin-left:auto">Copy report</button>` : "";
   return `<div class="drift ${cls}" id="drift"><div class="row"><div class="score">${esc(drift.score)}</div><div><div>${verdict} <span class="sub">threshold ${esc(drift.threshold)}</span></div><div class="sub">${esc(drift.summary.changed)} changed · ${esc(drift.summary.added)} added · ${esc(drift.summary.removed)} removed${baselineLabel ? ` · vs ${esc(baselineLabel)}` : ""}</div></div>${copyBtn}</div>${warnings}${groups}${more}${legend}${empty}</div>`;
 }
 
@@ -815,7 +815,7 @@ export function generateHtmlReport(result: BrandingResult, options: HtmlReportOp
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="dembrandt${version ? " " + esc(version) : ""}">
-<title>Dembrandt report — ${esc(domain)}</title>
+<title>Dembrandt report - ${esc(domain)}</title>
 <style>${STYLE}</style>
 </head>
 <body>

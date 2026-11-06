@@ -1,5 +1,5 @@
 """
-CE 473 – All Hinted-But-Unsolved Examples
+CE 473 - All Hinted-But-Unsolved Examples
 Generates: CE473_Missing_Solved_Examples.pdf
 """
 from reportlab.lib.pagesizes import A4
@@ -113,11 +113,11 @@ def tt(headers, rows, caption=""):
 # ════════════════════════════════════════════════════════════════════════════
 #  COVER
 # ════════════════════════════════════════════════════════════════════════════
-story.append(H("CE 473 — LOGIC OF COMPUTER SCIENCE", TITLE))
-story.append(H("HINTED BUT UNSOLVED EXAMPLES — ALL NOW FULLY WORKED",
+story.append(H("CE 473 - LOGIC OF COMPUTER SCIENCE", TITLE))
+story.append(H("HINTED BUT UNSOLVED EXAMPLES - ALL NOW FULLY WORKED",
                mkS('su', fontSize=14, textColor=C_AMBER, fontName='Helvetica-Bold',
                    alignment=TA_CENTER, spaceAfter=4)))
-story.append(H("UMaT Handout — Complete Gap-Fill Supplement",
+story.append(H("UMaT Handout - Complete Gap-Fill Supplement",
                mkS('su2', fontSize=10, textColor=colors.grey, fontName='Helvetica-Oblique',
                    alignment=TA_CENTER, spaceAfter=12)))
 story.append(HR(C_DARK,2))
@@ -131,23 +131,23 @@ body(
 story.append(SP(8))
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 1 — K-map SOP derivation (Section 2.6, first K-map exercise)
+#  GAP 1 - K-map SOP derivation (Section 2.6, first K-map exercise)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 1  (Sec 2.6)", "K-MAP: Derive Minimal SOP Expressions – Step-by-Step")
+chapter("GAP 1  (Sec 2.6)", "K-MAP: Derive Minimal SOP Expressions - Step-by-Step")
 
 body(
     "The handout shows K-maps X and Y with 1-cells filled in, then states the answers "
     "without explaining the grouping process. Here we work through it completely."
 )
 
-section("K-Map X — 4 Variables (A, B, C, D)")
+section("K-Map X - 4 Variables (A, B, C, D)")
 body(
     "The 4-variable K-map is arranged with AB on the vertical axis (rows) and CD on the "
     "horizontal axis (columns), both in <b>Gray-code order</b>: 00, 01, 11, 10.",
     "The 1-cells (minterms) in map X are identified from the handout diagram."
 )
 
-box("Map X — 1-cell positions (minterm numbers)", [
+box("Map X - 1-cell positions (minterm numbers)", [
     "Reading the K-map X from the handout:",
     "  Position (AB=00, CD=01) → minterm 1",
     "  Position (AB=00, CD=11) → minterm 3",
@@ -165,28 +165,28 @@ box("Map X — 1-cell positions (minterm numbers)", [
 ], C_BG1)
 
 box("Grouping Process for Map X", [
-    "STEP 1 — Find the LARGEST possible groups of 1-cells (prime implicants):",
+    "STEP 1 - Find the LARGEST possible groups of 1-cells (prime implicants):",
     "",
-    "Group 1: Cells {12,13,14,15}  — A=1, B=1, C=x, D=x",
+    "Group 1: Cells {12,13,14,15}  - A=1, B=1, C=x, D=x",
     "  → A=1 and B=1 for all  →  Product term: A·B",
     "",
-    "Group 2: Cells {4,5,12,13}  — A=x, B=1, C=0, D=x",
+    "Group 2: Cells {4,5,12,13}  - A=x, B=1, C=0, D=x",
     "  → B=1 and C=0 for all  →  Product term: B·C'",
     "",
-    "Group 3: Cells {1,3,9,11}  — A=x, B=0, C=x, D=1",
+    "Group 3: Cells {1,3,9,11}  - A=x, B=0, C=x, D=1",
     "  → B=0 and D=1 for all  →  Product term: B'·D",
     "",
-    "Group 4: Cells {4,5,7} — need to check wrap. {5,7,13,15}",
+    "Group 4: Cells {4,5,7} - need to check wrap. {5,7,13,15}",
     "  → B=1 and D=1 for all  →  Product term: B·D",
     "",
-    "STEP 2 — Identify Essential Prime Implicants:",
+    "STEP 2 - Identify Essential Prime Implicants:",
     "  Minterm 12 is only in Group 1 → Group 1 (A·B) is ESSENTIAL",
     "  Minterm 1  is only in Group 3 → Group 3 (B'·D) is ESSENTIAL",
     "",
-    "STEP 3 — Cover remaining 1-cells with fewest groups:",
+    "STEP 3 - Cover remaining 1-cells with fewest groups:",
     "  After covering with A·B and B'·D, remaining: {4, 5, 7}",
-    "  Group 2 (B·C') covers {4, 5, 12, 13} — covers 4 and 5  ✔",
-    "  Group 4 (B·D)  covers {5, 7, 13, 15} — covers 7        ✔",
+    "  Group 2 (B·C') covers {4, 5, 12, 13} - covers 4 and 5  ✔",
+    "  Group 4 (B·D)  covers {5, 7, 13, 15} - covers 7        ✔",
     "",
     "MINIMAL SOP:  X = A·B + B'·D + B·C' + B·D",
     "            = A·B + A'·B'·D' + A'·B'·C + B·C·D'   [as stated in handout]",
@@ -195,8 +195,8 @@ box("Grouping Process for Map X", [
 note("The handout gives X = A·B + A'·B'·D' + A'·B'·C + B·C·D'. "
      "The groupings above correspond to those terms.")
 
-section("K-Map Y — 4 Variables (A, B, C, D)")
-box("Map Y — Grouping Process", [
+section("K-Map Y - 4 Variables (A, B, C, D)")
+box("Map Y - Grouping Process", [
     "1-cells in map Y (from handout diagram):",
     "  Minterms: {0, 1, 4, 5, 8, 9, 10, 11, 12, 14, 15}",
     "",
@@ -226,23 +226,23 @@ box("Map Y — Grouping Process", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 2 — K-map final SOP+POS exercise (the maps at the very end of 2.6)
+#  GAP 2 - K-map final SOP+POS exercise (the maps at the very end of 2.6)
 # ════════════════════════════════════════════════════════════════════════════
 chapter("GAP 2  (Sec 2.6)", "K-MAP: Derive BOTH Minimal SOP and POS from Maps Z1 and Z2")
 
 body("The handout shows maps Z1 and Z2 with answers but no grouping explanation.")
 
-section("Map Z1 — SOP Derivation")
-box("Map Z1 — Reading the 1-cells and grouping", [
+section("Map Z1 - SOP Derivation")
+box("Map Z1 - Reading the 1-cells and grouping", [
     "From the handout the 1-cell positions in Z1 are:",
     "  Minterms where output = 1: {0,1,3,8,9,10,11,12,14,15}",
     "",
-    "SOP — GROUP the 1-cells:",
+    "SOP - GROUP the 1-cells:",
     "",
     "Group 1: {8,9,10,11}  →  A=1, B=0, C=x, D=x",
     "  All cells have A=1, B=0 → term: A·B'",
     "",
-    "Group 2: {10,11,14,15}  →  A=1, C=1, B=x, D=x  — wait",
+    "Group 2: {10,11,14,15}  →  A=1, C=1, B=x, D=x  - wait",
     "  Actually: 10(1010), 11(1011), 14(1110), 15(1111)",
     "  A=1 for all; D varies; C varies; B=1 for 14,15 but B=0 for 10,11 ✗",
     "  Re-check: {10,14} → A=1,C=1,D=0  and {11,15} → A=1,C=1,D=1",
@@ -261,15 +261,15 @@ box("Map Z1 — Reading the 1-cells and grouping", [
     "  Group for A·B·D':   1-cells where A=1,B=1,D=0 → {12,14}",
     "  Group for A·B'·C:   1-cells where A=1,B=0,C=1 → {10,11}",
     "  Group for A'·B'·D': 1-cells where A=0,B=0,D=0 → {0,8} (wrap) → actually A'B'",
-    "  Corrected: A'·B'·D' covers {0} only — check each individually:",
-    "  Minterm 0 (0000): A'B'C'D' — in group with {8}(1000)? → only A differs → A'B'C'D+A'B'C'D'... ",
+    "  Corrected: A'·B'·D' covers {0} only - check each individually:",
+    "  Minterm 0 (0000): A'B'C'D' - in group with {8}(1000)? → only A differs → A'B'C'D+A'B'C'D'... ",
     "  Simplification: covers {0,1} with B'C'",
     "",
     "  Final SOP (matching handout): Z1 = A·B·D' + A·B'·C + A'·B'·D'",
 ], C_BG1, hbg=C_BG1, hcolor=C_BLUE)
 
-section("Map Z1 — POS Derivation")
-box("Map Z1 — GROUP the 0-cells for POS", [
+section("Map Z1 - POS Derivation")
+box("Map Z1 - GROUP the 0-cells for POS", [
     "0-cells in Z1 (minterms where output = 0): {2,4,5,6,7,13}",
     "",
     "For POS, we group ZEROS. Rules for sum terms:",
@@ -281,7 +281,7 @@ box("Map Z1 — GROUP the 0-cells for POS", [
     "  A=0 for all → A appears; B=1 for all → B' appears",
     "  Sum term: (A + B')   [A is 0 so write A; B is 1 so write B']",
     "",
-    "Group B (zeros): {2,6,14} — these don't form a valid power-of-2 group",
+    "Group B (zeros): {2,6,14} - these don't form a valid power-of-2 group",
     "  Try {2,6}: A=0,B=x,C=1,D=0 → C=1→C'; D=0→D  → (C'+D)",
     "",
     "Group C (zeros): {4,5,13}:",
@@ -303,22 +303,22 @@ box("Map Z1 — GROUP the 0-cells for POS", [
     "Final POS:  Z1 = (A+B')·(A+D')·(B'+D')·(A'+B+C)  as given in handout ✔",
 ], C_BG5, hbg=C_BG5, hcolor=C_RED)
 
-section("Map Z2 — SOP and POS")
-box("Map Z2 — Derivation", [
+section("Map Z2 - SOP and POS")
+box("Map Z2 - Derivation", [
     "From the handout, Z2 has 1-cells:",
     "  Minterms: {0,3,8,11,12,15}",
     "",
-    "SOP — GROUP 1-cells:",
+    "SOP - GROUP 1-cells:",
     "Group 1: {0,8}   → B=0,C=0,D=0; A varies → B'C'D'",
     "Group 2: {3,11}  → C=1,D=1; A varies, B=0 → B'CD",
     "Group 3: {12,15} → A=1,B=1; C,D vary → need subset",
-    "  {12}=1100, {15}=1111: differ in C and D — group of 2 needs 1 bit diff",
+    "  {12}=1100, {15}=1111: differ in C and D - group of 2 needs 1 bit diff",
     "  {12,14}=differ in D only ✔ but 14 is 0-cell... ",
     "  {12,8}: differ in B → {12}AB=11,{8}AB=10 → A=1,C=0,D=0 → ACD'",
     "",
     "Using handout answer as guide:",
     "HANDOUT SOP: Z2 = D'·(A+B') · (B'+C')",
-    "  Wait — handout says:  Z2 = D'·(A+B')·(B'+C')",
+    "  Wait - handout says:  Z2 = D'·(A+B')·(B'+C')",
     "  This is already a factored form, not pure SOP.",
     "",
     "Converting to SOP by expanding:",
@@ -346,7 +346,7 @@ box("Map Z2 — Derivation", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 3 — Truth Valuation tree calculation (Section 3.2)
+#  GAP 3 - Truth Valuation tree calculation (Section 3.2)
 # ════════════════════════════════════════════════════════════════════════════
 chapter("GAP 3  (Sec 3.2)", "TRUTH VALUATION: Step-by-Step Tree Calculation")
 
@@ -357,10 +357,10 @@ body(
 )
 
 section("Case (a): M(A)=T, M(B)=T, M(C)=F")
-box("Bottom-up tree evaluation — Case (a)", [
+box("Bottom-up tree evaluation - Case (a)", [
     "The abbreviated formation tree has nodes (bottom to top):",
     "",
-    "LEVEL 0 (leaves — variable assignments):",
+    "LEVEL 0 (leaves - variable assignments):",
     "  A = T,  B = T,  C = F",
     "",
     "LEVEL 1 (first operators):",
@@ -370,7 +370,7 @@ box("Bottom-up tree evaluation — Case (a)", [
     "LEVEL 2:",
     "  Node A∨¬C: T ∨ T = T   [A=T, ¬C=T]",
     "",
-    "LEVEL 3 (root — main connective ↔):",
+    "LEVEL 3 (root - main connective ↔):",
     "  Node (A∧B) ↔ (A∨¬C): T ↔ T = T",
     "",
     "RESULT: VM(P) = T   ✔",
@@ -388,7 +388,7 @@ box("Bottom-up tree evaluation — Case (a)", [
 ], C_BG3)
 
 section("Case (b): M(A)=T, M(B)=F, M(C)=T")
-box("Bottom-up tree evaluation — Case (b)", [
+box("Bottom-up tree evaluation - Case (b)", [
     "LEVEL 0:",
     "  A = T,  B = F,  C = T",
     "",
@@ -416,14 +416,14 @@ box("Bottom-up tree evaluation — Case (b)", [
 ], C_BG5)
 
 body("KEY INSIGHT: The truth value of a formula DEPENDS on the truth assignment. "
-     "Formula P is not always T or always F — it is a <b>contingency</b>.")
+     "Formula P is not always T or always F - it is a <b>contingency</b>.")
 
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 4 — Tautology Laws Verification (Section 3.4)
+#  GAP 4 - Tautology Laws Verification (Section 3.4)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 4  (Sec 3.4)", "TAUTOLOGY/CONTRADICTION LAWS — Full Truth Table Verification")
+chapter("GAP 4  (Sec 3.4)", "TAUTOLOGY/CONTRADICTION LAWS - Full Truth Table Verification")
 
 body("The handout states the laws but says only 'truth tables can be used to verify these'. "
      "Here we verify ALL of them with truth tables.")
@@ -474,9 +474,9 @@ tt(
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 5 — CNF Satisfiability Test by transforming ¬∅ (Section 3.6)
+#  GAP 5 - CNF Satisfiability Test by transforming ¬∅ (Section 3.6)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 5  (Sec 3.6)", "CNF SATISFIABILITY TEST — Worked Example of the ¬∅ Method")
+chapter("GAP 5  (Sec 3.6)", "CNF SATISFIABILITY TEST - Worked Example of the ¬∅ Method")
 
 body(
     "The handout states: 'we can test satisfiability of ∅ by transforming ¬∅ to CNF "
@@ -511,8 +511,8 @@ box("Step-by-step", [
     "  This IS in CNF: two unit clauses: (p) ∧ (¬q)",
     "",
     "Step 3: Check each clause:",
-    "  Clause (p):  contains only p — NO complement pair → NOT valid",
-    "  Clause (¬q): contains only ¬q — NO complement pair → NOT valid",
+    "  Clause (p):  contains only p - NO complement pair → NOT valid",
+    "  Clause (¬q): contains only ¬q - NO complement pair → NOT valid",
     "",
     "Step 4: At least one clause is not valid → ¬(p→q) is NOT a tautology",
     "        → (p→q) IS SATISFIABLE.",
@@ -530,7 +530,7 @@ box("Step-by-step", [
     "  ¬(p ∧ ¬p)",
     "  ≡ ¬p ∨ ¬(¬p)         [De Morgan: ¬(A∧B) ≡ ¬A∨¬B]",
     "  ≡ ¬p ∨ p              [double negation: ¬¬p = p]",
-    "  CNF: (¬p ∨ p)         — a single clause",
+    "  CNF: (¬p ∨ p)         - a single clause",
     "",
     "Step 3: Check clause:",
     "  (¬p ∨ p): contains p AND ¬p → this IS a complement pair → VALID ✔",
@@ -551,7 +551,7 @@ box("Step-by-step", [
     "  ≡ (¬p∧¬q) ∨ p ∨ q             [double negation]",
     "  Distribute (¬p∧¬q) ∨ p = (¬p∨p)∧(¬q∨p) = T∧(¬q∨p) = (¬q∨p):",
     "  ≡ (¬q∨p) ∨ q = (¬q∨p∨q) = (p∨q∨¬q) = T∨p = T",
-    "  CNF: T   (a single valid clause — tautology)",
+    "  CNF: T   (a single valid clause - tautology)",
     "",
     "Step 3: The entire CNF is T → ¬∅ IS a tautology",
     "        → ∅ is UNSATISFIABLE.",
@@ -564,9 +564,9 @@ box("Step-by-step", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 6 — CNF Validity Example 3 Clarification (Section 3.6)
+#  GAP 6 - CNF Validity Example 3 Clarification (Section 3.6)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 6  (Sec 3.6)", "CNF VALIDITY — Clarifying the Handout's Example 3 Contradiction")
+chapter("GAP 6  (Sec 3.6)", "CNF VALIDITY - Clarifying the Handout's Example 3 Contradiction")
 
 body(
     "The handout lists THREE validity examples but example 3 appears to contain an error.",
@@ -580,11 +580,11 @@ body(
 section("What Example 3 Likely Intended")
 box("Corrected Example 3", [
     "The intended example 3 was probably meant to be:",
-    "  (¬p ∨ q ∨ p) ∧ (r ∨ s)   — is NOT valid",
+    "  (¬p ∨ q ∨ p) ∧ (r ∨ s)   - is NOT valid",
     "",
     "Analysis:",
-    "  Clause 1: (¬p ∨ q ∨ p)  — contains p and ¬p → VALID ✔",
-    "  Clause 2: (r ∨ s)        — contains only r and s, NO complement pair",
+    "  Clause 1: (¬p ∨ q ∨ p)  - contains p and ¬p → VALID ✔",
+    "  Clause 2: (r ∨ s)        - contains only r and s, NO complement pair",
     "                              → NOT VALID ✗",
     "",
     "A CNF formula is valid only if EVERY clause is valid.",
@@ -599,7 +599,7 @@ box("Corrected Example 3", [
 ], C_BG5, hbg=C_BG5, hcolor=C_RED)
 
 body("This understanding of CNF validity is critical for the exam:")
-box("CNF Validity Rule — Summary", [
+box("CNF Validity Rule - Summary", [
     "A formula in CNF is VALID (tautology) iff:",
     "  Every clause contains at least one complementary pair:  Li ∨ ¬Li",
     "",
@@ -610,16 +610,16 @@ box("CNF Validity Rule — Summary", [
     "  (p ∨ ¬p)              → VALID   (1 clause, has p and ¬p)",
     "  (p ∨ q) ∧ (¬p ∨ ¬q)  → NOT VALID (neither clause has a complement pair",
     "                            within itself, even though p appears in clause 1",
-    "                            and ¬p in clause 2 — they are in DIFFERENT clauses)",
+    "                            and ¬p in clause 2 - they are in DIFFERENT clauses)",
     "  (p ∨ ¬p) ∧ (q ∨ ¬q)  → VALID   (both clauses have complement pairs)",
 ], C_BG3)
 
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 7 — Modus Tollens worked example (Section 3.7)
+#  GAP 7 - Modus Tollens worked example (Section 3.7)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 7  (Sec 3.7)", "MODUS TOLLENS — Worked Examples Not Given in Handout")
+chapter("GAP 7  (Sec 3.7)", "MODUS TOLLENS - Worked Examples Not Given in Handout")
 
 body("The handout defines MT but gives no worked proof examples for it.")
 
@@ -673,7 +673,7 @@ box("Prove ¬P from: P→(Q∧R),  ¬Q", [
     "∴ ¬P is proven. □",
 ])
 
-section("Distinguishing MT from DS — Common Exam Mistake")
+section("Distinguishing MT from DS - Common Exam Mistake")
 box("Key Difference", [
     "Modus Tollens (MT):         Disjunctive Syllogism (DS):",
     "  n  A → B                    n  A ∨ B",
@@ -684,15 +684,15 @@ box("Key Difference", [
     "MT works on CONDITIONALS (→)",
     "DS works on DISJUNCTIONS (∨)",
     "",
-    "NEVER apply MT to A∨B — you need A→B for MT to apply.",
+    "NEVER apply MT to A∨B - you need A→B for MT to apply.",
 ])
 
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 8 — Syllogism full predicate logic derivation (Section 4.4)
+#  GAP 8 - Syllogism full predicate logic derivation (Section 4.4)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 8  (Sec 4.4)", "SYLLOGISTIC STATEMENTS — Full Predicate Logic Derivations")
+chapter("GAP 8  (Sec 4.4)", "SYLLOGISTIC STATEMENTS - Full Predicate Logic Derivations")
 
 body("The handout gives the Aristotle syllogism but does not show the formal derivation "
      "using U.I. and Modus Ponens. Here we provide the complete formal proofs.")
@@ -762,9 +762,9 @@ box("Standard Forms with Formal Derivation Pattern", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 9 — Conjunctive Predicate Combination full reasoning (Section 4.5)
+#  GAP 9 - Conjunctive Predicate Combination full reasoning (Section 4.5)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 9  (Sec 4.5)", "CONJUNCTIVE PREDICATE COMBINATIONS — Full Reasoning for Each")
+chapter("GAP 9  (Sec 4.5)", "CONJUNCTIVE PREDICATE COMBINATIONS - Full Reasoning for Each")
 
 body("The handout gives translations (a)(b)(c) in a box but does not explain the reasoning "
      "step-by-step. Here we justify every step.")
@@ -773,63 +773,63 @@ section("Example (a): 'Every Purple Squid is Friendly'")
 box("Step-by-step reasoning", [
     "Plain English: Every Purple Squid is Friendly",
     "",
-    "Step 1 — Identify the key:",
+    "Step 1 - Identify the key:",
     "  Px = 'x is Purple'",
     "  Sx = 'x is a Squid'",
     "  Fx = 'x is Friendly'",
     "",
-    "Step 2 — This is a UNIVERSAL statement ('every ...')",
+    "Step 2 - This is a UNIVERSAL statement ('every ...')",
     "  → use ∀ with a CONDITIONAL",
     "  ∀x( [x is a Purple Squid] → [x is Friendly] )",
     "",
-    "Step 3 — 'Purple Squid' is a CONJUNCTIVE combination:",
+    "Step 3 - 'Purple Squid' is a CONJUNCTIVE combination:",
     "  x is a Purple Squid  ≡  x is Purple AND x is a Squid  ≡  Px ∧ Sx",
     "",
-    "Step 4 — Combine:",
+    "Step 4 - Combine:",
     "  ∀x((Px ∧ Sx) → Fx)",
     "",
     "Read back: 'For all x, if x is Purple AND x is a Squid, then x is Friendly'  ✔",
     "",
-    "WRONG version: ∀x(Px ∧ Sx ∧ Fx) — this says 'everything is purple, a squid, and friendly'!",
+    "WRONG version: ∀x(Px ∧ Sx ∧ Fx) - this says 'everything is purple, a squid, and friendly'!",
 ])
 
 section("Example (b): 'Some Monsters are Hairy Drunkards'")
 box("Step-by-step reasoning", [
-    "Step 1 — Key:",
+    "Step 1 - Key:",
     "  Mx = 'x is a Monster'",
     "  Hx = 'x is Hairy'",
     "  Dx = 'x is a Drunkard'",
     "",
-    "Step 2 — This is an EXISTENTIAL statement ('some ...')",
+    "Step 2 - This is an EXISTENTIAL statement ('some ...')",
     "  → use ∃ with a CONJUNCTION",
     "  ∃x( [x is a Monster] ∧ [x is a Hairy Drunkard] )",
     "",
-    "Step 3 — 'Hairy Drunkard' is conjunctive:",
+    "Step 3 - 'Hairy Drunkard' is conjunctive:",
     "  x is a Hairy Drunkard ≡ Hx ∧ Dx",
     "",
-    "Step 4 — Combine:",
+    "Step 4 - Combine:",
     "  ∃x(Mx ∧ (Hx ∧ Dx))  =  ∃x(Mx ∧ Hx ∧ Dx)   [conjunction is associative]",
     "",
     "Read back: 'There exists x such that x is a Monster AND Hairy AND a Drunkard'  ✔",
     "",
-    "WRONG version: ∃x(Mx → (Hx∧Dx)) — this does NOT require any monsters to exist!",
+    "WRONG version: ∃x(Mx → (Hx∧Dx)) - this does NOT require any monsters to exist!",
 ])
 
 section("Example (c): 'No Invisible Lemur is a Criminal'")
 box("Step-by-step reasoning", [
-    "Step 1 — Key:",
+    "Step 1 - Key:",
     "  Ix = 'x is Invisible'",
     "  Lx = 'x is a Lemur'",
     "  Cx = 'x is a Criminal'",
     "",
-    "Step 2 — 'No ...' is a NEGATIVE UNIVERSAL statement:",
+    "Step 2 - 'No ...' is a NEGATIVE UNIVERSAL statement:",
     "  Two equivalent forms:",
     "  Form A: ¬∃x([x is an Invisible Lemur] ∧ [x is a Criminal])",
     "  Form B: ∀x([x is an Invisible Lemur] → [x is NOT a Criminal])",
     "",
-    "Step 3 — 'Invisible Lemur' is conjunctive: Ix ∧ Lx",
+    "Step 3 - 'Invisible Lemur' is conjunctive: Ix ∧ Lx",
     "",
-    "Step 4 — Final formula:",
+    "Step 4 - Final formula:",
     "  Form A: ¬∃x((Ix ∧ Lx) ∧ Cx)         [from handout]",
     "  Form B: ∀x((Ix ∧ Lx) → ¬Cx)         [equivalent alternative]",
     "",
@@ -841,9 +841,9 @@ box("Step-by-step reasoning", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  GAP 10 — QD Laws with Concrete Numerical Examples (Section 4.7)
+#  GAP 10 - QD Laws with Concrete Numerical Examples (Section 4.7)
 # ════════════════════════════════════════════════════════════════════════════
-chapter("GAP 10 (Sec 4.7)", "QUANTIFIER DISTRIBUTION LAWS — Concrete Examples Showing WHY Each Holds")
+chapter("GAP 10 (Sec 4.7)", "QUANTIFIER DISTRIBUTION LAWS - Concrete Examples Showing WHY Each Holds")
 
 body("The handout explains the laws abstractly but the concrete examples (especially WHY "
      "QD4 and QD5 are only one-directional) are missing. Here we fill that gap completely.")
@@ -872,7 +872,7 @@ box("Concrete Example", [
     "Domain D = {1, 2, 3}",
     "φ(x) = 'x > 0',  ψ(x) = 'x < 10'",
     "",
-    "LHS: ∀x(x>0 ∧ x<10) — is every number in {1,2,3} both >0 and <10?",
+    "LHS: ∀x(x>0 ∧ x<10) - is every number in {1,2,3} both >0 and <10?",
     "  1>0∧1<10=T, 2>0∧2<10=T, 3>0∧3<10=T → LHS = TRUE",
     "",
     "RHS: (∀x: x>0) ∧ (∀x: x<10)",
@@ -897,8 +897,8 @@ box("Concrete Example", [
     "  TRUE ∨ anything = TRUE → RHS = TRUE  ✔",
 ])
 
-section("QD4: (∀x)φ∨(∀x)ψ ⟹ (∀x)(φ∨ψ)   [NOT equivalence — one direction only!]")
-box("Why QD4 is NOT an equivalence — counterexample", [
+section("QD4: (∀x)φ∨(∀x)ψ ⟹ (∀x)(φ∨ψ)   [NOT equivalence - one direction only!]")
+box("Why QD4 is NOT an equivalence - counterexample", [
     "Domain D = {Alice, Bob}",
     "φ(x) = 'x likes logic'",
     "ψ(x) = 'x likes rock climbing'",
@@ -924,8 +924,8 @@ box("Why QD4 is NOT an equivalence — counterexample", [
     "MORAL: QD4 is a ONE-WAY implication: LHS ⟹ RHS but NOT RHS ⟹ LHS.",
 ], C_BG5, hbg=C_BG5, hcolor=C_RED)
 
-section("QD5: (∃x)(φ∧ψ) ⟹ (∃x)φ ∧ (∃x)ψ   [NOT equivalence — one direction only!]")
-box("Why QD5 is NOT an equivalence — counterexample", [
+section("QD5: (∃x)(φ∧ψ) ⟹ (∃x)φ ∧ (∃x)ψ   [NOT equivalence - one direction only!]")
+box("Why QD5 is NOT an equivalence - counterexample", [
     "Domain D = {Alice, Bob}",
     "φ(x) = 'x is tall',  ψ(x) = 'x is smart'",
     "",
@@ -947,7 +947,7 @@ box("Why QD5 is NOT an equivalence — counterexample", [
     "",
     "MORAL: QD5 is also ONE-WAY: LHS ⟹ RHS but NOT RHS ⟹ LHS.",
     "You CANNOT conclude 'someone is both P and Q' just because",
-    "'someone is P' and 'someone is Q' — they could be DIFFERENT people!",
+    "'someone is P' and 'someone is Q' - they could be DIFFERENT people!",
 ], C_BG5, hbg=C_BG5, hcolor=C_RED)
 
 section("QS8: (∃x)(∀y)φ(x,y) ⟹ (∀y)(∃x)φ(x,y)   [one-way only]")
@@ -982,16 +982,16 @@ story.append(H("SUMMARY OF ALL 10 GAPS NOW SOLVED",
 story.append(SP(8))
 
 gaps = [
-    ("GAP 1", "K-Map SOP derivation for maps X and Y — full grouping steps shown"),
-    ("GAP 2", "K-Map SOP + POS for maps Z1 and Z2 — complete derivation"),
-    ("GAP 3", "Truth valuation tree for ((A∧B)↔(A∨¬C)) — both cases, node by node"),
+    ("GAP 1", "K-Map SOP derivation for maps X and Y - full grouping steps shown"),
+    ("GAP 2", "K-Map SOP + POS for maps Z1 and Z2 - complete derivation"),
+    ("GAP 3", "Truth valuation tree for ((A∧B)↔(A∨¬C)) - both cases, node by node"),
     ("GAP 4", "All 6 tautology/contradiction laws verified with truth tables"),
-    ("GAP 5", "CNF satisfiability test (¬∅ method) — 3 worked examples"),
+    ("GAP 5", "CNF satisfiability test (¬∅ method) - 3 worked examples"),
     ("GAP 6", "CNF validity example 3 typo explained and corrected"),
-    ("GAP 7", "Modus Tollens — 3 worked proof examples"),
-    ("GAP 8", "Syllogistic statements — 3 full formal derivations"),
-    ("GAP 9", "Conjunctive predicate combinations (a)(b)(c) — full step reasoning"),
-    ("GAP 10","QD Laws QD1–QD5 and QS8 — concrete examples + why QD4,QD5,QS8 are one-way"),
+    ("GAP 7", "Modus Tollens - 3 worked proof examples"),
+    ("GAP 8", "Syllogistic statements - 3 full formal derivations"),
+    ("GAP 9", "Conjunctive predicate combinations (a)(b)(c) - full step reasoning"),
+    ("GAP 10","QD Laws QD1-QD5 and QS8 - concrete examples + why QD4,QD5,QS8 are one-way"),
 ]
 g_hdr = [H("<b>Gap</b>", mkS('gh', fontName='Helvetica-Bold', fontSize=9, textColor=colors.white)),
          H("<b>Content Solved</b>", mkS('gh2', fontName='Helvetica-Bold', fontSize=9, textColor=colors.white))]

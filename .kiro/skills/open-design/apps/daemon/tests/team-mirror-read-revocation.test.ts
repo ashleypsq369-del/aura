@@ -8,8 +8,8 @@ import { startServer } from '../src/server.js';
 // pulled local mirror must stop serving its files. The pull gate stamps a
 // non-destructive `teamMirrorRevokedAt` flag on the local project; the read
 // routes must then refuse to serve it (the bytes stay on disk, so a re-share
-// clears the flag and restores access). A member's own local project — which
-// never carries the flag — must keep reading normally.
+// clears the flag and restores access). A member's own local project - which
+// never carries the flag - must keep reading normally.
 describe('team mirror read revocation', () => {
   let server: http.Server;
   let baseUrl: string;

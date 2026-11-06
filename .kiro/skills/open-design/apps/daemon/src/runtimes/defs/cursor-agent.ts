@@ -45,7 +45,7 @@ export const cursorAgentDef = {
     },
     // `cursor-agent models` prints account-bound model ids per line. When
     // the user isn't authed it prints "No models available for this
-    // account." — that's not a model list, so we detect it and fall back.
+    // account." - that's not a model list, so we detect it and fall back.
     listModels: {
       args: ['models'],
       timeoutMs: 5000,

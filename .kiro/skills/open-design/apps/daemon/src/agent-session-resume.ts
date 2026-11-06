@@ -41,7 +41,7 @@ export interface AgentResumeContext {
   storedInputTokens: number | null;
   /**
    * Per-section digests behind `storedStablePromptHash`, for naming which input
-   * drifted when the hash no longer matches. Diagnostic only — never an input
+   * drifted when the hash no longer matches. Diagnostic only - never an input
    * to the resume decision.
    */
   storedStableSections: StableSectionHashes | null;
@@ -174,8 +174,8 @@ export function resolveAgentResumeFailurePolicy(input: {
 /**
  * Resume identity guard. A stored upstream session is only safe to continue
  * (and to `skipTranscript` for) when the conversation has not changed shape
- * under it. We reject the resume — forcing a fresh session reseeded with the
- * full transcript — when:
+ * under it. We reject the resume - forcing a fresh session reseeded with the
+ * full transcript - when:
  *  - the model changed (the session was built under a different model),
  *  - the cwd changed (different workspace identity), or
  *  - the conversation advanced under the session: the assistant message the
@@ -183,8 +183,8 @@ export function resolveAgentResumeFailurePolicy(input: {
  *    (another agent ran in between, or the message was edited/removed).
  *
  * The cursor is the session's own last assistant message id. At the next turn's
- * resolve time the latest completed assistant message — excluding the current
- * run's in-flight placeholder — must still be that id. A null stored cursor (row
+ * resolve time the latest completed assistant message - excluding the current
+ * run's in-flight placeholder - must still be that id. A null stored cursor (row
  * written before this guard shipped) cannot be verified, so it is treated as
  * unsafe and reseeded once.
  */
@@ -265,7 +265,7 @@ export function resolveAgentResumeContext(
  * "Continue the run" sends a directive, not a request: *continue where you left
  * off; otherwise complete the original request*. That sentence is only
  * answerable inside the session that heard the original request. Two surfaces
- * offer it — the chat error card and `od run continue` — and neither can tell
+ * offer it - the chat error card and `od run continue` - and neither can tell
  * whether the session will actually be continued: they see `resumable` (and, in
  * the UI, agent identity), while `evaluateResumeInvalidation` above ALSO
  * compares the stored model, cwd and cursor. Changing the model in Settings
@@ -279,14 +279,14 @@ export function resolveAgentResumeContext(
  *
  * Deliberately requires a stored session WITH a cursor: that cursor is the exact
  * anchor for "which request", and without one there is nothing to be precise
- * about — guessing a request would be worse than sending none.
+ * about - guessing a request would be worse than sending none.
  */
 export function resolveResumeContinuationSeed(input: {
   /** The caller declared this turn's message is a continuation directive. */
   isContinuation: boolean;
   /** The daemon could not continue a stored session on this turn. */
   requiresFullTranscript: boolean;
-  /** Stored handle at resolve time — present even when the guard rejected it. */
+  /** Stored handle at resolve time - present even when the guard rejected it. */
   storedSessionId: string | null;
   /** Stored resume cursor; the assistant turn the refused session produced. */
   storedLastMessageId: string | null;
@@ -353,7 +353,7 @@ export function persistCapturedAgentSession(
 // longer exists on disk (session pruned, repo moved machines, ~/.claude
 // cleared). Verified against the installed CLI (v2.1.178): the first pattern
 // matches its "No conversation found with session ID: <id>" string. These stay
-// as a fast path, but Claude's human-readable prose drifts across builds — when
+// as a fast path, but Claude's human-readable prose drifts across builds - when
 // it does, none of these match and the stale session id is never cleared, so
 // every turn retries the same dead `--resume` (#4275). The structured detector
 // below is the version-stable primary; treat these patterns as a complement.
@@ -371,7 +371,7 @@ const CLAUDE_RESUME_FAILURE_PATTERNS: RegExp[] = [
  * loaded fails LOCALLY, before any API call, so the terminal result is
  * `is_error` with zero turns and zero API time. A genuine in-turn failure
  * (overload / network) spends real API time (`duration_api_ms > 0`) and/or
- * completes a turn, so it is deliberately left alone — a transient blip must
+ * completes a turn, so it is deliberately left alone - a transient blip must
  * not drop a still-valid session.
  */
 function hasClaudeResumeFailureResultEvent(text: string): boolean {
@@ -427,7 +427,7 @@ export function computeIncludeStable(
  * signatures are matched on `stderr` (where Claude prints the failure); the
  * version-stable structured `result` event is matched on `stdout` (the
  * stream-json channel). We deliberately do NOT scan ordinary assistant stdout
- * for the prose phrases — a successful turn whose model text happens to contain
+ * for the prose phrases - a successful turn whose model text happens to contain
  * "session not found" must not be mistaken for a resume failure.
  */
 export function isClaudeResumeFailure(stderr: string, stdout = ''): boolean {
@@ -473,7 +473,7 @@ export function isOpencodeResumeFailure(text: string): boolean {
  * Per-agent dispatch for "the session/thread I asked to resume is gone".
  * Generalizes resume-fallback classification so every native-resume adapter
  * routes through one decision point in server.ts. Unknown agents return false
- * (no fallback) — a new resume-capable adapter must opt in here explicitly.
+ * (no fallback) - a new resume-capable adapter must opt in here explicitly.
  *
  * Detection scans only the CLI's FAILURE channel, never successful assistant
  * output: codex/opencode print their resume-miss to `stderr` (a generic phrase
@@ -503,7 +503,7 @@ export function isAgentResumeFailure(
 
 // vela (AMR) reports a missing resumed session as a structured ACP JSON-RPC
 // error `{"error":{"data":{"kind":"resume_failed",...}}}` on stdout (the
-// protocol channel). Match the structured marker — not a bare word — so a
+// protocol channel). Match the structured marker - not a bare word - so a
 // model reply that merely mentions "resume_failed" cannot trip it.
 const AMR_RESUME_FAILURE_PATTERN = /"kind"\s*:\s*"resume_failed"/;
 const AMR_OPENCODE_EVENT_STREAM_RESUME_FAILURE_PATTERNS: RegExp[] = [

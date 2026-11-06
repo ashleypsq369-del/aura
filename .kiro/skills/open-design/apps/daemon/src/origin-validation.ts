@@ -32,19 +32,19 @@ export function configuredAllowedHosts(origins = configuredAllowedOrigins()): st
   return origins.map((origin) => new URL(origin).host);
 }
 
-// Issue #3225 — operator-declared allowlist of internal hosts that are exempt
+// Issue #3225 - operator-declared allowlist of internal hosts that are exempt
 // from the default-deny SSRF guard for USER-CONFIGURED provider endpoints (an
 // internally-hosted LiteLLM/Ollama on an RFC1918 address reachable only over
 // VPN). Comma- or whitespace-separated; each entry may be a bare host
-// (`10.0.0.5`), `host:port`, or a full URL — only the hostname is retained,
+// (`10.0.0.5`), `host:port`, or a full URL - only the hostname is retained,
 // since the SSRF block is host-based. IPv6 literals must be bracketed
 // (`[fd00::1]` or `[fd00::1]:4000`) so the port is unambiguous; the brackets
 // are stripped here so the result compares directly against a resolved
 // address. An empty/unset value yields `[]`, preserving the strict default
 // for every deployment that does not opt in.
 //
-// A malformed entry — or CIDR notation, which the host-based matcher cannot
-// honor — is dropped with a warning rather than silently trusted, so a typo
+// A malformed entry - or CIDR notation, which the host-based matcher cannot
+// honor - is dropped with a warning rather than silently trusted, so a typo
 // can never quietly widen (or quietly fail to widen) the guard. This list is
 // threaded ONLY into the user-configured-endpoint validators, never the
 // attacker-controllable asset-download guard (`assertExternalAssetUrl`).
@@ -64,7 +64,7 @@ export function configuredAllowedInternalHosts(
     // still carries a scheme, so exclude those from the CIDR heuristic.)
     if (!entry.includes('://') && /^[^/]+\/\d{1,3}$/.test(entry)) {
       warn(
-        `[ssrf] ignoring CIDR entry in OD_ALLOWED_INTERNAL_HOSTS: ${JSON.stringify(entry)} — list individual hosts instead`,
+        `[ssrf] ignoring CIDR entry in OD_ALLOWED_INTERNAL_HOSTS: ${JSON.stringify(entry)} - list individual hosts instead`,
       );
       continue;
     }
@@ -232,7 +232,7 @@ export function isLocalSameOrigin(
     // through a reverse proxy. Sec-Fetch-Site is set by the user agent and
     // cannot be modified by JavaScript, so a value of "same-origin"
     // attests that the request originated from the same origin as the
-    // target — a cross-site `<img>`/`<script>` exploit would carry
+    // target - a cross-site `<img>`/`<script>` exploit would carry
     // "cross-site" instead. Only consult the broader allow-list once that
     // signal is present.
     const fetchSite = headerValue(req.headers?.['sec-fetch-site']);
@@ -268,7 +268,7 @@ function headerValue(value: unknown): string | undefined {
  * `apiRelativePath` MUST be `req.path` as observed INSIDE `app.use('/api', …)`.
  * Express strips the mounted `/api` prefix there, so a request to
  * `/api/library/ingest` arrives as `/library/ingest`. Matching `'/library/'`
- * is therefore the correct (and only working) prefix — matching
+ * is therefore the correct (and only working) prefix - matching
  * `'/api/library/'` here would never fire because the mount prefix is gone.
  *
  * Returns true only for a locally-installed browser extension (an origin a web

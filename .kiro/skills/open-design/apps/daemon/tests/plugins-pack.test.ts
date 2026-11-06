@@ -1,4 +1,4 @@
-// Phase 4 / plan §3.X1 — packPlugin().
+// Phase 4 / plan §3.X1 - packPlugin().
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';

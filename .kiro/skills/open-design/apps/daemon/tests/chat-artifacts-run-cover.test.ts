@@ -6,7 +6,7 @@
  * `attachChatArtifactThumbnail` had unit coverage, and nothing in the daemon
  * ever called either of them. So the assertions here deliberately start at the
  * `/api/chat` boundary and go all the way to the `ChatArtifactRef` the web card
- * reads — a test that called the cover helper directly would have been green on
+ * reads - a test that called the cover helper directly would have been green on
  * the broken build too.
  *
  * The second thing it pins is §6.3's freeze. The renderer is held at a gate
@@ -356,7 +356,7 @@ describe('run terminal HTML cover wiring', () => {
     const turn = await runTurnThatWritesHtml();
 
     // The turn is already terminal (the chat response above completed) while
-    // the renderer is still parked at the gate — so the cover render does not
+    // the renderer is still parked at the gate - so the cover render does not
     // hold the chat turn open.
     await waitFor(() => exporterCalls.length, (n) => n > 0, 8_000);
     expect(exporterCalls.length, 'the terminal path should have asked for a cover').toBe(1);
@@ -409,7 +409,7 @@ describe('run terminal HTML cover wiring', () => {
       (list) => list.some((ref) => ref.label === 'index.html' && ref.snapshotState !== 'legacy_unavailable'),
     );
     const htmlRef = refs.find((ref) => ref.label === 'index.html');
-    // Product ruling 2026-09-02: no placeholder, no failure copy — the card
+    // Product ruling 2026-09-02: no placeholder, no failure copy - the card
     // just keeps its live preview. So the ref must stay openable and carry no
     // cover URL at all.
     expect(htmlRef?.thumbnailUrl).toBeUndefined();
@@ -551,7 +551,7 @@ describe('run terminal HTML cover wiring', () => {
    * 前半条早就成立(上面几条测的就是它),后半条一直是空的:封面**故意不 await**,
    * 它在终止帧之后几百毫秒才落库,而 daemon 落库时**一声不吭**。客户端在
    * run 终止后 150ms 拉一次(`ProjectView.scheduleConversationMessageRefresh`),
-   * 那一拉必然早于封面,之后再也不拉 —— 于是卡片在整个会话里一直停在降级支的
+   * 那一拉必然早于封面,之后再也不拉 -- 于是卡片在整个会话里一直停在降级支的
    * live iframe 上,直到整页刷新。真机实测这一局输了 466 毫秒:ref 落库
    * 17:13:05,封面 ready 17:13:06。
    *
@@ -561,7 +561,7 @@ describe('run terminal HTML cover wiring', () => {
    * 「封面自己会说话」。所以这里先把 renderer 关在闸门后跑完一整轮,确认此刻
    * **还没有** ready 的 ref,再连上事件流,最后才放行渲染。
    *
-   * 断言的是 wire 上的事件名和消息身份,不是某个内部函数被调用过 —— 后者在
+   * 断言的是 wire 上的事件名和消息身份,不是某个内部函数被调用过 -- 后者在
    * daemon 不推送的今天也能被 mock 成绿的。
    */
   it('tells the project stream when a cover lands after the turn already ended', async () => {
@@ -579,7 +579,7 @@ describe('run terminal HTML cover wiring', () => {
     const turn = await runTurnThatWritesHtml();
 
     // The turn is terminal and the renderer is parked at the gate, so the card
-    // the user is looking at right now has no cover — it is on the live-iframe
+    // the user is looking at right now has no cover - it is on the live-iframe
     // degrade branch. That is the moment this test is about.
     await waitFor(() => exporterCalls.length, (n) => n > 0, 8_000);
     const beforeRelease = refsFor(turn.projectId, turn.messageId);

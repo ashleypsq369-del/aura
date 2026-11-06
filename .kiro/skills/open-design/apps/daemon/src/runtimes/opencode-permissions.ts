@@ -96,13 +96,13 @@ async function nearestGitAncestor(from: string): Promise<string | null> {
  * nearest enclosing git root and adopts THAT as the worktree (verified with
  * `opencode debug scrap`, whose every registered project is a git root). A
  * managed project directory is not a git repository, and a development install
- * keeps the daemon data directory under the repository root — so OpenCode walks
+ * keeps the daemon data directory under the repository root - so OpenCode walks
  * past the project and adopts the whole Open Design checkout.
  *
  * The consequences are all silent: the agent names the repository root as its
  * workspace and writes the deliverable there, the project directory stays
  * empty, `snapshotProjectArtifactsAsync(cwd)` sees nothing, and the Run reports
- * `no_artifact`. `permission.external_directory` cannot catch it either — once
+ * `no_artifact`. `permission.external_directory` cannot catch it either - once
  * the repository is the worktree, writing inside it is an in-project write.
  *
  * Sent unconditionally, matching the BYOK OpenCode definition that already

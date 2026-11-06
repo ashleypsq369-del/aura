@@ -45,7 +45,7 @@ describe('decodeMultipartFilename', () => {
   });
 
   it('leaves genuine latin1 names untouched when bytes do not form valid UTF-8', () => {
-    // 0xE9 alone is not valid UTF-8 — keep the raw latin1 representation.
+    // 0xE9 alone is not valid UTF-8 - keep the raw latin1 representation.
     const latin1Only = Buffer.from([0x43, 0x61, 0x66, 0xe9]).toString('latin1');
     expect(decodeMultipartFilename(latin1Only)).toBe(latin1Only);
   });

@@ -293,7 +293,7 @@ describe('buildClaudeMcpJson', () => {
         headers: { Authorization: '' },
       },
     ]) as { mcpServers: Record<string, Record<string, unknown>> };
-    // Empty Authorization is worse than missing — should be omitted.
+    // Empty Authorization is worse than missing - should be omitted.
     expect(out.mcpServers.higgsfield?.headers).toBeUndefined();
   });
 });
@@ -811,10 +811,10 @@ describe('MCP_TEMPLATES', () => {
     expect(tpl).toBeDefined();
     // The actual MCP endpoint (verified live) is the /mcp path with
     // streamable HTTP transport. The bare host returns 404 on POST and the
-    // /sse path returns 404 — only /mcp speaks the protocol.
+    // /sse path returns 404 - only /mcp speaks the protocol.
     expect(tpl?.transport).toBe('http');
     expect(tpl?.url).toBe('https://mcp.higgsfield.ai/mcp');
-    // Authorization header is optional — Claude Code attempts OAuth itself
+    // Authorization header is optional - Claude Code attempts OAuth itself
     // when no Bearer token is supplied.
     expect(
       tpl?.headerFields?.some((f) => f.key === 'Authorization' && !f.required),
@@ -837,7 +837,7 @@ describe('MCP_TEMPLATES', () => {
     expect(tpl?.transport).toBe('stdio');
     expect(tpl?.command).toBe('npx');
     expect(tpl?.args).toEqual(['-y', '@pollinations_ai/mcp']);
-    // The free tier works without a key — POLLINATIONS_API_KEY must be
+    // The free tier works without a key - POLLINATIONS_API_KEY must be
     // surfaced but NOT marked required (would block users from saving an
     // anonymous-tier server).
     const apiKey = tpl?.envFields?.find((f) => f.key === 'POLLINATIONS_API_KEY');
@@ -883,7 +883,7 @@ describe('MCP_TEMPLATES', () => {
     expect(tpl?.command).toBe('npx');
     expect(tpl?.args).toEqual(['-y', 'edgeone-pages-mcp@latest']);
     // deploy_html flow works token-less; folder / project-update tools
-    // need EDGEONE_PAGES_API_TOKEN — surface it but keep optional.
+    // need EDGEONE_PAGES_API_TOKEN - surface it but keep optional.
     const token = tpl?.envFields?.find((f) => f.key === 'EDGEONE_PAGES_API_TOKEN');
     expect(token).toBeDefined();
     expect(token?.required ?? false).toBe(false);
@@ -917,7 +917,7 @@ describe('MCP_TEMPLATES', () => {
 
   it('groups image-generation templates in declaration order', () => {
     const ids = MCP_TEMPLATES.filter((t) => t.category === 'image-generation').map((t) => t.id);
-    // Order matters — the picker renders templates in the declared order
+    // Order matters - the picker renders templates in the declared order
     // inside each category bucket, so the most useful default (Higgsfield
     // OpenClaw, the marquee install) needs to stay first.
     expect(ids).toEqual([
@@ -1123,7 +1123,7 @@ describe('MCP_TEMPLATES', () => {
     const tpl = MCP_TEMPLATES.find((t) => t.id === 'figma-context');
     expect(tpl).toBeDefined();
     expect(tpl?.category).toBe('design-systems');
-    // `--stdio` is required — without it the package starts an HTTP listener
+    // `--stdio` is required - without it the package starts an HTTP listener
     // on a random port and the spawn never produces stdio messages.
     expect(tpl?.args).toEqual(['-y', 'figma-developer-mcp', '--stdio']);
     const key = tpl?.envFields?.find((f) => f.key === 'FIGMA_API_KEY');
@@ -1146,7 +1146,7 @@ describe('MCP_TEMPLATES', () => {
     expect(tpl?.args).toEqual(['-y', 'mcp-design-system-extractor@latest']);
     // STORYBOOK_URL has a sensible default in the upstream package
     // (http://localhost:6006), so the template surfaces it but does NOT
-    // require it — users with a localhost Storybook can save the entry as-is.
+    // require it - users with a localhost Storybook can save the entry as-is.
     const url = tpl?.envFields?.find((f) => f.key === 'STORYBOOK_URL');
     expect(url).toBeDefined();
     expect(url?.required ?? false).toBe(false);
@@ -1179,7 +1179,7 @@ describe('MCP_TEMPLATES', () => {
     const tpl = MCP_TEMPLATES.find((t) => t.id === 'mcp-dashboards');
     expect(tpl).toBeDefined();
     expect(tpl?.category).toBe('data-viz');
-    // `--stdio` flag selects stdio transport — without it the bin starts an
+    // `--stdio` flag selects stdio transport - without it the bin starts an
     // HTTP server on :3001 and the spawn never produces stdio messages.
     expect(tpl?.args).toEqual(['-y', 'mcp-dashboards', '--stdio']);
     expect(tpl?.envFields ?? []).toEqual([]);

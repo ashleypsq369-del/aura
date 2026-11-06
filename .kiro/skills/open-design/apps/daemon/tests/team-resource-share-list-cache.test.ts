@@ -327,7 +327,7 @@ describe('team resource share success invalidates the cached /team listing', () 
   }
 
   // freshMs is generous (3000ms, matching production) precisely so that a
-  // successful invalidate is the ONLY way the very next read can be fresh —
+  // successful invalidate is the ONLY way the very next read can be fresh -
   // if the handler forgot to call it, this test would still be well inside the
   // stale window and would observe the pre-mutation list.
   const PROD_FRESH_MS = 3000;
@@ -353,7 +353,7 @@ describe('team resource share success invalidates the cached /team listing', () 
       expect(shareResp.status).toBe(200);
       expect(shareResp.body).toMatchObject({ shared: true });
 
-      // No delay, no waiting out freshMs — this is the exact timing the
+      // No delay, no waiting out freshMs - this is the exact timing the
       // client's own post-share refetch relies on.
       const after = await req.get(`/api/workspace/${kind}/team`);
       expect(after.body.ids).toEqual(['a', 'b']);
@@ -386,9 +386,9 @@ describe('team resource share success invalidates the cached /team listing', () 
     });
   }
 
-  it('does not invalidate on a share no-op (shared:false — no team identity)', async () => {
+  it('does not invalidate on a share no-op (shared:false - no team identity)', async () => {
     const { service, sharedResourcesCalls } = mutableShare([record('a')]);
-    // Shadow `share` to answer the off-team no-op without mutating anything —
+    // Shadow `share` to answer the off-team no-op without mutating anything -
     // a real off-team share() never reaches the mutation branch above.
     (service as unknown as { share: TeamResourceShareService['share'] }).share = async () => null;
     const listTeam = createSwrCache(
@@ -405,7 +405,7 @@ describe('team resource share success invalidates the cached /team listing', () 
     const shareResp = await req.post('/api/workspace/design-systems/b/share');
     expect(shareResp.body).toEqual({ shared: false });
 
-    // Still inside freshMs and nothing actually changed — the cache is
+    // Still inside freshMs and nothing actually changed - the cache is
     // untouched, proving the handler did not fire an unconditional invalidate.
     await req.get('/api/workspace/design-systems/team');
     expect(sharedResourcesCalls()).toBe(1);
@@ -451,12 +451,12 @@ describe('team resource share success invalidates the cached /team listing', () 
 
   // Pins the two-layer composition `cachedTeamResourceList` uses in server.ts:
   // `share.sharedResources()` itself reads through a SECOND, shared SWR cache
-  // (`sharedTeamResourcesCommand` — the single `vela resource shared --json`
+  // (`sharedTeamResourcesCommand` - the single `vela resource shared --json`
   // read all three kinds funnel through). A bare reset of only the outer
   // per-kind cache is not enough: the immediate post-share refetch would call
   // `sharedResources()` fresh, which would then read the STILL-STALE raw hub
   // listing back out of that inner cache for up to its own freshMs. This
-  // mirrors (does not import — the composition is private to server.ts) the
+  // mirrors (does not import - the composition is private to server.ts) the
   // exact `cachedTeamResourceList` wiring so a regression there is caught here
   // instead of only in a live daemon.
   it('the outer per-kind cache cascades invalidate into the shared inner hub-read cache', async () => {

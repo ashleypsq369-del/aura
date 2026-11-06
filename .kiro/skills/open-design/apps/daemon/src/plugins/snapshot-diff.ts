@@ -1,4 +1,4 @@
-// Phase 4 / spec §11.5 / plan §3.BB2 — snapshot diff helper.
+// Phase 4 / spec §11.5 / plan §3.BB2 - snapshot diff helper.
 //
 // Pure helper that compares two AppliedPluginSnapshot values and
 // returns a structured report. Useful for:

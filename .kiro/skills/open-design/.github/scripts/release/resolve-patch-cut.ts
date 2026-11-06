@@ -2,9 +2,9 @@
 // GitHub runner.
 //
 // Two modes, one per workflow step in cut-patch-release.yml:
-//   resolve — decide which version to cut, and which already-cut release must
+//   resolve - decide which version to cut, and which already-cut release must
 //             have shipped stable before we are allowed to stack on top of it
-//   gate    — ask GitHub whether that release is a published stable release
+//   gate    - ask GitHub whether that release is a published stable release
 //
 // This used to be inline shell in the workflow. It moved out so the gate
 // decision is testable: e2e/tests/scripts/resolve-patch-cut.test.ts drives both
@@ -39,7 +39,7 @@ function setOutput(name: string, value: string): void {
   appendFileSync(file, `${name}=${value}\n`, "utf8");
 }
 
-/** Strict x.y.z, digits only — rejects shell metacharacters, newlines, etc. */
+/** Strict x.y.z, digits only - rejects shell metacharacters, newlines, etc. */
 function parseVersion(text: string): ReleaseVersion | null {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(text);
   if (match == null) return null;
@@ -81,7 +81,7 @@ function releaseBranchVersions(): ReleaseVersion[] {
  * `release/vX.Y.Z` below it.
  *
  * Not the minor base X.Y.0. Gating on the base stops guarding anything after
- * the line's first patch — once X.Y.0 ships, X.Y.2, X.Y.3, ... all pass while
+ * the line's first patch - once X.Y.0 ships, X.Y.2, X.Y.3, ... all pass while
  * the releases directly beneath them may never have shipped. That is how
  * release/v0.22.3 got cut on 2026-09-10 while release/v0.22.2 was unshipped and
  * still taking backports; nothing looked at 0.22.2 at any point.

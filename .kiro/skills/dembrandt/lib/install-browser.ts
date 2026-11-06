@@ -5,7 +5,7 @@
  * binaries. A browser installed for a *different* Playwright version is not
  * found ("Executable doesn't exist"), which is the single most common first-run
  * failure. Deriving the version from the playwright-core resolved next to this
- * file keeps the two in lockstep by construction — including in a global
+ * file keeps the two in lockstep by construction - including in a global
  * install, where a bare `npx playwright-core install` would otherwise fetch an
  * unrelated latest version from the registry.
  *
@@ -30,7 +30,7 @@ export function bundledPlaywrightVersion(): string {
  *
  * Invoked as `node <resolved cli.js>` rather than through npx: the resolved
  * CLI *is* the bundled playwright-core, so the version matches by construction
- * with no registry fetch — and npx is npx.cmd on Windows, which execFileSync
+ * with no registry fetch - and npx is npx.cmd on Windows, which execFileSync
  * will not spawn without a shell.
  */
 export function installBrowsers(argv: string[]): number {
@@ -42,7 +42,7 @@ export function installBrowsers(argv: string[]): number {
   console.log(`Installing Playwright ${targets.join(" ")} for playwright-core ${version}...`);
   try {
     // cli.js is not in playwright-core's exports map, so it cannot be
-    // require.resolve'd directly — derive its path from package.json, which is.
+    // require.resolve'd directly - derive its path from package.json, which is.
     const cli = join(dirname(require.resolve("playwright-core/package.json")), "cli.js");
     execFileSync(process.execPath, [cli, "install", ...targets], { stdio: "inherit" });
     return 0;

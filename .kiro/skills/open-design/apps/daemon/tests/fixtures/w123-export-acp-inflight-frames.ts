@@ -1,5 +1,5 @@
 /**
- * Regenerates `w123-acp-inflight-frames.json` — the real ACP frames the OD
+ * Regenerates `w123-acp-inflight-frames.json` - the real ACP frames the OD
  * daemon receives on an AMR run.
  *
  * NOT a test and not run by CI. It exists so the fixture is reproducible and so
@@ -23,7 +23,7 @@
  * Those rows are opencode's INTERNAL shape, so they are mapped to the ACP wire
  * shape the daemon actually parses. AMR does not use opencode's own ACP bridge:
  * the OD daemon talks to the `vela` CLI, whose ACP runtime does its own
- * mapping. The two differ in ways that matter here — vela puts the raw opencode
+ * mapping. The two differ in ways that matter here - vela puts the raw opencode
  * tool name in `kind` (which is how `todowrite` reaches OD), never sets `name`,
  * and never forwards a running call's output. So this file reproduces vela's
  * mapper, function for function:
@@ -37,7 +37,7 @@
  * ── What is trimmed ─────────────────────────────────────────────────────────
  *
  * String leaves longer than `TRIM_LIMIT` are truncated with a
- * `…[trimmed N chars]` suffix — for size, and because the untrimmed payloads
+ * `…[trimmed N chars]` suffix - for size, and because the untrimmed payloads
  * are real prompts and real shell output. Frame count, ordering, wall-clock
  * offsets, `sessionUpdate`/`status`/`kind`/`title`, and the `rawInput`/`content`
  * key sets are untouched; nothing under test reads the elided bytes.
@@ -55,7 +55,7 @@ const SESSION_ROOT = path.join(homedir(), '.amr', 'opencode-sessions');
 
 type Json = Record<string, unknown>;
 
-/** `opencode_client.go:1049` toolContent — output is stringified, not embedded. */
+/** `opencode_client.go:1049` toolContent - output is stringified, not embedded. */
 function toolContent(value: unknown): string {
   if (value === null || value === undefined) return '';
   if (typeof value === 'string') return value;

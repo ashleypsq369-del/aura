@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
  LayoutDashboard, Users, Brain, Bell, Pill, Calendar, 
@@ -395,7 +395,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  )}
  </button>
 
- {/* Copyright strip — only when labels visible */}
+ {/* Copyright strip - only when labels visible */}
  {showLabels && (
    <div style={{ marginTop:10, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.08)' }}>
      <p style={{ fontSize:10, color:'rgba(255,255,255,0.28)', textAlign:'center', lineHeight:1.6, margin:0 }}>

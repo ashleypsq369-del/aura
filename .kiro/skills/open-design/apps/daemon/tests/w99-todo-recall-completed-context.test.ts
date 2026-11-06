@@ -1,17 +1,17 @@
 /**
- * W99 · 召回块要带上「上一轮已经做完的那几条」—— daemon 这一半。
+ * W99 · 召回块要带上「上一轮已经做完的那几条」-- daemon 这一半。
  *
  * 现场:用户中止了一轮 4 步的活(前 2 步已完成),问了个无关问题,再说「继续之前的
- * 设计」。agent 确实接上了那两条没做完的,但它重发的新清单**只有 2 步** —— 上一轮
+ * 设计」。agent 确实接上了那两条没做完的,但它重发的新清单**只有 2 步** -- 上一轮
  * 做完的两条整个消失了,于是输入框上那枚药丸说「第 3/4 步」、流水里的卡说「2 步」。
  *
  * 根因不在模型:已完成那几条是 daemon 在**建提示词之前**就过滤掉的,agent 从头到尾
  * 没见过它们。所以这一组钉的是「召回块里到底有什么」,不是措辞好不好。
  *
  * 四件事:
- *  ① 正向 —— 被中止的轮次里 2 完成 + 2 未完成,四条**都在块里**,已完成的标成完成;
- *  ② 防重做 —— 块里必须一眼看出那两条是**既成事实**,不是待办;
- *  ③ 反向 —— 全做完仍旧一条都不注入(闸门没被拆);成功结束的轮次表现不变;
+ *  ① 正向 -- 被中止的轮次里 2 完成 + 2 未完成,四条**都在块里**,已完成的标成完成;
+ *  ② 防重做 -- 块里必须一眼看出那两条是**既成事实**,不是待办;
+ *  ③ 反向 -- 全做完仍旧一条都不注入(闸门没被拆);成功结束的轮次表现不变;
  *     没发过清单的会话正文**逐字节**不变;
  *  ④ 回看窗口仍然是 8 条。
  */
@@ -99,7 +99,7 @@ describe('W99 · 被中止那一轮的清单:四条都要回到 agent 眼前', (
     const db = seed();
     seedAssistant(db, 'a1', [TODO_WRITE(ABORTED_TURN)], 'canceled');
     const block = recallBlockFor(db);
-    // 每一条自己那一行上就写着状态 —— agent 不需要去别处对照
+    // 每一条自己那一行上就写着状态 -- agent 不需要去别处对照
     expect(block).toMatch(/\[completed\][^\n]*搭定价区/);
     expect(block).toMatch(/\[completed\][^\n]*补 FAQ/);
     expect(block).toMatch(/\[in_progress\][^\n]*过一遍响应式/);
@@ -112,7 +112,7 @@ describe('W99 · 被中止那一轮的清单:四条都要回到 agent 眼前', (
     const block = recallBlockFor(db);
     expect(block).toMatch(/already (finished|done)/i);
     expect(block).toMatch(/\bdo not (redo|repeat|run that work again)\b/i);
-    // 决定权仍旧交出去 —— 防重做不能顺手变成「必须接着做」
+    // 决定权仍旧交出去 -- 防重做不能顺手变成「必须接着做」
     expect(block).toMatch(/not an instruction/i);
     expect(block).toMatch(/\byou decide\b/i);
     expect(block).not.toMatch(/\byou must\b/i);
@@ -193,7 +193,7 @@ describe('W99 · 被中止那一轮的清单:四条都要回到 agent 眼前', (
     ).toBe(skipBase);
   });
 
-  it('④ 反向:回看窗口仍然是 8 条 —— 第 9 条之外的清单不召回', () => {
+  it('④ 反向:回看窗口仍然是 8 条 -- 第 9 条之外的清单不召回', () => {
     const db = seed();
     seedAssistant(db, 'a0', [TODO_WRITE(ABORTED_TURN)], 'canceled');
     for (let i = 1; i <= 8; i += 1) {

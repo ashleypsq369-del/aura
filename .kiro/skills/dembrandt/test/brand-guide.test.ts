@@ -95,7 +95,7 @@ test('buildHTML shows a font source url that matches the family exactly', () => 
 
 test('buildHTML matches a font source url with a format code spliced into the filename', () => {
   // Real-world shape (hm.com): "HM Ampersand Regular" family, filename
-  // "HMAmpersandW01-Regular-75537.ttf" — the "W01" breaks a plain substring
+  // "HMAmpersandW01-Regular-75537.ttf" - the "W01" breaks a plain substring
   // match, so the family words must be matched individually.
   const html = buildHTML({
     url: 'https://x.test',

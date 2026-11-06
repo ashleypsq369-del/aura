@@ -25,7 +25,7 @@ const KNOWN_MODEL_REQUIREMENTS: Readonly<Record<string, KnownModelRequirement>> 
   // Production traces showed 0.142.5 rejecting this ChatGPT-backed model with
   // "requires a newer version of Codex". Upstream confirms 0.143.0 can start
   // it explicitly even when the interactive model picker omits it, so version
-  // is the compatibility contract here—not catalog visibility.
+  // is the compatibility contract here-not catalog visibility.
   'gpt-5.6-terra': {
     minimum: { major: 0, minor: 143, patch: 0 },
     minimumLabel: '0.143.0',

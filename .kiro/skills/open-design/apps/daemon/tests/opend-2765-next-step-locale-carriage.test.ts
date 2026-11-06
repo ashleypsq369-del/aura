@@ -1,9 +1,9 @@
 /**
- * OPEND-2765 — 红测:`locale` 从 `/api/chat` 一路带到「下一步引导」那段提示词里。
+ * OPEND-2765 - 红测:`locale` 从 `/api/chat` 一路带到「下一步引导」那段提示词里。
  *
  * 单子上的现象是 zh-CN 环境下三条动态建议全是英文。这三条不是 i18n 文件里的固定
  * 文案,是模型按 `<od-next …>` 协议现写的(`packages/contracts/src/api/next-step-marker.ts`),
- * 所以判据不能落在「模型是否真的写了中文」—— 那不可控。判据落在**我们控制的那一段**:
+ * 所以判据不能落在「模型是否真的写了中文」-- 那不可控。判据落在**我们控制的那一段**:
  * 客户端选的 locale 有没有出现在那段协议提示词里。
  *
  * 为什么必须在 daemon 这一层再钉一遍(contracts 那边已经钉了渲染函数):
@@ -13,7 +13,7 @@
  * 只有在真实组装出来的 prompt 上取证,才能证明 locale 真的跟着到了那一段。
  *
  * 取证方式:假 agent 把 stdin 收到的完整 prompt 落盘,再从里面把
- * `Follow-up suggestions:` 这一段单独切出来断言 —— 不能拿整份 prompt 断言,
+ * `Follow-up suggestions:` 这一段单独切出来断言 -- 不能拿整份 prompt 断言,
  * 因为首轮里稳定前缀自己就带着 `Simplified Chinese`,那样断言永远绿。
  */
 import type http from 'node:http';
@@ -108,7 +108,7 @@ process.stdin.on('end', () => {
     const prompt = await capturePromptForLocale('zh-CN');
     const block = followUpSuggestionsBlock(prompt);
 
-    // 先证明取证器没取空 —— 空串对任何 toContain 都会红,但对 not.toContain 会假绿,
+    // 先证明取证器没取空 -- 空串对任何 toContain 都会红,但对 not.toContain 会假绿,
     // 下面那条反向锚点依赖这个前提。
     expect(block).toContain('<od-next key=');
     expect(block).toContain('Simplified Chinese');

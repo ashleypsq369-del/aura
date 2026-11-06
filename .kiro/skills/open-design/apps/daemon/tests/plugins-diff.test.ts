@@ -1,4 +1,4 @@
-// Plan §3.AA1 — diffPlugins() pure helper.
+// Plan §3.AA1 - diffPlugins() pure helper.
 
 import { describe, expect, it } from 'vitest';
 import type { InstalledPluginRecord, PluginManifest } from '@open-design/contracts';
@@ -29,7 +29,7 @@ const make = (
   ...over,
 });
 
-describe('diffPlugins — equivalence', () => {
+describe('diffPlugins - equivalence', () => {
   it('returns an empty entries list for byte-equal records', () => {
     const a = make('p', { taskKind: 'new-generation' });
     const b = make('p', { taskKind: 'new-generation' });
@@ -42,7 +42,7 @@ describe('diffPlugins — equivalence', () => {
   });
 });
 
-describe('diffPlugins — top-level record', () => {
+describe('diffPlugins - top-level record', () => {
   it('detects version + trust changes', () => {
     const a = make('p');
     const b = make('p', undefined, { version: '0.2.0', trust: 'restricted' });
@@ -72,7 +72,7 @@ describe('diffPlugins — top-level record', () => {
   });
 });
 
-describe('diffPlugins — manifest body', () => {
+describe('diffPlugins - manifest body', () => {
   it('detects od.taskKind changes', () => {
     const a = make('p', { taskKind: 'new-generation' });
     const b = make('p', { taskKind: 'code-migration' });
@@ -131,7 +131,7 @@ describe('diffPlugins — manifest body', () => {
   });
 });
 
-describe('diffPlugins — output shape', () => {
+describe('diffPlugins - output shape', () => {
   it('sorts entries by field path lexicographically (deterministic output)', () => {
     const a = make('p');
     const b = make('p', undefined, { version: '0.2.0', trust: 'restricted', source: '/tmp/new' });

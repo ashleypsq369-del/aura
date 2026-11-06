@@ -1,4 +1,4 @@
-// Phase 6 entry slice — figma-extract atom impl.
+// Phase 6 entry slice - figma-extract atom impl.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
@@ -66,7 +66,7 @@ const stubFetch = (response: { ok?: boolean; status?: number; statusText?: strin
   });
 };
 
-describe('runFigmaExtract — happy paths', () => {
+describe('runFigmaExtract - happy paths', () => {
   it('walks the Figma document into a flat tree with parents + boxes', async () => {
     const fetchFn = stubFetch({ body: fixtureFile });
     const report = await runFigmaExtract({
@@ -149,10 +149,10 @@ describe('runFigmaExtract — happy paths', () => {
   });
 });
 
-describe('runFigmaExtract — asset rasterisation', () => {
+describe('runFigmaExtract - asset rasterisation', () => {
   // Fixture with two non-text leaf nodes (3:2 + 3:3) so the asset
   // candidate set is multi-id. The base fixtureFile only has one
-  // (3:2 — a RECTANGLE with a gradient fill).
+  // (3:2 - a RECTANGLE with a gradient fill).
   const assetFixture = {
     document: {
       id: '0:0', name: 'Document', type: 'DOCUMENT',
@@ -267,7 +267,7 @@ describe('runFigmaExtract — asset rasterisation', () => {
   });
 });
 
-describe('runFigmaExtract — error paths', () => {
+describe('runFigmaExtract - error paths', () => {
   it('throws when neither fileUrl nor fileKey resolves', async () => {
     await expect(runFigmaExtract({
       cwd,

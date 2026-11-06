@@ -1,4 +1,4 @@
-// Phase 7-8 entry slice / spec §10 / §11.5.1 / §21.5 — handoff atom.
+// Phase 7-8 entry slice / spec §10 / §11.5.1 / §21.5 - handoff atom.
 //
 // SKILL.md fragment lives at plugins/_official/atoms/handoff/. The
 // daemon-side helper updates an ArtifactManifest's provenance +
@@ -113,7 +113,7 @@ export function isDeployableAppEligible(args: {
   return exports.some((t: ArtifactExportTarget) => t.surface === 'docker' || t.surface === 'cli');
 }
 
-// Plan §3.S1 — pipeline-driven handoff bridge.
+// Plan §3.S1 - pipeline-driven handoff bridge.
 //
 // Reads the on-disk state previous atoms wrote (critique/build-test.json,
 // review/decision.json) and returns the updated manifest with the right
@@ -129,7 +129,7 @@ export function isDeployableAppEligible(args: {
 //   4. (3) + build.passing && tests.passing + docker/cli exportTarget
 //                                                     → handoffKind='deployable-app'
 //
-// Monotonicity is enforced via recordHandoff() — a subsequent run
+// Monotonicity is enforced via recordHandoff() - a subsequent run
 // can only advance, never demote.
 
 export interface RunHandoffAtomInput {
@@ -232,7 +232,7 @@ async function readDiffReviewDecision(cwd: string): Promise<'accept' | 'reject' 
   }
 }
 
-// Plan §3.T1 — `<cwd>/handoff/manifest.json` round-trip.
+// Plan §3.T1 - `<cwd>/handoff/manifest.json` round-trip.
 //
 // runAndPersistHandoff() is the on-disk shell around runHandoffAtom():
 //

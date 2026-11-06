@@ -217,10 +217,10 @@ During local development, `tools-dev` starts the daemon first, passes its port i
 
 Image, video, audio, and HyperFrames skills call the local `od` CLI through environment variables injected by the daemon when it spawns an agent:
 
-- `OD_BIN` — absolute path to `apps/daemon/dist/cli.js`.
-- `OD_DAEMON_URL` — the running daemon URL.
-- `OD_PROJECT_ID` — the active project id.
-- `OD_PROJECT_DIR` — the active project's file directory.
+- `OD_BIN` - absolute path to `apps/daemon/dist/cli.js`.
+- `OD_DAEMON_URL` - the running daemon URL.
+- `OD_PROJECT_ID` - the active project id.
+- `OD_PROJECT_DIR` - the active project's file directory.
 
 If media generation fails with `OD_BIN: parameter not set`, `apps/daemon/dist/cli.js` missing, or `failed to reach daemon at http://127.0.0.1:0`, rebuild the daemon CLI and restart the managed runtime:
 
@@ -281,8 +281,8 @@ For every send, the app builds a system prompt from three layers and sends it to
 
 ```
 BASE_SYSTEM_PROMPT   (execution-profile-specific file or <artifact> handoff)
-   + active design system body  (DESIGN.md — palette/type/layout)
-   + active skill body          (SKILL.md — workflow and output rules)
+   + active design system body  (DESIGN.md - palette/type/layout)
+   + active skill body          (SKILL.md - workflow and output rules)
 ```
 
 Swap the skill or the design system in the top bar and the next send uses the new stack. Bodies are cached in-memory per session so this is a single daemon fetch per pick.
@@ -292,7 +292,7 @@ Swap the skill or the design system in the top bar and the next send uses the ne
 ```
 open-design/
 ├── apps/
-│   ├── daemon/                # Node/Express — spawns local agents + serves APIs
+│   ├── daemon/                # Node/Express - spawns local agents + serves APIs
 │   │   └── src/
 │   │       ├── cli.ts             # `od` bin entry
 │   │       ├── server.ts          # /api/* + static serving
@@ -334,20 +334,20 @@ open-design/
 
 ## Troubleshooting
 
-- **`better-sqlite3` fails to load / ABI mismatch after a Node.js version change** — `pnpm install` re-runs `postinstall` automatically and rebuilds the native addon for the current Node.js. To rebuild manually or verify the fix: `pnpm --filter @open-design/daemon rebuild better-sqlite3` then `pnpm --filter @open-design/daemon exec node -e "require('better-sqlite3')"`. Requires build tools: `python3`, `make`, `g++` (or `clang++`). If you use `ignore-scripts=true` in your `.npmrc` (common for AUR packages), run `pnpm bootstrap` after `pnpm install`.
-- **"no agents found on PATH"** — install one of the local runtimes registered in [`apps/daemon/src/runtimes/registry.ts`](apps/daemon/src/runtimes/registry.ts), make sure its executable is visible to the daemon, then use **Rescan** in **Models & providers → Local CLI**. Or configure a BYOK runtime in Settings.
-- **Claude Code exits with code 1** — OpenDesign was able to start `claude`, but the spawned non-interactive run failed before producing a response. From the same shell or app environment that starts OpenDesign, check:
+- **`better-sqlite3` fails to load / ABI mismatch after a Node.js version change** - `pnpm install` re-runs `postinstall` automatically and rebuilds the native addon for the current Node.js. To rebuild manually or verify the fix: `pnpm --filter @open-design/daemon rebuild better-sqlite3` then `pnpm --filter @open-design/daemon exec node -e "require('better-sqlite3')"`. Requires build tools: `python3`, `make`, `g++` (or `clang++`). If you use `ignore-scripts=true` in your `.npmrc` (common for AUR packages), run `pnpm bootstrap` after `pnpm install`.
+- **"no agents found on PATH"** - install one of the local runtimes registered in [`apps/daemon/src/runtimes/registry.ts`](apps/daemon/src/runtimes/registry.ts), make sure its executable is visible to the daemon, then use **Rescan** in **Models & providers → Local CLI**. Or configure a BYOK runtime in Settings.
+- **Claude Code exits with code 1** - OpenDesign was able to start `claude`, but the spawned non-interactive run failed before producing a response. From the same shell or app environment that starts OpenDesign, check:
   ```bash
   claude --version
   claude auth status --text
   printf 'hello' | claude -p --output-format stream-json --verbose --permission-mode bypassPermissions
   ```
   If the smoke test reports `401`, `apiKeySource: "none"`, or another auth error without a custom endpoint, run `claude`, use `/login`, exit Claude, and retry OpenDesign. If you use multiple Claude profiles, set **Models & providers → Local CLI → Claude Code config directory** to the profile path such as `~/.claude-2`. If `ANTHROPIC_BASE_URL` or a proxy is set, check the endpoint URL, proxy credentials, endpoint auth environment, and model access; remove the custom endpoint only if you want to retry with standard Claude Code auth. On Windows, native PowerShell and WSL use separate Claude installs and credential stores; re-authenticate in the same environment OpenDesign uses, and check Windows Credential Manager if `/login` does not repair native Windows credentials.
-- **daemon 500 on /api/chat** — check the daemon terminal for the stderr tail; usually the CLI rejected its args. Different CLIs take different argv shapes; inspect the matching definition in `apps/daemon/src/runtimes/defs/` if you need to adjust one.
-- **media generation says `OD_BIN` is missing or daemon URL is `:0`** — run the media dispatcher checks above. Do not resume the old CLI session; reopen the project from the OpenDesign app so the daemon can inject fresh `OD_*` variables.
-- **Codex loads too much plugin context** — start OpenDesign with `OD_CODEX_DISABLE_PLUGINS=1 pnpm tools-dev` to make daemon-spawned Codex processes run with `--disable plugins`.
-- **artifact never renders** — first identify the run's handoff profile. For a filesystem-capable local runtime, confirm the agent created a previewable project file and that file-write events reached the daemon; it should not emit source in `<artifact>`. For a plain/text-only or BYOK run, confirm the response contains one complete `<artifact>` block. Check daemon logs for the first failed boundary instead of asking a filesystem runtime to fall back to inline source.
-- **Browser authentication prompt on macOS** — keep Docker Desktop's default bridge networking. Sign in with username `open-design` and the `OD_API_TOKEN` value from `deploy/.env` as the password. Host networking is not required. See [`deploy/README.md` — Docker Desktop on macOS](deploy/README.md#docker-desktop-on-macos).
+- **daemon 500 on /api/chat** - check the daemon terminal for the stderr tail; usually the CLI rejected its args. Different CLIs take different argv shapes; inspect the matching definition in `apps/daemon/src/runtimes/defs/` if you need to adjust one.
+- **media generation says `OD_BIN` is missing or daemon URL is `:0`** - run the media dispatcher checks above. Do not resume the old CLI session; reopen the project from the OpenDesign app so the daemon can inject fresh `OD_*` variables.
+- **Codex loads too much plugin context** - start OpenDesign with `OD_CODEX_DISABLE_PLUGINS=1 pnpm tools-dev` to make daemon-spawned Codex processes run with `--disable plugins`.
+- **artifact never renders** - first identify the run's handoff profile. For a filesystem-capable local runtime, confirm the agent created a previewable project file and that file-write events reached the daemon; it should not emit source in `<artifact>`. For a plain/text-only or BYOK run, confirm the response contains one complete `<artifact>` block. Check daemon logs for the first failed boundary instead of asking a filesystem runtime to fall back to inline source.
+- **Browser authentication prompt on macOS** - keep Docker Desktop's default bridge networking. Sign in with username `open-design` and the `OD_API_TOKEN` value from `deploy/.env` as the password. Host networking is not required. See [`deploy/README.md` - Docker Desktop on macOS](deploy/README.md#docker-desktop-on-macos).
 
 ## Mapping back to the vision
 

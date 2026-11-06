@@ -68,7 +68,7 @@ describe('isPrivateAddress', () => {
       'fd12::3',
       'ff02::1',
       'fe80::1', // link-local low end
-      'fe90::1', // link-local — was missed by an exact fe80 match
+      'fe90::1', // link-local - was missed by an exact fe80 match
       'febf::1', // link-local high end (fe80::/10)
       '::ffff:127.0.0.1',
       '::ffff:7f00:1', // hex IPv4-mapped 127.0.0.1 (Node normalizes brackets to this)
@@ -115,7 +115,7 @@ describe('assertSafePublicUrl (up-front rejection)', () => {
     expect(() => assertSafePublicUrl('http://169.254.169.254/x.png')).toThrow(
       expect.objectContaining({ status: 400 }),
     );
-    // IPv4-mapped IPv6 literal — the URL parser normalizes the bracketed host
+    // IPv4-mapped IPv6 literal - the URL parser normalizes the bracketed host
     // to `::ffff:7f00:1`, which must still be rejected as loopback.
     expect(() => assertSafePublicUrl('http://[::ffff:127.0.0.1]/x.png')).toThrow(
       expect.objectContaining({ status: 400 }),
@@ -194,7 +194,7 @@ describe('createPluginAssetCache', () => {
     // On-disk blob exists under the sha256 key.
     const onDisk = await readFile(path.join(dir, assetCacheKey(url)));
     expect(onDisk.byteLength).toBe(8);
-    // Second call is served from disk — no extra fetch.
+    // Second call is served from disk - no extra fetch.
     const second = await cache.get(url);
     expect(second.buf.byteLength).toBe(8);
     expect(calls).toBe(1);
@@ -282,11 +282,11 @@ describe('createPluginAssetCache', () => {
         return pngResponse();
       }) as typeof fetch,
     });
-    // 169.254.169.254 is the cloud metadata endpoint — must never be fetched.
+    // 169.254.169.254 is the cloud metadata endpoint - must never be fetched.
     await expect(cache.get('https://169.254.169.254/x.png')).rejects.toMatchObject({ status: 400 });
     expect(calls).toBe(0);
   });
   // DNS-rebinding (host that *resolves* to a private address) is covered by the
-  // createValidatingLookup suite above — that guard runs at connection time,
+  // createValidatingLookup suite above - that guard runs at connection time,
   // inside the undici Agent, not through the injectable fetchImpl.
 });

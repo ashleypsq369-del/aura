@@ -189,7 +189,7 @@ describe('chat artifact maintenance loop', () => {
   });
 
   describe('one definition of a pass', () => {
-    // A `pending` row is invisible to the snapshot sweep on purpose — its bytes
+    // A `pending` row is invisible to the snapshot sweep on purpose - its bytes
     // may be mid-install, and only the reconciler may decide an in-flight
     // capture's fate. That is exactly why the order is not cosmetic: sweeping
     // first means a long-dead interrupted capture is protected by the very

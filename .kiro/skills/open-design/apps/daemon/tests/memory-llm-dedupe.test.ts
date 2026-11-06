@@ -75,8 +75,8 @@ describe('memory-llm chat extraction: duplicate-turn gate + reply serialization'
 
   it('re-invoking with an unchanged turn early-returns with no second LLM call', async () => {
     const turn = {
-      userMessage: 'I always work in dark mode — keep UIs dark by default.',
-      assistantMessage: 'Understood — I will default new UIs to dark mode.',
+      userMessage: 'I always work in dark mode - keep UIs dark by default.',
+      assistantMessage: 'Understood - I will default new UIs to dark mode.',
     };
     const opts = { projectRoot: process.cwd(), conversationId: 'conv-1' };
 
@@ -98,8 +98,8 @@ describe('memory-llm chat extraction: duplicate-turn gate + reply serialization'
     const turn = { userMessage: 'Remember I ship on Fridays.', assistantMessage: 'Noted.' };
     const opts = { projectRoot: process.cwd(), conversationId: 'conv-2' };
 
-    await extractWithLLM(dataDir, turn, opts); // fails — must not record the signature
-    await extractWithLLM(dataDir, turn, opts); // retried — must reach the provider again
+    await extractWithLLM(dataDir, turn, opts); // fails - must not record the signature
+    await extractWithLLM(dataDir, turn, opts); // retried - must reach the provider again
 
     expect(vi.mocked(globalThis.fetch)).toHaveBeenCalledTimes(2);
   });
@@ -117,7 +117,7 @@ describe('memory-llm chat extraction: duplicate-turn gate + reply serialization'
       opts,
     );
 
-    // Distinct replies are distinct turns — both reach the provider.
+    // Distinct replies are distinct turns - both reach the provider.
     expect(vi.mocked(globalThis.fetch)).toHaveBeenCalledTimes(2);
   });
 
@@ -143,7 +143,7 @@ describe('memory-llm chat extraction: duplicate-turn gate + reply serialization'
     expect(vi.mocked(globalThis.fetch)).toHaveBeenCalledTimes(2);
   });
 
-  it('feeds the rendered reply — not raw stream transport — as "## Assistant reply"', async () => {
+  it('feeds the rendered reply - not raw stream transport - as "## Assistant reply"', async () => {
     // A realistic Claude stream-json stdout capture: session bootstrap noise,
     // a resume hook, extended thinking, then the actual reply text.
     const rawStdout = [
@@ -196,7 +196,7 @@ describe('memory-llm chat extraction: duplicate-turn gate + reply serialization'
     const userPayload: string = body.messages[1].content;
 
     // The reply the model is asked to mine is the rendered text under the
-    // "## Assistant reply" heading — and carries none of the raw JSONL
+    // "## Assistant reply" heading - and carries none of the raw JSONL
     // transport that the old raw-stdout capture leaked in.
     expect(userPayload).toContain('## Assistant reply');
     expect(userPayload).toContain('I set the primary CTA to the brand green token.');

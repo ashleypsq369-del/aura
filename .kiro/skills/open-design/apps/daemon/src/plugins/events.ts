@@ -1,4 +1,4 @@
-// Phase 4 / spec §11.5 / plan §3.II1 — plugin event ring buffer.
+// Phase 4 / spec §11.5 / plan §3.II1 - plugin event ring buffer.
 //
 // In-memory FIFO ring buffer of plugin lifecycle events
 // (install / uninstall / upgrade / apply / snapshot-prune).
@@ -12,7 +12,7 @@
 // callback) or pull `snapshot()` for a one-shot read. The route
 // in server.ts wires both into a single SSE endpoint.
 //
-// No SQLite, no FS — pure in-memory state. A daemon restart
+// No SQLite, no FS - pure in-memory state. A daemon restart
 // resets the buffer (events survive the run, not the restart).
 
 export type PluginEventKind =
@@ -36,7 +36,7 @@ export interface PluginEvent {
   // (marketplace-refreshed) have no plugin id; they pass
   // pluginId='' so consumers can filter consistently.
   pluginId:  string;
-  // Optional structured payload — installer ships
+  // Optional structured payload - installer ships
   // { source, version }, uninstaller ships { reason }, etc.
   details?:  Record<string, unknown>;
 }
@@ -119,7 +119,7 @@ export function __resetPluginEventBufferForTests(): void {
   singleton.reset();
 }
 
-// Plan §3.NN1 — operator-facing buffer reset. Distinct from
+// Plan §3.NN1 - operator-facing buffer reset. Distinct from
 // __resetPluginEventBufferForTests because it returns the
 // pre-purge stats so the caller can audit what was discarded.
 // Exposed via the loopback-only `POST /api/plugins/events/purge`
@@ -131,7 +131,7 @@ export interface PurgePluginEventBufferResult {
   // confirm coverage.
   firstId:       number | null;
   lastId:        number | null;
-  // The ringe buffer's nextId value PRE-purge — useful for
+  // The ringe buffer's nextId value PRE-purge - useful for
   // debugging 'did we lose a window of events between export
   // and purge?'.
   preNextId:     number;
@@ -149,7 +149,7 @@ export function purgePluginEventBuffer(): PurgePluginEventBufferResult {
   return result;
 }
 
-// Plan §3.KK2 — pure roll-up over a slice of events. Useful for
+// Plan §3.KK2 - pure roll-up over a slice of events. Useful for
 // dashboards + the `od plugin events stats` CLI summary. Lives
 // next to the buffer so consumers can compute the same rollup
 // shape over either the full buffer or a filtered subset.

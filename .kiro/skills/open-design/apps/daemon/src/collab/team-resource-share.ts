@@ -1,5 +1,5 @@
 // Team resource sharing. A member with publish rights promotes a personal
-// resource — a design system, plugin, or skill — into the team scope: the
+// resource - a design system, plugin, or skill - into the team scope: the
 // resource's directory is packed and pushed by the login-backed Vela CLI under
 // its kind, so teammates can pull it into their own workspace. OpenDesign owns
 // the permission gate and scheduling, not backend credentials or byte transfer.
@@ -168,7 +168,7 @@ export function createTeamResourceShareService(
     };
   }
   // Distinct, colon-free id namespace on the shared hub. The caller's id (e.g.
-  // `user:palette-x`) is sanitized to path-safe chars — the hub routes the
+  // `user:palette-x`) is sanitized to path-safe chars - the hub routes the
   // resource id as a path param, so a colon would 404.
   const sanitizeResourceIdSegment = (value: string) => value.replace(/[^a-zA-Z0-9_-]/g, '-');
   const scopedIdPrefixFor = (principal?: ResourceHubPrincipal | null) =>
@@ -276,10 +276,10 @@ async function defaultRun(args: string[], workspaceId?: string): Promise<string>
 
 /**
  * spec 04 §11: unshare `resourceId` from `service`'s team hub, but ONLY when
- * it is CURRENTLY on the LIVE `sharedResources()` list — never inferred from
+ * it is CURRENTLY on the LIVE `sharedResources()` list - never inferred from
  * a caller-side "was this ever synced locally" flag. A resource's own
  * sharer never carries a local "teamSynced" marker (that flag is only ever
- * stamped onto a TEAMMATE's pulled copy — see `isTeamSyncedUserDesignSystem`
+ * stamped onto a TEAMMATE's pulled copy - see `isTeamSyncedUserDesignSystem`
  * in design-systems/index.ts), so gating an unshare on it would let the
  * sharer delete their own shared resource without ever touching the hub's
  * index, leaving a dangling entry that keeps re-syncing onto every teammate.
@@ -289,7 +289,7 @@ async function defaultRun(args: string[], workspaceId?: string): Promise<string>
  * `requestTeamVisibility`/`collabSync.requestTeamUnshare` instead of this
  * helper because projects don't go through `TeamResourceShareService`).
  *
- * Returns whether an unshare actually ran, so a caller — and its tests — can
+ * Returns whether an unshare actually ran, so a caller - and its tests - can
  * assert on the real state transition instead of a "was unshare called" mock.
  * Deliberately does NOT swallow a thrown `TeamResourceShareForbiddenError`:
  * the caller's delete must abort rather than proceed past a failed unshare.

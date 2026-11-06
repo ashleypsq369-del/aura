@@ -1,16 +1,16 @@
-// Phase 4 / spec §13 / plan §3.Y1 — installed-plugin search + filters.
+// Phase 4 / spec §13 / plan §3.Y1 - installed-plugin search + filters.
 //
 // Pure helper that filters and ranks an in-memory list of
 // InstalledPluginRecord by an optional free-text query, plus
 // structural filters (taskKind / mode / tag / trust).
 //
 // The function is consumed by:
-//   - `od plugin search <query>` (new in §3.Y1) — searches installed
+//   - `od plugin search <query>` (new in §3.Y1) - searches installed
 //     plugins for discovery,
-//   - `od plugin list --filter ...` (new in §3.Y1) — same filter
+//   - `od plugin list --filter ...` (new in §3.Y1) - same filter
 //     surface without requiring a query.
 //
-// The matcher is intentionally simple — case-insensitive substring
+// The matcher is intentionally simple - case-insensitive substring
 // across id, title, description, and tag list. Spec §13's full-text
 // + relevance-ranked search lives on the marketplace catalog side;
 // this helper is for the local installed roster only and never

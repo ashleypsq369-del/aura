@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * generic — a reasonable card+button page for kinds without a bespoke layout.
+ * generic - a reasonable card+button page for kinds without a bespoke layout.
  */
 
 import { button, card, tag } from "../kit.js";
@@ -31,5 +31,5 @@ export function renderGeneric(kind: AssetKind, brand: Brand, tokens: DesignToken
       ${card({ title: label, body: inner })}
     </div>`;
 
-  return document({ title: `${brand.name} — ${label}`, tokens, brand, body });
+  return document({ title: `${brand.name} - ${label}`, tokens, brand, body });
 }

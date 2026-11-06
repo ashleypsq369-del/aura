@@ -4,7 +4,7 @@ import { createValidatingLookup, fetchExternalBrandAsset } from '../src/brands/s
 
 // The brand-extraction fetchers pull a user-supplied site URL and then follow
 // sub-resource URLs (CSS/@font-face/img/favicon) discovered inside the fetched
-// HTML — those are attacker-influenced. `fetchExternalBrandAsset` is the single
+// HTML - those are attacker-influenced. `fetchExternalBrandAsset` is the single
 // SSRF choke point they all route through. It must refuse non-public hosts
 // (loopback, RFC1918/CGNAT, link-local, cloud metadata) BEFORE any request, so
 // these assertions never touch the network.
@@ -38,7 +38,7 @@ describe('fetchExternalBrandAsset SSRF guard', () => {
 // Redirects are followed manually so ordinary public->public hops still work,
 // but a redirect into non-public space is refused before the next request.
 // Public IP literals are used so the guard needs no DNS lookup and `fetch` is
-// stubbed — no network is touched.
+// stubbed - no network is touched.
 describe('fetchExternalBrandAsset redirect handling', () => {
   afterEach(() => {
     vi.restoreAllMocks();
@@ -76,7 +76,7 @@ describe('fetchExternalBrandAsset redirect handling', () => {
 // DNS rebinding: an attacker-controlled name can answer public for the
 // validation lookup and private for the socket's own re-resolution. The pre-URL
 // check alone can't stop that, so the guard is pinned to the connection via a
-// validating `lookup` (createValidatingLookup) — the address it validates IS the
+// validating `lookup` (createValidatingLookup) - the address it validates IS the
 // one the socket connects to. This exercises that connect-time lookup directly.
 describe('createValidatingLookup (DNS-rebinding pin)', () => {
   const runLookup = (

@@ -7,7 +7,7 @@ import {
 } from '../src/connectionTest.js';
 import type { DnsLookupFn } from '../src/connectionTest.js';
 
-describe('assertExternalAssetUrl — loopback rejection (issue #5478)', () => {
+describe('assertExternalAssetUrl - loopback rejection (issue #5478)', () => {
   it('rejects 127.0.0.1 asset URLs', async () => {
     const result = await assertExternalAssetUrl('http://127.0.0.1:8080/evil.png');
     expect(result.ok).toBe(false);
@@ -50,7 +50,7 @@ describe('assertExternalAssetUrl — loopback rejection (issue #5478)', () => {
   });
 });
 
-describe('validateBaseUrlResolved — DNS-resolved loopback (issue #5478)', () => {
+describe('validateBaseUrlResolved - DNS-resolved loopback (issue #5478)', () => {
   // A DNS mock that resolves any hostname to a loopback address
   const dnsResolvesLoopback: DnsLookupFn = async (_hostname: string) => [
     { address: '127.0.0.1', family: 4 },
@@ -108,7 +108,7 @@ describe('validateBaseUrlResolved — DNS-resolved loopback (issue #5478)', () =
   });
 });
 
-describe('DNS rebinding — resolved-address pinning (issue #5478)', () => {
+describe('DNS rebinding - resolved-address pinning (issue #5478)', () => {
   it('validateBaseUrlResolved attaches validated addresses to the result', async () => {
     const dns: DnsLookupFn = async () => [{ address: '93.184.216.34', family: 4 }];
     const result = await validateBaseUrlResolved(
@@ -175,7 +175,7 @@ describe('DNS rebinding — resolved-address pinning (issue #5478)', () => {
   });
 });
 
-describe('DNS lookup failure — fail-closed behavior (issue #5478)', () => {
+describe('DNS lookup failure - fail-closed behavior (issue #5478)', () => {
   it('validateBaseUrlResolved fails closed when DNS throws and forbidLoopback is true', async () => {
     const throwingDns: DnsLookupFn = async () => {
       throw new Error('ENOTFOUND');
@@ -190,7 +190,7 @@ describe('DNS lookup failure — fail-closed behavior (issue #5478)', () => {
   });
 
   it('validateBaseUrlResolved returns sync result when DNS throws and forbidLoopback is false', async () => {
-    // Provider endpoints should still return success on DNS failure — the
+    // Provider endpoints should still return success on DNS failure - the
     // actual fetch will surface the resolution error.
     const throwingDns: DnsLookupFn = async () => {
       throw new Error('ENOTFOUND');
@@ -220,7 +220,7 @@ describe('DNS lookup failure — fail-closed behavior (issue #5478)', () => {
   });
 });
 
-describe('createAssetValidatingLookup — connect-time guard (issue #5478)', () => {
+describe('createAssetValidatingLookup - connect-time guard (issue #5478)', () => {
   // Mock dns.lookup implementation that returns loopback
   const lookupReturnsLoopback = (
     _hostname: string,
@@ -315,7 +315,7 @@ describe('createAssetValidatingLookup — connect-time guard (issue #5478)', () 
   });
 });
 
-describe('assertAndFetchExternalAsset — fail-closed paths (issue #5478)', () => {
+describe('assertAndFetchExternalAsset - fail-closed paths (issue #5478)', () => {
   it('throws on blocked loopback URL', async () => {
     await expect(
       assertAndFetchExternalAsset('http://127.0.0.1:8080/evil.png'),
@@ -347,10 +347,10 @@ describe('assertAndFetchExternalAsset — fail-closed paths (issue #5478)', () =
   });
 });
 
-describe('assertAndFetchExternalAsset — TOCTOU with injectable lookup (issue #5478)', () => {
+describe('assertAndFetchExternalAsset - TOCTOU with injectable lookup (issue #5478)', () => {
   it('fetch carries dispatcher so connect-time rebind to loopback is refused', async () => {
     // The validation lookup returns a public IP, so assertExternalAssetUrl passes.
-    // The fetch stub receives the request init — assert that `dispatcher` is
+    // The fetch stub receives the request init - assert that `dispatcher` is
     // attached, proving the validating Agent would refuse a connect-time rebind.
     const publicLookup: DnsLookupFn = async () => [{ address: '93.184.216.34', family: 4 }];
     let capturedInit: RequestInit | undefined;

@@ -29,16 +29,16 @@ export const aiderAgentDef = {
     //
     // The suppression flags are all there to keep aider runnable without
     // a TTY:
-    //   --yes-always                       — skip per-action confirmation
-    //   --no-pretty                        — strip ANSI so stdout parses as plain text
-    //   --no-stream                        — left as default (streaming on)
-    //   --no-git / --no-auto-commits       — the daemon spawns aider inside
+    //   --yes-always                       - skip per-action confirmation
+    //   --no-pretty                        - strip ANSI so stdout parses as plain text
+    //   --no-stream                        - left as default (streaming on)
+    //   --no-git / --no-auto-commits       - the daemon spawns aider inside
     //                                        an OD project workspace that is
     //                                        not the user's git repo, so the
     //                                        commit machinery has nothing
     //                                        useful to do here
-    //   --no-suggest-shell-commands        — avoids a follow-up interactive prompt
-    //   --no-show-model-warnings           — suppresses model-compat banners
+    //   --no-suggest-shell-commands        - avoids a follow-up interactive prompt
+    //   --no-show-model-warnings           - suppresses model-compat banners
     //                                        that would otherwise prefix every
     //                                        run with noise
     buildArgs: (prompt, _imagePaths, _extra, options = {}) => {

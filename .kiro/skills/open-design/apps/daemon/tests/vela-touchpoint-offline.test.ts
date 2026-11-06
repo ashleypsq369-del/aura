@@ -1,4 +1,4 @@
-// OPEND-3436 at the daemon HTTP boundary — the cheapest layer that can see the
+// OPEND-3436 at the daemon HTTP boundary - the cheapest layer that can see the
 // whole feature (AGENTS.md "Try the cheapest layer first").
 //
 // The browser asks the same URL it always asked. What this ticket changes is
@@ -118,7 +118,7 @@ const RECEIPT = {
 /**
  * `cut` sends the status line and the start of a body, then drops the
  * connection; `stall` sends the same and then goes silent. Both are a runtime
- * that has already ANSWERED — the status is on the wire — but whose body the
+ * that has already ANSWERED - the status is on the wire - but whose body the
  * daemon never gets to read.
  */
 type Reply = Readonly<{
@@ -408,7 +408,7 @@ describe('production touchpoint offline replay', () => {
   // OPEND-3375's shape: a withdrawn DEPLOYMENT answers 410 with no receipt,
   // because there is no longer a delivery to write one about. The browser
   // already reads any unreadable 410 as a withdrawal and clears the screen. The
-  // package behind it has to go too — otherwise this ticket's own replay path
+  // package behind it has to go too - otherwise this ticket's own replay path
   // brings the withdrawn activity back the next time the client starts offline,
   // which is the exact failure AC6 names.
   it.each([
@@ -464,7 +464,7 @@ describe('production touchpoint offline replay', () => {
     await decide();
     expect(storedRecords()).toHaveLength(1);
 
-    // A different account on the same environment — a sign-out and sign-in.
+    // A different account on the same environment - a sign-out and sign-in.
     env.VELA_CONTROL_KEY = 'ck-account-b';
     await cutTheWire();
     const other = await decide();

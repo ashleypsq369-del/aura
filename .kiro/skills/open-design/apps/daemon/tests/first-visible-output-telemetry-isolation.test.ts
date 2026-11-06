@@ -6,15 +6,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { RunLifecycleMark } from '../src/run-lifecycle-tracer.js';
 
 // The `first_visible_output` / `first_token` marks are stamped from inside
-// `send()` — the single choke point EVERY stream event passes through on its
-// way to the user — and from the strategy's close-time tail emission. That
+// `send()` - the single choke point EVERY stream event passes through on its
+// way to the user - and from the strategy's close-time tail emission. That
 // places pure instrumentation directly on the product's critical path, so the
 // failure mode of a bug in it is not "one analytics field is missing", it is
 // "the user never receives the reply".
 //
 // Today nothing in that block realistically throws: the classifier is written
 // defensively and `mark` only spreads an object. But "safe because it is
-// currently written carefully" is not an invariant — the next line added there
+// currently written carefully" is not an invariant - the next line added there
 // can break it, and it would break the product, silently, for every run.
 //
 // So the fault is injected rather than argued about: the marker classifier and

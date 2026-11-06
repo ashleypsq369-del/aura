@@ -63,7 +63,7 @@ Choose the lightest type that satisfies the task. Heavier overlays carry higher 
 
 | Type | Blocks background | Anchored to trigger | Typical content | Dismiss with |
 |---|---|---|---|---|
-| **Tooltip** | No | Yes | 1–2 lines of explanatory text | Cursor leave / focus out |
+| **Tooltip** | No | Yes | 1-2 lines of explanatory text | Cursor leave / focus out |
 | **Popover** | No | Yes | Short interactive content: a form field, a picker, a small list | Click outside, Escape, explicit close |
 | **Dropdown / Menu** | No | Yes | List of actions or options | Click outside, Escape, selection |
 | **Bottom sheet** (mobile) | Partial (dimmed) | No | Actions or content on small screens | Swipe down, tap scrim, Escape |
@@ -87,10 +87,10 @@ When each overlay is styled on its own, the user meets several dialects of the s
 
 ## Tooltip
 
-A tooltip appears on hover or keyboard focus and disappears when the trigger loses focus. It is purely informational — no interactive elements inside.
+A tooltip appears on hover or keyboard focus and disappears when the trigger loses focus. It is purely informational - no interactive elements inside.
 
 - Content: one short sentence, label, or keyboard shortcut. Never put a link or button inside a tooltip.
-- Delay: 300–400ms on hover; no delay on keyboard focus.
+- Delay: 300-400ms on hover; no delay on keyboard focus.
 - Position: prefer above the trigger; auto-flip when viewport edge is near.
 - ARIA: `role="tooltip"` on the element; `aria-describedby` on the trigger pointing to the tooltip id.
 
@@ -98,9 +98,9 @@ A tooltip appears on hover or keyboard focus and disappears when the trigger los
 
 ## Popover
 
-A popover is anchored to a trigger but contains interactive content — a colour picker, a date range selector, a small form, a list of filters. Unlike a tooltip, it stays open while the user interacts.
+A popover is anchored to a trigger but contains interactive content - a colour picker, a date range selector, a small form, a list of filters. Unlike a tooltip, it stays open while the user interacts.
 
-- Max width: 280–360px. For larger content, use a drawer.
+- Max width: 280-360px. For larger content, use a drawer.
 - Position: anchored to the trigger; auto-flip to stay in viewport.
 - Dismiss: click outside, Escape key, or explicit close button when the content is long.
 - Focus: move focus into the popover when it opens; return focus to the trigger on close.
@@ -114,7 +114,7 @@ A dropdown lists selectable options or actions anchored to a trigger button. It 
 
 - Separate **select dropdowns** (the user picks one value that persists) from **action menus** (the user triggers an action that doesn't persist as a value).
 - Width: at least as wide as the trigger; cap at 280px.
-- Long lists: add a search input at the top when there are more than 8–10 items.
+- Long lists: add a search input at the top when there are more than 8-10 items.
 - Keyboard: `↑`/`↓` to move between items, `Enter` to select, `Escape` to close.
 
 ---
@@ -126,7 +126,7 @@ On small screens, a bottom sheet replaces modals and popovers. It slides up from
 - **Peek height:** Show a small portion of the sheet first (a handle + title), let the user drag to expand.
 - **Full-height:** For longer content or forms that need the full viewport.
 - Dismiss: swipe down, tap the scrim, or press Escape.
-- Do not centre dialogs on mobile — use a bottom sheet instead (centred modals are too small and hard to reach).
+- Do not centre dialogs on mobile - use a bottom sheet instead (centred modals are too small and hard to reach).
 - ARIA: treat as `role="dialog"` with the same focus management as a modal.
 
 ---
@@ -137,9 +137,9 @@ A drawer slides in from the left or right and partially covers the main content.
 
 - **Right drawer:** Detail view, editing form, filter/sort panel. Most common.
 - **Left drawer:** Navigation on mobile (hamburger menu pattern).
-- Width: 320–480px on desktop. Full-width on mobile (effectively a bottom sheet or full-screen overlay instead).
+- Width: 320-480px on desktop. Full-width on mobile (effectively a bottom sheet or full-screen overlay instead).
 - Scrim: a semi-transparent backdrop (`rgba(0,0,0,0.4)`) behind the drawer dims the main content.
-- Dismiss: Escape key, explicit close button. Clicking the scrim is optional — avoid it when the drawer contains an unsaved form.
+- Dismiss: Escape key, explicit close button. Clicking the scrim is optional - avoid it when the drawer contains an unsaved form.
 - Do not use a drawer when the task is blocking (e.g. a required decision). Use a modal instead.
 - ARIA: `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing to the drawer title.
 
@@ -188,7 +188,7 @@ A modal blocks the entire UI with a full scrim. Use it only when the app genuine
 | Large | 640px | Multi-field forms, richer content |
 | Full-screen | 100% viewport | Immersive tasks; use sparingly |
 
-Content that overflows the modal height should scroll within the **body area only** — the header and footer must remain visible.
+Content that overflows the modal height should scroll within the **body area only** - the header and footer must remain visible.
 
 **A mobile-first dialog gets its own desktop layout.** A phone-width card centred on a large screen reads cramped and unfinished: options wrap into one narrow column and targets sit closer than the space allows. Give the desktop breakpoint its own width, column count and spacing while mobile keeps the original.
 
@@ -198,8 +198,8 @@ Content that overflows the modal height should scroll within the **body area onl
 
 | Trigger | Allowed for non-destructive? | Allowed for destructive? |
 |---|---|---|
-| `Escape` key | Yes | No — require explicit Cancel |
-| Click outside scrim | Yes (optional) | No — too easy to dismiss accidentally |
+| `Escape` key | Yes | No - require explicit Cancel |
+| Click outside scrim | Yes (optional) | No - too easy to dismiss accidentally |
 | Close button (✕) | Yes | Yes |
 | Cancel button | Yes | Yes |
 
@@ -207,7 +207,7 @@ For destructive or irreversible actions: disable Escape and click-outside dismis
 
 ### Stacking modals
 
-Avoid opening a modal from inside a modal. It signals an information architecture problem — the task is likely too complex for a single dialog.
+Avoid opening a modal from inside a modal. It signals an information architecture problem - the task is likely too complex for a single dialog.
 
 If a secondary overlay is unavoidable, use a popover anchored inside the modal rather than another full modal. Never stack two blocking scrim overlays.
 
@@ -296,7 +296,7 @@ Use a focus trap library or the native `<dialog>` element, which handles trappin
 - `aria-modal="true"` tells screen readers to ignore content behind the overlay
 - `aria-labelledby` points to the dialog title's id
 - `aria-describedby` points to the description's id (optional but helpful for confirmations)
-- The scrim backdrop should have `aria-hidden="true"` — screen readers must not read it
+- The scrim backdrop should have `aria-hidden="true"` - screen readers must not read it
 
 ---
 
@@ -314,7 +314,7 @@ Confirmation dialogs for destructive actions must name the item and consequence.
 > [No] [Yes]
 
 - The primary destructive action button uses `--color-error` / `--color-danger`, not `--color-primary`.
-- Label the destructive button explicitly: "Delete project", "Remove member", "Cancel order" — not just "OK" or "Confirm".
+- Label the destructive button explicitly: "Delete project", "Remove member", "Cancel order" - not just "OK" or "Confirm".
 - Cancel is always on the left (or secondary position); destructive action on the right.
 
 ## Tooltips on Packed Cells
@@ -328,7 +328,7 @@ A tooltip on one cell of a flush group opens clear of the whole group. When cell
 - [ ] Is the correct overlay type chosen for the task (tooltip / popover / menu / bottom sheet / drawer / modal)?
 - [ ] Is a modal avoided when a drawer or inline pattern would suffice?
 - [ ] Does the modal/drawer have a visible title, body, and clear action buttons?
-- [ ] Does overflow content scroll within the body — with the header and footer fixed?
+- [ ] Does overflow content scroll within the body - with the header and footer fixed?
 - [ ] Is Escape disabled for destructive actions (click-outside too)?
 - [ ] Does focus move into the overlay on open, and return to the trigger on close?
 - [ ] Is focus trapped within the overlay while it's open?

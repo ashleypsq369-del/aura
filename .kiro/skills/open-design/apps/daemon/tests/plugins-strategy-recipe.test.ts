@@ -217,7 +217,7 @@ describe('OD Next V2 request recipe wiring', () => {
     if (!recipe) throw new Error('expected OD Next PPT recipe');
 
     const prompt = composeSystemPrompt({ odNextStrategyRecipe: recipe });
-    expect(prompt.match(/^## Task Skill —/gm)).toHaveLength(1);
+    expect(prompt.match(/^## Task Skill -/gm)).toHaveLength(1);
     expect(prompt).toContain('OD Deck Protocol v1');
     expect(prompt).toContain('data-od-deck-protocol="1"');
     expect(prompt).toContain("type: 'od:deck-ready'");
@@ -299,7 +299,7 @@ describe('OD Next V2 request recipe wiring', () => {
       odNextStrategyRecipe: recipe,
       ...stableContext,
     }));
-    expect(prompt.match(/^## Task Skill —/gm)).toHaveLength(1);
+    expect(prompt.match(/^## Task Skill -/gm)).toHaveLength(1);
     expect(prompt).toContain('"fidelity": "high-fidelity"');
     expect(prompt).toContain('Real project template');
     expect(prompt).toContain('Acme Brand');

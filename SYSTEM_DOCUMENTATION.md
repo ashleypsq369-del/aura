@@ -228,7 +228,7 @@ All models defined in `backend/src/db.py` using SQLAlchemy ORM on SQLite.
 | Model | Table | Key Fields |
 |---|---|---|
 | `CarePlan` | `care_plans` | patient_id, goals_of_care, pain_management_plan, ai_generated, care_phase, disease_profile |
-| `CarePlanGoal` | `care_plan_goals` | care_plan_id, title, category, priority, status, progress (0–100), ai_suggested |
+| `CarePlanGoal` | `care_plan_goals` | care_plan_id, title, category, priority, status, progress (0-100), ai_suggested |
 | `CarePlanChecklistItem` | `care_plan_checklist_items` | goal_id, task, frequency, is_completed, due_date |
 | `CarePlanIntervention` | `care_plan_interventions` | care_plan_id, name, category, responsible_role, status |
 
@@ -236,10 +236,10 @@ All models defined in `backend/src/db.py` using SQLAlchemy ORM on SQLite.
 
 | Model | Table | Validated Tool |
 |---|---|---|
-| `ESASAssessment` | `esas_assessments` | Edmonton Symptom Assessment System (pain/fatigue/nausea/depression/anxiety/breathlessness/appetite/wellbeing each 0–10) |
+| `ESASAssessment` | `esas_assessments` | Edmonton Symptom Assessment System (pain/fatigue/nausea/depression/anxiety/breathlessness/appetite/wellbeing each 0-10) |
 | `PPSAssessment` | `pps_assessments` | Palliative Performance Scale (ambulation/activity/self_care/intake/consciousness → pps_score) |
-| `PHQ9Assessment` | `phq9_assessments` | PHQ-9 Depression (q1–q9 scores, total, severity) |
-| `GAD7Assessment` | `gad7_assessments` | GAD-7 Anxiety (q1–q7 scores, total, severity) |
+| `PHQ9Assessment` | `phq9_assessments` | PHQ-9 Depression (q1-q9 scores, total, severity) |
+| `GAD7Assessment` | `gad7_assessments` | GAD-7 Anxiety (q1-q7 scores, total, severity) |
 | `BarthelIndexAssessment` | `barthel_assessments` | Barthel ADL (10 domains → total_score) |
 | `PainAssessment` | `pain_assessments` | Brief Pain Inventory (worst/least/average/current pain + interference) |
 | `QualityOfLifeAssessment` | `qol_assessments` | FACT-G QoL (physical/social/emotional/functional wellbeing) |
@@ -478,14 +478,14 @@ All endpoints require `Authorization: Bearer <JWT>` except `/api/auth/login` and
 
 | Task | Output | Threshold |
 |---|---|---|
-| `vital_risk` | Low/Medium/High/Crisis | Score 0–1 |
-| `symptom_burden` | Symptom severity class | Score 0–1 |
-| `functional_decline` | Decline probability | Score 0–1 |
-| `cognitive_impairment` | Impairment risk | Score 0–1 |
-| `mental_health_risk` | Depression/anxiety risk | Score 0–1 |
-| `medication_risk` | Adverse event risk | Score 0–1 |
-| `caregiver_burden` | Burden level | Score 0–1 |
-| `admission_risk` | Hospital admission risk | Score 0–1 |
+| `vital_risk` | Low/Medium/High/Crisis | Score 0-1 |
+| `symptom_burden` | Symptom severity class | Score 0-1 |
+| `functional_decline` | Decline probability | Score 0-1 |
+| `cognitive_impairment` | Impairment risk | Score 0-1 |
+| `mental_health_risk` | Depression/anxiety risk | Score 0-1 |
+| `medication_risk` | Adverse event risk | Score 0-1 |
+| `caregiver_burden` | Burden level | Score 0-1 |
+| `admission_risk` | Hospital admission risk | Score 0-1 |
 
 **Fallback:** If `.pkl` files are absent, a rule-based scoring engine in `ml_model_service.py` computes estimates from raw vitals and symptom values.
 
@@ -654,7 +654,7 @@ frontend/
 ### Wellness
 | File | Route | Description |
 |---|---|---|
-| `WellnessCheckin.jsx` | `/wellness-checkin` | Patient daily ESAS self-report (8 dimensions 0–10) |
+| `WellnessCheckin.jsx` | `/wellness-checkin` | Patient daily ESAS self-report (8 dimensions 0-10) |
 | `MyJourney.jsx` | `/my-journey` | Patient care journey timeline |
 
 ### Clinical Operations

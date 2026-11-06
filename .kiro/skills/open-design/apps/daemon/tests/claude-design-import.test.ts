@@ -192,16 +192,16 @@ function DCViewport() {
 
     const onWheel = (e) => {
       e.preventDefault();
-      if (isGesturing) return; // Safari: gesture* owns the pinch — discard concurrent wheels
+      if (isGesturing) return; // Safari: gesture* owns the pinch - discard concurrent wheels
       if ((e.ctrlKey || e.metaKey) && !isMouseWheel(e)) {
         // trackpad pinch, or ctrl/cmd + smooth-scroll mouse. Notched
         // wheels fall through to the fixed-step branch below.
         zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01));
       } else if (isMouseWheel(e)) {
-        // notched mouse wheel — fixed-ratio step per click
+        // notched mouse wheel - fixed-ratio step per click
         zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18));
       } else {
-        // trackpad two-finger scroll — pan
+        // trackpad two-finger scroll - pan
         tf.current.x -= e.deltaX;
         tf.current.y -= e.deltaY;
         apply();
@@ -211,7 +211,7 @@ function DCViewport() {
     // Safari sends native gesture* events for trackpad pinch with a smooth
     // e.scale; preferring these over the ctrl+wheel fallback gives a much
     // better feel there. No-ops on other browsers. Safari also fires
-    // ctrlKey wheel events during the same pinch — isGesturing makes
+    // ctrlKey wheel events during the same pinch - isGesturing makes
     // onWheel drop those entirely so they neither zoom nor pan.
     let gsBase = 1;
     let isGesturing = false;
@@ -287,7 +287,7 @@ function DCViewport() {
       const result = await importClaudeDesignZip(zipPath, projectDir);
       expect(result.files).toContain('design-canvas.jsx');
       const written = readFileSync(path.join(projectDir, 'design-canvas.jsx'), 'utf8');
-      // Source must be preserved verbatim — no partial rewrite, no crash.
+      // Source must be preserved verbatim - no partial rewrite, no crash.
       expect(written).toBe(driftedCanvas);
       // And the importer must have logged so the regression is greppable.
       expect(warn).toHaveBeenCalledTimes(1);

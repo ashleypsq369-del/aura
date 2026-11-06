@@ -12,7 +12,7 @@ export {
  * lifecycle in `runs.ts`: each session keeps a bounded event ring-buffer so a
  * reattaching SSE client can replay recent scrollback after its
  * `Last-Event-ID`, then fans out live PTY output to every attached client.
- * Sessions are process-local and never persisted — closing the daemon kills
+ * Sessions are process-local and never persisted - closing the daemon kills
  * the PTYs (see `shutdownActive`).
  */
 

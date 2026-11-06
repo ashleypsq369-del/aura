@@ -1,7 +1,7 @@
 /** @module agent-protocol/acp/constants
  * Protocol version, timeout defaults, artifact-detection patterns, and
  * model-config identifier sets used across all acp/ files. No dependencies
- * on other agent-protocol modules — safe to import from anywhere in acp/.
+ * on other agent-protocol modules - safe to import from anywhere in acp/.
  */
 
 /** ACP JSON-RPC protocol version sent in every `initialize` handshake. */
@@ -18,7 +18,7 @@ export const MAX_TIMEOUT_MS = 24 * 60 * 60 * 1000;
 // Callers can override via `stageTimeoutMs`; the chat server reads
 // `OD_ACP_STAGE_TIMEOUT_MS` from the environment.
 // A non-positive `stageTimeoutMs` (`<= 0`) disables the watchdog entirely,
-// mirroring the outer chat watchdog's escape-hatch semantics — without this,
+// mirroring the outer chat watchdog's escape-hatch semantics - without this,
 // `OD_ACP_STAGE_TIMEOUT_MS=0` would call `setTimeout(..., 0)` and fail every
 // ACP session on the next tick instead of disabling the watchdog.
 /** Default per-stage inactivity watchdog timeout (10 minutes) for an ACP session; resets on every received line from the agent subprocess. */
@@ -42,7 +42,7 @@ export const ACP_STDERR_DIAGNOSTIC_TAIL_LIMIT = 4_000;
 /**
  * Floor between two `tool_in_flight` publications for the SAME tool call.
  *
- * The first publication of a call is never throttled — that is the entire
+ * The first publication of a call is never throttled - that is the entire
  * point, since a row must appear the moment the agent says it started. This
  * only bounds the UPDATES that follow.
  *

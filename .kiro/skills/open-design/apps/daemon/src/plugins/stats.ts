@@ -1,10 +1,10 @@
-// Phase 4 / spec §11.5 / plan §3.DD1 — installed-plugin inventory stats.
+// Phase 4 / spec §11.5 / plan §3.DD1 - installed-plugin inventory stats.
 //
 // Pure helper that aggregates an in-memory list of
 // InstalledPluginRecord into a single health/inventory report.
 // Used by:
 //
-//   - `od plugin stats` — operator at-a-glance inventory check,
+//   - `od plugin stats` - operator at-a-glance inventory check,
 //   - the desktop / web 'Plugins' settings panel (via the JSON
 //     mode of the same CLI),
 //   - the `od doctor` summary (a future patch can fold this in
@@ -33,7 +33,7 @@ export interface PluginInventoryStats {
   // The newest install timestamp (epoch ms) so an operator can
   // see 'when did anything change last?'.
   lastInstalledAt:  number | null;
-  // The newest update timestamp — distinct because re-running the
+  // The newest update timestamp - distinct because re-running the
   // installer on the same source bumps updatedAt without
   // changing installedAt.
   lastUpdatedAt:    number | null;
@@ -86,7 +86,7 @@ export function pluginInventoryStats(plugins: ReadonlyArray<InstalledPluginRecor
   return stats;
 }
 
-// Snapshot-side aggregation — pure, takes the rows the daemon
+// Snapshot-side aggregation - pure, takes the rows the daemon
 // produces from `applied_plugin_snapshots`. Kept in a sister
 // function so the route can call both halves and merge on the way
 // out.
@@ -110,7 +110,7 @@ export interface SnapshotStatsRow {
   applied_at: number;
 }
 
-// Plan §3.MM2 — `pluginSourceBuckets()` aggregates installed
+// Plan §3.MM2 - `pluginSourceBuckets()` aggregates installed
 // plugins by (sourceKind, source) tuples. Used by the
 // `od plugin sources` CLI; lives next to the other stats
 // helpers so future audit panels can reuse it.

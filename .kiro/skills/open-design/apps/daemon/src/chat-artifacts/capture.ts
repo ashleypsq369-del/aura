@@ -4,7 +4,7 @@
 // transaction, so every capture writes a durable intent FIRST (carrying the
 // temp key and the expectation it must satisfy), only then touches bytes, and
 // only flips to `ready` once the bytes are installed and re-hashed. A crash at
-// any step leaves a row the reconciler can classify — never a silent half-state
+// any step leaves a row the reconciler can classify - never a silent half-state
 // and never bytes the daemon cannot account for.
 //
 // THE OTHER POINT: a capture that cannot prove it holds the EXACT bytes of that
@@ -75,7 +75,7 @@ export interface CaptureFromPathInput {
 }
 
 export interface ChatArtifactCaptureResult {
-  /** Empty string when `state` is `skipped` — no snapshot row was written. */
+  /** Empty string when `state` is `skipped` - no snapshot row was written. */
   snapshotId: string;
   workspaceArtifactId: string;
   /**
@@ -83,7 +83,7 @@ export interface ChatArtifactCaptureResult {
    * (user ruling 2026-09-02: video / audio). It is deliberately NOT `failed`:
    * nothing was attempted, so nothing is missing, and the card falls back to
    * the live workspace file exactly as a legacy message does. Reporting it as
-   * a failure would bury the real failures — quota, drift, renderer — that the
+   * a failure would bury the real failures - quota, drift, renderer - that the
    * state exists to surface.
    */
   state: 'ready' | 'failed' | 'skipped';
@@ -133,7 +133,7 @@ export async function captureChatArtifactSnapshotFromBytes(
   const byteSize = input.bytes.byteLength;
 
   // `advanceWorkspaceLatest: false` means these bytes are a rendering OF the
-  // file, not the file — a cover. So every fact that describes the file's
+  // file, not the file - a cover. So every fact that describes the file's
   // CONTENT stays out, MIME INCLUDED. `image/jpeg` is true of a video's poster
   // and false of the video; letting it through would restamp the mutable Design
   // Files identity that the card's click resolves through, and `mime` is written
@@ -246,7 +246,7 @@ export async function captureChatArtifactSnapshotFromPath(
 
   // Same gate as the in-memory path, for the same reason: this is a chokepoint,
   // not a helper. `run-capture` already routes non-storing kinds to the latest
-  // pointer before it ever gets here, so today this is defence in depth — it is
+  // pointer before it ever gets here, so today this is defence in depth - it is
   // what stops the next call site from reintroducing the exclusion as a bug.
   if (!mayStoreOriginalBytes(input.kind, role)) return skipped(workspaceArtifact.id);
 
@@ -419,7 +419,7 @@ function recordImmediateFailure(
 /**
  * Budget gate. Returns the failure code to record, or null when the capture may
  * proceed. A digest that is already installed costs nothing new, so it is
- * always allowed through — refusing a dedupe hit would fail a capture that
+ * always allowed through - refusing a dedupe hit would fail a capture that
  * consumes zero additional bytes.
  */
 function checkBudget(
@@ -488,7 +488,7 @@ function failure(
 }
 
 function logCaptureFailure(source: string, filePath: string, err: unknown): void {
-  // Never log bytes or absolute paths — only the project-relative label.
+  // Never log bytes or absolute paths - only the project-relative label.
   const message = err instanceof Error ? err.message : String(err);
   try {
     console.warn(`[chat-artifacts] ${source} capture failed for ${filePath}: ${message}`);

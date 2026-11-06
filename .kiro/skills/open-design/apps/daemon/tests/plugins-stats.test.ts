@@ -1,4 +1,4 @@
-// Plan §3.DD1 — pluginInventoryStats + snapshotInventoryStats.
+// Plan §3.DD1 - pluginInventoryStats + snapshotInventoryStats.
 
 import { describe, expect, it } from 'vitest';
 import type { InstalledPluginRecord, PluginManifest } from '@open-design/contracts';
@@ -153,7 +153,7 @@ describe('snapshotInventoryStats', () => {
   });
 });
 
-describe('pluginSourceBuckets — Plan §3.MM2', () => {
+describe('pluginSourceBuckets - Plan §3.MM2', () => {
   it('returns total=0 + empty buckets[] for an empty list', () => {
     const result = pluginSourceBuckets([]);
     expect(result.total).toBe(0);

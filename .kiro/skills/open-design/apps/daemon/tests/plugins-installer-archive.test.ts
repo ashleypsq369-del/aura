@@ -1,4 +1,4 @@
-// Plan §3.A6 / spec §7.2 — github + https tarball install backend.
+// Plan §3.A6 / spec §7.2 - github + https tarball install backend.
 //
 // We don't reach the network in tests; an in-memory `fetcher` returns the
 // gzipped bytes we just wrote with `tar.create()`. The test validates:

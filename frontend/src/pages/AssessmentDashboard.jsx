@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -98,7 +98,7 @@ export default function AssessmentDashboard() {
       fullName: 'Edmonton Symptom Assessment',
       icon: Heart,
       color: 'rose',
-      description: '9 symptom scales — pain, fatigue, nausea and more',
+      description: '9 symptom scales - pain, fatigue, nausea and more',
       data: overview?.esas,
       route: `/assessments/${patientId}/esas`,
       frequency: 'Daily',
@@ -232,7 +232,7 @@ export default function AssessmentDashboard() {
       fullName: 'Referral Tracker',
       icon: Send,
       color: 'green',
-      description: 'Allied health referrals — physio, social work, chaplaincy and more',
+      description: 'Allied health referrals - physio, social work, chaplaincy and more',
       data: overview?.referrals,
       route: `/assessments/${patientId}/referrals`,
       frequency: 'As needed',
@@ -244,7 +244,7 @@ export default function AssessmentDashboard() {
       fullName: 'Spiritual & Wellbeing Care',
       icon: Heart,
       color: 'violet',
-      description: 'Inclusive spiritual care — all faiths and secular',
+      description: 'Inclusive spiritual care - all faiths and secular',
       data: overview?.spiritual_care,
       route: `/assessments/${patientId}/spiritual-care`,
       frequency: 'As needed',

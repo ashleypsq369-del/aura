@@ -104,7 +104,7 @@ async function runStageWithDevloop(
   const repeat = stage.repeat === true;
   if (repeat && !stage.until) {
     throw new PipelineConfigError(
-      `stage "${stage.id}" sets repeat:true but no until expression — refusing to schedule`,
+      `stage "${stage.id}" sets repeat:true but no until expression - refusing to schedule`,
     );
   }
   const expression = stage.until ? parseUntilOrThrow(stage.until, stage.id) : null;

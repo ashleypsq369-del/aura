@@ -20,7 +20,7 @@ function persist(payload: Record<string, unknown>): PersistedStatus | null {
   return daemonAgentPayloadToPersistedAgentEvent(payload) as PersistedStatus | null;
 }
 
-describe('daemonAgentPayloadToPersistedAgentEvent — tool_loop', () => {
+describe('daemonAgentPayloadToPersistedAgentEvent - tool_loop', () => {
   it('persists a warn tool_loop as a stored warning status (survives replay)', () => {
     const persisted = persist({
       type: 'tool_loop',
@@ -59,7 +59,7 @@ describe('daemonAgentPayloadToPersistedAgentEvent — tool_loop', () => {
   });
 });
 
-describe('daemonAgentPayloadToPersistedAgentEvent — diagnostic', () => {
+describe('daemonAgentPayloadToPersistedAgentEvent - diagnostic', () => {
   it('persists safe structured runtime diagnostics', () => {
     const persisted = daemonAgentPayloadToPersistedAgentEvent({
       type: 'diagnostic',
@@ -101,7 +101,7 @@ describe('daemonAgentPayloadToPersistedAgentEvent — diagnostic', () => {
   });
 });
 
-describe('daemonAgentPayloadToPersistedAgentEvent — transient ACP status labels', () => {
+describe('daemonAgentPayloadToPersistedAgentEvent - transient ACP status labels', () => {
   // Regression for PR #5145 review: transient ACP protocol-internal status
   // labels (waiting_for_first_output, tool_call, tool_call_update,
   // session_update) carry no user-visible detail. The live web translator
@@ -126,8 +126,8 @@ describe('daemonAgentPayloadToPersistedAgentEvent — transient ACP status label
 
   // `agent_reconnecting` was on the list above and was taken off it. Unlike its
   // neighbours it is not polling-shaped: it fires once per real, irreversible
-  // upstream event — the agent's connection to the model dropped mid-turn and
-  // the turn restarted — and the model can re-generate text it had already
+  // upstream event - the agent's connection to the model dropped mid-turn and
+  // the turn restarted - and the model can re-generate text it had already
   // streamed, so the transcript legitimately ends up holding the answer twice.
   // Dropping the row left the reader with two conclusions and nothing to
   // explain the seam. Full rationale and the recorded case live on

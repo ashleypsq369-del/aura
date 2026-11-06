@@ -136,13 +136,13 @@ export const RUN_EVENT_CONTENT_WARNING =
  * Whether an optional log source should be listed at all.
  *
  * ENOENT is the ordinary "this launcher never produced one" answer and must
- * drop the entry silently — tools-dev appends to latest.log and never rotates,
+ * drop the entry silently - tools-dev appends to latest.log and never rotates,
  * so listing a phantom would stamp a placeholder into every dev bundle.
  *
  * Any OTHER access failure means the file is THERE but unreachable (EACCES on
  * the log directory, EIO, ENOTDIR). Treating that as absence would make the
  * one log that explains an incident vanish without a word, so the source stays
- * listed and `collectLogSource` records the real error — a bundle that says
+ * listed and `collectLogSource` records the real error - a bundle that says
  * "unreadable, here is why" beats a bundle that quietly says nothing.
  */
 async function shouldListOptionalSource(path: string): Promise<boolean> {
@@ -214,7 +214,7 @@ async function buildSidecarLogSources(
     // entry is existence-conditional because non-rotating launchers
     // (tools-dev appends to latest.log) never produce one, and listing it
     // unconditionally would stamp missing-file placeholders and manifest
-    // noise into every dev bundle — the same reason renderer.log stays
+    // noise into every dev bundle - the same reason renderer.log stays
     // desktop-only above.
     const previousLogPath = `${dirname(absolutePath)}/previous.log`;
     if (await shouldListOptionalSource(previousLogPath)) {
@@ -378,7 +378,7 @@ export function createDiagnosticsExportHandler(options: DiagnosticsHandlerOption
       // Surface "expected-but-empty" so a reader can tell a collection gap
       // apart from "no runs happened". buildRunEventLogSources returns [] both
       // when the dir is missing AND when persistence is off, adding no manifest
-      // entries — without this note an empty bundle looks like a clean run.
+      // entries - without this note an empty bundle looks like a clean run.
       const warnings: string[] = [];
       if (options.runtime == null) warnings.push(STANDALONE_LAUNCH_WARNING);
       if (runEventSources.length > 0) warnings.push(RUN_EVENT_CONTENT_WARNING);
@@ -478,7 +478,7 @@ export function createDiagnosticsExportHandler(options: DiagnosticsHandlerOption
           homeDir: home,
         },
         // Electron minidumps the desktop relocated into the log tree. These carry
-        // the native crash stack — the only reliable root-cause for an opaque
+        // the native crash stack - the only reliable root-cause for an opaque
         // renderer abort like 0x80000003 that no text log captures.
         ...(crashDumpsDir != null
           ? { crashDumps: { dir: crashDumpsDir, withinDays: 14, maxDumps: 10 } }

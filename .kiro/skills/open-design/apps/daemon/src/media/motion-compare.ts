@@ -1,7 +1,7 @@
 // Motion compare: puts a produced film next to the reference it was made from,
 // at the same timestamps, and measures how far apart the two frames are. The
 // agent reads the pairs; the score only says which timestamp to look at first.
-// Judging whether a film is right stays with the model — this tool removes the
+// Judging whether a film is right stays with the model - this tool removes the
 // guesswork about where it drifted, not the judgement.
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { spawn } from 'node:child_process';
@@ -21,7 +21,7 @@ export class MotionCompareError extends Error {
 
 export interface MotionComparePair {
   at: number;
-  /** Structural similarity of the two frames, 0–1; lower means further apart. */
+  /** Structural similarity of the two frames, 0-1; lower means further apart. */
   ssim: number;
   referenceFrame: string;
   candidateFrame: string;
@@ -73,8 +73,8 @@ export function parseSsim(stderr: string): number | null {
 }
 
 /**
- * Where to look: the opening, the ending, an even grid, and — when the caller
- * passes the reference's shot cuts — the first moment of every shot, because
+ * Where to look: the opening, the ending, an even grid, and - when the caller
+ * passes the reference's shot cuts - the first moment of every shot, because
  * that is where a rebuilt film most often drifts.
  */
 export function pickCompareTimes(durationSec: number, requested?: number[], cuts?: number[]): number[] {

@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer';
 const HTML_EXTENSION = /\.html?$/iu;
 const MOTION_REACT_HOOK_USAGE =
   /\bMotion\b[\s\S]*\b(?:useScroll|useTransform|useMotionTemplate|useMotionValue|useAnimationFrame)\b|\b(?:useScroll|useTransform|useMotionTemplate|useMotionValue|useAnimationFrame)\s*\(/u;
-// Boundary: this normalizer only repairs the `<script src=...>` UMD shape served by unpkg/jsdelivr —
+// Boundary: this normalizer only repairs the `<script src=...>` UMD shape served by unpkg/jsdelivr -
 // the vanilla `dist/motion.js` DOM bundle (`Motion.animate`), which has none of the React hooks. It does
 // NOT touch ESM `import`s, importmaps, esm.sh module URLs, or other CDNs; those paths are steered by the
 // official system prompt and the per-plugin "Motion loading (locked)" notes, not rewritten here. The

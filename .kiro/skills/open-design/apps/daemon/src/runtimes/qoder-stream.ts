@@ -23,7 +23,7 @@ function isRecord(value: unknown): value is JsonRecord {
  *
  * The decoder is the whole point. A chunk boundary lands wherever the pipe
  * decides, which for any non-ASCII output means it will eventually land in the
- * middle of a multi-byte character — `Buffer.toString('utf8')` turns that
+ * middle of a multi-byte character - `Buffer.toString('utf8')` turns that
  * half-character into U+FFFD on both sides and the character is gone for good.
  * `StringDecoder` holds the incomplete bytes until the next chunk completes
  * them, which is the same guarantee the other runtimes get for free from

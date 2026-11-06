@@ -149,11 +149,11 @@ describe('enforceWorkspaceResourceMutation', () => {
 
   // spec 04 §10 fix #3 (recvqbeDjAsejl / recvqbklNGDqYY): before this fix, the
   // null-ctx branch only refused a `visibility: 'team'` row and let ANY
-  // `personal` row through unconditionally — so a signed-out caller (or a
+  // `personal` row through unconditionally - so a signed-out caller (or a
   // plain `curl` with no workspace headers) could still mutate someone else's
   // personal-but-CLAIMED resource. A claimed resource is a claimed resource
   // regardless of whether it's also shared with a team; only a genuinely
-  // UNBOUND resource (no row at all — the case above already covers this)
+  // UNBOUND resource (no row at all - the case above already covers this)
   // should pass a headerless caller through.
   it('rejects a headerless caller against a personal-visibility (but bound) resource', () => {
     const { getWorkspaceResource, getWorkspaceResourceByResourceId } = makeLookups({
@@ -333,7 +333,7 @@ describe('enforceWorkspaceResourceMutation', () => {
     it('BUG: allows a removed member\'s write when only client headers are consulted', () => {
       // This test pins the CURRENT (vulnerable) behavior: no
       // `getLastKnownMembership` is wired up, so the gate has only the
-      // client's own claim to go on — exactly the pre-fix code path.
+      // client's own claim to go on - exactly the pre-fix code path.
       const { getWorkspaceResource, getWorkspaceResourceByResourceId } = makeLookups({
         'plugin-a': { workspaceId: 'ws-1', visibility: 'personal', resourceState: 'active', createdByWorkspaceMemberId: 'member-a' },
       });
@@ -358,7 +358,7 @@ describe('enforceWorkspaceResourceMutation', () => {
         'plugin-a': { workspaceId: 'ws-1', visibility: 'personal', resourceState: 'active', createdByWorkspaceMemberId: 'member-a' },
       });
       const { calls, sendApiError } = spySendApiError();
-      // Client headers still say "active" (stale) — the daemon's own cache
+      // Client headers still say "active" (stale) - the daemon's own cache
       // says this same workspace's caller has been removed.
       const getLastKnownMembership = () => ({ workspaceId: 'ws-1', memberStatus: 'removed' as const });
       const allowed = enforceWorkspaceResourceMutation(
@@ -438,7 +438,7 @@ describe('enforceWorkspaceResourceMutation', () => {
       });
       const { calls, sendApiError } = spySendApiError();
       // Cache holds a real "removed" fact, but for a DIFFERENT workspace than
-      // the one this request is scoped to — must not leak across workspaces.
+      // the one this request is scoped to - must not leak across workspaces.
       const getLastKnownMembership = () => ({ workspaceId: 'ws-other', memberStatus: 'removed' as const });
       const allowed = enforceWorkspaceResourceMutation(
         'plugin',
@@ -492,7 +492,7 @@ describe('enforceWorkspaceResourceMutation', () => {
 //
 // That asymmetry protected nothing. Any caller who wanted the permissive answer
 // could simply drop its headers and get it, so the only thing the refusal did was
-// punish honest clients for identifying themselves — and it is what forced the web
+// punish honest clients for identifying themselves - and it is what forced the web
 // client to tiptoe about WHEN it may name itself, which produced a
 // 401 WORKSPACE_CONTEXT_REQUIRED on the Home example-prompt send.
 //
@@ -505,8 +505,8 @@ describe('enforceWorkspaceResourceMutation', () => {
 //
 // This ONLY permits the operation. The gate returns a boolean and writes nothing,
 // so a previously-unbound resource is not adopted into the asserting caller's
-// workspace — #6213's objection to silently rebinding an orphan is untouched.
-describe('enforceWorkspaceResourceMutation — a resource no workspace has claimed', () => {
+// workspace - #6213's objection to silently rebinding an orphan is untouched.
+describe('enforceWorkspaceResourceMutation - a resource no workspace has claimed', () => {
   it('allows an asserted identity, exactly as it already allows a headerless caller', () => {
     const { getWorkspaceResource, getWorkspaceResourceByResourceId } = makeLookups({});
     const { calls, sendApiError } = spySendApiError();

@@ -31,8 +31,8 @@ import {
 } from './workspace-context.js';
 
 // Real B-integration provider (T2). The daemon reuses the SAME vela login session
-// that AMR / the vela CLI use — `readVelaControlApiContext` reads the control key
-// + api url from ~/.amr/config.json (or env) — and reads B's authenticated
+// that AMR / the vela CLI use - `readVelaControlApiContext` reads the control key
+// + api url from ~/.amr/config.json (or env) - and reads B's authenticated
 // workspace membership directory. The locally persisted selection decides which
 // directory entry is current for THIS client; B's account-global "current"
 // selection is deliberately outside this path. No second identity: one vela
@@ -108,10 +108,10 @@ interface VelaWorkspaceContextOptions {
  * startup no longer calls B's account-global current-workspace endpoint. This
  * is a near pass-through with two adjustments:
  *  - `teamId` is derived as `workspaceId` for a team workspace: B has no separate
- *    team id — the workspace IS the team scope the resource hub keys resources by.
+ *    team id - the workspace IS the team scope the resource hub keys resources by.
  *  - `permissions` / `seatSummary` are trusted from B when well-formed, and
  *    defensively re-derived (so read-only gating never breaks) if B omits them.
- * Returns null when a required field is missing or an enum is out of range —
+ * Returns null when a required field is missing or an enum is out of range -
  * collab then stays dormant rather than acting on a malformed context.
  */
 export function mapVelaWorkspaceContext(
@@ -173,7 +173,7 @@ export function mapVelaWorkspaceContext(
   }
   const workspaceName = str((raw as { workspaceName?: unknown }).workspaceName);
   // B names EVERY workspace, personal included, so the name belongs on the
-  // context for both types — that is what lets a surface label the current
+  // context for both types - that is what lets a surface label the current
   // workspace off the startup context alone. `teamName` stays team-only: it is
   // the team switcher's field and doubles as an "is a team" signal.
   if (workspaceName) context.workspaceName = workspaceName;
@@ -333,7 +333,7 @@ export function createVelaWorkspaceContextProvider(
         session,
       );
     } catch {
-      // Never let a workspace-context failure throw into collab — degrade to
+      // Never let a workspace-context failure throw into collab - degrade to
       // single-player. A transient B outage must not break the local editor.
       return null;
     }
@@ -471,7 +471,7 @@ function velaUserDisplayName(user: VelaUser | null): string {
 /**
  * Result of a directory fetch attempt. `ok` is the load-bearing bit for
  * anything that decides whether to trust an absence as a CONFIRMED removal:
- * true only when B actually answered with a 2xx — false for a network error,
+ * true only when B actually answered with a 2xx - false for a network error,
  * an abort/timeout, or any non-2xx status, regardless of what (if anything)
  * `items` ends up holding.
  */
@@ -962,8 +962,8 @@ export async function listVelaWorkspaceDirectory(
 /**
  * Select the workspace-context provider for this run. `OD_WORKSPACE_CONTEXT_SOURCE
  * =vela` opts into the real B-backed provider (production / e2e against a live
- * vela); every other value keeps the dev stub, so demo and tools-dev runs — which
- * have no B and drive the context via the dev PUT — are unaffected.
+ * vela); every other value keeps the dev stub, so demo and tools-dev runs - which
+ * have no B and drive the context via the dev PUT - are unaffected.
  */
 export function createWorkspaceContextProviderFromEnv(
   env: NodeJS.ProcessEnv = process.env,

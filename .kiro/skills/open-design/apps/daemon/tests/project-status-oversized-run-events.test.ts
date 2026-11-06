@@ -21,7 +21,7 @@ import { captureDbReads, readsCarrying } from './helpers/db-read-capture.js';
  * `GET /api/projects` projects every project's latest run status, and a
  * `succeeded` run is downgraded to `incomplete` from its persisted events
  * (#1247 / #1060). In 0.22.x that projection selected `events_json` for EVERY
- * run message of every project and parsed the winner's whole event log in JS —
+ * run message of every project and parsed the winner's whole event log in JS -
  * for the incident conversation that is hundreds of MB loaded on each project
  * list, to read a TodoWrite snapshot, a done marker and a usage stop reason.
  *

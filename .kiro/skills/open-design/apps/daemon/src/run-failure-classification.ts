@@ -223,7 +223,7 @@ function isHardQuotaText(text: string): boolean {
   // `quota reached` covers Antigravity's upstream log line:
   //   RESOURCE_EXHAUSTED (code 429): Individual quota reached.
   // `RESOURCE_EXHAUSTED` catches the same log when the phrase portion is
-  // truncated or arrives separately — it is the gRPC status code that
+  // truncated or arrives separately - it is the gRPC status code that
   // Antigravity uses exclusively for per-model quota exhaustion.
   return /\b(session limit|usage limit|limit reached|quota exceeded|quota reached|exceeded your current quota|billing (?:hard )?limit|insufficient[ _-]?(?:quota|credit|credits|funds)|out of credits|no payment method|requires more credits|can only afford)\b|DAILY_LIMIT_EXCEEDED|RESOURCE_EXHAUSTED|用户额度不足|额度不足|预扣费额度失败/i
     .test(text);
@@ -277,7 +277,7 @@ function isAgentConfigInvalidText(text: string): boolean {
 function isCliNotInstalledText(text: string): boolean {
   // Also covers the agent binary being absent at its resolved path:
   //   - Windows shell "'node' is not recognized as an internal or external command"
-  //   - Node "Error: spawn <path> ENOENT" (the executable file does not exist —
+  //   - Node "Error: spawn <path> ENOENT" (the executable file does not exist -
   //     distinct from spawn EPERM/EBADF/ENOEXEC where the file exists but can't run)
   // Both currently leak into the opaque execution_failed bucket (#3408 P1).
   return /\b(?:Codex CLI was not found|Missing optional dependency|Cannot find module|not installed|not on PATH|cannot find the (?:path|file) specified|system cannot find the (?:path|file) specified|is not recognized as an internal or external command|\bspawn\b[^\n]*\bENOENT\b)|�ڲ����ⲿ����|�Ҳ���ָ����·��|�޷�ִ��ָ���ĳ���|ϵͳ�Ҳ���ָ����·����|ϵͳ�޷�ִ��ָ���ĳ���/i
@@ -300,7 +300,7 @@ function isBundledBinaryMissingText(text: string): boolean {
  * named separately from `stream_disconnected`: a request has to resolve and
  * connect before it can be reset, so a machine that just went offline fails at
  * DNS, not with a socket error. Only a call that was *already streaming* when the
- * link died reports a reset — which is why the two arrive with different words
+ * link died reports a reset - which is why the two arrive with different words
  * for one physical cause, and why matching only the reset vocabulary leaves the
  * commoner half to fall through to the last-resort `execution_failed` bucket.
  *
@@ -369,8 +369,8 @@ function isSessionResumeExpiredText(text: string): boolean {
 
 // A lost race for the local credential-refresh lock, not a bad credential.
 //
-// Anchored on the contention itself — another holder, or a holder that died
-// mid-refresh — because that is what separates this from a genuinely unusable
+// Anchored on the contention itself - another holder, or a holder that died
+// mid-refresh - because that is what separates this from a genuinely unusable
 // token. An expired or replayed refresh token reads as "refresh token expired
 // / already used" and belongs to `authDetail`; those phrases are deliberately
 // not matched here. The trailing "or sign in again" in the agent's own message
@@ -463,7 +463,7 @@ function modelUnavailableDetail(text: string): TrackingRunFailureDetail | null {
   }
   if (/\bmodel is disabled\b/i.test(text)) return 'model_disabled';
   // A local model server (e.g. LM Studio, reached via opencode's own provider
-  // config) is up but has no model loaded. Not a model we picked wrong — the
+  // config) is up but has no model loaded. Not a model we picked wrong - the
   // user must load a model in the local app first (`lms load`). User-action,
   // not an engine bug, so it should not sit in the opaque execution_failed
   // bucket. (#3408 P1)
@@ -585,8 +585,8 @@ function signalInterruptClassification(
   retryableHint: boolean | undefined,
   /**
    * The signal when the caller already knows it. A killed run does NOT reliably
-   * carry an `AGENT_SIGNAL_*` code — a real `kill -9` lands as
-   * `AGENT_EXECUTION_FAILED` with the signal only on `status.signal` — so the
+   * carry an `AGENT_SIGNAL_*` code - a real `kill -9` lands as
+   * `AGENT_EXECUTION_FAILED` with the signal only on `status.signal` - so the
    * code alone is not enough to recognize one.
    */
   signalOverride?: string | null,
@@ -670,7 +670,7 @@ function isProcessCrashText(text: string): boolean {
 
 /**
  * True when the failure text is an agent CLI reporting that a runtime IT
- * manages failed to start — not a statement about the CLI's own build.
+ * manages failed to start - not a statement about the CLI's own build.
  *
  * vela wraps every bundled-OpenCode startup failure this way before answering
  * `session/new` / `session/load` (`acp_runtime.go`: `start opencode server:
@@ -684,8 +684,8 @@ function isProcessCrashText(text: string): boolean {
  * session with no reason has only its own build left to blame; a CLI that
  * reports its managed runtime never became ready has named the moving part
  * itself, and pointing that user at the CLI version sends them after a fix that
- * cannot apply. These startups are also the transient half of the pair — a port
- * race clears on the next attempt — which is the retry the refusal reading
+ * cannot apply. These startups are also the transient half of the pair - a port
+ * race clears on the next attempt - which is the retry the refusal reading
  * withdraws.
  *
  * @param text - Failure text as surfaced by the ACP session (`rpcErrorMessage`).
@@ -694,13 +694,13 @@ function isManagedRuntimeStartupFailureText(text: string): boolean {
   return /\bstart opencode server\b|\bopencode exited before readiness\b/i.test(text);
 }
 
-// The child binary executed an instruction this CPU does not implement — in
+// The child binary executed an instruction this CPU does not implement - in
 // practice a Bun-compiled agent (bundled opencode) built for AVX2 running on a
 // CPU without it (Intel Atom/Celeron/Pentium N-series through 2021, and
 // AVX-but-not-AVX2 Sandy/Ivy Bridge cores). Matched only on signals that
 // prove the unsupported-CPU case:
 // - `no_avx2`: the CPU-feature line Bun's crash banner prints on such
-//   machines. Unconditional — the feature line itself is the proof.
+//   machines. Unconditional - the feature line itself is the proof.
 // - Windows STATUS_ILLEGAL_INSTRUCTION (hex 0xC000001D or Go/Node's decimal
 //   exit-status rendering 3221225501), but ONLY inside vela's bundled-opencode
 //   startup wrapper text (`isManagedRuntimeStartupFailureText`). The raw status
@@ -776,7 +776,7 @@ function isCpuUnsupportedCrashText(text: string): boolean {
 // that ended the child as `rpc_close_reason`. When the agent-level error code is
 // the generic `AGENT_EXECUTION_FAILED` and no text pattern matched, this close
 // reason is the only remaining signal that distinguishes a mid-stream agent
-// error from a bare non-zero exit from an ACP fatal — so we surface it instead
+// error from a bare non-zero exit from an ACP fatal - so we surface it instead
 // of collapsing all three into one opaque `execution_failed` bucket.
 function readRuntimeCloseReason(
   events: RunEventForFailureClassification[] = [],
@@ -798,18 +798,18 @@ function readRuntimeCloseReason(
  * True when the DAEMON itself declared this run timed out.
  *
  * Invariant: a verdict the daemon reached on its own survives without its own
- * prose. The ACP stage watchdog decides a stage is over and kills the child —
- * nothing upstream reported anything — and it stamps that decision as
+ * prose. The ACP stage watchdog decides a stage is over and kills the child -
+ * nothing upstream reported anything - and it stamps that decision as
  * `error.details.kind === 'acp_stage_timeout'` (see `agent-protocol/acp/session.ts`).
  * Reading the marker rather than regex-matching the sentence it happened to
  * write is what stops a reworded, wrapped, localized or dropped message from
- * silently re-filing a watchdog kill as an opaque `process_exit / exit_code` —
+ * silently re-filing a watchdog kill as an opaque `process_exit / exit_code` -
  * which is `retryable: false` / `user_action: 'none'`, the one verdict this
  * failure must never get, since a retry is its entire remedy.
  *
  * The value is matched exactly, and it is namespaced to the mechanism that
- * writes it. `error.details` is NOT a daemon-private slot — `fail()` copies an
- * agent's JSON-RPC `error.data` straight into it — so the marker's protection
+ * writes it. `error.details` is NOT a daemon-private slot - `fail()` copies an
+ * agent's JSON-RPC `error.data` straight into it - so the marker's protection
  * comes from being a name no upstream payload emits, not from the slot being
  * unreachable. A generic `kind: 'timeout'`, which any vendor SDK might send for
  * its own timeout, would have been read here as a watchdog kill that never
@@ -817,7 +817,7 @@ function readRuntimeCloseReason(
  *
  * This is collision resistance, not authentication: an adapter that deliberately
  * sent `kind: 'acp_stage_timeout'` would still be believed. Making the verdict
- * unforgeable requires carrying it in a field agent payload can never reach —
+ * unforgeable requires carrying it in a field agent payload can never reach -
  * see the note on `fail()` in `agent-protocol/acp/session.ts`.
  */
 function hasDaemonTimeoutVerdict(
@@ -862,8 +862,8 @@ function executionFailedDetail(
 /**
  * Whether a terminal failure can be recovered by RESUMING the agent's existing
  * CLI session (continue from where it left off) rather than restarting from
- * scratch. True only for transient mid-stream interruptions — an upstream drop
- * or an inactivity timeout — where any work already committed to the session is
+ * scratch. True only for transient mid-stream interruptions - an upstream drop
+ * or an inactivity timeout - where any work already committed to the session is
  * worth continuing. Deliberately excludes process crashes, OOM kills,
  * auth/balance/prompt-size and any other non-transient cause: resuming those
  * would just reproduce the failure. The caller additionally gates on the
@@ -1102,7 +1102,7 @@ function classifyRunFailureBase(
   if (isAccountSuspendedText(text)) {
     return classification(
       // The account is refused access, so this belongs with the authorization
-      // failures rather than in the opaque process-exit bucket — but unlike the
+      // failures rather than in the opaque process-exit bucket - but unlike the
       // rest of that bucket there is no sign-in that fixes it, hence
       // `user_action: 'none'` and a non-retryable verdict.
       'auth',
@@ -1171,7 +1171,7 @@ function classifyRunFailureBase(
   // this is the failure that spent the longest being mistaken for one of them.
   // vela's link gateway turns an upstream 401/403 into an HTTP 500 under its
   // own code (`services/link/internal/handlers/openai.go:2074`) and words it
-  // "Upstream provider credentials are missing or invalid." — a sentence
+  // "Upstream provider credentials are missing or invalid." - a sentence
   // `isAuthDetailText` reads as the caller's missing credentials. The
   // credentials are the platform's, held in the gateway's configuration, so
   // there is no sign-in for the user to perform and no retry that changes the
@@ -1187,20 +1187,20 @@ function classifyRunFailureBase(
   }
 
   /*
-   * A forced signal is a STRUCTURAL fact — the child did not report it, the OS
-   * or an operator ended the process — so no amount of leftover stderr can
+   * A forced signal is a STRUCTURAL fact - the child did not report it, the OS
+   * or an operator ended the process - so no amount of leftover stderr can
    * explain it away. Claimed here, ahead of every text heuristic below.
    *
    * Found on a real run (2026-08-27): `kill -9` on the agent child produced
    * `signal: SIGKILL, exitCode: null`, and the classifier answered
    * `auth / stale_profile` because a half-written line about local profiles
    * happened to be in the buffer. The chat card then told the user to run
-   * `/login` — sending them to fix something that was never broken.
+   * `/login` - sending them to fix something that was never broken.
    *
    * `signalInterruptClassification` already carries the right reasoning ("a
    * signal is the strongest evidence we have"); it just sat 300 lines too late
    * to win. Deliberately narrow:
-   *  · only SIGKILL and the crash signals — SIGTERM/SIGINT genuinely accompany
+   *  · only SIGKILL and the crash signals - SIGTERM/SIGINT genuinely accompany
    *    graceful shutdown and interrupts, where the text does carry more meaning;
    *  · timeout still wins, because the daemon's watchdog writes its own reason
    *    before escalating to a kill, and WHY it was killed beats the bare signal.
@@ -1261,7 +1261,7 @@ function classifyRunFailureBase(
   // A `--resume <id>` whose stored session no longer resolves (Claude's 30-day
   // cleanupPeriodDays prune, a CLAUDE_CONFIG_DIR change, a cwd/worktree change,
   // or a prior run killed before the session was flushed). The daemon already
-  // clears the stale id so the next turn starts fresh — this is a recoverable
+  // clears the stale id so the next turn starts fresh - this is a recoverable
   // session-lifecycle failure, not an opaque engine crash, so name it and mark
   // it retryable instead of letting it sit in execution_failed. (#3408 P1)
   if (isSessionResumeExpiredText(text)) {
@@ -1280,11 +1280,11 @@ function classifyRunFailureBase(
   //
   // Claimed ahead of every auth branch below on purpose. The agent's message
   // ends "…or sign in again", and `auth` is fixed at `retryable: false` /
-  // `user_action: 'login'` — so reaching that verdict would tell the user to
+  // `user_action: 'login'` - so reaching that verdict would tell the user to
   // re-authenticate a credential that is perfectly valid, and strand the run.
   // Claimed ahead of the `process_exit` fallbacks for the opposite reason:
   // there it lands on `exit_nonzero`, which `transientSuppressedReason` refuses
-  // as a non-retryable category, which is how this surfaces today — a dead-end
+  // as a non-retryable category, which is how this surfaces today - a dead-end
   // failure card for a condition the agent itself describes as transient.
   //
   // Nothing streamed and no tool ran at `session_init`, so the replay is safe
@@ -1389,7 +1389,7 @@ function classifyRunFailureBase(
   // A protocol failure from AFTER the handshake: a session existed, so the run
   // may simply have hit a bad moment and the old transient treatment stands.
   // Handshake-numbered frames (ids 1 and 2) are deliberately NOT claimed here
-  // — the wording an agent chooses for its rejection (`Internal error`,
+  // - the wording an agent chooses for its rejection (`Internal error`,
   // `Method not found`, `Invalid params`) is not a signal, and matching on it
   // made the verdict depend on which layer of the CLI happened to refuse.
   // Those fall through every cause branch below and are answered once, at
@@ -1408,7 +1408,7 @@ function classifyRunFailureBase(
   //
   // The `auth` verdict below prescribes `user_action: 'login'`, and the web
   // renders that as a sign-in the user is expected to perform. It is only true
-  // of a credential the daemon can reach — the agent's own, or the AMR Cloud
+  // of a credential the daemon can reach - the agent's own, or the AMR Cloud
   // session. But this classifier reads one flat blob: `collectFailureText`
   // (:177) folds `stderr` events into the corpus (:188), so a `gh`, `npm`,
   // `curl` or MCP credential the agent tripped over mid-run arrives here
@@ -1420,7 +1420,7 @@ function classifyRunFailureBase(
   // (vela's `mcp_auth_required` envelope, via `isToolErrorText` below), so this
   // joins the existing landing instead of inventing a code. `user_action` is
   // `'none'` because a missing credential does not fix itself on retry, and the
-  // generic card hands the tool's own line — the one that names what to fix —
+  // generic card hands the tool's own line - the one that names what to fix -
   // back to the user.
   if (reportsToolPrincipalAuthFailure(text)) {
     return classification(
@@ -1459,7 +1459,7 @@ function classifyRunFailureBase(
   if (errorCode === 'RATE_LIMITED' || serviceFailure === 'RATE_LIMITED' || isHardQuotaText(text) || isRateLimitText(text)) {
     // Checked BEFORE the hard-quota reading: vela phrases its rolling per-model
     // window as "…usage limit…", which `isHardQuotaText` matches, so without
-    // this branch a self-resetting window is reported as an exhausted quota —
+    // this branch a self-resetting window is reported as an exhausted quota -
     // non-retryable, and counted against reliability as a real failure.
     if (isModelWindowLimitFailure(text)) {
       return classification(
@@ -1514,7 +1514,7 @@ function classifyRunFailureBase(
   }
 
   // Prefer the structured rpc_close_reason=empty_output signal over text
-  // heuristics — but only after RATE_LIMITED, UPSTREAM_UNAVAILABLE, and other
+  // heuristics - but only after RATE_LIMITED, UPSTREAM_UNAVAILABLE, and other
   // structured-code branches above have had a chance to claim the run. A child
   // that exits cleanly after a provider rate-limit rejection may still carry
   // rpc_close_reason=empty_output; the structured error code is the authoritative
@@ -1545,7 +1545,7 @@ function classifyRunFailureBase(
     // `attachAcpSession`'s stage watchdog fails the turn with
     // `ACP <stage> timed out after <n>ms` and then kills the child, so the run
     // surfaces the child's exit code instead of a stall code. Without this
-    // trigger the terminal reads as a bare AGENT_EXIT_130 — indistinguishable
+    // trigger the terminal reads as a bare AGENT_EXIT_130 - indistinguishable
     // from a user interrupt, which is how the 2026-07-28 AMR stall got
     // attributed to the wrong watchdog and the wrong 15-minute window.
     //
@@ -1610,7 +1610,7 @@ function classifyRunFailureBase(
   // Must be checked BEFORE the fatal_rpc_error close-reason promotion below:
   // when the bundled agent binary dies of an illegal instruction before
   // readiness, vela surfaces an ACP fatal and the close reason alone would
-  // classify this as a retryable fatal_rpc_error — but the retry re-runs the
+  // classify this as a retryable fatal_rpc_error - but the retry re-runs the
   // same binary on the same CPU and deterministically fails again.
   if (isCpuUnsupportedCrashText(text)) {
     return classification(
@@ -1638,7 +1638,7 @@ function classifyRunFailureBase(
   // branch above has already had its chance to name a cause, so reaching here
   // means the agent CLI answered `initialize`, refused `session/new` /
   // `session/load`, and gave no reason the daemon recognises. Its build is then
-  // the only variable left — file it at `session_init`, which is the stage the
+  // the only variable left - file it at `session_init`, which is the stage the
   // retry policy refuses to re-run, and point the user at the CLI rather than
   // at the model or the stream.
   //
@@ -1650,7 +1650,7 @@ function classifyRunFailureBase(
   // what the telemetry records.
   //
   // The deferrals are not about wording. Both are texts where the handshake
-  // frame is the ENVELOPE rather than the evidence — something other than the
+  // frame is the ENVELOPE rather than the evidence - something other than the
   // agent CLI's own build failed, and the CLI merely carried the report:
   //
   // - An OS-level crash banner (a Bun panic, a Windows
@@ -1658,8 +1658,8 @@ function classifyRunFailureBase(
   //   that DIED; `signalInterruptClassification` below owns that reading, the
   //   same reason `isCpuUnsupportedCrashText` is checked above.
   // - A managed runtime that never became ready describes a child that never
-  //   STARTED. AMR is the population this reaches — vela reports its bundled
-  //   OpenCode's startup failures from inside `session/new` — and a startup
+  //   STARTED. AMR is the population this reaches - vela reports its bundled
+  //   OpenCode's startup failures from inside `session/new` - and a startup
   //   race is exactly the shape the fatal_rpc_error path below recovers by
   //   retrying. Filing it here would tell that user to replace a healthy CLI
   //   and take the recovery away at the same time.
@@ -1744,15 +1744,15 @@ const TEXT_ONLY_PROBE_ERROR_CODE = 'AGENT_EXECUTION_FAILED';
 
 /**
  * True when this failure text reads as an ACP handshake rejection the agent CLI
- * gave no reason for — the one shape "this CLI build cannot start a session;
+ * gave no reason for - the one shape "this CLI build cannot start a session;
  * change it, then retry" actually answers, because the build is the only
  * variable left.
  *
  * Answered by running the classifier itself rather than by a second signature
  * list, so the prescription the user reads and the bucket the run is filed
  * under are the same decision. A handshake failure that names a cause the
- * classifier recognises — signed out, throttled, out of balance, upstream down,
- * prompt too long — is claimed by that cause's branch and reported false here,
+ * classifier recognises - signed out, throttled, out of balance, upstream down,
+ * prompt too long - is claimed by that cause's branch and reported false here,
  * so the user is sent after the fix that actually applies.
  *
  * @param text - Failure text as surfaced by the ACP session (`rpcErrorMessage`).

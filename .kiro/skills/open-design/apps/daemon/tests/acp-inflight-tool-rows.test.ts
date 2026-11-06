@@ -1,9 +1,9 @@
 /**
- * W123 —— ACP 工具行「第一帧就上屏」。
+ * W123 -- ACP 工具行「第一帧就上屏」。
  *
  * 现状(红):ACP 侧一次工具调用的 `tool_use`/`tool_result` **只在终态**发出
  * (`session.ts` 的 `emitTerminalToolPair`)。真语料里 202 次调用的 100% 生命周期
- * 都不可见 —— bash 中位 0.4s、p90 37.3s、最长 54.7s;一次 task 藏了 222.0s。
+ * 都不可见 -- bash 中位 0.4s、p90 37.3s、最长 54.7s;一次 task 藏了 222.0s。
  *
  * 目标:第一帧就发一条「在途形态」的工具事件(工具名 + 当时已知的入参),
  * 后续帧带来真名/真命令/真路径时**覆盖同一行**,终态再发完整的那一对。
@@ -15,7 +15,7 @@
  *   来源:`~/.amr/opencode-sessions/<sha>/data/opencode/opencode.db` 的 `event` 表,
  *        `type='message.part.updated.1'` 且 `part.type === 'tool'`(12 个真实 AMR
  *        session、202 次工具调用、911 帧,每帧带真实墙钟毫秒)。
- *   映射:逐行照抄 vela 自己的桥,不是我猜的 ——
+ *   映射:逐行照抄 vela 自己的桥,不是我猜的 --
  *        `nexu/vela apps/cli/internal/agent/opencode_client.go:971 mapOpenCodeToolPart`
  *        `nexu/vela apps/cli/internal/agent/acp_runtime.go:965     buildACPToolUpdate`
  *   导出:`apps/daemon/tests/fixtures/w123-export-acp-inflight-frames.ts`
@@ -60,7 +60,7 @@ const callsByTool = (tool: string): AcpCall[] =>
 
 const callById = (id: string): AcpCall => {
   const found = CORPUS.calls.find((call) => call.toolCallId === id);
-  assert.ok(found, `语料里没有 ${id} —— 夹具被换过了?`);
+  assert.ok(found, `语料里没有 ${id} -- 夹具被换过了?`);
   return found;
 };
 
@@ -113,7 +113,7 @@ function writeResult(child: FakeAcpChild, id: number, result: unknown): void {
 const agentPayloads = (events: Emitted[], type: string): Record<string, unknown>[] =>
   events.filter((e) => e.event === 'agent' && e.payload.type === type).map((e) => e.payload);
 
-/** 一次调用在途形态的事件类型 —— 实现要发的就是这个。 */
+/** 一次调用在途形态的事件类型 -- 实现要发的就是这个。 */
 const IN_FLIGHT = 'tool_in_flight';
 
 /**
@@ -121,7 +121,7 @@ const IN_FLIGHT = 'tool_in_flight';
  *
  * 时钟必须是真的:在途事件的节流判据是 `Date.now()`,把六帧背靠背喂进去会把
  * 真实间隔 2.3 秒压成 0 毫秒,于是「节流生效」和「升级会发第二条」两条断言
- * 同时变成假的 —— 一条假红、一条假绿。虚拟时钟按 `offsetMs` 往前走,
+ * 同时变成假的 -- 一条假红、一条假绿。虚拟时钟按 `offsetMs` 往前走,
  * 量到的就是线上会发生的事。
  */
 const CLOCK_BASE = 1_787_820_000_000;
@@ -164,15 +164,15 @@ test('W123 夹具是真语料,不是手搭的', () => {
   for (const tool of ['bash', 'write', 'edit', 'read', 'task', 'todowrite', 'grep', 'glob']) {
     assert.ok(callsByTool(tool).length > 0, `语料缺少 ${tool}`);
   }
-  // 第一帧的 rawInput 是空的 —— 整条设计就建立在这个事实上。
+  // 第一帧的 rawInput 是空的 -- 整条设计就建立在这个事实上。
   const firstFrames = CORPUS.calls.map((c) => c.frames[0]!.update);
   const withInput = firstFrames.filter((u) => Object.keys((u.rawInput ?? {}) as object).length > 0);
-  assert.equal(withInput.length, 0, '第一帧不该带入参 —— 若带了,整套「先无名后补名」的前提就变了');
+  assert.equal(withInput.length, 0, '第一帧不该带入参 -- 若带了,整套「先无名后补名」的前提就变了');
 });
 
 // ── ① 第一帧就上屏 ──────────────────────────────────────────────────────
 
-test('bash 的 pending 帧一到,行就在了 —— 不用等终态', () => {
+test('bash 的 pending 帧一到,行就在了 -- 不用等终态', () => {
   const { child, events } = startSession();
   const call = callById(LONGEST_BASH);
   replayCall(child, call, 1); // 只喂 pending
@@ -272,7 +272,7 @@ test('只发在途形态时,不产生 tool_result,也不算「已产出」', () 
   assert.deepEqual(
     agentPayloads(events, 'tool_result'),
     [],
-    '在途形态绝不能走 emitTerminalToolPair —— 那会顺手置 emittedConcreteToolEvent',
+    '在途形态绝不能走 emitTerminalToolPair -- 那会顺手置 emittedConcreteToolEvent',
   );
 });
 
@@ -290,7 +290,7 @@ test('think 类工具不上屏', () => {
 
 test('上了屏的行,后来被判成 think 也必须收尾', () => {
   // `thinkOnly` 是「一旦为真永不清零」的,所以**后一帧**可以把一次已经画出来的
-  // 调用翻成 think。原来的 think 过滤会连终态一起丢掉 —— 屏幕上就留下一行永远
+  // 调用翻成 think。原来的 think 过滤会连终态一起丢掉 -- 屏幕上就留下一行永远
   // 转圈的东西,正是这次改动要消灭的那种「是不是卡住了」。
   // 真语料 202 次里一次都没翻过(名字只变过 1 次,还是变准了),但代价太低,
   // 不值得赌。
@@ -337,7 +337,7 @@ test('run 被中途取消,flush 只补一对完成态,不多出一行', () => {
 
 // ── 在途形态不落库 ────────────────────────────────────────────────────
 
-test('在途形态不落库 —— 重载后一次调用只能有一行', () => {
+test('在途形态不落库 -- 重载后一次调用只能有一行', () => {
   const inFlight = {
     type: 'tool_in_flight',
     id: 'abc',
@@ -409,12 +409,12 @@ test('节流:整批真语料跑完,在途事件数远小于帧数', () => {
   }
   assert.equal(frames, 911, '真语料 911 帧');
   // 实测:911 帧里 709 帧非终态,只发出 350 条在途事件(bash 538 帧 → 144 条,
-  // 削掉 73%)。载荷没变就不发,变了也要隔 250ms —— 见
+  // 削掉 73%)。载荷没变就不发,变了也要隔 250ms -- 见
   // `ACP_IN_FLIGHT_TOOL_MIN_INTERVAL_MS` 的注释。
   assert.equal(inFlight, 350, `在途事件应为 350 条,实际 ${inFlight}`);
   assert.ok(
     inFlight * 2 < frames,
-    `在途事件 ${inFlight} 条 / 帧 ${frames} 条 —— 载荷没变时不许重发`,
+    `在途事件 ${inFlight} 条 / 帧 ${frames} 条 -- 载荷没变时不许重发`,
   );
 });
 
@@ -497,12 +497,12 @@ test('bash 的 locations 目录不会漏进在途行的 file_path', () => {
 // ── 全形态覆盖 ────────────────────────────────────────────────────────
 
 /**
- * 「先猜后改」到底会改多少 —— 这条是量出来的,不是推出来的。
+ * 「先猜后改」到底会改多少 -- 这条是量出来的,不是推出来的。
  *
  * 工具名是 ACP 从 `kind`/`title` 推的、路径是从 `locations`/`rawInput`/title 推的,
  * 所以早期那一行上的两格都可能是猜的。真语料 202 次调用跑下来:
  *
- *  · **路径 0/202 变过** —— 「先无名、后补名」不会闪。
+ *  · **路径 0/202 变过** -- 「先无名、后补名」不会闪。
  *  · **名字 1/202 变过**,而且是那次 task:`Task → Survey OpenDesign chat panel`
  *    的首词。第一帧 title 就是 `task`(vela 的 `mapOpenCodeToolPart` 在 title 为空
  *    时回落成工具名),真标题要等 running 帧。这是**变准了**,不是变错了。

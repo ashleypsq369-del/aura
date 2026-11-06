@@ -2,7 +2,7 @@ import { agentCapabilities } from '../capabilities.js';
 import { DEFAULT_MODEL_OPTION } from './shared.js';
 import type { RuntimeAgentDef } from '../types.js';
 
-// Codebuddy Code (https://www.codebuddy.cn) — a Claude Code–compatible CLI
+// Codebuddy Code (https://www.codebuddy.cn) - a Claude Code-compatible CLI
 // that ships as `codebuddy` (short alias: `cbc`). The argument surface is a
 // superset of Claude Code's `-p` mode: `--output-format stream-json`,
 // `--input-format stream-json`, `--permission-mode`, `--session-id`,
@@ -67,8 +67,8 @@ export const codebuddyAgentDef = {
     // Codebuddy CLI --effort supports exactly 6 levels:
     //   minimal, low, medium, high, xhigh, max
     // We additionally expose a synthetic `default` sentinel as the FIRST
-    // option so the web pickers (AvatarMenu / SettingsDialog) — which
-    // fall back to `reasoningOptions[0].id` when nothing is saved yet —
+    // option so the web pickers (AvatarMenu / SettingsDialog) - which
+    // fall back to `reasoningOptions[0].id` when nothing is saved yet -
     // surface a real "use Codebuddy's own default" choice that round-trips
     // to "no --effort flag". `buildArgs` treats `default` as omit.
     reasoningOptions: [
@@ -94,8 +94,8 @@ export const codebuddyAgentDef = {
       if (options.model && options.model !== 'default') {
         args.push('--model', options.model);
       }
-      // Reasoning effort control — Codebuddy supports `--effort <level>`.
-      // The `default` sentinel means "let Codebuddy pick" — omit the flag.
+      // Reasoning effort control - Codebuddy supports `--effort <level>`.
+      // The `default` sentinel means "let Codebuddy pick" - omit the flag.
       if (options.reasoning && options.reasoning !== 'default') {
         args.push('--effort', options.reasoning);
       }

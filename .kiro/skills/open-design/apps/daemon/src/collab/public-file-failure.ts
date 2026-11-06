@@ -33,7 +33,7 @@ export function safeVelaCommandError(
  * `Error: <err>` line on stderr, where an API rejection reads
  * `API request failed with status <N>[: <code>]`. Daemon-side terminations
  * (timeout, abort, missing binary) are recognised from `runVelaCommand`'s own
- * errors. Anything else is `unknown` — this never guesses.
+ * errors. Anything else is `unknown` - this never guesses.
  */
 export function classifyVelaCommandFailure(
   stage: ApiFailureStage,

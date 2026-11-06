@@ -14,7 +14,7 @@ import { isAbortedOperationError } from '../src/integrations/aborted-error.js';
 // `code: 'ABORT_ERR'` (and keeps a separate `reason: 'timeout'` path for real
 // deadline breaches). Nothing downstream ever read those markers, so every
 // deliberate cancellation surfaced as `[od] authorized proactive team pull
-// failed closed:` — observed live while investigating a first-open trace, where
+// failed closed:` - observed live while investigating a first-open trace, where
 // it sent the investigation after a phantom failure.
 //
 // This predicate is the seam the pull path uses to tell the two apart. It must

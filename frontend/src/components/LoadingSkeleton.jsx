@@ -1,14 +1,14 @@
-/**
- * LoadingSkeleton — reusable shimmer skeletons for every data surface
+﻿/**
+ * LoadingSkeleton - reusable shimmer skeletons for every data surface
  * Uses CSS vars so it works in both light and dark mode automatically.
  *
  * Exports:
- *   Skeleton          — single block with shimmer
- *   SkeletonCard      — card with header + lines
- *   SkeletonList      — N rows of avatar + text
- *   SkeletonTable     — table with N rows
- *   SkeletonStats     — row of stat tiles
- *   SkeletonPage      — full page loading state
+ *   Skeleton          - single block with shimmer
+ *   SkeletonCard      - card with header + lines
+ *   SkeletonList      - N rows of avatar + text
+ *   SkeletonTable     - table with N rows
+ *   SkeletonStats     - row of stat tiles
+ *   SkeletonPage      - full page loading state
  */
 import { motion } from 'framer-motion';
 

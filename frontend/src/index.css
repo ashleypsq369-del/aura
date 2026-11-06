@@ -86,7 +86,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ── Global link reset — prevent browser default blue/purple colours ── */
+  /* ── Global link reset - prevent browser default blue/purple colours ── */
   a {
     color: inherit;
     text-decoration: none;
@@ -95,10 +95,10 @@
 
   /* ── Dark mode CSS variable overrides ──────────────────────────────── */
   html.dark {
-    --color-text-primary:   #f8fafc;   /* near white — max readability */
-    --color-text-secondary: #e2e8f0;   /* light — clearly visible */
-    --color-text-slate-500: #b0c4d4;   /* body text — readable */
-    --color-text-light:     #94a3b8;   /* hint text — still visible */
+    --color-text-primary:   #f8fafc;   /* near white - max readability */
+    --color-text-secondary: #e2e8f0;   /* light - clearly visible */
+    --color-text-slate-500: #b0c4d4;   /* body text - readable */
+    --color-text-light:     #94a3b8;   /* hint text - still visible */
     --color-card-bg:        #1e293b;
     --color-card-hover:     #263347;
     --color-border-light:   #334155;
@@ -108,7 +108,7 @@
   /* ─────────────────────────────────────────────────────────────────── */
   
   body {
-    background: #f4f6f8; /* standard healthcare neutral grey — used by Epic, MyChart, NHS */
+    background: #f4f6f8; /* standard healthcare neutral grey - used by Epic, MyChart, NHS */
     color: var(--color-text-primary);
     font-family: 'Inter', var(--font-family-sans), sans-serif;
     font-size: 16px;
@@ -125,7 +125,7 @@
   }
 
   html.dark body {
-    background: #0a0a0a; /* true black — clean dark mode, not navy */
+    background: #0a0a0a; /* true black - clean dark mode, not navy */
     color: var(--color-text-primary);
   }
 
@@ -139,7 +139,7 @@
     /* let the explicit class rules take priority, but set a readable base */
   }
 
-  /* ── Placeholder text — always readable ────────────────────────────── */
+  /* ── Placeholder text - always readable ────────────────────────────── */
   html.dark input::placeholder,
   html.dark textarea::placeholder,
   html.dark select::placeholder    { color: #64748b !important; opacity: 1 !important; }
@@ -159,7 +159,7 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-serif);
-    /* Color intentionally NOT set here — use Tailwind text-* classes or inline style per component */
+    /* Color intentionally NOT set here - use Tailwind text-* classes or inline style per component */
   }
 
   /* Image card & slideshow headings - warm gold for legibility over photo backgrounds */
@@ -328,7 +328,7 @@
 .relative > input[class*="pl-8"],
 .relative > input[class*="pl-9"],
 .relative > input[class*="pl-10"] {
-  /* Already has padding — just ensure icon doesn't stack on text */
+  /* Already has padding - just ensure icon doesn't stack on text */
 }
 
 /* If an absolute Search icon sits at left-3.5 (14px), the input needs
@@ -347,12 +347,12 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   UNIVERSAL BASELINE — Less cramped, accessible for all age groups
+   UNIVERSAL BASELINE - Less cramped, accessible for all age groups
    Wrapped in @layer base so Tailwind v4 processes them correctly.
    ═══════════════════════════════════════════════════════════════════════════ */
 @layer base {
 
-/* ── 1. Global button baseline — WCAG 2.5.5 (44px min touch targets) ── */
+/* ── 1. Global button baseline - WCAG 2.5.5 (44px min touch targets) ── */
 button,
 [role="button"],
 [role="tab"],
@@ -365,7 +365,7 @@ a.btn {
   cursor: pointer;
 }
 
-/* ── 2. Form inputs — comfortably tappable ─────────────────────────── */
+/* ── 2. Form inputs - comfortably tappable ─────────────────────────── */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select,
 textarea {
@@ -374,7 +374,7 @@ textarea {
   line-height: 1.5;
 }
 
-/* ── 3. Focus indicators — WCAG 2.4.7 ─────────────────────────────── */
+/* ── 3. Focus indicators - WCAG 2.4.7 ─────────────────────────────── */
 :focus-visible {
   outline: 2px solid #0d9488;
   outline-offset: 2px;
@@ -388,30 +388,30 @@ textarea {
 
 /* ── The rules below use custom class names, fine outside @layer ──── */
 
-/* ── 4. Card baseline — breathable, not cramped ────────────────────────── */
-/* Cards use Tailwind padding classes directly — no global override needed */
+/* ── 4. Card baseline - breathable, not cramped ────────────────────────── */
+/* Cards use Tailwind padding classes directly - no global override needed */
 
-/* ── 5. Typography hierarchy — clear reading order ─────────────────────── */
-/* Tailwind v4 manages heading sizes — use Tailwind classes on elements */
+/* ── 5. Typography hierarchy - clear reading order ─────────────────────── */
+/* Tailwind v4 manages heading sizes - use Tailwind classes on elements */
 
 /* ── 6. Readable paragraph text ────────────────────────────────────────── */
 /* Body line-height 1.65 already set above handles this */
 
-/* ── 7. Small helper text — never illegibly small ──────────────────────── */
+/* ── 7. Small helper text - never illegibly small ──────────────────────── */
 /* WCAG 1.4.4: text must be readable at 200% zoom */
 .text-xs  { font-size: 0.8125rem !important; }  /* 13px min (was 12px) */
 
-/* ── 8. Interactive list items — handled per-component ─────────────────── */
+/* ── 8. Interactive list items - handled per-component ─────────────────── */
 
 /* ── 9. Reduced grid density on smaller screens ────────────────────────── */
 /* Handled by the adaptive profile CSS (data-ui-profile) above */
 
-/* ── 10. Section vertical rhythm — tighter spacing ───────────────────── */
+/* ── 10. Section vertical rhythm - tighter spacing ───────────────────── */
 .space-y-5 > * + * { margin-top: 1.1rem; }
 .space-y-6 > * + * { margin-top: 1.25rem; }
 .space-y-8 > * + * { margin-top: 1.5rem; }
 
-/* ── 11. Colour contrast floors — WCAG 1.4.3 (4.5:1 for normal text) ─── */
+/* ── 11. Colour contrast floors - WCAG 1.4.3 (4.5:1 for normal text) ─── */
 /* Suppress excessively light text classes */
 .text-slate-300 { color: #94a3b8 !important; }    /* floor: 4.6:1 on white */
 .text-slate-400 { color: #64748b !important; }    /* upgraded from #94a3b8 */
@@ -431,15 +431,15 @@ textarea {
 }
 
 /* ── 13. Global card breathing room ─────────────────────────────────────
-   Cards use Tailwind padding utilities — no global override needed       */
+   Cards use Tailwind padding utilities - no global override needed       */
 
-/* ── 14. Section headings — clear visual separation ─────────────────── */
+/* ── 14. Section headings - clear visual separation ─────────────────── */
 /* Use Tailwind classes directly on elements rather than compound selectors */
 
 /* ── 15. Form group spacing ─────────────────────────────────────────── */
 .space-y-4 > * + * { margin-top: 1.25rem; }
 
-/* ── 16. Table rows — handled by Tailwind utilities ─────────────────── */
+/* ── 16. Table rows - handled by Tailwind utilities ─────────────────── */
 
 /* ── 17. Dialog / modal content padding ─────────────────────────────── */
 /* Handled per-component with Tailwind padding utilities */
@@ -454,12 +454,12 @@ textarea {
 /* Handled per-component */
 
 /* ── 21. Mobile text floor ─────────────────────────────────────────────── */
-/* Body font is already 16px globally — no override needed */
+/* Body font is already 16px globally - no override needed */
 
 /* ── 22. Consistent focus ring colour system-wide ──────────────────── */
 /* Already set in rule 3 above */
 
-/* ── Responsive page container — replaces ad-hoc px-6/px-8 on each page ──
+/* ── Responsive page container - replaces ad-hoc px-6/px-8 on each page ──
    Usage: className="page-section"  on the max-w-[1400px] mx-auto div     */
 .page-section {
   width: 100%;
@@ -600,7 +600,7 @@ textarea {
   padding: 1rem 1.5rem !important;
   border-radius: 1rem !important;
 }
-/* Single-column layouts — prevent overwhelming dense grids */
+/* Single-column layouts - prevent overwhelming dense grids */
 [data-ui-profile="cognitive"] .grid-cols-2,
 [data-ui-profile="cognitive"] .grid-cols-3,
 [data-ui-profile="cognitive"] .grid-cols-4 {
@@ -628,7 +628,7 @@ textarea {
   color: #000000 !important;
   background-color: #ffffff !important;
 }
-/* Ultra-high contrast — override Tailwind colours */
+/* Ultra-high contrast - override Tailwind colours */
 [data-ui-profile="visual"] .text-slate-500,
 [data-ui-profile="visual"] .text-slate-400,
 [data-ui-profile="visual"] .text-gray-400,
@@ -649,7 +649,7 @@ textarea {
   font-size: 1.1rem !important;
   font-weight: 600 !important;
 }
-/* Remove colour-only status indicators — add text labels */
+/* Remove colour-only status indicators - add text labels */
 [data-ui-profile="visual"] .badge-critical::after { content: " (Critical)"; }
 [data-ui-profile="visual"] .badge-high::after     { content: " (High)"; }
 [data-ui-profile="visual"] .badge-moderate::after { content: " (Moderate)"; }
@@ -687,7 +687,7 @@ textarea {
 
 /* ── DISTRESSED PROFILE ─────────────────────────────────────────────────────
    Bedbound / very high pain + low mood
-   Research: Smashing Magazine (2026) — reduce cognitive strain, no trends  */
+   Research: Smashing Magazine (2026) - reduce cognitive strain, no trends  */
 [data-ui-profile="distressed"] {
   font-size: 18px !important;
 }
@@ -695,7 +695,7 @@ textarea {
   font-size: 1.125rem;
   line-height: 1.8;
 }
-/* No animations — every visual change adds cognitive load when in distress */
+/* No animations - every visual change adds cognitive load when in distress */
 [data-ui-profile="distressed"] *,
 [data-ui-profile="distressed"] *::before,
 [data-ui-profile="distressed"] *::after {
@@ -708,7 +708,7 @@ textarea {
   font-size: 1.1rem !important;
   font-weight: 700 !important;
 }
-/* Calm, muted palette — no saturated accent colours */
+/* Calm, muted palette - no saturated accent colours */
 [data-ui-profile="distressed"] .bg-teal-600 { background-color: #0f766e !important; }
 [data-ui-profile="distressed"] .bg-rose-500  { background-color: #be123c !important; }
 /* Dense grids become single column */
@@ -738,7 +738,7 @@ textarea {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PRINT STYLES — Reports & Clinical Documents
+   PRINT STYLES - Reports & Clinical Documents
    Applied when user uses browser Print / Save as PDF.
    Hides navigation, shows only #report-print-area content cleanly.
    ═══════════════════════════════════════════════════════════════════════════ */

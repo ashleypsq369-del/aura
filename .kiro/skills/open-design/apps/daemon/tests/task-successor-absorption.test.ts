@@ -12,13 +12,13 @@ import { startServer } from '../src/server.js';
  * each of them its own assistant row (the continuation's row id is minted as
  * `odnext_assistant_<hash>`). The web client renders those rows as ONE turn, so
  * while the successor streams it keeps appending into the message object it
- * already had on screen — the PREDECESSOR's row — and then persists that folded
+ * already had on screen - the PREDECESSOR's row - and then persists that folded
  * copy through `PUT /api/projects/:id/conversations/:cid/messages/:mid`.
  *
  * When that PUT names the successor Run, `mergeMessageWriteForDaemonBacked`
- * already refuses it. When it names the row's OWN Run — which is what the
+ * already refuses it. When it names the row's OWN Run - which is what the
  * client sends after a conversation refresh has handed the server's `runId` and
- * terminal `runStatus` back to a message the stream is still writing into — the
+ * terminal `runStatus` back to a message the stream is still writing into - the
  * guard sees an ordinary "grew a bit" write and lets the whole successor stream
  * land. The successor's answer is then stored twice: once inside the
  * predecessor's row and once in its own, and a freshly opened project renders
@@ -26,9 +26,9 @@ import { startServer } from '../src/server.js';
  *
  * Observed in the packaged 0.21.1-beta.7 database, conversation
  * 59edcc92-3f83-4c7f-880f-8eccf905785a: message 5ba87c0e (clarification Run
- * fefe72f4) carries 1010 events with TWO `done_key`s — its own
+ * fefe72f4) carries 1010 events with TWO `done_key`s - its own
  * `ea4b836c2a18b4e8` at index 1 and the production Run's `d35b50f40e3a9ba7` at
- * index 239 — and its `content` ends with the production row's full body.
+ * index 239 - and its `content` ends with the production row's full body.
  * A second, older instance sits in the same database from 2026-08-28.
  *
  * The invariant this pins: a daemon-backed assistant row holds the stream of
@@ -66,8 +66,8 @@ type StoredMessage = {
 /*
  * Event shapes copied from the packaged beta database (the production Run's own
  * row, `odnext_assistant_26e1ba4b367f97c2d2aa9ac0aedafb35`). `thinking_tokens`
- * only ever comes from the web translation — the daemon deliberately does not
- * persist it — which is how the stored copy was identified as a client write.
+ * only ever comes from the web translation - the daemon deliberately does not
+ * persist it - which is how the stored copy was identified as a client write.
  */
 const SUCCESSOR_TAIL_EVENTS: PersistedEvent[] = [
   { kind: 'status', label: 'initializing', detail: 'claude-opus-5[1m]' },
@@ -146,7 +146,7 @@ describe('a task successor Run must not be folded into its predecessor row', () 
 
     // The folded snapshot the client sends: the predecessor row's own stream
     // followed by the successor Run's whole stream (its `start` frame, its
-    // `done_key`, its body, its terminal `usage`) — and it names the row's OWN
+    // `done_key`, its body, its terminal `usage`) - and it names the row's OWN
     // Run and the terminal status the row already carries, which is what the
     // client holds after a conversation refresh.
     const foldedEvents: PersistedEvent[] = [
@@ -189,7 +189,7 @@ describe('a task successor Run must not be folded into its predecessor row', () 
     expect(after?.content).toBe(predecessor?.content);
     expect(after?.events?.length).toBe(predecessor?.events?.length);
 
-    // The successor's own row is untouched — it is the one place that answer lives.
+    // The successor's own row is untouched - it is the one place that answer lives.
     const successorAfter = await fetchMessage(
       started.url, projectId, conversationId, successorMessageId,
     );

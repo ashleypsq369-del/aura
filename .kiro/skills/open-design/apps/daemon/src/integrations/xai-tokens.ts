@@ -25,7 +25,7 @@ export interface StoredXAIToken {
   accessToken: string;
   /** Refresh token (RFC 6749 §6) if the auth server issued one. */
   refreshToken?: string;
-  /** Absolute epoch ms at which `accessToken` expires. Optional — some
+  /** Absolute epoch ms at which `accessToken` expires. Optional - some
    * providers never expire. */
   expiresAt?: number;
   /** RFC 6749 §5.1 token_type. Almost always `Bearer`. */
@@ -176,7 +176,7 @@ export async function clearXAIToken(dataDir: string): Promise<void> {
 
 /** True when the stored token is past its `expiresAt` (or within `skew`
  * milliseconds of expiring). Returns false when no `expiresAt` is
- * recorded — some providers issue non-expiring tokens. */
+ * recorded - some providers issue non-expiring tokens. */
 export function isXAITokenExpired(
   token: StoredXAIToken,
   now: number = Date.now(),

@@ -1,4 +1,4 @@
-// Daemon-side mirror of src/media/models.ts. The two files are kept in sync by hand — any model added to
+// Daemon-side mirror of src/media/models.ts. The two files are kept in sync by hand - any model added to
 // src/media/models.ts must be added here too. Drift is enforced by
 // `node scripts/verify-media-models.mjs` (also exposed as
 // `npm run verify:media-models`); CI should call it before publish so
@@ -34,7 +34,7 @@ export const MEDIA_PROVIDERS: MediaProvider[] = [
   { id: 'openai', label: 'OpenAI', hint: 'gpt-image-2 / dall-e-3', integrated: true, defaultBaseUrl: 'https://api.openai.com/v1' },
   { id: 'vela', label: 'OpenDesign Cloud', hint: 'Managed image and video generation through Vela', integrated: true, credentialsRequired: false, settingsVisible: false },
   { id: 'volcengine', label: 'Volcengine Ark (Doubao)', hint: 'Seedance 2.0 / Seedream', integrated: true, defaultBaseUrl: 'https://ark.cn-beijing.volces.com/api/v3' },
-  { id: 'grok', label: 'xAI Grok Imagine', hint: 'grok-imagine — image + video with native audio', integrated: true, defaultBaseUrl: 'https://api.x.ai/v1' },
+  { id: 'grok', label: 'xAI Grok Imagine', hint: 'grok-imagine - image + video with native audio', integrated: true, defaultBaseUrl: 'https://api.x.ai/v1' },
   { id: 'hyperframes', label: 'HyperFrames', hint: 'Local HTML -> MP4 renderer', integrated: true, credentialsRequired: false, settingsVisible: false },
   { id: 'nanobanana', label: 'Nano Banana', hint: 'Uses Google’s official API by default. You can also configure a custom gateway.', integrated: true, defaultBaseUrl: 'https://generativelanguage.googleapis.com', supportsCustomModel: true },
   { id: 'imagerouter', label: 'ImageRouter', hint: 'OpenAI-compatible image + video routing', integrated: true, defaultBaseUrl: 'https://api.imagerouter.io/v1/openai', docsUrl: 'https://docs.imagerouter.io/api-reference/image-generation/', supportsCustomModel: true, customModelPlaceholder: 'openai/gpt-image-2 or xAI/grok-imagine-video' },
@@ -138,12 +138,12 @@ export const IMAGE_MODELS: MediaModel[] = [
   { id: 'ideogram-v2', label: 'ideogram-v2', hint: 'Replicate · typography', provider: 'replicate', caps: ['t2i'] },
   { id: 'sdxl', label: 'stable-diffusion-xl', hint: 'Replicate · SDXL', provider: 'replicate', caps: ['t2i'] },
 
-  { id: 'flux-pro-ultra', label: 'flux-pro-ultra', hint: 'Fal · FLUX 1.1 Pro Ultra · highest quality (~60–180s)', provider: 'fal', caps: ['t2i'] },
-  { id: 'flux-dev-fal', label: 'flux-dev (fal)', hint: 'Fal · FLUX Dev · balanced quality/speed (~15–40s)', provider: 'fal', caps: ['t2i'] },
-  { id: 'flux-schnell-fal', label: 'flux-schnell (fal)', hint: 'Fal · FLUX Schnell · fastest (~3–8s)', provider: 'fal', caps: ['t2i'] },
-  { id: 'ideogram-v3-fal', label: 'ideogram-v3', hint: 'Fal · Ideogram v3 · typography + design (~15–30s)', provider: 'fal', caps: ['t2i'] },
-  { id: 'recraft-v3-fal', label: 'recraft-v3', hint: 'Fal · Recraft v3 · vector + illustration (~15–30s)', provider: 'fal', caps: ['t2i'] },
-  { id: 'sd-3.5', label: 'stable-diffusion-3.5', hint: 'Fal · SD 3.5 (~20–40s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'flux-pro-ultra', label: 'flux-pro-ultra', hint: 'Fal · FLUX 1.1 Pro Ultra · highest quality (~60-180s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'flux-dev-fal', label: 'flux-dev (fal)', hint: 'Fal · FLUX Dev · balanced quality/speed (~15-40s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'flux-schnell-fal', label: 'flux-schnell (fal)', hint: 'Fal · FLUX Schnell · fastest (~3-8s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'ideogram-v3-fal', label: 'ideogram-v3', hint: 'Fal · Ideogram v3 · typography + design (~15-30s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'recraft-v3-fal', label: 'recraft-v3', hint: 'Fal · Recraft v3 · vector + illustration (~15-30s)', provider: 'fal', caps: ['t2i'] },
+  { id: 'sd-3.5', label: 'stable-diffusion-3.5', hint: 'Fal · SD 3.5 (~20-40s)', provider: 'fal', caps: ['t2i'] },
 
   { id: 'leonardo-phoenix', label: 'Phoenix', hint: 'Leonardo · versatile', provider: 'leonardo', caps: ['t2i'] },
   { id: 'leonardo-kino-xl', label: 'Kino XL', hint: 'Leonardo · cinematic', provider: 'leonardo', caps: ['t2i'] },
@@ -211,7 +211,7 @@ export const AUDIO_MODELS_BY_KIND: Record<AudioKind, MediaModel[]> = {
     { id: 'doubao-tts', label: 'doubao-tts', hint: 'Volcengine', provider: 'volcengine', caps: ['tts'] },
     { id: 'gpt-4o-mini-tts', label: 'gpt-4o-mini-tts', hint: 'OpenAI', provider: 'openai', caps: ['tts'] },
     { id: 'aihubmix-tts-1', label: 'tts-1 (AIHubMix)', hint: 'AIHubMix · OpenAI tts-1', provider: 'aihubmix', caps: ['tts'] },
-    // xAI TTS — multilingual; uses the same SuperGrok OAuth as image / video.
+    // xAI TTS - multilingual; uses the same SuperGrok OAuth as image / video.
     { id: 'grok-tts', label: 'grok-tts', hint: 'xAI · multilingual · uses Grok subscription', provider: 'grok', caps: ['tts'] },
   ],
   sfx: [

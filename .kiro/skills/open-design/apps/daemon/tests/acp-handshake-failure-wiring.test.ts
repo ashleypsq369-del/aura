@@ -22,8 +22,8 @@ import { startServer } from '../src/server.js';
 //
 // So a unit test over the pure predicates proves nothing about what the user
 // reads. These tests assert on the two surfaces a user and the telemetry
-// pipeline actually observe — the `error` SSE event recorded in the run's
-// events log, and `run.error` / `run.errorCode` on `GET /api/runs/:id` — plus
+// pipeline actually observe - the `error` SSE event recorded in the run's
+// events log, and `run.error` / `run.errorCode` on `GET /api/runs/:id` - plus
 // the spawn count, which is what "stop retrying a deterministic failure" means
 // in practice.
 //
@@ -31,7 +31,7 @@ import { startServer } from '../src/server.js';
 // `AGENT_CLI_SESSION_REFUSED` code plus the structured runtime identity (the
 // agent's display name) and leaves `run.error` as the agent's own line.
 // The sentence the user reads is the web's, resolved from that code through
-// i18n — a daemon-authored English paragraph can never be localized.
+// i18n - a daemon-authored English paragraph can never be localized.
 
 type StartedServer = {
   url: string;
@@ -47,7 +47,7 @@ type RunStatus = {
   eventsLogPath: string;
 };
 
-/** The structured half of an SSE `error` frame — what the web localizes from. */
+/** The structured half of an SSE `error` frame - what the web localizes from. */
 type ErrorFrame = {
   message?: unknown;
   error?: {
@@ -60,7 +60,7 @@ type ErrorFrame = {
 
 type RunEvent = { event: string; data: unknown };
 
-/** The persisted half of the same failure — what a reload reads instead of SSE. */
+/** The persisted half of the same failure - what a reload reads instead of SSE. */
 type PersistedStatusEvent = {
   kind?: unknown;
   label?: unknown;
@@ -82,23 +82,23 @@ const FAKE_ACP_CLI = path.join(HERE, 'fixtures', 'fake-acp-handshake-cli.mjs');
 /** The agent the reported users were actually running when this broke. */
 const AGENT_ID = 'kimi';
 const AGENT_BIN = 'kimi';
-/** `kimiAgentDef.name` — the display name the guidance copy must lead with. */
+/** `kimiAgentDef.name` - the display name the guidance copy must lead with. */
 const AGENT_DISPLAY_NAME = 'Kimi CLI';
 /**
  * What an ACP CLI says when a runtime IT manages failed to come up, verbatim
  * from vela's `acp_runtime.go` (`start opencode server: %v` wrapping
  * `opencode exited before readiness: %w`). Reported from inside `session/new`,
- * so it reaches the daemon handshake-numbered — while saying nothing at all
+ * so it reaches the daemon handshake-numbered - while saying nothing at all
  * about the agent CLI's own build.
  */
 const RUNTIME_NEVER_READY =
   'start opencode server: opencode exited before readiness: exit status 3';
 
-describe('ACP handshake rejection — server wiring', () => {
+describe('ACP handshake rejection - server wiring', () => {
   const originalEnv = snapshotEnv();
   let started: StartedServer | null = null;
   let binDir: string | null = null;
-  // The empty home detection is scoped to for this test — see
+  // The empty home detection is scoped to for this test - see
   // `isolateAgentDetection`. Per test, because the toolchain-directory cache is
   // keyed on it.
   let agentHomeDir = '';
@@ -139,7 +139,7 @@ describe('ACP handshake rejection — server wiring', () => {
 
     // 1. `run.error` is the agent's own line, unedited. It is the input to
     //    run-failure-classification.ts, so dropping or padding the JSON-RPC
-    //    frame would degrade this failure class in telemetry — and it is the
+    //    frame would degrade this failure class in telemetry - and it is the
     //    text the card shows under 「查看错误详情」, so it must appear once and
     //    carry no prose of the daemon's own.
     const runError = run.error ?? '';
@@ -179,7 +179,7 @@ describe('ACP handshake rejection — server wiring', () => {
 
   // The SSE frame is only half the surface. The daemon persists every run event
   // onto the assistant message BEFORE emitting it, and `ChatPane` rebuilds the
-  // failure card from that stored event after a reload — it never replays the
+  // failure card from that stored event after a reload - it never replays the
   // stream. So a code that reaches the live client but not the database means
   // the localized card is shown while the tab stays open and collapses to the
   // generic failure copy the moment the user comes back, which is exactly when
@@ -203,7 +203,7 @@ describe('ACP handshake rejection — server wiring', () => {
     // Read the conversation back the way a reloaded client does.
     const errorEvent = await readPersistedRunErrorEvent(started.url, conversationId);
     expect(errorEvent.code).toBe('AGENT_CLI_SESSION_REFUSED');
-    // The agent's own line survives into storage too — same invariant as the
+    // The agent's own line survives into storage too - same invariant as the
     // live surface, since this is the text the card shows under details.
     expect(errorEvent.detail).toBe('json-rpc id 2: Internal error');
     // The finalizer rewrites this same event in place to stamp the run's
@@ -213,7 +213,7 @@ describe('ACP handshake rejection — server wiring', () => {
     expect(errorEvent.failureDetail).toBe('agent_protocol_error');
   });
 
-  it('does not re-run a handshake rejection — the same CLI build refuses again', async () => {
+  it('does not re-run a handshake rejection - the same CLI build refuses again', async () => {
     binDir = await mkdtemp(path.join(os.tmpdir(), 'od-acp-handshake-retry-bin-'));
     const logPath = path.join(binDir, 'invocations.jsonl');
     // The CLI claims its own handshake rejection is transient. The daemon must
@@ -240,7 +240,7 @@ describe('ACP handshake rejection — server wiring', () => {
 
     // This shape carries a nested `error` object (the agent supplied
     // `error.data`), which is the field `run.error` and `run.errorCode` are
-    // read from — so the code has to land there, not only on the top level.
+    // read from - so the code has to land there, not only on the top level.
     // The agent's own `data` survives alongside the identity the card needs.
     const events = await readRunEvents(run.eventsLogPath);
     const errorEvents = events.filter((event) => event.event === 'error');
@@ -281,8 +281,8 @@ describe('ACP handshake rejection — server wiring', () => {
   // Regression for the misfire this guidance shipped with: reading only the
   // JSON-RPC id made EVERY handshake-stage error a CLI-compatibility verdict.
   // Running a real Kimi CLI while signed out produces `json-rpc id 2:
-  // Authentication required` — a healthy, current CLI reporting the one thing
-  // it cannot do for the user — and the daemon answered it by telling them to
+  // Authentication required` - a healthy, current CLI reporting the one thing
+  // it cannot do for the user - and the daemon answered it by telling them to
   // update or downgrade that CLI. No pure-function test caught it, because the
   // helpers were consistent with themselves; only the end-to-end text a signed
   // out user reads shows the prescription is wrong.
@@ -307,7 +307,7 @@ describe('ACP handshake rejection — server wiring', () => {
     expect(run.status).toBe('failed');
 
     const runError = run.error ?? '';
-    // What the agent actually said survives — that is the sentence pointing at
+    // What the agent actually said survives - that is the sentence pointing at
     // the fix (sign in), and it is also what the classifier reads.
     expect(runError).toMatch(/json-rpc id 2: Authentication required/i);
     // …and the CLI-compatibility verdict is not pinned on it. Getting this
@@ -326,8 +326,8 @@ describe('ACP handshake rejection — server wiring', () => {
 
   // Same misfire, a different cause: the predicate that decides "the CLI gave
   // no reason" recognised only the three agent-service classes, so every OTHER
-  // cause the run classifier already knows how to advise on — prompt size
-  // first among them — was rewritten into "your CLI version is incompatible".
+  // cause the run classifier already knows how to advise on - prompt size
+  // first among them - was rewritten into "your CLI version is incompatible".
   // The user whose content was too long was told to change a healthy CLI, while
   // the telemetry for the same run said `prompt_too_large` / `reduce_context`.
   it('does not blame the CLI version when the agent says the request was too large', async () => {
@@ -349,7 +349,7 @@ describe('ACP handshake rejection — server wiring', () => {
     const run = await sendRunAndWait(started.url, conversationId, 'draft a landing page');
 
     expect(run.status).toBe('failed');
-    // Verbatim, as with every other named cause — this is the line that says
+    // Verbatim, as with every other named cause - this is the line that says
     // what to shorten, and the line the classifier reads.
     expect(run.error ?? '').toBe(
       'json-rpc id 2: [code=request_too_large] request body exceeds configured limit',
@@ -373,7 +373,7 @@ describe('ACP handshake rejection — server wiring', () => {
 
   // AMR is the largest population running this path, and what it runs
   // underneath is OpenCode. When vela's bundled OpenCode child fails to come up
-  // — a port collision, an OOM kill, a half-written config — vela reports that
+  // - a port collision, an OOM kill, a half-written config - vela reports that
   // from inside `session/new`, so the failure arrives handshake-numbered even
   // though the agent CLI refused nothing at all.
   //
@@ -390,8 +390,8 @@ describe('ACP handshake rejection — server wiring', () => {
       cliVersion: '0.38.0',
       errorMessage: RUNTIME_NEVER_READY,
       // vela marks its own startup failure transient. Unlike a handshake
-      // refusal — where a CLI claiming retryability is claiming something the
-      // daemon can disprove — here the CLI is right, and the daemon must not
+      // refusal - where a CLI claiming retryability is claiming something the
+      // daemon can disprove - here the CLI is right, and the daemon must not
       // overrule it.
       retryable: true,
     });
@@ -481,20 +481,20 @@ async function detectAgents(url: string): Promise<void> {
  *
  * `GET /api/agents` probes every shipped runtime, and detection resolves
  * binaries from `process.env.PATH` PLUS the machine's user toolchain
- * directories — Homebrew, `~/.local/bin`, `~/.bun/bin`, version-manager and npm
+ * directories - Homebrew, `~/.local/bin`, `~/.bun/bin`, version-manager and npm
  * prefixes (`resolvePathDirs` in runtimes/executables.ts). So on any host that
  * actually has agent CLIs installed, one refresh becomes a dozen real
  * `--version` / `--help` / compatibility spawns, and the cost of a test that
  * waits on one is a property of the host rather than of the code under test.
  * Measured through this same path: ~2.8s on this machine, and the gated case
- * below — which waits on a refresh twice — ran ~28s on a reviewer's, past the
+ * below - which waits on a refresh twice - ran ~28s on a reviewer's, past the
  * suite's 20s test timeout, while passing here.
  *
  * `OD_AGENT_HOME` is detection's own answer to that (`resolveDetectionHome`):
  * pointed at an empty directory it scopes the search strictly to that home and
  * skips the machine's toolchain locations entirely, so the walk over the
  * registry finds nothing except what this test wrote onto PATH. Same route,
- * same probe path, same assertions — the host's CLIs simply stop being dragged
+ * same probe path, same assertions - the host's CLIs simply stop being dragged
  * through them, and the refresh drops to a single spawn of the fake CLI.
  *
  * @param dir - Directory holding the fake agent CLI shim.
@@ -528,7 +528,7 @@ async function readRunSessionRequests(logPath: string): Promise<string[]> {
     .map((entry) => entry.method);
 }
 
-/** Mirrors `extractErrorDetails` in runtimes/runs.ts — the text that becomes `run.error`. */
+/** Mirrors `extractErrorDetails` in runtimes/runs.ts - the text that becomes `run.error`. */
 function effectiveErrorMessage(data: unknown): string {
   const payload = (data ?? {}) as { message?: unknown; error?: unknown };
   const nested =
@@ -543,7 +543,7 @@ function effectiveErrorMessage(data: unknown): string {
  * The stored `status: 'error'` event a reloaded conversation renders from.
  *
  * Goes through the same route the web client calls on mount, so this reads what
- * a user coming back to the tab actually gets — not what the live stream said.
+ * a user coming back to the tab actually gets - not what the live stream said.
  * Polls briefly because finalize-time enrichment lands just after the run turns
  * terminal; it does not tolerate a missing event.
  */

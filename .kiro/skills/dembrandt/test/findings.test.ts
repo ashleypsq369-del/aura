@@ -4,7 +4,7 @@ import { computeFindings } from '../lib/findings.js';
 
 /**
  * computeFindings is the single source of truth behind the report's summary
- * scores. These pin the four honest checks and the derived consistency score —
+ * scores. These pin the four honest checks and the derived consistency score -
  * every gauge number must trace back to a finding here.
  */
 

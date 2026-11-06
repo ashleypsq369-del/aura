@@ -2,7 +2,7 @@
 //
 // applyPlugin must:
 //   - Compute a deterministic snapshot for the same inputs.
-//   - Refuse to mutate the registry / FS / SQLite — caller owns persistence.
+//   - Refuse to mutate the registry / FS / SQLite - caller owns persistence.
 //   - Throw MissingInputError when a required input is absent.
 
 import { describe, expect, it } from 'vitest';

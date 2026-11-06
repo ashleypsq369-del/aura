@@ -50,8 +50,8 @@ import type { MediaStockTelemetryEvent } from '@open-design/contracts/analytics'
 const DEFAULT_HOST = 'https://us.i.posthog.com';
 
 // The daemon runs on the user's own machine, so `process.platform` IS the
-// user's OS. posthog-node — unlike posthog-js, which parses `$os` from the
-// User-Agent — does NOT auto-enrich device properties, so every
+// user's OS. posthog-node - unlike posthog-js, which parses `$os` from the
+// User-Agent - does NOT auto-enrich device properties, so every
 // daemon-emitted event (all `result` / backend events: run_created,
 // run_finished, project_create_result, file_upload_result, …) would land in
 // the null/unknown bucket on any OS breakdown. Stamp the canonical PostHog
@@ -242,7 +242,7 @@ export async function captureStockAnalyticsBatch(args: {
   } catch { return 'retry'; }
 }
 
-// Baseline wire response for GET /api/analytics/config — checks only the
+// Baseline wire response for GET /api/analytics/config - checks only the
 // env-var gate. The route handler in server.ts further narrows this with
 // the user's telemetry.metrics consent before sending it to the client.
 export function readPublicConfigResponse(
@@ -305,7 +305,7 @@ export interface AnalyticsService {
    * Safety / reliability events (renderer crashes, daemon uncaught errors,
    * SSE health, etc.) that intentionally BYPASS the user's analytics
    * consent toggle. The product policy is: we always retain ground-truth
-   * stability data even for opted-out users — the user-facing consent copy
+   * stability data even for opted-out users - the user-facing consent copy
    * in Settings → Privacy must call this out.
    *
    * Falls back to a synthetic distinctId when the installationId is not
@@ -377,11 +377,11 @@ export function createAnalyticsService(args: {
   // disableGeoip: false REVERSES posthog-node's default (true). The library
   // assumes a server deployment where the ingestion request originates from a
   // datacenter IP, so GeoIP would mis-attribute every user to the server's
-  // location — hence it stamps `$geoip_disable: true` and PostHog skips
+  // location - hence it stamps `$geoip_disable: true` and PostHog skips
   // country enrichment. OpenDesign's daemon runs on the USER'S OWN machine,
   // so the request's source IP is the user's real public IP, identical to what
   // posthog-js already sends. Leaving the default on stripped country from
-  // every daemon-emitted event (run_created, run_finished, *_result, …) —
+  // every daemon-emitted event (run_created, run_finished, *_result, …) -
   // they all landed in the null bucket on any country breakdown while web
   // events were 100% enriched. Same reason we hand-stamp `$os` below:
   // posthog-node does not auto-enrich what posthog-js gets for free.
@@ -392,7 +392,7 @@ export function createAnalyticsService(args: {
     disableGeoip: false,
   });
 
-  // Suppress posthog-node's own internal error spam — analytics failures
+  // Suppress posthog-node's own internal error spam - analytics failures
   // must never look like product errors. The library exposes `on('error')`.
   client.on?.('error', () => undefined);
 
@@ -498,7 +498,7 @@ export function createAnalyticsService(args: {
             $os: DAEMON_OS_NAME,
             $os_version: DAEMON_OS_VERSION,
             ...(context.requestId ? { request_id: context.requestId } : {}),
-            // $insert_id is PostHog's dedup key — passing the same id
+            // $insert_id is PostHog's dedup key - passing the same id
             // from web and daemon prevents the mirrored result event
             // from being counted twice.
             ...common,
@@ -530,7 +530,7 @@ export function createAnalyticsService(args: {
       // Returns a Promise that resolves AFTER `client.capture()` has run.
       // The fatal-shutdown path in server.ts awaits this before invoking
       // `shutdown()` so the event is guaranteed to be in posthog-node's
-      // local queue when the flush starts — otherwise a fast `shutdown()`
+      // local queue when the flush starts - otherwise a fast `shutdown()`
       // would drain an empty queue and the crash signal would be lost.
       // See codex review on PR #2527 (Siri-Ray) for the original race.
       const resolvedInsertId = insertId ?? randomInsertId();

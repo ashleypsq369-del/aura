@@ -62,7 +62,7 @@ import type { RunFailureClassification } from './run-failure-classification.js';
 import { redactSecrets } from './redact.js';
 import { readTelemetryEnvironment } from './telemetry-environment.js';
 
-// Langfuse US region: confirmed by an end-to-end smoke on 2026-05-07 — the
+// Langfuse US region: confirmed by an end-to-end smoke on 2026-05-07 - the
 // project's keys authenticate against `us.cloud.langfuse.com` only. EU host
 // (`cloud.langfuse.com`) returns 401 with the matching error message.
 // See specs/change/20260507-langfuse-telemetry/spec.md Q3.
@@ -324,7 +324,7 @@ export interface RuntimeInfo {
   appChannel?: string;
   /** Whether the daemon is running inside a packaged build. */
   packaged?: boolean;
-  /** Front-end carrier — `desktop` (Electron), `web` (browser), or unknown. */
+  /** Front-end carrier - `desktop` (Electron), `web` (browser), or unknown. */
   clientType?: 'desktop' | 'web' | 'unknown';
   /** Exact CLI version observed by the daemon's bounded detection probe. */
   agentCliVersion?: string;
@@ -620,7 +620,7 @@ function parseNonNegativeInt(value: string | undefined, fallback: number): numbe
 }
 
 // Byte-aware UTF-8 truncation. JS String.length counts UTF-16 code units,
-// not bytes — non-ASCII text (CJK, emoji) can occupy 2-4× as many bytes as
+// not bytes - non-ASCII text (CJK, emoji) can occupy 2-4× as many bytes as
 // characters, so a `value.length > max` cap silently lets oversized prompts
 // through. We truncate on a UTF-8 byte boundary so the result is still
 // valid Unicode (no half-encoded characters).
@@ -1000,7 +1000,7 @@ function buildToolPerformanceDiagnostics(
 
   for (const tool of list) {
     const d = durationMs(tool.startedAt, tool.endedAt);
-    // Aggregate under allowlisted family names only — never raw ACP/MCP labels.
+    // Aggregate under allowlisted family names only - never raw ACP/MCP labels.
     const safeName = telemetrySafeToolName(tool.name);
     const current =
       byName.get(safeName) ??
@@ -1511,7 +1511,7 @@ export function shouldFullyRedactToolPayload(toolName: string): boolean {
 /**
  * Map an arbitrary tool name to a Langfuse-safe label (bounded family allowlist).
  * Custom ACP/MCP names, paths, and free text never leave the host as span names
- * or toolName metadata — even when content telemetry is off.
+ * or toolName metadata - even when content telemetry is off.
  */
 export function telemetrySafeToolName(toolName: string): string {
   return canonicalizeToolAnalyticsName(toolName);
@@ -1529,7 +1529,7 @@ export function toolPayloadRedactionPlaceholder(
 ): string {
   const label = toolName.trim() || 'unnamed';
   if (isContentToolName(label)) {
-    // Stable allowlisted family only — never the raw adapter string.
+    // Stable allowlisted family only - never the raw adapter string.
     return `[REDACTED:tool_${direction}:content_tool:${telemetrySafeToolName(label)}]`;
   }
   return `[REDACTED:tool_${direction}:unknown_tool]`;
@@ -1537,7 +1537,7 @@ export function toolPayloadRedactionPlaceholder(
 
 function redactLocalPaths(value: string | undefined): string | undefined {
   if (value === undefined) return undefined;
-  // macOS /Users, Linux /home + /root, Windows C:\Users — Linux is a primary
+  // macOS /Users, Linux /home + /root, Windows C:\Users - Linux is a primary
   // supported environment, so Bash inputs like `cat /home/alice/.env` must not
   // leak home directories into Langfuse tool spans.
   return value
@@ -2036,7 +2036,7 @@ export function buildTracePayload(
   // Trace metadata is the queryable + exportable fact-sheet for each turn.
   // Anything we want to slice on for evals or dataset construction lives
   // here. Fields are flat (Langfuse stores it as JSON but indexes shallow
-  // keys best). All entries are anonymous — no PII, no credentials.
+  // keys best). All entries are anonymous - no PII, no credentials.
   const traceMetadata: Record<string, unknown> = {
     ...ctx.skillDiscovery,
     ...(ctx.evalContextV2 && wantsContent ? { eval_context_v2: wantsArtifacts ? ctx.evalContextV2 : {
@@ -3233,7 +3233,7 @@ export function buildFeedbackPayload(ctx: FeedbackReportContext): unknown[] {
     reasonCodes: ctx.reasonCodes,
     reasonCount: ctx.reasonCodes.length,
     hasCustomReason: ctx.hasCustomReason,
-    // Raw text — gated upstream by telemetry.content consent.
+    // Raw text - gated upstream by telemetry.content consent.
     customReason: ctx.customReason || undefined,
     installationId: ctx.installationId ?? undefined,
     ...(ctx.metadata ?? {}),

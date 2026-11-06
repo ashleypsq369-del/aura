@@ -30,7 +30,7 @@ describe('distillRulesFromAnnotations', () => {
       {
         annotations: [
           { note: 'Make the CTA copy action-first', targetLabel: 'Hero button' },
-          { note: 'x' }, // too short — dropped
+          { note: 'x' }, // too short - dropped
         ],
       },
       // Injected suggest stands in for the no-provider path (returns []).
@@ -61,7 +61,7 @@ describe('distillRulesFromAnnotations', () => {
     expect(result.attemptedLLM).toBe(true);
     expect(result.source).toBe('mixed');
     // The LLM draft and the heuristic draft share the same assertion, so the
-    // surfaced list collapses to a single proposal — the LLM phrasing wins.
+    // surfaced list collapses to a single proposal - the LLM phrasing wins.
     expect(result.proposals).toHaveLength(1);
     expect(result.proposals[0]?.name).toBe('Sentence-case buttons');
     expect(result.proposals[0]?.check).toBe('No all-caps button labels');

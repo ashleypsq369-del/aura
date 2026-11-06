@@ -94,7 +94,7 @@ export interface CollabCloudServiceDeps {
 	 *
 	 * A deletion arriving from the cloud carries no anchor: there is nothing left
 	 * to point at. The personal path filters incoming records by `filePath`, so a
-	 * tombstone matches nothing and is dropped — while the cursor still advances
+	 * tombstone matches nothing and is dropped - while the cursor still advances
 	 * past it. The deletion is then unreachable forever, and the local copy keeps
 	 * a comment the author deleted on the web.
 	 *
@@ -105,7 +105,7 @@ export interface CollabCloudServiceDeps {
 	 * Contract, and each clause is load-bearing:
 	 * - BOTH ids are required. Matching on comment id alone would let one
 	 *   project's deletion reach another project's row.
-	 * - `found: false` means the row is genuinely absent — a safe no-op.
+	 * - `found: false` means the row is genuinely absent - a safe no-op.
 	 * - A failed lookup MUST throw. It must never be reported as absence: that
 	 *   would turn "the database did not answer" into "there is nothing to
 	 *   delete", and the batch would be acknowledged with the deletion lost.
@@ -146,7 +146,7 @@ export interface CollabCloudServiceDeps {
 	/**
 	 * Resolve a LOCAL conversation id to re-home synced comments onto (conversation
 	 * ids do not cross daemons, and preview_comments has a conversation FK). Null
-	 * when the project has no local conversation yet — the poller then skips it.
+	 * when the project has no local conversation yet - the poller then skips it.
 	 */
 	resolveLocalConversationId: (projectId: string) => string | null;
 	/**
@@ -366,7 +366,7 @@ export interface CollabCloudService {
 	 *
 	 * Resolves with the cloud-assigned `seq` for THIS push (or `null` off-team /
 	 * on failure) so the caller can reconcile a new comment's provisional
-	 * `pin_seq` — see `confirmPreviewCommentPinSeq` in db.ts and the
+	 * `pin_seq` - see `confirmPreviewCommentPinSeq` in db.ts and the
 	 * recvq5BVsolIxi design note above `previewCommentToCloud`. The value is
 	 * safe to feed into that reconciliation from EITHER a create or an edit
 	 * push: the guard there only ever applies once per comment, so whichever
@@ -413,14 +413,14 @@ export interface CollabCloudService {
 	 * Pull + merge ONE project's comments now, regardless of whether it has a
 	 * live events subscriber. This is the hub push-channel consumer: a
 	 * `comment-changed` dirty mark must be redeemable even when the project is
-	 * not in `listProjectIds()` (the poll loop's open-projects scope) — the
+	 * not in `listProjectIds()` (the poll loop's open-projects scope) - the
 	 * poll loop otherwise never covers it and the mark would be consumed for
 	 * nothing. Errors land on `onError`; never throws.
 	 *
 	 * Resolves `true` only when a pull actually ran against the relay for this
 	 * project (a legitimately-empty/not-modified result still counts). Resolves
 	 * `false` when it no-oped (no team identity yet, no local conversation to
-	 * merge into) or the pull failed — the caller must then treat its consumed
+	 * merge into) or the pull failed - the caller must then treat its consumed
 	 * dirty mark as UNREDEEMED and restore it, otherwise a transient miss
 	 * silently loses the one signal a single comment ever gets.
 	 */
@@ -640,7 +640,7 @@ export function createCollabCloudService(
 		if (!identity) return;
 		const cloud = previewCommentToCloud(comment, identity.memberId);
 		cloud.deleted = true;
-		// The tombstone's own event time — newer than the comment's last content
+		// The tombstone's own event time - newer than the comment's last content
 		// edit so it can't be mistaken for a stale record on the relay/receiver.
 		cloud.updatedAt = Date.now();
 		await deps.client.pushComment(identity.teamId, comment.projectId, commentRelayPayload(cloud));
@@ -1389,7 +1389,7 @@ export function createCollabCloudService(
 	/**
 	 * One pull round: the member page drain plus the legacy pull. Every row the
 	 * round commits is counted into one `onMerged` notification, emitted when
-	 * the round settles — also when it ends early or throws, because rows that
+	 * the round settles - also when it ends early or throws, because rows that
 	 * already committed are in local storage either way. A 3-page drain is one
 	 * web refetch, not three.
 	 */
@@ -1433,11 +1433,11 @@ export function createCollabCloudService(
 	): Promise<boolean> {
 		const conversationId = deps.resolveLocalConversationId(projectId);
 		// No local conversation to attach to yet (e.g. a member who pulled the
-		// project but has not opened a chat) — nothing to merge into.
+		// project but has not opened a chat) - nothing to merge into.
 		if (!conversationId) return false;
 		// Member comments of a team project: bounded pages first. The legacy pull
 		// below then carries only what paging does not cover yet (share-page user
-		// comments, BA2), unless the member cursor needs a rebuild — in that case
+		// comments, BA2), unless the member cursor needs a rebuild - in that case
 		// the legacy pull keeps delivering member comments too, so nothing
 		// regresses while BO2's rebuild is pending.
 		//

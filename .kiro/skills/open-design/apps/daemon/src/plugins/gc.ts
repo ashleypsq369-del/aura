@@ -52,7 +52,7 @@ export function startSnapshotGc(opts: SnapshotGcOptions): SnapshotGcHandle {
 
   const tick = () => {
     try {
-      // Plan §3.M1 / spec PB2 — feed OD_SNAPSHOT_RETENTION_DAYS into
+      // Plan §3.M1 / spec PB2 - feed OD_SNAPSHOT_RETENTION_DAYS into
       // pruneExpiredSnapshots so referenced rows whose project has
       // been deleted are eligible for deletion after the configured
       // window. The unreferenced-TTL sweep stays the v1 default

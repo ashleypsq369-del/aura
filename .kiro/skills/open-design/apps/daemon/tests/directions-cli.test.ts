@@ -1,7 +1,7 @@
 // `od tools directions` is called directly by agents following the slim
 // prompt contract, so malformed invocations must fail fast (reviewer finding
 // on #5603): a missing `--id` value used to fall through to the full-list
-// output, and `--id --json` swallowed `--json` as the id — both exiting 0
+// output, and `--id --json` swallowed `--json` as the id - both exiting 0
 // with unrelated output the agent would then act on.
 import { execFile } from 'node:child_process';
 import { fileURLToPath } from 'node:url';

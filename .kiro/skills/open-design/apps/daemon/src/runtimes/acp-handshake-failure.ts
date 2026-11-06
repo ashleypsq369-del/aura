@@ -1,6 +1,6 @@
 /** @module runtimes/acp-handshake-failure
- * Recognises an ACP *handshake* rejection — the agent CLI answered
- * `initialize` and then refused to open a session — and NAMES it, so the
+ * Recognises an ACP *handshake* rejection - the agent CLI answered
+ * `initialize` and then refused to open a session - and NAMES it, so the
  * client can say what to do about it in the reader's own language.
  *
  * `acp-handshake-id.ts` answers *when* the failure happened: ids 1 and 2 are
@@ -18,7 +18,7 @@
  * lands in can never prescribe two different fixes.
  *
  * What this module does NOT do is write the sentence. The daemon has no locale
- * — a paragraph composed here lands verbatim in `run.error` and is rendered
+ * - a paragraph composed here lands verbatim in `run.error` and is rendered
  * verbatim by the chat, so a Chinese UI showed a Chinese title over an English
  * body, and the paragraph's own `Details: …` restatement printed the agent's
  * line a second time in a card that already shows it. Instead the failure
@@ -47,8 +47,8 @@ export {
   isAcpHandshakeRpcErrorText,
 } from './acp-handshake-id.js';
 
-// The verdict — handshake numbering AND no cause the run classifier already
-// has a remedy for — is `classifyRunFailure`'s, not this module's. Re-exported
+// The verdict - handshake numbering AND no cause the run classifier already
+// has a remedy for - is `classifyRunFailure`'s, not this module's. Re-exported
 // so the ACP surface still reads as one place, while there is exactly one
 // implementation to keep honest.
 export { isAcpCliSessionRefusalText } from '../run-failure-classification.js';
@@ -115,10 +115,10 @@ interface AcpErrorFrame {
  * `design.runs.emit` reads `error.message ?? message` and `error.code ?? code`
  * out of it to populate `run.error` / `run.errorCode`. The close handler that
  * runs afterwards short-circuits on `hasFatalError()`, so nothing downstream
- * gets a second chance to classify the failure — the payload is the last point
+ * gets a second chance to classify the failure - the payload is the last point
  * where both surfaces can be corrected together.
  *
- * Stamps only the structured half — code, retryability, identity — and only for
+ * Stamps only the structured half - code, retryability, identity - and only for
  * a handshake-numbered JSON-RPC error that named no cause of its own. The
  * message fields keep the agent's own line on both surfaces. Every other
  * payload is returned by identity, so structured failures

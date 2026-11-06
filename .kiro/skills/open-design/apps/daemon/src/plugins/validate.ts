@@ -1,4 +1,4 @@
-// Phase 4 / spec §11.5 / plan §3.W1 — author-side plugin validation.
+// Phase 4 / spec §11.5 / plan §3.W1 - author-side plugin validation.
 //
 // Pre-install lint pass: takes a path to a plugin folder on disk
 // (typically the author's local working dir) and returns the same

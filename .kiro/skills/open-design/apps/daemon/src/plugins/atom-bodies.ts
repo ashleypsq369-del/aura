@@ -1,4 +1,4 @@
-// Phase 4 / spec §23.3.2 patch 2 — atom SKILL.md body loader.
+// Phase 4 / spec §23.3.2 patch 2 - atom SKILL.md body loader.
 //
 // `composeSystemPrompt()` today inlines every atom's prompt fragment as
 // a TypeScript string constant in `apps/daemon/src/prompts/system.ts`.

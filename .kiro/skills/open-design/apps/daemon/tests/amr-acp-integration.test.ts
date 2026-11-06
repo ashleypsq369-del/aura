@@ -726,7 +726,7 @@ describe('AMR model loading cache', () => {
   });
 });
 
-describe('AMR ACP transport — end-to-end against fake vela stub', () => {
+describe('AMR ACP transport - end-to-end against fake vela stub', () => {
   it('drives a complete turn: initialize → session/new → session/set_model → session/prompt', async () => {
     const child = spawnFakeVela({
       FAKE_VELA_TEXT: 'Hello from AMR.',
@@ -834,7 +834,7 @@ describe('AMR ACP transport — end-to-end against fake vela stub', () => {
         cwd: process.cwd(),
         // model === 'default' triggers the daemon to skip session/set_model.
         // Against a vela-faithful stub that should surface as a fatal error,
-        // not a silent success — otherwise this same call path would also
+        // not a silent success - otherwise this same call path would also
         // silently fail against a real vela in production.
         model: 'default',
         mcpServers: [],

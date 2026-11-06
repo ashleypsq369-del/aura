@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -75,9 +75,9 @@ const PATIENT_STEPS = [
  required: false,
  options: [
  { value: "child", label: "Under 18" },
- { value: "young_adult", label: "18 – 40" },
- { value: "adult", label: "41 – 64" },
- { value: "older_adult", label: "65 – 79" },
+ { value: "young_adult", label: "18 - 40" },
+ { value: "adult", label: "41 - 64" },
+ { value: "older_adult", label: "65 - 79" },
  { value: "elderly", label: "80 and over" }
  ]
  },
@@ -929,8 +929,8 @@ const FAMILY_STEPS = [
  required: false,
  options: [
  { value: "yes_young", label: "Yes - young children under 10" },
- { value: "yes_teen", label: "Yes - teenagers (10–17)" },
- { value: "yes_young_adult", label: "Yes - young adults 18–25" },
+ { value: "yes_teen", label: "Yes - teenagers (10-17)" },
+ { value: "yes_young_adult", label: "Yes - young adults 18-25" },
  { value: "no", label: "No" }
  ]
  }

@@ -3,8 +3,8 @@ name: release-prerelease-smoke
 # Packaged smoke for one prerelease, run against the artifacts as PUBLISHED.
 #
 # This used to be a step at the end of each build job. Two problems with that.
-# It kept release-prerelease.yml — which holds a single repository-wide
-# concurrency group — open past `publish`, so the next prerelease could not
+# It kept release-prerelease.yml - which holds a single repository-wide
+# concurrency group - open past `publish`, so the next prerelease could not
 # start. And it installed electron-builder's output directory, which is not what
 # anybody downloads.
 #
@@ -40,7 +40,7 @@ on:
         type: string
         default: ""
       win_x64_smoke_mode:
-        description: "Windows x64 smoke coverage. `full` also builds the updater payload fixture here, which costs a complete Windows package — the published artifact cannot supply it, because it is the version being updated FROM."
+        description: "Windows x64 smoke coverage. `full` also builds the updater payload fixture here, which costs a complete Windows package - the published artifact cannot supply it, because it is the version being updated FROM."
         required: true
         type: choice
         options:
@@ -316,7 +316,7 @@ jobs:
           if (-not (Test-Path -LiteralPath $installer)) { throw "staged installer not found at $installer" }
           Unblock-File -LiteralPath $installer
       - name: Setup NSIS
-        # Only the `full` profile packages anything here — the updater payload
+        # Only the `full` profile packages anything here - the updater payload
         # fixture below. `core` installs the downloaded setup.exe and needs no
         # NSIS toolchain at all.
         if: ${{ inputs.win_x64_smoke_mode == 'full' }}
@@ -340,7 +340,7 @@ jobs:
       - name: Build prerelease win_x64 update fixture
         # Only the `full` Windows smoke consumes this fixture. It is a second,
         # complete Windows package built at version+1 so the updater has
-        # something real to apply — the published artifact cannot supply it,
+        # something real to apply - the published artifact cannot supply it,
         # because it is the version being updated FROM.
         if: ${{ inputs.win_x64_smoke_mode == 'full' && inputs.win_x64_update_metadata_url == '' && inputs.win_x64_update_target_version == '' }}
         continue-on-error: true

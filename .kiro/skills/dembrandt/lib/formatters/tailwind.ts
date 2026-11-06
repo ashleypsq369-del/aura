@@ -342,7 +342,7 @@ function buildFontWeights(styles: TypographyStyleInput[]): ThemeEntry[] {
 
 /**
  * Letter spacing, only where the page deviates from normal, and only for the
- * first style of each context — same reasoning as the size scale.
+ * first style of each context - same reasoning as the size scale.
  */
 function buildTracking(styles: TypographyStyleInput[]): ThemeEntry[] {
   const entries: ThemeEntry[] = [];

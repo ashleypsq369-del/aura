@@ -1,10 +1,10 @@
 /**
- * Coverage for `apps/daemon/src/integrations/vela.ts` — the read-side of
+ * Coverage for `apps/daemon/src/integrations/vela.ts` - the read-side of
  * the AMR (vela) login integration. The spawn path is exercised by
  * `tests/amr-acp-integration.test.ts` (which uses the fake-vela stub); here
  * we focus on the status reader that drives the Settings UI.
  *
- * `~/.amr/config.json` is the source of truth — vela CLI writes it on
+ * `~/.amr/config.json` is the source of truth - vela CLI writes it on
  * successful `vela login` and OpenDesign just surfaces a small projection.
  * Tests redirect HOME via env so we never touch the real user file.
  */
@@ -290,7 +290,7 @@ describe('readVelaLoginStatus', () => {
     expect(status.user?.email).toBe('leaf@example.com');
     expect(status.user?.plan).toBe('free');
     // The secrets in the file are intentionally NOT surfaced through the
-    // status projection — the UI never needs them and we don't want them
+    // status projection - the UI never needs them and we don't want them
     // showing up in HTTP responses to the local web.
     expect(JSON.stringify(status)).not.toContain('rt-secret-abc');
     expect(JSON.stringify(status)).not.toContain('ck-secret');
@@ -336,7 +336,7 @@ describe('readVelaLoginStatus', () => {
     expect(status.loggedIn).toBe(false);
   });
 
-  it('isolates profiles — a logged-in "local" does not imply logged-in "prod"', () => {
+  it('isolates profiles - a logged-in "local" does not imply logged-in "prod"', () => {
     writeConfig({
       profiles: {
         local: { runtimeKey: 'rt-local', user: { id: 'u', email: 'leaf@example.com' } },
@@ -673,7 +673,7 @@ describe('velaLiveAccountCacheKey + clearAllVelaLiveAccounts', () => {
   it('invalidates an env-backed key when the config account changes', () => {
     // Env-backed auth (VELA_RUNTIME_KEY) has userId='' (user:null), so the
     // config mtime is the ONLY signal that the underlying billing account
-    // changed — it must be part of the key or a switch leaks the prior
+    // changed - it must be part of the key or a switch leaks the prior
     // account's plan/balance. readVelaCredentialRevision now keeps configMtimeMs
     // for env auth so these differ.
     const env = (mtime: number) =>

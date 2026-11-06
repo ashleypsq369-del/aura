@@ -136,7 +136,7 @@ function fakeProjectStore(): PulledProjectStore & {
   return store;
 }
 
-/** A personal (non-team) workspace context — the default a fresh account lands
+/** A personal (non-team) workspace context - the default a fresh account lands
  *  on. Non-null and fully populated, but with no `teamId`: the resource hub is
  *  addressed by its `workspaceId` instead, as a partition of one. */
 function personalContextProvider(): WorkspaceContextProvider {
@@ -818,7 +818,7 @@ describe('collab sync routes', () => {
     // regen, or any write under the project dir) still fires
     // `scheduler.notifyChanged`. Before the fix, the scheduler adapter found
     // no remaining principal for the project and fell through to publishing
-    // it anyway under an unscoped resource id — durably re-sharing it for
+    // it anyway under an unscoped resource id - durably re-sharing it for
     // the window before `onPublished`'s `unshared` guard noticed and issued
     // a compensating unpublish. A status read landing in that window saw the
     // project as shared again.
@@ -841,7 +841,7 @@ describe('collab sync routes', () => {
     await runtime.requestTeamUnshare(projectId, workspace);
     publish.mockClear();
 
-    // Simulate the stale file-watcher subscription firing after unshare —
+    // Simulate the stale file-watcher subscription firing after unshare -
     // exactly what collab-publish-watcher.ts's leftover `subs` entry does.
     runtime.scheduler.notifyChanged(projectId, 'file-change');
     runtime.scheduler.runBoundary(projectId);
@@ -1487,7 +1487,7 @@ describe('collab sync routes', () => {
   it('owner opening their own unmaterialized shared project self-pulls and clears the placeholder stamp (recvqzaDvUU6B3)', async () => {
     // Fresh-install shape: the hub still lists the project with THIS member as
     // owner, but the local data root has no copy. The status poll registers a
-    // placeholder — and, because the owner has no other pull path ("the owner
+    // placeholder - and, because the owner has no other pull path ("the owner
     // never auto-pulls" only holds when their local copy is real), that same
     // poll must kick off a background self-pull. Without it the empty
     // placeholder stays the only local state, which is exactly what the
@@ -1771,7 +1771,7 @@ describe('collab sync routes', () => {
       resolveSharedProjectOwner: async () => 'owner-self',
     });
     expect(projectStore.has('shared-owned')).toBe(false);
-    // An owner can hit a shared project that is NOT in this daemon's local DB —
+    // An owner can hit a shared project that is NOT in this daemon's local DB -
     // it was created/shared on another machine (or a smoke-test attributed it to
     // them in the hub). Opening it must still register the placeholder, or
     // conversations/events/tabs 404 and the left pane hangs for a minute. The
@@ -2237,7 +2237,7 @@ describe('collab sync routes', () => {
     // by teamId and a personal session had nothing to publish under. B's
     // control-key auth path stopped refusing non-team callers: it mints a
     // principal whose teamId IS the workspace id, and its access check only
-    // compares that id against the resource's own — a partition of one. So a
+    // compares that id against the resource's own - a partition of one. So a
     // personal workspace must get through, and must be scoped by its OWN id.
     const dir = await mkdtemp(path.join(tmpdir(), 'od-public-file-'));
     tempDirs.push(dir);
@@ -2274,7 +2274,7 @@ describe('collab sync routes', () => {
       expect.arrayContaining([expect.objectContaining({ file: 'index.html' }), expect.objectContaining({ file: 'style.css', data: expect.anything() })]),
     );
     expect(vi.mocked(runVelaResourceCommand).mock.calls.map(call => call[0][0])).toEqual(['push']);
-    // Every hub call carries the personal workspace's own id as the scope —
+    // Every hub call carries the personal workspace's own id as the scope -
     // there is no teamId on this context, and nothing may invent one.
     expect(runVelaResourceCommand).toHaveBeenCalled();
     for (const call of vi.mocked(runVelaResourceCommand).mock.calls) {
@@ -2379,7 +2379,7 @@ describe('collab sync routes', () => {
   it('explains, rather than bare-codes, a public file publish with no workspace at all', async () => {
     // The gate was widened, not removed. A signed-out caller (or a context read
     // that came back empty) has no id to publish under and no member id to own
-    // the resource with, so all three handlers still refuse it — and must ship a
+    // the resource with, so all three handlers still refuse it - and must ship a
     // human-readable reason alongside the code, since the `od` CLI and embedding
     // agents surface the body verbatim. The sentence now says SIGN IN; telling a
     // personal user to "switch to a team workspace" is no longer true.
@@ -3182,7 +3182,7 @@ describe('collab sync routes', () => {
   // recvqhwv6RPU1j: replacing the "共享项目" placeholder record with the real
   // project name happens only in the daemon DB (registerPulledProject). The
   // only post-pull signal used to be `file-changed`, which makes the web
-  // refresh the FILE LIST but never re-read the project record — so a member's
+  // refresh the FILE LIST but never re-read the project record - so a member's
   // sidebar/tab title stayed on the placeholder until a manual page reload.
   // A pull that registered or updated the local record must also emit the
   // existing `project-metadata-changed` thin signal (notifyProjectMetadataChanged)
@@ -3373,7 +3373,7 @@ describe('collab sync routes', () => {
     expect(store.projects.get('shared-placeholder')?.name).toBe('Emerald Editorial');
   });
 
-  it('is idempotent — a pull for an already-local project does not re-register it', async () => {
+  it('is idempotent - a pull for an already-local project does not re-register it', async () => {
     const store = fakeProjectStore();
     store.register({
       id: 'shared-3',
@@ -3396,7 +3396,7 @@ describe('collab sync routes', () => {
     expect(store.projects.get('shared-3')?.name).toBe('Already Local');
   });
 
-  it('derives read-only from the hub at status time — no pull or in-memory record needed', async () => {
+  it('derives read-only from the hub at status time - no pull or in-memory record needed', async () => {
     const api = await startSyncServer(undefined, {
       resolveSharedProjectOwner: async (projectId) =>
         projectId === 'shared-ro' ? 'wm-owner' : null,
@@ -3407,7 +3407,7 @@ describe('collab sync routes', () => {
     // member's client (`shared && !isOwner`) renders it single-writer read-only.
     // Deriving every read is what makes read-only survive a daemon restart (which
     // clears the in-memory maps) and an already-pulled project opened without a
-    // re-pull — the bug was the pull never recording this at all.
+    // re-pull - the bug was the pull never recording this at all.
     const status = await api.json('/api/projects/shared-ro/collab/status');
     expect(status.body.syncState).toBe('synced');
     expect(status.body.ownerMemberId).toBe('wm-owner');

@@ -8,7 +8,7 @@
 // expiry logic.
 //
 // Refresh-on-read (lazy) is sufficient because xAI bearer tokens are
-// short-lived — every active call site naturally sees expiry often
+// short-lived - every active call site naturally sees expiry often
 // enough that we don't need a separate background refresher.
 
 import { refreshXAIToken } from './xai-oauth.js';
@@ -42,7 +42,7 @@ export async function resolveXAIBearer(
     return { accessToken: stored.accessToken, source: 'stored' };
   }
 
-  // Within skew window — try a refresh. If we have no refresh_token
+  // Within skew window - try a refresh. If we have no refresh_token
   // (some auth servers don't issue one) the caller has to re-login, so
   // we can't recover here.
   if (!stored.refreshToken) return null;

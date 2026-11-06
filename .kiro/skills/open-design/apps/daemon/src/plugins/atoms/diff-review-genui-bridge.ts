@@ -1,4 +1,4 @@
-// Phase 8 entry slice / spec §10.3 / §21.5 — diff-review GenUI bridge.
+// Phase 8 entry slice / spec §10.3 / §21.5 - diff-review GenUI bridge.
 //
 // Glue between the daemon's GenUI respond endpoint and the
 // `runDiffReview()` helper. When the user (or the agent) answers the
@@ -9,13 +9,13 @@
 // turn through the agent.
 //
 // This module is intentionally narrow:
-//   - `isDiffReviewSurfaceId(id)` — the only place the
+//   - `isDiffReviewSurfaceId(id)` - the only place the
 //     '__auto_diff_review_' prefix is owned, so future renames flow
 //     from one constant.
-//   - `parseDiffReviewGenuiResponse(value)` — coerces the JSON body
+//   - `parseDiffReviewGenuiResponse(value)` - coerces the JSON body
 //     the surface renderer submitted into the
 //     `runDiffReview({ decision })` shape, with strict validation.
-//   - `applyDiffReviewDecisionToCwd({ cwd, value, reviewer })` —
+//   - `applyDiffReviewDecisionToCwd({ cwd, value, reviewer })` -
 //     end-to-end glue that calls runDiffReview() with the parsed
 //     decision and returns the report. Best-effort on the daemon
 //     side: failures are swallowed and logged so the GenUI respond
@@ -70,7 +70,7 @@ export interface ApplyDiffReviewDecisionInput {
 export interface ApplyDiffReviewDecisionResult {
   ok: true;
   report: DiffReviewReport;
-  // Plan §3.T1 — when the diff-review write succeeds, we also run the
+  // Plan §3.T1 - when the diff-review write succeeds, we also run the
   // handoff atom against the project cwd so `<cwd>/handoff/manifest.json`
   // tracks the promotion ladder live. Best-effort: a failure here
   // doesn't fail the overall bridge call (the diff-review write

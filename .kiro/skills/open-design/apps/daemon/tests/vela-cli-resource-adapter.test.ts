@@ -18,7 +18,7 @@ import {
 import { createCollabRuntime } from '../src/collab/runtime.js';
 import type { ResourceHubPrincipal } from '../src/collab/resource-principal.js';
 
-// Spelled out literally — NOT imported from the source module — so that an
+// Spelled out literally - NOT imported from the source module - so that an
 // accidental deletion of any entry from the source lists turns this file red.
 // Order: the secret-bearing member-mirror entries first, then the
 // generated/installed trees the project UI already hides from the owner.
@@ -180,7 +180,7 @@ describe('createVelaCliResourceAdapter', () => {
 
     const excluded = excludedNamesIn(calls[0]!);
     // `--exclude target` matches by entry name regardless of type, so the bare
-    // form would also drop a regular project file named `target` — content the
+    // form would also drop a regular project file named `target` - content the
     // owner still sees, silently missing from every member mirror. The owner
     // side hides these as directories only, and the slash form says so.
     for (const bare of ['target', 'out', 'dist', 'build', 'debug', 'coverage', 'vendor']) {
@@ -423,7 +423,7 @@ describe('createVelaCliResourceAdapter', () => {
     expect(await adapter.publish({ projectId: 'p1', reason: 'edit' })).toBeNull();
     expect(calls).toHaveLength(1);
 
-    // Read/unpublish operations on the same live session are refused too —
+    // Read/unpublish operations on the same live session are refused too -
     // a removed member's daemon should not keep talking to the team hub at
     // all through this session.
     expect(await adapter.syncLatest!({ projectId: 'p1' })).toBeNull();
@@ -467,7 +467,7 @@ describe('transport selection', () => {
 
   it('refuses a member the team has removed, even though their identity fields still resolve', () => {
     // A removed member's workspaceType/workspaceId/workspaceMemberId keep
-    // resolving — only memberStatus flips — so the identity fields alone are
+    // resolving - only memberStatus flips - so the identity fields alone are
     // not enough to prove this session may still address the resource hub.
     expect(
       contextHasTeamIdentity({
@@ -488,12 +488,12 @@ describe('transport selection', () => {
 // on the feature-test hub (2026-07-27, workspace res-wipe-0727): every
 // subsequent unshare attempt died re-removing the already-tombstoned resource
 // (`vela resource remove` → 404 `resource_not_found`, surfaced as HTTP 400
-// and a local-row rollback), so the catalog row could NEVER be removed — and
+// and a local-row rollback), so the catalog row could NEVER be removed - and
 // after a reinstall (fresh data root, local `cloudTombstonedAt` gone) the
 // retracted project came back as a normal-looking team card for everyone.
 //
 // The invariant under test: `unpublish` is a retraction toward one end state
-// — "the hub no longer serves this resource". A hub answer that the resource
+// - "the hub no longer serves this resource". A hub answer that the resource
 // is already absent IS that end state, so retraction must treat it as
 // success and let the caller finish the rest of the unshare (the catalog
 // removal), instead of failing the whole operation forever.
@@ -555,7 +555,7 @@ describe('unpublish retraction idempotency (dangling team-catalog heal)', () => 
 
 // Red spec for the resource-transport spawn budgets. Before these existed,
 // only `pull` carried a timeout: a wedged `vela resource push` (hung network,
-// stalled auth refresh) held the scheduler's in-flight publish forever — no
+// stalled auth refresh) held the scheduler's in-flight publish forever - no
 // error ever reached the failure path, so the project sat "publishing" until
 // daemon restart. head/shared/remove are pure metadata round-trips and get a
 // tight budget; push uploads whole project snapshots over arbitrary uplinks

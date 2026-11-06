@@ -105,7 +105,7 @@ test('parsePiModels skips duplicate default id', () => {
 
 // ─── RPC event translation (mapPiRpcEvent) ────────────────────────────────
 //
-// We test the pure event mapper directly — no child process, no stdin.
+// We test the pure event mapper directly - no child process, no stdin.
 // This catches regressions like tool event ordering bugs.
 
 import { createJsonLineStream } from '../src/agent-protocol/index.js';
@@ -585,7 +585,7 @@ test('attachPiRpcSession emits status:initializing with null model when model is
 test('attachPiRpcSession sends prompt command on stdin', () => {
   const { child } = createSession();
 
-  // Read what was written to stdin — the first line should be a prompt command.
+  // Read what was written to stdin - the first line should be a prompt command.
   const chunks: string[] = [];
   child.stdin.on('data', (chunk: Buffer) => chunks.push(chunk.toString()));
   // stdin already received the prompt write; PassThrough buffers it.
@@ -1074,7 +1074,7 @@ test('attachPiRpcSession: no agent events emitted after abort()', () => {
   const beforeCount = events.length;
   assert.ok(beforeCount > 0, 'should have events before abort');
 
-  // Abort — sets finished = true, gates further stdout events.
+  // Abort - sets finished = true, gates further stdout events.
   session.abort();
 
   // Feed more agent events that arrive during the abort grace window.

@@ -5,7 +5,7 @@
  *   1. every run mints its own key, and it is unguessable;
  *   2. the key reaches the client on the same path as every other event, so it
  *      is there both live and after a reload;
- *   3. the marker rides the event stream but never lands in the message body —
+ *   3. the marker rides the event stream but never lands in the message body -
  *      `content` is what copy/export/legacy-render read.
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -79,7 +79,7 @@ describe('done marker · wire shape', () => {
 
   it('drops a done_key payload with no key rather than persisting an empty one', () => {
     // An empty key would match nothing, but a client that trusts "a key exists"
-    // would stop honouring the legacy bare marker — worse than having no key.
+    // would stop honouring the legacy bare marker - worse than having no key.
     expect(daemonAgentPayloadToPersistedAgentEvent({ type: 'done_key', key: '' })).toBeNull();
     expect(daemonAgentPayloadToPersistedAgentEvent({ type: 'done_key' })).toBeNull();
   });
@@ -89,7 +89,7 @@ describe('done marker · wire shape', () => {
     expect(stripDoneMarkers('a<od-done key="abcd1234" />b')).toBe('ab');
     expect(stripDoneMarkers("a<od-done key='abcd1234'>b")).toBe('ab');
     expect(stripDoneMarkers('a<OD-DONE KEY="abcd1234"/>b')).toBe('ab');
-    // Two markers in one body (agent emitted a stray extra) — both go
+    // Two markers in one body (agent emitted a stray extra) - both go
     expect(stripDoneMarkers('<od-done key="a1b2c3d4"/>x<od-done key="a1b2c3d4"/>y')).toBe('xy');
   });
 

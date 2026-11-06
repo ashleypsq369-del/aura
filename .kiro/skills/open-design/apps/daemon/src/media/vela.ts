@@ -480,7 +480,7 @@ export const VELA_SAFETY_REJECTION_CODE = 'safety_rejection';
 
 /**
  * Optional, non-authoritative hint about what a safety policy objected to.
- * Absent whenever the upstream supplier could not prove it — callers must then
+ * Absent whenever the upstream supplier could not prove it - callers must then
  * fall back to naming both possibilities rather than picking one.
  */
 export type VelaSafetySubject = 'prompt' | 'input_image' | 'output_image';
@@ -530,8 +530,8 @@ function safetySubject(value: unknown): VelaSafetySubject | undefined {
 /**
  * Rebuild a structured failure from a rejected `vela image --json` run.
  *
- * Returns undefined for every failure that carried no task JSON — a CLI
- * validation error, a crash, a timeout — so those keep their existing generic
+ * Returns undefined for every failure that carried no task JSON - a CLI
+ * validation error, a crash, a timeout - so those keep their existing generic
  * handling. An unrecognised or absent `code` is deliberately NOT promoted to a
  * safety rejection: mislabelling an outage as a policy refusal would send a
  * user off to rewrite a prompt that was never the problem.

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PersonalisationContext
  * ======================
  * Derives uiFlags from questionnaire preferences and exposes them
@@ -6,14 +6,14 @@
  * sidebar items based on what the user chose during onboarding.
  *
  * Key flags:
- * showCommunity – false if wants_community === 'no'
- * showLegacy – false if legacy_interest === 'no'
- * showJournal – false if coping_strategies excludes writing
- * showAI – false if ai_analysis_consent === 'no'
- * showSpiritualItems – false if spiritual_importance === 'not'
- * simplifiedNav – true if tech_comfort === 'basic' or info_style === 'simple'
- * hiddenNavPaths – Set of sidebar paths to hide
- * hiddenSections – Set of section keys to hide within pages
+ * showCommunity - false if wants_community === 'no'
+ * showLegacy - false if legacy_interest === 'no'
+ * showJournal - false if coping_strategies excludes writing
+ * showAI - false if ai_analysis_consent === 'no'
+ * showSpiritualItems - false if spiritual_importance === 'not'
+ * simplifiedNav - true if tech_comfort === 'basic' or info_style === 'simple'
+ * hiddenNavPaths - Set of sidebar paths to hide
+ * hiddenSections - Set of section keys to hide within pages
  */
 
 import { createContext, useContext, useMemo } from 'react';

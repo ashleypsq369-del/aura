@@ -10,7 +10,7 @@ import { createCodexAppServerNormalizer } from '../src/agent-protocol/codex-app-
  * `ExecutionShell` renders it). codex carries the same fact on a different
  * wire: every `thread/tokenUsage/updated` notification includes
  * `total.reasoningOutputTokens`, and the daemon was already reading that field
- * — it just stopped at the `usage` event, which the shell head does not use for
+ * - it just stopped at the `usage` event, which the shell head does not use for
  * this slot.
  *
  * ── Why `total` and not `last` ──────────────────────────────────────────────
@@ -22,7 +22,7 @@ import { createCodexAppServerNormalizer } from '../src/agent-protocol/codex-app-
  *   total.reasoningOutputTokens  28, 43, 43, 57, 65, 127, 127, 127   monotonic
  *   last.reasoningOutputTokens   28, 15,  0, 14,  8,  62,   0,   0   resets
  *
- * `last` is per upstream CALL, not per turn — it returns to 0 several times
+ * `last` is per upstream CALL, not per turn - it returns to 0 several times
  * inside one turn. Feeding it to a counter the product requires to only ever
  * climb would make the on-screen number fall back mid-thought. `total` is
  * thread-cumulative and never retreats.
@@ -38,7 +38,7 @@ const THREAD = { threadId: 't1', turnId: 'turn1' };
 
 /** `total.reasoningOutputTokens` as recorded, in arrival order. */
 const REAL_REASONING_SERIES = [28, 43, 43, 57, 65, 127, 127, 127] as const;
-/** `last.reasoningOutputTokens` from the same frames — deliberately not used. */
+/** `last.reasoningOutputTokens` from the same frames - deliberately not used. */
 const REAL_LAST_SERIES = [28, 15, 0, 14, 8, 62, 0, 0] as const;
 
 function realTokenUsageFrames() {
@@ -80,7 +80,7 @@ describe('codex live thinking-token reading', () => {
   it('emits a thinking_tokens event whenever the reading advances', () => {
     const events = drive(realTokenUsageFrames());
     const thinking = events.filter((e) => e.type === 'thinking_tokens');
-    // The recorded series is 28, 43, 43, 57, 65, 127, 127, 127 — codex repeats
+    // The recorded series is 28, 43, 43, 57, 65, 127, 127, 127 - codex repeats
     // the counter on frames where the model did no further reasoning. Those
     // repeats are dropped rather than re-emitted, and that is the point, not an
     // optimisation: the slot decides between the number and the stopwatch by
@@ -122,7 +122,7 @@ describe('codex live thinking-token reading', () => {
   });
 
   it('stays silent while the turn has reasoned nothing', () => {
-    // Zero is not a progress signal — it is the absence of one. Emitting it
+    // Zero is not a progress signal - it is the absence of one. Emitting it
     // would put a 「0 tokens」 reading on screen for every non-reasoning turn.
     const events = drive([
       { method: 'thread/tokenUsage/updated', params: {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -431,14 +431,14 @@ function FamilyDashboard({ user, summary, navigate }) {
  <PageHeader
  image="/resources/cards/header-family-dash.jpg"
  title="Family Dashboard"
- subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'there'} — stay connected with your loved one's care journey`}
+ subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'there'} - stay connected with your loved one's care journey`}
  icon={Heart}
  />
 
  {/* Two-col layout on desktop: hero+cards left, care updates right */}
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
- {/* LEFT — hero + quick actions + tasks */}
+ {/* LEFT - hero + quick actions + tasks */}
  <div className="lg:col-span-2 space-y-4">
  {patientId && (
  <FamilyDashboardHero patientId={patientId} patientName={summary?.patient?.full_name} />
@@ -456,7 +456,7 @@ function FamilyDashboard({ user, summary, navigate }) {
  <TaskStatusBar />
  </div>
 
- {/* RIGHT — sticky care updates column */}
+ {/* RIGHT - sticky care updates column */}
  <div className="lg:sticky lg:top-4 self-start">
  <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 100px)' }}>
  {/* Compact single-line header */}

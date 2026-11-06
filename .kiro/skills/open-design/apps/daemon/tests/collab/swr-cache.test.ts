@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { createSwrCache } from '../../src/collab/swr-cache.js';
 
 // Generic stale-while-revalidate primitive shared by every SWR-cached read in
-// the daemon (team-project catalog, team member roster, and — the bug this
-// file exists to pin down — the team design-system/plugin/skill listing). The
+// the daemon (team-project catalog, team member roster, and - the bug this
+// file exists to pin down - the team design-system/plugin/skill listing). The
 // `invalidate()` tests are the load-bearing ones: without it, a local mutation
 // (share/unshare) had no way to drop the entry it just made stale, so the
 // caller who just mutated the data read their own pre-mutation write back for
@@ -73,7 +73,7 @@ describe('createSwrCache', () => {
     await expect(cache()).resolves.toBe('v2');
   });
 
-  it('does not poison the cache with a failed fetch — the next read retries', async () => {
+  it('does not poison the cache with a failed fetch - the next read retries', async () => {
     let calls = 0;
     const cache = createSwrCache<string>(async () => {
       calls += 1;
@@ -89,7 +89,7 @@ describe('createSwrCache', () => {
   // The actual bug: `cachedTeamResourceList` in server.ts wraps this primitive
   // and, before this fix, had no way to tell it a local share/unshare just
   // changed the underlying data. The route's response is what makes the client
-  // refetch — without invalidate() that refetch read the pre-change list
+  // refetch - without invalidate() that refetch read the pre-change list
   // straight out of here for up to freshMs (3s in production), so a shared
   // design system/plugin/skill did not show up in the team list until a later
   // poll tick.

@@ -35,7 +35,7 @@ export interface AcpSessionOptions {
  * between `'array'` format (`[{name, value}]`, default, used by Hermes/Kimi)
  * and `'map'` format (`{"KEY": "val"}`, used by reasonix and standard MCP).
  *
- * MCP is optional — omit `mcpServers` to run without it. Never auto-installs
+ * MCP is optional - omit `mcpServers` to run without it. Never auto-installs
  * or mutates user/global MCP config.
  *
  * @param cwd - The working directory to pass to the ACP agent subprocess.
@@ -53,7 +53,7 @@ export function buildAcpSessionNewParams(cwd: string, { mcpServers, envFormat = 
     // explicit per-session MCP descriptor when a compatible agent supports it.
     mcpServers: servers.map((s) => {
       const rawEnv = s?.env;
-      // Already a plain object — pass through in map mode, convert to
+      // Already a plain object - pass through in map mode, convert to
       // array in array mode (e.g. live-artifacts MCP from
       // buildLiveArtifactsMcpServersForAgent which already respects
       // acpMcpEnvFormat).

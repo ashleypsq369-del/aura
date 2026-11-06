@@ -6,7 +6,7 @@ import { parseVariableAxes, parseOpenTypeFeatures, pickBodyFamily, filterFontUrl
  * The typography extractor reads computed styles in the browser, but the
  * variable-axis and OpenType parsing is pure Node and exported, so it is tested
  * directly with synthetic font-variation-settings / font-feature-settings
- * strings — no page required.
+ * strings - no page required.
  */
 
 test('parseVariableAxes folds settings into per-axis ranges, widest wins', () => {

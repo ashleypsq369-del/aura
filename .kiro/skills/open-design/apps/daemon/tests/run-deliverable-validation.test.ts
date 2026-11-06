@@ -191,7 +191,7 @@ describe('run deliverable validation', () => {
   });
 
   // Issue: a HyperFrames run delivered an editable root `index.html`, the run
-  // succeeded, and delivery validation still reported `type_mismatch` — which
+  // succeeded, and delivery validation still reported `type_mismatch` - which
   // the OD Next coordinator turns into `od_next_canonical_deliverable_invalid`
   // and surfaces to the user as "The strategy task could not continue."
   //

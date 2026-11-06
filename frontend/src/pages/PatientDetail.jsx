@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -29,7 +29,7 @@ import { API_URL } from '../api/client';
 const SETTING_INFO = {
  hospital_based: { label:'Hospital-Based', icon:Building2, color:'#1d4ed8', bg:'#eff6ff',
  clinical_notes: 'Inpatient specialist care. Prioritise: vitals q4-8h, pain control, daily MDT review.',
- key_tasks: ['Vitals every 4–8h', 'Daily symptom assessment (ESAS)', 'Medication review', 'Family communication'],
+ key_tasks: ['Vitals every 4-8h', 'Daily symptom assessment (ESAS)', 'Medication review', 'Family communication'],
  },
  hospice: { label:'Hospice', icon:Heart, color:'#be123c', bg:'#fff1f2',
  clinical_notes: 'Comfort-focused care. Prioritise: dignity, pain & symptom control, family support, legacy planning.',

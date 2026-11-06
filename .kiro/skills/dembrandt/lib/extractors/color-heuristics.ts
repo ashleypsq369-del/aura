@@ -129,7 +129,7 @@ export function classifyStructural(
   if (usagePercent > 40 && data.score < data.count * 1.2 && saturation <= 0.2) return true;
 
   // Saturated colour never used as a background and with low brand intent:
-  // incidental decoration. (Backgrounds, i.e. bgCount > 0, are exempt — that is
+  // incidental decoration. (Backgrounds, i.e. bgCount > 0, are exempt - that is
   // how card/section fills survive.)
   if (data.bgCount === 0 && data.score < data.count * 1.5 && saturation > 0.3) return true;
 

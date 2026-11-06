@@ -1,11 +1,11 @@
-// OD Library orchestration — the single registration hook every ingest point
+// OD Library orchestration - the single registration hook every ingest point
 // calls, plus content-addressed owned storage and the programmatic enrichment
 // layer (mime / size / image dimensions / derived tags).
 //
 // `registerLibraryAsset` is idempotent by content hash: the same bytes seen
 // twice collapse to one asset row, and each call appends a source record so
 // "this image was used in two tasks" becomes one asset with two back-links.
-// It must never throw into a caller's main flow — every existing ingest point
+// It must never throw into a caller's main flow - every existing ingest point
 // wraps it best-effort.
 //
 // AI enrichment (caption / OCR / embedding) is intentionally out of this first
@@ -415,7 +415,7 @@ export async function registerLibraryAsset(
 /**
  * Record the enrichment task. The programmatic layer (size / mime / dims /
  * tags) already ran inline above, so it lands `done`; the AI layer (caption /
- * OCR / embedding) is recorded `skipped` until a model is configured — a
+ * OCR / embedding) is recorded `skipped` until a model is configured - a
  * future `od library reindex` can re-run it.
  */
 function recordEnrichmentTask(db: SqliteDb, assetId: string, kind: LibraryAssetKind): string {

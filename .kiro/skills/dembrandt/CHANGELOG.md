@@ -163,7 +163,7 @@ The artifact is correct on its own.
 ### Fixed
 - The contrast check graded every pair at 4.5:1 regardless of text size, and a pair that failed it was still labelled AA-Large. Each pair now carries the size its text actually had and is graded at the threshold WCAG 1.4.3 gives that size, through one shared verdict every surface calls (#211)
 - Logotypes, disabled controls and `aria-hidden` text were reported as contrast failures, and a wrapper was counted again for text its child renders. Both are out; `[class*=logo]` no longer exempts a container merely named after the mark (#211)
-- A saved HTML report loaded the audited site's logo and favicons over the network, which a `file://` origin cannot do against any site sending `Cross-Origin-Resource-Policy: same-origin` — the images simply did not appear. Assets are inlined at extraction, and one that cannot be inlined is dropped instead of left broken (#211)
+- A saved HTML report loaded the audited site's logo and favicons over the network, which a `file://` origin cannot do against any site sending `Cross-Origin-Resource-Policy: same-origin` - the images simply did not appear. Assets are inlined at extraction, and one that cannot be inlined is dropped instead of left broken (#211)
 - An `og:image` pointing at the site root was recorded as an image and rendered as a 24px icon (#211)
 - The SVG-colour fetch had no timeout, so one stalled asset held a run for that asset's full response time. Every asset fetch is now bounded, with a budget over the phase (#211)
 
@@ -172,7 +172,7 @@ The artifact is correct on its own.
 - `wcag` pairs carry `fontSize`, `fontWeight`, `large`, `requiredAA`, `passAA` and `passAAA`. `aa`, `aaLarge` and `aaa` still ship, deprecated, and go in 2.0.0 (#211)
 
 ### Changed
-- Schema 1.13.0. The same site reports different contrast numbers than it did on 0.32.2: one colour pair can now appear twice, once per size class. Measured on dembrandt.com against a 0.32.2 extraction, static pairs went 47 to 43 and AA passes 38 to 39, with no verdict reversed. The drift gate does not read `wcag`, so it scores this release `stable 0` — the movement is real and the gate is blind to it (#211)
+- Schema 1.13.0. The same site reports different contrast numbers than it did on 0.32.2: one colour pair can now appear twice, once per size class. Measured on dembrandt.com against a 0.32.2 extraction, static pairs went 47 to 43 and AA passes 38 to 39, with no verdict reversed. The drift gate does not read `wcag`, so it scores this release `stable 0` - the movement is real and the gate is blind to it (#211)
 - MCP responses replace inlined asset bytes with a marker. An agent cannot use base64 pixels and they would cost it hundreds of kilobytes of context (#211)
 
 ## [0.32.2] - 2026-09-10
@@ -344,7 +344,7 @@ The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a tran
 ## [0.23.1] - 2026-07-10
 
 ### Fixed
-- MCP server: `@modelcontextprotocol/sdk` and `zod` ship as regular dependencies. As optional peers they broke the documented install — `npx -y --package dembrandt dembrandt-mcp` exited with McpDepsMissingError on every clean machine (0.21.0–0.23.0), and npx never installs optional peers (#120)
+- MCP server: `@modelcontextprotocol/sdk` and `zod` ship as regular dependencies. As optional peers they broke the documented install - `npx -y --package dembrandt dembrandt-mcp` exited with McpDepsMissingError on every clean machine (0.21.0-0.23.0), and npx never installs optional peers (#120)
 
 ## [0.23.0] - 2026-07-10
 
@@ -354,7 +354,7 @@ The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a tran
 
 ### Added
 - `lib/extractors/logo-heuristics.ts`: the pure, DOM-free logo decisions (home-link, position→context, third-party-brand detection, painted-box geometry, minimum logo size), serialized into the page so the browser runs the exact same code, with 30 unit tests
-- MCP server: three pure analysis tools — `get_findings` (design-system lint: contrast, consistency, duplication), `export_dtcg` (W3C Design Tokens export), `generate_design_md` (DESIGN.md brand guide) — plus `list_jobs` for the async queue
+- MCP server: three pure analysis tools - `get_findings` (design-system lint: contrast, consistency, duplication), `export_dtcg` (W3C Design Tokens export), `generate_design_md` (DESIGN.md brand guide) - plus `list_jobs` for the async queue
 - MCP extraction tools accept `mobile`, `cookie` (authenticated pages), and `wcag` (contrast analysis) options; `get_design_tokens` gains `darkMode`
 - Official GitHub Action for the CI drift gate (DEM-151, #116)
 - Flag orthogonality: multi-page propagation, wcag merge, save/dtcg split (`--save-output`), compatibility docs (#113)
@@ -397,7 +397,7 @@ The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a tran
 ## [0.19.5] - 2026-06-14
 
 ### Fixed
-- Drift comparison now ignores `confidence: "low"` radius and shadow tokens — single-use, margin-of-detection elements the extractor is unsure about that surfaced inconsistently between extractions and produced phantom drift
+- Drift comparison now ignores `confidence: "low"` radius and shadow tokens - single-use, margin-of-detection elements the extractor is unsure about that surfaced inconsistently between extractions and produced phantom drift
 
 ### Added
 - The CLI run summary now reflects the active flags and explicit paths of the run (DEM-99)
@@ -405,7 +405,7 @@ The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a tran
 ## [0.19.4] - 2026-06-14
 
 ### Fixed
-- Self-hosted font lists (`selfHostedFonts`, `customFonts`) are now deduped and sorted, so two extractions of the same page no longer differ by font order — eliminating phantom design drift
+- Self-hosted font lists (`selfHostedFonts`, `customFonts`) are now deduped and sorted, so two extractions of the same page no longer differ by font order - eliminating phantom design drift
 
 ### Added
 - `--approve` accepts the current extraction as the new baseline: with `--compare <file>`, it overwrites that local baseline and passes instead of failing. App baseline ids are read-only
@@ -422,9 +422,9 @@ The WCAG contrast fix (`--wcag`) also moves values, not just adds fields: a tran
 ## [0.12.0] - 2026-05-10
 
 ### Fixed
-- Link and text colors (e.g. `#0070e0`) were incorrectly filtered out when they never appeared as background colors — chromatic text-only colors with sufficient semantic context are now retained
-- Header and single-instance brand background colors were dropped on large sites where element count pushed the frequency threshold too high — high-scoring colors now bypass the count threshold
-- Modern CSS color functions (`oklab`, `oklch`, `lch`, `lab`, `color()`) were leaking into the palette as unparseable strings — these are now rejected at all extraction paths including hover/focus state merging
+- Link and text colors (e.g. `#0070e0`) were incorrectly filtered out when they never appeared as background colors - chromatic text-only colors with sufficient semantic context are now retained
+- Header and single-instance brand background colors were dropped on large sites where element count pushed the frequency threshold too high - high-scoring colors now bypass the count threshold
+- Modern CSS color functions (`oklab`, `oklch`, `lch`, `lab`, `color()`) were leaking into the palette as unparseable strings - these are now rejected at all extraction paths including hover/focus state merging
 
 ## [0.11.0] - 2026-04-11
 

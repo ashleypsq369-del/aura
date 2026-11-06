@@ -31,7 +31,7 @@ export const VELA_CHILD_EVIDENCE_COVERAGE_SOURCE = 'vela_opencode_acp' as const;
  *
  * `published` stays false: the producer lives on an unmerged Vela branch, so a
  * build carrying it is not something a user can install. `verifiedRuntimeSupport`
- * is now true — a local Vela built from that branch negotiated the extension and
+ * is now true - a local Vela built from that branch negotiated the extension and
  * drove a complex OD Next task to `availability: complete` with three observed
  * Children, which is the claim this flag makes. Flip `published` and re-pin the
  * commit once the producer lands on Vela's main.
@@ -150,7 +150,7 @@ export interface VelaChildEvidenceConsumer {
    * Provider-neutral child-evidence coverage for this ACP run. Without it the
    * daemon has nothing to publish as `child_evidence_coverage_v1`, and task
    * aggregation falls back to `child_lifecycle_unavailable_not_zero` for every
-   * AMR task — which cannot distinguish a run that provably had no Child
+   * AMR task - which cannot distinguish a run that provably had no Child
    * agents from a run nobody was observing.
    */
   childEvidenceCoverage(input: VelaChildEvidenceCoverageInput): ChildEvidenceCoverageV1;
@@ -538,7 +538,7 @@ export function createVelaChildEvidenceConsumer(input: {
   /**
    * One limitation is recorded for every reason this ACP run could have missed
    * a Child agent. `complete` is therefore reserved for a negotiated producer,
-   * a cleanly closed turn, no still-open child, and no rejected frame — the
+   * a cleanly closed turn, no still-open child, and no rejected frame - the
    * only state in which `knownChildCount === 0` is a real observation rather
    * than a blind spot.
    */

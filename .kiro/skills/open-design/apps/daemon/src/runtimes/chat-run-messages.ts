@@ -214,8 +214,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /**
  * A second `start` on the same assistant message is the daemon re-driving this
  * turn: the previous attempt was torn down and another one is about to spawn
- * (`run-retry-policy.ts`). The attempt being replaced never terminated — that
- * is the only reason it is retried — so the passage it was still writing gets
+ * (`run-retry-policy.ts`). The attempt being replaced never terminated - that
+ * is the only reason it is retried - so the passage it was still writing gets
  * written again, and an append-only event stream keeps both copies.
  *
  * Retiring it here, on the attempt boundary and before the new attempt's first
@@ -358,8 +358,8 @@ export function finalizeRunMessageEvents(
 
 /**
  * Stamp the daemon's finalize-time failure classification onto the persisted
- * assistant message so a reload — or any consumer that reads the stored
- * message instead of the live SSE stream — still sees the fine-grained cause.
+ * assistant message so a reload - or any consumer that reads the stored
+ * message instead of the live SSE stream - still sees the fine-grained cause.
  *
  * The `error` SSE frame is emitted from the child-close handler BEFORE the run
  * is finalized, so `failureCategory` / `failureDetail` (computed at finalize)
@@ -498,7 +498,7 @@ function unboundedPersistedAgentEvent(
  * The membership test is "would replaying this row tell the reader anything?",
  * not "is this label noisy while it streams". Everything listed here is
  * polling-shaped: it fires repeatedly, describes a state rather than an event,
- * and is superseded by whatever comes next — so the transcript is strictly
+ * and is superseded by whatever comes next - so the transcript is strictly
  * better without it.
  *
  * `agent_reconnecting` used to be on this list and is deliberately NOT any
@@ -507,7 +507,7 @@ function unboundedPersistedAgentEvent(
  * mid-turn and the turn was restarted. When that happens the model can and does
  * re-generate text it had already streamed, so the transcript legitimately
  * contains the answer twice. Dropping the row left the reader with two
- * conclusions and nothing at all to explain the seam — the duplicate looked
+ * conclusions and nothing at all to explain the seam - the duplicate looked
  * like the product inventing text. Keeping one row is not a fix for the
  * duplication (that is the codex-app-server message-restart question), but it
  * turns "inexplicable" into "legible", which is worth one row.
@@ -558,7 +558,7 @@ function unboundedAgentPayloadToPersistedAgentEvent(data: unknown): PersistedAge
   }
   /**
    * Persisted so a reloaded conversation shows the same three follow-up rows it
-   * showed live. A turn with no such event renders no row at all — that is what
+   * showed live. A turn with no such event renders no row at all - that is what
    * every conversation from before this event looks like, and the suggestions
    * are about what that specific turn built, so there is nothing to fall back
    * to.
@@ -576,7 +576,7 @@ function unboundedAgentPayloadToPersistedAgentEvent(data: unknown): PersistedAge
    * the host falls back to its own produced-file inference, which is what every
    * conversation recorded before this event looks like.
    *
-   * Stored only when it carries something usable — an event with neither field
+   * Stored only when it carries something usable - an event with neither field
    * would be a persisted no-op that later folds have to skip anyway.
    */
   if (type === 'artifact_focus') {
@@ -639,7 +639,7 @@ function unboundedAgentPayloadToPersistedAgentEvent(data: unknown): PersistedAge
   /*
    * Live-only, like the delta it is derived from. Once the run is over the same
    * path is in the finished `tool_use.input`, so persisting this would leave a
-   * reloaded conversation with two rows for one call — and the whole point of
+   * reloaded conversation with two rows for one call - and the whole point of
    * the event is a head start that no longer exists after the fact.
    */
   if (type === 'tool_input_target') return null;
@@ -647,7 +647,7 @@ function unboundedAgentPayloadToPersistedAgentEvent(data: unknown): PersistedAge
    * `thinking_tokens` deliberately has NO branch here: it is live-only, so the
    * fallthrough `return null` at the bottom is the whole implementation. The
    * count describes a thinking block that is still running, and a reloaded
-   * conversation has no such block — either the reasoning text is there to
+   * conversation has no such block - either the reasoning text is there to
    * read, or, in Claude's billed-but-withheld mode, the row itself is gone.
    * Persisting it would also write ~40 rows per block to buy nothing back.
    * Pinned by `tests/runtimes/w134-thinking-token-count.test.ts`.
@@ -724,7 +724,7 @@ function unboundedAgentPayloadToPersistedAgentEvent(data: unknown): PersistedAge
     const detail =
       data.action === 'halt'
         ? `Run stopped: the agent repeated a failing ${toolName} call ${count}× without progress. Re-check the actual target before retrying.`
-        : `Heads up — the agent has repeated a failing ${toolName} call ${count}× and may be stuck.`;
+        : `Heads up - the agent has repeated a failing ${toolName} call ${count}× and may be stuck.`;
     return { kind: 'status', label: 'warning', detail };
   }
   if (type === 'raw' && typeof data.line === 'string') {
@@ -773,7 +773,7 @@ export function pinAssistantMessageOnRunCreate(
   if (!run.conversationId || !run.assistantMessageId) return { ok: true };
 
   // A resume claim writes the post-restart intent (queued) while the run
-  // object is still terminal (failed) — prepareRestart flips it afterwards
+  // object is still terminal (failed) - prepareRestart flips it afterwards
   // (#6418).
   const claimStatus = opts?.status ?? run.status;
 
@@ -782,7 +782,7 @@ export function pinAssistantMessageOnRunCreate(
   // on the single better-sqlite3 connection, so two concurrent runs sharing an
   // assistantMessageId can never both claim the row. `changes > 0` means THIS
   // run owns the message; `0` means another active run holds it (or it is out
-  // of scope) and the run must not start — the caller drops the just-created
+  // of scope) and the run must not start - the caller drops the just-created
   // run and rejects the request.
   const claim = db.transaction((): { ok: boolean; reason?: 'active' | 'scope' } => {
     const existing = db

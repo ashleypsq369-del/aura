@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { resolveWorkspaceScope } from '../../src/collab/workspace-scope.js';
 
 // B-line handoff (vela-client-explicit-workspace-handoff): every workspace-
-// scoped call resolves its target through ONE entry with a fixed priority —
+// scoped call resolves its target through ONE entry with a fixed priority -
 // explicit per-call id → the project's pinned workspace → the locally
 // persisted selection → environment. When all are absent the result stays
 // unresolved; the caller must not fall back to server-side workspace state.

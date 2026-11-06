@@ -9,8 +9,8 @@
 // A daemon that dies of a V8 OOM cannot report itself, so the design is
 // persist-then-report: a small checkpoint is rewritten synchronously at the
 // moments that matter (boot, each sample, a read started under pressure,
-// shutdown), and the NEXT boot turns the previous checkpoint — plus the Node
-// fatal-error report, when V8 wrote one — into telemetry.
+// shutdown), and the NEXT boot turns the previous checkpoint - plus the Node
+// fatal-error report, when V8 wrote one - into telemetry.
 
 import { randomUUID } from 'node:crypto';
 import {

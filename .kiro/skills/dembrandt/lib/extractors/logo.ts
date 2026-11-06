@@ -23,7 +23,7 @@ export async function extractSiteName(page) {
 
     const title = document.title?.trim();
     if (title) {
-      const sep = title.match(/(.+?)\s*[|\-–—:]\s*/);
+      const sep = title.match(/(.+?)\s*[|\---:]\s*/);
       if (sep && sep[1].length > 1 && sep[1].length < 40) return sep[1].trim();
     }
 
@@ -150,7 +150,7 @@ export async function extractLogo(page, url) {
     } catch {}
   }
 
-  // Platform-specific color hints (meta/link tags) — fills gaps not covered by manifest
+  // Platform-specific color hints (meta/link tags) - fills gaps not covered by manifest
   const domSnap = await page.evaluate(DOM_COLOR_SNAPSHOT_SCRIPT);
   const platformHints = extractPlatformColors(domSnap);
   const resolved = resolvePlatformColors(platformHints, {
@@ -165,7 +165,7 @@ export async function extractLogo(page, url) {
     const siteDomain = new URL(baseUrl).hostname.replace('www.', '').split('.')[0].toLowerCase();
     // The pure, unit-tested heuristics from logo-heuristics.ts, run here as the exact same
     // code. guardExtractor wraps this whole evaluate, so even a rehydration failure only
-    // yields an empty logo result for this one site — never a crash.
+    // yields an empty logo result for this one site - never a crash.
     const H = new Function(heuristicsSource +
       '\nreturn { isHomeHref, classifyContextByPosition, thirdPartyBrandFromAlt, positionFraction, fitPaintedBox, isLogoSized, isOwnBrandMark };')() as {
         isHomeHref: (href: any, origin: any) => boolean;
@@ -180,7 +180,7 @@ export async function extractLogo(page, url) {
     // A customer / partner logo wall is a STRUCTURAL pattern, not a naming one: three or
     // more similarly-sized marks grouped in one container ("as used by…", integration
     // grids, press strips). Detecting the GROUP is safer than guessing each mark's brand
-    // from its file name — the latter dropped real logos whose file wasn't named after the
+    // from its file name - the latter dropped real logos whose file wasn't named after the
     // site (an abbreviation, a hash, a proxy URL). A lone header/footer logo is never in
     // such a group, so this never touches it.
     function inLogoWall(el) {
@@ -188,7 +188,7 @@ export async function extractLogo(page, url) {
       if (r0.width < 24 || r0.height < 8) return false;
       // The primary logo lives in the header/nav or the footer; brand walls are content
       // sections ("trusted by", integrations, press) in between. Never treat a header/nav
-      // or footer mark as a wall member — that protected e.g. a header logo sitting beside
+      // or footer mark as a wall member - that protected e.g. a header logo sitting beside
       // a couple of UI marks. A footer logo needs the same protection: footers commonly
       // group it with social/app-store icons, which is exactly the >=3-sizable-marks shape
       // this function otherwise flags as a wall.
@@ -197,7 +197,7 @@ export async function extractLogo(page, url) {
       // is chrome, not a content wall, so protect it by position too.
       if (r0.top + window.scrollY < 180) return false;
       // Brand-wall logos vary in width (each brand's mark has its own aspect ratio), so
-      // size-similarity is the wrong signal — a carousel/list/grid of >=3 sizable marks in
+      // size-similarity is the wrong signal - a carousel/list/grid of >=3 sizable marks in
       // one local container is the wall. Count sizable img/svg marks (tiny UI icons don't
       // count); >=3 in a local container (not body/main) means el is part of a wall.
       let node = el.parentElement;
@@ -314,7 +314,7 @@ export async function extractLogo(page, url) {
       if (imgFile.includes(siteDomain) || altText.includes(siteDomain) || className.includes(siteDomain)) score += 40;
       if (className.includes('logo') || el.id?.toLowerCase().includes('logo')) score += 30;
 
-      // SVG with aria-label="Homepage" directly in a home anchor — strong signal
+      // SVG with aria-label="Homepage" directly in a home anchor - strong signal
       if (el.tagName === 'svg' || el.tagName === 'SVG') {
         const ariaLabel = (el.getAttribute('aria-label') || '').toLowerCase();
         if (ariaLabel.includes('home') || ariaLabel.includes('logo')) score += 40;
@@ -342,7 +342,7 @@ export async function extractLogo(page, url) {
         } catch {}
       }
 
-      // For SVGs use rendered rect — baseVal reflects viewBox coordinates, not display size
+      // For SVGs use rendered rect - baseVal reflects viewBox coordinates, not display size
       const width = el.tagName === 'IMG' ? (el.naturalWidth || rect.width) : rect.width;
       const height = el.tagName === 'IMG' ? (el.naturalHeight || rect.height) : rect.height;
       if (width < 20 || height < 20) score -= 30;
@@ -355,7 +355,7 @@ export async function extractLogo(page, url) {
     }
 
     // The box a logo actually occupies on screen. `width`/`height` below report the
-    // asset's intrinsic size (naturalWidth, or the svg's width attribute) — useful, but
+    // asset's intrinsic size (naturalWidth, or the svg's width attribute) - useful, but
     // not where the mark is painted. Every layer can resize a logo independently:
     //
     //   intrinsic   naturalWidth/Height, or the svg viewBox
@@ -570,10 +570,10 @@ export async function extractLogo(page, url) {
           // Disqualify third-party brand logos: alt naming a brand that isn't our site
           // These appear in customer/integration/testimonial sections on marketing pages.
           // A mark that links home is ours whatever its alt says; otherwise, if its alt
-          // names a different brand, it is a customer/integration logo — skip it.
+          // names a different brand, it is a customer/integration logo - skip it.
           const homeLinked = H.isHomeHref(el.closest('a')?.getAttribute('href'), location.origin);
           if (!homeLinked) {
-            // alt naming a different brand, OR membership in a logo wall — either way not ours
+            // alt naming a different brand, OR membership in a logo wall - either way not ours
             if (H.thirdPartyBrandFromAlt(altText, siteDomain) || inLogoWall(el)) {
               return;
             }
@@ -644,7 +644,7 @@ export async function extractLogo(page, url) {
       return candidates;
     }
 
-    // SPA/PWA apps often render into a root div — treat it as transparent wrapper
+    // SPA/PWA apps often render into a root div - treat it as transparent wrapper
     const spaRoot = document.querySelector('#app, #root, #__next, #__nuxt, [data-reactroot]') as any;
 
     // A comma-separated querySelector returns the first match in DOCUMENT order, not the
@@ -759,7 +759,7 @@ export async function extractLogo(page, url) {
     const globalLogoCandidates = (() => {
       const results = [];
       // Tag-AGNOSTIC: an inline <svg> logo wrapped in a home link is as much the site's
-      // mark as an <img> is, but the old img-only selectors could not see it — that alone
+      // mark as an <img> is, but the old img-only selectors could not see it - that alone
       // accounted for a large share of the missed home-linked inline-SVG logos.
       // Gather both img and svg from three unambiguous sources: a logo-named container, a
       // logo-named ancestor, and a link to the home page.
@@ -780,7 +780,7 @@ export async function extractLogo(page, url) {
           {
             const rect = el.getBoundingClientRect();
             if (rect.width === 0 || rect.height === 0) continue;
-            // Below-fold logos are real — 15 of the 22 marks humans found and this extractor
+            // Below-fold logos are real - 15 of the 22 marks humans found and this extractor
             // missed sit under the fold. But letting every semantically-named mark through
             // tripled the proposal count with customer-wall logos, so only the ones that
             // link to the home page qualify down there: that link is the site claiming the
@@ -789,7 +789,7 @@ export async function extractLogo(page, url) {
             if (!H.isLogoSized(rect.width, rect.height)) continue; // a UI icon, not a logo
             const homeLinked = H.isHomeHref(el.closest('a')?.getAttribute('href'), location.origin);
             // A customer/partner wall matches [class*=logo] too. If a non-home-linked mark
-            // names a different brand in its alt or file name, it is not ours — skip it.
+            // names a different brand in its alt or file name, it is not ours - skip it.
             // (A partner strip of "logo-<Brand>.svg" images slipped in here: the pre-scan
             // never ran the third-party guard that findLogosInZone applies.)
             const altText = (el.getAttribute('alt') || '');
@@ -797,7 +797,7 @@ export async function extractLogo(page, url) {
               if (H.thirdPartyBrandFromAlt(altText, siteDomain) || inLogoWall(el)) continue;
             }
             const belowFold = rect.top > 500;
-            // A below-fold mark normally needs a home link to prove it's ours — but a footer
+            // A below-fold mark normally needs a home link to prove it's ours - but a footer
             // logo is often not linked at all. If its alt or filename self-identifies as the
             // site's own brand, that's proof enough without the link.
             const ownBrand = homeLinked || H.isOwnBrandMark(altText, el.getAttribute('src') || el.getAttribute('href') || '', siteDomain);
@@ -812,7 +812,7 @@ export async function extractLogo(page, url) {
       return results;
     })();
 
-    // Deduplicate zones — nav might be inside header, avoid double-scanning
+    // Deduplicate zones - nav might be inside header, avoid double-scanning
     const headerCandidates = firstChildrenZone(headerEl, 'header');
     const navCandidates = (navEl && !(headerEl as any)?.contains(navEl))
       ? firstChildrenZone(navEl, 'header')
@@ -860,7 +860,7 @@ export async function extractLogo(page, url) {
       let inst = null;
       if (c.cssBackground) inst = c.cssBackground;
       else if (c.el) inst = extractLogoFromEl(c.el, c.context, baseUrl);
-      // Reject UI icons (search/menu/social glyphs) that scored into the candidate list —
+      // Reject UI icons (search/menu/social glyphs) that scored into the candidate list -
       // measured floor: no real logo is below 24px on its long edge. Judge by the painted
       // rect (the on-screen size), not the intrinsic asset size.
       if (inst) {

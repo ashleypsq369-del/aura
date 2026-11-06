@@ -1,6 +1,6 @@
 ## What this PR adds
 
-A new Skill — **{{SKILL_NAME}}** — at `skills/{{SKILL_SLUG}}/`.
+A new Skill - **{{SKILL_NAME}}** - at `skills/{{SKILL_SLUG}}/`.
 
 > {{PITCH}}
 
@@ -18,7 +18,7 @@ A new Skill — **{{SKILL_NAME}}** — at `skills/{{SKILL_SLUG}}/`.
 
 ## What's in this PR
 
-- `skills/{{SKILL_SLUG}}/SKILL.md` — the skill itself (frontmatter + instructions)
+- `skills/{{SKILL_SLUG}}/SKILL.md` - the skill itself (frontmatter + instructions)
 - everything else inside `skills/{{SKILL_SLUG}}/` is referenced from `SKILL.md`
 
 ## Checklist

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -343,7 +343,7 @@ export default function Layout({ children }) {
  <div className="flex-1">
  {children}
  </div>
- {/* Footer — links row + copyright */}
+ {/* Footer - links row + copyright */}
  <footer style={{
    width:'100%', textAlign:'center',
    padding:'10px 16px 14px',

@@ -1,16 +1,16 @@
 // Read endpoints for immutable chat artifact snapshots.
 //
-// AUTHORITY: every route runs the SAME gate as `/raw` — project lookup, then
+// AUTHORITY: every route runs the SAME gate as `/raw` - project lookup, then
 // `authorizeProjectRequest({ mode: 'read' })`, then the Team-mirror revocation
-// check — and only then compares the snapshot's own `project_id` against the
+// check - and only then compares the snapshot's own `project_id` against the
 // route's project. An unguessable UUID is not an authorization mechanism, so
 // knowing a snapshot id gets a caller nothing without project read authority.
 //
 // PRIVACY: a caller never supplies a storage key or a path. It supplies an id;
 // the daemon resolves the key internally and never reveals it.
 //
-// SAFETY: only image / video / audio bytes are served inline. Anything else —
-// SVG and any future HTML source snapshot included — is forced to
+// SAFETY: only image / video / audio bytes are served inline. Anything else -
+// SVG and any future HTML source snapshot included - is forced to
 // `application/octet-stream` with an attachment disposition, so a snapshot can
 // never execute script in the app's own origin.
 

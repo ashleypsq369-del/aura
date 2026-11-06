@@ -59,7 +59,7 @@ export async function listPromptTemplates(root: string): Promise<PromptTemplate[
       }
     }
   }
-  // Stable order — same surface group together, alpha by title within
+  // Stable order - same surface group together, alpha by title within
   // surface so the gallery matches what `ls` would suggest.
   out.sort((a, b) => {
     if (a.surface !== b.surface) {

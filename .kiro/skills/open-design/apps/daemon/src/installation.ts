@@ -16,8 +16,8 @@
 //      down with it.
 //
 // To preserve person continuity across both, we mirror the id into a
-// stable file at the **channel root** — one level above the namespaces
-// directory — and treat that file as authoritative on read. The legacy
+// stable file at the **channel root** - one level above the namespaces
+// directory - and treat that file as authoritative on read. The legacy
 // app-config.json field is still written so any code path that reads it
 // directly (legacy / future fallbacks) keeps seeing the same value.
 //
@@ -31,7 +31,7 @@
 // `OD_INSTALLATION_DIR` is the env override. Packaged sidecars.ts sets it
 // to the channel root explicitly; everything else falls back to dataDir
 // (where it sits next to app-config.json and behaves like the legacy
-// path — fine for dev because dev doesn't have namespace churn).
+// path - fine for dev because dev doesn't have namespace churn).
 
 import { readFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -112,7 +112,7 @@ export async function readInstallationFile(
       await readFile(installationFilePath(installationDir), 'utf8'),
     );
   } catch {
-    // ENOENT, malformed JSON, permission denied, EIO — treat as empty so the
+    // ENOENT, malformed JSON, permission denied, EIO - treat as empty so the
     // fallback path through app-config.json keeps the daemon alive.
     return {};
   }

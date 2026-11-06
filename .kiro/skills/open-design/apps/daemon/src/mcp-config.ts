@@ -11,7 +11,7 @@
 // runtime layouts route this file alongside the rest of the runtime state.
 //
 // We deliberately keep the schema close to Claude Code's `.mcp.json` and
-// Cursor's MCP config — those are the de-facto interchange formats — so
+// Cursor's MCP config - those are the de-facto interchange formats - so
 // users can copy-paste between OpenDesign and other tools without
 // translation.
 
@@ -20,7 +20,7 @@ import { realpathSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import path from 'node:path';
 
-// Wire-level MCP types. Mirrors `packages/contracts/src/api/mcp.ts` — the
+// Wire-level MCP types. Mirrors `packages/contracts/src/api/mcp.ts` - the
 // daemon and web import-from-contracts side both round-trip the same JSON
 // shape, but NodeNext + the contracts package's mixed bundler-emit setup
 // would force a `./api/mcp` subpath export here. Keeping the canonical
@@ -119,7 +119,7 @@ function sanitizeStringMap(raw: unknown): Record<string, string> | undefined {
     // "user pinned this", which would block our daemon-issued OAuth
     // Bearer from being injected. The UI also has placeholder fields
     // (e.g. an "Authorization=" template row) the user can leave blank
-    // — those should never make it into the saved config.
+    // - those should never make it into the saved config.
     if (v.trim() === '') continue;
     out[k] = v;
   }
@@ -200,7 +200,7 @@ export function sanitizeMcpServer(raw: unknown): McpServerConfig | null {
     if (env) next.env = env;
   } else {
     if (typeof raw.url !== 'string' || !raw.url.trim()) return null;
-    // Reject anything that isn't an http(s) URL — protects against accidental
+    // Reject anything that isn't an http(s) URL - protects against accidental
     // `file://` / `javascript:` slipping into a config file.
     let parsed: URL;
     try {
@@ -283,7 +283,7 @@ async function doWrite(dataDir: string, body: unknown): Promise<McpConfig> {
  * (= safe to write `.mcp.json` into without risk of clobbering a user-owned
  * file). Git-linked projects whose cwd points at the user's own repo, and
  * the no-project fallback that resolves to PROJECT_ROOT, both return false
- * — the daemon must NOT write external-MCP config into either of those.
+ * - the daemon must NOT write external-MCP config into either of those.
  */
 export function isManagedProjectCwd(
   cwd: string | null | undefined,
@@ -298,13 +298,13 @@ export function isManagedProjectCwd(
 /**
  * Project-cwd `.mcp.json` shape that Claude Code auto-loads on spawn (the
  * same format Claude Desktop and Cursor use). Returns null when the user
- * has no enabled servers — in that case the caller should NOT write the
+ * has no enabled servers - in that case the caller should NOT write the
  * file (and should clean up any stale one).
  *
  * `tokens` is an optional map of `serverId -> bearer access token`, used
  * for HTTP/SSE servers that completed the daemon's web OAuth flow. When a
  * token is present we inject `Authorization: Bearer <token>` into the
- * server's headers — this is what bypasses the per-spawn `mcp-remote`
+ * server's headers - this is what bypasses the per-spawn `mcp-remote`
  * dance and lets Claude Code talk directly to the upstream MCP using
  * pre-authenticated credentials. User-supplied headers always win on
  * conflict so they can pin a specific token if they really want to.
@@ -341,7 +341,7 @@ export function buildClaudeMcpJson(
 /** Build a headers object that includes the daemon-issued bearer token when
  * the user hasn't already supplied a NON-EMPTY Authorization header. A
  * blank Authorization (empty string / whitespace only) is treated as
- * "not pinned" — historically the template UI persisted empty values from
+ * "not pinned" - historically the template UI persisted empty values from
  * unfilled fields, and we never want a blank Authorization to suppress a
  * valid OAuth Bearer (the upstream MCP would refuse the connection and
  * fall back to its in-tool re-auth dance). Real user-pinned values still
@@ -372,7 +372,7 @@ function mergeAuthHeader(
 /**
  * Convert user-configured external MCP servers into the ACP `mcpServers`
  * shape that Hermes/Kimi accept (already in use by buildLiveArtifactsMcpServersForAgent).
- * SSE/HTTP servers are dropped — ACP currently models stdio only — but we
+ * SSE/HTTP servers are dropped - ACP currently models stdio only - but we
  * surface a warning so the UI can hint at it.
  */
 export interface AcpMcpServer {
@@ -406,7 +406,7 @@ export function buildAcpMcpServers(servers: McpServerConfig[]): AcpMcpServer[] {
 }
 
 /**
- * OpenCode merges its config from multiple sources at boot — global
+ * OpenCode merges its config from multiple sources at boot - global
  * `~/.config/opencode/opencode.json`, the `OPENCODE_CONFIG` file path, the
  * project `opencode.json`, and the `OPENCODE_CONFIG_CONTENT` env var (an
  * inline JSON string). The env-var path is what lets a launcher like the
@@ -437,7 +437,7 @@ export function buildAcpMcpServers(servers: McpServerConfig[]): AcpMcpServer[] {
  *     }
  *   }
  *
- * Returns `null` when nothing would be emitted — the caller must NOT set
+ * Returns `null` when nothing would be emitted - the caller must NOT set
  * `OPENCODE_CONFIG_CONTENT` to `null`/empty in that case, because doing so
  * would override the user's saved global config with an empty object. A
  * null return means "leave the env untouched and let OpenCode read the
@@ -597,7 +597,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'higgsfield-openclaw',
     label: 'Higgsfield (OpenClaw)',
     description:
-      'Image and video generation MCP from higgsfield.ai. Exposes Soul, Nano Banana, Flux, Kling, Veo, Seedance, and 25+ other models. Endpoint is streamable HTTP at /mcp; click "Connect" after saving — OpenDesign completes OAuth and stores the token server-side, so no terminal step is needed and the connection survives across chat turns and cloud deployments.',
+      'Image and video generation MCP from higgsfield.ai. Exposes Soul, Nano Banana, Flux, Kling, Veo, Seedance, and 25+ other models. Endpoint is streamable HTTP at /mcp; click "Connect" after saving - OpenDesign completes OAuth and stores the token server-side, so no terminal step is needed and the connection survives across chat turns and cloud deployments.',
     transport: 'http',
     authMode: 'oauth',
     category: 'image-generation',
@@ -618,7 +618,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'pollinations',
     label: 'Pollinations',
     description:
-      'Free / freemium multimodal generation: images (Flux, GPT Image, Nano Banana, Seedream…), videos (Veo, Seedance, WAN, Grok Video…), text and 35+ TTS voices. Complements Higgsfield by giving the agent a no-cost fallback path and access to text + audio outputs. A publishable key (pk_*) at enter.pollinations.ai unlocks higher rate limits — leave POLLINATIONS_API_KEY empty for the anonymous tier.',
+      'Free / freemium multimodal generation: images (Flux, GPT Image, Nano Banana, Seedream…), videos (Veo, Seedance, WAN, Grok Video…), text and 35+ TTS voices. Complements Higgsfield by giving the agent a no-cost fallback path and access to text + audio outputs. A publishable key (pk_*) at enter.pollinations.ai unlocks higher rate limits - leave POLLINATIONS_API_KEY empty for the anonymous tier.',
     transport: 'stdio',
     category: 'image-generation',
     homepage: 'https://github.com/pollinations/pollinations/tree/main/packages/mcp',
@@ -639,7 +639,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'allyson',
     label: 'Allyson (animated SVG)',
     description:
-      'Turn a static image (PNG / JPG / SVG) into an animated SVG component using natural-language prompts. Fills the vector / motion gap that Higgsfield and other raster generators do not cover — the output is a TSX / SVG file the agent can drop directly into a design artifact. Get an API key at allyson.ai.',
+      'Turn a static image (PNG / JPG / SVG) into an animated SVG component using natural-language prompts. Fills the vector / motion gap that Higgsfield and other raster generators do not cover - the output is a TSX / SVG file the agent can drop directly into a design artifact. Get an API key at allyson.ai.',
     transport: 'stdio',
     category: 'image-generation',
     homepage: 'https://github.com/isaiahbjork/allyson-mcp',
@@ -661,7 +661,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'bedrock-image',
     label: 'AWS Bedrock Image (Nova Canvas / SD 3.5)',
     description:
-      'AWS Labs–blessed replacement for the deprecated Nova Canvas MCP. Wraps Amazon Nova Canvas + Stable Diffusion 3.5 with text-to-image, color-guided generation, image editing and upscaling — useful when you want brand-color enforcement (point it at a hex from your design-systems/<brand>/DESIGN.md). Requires the `uvx` Python launcher and AWS credentials with Bedrock + Nova access.',
+      'AWS Labs-blessed replacement for the deprecated Nova Canvas MCP. Wraps Amazon Nova Canvas + Stable Diffusion 3.5 with text-to-image, color-guided generation, image editing and upscaling - useful when you want brand-color enforcement (point it at a hex from your design-systems/<brand>/DESIGN.md). Requires the `uvx` Python launcher and AWS credentials with Bedrock + Nova access.',
     transport: 'stdio',
     category: 'image-generation',
     homepage: 'https://github.com/kalleeh/bedrock-image-mcp-server',
@@ -691,12 +691,12 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'prompt-to-asset',
     label: 'Prompt-to-Asset (icons / favicons / OG / logos)',
     description:
-      'Turn one brief into app icons, favicons, OG images, logos, splash screens, SVGs and full platform bundles (iOS AppIconSet, Android adaptive, PWA, visionOS). Routes across 30+ image models with **free-first ranking** — Cloudflare Workers AI / NVIDIA NIM / HF / Stable Horde / Pollinations and inline SVG fall first; paid providers are last-resort. No required API key for the inline-SVG and free-tier paths. Fills the brand-asset (icon / favicon / wordmark) lane Higgsfield + Pollinations leave open.',
+      'Turn one brief into app icons, favicons, OG images, logos, splash screens, SVGs and full platform bundles (iOS AppIconSet, Android adaptive, PWA, visionOS). Routes across 30+ image models with **free-first ranking** - Cloudflare Workers AI / NVIDIA NIM / HF / Stable Horde / Pollinations and inline SVG fall first; paid providers are last-resort. No required API key for the inline-SVG and free-tier paths. Fills the brand-asset (icon / favicon / wordmark) lane Higgsfield + Pollinations leave open.',
     transport: 'stdio',
     category: 'image-generation',
     homepage: 'https://github.com/MohamedAbdallah-14/prompt-to-asset',
     example:
-      'Make a transparent flat-vector logo for "Forge", a developer-tools brand, in warm orange — and fan it out to iOS / Android / PWA / favicon bundles.',
+      'Make a transparent flat-vector logo for "Forge", a developer-tools brand, in warm orange - and fan it out to iOS / Android / PWA / favicon bundles.',
     command: 'npx',
     args: ['-y', 'prompt-to-asset'],
   },
@@ -704,7 +704,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'nanobanana',
     label: 'Nano Banana (AceDataCloud)',
     description:
-      'Hosted streamable-HTTP MCP wrapping Google Nano Banana for image generation, editing, virtual try-on and product placement. The endpoint is managed by AceDataCloud — no local install, just paste your platform API token as the Authorization header (acquire at platform.acedata.cloud). Complements Higgsfield by giving the agent virtual-try-on and "place product in scene" tools that the OpenClaw catalog does not expose directly.',
+      'Hosted streamable-HTTP MCP wrapping Google Nano Banana for image generation, editing, virtual try-on and product placement. The endpoint is managed by AceDataCloud - no local install, just paste your platform API token as the Authorization header (acquire at platform.acedata.cloud). Complements Higgsfield by giving the agent virtual-try-on and "place product in scene" tools that the OpenClaw catalog does not expose directly.',
     transport: 'http',
     authMode: 'none',
     category: 'image-generation',
@@ -748,7 +748,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'fal-ai',
     label: 'fal.ai (600+ models)',
     description:
-      'Catch-all MCP for the fal.ai model catalog: 600+ image / video / audio models including FLUX (schnell / dev / pro / ultra), SDXL, Stable Diffusion 3, Kling Video, Hunyuan, MusicGen, Whisper and more. Includes editing tools (background removal, upscaling, inpainting, smart resize for IG / TikTok / YouTube) — a single gateway to most of the open-source generation ecosystem. Requires the `uvx` Python launcher and a free fal.ai API key.',
+      'Catch-all MCP for the fal.ai model catalog: 600+ image / video / audio models including FLUX (schnell / dev / pro / ultra), SDXL, Stable Diffusion 3, Kling Video, Hunyuan, MusicGen, Whisper and more. Includes editing tools (background removal, upscaling, inpainting, smart resize for IG / TikTok / YouTube) - a single gateway to most of the open-source generation ecosystem. Requires the `uvx` Python launcher and a free fal.ai API key.',
     transport: 'stdio',
     category: 'image-generation',
     homepage: 'https://github.com/raveenb/fal-mcp-server',
@@ -772,7 +772,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'imagician',
     label: 'Imagician (image post-processing)',
     description:
-      'Local sharp-based image editor: resize, crop, rotate, flip, format conversion (JPEG / PNG / WebP / AVIF), compression and batch operations. Pairs naturally with the generation MCPs above so the agent can polish a freshly rendered artifact before saving it under .od/artifacts/. No auth, no network — all operations run locally on absolute file paths.',
+      'Local sharp-based image editor: resize, crop, rotate, flip, format conversion (JPEG / PNG / WebP / AVIF), compression and batch operations. Pairs naturally with the generation MCPs above so the agent can polish a freshly rendered artifact before saving it under .od/artifacts/. No auth, no network - all operations run locally on absolute file paths.',
     transport: 'stdio',
     category: 'image-editing',
     homepage: 'https://github.com/flowy11/imagician',
@@ -811,7 +811,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'topaz-labs',
     label: 'Topaz Labs (AI upscale / denoise / sharpen)',
     description:
-      'Official Topaz Labs MCP wrapping their AI image-enhancement pipeline: Standard V2 / Wonder 2 upscaling, Bloom denoising, Recover 3 detail restoration. Use this as the polish step *after* a generation MCP — fix soft hair, recover skin micro-texture, push a 1024² render to a print-ready 4K asset. Requires a Topaz Labs API key from developer.topazlabs.com.',
+      'Official Topaz Labs MCP wrapping their AI image-enhancement pipeline: Standard V2 / Wonder 2 upscaling, Bloom denoising, Recover 3 detail restoration. Use this as the polish step *after* a generation MCP - fix soft hair, recover skin micro-texture, push a 1024² render to a print-ready 4K asset. Requires a Topaz Labs API key from developer.topazlabs.com.',
     transport: 'stdio',
     category: 'image-editing',
     homepage: 'https://github.com/TopazLabs/topaz-mcp',
@@ -833,7 +833,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'transloadit',
     label: 'Transloadit (media pipelines)',
     description:
-      '86+ "Robots" for industrial media processing: smart_crop, watermarking, OCR, format transcoding (image / video / audio), face detection, document conversion, AI tagging — composable into multi-step pipelines ("Assemblies"). Pairs naturally with Imagician / ImageSorcery for the heavier "build a real production pipeline" workflows. Needs a free Transloadit account.',
+      '86+ "Robots" for industrial media processing: smart_crop, watermarking, OCR, format transcoding (image / video / audio), face detection, document conversion, AI tagging - composable into multi-step pipelines ("Assemblies"). Pairs naturally with Imagician / ImageSorcery for the heavier "build a real production pipeline" workflows. Needs a free Transloadit account.',
     transport: 'stdio',
     category: 'image-editing',
     homepage: 'https://github.com/transloadit/node-sdk/tree/main/packages/mcp-server',
@@ -914,12 +914,12 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'figma-context',
     label: 'Figma Context (read designs → code)',
     description:
-      'Framelink MCP for Figma — paste a Figma file / frame / group URL into chat and the agent gets back simplified Figma metadata (layout, typography, colors, components) tailored for code generation. The "designs → code" workhorse: way more accurate than feeding screenshots back to the model. Get a Figma personal access token at help.figma.com → Manage personal access tokens.',
+      'Framelink MCP for Figma - paste a Figma file / frame / group URL into chat and the agent gets back simplified Figma metadata (layout, typography, colors, components) tailored for code generation. The "designs → code" workhorse: way more accurate than feeding screenshots back to the model. Get a Figma personal access token at help.figma.com → Manage personal access tokens.',
     transport: 'stdio',
     category: 'design-systems',
     homepage: 'https://github.com/GLips/Figma-Context-MCP',
     example:
-      'Look at this Figma frame: https://figma.com/file/<file>/<name>?node-id=<n> — implement it as a Tailwind + React component.',
+      'Look at this Figma frame: https://figma.com/file/<file>/<name>?node-id=<n> - implement it as a Tailwind + React component.',
     command: 'npx',
     args: ['-y', 'figma-developer-mcp', '--stdio'],
     envFields: [
@@ -949,7 +949,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'design-system-extractor',
     label: 'Design System Extractor (Storybook)',
     description:
-      'Connects to a running Storybook instance and extracts component HTML, variants, computed styles, theme tokens and dependency graphs. Perfect when an existing app already has a design system in Storybook — point this at it and the agent stops guessing component APIs. Defaults to `http://localhost:6006`; override with STORYBOOK_URL.',
+      'Connects to a running Storybook instance and extracts component HTML, variants, computed styles, theme tokens and dependency graphs. Perfect when an existing app already has a design system in Storybook - point this at it and the agent stops guessing component APIs. Defaults to `http://localhost:6006`; override with STORYBOOK_URL.',
     transport: 'stdio',
     category: 'design-systems',
     homepage: 'https://github.com/freema/mcp-design-system-extractor',
@@ -974,7 +974,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'figma-use',
     label: 'figma-use (write designs from chat)',
     description:
-      'Companion to Figma-Context: where Framelink reads, figma-use *writes* — 90+ tools to create frames, text, components, variants, set layouts, render JSX into the canvas, export PNG/SVG, query nodes via XPath, lint for WCAG / auto-layout / hardcoded colors, and analyze design systems. Runs as a local HTTP MCP server on port 38451; no API key. Two prerequisites the user owns: (1) start Figma with remote debugging — macOS: `open -a Figma --args --remote-debugging-port=9222` (Figma 126+ needs `figma-use daemon start --pipe` instead), and (2) leave `npx figma-use mcp serve` running in a terminal. Then this template wires the daemon to that endpoint.',
+      'Companion to Figma-Context: where Framelink reads, figma-use *writes* - 90+ tools to create frames, text, components, variants, set layouts, render JSX into the canvas, export PNG/SVG, query nodes via XPath, lint for WCAG / auto-layout / hardcoded colors, and analyze design systems. Runs as a local HTTP MCP server on port 38451; no API key. Two prerequisites the user owns: (1) start Figma with remote debugging - macOS: `open -a Figma --args --remote-debugging-port=9222` (Figma 126+ needs `figma-use daemon start --pipe` instead), and (2) leave `npx figma-use mcp serve` running in a terminal. Then this template wires the daemon to that endpoint.',
     transport: 'http',
     authMode: 'none',
     category: 'design-systems',
@@ -987,7 +987,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'aesthetics-wiki',
     label: 'Aesthetics Wiki (moodboard / inspiration)',
     description:
-      'Read-only access to the Aesthetics Wiki (cottagecore, dark academia, y2k, goblincore, brutalism, vaporwave… thousands more) — search styles, fetch summaries + main image, list related aesthetics, pull image galleries for a moodboard, or grab a random aesthetic to break creative block. No API key required. Requires the `uvx` Python launcher.',
+      'Read-only access to the Aesthetics Wiki (cottagecore, dark academia, y2k, goblincore, brutalism, vaporwave… thousands more) - search styles, fetch summaries + main image, list related aesthetics, pull image galleries for a moodboard, or grab a random aesthetic to break creative block. No API key required. Requires the `uvx` Python launcher.',
     transport: 'stdio',
     category: 'design-systems',
     homepage: 'https://github.com/leonardoca1/aesthetics-wiki-mcp',
@@ -1002,7 +1002,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: '21st-dev-magic',
     label: '21st.dev Magic (UI components)',
     description:
-      'Generates polished, designer-grade UI components from natural-language prompts using the 21st.dev component library. Strongest match for the "good-looking craft" lane — feed it a brief and it returns React/TSX you can paste into an artifact. The API key is passed as a positional argument; replace `__YOUR_API_KEY__` in the Args field after saving (get one at 21st.dev/magic/console).',
+      'Generates polished, designer-grade UI components from natural-language prompts using the 21st.dev component library. Strongest match for the "good-looking craft" lane - feed it a brief and it returns React/TSX you can paste into an artifact. The API key is passed as a positional argument; replace `__YOUR_API_KEY__` in the Args field after saving (get one at 21st.dev/magic/console).',
     transport: 'stdio',
     category: 'ui-components',
     homepage: 'https://github.com/21st-dev/magic-mcp',
@@ -1015,7 +1015,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'shadcn-ui',
     label: 'shadcn/ui',
     description:
-      'Direct access to shadcn/ui component source, demos, blocks and metadata across React, Svelte, Vue and React Native. Lets the agent install, copy and adapt components instead of guessing the API. Adding a GitHub PAT via `--github-api-key` raises the upstream rate limit from 60 → 5000 requests/hour — edit the Args field after saving to inject yours.',
+      'Direct access to shadcn/ui component source, demos, blocks and metadata across React, Svelte, Vue and React Native. Lets the agent install, copy and adapt components instead of guessing the API. Adding a GitHub PAT via `--github-api-key` raises the upstream rate limit from 60 → 5000 requests/hour - edit the Args field after saving to inject yours.',
     transport: 'stdio',
     category: 'ui-components',
     homepage: 'https://github.com/Jpisnice/shadcn-ui-mcp-server',
@@ -1056,7 +1056,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'mermaid',
     label: 'Mermaid diagrams',
     description:
-      'Render Mermaid (flowchart, sequence, class, state, gantt, ER…) diagrams to PNG / SVG via Puppeteer. Natural extension of the markdown rendering in chat — gives the agent a way to materialize architecture / process diagrams as proper image artifacts.',
+      'Render Mermaid (flowchart, sequence, class, state, gantt, ER…) diagrams to PNG / SVG via Puppeteer. Natural extension of the markdown rendering in chat - gives the agent a way to materialize architecture / process diagrams as proper image artifacts.',
     transport: 'stdio',
     category: 'data-viz',
     homepage: 'https://github.com/peng-shawn/mermaid-mcp-server',
@@ -1069,12 +1069,12 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'mcp-dashboards',
     label: 'MCP Dashboards (45+ chart types)',
     description:
-      'Renders 45+ interactive chart types as HTML directly in chat: bar, line, pie, candlestick, sankey, geo maps, radar, funnel, treemap and more — plus full KPI dashboards with drill-down, live API polling, 20 themes, and export to PNG / PPT / A4. Goes wider than AntV for "dashboard"-shaped artifacts; use it when a static chart is not enough.',
+      'Renders 45+ interactive chart types as HTML directly in chat: bar, line, pie, candlestick, sankey, geo maps, radar, funnel, treemap and more - plus full KPI dashboards with drill-down, live API polling, 20 themes, and export to PNG / PPT / A4. Goes wider than AntV for "dashboard"-shaped artifacts; use it when a static chart is not enough.',
     transport: 'stdio',
     category: 'data-viz',
     homepage: 'https://github.com/KyuRish/mcp-dashboards',
     example:
-      'Build a 4-card KPI dashboard with monthly revenue, churn, MAU, and a sankey of acquisition funnels — export it as PNG.',
+      'Build a 4-card KPI dashboard with monthly revenue, churn, MAU, and a sankey of acquisition funnels - export it as PNG.',
     command: 'npx',
     args: ['-y', 'mcp-dashboards', '--stdio'],
   },
@@ -1082,7 +1082,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'excalidraw-architect',
     label: 'Excalidraw Architect (hand-drawn diagrams)',
     description:
-      'Hand-drawn-style architecture diagrams via Excalidraw + a Sugiyama auto-layout engine — no overlapping boxes, no tangled arrows. Built-in styling for 50+ technologies (Kafka, Postgres, Redis, S3, Lambda, K8s…). Iterate with natural language ("add a cache in front of the DB"), then export to SVG / PNG. Different aesthetic from Mermaid: warmer, less "generated". Requires the `uvx` Python launcher.',
+      'Hand-drawn-style architecture diagrams via Excalidraw + a Sugiyama auto-layout engine - no overlapping boxes, no tangled arrows. Built-in styling for 50+ technologies (Kafka, Postgres, Redis, S3, Lambda, K8s…). Iterate with natural language ("add a cache in front of the DB"), then export to SVG / PNG. Different aesthetic from Mermaid: warmer, less "generated". Requires the `uvx` Python launcher.',
     transport: 'stdio',
     category: 'data-viz',
     homepage: 'https://github.com/BV-Venky/excalidraw-architect-mcp',
@@ -1097,7 +1097,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'edgeone-pages',
     label: 'EdgeOne Pages (publish HTML)',
     description:
-      'Deploy raw HTML to Tencent EdgeOne Pages and get back a public URL. Lets the agent ship a generated landing page or design preview as a shareable link in one tool call — no account or token needed for the basic deploy_html flow. Provide an EDGEONE_PAGES_API_TOKEN if you want deploy_folder / project-update tools as well.',
+      'Deploy raw HTML to Tencent EdgeOne Pages and get back a public URL. Lets the agent ship a generated landing page or design preview as a shareable link in one tool call - no account or token needed for the basic deploy_html flow. Provide an EDGEONE_PAGES_API_TOKEN if you want deploy_folder / project-update tools as well.',
     transport: 'stdio',
     category: 'publishing',
     homepage: 'https://github.com/TencentEdgeOne/edgeone-pages-mcp',
@@ -1123,7 +1123,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'pagedrop',
     label: 'PageDrop (instant HTML hosting)',
     description:
-      'Deploy raw HTML, Markdown, PDF or a ZIP archive to a permanent public URL — no signup, no key, no account. Complements EdgeOne Pages for users who want a true zero-friction publish path. Optional password protection, custom slug, OG tags and TTL.',
+      'Deploy raw HTML, Markdown, PDF or a ZIP archive to a permanent public URL - no signup, no key, no account. Complements EdgeOne Pages for users who want a true zero-friction publish path. Optional password protection, custom slug, OG tags and TTL.',
     transport: 'stdio',
     category: 'publishing',
     homepage: 'https://pagedrop.dev/',
@@ -1136,7 +1136,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'pdfspark',
     label: 'PDFSpark (HTML / URL → PDF)',
     description:
-      'Free HTML-to-PDF and URL-to-PDF conversion via Playwright — no signup, no key. Supports merging, splitting, page formatting (A4 / Letter / margins / orientation), watermarks, headers, footers, AES-256 encryption and metadata. Pairs naturally with the publishing flow when the agent needs a downloadable PDF version of a generated page.',
+      'Free HTML-to-PDF and URL-to-PDF conversion via Playwright - no signup, no key. Supports merging, splitting, page formatting (A4 / Letter / margins / orientation), watermarks, headers, footers, AES-256 encryption and metadata. Pairs naturally with the publishing flow when the agent needs a downloadable PDF version of a generated page.',
     transport: 'stdio',
     category: 'publishing',
     homepage: 'https://pdfspark.dev/',
@@ -1162,7 +1162,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'qrmint',
     label: 'QRMint (styled QR codes)',
     description:
-      'Free, no-signup MCP for styled QR codes: custom colors, embedded logos, frames, batch generation. Drop on a poster, a slide, a print bundle, a packaging mockup — wherever a flat-black QR would look out of place.',
+      'Free, no-signup MCP for styled QR codes: custom colors, embedded logos, frames, batch generation. Drop on a poster, a slide, a print bundle, a packaging mockup - wherever a flat-black QR would look out of place.',
     transport: 'stdio',
     category: 'publishing',
     homepage: 'https://qrmcp.dev/',
@@ -1175,7 +1175,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'slideshot',
     label: 'Slideshot (HTML → PDF / PNG / WebP / PPTX)',
     description:
-      'Convert AI-generated HTML carousels into high-resolution PNG / WebP / PDF / PPTX. 7 built-in themes (generic, branded, instagram-carousel, infographic, pitch-deck, dark-modern, editorial). Killer companion for "design a slide deck" or "build an Instagram carousel" workflows — and the rendered output is real Puppeteer pixels, not a screenshot.',
+      'Convert AI-generated HTML carousels into high-resolution PNG / WebP / PDF / PPTX. 7 built-in themes (generic, branded, instagram-carousel, infographic, pitch-deck, dark-modern, editorial). Killer companion for "design a slide deck" or "build an Instagram carousel" workflows - and the rendered output is real Puppeteer pixels, not a screenshot.',
     transport: 'stdio',
     category: 'publishing',
     homepage: 'https://github.com/06ketan/slideshot',
@@ -1188,7 +1188,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'deckrun',
     label: 'Deckrun (Markdown → PDF / video / audio)',
     description:
-      'Hosted MCP that converts Deckrun Markdown into pixel-perfect branded PDFs, narrated MP4 videos, and MP3 audio from one source. The free tier exposes `get_slide_format` + `generate_slide_deck` (PDF) with no API key required and no signup — just connect and go. Add a paid `DECKRUN_API_KEY` later for video / audio generation, themes, voices and async jobs.',
+      'Hosted MCP that converts Deckrun Markdown into pixel-perfect branded PDFs, narrated MP4 videos, and MP3 audio from one source. The free tier exposes `get_slide_format` + `generate_slide_deck` (PDF) with no API key required and no signup - just connect and go. Add a paid `DECKRUN_API_KEY` later for video / audio generation, themes, voices and async jobs.',
     transport: 'http',
     authMode: 'none',
     category: 'publishing',
@@ -1258,7 +1258,7 @@ export const MCP_TEMPLATES: McpTemplate[] = [
     id: 'a11y',
     label: 'A11y (Web accessibility / WCAG)',
     description:
-      'Web accessibility testing via Deque axe-core + Puppeteer: test any URL or HTML snippet against WCAG 2.0 / 2.1 / 2.2 (A / AA / AAA), check color-contrast pairs, validate ARIA usage and detect orientation lock. Closes the craft loop — agent renders an artifact, captures it, runs an a11y check, then fixes what fails.',
+      'Web accessibility testing via Deque axe-core + Puppeteer: test any URL or HTML snippet against WCAG 2.0 / 2.1 / 2.2 (A / AA / AAA), check color-contrast pairs, validate ARIA usage and detect orientation lock. Closes the craft loop - agent renders an artifact, captures it, runs an a11y check, then fixes what fails.',
     transport: 'stdio',
     category: 'utilities',
     homepage: 'https://github.com/ronantakizawa/a11ymcp',

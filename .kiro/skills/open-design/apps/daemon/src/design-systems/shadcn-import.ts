@@ -8,19 +8,19 @@
 // hands that directory to `importLocalDesignSystemProject` with a
 // `source: { type: 'shadcn', … }` override. The local importer already
 // scans CSS custom properties, generates a schema-valid DESIGN.md +
-// tokens.css + manifest.json, and copies component snippets — mirroring the
+// tokens.css + manifest.json, and copies component snippets - mirroring the
 // GitHub importer's "clone → import local project" shape.
 //
 // Reference forms (matching the shadcn CLI `add` syntax):
-//   - `<owner>/<repo>/<item>[#<branch|tag|sha>]` — resolved against the
+//   - `<owner>/<repo>/<item>[#<branch|tag|sha>]` - resolved against the
 //     repository's root `registry.json` on GitHub (following the `include`
 //     layout if present).
-//   - `https://…/<item>.json` — a direct registry-item document. A
+//   - `https://…/<item>.json` - a direct registry-item document. A
 //     `registry.json` index URL is also accepted when an item is selected
 //     with a `#<item>` fragment.
 //
 // Network safety: every URL we contact is validated against an egress policy
-// (see `assertFetchableUrl`) — `http://` is allowed only for loopback hosts,
+// (see `assertFetchableUrl`) - `http://` is allowed only for loopback hosts,
 // and private / link-local / non-routable IP literals are refused for both
 // schemes. Redirects are disabled, every fetch is size- and time-bounded, and
 // the whole import shares one overall request/time budget.
@@ -282,7 +282,7 @@ function classifyHost(rawHost: string): HostClass {
 
   if (host === 'localhost' || host.endsWith('.localhost')) return 'loopback';
   // Pure-decimal or hex hosts are obfuscated IP encodings, never real registry
-  // hostnames — refuse them rather than let the resolver normalize a bypass.
+  // hostnames - refuse them rather than let the resolver normalize a bypass.
   if (/^\d+$/.test(host) || /^0x[0-9a-f]+$/.test(host)) return 'blocked';
 
   const kind = isIP(host);
@@ -483,7 +483,7 @@ async function fetchJsonDocument(url: string, fetchImpl: ShadcnFetch): Promise<u
 }
 
 async function fetchText(url: string, fetchImpl: ShadcnFetch): Promise<string> {
-  // Defense in depth: validate every URL we actually contact — not just the
+  // Defense in depth: validate every URL we actually contact - not just the
   // user-supplied entry point, but raw GitHub URLs, `include` targets, and raw
   // file URLs too. Combined with redirect:'error' in defaultShadcnFetch, this
   // closes redirect- and include-based SSRF paths to disallowed hosts.
@@ -636,7 +636,7 @@ export function renderShadcnSourceCss(cssVars: ShadcnCssVars | undefined): strin
 function declaration(key: string, value: unknown): string {
   const name = normalizeVarName(key);
   // Reject anything that isn't a clean custom-property ident or whose value
-  // could break out of the declaration — otherwise a hostile cssVars entry
+  // could break out of the declaration - otherwise a hostile cssVars entry
   // could inject extra rules or be silently dropped by the token scanner.
   if (!/^--[A-Za-z0-9_-]+$/.test(name)) {
     throw new LocalDesignSystemImportError(
@@ -658,8 +658,8 @@ function normalizeVarName(key: string): string {
   return `--${key.trim().replace(/^--/, '')}`;
 }
 
-// shadcn (Tailwind v3 era) stores colors as bare HSL triplets — e.g.
-// `222.2 47.4% 11.2%` — because the Tailwind config wraps them as
+// shadcn (Tailwind v3 era) stores colors as bare HSL triplets - e.g.
+// `222.2 47.4% 11.2%` - because the Tailwind config wraps them as
 // `hsl(var(--token))`. OD's importer only recognizes wrapped colors, so wrap
 // bare HSL triplets back into `hsl(...)` to preserve brand fidelity. Values
 // that are already functions/hex/keywords (incl. Tailwind v4 `oklch(...)`)
@@ -831,7 +831,7 @@ function defaultShadcnFetch(): ShadcnFetch {
   if (typeof fetch !== 'function') {
     throw new LocalDesignSystemImportError('INTERNAL_ERROR', 'global fetch is not available in this runtime');
   }
-  // redirect:'error' blocks redirect-based SSRF — a validated https registry URL
+  // redirect:'error' blocks redirect-based SSRF - a validated https registry URL
   // cannot bounce the daemon to a disallowed internal http target (e.g.
   // 169.254.169.254). Every hop is re-checked by fetchText's host validation.
   return (url, init) => fetch(url, { ...init, redirect: 'error' });

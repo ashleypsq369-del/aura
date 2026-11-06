@@ -1,6 +1,6 @@
-/**
- * DropdownMenu.jsx — WAI-ARIA compliant dropdown using Radix UI
- * Fully adaptive light/dark mode — Radix portals render outside html.dark,
+﻿/**
+ * DropdownMenu.jsx - WAI-ARIA compliant dropdown using Radix UI
+ * Fully adaptive light/dark mode - Radix portals render outside html.dark,
  * so we read the class at open time and pass explicit hex colors.
  */
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
@@ -14,7 +14,7 @@ export default function DropdownMenu({ trigger, items = [], align = 'end', sideO
   const isDark = typeof document !== 'undefined'
     && document.documentElement.classList.contains('dark');
 
-  // Explicit color values — bypasses CSS var resolution issues in Radix portal
+  // Explicit color values - bypasses CSS var resolution issues in Radix portal
   const C = isDark ? {
     bg:        '#0d1c26',
     border:    '#1a3040',
@@ -129,7 +129,7 @@ export default function DropdownMenu({ trigger, items = [], align = 'end', sideO
                   })}
                 </div>
 
-                {/* Sign Out — pinned bottom */}
+                {/* Sign Out - pinned bottom */}
                 {dangerItem && (() => {
                   const Icon = dangerItem.icon;
                   return (

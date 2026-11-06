@@ -12,7 +12,7 @@ import { injectMotionSourcePlayer, isMotionVideoComposition, markMotionFrameRend
 //
 // Every surface (image / video / audio) flows through this single
 // entrypoint. Providers live behind the `provider` field on each model
-// entry in media-models.js — when a real integration ships we route to
+// entry in media-models.js - when a real integration ships we route to
 // it; otherwise we emit a deterministic, lightweight placeholder
 // (labelled SVG-PNG, silent WAV/MP3, blank MP4) so the framework works
 // without API keys.
@@ -210,7 +210,7 @@ const AUDIO_KINDS = new Set(['music', 'speech', 'sfx']);
 // Stubs ship a 1×1 PNG / ~24-byte mp4 / silent WAV / single-frame mp3 so
 // the dispatch path is exercisable before real provider integrations
 // land. On a release build that lands as "successful" but functionally
-// empty bytes — confusing to users. We therefore gate the stub renderers
+// empty bytes - confusing to users. We therefore gate the stub renderers
 // behind OD_MEDIA_ALLOW_STUBS=1 and otherwise return a 503 (mapped from
 // the StubProviderDisabledError thrown below) with a clear message.
 class StubProviderDisabledError extends Error {
@@ -364,7 +364,7 @@ export async function generateMedia(args: {
    * This is the strongest capture point in the daemon: the caller receives the
    * very buffer that produced the file, so an immutable snapshot never has to
    * re-read a path that the next turn may already have overwritten. The media
-   * layer stays a pure dispatcher — it hands over bytes and a project-relative
+   * layer stays a pure dispatcher - it hands over bytes and a project-relative
    * name and knows nothing about snapshots, runs, or messages.
    *
    * Failures here must never fail the generation, so the caller's rejection is
@@ -440,7 +440,7 @@ export async function generateMedia(args: {
       // AIHubMix image/audio models are discovered live from its catalogue
       // (GET /api/v1/models?type=image_generation), so most ids are NOT in the
       // static registry. They all render through the same OpenAI-compatible
-      // endpoint, so synthesize a def on the fly — aihubmixWireModel() strips
+      // endpoint, so synthesize a def on the fly - aihubmixWireModel() strips
       // the `aihubmix-` prefix to the real wire name inside the renderer.
       isCatalogBypass = true;
       def = {
@@ -816,7 +816,7 @@ export async function generateMedia(args: {
       intentionalStub = true;
     }
   } catch (err) {
-    // Stub-disabled errors are intentional — propagate so the daemon
+    // Stub-disabled errors are intentional - propagate so the daemon
     // maps them to 503 and the CLI surfaces a clear "configure a real
     // provider" message rather than writing fake bytes.
     if (err instanceof StubProviderDisabledError) {
@@ -830,7 +830,7 @@ export async function generateMedia(args: {
     }
     // A real provider failed (network blip, 4xx, missing key, …). We
     // still want to fall back to a stub so the agent's chat loop
-    // doesn't dead-end — but only when stubs are allowed for this
+    // doesn't dead-end - but only when stubs are allowed for this
     // build. Otherwise re-throw so the CLI exits non-zero with the
     // real upstream message.
     if (!stubsAllowed()) {
@@ -843,7 +843,7 @@ export async function generateMedia(args: {
     providerError = msg;
     usedStubFallback = true;
     // Also log to daemon stderr so the failure is visible in the daemon
-    // terminal — easiest place for the developer/operator to spot it.
+    // terminal - easiest place for the developer/operator to spot it.
     try {
       console.error(
         `[media] ${providerId}/${surface}/${model} failed: ${msg}`,
@@ -853,7 +853,7 @@ export async function generateMedia(args: {
     }
   }
   // Tag the providerNote with `[stub]` only when the bytes actually came
-  // from the stub renderer — either as the intentional fallback for an
+  // from the stub renderer - either as the intentional fallback for an
   // unintegrated (provider, surface) pair, or because a real-provider
   // call failed and we wrote a placeholder. Real-provider successes keep
   // the renderer's own note (e.g. "openai/gpt-image-2 · 1:1 · 1.2 MB")
@@ -928,7 +928,7 @@ function defaultAspectFor(surface: MediaSurface): string | undefined {
 // Provider: OpenAI Images API (gpt-image-2, gpt-image-1.5, dall-e-3 …)
 //
 // We support both the canonical OpenAI endpoint AND Azure-hosted
-// OpenAI deployments behind the same provider slot — Azure is detected
+// OpenAI deployments behind the same provider slot - Azure is detected
 // from the base URL (`*.azure.com` host or a `/deployments/<name>`
 // segment in the path). For Azure we additionally:
 //   * append `?api-version=…` (default 2024-02-01, unless the user has
@@ -958,7 +958,7 @@ function withMediaRequestInit(
 }
 
 const OPENAI_IMAGE_NO_CREDENTIAL_MESSAGE =
-  `no OpenAI credential — configure an API key in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENAI_API_KEY.`;
+  `no OpenAI credential - configure an API key in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENAI_API_KEY.`;
 
 async function renderOpenAIImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
@@ -1048,7 +1048,7 @@ async function renderOpenAIImage(ctx: MediaContext, credentials: ProviderConfig)
 async function renderImageRouterImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no ImageRouter API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_IMAGEROUTER_API_KEY`,
+      `no ImageRouter API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_IMAGEROUTER_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || IMAGEROUTER_DEFAULT_BASE_URL).trim();
@@ -1083,7 +1083,7 @@ async function renderImageRouterImage(ctx: MediaContext, credentials: ProviderCo
 async function renderImageRouterVideo(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no ImageRouter API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_IMAGEROUTER_API_KEY`,
+      `no ImageRouter API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_IMAGEROUTER_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || IMAGEROUTER_DEFAULT_BASE_URL).trim();
@@ -1119,7 +1119,7 @@ async function renderCustomOpenAIImage(ctx: MediaContext, credentials: ProviderC
   const baseUrl = (credentials.baseUrl || '').trim();
   if (!baseUrl) {
     throw new Error(
-      `Custom Image API base URL required — configure an OpenAI-compatible /v1/images/generations or /v1/images/edits endpoint in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
+      `Custom Image API base URL required - configure an OpenAI-compatible /v1/images/generations or /v1/images/edits endpoint in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
     );
   }
   const wireModel = (
@@ -1128,7 +1128,7 @@ async function renderCustomOpenAIImage(ctx: MediaContext, credentials: ProviderC
   ).trim();
   if (!wireModel) {
     throw new Error(
-      `Custom Image API model required — configure the provider model in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
+      `Custom Image API model required - configure the provider model in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
     );
   }
 
@@ -1295,7 +1295,7 @@ function buildOpenAIImageUrl(baseUrl: string, isAzure: boolean): string {
   try {
     parsed = new URL(buildOpenAICompatibleGenerationUrl(baseUrl, 'images'));
   } catch {
-    // Bad URL — fall back to naive concat so the upstream error is
+    // Bad URL - fall back to naive concat so the upstream error is
     // surfaced through the normal HTTP path rather than a parse crash.
     return buildOpenAICompatibleGenerationUrl(baseUrl, 'images');
   }
@@ -1381,7 +1381,7 @@ function openaiSpeechFormatFor(fileName: string): string {
 
 async function renderOpenAISpeech(ctx: MediaContext, credentials: ProviderConfig, fileName: string): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no OpenAI credential — configure an API key in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENAI_API_KEY`);
+    throw new Error(`no OpenAI credential - configure an API key in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENAI_API_KEY`);
   }
   const rawBase = credentials.baseUrl || 'https://api.openai.com/v1';
   const azure = detectAzureEndpoint(rawBase);
@@ -1449,7 +1449,7 @@ async function renderOpenAISpeech(ctx: MediaContext, credentials: ProviderConfig
 }
 
 // ---------------------------------------------------------------------------
-// Provider: Volcengine Ark — Doubao Seedance 2.0 video.
+// Provider: Volcengine Ark - Doubao Seedance 2.0 video.
 //
 // Docs:
 //   POST /api/v3/contents/generations/tasks   → { id }
@@ -1463,7 +1463,7 @@ async function renderOpenAISpeech(ctx: MediaContext, credentials: ProviderConfig
 async function renderVolcengineVideo(ctx: MediaContext, credentials: ProviderConfig, onProgress?: ProgressFn): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no Volcengine Ark API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set ARK_API_KEY`,
+      `no Volcengine Ark API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set ARK_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
@@ -1484,7 +1484,7 @@ async function renderVolcengineVideo(ctx: MediaContext, credentials: ProviderCon
     : promptText;
 
   // Seedance i2v (and seedance-2.0/-fast which support both modes)
-  // accept an additional `image_url` content entry — Volcengine treats
+  // accept an additional `image_url` content entry - Volcengine treats
   // it as the first frame and animates from there. We pass the data
   // URL directly; the API does not require a public URL. When no
   // image is provided, this is a regular t2v call.
@@ -1536,7 +1536,7 @@ async function renderVolcengineVideo(ctx: MediaContext, credentials: ProviderCon
   // Emit a "task accepted" line right away so the agent's chat shows
   // something within the first second instead of going silent for the
   // full poll loop. cc's Bash tool considers a long-quiet pipe stuck
-  // and times out at ~2 minutes — Volcengine i2v routinely takes
+  // and times out at ~2 minutes - Volcengine i2v routinely takes
   // 3-5 minutes, so without this stream, every i2v dispatch dies
   // mid-flight.
   if (typeof onProgress === 'function') {
@@ -1560,7 +1560,7 @@ async function renderVolcengineVideo(ctx: MediaContext, credentials: ProviderCon
     }
     lastStatus = pollData.status || '';
     // Forward each poll tick. Heartbeat doubles as a "command is alive"
-    // signal for the agent's bash tool — the daemon's SSE stream emits
+    // signal for the agent's bash tool - the daemon's SSE stream emits
     // an event for every line, which cc renders into the chat as live
     // output so its watchdog never marks the call as hung.
     if (typeof onProgress === 'function') {
@@ -1606,7 +1606,7 @@ function volcengineRatioFor(aspect?: string): string {
 // POST /api/v3/images/generations (OpenAI-compatible payload).
 async function renderVolcengineImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no Volcengine Ark API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set ARK_API_KEY`);
+    throw new Error(`no Volcengine Ark API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set ARK_API_KEY`);
   }
   const baseUrl = (credentials.baseUrl || 'https://ark.cn-beijing.volces.com/api/v3').replace(/\/$/, '');
 
@@ -1660,10 +1660,10 @@ async function renderVolcengineImage(ctx: MediaContext, credentials: ProviderCon
 // Provider: xAI Grok Imagine.
 //
 // Docs: https://docs.x.ai/developers/model-capabilities/{images,video}/generation
-//   * Image: POST /v1/images/generations — synchronous, returns
+//   * Image: POST /v1/images/generations - synchronous, returns
 //            {data:[{b64_json|url}]}; we ask for b64_json so the bytes
 //            arrive in one round-trip.
-//   * Video: POST /v1/videos/generations — may return the finished video
+//   * Video: POST /v1/videos/generations - may return the finished video
 //            inline ({status:'done', video:{url}}) or an async stub
 //            ({id, status:'pending'}); in the async case we poll
 //            GET /v1/videos/{id} until status flips to done/failed.
@@ -1677,7 +1677,7 @@ async function renderVolcengineImage(ctx: MediaContext, credentials: ProviderCon
 async function renderGrokImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no xAI credentials — sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
+      `no xAI credentials - sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://api.x.ai/v1').replace(/\/$/, '');
@@ -1722,7 +1722,7 @@ async function renderGrokImage(ctx: MediaContext, credentials: ProviderConfig): 
   }
   // xAI's Imagine returns JPEG by default (no format option in the API
   // surface), but PNG/WebP are technically possible. Sniff the magic
-  // bytes so the on-disk extension matches reality — saving JPEG bytes
+  // bytes so the on-disk extension matches reality - saving JPEG bytes
   // as `.png` confuses Finder previews and any downstream consumer that
   // trusts the extension.
   return {
@@ -1736,7 +1736,7 @@ async function renderNanoBananaImage(ctx: MediaContext, credentials: ProviderCon
   const apiKey = credentials.apiKey;
   if (!apiKey) {
     throw new Error(
-      `no Nano Banana API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_NANOBANANA_API_KEY`,
+      `no Nano Banana API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_NANOBANANA_API_KEY`,
     );
   }
 
@@ -1856,7 +1856,7 @@ function sniffImageExt(bytes: Buffer): string {
 
 
 // ---------------------------------------------------------------------------
-// Provider: OpenRouter — Unified video generation gateway (asynchronous).
+// Provider: OpenRouter - Unified video generation gateway (asynchronous).
 //
 // Docs: https://openrouter.ai/docs/guides/overview/multimodal/video-generation
 //
@@ -1878,7 +1878,7 @@ async function renderOpenRouterImage(
 ): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no OpenRouter API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENROUTER_API_KEY`,
+      `no OpenRouter API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENROUTER_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://openrouter.ai/api/v1').replace(/\/$/, '');
@@ -1998,7 +1998,7 @@ async function renderOpenRouterImage(
 // (e.g. `bytedance/seedance-2.0`).
 //
 // Image-to-video (i2v) is supported via `frame_images` with
-// `frame_type: "first_frame"` — the dispatcher already resolved the
+// `frame_type: "first_frame"` - the dispatcher already resolved the
 // project image into a base64 data URL in `ctx.imageRef`.
 // ---------------------------------------------------------------------------
 
@@ -2009,7 +2009,7 @@ async function renderOpenRouterVideo(
 ): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no OpenRouter API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENROUTER_API_KEY`,
+      `no OpenRouter API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OPENROUTER_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://openrouter.ai/api/v1').replace(/\/$/, '');
@@ -2221,7 +2221,7 @@ async function renderOpenRouterVideo(
 
 function openRouterAspectFor(aspect?: string): string {
   // OpenRouter normalises aspect ratios across providers. Our
-  // MEDIA_ASPECTS vocabulary is a strict subset — pass known values
+  // MEDIA_ASPECTS vocabulary is a strict subset - pass known values
   // through, default to 16:9 for video.
   if (
     aspect === '1:1'
@@ -2238,7 +2238,7 @@ function openRouterAspectFor(aspect?: string): string {
 async function renderLeonardoImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no Leonardo.ai API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set LEONARDO_API_KEY`,
+      `no Leonardo.ai API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set LEONARDO_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://cloud.leonardo.ai/api/rest/v1').replace(/\/$/, '');
@@ -2367,13 +2367,13 @@ async function renderLeonardoImage(ctx: MediaContext, credentials: ProviderConfi
 async function renderGrokVideo(ctx: MediaContext, credentials: ProviderConfig, onProgress?: ProgressFn): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no xAI credentials — sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
+      `no xAI credentials - sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
     );
   }
   const baseUrl = (credentials.baseUrl || 'https://api.x.ai/v1').replace(/\/$/, '');
 
   // Grok caps duration at 15s. The dispatcher already clamps to
-  // VIDEO_LENGTHS_SEC (which goes up to 30) — re-clamp here so a user
+  // VIDEO_LENGTHS_SEC (which goes up to 30) - re-clamp here so a user
   // who picked 30 doesn't bounce off the upstream API with a 4xx.
   const requested = ctx.length || 5;
   const durationSec = Math.min(Math.max(requested, 1), 15);
@@ -2388,7 +2388,7 @@ async function renderGrokVideo(ctx: MediaContext, credentials: ProviderConfig, o
   };
   if (ctx.imageRef && ctx.imageRef.dataUrl) {
     // grok-imagine-video accepts a base64 data URI in `image` for i2v.
-    // Same surface as Seedance — the dispatcher already produced the
+    // Same surface as Seedance - the dispatcher already produced the
     // data URL via resolveProjectImage, so we just hand it through.
     body.image = ctx.imageRef.dataUrl;
   }
@@ -2477,7 +2477,7 @@ async function renderGrokVideo(ctx: MediaContext, credentials: ProviderConfig, o
   }
 
   if (!videoUrl) {
-    // Submit returned neither an inline video.url nor a request_id —
+    // Submit returned neither an inline video.url nor a request_id -
     // upstream broke its own contract. Surfacing the last status helps
     // pinpoint whether it was a transient API blip or a malformed
     // response we should add a parser branch for.
@@ -2502,7 +2502,7 @@ async function renderGrokVideo(ctx: MediaContext, credentials: ProviderConfig, o
 function grokAspectFor(aspect?: string): string {
   // xAI accepts a wide list (1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 2:1,
   // 1:2, 19.5:9, 9:19.5, 20:9, 9:20, auto). Our MEDIA_ASPECTS subset
-  // is a strict subset — pass through known values, otherwise 16:9.
+  // is a strict subset - pass through known values, otherwise 16:9.
   if (
     aspect === '1:1'
     || aspect === '16:9'
@@ -2516,7 +2516,7 @@ function grokAspectFor(aspect?: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Provider: xAI Grok TTS — POST /v1/tts.
+// Provider: xAI Grok TTS - POST /v1/tts.
 //
 // xAI exposes a dedicated /tts endpoint that returns audio bytes directly,
 // not the OpenAI /audio/speech shape. Docs:
@@ -2532,7 +2532,7 @@ const XAI_TTS_DEFAULT_LANGUAGE = 'en';
 async function renderXAITTS(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no xAI credentials — sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
+      `no xAI credentials - sign in with your SuperGrok subscription (in OD or via \`hermes auth add xai-oauth\`), set XAI_API_KEY, or configure a key in ${SETTINGS_MEDIA_PROVIDERS_PATH}`,
     );
   }
   const baseUrl = (credentials.baseUrl || XAI_TTS_DEFAULT_BASE_URL).replace(
@@ -2581,7 +2581,7 @@ async function renderXAITTS(ctx: MediaContext, credentials: ProviderConfig): Pro
 }
 
 // ---------------------------------------------------------------------------
-// Provider: ElevenLabs — v3 text-to-speech (synchronous).
+// Provider: ElevenLabs - v3 text-to-speech (synchronous).
 //
 // Docs: https://elevenlabs.io/docs/api-reference/text-to-speech/convert
 // The API returns MP3 bytes directly. The catalogue id `elevenlabs-v3`
@@ -2634,7 +2634,7 @@ function assertElevenLabsSfxPromptLength(text: string) {
 async function renderElevenLabsTTS(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no ElevenLabs API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_ELEVENLABS_API_KEY`,
+      `no ElevenLabs API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_ELEVENLABS_API_KEY`,
     );
   }
 
@@ -2687,7 +2687,7 @@ async function renderElevenLabsTTS(ctx: MediaContext, credentials: ProviderConfi
 async function renderElevenLabsSfx(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no ElevenLabs API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_ELEVENLABS_API_KEY`,
+      `no ElevenLabs API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_ELEVENLABS_API_KEY`,
     );
   }
 
@@ -2736,9 +2736,9 @@ async function renderElevenLabsSfx(ctx: MediaContext, credentials: ProviderConfi
 }
 
 // ---------------------------------------------------------------------------
-// Provider: MiniMax — Speech-02 family text-to-speech (synchronous).
+// Provider: MiniMax - Speech-02 family text-to-speech (synchronous).
 //
-// Docs: https://platform.minimaxi.com — POST /t2a_v2 with a JSON body
+// Docs: https://platform.minimaxi.com - POST /t2a_v2 with a JSON body
 // describing the voice + audio settings. Response is JSON with the
 // audio bytes hex-encoded under `data.audio`. The MiniMax catalogue we
 // surface as the generic id `minimax-tts` resolves to `speech-02-turbo`
@@ -2777,7 +2777,7 @@ const MINIMAX_IMAGE_MODEL_MAP = {
 async function renderMinimaxTTS(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no MiniMax API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_MINIMAX_API_KEY`,
+      `no MiniMax API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_MINIMAX_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || MINIMAX_DEFAULT_BASE_URL).replace(
@@ -2795,7 +2795,7 @@ async function renderMinimaxTTS(ctx: MediaContext, credentials: ProviderConfig):
   // Voice id picks: the agent can pass --voice to choose, otherwise we
   // default to a neutral Mandarin male voice that handles both Chinese
   // and English text reasonably. MiniMax's voice catalogue is large
-  // (`male-qn-qingse`, `female-shaonv`, etc.) — listed at
+  // (`male-qn-qingse`, `female-shaonv`, etc.) - listed at
   // platform.minimaxi.com under voice management.
   const voiceId = (ctx.voice && ctx.voice.trim()) || 'male-qn-qingse';
 
@@ -2866,7 +2866,7 @@ async function renderMinimaxTTS(ctx: MediaContext, credentials: ProviderConfig):
 }
 
 // ---------------------------------------------------------------------------
-// Provider: MiniMax — image-01 text-to-image (synchronous, with optional
+// Provider: MiniMax - image-01 text-to-image (synchronous, with optional
 // I2I via subject_reference).
 //
 // Docs: https://platform.minimax.io/docs/api-reference/image-generation-t2i
@@ -2877,7 +2877,7 @@ async function renderMinimaxTTS(ctx: MediaContext, credentials: ProviderConfig):
 // MiniMax's TTS API.
 //
 // We always request `response_format: 'base64'` because MiniMax's default
-// URL responses expire after 24 hours — base64 persists at write time and
+// URL responses expire after 24 hours - base64 persists at write time and
 // never goes stale. The wire model `image-01` is mapped from our catalog id
 // `minimax-image-01` via MINIMAX_IMAGE_MODEL_MAP.
 // ---------------------------------------------------------------------------
@@ -2885,7 +2885,7 @@ async function renderMinimaxTTS(ctx: MediaContext, credentials: ProviderConfig):
 async function renderMinimaxImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no MiniMax API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_MINIMAX_API_KEY`,
+      `no MiniMax API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_MINIMAX_API_KEY`,
     );
   }
   // Base URL precedence:
@@ -2895,7 +2895,7 @@ async function renderMinimaxImage(ctx: MediaContext, credentials: ProviderConfig
   // We deliberately ignore credentials.baseUrl here. The 'minimax' provider
   // slot is shared with TTS, whose stored baseUrl is the legacy
   // api.minimaxi.chat/v1 host. Naively appending '/v1/image_generation'
-  // would produce https://api.minimaxi.chat/v1/v1/image_generation — a
+  // would produce https://api.minimaxi.chat/v1/v1/image_generation - a
   // 404 against the wrong host. Adding a per-surface baseUrl to the
   // provider schema would be a cleaner long-term fix; until then, image
   // stays pinned to its own host and operators route via the env var.
@@ -2995,14 +2995,14 @@ function minimaxImageAspectFor(aspect?: string): string | undefined {
 }
 
 // ---------------------------------------------------------------------------
-// Provider: SenseAudio — senseaudio-tts-1.5 text-to-speech (synchronous).
+// Provider: SenseAudio - senseaudio-tts-1.5 text-to-speech (synchronous).
 //
-// Docs: https://docs.senseaudio.cn — POST /v1/t2a_v2 with a JSON body
+// Docs: https://docs.senseaudio.cn - POST /v1/t2a_v2 with a JSON body
 // shaped like MiniMax's (voice_setting / audio_setting). The response is
 // JSON with hex-encoded audio under `data.audio` and a `base_resp`
 // envelope that distinguishes HTTP-level from API-level failures, again
 // mirroring MiniMax. The catalogue id we surface as `senseaudio-tts`
-// resolves to `senseaudio-tts-1.5-260319` on the wire — SenseAudio's
+// resolves to `senseaudio-tts-1.5-260319` on the wire - SenseAudio's
 // recommended flagship model (supports emotion control, polyphonic
 // characters, LaTeX formula reading, voice cloning, and text-generated
 // voices). Default voice is `female_0033_b` per the official example; the agent
@@ -3023,7 +3023,7 @@ const SENSEAUDIO_TTS_MODEL_MAP = {
 async function renderSenseAudioTTS(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no SenseAudio API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_SENSEAUDIO_API_KEY`,
+      `no SenseAudio API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_SENSEAUDIO_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || SENSEAUDIO_DEFAULT_BASE_URL).replace(
@@ -3098,7 +3098,7 @@ async function renderSenseAudioTTS(ctx: MediaContext, credentials: ProviderConfi
 }
 
 // ---------------------------------------------------------------------------
-// Provider: SenseAudio image — POST /v1/image/sync (synchronous text-to-image).
+// Provider: SenseAudio image - POST /v1/image/sync (synchronous text-to-image).
 //
 // Docs: https://docs.senseaudio.cn/guides/image/overview
 //   * Models: senseaudio-image-2.0-260319 (multi-aspect), senseaudio-image-1.0-260319
@@ -3121,7 +3121,7 @@ const SENSEAUDIO_IMAGE_PROMPT_LIMIT = 2000;
 
 // SenseAudio's image gateway rejects non-standard pixel sizes with a 400
 // `参数错误：size`. Keep this table in sync with byok-tools.ts's
-// ASPECT_TO_SIZE — both paths hit the same /v1/image/sync endpoint.
+// ASPECT_TO_SIZE - both paths hit the same /v1/image/sync endpoint.
 function senseAudioImageSize(aspect?: string): string {
   if (aspect === '16:9') return '1280x720';
   if (aspect === '9:16') return '720x1280';
@@ -3133,7 +3133,7 @@ function senseAudioImageSize(aspect?: string): string {
 async function renderSenseAudioImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no SenseAudio API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_SENSEAUDIO_API_KEY`,
+      `no SenseAudio API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_SENSEAUDIO_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || SENSEAUDIO_DEFAULT_BASE_URL).replace(
@@ -3218,7 +3218,7 @@ async function renderSenseAudioImage(ctx: MediaContext, credentials: ProviderCon
 }
 
 // ---------------------------------------------------------------------------
-// Provider: AIHubMix — OpenAI-wire-compatible aggregator.
+// Provider: AIHubMix - OpenAI-wire-compatible aggregator.
 //
 // Image:  POST /v1/images/generations  (OpenAI shape, b64_json or url)
 // Speech: POST /v1/audio/speech        (OpenAI shape, raw audio bytes)
@@ -3229,7 +3229,7 @@ async function renderSenseAudioImage(ctx: MediaContext, credentials: ProviderCon
 
 async function renderAIHubMixImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no AIHubMix API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
+    throw new Error(`no AIHubMix API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
   }
   const baseUrl = credentials.baseUrl || AIHUBMIX_DEFAULT_BASE_URL;
   const wireModel = aihubmixWireModel(credentials.model || ctx.wireModel);
@@ -3303,7 +3303,7 @@ async function renderAIHubMixGeminiImage(
   wireModel: string,
 ): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no AIHubMix API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
+    throw new Error(`no AIHubMix API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
   }
   const aspect = ctx.aspect || '1:1';
   const bytes = await aihubmixGeminiImageBytes(
@@ -3325,7 +3325,7 @@ async function renderAIHubMixGeminiImage(
 
 async function renderAIHubMixTTS(ctx: MediaContext, credentials: ProviderConfig, fileName: string): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no AIHubMix API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
+    throw new Error(`no AIHubMix API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
   }
   const baseUrl = credentials.baseUrl || AIHUBMIX_DEFAULT_BASE_URL;
   const wireModel = aihubmixWireModel(credentials.model || ctx.wireModel);
@@ -3381,7 +3381,7 @@ async function renderAIHubMixVideo(
   onProgress?: ProgressFn,
 ): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no AIHubMix API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
+    throw new Error(`no AIHubMix API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_AIHUBMIX_API_KEY`);
   }
   const baseUrl = (credentials.baseUrl || AIHUBMIX_DEFAULT_BASE_URL).replace(/\/$/, '');
   const wireModel = aihubmixWireModel(credentials.model || ctx.wireModel);
@@ -3522,9 +3522,9 @@ async function renderAIHubMixVideo(
 }
 
 // ---------------------------------------------------------------------------
-// Provider: FishAudio — Speech-1.x family text-to-speech (synchronous).
+// Provider: FishAudio - Speech-1.x family text-to-speech (synchronous).
 //
-// Docs: https://docs.fish.audio — POST /v1/tts with a JSON body.
+// Docs: https://docs.fish.audio - POST /v1/tts with a JSON body.
 // FishAudio returns the audio bytes directly (Content-Type: audio/mpeg
 // for mp3, audio/wav for wav) rather than wrapping them in JSON, so we
 // stream the body straight into a Buffer. The catalogue id we expose
@@ -3542,7 +3542,7 @@ const FISHAUDIO_TTS_MODEL_MAP = {
 async function renderFishAudioTTS(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
     throw new Error(
-      `no FishAudio API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_FISHAUDIO_API_KEY`,
+      `no FishAudio API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set OD_FISHAUDIO_API_KEY`,
     );
   }
   const baseUrl = (credentials.baseUrl || FISHAUDIO_DEFAULT_BASE_URL).replace(
@@ -3596,7 +3596,7 @@ async function renderFishAudioTTS(ctx: MediaContext, credentials: ProviderConfig
 }
 
 // ---------------------------------------------------------------------------
-// Provider: Fal.ai — generic queue-based renderer for image + video.
+// Provider: Fal.ai - generic queue-based renderer for image + video.
 //
 // Queue protocol (raw HTTP, no SDK):
 //   POST https://queue.fal.run/{endpoint}          body: flat model input (no wrapper)
@@ -3607,7 +3607,7 @@ async function renderFishAudioTTS(ctx: MediaContext, credentials: ProviderConfig
 // Video result shape: { video: { url } } or { videos: [{ url }] }
 //
 // Endpoint resolution: FAL_ENDPOINTS maps catalogue IDs to their fal-ai/*
-// path. Any model ID not in the map is used verbatim — this is what
+// path. Any model ID not in the map is used verbatim - this is what
 // enables arbitrary "fal-ai/..." custom paths without catalog entries.
 // ---------------------------------------------------------------------------
 
@@ -3759,7 +3759,7 @@ function falQueueBase(baseUrl: string): string {
 
 async function renderFalImage(ctx: MediaContext, credentials: ProviderConfig): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no Fal API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set FAL_KEY`);
+    throw new Error(`no Fal API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set FAL_KEY`);
   }
   const queueBase = falQueueBase((credentials.baseUrl || 'https://fal.run').replace(/\/$/, ''));
   const endpoint = FAL_ENDPOINTS[ctx.model] ?? ctx.model;
@@ -3800,7 +3800,7 @@ async function renderFalImage(ctx: MediaContext, credentials: ProviderConfig): P
 
 async function renderFalVideo(ctx: MediaContext, credentials: ProviderConfig, onProgress?: ProgressFn): Promise<RenderResult> {
   if (!credentials.apiKey) {
-    throw new Error(`no Fal API key — configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set FAL_KEY`);
+    throw new Error(`no Fal API key - configure it in ${SETTINGS_MEDIA_PROVIDERS_PATH} or set FAL_KEY`);
   }
   const queueBase = falQueueBase((credentials.baseUrl || 'https://fal.run').replace(/\/$/, ''));
   const endpoint = FAL_ENDPOINTS[ctx.model] ?? ctx.model;
@@ -3860,7 +3860,7 @@ async function renderFalVideo(ctx: MediaContext, credentials: ProviderConfig, on
 }
 
 // ---------------------------------------------------------------------------
-// Provider: HyperFrames — local HTML→MP4 renderer (heygen-com/hyperframes).
+// Provider: HyperFrames - local HTML→MP4 renderer (heygen-com/hyperframes).
 //
 // The agent does the creative work: it reads skills/hyperframes/SKILL.md,
 // writes a composition (`hyperframes.json` + `meta.json` + `index.html`,
@@ -3894,7 +3894,7 @@ async function renderHyperFrames(
     );
   }
   // Resolve compositionDir against projectDir and refuse anything that
-  // escapes — the agent has free file access to the project but the
+  // escapes - the agent has free file access to the project but the
   // dispatcher must not let a bad relative path render an arbitrary
   // directory on the host.
   const projectRootResolved = path.resolve(projectDir);
@@ -3908,7 +3908,7 @@ async function renderHyperFrames(
         'Pass a path relative to the project (e.g. ".hyperframes-cache/abc").',
     );
   }
-  // Existence check — render against a missing directory hangs HF for
+  // Existence check - render against a missing directory hangs HF for
   // a while before failing, so short-circuit with a clear error.
   let compStat;
   try {
@@ -4221,10 +4221,10 @@ async function assertHyperFramesCompositionFile(
  * through `onProgress`. Resolves on a clean exit, rejects on non-zero
  * exit (with the stderr tail attached so the dispatcher can surface it).
  *
- * Streaming matters for UX: the render typically takes 60–120s and
+ * Streaming matters for UX: the render typically takes 60-120s and
  * HF prints "Capturing frame N/M" as it goes. Without piping these
  * lines back to the caller, the HTTP request looks hung and the
- * agent's chat tool shows a long quiet spinner — users can't tell
+ * agent's chat tool shows a long quiet spinner - users can't tell
  * whether anything is happening.
  */
 function runHyperFramesRender(compAbs: string, tmpOutput: string, onProgress?: ProgressFn): Promise<void> {
@@ -4388,7 +4388,7 @@ function svgPlaceholder(ctx: MediaContext): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">`,
     `<rect width="${w}" height="${h}" fill="#0f1424"/>`,
-    `<text x="50%" y="50%" fill="#7da4ff" font-family="ui-sans-serif" font-size="20" text-anchor="middle">${safe(ctx.model)} — ${safe(ctx.prompt).slice(0, 60)}</text>`,
+    `<text x="50%" y="50%" fill="#7da4ff" font-family="ui-sans-serif" font-size="20" text-anchor="middle">${safe(ctx.model)} - ${safe(ctx.prompt).slice(0, 60)}</text>`,
     '</svg>',
   ].join('');
 }

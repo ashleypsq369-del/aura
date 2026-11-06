@@ -122,8 +122,8 @@ describe('chat artifact crash recovery', () => {
   });
 
   // `kind` used to be `html` in this fixture and the next. No path intent is
-  // ever written for `html` — only kinds whose ORIGINAL bytes are the message
-  // evidence get a path capture at all — so the fixtures described a record
+  // ever written for `html` - only kinds whose ORIGINAL bytes are the message
+  // evidence get a path capture at all - so the fixtures described a record
   // this code path cannot receive. They are images now; the fingerprint
   // assertions they exist for are unchanged.
   it('path intent: re-captures only when the source fingerprint still matches', async () => {

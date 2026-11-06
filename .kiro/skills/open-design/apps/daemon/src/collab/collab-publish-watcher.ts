@@ -6,8 +6,8 @@
 // Read-only gate (loop-safe): a project is watched ONLY when this daemon's member
 // is its single writer (team-shared AND owner === me). A member's pulled read-only
 // copy (owned by someone else) is never watched here, so materializing an inbound
-// pull can never loop back into a publish. It also keeps the member — who must
-// stay read-only — from ever publishing edits to someone else's project.
+// pull can never loop back into a publish. It also keeps the member - who must
+// stay read-only - from ever publishing edits to someone else's project.
 //
 // Kept OUT of runtime.ts (which #5383 is also editing) so the surfaces do not
 // collide; server.ts wires it to the runtime's scheduler + the project watchers.
@@ -108,7 +108,7 @@ export function createCollabPublishWatcher(deps: CollabPublishWatcherDeps): Coll
         // `ignoreInitial`, so files already on disk when watching begins (e.g.
         // documents uploaded to a project before it was shared, or before the
         // owner-check resolved) never fire a change event and would otherwise
-        // stay stranded at the initial share version — members would see the
+        // stay stranded at the initial share version - members would see the
         // shared project but pull an empty/stale copy. Gated on `shouldPublish`
         // (team-shared AND owned by me) above, so this only republishes a
         // single-writer's own project and is loop-safe. Fires once per project

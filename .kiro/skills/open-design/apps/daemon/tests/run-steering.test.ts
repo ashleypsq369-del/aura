@@ -1,4 +1,4 @@
-// B11 "steer the running turn" (`引导对话`) — the invariant that decides whether a
+// B11 "steer the running turn" (`引导对话`) - the invariant that decides whether a
 // mid-turn user message can actually reach the model.
 //
 // The queue row's third button used to be "send now", which CANCELS the running
@@ -7,14 +7,14 @@
 //
 // Three things have to hold for that write to mean anything, and each of them
 // fails silently if we only guess:
-//   1. the runtime must deliver its prompt as `stream-json` — that is the only
+//   1. the runtime must deliver its prompt as `stream-json` - that is the only
 //      format whose writer leaves stdin open past the opening prompt. Every
 //      other plain-text runtime gets its prompt as a file-backed stdin at
 //      spawn, so there is no pipe for a later write to reach.
 //   2. the run must still be live.
 //   3. `run.stdinOpen` must still be true. A clean `turn_end` closes stdin
 //      (applyClaudeStreamJsonRunBookkeeping); a `stop_reason: 'tool_use'` pause
-//      does NOT — and that pause is exactly when steering is most valuable.
+//      does NOT - and that pause is exactly when steering is most valuable.
 
 import { describe, expect, it } from 'vitest';
 
@@ -51,7 +51,7 @@ describe('classifyRunSteering', () => {
     ).toEqual({ ok: true });
   });
 
-  it('admits a run paused on tool_use — stdin is open, so the model still reads', () => {
+  it('admits a run paused on tool_use - stdin is open, so the model still reads', () => {
     // The daemon does not close stdin on `stop_reason: 'tool_use'`; that pause
     // is a mid-turn wait, not a turn boundary. Steering must be allowed there.
     expect(

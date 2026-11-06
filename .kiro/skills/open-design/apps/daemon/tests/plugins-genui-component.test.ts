@@ -1,4 +1,4 @@
-// Plan §3.K3 / spec §10.3.5 — od.genui.surfaces[].component manifest field.
+// Plan §3.K3 / spec §10.3.5 - od.genui.surfaces[].component manifest field.
 //
 // Two contracts:
 //   1. The Zod schema in @open-design/contracts accepts the new
@@ -64,7 +64,7 @@ describe('GenUISurfaceSpec.component (manifest schema)', () => {
   });
 });
 
-describe('validateCapabilityList — genui:custom-component', () => {
+describe('validateCapabilityList - genui:custom-component', () => {
   it('treats genui:custom-component as a first-class top-level capability', () => {
     const { accepted, rejected } = validateCapabilityList([
       'prompt:inject',
@@ -75,7 +75,7 @@ describe('validateCapabilityList — genui:custom-component', () => {
   });
 });
 
-describe('doctorPlugin — component capability gate', () => {
+describe('doctorPlugin - component capability gate', () => {
   const baseManifest: PluginManifest = {
     name:        'sample-plugin',
     title:       'Sample',

@@ -58,7 +58,7 @@ async function semantic(): Promise<Record<string, string>> {
   return semantic;
 }
 
-// Skip (visibly, never silently pass) when the chromium binary is absent — e.g.
+// Skip (visibly, never silently pass) when the chromium binary is absent - e.g.
 // a browser-less `npm test`. CI installs the browser, so these assert there.
 function browserUnavailable(t: { skip: (m?: string) => void }): boolean {
   if (launchError) { t.skip(`chromium unavailable: ${launchError}`); return true; }

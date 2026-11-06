@@ -25,7 +25,7 @@ export class InvalidProjectExampleBindingError extends Error {
  * Digest the SKILL.md the example card would contribute as a user-selected
  * Skill.
  *
- * SKILL.md — not `open-design.json` — is deliberately the pinned artifact:
+ * SKILL.md - not `open-design.json` - is deliberately the pinned artifact:
  * these are the exact bytes `captureFrozenSkillPackageFromSources` will read
  * at run start, so the recorded digest is the one that can actually be
  * reproduced there. An example with no SKILL.md has nothing to carry into
@@ -99,7 +99,7 @@ const SHA256_DIGEST = /^sha256:[a-f0-9]{64}$/;
  * difference: the strategy binding re-derives its task profile from project
  * metadata and rejects a binding that disagrees, whereas an example binding
  * has no metadata-derivable counterpart to check against. Its authority comes
- * from the two facts recorded here — the exact `pluginSource` the record is
+ * from the two facts recorded here - the exact `pluginSource` the record is
  * re-resolved through at run start, and the `manifestSourceDigest` capture has
  * to reproduce from disk. This function is therefore a shape gate only, and
  * must not be treated as proof that the example still exists.

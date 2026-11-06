@@ -9,7 +9,7 @@ export interface RegisterActiveContextRoutesDeps extends RouteDeps<'db' | 'http'
 // Soft "what is the user looking at right now in OpenDesign?" channel. The
 // web UI POSTs the current project + file on every route change; the MCP
 // surface reads it so a coding agent in another repo can resolve "the design
-// I have open" without the user typing the project id. In-memory only —
+// I have open" without the user typing the project id. In-memory only -
 // daemon restart clears it.
 interface ActiveContext {
   projectId: string;

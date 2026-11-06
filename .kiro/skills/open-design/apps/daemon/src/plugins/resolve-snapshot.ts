@@ -1,4 +1,4 @@
-// Plugin snapshot resolver — wires the pure `applyPlugin()` into the
+// Plugin snapshot resolver - wires the pure `applyPlugin()` into the
 // daemon's `POST /api/projects` and `POST /api/runs` paths. Spec §8.2.1
 // invariant I3: the AppliedPluginSnapshot is the only contract between
 // "plugin" and "run". This module owns the side-effect-bearing edges:
@@ -150,7 +150,7 @@ export type ResolveSnapshotResult = ResolveSnapshotOk | ResolveSnapshotError | n
 // Returns null when the project is missing or has no snapshot pinned.
 // Used by resolvePluginSnapshot's fallback so a plain `POST /api/runs
 // { projectId }` reuses the snapshot the user picked at project create
-// time — without forcing every caller to re-thread the snapshot id.
+// time - without forcing every caller to re-thread the snapshot id.
 function readProjectPinnedSnapshotId(db: SqliteDb, projectId: string): string | null {
   try {
     const row = db
@@ -201,7 +201,7 @@ export function resolvePluginSnapshot(input: ResolveSnapshotInput): ResolveSnaps
   // snapshot is already pinned to the project (set by a prior project /
   // conversation create that ran the plugin), reuse it. This is what
   // makes ChatComposer's "start a run" path work after the user picked a
-  // plugin in NewProjectPanel — the body only carries `projectId`.
+  // plugin in NewProjectPanel - the body only carries `projectId`.
   if (
     !fields.pluginId
     && !fields.snapshotId
@@ -215,7 +215,7 @@ export function resolvePluginSnapshot(input: ResolveSnapshotInput): ResolveSnaps
   }
   if (!fields.pluginId && !fields.snapshotId) return null;
 
-  // Path 1: explicit snapshot id — look it up and verify status.
+  // Path 1: explicit snapshot id - look it up and verify status.
   if (fields.snapshotId) {
     const snapshot = getSnapshot(input.db, fields.snapshotId);
     if (!snapshot) {
@@ -277,7 +277,7 @@ export function resolvePluginSnapshot(input: ResolveSnapshotInput): ResolveSnaps
     });
   }
 
-  // Path 2: pluginId — run apply, persist a new snapshot.
+  // Path 2: pluginId - run apply, persist a new snapshot.
   const internalPlugin = input.internalStrategyActivation?.plugin;
   const plugin = internalPlugin?.id === fields.pluginId
     ? internalPlugin

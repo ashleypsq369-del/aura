@@ -5,7 +5,7 @@
 // question instead of an integration one.
 //
 // PRIVACY (design §10.3, §11): counts only. No paths, labels, digests, byte
-// sizes, prompts, or snapshot URLs — a snapshot is a copy of the user's own
+// sizes, prompts, or snapshot URLs - a snapshot is a copy of the user's own
 // design work, and the failure code is the whole diagnostic.
 
 import type { ChatArtifactCaptureResultProps } from '@open-design/contracts';
@@ -47,7 +47,7 @@ export function chatArtifactCaptureResultProps(
     // time a new failure code appears.
     source_changed_count: sourceChanged,
     // A turn where nothing failed is a success even if every snapshot was
-    // reused rather than freshly written — reuse is the strong path, not a
+    // reused rather than freshly written - reuse is the strong path, not a
     // shortfall.
     result: report.failed > 0 ? 'degraded' : 'success',
   };

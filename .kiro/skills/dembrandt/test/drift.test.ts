@@ -250,7 +250,7 @@ test('a degraded category is excluded from the score instead of read as removals
 test('a failed manifest injection degrades color: its palette entries must not read as removed brand colors', () => {
   // Manifest injection pushes theme_color/background_color into the palette
   // (count 10, high confidence). If the candidate's injection fails, those
-  // colors vanish — without the manifest→color mapping they scored as drift.
+  // colors vanish - without the manifest→color mapping they scored as drift.
   const palette = [
     { color: '#ff6600', normalized: '#ff6600', count: 10, confidence: 'high' },
     { color: '#123456', normalized: '#123456', count: 40, confidence: 'high' },
@@ -349,7 +349,7 @@ test('drift classification agrees with the shared deltaE across the colorSame bo
 /**
  * A single changed brand colour must fail the gate. The semantic map used to
  * share the palette's denominator, so one magenta primary in a real palette
- * scored stable 0 and exited 0 — the exact case the gate exists for (DEM-376).
+ * scored stable 0 and exited 0 - the exact case the gate exists for (DEM-376).
  *
  * The palette keeps its own denominator, so the churn tolerance below still
  * holds: scoring the two together in either direction breaks one of them.

@@ -28,7 +28,7 @@ function firstText(result: { content: Array<{ text: string }> }): string {
 // These tools let a coding agent (Codex, Cursor, …) commission Open
 // Design to generate a design and then poll for the result, instead of
 // only reading/creating raw artifacts. The agent never runs a skill
-// itself — it asks the daemon to, and the daemon spawns its own agent.
+// itself - it asks the daemon to, and the daemon spawns its own agent.
 describe('public MCP discovery + generation tools', () => {
   afterEach(() => {
     _resetMcpWorkspaceContextCacheForTests();
@@ -240,7 +240,7 @@ describe('public MCP discovery + generation tools', () => {
 
     const result = await handleMcpToolCall('http://127.0.0.1:17456', 'start_run', {
       prompt: 'make a banner',
-      // agent intentionally omitted — daemon resolves from app-config or first available
+      // agent intentionally omitted - daemon resolves from app-config or first available
     });
 
     const runsCall = fetchMock.mock.calls.find(
@@ -339,7 +339,7 @@ describe('public MCP discovery + generation tools', () => {
   });
 
   // When a run is mid-flight, the outer agent has no in-band signal
-  // that OD is making progress — which led real Codex clients to cancel
+  // that OD is making progress - which led real Codex clients to cancel
   // after a few polls and substitute their own output. Surfacing
   // eventsLogPath plus a hint to tail it gives Codex a way to see live
   // progress in its own shell and trust the run.
@@ -347,7 +347,7 @@ describe('public MCP discovery + generation tools', () => {
   // file preview and the chat history for a run. Built when the
   // daemon advertises a webBaseUrl (via /api/mcp/install-info) and
   // the run is bound to a project + conversation. This is the URL
-  // Codex hands back to the user — way better than the raw `/api/.../raw/`
+  // Codex hands back to the user - way better than the raw `/api/.../raw/`
   // path because the chat panel shows what Codex asked and what the
   // inner agent replied.
 
@@ -647,7 +647,7 @@ describe('public MCP discovery + generation tools', () => {
   });
 
   it('get_project omits previewUrl when the project has no entry file', async () => {
-    // No metadata.entryFile AND no html file in /files — must omit.
+    // No metadata.entryFile AND no html file in /files - must omit.
     const fetchMock = vi.fn(async (url: string) => {
       if (url.endsWith('/api/projects/' + PROJECT_UUID + '/files')) {
         return new Response(JSON.stringify({ files: [] }), { status: 200 });
@@ -728,7 +728,7 @@ describe('public MCP discovery + generation tools', () => {
   // inner agent does NOT write files (e.g. it asks back with a discovery
   // form), the run still terminates "succeeded" but the only output
   // lives in the SSE event stream as text_delta chunks. get_run must
-  // pull those into an agentMessage field — otherwise the outer agent
+  // pull those into an agentMessage field - otherwise the outer agent
   // sees a successful run with no artifacts and assumes failure.
 
   function sseEvents(entries: Array<{ event: string; data: unknown }>): string {
@@ -779,7 +779,7 @@ describe('public MCP discovery + generation tools', () => {
       }
       if (url.endsWith('/api/runs/run-42/events')) {
         return new Response(
-          sseEvents([{ event: 'agent', data: { type: 'text_delta', delta: 'Done — see index.html.' } }]),
+          sseEvents([{ event: 'agent', data: { type: 'text_delta', delta: 'Done - see index.html.' } }]),
           { status: 200 },
         );
       }
@@ -790,7 +790,7 @@ describe('public MCP discovery + generation tools', () => {
     const result = await handleMcpToolCall('http://127.0.0.1:17456', 'get_run', { runId: 'run-42' });
     const parsed = JSON.parse(firstText(result));
     expect(parsed.previewUrl).toBe(buildProjectRawFileUrl('http://127.0.0.1:17456', 'project-1', 'index.html'));
-    expect(parsed.agentMessage).toBe('Done — see index.html.');
+    expect(parsed.agentMessage).toBe('Done - see index.html.');
   });
 
   it('get_run tolerates a missing events endpoint (older daemons / unreachable)', async () => {
@@ -872,7 +872,7 @@ describe('public MCP discovery + generation tools', () => {
 
   // #4: list_plugins flattens the bulky daemon record (sourceKind,
   // fsPath, marketplaceTrust, installedAt, …) into the few fields an
-  // external agent actually needs to pick a plugin — id, title,
+  // external agent actually needs to pick a plugin - id, title,
   // description, kind, tags.
 
   it('list_plugins maps to a slim agent-friendly shape pulled from manifest', async () => {
@@ -888,7 +888,7 @@ describe('public MCP discovery + generation tools', () => {
             manifest: {
               name: 'example-html-ppt-pitch-deck',
               title: 'HTML PPT Pitch Deck',
-              description: 'Investor-ready 10-slide HTML pitch deck — gradient hero, big numbers, traction bar chart.',
+              description: 'Investor-ready 10-slide HTML pitch deck - gradient hero, big numbers, traction bar chart.',
               tags: ['deck', 'pitch'],
               od: { kind: 'scenario', taskKind: 'deck' },
             },
@@ -905,7 +905,7 @@ describe('public MCP discovery + generation tools', () => {
       {
         id: 'example-html-ppt-pitch-deck',
         title: 'HTML PPT Pitch Deck',
-        description: 'Investor-ready 10-slide HTML pitch deck — gradient hero, big numbers, traction bar chart.',
+        description: 'Investor-ready 10-slide HTML pitch deck - gradient hero, big numbers, traction bar chart.',
         kind: 'deck',
         tags: ['deck', 'pitch'],
       },

@@ -1,17 +1,17 @@
 // THE INVARIANT: a project belongs to exactly ONE workspace.
 //
-// Product ruling (2026-07-21): 「草稿和分享的方案都是和 workspace 绑定的」 — both
+// Product ruling (2026-07-21): 「草稿和分享的方案都是和 workspace 绑定的」 - both
 // drafts and shared projects belong to a workspace. A project is created in a
 // workspace and lives there. Sharing flips `visibility` WITHIN that workspace;
 // it does not project the project into a second one. Switching workspaces must
 // therefore change which drafts you see, and signing out must hide them.
 //
 // The live data disagrees, and the data is wrong. On the dogfood database 23 of
-// 31 projects held rows in 2-4 workspaces. That is not history to preserve — it
+// 31 projects held rows in 2-4 workspaces. That is not history to preserve - it
 // is the wreckage of `seedPersonalWorkspaceProjects`, which back-filled a row
 // for EVERY local project on EVERY personal-workspace read. The proof is in the
 // timestamps: a project with four rows has one identical `created_at` across
-// all four — a single batch write, not four user actions. Drafts were not
+// all four - a single batch write, not four user actions. Drafts were not
 // unbound; they were bound to everywhere, which reads the same as nowhere.
 //
 // A permissive schema is not evidence of intent either. `workspace_projects`
@@ -37,7 +37,7 @@ export interface WorkspaceProjectHomeRow {
 }
 
 /**
- * True for a row that records no act — `visibility: 'personal'` with no creator.
+ * True for a row that records no act - `visibility: 'personal'` with no creator.
  *
  * This is exactly the shape the old `ensureWorkspaceProjection(project, ctx,
  * 'personal')` back-fill wrote, and nothing else writes it: project creation
@@ -53,7 +53,7 @@ export function isBackfilledWorkspaceProjectRow(row: WorkspaceProjectHomeRow): b
 /**
  * Workspaces that provably host a team plane, inferred from the rows alone.
  *
- * A `visibility: 'team'` row can only exist in a team workspace — the share path
+ * A `visibility: 'team'` row can only exist in a team workspace - the share path
  * refuses one anywhere else (collab/team-share-scope.ts) and startup heals the
  * rows older builds wrote in violation. That makes "has ever hosted a share" a
  * table-local proxy for "is a team workspace", which is what lets the collapse
@@ -76,7 +76,7 @@ export interface WorkspaceProjectHomeDecision {
   projectId: string;
   /**
    * The workspace the project ends up in. Null means every candidate row was an
-   * ownerless guess inside a team workspace, where no view would render it —
+   * ownerless guess inside a team workspace, where no view would render it -
    * the project is left unbound on purpose and the next personal-workspace read
    * binds it. See {@link collapseWorkspaceProjectHomes}.
    */
@@ -89,11 +89,11 @@ export interface WorkspaceProjectHomeDecision {
  * How strongly a row asserts that the project lives in its workspace.
  * Higher wins. The order is evidence, not preference:
  *
- *   2 — a team share. It binds a hub resource (`resource_hub_resource_id`), so
+ *   2 - a team share. It binds a hub resource (`resource_hub_resource_id`), so
  *       dropping it would strand that resource and silently unshare the project
  *       for every teammate. Nothing outranks it.
- *   1 — a row naming who created or pulled the project there. A recorded act.
- *   0 — an ownerless personal row. A back-fill guess.
+ *   1 - a row naming who created or pulled the project there. A recorded act.
+ *   0 - an ownerless personal row. A back-fill guess.
  */
 function rowEvidence(row: WorkspaceProjectHomeRow): number {
   if (row.visibility === 'team') return 2;
@@ -129,9 +129,9 @@ function recordedActsPerWorkspace(
  * `workspaceProjectRowBelongsToCurrentWorkspace`, so promoting one would hide
  * the project in every view at once); how much real activity that workspace
  * holds; the oldest row, so the workspace the user reached first wins; and
- * finally the workspace id. That last step is genuinely arbitrary — the
+ * finally the workspace id. That last step is genuinely arbitrary - the
  * back-fill copied one `project.createdAt` onto every row it wrote, so two
- * guesses in two personal workspaces really do carry identical evidence — but
+ * guesses in two personal workspaces really do carry identical evidence - but
  * it is deterministic, which is what stops two daemons from disagreeing.
  *
  * NO PROJECT CAN BE LOST HERE. This function only ever names rows to delete
@@ -140,7 +140,7 @@ function recordedActsPerWorkspace(
  * reverse). Every project that had a row keeps exactly one, with a single
  * deliberate exception: when EVERY candidate is an ownerless guess sitting in a
  * team workspace, all of them go and `keptWorkspaceId` is null. Keeping one
- * would be worse than keeping none — a suppressed row renders nowhere, while an
+ * would be worse than keeping none - a suppressed row renders nowhere, while an
  * unbound project is still listed by `/api/projects`, still opens by id, and is
  * bound to the user's personal workspace by the next read. The migration cannot
  * make that binding itself: which workspace ids are personal is a signed-in

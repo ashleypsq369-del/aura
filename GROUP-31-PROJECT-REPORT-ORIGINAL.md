@@ -187,7 +187,7 @@ In addition to poor access to health services, provision of palliative care is a
 
 1.2 Problem Statement
 
-Palliative care should have four key qualities – coordination, continuity, responsiveness, and specificity according to the needs of the patient. Yet, in practice, rarely is all of this achieved simultaneously. Transitioning from one caregiver and institution to another takes place without any accompanying patient records. Decisions are made using incomplete information about the condition of patients. Caregivers and families, carrying the heaviest burden, have zero participation in any of the established care processes. The gap between the philosophy behind palliative care and what is being practiced on the ground is significant (Boddaert et al., 2022; Wang et al., 2016).
+Palliative care should have four key qualities - coordination, continuity, responsiveness, and specificity according to the needs of the patient. Yet, in practice, rarely is all of this achieved simultaneously. Transitioning from one caregiver and institution to another takes place without any accompanying patient records. Decisions are made using incomplete information about the condition of patients. Caregivers and families, carrying the heaviest burden, have zero participation in any of the established care processes. The gap between the philosophy behind palliative care and what is being practiced on the ground is significant (Boddaert et al., 2022; Wang et al., 2016).
 
 No currently existing tools, systems, and platforms have managed to close this gap. Current palliative care platforms are designed to help with administrative functions only, such as scheduling, billing, and documentation. The application of AI to palliative care is currently limited to mortality prediction models. These algorithms are lacking in terms of transparency. Without having the ability to give an explanation for the classification, clinicians are unlikely to follow up with their recommendation. This issue is critical in palliative care as clinical decisions in it are life-or-death decisions and trust in the physician is essential (Abbas et al., 2025; Antoniadi et al., 2021). These problems in Ghana are even greater than those facing palliative care worldwide. In Ghana, palliative care services are limited to a select few major urban hospitals and to those able to pay for hospice care. According to COMPASS Ghana, more than 40% of the population does not have health insurance, patients are referred to palliative care late, community and home-based care approaches are mentioned in Ghanaian policy documents, yet there are no systems in place to ensure their implementation (Anon., 2024a). Indeed, according to 2025 data released by the National Health Insurance Authority, 44 percent of the country's population is not insured with the largest share of uninsured residents in Oti and Northern regions (National Health Insurance Authority, 2025). Moreover, according to the latest statistics reported by the Ghana Palliative Care Association (GPCA), there are no dedicated inpatient wards for palliative care in any of Ghana's leading teaching hospitals (Anon., 2024b). Care ends abruptly with the death of a patient and the cessation of any support services. Bereaved relatives, who were often the ones taking care of their loved one, receive no further contact and have nobody to help them cope psychologically with the loss (Finucane et al., 2024).
 
@@ -705,10 +705,10 @@ Table 5.2: Illustrative synthetic feature distributions and label-assignment rul
 
 | Feature or rule | Specification used in model training |
 |---|---|
-| Patient age | Normal distribution, mean 72, standard deviation 12, clipped to 18–100 years |
-| Palliative Performance Scale score | Normal distribution, mean 55, standard deviation 20, clipped to 10–100 |
-| Edmonton Symptom Assessment System pain score | Normal distribution, mean 4, standard deviation 3, clipped to 0–10 |
-| Zarit caregiver burden score | Normal distribution, mean 32, standard deviation 15, clipped to 0–88 |
+| Patient age | Normal distribution, mean 72, standard deviation 12, clipped to 18-100 years |
+| Palliative Performance Scale score | Normal distribution, mean 55, standard deviation 20, clipped to 10-100 |
+| Edmonton Symptom Assessment System pain score | Normal distribution, mean 4, standard deviation 3, clipped to 0-10 |
+| Zarit caregiver burden score | Normal distribution, mean 32, standard deviation 15, clipped to 0-88 |
 | Vital signs risk label | Positive if oxygen saturation below 90%, heart rate above 120bpm, respiratory rate above 22/min, or temperature above 38.5°C |
 | Admission risk label | Positive if Palliative Performance Scale below 40, Edmonton total above 45, and emergency department visits in 6 months above 1 |
 
@@ -797,7 +797,7 @@ Anon. (2024b), "Palliative Care Development and Situation in Ghana", Ghana Palli
 
 Antoniadi, A. M., Du, Y., Guendouz, Y., Wei, L., Mazo, C., Dwyer, T., and Mooney, C. (2021), "Current Challenges and Future Opportunities for XAI in Clinical Decision Support", Applied Sciences, Vol. 11, No. 11, p. 5088.
 
-Boddaert, M. S., Pereira, C., Adema, J., Vissers, K. C. P., van der Linden, Y. M., Raijmakers, N. J. H., & Fransen, H. P. (2022), "Inappropriate End-of-Life Cancer Care in a Generalist and Specialist Palliative Care Model", BMJ Supportive & Palliative Care, Vol. 12, No. e1, pp. e137 – e145.
+Boddaert, M. S., Pereira, C., Adema, J., Vissers, K. C. P., van der Linden, Y. M., Raijmakers, N. J. H., & Fransen, H. P. (2022), "Inappropriate End-of-Life Cancer Care in a Generalist and Specialist Palliative Care Model", BMJ Supportive & Palliative Care, Vol. 12, No. e1, pp. e137 - e145.
 
 CareSmartz360 (2025), CareSmartz360 Home Care Agency Software, CareSmartz360. Available at: https://www.caresmartz.com/. Accessed: 13 April 2026.
 
@@ -847,7 +847,7 @@ Tilala, M., Reddy, V., and Rao, K. (2024), "Biomedical Ethics and the Design of 
 
 United Nations (2015), Transforming Our World: The 2030 Agenda for Sustainable Development, United Nations, New York, 41 pp.
 
-Wang, S. Y., Aldridge, M. D., Gross, C. P., Canavan, M., Cherlin, E., Johnson-Hurzeler, R., and Bradley, E. (2016), "Transitions Between Healthcare Settings of Hospice Enrollees at the End of Life", Journal of the American Geriatrics Society, Vol. 64, No. 2, pp. 314 – 322.
+Wang, S. Y., Aldridge, M. D., Gross, C. P., Canavan, M., Cherlin, E., Johnson-Hurzeler, R., and Bradley, E. (2016), "Transitions Between Healthcare Settings of Hospice Enrollees at the End of Life", Journal of the American Geriatrics Society, Vol. 64, No. 2, pp. 314 - 322.
 
 Wang, L., Li, J., and Chen, H. (2023), "Humanistic Ethics in Healthcare AI: Empathy, Relationships, and the Limits of Algorithms", Ethics and Information Technology, Vol. 25, No. 1, pp. 1 - 12.
 

@@ -1072,7 +1072,7 @@ export class ComposioConnectorProvider {
       .filter((tool) => tool.refreshEligible)
       .map((tool) => tool.name);
     const allowedToolNames = [...new Set([...staticDefinition.allowedToolNames, ...autoAllowedLiveToolNames])];
-    // `curatedToolNames` mirrors the static catalog ONLY — it
+    // `curatedToolNames` mirrors the static catalog ONLY - it
     // intentionally never picks up `autoAllowedLiveToolNames`. It
     // preserves the static catalog baseline, while summary badges use
     // `toolCount` when present to reflect the advertised provider

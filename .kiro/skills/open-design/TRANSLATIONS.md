@@ -4,7 +4,7 @@
 
 For general contribution flow, see [CONTRIBUTING.md](CONTRIBUTING.md). The "Localization maintenance" section there documents the boundary between translated surfaces and agent-facing source material. This file covers **how** to add and maintain a locale across the surfaces contributors touch most often: UI chrome, root READMEs, core docs, and display metadata.
 
-> **Why a separate file?** i18n contributors usually only need this surface — keeping locale workflow out of the main contribution guide isolates jargon (BCP-47, fallback chains, regional glossaries) from the broader code-workflow audience. CONTRIBUTING.md cross-links here for discovery.
+> **Why a separate file?** i18n contributors usually only need this surface - keeping locale workflow out of the main contribution guide isolates jargon (BCP-47, fallback chains, regional glossaries) from the broader code-workflow audience. CONTRIBUTING.md cross-links here for discovery.
 
 ---
 
@@ -44,15 +44,15 @@ cp README.md docs/i18n/README.sv.md
 
 **This is the most commonly forgotten step.** You must update the language switcher in:
 1. Your new `docs/i18n/README.sv.md` (bold your language)
-2. **Every existing README** — the English `README.md` in the repo root *and* every `docs/i18n/README.*.md` (add your language as a link)
+2. **Every existing README** - the English `README.md` in the repo root *and* every `docs/i18n/README.*.md` (add your language as a link)
 
 The switcher uses two link conventions depending on which file it lives in:
 
-- **English root `README.md`** — bold `English`; link translations with the `docs/i18n/` prefix:
+- **English root `README.md`** - bold `English`; link translations with the `docs/i18n/` prefix:
   ```html
   <p align="center"><b>English</b> · <a href="docs/i18n/README.es.md">Español</a> · ... · <a href="docs/i18n/README.sv.md">Svenska</a></p>
   ```
-- **Translated `docs/i18n/README.xx.md`** — bold your own language; link English with `../../README.md` and the other translations as sibling filenames:
+- **Translated `docs/i18n/README.xx.md`** - bold your own language; link English with `../../README.md` and the other translations as sibling filenames:
   ```html
   <p align="center"><a href="../../README.md">English</a> · <a href="README.es.md">Español</a> · ... · <b>Svenska</b></p>
   ```
@@ -100,24 +100,24 @@ OpenDesign currently supports **19 languages** across different surfaces:
 | Language             | Code    | README | UI Dict | Core Docs | Status |
 | -------------------- | ------- | ------ | ------- | --------- | ------ |
 | English              | `en`    | ✅     | ✅      | ✅        | source |
-| العربية (Arabic)     | `ar`    | ✅     | ✅      | —         | active |
+| العربية (Arabic)     | `ar`    | ✅     | ✅      | -         | active |
 | Deutsch              | `de`    | ✅     | ✅      | ✅        | active |
-| Español              | `es-ES` | ✅     | ✅      | —         | active |
-| فارسی (Persian)      | `fa`    | —      | ✅      | —         | active |
+| Español              | `es-ES` | ✅     | ✅      | -         | active |
+| فارسی (Persian)      | `fa`    | -      | ✅      | -         | active |
 | Français             | `fr`    | ✅     | ✅      | ✅        | active |
-| Magyar (Hungarian)   | `hu`    | —      | ✅      | —         | active |
-| Bahasa Indonesia     | `id`    | —      | ✅      | —         | active |
-| Italiano             | `it`    | —      | ✅      | —         | active |
+| Magyar (Hungarian)   | `hu`    | -      | ✅      | -         | active |
+| Bahasa Indonesia     | `id`    | -      | ✅      | -         | active |
+| Italiano             | `it`    | -      | ✅      | -         | active |
 | 日本語 (Japanese)    | `ja`    | ✅     | ✅      | ✅        | active |
 | 한국어 (Korean)      | `ko`    | ✅     | ✅      | ✅        | active |
-| Polski (Polish)      | `pl`    | —      | ✅      | —         | active |
+| Polski (Polish)      | `pl`    | -      | ✅      | -         | active |
 | Português (Brasil)   | `pt-BR` | ✅     | ✅      | ✅        | active |
-| Русский (Russian)    | `ru`    | ✅     | ✅      | —         | active |
+| Русский (Russian)    | `ru`    | ✅     | ✅      | -         | active |
 | ภาษาไทย (Thai)       | `th`    | ✅     | ✅      | ✅        | active |
-| Türkçe (Turkish)     | `tr`    | ✅     | ✅      | —         | active |
-| Українська           | `uk`    | ✅     | ✅      | —         | active |
+| Türkçe (Turkish)     | `tr`    | ✅     | ✅      | -         | active |
+| Українська           | `uk`    | ✅     | ✅      | -         | active |
 | 简体中文             | `zh-CN` | ✅     | ✅      | ✅        | active |
-| 繁體中文             | `zh-TW` | ✅     | ✅      | —         | active |
+| 繁體中文             | `zh-TW` | ✅     | ✅      | -         | active |
 
 **Translation surfaces:**
 - **README**: Project README, translated into `docs/i18n/README.{lang}.md` (English source stays at root `README.md`)
@@ -143,12 +143,12 @@ The `LOCALES` array in [`apps/web/src/i18n/types.ts`](apps/web/src/i18n/types.ts
 
 **For UI dictionary + README translation:**
 
-1. **Pick a BCP-47 code.** Use the regional form (`pt-BR`, `es-ES`, `zh-TW`) when the variant matters; the bare code (`fr`, `ru`, `it`) when it doesn't. `pt-BR` and a hypothetical `pt-PT` would coexist as separate locales — the same precedent applies to `en-US` / `en-GB` if a contributor wants to maintain both.
+1. **Pick a BCP-47 code.** Use the regional form (`pt-BR`, `es-ES`, `zh-TW`) when the variant matters; the bare code (`fr`, `ru`, `it`) when it doesn't. `pt-BR` and a hypothetical `pt-PT` would coexist as separate locales - the same precedent applies to `en-US` / `en-GB` if a contributor wants to maintain both.
 
 2. **Update [`apps/web/src/i18n/types.ts`](apps/web/src/i18n/types.ts):**
    - Extend the `Locale` union with your code
    - Append your code to the `LOCALES` array
-   - Add a `LOCALE_LABEL[<code>]` entry — use the **native name** of the language (`Svenska`, `日本語`, not `sv`, `ja`)
+   - Add a `LOCALE_LABEL[<code>]` entry - use the **native name** of the language (`Svenska`, `日本語`, not `sv`, `ja`)
 
    ```typescript
    export type Locale = 'en' | 'de' | 'fr' | 'sv' | /* ... */;
@@ -173,7 +173,7 @@ The `LOCALES` array in [`apps/web/src/i18n/types.ts`](apps/web/src/i18n/types.ts
    expect(LOCALE_LABEL.sv).toBe('Svenska');
    ```
 
-   **If your locale is RTL (Arabic, Hebrew, Persian, Urdu, etc.):** also append your code to `RTL_LOCALES` in [`apps/web/src/i18n/index.tsx`](apps/web/src/i18n/index.tsx). This array controls the `dir="rtl"` attribute on `<html>` at runtime — without it the web UI renders LTR regardless of language. The current list is:
+   **If your locale is RTL (Arabic, Hebrew, Persian, Urdu, etc.):** also append your code to `RTL_LOCALES` in [`apps/web/src/i18n/index.tsx`](apps/web/src/i18n/index.tsx). This array controls the `dir="rtl"` attribute on `<html>` at runtime - without it the web UI renders LTR regardless of language. The current list is:
 
    ```typescript
    const RTL_LOCALES: Locale[] = ['ar', 'fa'];
@@ -206,15 +206,15 @@ The `LOCALES` array in [`apps/web/src/i18n/types.ts`](apps/web/src/i18n/types.ts
    - Keep code snippets, URLs, and brand names in English
    - Fix relative paths for the new location: links to repo-root resources (`apps/`, `docs/`, `LICENSE`, the English `README.md`, etc.) need a `../../` prefix; links to a sibling translated core doc stay as a bare filename. Example: `[Quickstart](../../QUICKSTART.md)` → `[Snabbstart](QUICKSTART.sv.md)` if that translation exists, else `[Snabbstart](../../QUICKSTART.md)`
 
-6. **Update the language switcher in EVERY README** — the root `README.md` and every `docs/i18n/README.*.md` (line ~25 of each):
+6. **Update the language switcher in EVERY README** - the root `README.md` and every `docs/i18n/README.*.md` (line ~25 of each):
    - Match the order used in the English README
    - Include the same set everywhere
    - Bold the current language: `<b>Svenska</b>`
    - The link form differs by file location (see below)
 
-   **English root `README.md`** — bold `English`, link translations with the `docs/i18n/` prefix. Copy the current switcher from `README.md`, append the new `docs/i18n/README.<code>.md` link, and keep English bold. The checked-in switcher is the source to copy; do not copy a hard-coded language list from this guide.
+   **English root `README.md`** - bold `English`, link translations with the `docs/i18n/` prefix. Copy the current switcher from `README.md`, append the new `docs/i18n/README.<code>.md` link, and keep English bold. The checked-in switcher is the source to copy; do not copy a hard-coded language list from this guide.
 
-   **Translated `docs/i18n/README.<code>.md`** — link English with `../../README.md`, the other translations as sibling filenames, bold your own. Copy a current translated switcher, add the new locale, and bold the new language. `pnpm i18n:check` validates the result.
+   **Translated `docs/i18n/README.<code>.md`** - link English with `../../README.md`, the other translations as sibling filenames, bold your own. Copy a current translated switcher, add the new locale, and bold the new language. `pnpm i18n:check` validates the result.
 
 7. **(Optional) Translate core docs:**
    - Copy `QUICKSTART.md` → `docs/i18n/QUICKSTART.<code>.md`
@@ -437,7 +437,7 @@ When converting between Simplified and Traditional Chinese, prefer Taiwan-specif
 
 #### Idiomatic / domain-specific (requires human judgment)
 
-These mappings needed human judgment in #194 — OpenCC won't catch them and they're the **most useful to record** because the next translator will hit the same choices:
+These mappings needed human judgment in #194 - OpenCC won't catch them and they're the **most useful to record** because the next translator will hit the same choices:
 
 | English / context        | zh-CN     | zh-TW     |
 | ------------------------ | --------- | --------- |
@@ -477,13 +477,13 @@ The shipped UI locale is **`es-ES`** with label `Español (España)`, so the dic
 | file       | archivo      | fichero (dated Spain)  |
 | mobile     | móvil        | celular (LatAm)        |
 
-If a contributor wants neutral or Latin American Spanish, propose a separate locale (e.g. `es-419`) in a follow-up PR — do not drift `es-ES` toward a different regional variant, as the existing `Español (España)` label sets reader expectations.
+If a contributor wants neutral or Latin American Spanish, propose a separate locale (e.g. `es-419`) in a follow-up PR - do not drift `es-ES` toward a different regional variant, as the existing `Español (España)` label sets reader expectations.
 
 ### Arabic: RTL and Technical Terms
 
 **Arabic (`ar`)** uses Modern Standard Arabic (MSA) understood across all Arabic-speaking regions:
 
-- Use right-to-left (RTL) text direction — **Markdown handles this automatically for `README.*.md` files**
+- Use right-to-left (RTL) text direction - **Markdown handles this automatically for `README.*.md` files**
 - The **web UI requires manual registration**: append your locale code to `RTL_LOCALES` in [`apps/web/src/i18n/index.tsx`](apps/web/src/i18n/index.tsx) (currently `['ar', 'fa']`), otherwise `<html dir="rtl">` is never set and the UI renders LTR
 - Technical terms are often kept in English with Arabic explanation
 - Numbers and dates can use Western Arabic numerals (0-9) for technical content
@@ -496,7 +496,7 @@ OpenDesign هو البديل مفتوح المصدر لـ Claude Design
 
 ### Other Languages
 
-Other CJK / RTL glossaries can extend this section as locales mature. Don't pre-emptively fill empty tables — add a row when a contributor hits a real terminology choice that future PRs will face.
+Other CJK / RTL glossaries can extend this section as locales mature. Don't pre-emptively fill empty tables - add a row when a contributor hits a real terminology choice that future PRs will face.
 
 ---
 
@@ -624,7 +624,7 @@ Example:
 
 ### When English Content Changes
 
-Translations are **not automatically updated** when the English source changes. This is intentional — we prefer slightly outdated translations over machine-translated ones.
+Translations are **not automatically updated** when the English source changes. This is intentional - we prefer slightly outdated translations over machine-translated ones.
 
 **If you notice outdated content:**
 1. Check the English version's recent commits
@@ -730,7 +730,7 @@ After the first use, you can use just the English term.
 
 ### Q: How do I handle right-to-left (RTL) languages like Arabic?
 
-**README:** Markdown and GitHub automatically handle RTL text direction — just write naturally in your language and keep code blocks / URLs left-to-right.
+**README:** Markdown and GitHub automatically handle RTL text direction - just write naturally in your language and keep code blocks / URLs left-to-right.
 
 **UI locale:** The web app auto-detects supported OS/browser languages and preserves an explicit user selection. Directionality is registered separately: append a new RTL locale to `RTL_LOCALES` in [`apps/web/src/i18n/index.tsx`](apps/web/src/i18n/index.tsx) (currently `['ar', 'fa']`) so `<html dir="rtl">` is set. See the [detailed steps](#adding-a-new-locale) under step 2.
 
@@ -811,10 +811,10 @@ If yes to all, it's good enough!
 
 ## 🎯 Open Questions
 
-Genuinely undecided — flagged so contributors know they're live design discussions:
+Genuinely undecided - flagged so contributors know they're live design discussions:
 
 - **README freshness signal.** A small badge or front-matter timestamp on each `README.<code>.md` could help readers gauge how current a translation is.
-- **Native-speaker review window.** Whether `~7 days` is too short for smaller language communities — adjust if real data shows otherwise.
+- **Native-speaker review window.** Whether `~7 days` is too short for smaller language communities - adjust if real data shows otherwise.
 
 If you have an opinion on any of the above, open an issue or comment on [#195](https://github.com/nexu-io/open-design/issues/195).
 

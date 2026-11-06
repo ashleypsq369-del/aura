@@ -1,5 +1,5 @@
-"""
-Seed ServiceTypeConfig — 8 palliative care service types
+﻿"""
+Seed ServiceTypeConfig - 8 palliative care service types
 with role-specific MCQ assessments, Ghana-localised.
 Run: python seed_services.py
 """

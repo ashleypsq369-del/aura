@@ -13,7 +13,7 @@ doc = SimpleDocTemplate(
     pagesize=A4,
     rightMargin=2*cm, leftMargin=2*cm,
     topMargin=2*cm,   bottomMargin=2*cm,
-    title="CE 473 Logic of Computer Science – Complete Study Guide",
+    title="CE 473 Logic of Computer Science - Complete Study Guide",
     author="Compiled from UMaT Handout"
 )
 
@@ -182,7 +182,7 @@ cover_data = [[
     ],[
     SP(10)
     ],[
-    H("CE 473 – LOGIC OF COMPUTER SCIENCE", mkStyle('ct4', fontSize=20,
+    H("CE 473 - LOGIC OF COMPUTER SCIENCE", mkStyle('ct4', fontSize=20,
        textColor=colors.white, fontName='Helvetica-Bold', alignment=TA_CENTER,
        backColor=C_DARK, borderPadding=10)),
     ],[
@@ -191,7 +191,7 @@ cover_data = [[
     H("COMPLETE EXAM STUDY GUIDE", mkStyle('ct5', fontSize=16,
        textColor=C_AMBER, fontName='Helvetica-Bold', alignment=TA_CENTER)),
     ],[
-    H("Every Example · Every Operation · Every Proof — Fully Worked", mkStyle('ct6',
+    H("Every Example · Every Operation · Every Proof - Fully Worked", mkStyle('ct6',
        fontSize=11, textColor=C_PURPLE, fontName='Helvetica-Oblique', alignment=TA_CENTER)),
     ],[
     SP(8)
@@ -220,23 +220,23 @@ story.append(H("TABLE OF CONTENTS", mkStyle('toc_h', fontSize=15, fontName='Helv
 toc = [
     ("Chapter 1", "Mathematical and Structural Induction"),
     ("  1.1", "Mathematical Induction"),
-    ("  1.2", "Principles of Mathematical Induction – Examples & Proofs"),
-    ("  1.3", "Principles of Structural Induction – Examples & Proofs"),
+    ("  1.2", "Principles of Mathematical Induction - Examples & Proofs"),
+    ("  1.3", "Principles of Structural Induction - Examples & Proofs"),
     ("Chapter 2", "Boolean Algebra"),
     ("  2.1", "Overview & Postulates"),
     ("  2.2", "Truth Tables"),
-    ("  2.3", "Logical Operators – All Truth Tables"),
-    ("  2.4 & 2.5", "Simplification of Boolean Functions – All Examples"),
-    ("  2.6", "Karnaugh Maps – All Examples"),
-    ("  2.7", "Logic Gates – All 7 Gates"),
+    ("  2.3", "Logical Operators - All Truth Tables"),
+    ("  2.4 & 2.5", "Simplification of Boolean Functions - All Examples"),
+    ("  2.6", "Karnaugh Maps - All Examples"),
+    ("  2.7", "Logic Gates - All 7 Gates"),
     ("Chapter 3", "Propositional Logic"),
     ("  3.1", "Language of Propositional Logic"),
     ("  3.2", "Truth Valuation"),
     ("  3.3", "Satisfiability of Formulae"),
     ("  3.4", "Tautologies, Contradictions, Contingencies"),
-    ("  3.5", "Logical Equivalence – All Examples & Proofs"),
-    ("  3.6", "Conjunctive Normal Form – All Examples"),
-    ("  3.7", "Natural Deductions – All Rules & Worked Examples"),
+    ("  3.5", "Logical Equivalence - All Examples & Proofs"),
+    ("  3.6", "Conjunctive Normal Form - All Examples"),
+    ("  3.7", "Natural Deductions - All Rules & Worked Examples"),
     ("  3.8", "Limitations of Propositional Logic"),
     ("Chapter 4", "Predicate Logic"),
     ("  4.1", "Translation Key & Examples"),
@@ -245,7 +245,7 @@ toc = [
     ("  4.4", "Syllogistic Statements"),
     ("  4.5", "Conjunctive Predicate Combinations"),
     ("  4.6", "Disjunctive Predicate Combinations"),
-    ("  4.7", "Laws and Rules of Inference – All Proofs"),
+    ("  4.7", "Laws and Rules of Inference - All Proofs"),
     ("  4.8", "Indirect Proof"),
     ("  4.9", "Conditional Proof"),
 ]
@@ -262,7 +262,7 @@ story.append(toc_t)
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  CHAPTER 1 — MATHEMATICAL AND STRUCTURAL INDUCTION
+#  CHAPTER 1 - MATHEMATICAL AND STRUCTURAL INDUCTION
 # ════════════════════════════════════════════════════════════════════════════
 chapter(1, "MATHEMATICAL AND STRUCTURAL INDUCTION")
 
@@ -280,13 +280,13 @@ body(
     "To prove a statement holds for all positive integers <b>n</b>, follow <b>THREE steps</b>:"
 )
 proof_box("The Three Steps of Mathematical Induction", [
-    "Step 1 – BASE CASE:    Prove the statement is true for the smallest value of n",
+    "Step 1 - BASE CASE:    Prove the statement is true for the smallest value of n",
     "                       (usually n = 0, 1, or 2).",
     "",
-    "Step 2 – INDUCTION HYPOTHESIS (IH):  Assume the statement is true for n = k",
+    "Step 2 - INDUCTION HYPOTHESIS (IH):  Assume the statement is true for n = k",
     "                                     (some arbitrary fixed value, at least the base).",
     "",
-    "Step 3 – INDUCTIVE STEP:  Prove the statement is true for n = k + 1,",
+    "Step 3 - INDUCTIVE STEP:  Prove the statement is true for n = k + 1,",
     "                          using the assumption in Step 2.",
 ])
 
@@ -295,17 +295,17 @@ warn("This technique ONLY works when the domain is a subset of the integers. "
 
 # ─── Example 1 (from handout, fully worked) ──────────────────────────────
 subsection("Example 1: Show that n² ≥ 2n for all n = 2, 3, 4, …")
-proof_box("Worked Solution – Example 1", [
-    "STEP 1 — Base Case (n = 2):",
+proof_box("Worked Solution - Example 1", [
+    "STEP 1 - Base Case (n = 2):",
     "   LHS = 2² = 4",
     "   RHS = 2(2) = 4",
     "   Since 4 ≥ 4, the statement holds for n = 2.  ✔",
     "",
-    "STEP 2 — Induction Hypothesis (IH):",
+    "STEP 2 - Induction Hypothesis (IH):",
     "   Assume n² ≥ 2n holds for n = k  (where k ≥ 2).",
     "   Therefore:  k² ≥ 2k          …(IH)",
     "",
-    "STEP 3 — Inductive Step: Prove for n = k + 1",
+    "STEP 3 - Inductive Step: Prove for n = k + 1",
     "   Need to show: (k+1)² ≥ 2(k+1)",
     "",
     "   LHS = (k+1)² = k² + 2k + 1",
@@ -326,16 +326,16 @@ proof_box("Worked Solution – Example 1", [
 
 # ─── Additional Example 2 (extra practice) ───────────────────────────────
 subsection("Example 2 (Extra): Prove that 1 + 2 + 3 + … + n = n(n+1)/2 for all n ≥ 1")
-proof_box("Worked Solution – Example 2 (Sum Formula)", [
-    "STEP 1 — Base Case (n = 1):",
+proof_box("Worked Solution - Example 2 (Sum Formula)", [
+    "STEP 1 - Base Case (n = 1):",
     "   LHS = 1",
     "   RHS = 1(1+1)/2 = 1",
     "   LHS = RHS  ✔",
     "",
-    "STEP 2 — Induction Hypothesis:",
+    "STEP 2 - Induction Hypothesis:",
     "   Assume  1 + 2 + … + k = k(k+1)/2  for some k ≥ 1.",
     "",
-    "STEP 3 — Inductive Step: Prove for n = k + 1",
+    "STEP 3 - Inductive Step: Prove for n = k + 1",
     "   1 + 2 + … + k + (k+1)",
     "   = k(k+1)/2 + (k+1)          [using IH]",
     "   = (k+1)[ k/2 + 1 ]",
@@ -347,15 +347,15 @@ proof_box("Worked Solution – Example 2 (Sum Formula)", [
 
 # ─── Additional Example 3 ─────────────────────────────────────────────────
 subsection("Example 3 (Extra): Prove 2ⁿ > n for all n ≥ 1")
-proof_box("Worked Solution – Example 3", [
-    "STEP 1 — Base Case (n = 1):",
+proof_box("Worked Solution - Example 3", [
+    "STEP 1 - Base Case (n = 1):",
     "   LHS = 2¹ = 2",
     "   RHS = 1",
     "   2 > 1  ✔",
     "",
-    "STEP 2 — IH:  Assume 2ᵏ > k  for some k ≥ 1.",
+    "STEP 2 - IH:  Assume 2ᵏ > k  for some k ≥ 1.",
     "",
-    "STEP 3 — Show 2^(k+1) > k + 1:",
+    "STEP 3 - Show 2^(k+1) > k + 1:",
     "   2^(k+1) = 2 · 2ᵏ",
     "           > 2 · k         [by IH, 2ᵏ > k]",
     "           = 2k",
@@ -374,15 +374,15 @@ body(
     "definition of the structure itself."
 )
 proof_box("Two Steps of Structural Induction", [
-    "Step 1 — BASE CASE:  Prove P for the 'base cases' of the definition.",
-    "Step 2 — INDUCTIVE STEP:  Prove P for the result of any combination rule,",
+    "Step 1 - BASE CASE:  Prove P for the 'base cases' of the definition.",
+    "Step 2 - INDUCTIVE STEP:  Prove P for the result of any combination rule,",
     "                           ASSUMING it is true for all the parts (sub-structures).",
 ])
 
 subsection("Recursive Definition Examples from the Handout")
 body("The handout gives three standard recursive definitions:")
 
-example_box("Recursive Definition 1 – Even Numbers", [
+example_box("Recursive Definition 1 - Even Numbers", [
     "E is defined as:",
     "  1.  0 ∈ E                          (base case)",
     "  2.  if n ∈ E  then  n + 2 ∈ E     (combination)",
@@ -391,14 +391,14 @@ example_box("Recursive Definition 1 – Even Numbers", [
     "Consequence: E = {…, -4, -2, 0, 2, 4, …} = the set of ALL even integers.",
 ], C_BG1)
 
-example_box("Recursive Definition 2 – Non-empty Binary Tree", [
+example_box("Recursive Definition 2 - Non-empty Binary Tree", [
     "A non-empty binary tree T is either:",
     "  1.  A single root node r,  OR",
     "  2.  A root node r connected (by an edge) to the root(s) of one or two",
     "      non-empty binary trees TL and/or TR.",
 ], C_BG2)
 
-example_box("Recursive Definition 3 – Fully Bracketed Arithmetic Expression", [
+example_box("Recursive Definition 3 - Fully Bracketed Arithmetic Expression", [
     "A fully bracketed arithmetic expression E over {[, ], +, -, *, x} is either:",
     "  1.  The symbol 0, 1, or x                          (base cases)",
     "  2.  [e + e']  where e, e' are such expressions",
@@ -412,7 +412,7 @@ body("Claim: For any non-empty binary tree T = (V, E),  the number of vertices e
 proof_box("Proof by Structural Induction on T = (V, E)", [
     "Let P(T) be the property  |V| = |E| + 1.",
     "",
-    "BASE CASE — T is a single root node:",
+    "BASE CASE - T is a single root node:",
     "   |V| = 1  (just the root)",
     "   |E| = 0  (no edges)",
     "   1 = 0 + 1  ✔",
@@ -425,14 +425,14 @@ proof_box("Proof by Structural Induction on T = (V, E)", [
     "Induction Hypothesis: P(TL) and P(TR) both hold, i.e.",
     "   |VL| = |EL| + 1   and   |VR| = |ER| + 1",
     "",
-    "Case A – T has only TL (one child):",
+    "Case A - T has only TL (one child):",
     "   |V| = |VL| + 1                [r + all nodes of TL]",
     "        = (|EL| + 1) + 1         [by IH on TL]",
     "        = |EL| + 2",
     "   |E| = |EL| + 1                [edges of TL + edge (r, rL)]",
     "   ∴ |V| = |EL| + 2 = (|EL| + 1) + 1 = |E| + 1  ✔",
     "",
-    "Case B – T has both TL and TR (two children):",
+    "Case B - T has both TL and TR (two children):",
     "   |V| = |VL| + |VR| + 1",
     "        = (|EL|+1) + (|ER|+1) + 1   [by IH]",
     "        = |EL| + |ER| + 3",
@@ -448,18 +448,18 @@ subsection("Structural Induction Proof 2: Every element of E is of the form 2x, 
 proof_box("Proof by Structural Induction on even number e", [
     "Let P(e) be the property: e = 2x for some integer x ∈ ℤ.",
     "",
-    "BASE CASE — e = 0:",
+    "BASE CASE - e = 0:",
     "   0 = 2 · 0  and  0 ∈ ℤ  ✔",
     "",
     "INDUCTIVE STEP:  Two cases from the recursive definition.",
     "",
     "IH: Assume P(e') holds, i.e. e' = 2x' for some x' ∈ ℤ.",
     "",
-    "Case 1 — e = e' + 2:",
+    "Case 1 - e = e' + 2:",
     "   e = e' + 2 = 2x' + 2 = 2(x' + 1) = 2x",
     "   where x = x' + 1 ∈ ℤ (since x' ∈ ℤ)  ✔",
     "",
-    "Case 2 — e = -e':",
+    "Case 2 - e = -e':",
     "   e = -e' = -(2x') = 2(-x') = 2x",
     "   where x = -x' ∈ ℤ (since x' ∈ ℤ)  ✔",
     "",
@@ -470,7 +470,7 @@ proof_box("Proof by Structural Induction on even number e", [
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  CHAPTER 2 — BOOLEAN ALGEBRA
+#  CHAPTER 2 - BOOLEAN ALGEBRA
 # ════════════════════════════════════════════════════════════════════════════
 chapter(2, "BOOLEAN ALGEBRA")
 
@@ -538,9 +538,9 @@ truth_table(
     "Number of rows required"
 )
 
-section("2.3", "Logical Operators – All Truth Tables")
+section("2.3", "Logical Operators - All Truth Tables")
 
-subsection("1. Conjunction (AND) — x ∧ y")
+subsection("1. Conjunction (AND) - x ∧ y")
 body("Output is TRUE <b>only when both</b> inputs are TRUE.")
 truth_table(
     [H("<b>x</b>",MONO),H("<b>y</b>",MONO),H("<b>x ∧ y</b>",MONO)],
@@ -549,7 +549,7 @@ truth_table(
 body("Laws from AND:", "  (i) x∧y ≡ y∧x  (commutative)",
      "  (ii) x∧1 ≡ x", "  (iii) x∧0 ≡ 0", "  (iv) x∧x ≡ x  (idempotent)")
 
-subsection("2. Disjunction (OR) — x ∨ y")
+subsection("2. Disjunction (OR) - x ∨ y")
 body("Output is FALSE <b>only when both</b> inputs are FALSE.")
 truth_table(
     [H("<b>x</b>",MONO),H("<b>y</b>",MONO),H("<b>x ∨ y</b>",MONO)],
@@ -558,21 +558,21 @@ truth_table(
 body("Laws from OR:", "  (i) x∨y ≡ y∨x  (commutative)",
      "  (ii) x∨1 ≡ 1", "  (iii) x∨0 ≡ x", "  (iv) x∨x ≡ x  (idempotent)")
 
-subsection("3. Equivalence (XNOR) — x ↔ y")
+subsection("3. Equivalence (XNOR) - x ↔ y")
 body("Output is TRUE when both inputs are <b>equal</b>.")
 truth_table(
     [H("<b>x</b>",MONO),H("<b>y</b>",MONO),H("<b>x ↔ y</b>",MONO)],
     [["0","0","1"],["0","1","0"],["1","0","0"],["1","1","1"]]
 )
 
-subsection("4. Implication — x → y")
+subsection("4. Implication - x → y")
 body("Output is FALSE <b>only when</b> x is TRUE and y is FALSE.")
 truth_table(
     [H("<b>x</b>",MONO),H("<b>y</b>",MONO),H("<b>x → y</b>",MONO)],
     [["0","0","1"],["0","1","1"],["1","0","0"],["1","1","1"]]
 )
 
-subsection("5. Negation / NOT — ¬x")
+subsection("5. Negation / NOT - ¬x")
 body("Unary operator. Reverses the truth value.")
 truth_table(
     [H("<b>x</b>",MONO),H("<b>¬x</b>",MONO)],
@@ -638,7 +638,7 @@ body("• If variable X = 1 for ALL cells in the group → include X in the term
 body("• If variable X changes (0 and 1) within the group → X is ELIMINATED.")
 
 subsection("Worked K-map Example 1 (SOP from handout, map X)")
-proof_box("Given map X — 4-variable (A,B,C,D):", [
+proof_box("Given map X - 4-variable (A,B,C,D):", [
     "Reading the 1-cells and grouping (as shown in handout):",
     "",
     "Group 1:  A·B cells          → product term: A·B",
@@ -676,7 +676,7 @@ proof_box("Product-of-Sums: group the 0-cells instead of the 1-cells", [
     "  Z = (A+D')·(B'+C+D)·(A'+B+C'+D)",
 ])
 
-section("2.7", "Logic Gates – All Seven Basic Gates")
+section("2.7", "Logic Gates - All Seven Basic Gates")
 
 gates = [
     ("AND Gate",
@@ -722,7 +722,7 @@ body("Arrays of logic gates form <b>Integrated Circuits (ICs)</b>. As IC technol
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  CHAPTER 3 — PROPOSITIONAL LOGIC
+#  CHAPTER 3 - PROPOSITIONAL LOGIC
 # ════════════════════════════════════════════════════════════════════════════
 chapter(3, "PROPOSITIONAL LOGIC")
 
@@ -735,7 +735,7 @@ body(
 )
 
 defn("Proposition", "A declarative statement with a definite truth value (T or F).")
-defn("Non-proposition", "Statements with pronouns/variables like 'n is prime' or 'He is president' — "
+defn("Non-proposition", "Statements with pronouns/variables like 'n is prime' or 'He is president' - "
      "not decidable until the variable is specified.")
 
 subsection("Negation")
@@ -823,7 +823,7 @@ defn("Satisfiable", "Set S is satisfiable if there EXISTS a truth assignment M t
      "every formula in S true simultaneously.")
 defn("Unsatisfiable", "No truth assignment makes all formulae in S true.")
 
-proof_box("Case (a) – Satisfiable Example", [
+proof_box("Case (a) - Satisfiable Example", [
     "S = { (A∧B)⇒C,  A↔B,  (C∨A)∨B }",
     "",
     "Try M: M(A)=T, M(B)=T, M(C)=T",
@@ -833,7 +833,7 @@ proof_box("Case (a) – Satisfiable Example", [
     "",
     "All formulas are TRUE → S is SATISFIABLE.  M(A)=M(B)=M(C)=T satisfies S.",
 ])
-proof_box("Case (b) – Unsatisfiable Example", [
+proof_box("Case (b) - Unsatisfiable Example", [
     "S = { A⇒(B∨C),  ¬(A⇒B),  A↔¬C }",
     "",
     "Try M(A)=T:",
@@ -873,7 +873,7 @@ truth_table(
 )
 
 subsection("Worked Example: Show p ∨ (q ∨ ¬p) is a Tautology")
-proof_box("Method 1 – Truth Table", [
+proof_box("Method 1 - Truth Table", [
     "p | q | ¬p | q∨¬p | p∨(q∨¬p)",
     "T | T |  F |  T   |    T",
     "T | F |  F |  F   |    T",
@@ -882,7 +882,7 @@ proof_box("Method 1 – Truth Table", [
     "",
     "All rows give TRUE → it is a TAUTOLOGY.  ✔",
 ])
-proof_box("Method 2 – Algebraic (from handout)", [
+proof_box("Method 2 - Algebraic (from handout)", [
     "p ∨ (q ∨ ¬p)",
     "≡ p ∨ (¬p ∨ q)      [commutative]",
     "≡ (p ∨ ¬p) ∨ q      [associative]",
@@ -938,7 +938,7 @@ story.append(eq_t)
 story.append(SP(6))
 
 subsection("Worked Equivalence Example 1 (from handout): Show (p→q)∧(q→p) ≡ p↔q")
-proof_box("Method – Truth Table", [
+proof_box("Method - Truth Table", [
     "p | q | p→q | q→p | (p→q)∧(q→p) | p↔q",
     "T | T |  T  |  T  |      T       |  T",
     "T | F |  F  |  T  |      F       |  F",
@@ -997,22 +997,22 @@ body("  Step 1: Eliminate implications:  A→B  ≡  ¬A ∨ B",
      "  Step 4: Distribute ∨ over ∧:  A∨(B∧C) ≡ (A∨B)∧(A∨C)")
 
 subsection("Worked CNF Example (from handout): Convert (¬p→¬q)→(p→q) to CNF")
-proof_box("Solution – Step by Step", [
+proof_box("Solution - Step by Step", [
     "Starting: (¬p→¬q) → (p→q)",
     "",
-    "Step 1 – Eliminate implications (A→B ≡ ¬A∨B):",
+    "Step 1 - Eliminate implications (A→B ≡ ¬A∨B):",
     "   Inner: ¬p→¬q ≡ ¬(¬p)∨¬q = p∨¬q",
     "   Inner: p→q   ≡ ¬p∨q",
     "   Outer: (p∨¬q) → (¬p∨q)",
     "        ≡ ¬(p∨¬q) ∨ (¬p∨q)    [implication law]",
     "",
-    "Step 2 – Push negation inward:",
+    "Step 2 - Push negation inward:",
     "   ¬(p∨¬q) ≡ ¬p ∧ ¬(¬q) = ¬p ∧ q    [De Morgan]",
     "   So: (¬p ∧ q) ∨ (¬p ∨ q)",
     "",
-    "Step 3 – No double negations remain.",
+    "Step 3 - No double negations remain.",
     "",
-    "Step 4 – Distribute ∨ over ∧:",
+    "Step 4 - Distribute ∨ over ∧:",
     "   (¬p ∧ q) ∨ (¬p ∨ q)",
     "   = (¬p ∨ (¬p ∨ q)) ∧ (q ∨ (¬p ∨ q))    [A∨(B∧C) = (A∨B)∧(A∨C)]",
     "   = (¬p ∨ ¬p ∨ q) ∧ (q ∨ ¬p ∨ q)        [associative]",
@@ -1108,7 +1108,7 @@ proof_box("Proof", [
 section("3.8", "Limitations of Propositional Logic")
 body(
     "In propositional logic, the <b>internal structure</b> of basic propositions is hidden.",
-    "For example: 'John is a science student' is just p — we cannot reason about 'John' as "
+    "For example: 'John is a science student' is just p - we cannot reason about 'John' as "
     "an object or 'science student' as a property.",
     "This motivates <b>Predicate Logic</b> (Chapter 4), which exposes that internal structure."
 )
@@ -1116,7 +1116,7 @@ body(
 story.append(PageBreak())
 
 # ════════════════════════════════════════════════════════════════════════════
-#  CHAPTER 4 — PREDICATE LOGIC
+#  CHAPTER 4 - PREDICATE LOGIC
 # ════════════════════════════════════════════════════════════════════════════
 chapter(4, "PREDICATE LOGIC")
 
@@ -1164,8 +1164,8 @@ body("∃x P(x) means 'There exists at least one x such that P(x) is true'.",
 
 example_box("Quantification Examples (from handout)", [
     "Natural:  Everyone is smart",
-    "Step 1 — unquantified: Sx  ('x is smart')",
-    "Step 2 — quantify:     ∀xSx  ('for all x, x is smart')",
+    "Step 1 - unquantified: Sx  ('x is smart')",
+    "Step 2 - quantify:     ∀xSx  ('for all x, x is smart')",
     "",
     "Natural:  John likes someone",
     "Step 1:   Ljx  ('John likes x')",
@@ -1208,7 +1208,7 @@ example_box("Classic Syllogism (from handout)", [
     "  ∀x(Mx → Rx)   (all men are mortal: if x is a man, x is mortal)",
     "  Ma             (Aristotle is a man)",
     "  ──────────────",
-    "  Ra             (Aristotle is mortal) — by Universal Instantiation + Modus Ponens",
+    "  Ra             (Aristotle is mortal) - by Universal Instantiation + Modus Ponens",
 ])
 
 body("<b>Standard syllogistic forms:</b>")
@@ -1219,10 +1219,10 @@ example_box("Syllogistic Forms in Predicate Logic", [
     "'Some A are not B' → ∃x(Ax ∧ ¬Bx)",
     "",
     "WARNING: 'All A are B' is NOT ∀x(Ax ∧ Bx)",
-    "         That would mean 'Everything is both A and B' — incorrect!",
+    "         That would mean 'Everything is both A and B' - incorrect!",
     "",
     "WARNING: 'Some A are B' is NOT ∃x(Ax → Bx)",
-    "         That would be satisfied even if no A exists — incorrect!",
+    "         That would be satisfied even if no A exists - incorrect!",
 ])
 
 section("4.5", "Conjunctive Predicate Combinations")
@@ -1242,14 +1242,14 @@ example_box("Conjunctive Combination Examples (from handout)", [
 ])
 
 warn("Some compound nouns CANNOT be split: 'alleged criminal', 'expectant mother', "
-     "'deer hunter' — treat these as SINGLE predicates.")
+     "'deer hunter' - treat these as SINGLE predicates.")
 warn("'Bostonian cabdriver' could mean (Bx∧Cx) or a single predicate depending on context.")
 
 section("4.6", "Disjunctive Predicate Combinations")
 body("Surface conjunctions ('and') in natural language can be LOGICAL DISJUNCTIONS.")
 example_box("Worked Example: 'All cats and dogs make suitable pets'", [
     "First attempt (WRONG):",
-    "  ∀x((Cx ∧ Dx) → Sx)  — this says 'everything that is BOTH a cat AND a dog'",
+    "  ∀x((Cx ∧ Dx) → Sx)  - this says 'everything that is BOTH a cat AND a dog'",
     "  But nothing is both a cat and a dog! This is always vacuously true. ✗",
     "",
     "Correct Translation 1 (conjunction of two universals):",
@@ -1272,7 +1272,7 @@ qdlaws = [
     ("QD3", "(∃x)(φ(x)∨ψ(x))  ⟺  (∃x)φ(x)∨(∃x)ψ(x)",
      "∃ distributes over ∨ (both ways)."),
     ("QD4", "(∀x)φ(x)∨(∀x)ψ(x)  ⟹  (∀x)(φ(x)∨ψ(x))",
-     "∀ can be raised OUT of a disjunction (one direction only — implication, not equivalence)."),
+     "∀ can be raised OUT of a disjunction (one direction only - implication, not equivalence)."),
     ("QD5", "(∃x)(φ(x)∧ψ(x))  ⟹  (∃x)φ(x)∧(∃x)ψ(x)",
      "∃ can be lowered INTO a conjunction (one direction only)."),
 ]
@@ -1384,7 +1384,7 @@ proof_box("Proof by Conditional Proof", [
 ])
 
 note("Compare Indirect Proof (4.8) and Conditional Proof (4.9): both prove the same result "
-     "but by different strategies. Conditional Proof is simpler here — assume antecedent, "
+     "but by different strategies. Conditional Proof is simpler here - assume antecedent, "
      "derive consequent.")
 
 # ─── Final Summary / Exam Tips ────────────────────────────────────────────

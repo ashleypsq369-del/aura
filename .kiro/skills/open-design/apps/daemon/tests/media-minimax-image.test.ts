@@ -177,7 +177,7 @@ describe('minimax image generation', () => {
 
     expect(result.name).toBe('minimax-i2i.png');
     expect(result.providerId).toBe('minimax');
-    // providerNote must NOT echo the data URL — no PII leak in metadata.
+    // providerNote must NOT echo the data URL - no PII leak in metadata.
     expect(result.providerNote).not.toContain('data:image');
     expect(result.providerNote).toContain('minimax/image-01');
 
@@ -197,7 +197,7 @@ describe('minimax image generation', () => {
         status_code: 1008,
         status_msg: 'Insufficient account balance',
       },
-      // No data.image_base64 — the renderer should reject on base_resp before
+      // No data.image_base64 - the renderer should reject on base_resp before
       // ever reaching the decode path.
     }), {
       status: 200,
@@ -224,7 +224,7 @@ describe('minimax image generation', () => {
   it('surfaces upstream HTTP errors with status code and body excerpt', async () => {
     await writeConfig({ providers: { minimax: {} } });
 
-    // 401 with a non-JSON body — the renderer must report both the HTTP
+    // 401 with a non-JSON body - the renderer must report both the HTTP
     // status and the body excerpt in the thrown Error.
     const fetchMock = vi.fn(async () => new Response('unauthorized', {
       status: 401,
@@ -244,7 +244,7 @@ describe('minimax image generation', () => {
   });
 
   it('uses the image-specific default base URL and wire model when no config is provided', async () => {
-    // No writeConfig() call — the provider slot exists but has no stored
+    // No writeConfig() call - the provider slot exists but has no stored
     // config. resolveProviderConfig still returns apiKey from
     // OD_MINIMAX_API_KEY, but baseUrl and model come from the renderer's
     // image-specific defaults.
@@ -286,7 +286,7 @@ describe('minimax image generation', () => {
     // Regression test for the user's reported 404. The 'minimax' provider
     // slot is shared with TTS, whose stored baseUrl is the legacy
     // api.minimaxi.chat/v1 host. Naively appending '/v1/image_generation'
-    // produces https://api.minimaxi.chat/v1/v1/image_generation — a 404
+    // produces https://api.minimaxi.chat/v1/v1/image_generation - a 404
     // against the wrong host. The image renderer must ignore
     // credentials.baseUrl entirely and pin to its own host.
     await writeConfig({
@@ -354,7 +354,7 @@ describe('minimax image generation', () => {
 
   it('throws a clear error when no MiniMax API key is configured', async () => {
     // The renderer must reject the request before touching the network
-    // when credentials.apiKey is missing — otherwise the user gets a
+    // when credentials.apiKey is missing - otherwise the user gets a
     // confusing 401 from MiniMax instead of the actionable "configure
     // it in Settings" message that matches every other renderer.
     delete process.env.OD_MINIMAX_API_KEY;
@@ -362,7 +362,7 @@ describe('minimax image generation', () => {
 
     // No fetch mock needed: the renderer must short-circuit before
     // dispatching. If it doesn't, vi.fn would surface as unhandled
-    // and the test would still fail — both sides of the contract are
+    // and the test would still fail - both sides of the contract are
     // anchored.
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
@@ -418,7 +418,7 @@ describe('minimax image generation', () => {
 
     expect(result.providerId).toBe('minimax');
     // providerNote must surface the aliased wire name, not the catalog
-    // id — the FileViewer toolbar tells the truth about what was sent.
+    // id - the FileViewer toolbar tells the truth about what was sent.
     expect(result.providerNote).toContain('minimax/image-01-pro');
   });
 

@@ -2,8 +2,8 @@
 // In-memory ring buffer of recent memory-extraction attempts.
 //
 // Both extractors write here:
-//   - 'llm'       — the small-model extractor in `memory-llm.ts`
-//   - 'heuristic' — the regex pack in `memory.ts::extractFromMessage`
+//   - 'llm'       - the small-model extractor in `memory-llm.ts`
+//   - 'heuristic' - the regex pack in `memory.ts::extractFromMessage`
 //
 // Both used to be entirely silent. `pickProvider()` would return null
 // when no API key was configured and the LLM call would just `return []`
@@ -14,7 +14,7 @@
 // both pipelines into a typed, observable stream of records keyed by
 // `kind`.
 //
-// Each attempt creates one record. We keep the last N (cap is small —
+// Each attempt creates one record. We keep the last N (cap is small -
 // this is a UX surface, not an audit log) so the settings panel can
 // render "recent extractions" with phases, providers, durations, and
 // links into the entries that landed on disk.
@@ -62,7 +62,7 @@ function trimError(s) {
 function emit(record) {
   // Defer the emit so the caller can append a synchronous follow-up
   // update without firing two events back-to-back in the same tick.
-  // Cheaper than debouncing and good enough — the SSE path on the
+  // Cheaper than debouncing and good enough - the SSE path on the
   // server flushes on the next event-loop turn anyway.
   setImmediate(() => {
     try {
@@ -83,7 +83,7 @@ function pushNewest(record) {
   if (records.length > MAX_RECORDS) records.length = MAX_RECORDS;
 }
 
-// Public — start a new attempt. Returns the id; subsequent phase
+// Public - start a new attempt. Returns the id; subsequent phase
 // updates flow through `markRunning`, `markSuccess`, `markFailed`,
 // `markSkipped`. We return only the id (not the record itself) so the
 // caller can't accidentally mutate buffer state in place. `kind`
@@ -127,7 +127,7 @@ export function markSkipped(id, reason) {
   emit(rec);
 }
 
-// One-shot variant — use when we want to record a skip that never went
+// One-shot variant - use when we want to record a skip that never went
 // through the running phase (e.g. memory disabled, empty user message,
 // no provider configured). Returns the record's id so the caller can
 // pass it to listExtractions consumers if needed.
@@ -147,7 +147,7 @@ export function recordSkip({ userMessage, reason, kind = 'llm', extractionOrigin
   return record.id;
 }
 
-// One-shot variant for the heuristic regex pack — synchronous, no
+// One-shot variant for the heuristic regex pack - synchronous, no
 // streaming phases, completes in microseconds. Use this instead of
 // startExtraction()/markSuccess() so the regex extractor doesn't bounce
 // two SSE frames per turn (a 'running' immediately followed by
@@ -204,14 +204,14 @@ export function markFailed(id, error) {
   emit(rec);
 }
 
-// Public — newest-first snapshot. Cloned so callers can't mutate the
+// Public - newest-first snapshot. Cloned so callers can't mutate the
 // buffer through the returned reference.
 export function listExtractions() {
   return records.map(clone);
 }
 
-// Public — drop one record by id. Returns the count actually removed
-// (0 when the id was already gone — caller still gets a 200 from the
+// Public - drop one record by id. Returns the count actually removed
+// (0 when the id was already gone - caller still gets a 200 from the
 // HTTP endpoint so a dangling double-click isn't surfaced as an error).
 // Emits a synthetic `extraction` event with `phase: 'deleted'` so any
 // open settings panel can drop the row immediately without a refetch.
@@ -229,7 +229,7 @@ export function removeExtraction(id) {
   return 1;
 }
 
-// Public — wipe the whole buffer. Returns the count removed. Emits a
+// Public - wipe the whole buffer. Returns the count removed. Emits a
 // single `extractions-cleared` event so the UI can drop everything in
 // one render rather than firing N row-level deletes.
 export function clearExtractions() {
@@ -252,7 +252,7 @@ export function clearExtractions() {
   return removed;
 }
 
-// Test-only — wipe the buffer. Not exported for production paths but
+// Test-only - wipe the buffer. Not exported for production paths but
 // the tests need a deterministic starting state.
 export function __resetExtractionsForTests() {
   records.length = 0;

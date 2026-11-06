@@ -4,8 +4,8 @@
 //
 // This used to live inline in `POST /api/runs`, which meant a Run only entered
 // the lifecycle if a client had asked for it over HTTP. Every physical Run the
-// daemon allocates on its own — an OD Next automatic continuation, a scheduled
-// Automation, a live-artifact refresh — started outside it and reported
+// daemon allocates on its own - an OD Next automatic continuation, a scheduled
+// Automation, a live-artifact refresh - started outside it and reported
 // nothing, so per-Run rates were computed on the client-started stage alone
 // (OPEND-2365). It is a module now so `internalRunCreation.start` can install
 // it for every physical Run from one place, whoever asked for the Run.
@@ -217,7 +217,7 @@ export function inheritedRunLineageHints(
 
 /**
  * What the lifecycle reads from the daemon. `telemetry` is the same group the
- * run routes already own — it exists only to serve these two events.
+ * run routes already own - it exists only to serve these two events.
  */
 export interface RunAnalyticsLifecycleDeps {
   db: Parameters<typeof getProject>[0];
@@ -270,7 +270,7 @@ export interface RunAnalyticsTelemetryDeps {
  * A daemon-started Run supplies the same facts its HTTP sibling would: the
  * request body it was composed from, and the analytics identity it inherits
  * from the Run that caused it. `analyticsContext` resolution stays first-write
- * immutable — a continuation cannot relabel the identity of the task it
+ * immutable - a continuation cannot relabel the identity of the task it
  * continues.
  */
 export interface RunAnalyticsFacts {
@@ -900,7 +900,7 @@ export function createRunAnalyticsLifecycle(
             userQueryTokens,
           );
           const perRequestUsage = perRequestUsageForRun(run);
-          // Whether this run is a non-first turn in its conversation — i.e. a
+          // Whether this run is a non-first turn in its conversation - i.e. a
           // prior completed assistant turn exists (excluding this run's own
           // placeholder). The session-reuse cache win only applies to follow-up
           // turns, so slicing `first_call_cache_hit_ratio` by this flag is the
@@ -920,7 +920,7 @@ export function createRunAnalyticsLifecycle(
               )
             : false;
           // Resolve the turn's first-call usage (cache-hit of the OPENING model
-          // call — the signal session reuse moves). Every coding agent except
+          // call - the signal session reuse moves). Every coding agent except
           // codex reports per-call usage on the stream, so the forward-scanned
           // first usage event IS the opening call. codex reports only a single
           // cumulative `turn.completed` usage on the stream, so its first stream
@@ -1125,7 +1125,7 @@ export function createRunAnalyticsLifecycle(
               ...(run.diagnosticIncidentIds?.length ? { diagnostic_incident_ids: run.diagnosticIncidentIds } : {}),
               // The gate that refused an OD Next turn. `result` above comes
               // from the physical run status, and a refused turn normally exits
-              // 0 — so without this the whole class counted as `success` while
+              // 0 - so without this the whole class counted as `success` while
               // the user was looking at a failure card. Read off the run's own
               // terminal projection, the same object the SSE `end` payload and
               // the failure card were built from, so the three cannot drift.
@@ -1140,7 +1140,7 @@ export function createRunAnalyticsLifecycle(
               stable_prompt_cache_miss_reason: run.promptCache?.missReason,
               // Which stable-prefix input drifted, for miss_reason
               // 'stable-prompt-changed' only. `unattributed` means the prefix
-              // moved but no tracked section did — a coverage gap in
+              // moved but no tracked section did - a coverage gap in
               // prompts/stable-sections.ts, not a cause.
               stable_prompt_changed_sections: run.promptCache?.changedSections ?? undefined,
               area: isDesignSystemRun ? 'design_system_generation' : 'chat_panel',

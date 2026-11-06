@@ -60,7 +60,7 @@ export type DesignSystemSummary = {
   /**
    * The workspace this user design system belongs to, when one claimed it.
    *
-   * Absent means UNCLAIMED, not "belongs to no workspace" — see
+   * Absent means UNCLAIMED, not "belongs to no workspace" - see
    * `DesignSystemListOptions.workspaceId`.
    */
   workspaceId?: string;
@@ -275,7 +275,7 @@ export type UserDesignSystemInput = {
    * active workspace selection at creation time; omitted leaves the system
    * unclaimed for local/unscoped use and quarantined from scoped catalogs.
    *
-   * Only `createUserDesignSystem` reads it — an update must never re-home an
+   * Only `createUserDesignSystem` reads it - an update must never re-home an
    * existing system just because the caller happened to be elsewhere.
    */
   workspaceId?: string;
@@ -301,7 +301,7 @@ export type DesignSystemListOptions = {
    * Restrict the listing to design systems visible from this workspace (#145).
    *
    * User design systems all live in ONE flat directory under the daemon data
-   * root — there is no per-workspace store — so without this filter a system
+   * root - there is no per-workspace store - so without this filter a system
    * authored in workspace A also showed up in a brand-new workspace B.
    *
    * A positive scope is fail-closed: both systems claimed by another workspace
@@ -397,16 +397,16 @@ export async function listDesignSystems(
  * the active workspace.
  *
  * `scope === undefined` (the `workspaceId` option key OMITTED, not merely
- * empty) means the caller asked for the truly unscoped catalog — id
+ * empty) means the caller asked for the truly unscoped catalog - id
  * resolution, install/import lookups, and (critically) `createUserDesignSystem`/
  * `updateUserDesignSystem`/`linkUserDesignSystemProject` re-reading the system
- * they just wrote by id — which must never hide anything, or writing a system
+ * they just wrote by id - which must never hide anything, or writing a system
  * claimed by a workspace would make `listDesignSystems(...).find(...)` fail to
  * find what was just written (a real regression this fix must not introduce).
  *
  * `scope` present but empty (`null`/`''`) is a DIFFERENT case: a caller that
- * DID ask to be scoped — `GET /api/design-systems` with no verified vela
- * session — but has no workspace identity to offer. Spec 04 §10: that must
+ * DID ask to be scoped - `GET /api/design-systems` with no verified vela
+ * session - but has no workspace identity to offer. Spec 04 §10: that must
  * hide a CLAIMED system, not show it, or "no scope" quietly becomes "trust
  * everything". With a positive scope, no `owner` means QUARANTINED: absence of
  * an ownership witness must not authorize a cross-workspace read. With an
@@ -555,19 +555,19 @@ async function listAvailableDesignSystemPackageFiles(
  * Structured (compiled) form of a brand's design system. Optional sibling
  * files alongside DESIGN.md that, when present, give agents a
  * machine-readable token contract and a worked fixture instead of having
- * to re-derive both from prose. Both fields are individually optional —
+ * to re-derive both from prose. Both fields are individually optional -
  * the daemon falls back to the DESIGN.md-only path when neither is
  * available, which is the current state for the ~138 brands without
  * hand-authored or derived tokens.
  *
- * - `tokensCss`     — verbatim content of `<brand>/tokens.css`.
- * - `usageMd`       — optional agent-facing router for the package.
- * - `fixtureHtml`   — verbatim content of `<brand>/components.html`.
- * - `componentsManifest` — concise summary derived from components.html
+ * - `tokensCss`     - verbatim content of `<brand>/tokens.css`.
+ * - `usageMd`       - optional agent-facing router for the package.
+ * - `fixtureHtml`   - verbatim content of `<brand>/components.html`.
+ * - `componentsManifest` - concise summary derived from components.html
  *                          or read from components.manifest.json cache
  *                          for prompt injection; when absent, callers
  *                          can fall back to `fixtureHtml`.
- * - `pullIndex`     — short manifest-derived file index. It lists
+ * - `pullIndex`     - short manifest-derived file index. It lists
  *                     richer preview/source evidence paths without
  *                     loading those files into the push prompt.
  */
@@ -1409,7 +1409,7 @@ export async function updateUserDesignSystem(
 // the registry title every time the workspace is ensured, so a rename
 // applied only to the project row silently reverts on the next open.
 // Renames on these projects must instead be written through to the
-// design-system title — the sync then carries the new name back onto the
+// design-system title - the sync then carries the new name back onto the
 // project and both records agree.
 export function workspaceRenameDesignSystemId(project: {
   designSystemId?: string | null;
@@ -1426,11 +1426,11 @@ export function workspaceRenameDesignSystemId(project: {
 }
 
 // 'not-applicable': the project is not a design-system workspace (or the
-// name is blank) — the rename does not involve a design system at all.
+// name is blank) - the rename does not involve a design system at all.
 // 'propagated': the bound design system's title now matches the new name.
 // 'failed': the project IS bound to a user design system but the title
 // could not be written through (e.g. the entry is missing on disk).
-// Callers must not persist the project-row rename on 'failed' — doing so
+// Callers must not persist the project-row rename on 'failed' - doing so
 // recreates the silent revert this write-through exists to prevent.
 export type WorkspaceRenamePropagation = 'not-applicable' | 'propagated' | 'failed';
 
@@ -1616,13 +1616,13 @@ export async function deleteUserDesignSystem(root: string, id: string): Promise<
  * Whether `id` was materialized locally from a teammate's team share, rather
  * than authored by the current caller. Mirrors the `teamSynced` flag
  * `markTeamSynced` (server.ts `syncSharedTeamDesignSystem`) writes once a
- * shared design system is pulled onto disk — false/absent for anything the
+ * shared design system is pulled onto disk - false/absent for anything the
  * caller authored themselves, including a system the caller has *shared* to
  * the team (the sharer's own copy never gets this flag). Routes that mutate
  * a `user:` design system (edit / publish toggle / delete) must treat a
  * `true` result as "not necessarily mine" and check the caller's team-share
  * management permission before proceeding (see `canManageSharedResource` in
- * `collab/team-resource-share.ts`) — recvqb6mfyqXLD.
+ * `collab/team-resource-share.ts`) - recvqb6mfyqXLD.
  */
 export async function isTeamSyncedUserDesignSystem(root: string, id: string): Promise<boolean> {
   const dirId = stripPrefixAndValidateId(id, 'user:');
@@ -1633,7 +1633,7 @@ export async function isTeamSyncedUserDesignSystem(root: string, id: string): Pr
 
 /**
  * One-time startup backfill (spec 9.2): design systems predate the generic
- * `workspace_resources` envelope table entirely — `createWorkspaceOwnedDesignSystem`
+ * `workspace_resources` envelope table entirely - `createWorkspaceOwnedDesignSystem`
  * and `markTeamSynced` (server.ts) only started double-writing into it today,
  * so every system claimed BEFORE that shipped has a `workspaceId` in its
  * `metadata.json` but no corresponding row in the table. Left alone, that
@@ -1650,7 +1650,7 @@ export async function isTeamSyncedUserDesignSystem(root: string, id: string): Pr
  * never writes a duplicate. Legacy raw Team rows are retained; the qualified
  * binding is added alongside them so no historical data is deleted.
  *
- * `visibility` mirrors the claim `markTeamSynced` writes going forward —
+ * `visibility` mirrors the claim `markTeamSynced` writes going forward -
  * `teamSynced: true` backfills as `'team'`, everything else as `'personal'`.
  * For a project-inferred claim, metadata.json is updated with that durable
  * workspace witness before the envelope row is created. Other metadata is
@@ -1940,8 +1940,8 @@ export function buildDesignSystemSkillsMarkdown(input: {
   }
   lines.push(
     `This package is a portable **${category}** design system for ${guide.deliverables}. ` +
-      'Hand the unzipped folder to any AI coding agent — Claude Code, Codex, Cursor, ' +
-      'Gemini, OpenCode, or Qwen — alongside `DESIGN.md`, and it will produce on-brand ' +
+      'Hand the unzipped folder to any AI coding agent - Claude Code, Codex, Cursor, ' +
+      'Gemini, OpenCode, or Qwen - alongside `DESIGN.md`, and it will produce on-brand ' +
       'work without further art direction.',
   );
   lines.push('');
@@ -1957,7 +1957,7 @@ export function buildDesignSystemSkillsMarkdown(input: {
   lines.push(
     '2. Tell the agent: "Use `DESIGN.md` as the design system for everything you generate."',
   );
-  lines.push('3. Ask for the artifact you want — e.g. "a pricing page" or "a 10-slide deck".');
+  lines.push('3. Ask for the artifact you want - e.g. "a pricing page" or "a 10-slide deck".');
   lines.push(
     '4. The agent reads `DESIGN.md` (identity, palette, typography, voice, layout) and the ' +
       '`system/` kit, then matches the brand.',
@@ -1965,7 +1965,7 @@ export function buildDesignSystemSkillsMarkdown(input: {
   lines.push('');
   lines.push(
     '`DESIGN.md` is the single source of truth. The `system/` directory (when present) ships ' +
-      'the rendered kit and design tokens — keep them together so the agent can read both.',
+      'the rendered kit and design tokens - keep them together so the agent can read both.',
   );
   lines.push('');
 
@@ -2003,7 +2003,7 @@ export function buildDesignSystemSkillsMarkdown(input: {
   lines.push('---');
   lines.push('');
   lines.push(
-    'Generated with **OpenDesign** — the open-source, local-first Claude Design alternative. ' +
+    'Generated with **OpenDesign** - the open-source, local-first Claude Design alternative. ' +
       'Generate decks, landing pages, dashboards, and brand systems with your favourite AI ' +
       'coding agent.',
   );
@@ -2328,8 +2328,8 @@ async function readGeneratedManifest(dir: string): Promise<Record<string, string
 // Regeneration must never discard files a user has customized (issue #323). A
 // generated file is only overwritten when it is still byte-identical to what the
 // generator last wrote (recorded in `.od-generated.json`). Anything the user
-// edited — or any pre-existing file with no recorded fingerprint (legacy systems)
-// — is preserved. Files that are absent are written and fingerprinted. The
+// edited - or any pre-existing file with no recorded fingerprint (legacy systems)
+// - is preserved. Files that are absent are written and fingerprinted. The
 // returned `nextManifest` records fingerprints for every path that will be
 // written/refreshed, preserves the prior fingerprint for kept-but-skipped paths,
 // and drops manifest keys the generator no longer produces.
@@ -2404,7 +2404,7 @@ async function writeGeneratedDesignSystemFiles(
 }
 
 // A real asset file synced in from a workspace project's editing-time
-// mirror — arbitrary bytes the agent already produced there (e.g. a
+// mirror - arbitrary bytes the agent already produced there (e.g. a
 // regenerated logo.svg), not generator output.
 export type DesignSystemAssetSourceFile = {
   /** POSIX-relative path under the design-system root, e.g. "assets/logo.svg". */
@@ -2419,7 +2419,7 @@ export type DesignSystemAssetSyncResult = {
 
 /**
  * Copies real asset bytes into a user design system's canonical `assets/`
- * directory — the fix for the logo/asset desync (spec 04 §9.3,
+ * directory - the fix for the logo/asset desync (spec 04 §9.3,
  * recvqb1t4FrckM): canonical is the only directory `team-resource-share`
  * packages and downloads read from, but agent-produced assets only ever
  * landed in the workspace-project editing mirror, so a regenerated logo
@@ -2431,7 +2431,7 @@ export type DesignSystemAssetSyncResult = {
  * stick, both applied here:
  *  1. Any `.od-generated.json` fingerprint entry for an overwritten path is
  *     dropped. `filterGeneratedWritesPreservingUserEdits` treats a path with
- *     no recorded fingerprint exactly like a hand-edited file — preserved,
+ *     no recorded fingerprint exactly like a hand-edited file - preserved,
  *     never refreshed.
  *  2. `artifactMode` flips to `'agent-managed'` the first time any file
  *     actually syncs, so `createUserDesignSystem`/`updateUserDesignSystem`
@@ -4142,7 +4142,7 @@ function summarize(raw: string): string {
   const nextHeading = afterH1.findIndex((l) => /^#{1,6}\s+/.test(l));
   const window = (nextHeading === -1 ? afterH1 : afterH1.slice(0, nextHeading))
     .join('\n')
-    // Drop blockquote metadata lines — they are surfaced separately.
+    // Drop blockquote metadata lines - they are surfaced separately.
     .replace(/^>\s*Category:.*$/gim, '')
     .replace(/^>\s*Surface:.*$/gim, '')
     .replace(/^>\s*/gm, '')
@@ -4196,8 +4196,8 @@ function cleanTitle(raw: string): string {
  * Pull 4 representative colors from a DESIGN.md so the picker can render
  * a tiny swatch row next to each system. Order: [bg, support, fg, accent].
  *
- * The shape is deliberately compact — one accent + one background + one
- * fg + one supporting tone — so the row reads like a brand mark even at
+ * The shape is deliberately compact - one accent + one background + one
+ * fg + one supporting tone - so the row reads like a brand mark even at
  * thumbnail scale. Picked greedily by token-name hints (matches the
  * heuristics in preview.js so the strip and the showcase
  * agree on which colors the system "is").
@@ -4217,7 +4217,7 @@ function extractSwatches(raw: string): string[] {
     seen.add(key);
     colors.push({ name: cleanName, value: v });
   }
-  // Form A: "- **Background:** `#FAFAFA`" — the colon may sit inside the
+  // Form A: "- **Background:** `#FAFAFA`" - the colon may sit inside the
   // bold markers (`**Name:**`) or outside them (`**Name**:`). Both variants
   // are common in hand-authored DESIGN.md files, so we allow the colon in
   // either position around the closing `**`.

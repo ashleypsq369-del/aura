@@ -7,7 +7,7 @@ import { computeDrift } from '../lib/drift.js';
  * generateHtmlReport is a pure result -> string formatter. These assertions pin
  * the contract that makes it usable as a CI artifact: self-contained (no external
  * resources), correct escaping of untrusted extracted strings, and the drift
- * banner in Mode B. The report is the rendered HTML only — no embedded JSON
+ * banner in Mode B. The report is the rendered HTML only - no embedded JSON
  * (dropped for size; the machine-readable form is --json-only).
  */
 

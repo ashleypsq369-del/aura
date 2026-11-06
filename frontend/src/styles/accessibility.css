@@ -1,5 +1,5 @@
 ﻿/**
- * accessibility.css — ProjectAura
+ * accessibility.css - ProjectAura
  * ================================
  * All rules use html.class-name selectors so they apply
  * ONLY when the user explicitly enables each setting.
@@ -30,10 +30,10 @@
 }
 
 /* ── Base font size ───────────────────────────────────────────────────── */
-/* 15px base — all rem-based text scales from here */
+/* 15px base - all rem-based text scales from here */
 :root { font-size: 15px; }
 
-/* Font size classes — set html font-size, which rem inherits from */
+/* Font size classes - set html font-size, which rem inherits from */
 html.text-small   { font-size: 14px !important; }
 html.text-medium  { font-size: 16px !important; }
 html.text-large   { font-size: 18px !important; }
@@ -41,7 +41,7 @@ html.text-xlarge  { font-size: 20px !important; }
 html.text-xxlarge { font-size: 24px !important; }
 
 /* When font size is set: override Tailwind text-* utilities so they scale too */
-/* Tailwind uses fixed px — we convert to em so they scale with the root */
+/* Tailwind uses fixed px - we convert to em so they scale with the root */
 html.text-large .text-xs,  html.text-xlarge .text-xs,  html.text-xxlarge .text-xs  { font-size: 0.75em !important; }
 html.text-large .text-sm,  html.text-xlarge .text-sm,  html.text-xxlarge .text-sm  { font-size: 0.875em !important; }
 html.text-large .text-base,html.text-xlarge .text-base,html.text-xxlarge .text-base{ font-size: 1em !important; }
@@ -54,9 +54,9 @@ html.text-large  [class*="text-["],
 html.text-xlarge  [class*="text-["],
 html.text-xxlarge [class*="text-["] { font-size: inherit !important; }
 
-/* ── High contrast — WCAG AAA level (7:1 min) ────────────────────────── */
+/* ── High contrast - WCAG AAA level (7:1 min) ────────────────────────── */
 html.high-contrast {
-  /* No html-level filter — use targeted rules below for precise control */
+  /* No html-level filter - use targeted rules below for precise control */
 }
 html.high-contrast body {
   background: #ffffff !important;
@@ -78,13 +78,13 @@ html.high-contrast textarea, html.high-contrast select {
   background: #ffffff !important;
   color: #000000 !important;
 }
-/* Cards and surfaces — white with thick black border */
+/* Cards and surfaces - white with thick black border */
 html.high-contrast .bg-white, html.high-contrast .bg-slate-50,
 html.high-contrast .bg-gray-50, html.high-contrast .bg-slate-100 {
   background: #ffffff !important;
   border: 1.5px solid #000000 !important;
 }
-/* Colored action buttons — black on white with thick border */
+/* Colored action buttons - black on white with thick border */
 html.high-contrast button[class*="bg-teal"],
 html.high-contrast button[class*="bg-red"],
 html.high-contrast button[class*="bg-blue"],
@@ -95,10 +95,10 @@ html.high-contrast button[class*="bg-amber"] {
   color: #ffffff !important;
   border: 2px solid #000000 !important;
 }
-/* Links — high visibility blue */
+/* Links - high visibility blue */
 html.high-contrast a { color: #0000cc !important; text-decoration: underline !important; font-weight: 600 !important; }
 html.high-contrast a:visited { color: #551a8b !important; }
-/* Focus — thick black ring, always visible */
+/* Focus - thick black ring, always visible */
 html.high-contrast *:focus {
   outline: 4px solid #000000 !important;
   outline-offset: 3px !important;
@@ -110,14 +110,14 @@ html.high-contrast .text-gray-400, html.high-contrast .text-gray-500,
 html.high-contrast .text-slate-600, html.high-contrast .text-gray-600 {
   color: #222222 !important;
 }
-/* Badges and chips — black text, thick borders */
+/* Badges and chips - black text, thick borders */
 html.high-contrast [class*="chip-"],
 html.high-contrast [class*="badge-"] {
   background: #ffffff !important;
   color: #000000 !important;
   border: 2px solid #000000 !important;
 }
-/* Images — slightly boosted for clarity */
+/* Images - slightly boosted for clarity */
 html.high-contrast img:not([aria-hidden="true"]) {
   filter: contrast(1.3) !important;
 }
@@ -177,7 +177,7 @@ html.keyboard-only *:focus {
 *:focus:not(:focus-visible) { outline: none; }
 
 /* ── Simplified UI ────────────────────────────────────────────────────── */
-/* Only add clear borders — never strip colours */
+/* Only add clear borders - never strip colours */
 html.simplified-ui [class*="shadow"] { box-shadow: none !important; }
 html.simplified-ui [class*="rounded-2xl"],
 html.simplified-ui [class*="rounded-xl"],
@@ -186,7 +186,7 @@ html.simplified-ui [class*="rounded-lg"] { border-radius: 8px !important; }
 /* ── Assisted mode ────────────────────────────────────────────────────── */
 html.assisted-mode { font-size: 20px !important; }
 
-/* Bigger buttons — skip tiny icon-only buttons */
+/* Bigger buttons - skip tiny icon-only buttons */
 html.assisted-mode button:not([class*="w-6"]):not([class*="w-7"]):not([class*="w-8"]):not([class*="w-9"]):not([class*="w-10"]):not([class*="p-1"]):not([class*="p-2"]) {
   min-height: 52px !important;
   font-size: 1rem !important;
@@ -232,7 +232,7 @@ html.cb-monochrome body {
   filter: grayscale(100%) contrast(1.15) !important;
 }
 
-/* Low contrast boost — enhances subtle borders and faint text */
+/* Low contrast boost - enhances subtle borders and faint text */
 html.cb-low_contrast body {
   filter: contrast(1.5) saturate(1.25) !important;
 }
@@ -240,7 +240,7 @@ html.cb-low_contrast {
   background: #ffffff !important;
 }
 
-/* Photosensitive — reduced brightness, desaturated colours, no animations */
+/* Photosensitive - reduced brightness, desaturated colours, no animations */
 html.cb-photosensitive body {
   filter: brightness(0.82) saturate(0.55) contrast(0.9) !important;
 }

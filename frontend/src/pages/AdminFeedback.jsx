@@ -1,5 +1,5 @@
-/**
- * AdminFeedback — Feedback & bug report inbox
+﻿/**
+ * AdminFeedback - Feedback & bug report inbox
  * Route: /admin/feedback
  * Built on: AdminPageShell + DataTable + Dialog (Radix)
  */
@@ -36,7 +36,7 @@ const RATING_FACE  = { 1:Frown, 2:Frown, 3:Meh, 4:Smile, 5:Smile };
 const RATING_COLOR = { 1:'#ef4444', 2:'#f97316', 3:'#d97706', 4:'#22c55e', 5:'#0d9488' };
 
 function relTime(ts) {
-  if (!ts) return '—';
+  if (!ts) return '-';
   const d = Math.floor((Date.now() - new Date(ts)) / 1000);
   if (d < 60)     return 'just now';
   if (d < 3600)   return `${Math.floor(d/60)}m ago`;
@@ -70,10 +70,10 @@ function DetailPanel({ item, onClose, onDelete }) {
   const meta = [
     { Icon:Globe, label:'Page',  value:item.page },
     { Icon:User,  label:'User',  value:item.user_id ? `#${item.user_id}` : 'Anonymous' },
-    { Icon:User,  label:'Role',  value:item.user_role || '—' },
-    { Icon:Mail,  label:'Email', value:item.email || '—' },
-    { Icon:Clock, label:'Time',  value:item.created_at ? new Date(item.created_at).toLocaleString('en-GB') : '—' },
-  ].filter(r => r.value && r.value !== '—');
+    { Icon:User,  label:'Role',  value:item.user_role || '-' },
+    { Icon:Mail,  label:'Email', value:item.email || '-' },
+    { Icon:Clock, label:'Time',  value:item.created_at ? new Date(item.created_at).toLocaleString('en-GB') : '-' },
+  ].filter(r => r.value && r.value !== '-');
 
   return (
     <div style={{ display:'flex', flexDirection:'column', height:'100%', background:'var(--card-bg)' }}>
@@ -239,7 +239,7 @@ export default function AdminFeedback() {
       id: 'summary', header: 'Summary',
       cell: info => {
         const item = info.row.original;
-        const txt  = item.description || item.what_doesnt || item.what_works || (item.rating ? `${item.rating}/5 stars` : '—');
+        const txt  = item.description || item.what_doesnt || item.what_works || (item.rating ? `${item.rating}/5 stars` : '-');
         return (
           <div>
             <p style={{ fontSize:12, color:'var(--text-700)', margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:260 }}>{txt}</p>
@@ -251,7 +251,7 @@ export default function AdminFeedback() {
     }),
     col.accessor('page', {
       header: 'Page',
-      cell: info => <span style={{ fontSize:11, color:'var(--text-500)' }}>{info.getValue()||'—'}</span>,
+      cell: info => <span style={{ fontSize:11, color:'var(--text-500)' }}>{info.getValue()||'-'}</span>,
     }),
     col.accessor('user_role', {
       header: 'Role',
@@ -383,7 +383,7 @@ export default function AdminFeedback() {
 
       {/* Master / Detail */}
       <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
-        {/* Table — hides on mobile when detail is open */}
+        {/* Table - hides on mobile when detail is open */}
         <div style={{ flex:1, minWidth:0, display: selected ? undefined : undefined }}>
           <DataTable
             columns={columns}

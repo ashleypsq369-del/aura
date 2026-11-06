@@ -329,7 +329,7 @@ export function resolveResearchCommandContract(
  * The invariant: every absolute path the composed prompt advertises to the
  * agent has to appear here. `withSkillRootPreamble()` names the skill's own
  * directory as the "absolute fallback" skill root, and `skillsDir` only covers
- * the skills that ship in the repository — a skill installed under the daemon
+ * the skills that ship in the repository - a skill installed under the daemon
  * data dir, or a plugin-local `SKILL.md` loaded from the bundled plugin folder,
  * resolves to a root that is outside every entry below. The agent then reads a
  * path we told it to read and the runtime treats it as an unapproved external
@@ -526,8 +526,8 @@ export function normalizeCommentAttachments(input: readonly CommentAttachmentInp
       if (!filePath || !elementId) return null;
       if (selectionKind !== 'visual' && !selector) return null;
       // Visual marks are kept even without a screenshot (#4084): when the
-      // preview capture fails (#4080) the structured location — file,
-      // pagePosition, markKind, currentText — is the only anchor the agent
+      // preview capture fails (#4080) the structured location - file,
+      // pagePosition, markKind, currentText - is the only anchor the agent
       // gets, so dropping the attachment here would silently strip the
       // user's targeting from the prompt.
       const pagePosition = normalizeAttachmentPosition(record.pagePosition);
@@ -536,7 +536,7 @@ export function normalizeCommentAttachments(input: readonly CommentAttachmentInp
         // concrete anchor: a positive-size pagePosition or a DOM selector.
         // /api/runs accepts commentAttachments from any client, and
         // normalizeAttachmentPosition() collapses missing/malformed positions
-        // to 0,0,0x0 — which identifies no region. Rendering such a payload
+        // to 0,0,0x0 - which identifies no region. Rendering such a payload
         // would hard-scope the agent onto fields that point nowhere and steer
         // it to edit an arbitrary part of the file, so drop it instead.
         const hasUsablePosition = pagePosition.width > 0 && pagePosition.height > 0;
@@ -590,7 +590,7 @@ export function renderCommentAttachmentHint(
     '',
     '',
     '<attached-preview-comments>',
-    "Hard scope: change ONLY the elements identified below by selector / position / pod members. Do NOT modify sibling sub-pages, parent layout, global CSS, design tokens, or unrelated rules even if you notice issues there — surface those as a follow-up note in your reply instead of editing them. If the user's request cannot be satisfied without touching outside this scope, ask the user before proceeding. For visual marks, inspect the screenshot when one is provided (otherwise locate the region from the structured fields) and modify the marked region first.",
+    "Hard scope: change ONLY the elements identified below by selector / position / pod members. Do NOT modify sibling sub-pages, parent layout, global CSS, design tokens, or unrelated rules even if you notice issues there - surface those as a follow-up note in your reply instead of editing them. If the user's request cannot be satisfied without touching outside this scope, ask the user before proceeding. For visual marks, inspect the screenshot when one is provided (otherwise locate the region from the structured fields) and modify the marked region first.",
   ];
   for (const item of commentAttachments) {
     const targetKind =
@@ -617,7 +617,7 @@ export function renderCommentAttachmentHint(
           `intent: ${item.intent || visualAnnotationIntent(item.markKind || 'stroke')}`,
         );
       } else {
-        // Screenshot capture failed (#4080) — no screenshot exists for this
+        // Screenshot capture failed (#4080) - no screenshot exists for this
         // mark. Point the agent at the structured fields instead (#4084).
         lines.push(
           `markKind: ${item.markKind || 'stroke'}`,
@@ -968,7 +968,7 @@ export function resolveSafePromptImagePaths(
     if (!isPathWithin(uploadDir, resolved) || !existsSync(resolved)) continue;
     // Past the within-UPLOAD_DIR + existence gate the path points at a real
     // upload. A statSync failure here (EACCES/EPERM, a file that vanished
-    // mid-run) is an infrastructure error, not bad input — surface it so the
+    // mid-run) is an infrastructure error, not bad input - surface it so the
     // run fails loudly instead of silently dropping required prompt context.
     let stat;
     try {

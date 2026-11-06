@@ -70,7 +70,7 @@ test('local file path: unparseable baseline rejects with a clear error, not a ba
 /**
  * Valid JSON is not an extraction. Without a shape check the baseline reads as
  * empty, every token in the candidate counts as added, and the run reports
- * total drift and exits 1 — a design change that never happened, in the bucket
+ * total drift and exits 1 - a design change that never happened, in the bucket
  * the exit-code contract reserves for real drift.
  */
 test('local file path: JSON that is not an extraction rejects rather than scoring as total drift', async () => {

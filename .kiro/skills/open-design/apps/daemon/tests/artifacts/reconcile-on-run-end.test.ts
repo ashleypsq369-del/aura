@@ -194,7 +194,7 @@ describe('run-end artifact manifest reconciliation (#2893)', () => {
     const pastTime = new Date('2020-01-01T00:00:00Z');
     fs.utimesSync(oldPath, pastTime, pastTime);
 
-    // Run starts here — record the timestamp before the run writes files
+    // Run starts here - record the timestamp before the run writes files
     const runStartTimeMs = Date.now();
 
     // File written during the run

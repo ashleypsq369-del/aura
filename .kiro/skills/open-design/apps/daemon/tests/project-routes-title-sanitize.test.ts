@@ -30,7 +30,7 @@ function extractTitle(html: string): string | null {
 // ---------------------------------------------------------------------------
 // Core sanitization: Teams-disallowed characters are replaced in <title>
 // ---------------------------------------------------------------------------
-describe('daemonSanitizeTitleInDoc – Teams-disallowed characters', () => {
+describe('daemonSanitizeTitleInDoc - Teams-disallowed characters', () => {
   it('replaces Teams-disallowed chars in a typical invoice title', () => {
     // Covers the reported repro: "Invoice #INV/2025:Acme & Co"
     const html = `<!doctype html>
@@ -164,7 +164,7 @@ describe('daemonSanitizeTitleInDoc – Teams-disallowed characters', () => {
 // ---------------------------------------------------------------------------
 // Defect #2: out-of-range numeric entities must not throw
 // ---------------------------------------------------------------------------
-describe('daemonSanitizeTitleInDoc – out-of-range numeric entities', () => {
+describe('daemonSanitizeTitleInDoc - out-of-range numeric entities', () => {
   it('does not throw on a decimal numeric entity beyond the Unicode range (&#9999999999;)', () => {
     // String.fromCodePoint throws RangeError for values > 0x10FFFF without the
     // safeFromCodePoint guard. This test would crash before the fix.
@@ -199,7 +199,7 @@ describe('daemonSanitizeTitleInDoc – out-of-range numeric entities', () => {
 // ---------------------------------------------------------------------------
 // Defect #3: named non-ASCII entities must not leave orphaned `name;` remnants
 // ---------------------------------------------------------------------------
-describe('daemonSanitizeTitleInDoc – named non-ASCII entities', () => {
+describe('daemonSanitizeTitleInDoc - named non-ASCII entities', () => {
   it('does not leave orphaned entity text when &ccedil; appears in the title', () => {
     // Before the fix: "&" is stripped first, leaving the literal string "ccedil;"
     // in the title. After the fix: &ccedil; is decoded to ç before sanitizing.
@@ -238,7 +238,7 @@ describe('daemonSanitizeTitleInDoc – named non-ASCII entities', () => {
 // Defect #4: only the real <head> title must be rewritten; not imposters in
 // comments or <script> blocks
 // ---------------------------------------------------------------------------
-describe('daemonSanitizeTitleInDoc – only rewrites the real <head> title', () => {
+describe('daemonSanitizeTitleInDoc - only rewrites the real <head> title', () => {
   it('does not treat a <title> inside an HTML comment as the document title', () => {
     // The comment appears before the real <title>. Without the fix the comment's
     // <title> would be matched first and the real title would be left unsanitized.

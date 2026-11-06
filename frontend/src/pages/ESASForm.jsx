@@ -1,5 +1,5 @@
-/**
- * ESASForm.jsx — Edmonton Symptom Assessment System
+﻿/**
+ * ESASForm.jsx - Edmonton Symptom Assessment System
  * Redesigned: PageHeader + clean question cards
  */
 import { useState } from 'react';
@@ -101,9 +101,9 @@ function ScoreSlider({ symptom, value, onChange, previous }) {
       </div>
 
       <div className="flex justify-between text-[10px] text-[var(--text-400)] font-medium">
-        <span>0 — None</span>
-        <span>5 — Moderate</span>
-        <span>10 — Worst</span>
+        <span>0 - None</span>
+        <span>5 - Moderate</span>
+        <span>10 - Worst</span>
       </div>
     </div>
   );
@@ -136,7 +136,7 @@ export default function ESASForm() {
       toast.success('ESAS assessment saved');
       fireMilestone('hearts');
       if (response.data.alerts_generated?.length > 0) {
-        toast.error(`${response.data.alerts_generated.length} alert(s) generated — please review`, { duration: 5000 });
+        toast.error(`${response.data.alerts_generated.length} alert(s) generated - please review`, { duration: 5000 });
       }
       queryClient.invalidateQueries(['esas', patientId]);
       queryClient.invalidateQueries(['assessment-overview', patientId]);

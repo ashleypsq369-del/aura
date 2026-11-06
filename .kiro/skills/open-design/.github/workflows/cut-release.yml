@@ -52,7 +52,7 @@ jobs:
           set -euo pipefail
           latest=""
           if [ -n "$INPUT_VERSION" ]; then
-            # Strict x.y.z, digits only — rejects shell metacharacters, newlines, etc.
+            # Strict x.y.z, digits only - rejects shell metacharacters, newlines, etc.
             if ! printf '%s' "$INPUT_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
               echo "::error::Invalid version '$INPUT_VERSION' (expected x.y.z, digits only)"
               exit 1
@@ -156,8 +156,8 @@ jobs:
           NOTICE_BODY: |
             **分支**:[`release/v${{ steps.ver.outputs.version }}`](${{ github.server_url }}/${{ github.repository }}/tree/release/v${{ steps.ver.outputs.version }})(从 main 切出,大版本 / minor)
 
-            **Backport label**:`backport release/v${{ steps.ver.outputs.version }}` —— 要回灌到这个版本的修复,给 PR 打这个 label。
+            **Backport label**:`backport release/v${{ steps.ver.outputs.version }}` -- 要回灌到这个版本的修复,给 PR 打这个 label。
 
-            Prerelease 打包已开始(约 20–40 分钟);完成后会再发一张带各平台下载链接的卡片。
+            Prerelease 打包已开始(约 20-40 分钟);完成后会再发一张带各平台下载链接的卡片。
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: node --experimental-strip-types tools/release/src/notifications/feishu-notice.ts

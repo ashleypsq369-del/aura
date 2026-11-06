@@ -1,4 +1,4 @@
-// Plan §3.M3 + §3.M4 — bundled atoms roster contract.
+// Plan §3.M3 + §3.M4 - bundled atoms roster contract.
 //
 // The repo's plugins/_official/atoms/ directory is the v1 source of
 // truth for first-party atom SKILL.md fragments. This test pins the
@@ -7,7 +7,7 @@
 // the same patch.
 //
 // We assert the on-disk inventory rather than the FIRST_PARTY_ATOMS
-// catalog — the latter is the daemon-side metadata, the former is
+// catalog - the latter is the daemon-side metadata, the former is
 // the publishable plugin substrate spec §23 reserves.
 
 import path from 'node:path';
@@ -19,7 +19,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '../../..');
 const atomsRoot = path.join(repoRoot, 'plugins', '_official', 'atoms');
 
-// Per spec §10 and §21 — implemented atoms (Phase 4 default)
+// Per spec §10 and §21 - implemented atoms (Phase 4 default)
 const PHASE_4_ATOMS = [
   'discovery-question-form',
   'direction-picker',

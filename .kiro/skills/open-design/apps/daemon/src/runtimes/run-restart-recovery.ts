@@ -34,7 +34,7 @@ export interface RestartRecoverableDurableRunState {
  * log, or its last persisted update when the log carries none.
  *
  * A Run cut off by a crash, a force-quit or a power loss stopped then, not when
- * the daemon next started — which can be hours later. Ending it at restart time
+ * the daemon next started - which can be hours later. Ending it at restart time
  * made the turn header read "14h" (P0-24 N1).
  */
 export function lastRecordedRunActivityAt(
@@ -56,7 +56,7 @@ export function interruptDurableRunAfterDaemonRestart(
   /**
    * From `lastRecordedRunActivityAt`; the Run's terminal time when known.
    * Pass a function to defer reading the event log until a Run actually needs
-   * interrupting — terminal Runs must not have their logs read at all.
+   * interrupting - terminal Runs must not have their logs read at all.
    */
   lastRecordedAtInput?: number | (() => number),
 ): boolean {
@@ -68,7 +68,7 @@ export function interruptDurableRunAfterDaemonRestart(
       ? lastRecordedAt
       : now;
   // P0-24 N1 / Q5: a Run cut off by a crash, force-quit or power loss was
-  // stopped, not failed — the cause is the client going away, not the agent.
+  // stopped, not failed - the cause is the client going away, not the agent.
   // It is recorded and reported as canceled; the reason stays on the record
   // (`errorCode` + `terminalTrigger` + `terminalRecoveryReason`) so analytics
   // can still tell these apart from a user's stop. Product accepted the

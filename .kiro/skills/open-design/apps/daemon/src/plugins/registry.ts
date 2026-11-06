@@ -95,7 +95,7 @@ export interface ResolveFailure {
 export type ResolveResult = ResolveOutcome | ResolveFailure;
 
 // Resolve a single plugin folder into a typed InstalledPluginRecord. Pure
-// FS read, no SQLite write — the installer module is the only writer.
+// FS read, no SQLite write - the installer module is the only writer.
 export async function resolvePluginFolder(opts: ResolveOptions): Promise<ResolveResult> {
   const warnings: string[] = [];
   const errors: string[] = [];
@@ -169,7 +169,7 @@ export async function resolvePluginFolder(opts: ResolveOptions): Promise<Resolve
   // Spec §5.3 / trust.ts: a `local` install is implicitly trusted (the user
   // copied the folder here themselves), everything else starts restricted
   // until an explicit `od plugin trust` flip. Fall back to that source-kind
-  // policy when the caller did not pin a trust tier — previously this was
+  // policy when the caller did not pin a trust tier - previously this was
   // hard-coded to 'restricted', which left local scenario plugins unable to
   // obtain the `pipeline:*` capability they need to run their own pipeline.
   const trust: TrustTier = opts.trust ?? defaultTrustForRecord({ sourceKind });
@@ -242,8 +242,8 @@ export function rowToInstalledPlugin(row: DbRow): InstalledPluginRecord {
  * caller may adopt legacy bytes merely by viewing them.
  *
  * `scope === undefined` (as opposed to `null` or `''`) is a SEPARATE signal
- * from "no identity": it means the caller — `listInstalledPlugins` called
- * with no second argument at all — never asked for scoping and is the
+ * from "no identity": it means the caller - `listInstalledPlugins` called
+ * with no second argument at all - never asked for scoping and is the
  * preserved local/CLI compatibility lane. `null`/`''` is the headerless HTTP
  * catalog: it may see unbound local user plugins and bundled plugins, but not
  * anything claimed by a Workspace.
@@ -397,13 +397,13 @@ export async function activateWorkspaceTeamPluginIfStillShared(input: {
 
 /**
  * `workspaceId` is optional and defaults to the pre-workspace-isolation
- * behavior (every live installed plugin, otherwise unfiltered) so every existing caller —
- * `od plugin list`, inventory stats, the bundled-scenario scan in server.ts —
+ * behavior (every live installed plugin, otherwise unfiltered) so every existing caller -
+ * `od plugin list`, inventory stats, the bundled-scenario scan in server.ts -
  * keeps working unchanged, AS LONG AS THEY OMIT THE ARGUMENT ENTIRELY. A
  * reconciled tombstone is terminal even for these unscoped internal callers.
  * `GET /api/plugins` always passes a second argument (`headerValue(...)`,
  * which returns `string | null`, never `undefined`), so it always gets the
- * workspace-scoped view even when the caller has no header — see
+ * workspace-scoped view even when the caller has no header - see
  * `pluginVisibleFromWorkspace`'s doc comment for why `undefined` and `null`
  * must NOT collapse to the same "unfiltered" behavior here.
  */

@@ -9,7 +9,7 @@ on:
   pull_request_target:
     # closed: backport labels present at merge time.
     # labeled: also catch a backport label added AFTER the PR was already merged (a common
-    #          slip — people forget to label before merging). The `if` below skips still-open
+    #          slip - people forget to label before merging). The `if` below skips still-open
     #          PRs, so labelling an open PR does nothing until it actually merges.
     types: [closed, labeled]
 
@@ -35,7 +35,7 @@ jobs:
       - name: Authorize the labeler (labeled events only)
         id: authz
         # For a backport label added AFTER merge, require the labeler to have write+ permission
-        # here — don't rely on backport-label-guard.yml winning the race to strip an unauthorized
+        # here - don't rely on backport-label-guard.yml winning the race to strip an unauthorized
         # label before this job mints the App token and opens the PR. The merge (closed) path is
         # already gated by the merger having had write access. Fail closed: any lookup miss skips.
         env:

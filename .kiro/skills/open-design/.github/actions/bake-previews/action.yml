@@ -108,7 +108,7 @@ runs:
         endpoint="${R2_ENDPOINT%/}"
         # cp (not sync --delete) so untouched clips already on R2 stay put.
         # Keys are content-addressed (<id>/<fingerprint>/preview.mp4), so the
-        # clips are immutable — let the CDN cache them forever (a content change
+        # clips are immutable - let the CDN cache them forever (a content change
         # ships a new directory). Garbage collection is a separate scheduled job.
         aws s3 cp .tmp/plugin-previews "s3://$R2_BUCKET/plugin-previews/" \
           --recursive --no-progress \

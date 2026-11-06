@@ -143,7 +143,7 @@ describe('pinAssistantMessageOnRunCreate generation boundary (#6418)', () => {
 
   it('does not generation-reset a row owned by a still-active run', () => {
     // nettee on #6418: a second concurrent run sharing the same
-    // assistantMessageId must not clear the first run's in-flight events —
+    // assistantMessageId must not clear the first run's in-flight events -
     // rebinding a row whose current run is still active would corrupt the
     // transcript (the route rejects it; this is the defense-in-depth skip).
     const db = createDb();
@@ -224,7 +224,7 @@ describe('pinAssistantMessageOnRunCreate generation boundary (#6418)', () => {
   it('binds a runId-less web placeholder (normal pre-run flow)', () => {
     // The web persists an assistant placeholder with runStatus set but no run
     // bound yet; the run creation must be able to rebind it (this is not a
-    // concurrent-run race — there is no real run owning the row).
+    // concurrent-run race - there is no real run owning the row).
     const db = createDb();
     db.prepare(`INSERT INTO conversations (id) VALUES ('conv-a')`).run();
     seedMessage(db, {

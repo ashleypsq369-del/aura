@@ -6,7 +6,7 @@ import { extractColors } from '../lib/extractors/colors.js';
 /**
  * `color` and `border-color` both inherit, and an unset border-color resolves
  * to currentColor. So every element reports a text colour whether or not it
- * paints text, and a border colour whether or not it draws a border — and on an
+ * paints text, and a border colour whether or not it draws a border - and on an
  * anchor nobody styled, that colour is the browser's default link blue.
  *
  * rgb(0,0,238) was the most frequent semantic.primary across a 174-site corpus

@@ -7,7 +7,7 @@ name: release-rollback
 # `latest` again. Implementation and all the refusals live in
 # `tools/release/src/storage/rollback-latest.ts`.
 #
-# WHAT THIS CANNOT DO — read before running. The desktop updater never offers a
+# WHAT THIS CANNOT DO - read before running. The desktop updater never offers a
 # version that is not strictly newer than the running one
 # (`apps/desktop/src/main/updater.ts`), so this stops the rollout and nothing
 # more. Installs that already took the bad release stay on it until a
@@ -18,7 +18,7 @@ name: release-rollback
 # that a rollback would fight, and the next counted publish would undo it
 # anyway. The underlying CLI is channel-general; this entrypoint is not.
 #
-# TRUST BOUNDARY — this performs a trusted write to the pointer every installed
+# TRUST BOUNDARY - this performs a trusted write to the pointer every installed
 # client reads. `workflow_dispatch` runs the workflow file *from the dispatch
 # ref*, so no check written here can be the control; the control is the repo's
 # dispatch permission, the same one that guards `release-stable.yml`. The ref
@@ -34,7 +34,7 @@ on:
         required: true
         type: string
       from_version:
-        description: "Stable version being retracted — must match what latest serves right now. This is the confirmation step."
+        description: "Stable version being retracted - must match what latest serves right now. This is the confirmation step."
         required: true
         type: string
       dry_run:
@@ -128,7 +128,7 @@ jobs:
 
       # Before anything is written. Moving the badge happens after the R2
       # rollback, so a missing release discovered there would fail the run with
-      # `latest` already moved — a half-done retraction is worse than a refused
+      # `latest` already moved - a half-done retraction is worse than a refused
       # one.
       - name: Assert the restored version has a GitHub Release
         id: badge
@@ -185,7 +185,7 @@ jobs:
           # The installer floor is repo-vars policy, and repository variables are
           # not process env. Without this handoff the rollback resolves NO floor:
           # it would delete an active `control.launcher.version` from the restored
-          # metadata and happily point latest below the current minimum — the
+          # metadata and happily point latest below the current minimum - the
           # exact safeguard this workflow claims to enforce.
           # `release-stable.yml` passes the same pair to publish and verify.
           RELEASE_LAUNCHER_VERSION_MIN_STABLE: ${{ vars.RELEASE_LAUNCHER_VERSION_MIN_STABLE }}

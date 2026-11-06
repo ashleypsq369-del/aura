@@ -148,7 +148,7 @@ dembrandt dembrandt.com --tailwind src/app.css   # or write it straight into a p
 }
 ```
 
-The file contains **only values observed on the page**. No 50–950 shade ramps, no interpolated scale steps, no derived hover or on-color variants: an invented shade is indistinguishable from a measured one once it is in the file, and this export is meant as the starting point you extend by hand. Colors keep their semantic role name (`--color-primary`), or the author's own custom property name where the page declares one; the rest are numbered `--color-brand-N`. Tailwind's defaults still apply to everything not listed, so the block extends the theme rather than replacing it.
+The file contains **only values observed on the page**. No 50-950 shade ramps, no interpolated scale steps, no derived hover or on-color variants: an invented shade is indistinguishable from a measured one once it is in the file, and this export is meant as the starting point you extend by hand. Colors keep their semantic role name (`--color-primary`), or the author's own custom property name where the page declares one; the rest are numbered `--color-brand-N`. Tailwind's defaults still apply to everything not listed, so the block extends the theme rather than replacing it.
 
 Spacing is emitted as v4's `--spacing` multiplier when the page has a recognizable base-N rhythm, and as named steps otherwise. Values with a usage count (spacing, radii) are selected by how often they appear, not by size, so sub-pixel one-offs stay out of the scale.
 

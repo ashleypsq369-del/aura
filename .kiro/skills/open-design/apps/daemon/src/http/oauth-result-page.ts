@@ -19,7 +19,7 @@ export function renderOAuthResultPage(opts: OAuthResultPageOptions): string {
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>${escapeHtml(title)} — OpenDesign</title>
+<title>${escapeHtml(title)} - OpenDesign</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root { color-scheme: light dark; }

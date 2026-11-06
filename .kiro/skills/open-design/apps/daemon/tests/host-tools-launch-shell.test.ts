@@ -23,7 +23,7 @@ const spawnMock = spawn as unknown as ReturnType<typeof vi.fn>;
 
 // Regression: launchHostTool used `spawn(command, args, { shell: process.platform === 'win32' })`.
 // On Windows that runs the launch through cmd.exe, which shell-interprets the
-// args — one of which is the (project-derived) directory path — so a path with
+// args - one of which is the (project-derived) directory path - so a path with
 // cmd metacharacters (`&`, `|`, `^`, `>`) could inject commands. The fix routes
 // through `createCommandInvocation` (no shell; .cmd/.bat via cmd.exe with
 // verbatim, CommandLineToArgvW-safe args).

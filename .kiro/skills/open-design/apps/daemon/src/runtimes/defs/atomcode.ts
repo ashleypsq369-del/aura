@@ -1,7 +1,7 @@
 import { DEFAULT_MODEL_OPTION } from './shared.js';
 import type { RuntimeAgentDef } from '../types.js';
 
-// AtomCode — open-source terminal AI coding agent written in Rust.
+// AtomCode - open-source terminal AI coding agent written in Rust.
 // Repo:   https://atomgit.com/atomgit_atomcode/atomcode
 // Docs:   https://atomcode.atomgit.com/docs/en/index.html
 // Install: `cargo install --path crates/atomcode-cli --locked` (from source)
@@ -18,7 +18,7 @@ import type { RuntimeAgentDef } from '../types.js';
 // inject credentials. Any OpenAI-compatible provider works (Anthropic, OpenAI,
 // DeepSeek, Zhipu/GLM, Qwen, SiliconFlow, Ollama, …).
 //
-// Output: AtomCode headless has no structured stream-json mode yet — it emits
+// Output: AtomCode headless has no structured stream-json mode yet - it emits
 // plain-text assistant replies on stdout and verbose diagnostics (tool calls,
 // token usage) on stderr with `-v`. We therefore use `streamFormat: 'plain'`
 // (single-turn text reply, no tool_use streaming). Upgrading to a structured

@@ -1,4 +1,4 @@
-// Phase 4 / spec §23.3.5 — bundled plugin boot walker.
+// Phase 4 / spec §23.3.5 - bundled plugin boot walker.
 //
 // On daemon startup, scan `<repo-root>/plugins/_official/**` for
 // folders that look like installable plugin manifests (a SKILL.md
@@ -66,7 +66,7 @@ export async function registerBundledPlugins(
 ): Promise<RegisterBundledPluginsResult> {
   const out: InstalledPluginRecord[] = [];
   const warnings: string[] = [];
-  // Every bundled folder we attempted this walk — including ones that
+  // Every bundled folder we attempted this walk - including ones that
   // failed to parse. Pruning keys off this set so a folder that still
   // ships but has a broken manifest is warned about, not deleted.
   const seenFolderIds = new Set<string>();
@@ -77,7 +77,7 @@ export async function registerBundledPlugins(
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
       // A missing bundledRoot is a packaging problem, not a removal of
-      // every bundled plugin — never prune on this path.
+      // every bundled plugin - never prune on this path.
       return { registered: [], pruned: [], warnings: [] };
     }
     throw err;
@@ -86,10 +86,10 @@ export async function registerBundledPlugins(
   for (const tier of topLevel) {
     if (!tier.isDirectory()) continue;
     // Two layouts are supported:
-    //   - plugins/_official/<plugin-id>/        — direct plugin
-    //   - plugins/_official/atoms/<atom>/       — atom subtree
-    //   - plugins/_official/scenarios/<id>/     — scenario subtree
-    //   - plugins/_official/bundles/<id>/       — bundle subtree
+    //   - plugins/_official/<plugin-id>/        - direct plugin
+    //   - plugins/_official/atoms/<atom>/       - atom subtree
+    //   - plugins/_official/scenarios/<id>/     - scenario subtree
+    //   - plugins/_official/bundles/<id>/       - bundle subtree
     // We try the direct shape first, then recurse one level if the
     // tier directory itself isn't a manifest folder.
     const tierAbs = path.join(input.bundledRoot, tier.name);
@@ -143,7 +143,7 @@ function pruneRemovedBundledPlugins(
 
 // Recursively list every file under `dir`, relative to `root`. Bundled
 // plugin folders are curated content directories (no node_modules/.git), so
-// a plain recursive walk is cheap — no need to special-case anything.
+// a plain recursive walk is cheap - no need to special-case anything.
 async function listFilesRecursive(root: string, dir: string): Promise<string[]> {
   let entries;
   try {
@@ -171,7 +171,7 @@ async function listFilesRecursive(root: string, dir: string): Promise<string[]> 
 // render preview media (od.preview.poster/video/gif) from arbitrary
 // manifest-referenced paths. Hardcoding "the files we know matter today"
 // would just be next month's whack-a-mole as new preview/asset consumers get
-// added — hashing the whole tree is the version of this check that doesn't
+// added - hashing the whole tree is the version of this check that doesn't
 // need updating every time. Paths are sorted before hashing so the digest is
 // independent of readdir's (platform-dependent) enumeration order.
 async function computeBundledContentDigest(folder: string): Promise<string> {
@@ -252,7 +252,7 @@ async function registerOne(args: {
   // an upgrade without a boot flag), so `record` always carries a fresh
   // `installedAt`/`updatedAt` stamped at construction time (registry.ts). If
   // nothing about this plugin actually changed since last boot, keep the
-  // existing timestamps instead of overwriting them with "now" — otherwise
+  // existing timestamps instead of overwriting them with "now" - otherwise
   // every restart resets the ENTIRE bundled catalog's `updatedAt` to the same
   // instant, which collapses the Community gallery's "Newest" sort (it orders
   // by `updatedAt`) into whatever order ties fall back to, instead of real

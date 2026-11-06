@@ -146,9 +146,9 @@ With `--json-only`, a failure also prints a machine-readable `{ "error": { "code
 
 By default a `robots.txt` disallow warns and the run continues. That is right when a person runs the CLI against a site they are responsible for: the tool has no standing to overrule them, and the warning is information rather than a gate.
 
-It is not right where nobody is deciding. Set `DEMBRANDT_ENFORCE_ROBOTS=1` in scheduled jobs, containers and any server-side use, and a disallow — or a `robots.txt` that cannot be read at all — skips the target with exit `4` before the browser is launched. Both the CLI and the MCP server honour it.
+It is not right where nobody is deciding. Set `DEMBRANDT_ENFORCE_ROBOTS=1` in scheduled jobs, containers and any server-side use, and a disallow - or a `robots.txt` that cannot be read at all - skips the target with exit `4` before the browser is launched. Both the CLI and the MCP server honour it.
 
-A site with no `robots.txt` is not a site that refused: `404` and `410` mean there are no rules to honour and the run proceeds. Every other response we cannot read as rules — a refusal, a rate limit, a bot wall, a `5xx` — skips.
+A site with no `robots.txt` is not a site that refused: `404` and `410` mean there are no rules to honour and the run proceeds. Every other response we cannot read as rules - a refusal, a rate limit, a bot wall, a `5xx` - skips.
 
 Exit `4` is a decision by the site, not a failure of the run, so a job that iterates over URLs should count it separately from `2` rather than failing the build:
 

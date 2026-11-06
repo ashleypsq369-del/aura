@@ -45,7 +45,7 @@ retrieval:
 
 # Nielsen's 10 Usability Heuristics
 
-Foundational principles for evaluating and designing usable interfaces. Apply these as a review checklist and as design constraints from the start — not only as a post-hoc audit tool.
+Foundational principles for evaluating and designing usable interfaces. Apply these as a review checklist and as design constraints from the start - not only as a post-hoc audit tool.
 
 ---
 
@@ -67,7 +67,7 @@ Users cannot make good decisions without knowing the current state of the system
 
 ## 2. Match Between System and Real World
 
-The design should speak the users' language — words, phrases, and concepts familiar to the user, not internal jargon or system terminology.
+The design should speak the users' language - words, phrases, and concepts familiar to the user, not internal jargon or system terminology.
 
 Follow real-world conventions and natural mapping so the interface feels intuitive rather than requiring translation.
 
@@ -91,7 +91,7 @@ Easy undo and escape paths foster confidence and prevent users from feeling trap
 - Always provide Undo for destructive or irreversible actions
 - Modals and dialogs need an obvious close/cancel action
 - Multi-step flows need a way to go back
-- Destructive actions (delete, publish, send) should be reversible where possible — or require explicit confirmation
+- Destructive actions (delete, publish, send) should be reversible where possible - or require explicit confirmation
 
 **Review question:** Can the user get out of any state without losing their work or needing to contact support?
 
@@ -138,7 +138,7 @@ Recognition requires less cognitive effort than recall. Visible affordances redu
 **In practice:**
 - Show relevant options in context rather than requiring users to remember commands
 - Display previously entered data when relevant (e.g. pre-fill known fields)
-- Use icons with labels — icons alone are ambiguous to many users
+- Use icons with labels - icons alone are ambiguous to many users
 - Navigation should be visible at all times, not hidden behind a gesture or hover
 
 **Review question:** Does a returning user need to remember anything to pick up where they left off?
@@ -147,7 +147,7 @@ Recognition requires less cognitive effort than recall. Visible affordances redu
 
 ## 7. Flexibility and Efficiency of Use
 
-Shortcuts — hidden from novice users — may speed up interaction for expert users. The design should serve both.
+Shortcuts - hidden from novice users - may speed up interaction for expert users. The design should serve both.
 
 Accelerators, customisation, and personalisation let experienced users work faster without adding complexity for beginners.
 
@@ -170,7 +170,7 @@ Focus content and visual design on the essentials that support primary user goal
 **In practice:**
 - Remove decorative elements that carry no meaning
 - Secondary and tertiary actions should be visually subordinate to primary ones
-- Avoid showing all features simultaneously — progressive disclosure reveals complexity only when needed
+- Avoid showing all features simultaneously - progressive disclosure reveals complexity only when needed
 - Empty states, error states, and loading states deserve the same design attention as content states
 
 **Review question:** Does every element on screen earn its place, or is something there "just in case"?
@@ -181,7 +181,7 @@ Focus content and visual design on the essentials that support primary user goal
 
 Error messages should be expressed in plain language, precisely indicate the problem, and constructively suggest a solution.
 
-Error messages are a UX surface — they deserve the same care as any other UI copy.
+Error messages are a UX surface - they deserve the same care as any other UI copy.
 
 **In practice:**
 - Never show raw error codes or stack traces to end users
@@ -198,7 +198,7 @@ Error messages are a UX surface — they deserve the same care as any other UI c
 
 It is best if the system does not need any additional explanation. However, it may be necessary to provide documentation to help users complete tasks.
 
-Help should be contextual, searchable, and actionable — not a last resort buried in a footer.
+Help should be contextual, searchable, and actionable - not a last resort buried in a footer.
 
 **In practice:**
 - Prefer self-explanatory UI over tooltips; prefer tooltips over documentation

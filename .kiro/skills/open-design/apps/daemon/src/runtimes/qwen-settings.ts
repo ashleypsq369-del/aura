@@ -55,11 +55,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  * Collect model ids from a parsed `settings.json`.
  *
  * Two sources, in priority order:
- * - `modelProviders.<provider>[].id` — every provider entry the user
+ * - `modelProviders.<provider>[].id` - every provider entry the user
  *   configured. The shape is `{ openai: [{ id, name, baseUrl, … }], … }`;
  *   provider keys are not enumerated against an allowlist so a Qwen release
  *   that adds one keeps working.
- * - `model` — the currently selected model, which may be a bare string or a
+ * - `model` - the currently selected model, which may be a bare string or a
  *   `{ name }`/`{ id }` record depending on Qwen version.
  *
  * Ids are sanitized and de-duplicated; anything unparseable is skipped rather

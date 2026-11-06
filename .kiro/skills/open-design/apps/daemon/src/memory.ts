@@ -28,7 +28,7 @@ import { parseFrontmatter } from './design-systems/frontmatter.js';
 // Imported lazily through the memory-extractions module by the call
 // sites below so a future test-only build of memory.ts that stubs the
 // store can still tree-shake the ring buffer. We use a static import
-// here because memory.ts is the chat hot path — a dynamic import per
+// here because memory.ts is the chat hot path - a dynamic import per
 // turn would add a microtask hop for no real benefit.
 import type { MemoryExtractionOrigin } from '@open-design/contracts';
 import { captureExtractionOrigin, recordHeuristic, recordSkip } from './memory-extractions.js';
@@ -36,7 +36,7 @@ import { captureExtractionOrigin, recordHeuristic, recordSkip } from './memory-e
 // Tiny in-process bus. The HTTP layer (`/api/memory/events`) subscribes
 // to this and forwards events to any open SSE client; the storage
 // helpers below emit on every write so the web UI auto-refreshes
-// whenever memory changes — whether the change came from the chat
+// whenever memory changes - whether the change came from the chat
 // hook, the LLM extractor, the settings panel, or `curl`.
 export const memoryEvents = new EventEmitter();
 memoryEvents.setMaxListeners(64);
@@ -50,7 +50,7 @@ export type MemoryChangeKind =
 
 export interface MemoryChangeEvent {
   kind: MemoryChangeKind;
-  // Optional details — populated for upsert / delete; absent for index /
+  // Optional details - populated for upsert / delete; absent for index /
   // config so the frontend just re-fetches the list.
   id?: string;
   name?: string;
@@ -217,7 +217,7 @@ export async function readMemoryConfig(dataDir) {
       extraction: normalizeExtractionPatch(parsed?.extraction),
     };
   } catch {
-    // Injection defaults on — the whole point of the feature is to surface
+    // Injection defaults on - the whole point of the feature is to surface
     // user context across runs. Chat auto-extraction defaults OFF (see the
     // parse path above): writing memory is opt-in, reading it is not.
     return {
@@ -288,14 +288,14 @@ export async function writeMemoryConfig(dataDir, patch) {
   ) {
     emitChange({ kind: 'config', enabled: next.enabled });
   }
-  // We don't emit a separate change event for extraction overrides — the
+  // We don't emit a separate change event for extraction overrides - the
   // chat hot path doesn't need to react, and the settings panel re-reads
   // the config on every PATCH response anyway. Adding an extra event
   // would just trigger redundant entry-list re-fetches in MemorySection.
   return next;
 }
 
-// Public — returns the masked shape consumed by GET /api/memory.
+// Public - returns the masked shape consumed by GET /api/memory.
 // Keeps the secret out of the DOM but lets the UI render "configured" /
 // "•••• abcd" affordances without round-tripping through writeConfig.
 export function maskMemoryExtractionConfig(extraction) {
@@ -538,7 +538,7 @@ export async function deleteMemoryEntry(dataDir, id) {
   try {
     await fsp.unlink(entryPath(dataDir, id));
   } catch {
-    // Already gone — fine. Caller doesn't care.
+    // Already gone - fine. Caller doesn't care.
   }
   await removeIndexLine(dataDir, id);
   emitChange({ kind: 'delete', id });
@@ -546,10 +546,10 @@ export async function deleteMemoryEntry(dataDir, id) {
 
 // ----- Index maintenance --------------------------------------------------
 
-const INDEX_LINK_RE = /^\s*-\s+\[([^\]]+)\]\(([^)]+)\)(\s+—\s+(.*))?$/;
+const INDEX_LINK_RE = /^\s*-\s+\[([^\]]+)\]\(([^)]+)\)(\s+-\s+(.*))?$/;
 
 // Pull the linked entry ids out of MEMORY.md. The index is the user's
-// editable list — every bullet that points at `<id>.md` is a fact the
+// editable list - every bullet that points at `<id>.md` is a fact the
 // user wants injected into future system prompts. Removing a bullet
 // disables that fact while leaving the underlying file on disk, so the
 // user can paste the line back later. Anything that doesn't parse as a
@@ -575,7 +575,7 @@ async function ensureIndexHasEntry(dataDir, id, name, description) {
   const link = `${id}.md`;
   const desc = String(description || '').replace(/\r?\n/g, ' ').trim();
   const newLine = desc
-    ? `- [${name}](${link}) — ${desc}`
+    ? `- [${name}](${link}) - ${desc}`
     : `- [${name}](${link})`;
   let replaced = false;
   for (let i = 0; i < lines.length; i++) {
@@ -616,7 +616,7 @@ async function removeIndexLine(dataDir, id) {
 // source of truth for which facts get injected: removing a `- [Name](id.md)`
 // line disables that fact in future prompts while keeping the file on
 // disk (paste the line back in the settings panel to re-enable it).
-// Without this filter, deleted index lines had no effect — the daemon
+// Without this filter, deleted index lines had no effect - the daemon
 // kept reading every entry file and the index editor was cosmetic only.
 export async function composeMemoryBody(dataDir) {
   const cfg = await readMemoryConfig(dataDir);
@@ -649,7 +649,7 @@ export async function composeMemoryBody(dataDir) {
       // Render the profile as a structured KEY/VALUE block of facts, not
       // prose. The body is already line-per-field (e.g. `- Role: …`), so we
       // surface those lines directly under a single heading rather than the
-      // `**name** — description` shape the other buckets use.
+      // `**name** - description` shape the other buckets use.
       parts.push('### Profile');
       for (const e of grouped.get(type) ?? []) {
         const body = await readEntryBodyById(dataDir, e.id);
@@ -670,7 +670,7 @@ export async function composeMemoryBody(dataDir) {
       for (const e of grouped.get(type) ?? []) {
         const body = await readEntryBodyById(dataDir, e.id);
         if (!body) continue;
-        parts.push(`- **${e.name}** — ${e.description || '(no description)'}`);
+        parts.push(`- **${e.name}** - ${e.description || '(no description)'}`);
         const indented = body
           .trim()
           .split(/\r?\n/)
@@ -685,7 +685,7 @@ export async function composeMemoryBody(dataDir) {
     for (const e of grouped.get(type) ?? []) {
       const body = await readEntryBodyById(dataDir, e.id);
       if (!body) continue;
-      parts.push(`- **${e.name}** — ${e.description || '(no description)'}`);
+      parts.push(`- **${e.name}** - ${e.description || '(no description)'}`);
       const indented = body
         .trim()
         .split(/\r?\n/)
@@ -703,8 +703,8 @@ async function readEntryBodyById(dataDir, id) {
   return entry?.body ?? '';
 }
 
-// Return the `rule` memory entries that are ACTIVE — i.e. linked in MEMORY.md
-// — with their bodies. The POST self-verify enforcement (memory-verify.ts)
+// Return the `rule` memory entries that are ACTIVE - i.e. linked in MEMORY.md
+// - with their bodies. The POST self-verify enforcement (memory-verify.ts)
 // reads these as the rubric an artifact turn must be checked against. We honor
 // the same active-set gate composeMemoryBody uses so a rule the user removed
 // from the index stops being enforced without deleting the file. Returns an
@@ -734,24 +734,24 @@ function capitalize(s) {
 // ----- Heuristic auto-extraction -----------------------------------------
 
 // Look for explicit "save this" markers in the user message. The aim is
-// not to be a clever miner — that's what an LLM extractor is for. The
+// not to be a clever miner - that's what an LLM extractor is for. The
 // aim is to make `/记住 X` and `remember: X` actually do something
 // without spinning up a second model call. Returns an array of upserts
 // applied (caller can surface them in the SSE stream / log).
 //
 // Each pattern is responsible for declaring the *shape* of the entry it
-// produces — not just the regex. That way a Chinese "我是 X" capture
+// produces - not just the regex. That way a Chinese "我是 X" capture
 // gets a stable, human-readable label like `用户身份` with body
 // `- 身份 / 角色：X` instead of three identical fields all set to the
 // raw captured phrase ("一名软件工程师"). The regex captures `$1` once;
 // the templates below decide how that phrase becomes a useful memory.
 //
 // Fields per pattern:
-//   re                  — regex with exactly one capture group
-//   type                — memory type bucket (`user` / `feedback` / …)
-//   name                — stable label used as the entry's display name
-//   descriptionTemplate — short summary; `$1` is the captured phrase
-//   bodyTemplate        — markdown body injected into future system
+//   re                  - regex with exactly one capture group
+//   type                - memory type bucket (`user` / `feedback` / …)
+//   name                - stable label used as the entry's display name
+//   descriptionTemplate - short summary; `$1` is the captured phrase
+//   bodyTemplate        - markdown body injected into future system
 //                         prompts; `$1` is the captured phrase
 //
 // Id derivation: each captured fact gets a unique id derived from
@@ -789,7 +789,7 @@ const REMEMBER_PATTERNS: ExtractionPattern[] = [
     name: 'User role',
     descriptionTemplate: 'User is a $1',
     bodyTemplate:
-      '- Role / identity: $1\n\nWhen to apply: any chat — frame examples and recommendations around this background.',
+      '- Role / identity: $1\n\nWhen to apply: any chat - frame examples and recommendations around this background.',
   },
   {
     re: /(?:^|\b)i\s+prefer\s+([^.\n]{3,200})/i,
@@ -799,7 +799,7 @@ const REMEMBER_PATTERNS: ExtractionPattern[] = [
     bodyTemplate:
       '- Preference: $1\n\nWhen to apply: factor this in whenever a relevant choice comes up.',
   },
-  // "I'm in Berlin", "I live in Amsterdam", "I'm based in Lisbon" — pin
+  // "I'm in Berlin", "I live in Amsterdam", "I'm based in Lisbon" - pin
   // the user's location so future replies can localise time/currency/
   // tone without re-asking. We deliberately exclude the role pattern
   // ("I am a/an/the …") so this doesn't double-fire on the same line.
@@ -819,7 +819,7 @@ const REMEMBER_PATTERNS: ExtractionPattern[] = [
     bodyTemplate:
       '- Location: $1\n\nWhen to apply: localise time-of-day phrasing, currency, and cultural references.',
   },
-  // "I want to ship a course", "I'd like to redesign the dashboard" —
+  // "I want to ship a course", "I'd like to redesign the dashboard" -
   // long-running goals that change how the assistant frames every
   // related ask. Capped at 200 chars so a runaway sentence doesn't blow
   // up the body.
@@ -861,7 +861,7 @@ const REMEMBER_PATTERNS: ExtractionPattern[] = [
     descriptionTemplate: '用户偏好：$1',
     bodyTemplate: '- 偏好：$1\n\n何时适用：在涉及该选择时优先采用这一倾向。',
   },
-  // 我在 / 我住在 — 用户所在地。用 [在再] 同时容忍输入法常见的把
+  // 我在 / 我住在 - 用户所在地。用 [在再] 同时容忍输入法常见的把
   // "在" 错按成 "再" 的拼写：用户原文 "我再德国，我希望基于…" 在过去
   // 的 pattern 表里没有任何匹配，于是只能等 LLM 兜底；现在两条都直接
   // 命中所在地与目标。
@@ -881,7 +881,7 @@ const REMEMBER_PATTERNS: ExtractionPattern[] = [
     bodyTemplate:
       '- 所在地：$1\n\n何时适用：在时区、货币、文化语境相关的回答里把这一点纳入考虑。',
   },
-  // 我想 / 我希望 / 我打算 — 长期目标，常常贯穿多次对话。和"记住"
+  // 我想 / 我希望 / 我打算 - 长期目标，常常贯穿多次对话。和"记住"
   // 这种命令式不同，这些表述往往伴随项目本身，所以归到 project 类。
   {
     re: /我(?:想|希望|打算|计划)\s*([^\n。！？!?]{4,200})/,
@@ -924,7 +924,7 @@ const HEURISTIC_ARTIFACT_MATCHERS = REMEMBER_PATTERNS.map((pattern) => ({
 
 /**
  * True when a memory entry is provably an artifact of the retired chat
- * regex pack — its name matches one of the pack's fixed display names and
+ * regex pack - its name matches one of the pack's fixed display names and
  * its body is an instance of that pattern's fill-in template. Used by the
  * one-time cleanup migration; LLM, connector, and hand-written entries never
  * match because their bodies are free prose, not template instances.
@@ -944,7 +944,7 @@ export function isHeuristicExtractionArtifact(entry) {
 // briefs, task-type forms, and any explicitly profile-tagged form all feed the
 // "who I am / how I work" facts the intent gateway expands a short query
 // against. An empty id (a bare `[form answers]` header with no tag) also
-// qualifies — the onboarding flow doesn't always stamp an id.
+// qualifies - the onboarding flow doesn't always stamp an id.
 function isProfileFormId(id) {
   const lower = typeof id === 'string' ? id.trim().toLowerCase() : '';
   if (lower.length === 0) return true;
@@ -958,11 +958,11 @@ function isProfileFormId(id) {
 // Parse an existing profile body (line-per-field `- Label: value`) into an
 // ordered label→value map so later answers ADD or overwrite individual fields
 // instead of wiping unrelated ones. Lines that don't match the `- Label: …`
-// shape are dropped on rewrite — the profile is a structured fact block, not
+// shape are dropped on rewrite - the profile is a structured fact block, not
 // free prose.
 const PROFILE_FIELD_LINE_RE = /^\s*-\s+([^:]+):\s*(.*)$/;
 
-// Canonical profile field labels — kept in sync with the web profile editor
+// Canonical profile field labels - kept in sync with the web profile editor
 // (apps/web/src/components/MemoryProfilePanel.tsx PROFILE_FIELDS). Incoming
 // labels are matched case-insensitively to a canonical label so a hand-typed
 // or differently-cased answer ("role") updates the existing field ("Role")
@@ -1015,9 +1015,9 @@ function renderProfileBody(map) {
 /**
  * Reduce a user_profile body to the canonical field set the settings-panel
  * profile editor writes (`CANONICAL_PROFILE_LABELS`). Rows under any other
- * label were accumulated by the retired chat-form capture — per-project
+ * label were accumulated by the retired chat-form capture - per-project
  * discovery answers re-keyed by whatever the form question's wording was
- * ("要做什么？", "What should I build?", …) — and are dropped. Returns null
+ * ("要做什么？", "What should I build?", …) - and are dropped. Returns null
  * when no canonical row survives, i.e. the whole profile was form residue.
  */
 export function pruneProfileBodyToCanonical(body) {
@@ -1083,7 +1083,7 @@ async function captureProfileFromForm(dataDir, parsed) {
 export async function extractFromMessage(dataDir, userMessage, options?: { extractionOrigin?: MemoryExtractionOrigin }) {
   const extractionOrigin = captureExtractionOrigin(options?.extractionOrigin);
   // Mirror the LLM extractor's skip surface so the settings panel shows
-  // both extractors for the same turn — even when there's nothing to
+  // both extractors for the same turn - even when there's nothing to
   // record. Without this, a turn with memory disabled or an empty
   // message produces no row at all and the user can't tell whether the
   // hook ran.
@@ -1105,7 +1105,7 @@ export async function extractFromMessage(dataDir, userMessage, options?: { extra
   // answer block from a discovery / task-type / profile question-form, seed (or
   // merge into) the singleton `user_profile` BEFORE the regex pack runs so the
   // structured profile is available to this same turn's prompt. Gated on the
-  // per-hook `profileEnabled` flag — when off we skip the profile write but
+  // per-hook `profileEnabled` flag - when off we skip the profile write but
   // still let the ordinary heuristics below run.
   if (cfg.profileEnabled !== false) {
     const parsedForm = parseFormAnswers(userMessage);
@@ -1141,7 +1141,7 @@ export async function extractFromMessage(dataDir, userMessage, options?: { extra
     const body = applyTemplate(pattern.bodyTemplate, trimmedCaptured);
     // Each captured fact gets its own file. Deriving the id from the
     // captured phrase (rather than the stable display name) lets two
-    // "我是" matches — e.g. "我是张三" then "我是软件工程师" — coexist
+    // "我是" matches - e.g. "我是张三" then "我是软件工程师" - coexist
     // instead of overwriting one another.
     const id = deriveMemoryId(pattern.type, trimmedCaptured);
     try {
@@ -1176,7 +1176,7 @@ export async function extractFromMessage(dataDir, userMessage, options?: { extra
       source: 'heuristic',
     });
   }
-  // Always log the heuristic attempt — even when no pattern matched —
+  // Always log the heuristic attempt - even when no pattern matched -
   // so the settings panel's "Extraction history" shows a row for every
   // turn instead of leaving the user wondering whether the regex ran.
   // 0-match runs land as `phase: 'skipped'` with reason `'no-match'`.

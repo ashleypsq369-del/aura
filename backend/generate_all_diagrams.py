@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 ProjectAura -- Dissertation Diagrams (Pure Academic Style)
 ==========================================================
@@ -494,5 +494,5 @@ fig3_5()
 fig3_6()
 print('\nAll saved to:', OUT)
 print('Word: Insert -> Pictures -> This Device')
-print('Resize to 80–90% page width, centre-align.')
+print('Resize to 80-90% page width, centre-align.')
 print('=' * 52)

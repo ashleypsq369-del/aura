@@ -1,4 +1,4 @@
-// Plan §8 Definition of Done — daemon-side e2e suite.
+// Plan §8 Definition of Done - daemon-side e2e suite.
 //
 // Anchors the four §8 e2e cases that don't require Playwright UI flow
 // or the Phase 1.5 headless flag (e2e-3 stays out of scope until then).
@@ -6,16 +6,16 @@
 // modules so the public contract surface (HTTP body shape, SQLite
 // columns) is what the test sees.
 //
-//   e2e-2 pure apply across runs   — two consecutive applies share digest
+//   e2e-2 pure apply across runs   - two consecutive applies share digest
 //                                    and produce no FS mutation.
-//   e2e-4 replay invariance        — replay reproduces the prompt block
+//   e2e-4 replay invariance        - replay reproduces the prompt block
 //                                    byte-for-byte after a plugin upgrade.
-//   e2e-6 connector trust gate     — restricted plugin without
+//   e2e-6 connector trust gate     - restricted plugin without
 //                                    connector:<id> fails apply with 409
 //                                    capabilities-required, the matching
 //                                    /api/tools/connectors/execute call
 //                                    is also rejected with 403.
-//   e2e-8 apply purity regression  — 100 applies grow the snapshot count
+//   e2e-8 apply purity regression  - 100 applies grow the snapshot count
 //                                    by 100, leave the project cwd byte
 //                                    size unchanged, and emit no
 //                                    .mcp.json.
@@ -120,7 +120,7 @@ async function totalSize(dir: string): Promise<number> {
   return total;
 }
 
-describe('Plan §8 e2e — daemon-side anchors', () => {
+describe('Plan §8 e2e - daemon-side anchors', () => {
   it('e2e-2 pure apply across runs: two applies share digest, no FS mutation', async () => {
     await installLocal(FIXTURE_DIR);
     const plugin = getInstalledPlugin(db, 'sample-plugin')!;
@@ -231,7 +231,7 @@ describe('Plan §8 e2e — daemon-side anchors', () => {
     ).run('restricted', JSON.stringify(['prompt:inject']), 'connector-plugin');
     const plugin = getInstalledPlugin(db, 'connector-plugin')!;
 
-    // Apply via the resolver — restricted + missing capability →
+    // Apply via the resolver - restricted + missing capability →
     // capabilities-required envelope.
     const result = resolvePluginSnapshot({
       db,
@@ -275,7 +275,7 @@ describe('Plan §8 e2e — daemon-side anchors', () => {
         registry: REGISTRY_VIEW,
       });
       // Persist via resolver.finalizeOk path (linkSnapshotToProject etc.)
-      // not exercised here — we just call createSnapshot to assert the
+      // not exercised here - we just call createSnapshot to assert the
       // count grows. apply itself is pure.
       createSnapshot(db, {
         projectId: 'project-1',
@@ -300,7 +300,7 @@ describe('Plan §8 e2e — daemon-side anchors', () => {
     const after = (db.prepare(`SELECT COUNT(*) AS n FROM applied_plugin_snapshots`).get() as { n: number }).n;
     expect(after - before).toBe(100);
     expect(await totalSize(projectCwd)).toBe(beforeSize);
-    // No .mcp.json was written into the cwd — apply is pure.
+    // No .mcp.json was written into the cwd - apply is pure.
     const cwdEntries = await readdir(projectCwd);
     expect(cwdEntries.some((e) => e === '.mcp.json')).toBe(false);
   });
@@ -333,7 +333,7 @@ describe('Plan §8 e2e — daemon-side anchors', () => {
 
     // Now simulate the run-create call: body has only `projectId`. The
     // resolver should fall back to the project-pinned snapshot id and
-    // return ok with the same snapshotId — no missing-input gate fires.
+    // return ok with the same snapshotId - no missing-input gate fires.
     const reused = resolvePluginSnapshot({
       db,
       body: { projectId: 'project-pinned' },

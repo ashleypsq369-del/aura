@@ -165,7 +165,7 @@ Load colors_and_type.css, inspect preview/, reuse ui_kits/app/, and preserve com
 
 // Same complete, reusable SKILL.md as AUDIT_SKILL, but with the two reuse
 // headings worded exactly as the skill_missing_reuse_sections warning instructs
-// authors to write them — "What is inside" and "design-system highlights".
+// authors to write them - "What is inside" and "design-system highlights".
 // Following the warning text must satisfy the validator, or an agent running
 // --fail-on-warnings loops forever re-spelling these headings (#4435).
 const SKILL_WITH_WARNING_WORDED_SECTIONS = AUDIT_SKILL

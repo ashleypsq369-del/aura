@@ -56,7 +56,7 @@ function tremor(t: number, freq: number, amp: number): number {
 }
 
 // Velocity profile: ballistic phase + corrective phase (two-phase Fitts model)
-// Humans move fast toward target then make fine corrections — not smooth decel
+// Humans move fast toward target then make fine corrections - not smooth decel
 function velocityProfile(t: number, overshootProb = 0.3): number {
   const hasOvershoot = Math.random() < overshootProb;
   if (t < 0.05) return t / 0.05 * 0.2; // startup latency
@@ -70,8 +70,8 @@ function velocityProfile(t: number, overshootProb = 0.3): number {
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 /**
- * Adaptive readiness: resolve as soon as the page is actually settled — network
- * quiet, web fonts loaded, and the DOM done mutating — instead of always waiting
+ * Adaptive readiness: resolve as soon as the page is actually settled - network
+ * quiet, web fonts loaded, and the DOM done mutating - instead of always waiting
  * a fixed cap. Falls back to the cap on any failure, so the worst case matches a
  * fixed wait while typical pages finish in a fraction of the time. Every error
  * is swallowed: readiness is best-effort and must never abort extraction.
@@ -106,7 +106,7 @@ async function waitForSettled(page: Page, capMs: number, quietMs = 500) {
 async function simulateHumanMouse(page: Page) {
   const vw = 1920, vh = 1080;
 
-  // Per-session behavioral fingerprint — each "user" has consistent quirks
+  // Per-session behavioral fingerprint - each "user" has consistent quirks
   const profile = {
     handedness: Math.random() < 0.88 ? 'right' : 'left', // right-handed bias
     tremFreq: 8 + Math.random() * 4,        // physiological tremor 8-12Hz
@@ -130,8 +130,8 @@ async function simulateHumanMouse(page: Page) {
 
   // Weighted zones: humans spend time in predictable areas of a webpage
   const targetZones = [
-    { x: [60, 500], y: [15, 75], weight: 3 },    // navigation — high attention
-    { x: [150, 1200], y: [80, 380], weight: 4 },  // hero/above-fold — high attention
+    { x: [60, 500], y: [15, 75], weight: 3 },    // navigation - high attention
+    { x: [150, 1200], y: [80, 380], weight: 4 },  // hero/above-fold - high attention
     { x: [100, 900], y: [350, 720], weight: 3 },  // body content
     { x: [600, 1800], y: [15, 75], weight: 1 },   // right nav / utility links
     { x: [20, 200], y: [200, 900], weight: 1 },   // left sidebar / margin
@@ -183,7 +183,7 @@ async function simulateHumanMouse(page: Page) {
     for (const { tx: etx, ty: ety } of movements) {
       const segDist = Math.hypot(etx - cx, ety - cy);
 
-      // Bézier control points — asymmetric, biased by hand dominance
+      // Bézier control points - asymmetric, biased by hand dominance
       const lateralBias = profile.handedness === 'right' ? 1 : -1;
       const cp1x = cx + (etx - cx) * (0.15 + Math.random() * 0.25) + gaussian(0, 35) * fatigue;
       const cp1y = cy + (ety - cy) * (0.05 + Math.random() * 0.2) + gaussian(0, 50) * fatigue + lateralBias * gaussian(0, 15);
@@ -247,7 +247,7 @@ async function simulateHumanMouse(page: Page) {
       }
     }
 
-    // Dwell: two-phase — initial landing jitter, then resting drift
+    // Dwell: two-phase - initial landing jitter, then resting drift
     const dwellMs = (150 + Math.random() * 1800) * profile.attentionSpan * fatigue;
     const phase1 = dwellMs * 0.3; // landing stabilization
     const phase2 = dwellMs * 0.7; // at-rest
@@ -263,7 +263,7 @@ async function simulateHumanMouse(page: Page) {
       await sleep(16);
     }
 
-    // Phase 2: resting — very slow Brownian drift
+    // Phase 2: resting - very slow Brownian drift
     const restSteps = Math.ceil(phase2 / 50);
     let rx = cx, ry = cy;
     for (let d = 0; d < restSteps; d++) {
@@ -277,7 +277,7 @@ async function simulateHumanMouse(page: Page) {
     }
     cx = rx; cy = ry;
 
-    // Inter-movement gap: bimodal — short gap (quick scan) or long gap (reading)
+    // Inter-movement gap: bimodal - short gap (quick scan) or long gap (reading)
     const isReading = Math.random() < 0.35;
     const gapMs = isReading
       ? 800 + Math.random() * 2500   // reading pause
@@ -303,7 +303,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
 
   // Progress lines print only in verbose mode (the main `dembrandt <url>`
   // command). Report commands (drift/init/conformance) pass no verbose flag and
-  // stay clean. Warnings are NOT routed through this — they always print.
+  // stay clean. Warnings are NOT routed through this - they always print.
   const log = (...args: unknown[]) => { if (options.verbose) console.log(...args); };
 
   spinner.text = "Creating browser context...";
@@ -415,7 +415,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
         });
       }
 
-      // history.length: fresh context always 1 — nudge to plausible value
+      // history.length: fresh context always 1 - nudge to plausible value
       try {
         Object.defineProperty(history, 'length', { get: () => 2 + Math.floor(Math.random() * 4) });
       } catch {}
@@ -434,7 +434,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
         return 1e-7 + (x - Math.floor(x)) * 9e-7;
       }
 
-      // WebGL: headless reports SwiftShader — spoof a plausible GPU string.
+      // WebGL: headless reports SwiftShader - spoof a plausible GPU string.
       // NVIDIA RTX 3060 on ANGLE/D3D11 is among the most common desktop profiles globally.
       function patchWebGLGetParameter(proto: WebGLRenderingContext) {
         const orig = proto.getParameter;
@@ -449,7 +449,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
         patchWebGLGetParameter(WebGL2RenderingContext.prototype as unknown as WebGLRenderingContext);
       }
 
-      // Audio fingerprint: OfflineAudioContext hash differs in headless — add stable noise.
+      // Audio fingerprint: OfflineAudioContext hash differs in headless - add stable noise.
       // Wraps startRendering so only fingerprinting renders see noise; regular AudioBuffer
       // usage (game audio, music players) is unaffected. Noise is session-stable so
       // consecutive reads from the same page produce the same hash.
@@ -668,7 +668,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
               return false;
             };
 
-            // Pass 1 — close affordances. Region/locale selectors, newsletter
+            // Pass 1 - close affordances. Region/locale selectors, newsletter
             // and promo popups, and app-install banners block the page and have
             // no bearing on branding. Close them rather than making a choice.
             const closeSelectors = [
@@ -710,7 +710,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
               }
             } catch {}
 
-            // Pass 2 — age gates. Alcohol/cannabis/tobacco gates have no close
+            // Pass 2 - age gates. Alcohol/cannabis/tobacco gates have no close
             // button; they require an affirmative click. Match button text and
             // scope to a visible gate container so we never hit a "No" / decline
             // path that redirects away.
@@ -762,7 +762,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
           });
         } catch (err) {
           // A click navigated the page and destroyed the execution context.
-          // That is a successful dismissal, not a failure — note it and move on;
+          // That is a successful dismissal, not a failure - note it and move on;
           // the stabilization wait below absorbs the navigation.
           modalActions = ["dismissed (page navigated)"];
         }
@@ -844,7 +844,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
     // a family still loading (or failed) renders as an OS fallback, and
     // typography from this run must carry that fact (meta.fontsReady) instead
     // of consumers inferring it from generic family names. 'unloaded' faces are
-    // declared but never requested — no rendered text uses them — so they are
+    // declared but never requested - no rendered text uses them - so they are
     // not fallback risks and must not be listed.
     let fontsReady = true;
     let pendingFonts: string[] = [];
@@ -914,7 +914,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
     // during result assembly. Print them once now, after the spinner stops, so a
     // broken extractor is visible during a verbose run without clobbering it.
     for (const e of extractorErrors) {
-      log(color.warning(`  ! ${e.stage}: extraction failed (continuing) — ${e.reason}`));
+      log(color.warning(`  ! ${e.stage}: extraction failed (continuing) - ${e.reason}`));
     }
 
     // Inject manifest theme_color / background_color as high-confidence palette entries
@@ -1050,7 +1050,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
 
     // Hover/focus state extraction
     const hoverFocusColors = [];
-    const interactiveStatePairs = []; // { fg, bg, state, tag } — raw rgb strings, normalized later (consumed by WCAG stage)
+    const interactiveStatePairs = []; // { fg, bg, state, tag } - raw rgb strings, normalized later (consumed by WCAG stage)
     try {
     spinner.start("Extracting hover/focus state colors...");
 
@@ -1317,7 +1317,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
           const s = getComputedStyle(h);
           return r.width > 0 && r.height > 0 && s.display !== "none" && s.visibility !== "hidden";
         };
-        // Mirror of isSafeMenuTrigger (lib/extractors/menu-triggers.ts) — kept
+        // Mirror of isSafeMenuTrigger (lib/extractors/menu-triggers.ts) - kept
         // inline because page.evaluate runs in an isolated browser realm and
         // cannot import. Any element with a real (non-fragment) href navigates
         // on click and would destroy this execution context.
@@ -1332,14 +1332,14 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
         try {
           triggers = Array.from(document.querySelectorAll(selector)).filter((el) => isVisible(el) && isSafe(el));
         } catch {
-          return 0; // malformed selector or hostile DOM — never throw out of evaluate
+          return 0; // malformed selector or hostile DOM - never throw out of evaluate
         }
         let count = 0;
         for (const el of triggers.slice(0, 30)) {
           try {
             const before = location.href;
             (el as HTMLElement).click();
-            if (location.href !== before) break; // navigated — stop, context may die
+            if (location.href !== before) break; // navigated - stop, context may die
             count++;
           } catch {}
         }
@@ -1379,7 +1379,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
       const mergedPalette = [...colors.palette];
       menuColors.palette.forEach((menuColor) => {
         const isDuplicate = mergedPalette.some((c) => c.normalized === menuColor.normalized);
-        // Demote to medium — revealed-panel colours are weaker brand signal than
+        // Demote to medium - revealed-panel colours are weaker brand signal than
         // the static above-the-fold scan, but stronger than hover state colours.
         if (!isDuplicate) mergedPalette.push({ ...menuColor, confidence: "medium", source: "menu" });
       });
@@ -1398,7 +1398,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
     log(color.success.bold("✓ Brand extraction complete!"));
 
     if (timeouts.length > 0) {
-      console.log(color.warning(`! ${timeouts.length} timeout(s) even at slow-tier waits: ${timeouts.join(', ')} — extraction may be incomplete`));
+      console.log(color.warning(`! ${timeouts.length} timeout(s) even at slow-tier waits: ${timeouts.join(', ')} - extraction may be incomplete`));
     }
 
     // Runs outside the parallel block: the 404 probe navigates, which would move
@@ -1413,7 +1413,7 @@ export async function extractBranding(url: string, spinner: Spinner, browser: Br
         if (voiceResult.voice) {
           const { wordCount, sentenceCount } = voiceResult.voice.metrics.structural;
           if (voiceResult.voice.belowWordFloor) {
-            log(color.warning(`  ! voice: ${wordCount} words, below the reliability floor — metrics may be noisy`));
+            log(color.warning(`  ! voice: ${wordCount} words, below the reliability floor - metrics may be noisy`));
           } else if (options.verbose) {
             log(chalk.dim(`  voice: ${voiceResult.voice.fragments.length} fragments, ${wordCount} words, ${sentenceCount} sentences`));
           }

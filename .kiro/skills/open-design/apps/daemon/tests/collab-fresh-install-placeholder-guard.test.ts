@@ -9,7 +9,7 @@ import {
 import { createShouldPublish } from '../src/collab/should-publish.js';
 import type { ResourceHubPrincipal } from '../src/collab/resource-principal.js';
 
-// Red spec for 飞书 recvqzaDvUU6B3 — "uninstall wiped local files; after
+// Red spec for 飞书 recvqzaDvUU6B3 - "uninstall wiped local files; after
 // reinstall every shared project got emptied for the whole team".
 //
 // Reproduced live (feature-test hub, 2026-07-27): a daemon started on a FRESH
@@ -19,7 +19,7 @@ import type { ResourceHubPrincipal } from '../src/collab/resource-principal.js';
 // publish watcher then discovered that placeholder as a local project, the
 // owner check passed (hub says owner === me), and the watcher's
 // initial-publish-on-first-watch pushed the EMPTY placeholder directory to
-// the resource hub as a brand-new published version — wiping the project's
+// the resource hub as a brand-new published version - wiping the project's
 // content (manifestDigest sha256:e3b0c442… = the empty tree) and its catalog
 // display name for every team member, one project after another.
 //
@@ -54,7 +54,7 @@ describe('fresh-install shared-project placeholder must never publish (recvqzaDv
     // The exact fresh-install state: the only local record for the project is
     // the placeholder `ensureSharedProjectPlaceholder` registers when the
     // owner opens their own shared project on a wiped data root. There is no
-    // local content — publishing this state destroys the hub copy.
+    // local content - publishing this state destroys the hub copy.
     const store = new Map<string, { name?: string | null; metadata?: unknown }>([
       ['reinstalled-shared-project', placeholderRecord()],
     ]);
@@ -63,7 +63,7 @@ describe('fresh-install shared-project placeholder must never publish (recvqzaDv
 
     const shouldPublish = createShouldPublish({
       // The hub's catalog still lists the project and names this daemon's
-      // member as its owner — that is what made the pre-guard code publish.
+      // member as its owner - that is what made the pre-guard code publish.
       resolveSharedProjectOwner: async () => 'owner-1',
       resolveProjectPrincipal: async () => ACTIVE_OWNER_PRINCIPAL,
       rememberTeamShare: vi.fn(),

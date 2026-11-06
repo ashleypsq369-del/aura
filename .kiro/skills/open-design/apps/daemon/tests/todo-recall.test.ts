@@ -1,9 +1,9 @@
 /**
- * Todo 召回通路 —— daemon 这一半。
+ * Todo 召回通路 -- daemon 这一半。
  *
  * 全链路在此之前**没有任何通路**把上一轮的 todo 送回给 agent:
  * 历史是 `buildDaemonTranscript` 拼的纯文本,只取 `message.content`,而 `content`
- * 只累加 `kind === 'text'` 的事件 —— TodoWrite 是 `tool_use`,永远进不了。
+ * 只累加 `kind === 'text'` 的事件 -- TodoWrite 是 `tool_use`,永远进不了。
  *
  * 这一组钉住三件事:
  *  ① 从库里找得到上一轮那份清单(找不到 → 空;全做完 → 渲染成 null,什么都不注入);
@@ -69,7 +69,7 @@ describe('上一轮未完成 todo:从库里读出来', () => {
     upsertMessage(db, 'conv-1', { id, role: 'assistant', content: '', runStatus, events });
   }
 
-  it('拿到上一轮最后一份清单 —— 整份,已完成那几条也在里面(W99)', () => {
+  it('拿到上一轮最后一份清单 -- 整份,已完成那几条也在里面(W99)', () => {
     const db = seed();
     seedAssistant(db, 'a1', [
       TODO_WRITE([
@@ -155,7 +155,7 @@ describe('召回段的措辞:陈述事实,决定权交给 agent', () => {
 
   it('明说这不是指令,三条路(接着做 / 重新规划 / 放着不管)都摆出来', () => {
     const block = renderUnfinishedTodoRecall(TODOS) ?? '';
-    // 决定权交出去 —— 不能写成命令
+    // 决定权交出去 -- 不能写成命令
     expect(block).toMatch(/\byou decide\b/i);
     expect(block).toMatch(/not an instruction/i);
     expect(block).toMatch(/\bpick .* back up\b/i);

@@ -5,16 +5,16 @@
  * tool", etc.).
  *
  * The contract is the unifying primitive: for media surfaces the agent
- * does NOT fabricate bytes inside `<artifact>` (it can't — bytes are
- * binary). Instead it shells out to a single command — `od media
- * generate` — that the daemon dispatches per (surface, model). The
+ * does NOT fabricate bytes inside `<artifact>` (it can't - bytes are
+ * binary). Instead it shells out to a single command - `od media
+ * generate` - that the daemon dispatches per (surface, model). The
  * daemon writes the resulting file into the project and the FileViewer
  * picks it up automatically. Tool output retains the operational details;
  * the visible assistant reply stays intentionally product-level.
  *
  * The contract is intentionally tool-name-agnostic: it works on any
  * code-agent CLI that has shell access (Claude Code's Bash, Codex's
- * shell, Gemini's exec, OpenCode, Cursor Agent, Qwen — all of them).
+ * shell, Gemini's exec, OpenCode, Cursor Agent, Qwen - all of them).
  * That's why we keep it as text-driven shell calls rather than custom
  * tool definitions.
  */
@@ -70,39 +70,39 @@ it; a sentence that only says "it failed" is not an acceptable substitute.
   refused only when \`error.subject\` proves it; otherwise name both:
   - \`subject: "prompt"\` -- "The wording didn't pass content review. Reword it,
     drop the sensitive details, and try again." Simplified Chinese, exactly:
-    提示词没通过内容审核 —— 换个说法、去掉敏感内容再试。
+    提示词没通过内容审核 -- 换个说法、去掉敏感内容再试。
   - \`subject: "input_image"\` -- "The reference image didn't pass content
     review. Try a different reference image." Simplified Chinese, exactly:
-    参考图没通过内容审核 —— 换一张参考图再试。
+    参考图没通过内容审核 -- 换一张参考图再试。
   - \`subject\` absent -- "The request didn't pass content review. Reword it, or
     use a different reference image." Simplified Chinese, exactly:
-    这次请求没通过内容审核 —— 换个说法,或者换一张参考图再试。
+    这次请求没通过内容审核 -- 换个说法,或者换一张参考图再试。
 - \`switch-model\` -- "This image model can't take the request. Pick a different
   image model and try again." Simplified Chinese, exactly:
-  这个图片模型用不了 —— 换一个图片模型再试。
+  这个图片模型用不了 -- 换一个图片模型再试。
 - \`open-settings\` -- "The image model still needs its API key. Fill it in
   under Settings and it will work." Simplified Chinese, exactly:
-  图片模型的 API key 还没填 —— 在设置里填好就能用。
+  图片模型的 API key 还没填 -- 在设置里填好就能用。
 - \`sign-in\` -- "The sign-in expired before the image was made. Sign in again
   and retry." Simplified Chinese, exactly:
-  登录已过期,图片没生成 —— 重新登录后再试一次。
+  登录已过期,图片没生成 -- 重新登录后再试一次。
 - \`add-credit\` -- "The image model is out of credit. Retrying won't bring it
   back; top up, or switch to another image model." Simplified Chinese, exactly:
-  图片模型的额度用完了 —— 重试不会恢复,去充值或换一个图片模型。
+  图片模型的额度用完了 -- 重试不会恢复,去充值或换一个图片模型。
 - \`retry-later\` -- "Image generation is unsteady right now. It isn't anything
   you did; trying again shortly usually works." Simplified Chinese, exactly:
-  图片生成这会儿不稳定 —— 不是你的问题,过一会儿再试通常就好。
+  图片生成这会儿不稳定 -- 不是你的问题,过一会儿再试通常就好。
 - \`update-app\` -- "Open Design needs an update before it can generate images."
   Simplified Chinese, exactly:
   需要更新 Open Design 才能生成图片。
 - \`unsupported\` -- "This task doesn't generate images. Start an image project
   if you need one." Simplified Chinese, exactly:
-  这次任务里不能生成图片 —— 需要图片的话,新建一个图片项目再试。
+  这次任务里不能生成图片 -- 需要图片的话,新建一个图片项目再试。
 - \`contact-support\` -- "The image didn't come out, and it isn't anything you
   did. This one is on Open Design and we've logged it; trying again usually
   recovers, and if it keeps happening, contact us." Simplified Chinese,
   exactly:
-  图片没生成出来,不是你的操作有误 —— 这次是 Open Design 自己的问题,我们已经记下了。重试一般能恢复;反复出现的话联系我们。
+  图片没生成出来,不是你的操作有误 -- 这次是 Open Design 自己的问题,我们已经记下了。重试一般能恢复;反复出现的话联系我们。
 - No \`nextStep\` at all -- an older daemon, or a failure that never reached the
   dispatcher: use the \`contact-support\` sentence. If image generation was
   expected and you never invoked the dispatcher, that is your own miss and it
@@ -128,7 +128,7 @@ export function renderMediaGenerationContract(
     return `
 ---
 
-## Media generation policy (load-bearing — overrides softer wording above)
+## Media generation policy (load-bearing - overrides softer wording above)
 
 OpenDesign-owned media execution is **disabled for this run**. Do not call
 \`"$OD_NODE_BIN" "$OD_BIN" media generate\`, OD media provider APIs, local
@@ -209,7 +209,7 @@ function renderMediaPolicyScope(
 export const MEDIA_GENERATION_CONTRACT = `
 ---
 
-## Media generation contract (load-bearing — overrides softer wording above)
+## Media generation contract (load-bearing - overrides softer wording above)
 
 This project is a **non-web** surface (image / video / audio). The unifying
 contract is: skill workflow + project metadata tell you WHAT to make; one
@@ -217,7 +217,7 @@ shell command through \`OD_NODE_BIN\` + \`OD_BIN\` is HOW you actually produce b
 Do not try to embed binary content inside \`<artifact>\` tags, and do not
 write image/video/audio bytes by hand. Always call out to the dispatcher.
 
-**Explicit layer overrides — read this first.** The design-workflow
+**Explicit layer overrides - read this first.** The design-workflow
 sections of this prompt (designer charter, discovery, and any deck
 framework) push hard on the \`<artifact>\` HTML pattern, the PDF print
 stylesheet, and the slide nav/counter scripts. Those directives **do not
@@ -231,13 +231,13 @@ prompt and the narration.
 
 The daemon spawns you with these env vars set (verify with \`echo\`):
 
-- \`OD_NODE_BIN\`    — absolute path to the Node-compatible runtime that started the daemon. Packaged desktop installs provide this even when the user has no system \`node\` on PATH.
-- \`OD_BIN\`         — absolute path to the OD CLI script. On POSIX shells run with \`"$OD_NODE_BIN" "$OD_BIN" …\`.
-- \`OD_PROJECT_ID\`  — the active project's id. Pass it as \`--project "$OD_PROJECT_ID"\`.
-- \`OD_PROJECT_DIR\` — the project's files folder (your cwd). Generated files land here.
-- \`OD_DAEMON_URL\`  — base URL of the local daemon, e.g. \`http://127.0.0.1:7456\`.
+- \`OD_NODE_BIN\`    - absolute path to the Node-compatible runtime that started the daemon. Packaged desktop installs provide this even when the user has no system \`node\` on PATH.
+- \`OD_BIN\`         - absolute path to the OD CLI script. On POSIX shells run with \`"$OD_NODE_BIN" "$OD_BIN" …\`.
+- \`OD_PROJECT_ID\`  - the active project's id. Pass it as \`--project "$OD_PROJECT_ID"\`.
+- \`OD_PROJECT_DIR\` - the project's files folder (your cwd). Generated files land here.
+- \`OD_DAEMON_URL\`  - base URL of the local daemon, e.g. \`http://127.0.0.1:7456\`.
 
-If any of these are unset, the user is running you outside the OD daemon —
+If any of these are unset, the user is running you outside the OD daemon -
 ask them to relaunch from the OD app (or pass the values explicitly).
 TODO (post-v1): teach the media dispatcher to auto-spawn a transient
 daemon when invoked outside the OD app, so a user running \`claude\`
@@ -256,7 +256,7 @@ Run via your shell tool (Bash on Claude Code, exec on Codex/Gemini, etc.):
   --prompt "<full prompt>" \\
   [--aspect 1:1|16:9|9:16|4:3|3:4] \\
   [--quality <tier>]                # vela/* images only; gpt-image-2 accepts low|medium|high
-  [--resolution <res>]              # vela/* images only; e.g. 1K, 2K — must be published for --aspect
+  [--resolution <res>]              # vela/* images only; e.g. 1K, 2K - must be published for --aspect
   [--length <seconds>]              # video only
   [--duration <seconds>]            # audio only
   [--prompt-influence <0-1>]        # audio:sfx only; higher follows the prompt more closely
@@ -267,15 +267,15 @@ Run via your shell tool (Bash on Claude Code, exec on Codex/Gemini, etc.):
 \`\`\`
 
 Always quote the prompt value. Use \`--prompt "<full prompt>"\` (or the
-equivalent safe quoting for your shell) — never splice an unquoted user
+equivalent safe quoting for your shell) - never splice an unquoted user
 string into the command line.
 
 Quality tiers are priced differently, so treat \`--quality\` as the user's
 call, not yours: pass it only when they asked for a tier, and omit it
-otherwise so the model's own default decides. Same for \`--resolution\` —
+otherwise so the model's own default decides. Same for \`--resolution\` -
 omitting it uses the model's default profile.
 
-A size or tier the user names IS that ask, in any language — "2K", "1k",
+A size or tier the user names IS that ask, in any language - "2K", "1k",
 "high quality", "高质量". Map it onto \`--resolution\` / \`--quality\`;
 restating it inside the prompt text does not reach the provider.
 
@@ -305,7 +305,7 @@ Save the \`file.name\` and reference it in your reply ("I generated
 
 For media projects, \`"$OD_NODE_BIN" "$OD_BIN" media generate …\` is the **only**
 approved execution path **except for the \`hyperframes-html\` video
-model** — see the carve-out below. Do not replace the dispatcher with
+model** - see the carve-out below. Do not replace the dispatcher with
 ad-hoc \`curl\` requests, direct imports of daemon modules, home-grown
 wrappers, or "equivalent" scripts. Do not probe the daemon with
 \`curl\`, \`lsof\`, \`netstat\`, or speculative environment debugging
@@ -323,7 +323,7 @@ capture. The daemon process is unsandboxed and renders reliably AND
 streams per-line progress to your stderr (so the user sees frame
 counts in chat instead of a silent spinner).
 
-**Default recipe — use Open Design's scaffold, don't write from scratch.**
+**Default recipe - use Open Design's scaffold, don't write from scratch.**
 For most OD requests ("test video", "5s product reveal", "demo clip"),
 authoring an HF composition from zero costs minutes of model output and
 silent chat-tool time. The init scaffold gives you a valid GSAP-ready
@@ -338,10 +338,10 @@ COMP="$OD_PROJECT_DIR/$COMP_REL"
 "$OD_NODE_BIN" "$OD_BIN" media scaffold --project "$OD_PROJECT_ID" --composition-dir "$COMP_REL"
 
 # Edit ONLY $COMP/index.html: tweak data-duration on the root, swap
-# the placeholder palette, add 1–3 clip <div>s, and append matching
+# the placeholder palette, add 1-3 clip <div>s, and append matching
 # tweens inside the existing window.__timelines["main"] = gsap.timeline(...)
 # block. Skip the Visual Identity HARD-GATE in skills/hyperframes/SKILL.md
-# — OD projects already have their own design-system layer. Default to
+# - OD projects already have their own design-system layer. Default to
 # dark canvas, one warm + one cool accent, restrained motion unless
 # the user explicitly asked for something else.
 
@@ -366,7 +366,7 @@ track). For typical test renders, the scaffold+edit path is the default.
 
 You MAY still run lighter HF subcommands from your own shell through
 \`"$OD_NODE_BIN" "$OD_HYPERFRAMES_BIN"\`: \`lint "$COMP"\`, \`transcribe\`,
-\`tts\` — none of
+\`tts\` - none of
 these spawn Chrome so the agent-side sandbox doesn't trip them.
 Reserve the daemon dispatch for anything Chrome-bound (\`render\`,
 \`inspect\`, \`preview\`).
@@ -378,26 +378,26 @@ fan out into alternate execution paths inside the same turn.
 
 ### All slow renders: generate → wait loop
 
-Any model whose generation takes longer than ~25s — including **fal flux-pro-ultra,
+Any model whose generation takes longer than ~25s - including **fal flux-pro-ultra,
 fal Veo, fal Sora, Volcengine i2v, hyperframes-html, and anything else with a
-multi-minute pipeline** — will not complete within the initial \`media generate\` call.
+multi-minute pipeline** - will not complete within the initial \`media generate\` call.
 
 \`media generate\` dispatches the task daemon-side and polls for up to ~25s. It
-always exits 0 — either with \`{"file":{...}}\` if the render finished within that
+always exits 0 - either with \`{"file":{...}}\` if the render finished within that
 window, or with \`{"taskId":"..."}\` as a handoff signal. You then drive the render
 to completion by calling \`media wait <taskId>\` through \`OD_NODE_BIN\` + \`OD_BIN\`
-in a loop — each call long-polls the daemon for up to 120s. The wait subcommand
+in a loop - each call long-polls the daemon for up to 120s. The wait subcommand
 exits with a distinct code per outcome:
 
-- \`exit 0\` — terminal **done**. Final stdout line is \`{"file":{...}}\`.
-- \`exit 5\` — terminal **failed**. Stderr carries the upstream error.
-- \`exit 2\` — still **running**. Final stdout line is
+- \`exit 0\` - terminal **done**. Final stdout line is \`{"file":{...}}\`.
+- \`exit 5\` - terminal **failed**. Stderr carries the upstream error.
+- \`exit 2\` - still **running**. Final stdout line is
   \`{"taskId":"…","status":"running","nextSince":<n>}\`. Re-run
   \`"$OD_NODE_BIN" "$OD_BIN" media wait <taskId> --since <n>\` to continue from where you left
   off (\`--since\` skips already-seen progress lines so you don't see the
   same chatter twice).
 
-The pattern in your shell tool (uses python3 to parse JSON — do NOT use jq, it
+The pattern in your shell tool (uses python3 to parse JSON - do NOT use jq, it
 may not be installed):
 
 \`\`\`bash
@@ -432,14 +432,14 @@ they arrive, so the user sees live status in chat throughout the loop instead of
 waiting silently for a single multi-minute call.
 
 **Always write your shell invocation as the full generate+wait loop above**, even
-for image models. \`flux-pro-ultra\` routinely takes 60–180s; \`sora-2\` and
+for image models. \`flux-pro-ultra\` routinely takes 60-180s; \`sora-2\` and
 \`veo-3-fal\` take longer. In the wait loop, exit 2 means "keep polling, not an error."
 
 A note on \`fetch failed\` to \`127.0.0.1\`. The OD daemon runs on
 loopback in the same machine that spawned you, so it is essentially
 always reachable. If your dispatcher attempt prints
 \`failed to reach daemon at http://127.0.0.1:<port>: …\` this is almost
-never the daemon being down — it is your own shell-tool sandbox
+never the daemon being down - it is your own shell-tool sandbox
 refusing the loopback dial (Codex \`workspace-write\` without
 \`network_access\`, restrictive macOS sandbox profiles, etc.). Keep the exact
 stderr in the tool trace and daemon logs. Do not expose the sandbox, loopback,
@@ -467,7 +467,7 @@ not start with \`fal-ai/\`, surface a warning in your reply and either
 metadata's default model and explain the substitution. Do not silently
 fall back.
 
-Exception — **fal-ai/\* custom paths**: any model ID that begins with
+Exception - **fal-ai/\* custom paths**: any model ID that begins with
 \`fal-ai/\` (e.g. \`fal-ai/flux/dev\`, \`fal-ai/stable-diffusion-xl\`) is a
 valid passthrough for the image or video surface. Pass it to
 \`"$OD_NODE_BIN" "$OD_BIN" media generate\` as-is via \`--model <id>\`;
@@ -479,7 +479,7 @@ path is given.
 
 1. **Read project metadata first.** The "Project metadata" block above
     tells you the user's pre-selected model, aspect, length, voice, audio
-    kind, etc. Treat those as authoritative defaults — only override if
+    kind, etc. Treat those as authoritative defaults - only override if
     the user's chat message explicitly contradicts them.
     For \`minimax-tts\`, \`voice\` must be a valid MiniMax \`voice_id\`
     (example: \`male-qn-qingse\`). Do not pass natural-language voice
@@ -499,12 +499,12 @@ path is given.
 2. **Dispatch immediately when the brief is complete.** For image and video
    projects, if the user's prompt specifies the subject, style/mood, and setting,
    **dispatch without a discovery question turn**. Do not ask about model or aspect
-   ratio when reasonable defaults exist — use them and start generating.
+   ratio when reasonable defaults exist - use them and start generating.
 
    Default model selection (use these when \`imageModel\`/\`videoModel\` is unknown
    or the user asks for "best"):
    - **Image, best quality (user says "best", "highest quality", "most realistic")**:
-     use \`flux-pro-ultra\` — but tell the user it takes 60–180s
+     use \`flux-pro-ultra\` - but tell the user it takes 60-180s
    - **Image, default / no preference stated**: use an explicitly named model
      in the current user message, then the run-scoped BYOK image default, then the project metadata's
      \`imageModel\` if set; otherwise use \`vela/gpt-image-2\`
@@ -554,7 +554,7 @@ path is given.
    unless the shell command has already been executed.
 4. **Iterate by re-running.** To revise, call \`"$OD_NODE_BIN" "$OD_BIN" media generate\` again
    with a new \`--output\` filename (or omit \`--output\` to auto-name).
-   Don't try to "edit" generated bytes by hand — re-generate and let the
+   Don't try to "edit" generated bytes by hand - re-generate and let the
    user pick which version to keep.
 5. **Don't emit \`<artifact>\` blocks for media.** They're for HTML/text
    artifacts. For media surfaces your "artifact" is the file written by
@@ -590,8 +590,8 @@ Never narrate a stub as if it were the final result.
    task is still **running** and needs another \`wait\` call (see
    "Long-running renders" above), \`5\` when the daemon accepted the request
    but the provider call failed (key missing / 4xx / network blip), and
-   \`1–4\` for client / daemon errors. Always check \`$?\` before describing
-   the output. \`2\` from \`media wait\` is not a failure — it just means
+   \`1-4\` for client / daemon errors. Always check \`$?\` before describing
+   the output. \`2\` from \`media wait\` is not a failure - it just means
    "keep polling".
 3. **stderr WARN lines.** On exit \`5\` the CLI prints multiple
    \`WARN: …\` lines explaining the failure (provider, reason, the

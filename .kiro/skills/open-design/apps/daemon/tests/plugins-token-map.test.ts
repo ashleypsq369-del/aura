@@ -1,4 +1,4 @@
-// Phase 6/7 entry slice — token-map atom impl.
+// Phase 6/7 entry slice - token-map atom impl.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -44,7 +44,7 @@ const codeTokens = (over: Partial<DesignExtractReport> = {}): DesignExtractRepor
   ...over,
 });
 
-describe('runTokenMap — match strategies', () => {
+describe('runTokenMap - match strategies', () => {
   it('matches by exact value', async () => {
     const source = codeTokens({
       colors: [{ kind: 'color', value: '#5b8def', sources: ['Button.tsx:3'], usage: ['Button.tsx'] }],
@@ -118,7 +118,7 @@ describe('runTokenMap — match strategies', () => {
   });
 });
 
-describe('runTokenMap — multi-kind matching', () => {
+describe('runTokenMap - multi-kind matching', () => {
   it('crosswalks spacing / radius / typography buckets', async () => {
     const source = codeTokens({
       spacing:    [{ kind: 'spacing', value: '8px', sources: [], usage: [] }],
@@ -132,7 +132,7 @@ describe('runTokenMap — multi-kind matching', () => {
   });
 });
 
-describe('runTokenMap — disk inputs + outputs', () => {
+describe('runTokenMap - disk inputs + outputs', () => {
   it('reads code/tokens.json when source is omitted + persists every bucket file', async () => {
     await mkdir(path.join(cwd, 'code'), { recursive: true });
     const onDisk = codeTokens({

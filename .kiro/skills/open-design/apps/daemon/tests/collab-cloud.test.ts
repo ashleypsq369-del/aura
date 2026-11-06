@@ -102,7 +102,7 @@ function fixedContextProvider(context: WorkspaceCollabContext | null): Workspace
   return { current: async () => context };
 }
 
-// —— previewCommentToCloud mapping ————————————————————————————————————————————
+// -- previewCommentToCloud mapping --------------------------------------------
 
 describe('Collab cloud member page adapter', () => {
   const envelope = {
@@ -240,7 +240,7 @@ describe('previewCommentToCloud', () => {
   });
 });
 
-// —— mergeSyncedPreviewComment idempotency (real db) ——————————————————————————
+// -- mergeSyncedPreviewComment idempotency (real db) --------------------------
 
 describe('mergeSyncedPreviewComment', () => {
   it('persists an inbound user comment without a wire label in real SQLite', () => {
@@ -529,14 +529,14 @@ describe('mergeSyncedPreviewComment', () => {
 
   it('lands under the LOCAL conversation, not the cloud comment conversationId', () => {
     const db = seededDb();
-    // comment.conversationId is 'conv-remote' (a foreign daemon's id) — merge must
+    // comment.conversationId is 'conv-remote' (a foreign daemon's id) - merge must
     // re-home it onto the local conversation to satisfy the FK + be queryable.
     mergeSyncedPreviewComment(db, 'p1', 'conv-local', cloudComment('c1'));
     expect(listPreviewComments(db, 'p1', 'conv-local')).toHaveLength(1);
     expect(listPreviewComments(db, 'p1', 'conv-remote')).toHaveLength(0);
   });
 
-  // —— multi-author coexistence on the SAME element (the顶掉 root cause) ————————
+  // -- multi-author coexistence on the SAME element (the顶掉 root cause) --------
 
   it('keeps two members\' comments on the same element as distinct rows', () => {
     const db = seededDb();
@@ -558,7 +558,7 @@ describe('mergeSyncedPreviewComment', () => {
     });
     expect(own).not.toBeNull();
     const stored = listPreviewComments(db, 'p1', 'conv-local');
-    // Both coexist — the local upsert did NOT clobber the synced member comment.
+    // Both coexist - the local upsert did NOT clobber the synced member comment.
     expect(stored).toHaveLength(2);
     expect(stored.find((c) => c.authorMemberId === 'm-member')?.note).toBe('note c-member');
     expect(stored.find((c) => c.authorMemberId === 'm-owner')?.note).toBe('owner note');
@@ -576,7 +576,7 @@ describe('mergeSyncedPreviewComment', () => {
     expect(listPreviewComments(db, 'p1', 'conv-local')).toHaveLength(2);
   });
 
-  // —— edit sync (UPSERT by updatedAt) ——————————————————————————————————————————
+  // -- edit sync (UPSERT by updatedAt) ------------------------------------------
 
   it('applies a strictly-newer edit in place and ignores a stale one', () => {
     const db = seededDb();
@@ -598,7 +598,7 @@ describe('mergeSyncedPreviewComment', () => {
     expect(listPreviewComments(db, 'p1', 'conv-local')).toHaveLength(1);
   });
 
-  // —— delete sync (tombstone) ——————————————————————————————————————————————————
+  // -- delete sync (tombstone) --------------------------------------------------
 
   it('deletes the local comment on an inbound tombstone', () => {
     const db = seededDb();
@@ -624,7 +624,7 @@ describe('mergeSyncedPreviewComment', () => {
   });
 });
 
-// —— createCollabCloudService poll + merge idempotency (fake client) —————————
+// -- createCollabCloudService poll + merge idempotency (fake client) ---------
 
 /** An in-memory fake collab-cloud client honoring sinceSeq, matching the real
  *  client's method shape so the service runs unchanged against it. */
@@ -888,7 +888,7 @@ describe('createCollabCloudService', () => {
   it('stays fully dormant in a personal workspace (team-only resources plane)', async () => {
     // B's resources/collab plane rejects personal-workspace principals with
     // 403 missing_principal BY DESIGN. A personal context must therefore
-    // yield no collab identity at all — no register, no pulls — instead of
+    // yield no collab identity at all - no register, no pulls - instead of
     // hammering B with doomed CLI calls on every poll tick (observed as an
     // infinite `vela collab member register` 403 loop for fresh users).
     const { client, registered } = fakeClient();
@@ -1288,11 +1288,11 @@ describe('createCollabCloudService', () => {
     service.dispose();
   });
 
-  // —— pullProject redemption contract ——————————————————————————————————————
+  // -- pullProject redemption contract --------------------------------------
   // The hub `comment-changed` handler and `onCommentsRead` both DELETE the
   // project's dirty mark before firing this targeted pull. A single comment
   // only ever emits one hub event, so a pull that silently no-ops or fails
-  // must report it (resolve false) — the caller restores the mark and the
+  // must report it (resolve false) - the caller restores the mark and the
   // next read retries. Without that signal the mark is burned for nothing
   // and the comment stays invisible until the project gains a live events
   // subscriber.
@@ -1367,7 +1367,7 @@ describe('createCollabCloudService', () => {
   });
 });
 
-// —— client wire behavior (injected fetch) ————————————————————————————————————
+// -- client wire behavior (injected fetch) ------------------------------------
 
 describe('collab-cloud client', () => {
   function jsonResponse(status: number, body: unknown, etag?: string): Response {

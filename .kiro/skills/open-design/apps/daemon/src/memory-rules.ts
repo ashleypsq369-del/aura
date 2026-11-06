@@ -3,12 +3,12 @@
 // Turns a batch of in-canvas/in-deck annotations (comments, highlights,
 // inspect-selection marks, visual marks) into candidate `rule` memories. The
 // output is display-only `RuleProposalDraft`s surfaced through the existing
-// Keep gate — distillation never writes a rule on its own.
+// Keep gate - distillation never writes a rule on its own.
 //
 // Two passes, layered:
-//   - heuristic — always available, no provider. Each annotation note becomes
+//   - heuristic - always available, no provider. Each annotation note becomes
 //     one draft (assertion = the note, check derived from the note + target).
-//   - llm       — best-effort. Reuses `suggestWithLLM` (memory-llm.ts) with a
+//   - llm       - best-effort. Reuses `suggestWithLLM` (memory-llm.ts) with a
 //     rule-focused system prompt so the small model can generalise several
 //     related annotations into a single reusable, checkable rule. Falls back
 //     silently to the heuristic result when no provider is configured.
@@ -21,7 +21,7 @@ import type {
   RuleProposalDraft,
 } from '@open-design/contracts';
 // suggestWithLLM lives in the @ts-nocheck memory-llm module; its inferred type
-// is loose, which is fine — we only consume the {type,name,description,body}
+// is loose, which is fine - we only consume the {type,name,description,body}
 // MemoryDraft shape it documents.
 import { suggestWithLLM } from './memory-llm.js';
 
@@ -48,7 +48,7 @@ const RULE_SYSTEM_PROMPT = `You distil a designer's review annotations into reus
 
 You are given a batch of annotations the user left on a delivered artifact (comments, highlights, inspect-selection marks). Each annotation may name the element it targets and the current content there.
 
-Decide whether the annotations imply any GENERAL, reusable rule — a preference that should hold for FUTURE artifacts too, not just a one-off fix to this element. Group related annotations into a single rule where they express the same intent.
+Decide whether the annotations imply any GENERAL, reusable rule - a preference that should hold for FUTURE artifacts too, not just a one-off fix to this element. Group related annotations into a single rule where they express the same intent.
 
 A good rule is:
 - general (applies beyond the specific element annotated),
@@ -57,7 +57,7 @@ A good rule is:
 
 Do NOT invent rules the annotations do not support. If nothing generalises, return an empty list.
 
-Output STRICT JSON in this exact shape — nothing else, no prose, no markdown fences:
+Output STRICT JSON in this exact shape - nothing else, no prose, no markdown fences:
 {
   "entries": [
     { "type": "rule", "name": "short title (<= 60 chars)", "description": "one-line summary (<= 140 chars)", "body": "Assertion: <what must hold>\\nCheck: <how to verify it>\\nVerified by: <which annotation(s) implied this>" }
@@ -192,7 +192,7 @@ export async function distillRulesFromAnnotations(
     .map((a) => heuristicProposal(a))
     .filter((p): p is RuleProposalDraft => p !== null);
 
-  // LLM pass — reuse the existing suggest path with a rule-focused prompt and a
+  // LLM pass - reuse the existing suggest path with a rule-focused prompt and a
   // type filter so only `rule` candidates survive. Synthesize a user message
   // from the annotations; suggestWithLLM records its own extraction-history
   // attempt and returns [] when no provider is configured.

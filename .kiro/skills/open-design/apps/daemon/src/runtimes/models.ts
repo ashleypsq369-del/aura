@@ -240,7 +240,7 @@ export function resolveModelForAgent(
 // Permit user-typed model ids that didn't appear in either the live
 // listing or the static fallback (e.g. the user is on a brand-new model
 // the CLI's `models` command hasn't surfaced yet). The CLI gets the value
-// as a child-process arg — not a shell string — so injection isn't a
+// as a child-process arg - not a shell string - so injection isn't a
 // concern, but we still reject anything that could be misread as a flag
 // by a downstream CLI or that contains whitespace / control chars.
 export function sanitizeCustomModel(id: string | null | undefined) {

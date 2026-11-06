@@ -15,7 +15,7 @@ NEW = r"""        {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizon
               <p style={{ fontSize:10, fontWeight:800, color:'#0d9488', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:2 }}>Browse by Role</p>
               <h2 style={{ fontSize:16, fontWeight:800, color:'#0f172a', margin:0 }}>Who do you need?</h2>
             </div>
-            {/* Pill strip — scrollable, no chevrons */}
+            {/* Pill strip - scrollable, no chevrons */}
             <div style={{ display:'flex', gap:6, overflowX:'auto', scrollbarWidth:'none', maxWidth:'60%' }}>
               <motion.button whileTap={{ scale:0.93 }}
                 onClick={() => { setFilterType(''); setPage(1); setTab('browse'); }}
@@ -36,7 +36,7 @@ NEW = r"""        {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizon
             </div>
           </div>
 
-          {/* Single crossfading image card — full width, fixed height */}
+          {/* Single crossfading image card - full width, fixed height */}
           <div style={{ position:'relative', borderRadius:18, overflow:'hidden', height:220, cursor:'pointer' }}
             onClick={() => { const e = Object.entries(TYPE_META); const [k] = e[slideIdx%e.length]; setFilterType(k); setPage(1); setTab('browse'); }}>
 
@@ -54,7 +54,7 @@ NEW = r"""        {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizon
                     transition={{ duration:0.7, ease:'easeInOut' }}>
                     <img src={meta.img} alt={meta.label}
                       style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%' }}/>
-                    {/* Bottom gradient only — minimal overlay */}
+                    {/* Bottom gradient only - minimal overlay */}
                     <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.08) 50%, transparent 100%)' }}/>
                     {/* Left side: role badge + name */}
                     <div style={{ position:'absolute', bottom:16, left:18, right:100 }}>
@@ -81,7 +81,7 @@ NEW = r"""        {/* ── ROLE CARD SLIDESHOW  (LoginSlideshow style, horizon
               })()}
             </AnimatePresence>
 
-            {/* Dot indicators — bottom centre */}
+            {/* Dot indicators - bottom centre */}
             <div style={{ position:'absolute', bottom:10, left:'50%', transform:'translateX(-50%)', display:'flex', gap:5, zIndex:3 }}>
               {Object.keys(TYPE_META).map((_,i) => (
                 <button key={i} onClick={e => { e.stopPropagation(); setSlideIdx(i); }}

@@ -1,4 +1,4 @@
-# backend/routers/preferences.py
+﻿# backend/routers/preferences.py
 """
 API routes for patient personalisation preferences (questionnaire)
 """
@@ -96,7 +96,7 @@ async def save_preferences(
                 data[key] = 0
     # ── End sanitize ──────────────────────────────────────────────────────
 
-    # Always use the authenticated user's ID from JWT — never trust body user_id
+    # Always use the authenticated user's ID from JWT - never trust body user_id
     user_id = current_user.id
     patient_id = data.get("patient_id")
     

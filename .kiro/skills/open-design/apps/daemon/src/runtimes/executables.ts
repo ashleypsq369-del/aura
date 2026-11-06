@@ -113,7 +113,7 @@ function resolvePathDirs() {
 }
 
 // The exact, de-duplicated directory list `resolveOnPath` walks. Surfaced so
-// detection can attach it to a `not-on-path` diagnostic verbatim — the UI
+// detection can attach it to a `not-on-path` diagnostic verbatim - the UI
 // shows the user where we actually looked before asking them to set an
 // explicit binary path, instead of recomputing PATH client-side.
 export function agentSearchDirs(): string[] {
@@ -133,7 +133,7 @@ export function agentBinEnvKey(agentId: string | undefined): string | null {
 // that ranks earlier can hold a wrapper left behind by a half-finished
 // install, and executing it fails even though a working CLI of the same
 // name sits in a later directory. Resolution alone cannot tell the two
-// apart — only spawning can — so the caller walks candidates until one
+// apart - only spawning can - so the caller walks candidates until one
 // actually runs.
 export function resolveAllOnPath(bin: string): string[] {
   const exts =
@@ -368,7 +368,7 @@ export function resolveAgentExecutable(
 // The executables a completed detection pass proved cannot be launched, per
 // agent id.
 //
-// Detection is the only stage that learns this — it is the only one that spawns
+// Detection is the only stage that learns this - it is the only one that spawns
 // anything. Without recording the answer, every later resolution (chat,
 // connection test, memory summariser, companion install) would redo the naive
 // "first hit on PATH" walk and land back on the very shim detection just
@@ -377,9 +377,9 @@ export function resolveAgentExecutable(
 //
 // This deliberately records what is *broken* rather than which candidate won.
 // Skipping proven-dead paths leaves PATH order in charge of everything still
-// standing, so a CLI that becomes visible earlier after detection ran — a fresh
+// standing, so a CLI that becomes visible earlier after detection ran - a fresh
 // install, a version manager swapping shims, a caller resolving under its own
-// environment — still wins. Remembering the winner instead pins the daemon to
+// environment - still wins. Remembering the winner instead pins the daemon to
 // one binary for its whole lifetime and silently outranks the caller's PATH.
 const unusableExecutables = new Map<string, Set<string>>();
 
@@ -434,7 +434,7 @@ export function inspectAgentExecutableResolution(
     }
   }
   const orderedPathCandidates = orderPathCandidatesForAgent(def.id, pathCandidates);
-  // First hit among what is left. Plain order is not enough on its own — the
+  // First hit among what is left. Plain order is not enough on its own - the
   // first file that merely *exists* can be a shim detection already proved
   // dead, which is why those are filtered out above rather than ranked below.
   const pathResolvedPath: string | null = orderedPathCandidates[0] ?? null;

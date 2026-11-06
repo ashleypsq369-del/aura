@@ -5,14 +5,14 @@
  * Two hard requirements, both of them scars:
  *
  *  1. **Never flash half a tag.** SSE cuts the stream wherever it likes, so a
- *     delta can end mid-marker — `<od-ne`, or `<od-next key="a7f`. Anything we
+ *     delta can end mid-marker - `<od-ne`, or `<od-next key="a7f`. Anything we
  *     cannot yet prove is prose gets held back until the next delta resolves
  *     it. `<od-title>` shipped without a wide enough look-back once and users
  *     watched a half tag paint and then vanish.
  *
  *  2. **Never swallow the user's words.** Holding back is a bet that more
- *     characters are coming. When the stream ends and the bet was wrong — the
- *     held tail was just prose that happened to start with `<` — `flush()`
+ *     characters are coming. When the stream ends and the bet was wrong - the
+ *     held tail was just prose that happened to start with `<` - `flush()`
  *     returns it verbatim. Silently eating a sentence is worse than briefly
  *     delaying one.
  *
@@ -22,21 +22,21 @@
  *
  * ---
  *
- * **Known duplication — read before "fixing" this in isolation.**
+ * **Known duplication - read before "fixing" this in isolation.**
  *
  * Five hand-written streaming tag scanners live in this daemon, all the same
  * shape (hold an ambiguous tail, release or drop it when the next delta
  * decides) and all with *different* rules:
  *
- *   · `next-step-marker.ts`      — this file. Quote-aware tag-end scan, holds
+ *   · `next-step-marker.ts`      - this file. Quote-aware tag-end scan, holds
  *                                  256 chars, drops a half tag.
- *   · `artifact-focus-marker.ts` — plain `indexOf('>')` plus a tag-name
+ *   · `artifact-focus-marker.ts` - plain `indexOf('>')` plus a tag-name
  *                                  boundary check, holds 4096, drops a half tag.
- *   · `title-marker.ts`          — open/close pair, no attributes at all,
+ *   · `title-marker.ts`          - open/close pair, no attributes at all,
  *                                  holds 512, and on overflow *swallows* the
  *                                  content instead of releasing it.
- *   · `panel-grammar-strip.ts`   — matches on the tag NAME only, holds 96.
- *   · `role-marker-guard.ts`     — its own `pending`/`tail` withhold buffer.
+ *   · `panel-grammar-strip.ts`   - matches on the tag NAME only, holds 96.
+ *   · `role-marker-guard.ts`     - its own `pending`/`tail` withhold buffer.
  *
  * Four caps (96/256/512/4096) and two mutually contradictory overflow policies
  * (release-as-prose vs swallow) is one bug surface, not five. It has already
@@ -49,7 +49,7 @@
  * `panel-grammar-strip.ts` was being fixed in parallel, and collapsing five
  * scanners into one needs its own change with a behavioural diff against real
  * transcripts, not a drive-by merge inside a bug fix. If you are the next
- * person here, that is the ticket to write — do not rediscover this list.
+ * person here, that is the ticket to write - do not rediscover this list.
  */
 
 import {
@@ -96,8 +96,8 @@ const DEFAULT_SCAN_LIMIT = 1024;
  * How many characters at the end of `text` could still grow into an opening
  * tag. Two cases, mirroring the done-marker's client-side hold-back:
  *
- *   · the tail is a prefix of `<od-next` — the tag name is not finished;
- *   · the tail already IS `<od-next` but no `>` has arrived — the key
+ *   · the tail is a prefix of `<od-next` - the tag name is not finished;
+ *   · the tail already IS `<od-next` but no `>` has arrived - the key
  *     attribute is still in flight.
  *
  * Bounded by `MAX_OPEN_TAG_HOLD` so a lone `<` in prose that never closes
@@ -117,11 +117,11 @@ function pendingOpenTagTail(text: string): number {
 }
 
 /**
- * Where an opening tag ends — or the proof that it is not a tag at all.
+ * Where an opening tag ends - or the proof that it is not a tag at all.
  *
- *   · `{ kind: 'end' }`       — the `>` that closes the opening tag.
- *   · `{ kind: 'undecided' }` — nothing yet disproves it; wait for more text.
- *   · `{ kind: 'malformed' }` — this cannot be a tag, and `headLength` is the
+ *   · `{ kind: 'end' }`       - the `>` that closes the opening tag.
+ *   · `{ kind: 'undecided' }` - nothing yet disproves it; wait for more text.
+ *   · `{ kind: 'malformed' }` - this cannot be a tag, and `headLength` is the
  *                               length of the tag-shaped prefix to discard.
  */
 type OpenTagScan =
@@ -136,13 +136,13 @@ type OpenTagScan =
  * (`value="a > b"`). That awareness is also how this function shipped a bug: a
  * value whose closing quote never arrives pairs with the *next* tag's opening
  * quote, and from there the scanner is permanently "inside a string" and skips
- * every `>` that follows — including the `/>` of the marker after it. In the
+ * every `>` that follows - including the `/>` of the marker after it. In the
  * recorded failure a codex reconnect cut the stream mid-attribute, the buffer
  * grew past the hold cap while poisoned this way, and the overflow path
  * released the whole half tag onto the screen and into the database.
  *
  * The fix is an invariant the poisoned state violates immediately: **inside an
- * attribute value there is no newline and no `<`** — the value is a quoted
+ * attribute value there is no newline and no `<`** - the value is a quoted
  * scalar and the `<` would have to be `&lt;`. Seeing either proves the quote
  * was never closed, so the tag dies at that character instead of eating the
  * rest of the answer. A `<` outside the quotes is the same proof: a tag cannot
@@ -237,8 +237,8 @@ export function createNextStepMarkerStripper(
             /*
              * Bet lost: no `</od-next>` within a sane distance, so this was
              * either prose that opened with the tag or a model that never
-             * closed it. Release the CONTENT (requirement 2 — never swallow
-             * words) but keep the opening tag suppressed (requirement 1 — a
+             * closed it. Release the CONTENT (requirement 2 - never swallow
+             * words) but keep the opening tag suppressed (requirement 1 - a
              * protocol tag never paints). Dropping both would eat up to a
              * kilobyte of a real answer; releasing both would put
              * `<od-next key="…">` on screen. Neither is acceptable, so the
@@ -275,11 +275,11 @@ export function createNextStepMarkerStripper(
         /*
          * The opening tag never closed. Two ways to get here, one exit:
          *
-         *  · `malformed` — proven not a tag (see `scanOpenTag`). Drop the
+         *  · `malformed` - proven not a tag (see `scanOpenTag`). Drop the
          *    tag-shaped prefix, keep everything from the offending character
          *    on, and re-enter the loop so a genuine marker later in the same
          *    buffer is still seen.
-         *  · `undecided` past the hold cap — `<od-next` followed by 256
+         *  · `undecided` past the hold cap - `<od-next` followed by 256
          *    characters with no `>`, no `<` and no newline. That is not prose;
          *    prose would have tripped one of those long ago. It is either a
          *    marker whose author wrote an essay into an attribute (the
@@ -322,7 +322,7 @@ export function createNextStepMarkerStripper(
      * Stream over. What is still held falls into three cases:
      *
      *  · We never saw a complete opening tag, so the tail is an ambiguous
-     *    `<`-prefix that turned out to be prose — return it verbatim. This is
+     *    `<`-prefix that turned out to be prose - return it verbatim. This is
      *    the "don't swallow the user's words" half.
      *  · We are inside a marker whose close never arrived. Everything after
      *    the opening tag is protocol payload, so the tag itself is dropped
@@ -344,7 +344,7 @@ export function createNextStepMarkerStripper(
        * The third case the comment above missed, and the second way a raw
        * marker reached the screen: `held` can also be an opening tag that was
        * still being typed when the stream ended (`<od-next key="…" value="…`).
-       * That is protocol, not prose, so it dies here — the same rule
+       * That is protocol, not prose, so it dies here - the same rule
        * `artifact-focus-marker.ts` already applies to its own `flush()`.
        *
        * The test is `startsWith`, not `includes`, so it stays narrow: a tail

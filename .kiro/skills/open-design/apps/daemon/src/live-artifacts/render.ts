@@ -17,7 +17,7 @@ export interface LiveArtifactRenderOutput {
 const TEMPLATE_INTERPOLATION = /{{\s*([^{}]+?)\s*}}/g;
 const RAW_TEMPLATE_INTERPOLATION = /{{{[^{}]*}}}|{{\s*&[^{}]*}}/;
 const TEMPLATE_PATH = /^(?:data|[A-Za-z_][A-Za-z0-9_]*)(?:\.(?:[A-Za-z_][A-Za-z0-9_-]*|\d+))*$/;
-// `data-od-repeat="item in data.items"` — one loop variable over one `data.*` array.
+// `data-od-repeat="item in data.items"` - one loop variable over one `data.*` array.
 const REPEAT_DIRECTIVE = /\s*\bdata-od-repeat\s*=\s*"([^"]*)"/i;
 const REPEAT_DIRECTIVE_SPEC = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s+in\s+(data(?:\.(?:[A-Za-z_][A-Za-z0-9_-]*|\d+))*)\s*$/;
 const EXECUTABLE_TEMPLATE_PATTERNS: Array<{ pattern: RegExp; message: string }> = [
@@ -163,7 +163,7 @@ type ArrayReader = (arrayPath: string) => unknown[];
  * Render one template fragment against a binding scope, expanding
  * `data-od-repeat` elements left to right. Each repeat element is emitted
  * fully rendered (all its bindings resolved) so substituted data values are
- * never re-scanned by a later interpolation pass — a single-pass invariant
+ * never re-scanned by a later interpolation pass - a single-pass invariant
  * that keeps data-supplied `{{...}}`-looking text inert. One level only:
  * a `data-od-repeat` nested inside another is rejected, matching the
  * documented html_template_v1 contract.
@@ -172,7 +172,7 @@ type ArrayReader = (arrayPath: string) => unknown[];
  * Locate the next REAL `data-od-repeat` directive at or after `from`. A match
  * is a directive only when it sits inside an element's open tag: the nearest
  * `<` to its left starts a named tag that has not closed yet. Literal
- * `data-od-repeat="..."` text — prose, code samples, comments — is content
+ * `data-od-repeat="..."` text - prose, code samples, comments - is content
  * per the html_template_v1 contract and is skipped, wherever it appears
  * (top level or inside a repeated element's body).
  */
@@ -193,7 +193,7 @@ function findRepeatDirective(
     // Inside an HTML comment nothing is a directive, even text that looks
     // like a whole `<div data-od-repeat="...">` tag.
     const inComment = insideComment(html, directiveIndex) !== null;
-    // Within the open tag, the attribute must start at the top level — a
+    // Within the open tag, the attribute must start at the top level - a
     // match inside another attribute's quoted value (title='... data-od-
     // repeat="x in y"') is authored text, not a directive.
     const inQuotedAttrValue =
@@ -247,7 +247,7 @@ function renderFragment(html: string, resolve: BindingResolver, readArray: Array
     // Strip only this element's own directive from its opening tag; a REAL
     // directive anywhere in what remains means a nested repeat, which the
     // contract does not support. Literal mentions inside the repeated body
-    // stay inert — same rule as the top-level scan.
+    // stay inert - same rule as the top-level scan.
     const itemTemplate = element.replace(REPEAT_DIRECTIVE, '');
     if (findRepeatDirective(itemTemplate)) {
       throw new Error('nested data-od-repeat is not supported');

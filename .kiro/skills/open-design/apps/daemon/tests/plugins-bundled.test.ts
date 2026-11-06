@@ -1,4 +1,4 @@
-// Phase 4 / spec §23.3.5 — bundled plugin boot walker.
+// Phase 4 / spec §23.3.5 - bundled plugin boot walker.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cp, mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
@@ -178,7 +178,7 @@ describe('registerBundledPlugins', () => {
     expect(result.registered.map((r) => r.id)).toEqual(['sample-plugin']);
   });
 
-  it('is idempotent — re-running upserts the same row', async () => {
+  it('is idempotent - re-running upserts the same row', async () => {
     const folder = path.join(tmpRoot, 'atoms', 'sample');
     await mkdir(folder, { recursive: true });
     await writeFile(path.join(folder, 'open-design.json'), SAMPLE_MANIFEST('sample'));
@@ -191,7 +191,7 @@ describe('registerBundledPlugins', () => {
 
   // Regression for: this walker re-runs every daemon boot, and each run
   // stamps a fresh `now` onto every record it builds. A re-registration that
-  // changes nothing must not bump `installedAt`/`updatedAt` — otherwise every
+  // changes nothing must not bump `installedAt`/`updatedAt` - otherwise every
   // restart resets the whole bundled catalog's freshness to the same instant,
   // which is exactly what broke the Community gallery's "Newest" sort (it
   // orders by `updatedAt`).
@@ -216,7 +216,7 @@ describe('registerBundledPlugins', () => {
     expect(second?.updatedAt).toBe(1_000);
 
     // A genuine content change (version bump) at a later boot DOES refresh
-    // updatedAt — the guard only skips no-op re-registrations.
+    // updatedAt - the guard only skips no-op re-registrations.
     await writeFile(
       path.join(folder, 'open-design.json'),
       SAMPLE_MANIFEST('sample').replace('"0.1.0"', '"0.2.0"'),
@@ -234,7 +234,7 @@ describe('registerBundledPlugins', () => {
   // Regression for review feedback on #5362: SKILL.md's markdown body never
   // makes it into the parsed manifest (adaptAgentSkill keeps only frontmatter
   // fields), so a body-only edit with no frontmatter/version bump must still
-  // be treated as a real change — otherwise updatedAt stays frozen forever
+  // be treated as a real change - otherwise updatedAt stays frozen forever
   // for a plugin whose SKILL.md instructions keep getting updated.
   it('advances updatedAt when only SKILL.md changes, with no version bump', async () => {
     const folder = path.join(tmpRoot, 'atoms', 'sample');
@@ -248,8 +248,8 @@ describe('registerBundledPlugins', () => {
     const [first] = listInstalledPlugins(db);
     expect(first?.updatedAt).toBe(1_000);
 
-    // Edit only SKILL.md's body — same frontmatter, same version, same
-    // open-design.json — and confirm the parsed manifest is unaffected before
+    // Edit only SKILL.md's body - same frontmatter, same version, same
+    // open-design.json - and confirm the parsed manifest is unaffected before
     // asserting on updatedAt (otherwise this test wouldn't actually probe the
     // gap: a manifest-derived field changing would trivially pass too).
     const editedSkill = `${SAMPLE_SKILL('sample')}\nRewritten instructions body.\n`;
@@ -286,7 +286,7 @@ describe('registerBundledPlugins', () => {
     const [first] = listInstalledPlugins(db);
     expect(first?.updatedAt).toBe(1_000);
 
-    // Edit only the preview asset — open-design.json and SKILL.md untouched.
+    // Edit only the preview asset - open-design.json and SKILL.md untouched.
     await writeFile(path.join(folder, 'preview', 'index.html'), '<p>v2 preview, redesigned</p>');
     nowSpy.mockReturnValue(2_000);
     const result = await registerBundledPlugins({ db, bundledRoot: tmpRoot });
@@ -321,7 +321,7 @@ describe('registerBundledPlugins', () => {
   it('prunes persisted bundled rows whose bundled folder was removed', async () => {
     // Upgrade path: a previous daemon image shipped `stale`, the user's DB
     // registered it, and this image no longer carries the folder. The row
-    // must disappear too — otherwise /api/plugins keeps serving a record
+    // must disappear too - otherwise /api/plugins keeps serving a record
     // whose backing files are gone.
     const keepDir = path.join(tmpRoot, 'atoms', 'keep');
     const staleDir = path.join(tmpRoot, 'atoms', 'stale');
@@ -360,7 +360,7 @@ describe('registerBundledPlugins', () => {
 
   it('does not prune bundled rows when the bundled root itself is missing', async () => {
     // A missing bundledRoot means a mispackaged image, not "every bundled
-    // plugin was deliberately removed" — wiping the registry would turn a
+    // plugin was deliberately removed" - wiping the registry would turn a
     // packaging bug into data loss.
     const folder = path.join(tmpRoot, 'atoms', 'sample');
     await mkdir(folder, { recursive: true });

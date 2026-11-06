@@ -7,13 +7,13 @@ It is intentionally narrow:
 - only `pull_request` / `merge_group` ci runs
 - only while `run_attempt < max_attempt` (default 2 → one automatic retry)
 - only when every non-success leaf job carries a trusted infra fingerprint
-  (shutdown/spot markers — not bare `cancelled` alone; no ordinary assertion
+  (shutdown/spot markers - not bare `cancelled` alone; no ordinary assertion
   failure / timeout mixed in)
 - only when freshness still holds: live PR head for `pull_request`, or an
   open PR whose live head still matches the PR head SHA encoded in the
   synthetic `merge_group` branch (`pr-N-<sha>`). Queue membership is not
-  usable — required-check failure ejects the entry before `workflow_run`
-  completed fires — and open-only is not enough (the PR may have advanced)
+  usable - required-check failure ejects the entry before `workflow_run`
+  completed fires - and open-only is not enough (the PR may have advanced)
 
 Skip paths exit 0. Hard API/protocol errors exit non-zero so the atom job is
 visible when the helper itself is broken.
@@ -132,7 +132,7 @@ def annotation_indicates_ordinary_failure(item: dict[str, Any]) -> bool:
     suppress infra-cancel retry when a later shutdown marker is also present.
 
     Only failure-level annotations (or untyped fixtures without
-    ``annotation_level``) that lack an infra marker are ordinary signals —
+    ``annotation_level``) that lack an infra marker are ordinary signals -
     including when a later shutdown annotation is also present on the same job.
     """
     text = annotation_text(item)
@@ -162,7 +162,7 @@ def job_looks_like_infra_cancel(job: dict[str, Any], annotations: list[dict[str,
     classifying mixed jobs as infra would auto-retry real assertion failures.
     """
     # job is retained for the classify call-site signature; conclusion alone is
-    # not an infra signal — only trusted annotation markers prove runner loss.
+    # not an infra signal - only trusted annotation markers prove runner loss.
     if not isinstance(job, dict):
         return False
     has_marker = False
@@ -271,7 +271,7 @@ def decide(
         # workflow_run completed fires after required checks fail, so GitHub has
         # normally already ejected the synthetic head from the merge queue.
         # Freshness is an open PR still at the PR head SHA encoded in the
-        # merge-queue branch (pr-N-<sha>) — not queue membership (which would
+        # merge-queue branch (pr-N-<sha>) - not queue membership (which would
         # skip every infra-cancel merge_group path) and not open-only (the PR
         # may have advanced after ejection).
         if merge_group_has_open_pr is None:
@@ -554,14 +554,14 @@ def resolve_merge_group_open_pr(
     Queue membership is therefore not a usable freshness signal for infra-cancel
     retry. Freshness is: an open PR is still associated with this run *and* its
     live head still equals the PR head SHA encoded in the merge-queue branch
-    (``pr-N-<sha>``). Open-only is not enough — a new commit on the PR must not
+    (``pr-N-<sha>``). Open-only is not enough - a new commit on the PR must not
     authorize ``gh run rerun --failed`` for the obsolete synthetic run.
 
     Returns:
-      True  — open PR still at the originating PR head for this run
-      False — associations resolved but no open PR remains at that head
+      True  - open PR still at the originating PR head for this run
+      False - associations resolved but no open PR remains at that head
               (closed, or open but advanced)
-      None  — could not determine association/freshness (API/protocol miss,
+      None  - could not determine association/freshness (API/protocol miss,
               or merge-queue branch lacks the originating PR head SHA)
     """
     owner, _, name = repo.partition("/")
@@ -602,7 +602,7 @@ def resolve_merge_group_open_pr(
         return False
 
     # GraphQL fallback: recent open PRs whose head matches are rare for
-    # synthetic merge commits, but a miss here should not hard-fail — return
+    # synthetic merge commits, but a miss here should not hard-fail - return
     # None so decide() skips cleanly when association cannot be proven.
     query = (
         "query {"
@@ -696,7 +696,7 @@ def run_decision_from_github(
 
 
 def self_check() -> None:
-    # Pure gate cases — no network.
+    # Pure gate cases - no network.
     ok, reason = decide(
         event_name="pull_request",
         conclusion="failure",
@@ -758,7 +758,7 @@ def self_check() -> None:
         infra_job_names=["Playwright visual (settings-workspace)"],
         ordinary_job_names=[],
         live_pr_head_sha=None,
-        # Open PR still associated — allow even when the synthetic head has
+        # Open PR still associated - allow even when the synthetic head has
         # already been ejected from the merge queue (normal after completed ci).
         merge_group_has_open_pr=True,
     )
@@ -923,7 +923,7 @@ def self_check() -> None:
     assert not ok and "ordinary non-infra" in reason, reason
 
     # Manually cancelled current-head PR run: leaves are bare cancelled with no
-    # infra markers. Must skip even though the head is still live — otherwise
+    # infra markers. Must skip even though the head is still live - otherwise
     # we would restart work the user explicitly cancelled.
     manual_cancel_jobs = [
         {"id": 20, "name": "E2E Vitest", "conclusion": "cancelled", "steps": []},
@@ -1099,7 +1099,7 @@ def self_check() -> None:
             assert f"head={expected_head}" in path, path
             return []
         if path.startswith("/repos/nexu-io/open-design/git/ref/heads/"):
-            # If consulted, tip still matches the failed SHA — but live-PR
+            # If consulted, tip still matches the failed SHA - but live-PR
             # resolution must not use bare branch tip as evidence.
             return {"object": {"sha": closed_run_sha, "type": "commit"}}
         if path.startswith("graphql:"):

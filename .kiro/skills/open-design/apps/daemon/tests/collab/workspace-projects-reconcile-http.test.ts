@@ -2,12 +2,12 @@
 // (collab/workspace-projects-reconciler.ts), wired to the REAL sqlite
 // `workspace_projects` CRUD (db.ts) and asserted through the REAL
 // `GET /api/workspaces/:workspaceId/projects` endpoint
-// (routes/project/index.ts) — not a shallow "the function was called" check.
+// (routes/project/index.ts) - not a shallow "the function was called" check.
 //
 // The concrete, repeatedly-reported scenario this closes: a member's local
 // `workspace_projects` row keeps claiming `visibility: 'team'` forever after
 // the owner unshares (or deletes) the project, because neither the hub-push
-// nor the 15s poller ever re-examined the row — they only refreshed the
+// nor the 15s poller ever re-examined the row - they only refreshed the
 // DISPLAY cache. See that file's header comment for the full design.
 import express from 'express';
 import type http from 'node:http';
@@ -92,7 +92,7 @@ describe('reconcileWorkspaceProjectsWithRemote, verified through the real worksp
   });
 
   // Real deps for `registerProjectRoutes`, wired to the SAME real sqlite db
-  // the reconciler under test writes into — every `projectStore` function is
+  // the reconciler under test writes into - every `projectStore` function is
   // the genuine `db.ts` implementation, matching
   // `tests/routes/project-move-to-personal.test.ts`'s established pattern.
   function buildProjectRoutesDeps(
@@ -434,7 +434,7 @@ describe('reconcileWorkspaceProjectsWithRemote, verified through the real worksp
     expect(getWorkspaceProjectByProjectId(db, projectId)).toEqual(before);
   });
 
-  // Real db.ts wiring for the reconciler under test — the same functions
+  // Real db.ts wiring for the reconciler under test - the same functions
   // `server.ts` itself calls, not a re-implementation. `getWorkspaceIdentity`
   // is fixed to the reader's identity for these tests; the identity-gating
   // behavior itself is covered by the fake-deps unit tests in
@@ -741,7 +741,7 @@ describe('reconcileWorkspaceProjectsWithRemote, verified through the real worksp
   // projects have no local `projects` row, and `workspace_projects.project_id`
   // is a FOREIGN KEY into `projects(id)` (db.ts), so the bind fallback's
   // INSERT threw SQLITE_CONSTRAINT_FOREIGNKEY on every single reconciliation
-  // pass (hub push + ~15s poller), forever — 4700+ log lines across restarts
+  // pass (hub push + ~15s poller), forever - 4700+ log lines across restarts
   // on the live member instance. Materializing a project is the open/pull
   // path's job (`ensureSharedProjectPlaceholder` / `registerPulledProject` in
   // routes/collab-sync.ts); the reconciler must SKIP what has never been
@@ -764,7 +764,7 @@ describe('reconcileWorkspaceProjectsWithRemote, verified through the real worksp
       resourceHubResourceId: `project-${unsharedId}`,
       syncState: 'synced',
     });
-    // The culprit: on the remote catalog, never seen locally — no `projects`
+    // The culprit: on the remote catalog, never seen locally - no `projects`
     // row, no `workspace_projects` row.
     const neverMaterializedId = 'never-materialized-remote-share';
     expect(getProject(db, neverMaterializedId)).toBeFalsy();
@@ -778,7 +778,7 @@ describe('reconcileWorkspaceProjectsWithRemote, verified through the real worksp
       { onError },
     );
 
-    // No FOREIGN KEY error — the unmaterialized project is not an error, it
+    // No FOREIGN KEY error - the unmaterialized project is not an error, it
     // is simply not this daemon's row to write yet.
     expect(onError).not.toHaveBeenCalled();
     expect(getWorkspaceProjectByProjectId(db, neverMaterializedId)).toBeUndefined();

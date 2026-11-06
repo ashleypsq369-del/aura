@@ -239,7 +239,7 @@ export interface RegisterCollabSyncRoutesDeps {
    * Delete a local project record that is still an unmaterialized
    * shared-project placeholder (and its empty content directory). Called by
    * the retracted-share heal below ONLY for a record the placeholder stamp
-   * proves contentless — implementations must re-check
+   * proves contentless - implementations must re-check
    * `isUnmaterializedSharedPlaceholder` before deleting so a concurrent pull
    * that just materialized real content can never be destroyed.
    */
@@ -353,7 +353,7 @@ export interface RegisterCollabSyncRoutesDeps {
    * repeated pulls against a live resource-hub project) rather than updating
    * files in place. A chokidar watch established before that swap keeps
    * watching the OLD (now-orphaned) directory handle and silently stops
-   * firing — so the member's own currently-open FileViewer tab never saw
+   * firing - so the member's own currently-open FileViewer tab never saw
    * `file-changed`, even though `/collab/status` and the file's bytes on disk
    * were both already correct (recvq6CIesNvWZ). Firing this explicit signal
    * right after the pull we know just landed sidesteps the swap entirely
@@ -364,7 +364,7 @@ export interface RegisterCollabSyncRoutesDeps {
    * Notify any live `/api/projects/:id/events` SSE subscribers that this
    * project's LOCAL record (name / skill / design-system) changed as part of
    * a pull. `registerPulledProject` is what replaces the "共享项目"
-   * placeholder record with the real project name — but that write is
+   * placeholder record with the real project name - but that write is
    * DB-only, and the only other post-pull signal (`notifyFilesChanged`)
    * refreshes the file list, never the project record. Without this signal a
    * member web that seeded its `projects` state from the placeholder keeps
@@ -403,7 +403,7 @@ export interface RegisterCollabSyncRoutesDeps {
   }) => void;
 }
 
-/** Result of one shared-project content pull — the same flow whether it was
+/** Result of one shared-project content pull - the same flow whether it was
  *  reached over `POST /api/projects/:id/collab/pull` or daemon-internally
  *  through {@link CollabSyncRoutesHandle.pullSharedProject}. */
 export type CollabSyncPullOutcome =
@@ -421,8 +421,8 @@ export interface CollabSyncRoutesHandle {
    * hub pull, register-on-pull, and the `file-changed` /
    * `project-metadata-changed` signals. The viewer principal is derived from
    * the daemon's own workspace context (there is no request to read headers
-   * from). Concurrent pulls for the same project+scope — including a member
-   * web's racing POST — coalesce onto one in-flight materialization.
+   * from). Concurrent pulls for the same project+scope - including a member
+   * web's racing POST - coalesce onto one in-flight materialization.
    */
   pullSharedProject(
     projectId: string,
@@ -637,7 +637,7 @@ function publicFilePublicationScope(
  *
  * Public links are snapshots in the workspace resource hub, which only a team
  * workspace can address (`workspaceContextHasTeamIdentity`). A personal or
- * signed-out session — and a team session whose context read momentarily fails —
+ * signed-out session - and a team session whose context read momentarily fails -
  * lands here. Ship a sentence alongside the code so every surface that is not
  * the web UI (the `od` CLI, embedding agents) states the reason instead of
  * echoing `WORKSPACE_IDENTITY_REQUIRED` at a human. The web UI localizes the
@@ -662,11 +662,11 @@ function workspaceIdentityRequiredBody() {
  * A public file link needs no such thing. The hub addresses purely by workspace
  * id, and B stopped refusing a personal workspace on its control-key auth path:
  * `authenticateSession` now mints a principal whose `teamId` IS the workspace id
- * — "a partition of one" — and `resolveAccess` only ever compares that id with
+ * - "a partition of one" - and `resolveAccess` only ever compares that id with
  * the resource's own. So the real requirement here is A workspace, not a TEAM
  * workspace: an id to publish under and a member id to own the resource with.
  *
- * A signed-out session still has neither, and is still refused — this widens the
+ * A signed-out session still has neither, and is still refused - this widens the
  * gate, it does not remove it. The web UI must gate its entry point on the SAME
  * rule (`canPublishPublicFile` in apps/web/src/collab/public-file-publish.ts);
  * a button that renders where this returns 409 is the bug this pair exists to
@@ -1144,11 +1144,11 @@ export function registerCollabSyncRoutes(
 
   /**
    * Register a minimal placeholder project record the moment a member opens a
-   * shared project they don't have locally yet — synchronously, with no hub
+   * shared project they don't have locally yet - synchronously, with no hub
    * round-trip. Without it `getProject` fails for the multi-second window before
    * the resource pull materializes the project, and every project route
    * (conversations, events SSE, tabs, files) 404s. The web answers those 404s
-   * with retry storms + EventSource reconnects — the request flood that made a
+   * with retry storms + EventSource reconnects - the request flood that made a
    * shared project take tens of seconds to open. The post-pull
    * `registerPulledProject` overwrites the placeholder name with the real one;
    * this is a no-op once the project is known locally.
@@ -1167,7 +1167,7 @@ export function registerCollabSyncRoutes(
     // Stamp the record as an unmaterialized placeholder so no publish path
     // ever treats its (empty) content directory as content authority until a
     // pull lands real hub content (the recvqzaDvUU6B3 fresh-install wipe
-    // guard — see collab/shared-project-placeholder.ts).
+    // guard - see collab/shared-project-placeholder.ts).
     markSharedProjectPlaceholder?.(projectId, true);
   }
 
@@ -1197,7 +1197,7 @@ export function registerCollabSyncRoutes(
   /**
    * Invariant: opening a shared project whose only local record is an
    * unmaterialized placeholder starts that project's content pull on the very
-   * request that discovered it — for EVERY viewer, owner or member.
+   * request that discovered it - for EVERY viewer, owner or member.
    *
    * Neither side of the product had another way to start it on first open. The
    * web's auto-pull is gated on `publishedVersion` advancing past its cursor,
@@ -1206,7 +1206,7 @@ export function registerCollabSyncRoutes(
    * written, and the real hub head is fetched fire-and-forget into
    * `headEnrichmentCache` for a LATER poll to consume. So a brand-new member
    * who opened a shared project on a fresh install got a placeholder, an empty
-   * file list, and no pull at all — materialization arrived only whenever a
+   * file list, and no pull at all - materialization arrived only whenever a
    * proactive lane (hub push / reconnect catch-up / the recovery floor) next
    * fired, which is why the content appeared to show up "only on the second
    * open".
@@ -1249,7 +1249,7 @@ export function registerCollabSyncRoutes(
       } catch (error) {
         // Retracted-share heal (飞书 recvqA6qhV7St1): the catalog names this
         // caller as the project's owner, yet the published pull answered
-        // `resource_not_found` — the hub's tombstone gate. A live share can
+        // `resource_not_found` - the hub's tombstone gate. A live share can
         // never produce that pair; it is the hub-authoritative signature of a
         // HALF-LANDED retraction: an unshare's `resource remove` landed but
         // its `team-projects remove` did not, leaving a dangling catalog row.
@@ -1854,7 +1854,7 @@ export function registerCollabSyncRoutes(
       // The lifecycle source did not answer (offline, signed out, AMR down).
       // A persisted publication is still the best-known link: show it, marked
       // stale, so the panel keeps working offline. Without one there is
-      // nothing to say — a request that did not answer is not "none".
+      // nothing to say - a request that did not answer is not "none".
       const local = publicFilePublicationStore.get(scope);
       // A queued stop means the owner already asked to end this share: never
       // offer its link as live, even as a stale best guess.
@@ -2266,7 +2266,7 @@ export function registerCollabSyncRoutes(
           notifyFilesChanged?.(projectId);
           if (localRecordChanged) notifyProjectMetadataChanged?.(projectId);
           markTeamProjectRevoked?.(projectId, false);
-          // Real hub content is on disk and registered — the local record is no
+          // Real hub content is on disk and registered - the local record is no
           // longer an unmaterialized placeholder, so publishing may resume.
           markSharedProjectPlaceholder?.(projectId, false);
           return complete({
@@ -2491,7 +2491,7 @@ export function registerCollabSyncRoutes(
           return complete({ status: 'register_failed' });
         }
       }
-      // The pull already materialized new bytes on disk at this point —
+      // The pull already materialized new bytes on disk at this point -
       // notify now rather than relying on the project's chokidar watcher,
       // which the pull's directory-replace can silently orphan (see
       // `notifyFilesChanged`'s doc comment). A currently-open FileViewer tab
@@ -2506,7 +2506,7 @@ export function registerCollabSyncRoutes(
         // manual reload (recvqhwv6RPU1j).
         notifyProjectMetadataChanged?.(projectId);
       }
-      // Real hub content is on disk and registered — the local record is no
+      // Real hub content is on disk and registered - the local record is no
       // longer an unmaterialized placeholder, so publishing may resume.
       markSharedProjectPlaceholder?.(projectId, false);
     }
@@ -2534,7 +2534,7 @@ export function registerCollabSyncRoutes(
   // transport replaces the whole project directory, so a duplicate pull is a
   // full-tree transfer, not a cheap no-op). The scope key includes the
   // principal's team + member ids because the same project can be shared
-  // under more than one scope (see `scopedProjectKey` in collab/runtime.ts) —
+  // under more than one scope (see `scopedProjectKey` in collab/runtime.ts) -
   // only identically-routed pulls may share a result.
   const pullsInFlight = new Map<string, Promise<CollabSyncPullOutcome>>();
   const projectPullTails = new Map<string, Promise<void>>();
@@ -2745,7 +2745,7 @@ export function registerCollabSyncRoutes(
     let ownerDisplayName: string | undefined;
     let ownerRole: 'owner' | 'admin' | 'member' | undefined;
     // Resolve ownership first through the CACHED hub owner lookup. This decides
-    // whether the project is shared at all — and a project that is local-only AND
+    // whether the project is shared at all - and a project that is local-only AND
     // unowned on the hub is a genuine personal project with no hub-published head.
     // Answering its version from local state lets us skip the uncached ~2s
     // publishedHead round-trip that otherwise ran on every status poll. That hub
@@ -2796,7 +2796,7 @@ export function registerCollabSyncRoutes(
       ensureSharedProjectPlaceholder(projectId);
     }
     // Whether this daemon's only local record for the project is still an
-    // unmaterialized placeholder. Purely local and synchronous — it needs no
+    // unmaterialized placeholder. Purely local and synchronous - it needs no
     // hub round-trip, which is exactly why it is the signal the client can act
     // on from the FIRST status response (see `awaitingFirstMaterialization` on
     // CollabSyncStatusResponse).

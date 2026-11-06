@@ -1,5 +1,5 @@
-/**
- * Register.jsx — Project Aura
+﻿/**
+ * Register.jsx - Project Aura
  * Healthcare-standard signup form (NHS / MyChart / Epic conventions):
  * • One card, two steps, plenty of breathing room
  * • Inline errors on blur; live re-check while typing once touched
@@ -122,8 +122,8 @@ const VALIDATORS = {
  password: v => {
  if (!v) return 'Please create a password';
  if (v.length < 8) return 'Password must be at least 8 characters';
- if (!/[A-Z]/.test(v)) return 'Include at least one uppercase letter (A—Z)';
- if (!/[0-9]/.test(v)) return 'Include at least one number (0—9)';
+ if (!/[A-Z]/.test(v)) return 'Include at least one uppercase letter (A-Z)';
+ if (!/[0-9]/.test(v)) return 'Include at least one number (0-9)';
  return null;
  },
  confirm_password: (v, pw) => {
@@ -615,7 +615,7 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Role — only show if NOT pre-selected from /get-started */}
+ {/* Role - only show if NOT pre-selected from /get-started */}
  {!preRole && (
  <InputGroup id="role" label="I am registering as"
  hint="Healthcare professionals are registered by your organisation's administrator">
@@ -710,7 +710,7 @@ export default function Register() {
  {terms ? (
    <span className="flex items-center gap-1.5 text-teal-700 font-semibold">
      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="7" fill="#0d9488"/><path d="M4 7l2.5 2.5L10 5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-     Terms accepted — you agreed to the Terms of Service and Privacy Policy
+     Terms accepted - you agreed to the Terms of Service and Privacy Policy
    </span>
  ) : (
    <>
@@ -750,7 +750,7 @@ export default function Register() {
  </div>
  </div>
 
- {/* Legal Modals — open without leaving the page */}
+ {/* Legal Modals - open without leaving the page */}
  <LegalModal type="terms"   open={showTermsModal}   onClose={() => setShowTermsModal(false)}   onAccept={() => setTerms(true)} />
  <LegalModal type="privacy" open={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} />
  </>

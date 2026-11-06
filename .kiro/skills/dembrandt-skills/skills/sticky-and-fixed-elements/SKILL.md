@@ -50,14 +50,14 @@ retrieval:
 | `position: fixed` | Removed from document flow. Always stays at the same viewport position regardless of scroll or parent. | Global navigation header, bottom toolbar, floating action button |
 | `position: sticky` | Stays in document flow until it hits its scroll threshold, then locks in place. Returns to flow when parent scrolls past. | Table column headers, section headings in a long list, in-page toolbars within a scroll container |
 
-**Prefer `sticky` over `fixed`** when the element belongs to a specific section or scroll context. Fixed elements sit above everything and affect the entire viewport — use them only for truly global UI.
+**Prefer `sticky` over `fixed`** when the element belongs to a specific section or scroll context. Fixed elements sit above everything and affect the entire viewport - use them only for truly global UI.
 
-## Top — Navigation Header
+## Top - Navigation Header
 
 The global navigation header is the most common fixed element. It should:
 
 - Remain visible at all times so the user can always navigate away
-- Be as thin as possible to maximise content area — 48–64px is a common range
+- Be as thin as possible to maximise content area - 48-64px is a common range
 - Have a background and shadow so content scrolling beneath it does not bleed through
 - On scroll, a subtle shadow (`--shadow-sm`) signals that content is behind it
 
@@ -79,21 +79,21 @@ Compensate for the fixed header with matching top padding on the page body:
 body { padding-top: var(--header-height); }
 ```
 
-## Bottom — Toolbar on Mobile
+## Bottom - Toolbar on Mobile
 
 On mobile, the bottom of the screen is the most reachable area with one thumb. A persistent bottom toolbar is the natural home for:
 
-- Primary navigation (bottom tab bar — iOS and Android convention)
+- Primary navigation (bottom tab bar - iOS and Android convention)
 - Contextual actions for the current view (edit, share, delete)
 - A floating action button (FAB) for the single most important action
 
 Bottom toolbars should:
 - Respect the safe area inset on devices with a home indicator: `padding-bottom: env(safe-area-inset-bottom)`
 - Be visually separated from content (background fill, top border, or shadow)
-- Contain 3–5 items maximum — more than 5 should move to a menu or a different pattern
+- Contain 3-5 items maximum - more than 5 should move to a menu or a different pattern
 - Use icons with labels for navigation tabs, or icons alone for contextual toolbars (with tooltips)
 
-On desktop, bottom toolbars are uncommon. Status bars, editor toolbars, and command palettes are the desktop equivalent — these are typically `position: fixed` at the bottom or `position: sticky` within their scroll container.
+On desktop, bottom toolbars are uncommon. Status bars, editor toolbars, and command palettes are the desktop equivalent - these are typically `position: fixed` at the bottom or `position: sticky` within their scroll container.
 
 ## Sticky Table Headers
 
@@ -123,7 +123,7 @@ Sticky and fixed elements create stacking context. Define z-index as named token
 --z-toast:      500;
 ```
 
-Every fixed or sticky element must declare its z-index explicitly using a token. Avoid ad-hoc values like `z-index: 9999` — they signal an unmanaged stacking context and will eventually conflict.
+Every fixed or sticky element must declare its z-index explicitly using a token. Avoid ad-hoc values like `z-index: 9999` - they signal an unmanaged stacking context and will eventually conflict.
 
 ## How Many Fixed Layers Is Too Many
 
@@ -141,5 +141,5 @@ A fixed header + fixed bottom toolbar + floating button + sticky sidebar + stick
 - [ ] Does the fixed header compensate for its height with body padding?
 - [ ] Does the bottom toolbar respect `env(safe-area-inset-bottom)` on mobile?
 - [ ] Are all z-index values defined as named tokens, not arbitrary numbers?
-- [ ] Is the total number of simultaneous fixed layers minimal — header + one bottom element maximum in most cases?
+- [ ] Is the total number of simultaneous fixed layers minimal - header + one bottom element maximum in most cases?
 - [ ] Does content scrolling behind a fixed element not visually bleed through (background + shadow on the fixed element)?

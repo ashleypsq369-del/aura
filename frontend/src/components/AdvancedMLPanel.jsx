@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AdvancedMLPanel.jsx
  * ====================
  * Displays all P6-P11 advanced ML analysis for a patient:
@@ -146,7 +146,7 @@ function PrognosisCard({ data }) {
  <p className="text-[11px] text-[var(--text-500)] mt-0.5">median estimated survival</p>
  {data.range_weeks && (
  <p className="text-[11px] text-[var(--text-400)] mt-0.5">
- Range: {data.range_weeks[0]} – {data.range_weeks[1]} weeks
+ Range: {data.range_weeks[0]} - {data.range_weeks[1]} weeks
  </p>
  )}
  </div>

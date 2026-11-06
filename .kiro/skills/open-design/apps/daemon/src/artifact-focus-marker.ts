@@ -9,12 +9,12 @@
  *     `<od-done key="8` in another. Anything that could still grow into a
  *     marker is held until the next delta resolves it, and a marker that never
  *     completes is dropped rather than painted. Stripping does NOT depend on
- *     the key matching — a wrongly-keyed marker is still protocol noise, which
+ *     the key matching - a wrongly-keyed marker is still protocol noise, which
  *     is the rule `<od-title>` and `<MUST_FIX>` both had to learn the hard way.
  *
  *  2. **Never swallow the user's words.** Holding back is a bet that more
- *     characters are coming. When the bet loses — the held tail was prose that
- *     happened to start with `<` — `flush()` returns it verbatim.
+ *     characters are coming. When the bet loses - the held tail was prose that
+ *     happened to start with `<` - `flush()` returns it verbatim.
  *
  *  3. **A marker never causes a read outside the project.** The declared path
  *     is untrusted input. It is rebased against the project root, refused if it
@@ -22,10 +22,10 @@
  *     of the project between the check and the stat.
  *
  * **The empty-preview gate.** The product ruling is that a preview must not
- * open while the file is still empty — a blank page reads as a bug — but must
+ * open while the file is still empty - a blank page reads as a bug - but must
  * also not wait for the whole turn to finish. So an accepted `open` is not
  * emitted until the file is proven non-empty on disk. If it is not yet, the
- * marker is *held*, not dropped, and re-probed by `settle()` — which the run
+ * marker is *held*, not dropped, and re-probed by `settle()` - which the run
  * loop calls after each file-writing tool result and once more at turn end.
  * That makes the trigger "the marker, and the bytes, whichever lands second".
  */
@@ -46,7 +46,7 @@ import {
  * Generous on purpose: everything this marker carries lives in the attribute
  * list, so a turn declaring several deliverables produces a genuinely long tag.
  * The cap only guards against a `<od-focus` that never closes at all, and the
- * branch is unreachable for ordinary prose — entering it requires the literal
+ * branch is unreachable for ordinary prose - entering it requires the literal
  * nine-character tag prefix.
  */
 const MAX_TAG_HOLD = 4096;
@@ -139,20 +139,20 @@ async function defaultProbeFile(
   return { size: stat.size };
 }
 
-/** `</od-focus` — a stray closing tag models sometimes add out of habit. */
+/** `</od-focus` - a stray closing tag models sometimes add out of habit. */
 const OD_FOCUS_CLOSE_TAG = '</od-focus';
 
 /**
  * The tag name must END where we think it does.
  *
  * Without this, `indexOf('<od-focus')` happily matches inside `<od-focused>`
- * and `<od-focuses>` and swallows them — the same shape of bug that let
+ * and `<od-focuses>` and swallows them - the same shape of bug that let
  * `<PANELISTS>` get eaten by a `<PANELIST>` matcher. The contracts-side regex
  * spells it `\b`; the streaming scanner has to check it by hand because it
  * works on a moving buffer rather than a complete string.
  *
  * A name still being typed (`<od-focus` at the very end of the buffer, nothing
- * after it yet) is *undecided*, not rejected — the next delta may bring `/>`
+ * after it yet) is *undecided*, not rejected - the next delta may bring `/>`
  * or may bring `ed>`. Undecided means held.
  */
 function tagBoundaryAt(lower: string, index: number, tagLength: number): 'tag' | 'not-tag' | 'undecided' {
@@ -188,8 +188,8 @@ function findMarkerStart(lower: string, from: number): { index: number; undecide
  * How many characters at the end of `text` could still grow into a marker.
  *
  * Two cases, mirroring `<od-next>`'s hold-back:
- *   · the tail is a prefix of `<od-focus` — the tag name is unfinished;
- *   · the tail already IS `<od-focus` but no `>` has arrived — attributes are
+ *   · the tail is a prefix of `<od-focus` - the tag name is unfinished;
+ *   · the tail already IS `<od-focus` but no `>` has arrived - attributes are
  *     still in flight.
  *
  * A lone `<` in prose enters the first case and leaves it the moment a
@@ -236,7 +236,7 @@ export function createArtifactFocusMarkerStripper(
    * The last path actually emitted. Two things depend on it:
    *
    *  · **Idempotency.** A marker's own probe and a `settle()` from the run loop
-   *    race by construction — the marker fires one and a tool result fires the
+   *    race by construction - the marker fires one and a tool result fires the
    *    other a moment later. Both can find the file non-empty. Without this
    *    latch they both emit and the preview navigates twice.
    *  · **Last-wins.** It is keyed on the PATH, not a boolean, so a later marker
@@ -359,7 +359,7 @@ export function createArtifactFocusMarkerStripper(
     /*
      * Stream over. What is still held is one of two things:
      *
-     *  · an ambiguous `<`-prefix that turned out to be prose — return it
+     *  · an ambiguous `<`-prefix that turned out to be prose - return it
      *    verbatim, because eating a sentence is worse than delaying one;
      *  · a `<od-focus` whose `>` never arrived. That is protocol, and protocol
      *    never paints, so it is dropped.

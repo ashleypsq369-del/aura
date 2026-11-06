@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 — `DaemonDb` adapter stub.
+// Phase 5 / spec §15.6 - `DaemonDb` adapter stub.
 //
 // Spec §15.6 calls out a Postgres adapter so multi-replica daemons
 // can share state behind a load balancer. v1 ships local SQLite via

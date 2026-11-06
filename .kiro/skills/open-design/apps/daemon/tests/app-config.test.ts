@@ -99,7 +99,7 @@ describe('app-config', () => {
     // A file that cannot be parsed at all resets every preference, including
     // this one, and that stays true. Singling out `odNextStrategyMode` to
     // survive a broken file would opt installations out of a rollout they never
-    // declined — a broken file is evidence of a broken file, not of an opt-out.
+    // declined - a broken file is evidence of a broken file, not of an opt-out.
     // What does survive is a mode we can see and cannot read; see below.
     describe('OD Next opt-out when the mode itself cannot be read', () => {
       const cases: Array<[string, unknown]> = [
@@ -209,7 +209,7 @@ describe('app-config', () => {
     it('preserves a partial explicit telemetry (metrics on, content off)', async () => {
       // The user picked a non-default combo (e.g. metrics on for funnel,
       // content off for privacy). We hand back exactly what they saved
-      // — defaults never overwrite explicit per-field choices.
+      // - defaults never overwrite explicit per-field choices.
       await writeFile(
         path.join(dataDir, 'app-config.json'),
         JSON.stringify({ telemetry: { metrics: true, content: false } }),
@@ -906,7 +906,7 @@ describe('app-config telemetry prefs', () => {
     // Pre-default era: a bad-shaped `telemetry` write got stripped and
     // `readAppConfig` returned `cfg.telemetry === undefined`. After the
     // 2026-05-22 default-on switch, the same read backfills the
-    // default — telemetry is never undefined for callers, but the
+    // default - telemetry is never undefined for callers, but the
     // user's invalid value still didn't make it to disk. The
     // assertion now tracks "what the gate sees" (the default), since
     // that's the actually observable behavior; the write-validation
@@ -941,7 +941,7 @@ describe('app-config telemetry prefs', () => {
     // path then backfills the default because the absence of a value
     // is treated the same as a fresh install. If the user really
     // wants to opt out, the PrivacySection writes
-    // `{ metrics: false, content: false, ... }` explicitly — that
+    // `{ metrics: false, content: false, ... }` explicitly - that
     // shape persists and is preserved across reads (see "preserves
     // an explicit telemetry opt-out across reads" above).
     await writeAppConfig(dataDir, {
@@ -962,7 +962,7 @@ describe('app-config telemetry prefs', () => {
     const cfg = await readAppConfig(dataDir);
     expect(cfg.installationId).toBe('install-1');
     expect(cfg.agentId).toBe('claude');
-    // telemetry is replaced (not deep-merged) — matches the agentModels semantics.
+    // telemetry is replaced (not deep-merged) - matches the agentModels semantics.
     expect(cfg.telemetry).toEqual({ content: true });
   });
 });
@@ -1368,7 +1368,7 @@ describe('app-config odNextStrategyMode', () => {
   });
 
   it('reads a corrupted stored value as off rather than throwing', async () => {
-    // The read path stays fail-soft — a hand-edited or truncated file must not
+    // The read path stays fail-soft - a hand-edited or truncated file must not
     // take the daemon down, and the rest of the config still comes through.
     //
     // Preserve legacy config normalization; rollout no longer uses this field.

@@ -1,4 +1,4 @@
-// Phase 4 / spec §14 / plan §3.X1 — `od plugin pack <folder>`.
+// Phase 4 / spec §14 / plan §3.X1 - `od plugin pack <folder>`.
 //
 // Produces a gzip-compressed tar archive of a plugin folder so the
 // author can hand it to a peer or upload it to a marketplace
@@ -16,7 +16,7 @@
 // What we exclude:
 //   - node_modules / .git / dist / build / out / coverage
 //     (consistent with the installer's tarball-traversal skiplist
-//     — keeps archive size sane and prevents "ship my whole
+//     - keeps archive size sane and prevents "ship my whole
 //     development setup" accidents)
 //   - .DS_Store / Thumbs.db (OS noise)
 //   - The output archive itself when --out lands inside the folder
@@ -67,7 +67,7 @@ export class PackPluginError extends Error {
 export async function packPlugin(input: PackPluginInput): Promise<PackPluginResult> {
   const folder = path.resolve(input.folder);
 
-  // Confirm the folder shape — open-design.json must exist + parse.
+  // Confirm the folder shape - open-design.json must exist + parse.
   let manifestRaw: string;
   try {
     manifestRaw = await fsp.readFile(path.join(folder, 'open-design.json'), 'utf8');
@@ -109,7 +109,7 @@ export async function packPlugin(input: PackPluginInput): Promise<PackPluginResu
       file:    outPath,
       cwd:     folder,
       portable: true,
-      // Reject symlinks at write time — the installer rejects them
+      // Reject symlinks at write time - the installer rejects them
       // at extract time too. Keeping the contract symmetric stops
       // an author from packing a symlink and only finding out at
       // install. The walker also pre-filters them; this is a

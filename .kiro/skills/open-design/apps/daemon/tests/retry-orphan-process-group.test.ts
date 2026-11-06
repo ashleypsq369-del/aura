@@ -11,7 +11,7 @@ import { startServer } from '../src/server.js';
 // processes.
 //
 // The daemon spawns agent CLIs detached (process-group leader) and captures
-// run.processGroupId precisely so teardown can signal the WHOLE group — the
+// run.processGroupId precisely so teardown can signal the WHOLE group - the
 // cancel path does this (runs.ts signalChildProcess: process.kill(-pgid)).
 // But tearDownAttemptForRetry (server.ts) only calls run.child.kill('SIGTERM')
 // on the direct child. Any grandchild the CLI spawned (MCP servers, tool
@@ -21,7 +21,7 @@ import { startServer } from '../src/server.js';
 // The forced-shutdown escalation timers cannot save this: the old child's
 // close handler clears them (clearForcedChildShutdown), and even when they
 // fire, signalChildProcess bails on the childHasExited(child) guard because
-// the direct child is already dead — so the group signal is never sent.
+// the direct child is already dead - so the group signal is never sent.
 
 type StartedServer = {
   url: string;
@@ -83,7 +83,7 @@ describe('same-run retry orphaned process group', () => {
     });
 
     const run = await createAndWaitForRun(started.url);
-    // The retry itself recovers the run — that part works.
+    // The retry itself recovers the run - that part works.
     expect(run.status).toBe('succeeded');
 
     // The failed attempt spawned one descendant inside its process group.
@@ -100,7 +100,7 @@ describe('same-run retry orphaned process group', () => {
     expect(
       dead,
       `grandchild ${grandchildPid} of the torn-down retry attempt is still alive ` +
-        `${3_000}ms after the run finished — same-run retry teardown leaked its process group`,
+        `${3_000}ms after the run finished - same-run retry teardown leaked its process group`,
     ).toBe(true);
   });
 });

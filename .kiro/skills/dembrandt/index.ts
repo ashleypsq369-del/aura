@@ -180,7 +180,7 @@ program
       if (verdict.action === "warn") {
         entryRobotsWarning = `robots.txt disallows ${url} (rule: "${verdict.rule}")`;
         spinner.warn(
-          chalk.hex("#FFB86C")(`${verdict.reason}. Proceeding anyway — respect the site's terms.`)
+          chalk.hex("#FFB86C")(`${verdict.reason}. Proceeding anyway - respect the site's terms.`)
         );
         spinner.start("Starting extraction...");
       }
@@ -237,7 +237,7 @@ program
             });
           } catch (launchErr) {
             // playwright-core is a hard dependency so the *module* always
-            // resolves — the guard in loadBrowserEngines can never fire on a
+            // resolves - the guard in loadBrowserEngines can never fire on a
             // real install. The condition that actually bites is a missing
             // browser *binary*, which only surfaces here, as raw Playwright
             // text. Translate it into our own instruction instead.
@@ -326,7 +326,7 @@ program
               redirectRobotsWarning = `robots.txt disallows ${result.url} (rule: "${verdict.rule}")`;
               if (!opts.jsonOnly) {
                 spinner.warn(
-                  chalk.hex("#FFB86C")(`${verdict.reason}. Proceeding anyway — respect the site's terms.`)
+                  chalk.hex("#FFB86C")(`${verdict.reason}. Proceeding anyway - respect the site's terms.`)
                 );
                 spinner.start("Continuing...");
               }
@@ -660,7 +660,7 @@ program
           try {
             const rc = JSON.parse(readFileSync(join(process.cwd(), ".dembrandtrc"), "utf-8"));
             if (typeof rc.endpoint === "string") apiBase = rc.endpoint;
-          } catch { /* no .dembrandtrc, or unreadable — use the default */ }
+          } catch { /* no .dembrandtrc, or unreadable - use the default */ }
           const { report, source, mode } = await resolveCompare(opts.compare, result, apiBase ? { api: apiBase } : {});
           driftReport = report;
           const verdict = report.status === "drift"
@@ -668,7 +668,7 @@ program
             : color.accent(`stable ${report.score}`);
           savedNotices.push(
             chalk.dim(
-              `⟂ Drift vs ${source} (${mode}): ${verdict} — ` +
+              `⟂ Drift vs ${source} (${mode}): ${verdict} - ` +
               `${report.summary.changed} changed, ${report.summary.added} added, ${report.summary.removed} removed`
             )
           );
@@ -683,10 +683,10 @@ program
               savedNotices.push(
                 chalk.dim(`✓ Baseline accepted (--approve): ${color.info(source)}`)
               );
-              // Accepted — pass the run regardless of drift.
+              // Accepted - pass the run regardless of drift.
             } else {
               savedNotices.push(
-                color.warning("! --approve only updates local baseline files, not App baseline ids — drift stands.")
+                color.warning("! --approve only updates local baseline files, not App baseline ids - drift stands.")
               );
               if (report.status === "drift") process.exitCode = EXIT.DRIFT;
             }
@@ -835,7 +835,7 @@ program
           `${result.breakpoints?.length ?? 0} breakpoints.`
         );
 
-      // Surface what shaped this run (DEM-99) — active flags and merged paths —
+      // Surface what shaped this run (DEM-99) - active flags and merged paths -
       // so the summary confirms what was asked for, not just what was extracted.
       const flagBits = activeFlags(opts);
       const flagsLine = flagBits.length ? chalk.dim(`   Flags: ${flagBits.join(' ')}`) : null;
@@ -845,8 +845,8 @@ program
       if (opts.jsonOnly) {
         console.log = originalConsoleLog;
         // Attach the drift report to the JSON stream (only here, so --save-output
-        // and baseline files stay pure extractions). Lets consumers — e.g. a CI
-        // gate posting a PR comment — read the per-token changes machine-readably
+        // and baseline files stay pure extractions). Lets consumers - e.g. a CI
+        // gate posting a PR comment - read the per-token changes machine-readably
         // instead of scraping the HTML report.
         const jsonOut = driftReport ? { ...outputData, drift: driftReport } : outputData;
         console.log(JSON.stringify(jsonOut, null, 2));
@@ -864,9 +864,9 @@ program
         for (const notice of savedNotices) console.log(notice);
 
         // The CLI is the only surface most users ever see, so without a nudge
-        // the account side is undiscoverable. Restricted to a bare run — anyone
+        // the account side is undiscoverable. Restricted to a bare run - anyone
         // passing flags already knows the tool and would just read this as
-        // noise — shown on the first few such runs only (see cli-state), and
+        // noise - shown on the first few such runs only (see cli-state), and
         // never once the user already syncs with --key. Points at the recipe
         // rather than /app: the reader is still deciding, not signing up.
         if (!apiKey && flagBits.length === 0 && consumeCloudHint()) {

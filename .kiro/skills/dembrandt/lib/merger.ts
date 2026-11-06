@@ -162,7 +162,7 @@ function mergeTypography(results) {
   });
 
   // Merge sources. variableAxes is an array of objects, so the generic Set
-  // union below would not dedupe it by axis — handle it explicitly afterwards.
+  // union below would not dedupe it by axis - handle it explicitly afterwards.
   const sources = { ...(base.sources || {}) };
   results.slice(1).forEach(r => {
     const s = r.typography?.sources || {};

@@ -1,6 +1,6 @@
 // Team collaboration daemon subsystem: bundles the author-side publish
 // scheduler and the presence tracker behind one factory so the server wires
-// them once. The resource hub itself is E's (the resource-hub owner) — this
+// them once. The resource hub itself is E's (the resource-hub owner) - this
 // holds only C's trigger + presence, talking to the hub through
 // ResourcePublishAdapter.
 
@@ -57,7 +57,7 @@ interface TeamProjectCatalogSink {
 
 /**
  * The subset of {@link CollabPublishScheduler} the rest of the daemon is
- * allowed to drive directly (the HTTP routes and the project file watcher —
+ * allowed to drive directly (the HTTP routes and the project file watcher -
  * see `server.ts`'s `notifyFilesChanged` wiring). Narrowed to an interface,
  * rather than exposing the class, so `createCollabRuntime` can hand out a
  * facade that also updates `syncState` on every author-side change without
@@ -81,9 +81,9 @@ export interface CollabRuntime {
   syncExistingTeamProject(projectId: string, principal: ResourceHubPrincipal): Promise<{ version: number | null }>;
   presence: CollabPresenceTracker;
   scheduler: CollabRuntimeScheduler;
-  /** Workspace-context provider — the B-integration seam (identity/visibility). */
+  /** Workspace-context provider - the B-integration seam (identity/visibility). */
   workspaceContext: WorkspaceContextProvider;
-  /** Team-resource state provider — the E-resource-hub seam (share/freeze state). */
+  /** Team-resource state provider - the E-resource-hub seam (share/freeze state). */
   teamResources: TeamResourceStateProvider;
   /** Last published version for a project (members poll this to know what to pull). */
   publishedVersion(projectId: string, principal?: ResourceHubPrincipal | null): number | null;
@@ -116,7 +116,7 @@ export interface CollabRuntime {
   /**
    * Re-upsert the shared project's catalog entry so metadata-only changes
    * (rename today) reach teammates without waiting for the next content
-   * publish — before this, a rename with no follow-up file edit NEVER
+   * publish - before this, a rename with no follow-up file edit NEVER
    * converged on member clients. No-op for projects that are not shared
    * from this daemon. Fire-and-forget; failures land on the metadata-only
    * retry hooks and never mutate content `syncState`.
@@ -185,7 +185,7 @@ export interface CreateCollabRuntimeOptions {
    * Gate for SCHEDULER-driven publishes (file watcher, `/collab/changed`,
    * `/collab/publish`, run boundaries): return false and the flush becomes a
    * no-op for that project. The second layer of the fresh-install wipe guard
-   * (recvqzaDvUU6B3) — `should-publish.ts` keeps a placeholder from ever
+   * (recvqzaDvUU6B3) - `should-publish.ts` keeps a placeholder from ever
    * being WATCHED, this keeps an already-scheduled notification (or a direct
    * HTTP nudge) from publishing one. Deliberately NOT consulted by
    * `requestTeamShare`/`publishNow`: an explicit share is the user saying
@@ -390,7 +390,7 @@ export function createCollabRuntime(options: CreateCollabRuntimeOptions = {}): C
    * publish confirms. Without this, `syncState` only ever left `'synced'` on
    * the FIRST share (`requestTeamShare`) and stayed `'synced'` through every
    * later edit-then-republish cycle, so `/collab/status` had no way to tell
-   * the owner's own client "your last edit hasn't reached teammates yet" —
+   * the owner's own client "your last edit hasn't reached teammates yet" -
    * the "uploading" tab badge has nothing to key off without this. Only
    * touches projects that already have a share principal; an unshared
    * project's `syncState` stays `'local_only'` regardless of local edits.
@@ -644,7 +644,7 @@ export function createCollabRuntime(options: CreateCollabRuntimeOptions = {}): C
         // still land here well after the unshare completed. Publishing
         // anyway would durably re-create the resource on the hub under an
         // unscoped id for the round-trip it takes `onPublished`'s `unshared`
-        // guard to notice and unpublish it again — a real window in which a
+        // guard to notice and unpublish it again - a real window in which a
         // status read reports the just-unshared project as shared again.
         // Refuse outright instead of publish-then-cleanup.
         if (unshared.has(projectId)) return null;
@@ -829,7 +829,7 @@ export function createCollabRuntime(options: CreateCollabRuntimeOptions = {}): C
   // route that through `markLocalChangePending` first so `syncState` reflects
   // "uploading" for the window between the edit and the debounced publish
   // confirming it (see the function's doc comment). The real scheduler still
-  // owns debouncing/coalescing/flush — this only adds the state update.
+  // owns debouncing/coalescing/flush - this only adds the state update.
   const schedulerFacade: CollabRuntimeScheduler = {
     notifyChanged(projectId, reason, principal) {
       markLocalChangePending(projectId, principal);

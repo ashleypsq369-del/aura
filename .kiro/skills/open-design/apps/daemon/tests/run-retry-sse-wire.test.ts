@@ -12,7 +12,7 @@
  * That delivery is not obvious from the daemon side, and it has already been
  * doubted once in review: the event is written by the ANALYTICS emitter, and
  * `ChatSseEvent` did not list it. It works because `runtimes/runs.ts`'s `emit`
- * is BOTH the event-log writer and the SSE fan-out — one function, no filter
+ * is BOTH the event-log writer and the SSE fan-out - one function, no filter
  * by event name. `run-retry-runtime.test.ts` covers the same retries but reads
  * `run.eventsLogPath` off disk, so it cannot see a regression that drops the
  * frame from the wire while still writing the file.
@@ -156,7 +156,7 @@ describe('run_retry_attempted reaches SSE subscribers', () => {
     // The two fields the chat reads. `retry_max_attempts` is 1 today
     // (DEFAULT_SAFE_RUN_RETRY_MAX_ATTEMPTS); the UI suppresses the "N/M"
     // counter while it stays 1, so this asserts presence and type, not the
-    // literal budget — that number is Q-11's to change.
+    // literal budget - that number is Q-11's to change.
     expect(retryFrames[0]!.data.retry_attempt_index).toBe(1);
     expect(typeof retryFrames[0]!.data.retry_max_attempts).toBe('number');
     expect(retryFrames[0]!.data.run_id).toBe(runId);

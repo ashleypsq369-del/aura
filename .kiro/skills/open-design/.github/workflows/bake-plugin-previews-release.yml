@@ -7,7 +7,7 @@ name: bake-plugin-previews-release
 #
 # Bumping BAKE_VERSION at release time is the explicit lever to refresh shared-
 # input changes (fonts / web CSS / design systems / renderer) that per-file
-# triggers cannot detect — a full sweep alone would reuse, not re-render, them.
+# triggers cannot detect - a full sweep alone would reuse, not re-render, them.
 
 on:
   push:
@@ -44,14 +44,14 @@ jobs:
           # github.com credential. release/** is guarded by the "Protected
           # branches (preview/*, release/v*)" ruleset (deletion / non_fast_forward
           # / pull_request), so a direct push is rejected (GH013) unless the pusher
-          # is a bypass actor. github-actions[bot] is NOT one — so the manifest
+          # is a bypass actor. github-actions[bot] is NOT one - so the manifest
           # writeback below force-authenticates as open-design-bot, which IS a
           # bypass actor, via an explicit token URL. A persisted github.token
           # extraheader would override that inline token on push (see #5357), so
           # drop it; nothing between here and the push needs the persisted cred.
           persist-credentials: false
 
-      - name: Loop guard — skip the bake bot's own manifest commit
+      - name: Loop guard - skip the bake bot's own manifest commit
         id: guard
         # Belt-and-suspenders with paths-ignore above: also skip when the head
         # commit was authored by the bake bot, so the manifest writeback cannot
@@ -61,7 +61,7 @@ jobs:
           echo "head commit author: $AUTHOR"
           if [ "$AUTHOR" = "bot@open-design.ai" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "head commit is the bake bot's manifest commit — skipping to break the loop"
+            echo "head commit is the bake bot's manifest commit - skipping to break the loop"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
@@ -87,8 +87,8 @@ jobs:
         # "Protected branches (preview/*, release/v*)" ruleset, so its push clears
         # the pull_request rule that rejects github-actions[bot] (GH013). The
         # release bake pushes the manifest directly (it then rides the non-squash
-        # release back-merge to main). Minted here — after the long render, not at
-        # job start — because an App token lives ~1h and the render can run long.
+        # release back-merge to main). Minted here - after the long render, not at
+        # job start - because an App token lives ~1h and the render can run long.
         uses: actions/create-github-app-token@v3.2.0
         with:
           client-id: ${{ secrets.BOT_APP_CLIENT_ID }}
@@ -108,7 +108,7 @@ jobs:
           diff_result="$(node scripts/plugin-previews-diff.mjs "$OLD" "$NEW")"
           case "$diff_result" in
             changed) ;;
-            unchanged) echo "previews unchanged — nothing to commit"; exit 0 ;;
+            unchanged) echo "previews unchanged - nothing to commit"; exit 0 ;;
             *) echo "unexpected diff result: '$diff_result'" >&2; exit 1 ;;
           esac
           cp "$NEW" "$OLD"

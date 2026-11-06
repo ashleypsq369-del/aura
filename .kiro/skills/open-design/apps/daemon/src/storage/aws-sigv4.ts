@@ -1,4 +1,4 @@
-// Phase 5 / spec §15.6 — minimal AWS Signature V4 signer.
+// Phase 5 / spec §15.6 - minimal AWS Signature V4 signer.
 //
 // We sign S3 requests inline with the spec'd canonical-request /
 // string-to-sign / signing-key / authorization recipe, using only

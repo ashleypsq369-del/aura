@@ -58,7 +58,7 @@ retrieval:
 
 ## The Standard
 
-The **European Accessibility Act (EAA)** requires digital products and services in the EU to meet **EN 301 549**, which references **WCAG 2.2 Level AA** as the technical baseline. This is not optional — it is a legal requirement for products operating in the EU market.
+The **European Accessibility Act (EAA)** requires digital products and services in the EU to meet **EN 301 549**, which references **WCAG 2.2 Level AA** as the technical baseline. This is not optional - it is a legal requirement for products operating in the EU market.
 
 **Default: always build to WCAG 2.2 AA.** Deviating requires explicit, documented justification. Do not skip accessibility requirements because of timeline pressure or design preference.
 
@@ -75,13 +75,13 @@ Users must be able to perceive all content and UI components.
 |---|---|---|
 | Normal text (< 18pt / < 14pt bold) | **4.5 : 1** | 7 : 1 |
 | Large text (≥ 18pt / ≥ 14pt bold) | **3 : 1** | 4.5 : 1 |
-| UI components and graphical objects | **3 : 1** | — |
+| UI components and graphical objects | **3 : 1** | - |
 
-> **Check contrast on the real rendered page, not the spec (dembrandt engine, optional).** Design-time swatches lie once real text lands on real backgrounds, gradients, and overlays. `get_findings` / `render_report` run against the live DOM and surface the actual failing text/background pairs with their measured ratios — a fast way to catch the combinations a static palette review misses. See [`extract-design`](../extract-design/SKILL.md).
+> **Check contrast on the real rendered page, not the spec (dembrandt engine, optional).** Design-time swatches lie once real text lands on real backgrounds, gradients, and overlays. `get_findings` / `render_report` run against the live DOM and surface the actual failing text/background pairs with their measured ratios - a fast way to catch the combinations a static palette review misses. See [`extract-design`](../extract-design/SKILL.md).
 
-**Disabled elements are exempt.** WCAG explicitly excludes inactive UI components from contrast requirements (WCAG 1.4.3 exception). A disabled button may use low-contrast text — this is intentional and correct, as it communicates the unavailable state.
+**Disabled elements are exempt.** WCAG explicitly excludes inactive UI components from contrast requirements (WCAG 1.4.3 exception). A disabled button may use low-contrast text - this is intentional and correct, as it communicates the unavailable state.
 
-Do not use colour as the only means of conveying information (e.g. a red border alone to indicate an error — add an icon or text label).
+Do not use colour as the only means of conveying information (e.g. a red border alone to indicate an error - add an icon or text label).
 
 **Weight is part of legibility, and the ratio cannot see it.** The contrast formula measures ink colour against background colour and nothing else. It scores a hairline and a heavy weight identically at the same hue, while perceived legibility is the product of both. So the palette's faintest legible colour and the type scale's lightest weight must not land on the same text: a muted or secondary token, the one carrying captions, labels and helper text, takes a weight of at least 500 wherever the body default reads as regular or light. *That floor is a house rule, not a WCAG requirement.* The standard has nothing to say about weight, which is exactly why the failure gets through the audit. The same physics on dark surfaces is in [[color-mode-and-theme]]. A muted colour is already the palette's least assertive choice, and pairing it with the lightest weight compounds two decisions that both mean *recede*. The result at caption sizes is text a reader has to work at consciously, while the audit reports a pass.
 
@@ -106,7 +106,7 @@ All interactive elements must be reachable and operable by keyboard alone.
 
 - Every button, link, input, and control must receive focus via Tab
 - Focus order must follow the visual reading order of the page
-- No keyboard traps — users must be able to navigate away from any component
+- No keyboard traps - users must be able to navigate away from any component
 - Modal dialogs must trap focus inside while open, and return focus to the trigger element on close
 
 ### Focus Visibility
@@ -120,10 +120,10 @@ A visible focus indicator is required on every interactive element (WCAG 2.2 str
 }
 ```
 
-Never use `outline: none` without providing a custom focus style. The focus ring is not a design problem to eliminate — it is a navigation tool.
+Never use `outline: none` without providing a custom focus style. The focus ring is not a design problem to eliminate - it is a navigation tool.
 
 ### Touch Target Size
-Interactive elements on touch devices must be at least **24×24px** (WCAG 2.2) — **44×44px** is the recommended comfortable minimum (Apple HIG, Material Design). Small icon buttons need padding to reach this size even if the visual icon is smaller.
+Interactive elements on touch devices must be at least **24×24px** (WCAG 2.2) - **44×44px** is the recommended comfortable minimum (Apple HIG, Material Design). Small icon buttons need padding to reach this size even if the visual icon is smaller.
 
 ### No Seizure Triggers
 Nothing on screen should flash more than 3 times per second.
@@ -142,8 +142,8 @@ Users must be able to understand the content and how the UI works.
 - Mark inline content in a different language with `lang` on that element
 
 ### Labels and Instructions
-- Every form input must have a visible label — not just a placeholder (placeholders disappear on input)
-- Required fields must be indicated — do not rely on colour alone; add an asterisk and a legend
+- Every form input must have a visible label - not just a placeholder (placeholders disappear on input)
+- Required fields must be indicated - do not rely on colour alone; add an asterisk and a legend
 - Error messages must be associated with their input via `aria-describedby`
 
 ### Predictability
@@ -153,7 +153,7 @@ Users must be able to understand the content and how the UI works.
 
 ### Error Identification
 - Form validation errors must identify which field failed
-- Errors must be described in text — not only by colour or icon
+- Errors must be described in text - not only by colour or icon
 
 ---
 
@@ -170,13 +170,13 @@ Use the correct HTML element for the job. Semantics convey role, state, and stru
 <nav aria-label="Main navigation">...</nav>
 <h1>Page title</h1>
 
-<!-- Wrong — requires manual ARIA to replicate what the element provides natively -->
+<!-- Wrong - requires manual ARIA to replicate what the element provides natively -->
 <div onclick="save()">Save</div>
 <div class="nav">...</div>
 <div class="heading">Page title</div>
 ```
 
-### ARIA — Use Sparingly
+### ARIA - Use Sparingly
 ARIA supplements HTML semantics where native elements fall short. It does not fix broken HTML.
 
 **Rule: no ARIA is better than incorrect ARIA.** Incorrect ARIA actively breaks screen reader output.
@@ -189,7 +189,7 @@ Required patterns:
 - `aria-current="page"` on the active navigation item
 
 ### Status Messages
-Dynamic updates (success toasts, loading states, error counts) must be announced to screen readers via `aria-live` or `role="status"` — they will not be announced automatically unless the focused element changes.
+Dynamic updates (success toasts, loading states, error counts) must be announced to screen readers via `aria-live` or `role="status"` - they will not be announced automatically unless the focused element changes.
 
 ---
 
@@ -200,7 +200,7 @@ WCAG 1.4.3 explicitly states: *"Text or images of text that are part of an inact
 This means:
 - Disabled buttons, inputs, and links **may** use low-contrast text and colours
 - The visual dimming of disabled states is both correct and compliant
-- Do not add artificial contrast to disabled elements — the reduced contrast communicates "this is unavailable"
+- Do not add artificial contrast to disabled elements - the reduced contrast communicates "this is unavailable"
 
 ---
 
@@ -209,7 +209,7 @@ This means:
 | Area | Check |
 |---|---|
 | Contrast | All active text ≥ 4.5:1 (normal) or 3:1 (large/UI) |
-| Contrast | Disabled elements exempt — intentionally low contrast is fine |
+| Contrast | Disabled elements exempt - intentionally low contrast is fine |
 | Colour | Colour is never the only information carrier |
 | Keyboard | All interactive elements reachable and operable by keyboard |
 | Focus | Visible focus indicator on every interactive element |

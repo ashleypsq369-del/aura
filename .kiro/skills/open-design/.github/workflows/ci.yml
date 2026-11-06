@@ -711,13 +711,13 @@ jobs:
       - name: Block merge while a merge-blocking label is present
         id: merge_blocking_label_gate
         # Hard gate: a PR that still carries `needs-validation` or `needs-maintainer-check` must
-        # not merge. Enforced ONLY in the merge_group (merge-queue) context — never on
+        # not merge. Enforced ONLY in the merge_group (merge-queue) context - never on
         # pull_request. main requires the merge queue, so every merge passes through merge_group;
         # a labeled entry fails this step there and is ejected from the queue, so it can never land.
         #
         # Why not also fail on pull_request: that turns the PR's own required `Validate workspace`
         # check red, and a deliberately-red required check is indistinguishable from a real CI
-        # failure to everything downstream — it flips the PR's mergeStateStatus to BLOCKED and
+        # failure to everything downstream - it flips the PR's mergeStateStatus to BLOCKED and
         # reads as ci_status=failure to the review bot, which deadlocks the very QA/validation that
         # is supposed to clear the label (QA never gets requested → label never removed → blocked
         # forever). The merge_group run executes on the queue's transient ref, so this failure does
@@ -731,7 +731,7 @@ jobs:
           REPO: ${{ github.repository }}
           # Resolving the queued PR via commits/<sha>/pulls alone is unreliable: the merge queue
           # squashes, so the queued commits are NEW synthetic SHAs GitHub does not associate back
-          # to the PR — that found nothing and waved a needs-validation PR through (#4736). So we
+          # to the PR - that found nothing and waved a needs-validation PR through (#4736). So we
           # resolve each merge-group commit to a PR from several signals, per commit (see below).
           MERGE_GROUP_REF: ${{ github.event.merge_group.head_ref }}
           BASE_SHA: ${{ github.event.merge_group.base_sha }}
@@ -797,14 +797,14 @@ jobs:
             }
             # Resolve EVERY merge-group commit to at least one real PR and check its labels.
             # Each queued entry can be recovered from up to three signals:
-            #   1. ref `.../pr-<N>-<sha>` — names the (tip) entry only; squash-safe.
-            #   2. the commit subject's trailing `(#N)` — the queue appends each entry's own PR
+            #   1. ref `.../pr-<N>-<sha>` - names the (tip) entry only; squash-safe.
+            #   2. the commit subject's trailing `(#N)` - the queue appends each entry's own PR
             #      number, so this recovers the NON-tip PRs of a batched group.
-            #   3. commits/<sha>/pulls — covers a non-squash queue where commits map back directly.
-            # A `(#N)` can also be a spurious reference — e.g. #4833, titled "... (#4828)", where
+            #   3. commits/<sha>/pulls - covers a non-squash queue where commits map back directly.
+            # A `(#N)` can also be a spurious reference - e.g. #4833, titled "... (#4828)", where
             # 4828 is the fixed ISSUE, not a PR; `gh pr view 4828` then fails with "Could not
             # resolve to a PullRequest". We must NOT fail closed on that (it ejected a clean,
-            # label-free PR from the queue forever) — but we must also NOT blindly skip it, or a
+            # label-free PR from the queue forever) - but we must also NOT blindly skip it, or a
             # batched non-tip PR whose only recovered number is such a reference would go unchecked
             # and a needs-validation entry could slip through (#4736). So we resolve PER COMMIT:
             # ignore a non-PR candidate only when its commit is still covered by another candidate
@@ -813,7 +813,7 @@ jobs:
             ref_prs="$(printf '%s\n' "$MERGE_GROUP_REF" | grep -oE 'pr-[0-9]+' | grep -oE '[0-9]+' || true)"
             commit_shas="$(printf '%s' "$compare_json" | jq -r '.commits[].sha')"
             if [ -z "$commit_shas" ]; then
-              echo "::error::merge_group compare $BASE_SHA...$HEAD_SHA returned no commits — cannot resolve queued PRs; blocking merge (fail closed)."
+              echo "::error::merge_group compare $BASE_SHA...$HEAD_SHA returned no commits - cannot resolve queued PRs; blocking merge (fail closed)."
               exit 1
             fi
             checked=""
@@ -830,10 +830,10 @@ jobs:
               for pr in $candidates; do
                 if ! labels="$(gh pr view "$pr" --repo "$REPO" --json labels --jq '.labels[].name' 2>/tmp/pr_view_err)"; then
                   if grep -q 'Could not resolve to a PullRequest' /tmp/pr_view_err; then
-                    echo "commit $sha: candidate #$pr is not a pull request (e.g. an issue reference) — ignoring this candidate."
+                    echo "commit $sha: candidate #$pr is not a pull request (e.g. an issue reference) - ignoring this candidate."
                     continue
                   fi
-                  echo "::error::label lookup for #$pr (commit $sha) failed — blocking merge (fail closed):"
+                  echo "::error::label lookup for #$pr (commit $sha) failed - blocking merge (fail closed):"
                   cat /tmp/pr_view_err
                   exit 1
                 fi
@@ -846,7 +846,7 @@ jobs:
                   blocking_label="needs-validation"
                 fi
                 if [ -n "$blocking_label" ]; then
-                  echo "::error::PR #$pr still has '$blocking_label' — blocking merge."
+                  echo "::error::PR #$pr still has '$blocking_label' - blocking merge."
                   # Fail-fast keeps this per-run notice on the FIRST labeled PR found; every
                   # labeled entry also fails its own queue run, so each still gets its own notice.
                   emit_ejection_notice "$pr" "$blocking_label" || echo "::warning::could not produce the ejection-notice handoff for PR #$pr; the block itself still stands."
@@ -855,11 +855,11 @@ jobs:
                 echo "PR #$pr: no merge-blocking label."
               done
               if [ "$covered" -eq 0 ]; then
-                echo "::error::merge-group commit $sha resolved to no pull request (candidates: ${candidates:-none}) — cannot verify merge-blocking labels; blocking merge (fail closed)."
+                echo "::error::merge-group commit $sha resolved to no pull request (candidates: ${candidates:-none}) - cannot verify merge-blocking labels; blocking merge (fail closed)."
                 exit 1
               fi
             done
-            echo "No merge-blocking label in the queued group ($checked ) — clear to merge."
+            echo "No merge-blocking label in the queued group ($checked ) - clear to merge."
           fi
 
       # `failure()` is required: the gate exits 1 on the very path that produces the handoff,
@@ -1114,7 +1114,7 @@ jobs:
           failed_lines="$(jq -r --arg skip "$skip_job_name" --arg self "$SELF_JOB_NAME" '
             .[]
             | select(.conclusion != null and .conclusion != "success" and .conclusion != "skipped" and .name != $skip and .name != $self)
-            | "- **\(.name)** — \(.conclusion)"
+            | "- **\(.name)** - \(.conclusion)"
               + ([.steps[]? | select(.conclusion == "failure") | .name] | if length > 0 then " at `" + join("`, `") + "`" else "" end)
               + " ([job log](\(.html_url)))"' <<< "$jobs_json")"
           if [ -z "$failed_lines" ]; then
@@ -1126,7 +1126,7 @@ jobs:
           # `✘` lines, runner error annotations), capped so the comment stays readable.
           # CI logs are full of terminal escape sequences, and gh >= 2.97 refuses to print such
           # a body unless told otherwise (GHSA-3m3g-3wcr-px46) while older gh does not know the
-          # flag — probe once so the excerpt works with either runner image.
+          # flag - probe once so the excerpt works with either runner image.
           gh --version | head -n 1
           # Capture the help text first: `gh api --help | grep -q` would let grep exit early and
           # fail the pipeline under pipefail, silently disabling the flag.

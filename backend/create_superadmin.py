@@ -1,6 +1,6 @@
-"""
+﻿"""
 Create the superadmin account.
-superadmin has role='admin' — full access to all admin endpoints.
+superadmin has role='admin' - full access to all admin endpoints.
 Run once: python create_superadmin.py
 """
 import sys
@@ -11,7 +11,7 @@ from src.db import SessionLocal, User, hash_password, authenticate_user
 db = SessionLocal()
 
 USERNAME = 'superadmin'
-PASSWORD = 'SuperAdmin@2026'  # Strong password — change after first login
+PASSWORD = 'SuperAdmin@2026'  # Strong password - change after first login
 
 existing = db.query(User).filter(User.username == USERNAME).first()
 if existing:

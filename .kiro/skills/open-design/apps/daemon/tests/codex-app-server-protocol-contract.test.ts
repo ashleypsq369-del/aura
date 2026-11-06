@@ -19,7 +19,7 @@ import { describe, expect, it } from 'vitest';
  * not the codex the user has installed. Compiling against it would buy
  * confidence the runtime cannot honour. What actually protects us is (a) the
  * defensive readers in the normalizer, which is what the rest of these suites
- * cover, and (b) this list — a machine-checked statement of exactly which
+ * cover, and (b) this list - a machine-checked statement of exactly which
  * protocol surface we lean on, which fails loudly the day codex renames one of
  * them. Keep the two in sync: adding a field read in the normalizer without
  * adding it here removes it from the guard.

@@ -3,7 +3,7 @@
 path = "frontend/src/pages/Services.jsx"
 src = open(path, encoding='utf-8').read()
 
-# ── ProfileSheet — white backgrounds → var(--card-bg)
+# ── ProfileSheet - white backgrounds → var(--card-bg)
 src = src.replace(
     "width:'100%', maxWidth:480, background:'#fff',",
     "width:'100%', maxWidth:480, background:'var(--card-bg)',"

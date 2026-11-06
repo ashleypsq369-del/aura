@@ -23,8 +23,8 @@ export const claudeAgentDef = {
     bin: 'claude',
     // Drop-in forks that ship a CLI argv-compatible with `claude`. Tried in
     // order if `claude` itself isn't on PATH, so users on a single-binary
-    // install (e.g. only OpenClaude — https://github.com/Gitlawb/openclaude
-    // — issue #235) get auto-detected without writing wrapper scripts.
+    // install (e.g. only OpenClaude - https://github.com/Gitlawb/openclaude
+    // - issue #235) get auto-detected without writing wrapper scripts.
     fallbackBins: ['openclaude'],
     versionArgs: ['--version'],
     authProbe: {
@@ -98,7 +98,7 @@ export const claudeAgentDef = {
       const dirs = (extraAllowedDirs || []).filter(
         (d) => typeof d === 'string' && d.length > 0,
       );
-      // `--add-dir` is older but still gate it for symmetry — old/forked
+      // `--add-dir` is older but still gate it for symmetry - old/forked
       // builds may lack it.
       if (dirs.length > 0 && caps.addDir !== false) {
         args.push('--add-dir', ...dirs);

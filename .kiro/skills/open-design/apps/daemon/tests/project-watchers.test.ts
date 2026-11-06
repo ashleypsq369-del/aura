@@ -114,7 +114,7 @@ describe('project-watchers (refcounting)', () => {
     expect(_activeWatcherCount()).toBe(1); // still one
 
     await sub1.unsubscribe();
-    expect(_activeWatcherCount()).toBe(1); // not yet — second sub still alive
+    expect(_activeWatcherCount()).toBe(1); // not yet - second sub still alive
     expect(factoryCloses).toBe(0);
 
     await sub2.unsubscribe();
@@ -333,7 +333,7 @@ describe('project-watchers (real chokidar)', () => {
     // Regression for codex P1: chokidar's FSWatcher is an EventEmitter.
     // Without an 'error' listener, transient FS faults (ENOSPC, EPERM,
     // EMFILE on saturated inotify watches) would surface as unhandled
-    // exceptions and could crash the daemon — taking down all routes.
+    // exceptions and could crash the daemon - taking down all routes.
     const { _internalWatcherForTests } = await import('../src/project-watchers.js');
     const { root, projectId } = await makeProjectsRoot();
     const events: ProjectWatchEvent[] = [];
@@ -344,7 +344,7 @@ describe('project-watchers (real chokidar)', () => {
       const watcher = _internalWatcherForTests(root, projectId);
       expect(watcher).toBeDefined();
       assertWatcher(watcher);
-      // The listener must be registered — listenerCount > 0 proves it.
+      // The listener must be registered - listenerCount > 0 proves it.
       expect(watcher.listenerCount('error')).toBeGreaterThan(0);
 
       // Behavioural: emitting an error must not throw or crash the process,

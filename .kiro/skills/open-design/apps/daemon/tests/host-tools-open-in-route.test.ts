@@ -2,7 +2,7 @@
 //
 // The helper-level tests in host-tools-routes.test.ts pin launchHostTool's
 // contract, but not the route's translation of a refused launch into an HTTP
-// response — if the route regressed back to swallowing `!launch.ok` (or mapped
+// response - if the route regressed back to swallowing `!launch.ok` (or mapped
 // it to `200 { ok: true }`), those tests would stay green. Here the spawn is
 // mocked at the node:child_process boundary so the full route path runs, and
 // the assertions lock the observable behavior: HTTP status + error code/body.

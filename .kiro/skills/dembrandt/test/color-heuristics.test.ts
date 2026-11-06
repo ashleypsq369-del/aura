@@ -83,7 +83,7 @@ test('near-neutral high-usage low-intent colour is structural', () => {
 });
 
 test('saturated high-usage colour (brand fill) is NOT structural', () => {
-  // a vivid brand section covering 60% of elements — must survive
+  // a vivid brand section covering 60% of elements - must survive
   assert.equal(
     classifyStructural({ count: 600, score: 600, bgCount: 600, normalizedHex: '#542087' }, 1000),
     false,

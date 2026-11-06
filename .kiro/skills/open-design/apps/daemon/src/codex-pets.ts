@@ -8,7 +8,7 @@
 //     pet.json          # { id, displayName, description, spritesheetPath }
 //     spritesheet.webp  # 1536x1872 8x9 atlas (or .png / .gif fallback)
 //
-// We scan both folders lazily on every list request — there are only a
+// We scan both folders lazily on every list request - there are only a
 // handful of pets in either location, and watching the filesystem would
 // add a daemon-side dependency that doesn't pay off here. When the same
 // pet id exists in both, the user's local copy wins so re-baking a
@@ -24,7 +24,7 @@ import os from 'node:os';
 // "which folder did we end up reading from", so a pet that exists in BOTH
 // the bundled root and the user's `~/.codex/pets/` still surfaces as
 // bundled (the sprite content can still come from the user's local copy
-// — only the flag is determined by the curated set membership).
+// - only the flag is determined by the curated set membership).
 type BundledIdSet = Set<string>;
 
 async function readBundledIds(root: string): Promise<BundledIdSet> {
@@ -87,7 +87,7 @@ const SPRITESHEET_NAMES = [
 ] as const;
 
 // Scan a single root and append summaries to `out`. Pets already in
-// `seenIds` are skipped — the user-root scan can therefore preempt a
+// `seenIds` are skipped - the user-root scan can therefore preempt a
 // bundled pet of the same id without the bundled scan re-emitting a
 // duplicate entry with a conflicting `bundled` flag.
 //
@@ -112,7 +112,7 @@ async function scanRoot(
   }
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    // The folder name is the on-disk identity for the pet — the
+    // The folder name is the on-disk identity for the pet - the
     // `/api/codex-pets/:id/spritesheet` route resolves directly against
     // it, so we use the sanitised folder name as the public id even
     // when the manifest declares a different `id`. Mirroring the two
@@ -131,7 +131,7 @@ async function scanRoot(
         manifest = parsed as PetManifest;
       }
     } catch {
-      // Manifest is optional — fall back to folder name for the
+      // Manifest is optional - fall back to folder name for the
       // display name so manually-dropped pets still appear.
     }
     const sheet = await pickSpritesheet(dir, manifest);
@@ -141,13 +141,13 @@ async function scanRoot(
       const st = await stat(sheet.absPath);
       mtimeMs = st.mtimeMs;
     } catch {
-      // ignore — listing should not fail on a transient stat error.
+      // ignore - listing should not fail on a transient stat error.
     }
     seenIds.add(safeFolderId);
     const displayName = pickString(manifest.displayName) ?? prettyName(entry.name);
     const description = pickString(manifest.description) ?? '';
     const spritesheetUrl = `${baseUrl}/api/codex-pets/${encodeURIComponent(safeFolderId)}/spritesheet`;
-    // Curated-set membership wins over the source-folder default — a
+    // Curated-set membership wins over the source-folder default - a
     // pet read from the user's `~/.codex/pets/` is still bundled if its
     // id is part of `assets/community-pets/`.
     const bundled = bundledIds.has(safeFolderId) ? true : bundledFallback;
@@ -184,7 +184,7 @@ export async function listCodexPets(
     await scanRoot(options.bundledRoot, baseUrl, true, bundledIds, out, seen);
   }
   // Newest-first across both origins. Sorting by mtime keeps the
-  // "recently hatched" framing in the UI honest — a bundled pet from
+  // "recently hatched" framing in the UI honest - a bundled pet from
   // 2024 still sinks below a fresh user-hatched pet from this morning.
   out.sort((a, b) => b.hatchedAt - a.hatchedAt);
   return { pets: out, rootDir: userRoot };
@@ -192,7 +192,7 @@ export async function listCodexPets(
 
 // Returns { absPath, ext } for the resolved spritesheet of a given pet
 // id, or null if the pet folder / sheet is missing. Used by the
-// `/api/codex-pets/:id/spritesheet` route to safely serve the file —
+// `/api/codex-pets/:id/spritesheet` route to safely serve the file -
 // the id is sanitised on both sides so users cannot path-escape into
 // arbitrary folders under their home directory or the bundled assets.
 export async function readCodexPetSpritesheet(
@@ -251,7 +251,7 @@ async function pickSpritesheet(dir: string, manifest: PetManifest): Promise<Spri
 }
 
 // Strip anything that might let a request path-escape, then collapse
-// runs of dots and reject any that still contain `..` after trimming —
+// runs of dots and reject any that still contain `..` after trimming -
 // the daemon serves these ids straight into a `path.join`, and a value
 // like `foo..bar` would otherwise be interpreted as `foo/../bar`.
 // Mirrors the pet folder names produced by the upstream skill

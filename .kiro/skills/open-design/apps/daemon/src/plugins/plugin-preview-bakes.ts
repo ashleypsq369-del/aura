@@ -1,4 +1,4 @@
-// Baked plugin preview clips — the daemon side of scripts/bake-plugin-previews.mjs.
+// Baked plugin preview clips - the daemon side of scripts/bake-plugin-previews.mjs.
 //
 // The home gallery renders html plugins as live, scaled hover-pan iframes, which
 // is GPU-expensive at scale. When a plugin has a pre-baked preview (a small VP9
@@ -89,7 +89,7 @@ export function bakedPreviewBlock(id: string, dir: string): BakedPreviewBlock | 
   //   1. an explicit OD_PLUGIN_PREVIEWS_BASE_URL override;
   //   2. the daemon's own /api/plugin-previews route when the clips are on disk
   //      (local dev / a freshly-baked dir);
-  //   3. the public R2 origin — the default for the packaged desktop app and the
+  //   3. the public R2 origin - the default for the packaged desktop app and the
   //      web deployment, so neither needs any config: the checked-in manifest
   //      names the clips and they're served from R2's CDN.
   const envBase = process.env.OD_PLUGIN_PREVIEWS_BASE_URL?.replace(/\/+$/, '');
@@ -103,7 +103,7 @@ export function bakedPreviewBlock(id: string, dir: string): BakedPreviewBlock | 
   };
 }
 
-// Attach the baked clip under `manifest.od.bakedPreview` (a SEPARATE field —
+// Attach the baked clip under `manifest.od.bakedPreview` (a SEPARATE field -
 // we deliberately do NOT overwrite `od.preview`). The gallery card opts into the
 // baked clip via `inferPluginPreview(record, { preferBaked: true })`, while the
 // detail modal keeps reading the real `od.preview` and renders the live,

@@ -1,7 +1,7 @@
 // Blocks an artifact publication when the body still contains template
 // placeholders that should have been replaced with real content. Scoped to
-// the file-write boundary for HTML-rendered artifact kinds — the moment
-// the file would land in the project as a published artifact — not to the
+// the file-write boundary for HTML-rendered artifact kinds - the moment
+// the file would land in the project as a published artifact - not to the
 // agent's chat prose, where these strings can legitimately appear when
 // the model is asking the user to fill them in.
 //
@@ -16,7 +16,7 @@
 // finished output.
 //
 // Pairs with `od.inputs` on `plugins/_official/examples/html-ppt-pitch-deck/
-// open-design.json`. The inputs gate is the primary contract — this guard
+// open-design.json`. The inputs gate is the primary contract - this guard
 // is the defense-in-depth invariant that catches agents that bypassed the
 // structured contract (e.g. routed through `od-default`) but still tried
 // to publish a placeholder-laden HTML/deck artifact.
@@ -27,7 +27,7 @@ export const ARTIFACT_PUBLICATION_BLOCKED_CODE = 'ARTIFACT_PUBLICATION_BLOCKED' 
 
 // HTML and deck are the artifact kinds whose bodies are user-facing
 // rendered documents. Other kinds (markdown drafts, code snippets, raw
-// JSON) are not subject to this guard — placeholder strings can be
+// JSON) are not subject to this guard - placeholder strings can be
 // legitimate content in those.
 export const PUBLICATION_GUARDED_ARTIFACT_KINDS: ReadonlySet<string> = new Set(['html', 'deck']);
 

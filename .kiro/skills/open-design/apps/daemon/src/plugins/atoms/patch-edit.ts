@@ -1,4 +1,4 @@
-// Phase 7 entry slice / spec §20.3 / §21.3.2 — patch-edit atom.
+// Phase 7 entry slice / spec §20.3 / §21.3.2 - patch-edit atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/patch-edit/.
 // The runner applies a unified diff to a project cwd one step at a
@@ -45,7 +45,7 @@ import { promises as fsp } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import type { OwnershipEntry, RewriteStep } from './rewrite-plan.js';
 
-// Plan §3.Z1 — atomic file write helper.
+// Plan §3.Z1 - atomic file write helper.
 //
 // Writes the body to a sibling temp file (`<path>.<random>.tmp`)
 // and renames into place. POSIX rename(2) is atomic when source

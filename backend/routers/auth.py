@@ -1,4 +1,4 @@
-"""
+﻿"""
 Authentication Router  --  Project Aura
 JWT auth + registration + password reset + change password
 """
@@ -296,7 +296,7 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
             )
             auto_patient_id = None
 
-    # Create UserProfile — professional/notification preferences
+    # Create UserProfile - professional/notification preferences
     dob = None
     if request.date_of_birth:
         try:
@@ -306,7 +306,7 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
     profile = UserProfile(user_id=new_user.id, language_pref="en")
     db.add(profile)
 
-    # Create UserExtended — demographics
+    # Create UserExtended - demographics
     ext = UserExtended(
         user_id=new_user.id,
         gender=request.gender,

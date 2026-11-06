@@ -1,5 +1,5 @@
-/**
- * FeedbackWidget — draggable floating feedback + bug report
+﻿/**
+ * FeedbackWidget - draggable floating feedback + bug report
  * - Drag the button anywhere on screen (persists via localStorage)
  * - Shows "Feedback" label so users know what it does
  * - Star rating with labels instead of plain circles
@@ -161,7 +161,7 @@ export default function FeedbackWidget() {
   const panelX = clamp(pos.x - (panelW - BUTTON_W) / 2, MARGIN, window.innerWidth - panelW - MARGIN);
   const panelY = clamp(pos.y - panelH - 10, MARGIN, pos.y - panelH - 10);
 
-  /* ── Input style — dark mode aware ── */
+  /* ── Input style - dark mode aware ── */
   const inp = {
     width: '100%', padding: '9px 12px', borderRadius: 10,
     border: '1.5px solid var(--card-border)', fontSize: 13,

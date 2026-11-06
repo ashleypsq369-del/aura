@@ -159,7 +159,7 @@ function migrate(db: SqliteDb): void {
 
     -- The generic workspace-binding table for resource types that do NOT get
     -- their own dedicated table (plugin today; skill / design system are
-    -- planned follow-ups — see specs/current for the phased rollout). Same
+    -- planned follow-ups - see specs/current for the phased rollout). Same
     -- "binding envelope" columns as workspace_projects, parameterized by
     -- resource_type so one CRUD layer (see getWorkspaceResource and friends
     -- below) and one mutation gate (collab/workspace-resource-mutation.ts)
@@ -169,7 +169,7 @@ function migrate(db: SqliteDb): void {
     -- table it points at depends on resource_type, and SQLite has no
     -- polymorphic foreign key. Callers that delete a resource's underlying
     -- record MUST also delete its workspace_resources row (by resource_type +
-    -- resource_id) themselves, or it becomes an orphan binding — the same
+    -- resource_id) themselves, or it becomes an orphan binding - the same
     -- failure mode workspace_projects_legacy_single_project once hit.
     CREATE TABLE IF NOT EXISTS workspace_resources (
       resource_type TEXT NOT NULL,
@@ -526,7 +526,7 @@ function migrate(db: SqliteDb): void {
   }
   // Fork divider (delivered design, cell 38): the marker that says "this turn
   // was forked, and here is the title the new conversation inherited". It has
-  // to be a stored column, not a client-side flag — the divider is only
+  // to be a stored column, not a client-side flag - the divider is only
   // honest if it is still there after a reload.
   if (!messageCols.some((c: DbRow) => c.name === 'forked_into_json')) {
     db.exec(`ALTER TABLE messages ADD COLUMN forked_into_json TEXT`);
@@ -564,7 +564,7 @@ function migrate(db: SqliteDb): void {
     db.exec(`ALTER TABLE preview_comments ADD COLUMN slide_index INTEGER`);
   }
   migratePreviewCommentsSlideKey(db);
-  // Team collaboration anchor columns — added after the slide-key rebuild so a legacy
+  // Team collaboration anchor columns - added after the slide-key rebuild so a legacy
   // table rebuild cannot drop them.
   const previewCommentAnchorCols = db.prepare(`PRAGMA table_info(preview_comments)`).all() as DbRow[];
   if (!previewCommentAnchorCols.some((c: DbRow) => c.name === 'anchor_state')) {
@@ -592,7 +592,7 @@ function migrate(db: SqliteDb): void {
   if (!previewCommentPinCols.some((c: DbRow) => c.name === 'pin_seq_confirmed')) {
     // 1 = final (no reconciliation pending). A NEW comment on a team-shared
     // project starts at 0 until the collab-cloud push confirms the real
-    // cloud-assigned seq (see confirmPreviewCommentPinSeq) — see this file's
+    // cloud-assigned seq (see confirmPreviewCommentPinSeq) - see this file's
     // upsertPreviewComment for why a locally-computed pin_seq can otherwise
     // collide across two devices creating a comment in the same poll window.
     db.exec(`ALTER TABLE preview_comments ADD COLUMN pin_seq_confirmed INTEGER NOT NULL DEFAULT 1`);
@@ -603,7 +603,7 @@ function migrate(db: SqliteDb): void {
   backfillPreviewCommentPinSeqAndSortKey(db);
   // Author-union columns for share-page comments (an account with no team
   // membership). They MUST be added here, after the two table-rebuild
-  // migrations above — migratePreviewCommentsSlideKey and
+  // migrations above - migratePreviewCommentsSlideKey and
   // migratePreviewCommentsAllowMultiplePerElement are CREATE + INSERT SELECT
   // + DROP against an EXPLICIT column list, so a column added before them is
   // silently dropped when an older database upgrades, taking its data with
@@ -739,7 +739,7 @@ function migrate(db: SqliteDb): void {
  * full statement and for the rule that picks the surviving row.
  *
  * Two steps, in this order, inside one transaction:
- *   1. collapse the duplicate rows an older build's blanket back-fill wrote —
+ *   1. collapse the duplicate rows an older build's blanket back-fill wrote -
  *      on the dogfood database 23 of 31 projects had rows in 2-4 workspaces;
  *   2. narrow the primary key from `(workspace_id, project_id)` back to
  *      `project_id`, which is what it was before a migration widened it (the
@@ -754,7 +754,7 @@ function migrate(db: SqliteDb): void {
  * A migration rather than the startup reconciliation used for impossible team
  * shares (server.ts `reconcileImpossibleTeamShares`): that one needs the
  * workspace DIRECTORY to decide, which is a signed-in network fact, so it cannot
- * run before the first read. This one decides from the table alone, so it can —
+ * run before the first read. This one decides from the table alone, so it can -
  * and it must, because the read path below now assumes at most one row.
  */
 function migrateWorkspaceProjectsSingleHome(db: SqliteDb): void {
@@ -956,7 +956,7 @@ function migratePreviewCommentsAllowMultiplePerElement(db: SqliteDb): void {
  * already-assigned rows), so it is safe to call on every startup.
  *
  * `pin_seq` is assigned per (project_id, file_path), ordered exactly like the
- * pre-existing canvas numbering (`created_at ASC, rowid ASC` — see
+ * pre-existing canvas numbering (`created_at ASC, rowid ASC` - see
  * `listPreviewComments`), so an already-open project's pin numbers do not
  * visibly change the moment this migration lands.
  *
@@ -979,7 +979,7 @@ function backfillPreviewCommentPinSeqAndSortKey(db: SqliteDb): void {
     `UPDATE preview_comments SET sort_key = ? WHERE id = ? AND sort_key IS NULL`,
   );
   // Seed each scope's counter from whatever is already assigned there (belt
-  // and suspenders — in the normal flow this backfill clears every NULL row in
+  // and suspenders - in the normal flow this backfill clears every NULL row in
   // one pass at the first startup after the migration lands, so there is
   // nothing already-assigned to seed from, but a partial prior run must not
   // renumber from 1 and collide with rows that already have a real pin_seq).
@@ -1185,12 +1185,12 @@ export function listProjects(db: SqliteDb) {
 }
 
 /**
- * Every project with NO `workspace_projects` binding row at all — the "no
+ * Every project with NO `workspace_projects` binding row at all - the "no
  * scope" catalog `GET /api/projects` must actually serve (spec 04 §10.2#1).
  * `listProjects` above stays the unfiltered form other internal callers
  * (library-sync's inventory scan, `listProjectIds` for the design-run
  * cross-reference) legitimately still want; this is the ONE new consumer that
- * needs the join. A project bound to ANY workspace — personal or team — is
+ * needs the join. A project bound to ANY workspace - personal or team - is
  * someone's claimed resource and must not leak into a headerless read.
  */
 export function listUnboundProjects(db: SqliteDb) {
@@ -1321,7 +1321,7 @@ export function setWorkspaceProjectMetadataRefreshPending(
  * The workspace a project belongs to, looked up by project alone.
  *
  * A project has exactly one workspace (see collab/workspace-project-home.ts), so
- * this — not `getWorkspaceProject(db, workspaceId, projectId)` — is the question
+ * this - not `getWorkspaceProject(db, workspaceId, projectId)` - is the question
  * to ask before binding a project anywhere. Asking the two-key form and getting
  * nothing back means "not in THIS workspace", which an older build mistook for
  * "not bound anywhere" and answered by writing another row.
@@ -1352,7 +1352,7 @@ export function getWorkspaceProjectByProjectId(db: SqliteDb, projectId: string) 
  * The `updatedAt` a writer passes when its write is SYNC, not a local person's
  * change: keep the row's existing answer instead of stamping "now".
  *
- * A project's `updated_at` answers exactly one question for the UI — when did a
+ * A project's `updated_at` answers exactly one question for the UI - when did a
  * person last change this project's conversations, files, or name? The project
  * card renders it as one relative time, independent of `last_user_query_at`
  * used for recent-project ordering. Content activity folds the project row
@@ -1368,7 +1368,7 @@ export function getWorkspaceProjectByProjectId(db: SqliteDb, projectId: string) 
  * carry the ORIGIN's timestamp when it has one (as `materializePulledTeamMirror`
  * does) or pass this marker. Letting them fall through to "now" is what made a
  * member's card read 「刚刚更新」 hours after a background pull they never asked
- * for — the reported bug.
+ * for - the reported bug.
  */
 export const SYNC_KEEPS_UPDATED_AT = '__od.sync-keeps-updated-at__' as const;
 
@@ -1391,7 +1391,7 @@ function nextUpdatedAt(patched: unknown, existing: unknown): number {
  * Deliberately keyed on the PROJECT, not on `(workspace, project)`: a project
  * already bound elsewhere is returned as-is rather than bound a second time.
  * That is what makes the caller's "ensure" idempotent across workspaces instead
- * of one back-fill per workspace visited — and it is also what the narrowed
+ * of one back-fill per workspace visited - and it is also what the narrowed
  * primary key now enforces, so an accidental second insert throws instead of
  * silently duplicating.
  *
@@ -1399,7 +1399,7 @@ function nextUpdatedAt(patched: unknown, existing: unknown): number {
  * not to now: the project list reports `MAX(p.updated_at, wp.updated_at)` as one
  * "last changed" time, so a binding written while syncing an old project must
  * not claim the project just changed (see {@link SYNC_KEEPS_UPDATED_AT}). A
- * caller that genuinely means "now" — a brand-new project — gets the same answer
+ * caller that genuinely means "now" - a brand-new project - gets the same answer
  * either way, because its project row was stamped now a moment ago.
  */
 export function ensureWorkspaceProject(db: SqliteDb, input: DbRow) {
@@ -1482,7 +1482,7 @@ export function updateWorkspaceProject(db: SqliteDb, workspaceId: string, projec
 
 /**
  * Update a project's `workspace_projects` row by project alone, reassigning
- * `workspace_id` to whatever the caller passes — the one case where the row's
+ * `workspace_id` to whatever the caller passes - the one case where the row's
  * CURRENT workspace is allowed to differ from the workspace this event is
  * asserting.
  *
@@ -1493,8 +1493,8 @@ export function updateWorkspaceProject(db: SqliteDb, workspaceId: string, projec
  * draft the user made before ever joining the team it just got shared into),
  * so it sits under an unrelated, stale `workspace_id`. Asking
  * `updateWorkspaceProject(db, newWorkspaceId, ...)` in that case finds nothing
- * — same shape of mistake `getWorkspaceProjectByProjectId`'s own doc comment
- * warns about — and the row is silently never migrated: visibility and
+ * - same shape of mistake `getWorkspaceProjectByProjectId`'s own doc comment
+ * warns about - and the row is silently never migrated: visibility and
  * sync_state stay frozen at whatever they were, so the project never starts
  * pulling the sharer's updates.
  */
@@ -1551,7 +1551,7 @@ export function deleteWorkspaceProject(db: SqliteDb, workspaceId: string, projec
 }
 
 /**
- * The workspace a project's TEAM projection lives in — the project's pinned
+ * The workspace a project's TEAM projection lives in - the project's pinned
  * scope for hub-facing calls (presence, comments). A project shared to (or
  * pulled from) a team has exactly one team-visibility row; personal drafts
  * have none and resolve to null so callers fall back to the local selection.
@@ -1593,10 +1593,10 @@ const WORKSPACE_RESOURCE_SELECT_COLUMNS = `
 
 /**
  * The generic counterpart of {@link getWorkspaceProject}, parameterized by
- * `resourceType` ('plugin' | 'skill' | 'design_system' — 'project' itself
+ * `resourceType` ('plugin' | 'skill' | 'design_system' - 'project' itself
  * stays on the dedicated `workspace_projects` table above). Returns null when
  * the resource is unbound OR bound to a DIFFERENT workspace than the one
- * asked about — same "wrong workspace reads as absent" contract as
+ * asked about - same "wrong workspace reads as absent" contract as
  * `getWorkspaceProject`.
  */
 export function getWorkspaceResource(
@@ -1618,7 +1618,7 @@ export function getWorkspaceResource(
  * The workspace a resource belongs to, looked up by resource alone (mirrors
  * {@link getWorkspaceProjectByProjectId}). Because `(resource_type,
  * resource_id)` is the table's primary key, a resource can only ever have
- * ONE binding row — this is the question to ask before binding a resource
+ * ONE binding row - this is the question to ask before binding a resource
  * anywhere, not the two-key form above.
  */
 export function getWorkspaceResourceByResourceId(
@@ -1669,7 +1669,7 @@ export function listTeamWorkspaceResourceWorkspaceIds(db: SqliteDb): string[] {
  * Bind a resource to a workspace, or return the binding it already has.
  *
  * Deliberately keyed on `(resourceType, resourceId)`, not on `(workspace,
- * resource)` — see {@link ensureWorkspaceProject}'s doc comment for why: a
+ * resource)` - see {@link ensureWorkspaceProject}'s doc comment for why: a
  * resource already bound elsewhere is returned as-is rather than bound a
  * second time, which is what makes this idempotent across workspaces and
  * what the `(resource_type, resource_id)` primary key enforces physically.
@@ -1775,7 +1775,7 @@ export function deleteWorkspaceResource(
 /**
  * Delete a resource's binding row regardless of which workspace it is
  * currently bound to. Callers that delete the resource's underlying record
- * (e.g. plugin uninstall) MUST call this — there is no ON DELETE CASCADE for
+ * (e.g. plugin uninstall) MUST call this - there is no ON DELETE CASCADE for
  * this table (see the table's doc comment in `migrate()`), so skipping this
  * leaves an orphan `workspace_resources` row pointing at nothing.
  */
@@ -1858,12 +1858,12 @@ function projectDisplayStatusForRunRow(
 
 /**
  * The persisted events of one message that `eventsEndedWithUnfinishedWork`
- * can read, in order — and nothing else.
+ * can read, in order - and nothing else.
  *
  * Invariant: that predicate's verdict depends only on `usage` (stop reason),
  * `done_key`, `text` (done conclusion, question form) and TodoWrite-shaped
- * `tool_use` events; every other event — raw lines, tool results, statuses,
- * thinking — is skipped by it. So the verdict over this subset is the verdict
+ * `tool_use` events; every other event - raw lines, tool results, statuses,
+ * thinking - is skipped by it. So the verdict over this subset is the verdict
  * over the whole log, and selecting the subset inside SQLite keeps a run's tool
  * payloads out of JS entirely. The tool-name filter is a superset of
  * `isTodoWriteToolName` (every name it accepts contains `todo` or is
@@ -2413,7 +2413,7 @@ export function listConversations(db: SqliteDb, projectId: string) {
  * last `usage` event, and only when the run's timestamps cannot supply one (see
  * `conversationRunSummaryFromRow`). Selecting `events_json` inside the
  * `latest_runs` window function instead forces SQLite to materialize the full
- * event log of every assistant message in the project just to order them —
+ * event log of every assistant message in the project just to order them -
  * unbounded work for a field the common path never looks at, since event logs
  * grow with tool output (image tool results carry inline base64).
  *
@@ -2425,8 +2425,8 @@ function attachLatestRunEvents(db: SqliteDb, listed: DbRow[]): DbRow[] {
   // Mirror `conversationRunSummaryFromRow`'s own nullish handling exactly: it
   // maps a null timestamp to `undefined` before the finiteness check, so a null
   // column means "no duration available from timestamps". Testing
-  // `Number.isFinite(Number(value))` instead would treat null as 0 — a finite
-  // number — and silently skip the fetch for precisely the rows that need it.
+  // `Number.isFinite(Number(value))` instead would treat null as 0 - a finite
+  // number - and silently skip the fetch for precisely the rows that need it.
   const hasBothTimestamps = (row: DbRow) =>
     row.latestRunStartedAt != null
     && row.latestRunEndedAt != null
@@ -2665,7 +2665,7 @@ export function deleteConversation(db: SqliteDb, id: string) {
 // Latched per-conversation intent detections (deck / media / platform).
 // These gate stable-region prompt blocks; the latch keeps a signal from
 // flipping OFF when the visible transcript is trimmed (agent switch) or the
-// client never resends prior turns. Keyed by conversation only — intent
+// client never resends prior turns. Keyed by conversation only - intent
 // belongs to the conversation, not the agent.
 export interface ConversationIntentSignals {
   deck: boolean;
@@ -2878,12 +2878,12 @@ export function getAgentSessionRecord(
 // Conversation cursor for the resume identity guard: the id of the latest
 // COMPLETED assistant message in the conversation, EXCLUDING the current run's
 // in-flight placeholder (`excludeMessageId`). At resolve time the session is in
-// sync iff this equals the assistant message the session last produced —
+// sync iff this equals the assistant message the session last produced -
 // otherwise another agent completed a turn in between, or the session's own last
 // message was edited/removed, and the session is behind. Returns null when there
 // is no prior completed assistant turn.
 //
-// "Completed" means run_status = 'succeeded' — a run stamps its assistant
+// "Completed" means run_status = 'succeeded' - a run stamps its assistant
 // message with the terminal status on finish (server.ts), so an intervening
 // agent run that FAILED or was CANCELED leaves a placeholder that produced no
 // completed turn; counting it as advancement would force a needless cold reseed
@@ -2895,7 +2895,7 @@ export function getAgentSessionRecord(
 // persists a session whose own last assistant turn FAILED transiently (the CLI
 // session already committed a tool/artifact block and is resumable). That stored
 // id is admitted through the filter so the session it owns still matches its
-// cursor — while a DIFFERENT later failed/canceled turn (a different id) stays
+// cursor - while a DIFFERENT later failed/canceled turn (a different id) stays
 // excluded, so genuine advancement by a later succeeded turn is still detected.
 export function latestCompletedAssistantMessageId(
   db: SqliteDb,
@@ -2905,13 +2905,13 @@ export function latestCompletedAssistantMessageId(
 ): string | null {
   const row = db
     .prepare(
-      // `excludeMessageId` keeps the caller's in-flight placeholder — which the
-      // stored session has never seen — from counting as advancement. When that
+      // `excludeMessageId` keeps the caller's in-flight placeholder - which the
+      // stored session has never seen - from counting as advancement. When that
       // placeholder IS the stored cursor (a daemon-internal restart re-entering
       // with the same message), the session did produce it, so the exclusion
       // must not apply: that is what `resumableMessageId` is for, and the
       // exclusion used to consume the row before the admission could.
-      // Advancement detection is unaffected — any later `succeeded` message
+      // Advancement detection is unaffected - any later `succeeded` message
       // still wins on `position DESC` and still fails the cursor comparison.
       `SELECT id FROM messages
         WHERE conversation_id = ? AND role = 'assistant'
@@ -2929,13 +2929,13 @@ export function latestCompletedAssistantMessageId(
 }
 
 /**
- * The user request that produced `assistantMessageId` — i.e. what the upstream
+ * The user request that produced `assistantMessageId` - i.e. what the upstream
  * session that ended on that assistant turn was working on.
  *
  * Anchored on the stored resume cursor rather than "the newest user message",
  * because by prompt-composition time the current turn's own user row is already
  * seeded (`seedRunUserMessage`) and would win a naive lookup. Returns null when
- * the anchor row is gone or nothing precedes it — the caller must then
+ * the anchor row is gone or nothing precedes it - the caller must then
  * synthesize no context at all rather than guess at one.
  */
 export function userRequestBeforeAssistantMessage(
@@ -2960,22 +2960,22 @@ export function userRequestBeforeAssistantMessage(
 /**
  * How far back a run start looks for the conversation's last declared task
  * list. A plan is recalled from the RECENT past, not from the whole
- * conversation — and the bound is also the cost ceiling: 21 of the 27 runtimes
+ * conversation - and the bound is also the cost ceiling: 21 of the 27 runtimes
  * never emit a task list at all, so without it every one of their run starts
  * would read every assistant message's `events_json` blob in the conversation.
  */
 const TODO_RECALL_MESSAGE_LOOKBACK = 8;
 
 /**
- * The conversation's most recently declared task list — the raw TodoWrite
- * `input` — walking back from the newest assistant turn, or `null` when none of
+ * The conversation's most recently declared task list - the raw TodoWrite
+ * `input` - walking back from the newest assistant turn, or `null` when none of
  * the recent turns declared one.
  *
  * Deliberately NOT `latestCompletedAssistantMessageId`'s `run_status =
  * 'succeeded'` filter: a turn that was interrupted or failed is precisely the
  * turn most likely to have left work open, and it is the one we most want to
- * hand back. Only `excludeMessageId` — the current run's own in-flight
- * placeholder — is skipped.
+ * hand back. Only `excludeMessageId` - the current run's own in-flight
+ * placeholder - is skipped.
  *
  * Walking PAST a turn that declared no list is intentional: an unrelated
  * question answered in between does not close the outstanding plan.
@@ -3028,8 +3028,8 @@ export function clearAgentSession(
  * Number of messages in a conversation.
  *
  * For emptiness checks prefer this over `listMessages(...).length`: the latter
- * loads and parses every message's JSON columns — including the event log,
- * which grows with tool output — to answer a question `COUNT(*)` answers
+ * loads and parses every message's JSON columns - including the event log,
+ * which grows with tool output - to answer a question `COUNT(*)` answers
  * without touching them.
  */
 export function countMessages(db: SqliteDb, conversationId: string): number {
@@ -3041,7 +3041,7 @@ export function countMessages(db: SqliteDb, conversationId: string): number {
 
 /**
  * The `done_key` every OTHER assistant row of a conversation was recorded with
- * — the Run identities `excludeMessageId` must never be allowed to absorb (see
+ * - the Run identities `excludeMessageId` must never be allowed to absorb (see
  * the PUT guard in `routes/project/conversations.ts`).
  *
  * Each physical Run mints exactly one key and emits it before any model output,
@@ -3128,7 +3128,7 @@ function listMessagesUnobserved(db: SqliteDb, conversationId: string) {
   // held at full size at once: rows written before the run-event payload
   // budget can be MBs each, and normalizing bounds them (see
   // `normalizeMessage`). Nothing below runs another statement while the
-  // iterator is open — batches and artifact refs were read above. Lightweight
+  // iterator is open - batches and artifact refs were read above. Lightweight
   // adapters that model only `all()` (see `hasMessageEventBatchStorage`) get
   // the same rows in one step.
   const rows = typeof messages.iterate === 'function'
@@ -3166,7 +3166,7 @@ function conversationChatArtifactRefs(
     //
     // The owning-project lookup is INSIDE this guard, not in front of it. It
     // reads a different table than the refs themselves, so it can fail on its
-    // own — and when it did, the throw travelled all the way out of
+    // own - and when it did, the throw travelled all the way out of
     // `listMessages` and the transcript came back empty. Artifact refs decorate
     // a conversation; nothing about them is worth losing its messages over.
     return new Map();
@@ -3225,7 +3225,7 @@ function messageChatArtifactRefs(db: SqliteDb, messageId: string): ChatArtifactR
  * This is what makes CONVERSATION FORK work: the fork copies each source
  * message under a fresh id, and the copy re-seeds its own `message_artifacts`
  * rows pointing at the SAME immutable snapshots. Blobs are shared, never
- * duplicated, and the two branches count independently — deleting one branch's
+ * duplicated, and the two branches count independently - deleting one branch's
  * message cannot take the other branch's evidence with it.
  *
  * Refs are only seeded when the message has none. A browser PUT that echoes a
@@ -3338,8 +3338,8 @@ export function upsertMessage(db: SqliteDb, conversationId: string, m: DbRow) {
       ? existing.content ?? ''
       : m.content;
     // A turn's recovery lineage is written once, by whoever owns the turn. A
-    // rewrite that carries no opinion about it — above all the run-create seed,
-    // which rebuilds this row from the request that won the claim — must not
+    // rewrite that carries no opinion about it - above all the run-create seed,
+    // which rebuilds this row from the request that won the claim - must not
     // erase it, or an accepted answer loses the logical task it belongs to
     // after a reload. An explicit null still clears it.
     const nextTaskAnalyticsJson =
@@ -3691,7 +3691,7 @@ function materializeMessageAgentEvents(
        * client finds the process/conclusion boundary) but must not survive into
        * the message body. `content` is what copy-to-clipboard, exports, title
        * fallbacks and the legacy events-less render path read, and a raw
-       * `<od-done key="…"/>` in any of those is a protocol tag on screen — the
+       * `<od-done key="…"/>` in any of those is a protocol tag on screen - the
        * exact failure `<od-title>` already shipped once.
        */
       /*
@@ -3777,15 +3777,15 @@ export function finalizeMessageAgentEvents(
  *
  * A turn only gets another attempt because the previous one never terminated,
  * so whatever text the superseded attempt streamed after its last committed
- * boundary was never closed upstream either — and the next attempt writes that
+ * boundary was never closed upstream either - and the next attempt writes that
  * passage again. Appending it a second time is how one conclusion ends up in
  * the transcript twice (OPEND-2566): the event stream is append-only and
  * adjacent text is concatenated, so nothing downstream can tell a re-written
  * answer from a longer one.
  *
  * Only the trailing delta run goes. Prose that a tool row already closed is
- * committed in the agent's own session — a resumed attempt continues past it
- * instead of repeating it — so it has to survive, and the last tool row is the
+ * committed in the agent's own session - a resumed attempt continues past it
+ * instead of repeating it - so it has to survive, and the last tool row is the
  * boundary the resume itself is anchored on.
  *
  * `content` is corrected by removing exactly the suffix those deltas
@@ -3803,7 +3803,7 @@ export function dropTrailingMessageAgentDeltas(
   // How the attempt ended is bookkeeping, not body: an interrupted attempt
   // signs off with its own `status` rows (the terminal error above all), and
   // they sit AFTER the passage that was cut off. Step over them to reach the
-  // prose, then leave them where they are — they are what makes the seam
+  // prose, then leave them where they are - they are what makes the seam
   // legible once the duplicate is gone.
   let end = events.length;
   while (end > 0 && events[end - 1]?.kind === 'status') end -= 1;
@@ -3948,7 +3948,7 @@ export interface UpsertPreviewCommentOptions {
   /**
    * True when this project currently syncs comments to the collab cloud (see
    * `shouldSyncProjectComments`), so a genuinely NEW comment's `pin_seq`
-   * starts unconfirmed (0) instead of final (1). Ignored on the edit branch —
+   * starts unconfirmed (0) instead of final (1). Ignored on the edit branch -
    * `pin_seq`/`pin_seq_confirmed`/`sort_key` are assigned exactly once, at
    * creation, and never revisited by an edit. Only meaningful together with a
    * later `confirmPreviewCommentPinSeq` call once the cloud push resolves.
@@ -3987,7 +3987,7 @@ export function upsertPreviewComment(
   const slideIndex = Number.isFinite(target.slideIndex) ? Math.max(0, Math.round(target.slideIndex)) : null;
   const slideKey = slideIndex ?? -1;
   // Team collaboration creation metadata. anchor_state / last_good_position stay null at
-  // creation — the drift ladder resolves and writes them back (updatePreviewCommentAnchor).
+  // creation - the drift ladder resolves and writes them back (updatePreviewCommentAnchor).
   const anchoredVersion = Number.isFinite(target.anchoredVersion)
     ? Math.max(0, Math.round(target.anchoredVersion))
     : null;
@@ -4017,7 +4017,7 @@ export function upsertPreviewComment(
   if (!note && attachments.length === 0) throw new Error('comment note required');
   // pin_seq / pin_seq_confirmed / sort_key are assigned exactly once, on the
   // INSERT branch, and are absent from the ON CONFLICT SET clause below so an
-  // edit (existing !== undefined) never rewrites them — see
+  // edit (existing !== undefined) never rewrites them - see
   // recvq5BVsolIxi / UpsertPreviewCommentOptions above. Computed against THIS
   // db file only: safe as the initial guess even when a sibling device
   // concurrently computes the same number for its own new comment, because a
@@ -4126,11 +4126,11 @@ export function confirmPreviewCommentAuthorKey(
 
 /**
  * Reconcile a comment's provisional `pin_seq` to the collab-cloud's
- * confirmed, globally-serialized push `seq` — the step that closes the
+ * confirmed, globally-serialized push `seq` - the step that closes the
  * cross-device race: two daemons that each computed the same local
  * `MAX(pin_seq)+1` for a comment created in the same ~5s poll window
  * converge to distinct numbers once their own push resolves, because the
- * guard below only ever applies ONCE per comment (idempotent — a later edit's
+ * guard below only ever applies ONCE per comment (idempotent - a later edit's
  * push resolving after the create's is a harmless no-op here). Returns false
  * when the row was already confirmed (nothing to do) or does not exist.
  */
@@ -4174,9 +4174,9 @@ function nextPinSeq(db: SqliteDb, projectId: string, filePath: string, excludeId
 /**
  * Invariant: no two SETTLED pins of one file share a number. The cloud `seq`
  * is the preferred number, but it can only be adopted when no other confirmed
- * row of the file already holds it. Confirmed rows the cloud never numbered —
+ * row of the file already holds it. Confirmed rows the cloud never numbered -
  * comments written while a project was private and relayed later by the
- * publish backfill, or never relayed at all — keep their local numbers, and a
+ * publish backfill, or never relayed at all - keep their local numbers, and a
  * cloud seq landing on one of them would show two pins labelled the same
  * (share P0 integration: two "1."). In that case take the next free number.
  * Provisional (unconfirmed) rows are not blockers: they move to their own
@@ -4203,7 +4203,7 @@ function distinctConfirmedPinSeq(
 /**
  * Persist the dragged comment's new sidebar position (Phase 2 of
  * recvq5BVsolIxi). The client computes `sortKey` itself (a midpoint between
- * the dragged item's new neighbors) — this is a single-row write, never a
+ * the dragged item's new neighbors) - this is a single-row write, never a
  * table-wide renumber, and never touches `pin_seq`.
  */
 export function reorderPreviewComment(
@@ -4236,7 +4236,7 @@ export function updatePreviewCommentStatus(db: SqliteDb, projectId: string, conv
  * Team collaboration drift-ladder write-back: persist how a comment resolved this render.
  * `lastGoodPosition`/`anchoredVersion` are COALESCEd so a `lost` resolve (which omits
  * them) keeps the last known-good values instead of wiping them. Does not bump
- * `updated_at` — anchor resolution is a derived read, not a content edit.
+ * `updated_at` - anchor resolution is a derived read, not a content edit.
  */
 export function updatePreviewCommentAnchor(
   db: SqliteDb,
@@ -4588,8 +4588,8 @@ type SyncedRevision = { seq: number | null; updatedAt: number | null };
  *   restarted daemon re-pulling from 0, a member snapshot, a relay echo) and
  *   never overwrites the row: `same-revision` at equality (metadata hydration
  *   only), `stale` below it.
- * - A revision the row has not seen yet — a higher `seq`, or any `seq` for a
- *   row that has none recorded — still honours the business last-writer-wins
+ * - A revision the row has not seen yet - a higher `seq`, or any `seq` for a
+ *   row that has none recorded - still honours the business last-writer-wins
  *   rule on `updatedAt` when the incoming record carries one, so a local edit
  *   not yet relayed is not clobbered by an older cloud edit. A record with no
  *   `updatedAt` cannot contest the row on time and is applied in `seq` order.
@@ -4611,7 +4611,7 @@ export function syncedCommentRevisionIsNewer(
 /**
  * Merge one collab-cloud comment into local `preview_comments`. The cloud
  * comment's id is used verbatim as the local id (it is the author daemon's own
- * id — a global dedup key), so a comment's whole lifecycle keys off that id:
+ * id - a global dedup key), so a comment's whole lifecycle keys off that id:
  *
  * - Tombstone (`deleted: true`): delete the local row by id. Delete wins
  *   unconditionally (it does not compare `updatedAt`).
@@ -4623,7 +4623,7 @@ export function syncedCommentRevisionIsNewer(
  * `conversationId` is the LOCAL project comment anchor (see
  * getProjectCommentAnchorConversationId);
  * the cloud comment's own conversationId is not a valid FK here. It is only used
- * when inserting a new row — an in-place update keeps the row's existing
+ * when inserting a new row - an in-place update keeps the row's existing
  * conversation. Returns an explicit changed/unchanged acknowledgement. Failures
  * throw so the caller cannot acknowledge a batch it did not persist.
  */
@@ -4794,9 +4794,9 @@ export function mergeSyncedPreviewComment(
   // Same-project replay is handled above. All other insert failures, including
   // an id owned by another project, must throw instead of acknowledging loss.
   //
-  // pin_seq is taken straight from the wire's `seq` — the collab-cloud's own
+  // pin_seq is taken straight from the wire's `seq` - the collab-cloud's own
   // globally-serialized push sequence for this project (see
-  // CollabCloudComment.seq) — rather than recomputed as a local MAX+1. That
+  // CollabCloudComment.seq) - rather than recomputed as a local MAX+1. That
   // is what makes a comment PULLED from a peer land on the exact same number
   // the peer's own device converged to via confirmPreviewCommentPinSeq: both
   // sides end up keyed off the one authoritative cloud value, never off a
@@ -4955,7 +4955,7 @@ export function getProjectPreviewComment(db: SqliteDb, projectId: string, id: st
  * Without it, this function's shape is inferred from whatever it happens to
  * build, and the routes hand the result onward through
  * `saved as unknown as PreviewComment`. That pair means a field added to the
- * contract but forgotten here does not fail typecheck — it is simply
+ * contract but forgotten here does not fail typecheck - it is simply
  * `undefined` for the whole DB→HTTP leg, everywhere, silently. Annotating the
  * return makes the compiler the thing that notices instead of a reviewer.
  */
@@ -5035,7 +5035,7 @@ function normalizePreviewCommentAttachments(input: unknown): PreviewCommentAttac
       return { path, name: rawName || path.split('/').pop() || path };
     })
     // `.filter(Boolean)` does not narrow, and the annotated return type is
-    // what makes that visible — the runtime was always dropping these.
+    // what makes that visible - the runtime was always dropping these.
     .filter((item): item is PreviewCommentAttachment => item !== null)
     .slice(0, 20);
 }
@@ -5226,11 +5226,11 @@ function scheduleNextMessageEventMaintenance(
 
 // ---------- run event payload heal ----------
 //
-// I3 — rows written before the run-event payload budget existed are healed
+// I3 - rows written before the run-event payload budget existed are healed
 // once. The pass itself (scheduling, yielding, reporting) lives in
 // `storage/message-event-payload-heal.ts`; these are its row-level primitives.
 // Each call rewrites at most ONE row, inside its own transaction, streaming the
-// row's events out of SQLite one element at a time — a stored event log is
+// row's events out of SQLite one element at a time - a stored event log is
 // never materialized whole in JS, and a crash leaves every row either as it was
 // or fully healed.
 
@@ -5244,7 +5244,7 @@ function isActiveMessageRunStatus(value: unknown): boolean {
 
 /**
  * True when some stored event in `column` (a JSON array) is a record, is not
- * `text`/`thinking`, and exceeds the per-event budget — the exact shape
+ * `text`/`thinking`, and exceeds the per-event budget - the exact shape
  * `boundPersistedAgentEvent` rewrites. Evaluated inside SQLite.
  */
 function oversizedEventExistsSql(column: string): string {

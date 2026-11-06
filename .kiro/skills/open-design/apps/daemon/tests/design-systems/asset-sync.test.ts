@@ -1,18 +1,18 @@
 // Logo/asset desync fix (spec 04 §9.3, recvqb1t4FrckM): the canonical design
 // system directory (USER_DESIGN_SYSTEMS_DIR/<id>) is the only place
 // team-resource-share, the download archive, and the showcase ever read
-// from — but until this fix, a real asset an agent regenerated (e.g.
+// from - but until this fix, a real asset an agent regenerated (e.g.
 // assets/logo.svg) only ever landed in the workspace project's editing
 // mirror and never got copied back. These specs pin the two layers that fix
 // it:
 //
-//   1. `syncUserDesignSystemAssetsFromFiles` (design-systems/index.ts) — the
+//   1. `syncUserDesignSystemAssetsFromFiles` (design-systems/index.ts) - the
 //      pure write: copies real bytes into canonical, drops the
 //      `.od-generated.json` fingerprint for the overwritten path so the
 //      generator never reclaims it, and flips `artifactMode` to
 //      'agent-managed' the first time anything real syncs.
 //   2. `createDesignSystemServerServices().syncUserDesignSystemAssetsFromWorkspace`
-//      — the orchestration: locates the design system's workspace project
+//      - the orchestration: locates the design system's workspace project
 //      the same way `ensureUserDesignSystemWorkspaceProject` does, and
 //      copies whatever real files sit under that project's `assets/`
 //      directory.
@@ -136,7 +136,7 @@ describe('syncUserDesignSystemAssetsFromFiles', () => {
     ]);
 
     // Mirrors exactly what a PATCH /api/design-systems/:id body-sync call
-    // does — updateUserDesignSystem calls writeGeneratedDesignSystemFiles
+    // does - updateUserDesignSystem calls writeGeneratedDesignSystemFiles
     // internally whenever the resolved artifactMode isn't 'agent-managed'.
     // Forcing it back to 'generated' here proves the manifest fingerprint,
     // not the artifactMode short-circuit, is what protects the real asset.
@@ -211,7 +211,7 @@ describe('createDesignSystemServerServices().syncUserDesignSystemAssetsFromWorks
         LEGACY_DESIGN_SYSTEM_ARTIFACTS,
         // The real design-systems/index.ts types (readonly `as const` array,
         // `DesignSystemSource` literal union) are strictly narrower than the
-        // DI factory's own locally declared (looser) option/array shapes —
+        // DI factory's own locally declared (looser) option/array shapes -
         // real callers (server.ts) never trip this because their broader
         // import graph resolves the module's types under a single
         // resolution mode; this isolated test file resolves it under both

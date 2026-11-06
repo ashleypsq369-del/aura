@@ -14,7 +14,7 @@ import {
 // (routes/collab-sync.ts POST /collab/pull), which never consults the policy.
 //
 // Fail-closed direction is INVERTED for this policy relative to the module's
-// other guards: "closed" here means PULL AS BEFORE — skipping is the new
+// other guards: "closed" here means PULL AS BEFORE - skipping is the new
 // behavior, so any uncertainty (policy throws, no version) degrades to the
 // existing pull rather than leaving a project permanently unmaterialized.
 

@@ -14,15 +14,15 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
  *     const visible = thinkingGrammarStripper.strip(ev.delta);
  *     if (!visible) { noteFirstOutputEvent(ev); return; }
  *
- * `strip('')` 返回 `''`,falsy —— 于是**空串帧一条不剩地被扔掉**。
+ * `strip('')` 返回 `''`,falsy -- 于是**空串帧一条不剩地被扔掉**。
  * 而 claude 的思考帧正文 100% 是空串(真 CLI 实测,opus-5 与 sonnet-4-5 各一轮;
  * `content_block_delta` 的 `delta` 就是 `{"type":"thinking_delta","thinking":"","estimated_tokens":50}`),
  * 所以对 claude 来说这道判据等于「思考帧全丢」。
  *
  * 丢掉的是两件东西:
- *  1. 壳头的「思考中」—— 规格 W11 写死「`thinking_delta` 到达(**哪怕 delta 为空**)
+ *  1. 壳头的「思考中」-- 规格 W11 写死「`thinking_delta` 到达(**哪怕 delta 为空**)
  *     就进入思考中」。一条都到不了,那一格永远是 false,用户盯着几分钟空白。
- *  2. **传输层心跳** —— `providers/daemon.ts` 每收到一条真运行帧就
+ *  2. **传输层心跳** -- `providers/daemon.ts` 每收到一条真运行帧就
  *     `markUpstreamActivity(runId)`。真机录制 `7ed15c2f`(1150 秒)里
  *     414/414 条 `thinking_delta` 的 `delta` 都是 `""`;把这条 drop 套上去,
  *     1357 帧只剩 943 帧,最长空档从 73.6 秒涨到 300.6 秒。
@@ -49,7 +49,7 @@ const ANSWER_TEXT = 'W102_ANSWER_SENTINEL';
 
 type SseFrame = { event: string; data: any };
 
-/** 把 SSE 正文拆成 (event, data) 序列 —— 断言"出现在出口上"只认这个 */
+/** 把 SSE 正文拆成 (event, data) 序列 -- 断言"出现在出口上"只认这个 */
 function parseSse(
   body: string,
   { rejectMalformedAgent = false }: { rejectMalformedAgent?: boolean } = {},
@@ -171,14 +171,14 @@ const se = (event) => w({ type: 'stream_event', event, session_id: 's-w102', par
 
 w({ type: 'system', subtype: 'init', model: 'claude-opus-5', session_id: 's-w102' });
 se({ type: 'message_start', message: { model: 'claude-opus-5', id: 'msg_w102', type: 'message', role: 'assistant', content: [], stop_reason: null, usage: { input_tokens: 2, output_tokens: 1 } } });
-// 思考块开场 —— 真 CLI 的 content_block 就是这三个字段,thinking/signature 都是空串
+// 思考块开场 -- 真 CLI 的 content_block 就是这三个字段,thinking/signature 都是空串
 se({ type: 'content_block_start', index: 0, content_block: { type: 'thinking', thinking: '', signature: '' } });
 for (let i = 0; i < ${EMPTY_THINKING_FRAMES}; i += 1) {
   se({ type: 'content_block_delta', index: 0, delta: { type: 'thinking_delta', thinking: '', estimated_tokens: (i + 1) * 50 } });
 }
-// 一片整段的剧场语法 —— 上游送了字符、剥完一个不剩,这一条该被扔
+// 一片整段的剧场语法 -- 上游送了字符、剥完一个不剩,这一条该被扔
 se({ type: 'content_block_delta', index: 0, delta: { type: 'thinking_delta', thinking: ${JSON.stringify(ALL_GRAMMAR_THINKING)} } });
-// 真正的思考正文 —— 非空,必须原样通过
+// 真正的思考正文 -- 非空,必须原样通过
 se({ type: 'content_block_delta', index: 0, delta: { type: 'thinking_delta', thinking: ${JSON.stringify(REAL_THINKING_PROSE)} } });
 se({ type: 'content_block_stop', index: 0 });
 se({ type: 'content_block_start', index: 1, content_block: { type: 'text', text: '' } });
@@ -232,7 +232,7 @@ setTimeout(() => process.exit(0), 10);
     });
     expect(chat.ok).toBe(true);
     sseBody = await chat.text();
-    // 这一轮真的跑完了 —— 否则下面所有"到了 / 没到"都是空的
+    // 这一轮真的跑完了 -- 否则下面所有"到了 / 没到"都是空的
     expect(sseBody).toContain('event: end');
     return sseBody;
   }
@@ -261,10 +261,10 @@ setTimeout(() => process.exit(0), 10);
     expect(await runOnce()).toContain(ANSWER_TEXT);
   }, 60_000);
 
-  it('心跳:上游发了几帧思考,出口就有几帧 —— 一帧都不能少', async () => {
+  it('心跳:上游发了几帧思考,出口就有几帧 -- 一帧都不能少', async () => {
     const deltas = thinkingDeltas(parseSse(await runOnce()));
     // 上游一共 EMPTY_THINKING_FRAMES 条空串 + 1 条纯标记 + 1 条真正文。
-    // 纯标记那条按设计扔掉,其余每一条都必须到达 —— 到达就是一次
+    // 纯标记那条按设计扔掉,其余每一条都必须到达 -- 到达就是一次
     // `markUpstreamActivity`,静默计时的读数全靠它。
     expect(deltas.length).toBe(EMPTY_THINKING_FRAMES + 1);
   }, 60_000);

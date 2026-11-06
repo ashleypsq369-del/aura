@@ -63,7 +63,7 @@ if 'FeedbackWidget' not in layout:
 # Find where TaskStatusBar is rendered and add FeedbackWidget after main content
 OLD_MAIN = "      </main>\n    </div>"
 NEW_MAIN = """      </main>
-      {/* Floating feedback widget — shown for all authenticated users */}
+      {/* Floating feedback widget - shown for all authenticated users */}
       <FeedbackWidget />
     </div>"""
 

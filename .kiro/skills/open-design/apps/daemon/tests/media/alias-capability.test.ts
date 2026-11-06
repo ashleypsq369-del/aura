@@ -12,7 +12,7 @@
  * ctx.model was overwritten with the alias, so the
  * `startsWith('dall-e-')` and `=== 'dall-e-3'` branches stopped
  * firing and the body was missing both response_format and the hd
- * quality flag — exactly the regression codex described.
+ * quality flag - exactly the regression codex described.
  */
 
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
@@ -106,7 +106,7 @@ describe('media alias preserves catalog-keyed capability branching (#1309 review
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(capturedBody).not.toBeNull();
-    // Wire name swap landed — the provider receives the alias.
+    // Wire name swap landed - the provider receives the alias.
     expect(capturedBody!.model).toBe('azure-dalle3-deployment');
     // Capability branches keyed on the catalog id continue to fire.
     expect(capturedBody!.response_format).toBe('b64_json');
@@ -153,7 +153,7 @@ describe('media alias preserves catalog-keyed capability branching (#1309 review
     expect(capturedBody).not.toBeNull();
     expect(capturedBody!.model).toBe('custom-tts-deployment');
     // Capability branch keyed on the catalog id continues to fire
-    // even though the wire-level model is the alias — the
+    // even though the wire-level model is the alias - the
     // gpt-4o-mini-tts-specific instructions field is still attached.
     expect(capturedBody!.instructions).toBe('warm and slow');
     expect(result.providerNote).toContain('custom-tts-deployment');

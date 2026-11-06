@@ -1,6 +1,6 @@
 ---
 name: algorithmic-color-palette
-description: Derive a full UI palette from one or two brand colours — state variants, brand-tinted greys, semantic colours. Use when building or expanding a colour system.
+description: Derive a full UI palette from one or two brand colours - state variants, brand-tinted greys, semantic colours. Use when building or expanding a colour system.
 metadata:
   priority: 8
   pathPatterns:
@@ -43,9 +43,9 @@ metadata:
 
 # Algorithmic Colour Palette
 
-A brand palette of 2–3 colours is not enough for a UI. You need shades for states (hover, active, disabled), neutrals for backgrounds and borders, and semantic colours for status. Deriving these algorithmically from the brand colours produces a palette that feels coherent — everything is visually related to the brand rather than pulled from a generic grey or a stock colour library.
+A brand palette of 2-3 colours is not enough for a UI. You need shades for states (hover, active, disabled), neutrals for backgrounds and borders, and semantic colours for status. Deriving these algorithmically from the brand colours produces a palette that feels coherent - everything is visually related to the brand rather than pulled from a generic grey or a stock colour library.
 
-> **Don't guess the seed colours — extract them (dembrandt engine, optional).** If the brand already exists on the web, pull its *real* palette off the live site instead of eyeballing a hex: `get_color_palette` (or the `extract-design` skill) returns the actual computed brand and neutral colours from the DOM, which you then expand with the methods below. See [`extract-design`](../extract-design/SKILL.md) for setup.
+> **Don't guess the seed colours - extract them (dembrandt engine, optional).** If the brand already exists on the web, pull its *real* palette off the live site instead of eyeballing a hex: `get_color_palette` (or the `extract-design` skill) returns the actual computed brand and neutral colours from the DOM, which you then expand with the methods below. See [`extract-design`](../extract-design/SKILL.md) for setup.
 
 ## Deriving Interactive State Colours
 
@@ -83,7 +83,7 @@ If the brand has a green or teal, shift it toward a clearer success green:
 
 ## Deriving Brand-Tinted Greys
 
-Generic greys (`#666`, `#999`, `#eee`) feel disconnected from the brand. Desaturating the brand hue produces greys that are subtly tinted — warm, cool, or neutral depending on the brand — and feel like they belong to the same palette.
+Generic greys (`#666`, `#999`, `#eee`) feel disconnected from the brand. Desaturating the brand hue produces greys that are subtly tinted - warm, cool, or neutral depending on the brand - and feel like they belong to the same palette.
 
 ### Optical Comfort: Avoiding Pure Black on White
 Pure black `#000000` on pure white `#FFFFFF` causes halation and eye strain. Use a near-black such as `#222222` (`grey-900`) for text and an off-white such as `#EEEEEE` (`grey-50`) for backgrounds; the softened pair still passes WCAG AA/AAA and reads as less harsh.
@@ -107,13 +107,13 @@ grey-50:  hsl(H,  3%, 96%)   ← page background, subtle fills
 ### Example: brand primary `#133174` (H = 224, blue-tinted)
 
 ```css
---color-grey-900: hsl(224, 12%, 10%);  /* #16171f — slightly blue-black */
---color-grey-500: hsl(224,  8%, 50%);  /* #7b7e8a — cool grey */
---color-grey-200: hsl(224,  5%, 82%);  /* #cfd0d5 — cool light border */
---color-grey-50:  hsl(224,  3%, 96%);  /* #f4f4f6 — near-white with a hint of blue */
+--color-grey-900: hsl(224, 12%, 10%);  /* #16171f - slightly blue-black */
+--color-grey-500: hsl(224,  8%, 50%);  /* #7b7e8a - cool grey */
+--color-grey-200: hsl(224,  5%, 82%);  /* #cfd0d5 - cool light border */
+--color-grey-50:  hsl(224,  3%, 96%);  /* #f4f4f6 - near-white with a hint of blue */
 ```
 
-Compare to generic `#f5f5f5` (no hue) — the brand-tinted version is subtly different but feels intentional.
+Compare to generic `#f5f5f5` (no hue) - the brand-tinted version is subtly different but feels intentional.
 
 ## Semantic Colour Derivation
 
@@ -123,14 +123,14 @@ Status colours (error, warning, success, info) should feel harmonious with the b
 
 1. **Pick the Hues:** Use standard semantic hues (0 for Error, 38 for Warning, 142 for Success).
 2. **Align S & L:** Use the saturation and lightness of your Brand Primary as a starting point.
-3. **Adjust for Perceived Brightness:** Hues like Yellow/Orange (Warning) feel brighter than Blue/Red. Reduce the lightness of Warning by 5–10% compared to Success or Error to ensure they feel equally "heavy" on the page.
+3. **Adjust for Perceived Brightness:** Hues like Yellow/Orange (Warning) feel brighter than Blue/Red. Reduce the lightness of Warning by 5-10% compared to Success or Error to ensure they feel equally "heavy" on the page.
 
 | Semantic | Hue (H) | Saturation (S) | Lightness (L) |
 |---|---|---|---|
-| **Error** | 0–10 | Match Primary | Match Primary |
-| **Warning** | 35–45 | Match Primary | Primary L - 10% |
-| **Success** | 140–160 | Match Primary | Match Primary |
-| **Info** | 210–230 | Match Primary | Match Primary |
+| **Error** | 0-10 | Match Primary | Match Primary |
+| **Warning** | 35-45 | Match Primary | Primary L - 10% |
+| **Success** | 140-160 | Match Primary | Match Primary |
+| **Info** | 210-230 | Match Primary | Match Primary |
 
 **The "Vibrancy" Rule:** If the brand is muted (low saturation), the semantic colours should also be slightly muted. If the brand is neon/vibrant, the semantics should follow suit. Cohesion comes from shared intensity.
 
@@ -183,7 +183,7 @@ Premium UIs avoid pure black shadows. Use a very dark, desaturated brand hue.
 
 ```css
 :root {
-  /* Primary — derived from brand #133174 */
+  /* Primary - derived from brand #133174 */
   --color-primary-subtle:  hsl(224, 21%, 94%);
   --color-primary-tint:    hsl(224, 70%, 67%);
   --color-primary:         hsl(224, 70%, 27%);

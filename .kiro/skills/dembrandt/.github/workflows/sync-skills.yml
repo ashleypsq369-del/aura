@@ -127,11 +127,11 @@ jobs:
 
             **⚠ Manual check required before merging**
             This automation bumps the npm version in `package.json` and the schema.org `softwareVersion`. Read the release notes above: if the release changed CLI flags, an environment variable, or the JSON output shape, these need updating by hand.
-            - `app/getting-started/page.tsx` — flags list
-            - `app/blackpaper/page.tsx` — flags list
-            - `app/page.tsx` — landing page flags (`new: true` for new ones)
-            - Consumers of `dembrandt/types` — if the output shape changed. Grep for the type you are reading; there is no single types file
-            - `app/api/extractions/route.ts` — if field access needs updating
+            - `app/getting-started/page.tsx` - flags list
+            - `app/blackpaper/page.tsx` - flags list
+            - `app/page.tsx` - landing page flags (`new: true` for new ones)
+            - Consumers of `dembrandt/types` - if the output shape changed. Grep for the type you are reading; there is no single types file
+            - `app/api/extractions/route.ts` - if field access needs updating
 
             A release with no new flags can still need every one of these.
           labels: automated

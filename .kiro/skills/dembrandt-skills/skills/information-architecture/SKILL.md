@@ -63,7 +63,7 @@ retrieval:
 
 # Information Architecture
 
-In small products, users find their way by exploring. In large applications — multi-module SaaS, ERPs, analytics platforms, marketplaces — exploration breaks down. The structure itself must do the navigational work. Information architecture is the design of that structure: what exists, what it is called, and how it relates to everything else.
+In small products, users find their way by exploring. In large applications - multi-module SaaS, ERPs, analytics platforms, marketplaces - exploration breaks down. The structure itself must do the navigational work. Information architecture is the design of that structure: what exists, what it is called, and how it relates to everything else.
 
 Good IA is invisible. Users find what they need without thinking about the structure. Bad IA forces users to hold a map in their head.
 
@@ -87,22 +87,22 @@ The names given to entities, sections, and actions are one of the most consequen
 - Does this name describe what the thing *does*, not how it is stored?
 
 ### Internal vocabulary is not customer vocabulary
-The terms a company uses internally are frequently *not* the terms the customer should see. An internal casual shorthand ("the recon job", "a P2 ticket") is precise for the team but opaque to an outsider. When a term crosses from the internal build into the customer-facing app, translate it to **the customer's word, or a universally understood one** — never ship the internal shorthand by default.
+The terms a company uses internally are frequently *not* the terms the customer should see. An internal casual shorthand ("the recon job", "a P2 ticket") is precise for the team but opaque to an outsider. When a term crosses from the internal build into the customer-facing app, translate it to **the customer's word, or a universally understood one** - never ship the internal shorthand by default.
 
-- **Introduce as few new terms as possible — a hard ceiling of ~10 invented terms for the whole product, and fewer is always better.** Every new coined term is something the user must learn before they can act. Prefer terms so universal that the end user already knows them over anything you'd have to teach.
-- **Placement tells half the story.** Where a feature sits — which section, which nav group, next to what — communicates as much as its label. A well-placed control needs less naming; a well-named control in the wrong place still confuses. Design the location and the name together.
+- **Introduce as few new terms as possible - a hard ceiling of ~10 invented terms for the whole product, and fewer is always better.** Every new coined term is something the user must learn before they can act. Prefer terms so universal that the end user already knows them over anything you'd have to teach.
+- **Placement tells half the story.** Where a feature sits - which section, which nav group, next to what - communicates as much as its label. A well-placed control needs less naming; a well-named control in the wrong place still confuses. Design the location and the name together.
 
 ### Label length: buttons are terse, titles continue the story
-- **Buttons: 1 word, ideally — 2 is fine, 3 is the maximum.** A button is an action verb, not a sentence. "Save", "Publish", "Invite member".
+- **Buttons: 1 word, ideally - 2 is fine, 3 is the maximum.** A button is an action verb, not a sentence. "Save", "Publish", "Invite member".
 - **Titles and headings carry the fuller explanation.** Let the surrounding title, section header, or helper text extend the narrative that the button can only hint at. The button says *what*; the title says *what this whole area is about*.
 
 ---
 
 ## Mental Model Follows Data Model
 
-The UI should be a direct, legible expression of the underlying data model. Users build a mental model of the product by interacting with it — that mental model should match how the data actually works.
+The UI should be a direct, legible expression of the underlying data model. Users build a mental model of the product by interacting with it - that mental model should match how the data actually works.
 
-**Match entities to screens.** Each major data entity (Project, Invoice, User, Product) typically deserves its own list view and detail view. Do not collapse distinct entities into one screen because it seems simpler — users will be confused when one action affects something they did not see.
+**Match entities to screens.** Each major data entity (Project, Invoice, User, Product) typically deserves its own list view and detail view. Do not collapse distinct entities into one screen because it seems simpler - users will be confused when one action affects something they did not see.
 
 **Expose relationships.** If a Project contains Tasks, and Tasks belong to Users, the UI hierarchy should reflect this:
 
@@ -134,7 +134,7 @@ Team members will lose access immediately.
 
 ## Confirm Dialogs for Dangerous Actions
 
-Any action that is irreversible, affects a wide scope, or causes data loss requires explicit confirmation before execution. The confirm dialog is not a courtesy — it is a contract with the user.
+Any action that is irreversible, affects a wide scope, or causes data loss requires explicit confirmation before execution. The confirm dialog is not a courtesy - it is a contract with the user.
 
 **When a confirm dialog is required:**
 
@@ -166,7 +166,7 @@ This cannot be undone."
 ```
 
 **Rules:**
-- Title names the specific entity — "Delete project: Website Redesign?" not "Are you sure?"
+- Title names the specific entity - "Delete project: Website Redesign?" not "Are you sure?"
 - Body states exactly what will be affected and whether it can be undone
 - The destructive action is labelled with the action, not "OK" or "Yes"
 - The destructive action is visually distinct: red fill, or positioned on the right
@@ -197,12 +197,12 @@ Good: Developer → Webhooks
 
 **Global search as escape hatch.** In large applications, search reduces the navigation burden. Users who know what they want should never have to navigate through 4 levels to find it.
 
-**Logo as Home.** The product logo should always be an interactive link leading back to the primary landing page or dashboard. This is a universal user expectation — a "reset button" for navigation.
+**Logo as Home.** The product logo should always be an interactive link leading back to the primary landing page or dashboard. This is a universal user expectation - a "reset button" for navigation.
 
 **Global Header Consistency.** In applications with deep hierarchy, keep the primary header and top-level navigation consistent across all views. Changing the global navigation based on the user's current depth disorients them and removes their easy path back to other content.
 
 **Persistent context.** In deeply nested views, the user must always be able to answer: where am I, what does this belong to, and how do I get back?
-- **Shallow hierarchy (1–2 layers):** Use a simple "← Back to [Parent]" link. Breadcrumbs (Home > Parent > Current) often add unnecessary visual noise for simple structures.
+- **Shallow hierarchy (1-2 layers):** Use a simple "← Back to [Parent]" link. Breadcrumbs (Home > Parent > Current) often add unnecessary visual noise for simple structures.
 - **Deep hierarchy (3+ layers):** Use breadcrumbs to provide a clear map of the user's location and an easy path to any parent level.
 
 Use parent labels and contextual headers to reinforce the current location.
@@ -224,15 +224,15 @@ An information architecture rarely breaks in one decision. It erodes: each new p
 
 ---
 
-## Hide, Don't Delete — but Don't Serve It Up Front Either
+## Hide, Don't Delete - but Don't Serve It Up Front Either
 
 When a feature or control adds density but a subset of users still needs it, you have three moves, not two. The mistake is treating it as a binary of *show it* or *remove it*.
 
-1. **Surface it** — primary, always-visible. Reserve this for the actions on the main user path.
-2. **Remove it** — if a control isn't earning its space and nobody's flow depends on it, cut it. Fewer, clearer controls beat a complete-but-noisy surface.
-3. **Hide behind an opening/closing element** — the middle path, and often the right one. Move secondary functionality into a modal, drawer, accordion, popover, or expandable panel: **discoverable but not immediately present.** The element stays one interaction away, so the default view stays calm.
+1. **Surface it** - primary, always-visible. Reserve this for the actions on the main user path.
+2. **Remove it** - if a control isn't earning its space and nobody's flow depends on it, cut it. Fewer, clearer controls beat a complete-but-noisy surface.
+3. **Hide behind an opening/closing element** - the middle path, and often the right one. Move secondary functionality into a modal, drawer, accordion, popover, or expandable panel: **discoverable but not immediately present.** The element stays one interaction away, so the default view stays calm.
 
-**Deliberate friction is a feature.** Place the reveal at the flow step where the user needs it — don't pre-load every option. Same instinct as the H1–H3 discipline (see `modular-scale-typography`): when a view sprouts deeper hierarchy, push the secondary layer into an opening/closing element.
+**Deliberate friction is a feature.** Place the reveal at the flow step where the user needs it - don't pre-load every option. Same instinct as the H1-H3 discipline (see `modular-scale-typography`): when a view sprouts deeper hierarchy, push the secondary layer into an opening/closing element.
 
 Choose the container by the content's weight: **accordion/expandable** for inline detail the user reads in place, **popover/drawer** for a short secondary task, **modal** for a focused sub-task or confirmation that must interrupt.
 
@@ -260,5 +260,5 @@ Change over time and difference across peers are two questions. Give each its ow
 - [ ] Is global search available for products with more than 3 navigation levels?
 - [ ] Does the product logo link back to the landing page or primary dashboard?
 - [ ] Is the primary header and global navigation consistent across all views, regardless of depth?
-- [ ] Are back links used for shallow hierarchies (1–2 layers) and breadcrumbs for deep hierarchies (3+ layers)?
+- [ ] Are back links used for shallow hierarchies (1-2 layers) and breadcrumbs for deep hierarchies (3+ layers)?
 - [ ] Where a view compares both over time and across peers, does each axis have its own words?

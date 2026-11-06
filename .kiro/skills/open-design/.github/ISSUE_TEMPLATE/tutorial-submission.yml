@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for sharing! Made or found a great OpenDesign tutorial on YouTube? Fill in the video link below — that's the only required field. A maintainer will review it and add it to the tutorials page. No pull request or markdown needed.
+        Thanks for sharing! Made or found a great OpenDesign tutorial on YouTube? Fill in the video link below - that's the only required field. A maintainer will review it and add it to the tutorials page. No pull request or markdown needed.
 
   - type: input
     id: video_url
@@ -30,7 +30,7 @@ body:
     id: category
     attributes:
       label: Category
-      description: Pick the closest fit (optional — a maintainer will confirm).
+      description: Pick the closest fit (optional - a maintainer will confirm).
       options:
         - Getting started
         - Tutorial

@@ -4,11 +4,11 @@ name: bake-plugin-previews-gc
 # 4b). Preview clips are immutable + content-addressed, so the bucket only grows;
 # this prunes clips that NO live build references. The protected set is the union
 # of object keys named by every git tag's manifest, every live release/** branch
-# HEAD, and the current main manifest — so a clip a shipped/old client still
+# HEAD, and the current main manifest - so a clip a shipped/old client still
 # points at is never deleted (see scripts/plugin-previews-gc.mjs).
 #
 # Ships in DRY-RUN: it only reports what it would delete. Arming real deletion
-# needs BOTH the `delete` input AND the GC_ENABLE_DELETE env below — flip them
+# needs BOTH the `delete` input AND the GC_ENABLE_DELETE env below - flip them
 # only after eyeballing a few dry-run deletion lists.
 
 on:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Fetch release branches + tags (fail closed)
         # No `|| true`: these refs define the protected set. If we cannot fetch
-        # them, fail the job rather than GC from partial ref data — once deletion
+        # them, fail the job rather than GC from partial ref data - once deletion
         # is armed, an incomplete protected set could prune clips a live release
         # or main manifest still references.
         run: |

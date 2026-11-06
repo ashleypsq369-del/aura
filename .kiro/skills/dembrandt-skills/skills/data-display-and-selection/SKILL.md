@@ -67,7 +67,7 @@ retrieval:
 
 # Data Display and Selection
 
-Complex data collections — products, files, users, orders, tasks — have no single correct view. Different tasks call for different views. Browsing benefits from grid; comparing details benefits from list or table; bulk management benefits from a dense table with mass actions. Give users the choice.
+Complex data collections - products, files, users, orders, tasks - have no single correct view. Different tasks call for different views. Browsing benefits from grid; comparing details benefits from list or table; bulk management benefits from a dense table with mass actions. Give users the choice.
 
 ---
 
@@ -87,7 +87,7 @@ Offer multiple views when the data has both visual and detailed dimensions.
 [Filter ▾]  [Sort ▾]          [⊞ Grid]  [☰ List]  [⊟ Table]
 ```
 
-On mobile, collapse to the view that works best for the content — grid for visual items, list for text. Do not offer a view toggle on small screens unless both views are genuinely usable.
+On mobile, collapse to the view that works best for the content - grid for visual items, list for text. Do not offer a view toggle on small screens unless both views are genuinely usable.
 
 ### Past a Handful of Items, Cards Become a Table
 
@@ -103,7 +103,7 @@ Then give the header the emphasis the boxes were pretending to provide: a heavie
 
 ## Selection: Prefer Large Hit Areas
 
-Checkboxes are small targets. Requiring users to hit a 16×16px checkbox to select a row is unnecessary friction — especially on touch devices.
+Checkboxes are small targets. Requiring users to hit a 16×16px checkbox to select a row is unnecessary friction - especially on touch devices.
 
 **Default: the entire row or card is the selection target.**
 
@@ -125,15 +125,15 @@ Checkboxes are small targets. Requiring users to hit a 16×16px checkbox to sele
 }
 ```
 
-For cards in a grid, the entire card is the selection area — not just a checkbox in the corner.
+For cards in a grid, the entire card is the selection area - not just a checkbox in the corner.
 
 ---
 
 ## Selected State Visual Language
 
-Selected items communicate their state through a background colour shift — not just a checkbox tick.
+Selected items communicate their state through a background colour shift - not just a checkbox tick.
 
-**Background:** `--color-primary-subtle` — the brand primary colour heavily desaturated and lightened to ~5–8% opacity. Perceptible but not jarring.
+**Background:** `--color-primary-subtle` - the brand primary colour heavily desaturated and lightened to ~5-8% opacity. Perceptible but not jarring.
 
 **Left border accent (optional):** A 3px left border in `--color-primary` reinforces the selected state for list and table rows.
 
@@ -146,7 +146,7 @@ Selected items communicate their state through a background colour shift — not
 }
 ```
 
-**Do not** use a high-contrast or saturated background for selection — it competes with content and makes dense tables hard to read.
+**Do not** use a high-contrast or saturated background for selection - it competes with content and makes dense tables hard to read.
 
 ---
 
@@ -160,8 +160,8 @@ When one or more items are selected, mass actions appear. They disappear when no
 [✓ 3 selected]  [Delete]  [Archive]  [Export]  [Move to ▾]  [× Clear]
 ```
 
-- Lead with the selection count: "3 selected" — confirms the scope before any action
-- Show only actions applicable to the selection — if some actions require a single item, disable them for multi-select
+- Lead with the selection count: "3 selected" - confirms the scope before any action
+- Show only actions applicable to the selection - if some actions require a single item, disable them for multi-select
 - "Clear" deselects everything and dismisses the toolbar
 - Destructive mass actions (Delete) always trigger a confirm dialog naming the count: "Delete 3 projects? This cannot be undone."
 
@@ -178,7 +178,7 @@ When one or more items are selected, mass actions appear. They disappear when no
 ### Column sorting (table view)
 - Click a column header to sort ascending; click again for descending; third click clears sort
 - Active sort column shows a directional arrow (↑ ↓)
-- Only sortable columns are clickable — non-sortable columns have no hover state on header
+- Only sortable columns are clickable - non-sortable columns have no hover state on header
 
 ### Filters
 - **Fetch parameters and result filters live in different places.** A form holds what needs a new fetch (date range, owner, location) and its submit button. A toolbar directly above the results holds what narrows rows already loaded: toggles, segmented filters, the visible-of-total count, and actions that use the results. Mixed together, the user cannot tell which controls need the submit button, and result actions read as part of the search.
@@ -188,7 +188,7 @@ When one or more items are selected, mass actions appear. They disappear when no
 - Filter count badge on the filter button when filters are active: `Filter (3)`
 
 ### Empty states
-- **No results from filter:** "No results for these filters. [Clear filters]" — do not show a generic empty state
+- **No results from filter:** "No results for these filters. [Clear filters]" - do not show a generic empty state
 - **Genuinely empty collection:** show a call to action for the first item: "No projects yet. [Create project]"
 
 ---
@@ -197,31 +197,31 @@ When one or more items are selected, mass actions appear. They disappear when no
 
 Search is how users find one thing in a large set, so it must feel **instant and recognisable**.
 
-**Suggest from the first keystrokes.** Start returning results after **1 character, at most 2–3** — don't make the user finish typing or press enter to see anything. Results appear live in a dropdown as they type.
+**Suggest from the first keystrokes.** Start returning results after **1 character, at most 2-3** - don't make the user finish typing or press enter to see anything. Results appear live in a dropdown as they type.
 
 **Make a valid result recognisable at a glance.** The whole point of a suggestion list is that the user spots *their* result in a long list without reading every row. Give each result more than a bare string:
 - a **thumbnail/image** where the item is visual (products, people, files),
-- the **category / area** it belongs to, and for typed domains (products, spare parts, services) a **category icon and colour** so the type is legible before the label is read — find good brand-appropriate icons for these result types (see [[brand-visual-language]]),
+- the **category / area** it belongs to, and for typed domains (products, spare parts, services) a **category icon and colour** so the type is legible before the label is read - find good brand-appropriate icons for these result types (see [[brand-visual-language]]),
 - the matched text **highlighted** within the result.
 
-This is a *soft* rule — not every search needs images — but the goal is constant: **the user should identify the right result out of many, fast** (reading is time — see [[ui-density]]).
+This is a *soft* rule - not every search needs images - but the goal is constant: **the user should identify the right result out of many, fast** (reading is time - see [[ui-density]]).
 
 **Give a way out to the full results.** The dropdown is a shortcut, not the whole story. Always offer "See all results for '…'", opening a **full listing/results page with filters** (the collection patterns above) for when the quick suggestions aren't enough.
 
-**Fully keyboard-navigable.** Arrow keys move through suggestions, Enter selects, Esc closes — and it must all work by mouse too. Search is a power-user path; don't force the hand off the keyboard.
+**Fully keyboard-navigable.** Arrow keys move through suggestions, Enter selects, Esc closes - and it must all work by mouse too. Search is a power-user path; don't force the hand off the keyboard.
 
 ---
 
 ## Table-Specific Patterns
 
 ### Sticky header
-Table column headers stick to the top when scrolling vertically — users must always be able to see what each column means.
+Table column headers stick to the top when scrolling vertically - users must always be able to see what each column means.
 
 ### Sticky first column
-For wide tables that scroll horizontally, the first column (row identifier — name, ID) sticks to the left.
+For wide tables that scroll horizontally, the first column (row identifier - name, ID) sticks to the left.
 
 ### Row actions
-Per-row actions (Edit, Delete, View) appear on hover in the rightmost column. Do not show them at rest — they add visual noise.
+Per-row actions (Edit, Delete, View) appear on hover in the rightmost column. Do not show them at rest - they add visual noise.
 
 ```
 [Name]  [Status]  [Date]  [Amount]          ← at rest
@@ -234,7 +234,7 @@ Per-row actions (Edit, Delete, View) appear on hover in the rightmost column. Do
 For enterprise data tables: allow columns to be resized by dragging the header border, and reordered by dragging the header. Persist the layout.
 
 ### Empty cells
-**Never write "N/A".** It is English jargon that does not translate, it means two things at once (not applicable, not available), and repeated down a column it outweighs the real values. Mark a missing value with an en dash (–) in muted text, aligned like the column's values, with a text alternative such as "No value" for screen readers. A hyphen reads as a minus sign next to numbers.
+**Never write "N/A".** It is English jargon that does not translate, it means two things at once (not applicable, not available), and repeated down a column it outweighs the real values. Mark a missing value with an en dash (-) in muted text, aligned like the column's values, with a text alternative such as "No value" for screen readers. A hyphen reads as a minus sign next to numbers.
 
 Leave a cell blank only in a sparse column where most rows have nothing; elsewhere a blank reads as still loading or broken. Zero is a value: write `0`. Where the reason matters, say it in words: "Not measured", "Pending". A value that exists but is unknown may show "?"; even that says more than "N/A".
 
@@ -242,17 +242,17 @@ Leave a cell blank only in a sparse column where most rows have nothing; elsewhe
 
 ## Making Numbers Comprehensible
 
-A raw number is hard to judge on its own — "1,240 users" or "€48,900" means little without a reference. Presenting data is not just laying out the figures; it is giving them the context and shape that let a user *understand* them at a glance.
+A raw number is hard to judge on its own - "1,240 users" or "€48,900" means little without a reference. Presenting data is not just laying out the figures; it is giving them the context and shape that let a user *understand* them at a glance.
 
-**Give a number a reference.** A bare value communicates far less than a value with a baseline: a percentage, an average, a delta, or a comparison. "€48,900 (+12% vs last month)", "72% of target", "avg 3.4 per user" — the comparison is usually the insight, not the absolute figure.
+**Give a number a reference.** A bare value communicates far less than a value with a baseline: a percentage, an average, a delta, or a comparison. "€48,900 (+12% vs last month)", "72% of target", "avg 3.4 per user" - the comparison is usually the insight, not the absolute figure.
 
 **Visualise when the story is a pattern.** Reach for a graph when the message is a **trend, distribution, comparison, or relationship** the eye reads faster than a column of digits. A single KPI can pair with a sparkline; a set of categories reads better as a bar chart than a table. A table is for looking up exact values; a chart is for seeing the shape.
 
-**Show time-series for anything that evolves.** If a value lives and changes over time — revenue, usage, a status history — present its trajectory, not just the current snapshot. A trend line answers "is this getting better or worse?" that a single number never can. Whenever something is time-dependent, consider showing its history alongside its current value.
+**Show time-series for anything that evolves.** If a value lives and changes over time - revenue, usage, a status history - present its trajectory, not just the current snapshot. A trend line answers "is this getting better or worse?" that a single number never can. Whenever something is time-dependent, consider showing its history alongside its current value.
 
-**Choose familiar, widely-understood chart types.** Pick the chart most people already know how to read — **bar, line, area, pie/donut, sparkline** — over an exotic one (sankey, radar, chord, treemap) that looks impressive but forces the user to *learn the chart* before they can read the data. Novelty in a chart type is a tax on comprehension; spend it only when a common chart genuinely can't tell the story.
+**Choose familiar, widely-understood chart types.** Pick the chart most people already know how to read - **bar, line, area, pie/donut, sparkline** - over an exotic one (sankey, radar, chord, treemap) that looks impressive but forces the user to *learn the chart* before they can read the data. Novelty in a chart type is a tax on comprehension; spend it only when a common chart genuinely can't tell the story.
 
-**Limited, semantic palette.** At most 2–3 colours; each means exactly one thing (see [[status-colors-and-errors]]). Traffic-light or a known convention (brand-primary vs grey). Need more distinctions? Add a legend or tooltips — don't add hues. Chart craft (axes, legends, light/dark): `dataviz`. Pairing a chart with its table: [[coordinated-data-views]].
+**Limited, semantic palette.** At most 2-3 colours; each means exactly one thing (see [[status-colors-and-errors]]). Traffic-light or a known convention (brand-primary vs grey). Need more distinctions? Add a legend or tooltips - don't add hues. Chart craft (axes, legends, light/dark): `dataviz`. Pairing a chart with its table: [[coordinated-data-views]].
 
 **One indicator carries everything about its subject; one legend per page at most.** Whatever describes a single thing (a row, a card, a record) goes into the same indicator: values and identifiers sit on the marks themselves, not in a bar plus a list or key beside it. When space runs out, degrade in steps: full label, then the number only, then nothing visible, with the full text in a tooltip or `title` and in the accessible name. A page has at most one legend, for what the marks cannot say themselves (usually what the colours mean); no mini-legends inside rows, cards or components. A key beside each indicator makes the eye travel and hold the mapping in memory, and a side list repeats the indicator in words.
 
@@ -288,7 +288,7 @@ In a list of records, the record's name opens it. A link stretched over the whol
 
 - [ ] Is a view mode toggle offered when data has both visual and detail dimensions?
 - [ ] Is the user's preferred view persisted across sessions?
-- [ ] Is the entire row or card the selection hit area — not just the checkbox?
+- [ ] Is the entire row or card the selection hit area - not just the checkbox?
 - [ ] Does selected state use a subtle background colour shift (`--color-primary-subtle`)?
 - [ ] Does a mass action toolbar appear when items are selected, showing the selection count?
 - [ ] Do destructive mass actions require a confirm dialog naming the item count?
@@ -304,7 +304,7 @@ In a list of records, the record's name opens it. A link stretched over the whol
 - [ ] Are chart types familiar and widely understood (bar/line/area/pie/sparkline) rather than exotic ones that must be learned before they can be read?
 - [ ] Are controls that need a new fetch in the form, and filters on loaded rows in a toolbar above the results?
 - [ ] Does a one-way row action show its result in the slot the button occupied, instead of a separate status column?
-- [ ] Does a chart/infographic use a small, semantic palette (≤2–3 colours, traffic-light or a known convention), with each colour meaning one thing — and a legend/tooltips where the encoding isn't self-evident?
+- [ ] Does a chart/infographic use a small, semantic palette (≤2-3 colours, traffic-light or a known convention), with each colour meaning one thing - and a legend/tooltips where the encoding isn't self-evident?
 - [ ] Where the line is the unit, is grouping shown as header rows in one flat table rather than accordions?
 - [ ] Is every percentage on screen a measured share of something, never a surfaced internal score?
 - [ ] Does every bar or cell in a repeated mark carry a value, with the mark removed otherwise?

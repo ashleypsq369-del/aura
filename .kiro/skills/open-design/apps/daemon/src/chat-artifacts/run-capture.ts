@@ -8,7 +8,7 @@
 // gone. Everything here happens while the daemon still owns the moment.
 //
 // TWO SOURCES, ONE STORE. When the media path already froze the exact provider
-// bytes for this run, that snapshot is reused verbatim — no re-read of a path
+// bytes for this run, that snapshot is reused verbatim - no re-read of a path
 // that may have been overwritten in between. Only paths with no such snapshot
 // are copied from disk, and those copies are fingerprint-guarded.
 
@@ -60,7 +60,7 @@ export interface CaptureRunChatArtifactsReport {
    * A bare `failed` total cannot separate "the store is full" from "the file
    * changed under us", and those are different incidents: the first is a
    * capacity problem, the second means the bytes on disk stopped being the
-   * bytes this turn produced — a timing failure that silently fabricates
+   * bytes this turn produced - a timing failure that silently fabricates
    * history if anything downstream decides to substitute the current file.
    * `source_changed` therefore has to be countable on its own.
    */
@@ -193,7 +193,7 @@ export async function captureRunChatArtifactSnapshots(
  *
  * This is the seam the first-viewport renderer plugs into. It is separate from
  * capture because the cover may arrive after the turn ends, while the ORIGINAL
- * bytes never may — those must be frozen at the chokepoint or not at all.
+ * bytes never may - those must be frozen at the chokepoint or not at all.
  */
 export async function attachChatArtifactThumbnail(
   deps: ChatArtifactCaptureDeps,
@@ -329,7 +329,7 @@ function projectIdForRef(
 
 /**
  * Project-relative, forward-slash, containment-checked. Returns null for any
- * path that is not genuinely inside the project root — an absolute stray must
+ * path that is not genuinely inside the project root - an absolute stray must
  * never become a snapshot label or a storage input.
  */
 function projectRelativePath(projectRoot: string, absolute: string): string | null {

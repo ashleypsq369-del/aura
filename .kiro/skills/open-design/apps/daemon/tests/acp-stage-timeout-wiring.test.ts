@@ -14,10 +14,10 @@ import { startServer } from '../src/server.js';
  *
  * The unit spec next door (`acp-stage-timeout-classification.test.ts`) pins the
  * frame and the classifier. This one pins the three surfaces a user and the
- * chat card actually read — the SSE `error` frame recorded in the run's events
+ * chat card actually read - the SSE `error` frame recorded in the run's events
  * log, the run's own `GET /api/runs/:id` classification, and the `status:error`
  * event persisted onto the assistant message that a reloaded conversation
- * renders from — because those are what decided whether the reported user got
+ * renders from - because those are what decided whether the reported user got
  * a Retry button or the generic 「任务执行失败」 card.
  */
 
@@ -67,7 +67,7 @@ const AGENT_BIN = 'kimi';
 /** Short enough to keep the suite fast, long enough to clear the handshake. */
 const STAGE_TIMEOUT_MS = 1_200;
 
-describe('ACP stage timeout — server wiring', () => {
+describe('ACP stage timeout - server wiring', () => {
   const originalEnv = snapshotEnv();
   let started: StartedServer | null = null;
   let binDir = '';
@@ -110,7 +110,7 @@ describe('ACP stage timeout — server wiring', () => {
     expect(run.status).toBe('failed');
 
     // 1. The SSE frame the live client reads. Every ACP `error` frame this run
-    //    produced must be named — a client holding only the frame (the daemon's
+    //    produced must be named - a client holding only the frame (the daemon's
     //    classification rides the later `end` frame) has nothing else to go on.
     const events = await readRunEvents(run.eventsLogPath);
     const errorFrames = events
@@ -122,7 +122,7 @@ describe('ACP stage timeout — server wiring', () => {
       expect(frame.error?.retryable).toBe(true);
     }
 
-    // 2. The run's own classification — what `statusBody` and the SSE `end`
+    // 2. The run's own classification - what `statusBody` and the SSE `end`
     //    frame carry, and what the live chat stamps onto the failed message.
     expect(run.failureCategory).toBe('timeout');
     expect(run.failureDetail).toBe('timeout');
@@ -143,7 +143,7 @@ describe('ACP stage timeout — server wiring', () => {
 
 /**
  * A CLI that completes the ACP handshake and then never answers
- * `session/prompt` — the shape of the reported run, where a `Write` tool call
+ * `session/prompt` - the shape of the reported run, where a `Write` tool call
  * produced zero bytes until the watchdog gave up.
  */
 async function writeStallingAcpCliShim(dir: string, name: string): Promise<string> {

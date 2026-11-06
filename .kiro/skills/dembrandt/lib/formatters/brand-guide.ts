@@ -2,7 +2,7 @@
  * Brand Guide HTML builder
  *
  * Pure, dependency-light renderer that turns extraction/token data into a
- * standalone A4-print HTML document. No browser dependency — safe to import
+ * standalone A4-print HTML document. No browser dependency - safe to import
  * in any runtime (Vercel, edge, browser). PDF rendering lives in pdf.ts.
  */
 
@@ -58,7 +58,7 @@ function sortByHue(colors) {
 function pickCoverBg(colors) {
   const gathered = gatherColors(colors);
   if (!gathered.length) return '#0a0a0a';
-  // Check if brand colors are mostly light — if so, use white bg so they pop
+  // Check if brand colors are mostly light - if so, use white bg so they pop
   let lightCount = 0;
   for (const c of gathered.slice(0, 6)) {
     const rgb = hexToRgb(c.hex);
@@ -87,7 +87,7 @@ function formatCmyk(hexStr) {
   return `${c}, ${m}, ${y}, ${Math.round(k * 100)}`;
 }
 
-/** Chroma proxy: max-min of RGB channels (0–255). Higher = more saturated. */
+/** Chroma proxy: max-min of RGB channels (0-255). Higher = more saturated. */
 function chroma(hexStr) {
   const rgb = hexToRgb(hexStr);
   if (!rgb) return 0;
@@ -182,7 +182,7 @@ export function buildHTML(data, options: { version?: string } = {}) {
     return `@import url('https://fonts.googleapis.com/css2?${params}&display=swap');`;
   })();
 
-  // Detect if the logo is light (white on transparent) — needs dark background
+  // Detect if the logo is light (white on transparent) - needs dark background
   const logoUrl = getLogoImageUrl(data);
   const logoIsLight = (() => {
     if (!data.logo) return false;
@@ -366,7 +366,7 @@ export function buildHTML(data, options: { version?: string } = {}) {
     border-bottom: 2px solid #1a1a1a;
   }
 
-  /* Colors — block layout */
+  /* Colors - block layout */
   .color-hero {
     border-radius: 10px;
     padding: 24px 28px;
@@ -422,7 +422,7 @@ export function buildHTML(data, options: { version?: string } = {}) {
     font-weight: 600;
   }
 
-  /* Typography — full page specimens */
+  /* Typography - full page specimens */
   .type-specimen {
     margin-bottom: 48px;
     break-inside: avoid;
@@ -594,7 +594,7 @@ export function buildHTML(data, options: { version?: string } = {}) {
     max-height: 100px;
   }
 
-  /* Logo misuse — "don't" grid */
+  /* Logo misuse - "don't" grid */
   .misuse-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -963,7 +963,7 @@ ${(() => {
     redirected ? `Requested ${escapeHtml(meta.requestedUrl)}, redirected to ${escapeHtml(data.url)}` : '',
     crawlNote,
     Array.isArray(meta.timeouts) && meta.timeouts.length
-      ? `${meta.timeouts.length} timeout${meta.timeouts.length === 1 ? '' : 's'} during extraction: ${escapeHtml(meta.timeouts.join(', '))} — some values may be incomplete`
+      ? `${meta.timeouts.length} timeout${meta.timeouts.length === 1 ? '' : 's'} during extraction: ${escapeHtml(meta.timeouts.join(', '))} - some values may be incomplete`
       : ''
   ].filter(Boolean);
 
@@ -996,7 +996,7 @@ export function getLogoImageUrl(data) {
     try {
       const decoded = decodeURIComponent(url);
       if (/\.(svg|png|jpg|jpeg|webp|gif|avif)(?=[?&]|$)/i.test(decoded)) return true;
-    } catch { /* malformed encoding — fall through */ }
+    } catch { /* malformed encoding - fall through */ }
     return false;
   };
 

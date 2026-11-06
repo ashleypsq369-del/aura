@@ -1,4 +1,4 @@
-// Phase 4 / spec §10.1 / plan §3.EE1 — pipeline simulator.
+// Phase 4 / spec §10.1 / plan §3.EE1 - pipeline simulator.
 //
 // Pure helper that walks a `PluginPipeline` against a caller-
 // supplied signal stream and reports per-stage convergence
@@ -41,7 +41,7 @@ export interface SimulatePipelineInput {
   signals:  StageSignalProvider | UntilSignals;
   // Per-stage iteration cap. Defaults to 10. The simulator clamps
   // 'repeat: true' stages at this ceiling even when the until
-  // expression never satisfies — surfaces a 'never converges'
+  // expression never satisfies - surfaces a 'never converges'
   // bug as a hit-cap event rather than an infinite loop.
   iterationCap?: number;
 }

@@ -57,7 +57,7 @@ const BODY = `
 
 const FIXTURE =
   `<!doctype html><html lang="en"><head>` +
-  `<title>Example — design system extraction</title>` +
+  `<title>Example - design system extraction</title>` +
   `<meta name="description" content="Extract design tokens from any website in one command.">` +
   `</head><body style="margin:0">${BODY}</body></html>`;
 
@@ -80,7 +80,7 @@ after(async () => {
 });
 
 test('meta title and description are collected', () => {
-  assert.deepEqual(textFor('meta-title'), ['Example — design system extraction']);
+  assert.deepEqual(textFor('meta-title'), ['Example - design system extraction']);
   assert.deepEqual(textFor('meta-description'), ['Extract design tokens from any website in one command.']);
 });
 

@@ -1,8 +1,8 @@
-/**
- * About.jsx — Project Aura About Page
+﻿/**
+ * About.jsx - Project Aura About Page
  * Public route: /about
  * Same layout pattern as TermsOfService / PrivacyPolicy.
- * Brief, honest, human — not a slide deck.
+ * Brief, honest, human - not a slide deck.
  */
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -21,7 +21,7 @@ export default function About() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }}>
 
-      {/* ── Header — same pattern as Terms/Privacy ─────────────────── */}
+      {/* ── Header - same pattern as Terms/Privacy ─────────────────── */}
       <div style={{
         background: 'linear-gradient(135deg,#071520 0%,#0b3028 50%,#0d9488 100%)',
         padding: '32px 24px 40px',
@@ -68,7 +68,7 @@ export default function About() {
             <h2 style={{ fontSize:15, fontWeight:700, color:'var(--text-900)', margin:0 }}>What is Project Aura?</h2>
           </div>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:0 }}>
-            Project Aura is a web platform built to help coordinate palliative care — the kind of care
+            Project Aura is a web platform built to help coordinate palliative care - the kind of care
             given to people living with serious, life-limiting illness. It connects the people involved
             in a patient's care: clinicians, caregivers, patients themselves, and family members,
             all in one place. Clinicians get AI-powered risk alerts. Families stay informed.
@@ -91,14 +91,14 @@ export default function About() {
           </div>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:0 }}>
             Ghana has no dedicated palliative ward in any of its teaching hospitals. Around 48% of
-            Ghanaians pay for healthcare entirely out-of-pocket, and the tools clinicians use today —
-            where they exist at all — are fragmented, expensive, and built for other healthcare systems
+            Ghanaians pay for healthcare entirely out-of-pocket, and the tools clinicians use today -
+            where they exist at all - are fragmented, expensive, and built for other healthcare systems
             entirely. None of the platforms we reviewed had clinical AI. None had bereavement support.
             None were built with the Ghanaian context in mind.
           </p>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:'10px 0 0' }}>
             We built Aura as our final-year project to demonstrate that a small team, with the right
-            tools, can build something genuinely useful for this gap — and to contribute a working
+            tools, can build something genuinely useful for this gap - and to contribute a working
             prototype that future developers or healthcare organisations could build on.
           </p>
         </motion.div>
@@ -150,13 +150,13 @@ export default function About() {
           </div>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:0 }}>
             Patients or caregivers log symptoms and vitals through the app. Eight AI models
-            (trained using XGBoost) process that data continuously and flag risks — pain, respiratory
+            (trained using XGBoost) process that data continuously and flag risks - pain, respiratory
             distress, anxiety, depression, falls risk, and more. Crucially, every AI alert comes
             with an explanation: a chart showing which factors drove the score, so clinicians can
             decide whether to act rather than just being handed a number.
           </p>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:'10px 0 0' }}>
-            Appointments, medications, clinical assessments, care plans, messages — all live in one
+            Appointments, medications, clinical assessments, care plans, messages - all live in one
             place. The platform works offline and syncs when the connection returns, which matters
             in areas with unreliable internet.
           </p>
@@ -216,7 +216,7 @@ export default function About() {
           </p>
         </motion.div>
 
-        {/* Bottom CTA — same as Terms "I Understand" block */}
+        {/* Bottom CTA - same as Terms "I Understand" block */}
         <motion.div {...fade(6)} style={{
           padding:'20px 24px', background:'rgba(13,148,136,0.06)',
           borderRadius:14, border:'1.5px solid rgba(13,148,136,0.2)', textAlign:'center',

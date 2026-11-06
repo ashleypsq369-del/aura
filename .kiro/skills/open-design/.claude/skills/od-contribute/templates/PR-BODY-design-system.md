@@ -1,6 +1,6 @@
 ## What this PR adds
 
-A new Design System — **{{BRAND_NAME}}** — at `design-systems/{{BRAND_SLUG}}/DESIGN.md`.
+A new Design System - **{{BRAND_NAME}}** - at `design-systems/{{BRAND_SLUG}}/DESIGN.md`.
 
 > {{PITCH}}
 
@@ -19,7 +19,7 @@ A new Design System — **{{BRAND_NAME}}** — at `design-systems/{{BRAND_SLUG}}
 
 ## What's in this PR
 
-- `design-systems/{{BRAND_SLUG}}/DESIGN.md` — the canonical design brief OD loads.
+- `design-systems/{{BRAND_SLUG}}/DESIGN.md` - the canonical design brief OD loads.
 - Any supporting assets in `design-systems/{{BRAND_SLUG}}/` are referenced from `DESIGN.md`.
 
 ## Checklist

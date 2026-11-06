@@ -27,7 +27,7 @@ import {
 } from '../src/integrations/vela.js';
 
 // A well-formed rich workspace-context body, as returned inside flows such as
-// invite continuation — a team member on a BYOK provider.
+// invite continuation - a team member on a BYOK provider.
 const B_TEAM_CONTEXT = {
   userId: 'auth-user-1',
   appUserId: 'app-user-1',
@@ -132,7 +132,7 @@ describe('mapVelaWorkspaceContext', () => {
     expect(mapped).not.toBeNull();
     // The team workspace IS the team scope → teamId mirrors workspaceId.
     expect(mapped?.teamId).toBe('ws-team-1');
-    // BYOK provider must not disable team features — provider is carried verbatim.
+    // BYOK provider must not disable team features - provider is carried verbatim.
     expect(mapped?.providerMode).toBe('personal_byok');
     // B's permissions are trusted (passed through), not re-derived.
     expect(mapped?.permissions.canWriteSyncedFiles).toBe(true);
@@ -160,7 +160,7 @@ describe('mapVelaWorkspaceContext', () => {
       workspaceName: "Ada's workspace",
     });
     expect(mapped?.workspaceName).toBe("Ada's workspace");
-    // `teamName` stays team-only — it is the team switcher's field.
+    // `teamName` stays team-only - it is the team switcher's field.
     expect(mapped?.teamName).toBeUndefined();
   });
 
@@ -1388,8 +1388,8 @@ describe('createVelaWorkspaceContextProvider exact member count enrichment', () 
 // recvqbbQ4yljNC: a member removed from a team workspace stayed pinned to it
 // forever. `current()` must tell apart "the directory CONFIRMS the pin is
 // gone" (safe to clear + fall back) from "B could not be asked right now"
-// (must NOT touch the pin — a network blip must never evict an online user).
-describe('createVelaWorkspaceContextProvider — stale pin recovery', () => {
+// (must NOT touch the pin - a network blip must never evict an online user).
+describe('createVelaWorkspaceContextProvider - stale pin recovery', () => {
   const DIRECTORY_WITHOUT_TEAM = {
     items: [
       {
@@ -1594,7 +1594,7 @@ describe('createVelaWorkspaceContextProvider — stale pin recovery', () => {
     }
   });
 
-  it('does NOT clear the pin when the directory request fails (network error) — preserve on B outage', async () => {
+  it('does NOT clear the pin when the directory request fails (network error) - preserve on B outage', async () => {
     const pin = statefulPin('ws-team-1');
     const fetchImpl = vi.fn(async (url: URL | string, init?: RequestInit) => {
       const method = init?.method ?? 'GET';
@@ -1614,7 +1614,7 @@ describe('createVelaWorkspaceContextProvider — stale pin recovery', () => {
     const context = await provider.current({});
 
     // A transient B outage degrades to null for this one read, exactly like
-    // the existing network-error contract — but the pin itself must survive
+    // the existing network-error contract - but the pin itself must survive
     // untouched so the NEXT successful poll can still recover the real
     // workspace instead of having already been evicted to a fallback.
     expect(context).toBeNull();

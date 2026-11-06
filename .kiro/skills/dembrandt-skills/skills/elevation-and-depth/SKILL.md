@@ -43,7 +43,7 @@ retrieval:
 
 # Elevation and Depth
 
-Elevation uses shadow and layering to communicate that an element sits above the base surface — giving UI a sense of physical depth. Combined with border-radius, it creates the tactile quality that makes cards graspable, modals clearly floating, and dropdowns feel like they've appeared on top of content.
+Elevation uses shadow and layering to communicate that an element sits above the base surface - giving UI a sense of physical depth. Combined with border-radius, it creates the tactile quality that makes cards graspable, modals clearly floating, and dropdowns feel like they've appeared on top of content.
 
 ## The Elevation Scale
 
@@ -66,12 +66,12 @@ A subtle shadow on a white surface can sometimes "wash out," making the edge of 
 - **Effect:** The border defines the physical boundary of the card, while the shadow provides the depth. Together, they make the component "pop" with much higher clarity than using either alone.
 
 ### Hover Needs a Defined Edge
-A card that shifts **background colour on hover** must have a defined edge — a border, shadow, or clear radius boundary. Without one, the shift has no shape and reads as a stray fill, not a highlighted card. **On a borderless, flat card, a background-change hover is forbidden** — use a border or a shadow (elevation) on hover instead.
+A card that shifts **background colour on hover** must have a defined edge - a border, shadow, or clear radius boundary. Without one, the shift has no shape and reads as a stray fill, not a highlighted card. **On a borderless, flat card, a background-change hover is forbidden** - use a border or a shadow (elevation) on hover instead.
 
 ### Subtle Gradients for Depth
 Gradients can be used to bring "liveliness" to an interface and reinforce the sense of elevation.
 - **The Lighting Metaphor:** A subtle linear gradient (top-to-bottom) that is slightly lighter at the top mimics natural overhead lighting. This makes a surface feel more physical and elevated than a flat fill.
-- **The 5% Rule:** Keep the gradient extremely subtle. A change in lightness of only 2–5% between the top and bottom is usually enough. If the user can easily see where the gradient starts and ends, it is likely too heavy.
+- **The 5% Rule:** Keep the gradient extremely subtle. A change in lightness of only 2-5% between the top and bottom is usually enough. If the user can easily see where the gradient starts and ends, it is likely too heavy.
 - **Usage:** Apply to primary buttons, hero cards, and header sections to improve visual hierarchy and brand personality.
 
 ## Pairing Elevation with Border-Radius
@@ -81,11 +81,11 @@ Border-radius and shadow work together to define the character of a surface. The
 | Surface | Shadow | Border-Radius | Tone |
 |---|---|---|---|
 | Inline chip / tag | none | `--radius-full` (pill) | Flat, lightweight |
-| Card | `--shadow-sm` | `--radius-md` (8–12px) | Graspable, contained |
+| Card | `--shadow-sm` | `--radius-md` (8-12px) | Graspable, contained |
 | Dropdown / popover | `--shadow-md` | `--radius-md` (8px) | Floating, contextual |
-| Modal / dialog | `--shadow-lg` | `--radius-lg` (12–16px) | Prominent, focused |
+| Modal / dialog | `--shadow-lg` | `--radius-lg` (12-16px) | Prominent, focused |
 | Toast / notification | `--shadow-md` | `--radius-md` | Ephemeral, above content |
-| Button | none or `--shadow-xs` | **consistent across all buttons** — see below |
+| Button | none or `--shadow-xs` | **consistent across all buttons** - see below |
 
 ### A Thick Accent Border and a Radius Never Share an Edge
 
@@ -93,7 +93,7 @@ Do not run a heavy coloured border along one side of a rounded box. Borders mite
 
 ## Border-Radius Consistency Rule
 
-**Button border-radius must not vary within a product.** All buttons — primary, secondary, destructive, ghost — use the same radius token. Varying radius between button types breaks visual consistency and implies a semantic difference that does not exist.
+**Button border-radius must not vary within a product.** All buttons - primary, secondary, destructive, ghost - use the same radius token. Varying radius between button types breaks visual consistency and implies a semantic difference that does not exist.
 
 ```css
 /* Correct: one radius for all buttons */
@@ -104,11 +104,11 @@ Do not run a heavy coloured border along one side of a rounded box. Borders mite
 .btn-secondary { border-radius: 4px; }  /* ← breaks consistency */
 ```
 
-The button radius token is a brand decision — set it once, apply it everywhere.
+The button radius token is a brand decision - set it once, apply it everywhere.
 
 ## Text Shadow for Contrast and Separation
 
-`text-shadow` can lift text off a background without changing colours — useful when contrast is marginal or text sits on a photograph, gradient, or complex background.
+`text-shadow` can lift text off a background without changing colours - useful when contrast is marginal or text sits on a photograph, gradient, or complex background.
 
 The effect must be imperceptible as a shadow. If the user notices the shadow, it is too strong.
 
@@ -123,17 +123,17 @@ The effect must be imperceptible as a shadow. If the user notices the shadow, it
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
-/* White text on light background — use a dark shadow, not white */
+/* White text on light background - use a dark shadow, not white */
 .inverted-text {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
 }
 ```
 
 **Rules:**
-- Opacity: stay below `0.30` — above that it reads as a design choice rather than a refinement
-- Blur: `2–4px` maximum — higher values make text feel dirty
-- Offset: `0 1px` or `0 0` — directional offsets above 2px look like retro Web 2.0
-- Never use `text-shadow` to compensate for a contrast failure — fix the colour first. Use it only when colours are already close to passing and a nudge is needed, or when text sits on unpredictable imagery
+- Opacity: stay below `0.30` - above that it reads as a design choice rather than a refinement
+- Blur: `2-4px` maximum - higher values make text feel dirty
+- Offset: `0 1px` or `0 0` - directional offsets above 2px look like retro Web 2.0
+- Never use `text-shadow` to compensate for a contrast failure - fix the colour first. Use it only when colours are already close to passing and a nudge is needed, or when text sits on unpredictable imagery
 
 ## Dark Mode Shadows
 
@@ -151,8 +151,8 @@ Shadows are less visible on dark backgrounds. On dark surfaces, compensate with:
 - [ ] Is border-radius consistent across all button variants?
 - [ ] Do shadows feel subtle and diffuse rather than heavy and dark?
 - [ ] On dark surfaces, are card/panel edges visible through border or adjusted shadow?
-- [ ] Is elevation used to communicate layering — not just decoration?
-- [ ] If gradients are used, are they subtle (2–5% lightness change) and used to reinforce the lighting/elevation metaphor?
+- [ ] Is elevation used to communicate layering - not just decoration?
+- [ ] If gradients are used, are they subtle (2-5% lightness change) and used to reinforce the lighting/elevation metaphor?
 
 ## Common Anti-Patterns
 

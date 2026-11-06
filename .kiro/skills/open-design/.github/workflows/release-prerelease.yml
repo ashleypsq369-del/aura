@@ -33,7 +33,7 @@ on:
         type: boolean
         default: true
       mac_sign_mode:
-        description: "macOS signing depth for both mac lanes. 'sign-only' (default) codesigns with the Apple certificate but skips the Apple notary round-trip, which is minutes of waiting on Apple that no prerelease consumer needs. 'notarize' also notarizes and staples — use it for the last prerelease before a stable promotion, since stable ships notarized. 'no' skips signing entirely and will FAIL the stable promotion gate, which requires platforms.mac.signed == true."
+        description: "macOS signing depth for both mac lanes. 'sign-only' (default) codesigns with the Apple certificate but skips the Apple notary round-trip, which is minutes of waiting on Apple that no prerelease consumer needs. 'notarize' also notarizes and staples - use it for the last prerelease before a stable promotion, since stable ships notarized. 'no' skips signing entirely and will FAIL the stable promotion gate, which requires platforms.mac.signed == true."
         required: true
         type: choice
         options:
@@ -93,7 +93,7 @@ on:
         type: boolean
         default: true
       mac_sign_mode:
-        description: "macOS signing depth for both mac lanes: no / sign-only / notarize. Defaults to sign-only — codesigned but not sent to Apple's notary service. Use notarize for the last prerelease before a stable promotion. 'no' fails the stable promotion gate, which requires platforms.mac.signed == true."
+        description: "macOS signing depth for both mac lanes: no / sign-only / notarize. Defaults to sign-only - codesigned but not sent to Apple's notary service. Use notarize for the last prerelease before a stable promotion. 'no' fails the stable promotion gate, which requires platforms.mac.signed == true."
         required: false
         type: string
         default: "sign-only"
@@ -134,7 +134,7 @@ on:
       # The code tests and the packaged mac/Windows smoke no longer run in this
       # workflow at all: they are dispatched into release-prerelease-tests.yml
       # and release-prerelease-smoke.yml, which have concurrency groups of their
-      # own. That is the whole point — a validation job that outlives `publish`
+      # own. That is the whole point - a validation job that outlives `publish`
       # used to hold this workflow open, and this workflow's concurrency group
       # is a single repository-wide string, so the next prerelease could not
       # even START until the last one's tests finished. Their results reach a
@@ -147,7 +147,7 @@ on:
         description: "Linux AppImage smoke outcome. Advisory; `skipped` unless vars.ENABLE_STABLE_LINUX is on."
         value: ${{ jobs.build_linux.outputs.smoke_result }}
       version_metadata_url:
-        description: "Public R2 URL of this build's version metadata.json. This is the authoritative \"did a package actually ship?\" signal — it is non-empty only when the publish job wrote metadata. Do NOT read the overall workflow conclusion for that: it now goes red whenever an advisory test job fails, even though the package shipped."
+        description: "Public R2 URL of this build's version metadata.json. This is the authoritative \"did a package actually ship?\" signal - it is non-empty only when the publish job wrote metadata. Do NOT read the overall workflow conclusion for that: it now goes red whenever an advisory test job fails, even though the package shipped."
         value: ${{ jobs.publish.outputs.version_metadata_url }}
       mac_arm64_url:
         description: "macOS arm64 dmg download URL."
@@ -196,7 +196,7 @@ env:
   # backend serves the feature (WORKSPACE_TEAM_ENABLED plus a configured
   # resource-hub blob store), so a prod build ships the transports enabled.
   # An empty amr_profile still yields no origin, which the packaged gate treats
-  # as dormant — a build that forgets the profile degrades to local-only rather
+  # as dormant - a build that forgets the profile degrades to local-only rather
   # than pointing at an unknown backend.
   #
   # Origins stay in repository secrets rather than literals: the non-prod AMR
@@ -308,7 +308,7 @@ jobs:
     # This workflow holds ONE repository-wide concurrency group
     # (`open-design-release-prerelease`, cancel-in-progress: false), so any job
     # that outlives `publish` keeps that group held and stops the NEXT
-    # prerelease from STARTING — not from publishing, from starting. The test
+    # prerelease from STARTING - not from publishing, from starting. The test
     # suites were doing exactly that. Handing them to workflows of their own
     # costs this pipeline the seconds it takes to POST a dispatch.
     #
@@ -380,7 +380,7 @@ jobs:
             -f "origin_run_id=$GITHUB_RUN_ID" \
             -f "expect_tests=$EXPECT_TESTS" \
             -f "expect_smoke=$EXPECT_SMOKE"
-          # Only reached when the dispatch above actually succeeded — the helper
+          # Only reached when the dispatch above actually succeeded - the helper
           # exits non-zero on every ref it could not dispatch on, and `run:`
           # blocks stop at the first failure. Empty therefore covers every way
           # the card fails to start: the helper could not dispatch on any ref,
@@ -391,7 +391,7 @@ jobs:
       # ---- Fallback when the card never started --------------------------
       # `always()` so a failed dispatch above still reaches these; gated on the
       # checkout because both scripts come from the working tree. They run on
-      # every prerelease and stay silent on the healthy ones — the composer
+      # every prerelease and stay silent on the healthy ones - the composer
       # refuses to emit `alert=true` when the card was dispatched, which is the
       # same rule this repository cannot afford to get wrong: a fallback that
       # also posts on good days is just a second card.
@@ -400,7 +400,7 @@ jobs:
       # package exists, so it reports where the version metadata WILL appear
       # instead of claiming a publication verdict it cannot have yet. Once the
       # card workflow IS running, release-prerelease-card.yml's own
-      # `fallback_notice` job owns the rest of the lane — the two are mutually
+      # `fallback_notice` job owns the rest of the lane - the two are mutually
       # exclusive, so a release can never draw both.
       - name: Setup Node.js for the fallback notifier
         if: >-
@@ -437,10 +437,10 @@ jobs:
       - name: Fail loudly when the fallback bot is itself unconfigured
         # Both notification paths down at once is an incident of its own, and a
         # red job is the only channel left to say so. Only reachable on this
-        # repository: the composer above is scoped to it, so a fork — which has
-        # neither bot — leaves `alert` empty and never goes red for this.
+        # repository: the composer above is scoped to it, so a fork - which has
+        # neither bot - leaves `alert` empty and never goes red for this.
         # `always()` because the whole point is to speak after something
-        # broke — without it GitHub's implicit success() skips this step in
+        # broke - without it GitHub's implicit success() skips this step in
         # every run where an earlier step already failed. The outcome check
         # is the other half: never act on a composer that did not finish.
         if: >-
@@ -469,7 +469,7 @@ jobs:
     # prerelease exists so a person can install it and test it by hand;
     # automated CI is a parallel opinion about the same commit, not a valve on
     # delivery. Chaining the two meant a single flaky suite cost the team a
-    # whole day's package — the expensive failure mode, and the one this
+    # whole day's package - the expensive failure mode, and the one this
     # pipeline kept hitting. The suites still run on every prerelease, in
     # release-prerelease-tests.yml, where they can take as long as they like
     # without holding this workflow's concurrency group.
@@ -483,7 +483,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           ref: ${{ needs.metadata.outputs.commit }}
-          # Shallow — see the metadata job's checkout for why.
+          # Shallow - see the metadata job's checkout for why.
           fetch-depth: 1
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -627,7 +627,7 @@ jobs:
             --to all
             --json
           )
-          # Signing depth follows mac_sign_mode — see the primary mac arm64 build.
+          # Signing depth follows mac_sign_mode - see the primary mac arm64 build.
           case "${{ inputs.mac_sign_mode }}" in
             no) ;;
             sign-only) build_args+=(--signed) ;;
@@ -868,17 +868,17 @@ jobs:
           retention-days: 1
       # The packaged smoke used to run here, after the publish manifest. It now
       # runs in release-prerelease-smoke.yml against the DMG re-downloaded from
-      # R2 — closer to what a user installs, and off this workflow's
+      # R2 - closer to what a user installs, and off this workflow's
       # concurrency group entirely.
   build_mac_intel:
     name: Build prerelease mac intel x64
-    # Tests never gate delivery on this channel — see build_mac.
+    # Tests never gate delivery on this channel - see build_mac.
     needs: metadata
     # On by default, and switchable. Intel is this pipeline's critical path: it
     # runs on the slower macos-15-intel fleet and takes ~33 min against ~21 min
     # for every other platform. It still builds on every run, because the stable
     # promotion gate reads platforms.macIntel out of the prerelease metadata and
-    # an Intel-less prerelease simply cannot be promoted — see the
+    # an Intel-less prerelease simply cannot be promoted - see the
     # enable_mac_x64 input description and AGENTS.md "Release channel model".
     if: ${{ inputs.enable_mac_x64 }}
     runs-on: macos-15-intel
@@ -890,7 +890,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           ref: ${{ needs.metadata.outputs.commit }}
-          # Shallow — see the metadata job's checkout for why.
+          # Shallow - see the metadata job's checkout for why.
           fetch-depth: 1
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -967,7 +967,7 @@ jobs:
             --to all
             --json
           )
-          # Signing depth follows mac_sign_mode — see the primary mac arm64 build.
+          # Signing depth follows mac_sign_mode - see the primary mac arm64 build.
           case "${{ inputs.mac_sign_mode }}" in
             no) ;;
             sign-only) build_args+=(--signed) ;;
@@ -1005,7 +1005,7 @@ jobs:
             --to all
             --json
           )
-          # Signing depth follows mac_sign_mode — see the primary mac arm64 build.
+          # Signing depth follows mac_sign_mode - see the primary mac arm64 build.
           case "${{ inputs.mac_sign_mode }}" in
             no) ;;
             sign-only) build_args+=(--signed) ;;
@@ -1173,10 +1173,10 @@ jobs:
           path: ${{ runner.temp }}/release-platform-manifests/mac_x64.json
           if-no-files-found: error
           retention-days: 1
-      # Packaged smoke moved to release-prerelease-smoke.yml — see build_mac.
+      # Packaged smoke moved to release-prerelease-smoke.yml - see build_mac.
   build_win:
     name: Build prerelease win x64
-    # Tests never gate delivery on this channel — see build_mac.
+    # Tests never gate delivery on this channel - see build_mac.
     needs: metadata
     runs-on: windows-latest
     env:
@@ -1187,7 +1187,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           ref: ${{ needs.metadata.outputs.commit }}
-          # Shallow — see the metadata job's checkout for why.
+          # Shallow - see the metadata job's checkout for why.
           fetch-depth: 1
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -1197,7 +1197,7 @@ jobs:
       # store never paid for itself on Windows. Measured across four consecutive
       # prerelease runs: on a miss (3 of 4) it cost 100s / 66s / 43s in the
       # "Post Setup Node.js" save with no install speedup, and on the one hit it
-      # traded a 32s restore for a 36s faster install — a wash. Worse, it
+      # traded a 32s restore for a 36s faster install - a wash. Worse, it
       # competes for the repository's 10 GB Actions cache budget against the
       # per-lane tools-pack caches, which are worth ~11 min of build time each.
       # This is now the only release build job without it, which is exactly the
@@ -1239,7 +1239,7 @@ jobs:
           # green (pwsh -command does not propagate choco's exit code) and let
           # the build die on makensis half an hour later. Retry the install
           # and hard-fail HERE, with a clear message, if makensis still cannot
-          # be found — a red Setup NSIS step is diagnosable; a mid-build
+          # be found - a red Setup NSIS step is diagnosable; a mid-build
           # makensis error is not.
           function Test-Makensis {
             [bool]((Get-Command makensis.exe -ErrorAction SilentlyContinue) -or (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe"))
@@ -1382,7 +1382,7 @@ jobs:
       # The Windows update fixture and the packaged Windows smoke both moved
       # to release-prerelease-smoke.yml, which rebuilds the fixture there when
       # `full` coverage is requested and installs the setup.exe re-downloaded
-      # from R2 — see build_mac.
+      # from R2 - see build_mac.
       # Cache persistence is optional and runs outside this release workflow.
       - name: Defer Windows tools-pack cache save
         if: ${{ success() && (steps.win_tools_pack_cache_restore.outputs.cache-hit != 'true' || steps.win_tools_pack_build.outputs.cache_failed == 'true') }}
@@ -1394,7 +1394,7 @@ jobs:
 
   build_linux:
     name: Build prerelease linux x64
-    # Tests never gate delivery on this channel — see build_mac.
+    # Tests never gate delivery on this channel - see build_mac.
     needs: metadata
     if: ${{ vars.ENABLE_STABLE_LINUX == 'true' }}
     runs-on: ubuntu-latest
@@ -1408,7 +1408,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           ref: ${{ needs.metadata.outputs.commit }}
-          # Shallow — see the metadata job's checkout for why.
+          # Shallow - see the metadata job's checkout for why.
           fetch-depth: 1
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -1522,7 +1522,7 @@ jobs:
     # No test suite appears in `needs` or `if`, and none may be added.
     # prerelease is the internal channel: its job is to put a package in a
     # colleague's hands so a human can test it, and machine CI is a second,
-    # parallel signal about the same commit — not a valve on the first one. A
+    # parallel signal about the same commit - not a valve on the first one. A
     # flaky suite used to mean nobody got a build that day, which is a worse
     # outcome than shipping an internal package alongside a red test. The
     # suites now live in release-prerelease-tests.yml and the packaged smoke in
@@ -1574,12 +1574,12 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           ref: ${{ needs.metadata.outputs.commit }}
-          # Shallow — see the metadata job's checkout for why.
+          # Shallow - see the metadata job's checkout for why.
           fetch-depth: 1
       # The artifact downloads below run on the runner's own Node, and the pnpm
       # toolchain this job actually uses is set up further down, right before
       # `pnpm install`. The Setup Node.js that used to sit here was a second,
-      # redundant copy of that one — it paid for its own post-job step and
+      # redundant copy of that one - it paid for its own post-job step and
       # bought nothing.
       - name: Download mac prerelease publish manifest
         uses: actions/download-artifact@v8
@@ -1708,7 +1708,7 @@ jobs:
   dispatch_smoke:
     name: Dispatch packaged smoke
     # Packaged smoke needs a package, so unlike dispatch_validation this one
-    # waits for `publish` — but it only waits long enough to POST the dispatch.
+    # waits for `publish` - but it only waits long enough to POST the dispatch.
     # The smoke itself downloads the artifacts back out of R2 in
     # release-prerelease-smoke.yml, which is both closer to what a user installs
     # and completely off this workflow's concurrency group.
@@ -1724,7 +1724,7 @@ jobs:
     # is per job and is NOT inherited: `publish` carries the same prefix and so
     # runs, but its own dependents are still downstream of build_linux's skip.
     # Without a break of its own this job never evaluates the conditions below
-    # at all — GitHub's implicit `success()` skips it first.
+    # at all - GitHub's implicit `success()` skips it first.
     #
     # That is how release-prerelease-smoke.yml went 0-for-N. In run
     # 34149795952 publish succeeded, version_metadata_url was published, and

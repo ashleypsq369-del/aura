@@ -43,7 +43,7 @@ retrieval:
 
 # User Flows and Guided Paths
 
-Related features that belong together should be experienced as a single coherent journey — not as separate screens the user has to navigate between manually. A well-designed flow feels inevitable: each step leads naturally to the next, the user always knows where they are and what comes next, and the path fits the product's information hierarchy.
+Related features that belong together should be experienced as a single coherent journey - not as separate screens the user has to navigate between manually. A well-designed flow feels inevitable: each step leads naturally to the next, the user always knows where they are and what comes next, and the path fits the product's information hierarchy.
 
 ## When to Guide vs. When to Let Users Explore
 
@@ -53,7 +53,7 @@ Related features that belong together should be experienced as a single coherent
 | Complex task that benefits from breaking into stages | Wizard with progress indicator |
 | Feature discovery across an existing product | Contextual tooltips or coach marks |
 | User returning to complete something they started | Resume prompt with clear re-entry point |
-| Open-ended exploration (dashboard, settings) | Free navigation — do not force a flow |
+| Open-ended exploration (dashboard, settings) | Free navigation - do not force a flow |
 
 Only guide when the task genuinely has a natural order. Forcing a wizard onto a non-sequential task frustrates users who already know what they want.
 
@@ -76,7 +76,7 @@ Step title
 [Back]  [Continue →]
 ```
 
-**Step indicator:** Always show the user where they are in the sequence and how many steps remain. A progress bar or numbered steps both work — numbered steps are clearer when step names are meaningful.
+**Step indicator:** Always show the user where they are in the sequence and how many steps remain. A progress bar or numbered steps both work - numbered steps are clearer when step names are meaningful.
 
 **Back navigation:** Always available. Users must be able to go back and change earlier decisions without losing their progress on later steps.
 
@@ -85,7 +85,7 @@ Step title
 **Exit path:** Make it clear how to abandon the flow without losing partial progress. Autosave drafts where possible.
 
 ### Step design principles
-- One primary decision or input group per step — don't overfill steps
+- One primary decision or input group per step - don't overfill steps
 - Step titles should describe the user's goal, not the system's: "Your delivery address" not "Address input"
 - Optional steps should be clearly marked and skippable
 - The final step should show a summary before committing
@@ -94,19 +94,19 @@ Step title
 
 Purchase flows have an additional constraint: every unnecessary step reduces conversion. Design for the shortest path to completion.
 
-- Collect only what is required at each stage — defer optional information
+- Collect only what is required at each stage - defer optional information
 - Show a persistent order summary so the user always sees what they are buying
 - Surface trust signals near payment steps (security badges, return policy)
-- Confirmation step before payment: show total, delivery, items — one last review
+- Confirmation step before payment: show total, delivery, items - one last review
 - Post-purchase: immediate confirmation with clear next steps ("Your order is confirmed. We'll email you when it ships.")
 
 ## Fitting Flows into the Product Hierarchy
 
-A guided path should feel like it belongs to the product — not like it has opened a separate experience.
+A guided path should feel like it belongs to the product - not like it has opened a separate experience.
 
 - The visual style, typography, and components inside a flow should match the rest of the product
 - Navigation chrome (sidebar, top nav) can be hidden during a flow to reduce distraction, but the brand header should remain visible
-- After completing a flow, return the user to a meaningful place in the hierarchy — not to a generic home screen
+- After completing a flow, return the user to a meaningful place in the hierarchy - not to a generic home screen
 - Deep-linking into a flow should work: a user who arrives at step 3 via email link should see step 3, not step 1
 
 ## Review Checklist

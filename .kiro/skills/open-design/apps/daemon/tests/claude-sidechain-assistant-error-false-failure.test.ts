@@ -8,7 +8,7 @@
 // frames stream inline carrying a non-null top-level `parent_tool_use_id`.
 // Claude-code surfaces an API failure (overload / connection reset, later
 // retried internally or absorbed by the main agent) as an assistant wrapper
-// with an `error` field — the daemon's own comment at server.ts:7133-7139
+// with an `error` field - the daemon's own comment at server.ts:7133-7139
 // documents the `assistant error:"unknown"` shape for connection drops. When
 // that failure happens inside a sub-agent's turn, the frame carries BOTH
 // `error` and `parent_tool_use_id`, and the parser emits a fatal-looking

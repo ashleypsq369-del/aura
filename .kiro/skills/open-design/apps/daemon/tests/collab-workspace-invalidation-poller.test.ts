@@ -8,7 +8,7 @@ import type {
 import { createProactiveContentPull } from '../src/collab/proactive-content-pull.js';
 import { createWorkspaceInvalidationPoller } from '../src/collab/workspace-invalidation-poller.js';
 
-// Minimal team context — `isTeamContext` only reads `workspaceType`/`teamId`,
+// Minimal team context - `isTeamContext` only reads `workspaceType`/`teamId`,
 // and `contextSignature` stringifies the whole object, so a partial cast is a
 // faithful stand-in for the diff logic under test.
 function teamContext(overrides: Partial<WorkspaceCollabContext> = {}): WorkspaceCollabContext {
@@ -227,7 +227,7 @@ describe('workspace invalidation poller', () => {
     h.projects = null; // read fails this cycle
     await h.poller.pollOnce();
     expect(h.types()).toEqual([]);
-    // Recovery with the SAME list must not emit either — baseline was preserved.
+    // Recovery with the SAME list must not emit either - baseline was preserved.
     h.projects = [project('p1')];
     await h.poller.pollOnce();
     expect(h.types()).toEqual([]);

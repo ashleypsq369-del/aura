@@ -12,15 +12,15 @@ import { startServer } from '../src/server.js';
 // details」", then shows only the daemon's generic sentence plus a pile of ids.
 //
 // Reproduced from a real run (`.od/runs/60d39320-…/events.jsonl`): the agent
-// wrote the precise cause to stderr —
+// wrote the precise cause to stderr -
 //   credentials-local: the value for "version" in …/.credentials.yaml must be a string
-// — the daemon captured and persisted that stderr event, and then emitted an
+// - the daemon captured and persisted that stderr event, and then emitted an
 // `error` frame carrying only "DeepSeek Harness profile exited without a
 // terminal result." Nothing downstream ever joined the two, so the captured
 // cause was unreachable from any UI.
 //
 // This asserts the STORED assistant message (what a reload reads) carries the
-// bounded, redacted stderr tail alongside the generic detail — and that a
+// bounded, redacted stderr tail alongside the generic detail - and that a
 // failure with no stderr grows no such field.
 
 const FIXTURE_PATH = path.join(
@@ -180,7 +180,7 @@ function restoreEnv(env: Record<string, string | undefined>): void {
 }
 
 // Fake Claude CLI: emits the init frame, replays the recorded agent crash dump
-// onto stderr, then dies non-zero — the shape of the real DSH-profile failure.
+// onto stderr, then dies non-zero - the shape of the real DSH-profile failure.
 // The dump is read from the fixture file rather than inlined so the bytes stay
 // verbatim (it contains `${…}` sequences a template literal would eat).
 async function writeStderrEchoClaude(dir: string, name: string): Promise<string> {

@@ -3,7 +3,7 @@
  * streaming**, without ever holding or forwarding the arguments themselves.
  *
  * Claude streams a tool call's JSON arguments as `input_json_delta` fragments
- * that split at arbitrary byte offsets — a real recording splits one path
+ * that split at arbitrary byte offsets - a real recording splits one path
  * across four fragments and closes it inside a fifth that has already started
  * on `"content"`:
  *
@@ -20,7 +20,7 @@
  * ## Why not `JSON.parse` in a try/catch
  *
  * A truncated fragment is not a JSON document, so the retry-until-it-parses
- * shape would re-parse a growing buffer on every fragment — quadratic in the
+ * shape would re-parse a growing buffer on every fragment - quadratic in the
  * argument size, and it cannot answer at all until the LAST byte arrives, which
  * is the exact moment this scanner is trying to beat.
  *
@@ -39,29 +39,29 @@
  *  - the tool is not a file-writing tool (`Bash`, `Grep`, … are never scanned);
  *  - the arguments exceed {@link SCAN_BUDGET_BYTES} without yielding a path.
  *
- * A key that appears late still resolves correctly — just late enough that the
+ * A key that appears late still resolves correctly - just late enough that the
  * head start is small or gone. Silence is the designed outcome, never a guess:
  * a half-read path must never reach the UI.
  *
  * ## 顺带把行数数出来(W120)
  *
  * 光有文件名,那一行在剩下的一百多秒里是**静止**的。同一趟扫描顺手数一下正文里
- * 的换行,行上就能一边写一边长 —— 代价是每个字符多一次比较,而这些字符本来就已经
+ * 的换行,行上就能一边写一边长 -- 代价是每个字符多一次比较,而这些字符本来就已经
  * 在 `claude-stream` 的缓冲里躺着了,不是新开的一遍扫描。
  *
  * 三条约束写死在这里,别在别处重新发明:
  *
  *  · **口径必须和落定后完全一致。** 落定那一行的 `+N` 由
  *    `apps/web/src/runtime/chat/format.ts` 的 `diffStat` 算出,Write 分支是
- *    `content.split('\n').length` —— 也就是**换行数 + 1**(结尾换行多算一行,
+ *    `content.split('\n').length` -- 也就是**换行数 + 1**(结尾换行多算一行,
  *    空串算 1 行)。这里逐字用同一条,所以 `tool_use` 落地时数字不会跳。
  *  · **只给整份写下去的工具数**({@link WHOLE_FILE_WRITE_TOOLS})。`Edit` 落定后
- *    是 `+N −M`,而 `−M` 要等 `old_string` 数完才知道 —— 在途给不出来就一半都不
+ *    是 `+N −M`,而 `−M` 要等 `old_string` 数完才知道 -- 在途给不出来就一半都不
  *    显示,绝不拿 0 冒充。`MultiEdit` / `replace` 同理:`diffStat` 对它们本来
  *    就返回 null,在途也必须跟着不报。
  *  · **必须节流。** 每来一个分片就报一次 = 把心跳变成广播。攒够
  *    {@link COUNT_REPORT_STEP_CHARS} 个正文字符、而且行数确实变了才报一次;
- *    正文那个字符串一收尾则**立刻补报最后一个值**,不管攒了多少 —— 这一条就是
+ *    正文那个字符串一收尾则**立刻补报最后一个值**,不管攒了多少 -- 这一条就是
  *    「结尾不许跳数字」的实现。
  *
  * 路径没收尾之前一个数字都不报:行上还没有那一行,报了也没处放。
@@ -81,13 +81,13 @@ const FILE_WRITE_TOOLS: ReadonlySet<string> = new Set([
  * Argument keys that hold that file's path, most specific first.
  *
  * `path` is only consulted for the tools above. It is a search ROOT on `Grep`
- * and `Glob`, and those tools never reach this scanner — which is the whole
+ * and `Glob`, and those tools never reach this scanner - which is the whole
  * reason the tool gate comes before the key gate.
  */
 const PATH_KEYS: readonly string[] = ['file_path', 'notebook_path', 'filePath', 'path'];
 
 /**
- * 会把**整份正文**写下去的工具 —— 只有这些的行数在途数得出来。
+ * 会把**整份正文**写下去的工具 -- 只有这些的行数在途数得出来。
  *
  * 这份名单必须和 `format.ts` 的 `diffStat` 里 `name === 'write' || name ===
  * 'write_file'` 那一支**逐字对应**。多一个,在途就会报一个落定后算不出来的数字;
@@ -102,9 +102,9 @@ const CONTENT_KEY = 'content';
  * 节流步长:每攒够这么多**正文字符**才允许报一次行数。
  *
  * 定这个值的依据是真机那一次:27.6KB 的页面写了 140 秒,约 200 字符/秒。512 字符
- * 折合 **2.6 秒一次** —— 秒表每秒在跳,行数每两三秒长一格,读起来是「在长」而不是
+ * 折合 **2.6 秒一次** -- 秒表每秒在跳,行数每两三秒长一格,读起来是「在长」而不是
  * 「在闪」。事件量同时被两头卡住:整趟最多 `正文字节 / 512 + 1` 条(27.6KB → 55 条),
- * 而且每个分片最多产出一条,所以**永远少于** `tool_input_delta` 的条数 ——
+ * 而且每个分片最多产出一条,所以**永远少于** `tool_input_delta` 的条数 --
  * 那一条本来就每个分片发一次(同一次写入约 700 条),这一档是它的零头。
  */
 const COUNT_REPORT_STEP_CHARS = 512;
@@ -137,7 +137,7 @@ export interface ToolInputPathScanner {
   /**
    * Feed the next raw argument fragment.
    *
-   * Returns what this fragment newly established — the decoded path the first
+   * Returns what this fragment newly established - the decoded path the first
    * time one is provably complete, and/or a fresh line count when the throttle
    * lets one through. `null` means this fragment established nothing, so a
    * caller that emits on a non-null return never emits noise.
@@ -161,7 +161,7 @@ export function createToolInputPathScanner(toolName: unknown): ToolInputPathScan
  *
  * Only depth-1 keys are considered: a `file_path` buried inside a nested object
  * is not this call's target. Whether a quote opens a key or a value is decided
- * by the last significant character — `{` or `,` means a key follows — which is
+ * by the last significant character - `{` or `,` means a key follows - which is
  * what keeps a `content` value containing `{`, `}` or `"file_path"` from being
  * mistaken for structure.
  */
@@ -186,11 +186,11 @@ class JsonPathScanner implements ToolInputPathScanner {
   private expectPathValue = false;
   private expectContentValue = false;
 
-  /** 路径已经报过了 —— 之后再出现同名键也不再报第二次。 */
+  /** 路径已经报过了 -- 之后再出现同名键也不再报第二次。 */
   private pathFound = false;
   /** 正文那个字符串已经开过头(才轮得到数行)。 */
   private contentSeen = false;
-  /** 正文那个字符串已经收尾 —— 该补报最后一个值了。 */
+  /** 正文那个字符串已经收尾 -- 该补报最后一个值了。 */
   private contentClosed = false;
   private newlines = 0;
   private charsSinceReport = 0;
@@ -203,7 +203,7 @@ class JsonPathScanner implements ToolInputPathScanner {
     this.scanned += fragment.length;
     /*
      * 预算只用来拦「扫了一大堆什么都没找到」的 blob。一旦路径已出、或者已经在数
-     * 正文,结构就已经明确了,继续扫的代价是每字符一次比较 —— 而
+     * 正文,结构就已经明确了,继续扫的代价是每字符一次比较 -- 而
      * `claude-stream` 本来就在把同一批字节往 `state.input` 上攒,这里没有第二份
      * 内存。中途停手反而会让最后那个数字对不上落定值,那正是这一单要防的事。
      */
@@ -233,7 +233,7 @@ class JsonPathScanner implements ToolInputPathScanner {
   /**
    * 现在该不该报一个行数,报多少。
    *
-   * 路径还没收尾就一律不报 —— 行上还没有那一行。正文收尾时**无条件补报**,
+   * 路径还没收尾就一律不报 -- 行上还没有那一行。正文收尾时**无条件补报**,
    * 这一条保证「在途最后一个行数 == 落定后 `diffStat` 的 `+N`」。
    */
   private dueLineCount(): number | undefined {
@@ -378,7 +378,7 @@ class JsonPathScanner implements ToolInputPathScanner {
   private append(ch: string): void {
     /*
      * 正文**一个字符都不留**:只把换行数出来,顺便记一下攒了多少字符给节流用。
-     * 这里是「原始入参不出 daemon」那条红线在扫描器里的落点 —— 27KB 的页面
+     * 这里是「原始入参不出 daemon」那条红线在扫描器里的落点 -- 27KB 的页面
      * 进来,留下的是两个整数。
      */
     if (this.capture === 'content') {
@@ -389,7 +389,7 @@ class JsonPathScanner implements ToolInputPathScanner {
     if (this.capture === 'none' || this.overflowed) return;
     const limit = this.capture === 'key' ? MAX_KEY_CHARS : MAX_PATH_CHARS;
     if (this.buf.length >= limit) {
-      // Too long to be what we are looking for — stop buffering, keep scanning
+      // Too long to be what we are looking for - stop buffering, keep scanning
       // structure so the rest of the document still parses correctly.
       this.buf = '';
       this.overflowed = true;

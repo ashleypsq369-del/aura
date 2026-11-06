@@ -44,7 +44,7 @@ const FAKE_VELA = fileURLToPath(new URL('./fixtures/fake-vela.mjs', import.meta.
 // emits its first token. The old 400ms sat too close to cold-start on a loaded
 // host, so the retry occasionally tripped its own watchdog and the spec flaked
 // (#5721; same watchdog path as #5292). The first attempt stalls for ~60s, so
-// any value trips it deterministically — sizing the budget well above any
+// any value trips it deterministically - sizing the budget well above any
 // realistic subprocess cold-start removes the race. 40 consecutive runs of both
 // stall cases were clean at 3000ms; 400ms flaked ~1/8.
 const STALL_WATCHDOG_TIMEOUT_MS = '3000';
@@ -693,8 +693,8 @@ if (attempts === 0) {
   // Retry attempt: a healthy child that keeps emitting (feeding its own
   // watchdog via raw stdout bytes) well past the previous attempt's
   // SIGTERM/SIGKILL escalation window, then finishes successfully. On buggy
-  // main the stale escalation timers signal the shared run.child — i.e. THIS
-  // child — and kill it mid-work, failing the run.
+  // main the stale escalation timers signal the shared run.child - i.e. THIS
+  // child - and kill it mid-work, failing the run.
   process.stdout.write(JSON.stringify({ type: 'system', subtype: 'init', model: 'claude-crossgen' }) + '\\n');
   let ticks = 0;
   const hb = setInterval(() => {

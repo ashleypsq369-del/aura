@@ -1,4 +1,4 @@
-// Phase 4 / plan §3.Y1 — searchInstalledPlugins().
+// Phase 4 / plan §3.Y1 - searchInstalledPlugins().
 
 import { describe, expect, it } from 'vitest';
 import type { InstalledPluginRecord, PluginManifest } from '@open-design/contracts';
@@ -31,7 +31,7 @@ const make = (id: string, over: Partial<{ title: string; description: string; ta
   } as PluginManifest,
 });
 
-describe('searchInstalledPlugins — free-text query', () => {
+describe('searchInstalledPlugins - free-text query', () => {
   const plugins = [
     make('exact-id', { title: 'Generic title', tags: ['utility'] }),
     make('beta',     { title: 'Awesome card builder', tags: ['ui'] }),
@@ -71,7 +71,7 @@ describe('searchInstalledPlugins — free-text query', () => {
   });
 });
 
-describe('searchInstalledPlugins — structural filters', () => {
+describe('searchInstalledPlugins - structural filters', () => {
   const plugins = [
     make('a', { taskKind: 'figma-migration', mode: 'extract' }),
     make('b', { taskKind: 'code-migration',  mode: 'extract' }),
@@ -116,7 +116,7 @@ describe('searchInstalledPlugins — structural filters', () => {
   });
 });
 
-describe('searchInstalledPlugins — query + filters together', () => {
+describe('searchInstalledPlugins - query + filters together', () => {
   const plugins = [
     make('alpha', { taskKind: 'code-migration', tags: ['ui'] }),
     make('beta',  { taskKind: 'figma-migration', tags: ['ui'] }),
@@ -134,7 +134,7 @@ describe('searchInstalledPlugins — query + filters together', () => {
   });
 });
 
-describe('searchInstalledPlugins — output shape', () => {
+describe('searchInstalledPlugins - output shape', () => {
   it('reports total + matched fields per entry', () => {
     const r = searchInstalledPlugins({
       plugins: [make('beta', { title: 'Card builder' })],

@@ -4,7 +4,7 @@ import type { ConversationsResponse, ConversationResponse, ProjectResponse, Chat
 // Verifies the headless `od plugin install → project create → run start`
 // loop end-to-end at the HTTP layer (the same paths the CLI subcommands
 // from §3.F1 / §3.F2 hit). Without an actual agent backend we can't
-// assert "first ND-JSON event has kind='pipeline_stage_started'" — that
+// assert "first ND-JSON event has kind='pipeline_stage_started'" - that
 // requires the run-time pipeline runner being wired into the live agent
 // loop. What we can lock today:
 //
@@ -163,7 +163,7 @@ async function readSseUntilSuccess(resp: Response) {
   throw new Error('install stream ended without success');
 }
 
-describe('Plan §8 e2e-3 (entry slice) — headless install → project → run', () => {
+describe('Plan §8 e2e-3 (entry slice) - headless install → project → run', () => {
   it('duplicates a bundled HTML example into a project without starting a run', async () => {
     const listResp = await fetch(`${baseUrl}/api/plugins`);
     expect(listResp.status).toBe(200);
@@ -820,7 +820,7 @@ process.stdin.on('end', () => {
     }
   }, 60_000);
 
-  // Full §8 e2e-3 contract — once the pipeline runner fires on a run
+  // Full §8 e2e-3 contract - once the pipeline runner fires on a run
   // with a declared pipeline, the first ND-JSON event should be
   // `pipeline_stage_started`. Plan §3.I1 wires firePipelineForRun into
   // POST /api/runs so any plugin run with `od.pipeline.stages[*]`
@@ -875,7 +875,7 @@ process.stdin.on('end', () => {
     // sourceKind='local', which is trusted by default (trust.ts
     // defaultTrustForRecord). The trusted default grant therefore already
     // includes pipeline:*, so the snapshot is created without any ephemeral
-    // grantCaps — exercising the stored/default grant path directly.
+    // grantCaps - exercising the stored/default grant path directly.
     const createResp = await fetch(`${baseUrl}/api/projects`, {
       method:  'POST',
       headers: { 'content-type': 'application/json' },
@@ -919,7 +919,7 @@ process.stdin.on('end', () => {
       const statusBody = (await statusResp.json()) as { id: string };
       expect(statusBody.id).toBe(runBody.runId);
 
-      // Read the run's event buffer through the headerless SSE stream — the
+      // Read the run's event buffer through the headerless SSE stream - the
       // server pipes every record through res.write, so reading the body until
       // 'end' or pipeline_stage_completed surfaces the first events. We don't
       // actually wait for end; we just look for the stage-start anchor.

@@ -136,9 +136,9 @@ function asPublicGrant(stored: StoredToolTokenGrant): ToolTokenGrant {
 // non-plugin run and we let it through (back-compat). When the grant
 // carries a snapshot id, we apply the §9 / §5.3 rule:
 //
-//   - trusted / bundled plugins implicitly carry connector:* — accept.
+//   - trusted / bundled plugins implicitly carry connector:* - accept.
 //   - restricted plugins must list `connector:<id>` in
-//     pluginCapabilitiesGranted — otherwise reject with TOOL_OPERATION_DENIED.
+//     pluginCapabilitiesGranted - otherwise reject with TOOL_OPERATION_DENIED.
 //
 // Used by `/api/tools/connectors/execute` (defense in depth, c). Phase 4
 // extends this to `connector:*` glob support if the spec patches §5.3 to
@@ -156,7 +156,7 @@ export function checkConnectorAccess(
   }
   return {
     ok: false,
-    reason: `restricted plugin (snapshot ${grant.pluginSnapshotId}) lacks "connector:${connectorId}" — grant via /api/plugins/:id/trust before retrying`,
+    reason: `restricted plugin (snapshot ${grant.pluginSnapshotId}) lacks "connector:${connectorId}" - grant via /api/plugins/:id/trust before retrying`,
   };
 }
 

@@ -1,5 +1,5 @@
-/**
- * BarthelIndexForm.jsx — Activities of Daily Living (Barthel Index)
+﻿/**
+ * BarthelIndexForm.jsx - Activities of Daily Living (Barthel Index)
  * Redesigned: PageHeader + clean option cards + live score bar
  */
 import { useState } from 'react';
@@ -59,7 +59,7 @@ const barthelItems = [
   ]},
   { key:'transfers',       label:'Transfers (Bed/Chair)',Icon:BedDouble, options:[
     { value:0,  label:'Unable',       desc:'No sitting balance' },
-    { value:5,  label:'Major help',   desc:'1–2 people, physical' },
+    { value:5,  label:'Major help',   desc:'1-2 people, physical' },
     { value:10, label:'Minor help',   desc:'Verbal or physical' },
     { value:15, label:'Independent',  desc:'No help needed' },
   ]},

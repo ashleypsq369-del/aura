@@ -1,5 +1,5 @@
-/**
- * ProviderRegister — 5-step professional registration wizard
+﻿/**
+ * ProviderRegister - 5-step professional registration wizard
  * Public route: /provider-register
  * Uses the same InputGroup/inputWrap/IconSlot/VALIDATORS pattern as Register.jsx
  * Steps: Account -> Service Type -> Profile -> Assessment -> Documents & Submit
@@ -66,7 +66,7 @@ const STEP_TITLES = [
 ];
 
 const STEP_SUBTITLES = [
-  'Tell us about you — all information is kept secure and private',
+  'Tell us about you - all information is kept secure and private',
   'Your assessment questions will be tailored to this specific role',
   'Your experience, qualifications, and location',
   'Scenario-based questions to assess your palliative care knowledge',
@@ -537,7 +537,7 @@ function StepServiceType({ form, set, types }) {
                     )}
                   </div>
 
-                  {/* Right — checkmark or chevron */}
+                  {/* Right - checkmark or chevron */}
                   <div style={{ flexShrink:0 }}>
                     {sel ? (
                       <motion.div

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
@@ -36,7 +36,7 @@ export default function Profile() {
     new_password: '',
     confirm_password: ''});
 
-  // ── Avatar upload — uses /api/profile/avatar which saves to UserExtended ──
+  // ── Avatar upload - uses /api/profile/avatar which saves to UserExtended ──
   const handleAvatarUpload = async (file) => {
     if (!file) return;
     const allowed = ['image/jpeg','image/png','image/webp'];
@@ -243,7 +243,7 @@ export default function Profile() {
               </div>
 
               <form onSubmit={handleProfileSubmit} className="p-4 space-y-4">
-                {/* Profile picture — direct upload to /api/profile/avatar */}
+                {/* Profile picture - direct upload to /api/profile/avatar */}
                 <div>
                   <label className="block text-xs font-bold mb-2" style={{ color:'var(--text-600)' }}>Profile Picture</label>
                   <div className="flex items-center gap-4">

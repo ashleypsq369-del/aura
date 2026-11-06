@@ -60,7 +60,7 @@ test('classifyContextByPosition: deep bottom is footer, middle is body', () => {
 });
 
 test('classifyContextByPosition: short pages never mislabel body as footer', () => {
-  // top just past the fold on a 900px page — dh-1200 is negative, so not footer
+  // top just past the fold on a 900px page - dh-1200 is negative, so not footer
   assert.equal(classifyContextByPosition(600, 900), 'body');
 });
 

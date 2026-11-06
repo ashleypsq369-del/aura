@@ -712,7 +712,7 @@ describe('preview comment agent payload', () => {
 
   // PR #4105 QA: /api/runs accepts commentAttachments from any client, so a
   // screenshot-less visual attachment with filePath/elementId but no usable
-  // anchor (pagePosition collapses to 0,0,0x0; no selector) must be dropped —
+  // anchor (pagePosition collapses to 0,0,0x0; no selector) must be dropped -
   // rendering it would hard-scope the agent onto fields that identify no
   // region, steering it to edit an arbitrary part of the file.
   it('drops a screenshot-less visual annotation whose position is missing or zero-size', () => {

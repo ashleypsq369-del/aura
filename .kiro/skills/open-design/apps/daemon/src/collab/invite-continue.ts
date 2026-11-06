@@ -9,7 +9,7 @@ import { mapVelaWorkspaceContext } from './vela-workspace-context.js';
 // session (never a client-supplied one) and consumes the one-time continuation on
 // B, which finalizes the membership and returns the current workspace context so
 // the client can switch into the team workspace. Any failure degrades to a typed
-// outcome the route maps onto HTTP — it never throws into the caller.
+// outcome the route maps onto HTTP - it never throws into the caller.
 
 const DEFAULT_TIMEOUT_MS = 8_000;
 

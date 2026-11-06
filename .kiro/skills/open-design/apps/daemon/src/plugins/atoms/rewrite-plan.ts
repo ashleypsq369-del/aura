@@ -1,21 +1,21 @@
-// Phase 7 entry slice / spec §20.3 / §21.3.2 — rewrite-plan atom.
+// Phase 7 entry slice / spec §20.3 / §21.3.2 - rewrite-plan atom.
 //
 // SKILL.md fragment ships at plugins/_official/atoms/rewrite-plan/.
 // Given a project cwd that already has code/index.json (from
 // code-import) + an optional code/tokens.json (from design-extract),
 // the runner produces a heuristic ownership classification and a
 // per-component step list. The narrative `plan.md` is intentionally
-// short — it's a scaffold the agent overwrites once the LLM-driven
+// short - it's a scaffold the agent overwrites once the LLM-driven
 // stage runs; the heuristic baseline gives subsequent stages
 // (`patch-edit` / `diff-review` / `build-test`) an audit trail to
 // reference even if the LLM step is skipped or fails.
 //
 // Ownership tiers (spec §11.5.1 / §20.3):
-//   leaf   — single-component leaf files (Button.tsx, Card.css)
-//   shared — shared infrastructure (hooks/, lib/, utils/)
-//   route  — page-level / route entry points (app/page.tsx,
+//   leaf   - single-component leaf files (Button.tsx, Card.css)
+//   shared - shared infrastructure (hooks/, lib/, utils/)
+//   route  - page-level / route entry points (app/page.tsx,
 //            pages/index.tsx, src/app/(group)/page.tsx)
-//   shell  — top-level layout / framework boundaries
+//   shell  - top-level layout / framework boundaries
 //            (layout.tsx, _app.tsx, providers/, root css)
 //
 // The classifier keeps false-positive `shell` rare: only files that
@@ -150,7 +150,7 @@ function classifyOne(file: string): OwnershipTier {
   if (ROUTE_DIR_HINT.test(file) && /^layout\.[tj]sx?$/.test(base)) return 'shell';
   if (SHARED_DIR_HINT.test(file)) return 'shared';
   if (COMPONENT_DIR_HINT.test(file)) return 'leaf';
-  // Files at the repo root that aren't shell are usually config — keep them
+  // Files at the repo root that aren't shell are usually config - keep them
   // as `shared` so the patch-edit gate insists on `risk: 'medium'+'.
   if (!file.includes('/')) return 'shared';
   return 'leaf';
@@ -298,7 +298,7 @@ function renderNarrative(args: {
   lines.push('## Steps');
   lines.push('');
   for (const step of args.steps) {
-    lines.push(`### ${step.id} — risk: ${step.risk}`);
+    lines.push(`### ${step.id} - risk: ${step.risk}`);
     lines.push('');
     lines.push(step.rationale);
     if (step.files.length > 0) {

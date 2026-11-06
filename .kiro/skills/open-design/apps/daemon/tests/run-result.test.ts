@@ -90,7 +90,7 @@ describe('deriveRunErrorCode', () => {
 
   it('falls back to AGENT_TERMINATED_UNKNOWN when neither signal nor non-zero exit is available', () => {
     // This is the shape produced when `acpSession.hasFatalError()` is
-    // true even though the child exited cleanly (code=0, no signal) —
+    // true even though the child exited cleanly (code=0, no signal) -
     // see `child.on('close', ...)` in server.ts. Without this fallback,
     // those failures would still blank out on PostHog.
     expect(
@@ -127,7 +127,7 @@ describe('deriveRunErrorCode', () => {
   });
 
   it('treats empty-string errorCode as "missing" so the fallback chain still kicks in', () => {
-    // Defensive — `readString` in runs.ts trims and null-checks, but
+    // Defensive - `readString` in runs.ts trims and null-checks, but
     // any future caller passing an empty string would otherwise emit a
     // blank `error_code` field and reintroduce the original symptom.
     expect(

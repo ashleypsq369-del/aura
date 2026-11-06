@@ -287,7 +287,7 @@ function handleOpenCodeEvent(obj: unknown, onEvent: StreamEventHandler, state: P
     // them as proper `error` events so server.ts's `sendAgentEvent` wrapper
     // can flip the run to `failed` and forward a visible SSE error to the
     // chat UI. Previously we downgraded these to `type:'raw'`, which is not
-    // rendered as an assistant message — the run looked like a fast clean
+    // rendered as an assistant message - the run looked like a fast clean
     // success while the user actually got nothing back. See issue #691.
     //
     // Shape mirrors the qoder-stream contract (`{type, message, raw}`) so
@@ -427,7 +427,7 @@ function handleGeminiEvent(obj: unknown, onEvent: StreamEventHandler, state: Par
 // Antigravity `agy --output-format stream-json` (agy >= 1.1.8). Every frame
 // carries an `event` discriminator: `init` once, `step_update` per
 // conversation step (closed-vocabulary `step_type`: user_input,
-// agent_response, tool, checkpoint, subagent — plus `error_message`, seen in
+// agent_response, tool, checkpoint, subagent - plus `error_message`, seen in
 // recorded streams), then one terminal `result`. Shapes follow agy's headless
 // docs and recorded agy 1.3.1 output (tests/fixtures/antigravity-stream-json).
 // Frames without `event` fall back to the Gemini-CLI JSONL branch, which some
@@ -738,7 +738,7 @@ function emitCursorTextDelta(text: string, onEvent: StreamEventHandler, state: P
   // Timestamped assistant events WITHOUT `model_call_id` are cursor-agent's
   // real-time incremental deltas (`--stream-partial-output`): the final turn
   // text is the in-order concatenation of every such delta. Emit each one
-  // verbatim — do NOT dedupe by content. Legitimately repeated deltas
+  // verbatim - do NOT dedupe by content. Legitimately repeated deltas
   // (`"ha"`, `"ha"` -> `"haha"`) or a delta that happens to be a prefix of
   // earlier text are real content, not duplicates; content-based prefix or
   // equality checks would silently drop them. Duplicate suppression and
@@ -754,7 +754,7 @@ function emitCursorTextDelta(text: string, onEvent: StreamEventHandler, state: P
  * CURRENT turn. A terminal replay (either a `model_call_id` message or a
  * non-timestamped final assistant message) carries the full text for the
  * current turn only, so it must be compared against
- * `cursorTextSoFar.slice(cursorTurnStart)` — NOT the whole cross-turn buffer,
+ * `cursorTextSoFar.slice(cursorTurnStart)` - NOT the whole cross-turn buffer,
  * which would miss the current-turn prefix on later turns and re-append the
  * whole replay (duplicate output like "secondsecond turn").
  *
@@ -788,7 +788,7 @@ function handleCursorEvent(obj: unknown, onEvent: StreamEventHandler, state: Par
 
   if (obj.type === 'assistant' && obj.message) {
     // Cursor sends a final assistant message that replays the full text for
-    // the current turn — either tagged with `model_call_id`, or (fallback)
+    // the current turn - either tagged with `model_call_id`, or (fallback)
     // as a non-timestamped terminal assistant message. Both are reconciled
     // against the current turn's emitted text via reconcileCursorTurnReplay.
     if (typeof obj.model_call_id === 'string') {
@@ -799,7 +799,7 @@ function handleCursorEvent(obj: unknown, onEvent: StreamEventHandler, state: Par
     const text = extractCursorText(obj.message);
     if (!text) return false;
     if (typeof obj.timestamp_ms === 'number') {
-      // Incremental streaming chunk within a turn — accumulate as usual.
+      // Incremental streaming chunk within a turn - accumulate as usual.
       emitCursorTextDelta(text, onEvent, state);
       return true;
     }
@@ -875,7 +875,7 @@ function emitCodexReasoningItem(
  *   {"type":"item.started","item":{"id":"item_3","type":"file_change",
  *     "changes":[{"path":"…/page.html","kind":"add"}],"status":"in_progress"}}
  *
- * That frame really does carry a path and a kind and nothing else — but it is
+ * That frame really does carry a path and a kind and nothing else - but it is
  * only ONE of the two codex wires, and no longer the shipping one.
  * `codex exec --json` still sends exactly the above on codex-cli 0.151.0
  * (probed 2026-09-03, the same build as the app-server probe below), and
@@ -891,7 +891,7 @@ function emitCodexReasoningItem(
  * own recorded fixture `tests/fixtures/codex-app-server/turn-app-server.jsonl`
  * has carried one since the transport landed. It was thrown away one layer up,
  * in `codex-app-server/normalize.ts`, which rebuilt the change as `{path,
- * kind}` to feed this handler — so from here the wire looked unchanged and this
+ * kind}` to feed this handler - so from here the wire looked unchanged and this
  * comment kept reading as true. Codex file rows therefore showed elapsed time
  * where the same row under Claude showed `+N −M`.
  *
@@ -902,14 +902,14 @@ function emitCodexReasoningItem(
  * One item can carry SEVERAL changes (writing an artifact plus its brand spec
  * is one item with two paths), so every change becomes its own call under a
  * derived id `<item id>#<index>`. The chat row model is one file per row, and
- * the web dedupes `tool_use` by id — a shared id would collapse the batch
+ * the web dedupes `tool_use` by id - a shared id would collapse the batch
  * into a single row and hide the rest.
  *
  * The emitted pair is the canonical Write/Edit shape (`file_path` in the
  * input) that `apps/web/src/runtime/chat/tool-kind.ts` already resolves to
  * 「新建」/「改写」 plus a file button, so nothing downstream needs a new event
  * kind. When a patch is present its two line counts ride along under
- * `od_diff_stat` and the patch itself is dropped here — see
+ * `od_diff_stat` and the patch itself is dropped here - see
  * `codexChangeDiffStat`. When it is absent (`exec --json`) the input keeps its
  * old single-key shape, `diffStat` returns null, and the row shows elapsed time
  * rather than a fabricated `+N −M`.
@@ -949,8 +949,8 @@ interface CodexDiffStat {
  *   Write  added = content.split('\n').length,  removed = 0
  *   Edit   added = new_string lines,            removed = old_string lines
  *
- * An `add` change's `diff` IS the file's whole text — codex sends the content
- * with no `+` prefixes at all — so `add` uses the Write expression verbatim,
+ * An `add` change's `diff` IS the file's whole text - codex sends the content
+ * with no `+` prefixes at all - so `add` uses the Write expression verbatim,
  * trailing-newline quirk included: a five-line file reports 6 under BOTH agents.
  * Matching Claude is the requirement; being independently "right" about the
  * trailing newline would put two different numbers on the same file.
@@ -958,7 +958,7 @@ interface CodexDiffStat {
  * An `update` change's `diff` is a unified diff, so the "lines that appear in
  * new" and "lines that appear in old" of the Edit rule are its `+` and `-`
  * lines. Counting them directly rather than rebuilding the two texts and
- * splitting keeps `+0` distinguishable from "one empty line" — `''.split('\n')`
+ * splitting keeps `+0` distinguishable from "one empty line" - `''.split('\n')`
  * is 1, which would have made every deletion-only patch read `+1`.
  *
  * Returns null when there is nothing to count: `exec --json` sends no `diff`,
@@ -1061,14 +1061,14 @@ function emitCodexFileChangeToolUses(
  * every connected MCP server into codex with `codex mcp add`, so any user with
  * a connector sees these frames. Until this branch existed both lifecycle
  * events fell through to `raw`, and `build-turn-blocks.ts` skips `raw`
- * outright — so a codex turn that called a connector showed NO row at all,
+ * outright - so a codex turn that called a connector showed NO row at all,
  * success or failure alike.
  *
  * `mcp__<server>__<tool>` is the repository's existing name shape for an
  * MCP-provided tool (`tool-kind.ts` documents `mcp__*__todo_write`, and the
  * canonical `isTodoWriteToolName` matches on the `__` boundary), so a snapshot
  * tool injected over MCP keeps being recognised as one. Returns null when the
- * item is not a fully named MCP call — a partially known frame stays `raw`
+ * item is not a fully named MCP call - a partially known frame stays `raw`
  * rather than becoming a row labelled with a blank server or tool.
  */
 function codexMcpToolName(item: JsonObject): string | null {
@@ -1083,7 +1083,7 @@ function codexMcpToolName(item: JsonObject): string | null {
  * Emit the `tool_use` half of an MCP call, once per item id.
  *
  * Called from `item.started` because every field the row needs (server, tool,
- * arguments) is already present there — holding it back to `item.completed`
+ * arguments) is already present there - holding it back to `item.completed`
  * would cost the row its duration for nothing (`tool-timing.ts` stamps
  * `startedAt` at the single event exit). The `codexToolUses` guard makes the
  * later `item.completed` a no-op, and equally makes `item.completed`
@@ -1128,7 +1128,7 @@ function codexMcpToolResult(item: JsonObject): { content: string; isError: boole
  * Read a codex `web_search` item into the query it actually searched for, or
  * null when the frame carries no search we can render honestly.
  *
- * Recorded shape, verbatim (codex-cli 0.149.1 — web search is ON by default,
+ * Recorded shape, verbatim (codex-cli 0.149.1 - web search is ON by default,
  * no flag needed, so this reaches every codex user):
  *
  *   {"type":"item.started","item":{"id":"item_2","type":"web_search",
@@ -1140,14 +1140,14 @@ function codexMcpToolResult(item: JsonObject): { content: string; isError: boole
  * Two codex oddities are load-bearing here. First, `id` is serialised TWICE;
  * `JSON.parse` keeps the last, so the tool id is the `exec-…` value. It is
  * stable across the pair, so the pairing still holds. Second, the started
- * frame's `query` is EMPTY — the query only exists at completion, and the query
+ * frame's `query` is EMPTY - the query only exists at completion, and the query
  * IS the row (`toolTitle` and `searchPattern` both read it). That is why the
  * pair is emitted at `item.completed` and the started frame emits nothing.
  *
  * Only `action.type === 'search'` is recognised. codex's action taxonomy has
  * more members (the started frame shows `other`) and we have captured only this
  * one; calling a page fetch a 「搜索」 is the same class of lie as calling a file
- * deletion 「新建」, so anything else stays `raw` — the visible signal that a
+ * deletion 「新建」, so anything else stays `raw` - the visible signal that a
  * shape is still unhandled.
  */
 function codexWebSearchQuery(item: JsonObject): string | null {
@@ -1262,13 +1262,13 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
     if (item.type === 'web_search') {
       // The started frame's `query` really is always empty (`action.type` is
       // `"other"` here; the term only exists on `item.completed`). This used to
-      // emit nothing at all for that reason — "a 「搜索」 row with no term is
+      // emit nothing at all for that reason - "a 「搜索」 row with no term is
       // worse than no row".
       //
       // The product overruled that trade-off on 2026-09-03: a call must reach
       // the screen and start its clock when it is made, never only once it
       // returns. A row with no term still answers the question the user is
-      // actually asking — where is it stuck — because it carries the stopwatch.
+      // actually asking - where is it stuck - because it carries the stopwatch.
       // There is no local `web_search` sample to time, so the size is taken
       // from the same class of call: claude's `WebFetch` runs 7.42s.
       //
@@ -1280,7 +1280,7 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
       // (`stampToolTiming`) because this parser holds no clock.
       //
       // ⚠️ `item.id` is the id AFTER `JSON.parse` deduplicates codex's twice-
-      // serialised `id` key — the `exec-…` value, not `item_2`. The completed
+      // serialised `id` key - the `exec-…` value, not `item_2`. The completed
       // frame resolves to the same one, which is exactly why the early row
       // retires instead of drawing a second search row.
       if (typeof item.id === 'string' && item.id) {
@@ -1288,7 +1288,7 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
         state.codexLastAgentMessageEndedWithNewline = false;
         onEvent({ type: 'tool_in_flight', id: item.id, name: 'web_search', input: {} });
       }
-      // Boundary state is otherwise deliberately NOT cleared here — it is
+      // Boundary state is otherwise deliberately NOT cleared here - it is
       // cleared where the settled row is emitted, so an unrecognised action
       // still reads as no tool row.
       return true;
@@ -1315,7 +1315,7 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
     // context-budget warning) as `error` ITEMS while the turn keeps running;
     // fatal failures arrive separately as top-level `error` / `turn.failed`
     // events. Surface these as a visible warning pill instead of dropping
-    // them as raw noise — during a silent provider hang such an item can be
+    // them as raw noise - during a silent provider hang such an item can be
     // the only signal the user ever gets (incident recvqgLmAkUM6G).
     if (item.type === 'error' && typeof item.message === 'string' && item.message.length > 0) {
       onEvent({ type: 'status', label: 'warning', detail: item.message });
@@ -1356,7 +1356,7 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
       emitCodexFileChangeToolUses(completedFileChanges, onEvent, state);
       // The result carries no content on purpose. `exec --json` genuinely
       // reports no per-file output; `app-server` does send the patch, but a
-      // patch is not command output — it belongs on the row as `+N −M` (read
+      // patch is not command output - it belongs on the row as `+N −M` (read
       // by `codexChangeDiffStat` above), not in the terminal panel a
       // `tool_result` body opens. `status: 'failed'` is the only failure
       // signal on the item, on both wires.
@@ -1396,7 +1396,7 @@ function handleCodexEvent(obj: unknown, onEvent: StreamEventHandler, state: Pars
       // ("structured search results returned out-of-band"), so the field the
       // original note said did not exist now does. What has NOT been measured
       // is whether codex populates it in this integration, and
-      // `codex-app-server/normalize.ts` drops it on the way in regardless — so
+      // `codex-app-server/normalize.ts` drops it on the way in regardless - so
       // a hit count here would be invented, not read. Measure the wire before
       // changing this; do not infer a count from the type alone.
       onEvent({ type: 'tool_result', toolUseId: item.id, content: '', isError: false });
@@ -1506,7 +1506,7 @@ export function createJsonEventStreamHandler(
   // Unrecognised lines are streamed to the browser and persisted as `raw`
   // events that nothing renders. They are bounded here, at the source, so the
   // live SSE fan-out, the daemon's run event buffer and the stored transcript
-  // all carry the same bounded line — a cursor-agent `editToolCall` completion
+  // all carry the same bounded line - a cursor-agent `editToolCall` completion
   // alone repeats the edited file twice (see run-event-payload-budget.ts).
   function handleLine(line: string): void {
     let obj: unknown;

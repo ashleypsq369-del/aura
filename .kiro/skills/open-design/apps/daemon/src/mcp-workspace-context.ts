@@ -99,7 +99,7 @@ export async function resolveMcpWorkspaceContext(
       data.activeWorkspaceId ?? undefined,
     );
     if (!selected) {
-      // 200 with empty items — non-vela (dev provider) or no live membership.
+      // 200 with empty items - non-vela (dev provider) or no live membership.
       recordFailure(baseUrl);
       return null;
     }

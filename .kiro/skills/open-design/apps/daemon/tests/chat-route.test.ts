@@ -501,7 +501,7 @@ process.exit(0);
    * agent 先写下四条待办(1 条 in_progress + 3 条 pending),再发一个可渲染的
    * `<question-form>` 交棒给用户,进程 exit 0、无 signal、无 error。
    * 它被 stamp 成 endedWithUnfinishedWork,项目卡与 Pet 任务中心于是画成
-   * `incomplete`,聊天页脚说「已停止,仍有未完成任务」—— 而没有任何东西停过它。
+   * `incomplete`,聊天页脚说「已停止,仍有未完成任务」-- 而没有任何东西停过它。
    *
    * 这条用例走真实的 emitAgentEvent 收口(`captureRunWorkCompletenessSignals`
    * 在那里把 text_delta 攒进 run.askUserScanText),所以它同时钉住了信号的采集
@@ -779,8 +779,8 @@ process.stdin.on('end', () => {
 
     // #8173: the skill preamble advertises the skill's absolute root as its
     // fallback path, but the allowlist was built from the repository `skills/`
-    // tree alone. A skill installed under the daemon data dir — the same shape
-    // as the bundled plugin folder in the report — landed outside it, so
+    // tree alone. A skill installed under the daemon data dir - the same shape
+    // as the bundled plugin folder in the report - landed outside it, so
     // OpenCode asked for `external_directory` approval on a file OD itself told
     // the agent to open.
     const skillId = `od-skill-root-${randomUUID().slice(0, 8)}`;
@@ -1360,7 +1360,7 @@ process.exit(1);
     // AmrModelLoadingCache, which degrades to the offline `vela model preset`
     // seed whenever the authoritative `vela model list` is momentarily
     // unavailable (and refreshes the remote catalog in the background). So a
-    // transient catalog failure must NOT abort the run — the per-run path no
+    // transient catalog failure must NOT abort the run - the per-run path no
     // longer blocks on a synchronous `model list` retry loop.
     const previousRuntimeKey = process.env.VELA_RUNTIME_KEY;
     const previousLinkUrl = process.env.VELA_LINK_URL;
@@ -1443,7 +1443,7 @@ child.on('exit', (code, signal) => {
     // Red spec for the packaged-prerelease "AMR model the selected model is not
     // available from Vela" report: the run preflight used to do a fresh,
     // blocking `vela model list` (authoritative remote catalog) on EVERY run
-    // and fail-close the run whenever that single call timed out / errored —
+    // and fail-close the run whenever that single call timed out / errored -
     // even though the user is logged in, the model picker already shows a
     // model (seeded from the offline `vela model preset`), and the selected
     // model is real. Under CorpLink/飞连 the remote call routinely exceeds the
@@ -2017,7 +2017,7 @@ process.stdin.on('end', () => {
   it('does not fail plugin authoring when the turn-1 reply is a clarifying question-form awaiting the brief', async () => {
     // The `od-plugin-authoring` plugin's turn-1 flow is to emit a
     // `<question-form>` collecting the plugin brief, then STOP and wait for
-    // the user to answer — artifacts only land on the follow-up turn. The
+    // the user to answer - artifacts only land on the follow-up turn. The
     // missing-artifacts guard must not treat that expected pause as a
     // failure (regression: "Plugin authoring ended before generating the
     // required generated-plugin artifacts.").
@@ -2082,7 +2082,7 @@ process.stdin.on('end', () => {
     // `<ask-question>` is the alias the web form parser accepts alongside
     // the canonical `<question-form>` (apps/web/src/artifacts/question-form.ts).
     // Models sometimes drift to it; the UI still renders a valid brief form,
-    // so the daemon's missing-artifacts guard must recognize the alias too —
+    // so the daemon's missing-artifacts guard must recognize the alias too -
     // otherwise the same "ended before generating…" regression returns for a
     // supported clarification shape.
     const projectId = `proj-plugin-authoring-alias-${randomUUID()}`;
@@ -2148,7 +2148,7 @@ process.stdin.on('end', () => {
     // The clarification carve-out must match the web parser's renderable-form
     // contract (JSON body with a `questions` array), not just the opening
     // tag. A `<question-form>` whose body is not valid form JSON renders as
-    // raw prose in the UI — no usable brief card — so suppressing the
+    // raw prose in the UI - no usable brief card - so suppressing the
     // missing-artifacts failure for it would turn a hard failure into a false
     // success. This pins that the guard stays gated on a renderable body.
     const projectId = `proj-plugin-authoring-badform-${randomUUID()}`;
@@ -2240,7 +2240,7 @@ process.stdin.on('end', () => {
 process.stdin.resume();
 process.stdin.on('end', () => {
   console.log(JSON.stringify({ type: 'step_start' }));
-  console.log(JSON.stringify({ type: 'text', part: { text: 'İstanbul brief — 先确认几个问题。\\n<ask-question id="discovery" title="Plugin brief">\\n{"questions":[{"id":"purpose","label":"What should it do?","type":"text"}]}\\n</ask-question>' } }));
+  console.log(JSON.stringify({ type: 'text', part: { text: 'İstanbul brief - 先确认几个问题。\\n<ask-question id="discovery" title="Plugin brief">\\n{"questions":[{"id":"purpose","label":"What should it do?","type":"text"}]}\\n</ask-question>' } }));
   console.log(JSON.stringify({ type: 'step_finish', part: { tokens: { input: 1, output: 1 } } }));
   process.exit(0);
 });
@@ -2325,7 +2325,7 @@ process.stdin.on('data', (chunk) => {
 });
 process.stdin.on('end', () => {
   const checks = [
-    prompt.includes('## Composed skill — faq-page') ? 'has-composed-skill-header' : 'missing-composed-skill-header',
+    prompt.includes('## Composed skill - faq-page') ? 'has-composed-skill-header' : 'missing-composed-skill-header',
     prompt.includes('# FAQ Page Skill') ? 'has-faq-skill-body' : 'missing-faq-skill-body',
     prompt.includes('category filtering') ? 'has-faq-skill-content' : 'missing-faq-skill-content',
   ];
@@ -2500,8 +2500,8 @@ process.stdin.on('data', (chunk) => {
 });
 process.stdin.on('end', () => {
   const checks = [
-    prompt.includes('## Composed skill — open-design-landing-deck') ? 'has-deck-skill-header' : 'missing-deck-skill-header',
-    prompt.includes('# Slide deck — fixed framework (this is non-negotiable for deck mode)') ? 'has-deck-framework' : 'missing-deck-framework',
+    prompt.includes('## Composed skill - open-design-landing-deck') ? 'has-deck-skill-header' : 'missing-deck-skill-header',
+    prompt.includes('# Slide deck - fixed framework (this is non-negotiable for deck mode)') ? 'has-deck-framework' : 'missing-deck-framework',
   ];
   console.log(JSON.stringify({ type: 'step_start' }));
   console.log(JSON.stringify({ type: 'text', part: { text: checks.join('\\n') } }));
@@ -2542,9 +2542,9 @@ process.stdin.on('data', (chunk) => {
 process.stdin.on('end', () => {
   const checks = [
     prompt.includes('# imagegen') ? 'has-base-image-skill-body' : 'missing-base-image-skill-body',
-    prompt.includes('## Composed skill — open-design-landing-deck') ? 'has-composed-deck-skill-header' : 'missing-composed-deck-skill-header',
-    prompt.includes('## Media generation contract (load-bearing — overrides softer wording above)') ? 'has-image-contract' : 'missing-image-contract',
-    prompt.includes('# Slide deck — fixed framework (this is non-negotiable for deck mode)') ? 'unexpected-deck-framework' : 'kept-deck-framework-out',
+    prompt.includes('## Composed skill - open-design-landing-deck') ? 'has-composed-deck-skill-header' : 'missing-composed-deck-skill-header',
+    prompt.includes('## Media generation contract (load-bearing - overrides softer wording above)') ? 'has-image-contract' : 'missing-image-contract',
+    prompt.includes('# Slide deck - fixed framework (this is non-negotiable for deck mode)') ? 'unexpected-deck-framework' : 'kept-deck-framework-out',
   ];
   console.log(JSON.stringify({ type: 'step_start' }));
   console.log(JSON.stringify({ type: 'text', part: { text: checks.join('\\n') } }));
@@ -2677,7 +2677,7 @@ process.stdin.on('data', (chunk) => {
 });
 process.stdin.on('end', () => {
   const checks = [
-    prompt.includes('## Composed skill — ${skillId}') ? 'has-opt-out-skill-header' : 'missing-opt-out-skill-header',
+    prompt.includes('## Composed skill - ${skillId}') ? 'has-opt-out-skill-header' : 'missing-opt-out-skill-header',
     prompt.includes('<CRITIQUE_RUN') ? 'unexpected-critique-panel' : 'critique-panel-disabled-by-skill-policy',
   ];
   console.log(JSON.stringify({ type: 'step_start' }));
@@ -2762,7 +2762,7 @@ process.stdin.on('data', (chunk) => {
 process.stdin.on('end', () => {
   const checks = [
     prompt.includes('# Sample Plugin') ? 'has-plugin-skill-body' : 'missing-plugin-skill-body',
-    prompt.includes('## Composed skill — faq-page') ? 'has-composed-skill-header' : 'missing-composed-skill-header',
+    prompt.includes('## Composed skill - faq-page') ? 'has-composed-skill-header' : 'missing-composed-skill-header',
     prompt.includes('# FAQ Page Skill') ? 'has-composed-skill-body' : 'missing-composed-skill-body',
   ];
   console.log(JSON.stringify({ type: 'step_start' }));
@@ -2916,7 +2916,7 @@ process.stdin.on('data', (chunk) => {
   prompt += chunk;
 });
 process.stdin.on('end', () => {
-  const hasDuplicateComposedAlias = prompt.includes('## Composed skill — open-design-landing');
+  const hasDuplicateComposedAlias = prompt.includes('## Composed skill - open-design-landing');
   const checks = [
     hasDuplicateComposedAlias ? 'duplicate-alias-composed-skill' : 'deduped-alias-composed-skill',
     prompt.includes('# open-design-landing') ? 'has-base-alias-skill-body' : 'missing-base-alias-skill-body',
@@ -3906,7 +3906,7 @@ process.stdin.on('end', () => {
 `,
         async () => {
           const formAnswers = [
-            '[form answers — discovery]',
+            '[form answers - discovery]',
             '- output: Dashboard / tool UI',
             '- brand: Pick a direction for me [value: pick_direction]',
           ].join('\n');
@@ -3915,7 +3915,7 @@ process.stdin.on('end', () => {
             'Design a metrics dashboard.',
             '',
             '## assistant',
-            '<question-form id="discovery" title="Quick brief — 30 seconds"></question-form>',
+            '<question-form id="discovery" title="Quick brief - 30 seconds"></question-form>',
             '',
             '## user',
             formAnswers,
@@ -3966,7 +3966,7 @@ process.stdin.on('end', () => {
     // Red spec for specs/current/intent-signal-cache-hotfix.md §3 case 6 (R2).
     // History is trimmed on agent switch (scopeHistoryToAgent) and
     // non-transcript clients never resend prior turns, so a deck signal that
-    // fired on turn 1 must persist on the conversation row — recomputing it
+    // fired on turn 1 must persist on the conversation row - recomputing it
     // from the scanned text alone lets it flip OFF again and re-sends the
     // ~17K stable block in both directions.
     const MAYBE_DECK_HEADING = '## If this brief is a slide deck / keynote / presentation';

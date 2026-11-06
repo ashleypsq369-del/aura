@@ -4,9 +4,9 @@
 // `fetch(url, { redirect: 'follow' })` on the client-supplied `body.url` with
 // NO SSRF host validation, unlike the sibling brand path which routes every
 // external asset through `assertPublicBrandUrl` (rejects loopback / RFC1918 /
-// link-local / metadata IPs). Any local process — including a prompt-injected
+// link-local / metadata IPs). Any local process - including a prompt-injected
 // agent, or anything that can set a `chrome-extension://` Origin header, which
-// a non-browser client does trivially — can make the privileged daemon issue
+// a non-browser client does trivially - can make the privileged daemon issue
 // GET requests to arbitrary internal services (127.0.0.1:*, 169.254.169.254,
 // RFC1918), and then read the fetched bytes back out through the unauthenticated
 // `GET /api/library/assets/:id/raw` route. That is SSRF with full response
@@ -90,7 +90,7 @@ afterEach(async () => {
 describe('library ingest SSRF', () => {
   it('must NOT fetch a loopback/internal URL (and must not exfil its bytes)', async () => {
     // Present a browser-extension Origin. A real browser reserves this for an
-    // installed extension, but any local non-browser client sets it freely —
+    // installed extension, but any local non-browser client sets it freely -
     // this also selects the "clipper" branch, which skips the mime allowlist,
     // so the fetched bytes are stored verbatim and become read-back-able.
     const ingestResp = await fetch(`${baseUrl}/api/library/ingest`, {
@@ -133,7 +133,7 @@ describe('library ingest SSRF', () => {
 
   // A/B causal: the drop-in fix is to route `fetchRemoteBytes` through the SAME
   // guard the sibling brand path already uses. This proves that guard rejects
-  // the exact loopback/metadata URL the ingest route happily fetched above —
+  // the exact loopback/metadata URL the ingest route happily fetched above -
   // so the vulnerability is a one-call omission, not a design gap.
   it('the existing sibling guard (assertPublicBrandUrl) rejects the same URL', async () => {
     const { assertPublicBrandUrl } = await import('../src/brands/safe-fetch.js');

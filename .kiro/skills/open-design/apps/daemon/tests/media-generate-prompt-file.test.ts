@@ -1,4 +1,4 @@
-// Gap-fill spec — `od media generate` must accept --prompt-file <path|->.
+// Gap-fill spec - `od media generate` must accept --prompt-file <path|->.
 //
 // AGENTS.md (Capability exposure / UI-CLI dual-track):
 //   "The CLI form must ... accept long-form prompts via --prompt-file <path|->,
@@ -66,7 +66,7 @@ afterEach(async () => {
 
 const LONG_PROMPT =
   'A sweeping cinematic vista of a neon city at dusk, rain-slicked streets,\n' +
-  'volumetric fog, 85mm, shallow depth of field — line two of a long prompt.';
+  'volumetric fog, 85mm, shallow depth of field - line two of a long prompt.';
 
 async function runCli(args: string[], input?: string): Promise<void> {
   const { code, stderr } = await new Promise<{ code: number; stderr: string }>((resolve, reject) => {
@@ -85,8 +85,8 @@ async function runCli(args: string[], input?: string): Promise<void> {
   });
   // The fake daemon resolves both /media/generate and the /media/tasks poll, so
   // the CLI must run the whole flow to a clean exit. Assert exit 0 (surfacing
-  // stderr) so a non-zero exit AFTER the POST — a failure during polling or
-  // result handling — fails the spec instead of passing on the recorded request
+  // stderr) so a non-zero exit AFTER the POST - a failure during polling or
+  // result handling - fails the spec instead of passing on the recorded request
   // alone.
   expect(code, `od media generate exited ${code}; stderr:\n${stderr}`).toBe(0);
 }

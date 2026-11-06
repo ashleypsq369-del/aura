@@ -1,4 +1,4 @@
-// Plan §3.JJ1 — producer hook coverage for the plugin event ring buffer.
+// Plan §3.JJ1 - producer hook coverage for the plugin event ring buffer.
 //
 // Asserts that the installer / uninstaller / upgrade pathways emit
 // the right event kind + that the upgrade path overrides

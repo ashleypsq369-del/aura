@@ -18,7 +18,7 @@
 //
 // Inline `PersistedAgentEvent` shape is restated in this file (the daemon
 // tsconfig does not resolve the `@open-design/contracts/api/chat` subpath
-// export — verified during PR #493). Schema-mismatch tests in the test
+// export - verified during PR #493). Schema-mismatch tests in the test
 // file would catch any drift between this restated union and the contract.
 
 import { randomBytes } from 'node:crypto';
@@ -143,7 +143,7 @@ interface ResolvedArtifact {
  *   2. The newest project file with a real `.artifact.json` sidecar,
  *      sorted by `manifest.updatedAt` descending. Files without an
  *      `updatedAt` (legacy pre-streaming manifests) sort last.
- *   3. `null` — no artifact in scope. Caller emits `artifact: null`
+ *   3. `null` - no artifact in scope. Caller emits `artifact: null`
  *      in the response and the prompt's "Current artifact" section
  *      reads "none".
  *
@@ -207,7 +207,7 @@ export async function resolveCurrentArtifact(
         };
       }
     }
-    // Active tab points at a non-artifact file (or an unsafe name) — fall
+    // Active tab points at a non-artifact file (or an unsafe name) - fall
     // through to the newest-artifact branch.
   }
 
@@ -269,7 +269,7 @@ export async function finalizeDesignPackage(
 ): Promise<FinalizeAnthropicResponse> {
   const project = getProject(db, projectId);
   if (!project) {
-    // Defensive — the route handler validates this and returns 404 before
+    // Defensive - the route handler validates this and returns 404 before
     // reaching here. Kept for direct (non-HTTP) callers, e.g. CLI scripts.
     throw new Error(`project not found: ${projectId}`);
   }
@@ -390,7 +390,7 @@ export async function finalizeDesignPackage(
             : '';
         if (errName === 'AbortError') throw err; // route handler maps to 503
         // Network-level failure (TypeError from fetch, ENOTFOUND/ECONNREFUSED
-        // via cause.code, etc.) — rewrap as upstream failure so the route
+        // via cause.code, etc.) - rewrap as upstream failure so the route
         // handler maps to 502 UPSTREAM_FAILED with redacted details.
         const message = err instanceof Error ? err.message : String(err);
         throw new FinalizeUpstreamError(502, '', `upstream ${protocol} network error: ${message}`);
@@ -647,7 +647,7 @@ function providerLabel(protocol: FinalizeProviderProtocol): string {
  * Call the selected provider API once, retrying once on a transient
  * upstream failure (HTTP 429 or 5xx). On a terminal failure, throw a
  * `FinalizeUpstreamError` carrying the upstream HTTP status and raw
- * body text — the route handler maps the status to one of
+ * body text - the route handler maps the status to one of
  * AUTH_FAILED / RATE_LIMITED / UPSTREAM_FAILED and runs the raw body
  * through `redactSecrets` before exposing it as `details` on the
  * error JSON.
@@ -686,7 +686,7 @@ export async function callFinalizeProviderWithRetry(
       );
     }
     // Linear backoff: 1s on attempt 0. Two retries would extend to 2s on
-    // attempt 1 — kept at one retry to stay within the daemon's blocking-
+    // attempt 1 - kept at one retry to stay within the daemon's blocking-
     // fast posture for `/finalize`.
     await sleep(1000 * (attempt + 1));
   }
@@ -881,7 +881,7 @@ export interface SynthesisPromptOutput {
 /**
  * Build the system + user prompts for the Anthropic Messages API call.
  * Inputs are verbatim except for the transcript (which the caller has
- * already passed through `truncateTranscriptForPrompt` — this function
+ * already passed through `truncateTranscriptForPrompt` - this function
  * does not re-truncate). Missing inputs (no design system selected, no
  * artifact in scope) produce explicit "none"/parenthetical placeholders
  * so Claude does not hallucinate content for absent sections.
@@ -970,7 +970,7 @@ export function truncateTranscriptForPrompt(jsonl: string): string {
   }
 
   if (headLines.length + tailLines.length >= body.length) {
-    // Head + tail covers the whole body — no truncation needed beyond the
+    // Head + tail covers the whole body - no truncation needed beyond the
     // marker reservation. Return verbatim.
     return [header, ...headLines, ...tailLines].join('\n');
   }

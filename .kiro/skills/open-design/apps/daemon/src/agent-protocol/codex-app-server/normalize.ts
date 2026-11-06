@@ -5,8 +5,8 @@ import { createCodexTurnUsage } from '../../observability/codex-turn-usage.js';
  * agent-event stream.
  *
  * The design rule here is "one mapping, not two". Everything the daemon already
- * knows how to render from a codex turn — command execution, file changes, MCP
- * calls, web search, todo snapshots, in-stream warnings, fatal errors — is
+ * knows how to render from a codex turn - command execution, file changes, MCP
+ * calls, web search, todo snapshots, in-stream warnings, fatal errors - is
  * translated back into the `exec --json` FRAME shape and routed through the
  * shipping codex branch of `json-event-stream.ts` (`createCodexFrameHandler`).
  * A second hand-written copy of those ~275 lines would drift from the original
@@ -15,7 +15,7 @@ import { createCodexTurnUsage } from '../../observability/codex-turn-usage.js';
  *
  * "Same frame shape" is not "same information". Where this wire carries MORE
  * than `exec --json` ever did, the extra field rides along on the synthesized
- * frame and the codex branch decides what to do with it — a file change's
+ * frame and the codex branch decides what to do with it - a file change's
  * `diff` is the one such field today (`FileUpdateChange.diff`, required here,
  * absent there). Dropping it to keep the frame narrow is what made codex file
  * rows show elapsed time where Claude's showed `+N −M`.
@@ -58,8 +58,8 @@ function num(value: unknown): number | undefined {
  * Item lifecycle status is passed through verbatim on purpose.
  *
  * `exec --json` spells the in-flight state `in_progress` and app-server spells
- * it `inProgress`, but the codex branch only ever compares status to `failed` —
- * which both wires spell identically — so a camelCase-to-snake_case rewrite
+ * it `inProgress`, but the codex branch only ever compares status to `failed` -
+ * which both wires spell identically - so a camelCase-to-snake_case rewrite
  * here would be code no test could distinguish. If that branch ever starts
  * reading the in-flight spelling, add the mapping together with the assertion
  * that needs it.
@@ -69,7 +69,7 @@ function num(value: unknown): number | undefined {
  * app-server models a patch kind as a tagged object (`{"type":"update",
  * "move_path":null}`); `exec --json` uses the bare tag string. Anything without
  * a readable tag stays unnamed, which makes `codexFileChanges` reject the whole
- * item — the same conservative behaviour `exec --json` has for an unknown kind.
+ * item - the same conservative behaviour `exec --json` has for an unknown kind.
  */
 function execPatchKind(kind: unknown): string {
   if (typeof kind === 'string') return kind;
@@ -139,7 +139,7 @@ function toExecItem(item: JsonObject): JsonObject | null {
                 // such field. Forwarding it is what lets the codex branch report
                 // `+N −M` instead of an elapsed time, and forwarding it only when
                 // present keeps the synthesized frame identical to the exec wire
-                // on the rollback transport. The frame is transient — the branch
+                // on the rollback transport. The frame is transient - the branch
                 // counts the lines and drops the patch, so nothing this large
                 // reaches the event stream or the message store.
                 ...(typeof change.diff === 'string' && change.diff.length > 0
@@ -293,7 +293,7 @@ export function createCodexAppServerNormalizer(
    * id ALREADY has a settled one (`dropSupersededInFlightToolUses` in
    * `apps/web/src/runtime/tool-events.ts`). Forwarding the started frame and
    * then sending output updates would therefore emit events that the client
-   * discards without rendering — the row would sit empty for the whole run and
+   * discards without rendering - the row would sit empty for the whole run and
    * every test at this layer would still be green. The settled pair is emitted
    * from `item.completed` instead, which is where the output is final anyway.
    *
@@ -302,7 +302,7 @@ export function createCodexAppServerNormalizer(
    * onto the settled row when it retires this one. Reading the clock here would
    * restart the stopwatch on every chunk.
    *
-   * The first publication of a call is never throttled — a row must appear when
+   * The first publication of a call is never throttled - a row must appear when
    * the command starts, which is the entire answer to "where is it stuck". Only
    * the updates that follow are rate-limited, and only when they would say
    * something new.
@@ -328,7 +328,7 @@ export function createCodexAppServerNormalizer(
   }
 
   /**
-   * `item/commandExecution/outputDelta` — the child's stdout/stderr as it is
+   * `item/commandExecution/outputDelta` - the child's stdout/stderr as it is
    * produced. Recorded against codex-cli 0.153.4 (2026-09-08): one frame per
    * write, `{ threadId, turnId, itemId, delta }`.
    *
@@ -471,7 +471,7 @@ export function createCodexAppServerNormalizer(
      * A command row is owned here for the length of its run, because only this
      * transport can fill it in while it runs (`item/commandExecution/
      * outputDelta`). Routing the started frame would emit the SETTLED row, and
-     * a settled row makes every later update invisible — see
+     * a settled row makes every later update invisible - see
      * `publishRunningCommand`. The settled pair still comes from the completed
      * frame below, unchanged.
      */
@@ -565,7 +565,7 @@ export function createCodexAppServerNormalizer(
    * ride on.
    *
    * codex encrypts its reasoning content, so the shell can never show the words
-   * — but the COUNT is in the clear and arrives throughout the turn, which is
+   * - but the COUNT is in the clear and arrives throughout the turn, which is
    * exactly the progress signal claude's `thinking_tokens` frame supplies on
    * its own wire. Emitting the same event here is what puts codex on the slot
    * `ExecutionShell` already renders; nothing downstream needed a new shape.
@@ -579,7 +579,7 @@ export function createCodexAppServerNormalizer(
    * The high-water clamp below is belt-and-braces on top of that: codex's own
    * counter has never been observed to retreat, but this reading is a number
    * the user watches climb, and a single rewind reads as a bug in the software
-   * rather than in the wire. Zero is withheld rather than emitted — it is the
+   * rather than in the wire. Zero is withheld rather than emitted - it is the
    * absence of a progress signal, not a progress signal worth a row.
    */
   function emitThinkingTokens(reasoningTokens: number | undefined): void {
@@ -610,7 +610,7 @@ export function createCodexAppServerNormalizer(
     const error = isRecord(params.error) ? params.error : null;
     const message = str(error?.message) || 'Codex error';
     // `willRetry` is codex's own statement that the turn is still alive. A
-    // retrying frame is a status pill, not a run failure — surfacing it as an
+    // retrying frame is a status pill, not a run failure - surfacing it as an
     // error would fail runs that go on to succeed.
     if (params.willRetry === true) {
       emit({ type: 'status', label: message });

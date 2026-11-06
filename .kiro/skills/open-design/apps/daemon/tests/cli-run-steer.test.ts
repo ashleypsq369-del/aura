@@ -1,4 +1,4 @@
-// Contract test for `od run steer` — the CLI half of B11 「引导对话」.
+// Contract test for `od run steer` - the CLI half of B11 「引导对话」.
 //
 // AGENTS.md "Capability exposure": every user-facing capability must be
 // reachable from BOTH the web UI and `od`, and both must drive the same
@@ -9,7 +9,7 @@
 // stay clean.
 //
 // Stub HTTP server rather than a booted daemon: what needs proving here is
-// routing, flag parsing, and the emitted request — the delivery semantics are
+// routing, flag parsing, and the emitted request - the delivery semantics are
 // covered against the real daemon in run-steer-route.test.ts.
 
 import http from 'node:http';

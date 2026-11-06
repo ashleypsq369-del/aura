@@ -242,7 +242,7 @@ describe('applyJsonInstall', () => {
     expect(out.mcpServers['open-design'].type).toBe('stdio');
   });
 
-  it('is idempotent — re-applying yields the same content', () => {
+  it('is idempotent - re-applying yields the same content', () => {
     const once = applyJsonInstall(null, plan);
     const twice = applyJsonInstall(once, plan);
     expect(twice).toBe(once);

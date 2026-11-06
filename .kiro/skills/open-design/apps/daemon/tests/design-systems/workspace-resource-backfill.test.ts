@@ -1,16 +1,16 @@
 // One-time startup backfill (spec 9.2, section 9.2): every user design
 // system claimed by a workspace BEFORE the `workspace_resources` envelope
 // double-write shipped (its `metadata.json` carries a `workspaceId`, but the
-// generic table has no matching row) must get one backfilled — see
+// generic table has no matching row) must get one backfilled - see
 // `backfillDesignSystemWorkspaceResources`'s own doc comment in
 // design-systems/index.ts, and `server.ts`'s startup call site right after
 // `reconcileImpossibleTeamShares`.
 //
 // Two invariants matter here, independent of `workspace-scope.test.ts`
 // (which pins the READ-side filter and must stay untouched by this change):
-//   1. correctness — the backfilled row lands with the right workspaceId and
+//   1. correctness - the backfilled row lands with the right workspaceId and
 //      the right visibility (personal vs team, from `metadata.teamSynced`).
-//   2. idempotency — running the backfill twice (every daemon restart) must
+//   2. idempotency - running the backfill twice (every daemon restart) must
 //      not error and must not duplicate or clobber an existing row.
 
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';

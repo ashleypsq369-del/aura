@@ -121,7 +121,7 @@ describe('prefetchFromHtml (extract from already-rendered DOM)', () => {
 
   it('harvests a content-rich post-wall page that still embeds a Turnstile widget', async () => {
     // The exact symptom: the user clears the Cloudflare wall in the in-app
-    // browser, the real Economist homepage renders — and that real page STILL
+    // browser, the real Economist homepage renders - and that real page STILL
     // references challenges.cloudflare.com (a Turnstile widget on its
     // login/subscribe surface). The harvest must treat it as the real site, not
     // throw the whole capture away as if it were the wall.

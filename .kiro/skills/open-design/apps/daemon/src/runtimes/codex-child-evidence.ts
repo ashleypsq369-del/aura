@@ -980,7 +980,7 @@ export async function collectCodexChildEvidence(
       // A Codex sub-agent is re-invoked by its parent, and every invocation
       // opens another turn in the Child's own rollout, so `started` followed by
       // N-1 `interacted` is the ordinary shape of one delegated package rather
-      // than an ambiguity — rejecting it discarded every Child of a real
+      // than an ambiguity - rejecting it discarded every Child of a real
       // complex Run. Terminals still have to be read per turn: handing the
       // whole session's activity list to each one would let a single parent
       // record terminate them all and stamp them with one `endedAtMs`.
@@ -1171,8 +1171,8 @@ export async function collectCodexChildEvidence(
   //
   // Codex opens a new turn in the Child's rollout per invocation, and the
   // per-turn observation identity above is what keeps each invocation's
-  // lifecycle separate. The coverage figure answers a different question —
-  // "how many Children ran" — which is the one OpenCode's `knownChildIds.size`
+  // lifecycle separate. The coverage figure answers a different question -
+  // "how many Children ran" - which is the one OpenCode's `knownChildIds.size`
   // answers too. Counting observation ids here instead reported three
   // sub-agents as four and left the two runtimes' figures incomparable.
   const knownChildCount = new Set(observations

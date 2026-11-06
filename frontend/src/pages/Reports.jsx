@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Reports Page - ProjectAura (Redesigned)
  * =========================================
  * Uses:
@@ -439,7 +439,7 @@ function MedicationAdherenceBody({data}) {
  </p>
  <p className="text-xs text-[var(--text-600)] mt-1">
  {s.adherence_status === 'good' && '≥80% - Meeting clinical threshold (NHS Medicines Management)'}
- {s.adherence_status === 'warning' && '60–79% - Below threshold. Review with prescriber.'}
+ {s.adherence_status === 'warning' && '60-79% - Below threshold. Review with prescriber.'}
  {s.adherence_status === 'critical'&& '<60% - Critical. Immediate clinical review required.'}
  {s.adherence_status === 'no_data' && 'No adherence logs found for this period.'}
  </p>
@@ -675,7 +675,7 @@ function ReportViewer({data,onClose}) {
  <div class="rpt-hdr-left">
  <h1>${data.report_title}</h1>
  <div class="rpt-hdr-meta">Generated: ${fmt(data.generated_at)} · By: ${genBy} (${data.generated_by?.role || ''})</div>
- ${data.period ? `<div class="rpt-hdr-meta">Period: ${fmtD(data.period.from)} – ${fmtD(data.period.to)}</div>` : ''}
+ ${data.period ? `<div class="rpt-hdr-meta">Period: ${fmtD(data.period.from)} - ${fmtD(data.period.to)}</div>` : ''}
  ${data.standard ? `<div style="font-size:9px;color:#94a3b8;margin-top:4px;">Standards: ${data.standard}</div>` : ''}
  </div>
  <div class="rpt-hdr-right">

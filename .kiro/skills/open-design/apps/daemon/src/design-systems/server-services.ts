@@ -136,7 +136,7 @@ function designSystemUserReadOptions(
   const binding = getWorkspaceResourceByResourceId(db, 'design_system', id);
   if (designSystemBindingAllowsRead(binding, workspaceId, workspaceMemberId)) {
     // Issue #6763: the binding is authoritative even when a re-finalize
-    // dropped `workspaceId` from metadata.json — read the FS copy unscoped.
+    // dropped `workspaceId` from metadata.json - read the FS copy unscoped.
     return { idPrefix: 'user:' };
   }
   return metadataGated;
@@ -152,7 +152,7 @@ export function createDesignSystemServerServices({
   bindProjectToWorkspace,
 }: {
   // Only consulted by `listAllSkills` below for its optional workspace scope
-  // filter — every other service in this factory stays filesystem-only. A
+  // filter - every other service in this factory stays filesystem-only. A
   // getter (not the db value itself) because this factory runs BEFORE
   // server.ts opens its database connection; the closure defers the read
   // until a request actually needs it, long after `openDatabase()` has run.
@@ -215,9 +215,9 @@ export function createDesignSystemServerServices({
    * Give the `ds-*` project that backs a design system's editing workspace a
    * `workspace_projects` home, the same as any other created project.
    *
-   * It is a real, run-hosting project — the chat/run prompt-composition path
+   * It is a real, run-hosting project - the chat/run prompt-composition path
    * stands it up on demand (`server.ts`) and the system prompt has a dedicated
-   * `editingOwnDraftDesignSystem` branch for chatting inside it — so an unbound
+   * `editingOwnDraftDesignSystem` branch for chatting inside it - so an unbound
    * one is denied its first turn by `enforceWorkspaceResourceMutation` exactly
    * like any other orphan. This factory has no Express request, so the daemon's
    * ambient workspace is the only thing that can answer; the injected closure
@@ -239,7 +239,7 @@ export function createDesignSystemServerServices({
    * Checking `options.workspaceId === undefined` (not just falsy) matters:
    * `GET /api/skills` always passes the key, with `null` whenever the request
    * carries no `x-od-workspace-id` header (headerValue never returns
-   * `undefined`) — that request DID ask to be scoped, just with no identity,
+   * `undefined`) - that request DID ask to be scoped, just with no identity,
    * and must still reach `listSkills`'s workspace filter so a claimed skill is
    * hidden from it (spec 04 §10), not silently fall through to the unscoped
    * branch the way a plain `options.workspaceId ? … : …` truthiness check
@@ -354,7 +354,7 @@ export function createDesignSystemServerServices({
    * `workspaceId` claim from `metadata.json` while the persisted binding keeps
    * the system correctly bound, so the metadata alone must never decide. The
    * signed-out lane hides BOTH envelope-bound systems and metadata-claimed
-   * systems (spec 04 §10) — only genuinely unclaimed resources stay visible
+   * systems (spec 04 §10) - only genuinely unclaimed resources stay visible
    * to a headerless caller.
    */
   async function listAllDesignSystems(options: {
@@ -868,7 +868,7 @@ export function createDesignSystemServerServices({
    * `assets/logo.svg` (spec 04 §9.3, recvqb1t4FrckM). Locates the source
    * project the same way `ensureUserDesignSystemWorkspaceProject` does
    * (`projectBackedDesignSystemProjectId`), just copying in the opposite
-   * direction — from the project mirror back to canonical.
+   * direction - from the project mirror back to canonical.
    */
   async function syncUserDesignSystemAssetsFromWorkspace(
     dbHandle: Database.Database,
@@ -905,7 +905,7 @@ export function createDesignSystemServerServices({
         files.push({ path: assetPath, content: detail.buffer });
       } catch {
         // A file that vanished or was mid-rename during the scan shouldn't
-        // fail the whole sync — skip it and continue with the rest.
+        // fail the whole sync - skip it and continue with the rest.
       }
     }
 

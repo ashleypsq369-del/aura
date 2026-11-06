@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * artifacts — the last hop of the pipeline. Where `kit` produces individual
+ * artifacts - the last hop of the pipeline. Where `kit` produces individual
  * themed components, `artifacts` composes them into *products* that follow the
  * real-world playbook for each medium:
  *
@@ -67,14 +67,14 @@ export function renderArtifact(kind: AssetKind, brand: Brand, tokens: DesignToke
 
 /**
  * A single overview page that shows every artifact product side by side via
- * sandboxed `<iframe srcdoc>` thumbnails — handy for a quick "what does this
+ * sandboxed `<iframe srcdoc>` thumbnails - handy for a quick "what does this
  * brand produce?" glance.
  */
 export function renderArtifactGallery(
   brand: Brand,
   tokens: DesignTokens,
   opts?: {
-    /** Applied to each artifact document before it is escaped into srcdoc —
+    /** Applied to each artifact document before it is escaped into srcdoc -
      *  e.g. inlining @font-face rules with gallery-relative urls. */
     decorate?: (html: string) => string;
   },
@@ -126,5 +126,5 @@ export function renderArtifactGallery(
 ${frames}
     </section>`;
 
-  return document({ title: `${brand.name} — Artifacts`, tokens, brand, body });
+  return document({ title: `${brand.name} - Artifacts`, tokens, brand, body });
 }

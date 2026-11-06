@@ -17,14 +17,14 @@ import { classifyRunFailure } from '../src/run-failure-classification.js';
 // classifier or to `withAcpServiceFailureCode` cannot quietly move a failure
 // from one card to another: the row goes red and names which one.
 //
-// Every text is real — taken from `run-failure-classification.test.ts`,
+// Every text is real - taken from `run-failure-classification.test.ts`,
 // `acp-handshake-failure.test.ts`, `specs/current/run-error-catalog.md`, or, for
 // H1, verbatim from a user's packaged `0.21.2-beta.1` screenshot.
 //
 // The two axes this table pins are deliberately separate:
-//   - `code`      — the SSE `error.code` the ACP bridge emits. This is the axis
+//   - `code`      - the SSE `error.code` the ACP bridge emits. This is the axis
 //                   the change moves, and the one the web resolves a card from.
-//   - `category` / `detail` / `retryable` / `userAction` — the run classifier's
+//   - `category` / `detail` / `retryable` / `userAction` - the run classifier's
 //                   verdict, which telemetry and the retry policy read. The
 //                   change moved NONE of these: every row's analysis verdict is
 //                   identical before and after, because the classifier already
@@ -51,7 +51,7 @@ interface Row {
    * How `fail()` shapes this failure today. `structured` is the JSON-RPC error
    * branch (`AGENT_EXECUTION_FAILED` + retryable + details); `bare` is every
    * other `fail()` call site, which emits `{ message }` with NO error object at
-   * all — and therefore, before this change, no error code whatsoever.
+   * all - and therefore, before this change, no error code whatsoever.
    */
   shape: 'bare' | 'structured';
   /** `error.retryable` as `fail()` set it. Must survive unchanged. */
@@ -114,7 +114,7 @@ const ROWS: Row[] = [
   // `invalid session/new response: …` line contains `invalid session`, which
   // `classifyAmrAccountFailure` accepted as "the AMR sign-in session is
   // invalid". The agent answering `session/new` with an unparseable frame is a
-  // defect in the agent's build, and no sign-in changes it — so the card told
+  // defect in the agent's build, and no sign-in changes it - so the card told
   // the user to log in for something logging in cannot fix. The classifier now
   // requires the credential noun to be the whole word (`vela-errors.ts`
   // `reportsInvalidAuthSession`), and this text stops being an account failure.
@@ -128,11 +128,11 @@ const ROWS: Row[] = [
   // explicit ground that it was aligning the code axis to a verdict the
   // classifier already gave ("分析轴 44 条一条没动 … 这是在向已评审的既有行为
   // 对齐,不是新增一类错判"). That was a deliberate refusal to re-litigate what
-  // the `auth` verdict MEANT — reasonable for a change whose whole claim was
+  // the `auth` verdict MEANT - reasonable for a change whose whole claim was
   // that it moved one axis only, and the reason the row reads `auth /
   // auth_required / login` here rather than being called a defect.
   //
-  // The product ruling of 2026-09-07 re-litigates it:「工具输出肯定不算吧?」 —
+  // The product ruling of 2026-09-07 re-litigates it:「工具输出肯定不算吧?」 -
   // a credential a TOOL reported cannot be answered with "sign in". The
   // curl-inside-bash 401 above is the user's own endpoint, reached from a shell
   // command the agent ran; the sign-in card the old verdict produced offers a
@@ -143,8 +143,8 @@ const ROWS: Row[] = [
   // `runtimes/auth.ts` `reportsToolPrincipalAuthFailure` now reads the
   // attribution the line carries (`tool bash failed:`, and `curl:` naming its
   // own speaker) instead of the auth vocabulary it travels with, so the row
-  // returns to `codeBefore` on the code axis — the ACP alignment simply no
-  // longer has an auth class to align to — and lands `tool_error`, which is
+  // returns to `codeBefore` on the code axis - the ACP alignment simply no
+  // longer has an auth class to align to - and lands `tool_error`, which is
   // where this family's one self-identifying member (`mcp_auth_required`)
   // already went. D2 below is the control: same `tool bash failed:` envelope,
   // no credential, still `UPSTREAM_UNAVAILABLE`.
@@ -162,15 +162,15 @@ const ROWS: Row[] = [
   // way: vela's link gateway rewrites an upstream 401/403 into an HTTP 500
   // carrying its OWN code (`services/link/internal/handlers/openai.go:2074`,
   // `normalizeUpstreamAuthFailure`), and three separate classifiers each read
-  // it as the caller being signed out — `classifyAmrAccountFailure` off
+  // it as the caller being signed out - `classifyAmrAccountFailure` off
   // `unauthenticated`, `classifyAgentServiceFailure` and `isAuthDetailText`
   // off "credentials are missing". The user was shown "Sign-in required" for a
   // credential they do not hold and cannot fix.
   { id: 'E1 upstream_provider_unauthenticated (R-053)', text: 'json-rpc id 4: opencode event stream: {"properties":{"error":{"data":{"message":"\\"[code=upstream_provider_unauthenticated] Upstream provider credentials are missing or invalid.\\""}}}}', shape: 'structured', payloadRetryable: false, codeBefore: 'AGENT_EXECUTION_FAILED', code: 'UPSTREAM_UNAVAILABLE', category: 'upstream_unavailable', detail: 'upstream_5xx', retryable: false, userAction: 'none' },
   { id: 'E2 upstream_provider_unauthenticated bare', text: 'API request failed with status 500: upstream_provider_unauthenticated', shape: 'structured', payloadRetryable: false, codeBefore: 'AGENT_EXECUTION_FAILED', code: 'UPSTREAM_UNAVAILABLE', category: 'upstream_unavailable', detail: 'upstream_5xx', retryable: false, userAction: 'none' },
   // The sibling code from the same vela switch (upstream 403). It never
-  // reached the auth branch — it landed `process_exit / fatal_rpc_error`, an
-  // opaque "Task failed" — so naming it here moves it onto the same service
+  // reached the auth branch - it landed `process_exit / fatal_rpc_error`, an
+  // opaque "Task failed" - so naming it here moves it onto the same service
   // card rather than un-mislabelling it.
   { id: 'E3 upstream_provider_forbidden', text: 'json-rpc id 4: opencode event stream: [code=upstream_provider_forbidden] Upstream provider rejected access for the configured credentials.', shape: 'structured', payloadRetryable: false, codeBefore: 'AGENT_EXECUTION_FAILED', code: 'UPSTREAM_UNAVAILABLE', category: 'upstream_unavailable', detail: 'upstream_5xx', retryable: false, userAction: 'none' },
 ];
@@ -192,7 +192,7 @@ function bridge(row: Row): { message?: unknown; error?: Record<string, unknown> 
   ) as { message?: unknown; error?: Record<string, unknown> };
 }
 
-/** Today's bridge with the service classification removed — the pre-change daemon. */
+/** Today's bridge with the service classification removed - the pre-change daemon. */
 function bridgeBefore(row: Row): { message?: unknown; error?: Record<string, unknown> } {
   const payload = row.shape === 'bare'
     ? { message: row.text }
@@ -279,7 +279,7 @@ describe('ACP failure landing table', () => {
     // (~:996), `RATE_LIMITED` (~:1258) and `UPSTREAM_UNAVAILABLE` (~:1269);
     // they were simply unreachable from the ACP path, because the code they key
     // on never arrived. Each was written to return the same verdict as the
-    // text-matching branch it shadows and to differ only in `evidenceLevel` —
+    // text-matching branch it shadows and to differ only in `evidenceLevel` -
     // which is the field recording HOW the daemon knows, so it is exactly the
     // field that should move when the daemon stops guessing from text. Every
     // other field is identical, which is what makes this a classification fix
@@ -316,7 +316,7 @@ describe('ACP failure landing table', () => {
       'D8 provider overloaded 529',
       // R-053 and its sibling. These three move because the service classifier
       // now reads vela's `upstream_provider_*` codes as what they say they are
-      // — the gateway's own credentials — instead of letting the sentence they
+      // - the gateway's own credentials - instead of letting the sentence they
       // travel with ("credentials are missing or invalid") be read as the
       // caller's.
       'E1 upstream_provider_unauthenticated (R-053)',
@@ -376,7 +376,7 @@ describe('withAcpServiceFailureCode', () => {
   it('gives a bare frame an error object without disturbing the message', () => {
     // `fail()` emits `{ message }` with no error object on every non-JSON-RPC
     // call site, which is why a signed-out CLI used to arrive with NO code at
-    // all — not even the generic one. `run.error` must read the same afterwards;
+    // all - not even the generic one. `run.error` must read the same afterwards;
     // only `run.errorCode` gains a value.
     const message = 'invalid session/new response: {"error":"HTTP 503 Service Unavailable"}';
     const result = withAcpServiceFailureCode({ message }) as {
@@ -393,7 +393,7 @@ describe('withAcpServiceFailureCode', () => {
 
   it('reads the agent structured error data as well as its message', () => {
     // Some ACP runtimes put the provider sentence in `error.data` rather than in
-    // the JSON-RPC message — `inferRpcErrorRetryable` reads both for the same
+    // the JSON-RPC message - `inferRpcErrorRetryable` reads both for the same
     // reason.
     const message = 'json-rpc id 4: session/prompt failed';
     const result = withAcpServiceFailureCode({

@@ -485,7 +485,7 @@ export interface ExtractionMeta {
   pendingFonts?: string[];
   /**
    * Categories that extracted incompletely. Engine rule: do NOT flag drift from a
-   * degraded category (it failed extraction, the brand did not change) — surface
+   * degraded category (it failed extraction, the brand did not change) - surface
    * it in the UI instead.
    */
   degraded?: string[];
@@ -514,7 +514,7 @@ export interface ExtractionMeta {
     pagesRequested: number | null;
     /** How many pages actually made it into the merged result. */
     pagesFound: number;
-    /** Which pages, in merge order — the landed URLs, not the requested ones. */
+    /** Which pages, in merge order - the landed URLs, not the requested ones. */
     pages?: string[];
   };
   /**
@@ -578,7 +578,7 @@ export interface BrandingResult {
   }[];
   /**
    * CLI-emitted note about the extraction itself (e.g. canvas-only sites). This is
-   * NOT a user annotation — a user note belongs in the storage envelope around the
+   * NOT a user annotation - a user note belongs in the storage envelope around the
    * payload, never on the pristine BrandingResult, or it mutates the payload.
    */
   note?: string;
@@ -591,13 +591,13 @@ export interface BrandingResult {
 
 /**
  * Storage envelope around a pristine BrandingResult payload. Identity, time, and
- * user-facing annotations live HERE, never on the payload — putting them on the
+ * user-facing annotations live HERE, never on the payload - putting them on the
  * payload would mutate the immutable extraction and break drift comparison.
  *
  * This type is reserved for the storage/UI layer (dembrandt-next, drift). The CLI
  * does not produce it; it is defined in core so every consumer agrees on one
  * envelope shape instead of forking it. Build the notes/labels feature against
- * `note`/`label` here — not against BrandingResult.note (which is CLI metadata).
+ * `note`/`label` here - not against BrandingResult.note (which is CLI metadata).
  */
 export interface Snapshot {
   id: string;
@@ -615,7 +615,7 @@ export interface Snapshot {
 
 /**
  * Minimal spinner contract extractBranding() needs. A real ora `Ora` satisfies
- * it structurally, as does the MCP null-spinner stub — so we don't pull ora's
+ * it structurally, as does the MCP null-spinner stub - so we don't pull ora's
  * full type just to accept a progress reporter.
  */
 export interface Spinner {

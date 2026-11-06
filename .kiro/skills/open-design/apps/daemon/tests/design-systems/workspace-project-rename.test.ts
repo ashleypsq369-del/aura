@@ -116,7 +116,7 @@ describe('propagateWorkspaceProjectRename', () => {
 
     const designMd = await readFile(path.join(root, DIR_ID, 'DESIGN.md'), 'utf8');
     expect(designMd.startsWith('# Earth Postcard')).toBe(true);
-    // The body must survive a rename — only the header changes.
+    // The body must survive a rename - only the header changes.
     expect(designMd).toContain('Body text.');
   });
 
@@ -159,7 +159,7 @@ describe('propagateWorkspaceProjectRename', () => {
 });
 
 // ---------------------------------------------------------------------------
-// PATCH /api/projects/:id — the route that consumes the write-through.
+// PATCH /api/projects/:id - the route that consumes the write-through.
 // Review follow-up on the original fix (PR #5134) found two holes:
 //   1. The propagation decision used the PRE-patch project row, so a PATCH
 //      that renames and rebinds/detaches in one request renamed the design

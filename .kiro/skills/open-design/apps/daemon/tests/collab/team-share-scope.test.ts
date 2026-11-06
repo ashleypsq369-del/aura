@@ -102,7 +102,7 @@ describe('shared project workspace pinning', () => {
   // live in the owner/member feature-test dogfood on 2026-07-22: the owner's
   // local row for a project Lee shared into `OD Feature Team` stayed pinned
   // to the owner's own personal workspace forever, so edits/renames Lee made
-  // never synced — the viewer just kept re-rendering the stale file.
+  // never synced - the viewer just kept re-rendering the stale file.
   describe('rebinding a stale personal row onto a real team share', () => {
     function seedPersonalDraft(projectId: string) {
       const db = openDatabase(tmp, { dataDir: tmp });
@@ -111,7 +111,7 @@ describe('shared project workspace pinning', () => {
       ensureWorkspaceProject(db, {
         projectId,
         // Bound to the owner's OWN personal workspace, from before this
-        // project was ever shared — the exact shape a viewer's daemon has for
+        // project was ever shared - the exact shape a viewer's daemon has for
         // a project it drafted locally, then someone else shared it TO them
         // under a different id (or it round-tripped through a personal
         // workspace the owner has since switched away from).
@@ -138,7 +138,7 @@ describe('shared project workspace pinning', () => {
       });
 
       expect(result).toBeNull();
-      // The row never moved — still personal, still under the stale workspace.
+      // The row never moved - still personal, still under the stale workspace.
       expect(getWorkspaceProjectByProjectId(db, projectId)).toMatchObject({
         workspaceId: PERSONAL_WS,
         visibility: 'personal',
@@ -166,7 +166,7 @@ describe('shared project workspace pinning', () => {
         syncState: 'synced',
       });
       // Reading by project id alone finds the single row, now under the team
-      // workspace — a subsequent open of this project pulls the sharer's
+      // workspace - a subsequent open of this project pulls the sharer's
       // updates instead of replaying the stale personal-draft snapshot.
       expect(getWorkspaceProjectByProjectId(db, projectId)).toMatchObject({
         workspaceId: TEAM_WS,
@@ -174,7 +174,7 @@ describe('shared project workspace pinning', () => {
         syncState: 'synced',
       });
       // The two-key form scoped to the OLD workspace no longer finds anything
-      // — there is exactly one row, and it moved.
+      // - there is exactly one row, and it moved.
       expect(getWorkspaceProject(db, PERSONAL_WS, projectId)).toBeUndefined();
     });
   });

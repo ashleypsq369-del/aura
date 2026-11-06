@@ -60,7 +60,7 @@ retrieval:
 
 # Semantic HTML and SEO
 
-Good HTML is not just markup — it is the contract between your content, search engines, assistive technologies, and the browser. Semantic HTML, correct metadata, and progressive enhancement make UI resilient, findable, and accessible by default.
+Good HTML is not just markup - it is the contract between your content, search engines, assistive technologies, and the browser. Semantic HTML, correct metadata, and progressive enhancement make UI resilient, findable, and accessible by default.
 
 ---
 
@@ -80,7 +80,7 @@ Use the element that describes the content's meaning, not just its appearance.
 ```
 
 ### Headings
-One `<h1>` per page — the primary topic. Headings form an outline: do not skip levels (`h1` → `h3` without `h2`).
+One `<h1>` per page - the primary topic. Headings form an outline: do not skip levels (`h1` → `h3` without `h2`).
 
 ```html
 <h1>Product name</h1>
@@ -98,7 +98,7 @@ One `<h1>` per page — the primary topic. Headings form an outline: do not skip
 <details> / <summary>  <!-- native disclosure/accordion -->
 ```
 
-Never use `<div>` or `<span>` as interactive elements without full ARIA annotation — and even then, prefer the native element.
+Never use `<div>` or `<span>` as interactive elements without full ARIA annotation - and even then, prefer the native element.
 
 ---
 
@@ -110,7 +110,7 @@ Every `<img>` needs an `alt` attribute. What goes in it depends on context.
 |---|---|
 | Informative (product photo, chart) | Describe content: `alt="Red leather sofa, three-seater"` |
 | Functional (icon button, logo link) | Describe function: `alt="Go to homepage"` |
-| Decorative | Empty: `alt=""` — screen readers skip it |
+| Decorative | Empty: `alt=""` - screen readers skip it |
 | Complex (chart, diagram) | Short alt + longer description nearby or in `<figcaption>` |
 
 ```html
@@ -122,7 +122,7 @@ Every `<img>` needs an `alt` attribute. What goes in it depends on context.
 
 <!-- With caption -->
 <figure>
-  <img src="chart.png" alt="Bar chart showing revenue growth Q1–Q4 2025">
+  <img src="chart.png" alt="Bar chart showing revenue growth Q1-Q4 2025">
   <figcaption>Revenue grew 42% year-on-year in Q4 2025.</figcaption>
 </figure>
 ```
@@ -133,12 +133,12 @@ Every `<img>` needs an `alt` attribute. What goes in it depends on context.
 
 ### Title and description
 ```html
-<title>Product Name — Short descriptor | Brand</title>
+<title>Product Name - Short descriptor | Brand</title>
 <meta name="description" content="One or two sentences. What this page is, who it is for, what they will find.">
 ```
 
-- Title: 50–60 characters. Most important keyword first.
-- Description: 120–160 characters. Shown in search results — write for the human, not the algorithm.
+- Title: 50-60 characters. Most important keyword first.
+- Description: 120-160 characters. Shown in search results - write for the human, not the algorithm.
 
 ### Canonical URL
 ```html
@@ -196,16 +196,16 @@ Common types: `Product`, `Article`, `BreadcrumbList`, `FAQPage`, `Organization`,
 Build in layers. The core content and function must work without JavaScript. Enhance with CSS. Enhance further with JS.
 
 ```
-Layer 1: HTML — content is readable, links work, forms submit
-Layer 2: CSS  — layout, typography, visual design
-Layer 3: JS   — interactivity, animations, dynamic content
+Layer 1: HTML - content is readable, links work, forms submit
+Layer 2: CSS  - layout, typography, visual design
+Layer 3: JS   - interactivity, animations, dynamic content
 ```
 
 **In practice:**
-- Forms must submit via native `<form action>` without JS — JS can intercept and enhance with fetch
-- Navigation links must be real `<a href>` — JS can add transitions
-- Content must be in the HTML — JS can enhance with lazy-load or personalisation
-- Images must have `src` — JS can add lazy loading via `loading="lazy"` (now native)
+- Forms must submit via native `<form action>` without JS - JS can intercept and enhance with fetch
+- Navigation links must be real `<a href>` - JS can add transitions
+- Content must be in the HTML - JS can enhance with lazy-load or personalisation
+- Images must have `src` - JS can add lazy loading via `loading="lazy"` (now native)
 
 ---
 
@@ -220,7 +220,7 @@ Client-rendered HTML is not reliably indexed by search engines. Use SSR (Next.js
 Update `document.title` and meta tags on every route change. Use the framework's `<Head>` component or equivalent.
 
 ### Focus management
-On route change, move focus to the new page's `<h1>` or `<main>` — screen readers do not detect SPA navigation automatically.
+On route change, move focus to the new page's `<h1>` or `<main>` - screen readers do not detect SPA navigation automatically.
 
 ```js
 // After route change
@@ -240,22 +240,22 @@ Use `pushState` / `replaceState` so back/forward navigation and bookmarking work
 Design and code should adapt to what the device and user can actually do.
 
 ### Client-side storage as a personalization tool
-`localStorage`, `sessionStorage`, and other browser capabilities (cookies, IndexedDB, media/permission queries) are legitimate tools for tailoring the experience — last view mode, chosen locale, a dismissed banner, an in-progress draft, a returning user's context.
+`localStorage`, `sessionStorage`, and other browser capabilities (cookies, IndexedDB, media/permission queries) are legitimate tools for tailoring the experience - last view mode, chosen locale, a dismissed banner, an in-progress draft, a returning user's context.
 
 Guardrails:
-- **Personalise from real understanding, not a guess.** What to persist and pre-fill safely usually needs customer testing — a wrong assumption in stored state is worse than a neutral default.
+- **Personalise from real understanding, not a guess.** What to persist and pre-fill safely usually needs customer testing - a wrong assumption in stored state is worse than a neutral default.
 - **Scope and consent.** `sessionStorage` for one session, `localStorage` across sessions; never store anything sensitive client-side; honour consent.
-- **Re-validate every 2–3 years.** Needs drift; a personalization that fit at launch becomes friction. Revisit, ideally with fresh testing.
+- **Re-validate every 2-3 years.** Needs drift; a personalization that fit at launch becomes friction. Revisit, ideally with fresh testing.
 
 ### Input method detection
 ```css
 @media (hover: hover) {
-  /* hover states — mouse or trackpad */
+  /* hover states - mouse or trackpad */
   .btn:hover { background: var(--color-primary-hover); }
 }
 
 @media (hover: none) {
-  /* touch device — no hover, larger targets */
+  /* touch device - no hover, larger targets */
   .btn { min-height: 44px; }
 }
 ```
@@ -263,12 +263,12 @@ Guardrails:
 ### Pointer precision
 ```css
 @media (pointer: coarse) {
-  /* fat-finger touch — increase target sizes */
+  /* fat-finger touch - increase target sizes */
   .interactive { min-height: 44px; min-width: 44px; }
 }
 
 @media (pointer: fine) {
-  /* mouse — precise, can use smaller targets */
+  /* mouse - precise, can use smaller targets */
 }
 ```
 
@@ -302,8 +302,8 @@ Pointer precision can select a default behaviour, not only target size. Read the
 - [ ] One `<h1>` per page, headings form a logical outline
 - [ ] Semantic elements used: `<main>`, `<nav>`, `<header>`, `<footer>`, `<article>`, `<section>`
 - [ ] Every `<img>` has a meaningful `alt` or `alt=""` for decorative images
-- [ ] `<title>` is unique per page, 50–60 characters, keyword-first
-- [ ] `<meta name="description">` present and 120–160 characters
+- [ ] `<title>` is unique per page, 50-60 characters, keyword-first
+- [ ] `<meta name="description">` present and 120-160 characters
 - [ ] Open Graph tags present on all shareable pages
 - [ ] `<link rel="canonical">` on pages accessible via multiple URLs
 - [ ] Structured data (JSON-LD) on product, article, and FAQ pages

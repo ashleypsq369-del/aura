@@ -13,9 +13,9 @@
 // Two wrong destinations are possible without this branch, and both are
 // asserted against below:
 //
-//   * `auth` — fixed at `retryable: false` / `user_action: 'login'`, which
+//   * `auth` - fixed at `retryable: false` / `user_action: 'login'`, which
 //     tells the user to re-authenticate a credential that never expired.
-//   * `exit_nonzero` — refused by `transientSuppressedReason` as a
+//   * `exit_nonzero` - refused by `transientSuppressedReason` as a
 //     non-retryable category, which strands a condition the agent itself
 //     calls transient behind a dead-end failure card.
 import { describe, expect, it, vi } from 'vitest';
@@ -84,7 +84,7 @@ describe('credential refresh contention', () => {
   });
 
   // The message's own tail advises signing in "if it persists". That advice is
-  // for a human reading a repeat, not evidence about this occurrence — it must
+  // for a human reading a repeat, not evidence about this occurrence - it must
   // not drag the first failure into the auth verdict.
   it('does not treat the trailing sign-in advice as auth evidence', () => {
     const result = classify(

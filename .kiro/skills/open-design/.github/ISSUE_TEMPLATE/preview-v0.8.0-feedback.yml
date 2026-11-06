@@ -1,5 +1,5 @@
-name: 🧪 OpenDesign 0.8.0 — preview feedback
-description: 0.8.0 is here as a preview on `main`. Bugs, suggestions, "this feels off", first impressions — drop them here.
+name: 🧪 OpenDesign 0.8.0 - preview feedback
+description: 0.8.0 is here as a preview on `main`. Bugs, suggestions, "this feels off", first impressions - drop them here.
 labels: ["preview/v0.8.0"]
 title: "[0.8.0] "
 body:
@@ -8,7 +8,7 @@ body:
       value: |
         **OpenDesign 0.8.0 is shipping as a preview.** The rebuilt core (plugins, headless, agent-native) is on `main` and we're hardening it before tagging 0.8.0 stable.
 
-        This template is the fast lane for anything you noticed while trying 0.8.0 — bugs, UX rough edges, missing features, half-formed thoughts. Small reports are the most useful.
+        This template is the fast lane for anything you noticed while trying 0.8.0 - bugs, UX rough edges, missing features, half-formed thoughts. Small reports are the most useful.
 
         For issues that aren't about 0.8.0 specifically, the regular **Bug report** / **Feature request** templates still work fine.
 

@@ -486,7 +486,7 @@ describe('preview comment permission gating', () => {
     const first = await api.createComment('m-author', 'author note');
     const second = await api.createComment('m-other', 'other note');
 
-    // Distinct rows — the second member did not overwrite the author's comment.
+    // Distinct rows - the second member did not overwrite the author's comment.
     expect(second.id).not.toBe(first.id);
     const rows = api.listComments();
     expect(rows).toHaveLength(2);
@@ -643,7 +643,7 @@ describe('preview comment permission gating', () => {
     expect(api.listComments()).toHaveLength(0);
   });
 
-  // —— reorder (sidebar sort_key) — recvq5BVsolIxi Phase 2 ————————————————————
+  // -- reorder (sidebar sort_key) - recvq5BVsolIxi Phase 2 --------------------
 
   it('reorder is a personal display preference: any member may reorder, not just the author', async () => {
     const api = await startServer();
@@ -666,7 +666,7 @@ describe('preview comment permission gating', () => {
     expect(api.created).toEqual([comment.id]);
   });
 
-  it('reorder writes only sort_key — pin_seq stays exactly what creation assigned', async () => {
+  it('reorder writes only sort_key - pin_seq stays exactly what creation assigned', async () => {
     const api = await startServer();
     const first = await api.createComment('m-author', 'first');
     const second = await api.createComment('m-other', 'second');

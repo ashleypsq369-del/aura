@@ -208,7 +208,7 @@ function validateDimensionValue(value, path, errors) {
   // References are allowed wherever a dimension value is expected.
   if (isReference(value)) return;
   if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-    // Object format: { value: number, unit: "px" | "rem" } — the only valid form per §8.2.
+    // Object format: { value: number, unit: "px" | "rem" } - the only valid form per §8.2.
     // Each of value/unit may be a property-level JSON Pointer reference ($ref) per §7.3.2.
     if (isPointerRef(value.value)) {
       const r = resolvePointerDeep(value.value.$ref);
@@ -501,7 +501,7 @@ function validateFontWeightValue(value, path, errors) {
  * here; deeper type-checking of references happens during reference resolution.
  */
 function validateSubValue(value, expectedType, path, errors, warnings) {
-  // Curly-brace token reference — accepted here; resolved elsewhere.
+  // Curly-brace token reference - accepted here; resolved elsewhere.
   if (isReference(value)) return;
   // Property-level JSON Pointer reference ($ref object): resolve and validate the target.
   if (isPointerRef(value)) {
@@ -745,7 +745,7 @@ function buildTokenRegistry(obj, path = '', registry = new Map(), parentType = n
           $path: currentPath
         });
       } else if ('$ref' in value && typeof value.$ref === 'string') {
-        // Token defined by a JSON Pointer $ref — store the resolved value so that
+        // Token defined by a JSON Pointer $ref - store the resolved value so that
         // curly-brace references to this token resolve correctly.
         const resolved = resolveJsonPointer(value.$ref);
         registry.set(currentPath, {

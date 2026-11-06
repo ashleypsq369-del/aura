@@ -585,7 +585,7 @@ jobs:
           # feature-test dispatch produces a packaged app that targets that
           # profile's AMR backend and enables the workspace-team transport. The
           # matching console origin arrives via the workflow-level
-          # OD_VELA_WEB_URL. Empty = default (prod) — the normal beta pipeline is
+          # OD_VELA_WEB_URL. Empty = default (prod) - the normal beta pipeline is
           # unaffected.
           OPEN_DESIGN_AMR_PROFILE: ${{ inputs.amr_endpoint_binding != '' && 'test' || inputs.amr_profile }}
         run: |
@@ -1273,7 +1273,7 @@ jobs:
           # Bake the AMR profile (tools-pack reads OPEN_DESIGN_AMR_PROFILE) so a
           # feature-test dispatch produces a packaged app that targets that
           # profile's AMR backend and enables the workspace-team transport. Empty
-          # = default (prod) — the normal beta pipeline is unaffected. Mirrors the
+          # = default (prod) - the normal beta pipeline is unaffected. Mirrors the
           # mac_arm64 build step above; this was missing here, so every win_x64
           # dogfood build silently fell back to prod and could not sign in to a
           # feature-test AMR environment.

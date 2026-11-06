@@ -1,5 +1,5 @@
-/**
- * AuditLog — System activity trail, HIPAA compliance record
+﻿/**
+ * AuditLog - System activity trail, HIPAA compliance record
  * Route: /admin/audit
  *
  * Built with: AdminPageShell + DataTable (TanStack) + StatusDot
@@ -37,7 +37,7 @@ function getActionCfg(action) {
   return ACTION_CFG[match] || { color: '#64748b', label: action, Icon: Activity };
 }
 
-/* ─── Action badge — Services TYPE_META gradient pill style ─────────── */
+/* ─── Action badge - Services TYPE_META gradient pill style ─────────── */
 function ActionBadge({ action }) {
   const cfg  = getActionCfg(action);
   const Icon = cfg.Icon;
@@ -67,7 +67,7 @@ const columns = [
         <span style={{ fontSize: 11, color: 'var(--text-500)', whiteSpace: 'nowrap' }}>
           {val
             ? new Date(val).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-            : '—'}
+            : '-'}
         </span>
       );
     },
@@ -120,7 +120,7 @@ const columns = [
       const res = info.getValue();
       return (
         <span style={{ fontSize: 11, color: 'var(--text-600)' }}>
-          {res || '—'}
+          {res || '-'}
           {log.resource_id && (
             <span style={{ color: 'var(--text-400)' }}> #{log.resource_id}</span>
           )}
@@ -133,7 +133,7 @@ const columns = [
     header: 'IP',
     cell: info => (
       <span style={{ fontSize: 11, fontFamily: 'monospace', color: 'var(--text-500)' }}>
-        {info.getValue() || '—'}
+        {info.getValue() || '-'}
       </span>
     ),
     meta: { thStyle: { width: 120 } },
@@ -144,7 +144,7 @@ const columns = [
     cell: info => (
       <span style={{ fontSize: 11, color: 'var(--text-500)', maxWidth: 240, display: 'block',
         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {info.getValue() || '—'}
+        {info.getValue() || '-'}
       </span>
     ),
     meta: { thStyle: { minWidth: 160 }, tdStyle: { whiteSpace: 'normal' } },

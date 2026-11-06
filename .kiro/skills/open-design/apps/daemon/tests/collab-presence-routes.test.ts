@@ -1186,7 +1186,7 @@ describe('collab presence routes', () => {
 
 describe('createCollabPresenceCloudClient', () => {
   // The routes read a present `cloud` as "the cloud owns presence", so an
-  // absent transport MUST produce an absent dependency — not a relay that
+  // absent transport MUST produce an absent dependency - not a relay that
   // dereferences nothing. See the factory's docblock.
   it('is absent when there is no collab transport', () => {
     expect(createCollabPresenceCloudClient(null, () => undefined)).toBeNull();

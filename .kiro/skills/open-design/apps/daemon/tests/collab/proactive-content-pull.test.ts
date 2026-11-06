@@ -11,7 +11,7 @@ import {
 
 // Hub push-channel consumer for 'project-content-changed' (recvqmKQRiIlYf):
 // when a teammate publishes a new version of a shared project, the member's
-// daemon pulls the content proactively — no open tab required — instead of
+// daemon pulls the content proactively - no open tab required - instead of
 // leaving freshness to the member web's ~5s status polling. These tests pin
 // the guard boundary: the pull must NEVER touch a project this daemon owns
 // (the owner's local copy is the single writer), may bootstrap a teammate's
@@ -515,7 +515,7 @@ describe('proactive content pull (hub project-content-changed consumer)', () => 
     await Promise.all([first, second]);
 
     // The v2 event waited out the v1 pull, saw the cursor still behind, and
-    // pulled once more — exactly one trailing pull, not a loop.
+    // pulled once more - exactly one trailing pull, not a loop.
     expect(deps.pullCalls).toEqual(['proj-1', 'proj-1']);
     expect(maxActive).toBe(1);
   });

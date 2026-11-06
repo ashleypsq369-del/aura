@@ -166,7 +166,7 @@ describe('reconcileLibrary', () => {
     expect(html.archivedDate).toBe(ARTIFACT_DATE);
   });
 
-  it('is idempotent — a second pass indexes nothing new', async () => {
+  it('is idempotent - a second pass indexes nothing new', async () => {
     await seedProject();
     await seedDesignSystem();
 

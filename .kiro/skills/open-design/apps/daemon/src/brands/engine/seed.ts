@@ -1,15 +1,15 @@
 // @ts-nocheck
 /**
- * SEED synthesis — the narrow front door of the brand engine.
+ * SEED synthesis - the narrow front door of the brand engine.
  *
  * The whole point of an Ant-Design-style engine is that a brand collapses into
  * a tiny ~20-field `SeedToken`; everything downstream (the full token system,
  * the themed kit, the artifacts) is DERIVED from it. This module is the only
  * place that *produces* a seed, by three routes:
  *
- *   defaultSeed         — the frozen Ant baseline (light theme).
- *   seedFromBrand       — map an already-synthesized Brand kit onto a seed.
- *   seedFromMaterial    — deterministically infer a seed from raw prefetch
+ *   defaultSeed         - the frozen Ant baseline (light theme).
+ *   seedFromBrand       - map an already-synthesized Brand kit onto a seed.
+ *   seedFromMaterial    - deterministically infer a seed from raw prefetch
  *                         material (the URL → seed path, no LLM in the loop).
  *
  * Functional colors (success/warning/error) stay at their stable Ant defaults
@@ -18,7 +18,7 @@
  *
  * Color parsing helpers are inlined on purpose: this module imports ONLY the
  * frozen `SeedToken` type from ./types and the adjacent Brand / PrefetchResult
- * contracts. It never reaches into palette/derive — keeping the seed surface
+ * contracts. It never reaches into palette/derive - keeping the seed surface
  * independent of how tokens are later computed.
  */
 
@@ -39,7 +39,7 @@ const CODE_STACK =
 
 // ─────────────────────────── default seed ───────────────────────────────────
 
-/** The frozen Ant light-theme seed — also the source of every untouched field. */
+/** The frozen Ant light-theme seed - also the source of every untouched field. */
 export const defaultSeed: SeedToken = {
   colorPrimary: "#1677ff",
   colorSuccess: "#52c41a",

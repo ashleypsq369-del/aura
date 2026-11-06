@@ -1,19 +1,19 @@
 name: finalize-release
 # Post-publish bookend to cut-release.yml. When a STABLE release ships, this:
-#   1. Deletes the now-obsolete "backport release/vX.Y.Z" label — a shipped
+#   1. Deletes the now-obsolete "backport release/vX.Y.Z" label - a shipped
 #      release takes no more backports, so the label only invites mistakes.
 #   2. Opens a PR bumping main's synchronized workspace versions to X.Y.(Z+1),
 #      keeping main strictly ahead of the just-shipped stable tag (the build
 #      guard requires apps/packaged version > the latest open-design-v* tag),
 #      validates the exact version-only tree and enqueues once CI is green.
 #
-# Trigger: workflow_run on release-stable completing — NOT `release: published`.
+# Trigger: workflow_run on release-stable completing - NOT `release: published`.
 # release-stable.yml promotes its own draft to published with `gh release edit
 # --draft=false` using GITHUB_TOKEN, and a release event minted by GITHUB_TOKEN
 # does not trigger other workflows (GitHub's loop guard). So we react to the
 # build finishing instead, exactly like backport-automerge / bake-plugin-
 # previews-automerge react to ci. The version is read from the LATEST published
-# release — release-stable promotes its release with `--latest`, so after a real
+# release - release-stable promotes its release with `--latest`, so after a real
 # publish that IS the just-shipped stable. We deliberately do NOT parse
 # workflow_run.head_branch: release-stable can be dispatched from one ref while
 # building another via its `ref` input, so head_branch may be the dispatch ref,
@@ -97,7 +97,7 @@ jobs:
           # On a dry-run the latest published release is the previous (already-finalized) stable,
           # which the bump idempotency + tolerant label delete below turn into a clean no-op.
           if [ "$draft" != "false" ] || [ "$pre" != "false" ] || ! printf '%s' "$ver" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "Latest release '$tag' is draft=$draft prerelease=$pre — not a stable X.Y.Z; skipping."
+            echo "Latest release '$tag' is draft=$draft prerelease=$pre - not a stable X.Y.Z; skipping."
             echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           major=${ver%%.*}; rest=${ver#*.}; minor=${rest%%.*}; patch=${rest##*.}
@@ -192,7 +192,7 @@ jobs:
           body=$(printf '%s\n' \
             "Automated by \`finalize-release\` after publishing \`open-design-v$VERSION\`." \
             "" \
-            "Keeps \`main\` strictly ahead of the shipped stable tag — the build guard requires \`apps/packaged\` version to be greater than the latest \`open-design-v*\` tag. Bumps only the synchronized workspace manifests (those already sharing the monorepo version); independently-versioned packages are left untouched." \
+            "Keeps \`main\` strictly ahead of the shipped stable tag - the build guard requires \`apps/packaged\` version to be greater than the latest \`open-design-v*\` tag. Bumps only the synchronized workspace manifests (those already sharing the monorepo version); independently-versioned packages are left untouched." \
             "" \
             "The \`backport release/v$VERSION\` label was already deleted by this same run." \
             "" \

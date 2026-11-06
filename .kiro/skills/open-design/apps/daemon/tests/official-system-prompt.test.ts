@@ -25,7 +25,7 @@ describe('official designer prompt', () => {
   });
 
   it('keeps the copyright guardrail bullet by default', () => {
-    // The swap in renderOfficialDesignerPrompt replaces this exact string —
+    // The swap in renderOfficialDesignerPrompt replaces this exact string -
     // if the prompt's inline bullet drifts from the exported constant the
     // web-clone substitution silently stops working.
     expect(OFFICIAL_DESIGNER_PROMPT).toContain(COPYRIGHT_GUARDRAIL_BULLET);

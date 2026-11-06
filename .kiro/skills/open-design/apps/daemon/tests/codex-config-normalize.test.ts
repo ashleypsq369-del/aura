@@ -1,4 +1,4 @@
-// Regression tests for codex-config-normalize.ts — originally #4276, extended
+// Regression tests for codex-config-normalize.ts - originally #4276, extended
 // for the wildcard-removal fix (#3408 Slice 1 / fix_config).
 //
 // Codex CLI rejects any service_tier value outside {fast, flex} with:
@@ -7,7 +7,7 @@
 //   or 'flex' in `service_tier`
 //
 // The original normalizer mapped a HARDCODED stale set ({priority, default})
-// to "fast" and left every other invalid value untouched — so each new stale
+// to "fast" and left every other invalid value untouched - so each new stale
 // value the Codex app writes (measured in production after `default` was
 // already patched) keeps crashing the CLI until someone adds it to the map.
 // This is whack-a-mole.
@@ -42,7 +42,7 @@ import {
 } from '../src/codex-config-normalize.js';
 
 // ---------------------------------------------------------------------------
-// normalizeCodexConfigContent — pure string-level normalization (remove-only)
+// normalizeCodexConfigContent - pure string-level normalization (remove-only)
 // ---------------------------------------------------------------------------
 
 describe('normalizeCodexConfigContent', () => {
@@ -143,7 +143,7 @@ describe('normalizeCodexConfigContent', () => {
   });
 
   // -------------------------------------------------------------------------
-  // BLOCKER 1 regression cases — line-anchored pattern must not corrupt data
+  // BLOCKER 1 regression cases - line-anchored pattern must not corrupt data
   // -------------------------------------------------------------------------
 
   it('BLOCKER 1: does NOT touch "priority" appearing inside an unrelated string value', () => {
@@ -152,7 +152,7 @@ describe('normalizeCodexConfigContent', () => {
       'notes = "priority access required"',
       'service_tier = "fast"',
     ].join('\n');
-    // No invalid standalone service_tier key — should be a no-op.
+    // No invalid standalone service_tier key - should be a no-op.
     expect(normalizeCodexConfigContent(input)).toBeNull();
   });
 
@@ -241,7 +241,7 @@ describe('normalizeCodexConfigContent', () => {
   // -------------------------------------------------------------------------
   // CRLF regression: config.toml files written by the Codex app on Windows use
   // CRLF endings. Removing the stale line must preserve ALL surrounding \r\n
-  // sequences — no conversion to LF, no stray \r left behind.
+  // sequences - no conversion to LF, no stray \r left behind.
   // -------------------------------------------------------------------------
 
   it('CRLF regression: removes the invalid line while preserving surrounding \\r\\n endings', () => {
@@ -273,7 +273,7 @@ describe('normalizeCodexConfigContent', () => {
 });
 
 // ---------------------------------------------------------------------------
-// normalizeCodexConfigFile — disk I/O normalization
+// normalizeCodexConfigFile - disk I/O normalization
 // ---------------------------------------------------------------------------
 
 describe('normalizeCodexConfigFile', () => {
@@ -393,7 +393,7 @@ describe('normalizeCodexConfigFile', () => {
   });
 
   // -------------------------------------------------------------------------
-  // BLOCKER 2 regression cases — atomic write and logged errors
+  // BLOCKER 2 regression cases - atomic write and logged errors
   // -------------------------------------------------------------------------
 
   it('BLOCKER 2: no temp-file litter remains after a successful atomic write', async () => {
@@ -460,7 +460,7 @@ describe('normalizeCodexConfigFile', () => {
   });
 
   // -------------------------------------------------------------------------
-  // FIX 1 regression: env-mismatch — CODEX_HOME from agentCliEnv must be
+  // FIX 1 regression: env-mismatch - CODEX_HOME from agentCliEnv must be
   // respected (#4276). The normalizer resolves the path from whatever env is
   // passed, including an overridden CODEX_HOME.
   // -------------------------------------------------------------------------
@@ -488,7 +488,7 @@ describe('normalizeCodexConfigFile', () => {
   });
 
   // -------------------------------------------------------------------------
-  // FIX 3 regression: tilde CODEX_HOME mismatch — #4276.
+  // FIX 3 regression: tilde CODEX_HOME mismatch - #4276.
   // -------------------------------------------------------------------------
 
   it('FIX 3 tilde regression: resolveCodexConfigPath expands ~/... to an absolute path', () => {

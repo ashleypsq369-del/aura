@@ -2,7 +2,7 @@
 //
 // Kimi Code CLI 0.37.0+ throws out of `session/new` when the request carries a
 // stdio MCP server, so the assertion that matters is about the payload that
-// actually reaches the wire — not about what a helper returns. This test puts a
+// actually reaches the wire - not about what a helper returns. This test puts a
 // fake `kimi` on PATH that records every `session/new` params object it is
 // given, drives a real `/api/runs` turn, and inspects the recording.
 //
@@ -111,7 +111,7 @@ describe('ACP stdio MCP servers are withheld from runtimes that reject them', ()
 
   // Best-effort cleanup against a throwaway data dir. Deleting serially inside
   // the default 10s hook budget times out once this file shares a worker with
-  // other server-level suites, so fan the deletes out and give the hook room —
+  // other server-level suites, so fan the deletes out and give the hook room -
   // a slow teardown must not report as a test failure when every case passed.
   afterAll(async () => {
     await Promise.all(
@@ -236,7 +236,7 @@ describe('ACP stdio MCP servers are withheld from runtimes that reject them', ()
 
   it('leaves another mature-acp runtime (hermes) receiving its stdio MCP server', async () => {
     // Regression guard: the fix is scoped to Kimi, so hermes/trae-cli/reasonix
-    // must keep the payload they have today — including at a version string
+    // must keep the payload they have today - including at a version string
     // that would disqualify Kimi.
     const { params } = await runTurnAndReadSessionNew({
       version: '0.38.0',

@@ -619,11 +619,11 @@ test('attachAcpSession converts cumulative ACP message snapshots into deltas', (
   });
   writeAcpUpdate(child, {
     sessionUpdate: 'agent_message_chunk',
-    content: { text: 'Agent Haven — managed AI agents' },
+    content: { text: 'Agent Haven - managed AI agents' },
   });
   writeAcpUpdate(child, {
     sessionUpdate: 'agent_message_chunk',
-    content: { text: 'Agent Haven — managed AI agents' },
+    content: { text: 'Agent Haven - managed AI agents' },
   });
   writeAcpResult(child, 3, { usage: { inputTokens: 1, outputTokens: 2 } });
 
@@ -631,7 +631,7 @@ test('attachAcpSession converts cumulative ACP message snapshots into deltas', (
     .filter((entry) => entry.event === 'agent' && (entry.payload as { type?: unknown }).type === 'text_delta')
     .map((entry) => (entry.payload as { delta?: unknown }).delta);
 
-  assert.deepEqual(textDeltas, ['Agent Haven', ' — managed AI agents']);
+  assert.deepEqual(textDeltas, ['Agent Haven', ' - managed AI agents']);
 });
 
 test('attachAcpSession keeps incremental ACP message chunks unchanged', () => {
@@ -655,7 +655,7 @@ test('attachAcpSession keeps incremental ACP message chunks unchanged', () => {
   });
   writeAcpUpdate(child, {
     sessionUpdate: 'agent_message_chunk',
-    content: { text: ' — managed AI agents' },
+    content: { text: ' - managed AI agents' },
   });
   writeAcpResult(child, 3, { usage: { inputTokens: 1, outputTokens: 2 } });
 
@@ -663,7 +663,7 @@ test('attachAcpSession keeps incremental ACP message chunks unchanged', () => {
     .filter((entry) => entry.event === 'agent' && (entry.payload as { type?: unknown }).type === 'text_delta')
     .map((entry) => (entry.payload as { delta?: unknown }).delta);
 
-  assert.deepEqual(textDeltas, ['Agent Haven', ' — managed AI agents']);
+  assert.deepEqual(textDeltas, ['Agent Haven', ' - managed AI agents']);
 });
 
 test('attachAcpSession forwards ACP status message details', () => {
@@ -1579,7 +1579,7 @@ test('attachAcpSession does not enable the Vela extension for generic ACP agents
 });
 
 test('a truly PATHLESS ACP write is NOT coerced into an artifact (no false positive)', () => {
-  // A write tool call whose only label is "edit" — no locations, no path, ever.
+  // A write tool call whose only label is "edit" - no locations, no path, ever.
   // We must not fabricate an artifact extension: without a concrete path the
   // call carries no evidence it touched an artifact, so it stays uncounted
   // rather than inflating artifact_count for ordinary non-artifact edits.
@@ -1856,7 +1856,7 @@ test('kind:other cannot claim Bash-like names that unlock partial redaction', ()
   );
   assert.ok(toolUse);
   assert.equal((toolUse.payload as { name?: string }).name, 'Other');
-  // Name collapsed; payload may still carry input in the live transcript — Langfuse
+  // Name collapsed; payload may still carry input in the live transcript - Langfuse
   // fail-closed redaction keys off the emitted name (Other → full redact).
   assert.equal(isAcpPartialRedactToolName((toolUse.payload as { name?: string }).name ?? ''), false);
 });
@@ -1897,7 +1897,7 @@ test('missing kind cannot claim Bash-like names that unlock partial redaction', 
   writeAcpUpdate(child, {
     sessionUpdate: 'tool_call',
     toolCallId: 'no-kind-bash-1',
-    // Intentionally omit kind — name alone must not unlock partial redaction.
+    // Intentionally omit kind - name alone must not unlock partial redaction.
     name: 'Bash',
     status: 'completed',
     rawInput: { secret: 'API_KEY=super-secret', command: 'cat /Users/alice/.env' },
@@ -1934,7 +1934,7 @@ test('sticky thinkOnly: pending Thinking then status-only completed emits no too
     title: 'Thinking',
     status: 'pending',
   });
-  // Terminal frame is status-only (no title) — must not clear sticky thinkOnly.
+  // Terminal frame is status-only (no title) - must not clear sticky thinkOnly.
   writeAcpUpdate(child, {
     sessionUpdate: 'tool_call_update',
     toolCallId: 'think-1',
@@ -2221,7 +2221,7 @@ test('terminal status-only frame keeps earlier rawOutput content', () => {
     sessionUpdate: 'tool_call_update',
     toolCallId: 'out-1',
     status: 'completed',
-    // status-only — no rawOutput on terminal frame
+    // status-only - no rawOutput on terminal frame
   });
   writeAcpResult(child, 3, { usage: { inputTokens: 1, outputTokens: 2 } });
 
@@ -2382,7 +2382,7 @@ test('ACP execute tool_result redacts private stdout (cat .env)', () => {
 
 test('ACP adapter toolCallId is always hashed before tool_use/tool_result emission', () => {
   // Path-like, identifier-shaped secrets, and plain local ids must all become
-  // opaque hashes — never pass through to Langfuse span ids / metadata.
+  // opaque hashes - never pass through to Langfuse span ids / metadata.
   const cases = [
     'read:/home/alice/.env',
     'sk-proj-abcdefghijklmnopqrstuvwxyz012345',
@@ -2898,7 +2898,7 @@ test('attachAcpSession.abort during startup ends stdin without sending session/c
     send: () => {},
   });
 
-  // Abort before session/new resolves (no sessionId yet) — e.g. the user
+  // Abort before session/new resolves (no sessionId yet) - e.g. the user
   // cancels during ACP startup. stdin must still close so OpenCode tears down.
   assert.equal(child.stdin.writableEnded, false);
   session.abort();
@@ -3314,7 +3314,7 @@ test('attachAcpSession.completedSuccessfully reflects abort and fatal-error stat
   session.abort();
 
   // Aborted runs are not "successful completions" even though `finished` is
-  // set internally — the consumer should treat them as canceled, not
+  // set internally - the consumer should treat them as canceled, not
   // succeeded.
   assert.equal(session.completedSuccessfully(), false);
 });
@@ -3337,7 +3337,7 @@ test('attachAcpSession default stage timeout tolerates >3min of silence between 
     child.stdout.write(`${JSON.stringify({ id: 1, result: {} })}\n`);
     child.stdout.write(`${JSON.stringify({ id: 2, result: { sessionId: 'session-1' } })}\n`);
 
-    // Simulate an agent silently writing a large artifact for ~4 minutes —
+    // Simulate an agent silently writing a large artifact for ~4 minutes -
     // longer than the historical 180_000ms default that killed long
     // generations mid-response.
     await vi.advanceTimersByTimeAsync(240_000);
@@ -3409,7 +3409,7 @@ test('fail paths flush open ACP tools as errored tool_use/tool_result pairs', as
       status: 'in_progress',
       rawInput: { command: 'sleep 999' },
     });
-    // No terminal tool_call_update — session dies mid-tool.
+    // No terminal tool_call_update - session dies mid-tool.
 
     await vi.advanceTimersByTimeAsync(1_500);
 
@@ -3522,7 +3522,7 @@ test('abort flushes open ACP tools as errored pairs', () => {
     status: 'in_progress',
     rawInput: { command: 'sleep 999' },
   });
-  // No terminal tool_call_update — user cancels mid-tool.
+  // No terminal tool_call_update - user cancels mid-tool.
   session.abort();
 
   const toolUse = events.find(

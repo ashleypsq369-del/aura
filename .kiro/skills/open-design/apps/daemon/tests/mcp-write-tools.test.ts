@@ -286,7 +286,7 @@ describe('public MCP delete_project', () => {
     ).toBe(false);
   });
 
-  it('requires an explicit project — never falls back to the active project for delete', async () => {
+  it('requires an explicit project - never falls back to the active project for delete', async () => {
     const base = nextBaseUrl();
     // No /api/projects call is needed; the tool should reject before
     // resolving anything. We still stub fetch so an accidental call is
@@ -318,7 +318,7 @@ describe('public MCP delete_project', () => {
     });
     vi.stubGlobal('fetch', withDirectory(fetchMock));
 
-    // 'throwaway' is a substring of 'Throwaway demo' — the tool accepts
+    // 'throwaway' is a substring of 'Throwaway demo' - the tool accepts
     // substrings per inputSchema, so the response must carry
     // resolvedProject so the agent can confirm which row got destroyed.
     const result = await handleMcpToolCall(base, 'delete_project', {
@@ -397,7 +397,7 @@ describe('formatDaemonError (shared error mapper)', () => {
           { status: 200 },
         );
       }
-      // 409 with structured body — verifies the irreversible tool's
+      // 409 with structured body - verifies the irreversible tool's
       // error path also flows through formatDaemonError.
       return new Response(
         JSON.stringify({ error: { code: 'PROJECT_LOCKED', message: 'in use' } }),

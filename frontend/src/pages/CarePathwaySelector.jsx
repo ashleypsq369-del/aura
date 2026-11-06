@@ -1,4 +1,4 @@
-/**
+﻿/**
  * CarePathwaySelector
  * Guided onboarding wizard - "What does your loved one need?"
  * Feature 7: Care Pathway Selector
@@ -22,8 +22,8 @@ const ICON_MAP = {
 };
 
 const SUPPORT_LEVELS = [
- { key: 'basic', label: 'Basic', desc: '1–2 visits per week' },
- { key: 'standard', label: 'Standard', desc: '3–4 visits per week' },
+ { key: 'basic', label: 'Basic', desc: '1-2 visits per week' },
+ { key: 'standard', label: 'Standard', desc: '3-4 visits per week' },
  { key: 'intensive', label: 'Intensive', desc: 'Daily or twice-daily' },
 ];
 

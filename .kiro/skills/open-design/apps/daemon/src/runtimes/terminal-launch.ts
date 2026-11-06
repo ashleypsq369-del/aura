@@ -13,7 +13,7 @@ const execFileAsync = promisify(execFile);
 // a one-click action instead of a "go open Terminal yourself" task.
 //
 // Each platform branch uses primitives that are safe against shell
-// injection BECAUSE we never accept user input here — the `command`
+// injection BECAUSE we never accept user input here - the `command`
 // argument is always a hard-coded binary name like `agy`. Adding
 // caller-supplied flags or env vars to this helper would invalidate
 // that guarantee, so the signature is intentionally narrow.
@@ -51,7 +51,7 @@ async function launchOnDarwin(command: string): Promise<TerminalLaunchResult> {
 // window's lifetime is independent from the daemon's process group.
 // We resolve as soon as the child process starts (not when it exits),
 // because terminals like xterm and x-terminal-emulator stay alive for
-// the duration of the interactive session — waiting for exit would time
+// the duration of the interactive session - waiting for exit would time
 // out and kill the window mid-OAuth-flow.
 async function launchOnLinux(command: string): Promise<TerminalLaunchResult> {
   // Order matters: x-terminal-emulator is the Debian alternative that
@@ -86,7 +86,7 @@ async function launchOnLinux(command: string): Promise<TerminalLaunchResult> {
   };
 }
 
-// Windows: `cmd /c start "<title>" cmd /k "<command>"` — the outer
+// Windows: `cmd /c start "<title>" cmd /k "<command>"` - the outer
 // `start` opens a new console window (the first quoted "OpenDesign"
 // is the window title, required by `start`'s positional-arg parser
 // when the next token is also quoted), and the inner `cmd /k` keeps

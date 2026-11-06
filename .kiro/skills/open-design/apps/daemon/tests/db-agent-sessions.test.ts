@@ -130,7 +130,7 @@ describe('latestCompletedAssistantMessageId (resume-identity cursor)', () => {
     expect(latestCompletedAssistantMessageId(db, 'conv-1', 'in-flight')).toBe('m-1');
 
     // Another agent runs and FAILS, then one is CANCELED, before producing any
-    // completed turn. These must not read as conversation advancement — the
+    // completed turn. These must not read as conversation advancement - the
     // stored session (m-1) is still the latest completed turn, so an otherwise
     // resumable session stays resumable. (Pre-fix this query ignored run_status
     // and returned the failed placeholder, forcing a needless cold reseed.)

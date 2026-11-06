@@ -10,12 +10,12 @@
 // "default", and others observed in production). An earlier version of this
 // module kept a hardcoded map of the known-stale values → "fast"; every new
 // invalid value the app emitted then slipped through and crashed the CLI until
-// someone added it to the map — whack-a-mole.
+// someone added it to the map - whack-a-mole.
 //
 // Instead, this module takes the wildcard view: the valid set is small and
 // known ({fast, flex}), so ANY service_tier value outside it is treated as
 // invalid and its line is REMOVED, letting the Codex CLI fall back to its
-// built-in default tier. Removing — rather than forcing "fast" — is the
+// built-in default tier. Removing - rather than forcing "fast" - is the
 // smallest assumption: it never imposes an opinionated tier on the user, and
 // "default"/unknown values semantically mean "let the system choose" anyway.
 //
@@ -100,7 +100,7 @@ function matchQuotedValue(line: string, key: string): string | null {
  * Codex install isn't reported as unauthenticated just because
  * `codex login status` (a ChatGPT/OpenAI-login check) exits non-zero.
  *
- * Deliberately a narrow line scanner rather than a full TOML parse — matching
+ * Deliberately a narrow line scanner rather than a full TOML parse - matching
  * this module's regex-scoped handling of config.toml (the daemon ships no TOML
  * parser); it reads only the two fields it needs.
  */
@@ -228,12 +228,12 @@ export function normalizeCodexConfigContent(content: string): string | null {
   //
   // Pattern breakdown (horizontal-whitespace class `[^\S\r\n]` never crosses
   // a line boundary, unlike `\s`):
-  //   ^([^\S\r\n]*)             — indentation (group 1, horizontal ws only)
-  //   service_tier              — literal key name
-  //   ([^\S\r\n]*=[^\S\r\n]*)   — = with optional surrounding ws (group 2)
-  //   (["'])([^"'\r\n]*)\3      — quoted value (group 3 = quote, group 4 = value)
-  //   ([^\S\r\n]*(?:#[^\r\n]*)?) — trailing ws + optional inline comment (group 5)
-  //   (\r?\n|$)                 — the line terminator, or EOF (group 6)
+  //   ^([^\S\r\n]*)             - indentation (group 1, horizontal ws only)
+  //   service_tier              - literal key name
+  //   ([^\S\r\n]*=[^\S\r\n]*)   - = with optional surrounding ws (group 2)
+  //   (["'])([^"'\r\n]*)\3      - quoted value (group 3 = quote, group 4 = value)
+  //   ([^\S\r\n]*(?:#[^\r\n]*)?) - trailing ws + optional inline comment (group 5)
+  //   (\r?\n|$)                 - the line terminator, or EOF (group 6)
   //
   // This deliberately avoids matching:
   //   - `some_key = "I need priority service_tier"`  (value of another key)
@@ -247,7 +247,7 @@ export function normalizeCodexConfigContent(content: string): string | null {
     pattern,
     (match: string, _indent, _eq, _quote, value: string) => {
       if (VALID_SERVICE_TIERS.has(value)) {
-        // Already valid — leave the line (and its terminator) verbatim.
+        // Already valid - leave the line (and its terminator) verbatim.
         return match;
       }
       changed = true;
@@ -287,7 +287,7 @@ const defaultIO: CodexConfigIO = { readFile, writeFile, rename, unlink };
  * always atomic), then renamed over the original. This prevents partial writes
  * from corrupting the config if the process is interrupted mid-write.
  *
- * A missing or unreadable config.toml is silently ignored — Codex uses
+ * A missing or unreadable config.toml is silently ignored - Codex uses
  * built-in defaults in that case. Write/rename failures are logged with
  * `console.warn` so they appear in daemon logs without blocking the launch.
  *
@@ -303,12 +303,12 @@ export async function normalizeCodexConfigFile(
   try {
     content = await io.readFile(configPath, 'utf8');
   } catch {
-    // File absent or unreadable — nothing to normalize.
+    // File absent or unreadable - nothing to normalize.
     return;
   }
 
   const patched = normalizeCodexConfigContent(content);
-  if (patched === null) return; // no stale value found — file untouched
+  if (patched === null) return; // no stale value found - file untouched
 
   // Write to a sibling temp file, then atomically rename over the target.
   // Same directory → same filesystem → rename is atomic on POSIX and

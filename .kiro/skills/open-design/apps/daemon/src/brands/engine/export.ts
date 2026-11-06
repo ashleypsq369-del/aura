@@ -10,7 +10,7 @@
  *
  * The flattening / css-var naming is owned by ./types (flattenTokens), so the
  * CSS output stays 1:1 with what kit & artifacts reference via varRef(). This
- * module is a pure formatter — it never imports another engine implementation
+ * module is a pure formatter - it never imports another engine implementation
  * module (no palette/seed/derive/kit), only the frozen ./types contract.
  */
 

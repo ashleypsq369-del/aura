@@ -18,7 +18,7 @@ export interface MediaTaskError {
   /**
    * Optional hint about what a content-safety policy objected to, forwarded
    * only when the upstream supplier proved it. Absent means "not proven", not
-   * "not applicable" — a client must then name both the prompt and the
+   * "not applicable" - a client must then name both the prompt and the
    * reference images rather than blame one of them.
    */
   subject?: MediaTaskErrorSubject;
@@ -41,7 +41,7 @@ export interface MediaTaskRow {
   projectId: string;
   /**
    * Monotonic creation order (SQLite's rowid). Only the ordering it induces is
-   * meaningful — never persist or display the value. It exists because
+   * meaningful - never persist or display the value. It exists because
    * `started_at` ties on every parallel fan-out, and a tie broken by storage
    * order lets a batch's cells swap places between two reads.
    */

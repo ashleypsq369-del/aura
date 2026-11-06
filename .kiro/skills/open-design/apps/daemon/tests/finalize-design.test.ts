@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Tests for `apps/daemon/src/finalize-design.ts` — fills in across phases
+// Tests for `apps/daemon/src/finalize-design.ts` - fills in across phases
 // D-I. Phase D adds the truncation helper tests; phases E-I extend.
 //
 // Per memory `project_open_design_493_merged.md`: this file uses
@@ -140,7 +140,7 @@ describe('truncateTranscriptForPrompt', () => {
     expect(out).toContain('"id":"m0"');
     expect(out).toContain('"id":"m799"');
 
-    // Middle messages (e.g. m400) should NOT all survive — at least one
+    // Middle messages (e.g. m400) should NOT all survive - at least one
     // must be omitted; otherwise we wouldn't have needed the marker.
     const surviving = (out.match(/"id":"m\d+"/g) || []).map((s) => Number(s.match(/m(\d+)/)![1]));
     expect(surviving.length).toBeLessThan(800);
@@ -303,7 +303,7 @@ describe('resolveCurrentArtifact', () => {
         updatedAt: '2026-05-07T00:00:00.000Z',
       },
     });
-    // Inject a malformed tabs row directly via SQL — bypasses the
+    // Inject a malformed tabs row directly via SQL - bypasses the
     // production tab-creation code path which would normally validate.
     db.prepare(
       `INSERT INTO tabs (project_id, name, position, is_active) VALUES (?, ?, 0, 1)`,
@@ -704,7 +704,7 @@ describe('finalizeDesignPackage (pipeline integration)', () => {
     // DESIGN.md must NOT have been written; the pre-existing lock prevented it.
     expect(fs.existsSync(path.join(projectsRoot, PROJECT_ID, 'DESIGN.md'))).toBe(false);
 
-    // The pre-existing lock must remain — we did not own it, so we must not unlink.
+    // The pre-existing lock must remain - we did not own it, so we must not unlink.
     expect(fs.existsSync(lockPath)).toBe(true);
   });
 
@@ -875,7 +875,7 @@ describe('finalizeDesignPackage (pipeline integration)', () => {
   it('rewraps 200 with non-JSON body as FinalizeUpstreamError(502)', async () => {
     const { db, projectsRoot, designSystemsRoot } = setupPipeline();
 
-    // 200 OK with text/html body — response.json() will throw SyntaxError.
+    // 200 OK with text/html body - response.json() will throw SyntaxError.
     const fetchImpl = vi.fn(async () =>
       new Response('<html>upstream proxy error</html>', {
         status: 200,
@@ -970,7 +970,7 @@ describe('finalizeDesignPackage (pipeline integration)', () => {
 // HTTP POSTs. These tests exercise the validation branches the function-
 // level tests above cannot reach (validateExternalApiBaseUrl is a
 // closure inside startServer, not exported).
-describe('POST /api/projects/:id/finalize/anthropic — HTTP-layer validation', () => {
+describe('POST /api/projects/:id/finalize/anthropic - HTTP-layer validation', () => {
   let server: http.Server;
   let serverBaseUrl: string;
 
@@ -1010,7 +1010,7 @@ describe('POST /api/projects/:id/finalize/anthropic — HTTP-layer validation', 
   it('403 FORBIDDEN when baseUrl points at a private internal IP (test #14)', async () => {
     // validateBaseUrl explicitly allows loopback (for local OpenAI-compatible
     // servers) but blocks private internal IPs (10/8, 172.16/12, 192.168/16,
-    // fc00::/7, fe80::/10) — see apps/daemon/src/connectionTest.ts:158-185.
+    // fc00::/7, fe80::/10) - see apps/daemon/src/connectionTest.ts:158-185.
     const res = await postJson('p1', {
       apiKey: 'sk-test',
       baseUrl: 'http://10.0.0.1',
@@ -1059,12 +1059,12 @@ describe('POST /api/projects/:id/finalize/anthropic — HTTP-layer validation', 
 // today because Express normalizes `%2e%2e` to `..` and collapses the
 // path before the route handler sees it (yielding 404), but a direct CLI
 // or scripted caller would still reach the function and trigger the
-// traversal — and a stored project row whose id is `..` would also slip
+// traversal - and a stored project row whose id is `..` would also slip
 // past `isSafeId` checks downstream of the handler.
 //
 // Unit-test isSafeId directly so the hole stays closed regardless of
 // which call site is exercised.
-describe('isSafeId — path-traversal regression', () => {
+describe('isSafeId - path-traversal regression', () => {
   it('rejects a single dot', () => {
     expect(isSafeId('.')).toBe(false);
   });

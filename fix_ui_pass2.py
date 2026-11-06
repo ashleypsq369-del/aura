@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pass 2 — comprehensive UI quality fixes across ALL pages and components.
+Pass 2 - comprehensive UI quality fixes across ALL pages and components.
 Based on ui-ux-pro-max healthcare UX guidelines + ux-ui-skills audit findings.
 
 Fixes applied:
@@ -26,7 +26,7 @@ for root, dirs, filenames in os.walk(SRC):
         if os.path.splitext(f)[1] in EXTS:
             files.append(os.path.join(root, f))
 
-# Simple string replacements — safe, targeted
+# Simple string replacements - safe, targeted
 FIXES = [
     # ── Font sizes ──────────────────────────────────────────────────────────
     ('text-[9px]',                  'text-[11px]'),
@@ -72,7 +72,7 @@ FIXES = [
     
     # ── Transition consistency ───────────────────────────────────────────────
     # transition alone is fine, but duration-150 is the Aura standard
-    # Skip this — too risky without context
+    # Skip this - too risky without context
 ]
 
 count = 0

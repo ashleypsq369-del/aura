@@ -21,8 +21,8 @@ import { createCodexAppServerNormalizer } from '../src/agent-protocol/codex-app-
  * `tool_in_flight` into the settled `tool_use` that shares its id
  * (`dropSupersededInFlightToolUses`), and it does so by DROPPING every
  * in-flight row whose id already has a settled row. So a settled `tool_use` at
- * `item/started` — which is what the `exec --json` branch emits, and what this
- * transport used to forward — makes every later in-flight update invisible on
+ * `item/started` - which is what the `exec --json` branch emits, and what this
+ * transport used to forward - makes every later in-flight update invisible on
  * screen. Emitting the events is not the same as showing them; the assertions
  * below therefore require the settled row to be ABSENT until the command ends.
  */
@@ -32,7 +32,7 @@ type Ev = Record<string, unknown>;
 /**
  * The real wire spaces these frames a second apart; a test drives them inside
  * one millisecond. Advancing a fake clock past the publication throttle is what
- * keeps this suite measuring accumulation rather than measuring the throttle —
+ * keeps this suite measuring accumulation rather than measuring the throttle -
  * with a real clock every assertion below would read the FIRST chunk and pass
  * even if later chunks were dropped on the floor.
  */
@@ -203,7 +203,7 @@ describe('codex app-server: streaming command output', () => {
   });
 
   /**
-   * A command that never prints must still get a row the moment it starts —
+   * A command that never prints must still get a row the moment it starts -
    * that row carries the stopwatch, which is the whole answer to "where is it
    * stuck". Output is what is unknown, not the call.
    */

@@ -6,7 +6,7 @@
 // inside `apps/daemon/src/routes/project/index.ts` as
 // `enforceWorkspaceProjectMutation` / `projectAccess`, hard-coded to
 // "project". Project's own logic has been fixed three times this week alone
-// from dogfood feedback — a mistake here is easy to make and expensive to
+// from dogfood feedback - a mistake here is easy to make and expensive to
 // repeat, so every other resource type should call THIS module rather than
 // forking its own copy. Project's route file still owns the project-specific
 // affordances (canMoveToTeam / canMoveToPersonal / canOpen / canExport /
@@ -23,7 +23,7 @@ export type WorkspaceResourceContext = {
    * The caller's RAW `x-od-workspace-type` claim, before it is collapsed into
    * `workspaceType` above. `workspaceType` defaults an absent header to
    * 'personal', which is the right default for view filtering but must never
-   * be read as the caller ASSERTING "personal" — only an explicit header is
+   * be read as the caller ASSERTING "personal" - only an explicit header is
    * evidence. Null means the caller made no claim.
    */
   workspaceTypeAsserted: 'personal' | 'team' | null;
@@ -448,7 +448,7 @@ export function isWorkspaceResourceLocked(ctx: WorkspaceResourceContext): boolea
 /**
  * The core frozen/privilege/mutate computation shared by every resource
  * type. Deliberately narrower than project's own `projectAccess` in
- * `routes/project/index.ts` — it does not compute
+ * `routes/project/index.ts` - it does not compute
  * canMoveToTeam/canMoveToPersonal/canOpen/canExport/canSendTo, which are
  * project-specific UX affordances project's own wrapper still builds on top
  * of this. What it DOES compute is the part every resource type needs
@@ -473,12 +473,12 @@ export function workspaceResourceAccess(
    *
    * 项目页那条本地快路径(`project-workspace-scope.ts` 的
    * `resolveLocalProjectWorkspaceScope`)**故意**把 `role` 钉成 `'member'`
-   * —— 它的契约就是「不查成员目录」。于是在那条路径上 `privileged` 恒为
+   * -- 它的契约就是「不查成员目录」。于是在那条路径上 `privileged` 恒为
    * false,`canMutate` 退化成 `selfCreated`,只读态才成立。
    *
    * 两个后果值得记住:
    * 1. 谁要是「修好」那个硬编码,让 role 变成真实角色,工作区 owner 就对
-   *    工作区里每一个项目都可写(包括不是他建的)—— 只读态静默消失。
+   *    工作区里每一个项目都可写(包括不是他建的)-- 只读态静默消失。
    * 2. 只读态在首屏渲染路径上。用户 2026-09-07 的原话:「不能等半天错误的
    *    身份模型再显示正确的」。所以这条链**不许改成等 `/api/workspace/context`
    *    或任何网络请求**,先渲染错的再纠正同样算回退。
@@ -587,7 +587,7 @@ function workspaceResourceMutationAllowed(
  *
  * `resourceType` ('project' | 'plugin' | 'skill' | 'design_system') feeds
  * both the lookup callbacks' semantics and the permission-denied error code
- * (`WORKSPACE_<RESOURCE_TYPE>_PERMISSION_DENIED`) — for `resourceType:
+ * (`WORKSPACE_<RESOURCE_TYPE>_PERMISSION_DENIED`) - for `resourceType:
  * 'project'` that reproduces the exact `WORKSPACE_PROJECT_PERMISSION_DENIED`
  * code the project route already shipped and has tests pinned against.
  *
@@ -603,7 +603,7 @@ function workspaceResourceMutationAllowed(
  * The shape `createEnforceWorkspaceProjectMutation` (routes/project/index.ts)
  * returns: `enforceWorkspaceResourceMutation` with `resourceType` (and, for
  * project, the last-known-membership cross-check) already bound. Exported so a
- * resource type with no workspace binding of its own — a project comment — can
+ * resource type with no workspace binding of its own - a project comment - can
  * borrow another resource type's ALREADY-BUILT gate instance instead of
  * re-deriving one, and so the two ends of that hand-off (the builder in
  * routes/project/index.ts, the consumer in routes/project/comments.ts) share
@@ -636,7 +636,7 @@ export type BoundWorkspaceResourceMutationGate = (
  * else's shared project that write is doubly wrong: it writes into a project
  * whose own banner says the member cannot modify it, and the version it
  * creates then presents itself as the owner's history even though the owner's
- * real history can never be there — `.file-versions` is in
+ * real history can never be there - `.file-versions` is in
  * `MEMBER_MIRROR_EXCLUDED_ENTRIES`, so a mirror never receives it. Measured
  * live (2026-07-27): owner 4 versions, member's panel 1, timestamped at the
  * moment the member opened the panel.
@@ -650,7 +650,7 @@ export type BoundWorkspaceResourceMutationGate = (
  * caller on a bound resource, because a mutation must prove membership. Here
  * the same absence must NOT suppress the bootstrap, or every legacy client,
  * `od` CLI invocation, and signed-out read would silently lose version history
- * for no security gain — the suppressed write is local-only either way
+ * for no security gain - the suppressed write is local-only either way
  * (`.file-versions` never publishes). Only an authenticated "this member
  * cannot write here" suppresses it.
  */
@@ -931,8 +931,8 @@ export async function enforceVerifiedWorkspaceResourceRead(
  * rules combined into a project its own creator could not touch:
  * `od project create` then `od project duplicate` -> 401.
  *
- * Resolving to the daemon's ambient identity — rather than to the request's
- * claim, of which there is none — is the same fallback the create path already
+ * Resolving to the daemon's ambient identity - rather than to the request's
+ * claim, of which there is none - is the same fallback the create path already
  * applies ("nothing asserted -> ambient"), so the gate and the creation paths
  * now agree about what a headerless caller is. It does NOT weaken the two
  * contracts that look adjacent: `authorizeCreatedProjectWorkspace` still refuses
@@ -944,7 +944,7 @@ export async function enforceVerifiedWorkspaceResourceRead(
  * What stays refused, because the original branch protected something real
  * (recvqbeDjAsejl / recvqbklNGDqYY, spec 04 §10):
  *
- *   - a resource bound to a workspace the daemon is NOT currently in — a
+ *   - a resource bound to a workspace the daemon is NOT currently in - a
  *     teammate's shared project, or one left behind by a previous identity. A
  *     headerless caller has no standing there and still gets 401.
  *   - a resource in the daemon's own workspace that the daemon's own identity
@@ -1032,7 +1032,7 @@ export function enforceWorkspaceResourceMutation(
   const row = getWorkspaceResource(db, ctx.workspaceId, resourceId);
   // "No row in MY workspace" is two different facts, and only one of them is a
   // refusal. A resource NO workspace has claimed is outside the isolation regime
-  // altogether — the design's "no retroactive tagging" rule, which
+  // altogether - the design's "no retroactive tagging" rule, which
   // `routes/plugins/index.ts` already applies by skipping this gate entirely for
   // an unbound plugin so it cannot become "permanently un-uninstallable the
   // moment a caller happens to carry workspace headers", and which design
@@ -1041,7 +1041,7 @@ export function enforceWorkspaceResourceMutation(
   // Treating it as a refusal made the gate ASYMMETRIC: `headerlessMutationAllowed`
   // short-circuits on "no row anywhere" before it even asks for an identity, so
   // the same caller was allowed when it sent NO headers and refused when it
-  // identified itself. That protected nothing — dropping headers is trivial — and
+  // identified itself. That protected nothing - dropping headers is trivial - and
   // it is what forced the web client to tiptoe about when it may name itself,
   // surfacing as 401 WORKSPACE_CONTEXT_REQUIRED on a first send.
   //

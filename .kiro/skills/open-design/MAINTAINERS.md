@@ -4,10 +4,10 @@
 
 This document defines the rules for becoming, serving as, and stepping down from
 a Maintainer of `nexu-io/open-design`. The Core Team's individual roster is
-maintained internally and is not enumerated here — what matters publicly are
+maintained internally and is not enumerated here - what matters publicly are
 the rules everyone plays by.
 
-> **Status**: v1, drafted 2026-05-11. Companion to [`CONTRIBUTING.md`](CONTRIBUTING.md#becoming-a-maintainer) — that file points contributors here for the full rules.
+> **Status**: v1, drafted 2026-05-11. Companion to [`CONTRIBUTING.md`](CONTRIBUTING.md#becoming-a-maintainer) - that file points contributors here for the full rules.
 
 ---
 
@@ -16,7 +16,7 @@ the rules everyone plays by.
 | Role | Permissions |
 |---|---|
 | **Contributor** | Anyone with at least 1 merged PR. No special permissions. |
-| **External Maintainer** | A community contributor promoted under the rules below. Can review, approve, close/reopen issues, and self-assign issues. **Cannot click the merge button** — that stays with the Core Team. |
+| **External Maintainer** | A community contributor promoted under the rules below. Can review, approve, close/reopen issues, and self-assign issues. **Cannot click the merge button** - that stays with the Core Team. |
 | **Core Team** | OpenDesign's internal team. Holds full repository write access and is the final authority on governance decisions. Roster maintained internally. |
 
 The rest of this document is about **External Maintainers** unless stated otherwise.
@@ -33,13 +33,13 @@ The rest of this document is about **External Maintainers** unless stated otherw
 
 ### Merge requirements
 
-Any PR — regardless of who authored it — needs **all three** of:
+Any PR - regardless of who authored it - needs **all three** of:
 
 1. No code conflicts.
 2. CI fully green.
 3. At least one approval from a Maintainer or Core Team member.
 
-A Maintainer's approval is the path most PRs take to merge — it's the most direct way a Maintainer's trust shows up in the project's day-to-day.
+A Maintainer's approval is the path most PRs take to merge - it's the most direct way a Maintainer's trust shows up in the project's day-to-day.
 
 ---
 
@@ -89,8 +89,8 @@ This is qualitative and not formula-based. The Core Team looks at:
 
 - **Code quality** of merged PRs (correctness, scope discipline, repo-boundary respect).
 - **Review quality** of any review comments left on others' PRs.
-- **Community participation** — Discussions, issue triage, Discord engagement.
-- **Collaboration signal** — responsiveness to feedback, willingness to revise.
+- **Community participation** - Discussions, issue triage, Discord engagement.
+- **Collaboration signal** - responsiveness to feedback, willingness to revise.
 
 Passing the first two criteria gets you into the candidate pool. Crossing
 this third threshold is what gets you nominated.
@@ -104,7 +104,7 @@ this third threshold is what gets you nominated.
 5. Public announcement.
 
 There is no nomination PR, no public voting, no fixed term. The intent is
-the **inverse of the K8s/Apache approver-vote model** — early in the
+the **inverse of the K8s/Apache approver-vote model** - early in the
 project's life, lightweight Core Team consensus moves faster and produces
 the same quality of outcome. As the Maintainer cohort grows past five
 External Maintainers, this section will be revisited.
@@ -120,14 +120,14 @@ of trust, not an unpaid job.
 What we ask, in spirit:
 
 - Approve PRs you have the context for; abstain when you don't.
-- Honor the merge requirements (§ "Merge requirements") — your approval
+- Honor the merge requirements (§ "Merge requirements") - your approval
   is a real signal, not a rubber stamp.
 - Keep `#maintainers` informed if you're going dark for an extended period.
 - Treat the not-yet-public roadmap shared in `#maintainers` as confidential.
 
 If the Core Team observes a pattern of bad-case behavior (rubber-stamp
 approvals, malicious issue closures, leaking unannounced roadmap, etc.),
-permissions are revoked under § "Step-down — for cause".
+permissions are revoked under § "Step-down - for cause".
 
 ---
 
@@ -136,20 +136,20 @@ permissions are revoked under § "Step-down — for cause".
 Beyond the repository permissions listed above, Maintainers receive a few
 things the wider community does not:
 
-- **Discord `#maintainers` channel** — a private working space shared with
+- **Discord `#maintainers` channel** - a private working space shared with
   the Core Team. Used for design previews, RFC drafts, and internal
   coordination on the not-yet-public part of the roadmap.
-- **Confidential roadmap** — early visibility into work that has not yet
+- **Confidential roadmap** - early visibility into work that has not yet
   been announced. Maintainers agree to treat its contents as confidential
   until a Core Team member announces them publicly.
-- **Direct line to the Core Team** — your `#maintainers` messages get a
+- **Direct line to the Core Team** - your `#maintainers` messages get a
   faster, more substantive response than public Discussions, and the Core
   Team genuinely solicits Maintainer input on architectural and roadmap
   decisions.
-- **Maintainer badge** — a public mark of trust on your GitHub profile and
+- **Maintainer badge** - a public mark of trust on your GitHub profile and
   in MAINTAINERS-related repo surfaces (rolling out once the GitHub badge
   capability is in place).
-- **Public recognition at promotion** — announcement across Twitter,
+- **Public recognition at promotion** - announcement across Twitter,
   GitHub Discussions, and Discord when you join.
 
 ---
@@ -181,9 +181,9 @@ Process:
 2. If no substantive response within 14 days, the Maintainer transitions
    to Emeritus and permissions are revoked.
 3. A short, kind public note is posted in GitHub Discussions: "Thanks for
-   your contributions — you've been moved to Emeritus, you're welcome
+   your contributions - you've been moved to Emeritus, you're welcome
    back any time."
-4. Returning is easy — see "Emeritus" below.
+4. Returning is easy - see "Emeritus" below.
 
 ### Step-down for cause
 
@@ -222,7 +222,7 @@ Maintainers who step down gracefully or transition through inactivity become
 - Removes write/approve/close permissions.
 - Keeps the person's name acknowledged on the (internal) roster's Emeritus
   section.
-- Keeps Discord `#maintainers` access (read or post — Maintainer's choice).
+- Keeps Discord `#maintainers` access (read or post - Maintainer's choice).
 - Carries no ongoing responsibility.
 
 ### Returning from Emeritus
@@ -230,8 +230,8 @@ Maintainers who step down gracefully or transition through inactivity become
 The simplest return path: 3 merged PRs in the most recent 30 days, then
 the Core Team restores permissions. No re-nomination is required.
 
-The point of Emeritus is to acknowledge that life happens — a sabbatical,
-a job change, a kid — without any drama or social cost on either side.
+The point of Emeritus is to acknowledge that life happens - a sabbatical,
+a job change, a kid - without any drama or social cost on either side.
 
 ---
 

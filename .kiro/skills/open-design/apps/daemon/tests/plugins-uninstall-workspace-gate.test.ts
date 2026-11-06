@@ -1,6 +1,6 @@
 // Red spec for the plugin uninstall security gap the workspace-isolation
 // round fixed: `POST /api/plugins/:id/uninstall` used to carry NO permission
-// check at all — any caller, any workspace, any role could uninstall any
+// check at all - any caller, any workspace, any role could uninstall any
 // plugin. It is now gated the same way project mutations are, via the shared
 // `enforceWorkspaceResourceMutation` (collab/workspace-resource-mutation.ts),
 // applied only to plugins that carry an actual `workspace_resources` binding
@@ -9,7 +9,7 @@
 //
 // Follows the same "seed the plugin folder directly on disk, alongside the
 // real running server" pattern as tests/plugins-uninstall-traversal.test.ts,
-// plus directly seeding the `workspace_resources` binding via db.ts — the
+// plus directly seeding the `workspace_resources` binding via db.ts - the
 // same SQLite instance the running server already opened (db.ts caches one
 // instance per resolved data dir; RUNTIME_DATA_DIR / OD_DATA_DIR agree within
 // one vitest file, so this reuses the server's own connection instead of
@@ -86,7 +86,7 @@ function bindPluginToWorkspace(pluginId: string, workspaceId: string, createdByW
   });
 }
 
-describe('POST /api/plugins/:id/uninstall — workspace ownership gate', () => {
+describe('POST /api/plugins/:id/uninstall - workspace ownership gate', () => {
   it('hides Personal detail, trust, and share routes from another same-Workspace member', async () => {
     const pluginId = `wsgate-sensitive-${Date.now()}`;
     await seedPluginFolder(pluginId);

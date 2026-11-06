@@ -41,7 +41,7 @@ export interface RegisterTeamResourceShareRoutesDeps {
   /**
    * Optional stale-while-revalidate provider for the `/team` list. Each GET
    * otherwise hits the resource hub (and re-materializes every shared resource)
-   * on the request path — slow when the workspace shell re-reads all three kinds
+   * on the request path - slow when the workspace shell re-reads all three kinds
    * on navigation. When provided, the route serves this cached listing instead,
    * so warm reads return instantly and refresh in the background.
    *
@@ -84,7 +84,7 @@ export function registerTeamResourceShareRoutes(
   const { basePath, share } = deps;
   const root = `/api/workspace/${basePath}`;
 
-  // The mutation itself already succeeded by the time this runs — a cache seam
+  // The mutation itself already succeeded by the time this runs - a cache seam
   // failing here must not turn a successful share/unshare into a reported
   // failure, so this is best-effort and swallows its own errors.
   function invalidateListTeam(scope: TeamResourceRequestScope): void {
@@ -119,7 +119,7 @@ export function registerTeamResourceShareRoutes(
     return null;
   }
 
-  // Ids shared to the team — drives the "team" collection for this kind.
+  // Ids shared to the team - drives the "team" collection for this kind.
   app.get(`${root}/team`, async (req, res) => {
     const scope = await resolveScope(req, res);
     if (!scope) return;
@@ -146,7 +146,7 @@ export function registerTeamResourceShareRoutes(
       }
       const result = await share.share(id, scope);
       if (!result) return res.json({ shared: false });
-      // The cached `/team` listing is now stale by construction — drop it so
+      // The cached `/team` listing is now stale by construction - drop it so
       // the client's immediate refetch (it fires one right after this
       // response) reads the new state instead of waiting out the cache's
       // freshMs, or worse, the client's slower background poll once SSE

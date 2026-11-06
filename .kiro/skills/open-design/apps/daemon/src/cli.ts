@@ -63,7 +63,7 @@ const RESUME_CONTINUE_PROMPT =
 // Hoisted to the top of the module *before* the subcommand dispatch
 // below: top-level `await SUBCOMMAND_MAP[first](rest)` runs runMedia
 // synchronously during module evaluation, and runMedia references these
-// `const` Sets — leaving them at the bottom of the file would hit the
+// `const` Sets - leaving them at the bottom of the file would hit the
 // TDZ ("Cannot access 'MEDIA_GENERATE_STRING_FLAGS' before
 // initialization") and crash every `od media …` invocation.
 const MEDIA_GENERATE_STRING_FLAGS = new Set([
@@ -115,7 +115,7 @@ const MCP_BOOLEAN_FLAGS = new Set([
 // Hoisted next to MCP_*_FLAGS for the same TDZ reason as the MEDIA flags
 // above: `od mcp install <agent>` dispatches through SUBCOMMAND_MAP during
 // top-level module evaluation, and runMcpInstall references these `const`
-// Sets — defining them next to runMcpInstall lower in the file would hit
+// Sets - defining them next to runMcpInstall lower in the file would hit
 // the TDZ.
 const MCP_INSTALL_STRING_FLAGS = new Set([
   'daemon-url',
@@ -206,7 +206,7 @@ const UI_BOOLEAN_FLAGS = new Set([
   'h',
   'json',
   'skip',
-  // Plan §6 Phase 2A.5 — `od ui show --schema` returns just the
+  // Plan §6 Phase 2A.5 - `od ui show --schema` returns just the
   // surface's JSON Schema (or `null` when the surface declares
   // none). Lets a code agent inspect the contract before piping a
   // value back through `od ui respond --value-json`.
@@ -362,7 +362,7 @@ const FIGMA_BOOLEAN_FLAGS = new Set([
 // inspect, and remove brands headlessly without rendering the web UI.
 // Hoisted next to the other dispatch-touched flag sets because runBrand is
 // reachable through the top-of-file SUBCOMMAND_MAP dispatch, which runs during
-// module evaluation — a const declared further down would still be in TDZ.
+// module evaluation - a const declared further down would still be in TDZ.
 const BRAND_STRING_FLAGS = new Set([
   'daemon-url', 'prompt-file', 'project', 'locale',
   'html-file', 'css-file', 'base-url',
@@ -375,7 +375,7 @@ const AGENT_BOOLEAN_FLAGS = new Set(['help', 'h', 'json']);
 const STRATEGY_STRING_FLAGS = new Set(['daemon-url']);
 const STRATEGY_BOOLEAN_FLAGS = new Set(['help', 'h', 'json']);
 // Hoisted because `runAutomation` is reachable through the top-of-file
-// SUBCOMMAND_MAP dispatch, which runs during module evaluation —
+// SUBCOMMAND_MAP dispatch, which runs during module evaluation -
 // any `const` declared further down would still be in TDZ when
 // `parseScheduleFlag` reads this map. Same reason the other dispatch-
 // touched constants live near the top.
@@ -859,7 +859,7 @@ async function runExport(args) {
     : {};
   // Visual formats rasterize through the desktop screenshot renderer so the
   // CLI matches the UI exactly. In particular `pdf` uses `/export/pdf-image`
-  // (one raster page per deck slide / per viewport for a page) — NOT the generic
+  // (one raster page per deck slide / per viewport for a page) - NOT the generic
   // `/export` vector `printToPDF` path, which drops CJK glyphs in the packaged
   // runtime and is the bug this feature exists to avoid.
   const exportPath = exportRoutePath(format);
@@ -939,7 +939,7 @@ Exit codes: 0 clean at threshold · 1 findings at/above --fail-on ·
 
 Options:
   --file, --html-file <p>  Input path (alternative to the positional; \`-\` = stdin)
-  --fail-on <sev>          p0 | p1 | p2 | none — exit 1 threshold (default p0)
+  --fail-on <sev>          p0 | p1 | p2 | none - exit 1 threshold (default p0)
   --agent-message          Also print the <artifact-lint> block for agent splicing
   --json                   Print a machine-readable result envelope
   --daemon-url <url>       Override daemon URL
@@ -952,7 +952,7 @@ Examples:
 
 // CLI half of POST /api/artifacts/lint. The endpoint has been live since the
 // linter landed, but without a subcommand it was unreachable from external
-// agents — the exact gap the dual-track rule in AGENTS.md exists to prevent.
+// agents - the exact gap the dual-track rule in AGENTS.md exists to prevent.
 async function runLint(args) {
   if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
     printLintHelp();
@@ -1026,12 +1026,12 @@ async function runLint(args) {
     process.stdout.write(JSON.stringify(envelope, null, 2) + '\n');
   } else {
     for (const f of findings as ArtifactLintFinding[]) {
-      console.log(`[${f.severity}] ${f.id} — ${f.message}`);
+      console.log(`[${f.severity}] ${f.id} - ${f.message}`);
       if (f.snippet) console.log(`      ${f.snippet}`);
       console.log(`      fix: ${f.fix}`);
     }
     const summary = `${findings.length} finding${findings.length === 1 ? '' : 's'} (P0 ${counts.p0} · P1 ${counts.p1} · P2 ${counts.p2})`;
-    console.log(findings.length ? summary : `clean — ${summary}`);
+    console.log(findings.length ? summary : `clean - ${summary}`);
     if (flags['agent-message'] && agentMessage) console.log(`\n${agentMessage}`);
   }
   if (failed) process.exitCode = 1;
@@ -1297,7 +1297,7 @@ What the daemon does:
   * scans PATH for installed code-agent CLIs (claude, codex, devin, opencode, cursor-agent, ...)
   * serves the chat UI at http://<host>:<port>
   * proxies messages (text + images) to the selected agent via child-process spawn
-  * exposes project-scoped media scaffold/generate APIs — the unified path
+  * exposes project-scoped media scaffold/generate APIs - the unified path
      that the agent calls via \`od media scaffold\` and \`od media generate\`.`);
 }
 
@@ -1512,7 +1512,7 @@ async function runCollab(args) {
     process.exit(2);
   }
   // Team resource sharing (design systems / plugins / skills) is workspace-scoped
-  // — it takes a resource id, not a project id — so it runs before the project-id
+  // - it takes a resource id, not a project id - so it runs before the project-id
   // requirement below. `share-resource <kind> <id>` / `team-resources <kind>` are
   // the generic forms; the design-system aliases are kept for compatibility.
   const RESOURCE_BASE_PATHS = new Set(['design-systems', 'plugins', 'skills']);
@@ -1546,7 +1546,7 @@ async function runCollab(args) {
     };
 
     // Resolve the resource kind (URL base path), whether this lists or shares,
-    // and the target id — from either the aliases or the generic <kind> <id>.
+    // and the target id - from either the aliases or the generic <kind> <id>.
     const positionals = positionalArgs(rest, COLLAB_STRING_FLAGS);
     let basePath;
     let isList;
@@ -2524,7 +2524,7 @@ async function pollUntilDoneOrBudget(daemonUrl, taskId, sinceStart, options = {}
       if (file.providerError) {
         const provider = file.providerId || 'provider';
         console.error(
-          `WARN: ${provider} call failed — wrote stub fallback (${file.size} bytes) to ${file.name}`,
+          `WARN: ${provider} call failed - wrote stub fallback (${file.size} bytes) to ${file.name}`,
         );
         console.error(`WARN: reason: ${file.providerError}`);
         console.error(
@@ -2582,7 +2582,7 @@ function surfaceFetchError(err, daemonUrl) {
       ? cause.message
       : '';
   let detail = err && err.message ? err.message : String(err);
-  if (code) detail = `${code}${causeMsg ? ` — ${causeMsg}` : ''}`;
+  if (code) detail = `${code}${causeMsg ? ` - ${causeMsg}` : ''}`;
   else if (causeMsg) detail = causeMsg;
   console.error(`failed to reach daemon at ${daemonUrl}: ${detail}`);
   if (code === 'EPERM' || code === 'ENETUNREACH') {
@@ -2608,7 +2608,7 @@ function parseFlags(argv, opts = {}) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (!a || !a.startsWith('--')) {
-      // Positional — let the caller decide what to do with it.
+      // Positional - let the caller decide what to do with it.
       continue;
     }
     const eq = a.indexOf('=');
@@ -2727,7 +2727,7 @@ Common options:
   --aspect 1:1|16:9|9:16|4:3|3:4
   --quality <tier>          OpenDesign Cloud images only: published quality tier
                             (gpt-image-2 accepts low|medium|high). Omit to let the
-                            model's own default tier decide — tiers are priced
+                            model's own default tier decide - tiers are priced
                             differently, so this is a billing choice.
   --resolution <res>        OpenDesign Cloud images only: published output resolution
                             (e.g. 1K, 2K). Must name a resolution the model publishes
@@ -2739,7 +2739,7 @@ Common options:
   --voice <voice-id>        Speech / TTS voice.
   --language <lang>         Language boost for TTS (e.g. Chinese,Yue for Cantonese).
   --audio-kind music|speech|sfx
-  --composition-dir <path>  hyperframes-html only — project-relative path
+  --composition-dir <path>  hyperframes-html only - project-relative path
                             to the dir containing hyperframes.json /
                             meta.json / index.html. Use \`media scaffold\` to
                             create it; the daemon renders it with its pinned
@@ -2752,14 +2752,14 @@ Common options:
   --daemon-url <url>
 
 Output: a single line of JSON: {"file": { name, size, kind, mime, ... }}
-  Slow models return {"taskId": "...", "nextSince": n} with exit 0 instead —
+  Slow models return {"taskId": "...", "nextSince": n} with exit 0 instead -
   a successful queued handoff, not a failure. Poll with \`media wait\`:
   exit 0 = done ({"file": ...} on stdout), exit 2 = still running (re-run
   the wait command stderr prints, carrying forward nextSince), 5 = failed.
   Standalone wait calls accept the same Workspace pair. Tool-token calls retain
   their injected authorization proof automatically through every poll.
 
-Worked generate→wait loop (POSIX bash — do NOT translate to PowerShell;
+Worked generate→wait loop (POSIX bash - do NOT translate to PowerShell;
 parse JSON with python3, not jq):
 
   out=\$("\$OD_NODE_BIN" "\$OD_BIN" media generate --project "\$OD_PROJECT_ID" \\
@@ -2787,7 +2787,7 @@ Stock search:
   Unavailable service exits 5; use web search for failed or missing slots.
   Files are saved in the authorized project, independently of the CLI cwd.
   --slots '<json>'          JSON array: [{"id":"hero","query":"kung pao chicken",
-                            "width":1200,"orientation":"landscape"}] (1–30 slots;
+                            "width":1200,"orientation":"landscape"}] (1-30 slots;
                             width = display width in px, default 1200). Write
                             English queries that name the subject first (e.g.
                             "eyeglasses frame product"): providers match English
@@ -2917,7 +2917,7 @@ To register this server into a coding agent's own config automatically:
 //
 // Wires this daemon's stdio MCP server into a coding agent's own config.
 // The pure planner (mcp-agent-install.ts) maps a resolved launch spec onto
-// one of three strategies — drive the agent's own `mcp add/remove` CLI,
+// one of three strategies - drive the agent's own `mcp add/remove` CLI,
 // deep-merge a JSON config file, or (for unverified formats) print a
 // ready-to-paste snippet. This executor performs the IO the planner avoids.
 // ---------------------------------------------------------------------------
@@ -2942,7 +2942,7 @@ async function resolveMcpLaunchSpec(flags) {
       }
     }
   } catch {
-    // daemon not running / unreachable — fall through to the minimal spec
+    // daemon not running / unreachable - fall through to the minimal spec
   }
   return {
     command: 'od',
@@ -3091,7 +3091,7 @@ async function runMcpInstall(args) {
         agent: slug,
         kind: 'json',
         configPath: plan.configPath,
-        message: `${serverName} not present in ${plan.configPath} — nothing to remove`,
+        message: `${serverName} not present in ${plan.configPath} - nothing to remove`,
       });
       return;
     }
@@ -3182,9 +3182,9 @@ function exitWithStructuredError({ code, message, data }, byokApiKey) {
 // parsed body (so the caller can keep going if it doesn't want to exit).
 //
 // Daemon error envelopes come in two shapes in practice:
-//   { error: { code, message, ... } }  — newer routes using sendApiError
-//   { error: '<code>', message, ... }   — workspace authority routes
-//   { error: '<message>' }             — older flat-string routes
+//   { error: { code, message, ... } }  - newer routes using sendApiError
+//   { error: '<code>', message, ... }   - workspace authority routes
+//   { error: '<message>' }             - older flat-string routes
 //                                         (e.g. POST /api/templates at
 //                                         routes/project/index.ts)
 // Normalize so a flat-string body still surfaces its message to the
@@ -3285,7 +3285,7 @@ async function runPlugin(args) {
   }
 }
 
-// Phase 4 / spec §14.1 — `od plugin scaffold` interactive starter.
+// Phase 4 / spec §14.1 - `od plugin scaffold` interactive starter.
 //
 // Side-effect: writes a SKILL.md + open-design.json starter under
 // `<targetDir>/<id>/`. Default targetDir is process.cwd() so a code
@@ -3345,7 +3345,7 @@ Writes <out|cwd>/<id>/{SKILL.md,open-design.json,README.md}.`);
   }
 }
 
-// Phase 4 / spec §11.5 / plan §3.W1 — `od plugin validate <folder>`.
+// Phase 4 / spec §11.5 / plan §3.W1 - `od plugin validate <folder>`.
 //
 // Pre-install lint pass against an author's working dir. Optionally
 // fetches the daemon's registry view so skill / DS / atom refs in
@@ -3373,7 +3373,7 @@ Exit codes:
   const folder = rest[0];
 
   // Try to load the daemon's registry view; the validator works
-  // offline too — emits warnings instead of errors for refs we
+  // offline too - emits warnings instead of errors for refs we
   // can't resolve.
   let registry;
   if (!flags['no-daemon']) {
@@ -3441,7 +3441,7 @@ Exit codes:
   process.exit(result.ok ? 0 : 4);
 }
 
-// Phase 4 / spec §14 / plan §3.X1 — `od plugin pack <folder>`.
+// Phase 4 / spec §14 / plan §3.X1 - `od plugin pack <folder>`.
 //
 // Produces a gzip-compressed tar archive ready to install via the
 // installer's HTTPS-tarball path. The output path is folder-base +
@@ -3661,7 +3661,7 @@ function inferGithubHost(target) {
   }
 }
 
-// Phase 4 / spec §14 — `od plugin export <projectId> --as <target>`.
+// Phase 4 / spec §14 - `od plugin export <projectId> --as <target>`.
 //
 // Produces a publish-ready folder from the AppliedPluginSnapshot
 // behind a given project (or directly from a snapshot id). Three
@@ -3771,7 +3771,7 @@ Common options:
       return;
     }
     case 'search': {
-      // Plan §3.H4 / spec §12 — marketplace catalog query. Walks
+      // Plan §3.H4 / spec §12 - marketplace catalog query. Walks
       // every configured marketplace's plugins[] entry and matches
       // by substring on name + description + tags.
       const query = (rest.find((a) => !a.startsWith('-')) ?? '').toLowerCase();
@@ -3956,8 +3956,8 @@ Common options:
 
 // Plan §3.A5 / spec §16 Phase 5: operator escape hatch for snapshot GC.
 // Two subcommands:
-//   - `od plugin snapshots list [--project <id>]` — list snapshots
-//   - `od plugin snapshots prune [--before <ts>]` — force-delete expired
+//   - `od plugin snapshots list [--project <id>]` - list snapshots
+//   - `od plugin snapshots prune [--before <ts>]` - force-delete expired
 //     (and optionally older-than-cutoff unreferenced) rows.
 async function runPluginSnapshots(args) {
   const sub = args[0];
@@ -4171,7 +4171,7 @@ function pluginFetch(flags, input, init = {}) {
   return fetch(input, { ...init, headers });
 }
 
-// Plan §3.Y1 — filter knobs on `od plugin list` (and feeds
+// Plan §3.Y1 - filter knobs on `od plugin list` (and feeds
 // `od plugin search` below). Recognising these as string flags
 // keeps the parseFlags() argv consumer happy.
 async function runPluginList(rest) {
@@ -4202,7 +4202,7 @@ Lists installed plugins. Filters AND together: --task-kind=code-migration
   emitPluginList({ entries: filtered, json: !!flags.json, emptyMessage: 'No plugins matched the filter.' });
 }
 
-// Plan §3.Y1 — `od plugin search <query>`.
+// Plan §3.Y1 - `od plugin search <query>`.
 async function runPluginSearch(rest) {
   const flags = parseFlags(rest, {
     string:  PLUGIN_LIST_FILTER_FLAGS,
@@ -4231,7 +4231,7 @@ flags as 'od plugin list'.`);
   });
 }
 
-// Plan §3.DD1 — `od plugin stats`. Pretty-prints the
+// Plan §3.DD1 - `od plugin stats`. Pretty-prints the
 // pluginInventoryStats + snapshotInventoryStats aggregation. The
 // daemon-side route owns the SQLite reads; the CLI is a thin
 // formatter.
@@ -4449,7 +4449,7 @@ function resolveCliEntryVersion(entry, range) {
   };
 }
 
-// Plan §3.MM1 — `od plugin manifest <id>`. Prints just the parsed
+// Plan §3.MM1 - `od plugin manifest <id>`. Prints just the parsed
 // manifest JSON, no wrapper. Useful for plugin authors who want to
 // compare the daemon's view to their on-disk open-design.json
 // without scrolling past the registry record fields (sourceKind /
@@ -4479,7 +4479,7 @@ async function runPluginManifest(rest) {
   process.stdout.write(JSON.stringify(data.manifest, null, 2) + '\n');
 }
 
-// Plan §3.MM2 — `od plugin sources`. Lists every distinct install
+// Plan §3.MM2 - `od plugin sources`. Lists every distinct install
 // source string + count of plugins installed from it, ordered by
 // count descending then source ascending. Useful for ops audits
 // ('which github repos do my plugins come from') + for plugin
@@ -4568,7 +4568,7 @@ async function runPluginInstall(rest) {
         if (!flags.json) console.log(`[install] ${data?.phase ?? '...'}: ${data?.message ?? ''}`);
       } else if (event === 'success') {
         finalEvent = data;
-        if (!flags.json) console.log(`[install] ok — ${data?.plugin?.id}@${data?.plugin?.version} (trust=${data?.plugin?.trust})`);
+        if (!flags.json) console.log(`[install] ok - ${data?.plugin?.id}@${data?.plugin?.version} (trust=${data?.plugin?.trust})`);
         if (!flags.json && Array.isArray(data?.warnings) && data.warnings.length > 0) {
           for (const w of data.warnings) console.log(`[install] warn: ${w}`);
         }
@@ -4589,10 +4589,10 @@ async function runPluginInstall(rest) {
   process.exit(exitCode);
 }
 
-// Plan §3.Z2 — `od plugin upgrade <id>`. Re-installs the plugin
+// Plan §3.Z2 - `od plugin upgrade <id>`. Re-installs the plugin
 // from its recorded source. Streams the same SSE event shape as
 // install, so 'progress' / 'success' / 'error' arrive verbatim.
-// Plan §3.II1 — `od plugin events tail`. Tails the daemon's
+// Plan §3.II1 - `od plugin events tail`. Tails the daemon's
 // in-memory plugin event ring buffer via SSE. -f keeps the
 // connection open and prints live events; otherwise prints the
 // backlog and exits when the daemon closes the stream.
@@ -4793,14 +4793,14 @@ Lifecycle vocabulary:
   }
 }
 
-// Plan §3.FF1 — `od plugin verify <pluginId>` CI meta-command.
+// Plan §3.FF1 - `od plugin verify <pluginId>` CI meta-command.
 //
 // Reads an optional .od-verify.json config from the plugin folder
 // or --config <path> and runs the enabled subset of:
 //
-//   doctor   — calls /api/plugins/<id>/doctor
-//   simulate — calls /api/plugins/<id> + simulatePipeline()
-//   canon    — fetches /api/applied-plugins/<snapshotId>/canon and
+//   doctor   - calls /api/plugins/<id>/doctor
+//   simulate - calls /api/plugins/<id> + simulatePipeline()
+//   canon    - fetches /api/applied-plugins/<snapshotId>/canon and
 //              compares against the on-disk fixture
 //
 // Aggregates into a unified pass/fail report. Exit 4 on any failed
@@ -4819,10 +4819,10 @@ async function runPluginVerify(rest) {
 CI meta-command. Reads an optional config from
 '<plugin-folder>/.od-verify.json' (or --config <path>) and runs:
 
-  doctor    — manifest + atom + ref lint
-  simulate  — convergence dry-run for every until expression,
+  doctor    - manifest + atom + ref lint
+  simulate  - convergence dry-run for every until expression,
               with per-stage signals from config.simulate.signals
-  canon     — byte-equality check against
+  canon     - byte-equality check against
               config.canon.fixturePath using the snapshot at
               config.canon.snapshotId
 
@@ -4965,11 +4965,11 @@ Exit codes:
   process.exit(report.passed ? 0 : 4);
 }
 
-// Plan §3.EE1 — `od plugin simulate <pluginId> [-s key=value ...]`.
+// Plan §3.EE1 - `od plugin simulate <pluginId> [-s key=value ...]`.
 //
 // Walks the plugin's pipeline against caller-supplied signals and
 // reports per-stage convergence (iterations + outcome). No LLM is
-// invoked — this is a pure devloop dry-run for testing 'until'
+// invoked - this is a pure devloop dry-run for testing 'until'
 // expressions.
 //
 // Signals are supplied via repeatable -s key=value flags. The
@@ -5069,7 +5069,7 @@ Closed signal vocabulary:
   if (result.outcome === 'cap-hit' || result.outcome === 'unparsable') process.exit(4);
 }
 
-// Plan §3.CC1 / §3.DD2 — `od plugin canon <snapshotId>`. Prints the
+// Plan §3.CC1 / §3.DD2 - `od plugin canon <snapshotId>`. Prints the
 // canonical `## Active plugin` block a snapshot will splice into
 // the system prompt. Useful for understanding what the agent
 // reads + locking byte-equality regression tests against the
@@ -5157,7 +5157,7 @@ fixtures into a plugin's own tests/.`);
   if (!body.endsWith('\n')) process.stdout.write('\n');
 }
 
-// Plan §3.AA1 — `od plugin diff <a> <b>`. Compares two installed
+// Plan §3.AA1 - `od plugin diff <a> <b>`. Compares two installed
 // plugins (by id) and prints a structured report. Useful for
 // debugging replay invariance + reviewing version bumps.
 async function runPluginDiff(rest) {
@@ -5198,7 +5198,7 @@ into 'added' / 'removed' / 'changed' with one line per field.`);
     console.log(`[diff] ${idA} and ${idB} are equivalent on every recorded field.`);
     return;
   }
-  console.log(`[diff] ${idA} \u2194 ${idB} — ${report.added} added, ${report.removed} removed, ${report.changed} changed`);
+  console.log(`[diff] ${idA} \u2194 ${idB} - ${report.added} added, ${report.removed} removed, ${report.changed} changed`);
   for (const e of report.entries) {
     const tag = e.kind === 'added'   ? '+'
               : e.kind === 'removed' ? '-'
@@ -5259,7 +5259,7 @@ async function runPluginUpgrade(rest) {
         if (!flags.json) console.log(`[upgrade] ${data?.phase ?? '...'}: ${data?.message ?? ''}`);
       } else if (event === 'success') {
         finalEvent = data;
-        if (!flags.json) console.log(`[upgrade] ok — ${data?.plugin?.id}@${data?.plugin?.version} (trust=${data?.plugin?.trust})`);
+        if (!flags.json) console.log(`[upgrade] ok - ${data?.plugin?.id}@${data?.plugin?.version} (trust=${data?.plugin?.trust})`);
         if (!flags.json && Array.isArray(data?.warnings) && data.warnings.length > 0) {
           for (const w of data.warnings) console.log(`[upgrade] warn: ${w}`);
         }
@@ -5514,13 +5514,13 @@ Lists and formalizes persisted skill-to-plugin candidates.`);
   process.exit(2);
 }
 
-// Phase 4 / spec §14.1 — `od plugin publish --to <catalog>`.
+// Phase 4 / spec §14.1 - `od plugin publish --to <catalog>`.
 //
 // Reads the installed plugin's manifest metadata (or the snapshot's
 // frozen view via --snapshot-id) and prints the catalog submission URL
 // + PR body. With `--open` the CLI auto-launches the system browser
 // against the URL so the author lands on the catalog's submission form
-// in one step. We never POST anywhere — the upstream review flow is
+// in one step. We never POST anywhere - the upstream review flow is
 // always under the author's control.
 async function runPluginPublish(rest) {
   const flags = parseFlags(rest, {
@@ -6239,7 +6239,7 @@ marks a version unresolvable for new installs while preserving lockfile replay.`
 }
 
 async function runPluginDoctor(rest) {
-  // Plan §3.HH1 — --strict promotes warnings to errors so CI can
+  // Plan §3.HH1 - --strict promotes warnings to errors so CI can
   // opt into 'no warnings allowed' mode without parsing the issue
   // list manually.
   const flags = parseFlags(rest, {
@@ -6284,7 +6284,7 @@ function safeParseJson(s) {
   try { return JSON.parse(s); } catch { return null; }
 }
 
-// `od plugin replay <runId> --snapshot-id <id>` — re-emit the immutable
+// `od plugin replay <runId> --snapshot-id <id>` - re-emit the immutable
 // snapshot the original run was launched against, so the caller (or
 // another agent) can re-apply the same plugin against fresh state. Phase
 // 2A keeps replay headless: the CLI prints the snapshot + rerun bundle;
@@ -6329,7 +6329,7 @@ async function runPluginReplay(rest) {
   console.log('[replay] re-apply via: od plugin apply ' + data.rerun?.pluginId + ' --inputs ' + JSON.stringify(JSON.stringify(data.rerun?.inputs ?? {})));
 }
 
-// `od plugin trust <id> --capabilities <comma-sep>` — flip a plugin's
+// `od plugin trust <id> --capabilities <comma-sep>` - flip a plugin's
 // capabilities_granted set. Plan §3.A2 / spec §9.1: the CLI is the
 // canonical write surface (invariant I4). The daemon validates the
 // capability vocabulary; unknown / malformed entries surface as
@@ -6472,7 +6472,7 @@ async function runUiShow(rest) {
     process.exit(1);
   }
   const data = await resp.json();
-  // Plan §6 Phase 2A.5 — `--schema` prints the spec's JSON Schema
+  // Plan §6 Phase 2A.5 - `--schema` prints the spec's JSON Schema
   // only (null if the surface declares none). Designed to feed
   // `od ui respond --value-json "$(...)"` in headless / agent flows.
   if (flags.schema) {
@@ -6944,7 +6944,7 @@ async function runFigma(args) {
 // scripted job) can drive the brand lifecycle without rendering a page.
 // Storage is /api/brands on the local daemon; a "brand" registers a `user:<id>`
 // design system under the hood, so applying a brand reuses the existing
-// design-system apply flow — there is no separate brandId apply path.
+// design-system apply flow - there is no separate brandId apply path.
 // ---------------------------------------------------------------------------
 
 // Derive a short domain for list output from a brand's source URL.
@@ -7036,8 +7036,8 @@ async function runBrandCreate(rest) {
     process.exit(2);
   }
   const positional = positionalArgs(rest, BRAND_STRING_FLAGS);
-  // The URL may arrive as a positional, or — for parity with other long-input
-  // subcommands — via --prompt-file <path|-> (a file or stdin). The positional
+  // The URL may arrive as a positional, or - for parity with other long-input
+  // subcommands - via --prompt-file <path|-> (a file or stdin). The positional
   // wins when both are present.
   let url = positional[0];
   if (!url) {
@@ -7080,7 +7080,7 @@ async function runBrandCreate(rest) {
     return;
   }
   process.stderr.write(
-    '[brand] extraction project created — open it to run the agent, ' +
+    '[brand] extraction project created - open it to run the agent, ' +
     `then it self-finalizes with: od brand finalize ${data?.id ?? ''}\n`,
   );
   // Clean stdout result: "<id>\t<projectId>" so jq / cut / xargs can chain.
@@ -7708,7 +7708,7 @@ async function runProject(args) {
                     Synthesize a resume-conversation handoff prompt.
   od project artifact-snapshot list --project <id> --conversation <id>
                     --message <id> [--json]
-                    List one chat message's artifact refs — which version each
+                    List one chat message's artifact refs - which version each
                     card shows and which one clicking it opens.
   od project artifact-snapshot inspect <snapshotId> --project <id> [--json]
                     Print one immutable snapshot's metadata (digest, size,
@@ -8513,7 +8513,7 @@ Common options:
 }
 
 /**
- * `od run notices` — the same feed as `GET /api/run-notices` (P0-24 N10).
+ * `od run notices` - the same feed as `GET /api/run-notices` (P0-24 N10).
  * Without `--watch` it prints what is there after `--after` and exits; with
  * it, it keeps polling and prints each new notice once (ND-JSON with --json).
  * A daemon restart starts a new epoch: the watcher resumes from its newest
@@ -8599,7 +8599,7 @@ async function runRun(args) {
   od run notices [--after <seq>] [--watch] [--json]
                                             Turns that ended on this machine and
                                             should reach the user (needs reply /
-                                            new reply / failed) — the feed the
+                                            new reply / failed) - the feed the
                                             desktop client turns into system
                                             notifications. --watch keeps polling.
 
@@ -8735,7 +8735,7 @@ Common options:
       const data = await resp.json();
       if (flags.json) return process.stdout.write(JSON.stringify(data, null, 2) + '\n');
       // Clean stdout stays machine-chainable; the hint goes to stderr.
-      process.stderr.write('[run] delivered into the running turn — the agent keeps its work\n');
+      process.stderr.write('[run] delivered into the running turn - the agent keeps its work\n');
       console.log(`${id}\t${data?.messageId ?? ''}\t${data?.run?.status ?? '-'}`);
       return;
     }
@@ -8779,8 +8779,8 @@ Common options:
         message,
         // This message is a continuation directive, not a self-contained
         // request, and this command ships no transcript with it. Declaring that
-        // lets the daemon — the only layer that knows whether the stored
-        // session survived its model/cwd/cursor guard — decide whether to send
+        // lets the daemon - the only layer that knows whether the stored
+        // session survived its model/cwd/cursor guard - decide whether to send
         // the directive alone or reseed the original request alongside it.
         resumeContinuation: true,
         analyticsHints: { entryFrom: 'resume_continue' },
@@ -9020,7 +9020,7 @@ async function streamRunEvents(base, initialRunId, workspaceHeaders = {}, byokAp
 
 // `od shell --project <id>` opens an interactive PTY rooted at the project's
 // working directory and attaches to it. This is the CLI parity for the web
-// Terminal tab — both surfaces drive `/api/projects/:id/terminals`. Output
+// Terminal tab - both surfaces drive `/api/projects/:id/terminals`. Output
 // streams down over SSE; local keystrokes are POSTed back up to /stdin. When
 // stdin is a TTY we flip it into raw mode so the remote shell sees per-key
 // bytes (ctrl-c, arrows, tab) instead of line-buffered input.
@@ -9586,7 +9586,7 @@ function renderDiffLineContent(value) {
 }
 
 // `od templates …` is the headless face of NewProjectPanel /
-// ExamplesTab — same /api/templates store, same DTO shapes. External
+// ExamplesTab - same /api/templates store, same DTO shapes. External
 // agents (hermes-agent, openclaw, custom bots) use these to snapshot a
 // project as a reusable starting point, list everything the user has
 // saved, or drop one that is no longer needed. The web UI and the CLI
@@ -9846,7 +9846,7 @@ Common options:
 }
 
 // ---------------------------------------------------------------------------
-// Subcommand: od chat  (Side Chat — context-seeded conversations)
+// Subcommand: od chat  (Side Chat - context-seeded conversations)
 //
 // `od chat new --project <id> [--seed-from <cid>] [--fork-after <mid>] [--title "<t>"] [--json]`
 //   Creates a new conversation that inherits another conversation's context
@@ -9860,7 +9860,7 @@ async function runChat(args) {
   if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
     console.log(`Usage:
   od chat new --project <id> [--seed-from <cid>] [--fork-after <mid>] [--title "<title>"] [--mode design|chat|plan] [--json]
-                                           Create a Side Chat — a new conversation
+                                           Create a Side Chat - a new conversation
                                            that copies in another conversation's
                                            context (--seed-from). Use
                                            --fork-after to stop at one source
@@ -9979,7 +9979,7 @@ Common options:
   }
 }
 
-// Plan §3.GG1 — `od daemon db status`. Prints a SQLite inventory
+// Plan §3.GG1 - `od daemon db status`. Prints a SQLite inventory
 // (file path, size on disk, schema version, per-table row counts).
 async function runDaemonDb(rest, flags) {
   const sub = rest[0];
@@ -10153,7 +10153,7 @@ async function runDaemonStop(flags) {
 // ---------------------------------------------------------------------------
 // Subcommand: od atoms / od skills / od design-systems / od craft / od status
 //
-// Plan §3.H2 / §3.H3 / spec §12.2 — design-library + status introspection
+// Plan §3.H2 / §3.H3 / spec §12.2 - design-library + status introspection
 // CLI parity. Every UI feature reachable via /api/* gets a CLI mirror
 // (the §11.7 "headless = canonical" invariant).
 // ---------------------------------------------------------------------------
@@ -10550,7 +10550,7 @@ async function runLibraryList(name, args) {
 // The uninstall arm exists because the Extensions page grew a 卸载 action, and a
 // capability that only one surface can reach is not shippable (AGENTS.md,
 // "Capability exposure (UI/CLI dual-track)"). Bundled skills are refused by the
-// route, not here — the daemon owns that judgement.
+// route, not here - the daemon owns that judgement.
 async function runSkills(args) {
   if (!args[0] || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
     console.log(`Usage:
@@ -10653,9 +10653,9 @@ async function runDesignSystems(args) {
 
 // od design-systems download <id> [--out <path>] [--json] [--daemon-url <url>]
 //
-// Streams GET /api/design-systems/:id/archive — the same self-contained brand
+// Streams GET /api/design-systems/:id/archive - the same self-contained brand
 // .zip (every system file plus a generated SKILLS.md usage guide) the web
-// "Download brand" button produces — and writes it to disk. Only user design
+// "Download brand" button produces - and writes it to disk. Only user design
 // systems are downloadable; presets return 404.
 async function runDesignSystemDownload(args) {
   if (args.length === 0 || args[0] === 'help' || args.includes('--help') || args.includes('-h')) {
@@ -10862,7 +10862,7 @@ Starts a review-gated TOKEN_SCHEMA token contract rebuild for an editable import
 //   [--import-mode <mode>] [--craft <slug,slug>] [--json] [--daemon-url <url>]
 //
 // Imports a shadcn registry item as an editable user design system via
-// POST /api/design-systems/import/shadcn — the CLI mirror of the Settings →
+// POST /api/design-systems/import/shadcn - the CLI mirror of the Settings →
 // Design systems "shadcn" import source. <reference> is the shadcn CLI
 // shorthand "<owner>/<repo>/<item>" (e.g. shadcn/ui/theme-zinc) or a direct
 // https URL to a registry-item JSON document.
@@ -11027,7 +11027,7 @@ async function runVersion(args) {
   console.log(version);
 }
 
-// `od whats-new` — CLI mirror of the home-surface post-update highlights
+// `od whats-new` - CLI mirror of the home-surface post-update highlights
 // card. Prints the current hand-curated "what's new" highlight (or a note
 // when there is none right now), from the same /api/whats-new endpoint the
 // web UI reads.
@@ -11065,13 +11065,13 @@ async function runWhatsNew(args) {
 //
 // Plan §3.I2 / spec §12.2.
 //
-// `od doctor` — repo-wide diagnostics. Hits /api/daemon/status, lists
+// `od doctor` - repo-wide diagnostics. Hits /api/daemon/status, lists
 // installed plugins + runs the per-plugin doctor, lists skills /
 // design-systems / craft / atoms. Exits non-zero when any plugin
 // doctor returns ok=false. Useful in CI: a failed exit causes the
 // pipeline to surface plugin-system regressions.
 //
-// `od config get/set/list/unset` — wraps GET/PUT /api/app-config so a
+// `od config get/set/list/unset` - wraps GET/PUT /api/app-config so a
 // code agent can flip provider keys / orbit settings / pet config
 // without leaving the terminal. JSON values pass through unchanged;
 // scalar strings/numbers/booleans are coerced.
@@ -11143,7 +11143,7 @@ or the daemon cannot be reached.`);
     report.issues.push({ severity: 'warn', code: 'library-list-failed', message: String(err?.message ?? err) });
   }
 
-  // Plugin doctor — runs the daemon's per-plugin check on every install.
+  // Plugin doctor - runs the daemon's per-plugin check on every install.
   try {
     const listResp = await fetch(`${base}/api/plugins`);
     if (listResp.ok) {
@@ -11696,7 +11696,7 @@ async function runMemory(args) {
   process.exit(2);
 }
 
-// `od memory profile <show|set>` — the singleton structured user profile the
+// `od memory profile <show|set>` - the singleton structured user profile the
 // PRE loop (intent gateway) reads to expand a short query into a full brief.
 // Same store as every other memory entry; the well-known id is `user_profile`.
 async function runMemoryProfile(base, rest, flags, writeJson) {
@@ -11734,7 +11734,7 @@ async function runMemoryProfile(base, rest, flags, writeJson) {
       name: existing?.name || 'Work profile',
       description: typeof flags.description === 'string'
         ? flags.description
-        : (existing?.description ?? 'How I work — read by the intent gateway.'),
+        : (existing?.description ?? 'How I work - read by the intent gateway.'),
       body: nextBody,
     };
     let resp;
@@ -11761,7 +11761,7 @@ async function runMemoryProfile(base, rest, flags, writeJson) {
   process.exit(2);
 }
 
-// `od memory rule <list|add>` — verified rules (assertion + check) the POST
+// `od memory rule <list|add>` - verified rules (assertion + check) the POST
 // self-verify loop enforces as scorecard rubric items.
 async function runMemoryRule(base, rest, flags, writeJson) {
   const parts = memoryPositionals(rest);
@@ -11889,7 +11889,7 @@ async function runMemoryRule(base, rest, flags, writeJson) {
 // Collect annotation inputs for `od memory rule suggest` from either a single
 // --note (+ optional target context) or a --prompt-file. The prompt-file may
 // hold a JSON array of annotation objects, or plain text with one note per
-// line — both keep the --prompt-file embeddability contract clean for jobs
+// line - both keep the --prompt-file embeddability contract clean for jobs
 // that pipe through xargs/jq/heredoc.
 async function collectDistillAnnotations(flags) {
   const annotations = [];
@@ -11939,7 +11939,7 @@ async function collectDistillAnnotations(flags) {
   return annotations;
 }
 
-// `od memory verify <list|clear>` — inspect or wipe the POST self-verify
+// `od memory verify <list|clear>` - inspect or wipe the POST self-verify
 // enforcement history (THREAD 2). `list` prints recent enforcement outcomes
 // (`pass` / `fail` / `missing`) the daemon recorded for artifact turns with
 // active rules; `clear` drops the in-memory buffer.
@@ -11996,7 +11996,7 @@ async function runMemoryVerify(base, rest, flags, writeJson) {
   process.exit(2);
 }
 
-// `od memory config` — inspect or toggle the master switch + the four hooks.
+// `od memory config` - inspect or toggle the master switch + the four hooks.
 // No flags ⇒ print every switch (read off GET /api/memory). Toggle flags ⇒
 // PATCH /api/memory/config and print the result. Flags accept true|false.
 async function runMemoryConfig(base, rest, flags, writeJson) {
@@ -12078,7 +12078,7 @@ async function runMemoryConfig(base, rest, flags, writeJson) {
 // Headless surface for the Automations tab. This is the dual-track contract:
 // every capability the Automations UI exposes is reachable here so an
 // external agent (hermes-agent, openclaw, custom Slackbot, etc.) can run
-// the full lifecycle — list, create, fire, harvest, retire — without
+// the full lifecycle - list, create, fire, harvest, retire - without
 // rendering a page. Storage is /api/routines on the local daemon; the
 // "routine" name is the implementation detail, "automation" is the user-
 // facing surface.

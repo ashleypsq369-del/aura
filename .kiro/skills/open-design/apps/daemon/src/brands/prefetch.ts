@@ -10,11 +10,11 @@ import { findRealElementRange, findRealTagOffset, HTML_TAG_PATTERNS } from '@ope
  * linked CSS server-side and harvest everything the synthesis agent needs:
  * ranked color candidates, font stacks, logo candidate files, and copy for
  * voice analysis. The output is a compact `material.md` digest that gets
- * inlined into a SINGLE agent prompt — the agent never needs WebFetch/Bash
+ * inlined into a SINGLE agent prompt - the agent never needs WebFetch/Bash
  * in the happy path. This is what makes extraction take ~30s instead of the
- * 2–3 min multi-turn agent-driven flow in open-design.
+ * 2-3 min multi-turn agent-driven flow in open-design.
  *
- * No headless browser, no cheerio — regex over HTML at this fidelity is
+ * No headless browser, no cheerio - regex over HTML at this fidelity is
  * fine; the LLM downstream is tolerant of harvest noise.
  */
 
@@ -33,7 +33,7 @@ export type ColorCandidate = {
   hex: string;
   /** Raw declarations folded into this candidate. */
   count: number;
-  /** True for near-white / near-black — listed but de-prioritized. */
+  /** True for near-white / near-black - listed but de-prioritized. */
   extreme?: boolean;
   /** Compact evidence strings such as css-var:--accent, prop:background, logo-svg:mark.svg. */
   sources?: string[];
@@ -70,7 +70,7 @@ export type PrefetchResult = {
   /** Path (relative to the brand dir) of a page screenshot used as vision
    *  material for the synthesis agent. Always null server-side now that the
    *  headless-Chrome capture was removed (it could not be constrained to public
-   *  hosts — SSRF). */
+   *  hosts - SSRF). */
   screenshot: string | null;
   /** True when the harvest looks too thin to synthesize from (likely a
    *  bot-blocked or fully JS-rendered site). The synthesis prompt switches
@@ -78,7 +78,7 @@ export type PrefetchResult = {
   thin: boolean;
   /** True when every fetch path returned an anti-bot challenge page
    *  (Cloudflare "Just a moment…" etc.). The challenge page's own content is
-   *  DISCARDED — colors/fonts/copy stay empty rather than polluting the brand
+   *  DISCARDED - colors/fonts/copy stay empty rather than polluting the brand
    *  with the interstitial's text and palette. */
   blocked: boolean;
   materialMd: string;
@@ -105,7 +105,7 @@ async function fetchText(
   cap: number,
   opts?: {
     /** Return the body of a non-2xx response too. Bot walls (Cloudflare…)
-     *  serve their challenge page with a 403/503 — for the main page fetch
+     *  serve their challenge page with a 403/503 - for the main page fetch
      *  that body is signal (it routes us into the blocked-mode pipeline),
      *  not an error. */
     allowHttpError?: boolean;
@@ -134,7 +134,7 @@ async function fetchText(
 /**
  * Download an image. CDNs commonly hotlink-protect brand assets, so we send
  * the full browser-shaped header set (Referer to the page that embeds the
- * image + Sec-Fetch-* + image Accept) and retry once — that defeats most
+ * image + Sec-Fetch-* + image Accept) and retry once - that defeats most
  * referer checks without needing a real browser.
  */
 async function fetchBinary(
@@ -173,7 +173,7 @@ async function fetchBinary(
 
 const CHALLENGE_TITLE_RE =
   /just a moment|attention required|access denied|verifying you are human|checking your browser|security check|please verify|are you a robot|ddos[- ]guard|captcha/i;
-// Markers that only ever appear on the interstitial itself — the legacy CF
+// Markers that only ever appear on the interstitial itself - the legacy CF
 // verification shell, the challenge opt blob, the "turn on JS and cookies"
 // copy, the PerimeterX/Imperva/EdgeOne block-page resources. Their presence is
 // proof the body IS the wall, never the real site.
@@ -188,8 +188,8 @@ const CHALLENGE_AMBIGUOUS_RE = /challenges\.cloudflare\.com|cf-turnstile|datadom
 
 /** A real interstitial is content-sparse: a verification widget and not much
  *  else. A real page that merely embeds an anti-bot widget still ships a full
- *  nav and body. Count the cheap structural signals a harvest feeds on — links,
- *  headings, paragraphs — to tell the two apart. */
+ *  nav and body. Count the cheap structural signals a harvest feeds on - links,
+ *  headings, paragraphs - to tell the two apart. */
 function looksContentRich(html: string): boolean {
   const scan = html.slice(0, 400_000);
   const anchors = (scan.match(/<a\s[^>]*\bhref=/gi) ?? []).length;
@@ -200,13 +200,13 @@ function looksContentRich(html: string): boolean {
 
 /** True when the HTML is a bot-protection interstitial (Cloudflare, DataDome,
  *  PerimeterX, …) rather than the real site. Harvesting one of these poisons
- *  every downstream field — "Just a moment…" becomes the brand name.
+ *  every downstream field - "Just a moment…" becomes the brand name.
  *
  *  The check is deliberately asymmetric: a challenge *title* or a challenge-only
  *  body marker blocks unconditionally, but an embeddable widget marker
  *  (Turnstile / DataDome) blocks only when the page is also sparse. That
- *  asymmetry is what lets the in-app browser's post-wall DOM — a real,
- *  content-rich page that still references the widget — survive the harvest
+ *  asymmetry is what lets the in-app browser's post-wall DOM - a real,
+ *  content-rich page that still references the widget - survive the harvest
  *  instead of being discarded as if it were the wall itself. */
 export function isChallengePage(html: string): boolean {
   const title = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "";
@@ -219,7 +219,7 @@ export function isChallengePage(html: string): boolean {
 
 /**
  * Captured pages are stored as READ-ONLY source evidence. Defuse every script
- * tag so previewing a capture can never run the source site's live code —
+ * tag so previewing a capture can never run the source site's live code -
  * auth widgets (Google One Tap sign-in bubbles), analytics beacons, consent
  * SDKs. The markup stays readable: only execution is disabled, by leading the
  * tag with a non-JS type attribute (on duplicate attributes the HTML parser
@@ -229,7 +229,7 @@ function defuseScripts(html: string): string {
   return html.replace(/<script\b/gi, '<script type="text/od-defused-script"');
 }
 
-/** Text of the document's own <title>, or "" — never one held in a string. */
+/** Text of the document's own <title>, or "" - never one held in a string. */
 function readRealTitleText(html: string): string {
   // The close is found by the raw-text rule rather than as text: `</title-page>`
   // is not a close, and `toLowerCase()` is not length-preserving, so offsets
@@ -308,7 +308,7 @@ function toHexPair(n: number): string {
 }
 
 /** Normalize a CSS color literal to #rrggbb. Returns null for unsupported
- *  syntaxes (oklch, var() refs, named colors) — those are counted raw. */
+ *  syntaxes (oklch, var() refs, named colors) - those are counted raw. */
 export function normalizeColor(raw: string): string | null {
   const v = raw.trim().toLowerCase();
   const hex = /^#([0-9a-f]{3,8})$/.exec(v);
@@ -563,7 +563,7 @@ function pngSize(buf: Buffer): { w: number; h: number } | null {
  * Last-resort logo tier: public favicon services keyed by hostname. These
  * never touch the origin, so they work even when the site itself is behind
  * hotlink protection or a bot challenge. Google's service falls back to a
- * 16×16 generic globe for unknown domains — the PNG-dimension check rejects
+ * 16×16 generic globe for unknown domains - the PNG-dimension check rejects
  * that so a placeholder never becomes the brand mark.
  */
 async function fetchServiceFavicons(host: string, logosDir: string): Promise<LogoCandidate[]> {
@@ -635,7 +635,7 @@ export function findLogoRefs(html: string, baseUrl: string): LogoRef[] {
   return refs.filter((r) => !seen.has(r.url) && (seen.add(r.url), true));
 }
 
-/** First inline <svg> inside <header>/<nav> — very often the wordmark. */
+/** First inline <svg> inside <header>/<nav> - very often the wordmark. */
 export function extractInlineHeaderSvg(html: string): string | null {
   const header = /<header[\s\S]{0,12000}?<\/header>/i.exec(html)?.[0] ??
     /<nav[\s\S]{0,12000}?<\/nav>/i.exec(html)?.[0];
@@ -687,12 +687,12 @@ function inlineStyleSelector(tagName: string, attrs: string): string {
 
 function buildMaterialMd(r: Omit<PrefetchResult, "materialMd" | "thin">): string {
   const lines: string[] = [];
-  lines.push(`# Brand material — ${r.finalUrl}`, "");
+  lines.push(`# Brand material - ${r.finalUrl}`, "");
   if (r.blocked) {
     lines.push(
       "⚠️ BLOCKED: the site answered every fetch with an anti-bot challenge page",
       "(Cloudflare or similar). The interstitial's own content was DISCARDED, so",
-      "the sections below are empty or come from public favicon services — they",
+      "the sections below are empty or come from public favicon services - they",
       "do NOT describe the real site.",
       "",
     );
@@ -704,7 +704,7 @@ function buildMaterialMd(r: Omit<PrefetchResult, "materialMd" | "thin">): string
   lines.push("## Measured colors (frequency-ranked from the site's actual CSS)", "");
   if (r.colors.length === 0) lines.push("(none found)");
   for (const c of r.colors) {
-    const sources = c.sources?.length ? ` — ${c.sources.slice(0, 3).join("; ")}` : "";
+    const sources = c.sources?.length ? ` - ${c.sources.slice(0, 3).join("; ")}` : "";
     lines.push(`- \`${c.hex}\` ×${c.count}${c.extreme ? " (near-white/black)" : ""}${sources}`);
   }
   lines.push("");
@@ -723,7 +723,7 @@ function buildMaterialMd(r: Omit<PrefetchResult, "materialMd" | "thin">): string
   if (r.fontFiles.length) {
     lines.push("## Self-hosted webfonts (downloaded into ./fonts/)", "");
     for (const f of r.fontFiles) {
-      lines.push(`- "${f.family}" ${f.weight} ${f.style} — fonts/${f.file} (${f.format}, ${f.bytes} bytes)`);
+      lines.push(`- "${f.family}" ${f.weight} ${f.style} - fonts/${f.file} (${f.format}, ${f.bytes} bytes)`);
     }
     lines.push(
       "",
@@ -737,12 +737,12 @@ function buildMaterialMd(r: Omit<PrefetchResult, "materialMd" | "thin">): string
   lines.push("## Logo candidates (downloaded into ./logos/)", "");
   if (r.logos.length === 0) lines.push("(none downloadable)");
   for (const l of r.logos) {
-    lines.push(`- logos/${l.file} — ${l.kind}, ${l.bytes} bytes, from ${l.sourceUrl}`);
+    lines.push(`- logos/${l.file} - ${l.kind}, ${l.bytes} bytes, from ${l.sourceUrl}`);
   }
   if (r.screenshot) {
     lines.push(
       "",
-      `A full-page screenshot was captured at \`${r.screenshot}\` — Read it with vision to locate the logo and judge the visual style.`,
+      `A full-page screenshot was captured at \`${r.screenshot}\` - Read it with vision to locate the logo and judge the visual style.`,
     );
   }
   lines.push("");
@@ -782,7 +782,7 @@ export async function prefetchBrand(
   throwIfPrefetchAborted(signal);
   // A non-2xx body is only useful when it's a bot-wall challenge page (it
   // routes into blocked mode below). A site's own 404/500 page is not the
-  // brand — treat that as a failed fetch.
+  // brand - treat that as a failed fetch.
   if (page && !page.ok && !isChallengePage(page.text)) page = null;
   throwIfPrefetchAborted(signal);
   let html: string;
@@ -792,7 +792,7 @@ export async function prefetchBrand(
     baseUrl = page.finalUrl;
   } else if (page) {
     // Bot-challenge page. The system-Chrome render fallback was removed (a
-    // spawned browser can't be constrained to public hosts — SSRF), so keep
+    // spawned browser can't be constrained to public hosts - SSRF), so keep
     // going in blocked mode: the favicon-service logo tier still runs and the
     // challenge content is discarded below. JS-heavy sites are rendered by the
     // in-app browser path (prefetchFromHtml), not here.
@@ -833,11 +833,11 @@ async function harvestFromHtml(
   // through when the caller supplies pre-rendered DOM).
   const blocked = isChallengePage(html);
   if (blocked) {
-    onProgress("blocked", "anti-bot challenge page — discarding its content from the harvest");
+    onProgress("blocked", "anti-bot challenge page - discarding its content from the harvest");
   }
 
   // ── CSS: linked stylesheets + inline <style> + style="" attributes ──
-  // A challenge page's palette/fonts belong to Cloudflare, not the brand —
+  // A challenge page's palette/fonts belong to Cloudflare, not the brand -
   // skip the whole stage so nothing of it leaks into the measured material.
   let allCss = "";
   let colors: ColorCandidate[] = [];
@@ -869,7 +869,7 @@ async function harvestFromHtml(
       cssLinks.slice(0, MAX_CSS_FILES).map((u) => fetchText(u, CSS_CAP, { signal })),
     );
     for (const r of cssResults) if (r) cssChunks.push(r.text);
-    // Google Fonts CSS carries the canonical family names — fetch those too.
+    // Google Fonts CSS carries the canonical family names - fetch those too.
     const gfResults = await Promise.all(
       googleFontsUrls.slice(0, 2).map((u) => fetchText(u, CSS_CAP, { signal })),
     );
@@ -903,7 +903,7 @@ async function harvestFromHtml(
   const logosDir = path.join(brandDir, "logos");
   fs.mkdirSync(logosDir, { recursive: true });
   const logos: LogoCandidate[] = [];
-  // A challenge page's markup only references Cloudflare assets — never
+  // A challenge page's markup only references Cloudflare assets - never
   // harvest logo refs from it.
   const inlineSvg = blocked ? null : extractInlineHeaderSvg(html);
   if (inlineSvg) {
@@ -934,11 +934,11 @@ async function harvestFromHtml(
   // Origin yielded nothing (challenge page, hotlink-protected CDN, no marks
   // in the markup) → public favicon services, keyed by hostname only.
   if (logos.length === 0) {
-    onProgress("logos", "origin logos unavailable — trying public favicon services");
+    onProgress("logos", "origin logos unavailable - trying public favicon services");
     try {
       logos.push(...(await fetchServiceFavicons(new URL(baseUrl).hostname, logosDir)));
     } catch {
-      /* unparseable baseUrl — skip the service tier */
+      /* unparseable baseUrl - skip the service tier */
     }
   }
   if (!blocked && logos.length > 0) {
@@ -948,14 +948,14 @@ async function harvestFromHtml(
   const prefetchDir = path.join(brandDir, "prefetch");
   fs.mkdirSync(prefetchDir, { recursive: true });
   // The page-screenshot fallback relied on spawning system Chrome, which was
-  // removed (it could not be constrained to public hosts — SSRF), so no
+  // removed (it could not be constrained to public hosts - SSRF), so no
   // screenshot is captured on the server side.
   const screenshot: string | null = null;
   onProgress("logos-done", `${logos.length} candidates`);
 
   // ── copy ──
   // Challenge-page copy ("Just a moment…", "performing security verification")
-  // must never become the brand's name/tagline/voice — leave it all empty.
+  // must never become the brand's name/tagline/voice - leave it all empty.
   const title = blocked
     ? ""
     : decodeEntities(/<title[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "").trim();

@@ -21,12 +21,12 @@ import type { RuntimeAgentDef } from '../types.js';
 //     on every tool call.
 //
 // Prompt stays plain-text on stdin (default `promptInputFormat`), so the
-// daemon writes the composed prompt and closes stdin — a clean one-shot
+// daemon writes the composed prompt and closes stdin - a clean one-shot
 // turn. We deliberately do NOT use `--stream-json-input`; that path is for
 // streaming further JSONL user messages mid-turn (Claude's AskUserQuestion
 // tool_result loop), which Amp does not need for the render flow.
 //
-// Models: Amp has no `--model` flag — it selects the model through its agent
+// Models: Amp has no `--model` flag - it selects the model through its agent
 // `--mode` (deep / smart / rush). We surface those modes through the model
 // picker and map the chosen id onto `--mode`, and disable the free-text
 // "Custom model" input since an arbitrary model id is meaningless here.

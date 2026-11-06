@@ -1,11 +1,11 @@
-/*
- * design-system.css — Project Aura
+﻿/*
+ * design-system.css - Project Aura
  * Cyan-tinted card design with full light/dark mode via CSS custom properties.
  *
  * Light:  Page #c2dde8  Card #e8fafa  Text #0a1f2e→#4d88a0
  * Dark:   Page #0a0a0a  Card #0f1f26  Text #e8edf3→#445a6a
  *
- * All text colour classes use CSS vars — they flip automatically
+ * All text colour classes use CSS vars - they flip automatically
  * when html.dark is present. No duplicate dark: rule needed.
  */
 
@@ -76,7 +76,7 @@ html.dark {
     background-color: var(--page-bg) !important;
   }
 
-  /* Card backgrounds — only in LIGHT MODE, never override dark mode backgrounds */
+  /* Card backgrounds - only in LIGHT MODE, never override dark mode backgrounds */
   html:not(.dark) .bg-slate-50,
   html:not(.dark) .bg-gray-50 {
     background-color: var(--card-bg) !important;
@@ -125,19 +125,19 @@ html.dark {
   .stat-card-violet,
   .stat-card-indigo  { border-left-color: #0891b2 !important; }
 
-  /* Note: .bg-slate-100 NOT globally overridden — it's used on buttons (bg-slate-100
+  /* Note: .bg-slate-100 NOT globally overridden - it's used on buttons (bg-slate-100
      on 'Keep going', filter chips, tab bars) and must stay neutral grey. */
 
-  /* ── TEXT COLOURS — auto-flip via vars ── */
+  /* ── TEXT COLOURS - auto-flip via vars ── */
   .text-slate-900, .text-gray-900   { color: var(--text-900) !important; }
   .text-slate-800, .text-gray-800   { color: var(--text-800) !important; }
   .text-slate-700, .text-gray-700   { color: var(--text-700) !important; }
   .text-slate-600, .text-gray-600   { color: var(--text-600) !important; }
   .text-slate-500, .text-gray-500   { color: var(--text-500) !important; }
   .text-slate-400, .text-gray-400   { color: var(--text-400) !important; }
-  /* Bump up 300 — Tailwind default #d1d5db is invisible on cyan cards */
+  /* Bump up 300 - Tailwind default #d1d5db is invisible on cyan cards */
   .text-slate-300, .text-gray-300   { color: var(--text-400) !important; }
-  /* 200 used on dark panels intentionally — keep but not on light */
+  /* 200 used on dark panels intentionally - keep but not on light */
   html:not(.dark) .text-slate-200,
   html:not(.dark) .text-gray-200    { color: var(--text-500) !important; }
 
@@ -150,11 +150,11 @@ html.dark {
   .text-amber-600, .text-amber-700  { color: var(--c-warn) !important; }
   .text-rose-600, .text-rose-700    { color: var(--c-rose) !important; }
 
-  /* ── BORDERS — neutral, no teal on inputs ── */
+  /* ── BORDERS - neutral, no teal on inputs ── */
   .border-slate-200 { border-color: #e2e8f0 !important; }
   .border-slate-100 { border-color: #f1f5f9 !important; }
 
-  /* ── INPUTS — white in light, dark navy in dark ── */
+  /* ── INPUTS - white in light, dark navy in dark ── */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
   textarea, select {
     font-size: 13px;
@@ -208,7 +208,7 @@ html.dark {
   /* ── BUTTONS: remaining blue → teal ── */
   .bg-blue-600 { background-color: #0d9488 !important; }
   .bg-blue-700 { background-color: #0f766e !important; }
-  /* bg-primary fallback — used in some legacy components */
+  /* bg-primary fallback - used in some legacy components */
   .bg-primary   { background-color: #0d9488 !important; }
   .text-primary { color: var(--c-teal) !important; }
   .ring-primary { --tw-ring-color: #0d9488 !important; }
@@ -254,7 +254,7 @@ html.dark {
   tbody tr       { border-bottom: 1px solid color-mix(in srgb,var(--card-border) 40%,transparent); }
   tbody tr:hover { background: color-mix(in srgb,var(--card-bg) 70%,var(--page-bg)) !important; }
 
-  /* ── PASTEL BACKGROUNDS — dark softening ── */
+  /* ── PASTEL BACKGROUNDS - dark softening ── */
   html.dark .bg-red-50     { background-color:rgba(220,38,38,0.10)  !important; }
   html.dark .bg-amber-50   { background-color:rgba(217,119,6,0.10)  !important; }
   html.dark .bg-teal-50    { background-color:rgba(13,148,136,0.10) !important; }
@@ -291,7 +291,7 @@ html.dark {
   html.dark .badge-info     { background:rgba(8,145,178,0.15);  color:#67e8f9; border-color:rgba(8,145,178,0.35);  }
 }
 
-/* ── Force white text on dark hero sections — beats ALL cascade ── */
+/* ── Force white text on dark hero sections - beats ALL cascade ── */
 .hero-text-white                { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
 .hero-text-white *              { color: inherit !important; -webkit-text-fill-color: inherit !important; }
 .hero-text-white h1,
@@ -317,7 +317,7 @@ html.dark {
 
 /* ── GLOBAL: remove teal ring/border on all focused inputs ─────────────────
    Overrides all focus-within:ring-teal-* and focus:ring-teal-* Tailwind classes
-   across 27+ components — cleaner than editing each file individually.       */
+   across 27+ components - cleaner than editing each file individually.       */
 *:focus,
 *:focus-within {
   --tw-ring-color: transparent !important;
@@ -349,7 +349,7 @@ html.dark {
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   ADMIN PAGE SCOPE — neutralise global !important overrides
+   ADMIN PAGE SCOPE - neutralise global !important overrides
    All admin pages mount inside <div data-admin="true">. Because attribute
    selectors ([data-admin]) have higher specificity than plain class selectors
    (.p-5), these rules win without needing their own !important.
@@ -380,7 +380,7 @@ html.dark {
 [data-admin] .w-8   { width: 32px;   }
 [data-admin] .w-6   { width: 24px;   }
 
-/* ── Background: admin pages own their own background — stop bleeding ── */
+/* ── Background: admin pages own their own background - stop bleeding ── */
 [data-admin],
 [data-admin] .min-h-screen,
 [data-admin] .min-h-full {
@@ -417,6 +417,6 @@ html.dark {
 [data-admin] h3 { font-size: inherit !important; }
 [data-admin] h4 { font-size: inherit !important; }
 
-/* ── Rounded utilities — not overridden globally but kept consistent ── */
+/* ── Rounded utilities - not overridden globally but kept consistent ── */
 [data-admin] .rounded-2xl { border-radius: 16px; }
 [data-admin] .rounded-xl  { border-radius: 12px; }

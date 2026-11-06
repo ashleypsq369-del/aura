@@ -2,7 +2,7 @@ import type Database from 'better-sqlite3';
 
 /**
  * Every row a database read hands to JS while `run` executes, serialized at
- * read time — the same technique as `db-list-conversations-events-payload`.
+ * read time - the same technique as `db-list-conversations-events-payload`.
  *
  * "Does this path materialize an event log in JS?" is categorical: a read
  * either returns the column's payload or it does not. Counting the reads whose

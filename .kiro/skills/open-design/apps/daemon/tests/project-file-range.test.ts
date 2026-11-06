@@ -20,7 +20,7 @@ const { JSDOM } = createRequire(import.meta.url)('jsdom') as {
 };
 
 // ---------------------------------------------------------------------------
-// parseByteRange — RFC 7233 unit tests
+// parseByteRange - RFC 7233 unit tests
 // ---------------------------------------------------------------------------
 
 describe('parseByteRange', () => {
@@ -102,7 +102,7 @@ describe('parseByteRange', () => {
 });
 
 // ---------------------------------------------------------------------------
-// resolveProjectFilePath — integration test (real temp files)
+// resolveProjectFilePath - integration test (real temp files)
 // ---------------------------------------------------------------------------
 
 describe('resolveProjectFilePath', () => {
@@ -165,7 +165,7 @@ describe('resolveProjectFilePath', () => {
 });
 
 // ---------------------------------------------------------------------------
-// GET /api/projects/:id/raw/* — HTTP route-level tests
+// GET /api/projects/:id/raw/* - HTTP route-level tests
 // Exercises the actual endpoint the VideoViewer and AudioViewer components
 // call, confirming 206 / Accept-Ranges / Content-Range behaviour end-to-end.
 // ---------------------------------------------------------------------------
@@ -214,7 +214,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     );
     await writeFile(path.join(dir, 'body.html'), Buffer.from('<html><body><main>Preview</main></body></html>'));
     // `<head>` is optional markup, so a document can legally have none while a
-    // script string contains one — the head-open half of
+    // script string contains one - the head-open half of
     // nexu-io/open-design#7410. `<header>` is here because a bare
     // `/<head[^>]*>/` matches it too.
     await writeFile(
@@ -245,7 +245,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     // the raw text, where the authored `</body>` reads as a real end tag.
     // Namespace is a stack, not a depth. `<![CDATA[` is character data in
     // foreign content and a bogus comment in HTML, and `<script>` inverts the
-    // same way, so both rules have to follow the adjusted current node —
+    // same way, so both rules have to follow the adjusted current node -
     // including a `<math>` that re-enters MathML beneath an HTML integration
     // point, and `annotation-xml`, which is only an integration point when its
     // `encoding` names an HTML type.
@@ -291,7 +291,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
           + '<![CDATA[x > <\/math><body>slip</body>]]></annotation-xml></math>'
           // The mirror case: the tokenizer resolves character references in a
           // value, so this one *is* an integration point and its `<script>` is
-          // HTML raw text — reading the source spelling keeps it MathML.
+          // HTML raw text - reading the source spelling keeps it MathML.
           + '<math><annotation-xml encoding="text&#x2f;html">'
           + '<script>const enc = "<\/math><body>slip</body>";<\/script></annotation-xml></math>'
           + '<main id="slot">real</main></body></html>',
@@ -321,7 +321,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
       ),
     );
     // Named character references are case-sensitive: `&sol;` is one, `&SOL;`
-    // is not, and the parser leaves the latter as literal text — so this
+    // is not, and the parser leaves the latter as literal text - so this
     // `annotation-xml` stays MathML and its CDATA stays character data.
     await writeFile(
       path.join(dir, 'encoding-case.html'),
@@ -334,7 +334,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     );
     // Only TAB, LF, FF, CR and SPACE separate tokens. Every other C0 code
     // point is an ordinary character, so `color\0=x` names an attribute the
-    // parser writes as `color\uFFFD` — not `color`, and therefore not a
+    // parser writes as `color\uFFFD` - not `color`, and therefore not a
     // `<font>` presentational attribute that breaks out of foreign content.
     await writeFile(
       path.join(dir, 'control-char-attr.html'),
@@ -377,7 +377,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     );
     // The dispatcher hands `<svg>` beneath a MathML `annotation-xml` to the
     // HTML rules even with no `encoding`, so that `<svg>` lands in SVG rather
-    // than inheriting MathML — and the `<foreignObject>` under it is then a
+    // than inheriting MathML - and the `<foreignObject>` under it is then a
     // real integration point whose `<script>` is HTML raw text again.
     await writeFile(
       path.join(dir, 'annotation-xml-svg.html'),
@@ -390,7 +390,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
       ),
     );
     // Every token the tokenizer turns into a comment may precede the doctype
-    // without changing the document's mode — an XML prologue and a stray
+    // without changing the document's mode - an XML prologue and a stray
     // `<!foo>` among them. Putting the payload in front of one puts a character
     // before the doctype, which silently drops the artifact into quirks mode.
     await writeFile(
@@ -402,7 +402,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     );
     // The in-select insertion mode ignores an `<svg>` / `<math>` start tag
     // outright, so no foreign element exists and what follows is still
-    // ordinary HTML — here a `<script>`, whose string contains both a
+    // ordinary HTML - here a `<script>`, whose string contains both a
     // breakout tag and a `</body>`.
     await writeFile(
       path.join(dir, 'select-foreign-start.html'),
@@ -514,7 +514,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
       ),
     );
     // A foreign element may also be called `template`, and it creates no inert
-    // fragment — so a `<base>` beneath it is live and must still suppress the
+    // fragment - so a `<base>` beneath it is live and must still suppress the
     // generated containment base.
     await writeFile(
       path.join(dir, 'svg-template-base.html'),
@@ -539,7 +539,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
       ),
     );
     // Every other stray end tag leaves the foreign element open, so this one
-    // still resolves precisely — the refusal above must not widen to it.
+    // still resolves precisely - the refusal above must not widen to it.
     await writeFile(
       path.join(dir, 'foreign-stray-div.html'),
       Buffer.from(
@@ -563,7 +563,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     );
     // A leading BOM is the encoding signature and only counts at byte zero, so
     // the no-boundary fallback has to insert after it rather than in front of
-    // it — otherwise the doctype stops applying and the artifact silently
+    // it - otherwise the doctype stops applying and the artifact silently
     // renders in quirks mode. `<plaintext>` is what removes the boundary here.
     await writeFile(
       path.join(dir, 'bom-plaintext.html'),
@@ -664,7 +664,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
           + '<main id="slot"></main></body></html>',
       ),
     );
-    // The same tags are just as ordinary inside an attribute value — storing a
+    // The same tags are just as ordinary inside an attribute value - storing a
     // template on a `data-` attribute is the other half of the #7410 shape.
     // Browsers accept a literal `<` there, and the injected bridge carries
     // quotes, so splicing into the value would close the attribute early.
@@ -676,7 +676,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
           + '<main id="slot"></main></body></html>',
       ),
     );
-    // A prototype whose inline script builds an HTML document string — the
+    // A prototype whose inline script builds an HTML document string - the
     // shape behind nexu-io/open-design#7410. The literal `</body>` inside the
     // template literal precedes the document's real one, so an injector that
     // splices at the FIRST `</body>` lands inside the script and truncates it.
@@ -1031,7 +1031,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     // adjusted current node's namespace, and the two spellings disagree about
     // where the body ends. Beneath `<template><svg>` and `<math>` the parser is
     // in foreign content, so those sections are character data and the
-    // `</body>` inside each is text — both survive byte for byte.
+    // `</body>` inside each is text - both survive byte for byte.
     expect(html).toContain('<![CDATA[x > </template><body>slip</body>]]>');
     expect(html).toContain('<![CDATA[x > </math><body>slip</body>]]>');
     // Beneath `<foreignObject>` the parser is back in HTML, where `<![CDATA[x >`
@@ -1050,8 +1050,8 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     const html = await bridged.text();
     const injectedAt = html.indexOf('data-od-url-scroll-bridge');
     expect(injectedAt).toBeGreaterThan(-1);
-    // Everything after `<plaintext>` is character data — both `</body>` copies
-    // included — so there is no boundary to splice at. Appending would not
+    // Everything after `<plaintext>` is character data - both `</body>` copies
+    // included - so there is no boundary to splice at. Appending would not
     // work either: PLAINTEXT never exits, so appended markup is text and the
     // bridge would not exist as an element at all. The fallback therefore goes
     // in at the top of the document, which costs the end-of-body placement but
@@ -1086,7 +1086,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     expect(html).toContain('<![CDATA[x > <\/script></svg><body>slip</body>]]>');
     expect(html).toContain('<![CDATA[x > </svg><body>slip</body>]]>');
     // No boundary is picked here, so the bridge goes in at the top of the
-    // document rather than at the end of body — it still exists as an element,
+    // document rather than at the end of body - it still exists as an element,
     // which is what actually matters, and every authored section is untouched.
     expect(load(html)('[data-od-url-scroll-bridge]').length).toBe(1);
   });
@@ -1121,7 +1121,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
 
   it('does not treat a padded or unterminated encoding as an integration point', async () => {
     // `annotation-xml` is an integration point only on an exact match, so a
-    // padded value and an ambiguous ampersand both stay MathML — and their
+    // padded value and an ambiguous ampersand both stay MathML - and their
     // CDATA stays character data.
     const bridged = await fetch(`${rawUrl('encoding-near-misses.html')}?odPreviewBridge=scroll`);
     expect(bridged.status).toBe(200);
@@ -1186,8 +1186,8 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     // A live bridge inside `<body>`, and `<main>` still an element rather than
     // script text. Read as staying double-escaped, the second script never
     // closes: `#slot` is swallowed and the bridge falls back into `<head>`, so
-    // both assertions below fail. The bridge lands at the first `</body>` — the
-    // one the tree builder acts on — which is ahead of `<main>`; that position
+    // both assertions below fail. The bridge lands at the first `</body>` - the
+    // one the tree builder acts on - which is ahead of `<main>`; that position
     // and the document's last `</body>` leave an identical tree, which is why
     // this asserts live elements and not an offset.
     expect(page('body > [data-od-url-scroll-bridge]').length).toBe(1);
@@ -1295,7 +1295,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     expect(bridged.status).toBe(200);
     const html = await bridged.text();
     // The generated base would land in `<head>`, ahead of the authored one, and
-    // the first base with an href wins — so it must not be generated at all.
+    // the first base with an href wins - so it must not be generated at all.
     expect(html).not.toContain('data-od-project-preview-base');
     expect(html).toContain('href="https://author.example/assets/"');
     expect(load(html)('[data-od-url-scroll-bridge]').length).toBe(1);
@@ -1362,13 +1362,13 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
   it('keeps a leading BOM at byte zero when there is no boundary', async () => {
     const bridged = await fetch(`${rawUrl('bom-plaintext.html')}?odPreviewBridge=scroll`);
     expect(bridged.status).toBe(200);
-    // `Response.text()` runs a UTF-8 decode, which *removes* a leading BOM —
+    // `Response.text()` runs a UTF-8 decode, which *removes* a leading BOM -
     // reading the body that way would assert nothing about the byte this spec
     // exists for. Decode the bytes with the BOM preserved instead.
     const html = new TextDecoder('utf-8', { ignoreBOM: true })
       .decode(await bridged.arrayBuffer());
     // The BOM stays the first code unit, and the doctype still precedes every
-    // injected token — the two conditions the browser needs to stay out of
+    // injected token - the two conditions the browser needs to stay out of
     // quirks mode.
     expect(html.charCodeAt(0)).toBe(0xfeff);
     const doctypeAt = html.toLowerCase().indexOf('<!doctype');
@@ -1387,7 +1387,7 @@ describe('GET /api/projects/:id/raw/* range request route', () => {
     expect(html).toContain('const doc = "<body>slip</body>";');
     expect(injectedAt).toBeGreaterThan(html.indexOf('<main id="slot">real</main>'));
     expect(injectedAt).toBeLessThan(html.lastIndexOf('</body>'));
-    // The bridge is a live element in body — not pushed into the head by a
+    // The bridge is a live element in body - not pushed into the head by a
     // raw-text region the scan failed to close.
     const page = load(html);
     expect(page('body > [data-od-url-scroll-bridge]').length).toBe(1);

@@ -101,7 +101,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
   // Receives the user's thumbs-up/down (+ reason codes) for an assistant
   // turn and forwards it to Langfuse as a `score-create`. Web persists the
   // feedback itself via PUT /messages/:id; this endpoint exists only as a
-  // telemetry side channel — the daemon is the single network egress for
+  // telemetry side channel - the daemon is the single network egress for
   // Langfuse and gates on `telemetry.metrics + telemetry.content` consent.
   //
   // The consent + sink decision is fast (awaits a small file read, no
@@ -601,7 +601,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
         try {
           const data = JSON.parse(line);
           if (await onFrame({ data })) {
-            // See note in streamUpstreamSse — fire-and-forget cancel.
+            // See note in streamUpstreamSse - fire-and-forget cancel.
             void reader.cancel().catch(() => {});
             return;
           }
@@ -656,7 +656,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
     const feedback = data?.promptFeedback;
     if (typeof feedback?.blockReason === 'string' && feedback.blockReason) {
       const tail = typeof feedback.blockReasonMessage === 'string' && feedback.blockReasonMessage
-        ? ` — ${feedback.blockReasonMessage}`
+        ? ` - ${feedback.blockReasonMessage}`
         : '';
       return `Gemini blocked the prompt (${feedback.blockReason})${tail}.`;
     }
@@ -666,7 +666,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
       const reason = candidate?.finishReason;
       if (typeof reason !== 'string' || benignGeminiFinishReasons.has(reason)) continue;
       const tail = typeof candidate?.finishMessage === 'string' && candidate.finishMessage
-        ? ` — ${candidate.finishMessage}`
+        ? ` - ${candidate.finishMessage}`
         : '';
       return `Gemini stopped the response (${reason})${tail}.`;
     }
@@ -697,7 +697,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
     };
   }
 
-  // ---- Reusable base-chat streamers (text only — no tool loop) -------------
+  // ---- Reusable base-chat streamers (text only - no tool loop) -------------
   // Both the native /api/proxy/{anthropic,google}/stream routes AND the
   // AIHubMix model-routed proxy call these. Only the resolved url + headers
   // differ (AIHubMix adds the APP-Code header and a different origin), so the
@@ -724,8 +724,8 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
   };
 
   // A BYOK proxy stream must unwind when the client disconnects (Stop or a
-  // closed tab); otherwise the upstream completion — and any tool loop that
-  // would fire further paid image/video/speech rounds — keeps streaming and
+  // closed tab); otherwise the upstream completion - and any tool loop that
+  // would fire further paid image/video/speech rounds - keeps streaming and
   // billing after the user is gone. Every upstream fetch below carries this
   // signal. Mirrors the AbortController wiring already used by
   // `/api/provider/models` and `/api/test/connection`.
@@ -917,7 +917,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
   }): string => {
     if (result.ok) {
       if (result.kind === 'video')
-        return `Video generated successfully. URL: ${result.url}. Reply to the user with a clickable markdown link, e.g. [▶ Play video](${result.url}). Do NOT use markdown image syntax — the chat renderer does not embed <video> tags.`;
+        return `Video generated successfully. URL: ${result.url}. Reply to the user with a clickable markdown link, e.g. [▶ Play video](${result.url}). Do NOT use markdown image syntax - the chat renderer does not embed <video> tags.`;
       if (result.kind === 'speech')
         return `Speech generated successfully. URL: ${result.url}. Reply to the user with a clickable markdown link to the MP3, e.g. [▶ Play voiceover](${result.url}).`;
       return `Image generated successfully. URL: ${result.url}. Reply to the user with: ![generated image](${result.url})`;
@@ -1496,8 +1496,8 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
   // `tools` array on every upstream request and, when the model
   // responds with a `tool_calls` finish_reason, executes the call
   // locally, appends the assistant + tool messages to the conversation,
-  // and re-issues the completion. This is how BYOK chat — which has
-  // no agent-runtime scaffolding — gets image-generation parity with
+  // and re-issues the completion. This is how BYOK chat - which has
+  // no agent-runtime scaffolding - gets image-generation parity with
   // the CLI agent path. Loop is bounded by MAX_BYOK_TOOL_LOOPS so a
   // misbehaving model can't pin the daemon in an infinite tool dance.
   const MAX_BYOK_TOOL_LOOPS = 3;
@@ -1540,7 +1540,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
      * (claude → Anthropic /v1/messages, gemini or imagen → Gemini
      * streamGenerateContent), all on the AIHubMix origin + APP-Code. Those
      * routes run base chat WITHOUT the tool loop (no in-chat generate_image
-     * yet — the OpenAI family keeps it). When unset/false the provider always
+     * yet - the OpenAI family keeps it). When unset/false the provider always
      * uses the OpenAI tool-loop path (SenseAudio).
      */
     routeByModel?: boolean;
@@ -1624,8 +1624,8 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
 
     // AIHubMix routes by model name to the native protocol wire (claude →
     // Anthropic /v1/messages, gemini/imagen → Gemini generateContent). That
-    // divert happens further down — AFTER executeOneTool and the per-protocol
-    // tool-loop runners are defined — so the claude/gemini branches can run the
+    // divert happens further down - AFTER executeOneTool and the per-protocol
+    // tool-loop runners are defined - so the claude/gemini branches can run the
     // same media tool loop the OpenAI family does. See the `routeByModel` block
     // just above `createSseResponse` below.
 
@@ -1634,14 +1634,14 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
       workingMessages.unshift({ role: 'system', content: systemPrompt });
     }
 
-    // Tool execution context — built once per request. The image tool
+    // Tool execution context - built once per request. The image tool
     // writes into `<projectsRoot>/<projectId>/byok-<id>.png` and returns
     // a relative URL via `/api/projects/:id/files/:filename`. The web's
     // Next.js rewrites `/api/:path*` to the daemon, so the chat UI
     // loads images same-origin through the standard project file
-    // route — no CSP / CORS exceptions needed.
+    // route - no CSP / CORS exceptions needed.
     // User-configured BYOK default image model. Drop silently if the
-    // client sent an id outside the provider's registry — the tool
+    // client sent an id outside the provider's registry - the tool
     // will fall back to the registry default and the LLM can still
     // override per-call via the tool's `model` arg.
     const validDefaultImageModel = opts.isImageModel(byokImageModel)
@@ -1752,7 +1752,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
         const delta = choice.delta || {};
 
         // Text content streams to the client unchanged. Tool turns and
-        // text turns can both share this path — the OpenAI protocol
+        // text turns can both share this path - the OpenAI protocol
         // never emits text+tool_calls in the same chunk, but it can
         // emit text before / after a tool_call in the same turn, and
         // we want the user to see whatever the model decided to say.
@@ -1764,7 +1764,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
           }
         }
 
-        // Tool call deltas stream as fragments — `id` arrives once at
+        // Tool call deltas stream as fragments - `id` arrives once at
         // the start, `function.name` once at the start, and
         // `function.arguments` accumulates a chunked JSON string we
         // have to concatenate. Parallel calls use the `index` field to
@@ -1851,7 +1851,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
         const result = await opts.runSpeech(args, toolCtx);
         return { ...result, kind: 'speech' };
       }
-      // generate_video — longer (up to 5 min), async-with-polling. Only some
+      // generate_video - longer (up to 5 min), async-with-polling. Only some
       // providers expose it (SenseAudio yes, AIHubMix no); without a runner
       // we surface a clear unsupported error the model can relay.
       if (!opts.runVideo) {
@@ -1960,7 +1960,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
           try {
             input = JSON.parse(b.json || '{}');
           } catch {
-            /* keep {} — the executor re-validates args */
+            /* keep {} - the executor re-validates args */
           }
           return { type: 'tool_use', id: b.id || `call_${i}`, name: b.name || '', input };
         });
@@ -2001,7 +2001,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
             if (result.ok) {
               console.log(`[${opts.logTag}] ${toolName} OK: ${call.id} → ${result.url}`);
             } else {
-              console.warn(`[${opts.logTag}] ${toolName} FAILED: ${call.id} — ${result.error}`);
+              console.warn(`[${opts.logTag}] ${toolName} FAILED: ${call.id} - ${result.error}`);
             }
             toolResults.push({
               type: 'tool_result',
@@ -2162,7 +2162,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
             if (result.ok) {
               console.log(`[${opts.logTag}] ${toolName} OK: ${call.id} → ${result.url}`);
             } else {
-              console.warn(`[${opts.logTag}] ${toolName} FAILED: ${call.id} — ${result.error}`);
+              console.warn(`[${opts.logTag}] ${toolName} FAILED: ${call.id} - ${result.error}`);
             }
             responseParts.push({
               functionResponse: {
@@ -2243,7 +2243,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
     // These gateways issue one API key that works for both
     // /v1/chat/completions and the image / TTS surfaces. Mirror the
     // BYOK key into media-config so the CLI agent path (`od media
-    // generate`) picks it up automatically — fire-and-forget; the
+    // generate`) picks it up automatically - fire-and-forget; the
     // chat stream must not block on the disk write. seedProviderIfMissing
     // is idempotent and preserves env-var-resolved keys.
     seedProviderIfMissing(ctx.paths.PROJECT_ROOT, opts.providerId, {
@@ -2284,7 +2284,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
           if (signal.aborted) return sse.end();
           const result = await executeOneTool(call);
           // The tool result is delivered to the model as a `tool` role
-          // message — a structured payload the model can interpret. We
+          // message - a structured payload the model can interpret. We
           // also surface a daemon-side log line so a user reporting "no
           // image showed up" can grep for the call id. The kind field
           // distinguishes image vs video so the daemon picks the right
@@ -2298,7 +2298,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
             );
           } else {
             console.warn(
-              `[${opts.logTag}] ${toolName} FAILED: ${call.id} — ${result.error}`,
+              `[${opts.logTag}] ${toolName} FAILED: ${call.id} - ${result.error}`,
             );
           }
           workingMessages.push({
@@ -2308,7 +2308,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
           });
         }
       }
-      // Tool loop exhausted — the model still wants to call tools but we
+      // Tool loop exhausted - the model still wants to call tools but we
       // refuse a 4th round. Close the stream gracefully; the last text
       // delta the model emitted (if any) is already on the wire.
       console.warn(
@@ -2340,7 +2340,7 @@ export function registerChatRoutes(app: Express, ctx: RegisterChatRoutesDeps) {
     runVideo: executeGenerateVideo,
   });
 
-  // AIHubMix: routes by model name to the native protocol wire —
+  // AIHubMix: routes by model name to the native protocol wire -
   //   claude*        → Anthropic /v1/messages (base chat, no tools yet)
   //   gemini*/imagen*→ Gemini :streamGenerateContent (base chat, no tools yet)
   //   everything else→ OpenAI /v1/chat/completions WITH the tool loop below

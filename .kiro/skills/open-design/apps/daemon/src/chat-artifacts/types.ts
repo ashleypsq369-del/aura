@@ -1,4 +1,4 @@
-// Chat artifact versioning — shared vocabulary.
+// Chat artifact versioning - shared vocabulary.
 //
 // Two identities, deliberately kept apart (see
 // specs/current/chat-artifact-versioning-design.md §3):
@@ -33,7 +33,7 @@ export type ChatArtifactFailureCode =
   | 'blob_missing'
   | 'digest_mismatch'
   // Not a failure of anything: this kind's originals are excluded by policy
-  // (user ruling 2026-09-02 — video / audio). It exists only so a RESIDUAL
+  // (user ruling 2026-09-02 - video / audio). It exists only so a RESIDUAL
   // pending intent, written by a build that still stored them, has an honest
   // terminal state. Nothing writes a fresh one; captures for excluded kinds
   // are skipped before any row is inserted.
@@ -52,7 +52,7 @@ export type ChatArtifactFailureCode =
  *
  * Note what it deliberately does NOT carry: digests, byte sizes and failure
  * codes. Those are diagnostics, and they live on the snapshot metadata
- * endpoint below — a chat card has no business rendering them.
+ * endpoint below - a chat card has no business rendering them.
  */
 export type {
   ChatArtifactDisplayPolicy,
@@ -61,7 +61,7 @@ export type {
 
 /**
  * The projection's own view of a capture's lifecycle. `orphaned` never reaches
- * a client — it is an internal GC classification — so the wire union in
+ * a client - it is an internal GC classification - so the wire union in
  * contracts is deliberately narrower than {@link ChatArtifactSnapshotState}.
  */
 export type ChatArtifactRefState = ContractChatArtifactSnapshotState;

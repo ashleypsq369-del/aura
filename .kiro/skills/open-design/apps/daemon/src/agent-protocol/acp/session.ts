@@ -94,7 +94,7 @@ const NON_DISPLAYABLE_ACP_SESSION_UPDATES = new Set([
  * the SSE wire, or Langfuse metadata.
  *
  * `hostSynthesized` marks an event the daemon manufactured while closing its own
- * books — the terminal `tool_use`/`tool_result` pair `flushOpenAcpTools` writes
+ * books - the terminal `tool_use`/`tool_result` pair `flushOpenAcpTools` writes
  * for a tool the agent never terminated. The agent produced no bytes for it.
  * Consumers that measure *agent* liveness (the chat run's progress clock) must
  * exclude these; consumers that build the transcript still want them, which is
@@ -124,7 +124,7 @@ export interface AttachAcpSessionOptions {
   /** Frozen non-image/image resources delivered as ACP resource_link blocks. */
   resourcePaths?: string[];
   mcpServers?: AcpMcpServerInput[];
-  // Passed through to buildAcpSessionNewParams — see AcpSessionOptions.
+  // Passed through to buildAcpSessionNewParams - see AcpSessionOptions.
   envFormat?: 'array' | 'map';
   // First version of this agent that rejects stdio MCP servers on `session/new`
   // (`RuntimeAgentDef.acpStdioMcpRemovedInVersion`). When set, stdio entries are
@@ -364,7 +364,7 @@ export function attachAcpSession({
    * Put a still-running tool call on screen, or refresh the row already there.
    *
    * ACP publishes a call as whole status frames, and OD used to transcribe only
-   * the terminal one — so a call was invisible for its entire life. Across 202
+   * the terminal one - so a call was invisible for its entire life. Across 202
    * real AMR calls that hid 855 seconds of work behind a blank execution shell:
    * shell commands at p90 37.3s, one `task` for 222.0s.
    *
@@ -372,7 +372,7 @@ export function attachAcpSession({
    *
    *  1. **It is not a terminal.** It deliberately does not go through
    *     `emitTerminalToolPair`, which also writes the `tool_result` and sets
-   *     `emittedConcreteToolEvent` — AMR's "did this turn produce anything"
+   *     `emittedConcreteToolEvent` - AMR's "did this turn produce anything"
    *     check reads that flag, and arming it for a call still in progress would
    *     let a turn that produced nothing be scored as if it had.
    *  2. **It never becomes a second row.** The id is the same telemetry id the
@@ -384,14 +384,14 @@ export function attachAcpSession({
    *  3. **A row that appeared must be closed.** See `emitTerminalToolPair` for
    *     the one case where that outranks the think-only filter.
    *
-   * Rate: the first publication of a call is never delayed — appearing at once
+   * Rate: the first publication of a call is never delayed - appearing at once
    * is the whole point. Later ones need both a changed payload and
    * `ACP_IN_FLIGHT_TOOL_MIN_INTERVAL_MS` since the last, so a chatty agent
    * cannot turn one call into a frame-rate event stream.
    */
   const showInFlightTool = (toolCallId: string, st: AcpToolRunState): void => {
     // The settled pair is already out (or this is noise, or the row would be
-    // orphaned by the think filter) — nothing in-flight to say.
+    // orphaned by the think filter) - nothing in-flight to say.
     if (st.emitted || st.thinkOnly) return;
     const output = st.resultContent
       ? st.resultContent.slice(0, ACP_IN_FLIGHT_TOOL_OUTPUT_LIMIT)
@@ -419,7 +419,7 @@ export function attachAcpSession({
   // Where a terminal tool pair came from. `agent_frame` means the agent sent a
   // terminal `tool_call_update` and we are transcribing it. `host_flush` means
   // the agent never did, and we are closing the tool ourselves so the pair is
-  // not lost — see `flushOpenAcpTools`.
+  // not lost - see `flushOpenAcpTools`.
   type AcpTerminalToolOrigin = 'agent_frame' | 'host_flush';
 
   const emitTerminalToolPair = (
@@ -434,14 +434,14 @@ export function attachAcpSession({
     // must not appear as concrete tool_use/tool_result events.
     //
     // Unless the row is already on screen. `thinkOnly` is sticky-on, so a frame
-    // arriving after the call was published could flip it — and dropping the
+    // arriving after the call was published could flip it - and dropping the
     // ending then would strand a live-looking row that never resolves, which is
     // the exact "is it stuck?" confusion this whole change exists to remove.
     // Whatever appeared must be closed; the filter still covers every call that
     // was classified before it was ever shown.
     if (st.thinkOnly && !st.shown) return;
     // A host flush is the daemon writing the tool's ending for it, not the agent
-    // reporting one. Same payload either way — only the provenance differs, and
+    // reporting one. Same payload either way - only the provenance differs, and
     // it travels out-of-band so the transcript is unchanged.
     const meta: AcpEmissionMeta | undefined =
       origin === 'host_flush' ? { hostSynthesized: true } : undefined;
@@ -506,7 +506,7 @@ export function attachAcpSession({
       // "this run timed out" was a regex over the English sentence below
       // (`isTimeoutText` in run-failure-classification.ts). Every path that
       // rewrites, wraps, localizes or drops an ACP error message therefore
-      // silently downgraded the run to `process_exit / exit_code` — which is
+      // silently downgraded the run to `process_exit / exit_code` - which is
       // `retryable: false` / `user_action: 'none'`, i.e. the generic failure
       // card with no Retry, for a failure whose whole remedy IS a retry.
       //
@@ -517,8 +517,8 @@ export function attachAcpSession({
       // The value is namespaced to this watchdog on purpose. `details` is NOT a
       // daemon-private slot: the JSON-RPC error branch below copies an agent's
       // `error.data` into it verbatim (`fail(rpcErr, { details })`), so a
-      // generic `kind: 'timeout'` — a value any vendor SDK might plausibly emit
-      // for its own timeout — would arrive at `hasDaemonTimeoutVerdict`
+      // generic `kind: 'timeout'` - a value any vendor SDK might plausibly emit
+      // for its own timeout - would arrive at `hasDaemonTimeoutVerdict`
       // indistinguishable from this one and claim a watchdog kill that never
       // happened. `acp_stage_timeout` names the specific daemon mechanism, so
       // no upstream payload collides with it by accident.
@@ -585,8 +585,8 @@ export function attachAcpSession({
    * `options.details` is emitted as `error.details`, and that slot is SHARED:
    * daemon-authored verdicts (`acp_stage_timeout`, `acp_child_exit`,
    * `acp_no_visible_output`, `amr_model`) and agent-supplied JSON-RPC
-   * `error.data` — copied in verbatim by the two `fail(rpcErr, { details })`
-   * call sites in the message handler — land in the same place and are
+   * `error.data` - copied in verbatim by the two `fail(rpcErr, { details })`
+   * call sites in the message handler - land in the same place and are
    * indistinguishable once emitted. Anything downstream that reads a
    * daemon verdict out of `details` is therefore trusting a name, not an
    * origin: keep those names namespaced to the mechanism that writes them
@@ -1603,14 +1603,14 @@ export function attachAcpSession({
      * Aborts an in-progress ACP session. Sends `session/cancel` when a session
      * id has already been established, then always closes stdin so the agent
      * receives EOF and can tear down its own runtime (e.g. vela's private
-     * OpenCode server). Idempotent — subsequent calls are no-ops.
+     * OpenCode server). Idempotent - subsequent calls are no-ops.
      */
     abort() {
       if (aborted || finished) return;
       // Flush deferred tool pairs as errored before terminal cancel. Tools are
       // held until a terminal tool_call_update; without this flush, user cancel
       // (runs.ts → acpSession.abort) drops in-progress tools from the transcript
-      // and from Langfuse/PostHog — unlike timeout and child-exit fail paths.
+      // and from Langfuse/PostHog - unlike timeout and child-exit fail paths.
       flushOpenAcpTools(true);
       aborted = true;
       finished = true;
@@ -1627,8 +1627,8 @@ export function attachAcpSession({
         }
       }
       // Always close stdin so the agent receives EOF and shuts down its own
-      // runtime — the vela ACP bridge tears down its private OpenCode server on
-      // EOF — instead of lingering (and leaking that server) until the caller's
+      // runtime - the vela ACP bridge tears down its private OpenCode server on
+      // EOF - instead of lingering (and leaking that server) until the caller's
       // SIGTERM fallback fires. This also covers aborts during ACP startup,
       // before session/new returns. Mirrors the clean-completion path above.
       try {

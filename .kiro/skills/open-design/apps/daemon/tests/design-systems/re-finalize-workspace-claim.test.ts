@@ -3,7 +3,7 @@
 // A brand re-finalize drives `registerBrandDesignSystem`'s write path, which
 // ends at `updateUserDesignSystem` with an input that carries NO `workspaceId`
 // field. That write spreads the existing metadata and, because the metadata
-// already lost its claim, REWRITES `metadata.json` WITHOUT the `workspaceId` —
+// already lost its claim, REWRITES `metadata.json` WITHOUT the `workspaceId` -
 // the "split-brain" state: the `workspace_resources` envelope still binds
 // `user:<id>` to a workspace + exact member, but the on-disk metadata no
 // longer says so.
@@ -11,14 +11,14 @@
 // Before the fix the READ side trusted the metadata claim alone. `listAll
 // DesignSystems` forwarded `workspaceId` into the FS listing, every by-id read
 // gated on `metadata.workspaceId`, and the by-id HTTP routes never forwarded
-// `workspaceMemberId` to the wrappers at all — so a correctly-bound system
+// `workspaceMemberId` to the wrappers at all - so a correctly-bound system
 // vanished from the workspace catalog AND from catalog/detail/preview/
 // showcase/static reads the moment its metadata lost the claim.
 //
 // This spec pins the read-side rescue (#6763): when the persisted
 // `workspace_resources` binding matches the exact verified scope (workspaceId,
 // visibility='personal', resourceState!='deleted',
-// createdByWorkspaceMemberId), the ENVELOPE — not the metadata claim — is the
+// createdByWorkspaceMemberId), the ENVELOPE - not the metadata claim - is the
 // visibility authority. The write side is intentionally NOT changed:
 // `metadata.json` must stay claim-less after re-finalization (asserted below)
 // and the catalog/by-id reads must keep serving the bound system anyway.
@@ -164,7 +164,7 @@ async function listen(app: express.Express): Promise<string> {
 /**
  * The real HTTP detail route (`GET /api/design-systems/:id`) wired to the real
  * server-services catalog/read implementations, so the route-level
- * `workspaceMemberId` forwarding (part of this PR) is proven end-to-end — the
+ * `workspaceMemberId` forwarding (part of this PR) is proven end-to-end - the
  * service-only tests above cannot see whether the route ever forwards it.
  */
 async function createRouteFixture() {

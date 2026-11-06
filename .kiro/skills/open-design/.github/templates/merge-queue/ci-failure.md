@@ -1,7 +1,7 @@
 <!-- merge-queue-ci-failure -->
 Ejected from the merge queue: CI failed on the queued merge of this PR.
 
-The merge queue gate ([run {{ run_id }}]({{ run_url }})) failed for the group headed by this PR. That run executes on the queue's transient ref, so the failure never shows up in this PR's own checks — they stay green, the queue entry simply disappears, and this notice is the only visible trace on the PR.
+The merge queue gate ([run {{ run_id }}]({{ run_url }})) failed for the group headed by this PR. That run executes on the queue's transient ref, so the failure never shows up in this PR's own checks - they stay green, the queue entry simply disappears, and this notice is the only visible trace on the PR.
 
 Failed jobs:
 

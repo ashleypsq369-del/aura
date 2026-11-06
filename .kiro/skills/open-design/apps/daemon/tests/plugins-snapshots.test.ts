@@ -287,7 +287,7 @@ describe('snapshots writer', () => {
     db.prepare('INSERT INTO projects (id, name) VALUES (?, ?)').run('project-1', 'Project 1');
     const snap = createSnapshot(db, baseInput());
     const beforeRow = db.prepare('SELECT expires_at FROM applied_plugin_snapshots WHERE id = ?').get(snap.snapshotId) as { expires_at: number | null };
-    // Either null (TTL=0) or a numeric expiry — we care that linking nulls it.
+    // Either null (TTL=0) or a numeric expiry - we care that linking nulls it.
     void beforeRow;
 
     linkSnapshotToRun(db, snap.snapshotId, 'run-1');

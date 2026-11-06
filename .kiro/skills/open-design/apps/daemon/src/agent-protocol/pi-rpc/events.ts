@@ -2,7 +2,7 @@
  * Pure event mapper for pi's JSON-RPC stream protocol. Translates raw JSON
  * objects emitted by `pi --mode rpc` into the daemon's typed UI events:
  * status, text_delta, thinking, tool_use, tool_result, usage, and error.
- * No I/O — all side effects flow through the SendAgentEvent callback.
+ * No I/O - all side effects flow through the SendAgentEvent callback.
  */
 import type { JsonRecord, SendAgentEvent, TokenUsage } from './internal.js';
 import { getRecord } from './internal.js';
@@ -186,7 +186,7 @@ export function mapPiRpcEvent(
   }
 
   if (raw.type === 'auto_retry_end' && raw.success === false) {
-    // Auto-retry exhausted — the agent is about to give up. Surface
+    // Auto-retry exhausted - the agent is about to give up. Surface
     // the final error so the daemon marks the run as failed rather
     // than silently succeeding with empty output.
     const message =

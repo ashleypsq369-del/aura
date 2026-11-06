@@ -206,7 +206,7 @@ describe('findPriorArtifactSiblings', () => {
     const dir = await makeDir();
     // Two distinct empty-slug identifiers both land in the artifact*.html
     // namespace. A new save for "首页" must not be compared against the
-    // earlier "测试" sibling — they're unrelated artifacts that just
+    // earlier "测试" sibling - they're unrelated artifacts that just
     // happen to share a fallback basename.
     await writeArtifactPair(dir, 'artifact.html', 'a'.repeat(40_000), '测试');
 
@@ -216,7 +216,7 @@ describe('findPriorArtifactSiblings', () => {
 
   it('falls back to filename-derived identifier for legacy sidecar-less HTML (mrcfps R6)', async () => {
     const dir = await makeDir();
-    // Pre-sidecar legacy file — `inferLegacyManifest` treats it as
+    // Pre-sidecar legacy file - `inferLegacyManifest` treats it as
     // html-kind elsewhere, so the guard should too. Without this
     // fallback, a stub overwrite of a legacy `dashboard.html` would
     // bypass the guard as a "first emission".

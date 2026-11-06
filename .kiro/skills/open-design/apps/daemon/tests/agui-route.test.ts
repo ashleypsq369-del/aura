@@ -1,4 +1,4 @@
-// Phase 4 / spec §10.3.5 — GET /api/runs/:id/agui smoke.
+// Phase 4 / spec §10.3.5 - GET /api/runs/:id/agui smoke.
 //
 // Covers the basic shape of the AG-UI canonical event stream:
 //   - 404 for an unknown run id.

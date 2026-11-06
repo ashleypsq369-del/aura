@@ -91,11 +91,11 @@ function localizeOrbitTemplateExamplePrompt(
   const localizedExamplePrompt = locale === 'zh-TW'
     ? {
         'orbit-general': '生成今天的 Open Orbit 晨間簡報。我已連接約 10 個整合（GitHub、Linear、Notion、Calendar、飛書、Sentry、Vercel、Slack、Gmail、Drive）。請拉取昨天各來源的活動，並將其渲染為編輯感 bento 儀表板。',
-        'orbit-github': '生成今天的 Open Orbit GitHub 簡報。GitHub 是我唯一已連接的整合——請拉取昨天的 PR、審查請求、Issue、CI 執行與合併記錄，並將其渲染為 GitHub Notifications + PR diff 風格頁面。',
+        'orbit-github': '生成今天的 Open Orbit GitHub 簡報。GitHub 是我唯一已連接的整合--請拉取昨天的 PR、審查請求、Issue、CI 執行與合併記錄，並將其渲染為 GitHub Notifications + PR diff 風格頁面。',
       }[template.id]
     : {
         'orbit-general': '生成今天的 Open Orbit 早间简报。我已连接约 10 个集成（GitHub、Linear、Notion、Calendar、飞书、Sentry、Vercel、Slack、Gmail、Drive）。请拉取昨天各来源的活动，并将其渲染为编辑感 bento 仪表板。',
-        'orbit-github': '生成今天的 Open Orbit GitHub 简报。GitHub 是我唯一已连接的集成——请拉取昨天的 PR、审查请求、Issue、CI 运行与合并记录，并将其渲染为 GitHub Notifications + PR diff 风格页面。',
+        'orbit-github': '生成今天的 Open Orbit GitHub 简报。GitHub 是我唯一已连接的集成--请拉取昨天的 PR、审查请求、Issue、CI 运行与合并记录，并将其渲染为 GitHub Notifications + PR diff 风格页面。',
       }[template.id];
   if (!localizedExamplePrompt) return template;
   return { ...template, examplePrompt: localizedExamplePrompt };
@@ -156,7 +156,7 @@ export const DEFAULT_ORBIT_CONFIG: OrbitConfigPrefs = {
   time: '08:00',
   // Default to the general-purpose Orbit briefing skill so the daemon
   // runs an adaptive template out of the box. Mirrors apps/web's
-  // DEFAULT_ORBIT — both surfaces must agree on the seed value to avoid
+  // DEFAULT_ORBIT - both surfaces must agree on the seed value to avoid
   // a "default in UI, null on disk" drift after the first save.
   templateSkillId: 'orbit-general',
 };
@@ -436,7 +436,7 @@ export function buildOrbitSystemPrompt(
 export function renderOrbitTemplateSystemPrompt(template: OrbitTemplateSelection | null): string {
   if (!template) return '';
   return [
-    `## Selected Orbit template skill — ${template.name}`,
+    `## Selected Orbit template skill - ${template.name}`,
     '',
     'This Orbit run was explicitly steered with the selected template skill below. Treat it as authoritative for the artifact structure, visual language, tokens, layout, and domain-specific synthesis rules.',
     'The generic Orbit digest brief and the live-artifact workflow still apply for data collection and artifact registration, but they must not override the selected template\'s visual/source-of-truth rules.',

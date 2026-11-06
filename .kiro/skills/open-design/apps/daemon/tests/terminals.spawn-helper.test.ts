@@ -15,7 +15,7 @@ import {
  * launcher toast fires. `terminals.create()` must self-heal that bit so a fresh
  * PTY actually spawns.
  *
- * macOS/Linux only — on win32 ConPTY has no spawn-helper and there is nothing to
+ * macOS/Linux only - on win32 ConPTY has no spawn-helper and there is nothing to
  * repair (`spawnHelperCandidatePaths()` is empty there).
  */
 const helperPath = spawnHelperCandidatePaths().find((p) => fs.existsSync(p)) ?? null;

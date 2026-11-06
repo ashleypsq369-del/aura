@@ -34,7 +34,7 @@ const CONTEXT_WS2 = {
 };
 
 // The dev/demo seam (`workspaceContext.set`), NOT `PUT /api/workspace/active`:
-// this is deliberately the same shape as a Vela-Web-driven switch — the
+// this is deliberately the same shape as a Vela-Web-driven switch - the
 // daemon's notion of "current" context changes, but no local pin is written.
 async function setContext(baseUrl: string, context: unknown): Promise<void> {
   const resp = await fetch(`${baseUrl}/api/workspace/context`, {
@@ -56,7 +56,7 @@ function workspaceHeaders(context: typeof CONTEXT_WS1 | typeof CONTEXT_WS2): Rec
   };
 }
 
-describe('GET/POST /api/design-systems — explicit request scope is isolated from daemon current Workspace', () => {
+describe('GET/POST /api/design-systems - explicit request scope is isolated from daemon current Workspace', () => {
   let server: http.Server;
   let baseUrl: string;
   let shutdown: (() => Promise<void> | void) | undefined;
@@ -202,13 +202,13 @@ describe('GET/POST /api/design-systems — explicit request scope is isolated fr
   });
 });
 
-describe('resolveDesignSystemWorkspaceScope — stale local pins are never data-plane authority', () => {
+describe('resolveDesignSystemWorkspaceScope - stale local pins are never data-plane authority', () => {
   // This function's session-liveness gate (`collab.workspaceContext.lastKnown()`)
-  // is untouched by the TTL-cache fix above — this suite exists to prove
+  // is untouched by the TTL-cache fix above - this suite exists to prove
   // removing that cache did not also disturb the gate. A fresh server
   // instance is used (rather than reusing the suite above) so its
   // `activeWorkspace` pin-file reader starts with an empty in-memory cache and
-  // performs its first disk read AFTER the stale pin below is written —
+  // performs its first disk read AFTER the stale pin below is written -
   // mirroring a real daemon restart finding a leftover pin file on disk.
   let server: http.Server;
   let baseUrl: string;
@@ -216,7 +216,7 @@ describe('resolveDesignSystemWorkspaceScope — stale local pins are never data-
 
   beforeAll(async () => {
     // A stale local pin exactly like a real leftover from a previous identity
-    // — `velaLogout` never clears this file (only a CONFIRMED member-removal
+    // - `velaLogout` never clears this file (only a CONFIRMED member-removal
     // does; see `resolvePinnedWorkspace` in vela-workspace-context.ts).
     const dataDir = process.env.OD_DATA_DIR!;
     writeFileSync(

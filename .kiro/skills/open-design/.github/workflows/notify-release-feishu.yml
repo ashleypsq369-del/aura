@@ -9,12 +9,12 @@ name: notify-release-feishu
 # are throttled, not debounced: an in-flight build is allowed to finish (so a
 # busy release branch always produces a prerelease), while pushes that arrive
 # during it coalesce into a single trailing build of the latest commit. With
-# cancel-in-progress the previous behavior starved — pushes spaced closer than
+# cancel-in-progress the previous behavior starved - pushes spaced closer than
 # the build duration kept cancelling each other and no package was ever cut.
 #
 # Also dispatchable by hand (workflow_dispatch) so a prerelease + Feishu card can be
 # cut without an actual push. The normal manual path is to dispatch ON a
-# release/vX.Y.Z branch with `ref`/`release_version` empty — release-prerelease then
+# release/vX.Y.Z branch with `ref`/`release_version` empty - release-prerelease then
 # derives the version from the branch name exactly like the push trigger does.
 # Building from a non-release ref such as main is also possible but requires
 # `release_version` (e.g. 0.10.0, matching apps/packaged/package.json), because
@@ -34,7 +34,7 @@ on:
         type: string
         default: ""
       release_version:
-        description: "Base version (x.y.z) — ONLY needed to build from a non-release ref such as main, where the branch name carries no version. Must equal apps/packaged/package.json. Leave empty on a release/vX.Y.Z branch."
+        description: "Base version (x.y.z) - ONLY needed to build from a non-release ref such as main, where the branch name carries no version. Must equal apps/packaged/package.json. Leave empty on a release/vX.Y.Z branch."
         required: false
         type: string
         default: ""
@@ -49,7 +49,7 @@ on:
         type: string
         default: ""
       enable_mac_x64:
-        description: "Also build the macOS Intel (x64) package. ON by default — stable ships Intel and is gated on validated prerelease artifacts, so an Intel-less prerelease cannot be promoted. Uncheck only when this run is explicitly not about Intel and you want the ~12 min back."
+        description: "Also build the macOS Intel (x64) package. ON by default - stable ships Intel and is gated on validated prerelease artifacts, so an Intel-less prerelease cannot be promoted. Uncheck only when this run is explicitly not about Intel and you want the ~12 min back."
         required: false
         type: boolean
         default: true
@@ -64,7 +64,7 @@ on:
         type: boolean
         default: true
       mac_sign_mode:
-        description: "macOS signing depth: no / sign-only / notarize. Empty uses sign-only — codesigned (which the stable promotion gate requires) but not sent to Apple's notary service. Use notarize for the last prerelease before a stable promotion."
+        description: "macOS signing depth: no / sign-only / notarize. Empty uses sign-only - codesigned (which the stable promotion gate requires) but not sent to Apple's notary service. Use notarize for the last prerelease before a stable promotion."
         required: false
         type: string
         default: ""
@@ -114,7 +114,7 @@ jobs:
       # `default:` applies only when an input is omitted, so forwarding an empty
       # string defeats the callee's declared `core` default; the empty value
       # then reaches the spec, reads as "not core", and selects the updater path
-      # — which demands a fixture only a genuine `full` request wires up, so the
+      # - which demands a fixture only a genuine `full` request wires up, so the
       # job dies before the smoke starts. That is how release/v0.18.1's first
       # prerelease failed on its branch-cut commit.
       win_x64_smoke_mode: ${{ inputs.win_x64_smoke_mode || 'core' }}
@@ -122,7 +122,7 @@ jobs:
       # stable's gate is a validated prerelease artifact.
       #
       # `|| true` would NOT express that. `inputs` is unset on push, so the
-      # obvious `${{ inputs.enable_mac_x64 || true }}` reads correctly there —
+      # obvious `${{ inputs.enable_mac_x64 || true }}` reads correctly there -
       # but on a dispatch where the operator UNCHECKED the box, `false || true`
       # is also true, and the switch would be unturnoffable. Test the event
       # instead: push short-circuits to a real `true`, and a dispatch forwards

@@ -1,4 +1,4 @@
-// Plan §3.EE1 — simulatePipeline + parseSignalKv pure helpers.
+// Plan §3.EE1 - simulatePipeline + parseSignalKv pure helpers.
 
 import { describe, expect, it } from 'vitest';
 import type { PluginPipeline } from '@open-design/contracts';
@@ -6,7 +6,7 @@ import { parseSignalKv, simulatePipeline } from '../src/plugins/simulate.js';
 
 const pipe = (stages: PluginPipeline['stages']): PluginPipeline => ({ stages });
 
-describe('simulatePipeline — single-shot stages', () => {
+describe('simulatePipeline - single-shot stages', () => {
   it("emits outcome='single' for repeat:false stages", () => {
     const result = simulatePipeline({
       pipeline: pipe([{ id: 'plan', atoms: ['todo-write'] }]),
@@ -26,7 +26,7 @@ describe('simulatePipeline — single-shot stages', () => {
   });
 });
 
-describe('simulatePipeline — repeat: true stages', () => {
+describe('simulatePipeline - repeat: true stages', () => {
   it("emits outcome='converged' when the until expression is satisfied", () => {
     const result = simulatePipeline({
       pipeline: pipe([{
@@ -104,7 +104,7 @@ describe('simulatePipeline — repeat: true stages', () => {
   });
 });
 
-describe('simulatePipeline — aggregate outcome', () => {
+describe('simulatePipeline - aggregate outcome', () => {
   it("'mixed' when some stages are single and some are converged", () => {
     const result = simulatePipeline({
       pipeline: pipe([

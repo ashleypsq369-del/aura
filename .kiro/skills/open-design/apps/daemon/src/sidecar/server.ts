@@ -153,7 +153,7 @@ export async function startDaemonSidecar(
   // `desktopAuthGateActive` from the STATUS IPC. The flag is dynamic
   // (flips to true on REGISTER_DESKTOP_AUTH) so the STATUS handler and
   // the public `status()` method below recompute it from
-  // `isDesktopAuthGateActive()` per request — the value cached here is
+  // `isDesktopAuthGateActive()` per request - the value cached here is
   // a startup snapshot only.
   const state: DaemonStatusSnapshot = {
     desktopAuthGateActive: isDesktopAuthGateActive(),

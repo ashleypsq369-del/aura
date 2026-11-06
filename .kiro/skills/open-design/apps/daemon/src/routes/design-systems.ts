@@ -67,9 +67,9 @@ export interface RegisterDesignSystemRoutesDeps extends RouteDeps<'db' | 'paths'
      * Whether the caller may mutate (edit / publish-toggle / delete) `id`.
      * Always true for a system the caller authored themselves. For a system
      * materialized locally from a teammate's team share, true only when the
-     * caller can manage that share — the original sharer, or a workspace
+     * caller can manage that share - the original sharer, or a workspace
      * owner/admin (see `canManageSharedResource` in
-     * `collab/team-resource-share.ts`) — mirroring the "who can unshare"
+     * `collab/team-resource-share.ts`) - mirroring the "who can unshare"
      * rule exactly. Without this gate, a plain member with a synced local
      * copy could PATCH/DELETE a design system that was never theirs
      * (recvqb6mfyqXLD): the UI hides the affordances, but nothing stopped a
@@ -77,7 +77,7 @@ export interface RegisterDesignSystemRoutesDeps extends RouteDeps<'db' | 'paths'
      *
      * `req` (spec 9.2) lets the implementation also refuse when the caller's
      * own workspace is locked/deleted (billing lapse, deletion in progress)
-     * — a check design system never had, unlike project/plugin.
+     * - a check design system never had, unlike project/plugin.
      */
     canMutateUserDesignSystem: (root: string, id: string, req: any) => Promise<boolean>;
     createUserDesignSystem: (
@@ -127,7 +127,7 @@ export interface RegisterDesignSystemRoutesDeps extends RouteDeps<'db' | 'paths'
     /**
      * Physically copies the real `assets/` files out of a user design
      * system's workspace project (where an agent's Write/Edit tool calls
-     * actually land) into the canonical directory — the fix for spec 04
+     * actually land) into the canonical directory - the fix for spec 04
      * §9.3 (recvqb1t4FrckM): canonical is the only directory
      * `team-resource-share` and the download archive read from, and until
      * this existed nothing ever copied a regenerated logo back into it.
@@ -146,7 +146,7 @@ export interface RegisterDesignSystemRoutesDeps extends RouteDeps<'db' | 'paths'
     /**
      * spec 04 §11: unshare `id` from the team hub BEFORE the local delete
      * proceeds, but only when it is CURRENTLY on the live team share list
-     * (`designSystemsTeamShare.sharedResources()` in server.ts) — never on
+     * (`designSystemsTeamShare.sharedResources()` in server.ts) - never on
      * `isTeamSyncedUserDesignSystem` alone. That flag is true only on a
      * teammate's PULLED copy; the sharer deleting their OWN original always
      * reads `teamSynced: false`, which is exactly why the hub index used to
@@ -629,7 +629,7 @@ export function registerDesignSystemRoutes(
     try {
       if (!(await authorizeDesignSystemMutation(req, res, req.params.id))) return;
       // recvqb6mfyqXLD: accepting a revision commits its proposed body onto
-      // the canonical design system — the same "edit" this route family
+      // the canonical design system - the same "edit" this route family
       // gates everywhere else (PATCH/DELETE/sync-assets above). Without this,
       // a plain member viewing a teammate's team-synced design system could
       // accept/reject its pending revision (surfaced to anyone who can read
@@ -687,10 +687,10 @@ export function registerDesignSystemRoutes(
       // recvqb6mfyqXLD: mirror the exact PATCH/DELETE verdict onto the read
       // path too. `DesignSystemsTab` already re-derives an equivalent verdict
       // from the separate `/team` share listing for its own list+detail pane,
-      // but a design system reached any other way — e.g. the direct
+      // but a design system reached any other way - e.g. the direct
       // `/design-systems/:id` route the Library's "Open design system" link
       // and `LibrarySection` navigate to, which renders `DesignSystemFlow`
-      // directly — had no ownership signal at all and fell back to treating
+      // directly - had no ownership signal at all and fell back to treating
       // any non-built-in system as fully editable. Computing it once here,
       // from the same `canMutateUserDesignSystem` the mutation routes below
       // already gate on, means every detail surface can hide/disable its
@@ -904,7 +904,7 @@ export function registerDesignSystemRoutes(
     }
   });
 
-  // Asset sync (spec 04 §9.3, recvqb1t4FrckM): a signal-only endpoint — the
+  // Asset sync (spec 04 §9.3, recvqb1t4FrckM): a signal-only endpoint - the
   // browser never uploads file bytes here. The daemon locates the design
   // system's workspace project itself (same lookup
   // `ensureUserDesignSystemWorkspaceProject` uses) and copies real files
@@ -933,7 +933,7 @@ export function registerDesignSystemRoutes(
         if (outcome.reason === 'not-found') {
           return res.status(404).json({ error: 'editable design system not found' });
         }
-        // No workspace project to sync from yet — a benign no-op, not an
+        // No workspace project to sync from yet - a benign no-op, not an
         // error; the trigger sites call this speculatively on every asset
         // write and run-end.
         return res.json({ synced: [] });
@@ -960,7 +960,7 @@ export function registerDesignSystemRoutes(
       if (options.beforeDelete && !(await options.beforeDelete())) return false;
       // spec 04 §11: drop the hub-side share BEFORE the local delete, so a
       // sharer deleting their OWN design system does not leave the hub index
-      // pointing at a canonical directory that is about to stop existing —
+      // pointing at a canonical directory that is about to stop existing -
       // otherwise `syncSharedTeamDesignSystem` (server.ts) keeps re-stamping
       // `markTeamSynced()` onto every teammate's already-synced local copy
       // forever, because the hub still reports the resource as shared. A
@@ -975,7 +975,7 @@ export function registerDesignSystemRoutes(
       }
       // Envelope cleanup (spec 9.2): drop the `workspace_resources` binding
       // row too, mirroring skill's DELETE route (routes/static-resource.ts)
-      // and plugin uninstall (plugins/installer.ts) — the generic table has
+      // and plugin uninstall (plugins/installer.ts) - the generic table has
       // no ON DELETE CASCADE, so skipping this leaves an orphan row pointing
       // at a design system that no longer exists on disk.
       deleteWorkspaceResourceByResourceId(db, 'design_system', storage.bindingResourceId);

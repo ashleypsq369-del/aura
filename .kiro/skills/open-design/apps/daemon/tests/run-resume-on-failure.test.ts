@@ -16,7 +16,7 @@ import { startServer } from '../src/server.js';
 //      conversation resumes it (`--resume <sessionId>`) instead of opening a
 //      fresh one.
 // On origin/main neither holds: `resumable` is absent, and the session is only
-// persisted on success — so both assertions go red there and green on the
+// persisted on success - so both assertions go red there and green on the
 // branch.
 
 type StartedServer = {
@@ -155,7 +155,7 @@ describe('resume-on-failure runtime', () => {
     // A turn that produces NO committed output before the upstream drop
     // auto-retries from scratch (transient + no side effects) and, once the
     // retry budget is spent, fails terminally. There is no session content to
-    // continue, so the run must NOT be flagged resumable — it stays a
+    // continue, so the run must NOT be flagged resumable - it stays a
     // from-scratch restart surface.
     const failed = await sendRunAndWait(started.url, conversationId);
     expect(failed.status).toBe('failed');
@@ -195,7 +195,7 @@ describe('resume-on-failure runtime', () => {
 
     // Streamed text (so the side-effect gate suppresses the blind retry) but NO
     // committed tool_use / artifact block. A few tokens reaching the UI is not a
-    // resume boundary — there may be nothing committed to continue — so the run
+    // resume boundary - there may be nothing committed to continue - so the run
     // must NOT be resumable even though it produced "output".
     const failed = await sendRunAndWait(started.url, conversationId);
     expect(failed.status).toBe('failed');

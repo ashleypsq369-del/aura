@@ -1,5 +1,5 @@
 // Realtime reconciliation of the local `workspace_projects` SQLite table
-// against Vela's team-project catalog — the remote source of truth for "is
+// against Vela's team-project catalog - the remote source of truth for "is
 // project X still shared to my team, and who owns it."
 //
 // Two existing daemon triggers already learn about a team-catalog change:
@@ -7,7 +7,7 @@
 //   - `workspaceInvalidationPoller`'s ~15s diff-and-signal cadence
 //     (collab/workspace-invalidation-poller.ts).
 // Both used to do nothing more than invalidate the DISPLAY cache
-// (`teamProjectsDisplayCache`) and nudge the web to refetch — the local
+// (`teamProjectsDisplayCache`) and nudge the web to refetch - the local
 // `workspace_projects` row itself was never re-examined, so a row this
 // daemon had already bound could silently disagree with reality forever
 // (the concrete, repeatedly-reported case: an owner unshares a project and a
@@ -16,18 +16,18 @@
 // module closes that gap: `handleHubTeamProjectsChanged` and
 // `handlePolledWorkspaceInvalidation` below hook BOTH existing triggers to
 // also run `reconcileWorkspaceProjectsWithRemote`, a real read-modify-write
-// pass over this daemon's own team rows. No new polling loop is introduced —
+// pass over this daemon's own team rows. No new polling loop is introduced -
 // both hooks ride the cadence their trigger already has.
 //
 // Scope: PROJECTS only (`workspace_projects`). Plugins / skills / design
 // systems have their own generic `workspace_resources` table and are
 // deliberately NOT covered here.
 //
-// Relationship to the two existing point fixes — neither is replaced:
+// Relationship to the two existing point fixes - neither is replaced:
 //   - `reconcileUnboundProjectBeforeMove` (routes/project/index.ts) stays: it
 //     is a synchronous, request-scoped correctness gate for ONE specific
 //     decision (`/move` to personal) that must not wait for the next
-//     background sweep — a user clicking "move to personal" right now needs
+//     background sweep - a user clicking "move to personal" right now needs
 //     the answer right now, not in up to 15s.
 //   - `reconcileLocalRowWithRemoteTeamAccess` (routes/project/index.ts) stays
 //     too: it runs on every `GET /api/workspaces/:workspaceId/projects` and
@@ -37,7 +37,7 @@
 //     completion pass for a brand-new row (in particular, the one that fills
 //     in the real `resourceHubResourceId` this module leaves null). This
 //     module additionally covers the direction that pass structurally never
-//     reaches — an ALREADY-bound row the remote catalog no longer confirms —
+//     reaches - an ALREADY-bound row the remote catalog no longer confirms -
 //     and runs proactively instead of waiting for the next list request.
 
 import type { WorkspaceInvalidationSsePayload } from '@open-design/contracts';
@@ -56,7 +56,7 @@ export interface LocalTeamProjectBinding {
   materializationPending?: boolean;
 }
 
-/** What the remote catalog says about a shared project — the subset
+/** What the remote catalog says about a shared project - the subset
  *  `listTeamProjects()` (contracts' `TeamProject`) actually carries. */
 export interface RemoteTeamProjectRef {
   visibility?: 'private' | 'team';
@@ -78,7 +78,7 @@ export interface WorkspaceProjectMetadataPatch {
 export interface ReconcilerRemoteTeamProjectSources {
   /**
    * The raw workspace catalog (`vela team-projects list` via the richer
-   * `VelaTeamProjectCatalogClient`), which carries EVERY registered row —
+   * `VelaTeamProjectCatalogClient`), which carries EVERY registered row -
    * including rows whose `syncState` is `pending_upload`/`syncing`/`failed`.
    * Null when the vela transport is not active for this daemon.
    */
@@ -98,18 +98,18 @@ export interface ReconcilerRemoteTeamProjectSources {
  * "Is project X still registered to my team, and who owns it" and "should
  * project X render in the team space right now" are different questions. The
  * display read answers the second one by hiding rows whose latest publish is
- * not `synced` — but a row whose publish FAILED is still a registered,
+ * not `synced` - but a row whose publish FAILED is still a registered,
  * owner-occupied catalog row (the hub's `upsertTeamProject` keeps refusing
  * every other member with `team_project_owner_conflict` for it). Feeding that
  * display-filtered list to `planWorkspaceProjectReconciliation` made a mere
  * sync failure indistinguishable from a real unshare, so the demote direction
  * rewrote a teammate's mirror into a personal draft ATTRIBUTED TO THE LOCAL
- * VIEWER (`createdByWorkspaceMemberId: workspaceMemberId`) — which then
+ * VIEWER (`createdByWorkspaceMemberId: workspaceMemberId`) - which then
  * surfaced in the viewer's drafts as "created by me" with an enabled
  * "move to team space" action that could only ever 403 (recvqzjnshIlOe).
  *
  * A genuine unshare/delete removes the hub row itself, so it disappears from
- * the raw catalog too — using membership here does not delay legitimate
+ * the raw catalog too - using membership here does not delay legitimate
  * revocation of a teammate's stale mirror or demotion of the original
  * creator's own project.
  *
@@ -161,7 +161,7 @@ export type WorkspaceProjectReconcileAction =
 /**
  * Pure planner: given what the remote catalog reports and what this daemon's
  * OWN `workspace_projects` table currently claims for the active team
- * workspace, decide which rows disagree and how to fix them. No I/O — the
+ * workspace, decide which rows disagree and how to fix them. No I/O - the
  * orchestrator below (`reconcileWorkspaceProjectsWithRemote`) is the only
  * caller that touches the database, which is what keeps this function
  * directly unit-testable.
@@ -170,7 +170,7 @@ export type WorkspaceProjectReconcileAction =
  * an opinion on: every `remoteProjects[].projectId` (so a brand-new remote
  * share can be told apart from an already-correct one) AND every row already
  * bound `visibility: 'team'` under `workspaceId` (so a row remote no longer
- * lists can be found at all). The caller builds this union — see
+ * lists can be found at all). The caller builds this union - see
  * `reconcileWorkspaceProjectsWithRemote`.
  */
 export function planWorkspaceProjectReconciliation(input: {
@@ -184,7 +184,7 @@ export function planWorkspaceProjectReconciliation(input: {
   const actions: WorkspaceProjectReconcileAction[] = [];
   const remoteIds = new Set(remoteProjects.map((project) => project.projectId));
 
-  // Direction 1: remote reports the project as shared to my team — correct a
+  // Direction 1: remote reports the project as shared to my team - correct a
   // missing, mis-owned, or wrong-visibility local row. Ownership drives
   // `createdByWorkspaceMemberId` the same way `reconcileLocalRowWithRemoteTeamAccess`
   // does: the hub's single writer per project is its `ownerMemberId`, so only
@@ -288,11 +288,11 @@ export interface WorkspaceProjectsReconcilerDeps {
   /** The signed-in team workspace + member this daemon is currently acting
    *  as, or null off-team / signed out / removed. Must gate on active
    *  membership (`memberStatus === 'active'`), the same defensive check
-   *  `should-publish.ts`'s `createShouldPublish` uses — a context that can
+   *  `should-publish.ts`'s `createShouldPublish` uses - a context that can
    *  still ADDRESS a resource hub partition is not proof this member is still
    *  IN the team (see that file's doc comment). */
   getWorkspaceIdentity: () => Promise<WorkspaceProjectsReconcileIdentity | null>;
-  /** `listTeamProjects()` narrowed to what the planner needs — reuse the
+  /** `listTeamProjects()` narrowed to what the planner needs - reuse the
    *  daemon's existing `teamProjectsForDisplay` (server.ts), the exact same
    *  read every other realtime consumer already shares, so this module never
    *  opens a second transport to Vela. */
@@ -300,17 +300,17 @@ export interface WorkspaceProjectsReconcilerDeps {
     identity: WorkspaceProjectsReconcileIdentity,
   ) => Promise<readonly RemoteTeamProjectRef[]>;
   /**
-   * True when this daemon has a local `projects` row for the id — i.e. the
+   * True when this daemon has a local `projects` row for the id - i.e. the
    * project's content has been materialized here (created locally, or pulled
    * from the hub). Gates the bind direction: `workspace_projects.project_id`
    * is a FOREIGN KEY into `projects(id)` (db.ts), so a bind INSERT for a
-   * never-materialized project cannot succeed — and must not be attempted.
+   * never-materialized project cannot succeed - and must not be attempted.
    * Materializing a project is the open/pull path's job
    * (`ensureSharedProjectPlaceholder` / `registerPulledProject` in
    * routes/collab-sync.ts), never this reconciler's; a remote catalog entry
    * with no local `projects` row and no local binding is simply out of this
    * daemon's scope until the member actually opens it (the team list already
-   * displays it from the remote catalog alone — see
+   * displays it from the remote catalog alone - see
    * `listRemoteTeamProjectSummaries` in routes/project/index.ts).
    */
   hasLocalProject: (projectId: string) => boolean;
@@ -333,7 +333,7 @@ export interface WorkspaceProjectsReconcilerDeps {
    * split across: a project with an existing (wrong) row (`rebindWorkspaceProject`,
    * keyed on project id alone so a stale workspace_id is corrected too) AND a
    * project with NO local row at all (`rebindWorkspaceProject` is a no-op in
-   * that case — it never inserts — so the caller must fall back to
+   * that case - it never inserts - so the caller must fall back to
    * `ensureWorkspaceProject` with the same patch). See the wiring in
    * server.ts for the reference implementation.
    */
@@ -411,7 +411,7 @@ function applyRemoteMetadataRefresh(
 /**
  * Run one reconciliation pass: read the remote team-project list, diff it
  * against this daemon's own `workspace_projects` rows, and write back
- * whatever disagrees. Best-effort throughout — a failed identity read or a
+ * whatever disagrees. Best-effort throughout - a failed identity read or a
  * failed remote read returns a no-op result rather than throwing, so a
  * transient Vela outage can never be misread as "remote reports zero
  * projects" and demote every local team row on missing (as opposed to
@@ -445,7 +445,7 @@ export async function reconcileWorkspaceProjectsWithRemote(
     if (existing) localBindings.set(remote.projectId, existing);
   }
 
-  // Reconciliation corrects the bindings of projects this daemon KNOWS —
+  // Reconciliation corrects the bindings of projects this daemon KNOWS -
   // a remote catalog entry with neither a local binding nor a local
   // `projects` row has nothing local to correct, and binding it anyway
   // would violate `workspace_projects`' FOREIGN KEY into `projects(id)`
@@ -585,7 +585,7 @@ export function handleHubProjectMetadataChanged(
  * itself stays a pure "diff and signal" utility
  * (`collab/workspace-invalidation-poller.ts`) with no opinion on
  * `workspace_projects`; this is the one seam where a `team-projects-changed`
- * signal ALSO kicks the real reconciliation — the poller's own ~15s-cadence
+ * signal ALSO kicks the real reconciliation - the poller's own ~15s-cadence
  * twin of `handleHubTeamProjectsChanged` above, for daemons that are signed
  * in but whose hub SSE channel is down (the poller is the sole delivery
  * mechanism in that state, per `startHubEventsSubscriber`'s own doc comment).

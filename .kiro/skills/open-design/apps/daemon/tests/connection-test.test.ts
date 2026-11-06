@@ -617,7 +617,7 @@ describe('POST /api/provider/models', () => {
   });
 
   it('lets an operator-allowlisted internal endpoint reach the upstream model fetch (#3225)', async () => {
-    // The exact symptom in #3225 — "Could not fetch models: Internal IPs
+    // The exact symptom in #3225 - "Could not fetch models: Internal IPs
     // blocked". With the host opted in via OD_ALLOWED_INTERNAL_HOSTS, model
     // discovery must reach the internal gateway instead of returning forbidden.
     vi.stubEnv('OD_ALLOWED_INTERNAL_HOSTS', '10.0.0.5');
@@ -4123,7 +4123,7 @@ console.log(JSON.stringify({ jsonrpc: '2.0', method: 'session/update', params: {
   });
 
   // Regression for #4281: agy print mode is silent on stdout/stderr for
-  // BOTH missing-auth and quota-exhausted failures — it exits 0 without
+  // BOTH missing-auth and quota-exhausted failures - it exits 0 without
   // echoing the upstream error, so the only place the failure shape
   // surfaces is agy's `--log-file`. Before the fix the connection test
   // never handed agy a `--log-file` and never inspected it, so every
@@ -4132,7 +4132,7 @@ console.log(JSON.stringify({ jsonrpc: '2.0', method: 'session/update', params: {
   // results that let Settings tell the user how to recover.
   //
   // The fake agy writes the caller-supplied log body to whatever
-  // `--log-file` path the daemon passes, then exits 0 with no stdout —
+  // `--log-file` path the daemon passes, then exits 0 with no stdout -
   // exactly the not-logged-in / quota shape captured from the real CLI.
   const fakeAgyScript = (logBody: string) => `
 const fs = require('node:fs');
@@ -4151,7 +4151,7 @@ process.stdin.on('end', () => {
   if (logPath && body) {
     try { fs.writeFileSync(logPath, body); } catch {}
   }
-  // Silent clean exit — no assistant text on stdout, matching agy's
+  // Silent clean exit - no assistant text on stdout, matching agy's
   // real print-mode behavior when it cannot establish a connection.
   process.exit(0);
 });
@@ -4684,7 +4684,7 @@ process.stdin.on('end', () => {
     // initial #2248 pass forgot to stamp diagnostics on that return
     // path, which contradicted the "Always set on local agent test
     // responses" contract in packages/contracts. Lock the contract,
-    // and additionally lock the probe's own stderr/exit metadata —
+    // and additionally lock the probe's own stderr/exit metadata -
     // without those, the diagnostics block would drop the only context
     // a caller has on a missing-auth failure (no smoke spawn ever ran,
     // so the smoke sink is empty).
@@ -4840,7 +4840,7 @@ describe('connection test timeout overrides', () => {
   // accepted any positive integer, but Node's setTimeout silently
   // clamps delays above 2^31-1 to ~1 ms (with a TimeoutOverflowWarning).
   // An override that meant to extend the budget would instead make
-  // every connection test fail almost immediately — the safety
+  // every connection test fail almost immediately - the safety
   // timeout would be effectively disarmed.
   it('rejects values above the Node setTimeout maximum (2^31-1)', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
@@ -5053,7 +5053,7 @@ describe('validateUserProviderBaseUrl: OD_ALLOWED_INTERNAL_HOSTS opt-in (issue #
     expect(result).toMatchObject({ error: 'Internal IPs blocked', forbidden: true });
   });
 
-  it('keeps the attacker-controllable asset guard strict — the plain resolver never consults the allowlist', async () => {
+  it('keeps the attacker-controllable asset guard strict - the plain resolver never consults the allowlist', async () => {
     vi.stubEnv('OD_ALLOWED_INTERNAL_HOSTS', '10.0.0.5');
     const result = await validateBaseUrlResolved('http://10.0.0.5:4000/v1');
     expect(result).toMatchObject({ error: 'Internal IPs blocked', forbidden: true });

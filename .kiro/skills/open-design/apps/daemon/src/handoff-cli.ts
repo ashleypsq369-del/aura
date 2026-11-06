@@ -1,11 +1,11 @@
-// `od project handoff` — the CLI surface for the resume-conversation
+// `od project handoff` - the CLI surface for the resume-conversation
 // handoff capability. Per AGENTS.md "Capability exposure (UI/CLI
 // dual-track)", every user-facing capability must be reachable through
 // the `od` CLI as well as the web UI; both drive the same
 // `POST /api/projects/:id/handoff` endpoint.
 //
 // Kept in its own module (not inline in cli.ts) so it stays unit-testable
-// without triggering cli.ts's import-time SUBCOMMAND_MAP dispatch —
+// without triggering cli.ts's import-time SUBCOMMAND_MAP dispatch -
 // mirrors artifacts-cli.ts / runArtifactsCli.
 
 import type { HandoffRequest, HandoffResponse } from '@open-design/contracts/api/handoff';
@@ -179,7 +179,7 @@ export async function runProjectHandoff(args: string[]): Promise<HandoffCliResul
       return fail(err?.message ?? `handoff failed: HTTP ${resp.status}`, err?.code, resp.status);
     }
     // A 2xx with an unparseable or shape-invalid body is a failure, not a
-    // success that prints `undefined` — fail fast so scripts can trust the
+    // success that prints `undefined` - fail fast so scripts can trust the
     // exit code.
     if (!isHandoffResponse(payload)) {
       return fail('daemon returned a malformed handoff response', undefined, resp.status);

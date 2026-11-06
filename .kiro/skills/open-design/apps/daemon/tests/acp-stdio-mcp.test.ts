@@ -49,7 +49,7 @@ describe('parseVersionCore', () => {
   });
 });
 
-describe('acpBuildAcceptsStdioMcp — Kimi version boundary', () => {
+describe('acpBuildAcceptsStdioMcp - Kimi version boundary', () => {
   // Verified against the real published tarballs.
   it.each([
     ['0.35.0', true],
@@ -105,7 +105,7 @@ describe('withholdStdioMcpServersForBuild', () => {
   });
 
   it('returns the input array by reference for an accepting build', () => {
-    // No other agent's payload shape may move — identity is the strongest
+    // No other agent's payload shape may move - identity is the strongest
     // available assertion that nothing was rebuilt.
     const servers = [liveArtifacts, httpServer];
     const result = withholdStdioMcpServersForBuild(servers, {
@@ -153,7 +153,7 @@ describe('runtime defs opting into the guard', () => {
 
   it('leaves reasonix on its map env format, which is a separate axis', () => {
     // Guards against a future edit conflating "shape the env" with "withhold
-    // the server" — reasonix needs the first and must not get the second.
+    // the server" - reasonix needs the first and must not get the second.
     expect(reasonixAgentDef.acpMcpEnvFormat).toBe('map');
   });
 });

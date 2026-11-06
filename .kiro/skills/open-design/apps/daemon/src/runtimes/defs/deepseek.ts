@@ -8,7 +8,7 @@ export const deepseekAgentDef = {
     // delegates to a sibling TUI runtime binary at exec time. Upstream also
     // ships the same dispatcher as `codewhale` after the CodeWhale rename
     // (issue #2983). The companion `deepseek-tui` / `codewhale-tui` runtime
-    // is not probed here — it does not accept the argv shape `buildArgs`
+    // is not probed here - it does not accept the argv shape `buildArgs`
     // produces (`exec --auto <prompt>`).
     bin: 'deepseek',
     fallbackBins: ['codewhale'],
@@ -24,7 +24,7 @@ export const deepseekAgentDef = {
     ],
     // DeepSeek's exec mode requires the prompt as a positional argument
     // (no `-` stdin sentinel; `prompt: String` is a required clap field).
-    // `--auto` enables agentic mode with auto-approval — the daemon runs
+    // `--auto` enables agentic mode with auto-approval - the daemon runs
     // every CLI without a TTY, so the interactive approval prompt would
     // hang the run. Streaming is plain text on stdout (tool calls go to
     // stderr); skipping `--json` keeps deltas streaming live instead of

@@ -1,4 +1,4 @@
-import sys, os, json
+﻿import sys, os, json
 sys.path.insert(0, os.path.dirname(__file__))
 import requests
 
@@ -30,4 +30,4 @@ if url:
     print(f"\nImage URL: {img_url}")
     print(f"Image HTTP: {r3.status_code} | Content-Type: {r3.headers.get('content-type')}")
 else:
-    print("\nNo avatar_url returned — AvatarDisplay will show DiceBear cartoon")
+    print("\nNo avatar_url returned - AvatarDisplay will show DiceBear cartoon")

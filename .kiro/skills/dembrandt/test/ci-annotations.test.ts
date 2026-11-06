@@ -53,7 +53,7 @@ test('driftAnnotations maps changed/removed to error and added to warning', () =
 test('driftAnnotations escapes commas and colons in the title property', () => {
   const lines = driftAnnotations(report({ threshold: 20 }));
   // title contains no comma/colon here, but the summary (data) keeps its commas
-  // raw — only the title property is property-escaped. Guard the contract: no
+  // raw - only the title property is property-escaped. Guard the contract: no
   // raw comma leaks into the property segment before the second ::.
   const prop = lines[0].slice('::error '.length, lines[0].indexOf('::', 2));
   assert.ok(!prop.includes(','), `property segment must not contain a raw comma: ${prop}`);

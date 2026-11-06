@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -143,10 +143,10 @@ export default function VitalsDetail() {
  subtitle="Complete vital sign history and trends"
  icon={Activity}
  stats={latest ? [
- { label:'BP', value: latest.blood_pressure_sys ? `${Math.round(latest.blood_pressure_sys)}/${Math.round(latest.blood_pressure_dia??0)}` : '—', color: getStatus('bp_sys',latest.blood_pressure_sys)==='warning'?'#f87171':'#2dd4bf' },
- { label:'Heart Rate', value: latest.heart_rate ? `${Math.round(latest.heart_rate)} bpm` : '—', color: getStatus('hr',latest.heart_rate)==='warning'?'#f87171':'#4ade80' },
- { label:'O₂ Sat', value: latest.oxygen_saturation ? `${latest.oxygen_saturation.toFixed(1)}%` : '—', color: getStatus('o2',latest.oxygen_saturation)==='critical'?'#ef4444':getStatus('o2',latest.oxygen_saturation)==='warning'?'#fbbf24':'#60a5fa' },
- { label:'Temp °C', value: latest.temperature ? `${latest.temperature.toFixed(1)}°C` : '—', color: getStatus('temp',latest.temperature)==='warning'?'#fbbf24':'#a78bfa' },
+ { label:'BP', value: latest.blood_pressure_sys ? `${Math.round(latest.blood_pressure_sys)}/${Math.round(latest.blood_pressure_dia??0)}` : '-', color: getStatus('bp_sys',latest.blood_pressure_sys)==='warning'?'#f87171':'#2dd4bf' },
+ { label:'Heart Rate', value: latest.heart_rate ? `${Math.round(latest.heart_rate)} bpm` : '-', color: getStatus('hr',latest.heart_rate)==='warning'?'#f87171':'#4ade80' },
+ { label:'O₂ Sat', value: latest.oxygen_saturation ? `${latest.oxygen_saturation.toFixed(1)}%` : '-', color: getStatus('o2',latest.oxygen_saturation)==='critical'?'#ef4444':getStatus('o2',latest.oxygen_saturation)==='warning'?'#fbbf24':'#60a5fa' },
+ { label:'Temp °C', value: latest.temperature ? `${latest.temperature.toFixed(1)}°C` : '-', color: getStatus('temp',latest.temperature)==='warning'?'#fbbf24':'#a78bfa' },
  ] : undefined}
  >
  {canRecord && (
@@ -220,7 +220,7 @@ export default function VitalsDetail() {
  </motion.div>
  )}
 
- {/* History — same DNA as PatientDataTable */}
+ {/* History - same DNA as PatientDataTable */}
  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
  style={{ background:'var(--card-bg)', borderRadius:16, border:'1px solid var(--card-border)', overflow:'hidden', marginTop:24 }}>
  <div style={{ height:3, background:'linear-gradient(90deg,#0d9488,#0891b2,#1d4ed8)' }} />
@@ -231,7 +231,7 @@ export default function VitalsDetail() {
  </div>
  </div>
 
- {/* Header row — matches PatientDataTable th style */}
+ {/* Header row - matches PatientDataTable th style */}
  <div style={{ display:'grid', gridTemplateColumns:'1fr 90px 80px 80px 70px 70px 100px 90px', padding:'8px 16px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
  {['Date & Time','BP','HR (bpm)','SpO₂ (%)','Temp °C','RR','Status','AI Explain'].map(h=>(
  <span key={h} style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.06em' }}>{h}</span>
@@ -253,12 +253,12 @@ export default function VitalsDetail() {
  const badgeClass = criticals >= 2 ? 'badge-critical' : criticals === 1 ? 'badge-high' : 'badge-low';
  const badgeLabel = criticals >= 2 ? 'Critical' : criticals === 1 ? 'Abnormal' : 'Normal';
 
- /* gradient avatar by row index — same palette as PatientDataTable */
+ /* gradient avatar by row index - same palette as PatientDataTable */
  const GRADS = ['linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#0891b2,#1d4ed8)','linear-gradient(135deg,#059669,#0d9488)','linear-gradient(135deg,#7c3aed,#0891b2)','linear-gradient(135deg,#d97706,#ea580c)','linear-gradient(135deg,#e11d48,#d97706)'];
  const grad = GRADS[idx % GRADS.length];
  const initials = String(idx + 1).padStart(2,'0');
 
- /* risk score bar — same as PatientDataTable risk_score column */
+ /* risk score bar - same as PatientDataTable risk_score column */
  const abnormPct = Math.round((criticals / 4) * 100);
  const barColor  = criticals >= 2 ? '#e11d48' : criticals === 1 ? '#f97316' : '#10b981';
 
@@ -268,7 +268,7 @@ export default function VitalsDetail() {
  onMouseEnter={e=>e.currentTarget.style.background='var(--page-bg)'}
  onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
 
- {/* Date — gradient avatar + text, same as PatientDataTable Patient column */}
+ {/* Date - gradient avatar + text, same as PatientDataTable Patient column */}
  <div style={{ display:'flex', alignItems:'center', gap:10 }}>
  <div style={{ width:36, height:36, borderRadius:'50%', background:grad, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0, boxShadow:'0 2px 6px rgba(0,0,0,0.15)' }}>
  {initials}
@@ -285,33 +285,33 @@ export default function VitalsDetail() {
 
  {/* BP */}
  <span style={{ fontSize:13, fontWeight:600, color:bpOk?'var(--text-700)':'#dc2626' }}>
- {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia??0)}` : '—'}
+ {v.blood_pressure_sys ? `${Math.round(v.blood_pressure_sys)}/${Math.round(v.blood_pressure_dia??0)}` : '-'}
  </span>
 
- {/* HR with risk bar — same as PatientDataTable risk_score */}
+ {/* HR with risk bar - same as PatientDataTable risk_score */}
  <div style={{ display:'flex', alignItems:'center', gap:4 }}>
  <span style={{ fontSize:13, fontWeight:600, color:hrOk?'var(--text-700)':'#dc2626', minWidth:28 }}>
- {v.heart_rate ? Math.round(v.heart_rate) : '—'}
+ {v.heart_rate ? Math.round(v.heart_rate) : '-'}
  </span>
  {!hrOk && <div style={{ width:6, height:6, borderRadius:'50%', background:'#ef4444', flexShrink:0, animation:'pulse 2s infinite' }}/>}
  </div>
 
  {/* SpO2 */}
  <span style={{ fontSize:13, fontWeight:600, color:o2Ok?'var(--text-700)':'#dc2626' }}>
- {v.oxygen_saturation ? `${v.oxygen_saturation.toFixed(1)}%` : '—'}
+ {v.oxygen_saturation ? `${v.oxygen_saturation.toFixed(1)}%` : '-'}
  </span>
 
  {/* Temp */}
  <span style={{ fontSize:13, fontWeight:600, color:tmpOk?'var(--text-700)':'#f97316' }}>
- {v.temperature ? `${v.temperature.toFixed(1)}°` : '—'}
+ {v.temperature ? `${v.temperature.toFixed(1)}°` : '-'}
  </span>
 
  {/* RR */}
  <span style={{ fontSize:13, color:'var(--text-600)' }}>
- {v.respiratory_rate ? Math.round(v.respiratory_rate) : '—'}
+ {v.respiratory_rate ? Math.round(v.respiratory_rate) : '-'}
  </span>
 
- {/* Status badge — same badge-* classes as PatientDataTable */}
+ {/* Status badge - same badge-* classes as PatientDataTable */}
  <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
  <span className={badgeClass} style={{ display:'inline-block', width:'fit-content' }}>{badgeLabel}</span>
  <div style={{ display:'flex', alignItems:'center', gap:4 }}>

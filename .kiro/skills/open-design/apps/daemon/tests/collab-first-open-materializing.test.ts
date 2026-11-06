@@ -20,7 +20,7 @@ import {
 
 // Red spec for the QA P0 "first open of a shared project shows nothing"
 // report: a brand-new member on a fresh install joins someone's workspace,
-// opens a project from it, sees NO loading state and no files — and only a
+// opens a project from it, sees NO loading state and no files - and only a
 // SECOND open (minutes later) shows the downloaded content.
 //
 // The whole first-open handshake is one `/collab/status` request, and on a
@@ -33,7 +33,7 @@ import {
 // in-process map that a fresh daemon has never written, and the real hub head
 // is fetched fire-and-forget into `headEnrichmentCache` for a LATER poll to
 // consume (routes/collab-sync.ts, the `needsHubHead` block). So the very first
-// response carries no evidence at all that content is on its way — which is
+// response carries no evidence at all that content is on its way - which is
 // exactly what the web needs: `useProjectCollab.downloadPending` is gated on
 // `publishedVersion > cursor`, so it computes false and DesignFilesPanel
 // renders `design-files-empty` (with "create a new sketch" CTAs) instead of
@@ -45,7 +45,7 @@ import {
 // record is an unmaterialized placeholder (`sharedProjectPlaceholderAt`, see
 // collab/shared-project-placeholder.ts) must be TOLD its local file list is
 // not the project's content, and the pull that fixes that must start on this
-// same request — never be deferred to a later poll or a background
+// same request - never be deferred to a later poll or a background
 // reconciler.
 
 let server: http.Server | null = null;
@@ -79,7 +79,7 @@ function memberContextProvider(workspaceMemberId: string): WorkspaceContextProvi
 /**
  * The exact local state of a fresh install: no projects at all. The status
  * route's `ensureSharedProjectPlaceholder` registers the placeholder row on
- * the first open and `markSharedProjectPlaceholder` stamps it — this fake
+ * the first open and `markSharedProjectPlaceholder` stamps it - this fake
  * models both, so the test exercises the real first-open sequence rather than
  * a pre-seeded one.
  */
@@ -140,7 +140,7 @@ async function startFirstOpenDaemon(options: {
       && scope.workspaceId === context.workspaceId
       && scope.resourceTeamId === context.teamId
       && scope.viewerMemberId === context.workspaceMemberId,
-    // The hub catalog lists the project and names SOMEONE ELSE as its owner —
+    // The hub catalog lists the project and names SOMEONE ELSE as its owner -
     // the member case QA reported.
     resolveSharedProjectOwner: async () => 'owner-1',
     projectStore: store,
@@ -216,7 +216,7 @@ describe('first open of an unmaterialized shared project (QA P0: no loading stat
     await res.json();
 
     // `beginContentTransfer` is what `pullSharedProjectCoalesced` calls the
-    // moment an exact-scope pull is admitted — i.e. the observable proof that
+    // moment an exact-scope pull is admitted - i.e. the observable proof that
     // opening the project actually kicked a materialization.
     await vi.waitFor(() => {
       expect(beginContentTransfer).toHaveBeenCalled();

@@ -2,7 +2,7 @@
 //
 // The daemon pins `mode: 'daemon'` when deriving configure globals for run
 // events and cannot see a saved BYOK key (BYOK creds live in the web client),
-// so its own derivation can only ever report local_cli / amr_cloud / none —
+// so its own derivation can only ever report local_cli / amr_cloud / none -
 // never byok. The web client knows the true runtime for the run it launched
 // and passes it via the run request's analytics hint, which must win so the
 // behavioural funnel can split AMR / BYOK / CLI on the server-side events.
@@ -21,7 +21,7 @@ describe('runtime_type on daemon run analytics', () => {
       agentId: 'claude',
       agents: [{ id: 'claude', available: true }],
     }).runtime_type;
-    // Daemon honestly can't tell this was a BYOK run — it sees an installed CLI.
+    // Daemon honestly can't tell this was a BYOK run - it sees an installed CLI.
     expect(derived).toBe('local_cli');
     // The client knows better and says byok; the hint wins.
     expect(runtimeTypeForRunAnalytics({ derived, hint: 'byok' })).toBe('byok');

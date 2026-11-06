@@ -1,7 +1,7 @@
 // Craft references loader and request resolver. Skills and design systems
 // can opt into sections explicitly, while deck generation receives the
 // typography baseline even when it arrived through a plugin or freeform
-// prompt with no persisted skill id. Missing files are dropped silently —
+// prompt with no persisted skill id. Missing files are dropped silently -
 // a caller that lists `motion` before we ship motion.md should still work.
 
 import { readFile } from "node:fs/promises";
@@ -95,7 +95,7 @@ export async function loadCraftSections(craftDir: string, requested: unknown[]) 
       parts.push(`### ${slug}\n\n${trimmed}`);
       sections.push(slug);
     } catch {
-      // File doesn't exist or unreadable — skip silently. Skills can
+      // File doesn't exist or unreadable - skip silently. Skills can
       // forward-reference future craft sections without breaking.
     }
   }

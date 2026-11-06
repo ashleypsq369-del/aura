@@ -13,7 +13,7 @@ import {
  * Presence when the vela-cli collab transport is OFF.
  *
  * `createVelaCliCollabClientFromEnv` returns `null` unless this run opted into
- * the vela-cli collab transport — which is every stable/prod packaged build and
+ * the vela-cli collab transport - which is every stable/prod packaged build and
  * every plain `tools-dev` run. `registerCollabPresenceRoutes` is built to cope
  * with that: `deps.cloud` is optional and each endpoint falls back to the
  * process-local presence tracker.

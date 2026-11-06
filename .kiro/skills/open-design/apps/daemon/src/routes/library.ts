@@ -123,7 +123,7 @@ async function fetchRemoteBytes(url: string): Promise<{ bytes: Buffer; mime: str
   // loopback, RFC1918/CGNAT, and link-local hosts, re-validating on every
   // redirect hop (redirect:'manual'). Without this a caller could make the
   // privileged daemon fetch an internal/loopback URL and read the response back
-  // via GET /api/library/assets/:id/raw — SSRF + response exfiltration. Sibling
+  // via GET /api/library/assets/:id/raw - SSRF + response exfiltration. Sibling
   // to the loopback-SSRF class in #5478.
   const resp = await fetchExternalBrandAsset(url);
   if (!resp.ok) throw new Error(`remote fetch failed: ${resp.status}`);
@@ -157,7 +157,7 @@ export function streamAssetFileToResponse(
     // The route sets success-only headers (Content-Type/-Length, Cache-Control,
     // Content-Disposition) before streaming. Strip them before the JSON error
     // fallback so a transient open/read failure isn't returned with stale asset
-    // metadata — in particular the `max-age=3600` directive, which would cache
+    // metadata - in particular the `max-age=3600` directive, which would cache
     // the 404 for an hour and mask the file once it becomes available again.
     for (const header of ['Cache-Control', 'Content-Disposition', 'Content-Type', 'Content-Length']) {
       res.removeHeader(header);
@@ -236,7 +236,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
           await copyFile(sidecar, path.join(absDir, elName));
           elementRelPath = relDir ? `${relDir}/${elName}` : elName;
         } catch {
-          // No stored markup (older capture / missing sidecar) — image only.
+          // No stored markup (older capture / missing sidecar) - image only.
         }
       }
     }
@@ -294,7 +294,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
     res.json({ code, expiresAt });
   });
 
-  // Reachable from the (not-yet-allowlisted) extension origin — gated by the
+  // Reachable from the (not-yet-allowlisted) extension origin - gated by the
   // pairing code. server.ts exempts this exact path from the global origin
   // middleware. CORS preflight handled below.
   app.options('/api/library/pair/confirm', (req, res) => {
@@ -360,7 +360,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
     // Clipper page captures may ship an OD Figma capture IR (a JSON node-tree)
     // alongside the HTML. It is stored as a sidecar of the HTML asset and a
     // marker is stamped onto the asset metadata so the Library can offer a
-    // Figma export. The daemon never parses the (potentially large) IR — the
+    // Figma export. The daemon never parses the (potentially large) IR - the
     // clipper supplies the node count.
     const figmaIr =
       typeof body.figmaCapture === 'string' && body.figmaCapture ? body.figmaCapture : undefined;
@@ -402,7 +402,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
     }
 
     // Manual uploads (local web UI / `od library import`) are restricted to a
-    // safe inline size and design-relevant formats — images, fonts, text/HTML,
+    // safe inline size and design-relevant formats - images, fonts, text/HTML,
     // and JSON/design data. Audio, video, and other binaries are turned away.
     // Clipper captures are exempt: the extension curates its own payloads
     // (including page video) and arrives on a trusted extension origin. Text-
@@ -422,7 +422,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
           res,
           415,
           'UNSUPPORTED_MEDIA_TYPE',
-          'this file type cannot be uploaded to the Library — images, fonts, text, HTML, and JSON/design data only',
+          'this file type cannot be uploaded to the Library - images, fonts, text, HTML, and JSON/design data only',
         );
       }
     }
@@ -483,12 +483,12 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
 
   app.get('/api/library/assets', async (req, res) => {
     // Keep the Library current with design systems / agent output before
-    // listing, so an opened grid already shows them. Throttled + best-effort —
+    // listing, so an opened grid already shows them. Throttled + best-effort -
     // never blocks the list on a reconcile error.
     await runReconcile(false).catch(() => {});
     const q = req.query;
     const str = (v: unknown): string | undefined => (typeof v === 'string' && v.length ? v : undefined);
-    // Build conditionally — exactOptionalPropertyTypes rejects explicit
+    // Build conditionally - exactOptionalPropertyTypes rejects explicit
     // `undefined` on the optional filter fields.
     const filter: LibraryAssetFilter = {};
     if (str(q.kind)) filter.kind = str(q.kind) as LibraryAssetKind;
@@ -682,7 +682,7 @@ export function registerLibraryRoutes(app: Express, ctx: RegisterLibraryRoutesDe
         now,
       );
       // writeProjectFile ensures the project dir; write the capture as the
-      // editable entry file. No artifact manifest — a plain HTML file avoids
+      // editable entry file. No artifact manifest - a plain HTML file avoids
       // the publication/stub guards (a captured page is arbitrary markup) while
       // still rendering and editing like any project HTML.
       await writeProjectFile(PROJECTS_DIR, projectId, 'index.html', Buffer.from(html, 'utf8'), {}, metadata);

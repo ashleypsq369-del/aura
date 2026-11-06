@@ -109,7 +109,7 @@ describe('media generation freezes provider bytes through the route hook', () =>
       | { id: string; captureState: string; sourcePath: string; storageKey: string; byteSize: number }
       | undefined;
 
-    // A missing row means the route never handed the generator a hook — the
+    // A missing row means the route never handed the generator a hook - the
     // one place a provider's in-memory bytes were still reachable.
     expect(snapshot, 'the media route captured a snapshot bound to this task').toBeTruthy();
     expect(snapshot!.captureState).toBe('ready');

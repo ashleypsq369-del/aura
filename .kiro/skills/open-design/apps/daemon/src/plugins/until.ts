@@ -2,10 +2,10 @@
 // not arbitrary JS. The grammar is a comma-/`||`-separated disjunction of
 // AND-joined comparisons over four known signal variables:
 //
-//   critique.score         number  — last critique-theater dim score (0..5)
-//   iterations             number  — completed devloop iterations on this stage
-//   user.confirmed         boolean — last `confirmation` surface answer
-//   preview.ok             boolean — last `live-artifact` preview load result
+//   critique.score         number  - last critique-theater dim score (0..5)
+//   iterations             number  - completed devloop iterations on this stage
+//   user.confirmed         boolean - last `confirmation` surface answer
+//   preview.ok             boolean - last `live-artifact` preview load result
 //
 // Comparison operators: == != >= <= > < (booleans support ==/!= only).
 // Boolean literals: true / false. Number literals: any JSON number.
@@ -21,7 +21,7 @@ export interface UntilSignals {
   'iterations'?:     number | undefined;
   'user.confirmed'?: boolean | undefined;
   'preview.ok'?:     boolean | undefined;
-  // Plan §3.N1 / spec §22.4 — promoted by the build-test atom
+  // Plan §3.N1 / spec §22.4 - promoted by the build-test atom
   // (Phase 7 entry slice). Lets a plan write
   // `until: 'build.passing && tests.passing'` directly instead of
   // collapsing pass/fail into critique.score.
@@ -112,7 +112,7 @@ function parseComparison(raw: string): UntilComparison {
   const rhs = expression.slice(opMatch.index + op.length).trim();
   if (!(lhs in SIGNAL_KINDS)) {
     throw new UntilSyntaxError(
-      `unknown signal "${lhs}" — supported: ${Object.keys(SIGNAL_KINDS).join(', ')}`,
+      `unknown signal "${lhs}" - supported: ${Object.keys(SIGNAL_KINDS).join(', ')}`,
     );
   }
   const signal = lhs as keyof UntilSignals;
@@ -160,7 +160,7 @@ function stripOuterParens(input: string): string {
 
 export interface EvaluationResult {
   satisfied: boolean;
-  // The first matching conjunction's terms — useful for debugging /
+  // The first matching conjunction's terms - useful for debugging /
   // event payloads. Empty when no term holds.
   matched:   UntilComparison[];
 }

@@ -9,8 +9,8 @@
  * after a session existed.
  *
  * This module answers ONLY that structural question, and it has no imports on
- * purpose. The matching question — *why* the handshake failed, and therefore
- * what the user should do about it — belongs to `run-failure-classification.ts`,
+ * purpose. The matching question - *why* the handshake failed, and therefore
+ * what the user should do about it - belongs to `run-failure-classification.ts`,
  * which owns every cause signature the daemon knows. Keeping the two apart is
  * what lets the classifier read the id without the id-reader having to reach
  * back into the classifier.

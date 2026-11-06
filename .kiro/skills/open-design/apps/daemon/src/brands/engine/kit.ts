@@ -4,7 +4,7 @@
  * HTML string whose colors/spacing/typography come *only* from the derived
  * design-token CSS custom properties (`var(--brand-*)`, via `varRef`). Nothing
  * here is hand-tuned per brand: the same markup re-skins itself the moment the
- * `:root` token block changes — that is what makes a single Seed yield a whole
+ * `:root` token block changes - that is what makes a single Seed yield a whole
  * coherent component set across light / dark / compact variants.
  *
  * Fragment functions (button / card / input / tag / alert / swatches /
@@ -316,7 +316,7 @@ details.kit-acc[open] .kit-acc-icon{transform:rotate(45deg)}
 
 // ─────────────────────────── avatar / stat / divider ────────────────────────
 
-/** Initials avatar — up to two initials on a primary-tinted disc. */
+/** Initials avatar - up to two initials on a primary-tinted disc. */
 export function avatar(opts: { name: string; size?: Size }): string {
   const px: Record<Size, string> = {
     sm: varRef("controlHeightSM"),
@@ -684,7 +684,7 @@ export function table(opts: { columns: string[]; rows: string[][] }): string {
   )};"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`;
 }
 
-/** Native `<details>` accordion — works with no JavaScript (FAQ-ready). */
+/** Native `<details>` accordion - works with no JavaScript (FAQ-ready). */
 export function accordion(opts: {
   items: Array<{ title: string; body: string }>;
   open?: number;
@@ -946,7 +946,7 @@ export function typeScale(tokens: DesignTokens): string {
 // ─────────────────────────── full showcase page ─────────────────────────────
 
 /** Build the inline `:root{ --brand-…: … }` block from the tokens directly
- *  (does not depend on export.ts — kit must stand alone). */
+ *  (does not depend on export.ts - kit must stand alone). */
 function rootVars(tokens: DesignTokens): string {
   const decls = flattenTokens(tokens)
     .map(({ name, value }) => `  ${name}: ${value};`)
@@ -1008,7 +1008,7 @@ export function renderKitPage(
     })}
     ${card({
       title: "Usage",
-      body: "Drop the same component into a dark or compact theme and it re-skins automatically — no per-variant markup.",
+      body: "Drop the same component into a dark or compact theme and it re-skins automatically - no per-variant markup.",
     })}
     ${card({
       body: "A bodyonly card. " + tag({ label: "live" }) + " " + tag({ label: "beta" }),
@@ -1023,7 +1023,7 @@ export function renderKitPage(
   ])}">
     ${input({ label: "Email", placeholder: "you@example.com" })}
     ${input({ label: "Project name", value: brandName })}
-    ${select({ label: "Team size", options: ["Just me", "2–10", "11–50", "50+"], value: "2–10" })}
+    ${select({ label: "Team size", options: ["Just me", "2-10", "11-50", "50+"], value: "2-10" })}
     ${textarea({ label: "Message", placeholder: "Tell us what you're building…", rows: 3 })}
   </div>
   <div style="${style([flexRow, "margin-top:" + varRef("sizeLG"), "gap:" + varRef("sizeLG")])}">
@@ -1083,7 +1083,7 @@ export function renderKitPage(
       open: 0,
       items: [
         { title: "What is a seed token?", body: "The ~20-field input every other token is derived from. Change one field and the whole system follows." },
-        { title: "Can I theme dark mode separately?", body: "No need — dark is the same seed run through a different algorithm, so it can never drift from the light theme." },
+        { title: "Can I theme dark mode separately?", body: "No need - dark is the same seed run through a different algorithm, so it can never drift from the light theme." },
       ],
     })}
   </div>`;
@@ -1105,7 +1105,7 @@ export function renderKitPage(
     })}
     ${card({
       title: "Composable",
-      body: "Marketing blocks (testimonials, pricing, stats) compose the same primitives — so a landing page is just kit pieces in the right order.",
+      body: "Marketing blocks (testimonials, pricing, stats) compose the same primitives - so a landing page is just kit pieces in the right order.",
       footer: button({ label: "View artifacts", type: "link", size: "sm" }),
     })}
   </div>`;
@@ -1218,7 +1218,7 @@ ${KIT_CSS}
   )}</div>
   <div class="panel">${section(
     "Marketing blocks",
-    "Testimonials and pricing compose the primitives — landing pages are these in the right order.",
+    "Testimonials and pricing compose the primitives - landing pages are these in the right order.",
     marketing,
   )}</div>
   <div class="panel">${section("Tags", "Compact labels keyed to functional colors.", tags)}</div>

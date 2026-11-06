@@ -5,25 +5,25 @@
 // ----------
 // `chatScrollForensicsBodyParser` is sized at 24mb
 // (`src/diagnostics-client-evidence.ts`) precisely because a capture carries
-// the chat log's full `outerHTML` — the renderer truncates its own side at 8MB
+// the chat log's full `outerHTML` - the renderer truncates its own side at 8MB
 // (`apps/web/src/observability/chat-scroll-forensics.ts`) and the envelope
 // carries TWO of them (`live` and `retained`). But that parser is attached to
 // the route, and the route is registered thousands of lines AFTER the
 // app-level `app.use(express.json({ limit: '4mb' }))`. `express.json` is a
-// no-op once a body has already been read, so the global parser claims — and
-// rejects — the body first. The 24mb parser never runs.
+// no-op once a body has already been read, so the global parser claims - and
+// rejects - the body first. The 24mb parser never runs.
 //
 // The failure is silent by construction: `uploadChatScrollForensics` returns
 // `res.ok` and never throws, so the colleague sees a normal export and we get
 // a bundle with no renderer evidence in it. The longer the transcript, the
-// more certain the loss — which inverts the whole point of the endpoint,
+// more certain the loss - which inverts the whole point of the endpoint,
 // because a transcript long enough to freeze is a transcript too long to send.
 //
 // Why this file exists next to `diagnostics-chat-scroll-forensics.test.ts`
 // -----------------------------------------------------------------------
 // That suite calls `chatScrollForensicsHandler` directly with a hand-made
 // `{ body }` object. Handler-level specs cannot see this bug at all: they never
-// go through express, so parser ORDER — the entire defect — is invisible to
+// go through express, so parser ORDER - the entire defect - is invisible to
 // them, and they stayed green while the endpoint was broken. Everything here
 // therefore goes over a real socket into a real `startServer()` app, which is
 // the only vantage point from which mount order is observable.
@@ -60,8 +60,8 @@ interface PostResult {
  * Deliberately `node:http` rather than `fetch`: when body-parser refuses an
  * oversized body it answers mid-upload and stops reading, and undici surfaces
  * that as an opaque `TypeError: fetch failed` about half the time. The raw
- * client lets the spec record BOTH shapes — a real status line, or the reset
- * that stands in for one — so "the daemon refused this body" is observable
+ * client lets the spec record BOTH shapes - a real status line, or the reset
+ * that stands in for one - so "the daemon refused this body" is observable
  * either way.
  */
 function post(url: string, body: string): Promise<PostResult> {
@@ -183,7 +183,7 @@ describe('chat-scroll forensics body limit, through the real express app', () =>
     // The fix must be a route-scoped parser registered ahead of the global one,
     // not a bigger global limit: raising the global would widen the parse
     // surface of every route in the daemon. `express.json` is app-level
-    // middleware, so it runs — and refuses — before routing, which is why an
+    // middleware, so it runs - and refuses - before routing, which is why an
     // unrouted path is a clean probe of the global ceiling alone.
     const result = await post(
       `${baseUrl}/api/__body-limit-probe`,

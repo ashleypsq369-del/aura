@@ -1,5 +1,5 @@
 /**
- * 媒体产物是**在这一轮结束之后**才落盘的 —— Plane OPEND-2608 / OPEND-2609。
+ * 媒体产物是**在这一轮结束之后**才落盘的 -- Plane OPEND-2608 / OPEND-2609。
  *
  * `run-produced-files.ts` 那道地板跑在 run 的 terminal chokepoint 上,吃的是这一轮
  * 自己的文件系统 diff。可媒体生成是 202 异步的:`handleGenerate` 立刻返回,
@@ -9,13 +9,13 @@
  * 客户端那一半同样够不着:`ProjectView` 的 `onDone` 也是在 terminal 那一刻算
  * `computeProducedFiles`,晚到的文件不在它的 `authoritativeArtifactPaths` 里、也
  * 不在它刚拉的文件列表里。所以它会给这条消息写一份**不含该媒体文件**的清单
- * (常常是 `[]`)—— 这正是 2609 的症状:音频生成出来了、右侧能播,聊天里没有卡。
+ * (常常是 `[]`)-- 这正是 2609 的症状:音频生成出来了、右侧能播,聊天里没有卡。
  *
  * 这条测试把顺序本身钉死,而不是相信推理:
- *   1. 一轮真的 run,agent 只做一件事 —— 用 run 自己的 `OD_TOOL_TOKEN` 打
+ *   1. 一轮真的 run,agent 只做一件事 -- 用 run 自己的 `OD_TOOL_TOKEN` 打
  *      `POST /api/tools/media/generate`,拿到 202 就退出(真实里就是 `od media
  *      generate` 25s 轮询预算耗尽后的那条 "still running" 交接)。
- *   2. 等 `runStatus` 变成 terminal,**当场断言文件还没落盘** —— 这一步是事实
+ *   2. 等 `runStatus` 变成 terminal,**当场断言文件还没落盘** -- 这一步是事实
  *      本身,不是断言风格问题:它证明这一轮的 diff 里不可能有这个文件。
  *   3. 等媒体任务 done,断言该文件已经关联到这条 assistant message 上。
  *
@@ -49,7 +49,7 @@ async function withDb<T>(fn: (db: Database.Database) => T | Promise<T>): Promise
   }
 }
 
-/** provider 回一张真 1x1 PNG —— `sniffImageExt` 认它,写盘也是真字节。 */
+/** provider 回一张真 1x1 PNG -- `sniffImageExt` 认它,写盘也是真字节。 */
 const ONE_BY_ONE_PNG_B64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
 
@@ -191,7 +191,7 @@ describe('a media file that lands after the run terminal still reaches its messa
   /**
    * 跑一轮真的 run:agent 只派发一次媒体生成就退出,自己一个字节都不写。
    *
-   * 返回前会**当场证明顺序** —— run 已经 terminal、文件还没落盘。这一步不是断言
+   * 返回前会**当场证明顺序** -- run 已经 terminal、文件还没落盘。这一步不是断言
    * 风格,是这条测试的全部前提:文件既然那时不存在,这一轮的 diff 里就不可能有它。
    */
   async function dispatchTurnThatFinishesBeforeItsMedia(outputName: string): Promise<{
@@ -283,7 +283,7 @@ describe('a media file that lands after the run terminal still reaches its messa
     const outputPath = join(dataDir, 'projects', projectId, outputName);
     expect(
       existsSync(outputPath),
-      'the media file already existed at the run terminal — the ordering premise of this test does not hold',
+      'the media file already existed at the run terminal - the ordering premise of this test does not hold',
     ).toBe(false);
 
     return {
@@ -327,7 +327,7 @@ describe('a media file that lands after the run terminal still reaches its messa
       '晚落盘的媒体产物没有关联到这一轮的 assistant message',
     ).toContain('poster.png');
 
-    // 形状必须是 ChatPanel 认的那种 `ProjectFile` —— 卡片按 `kind` / `mime`
+    // 形状必须是 ChatPanel 认的那种 `ProjectFile` -- 卡片按 `kind` / `mime`
     // 分图片卡与音频胶囊,`size` 还要显示出来。
     const card = message!.producedFiles!.find((f) => f.name === 'poster.png')!;
     expect(card.kind).toBe('image');
@@ -336,7 +336,7 @@ describe('a media file that lands after the run terminal still reaches its messa
   }, 90_000);
 
   /**
-   * 它是**地板,不是判决** —— 而且比 terminal 那道地板更严。
+   * 它是**地板,不是判决** -- 而且比 terminal 那道地板更严。
    *
    * 客户端在这一轮 terminal 那一刻算出的清单是权威的,只是它同样看不见还没落盘的
    * 媒体文件。所以正确行为是**只补一条、一条都不动**:客户端写过的每一项原样留着,
@@ -405,7 +405,7 @@ describe('a media file that lands after the run terminal still reaches its messa
   /**
    * 反方向:媒体**在这一轮里**就完成了。
    *
-   * 这时候文件早在 terminal 快照之前就落盘了,run 自己的 diff 里有它 —— 该由
+   * 这时候文件早在 terminal 快照之前就落盘了,run 自己的 diff 里有它 -- 该由
    * run-terminal 那道地板一次性写全清单。晚到路径必须**当场让开**:它要是抢先
    * 写了 `[那一个媒体文件]`,terminal 地板再看那一列就是非 NULL,于是判为
    * 「客户端已拥有」直接跳过,同一轮里 agent 自己写的文件就永远丢了。
@@ -430,7 +430,7 @@ describe('a media file that lands after the run terminal still reaches its messa
     expect(conversationId).toBeTruthy();
 
     // Dispatch, wait for the task the way `od media wait` does, THEN write a
-    // file of its own — so this turn's diff genuinely holds both.
+    // file of its own - so this turn's diff genuinely holds both.
     const script = `
 const fs = require('node:fs');
 const path = require('node:path');
@@ -509,7 +509,7 @@ const path = require('node:path');
    * 一次批量扇出里,同一个 run 的几个媒体任务几乎同时完成。
    *
    * 每次关联中间隔着一次 `fs.stat`(await),两个调用于是会**交错**:都先读到同一
-   * 份旧清单,再各自回来写。所以「读—改—写」必须在 await **之后**重新读一次,并且
+   * 份旧清单,再各自回来写。所以「读-改-写」必须在 await **之后**重新读一次,并且
    * 只覆盖自己读到的那份字节;否则后写的那个会拿着过期清单把先写的那条盖掉,
    * 用户就只看得见其中一张卡。
    */
@@ -530,7 +530,7 @@ const path = require('node:path');
 
     const runId = (await readMessages(turn.projectId, turn.conversationId))
       .find((m) => m.id === turn.messageId)!.runId!;
-    // One connection, the way the daemon holds it — the interleaving under test
+    // One connection, the way the daemon holds it - the interleaving under test
     // is the event loop's, not two databases'.
     await withDb(async (db) => {
       await Promise.all(

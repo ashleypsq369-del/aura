@@ -121,7 +121,7 @@ describe('vela billing 收口', () => {
     expect(parseBillingSummary('not json')).toBeNull();
   });
 
-  it('degrades to null when the CLI throws — no billing session', async () => {
+  it('degrades to null when the CLI throws - no billing session', async () => {
     const out = await fetchVelaBillingSummary({
       run: async () => {
         throw new Error('no vela session');

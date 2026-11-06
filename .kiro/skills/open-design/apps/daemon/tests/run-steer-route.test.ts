@@ -1,11 +1,11 @@
-// B11 「引导对话」 — POST /api/runs/:id/steer at the daemon HTTP boundary.
+// B11 「引导对话」 - POST /api/runs/:id/steer at the daemon HTTP boundary.
 //
 // The queue row's third button used to be "send now", which STOPS the running
 // turn and re-sends. Steering is the opposite: the turn keeps running and the
 // message is written onto the child's still-open stdin, so the model reads it
 // without losing the work it has already done.
 //
-// This spec drives the real thing end to end — a fake `claude` that parks on a
+// This spec drives the real thing end to end - a fake `claude` that parks on a
 // `stop_reason: 'tool_use'` frame (stdin stays open, exactly the moment
 // steering is worth the most), reads the injected JSONL frame off stdin, and
 // records what it actually received. Nothing here inspects daemon internals:
@@ -163,7 +163,7 @@ describe('POST /api/runs/:id/steer', () => {
     });
     expect(steer.status).toBe(409);
     const body = await steer.json() as { error: { code: string } };
-    // A permanent property of the runtime, not a transient state — the caller
+    // A permanent property of the runtime, not a transient state - the caller
     // is meant to stop advertising the affordance, not retry.
     expect(body.error.code).toBe('RUN_STEERING_UNSUPPORTED');
 
@@ -296,8 +296,8 @@ setTimeout(() => process.exit(0), 40000);
 
 /**
  * A `codex` stand-in that stays alive without producing a turn. codex is a
- * `promptInputFormat: 'text'` runtime — the daemon ends its stdin together
- * with the opening prompt — so a live run of it is the honest "unsupported
+ * `promptInputFormat: 'text'` runtime - the daemon ends its stdin together
+ * with the opening prompt - so a live run of it is the honest "unsupported
  * runtime" fixture.
  */
 async function writeIdleCodex(dir: string, name: string, readyPath: string): Promise<string> {

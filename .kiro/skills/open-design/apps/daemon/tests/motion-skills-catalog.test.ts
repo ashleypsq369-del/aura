@@ -96,7 +96,7 @@ describe('bundled motion helpers selected through the skill catalogue', () => {
   it('ships 160 unique Motion.Lab records and all 35 art / nine grammar cards', async () => {
     const categories = await Promise.all(['basic', 'text', 'interaction', 'advanced'].map((name) =>
       readFile(path.join(skillsRoot, 'motion-lab/references', `${name}.md`), 'utf8')));
-    const effectIds = categories.flatMap((body) => [...body.matchAll(/^## ([A-Za-z0-9-]+) —/gm)].map((m) => m[1]));
+    const effectIds = categories.flatMap((body) => [...body.matchAll(/^## ([A-Za-z0-9-]+) -/gm)].map((m) => m[1]));
     expect(effectIds).toHaveLength(160);
     expect(new Set(effectIds).size).toBe(160);
     for (const body of categories) {

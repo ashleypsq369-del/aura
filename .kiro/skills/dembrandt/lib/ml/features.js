@@ -1,10 +1,10 @@
-// features.ts — the single source of truth for turning a dembrandt extraction's
+// features.ts - the single source of truth for turning a dembrandt extraction's
 // color palette into numeric feature vectors.
 //
 // CRITICAL: this is the ONE place features are computed. The dataset builder
 // (training) and the runtime (inference) both call `candidatesFrom()`, so the
 // model never sees different features at train vs serve time. If you change a
-// feature here, retrain — the ONNX input width changes with FEATURE_NAMES.
+// feature here, retrain - the ONNX input width changes with FEATURE_NAMES.
 // Ordered feature names. The ONNX model's input width == FEATURE_NAMES.length.
 // Keep this list and the vector in `candidatesFrom` in lockstep.
 export const FEATURE_NAMES = [
@@ -13,7 +13,7 @@ export const FEATURE_NAMES = [
     'confidence', // high=1, medium=0.5, low=0
     'lightness', // OKLab L (0..1)
     'chroma', // OKLab C (~0..0.4)
-    'hue_sin', // sin(hue) — continuous hue
+    'hue_sin', // sin(hue) - continuous hue
     'hue_cos', // cos(hue)
     'is_grayish', // chroma < 0.02
     'is_near_black', // L < 0.15
@@ -125,7 +125,7 @@ export function candidatesFrom(extraction) {
     }
     const palette = [...byHex.values()];
     const totalCount = palette.reduce((sum, p) => sum + (p.count ?? 0), 0) || 1;
-    // Author-named :root tokens — a color defined as a brand-named custom property
+    // Author-named :root tokens - a color defined as a brand-named custom property
     // is strong evidence it is a brand color.
     // Trained as constant 0: cssVariables excluded palette colours until schema
     // 1.19.0. Stays 0 until FEATURE_VERSION 2 ships with a retrained model.

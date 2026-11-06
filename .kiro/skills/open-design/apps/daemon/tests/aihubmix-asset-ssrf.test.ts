@@ -32,7 +32,7 @@ describe('assertAndFetchExternalAsset', () => {
     await expect(
       assertAndFetchExternalAsset('http://169.254.169.254/latest/meta-data', {}),
     ).rejects.toThrow();
-    // The host is rejected at validation time — the download is never issued.
+    // The host is rejected at validation time - the download is never issued.
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -81,7 +81,7 @@ describe('AIHubMix asset downloads pin redirect:"error"', () => {
     projectId: PROJECT_ID,
     upstreamApiKey: 'ahm-byok-key',
     upstreamBaseUrl: 'https://aihubmix.com/v1',
-    // Keep tests fast — 1 ms between polls instead of the production interval.
+    // Keep tests fast - 1 ms between polls instead of the production interval.
     videoPollIntervalMs: 1,
   });
 

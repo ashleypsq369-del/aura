@@ -264,7 +264,7 @@ async function startHarness() {
     },
   } as unknown as CollabCloudClient;
 
-  // 生产 wiring 的镜像 —— 逐项对着 apps/daemon/src/server.ts:4379-4420 抄的
+  // 生产 wiring 的镜像 -- 逐项对着 apps/daemon/src/server.ts:4379-4420 抄的
   // **依赖装配**(不是逻辑):`resolveLocalProjectRelayBinding` 是 server.ts:4382-4392,
   // `validateCommentRelayProjectBinding` 是 server.ts:4393-4397(真函数
   // `commentRelayLocalBindingMatches`)。
@@ -538,11 +538,11 @@ async function readCommentsAfterDirtyMark(
 }
 
 // ---------------------------------------------------------------------------
-// 6 格矩阵 —— 上行
+// 6 格矩阵 -- 上行
 // ---------------------------------------------------------------------------
 
 describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
-  it('个人项目 · 未分享 · 上行 —— 不同步(本地保存成功,不入队、不推送)', async () => {
+  it('个人项目 · 未分享 · 上行 -- 不同步(本地保存成功,不入队、不推送)', async () => {
     const harness = await startHarness();
     const { status, commentId } = await writeCommentAndDrain(
       harness,
@@ -550,7 +550,7 @@ describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
       '个人未分享的评论',
     );
 
-    // 本地写入照常成功 —— 不同步不等于写不进去,这正是「静默」的来源。
+    // 本地写入照常成功 -- 不同步不等于写不进去,这正是「静默」的来源。
     expect(status).toBe(200);
     expect(commentId).toBeTruthy();
     expect(
@@ -561,7 +561,7 @@ describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
     expect(harness.relay.pushes).toEqual([]);
   });
 
-  it('个人项目 · 分享中 · 上行 —— 同步(入队并推送到云端)', async () => {
+  it('个人项目 · 分享中 · 上行 -- 同步(入队并推送到云端)', async () => {
     const harness = await startHarness();
     const { status, commentId } = await writeCommentAndDrain(
       harness,
@@ -581,7 +581,7 @@ describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
     expect(harness.relay.pushes[0]?.comment.id).toBe(commentId);
   });
 
-  it('团队项目 · 未分享 · 上行 —— 不同步(本地保存成功,不入队、不推送)', async () => {
+  it('团队项目 · 未分享 · 上行 -- 不同步(本地保存成功,不入队、不推送)', async () => {
     const harness = await startHarness();
     const { status, commentId } = await writeCommentAndDrain(
       harness,
@@ -598,7 +598,7 @@ describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
     expect(harness.relay.pushes).toEqual([]);
   });
 
-  it('团队项目 · 分享中 · 上行 —— 同步(入队并推送到云端)', async () => {
+  it('团队项目 · 分享中 · 上行 -- 同步(入队并推送到云端)', async () => {
     const harness = await startHarness();
     const { status, commentId } = await writeCommentAndDrain(
       harness,
@@ -620,11 +620,11 @@ describe('同步资格矩阵 · 上行(本地写 → 推云端)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 6 格矩阵 —— 下行
+// 6 格矩阵 -- 下行
 // ---------------------------------------------------------------------------
 
 describe('同步资格矩阵 · 下行(云端拉 → 本地)', () => {
-  it('个人项目 · 未分享 · 下行 —— 不同步(不发起拉取,脏标记原样退回)', async () => {
+  it('个人项目 · 未分享 · 下行 -- 不同步(不发起拉取,脏标记原样退回)', async () => {
     const harness = await startHarness();
     harness.seedRemoteComment(PERSONAL_UNSHARED, 'remote-personal-unshared', '云端的评论');
 
@@ -638,7 +638,7 @@ describe('同步资格矩阵 · 下行(云端拉 → 本地)', () => {
     expect(harness.dirtyCommentProjects.has(PERSONAL_UNSHARED.projectId)).toBe(true);
   });
 
-  it('个人项目 · 分享中 · 下行 —— 同步(拉取并合并进本地列表)', async () => {
+  it('个人项目 · 分享中 · 下行 -- 同步(拉取并合并进本地列表)', async () => {
     const harness = await startHarness();
     harness.seedRemoteComment(PERSONAL_SHARED, 'remote-personal-shared', '云端的评论');
 
@@ -661,7 +661,7 @@ describe('同步资格矩阵 · 下行(云端拉 → 本地)', () => {
     expect(harness.dirtyCommentProjects.has(PERSONAL_SHARED.projectId)).toBe(false);
   });
 
-  it('团队项目 · 未分享 · 下行 —— 不同步(不发起拉取,脏标记原样退回)', async () => {
+  it('团队项目 · 未分享 · 下行 -- 不同步(不发起拉取,脏标记原样退回)', async () => {
     const harness = await startHarness();
     harness.seedRemoteComment(TEAM_UNSHARED, 'remote-team-unshared', '云端的评论');
 
@@ -673,7 +673,7 @@ describe('同步资格矩阵 · 下行(云端拉 → 本地)', () => {
     expect(harness.dirtyCommentProjects.has(TEAM_UNSHARED.projectId)).toBe(true);
   });
 
-  it('团队项目 · 分享中 · 下行 —— 同步(拉取并合并进本地列表)', async () => {
+  it('团队项目 · 分享中 · 下行 -- 同步(拉取并合并进本地列表)', async () => {
     const harness = await startHarness();
     harness.seedRemoteComment(TEAM_SHARED, 'remote-team-shared', '云端的评论');
 
@@ -701,7 +701,7 @@ describe('同步资格矩阵 · 结构', () => {
   // 这一条是整张网里最重要的断言。它把「项目类型这一维今天到不了同步闸门
   // 面前」钉死:两个住在**不同种类工作区**里的项目,只要分享状态相同,上行
   // 行为就完全一样。A7 如果在 `commentRelayScope()` 里**引入**了项目类型
-  // (例如「个人项目不许同步」),这一条会红 —— 那是有意改变,不是漏改。
+  // (例如「个人项目不许同步」),这一条会红 -- 那是有意改变,不是漏改。
   it('项目类型不影响上行:个人工作区与团队工作区,只要都在分享中,行为一致', async () => {
     const harness = await startHarness();
     await writeCommentAndDrain(harness, PERSONAL_SHARED, 'a');
@@ -723,7 +723,7 @@ describe('同步资格矩阵 · 结构', () => {
   // comments.ts:388 的 `ctx.onCommentsRead?.()` 是**无条件**触发的:它不看
   // 分享状态,也不看项目类型。真正的资格判断在回调内部(server.ts:8698-8740)
   // 和 `pullProject` 里。A7 如果把资格前移到路由、让这个 hook 变成有条件触发,
-  // 脏标记的「消费一次」语义就会变 —— 这条断言就是那个提醒。
+  // 脏标记的「消费一次」语义就会变 -- 这条断言就是那个提醒。
   it('GET 评论列表在任何一格都会触发下行 hook(资格判断在 hook 内部,不在路由)', async () => {
     const harness = await startHarness();
     const fired: string[] = [];
@@ -745,7 +745,7 @@ describe('同步资格矩阵 · 结构', () => {
     expect(harness.dirtyCommentProjects.has(TEAM_UNSHARED.projectId)).toBe(true);
   });
 
-  // `commentsAreProjectScoped`(comments.ts:165-188)**不是死代码** —— 有人
+  // `commentsAreProjectScoped`(comments.ts:165-188)**不是死代码** -- 有人
   // 曾误判过。它返回真布尔值,team 分支真的会走到,并且决定了列表是「项目级」
   // 还是「会话级」。把它删掉的直接后果:分享中的项目看不到落在锚点会话上的
   // 远端评论。
@@ -838,7 +838,7 @@ describe('同步资格矩阵 · 结构', () => {
     ]);
   });
 
-  // 未分享的一格里,连队列行都不该出现 —— 「不同步」在今天是**从不入队**,
+  // 未分享的一格里,连队列行都不该出现 -- 「不同步」在今天是**从不入队**,
   // 而不是「入队了但投不出去」。这两者对 A7 是不同的实现选择,所以钉清楚。
   it('未分享的一格从不入队(不是入队后投递失败)', async () => {
     const harness = await startHarness();

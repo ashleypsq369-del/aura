@@ -19,7 +19,7 @@ export type ListSessionSkillCatalog = () => Promise<readonly SkillInfo[]>;
 export interface OdNextSessionSkillSelection {
   /** `ChatRequest.skillId`, falling back to the project row's persisted Skill. */
   skillId?: unknown;
-  /** `ChatRequest.skillIds` — the composer's per-turn @-mentions. */
+  /** `ChatRequest.skillIds` - the composer's per-turn @-mentions. */
   skillIds?: unknown;
 }
 
@@ -30,7 +30,7 @@ export interface OdNextSessionSkillSelection {
  * route.** A Skill the user @-mentioned, and an official example card they
  * picked, are both material the session selected inside a task type OD Next
  * already owns. Neither pins a plugin and neither diverts the run to the
- * ordinary route — they ride in through `session_skills/user_selected_skills`,
+ * ordinary route - they ride in through `session_skills/user_selected_skills`,
  * where the strategy's own conflict order puts them above the general
  * orchestration Skill and the task-type Skill.
  *
@@ -40,7 +40,7 @@ export interface OdNextSessionSkillSelection {
  *
  * Fail-soft throughout, for the same reason the example rail is: a Skill that
  * was deleted between picking and running, a catalogue that will not list, a
- * selection larger than the package bounds — each is a reason to run the task
+ * selection larger than the package bounds - each is a reason to run the task
  * without that material, never a reason to fail the user's run. The ordinary
  * route drops an unresolvable Skill silently too (`findSkillById` simply
  * misses), so this is the same contract, not a new leniency.
@@ -65,7 +65,7 @@ export async function captureOdNextSessionSkillPackage(input: {
     warn(`selected Skills could not be frozen: ${describe(error)}`);
   }
   // Retry without the named Skills so a selection this daemon cannot freeze
-  // never costs the project the example card it is bound to — the card is part
+  // never costs the project the example card it is bound to - the card is part
   // of how the project was created, the @-mention is one turn's choice.
   if (skills.length > 0 && sources.length > 0) {
     try {

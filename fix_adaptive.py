@@ -101,7 +101,7 @@ src = src.replace(
     "fontSize:13, fontWeight:800, color:'var(--text-900)', margin:0, lineHeight:1 }}"
 )
 # Stats label text (hub uses same pattern)
-# Already fixed above in services if same line — but hub has different context, let's be safe
+# Already fixed above in services if same line - but hub has different context, let's be safe
 src = src.replace(
     "fontSize:9, color:'#475569', margin:'2px 0 0', fontWeight:600 }}",
     "fontSize:9, color:'var(--text-500)', margin:'2px 0 0', fontWeight:600 }}"

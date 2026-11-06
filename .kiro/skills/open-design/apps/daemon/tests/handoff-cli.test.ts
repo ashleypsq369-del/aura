@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { runProjectHandoff } from '../src/handoff-cli.js';
 
-// Isolate the test from real daemon discovery — the flagUrl is echoed back.
+// Isolate the test from real daemon discovery - the flagUrl is echoed back.
 vi.mock('../src/daemon-url.js', () => ({
   resolveDaemonUrl: vi.fn(async (opts?: { flagUrl?: string }) => opts?.flagUrl ?? 'http://127.0.0.1:7456'),
 }));
@@ -69,7 +69,7 @@ describe('od project handoff CLI', () => {
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe(`${DAEMON}/api/projects/proj-1/handoff`);
     expect((init as RequestInit).method).toBe('POST');
-    // conversationId must be carried — the endpoint is conversation-scoped.
+    // conversationId must be carried - the endpoint is conversation-scoped.
     expect(JSON.parse(String((init as RequestInit).body))).toEqual({
       conversationId: 'conv-9',
       apiKey: 'sk-test',
@@ -174,7 +174,7 @@ describe('od project handoff CLI', () => {
 
   it('fails a 200 response whose body is not a well-formed HandoffResponse', async () => {
     // A broken daemon/proxy 200 with a shape-invalid body must not print
-    // `undefined` and exit 0 — scripts rely on the exit code.
+    // `undefined` and exit 0 - scripts rely on the exit code.
     fetchMock.mockResolvedValueOnce(
       new Response(JSON.stringify({ unexpected: 'shape' }), {
         status: 200,

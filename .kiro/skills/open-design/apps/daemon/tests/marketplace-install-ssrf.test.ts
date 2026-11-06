@@ -15,7 +15,7 @@
 //   - src/brands/safe-fetch.ts            (assertPublicBrandUrl + validatingLookup)
 //   - src/plugins/plugin-asset-cache.ts   (assertSafePublicUrl + validatingLookup)
 // These pin a connection-time DNS check so the address validated is the address
-// connected — defeating DNS rebinding. The marketplace/install fetchers have
+// connected - defeating DNS rebinding. The marketplace/install fetchers have
 // neither. Same class as the already-fixed library-ingest SSRF (#5529).
 //
 // This spec asserts the SECURE invariant: a loopback/internal URL must be
@@ -41,7 +41,7 @@ let dataDir = '';
 // handler never fires (the TLS handshake fails first) even though the daemon
 // DID open an outbound TCP connection to the internal address. We therefore
 // record the connection at the raw TCP layer: any inbound socket to this
-// loopback port is proof the daemon connected to the internal service — the
+// loopback port is proof the daemon connected to the internal service - the
 // SSRF. (Full response exfil would need the canary to speak TLS + serve a valid
 // manifest; not modelled here, but the connect itself is the vulnerability.)
 let canary: net.Server | undefined;

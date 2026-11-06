@@ -2102,7 +2102,7 @@ describe('DTCG Validator - W3C Spec Compliant', () => {
         });
         const result = validateTokens(tokens);
         // {} doesn't match the reference pattern, so it is treated as a literal
-        // string — which is not a valid color value (must be an object) → error.
+        // string - which is not a valid color value (must be an object) → error.
         expect(result.valid).toBe(false);
       });
 

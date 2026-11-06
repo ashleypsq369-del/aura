@@ -14,14 +14,14 @@ import {
 
 /**
  * `listConversations` only needs a *summary* of each conversation's latest run:
- * status, timestamps, and — when the timestamps are incomplete — a `durationMs`
+ * status, timestamps, and - when the timestamps are incomplete - a `durationMs`
  * recovered from the run's last `usage` event.
  *
  * Its `latest_runs` CTE nevertheless selects `events_json` into the window
  * function that picks the latest assistant row, so SQLite has to materialize
  * every assistant message's full event log for the project just to sort them by
- * position. On an image-heavy project that payload is enormous — tool results
- * carry inline base64 — and the list endpoint pays for all of it while
+ * position. On an image-heavy project that payload is enormous - tool results
+ * carry inline base64 - and the list endpoint pays for all of it while
  * returning a few hundred bytes.
  *
  * These specs pin the summary semantics (so the CTE can be narrowed without
@@ -30,8 +30,8 @@ import {
  * one when they cannot.
  *
  * That second half is deliberately expressed as a count of event-log reads
- * rather than as elapsed time. The property is categorical — the query either
- * touches the column or it does not — so counting states it exactly, while a
+ * rather than as elapsed time. The property is categorical - the query either
+ * touches the column or it does not - so counting states it exactly, while a
  * latency threshold restates it as an inequality that a loaded CI machine can
  * violate for reasons that have nothing to do with this code.
  */
@@ -144,13 +144,13 @@ describe('listConversations event payload', () => {
    * Testing the SQL text instead would not work: `terminalRunDurationSql`
    * legitimately names `events_json` inside the total-duration CTE, but only as
    * a correlated subquery SQLite skips whenever the timestamps are present. The
-   * regression this pins is different in kind — selecting the column into the
+   * regression this pins is different in kind - selecting the column into the
    * `latest_runs` window function, which materialises every assistant message's
    * full event log just to order rows by position. What separates the two is
    * not the SQL, it is whether the bytes come back.
    *
    * Wall-clock was the wrong instrument for the same reason: the property is
-   * categorical — the bytes either cross into JS or they do not — so a latency
+   * categorical - the bytes either cross into JS or they do not - so a latency
    * threshold restates an exact fact as an inequality a loaded CI box can
    * violate for reasons unrelated to this code.
    */
@@ -194,7 +194,7 @@ describe('listConversations event payload', () => {
     //
     // Before the fix the `latest_runs` CTE selected `events_json` into its
     // window function, so SQLite materialised every assistant message's full
-    // event log purely to order them by position — and this spec fails on the
+    // event log purely to order them by position - and this spec fails on the
     // very first row.
     const db = openDatabase(tempDir, { dataDir: tempDir });
     const now = Date.now();
@@ -225,7 +225,7 @@ describe('listConversations event payload', () => {
     // The complement of the spec above, and the reason the column cannot simply
     // be dropped: a run with no `endedAt` still owes the list a `durationMs`,
     // recovered from its last `usage` event. One conversation in that state
-    // must cost exactly one event-log read — not zero (the duration would go
+    // must cost exactly one event-log read - not zero (the duration would go
     // missing) and not one per conversation in the project.
     const db = openDatabase(tempDir, { dataDir: tempDir });
     const now = Date.now();
@@ -247,7 +247,7 @@ describe('listConversations event payload', () => {
 
     expect(result[0]!.latestRun).toMatchObject({ status: 'succeeded', durationMs: 900 });
 
-    // Exactly one read carries the log, and it is the targeted by-id fetch —
+    // Exactly one read carries the log, and it is the targeted by-id fetch -
     // not the list query, which must stay summary-sized however many
     // conversations are in the project.
     const carrying = readsCarryingEventLog(reads);

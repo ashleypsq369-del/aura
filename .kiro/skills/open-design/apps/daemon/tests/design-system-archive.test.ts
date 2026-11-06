@@ -82,7 +82,7 @@ describe('buildUserDesignSystemArchive', () => {
 
   it('never follows a symlink out of the design-system root into the ZIP', async () => {
     // A crafted package drops a symlink that points at a daemon-readable file
-    // outside its own directory. The archive must not follow it — otherwise the
+    // outside its own directory. The archive must not follow it - otherwise the
     // download becomes an arbitrary-file-read exfiltration path.
     const secret = path.join(root, 'outside-secret.txt');
     await writeFile(secret, 'TOP SECRET DAEMON FILE');

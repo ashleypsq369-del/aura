@@ -1,5 +1,5 @@
-/**
- * Messages — Adaptive light/dark messaging interface
+﻿/**
+ * Messages - Adaptive light/dark messaging interface
  * - Full CSS var support (light + dark mode)
  * - Contacts tab correctly opens the person's chat
  * - Amber accent for secondary text labels
@@ -209,7 +209,7 @@ export default function Messages() {
     }
   }, [convsData, pendingUserId]);
 
-  /* Handle contact click — open existing conv OR start new one then open */
+  /* Handle contact click - open existing conv OR start new one then open */
   const handleContactMessage = useCallback((userId) => {
     const list = convsData?.conversations || [];
     const existing = list.find(c =>
@@ -258,7 +258,7 @@ export default function Messages() {
     if (!convsData) return;
     const list = convsData?.conversations || [];
 
-    // Direct conversation ID link — highest priority
+    // Direct conversation ID link - highest priority
     if (convId) {
       window.history.replaceState({}, document.title, '/messages');
       const found = list.find(c => String(c.id) === String(convId));

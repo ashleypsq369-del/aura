@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Continuity Bridge
  * ------------------
  * WHO: The PATIENT (while alive) and their designated Heirs (after death).
@@ -104,9 +104,9 @@ export default function ContinuityBridge() {
 /* -- Overview ------------------------------------------------------------ */
 function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
  const stats = [
- { label: 'Memories saved',    value: patientData?.memory_count   ?? '—' },
- { label: 'Messages prepared', value: patientData?.message_count  ?? '—' },
- { label: 'Heirs designated',  value: patientData?.heir_count     ?? '—' },
+ { label: 'Memories saved',    value: patientData?.memory_count   ?? '-' },
+ { label: 'Messages prepared', value: patientData?.message_count  ?? '-' },
+ { label: 'Heirs designated',  value: patientData?.heir_count     ?? '-' },
  ];
  const actions = [
  { icon: HeartHandshake,    label: 'Memory Vault',   sub: 'Preserve cherished moments',  tab: 'legacy',    img: '/resources/african/african-hands-comfort.jpg'  },
@@ -117,7 +117,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
 
  return (
  <div className="space-y-4">
- {/* Stat strip — compact inline */}
+ {/* Stat strip - compact inline */}
  <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl p-4 flex items-center divide-x divide-[var(--card-border)]">
  {stats.map(({ label, value }) => (
  <div key={label} className="flex-1 text-center px-3 first:pl-0 last:pr-0">
@@ -133,10 +133,10 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
  <p className="text-purple-100 text-sm italic leading-relaxed">
  "What we have once enjoyed we can never lose. All that we love deeply becomes a part of us."
  </p>
- <p className="text-purple-400 text-xs mt-3">— Helen Keller</p>
+ <p className="text-purple-400 text-xs mt-3">- Helen Keller</p>
  </div>
 
- {/* Action cards — 2×2 */}
+ {/* Action cards - 2×2 */}
  <div className="grid grid-cols-2 gap-3">
  {actions.map(({ icon: Icon, label, sub, tab, img }) => (
  <motion.button key={tab} whileHover={{ y: -2 }} onClick={() => onTab(tab)}
@@ -154,7 +154,7 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
  ))}
  </div>
 
- {/* How it works — compact timeline */}
+ {/* How it works - compact timeline */}
  <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl overflow-hidden">
  <div className="px-4 py-3 border-b border-[var(--card-border)] bg-[var(--page-bg)]">
  <p className="text-xs font-bold text-[var(--text-700)] flex items-center gap-2">
@@ -164,8 +164,8 @@ function OverviewTab({ patientData, onTab, isDeceased, isHeir }) {
  <div className="divide-y divide-[var(--card-border)]">
  {[
  { step:'1', title:'While you are alive', desc:'Create memories, write final messages, and designate heirs who will receive your legacy.', color:'bg-purple-100 text-purple-700' },
- { step:'2', title:'Your legacy is secured', desc:'All content is privately stored. Heirs cannot access it yet — only you can edit or delete entries.', color:'bg-indigo-100 text-teal-700' },
- { step:'3', title:'After you pass', desc:'Designated heirs receive access to the memories and messages you left for them — exactly as you intended.', color:'bg-teal-100 text-teal-700' },
+ { step:'2', title:'Your legacy is secured', desc:'All content is privately stored. Heirs cannot access it yet - only you can edit or delete entries.', color:'bg-indigo-100 text-teal-700' },
+ { step:'3', title:'After you pass', desc:'Designated heirs receive access to the memories and messages you left for them - exactly as you intended.', color:'bg-teal-100 text-teal-700' },
  ].map(({ step, title, desc, color }) => (
  <div key={step} className="flex gap-3 px-4 py-3">
  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${color}`}>{step}</div>

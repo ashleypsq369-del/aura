@@ -1,4 +1,4 @@
-// Plan §6 Phase 2A.5 — `GET /api/runs/:runId/genui/:surfaceId` enriches
+// Plan §6 Phase 2A.5 - `GET /api/runs/:runId/genui/:surfaceId` enriches
 // the response with the surface spec (incl. JSON Schema) pulled out of
 // the AppliedPluginSnapshot. This is the wire that lets `od ui show`
 // (and the web JsonSchemaFormSurface fallback) inspect the schema for
@@ -183,7 +183,7 @@ afterEach(async () => {
     }
     db.close();
   } catch {
-    // ignore — DB might be locked / not yet created in some failure modes
+    // ignore - DB might be locked / not yet created in some failure modes
   }
   cleanupRows.length = 0;
 

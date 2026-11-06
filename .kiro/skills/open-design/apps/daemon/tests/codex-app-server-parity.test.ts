@@ -40,7 +40,7 @@ function eventsFromAppServer(frames: Array<{ method: string; params?: unknown }>
  *    app-server hands over tokens; the rendered text is what must agree.
  *  - tool ids: codex mints `item_3` on one transport and `call_2Uix…` on the
  *    other. Ids are rewritten to first-seen ordinals, which PRESERVES the
- *    tool_use -> tool_result pairing — a mis-paired result lands on a different
+ *    tool_use -> tool_result pairing - a mis-paired result lands on a different
  *    ordinal and the comparison fails.
  *  - `raw` frames, which `build-turn-blocks.ts` drops before rendering.
  */
@@ -62,7 +62,7 @@ function canonicalize(events: Ev[]): Ev[] {
      * command exits and has no shape that could carry it.
      *
      * Dropping it here compares what BOTH transports can know. It is safe to
-     * drop precisely because the client does the same thing — an early row is
+     * drop precisely because the client does the same thing - an early row is
      * retired into the settled `tool_use` that shares its id
      * (`dropSupersededInFlightToolUses`), which IS compared below, pairing and
      * all. The early rows themselves are asserted separately, in
@@ -139,7 +139,7 @@ const renderedText = (events: Ev[]) =>
 const usageEvents = (events: Ev[]) => events.filter((e) => e.type === 'usage');
 
 /* ------------------------------------------------------------------ *
- * Part 1 — paired transcripts of one identical turn, deep-equal.
+ * Part 1 - paired transcripts of one identical turn, deep-equal.
  * ------------------------------------------------------------------ */
 
 /**
@@ -393,7 +393,7 @@ const PAIRED_TURN = {
   ],
 };
 
-describe('codex transport parity — paired transcript of one turn', () => {
+describe('codex transport parity - paired transcript of one turn', () => {
   const execEvents = eventsFromExecJson(PAIRED_TURN.execJson.map((l) => JSON.stringify(l)));
   const appEvents = eventsFromAppServer(PAIRED_TURN.appServer);
 
@@ -466,10 +466,10 @@ describe('codex transport parity — paired transcript of one turn', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * Part 2 — two REAL captures of the same prompt, one per transport.
+ * Part 2 - two REAL captures of the same prompt, one per transport.
  * ------------------------------------------------------------------ */
 
-describe('codex transport parity — real captures', () => {
+describe('codex transport parity - real captures', () => {
   const execLines = fs
     .readFileSync(path.join(FIXTURES, 'turn-exec-json.jsonl'), 'utf8')
     .split('\n')

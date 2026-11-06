@@ -1,4 +1,4 @@
-// Phase 4 / spec §11.5 / plan §3.W1 — validatePluginFolder.
+// Phase 4 / spec §11.5 / plan §3.W1 - validatePluginFolder.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';

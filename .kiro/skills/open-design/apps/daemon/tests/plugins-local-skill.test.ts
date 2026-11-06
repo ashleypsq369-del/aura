@@ -1,4 +1,4 @@
-// Stage A of plugin-driven-flow-plan — plugin-local SKILL.md flow.
+// Stage A of plugin-driven-flow-plan - plugin-local SKILL.md flow.
 //
 // Covers:
 //   - `pickFirstSkillId` returns undefined for local `./SKILL.md` refs

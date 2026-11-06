@@ -47,23 +47,23 @@ retrieval:
 
 # Component Family Consistency
 
-Every interactive component in a product — buttons, inputs, selects, checkboxes, radio buttons, pills, badges, tags, calendars, date pickers, sliders, toggles — belongs to the same visual family. They share a common design DNA. A user should be able to look at any component and feel that it belongs to the same product as every other component.
+Every interactive component in a product - buttons, inputs, selects, checkboxes, radio buttons, pills, badges, tags, calendars, date pickers, sliders, toggles - belongs to the same visual family. They share a common design DNA. A user should be able to look at any component and feel that it belongs to the same product as every other component.
 
 When components are designed in isolation without shared tokens, the product feels assembled from parts rather than built as a whole.
 
 ## Reuse Before You Build a New Component
 
-Before creating any component, **audit what already exists** — a new-from-scratch component is another mouth to feed: another entry in the family that must stay consistent (radius, height, states, motion) and another thing to maintain. Building fresh should be the last resort, not the first move. Work down this order:
+Before creating any component, **audit what already exists** - a new-from-scratch component is another mouth to feed: another entry in the family that must stay consistent (radius, height, states, motion) and another thing to maintain. Building fresh should be the last resort, not the first move. Work down this order:
 
-1. **Is there already a component that does this?** Use it as-is. If it *almost* fits, extend it with a prop or variant rather than cloning it — one flexible `Button` beats `PrimaryButton`, `BigButton`, and `CtaButton` living in parallel.
-2. **Is there something close in the codebase you can generalise?** Often a one-off was built inline for a single screen. If a small change would make it generic — lift it into the shared library, parameterise the hard-coded bits (label, colour, size via props/tokens), drop the screen-specific assumptions — do that instead of writing a second near-identical thing.
-3. **Only build new when nothing existing fits and nothing can be reasonably generalised** — and when you do, build it *from the shared DNA below* so it joins the family cleanly.
+1. **Is there already a component that does this?** Use it as-is. If it *almost* fits, extend it with a prop or variant rather than cloning it - one flexible `Button` beats `PrimaryButton`, `BigButton`, and `CtaButton` living in parallel.
+2. **Is there something close in the codebase you can generalise?** Often a one-off was built inline for a single screen. If a small change would make it generic - lift it into the shared library, parameterise the hard-coded bits (label, colour, size via props/tokens), drop the screen-specific assumptions - do that instead of writing a second near-identical thing.
+3. **Only build new when nothing existing fits and nothing can be reasonably generalised** - and when you do, build it *from the shared DNA below* so it joins the family cleanly.
 
-Parallel one-offs — three near-identical buttons, two cards with different radius — are how a design system drifts. Before adding a component, ask: *does this exist, or is it one refactor from existing?*
+Parallel one-offs - three near-identical buttons, two cards with different radius - are how a design system drifts. Before adding a component, ask: *does this exist, or is it one refactor from existing?*
 
-The inverse also holds: a visual treatment that appears independently in 2–3 places has earned promotion — name it and make it a shared component or token before a fourth copy appears. And when pages from different design eras disagree, migrate old toward new: the newest components are the best evidence of current intent, but confirm before deprecating a style — see [`generate-ui-from-brand`](../generate-ui-from-brand/SKILL.md) for the consolidation pass.
+The inverse also holds: a visual treatment that appears independently in 2-3 places has earned promotion - name it and make it a shared component or token before a fourth copy appears. And when pages from different design eras disagree, migrate old toward new: the newest components are the best evidence of current intent, but confirm before deprecating a style - see [`generate-ui-from-brand`](../generate-ui-from-brand/SKILL.md) for the consolidation pass.
 
-> **Find the inconsistency automatically (dembrandt engine, optional).** Spotting where a live product has already diverged — five near-identical button radii, three greys that should be one — is tedious by eye. `get_findings` runs a design-system lint over a real extraction and reports consistency and duplication issues to consolidate. (And `compute_drift` scores how far two extractions have drifted apart — e.g. this product vs. its reference, or before vs. after a cleanup.) Use them to audit an existing product before deciding what to reuse. See [`extract-design`](../extract-design/SKILL.md).
+> **Find the inconsistency automatically (dembrandt engine, optional).** Spotting where a live product has already diverged - five near-identical button radii, three greys that should be one - is tedious by eye. `get_findings` runs a design-system lint over a real extraction and reports consistency and duplication issues to consolidate. (And `compute_drift` scores how far two extractions have drifted apart - e.g. this product vs. its reference, or before vs. after a cleanup.) Use them to audit an existing product before deciding what to reuse. See [`extract-design`](../extract-design/SKILL.md).
 
 ## The Shared DNA
 
@@ -79,9 +79,9 @@ All interactive components use the same base radius token. Variations are derive
 --radius-full:    9999px; /* pills, tags, avatar chips */
 ```
 
-A button and an input on the same form must have the same radius. A pill is always `--radius-full`. A badge is `--radius-sm` or `--radius-full` depending on brand tone — but consistent across all badges.
+A button and an input on the same form must have the same radius. A pill is always `--radius-full`. A badge is `--radius-sm` or `--radius-full` depending on brand tone - but consistent across all badges.
 
-**Nested corners are concentric.** When one rounded box sits inside another, the outer radius equals the inner radius plus the gap between them. A card with `12px` padding around an `8px` button needs `20px`, not `12px`. Get this wrong and the corners run at different curvatures a few pixels apart — nobody names it, everybody sees it.
+**Nested corners are concentric.** When one rounded box sits inside another, the outer radius equals the inner radius plus the gap between them. A card with `12px` padding around an `8px` button needs `20px`, not `12px`. Get this wrong and the corners run at different curvatures a few pixels apart - nobody names it, everybody sees it.
 
 ```css
 .card {
@@ -131,7 +131,7 @@ Components at the same visual scale share height and internal padding.
 
 Heights and text padding are in rem so a control still contains its label when the user enlarges text; borders and shadows stay in px. See [[sizing-units]].
 
-A button and an input placed next to each other must be the same height. This is not cosmetic — mismatched heights break form layouts and signal disorder.
+A button and an input placed next to each other must be the same height. This is not cosmetic - mismatched heights break form layouts and signal disorder.
 
 **Set the height, do not derive it.** A control sized only by padding has a height of line-height + padding + border, so two controls in one row drift apart whenever any of those three differ:
 
@@ -141,9 +141,9 @@ A button and an input placed next to each other must be the same height. This is
 
 Give every control on a line the same explicit height and centre its content. Set it as `min-height`, so the shape holds at rest and yields rather than clips when the content is larger than you planned.
 
-**Argue this at the box model, not at the pixels.** Whether a border is part of the height is `box-sizing`, and naming that is what ends the discussion — a row debated in nudges never closes, because every participant is describing a different symptom of the same declaration. Under `content-box` the border is added to the height, so an outlined control is 2px taller than its ghost sibling and, once centred, sits 1px off it. Under `box-sizing: border-box` — the default in Tailwind and most resets — the border is absorbed into the height, so the boxes match and a variant can gain or lose its border without moving anything.
+**Argue this at the box model, not at the pixels.** Whether a border is part of the height is `box-sizing`, and naming that is what ends the discussion - a row debated in nudges never closes, because every participant is describing a different symptom of the same declaration. Under `content-box` the border is added to the height, so an outlined control is 2px taller than its ghost sibling and, once centred, sits 1px off it. Under `box-sizing: border-box` - the default in Tailwind and most resets - the border is absorbed into the height, so the boxes match and a variant can gain or lose its border without moving anything.
 
-`border-box` moves the problem inward rather than removing it: the border now eats 1px of interior at the top and bottom, so a control whose content is not centred, or whose remaining interior is an odd number of pixels, still loses a rounding to one side. That is the 1px nobody can grep for. The fix is to keep the border in the box at all times — `border: 1px solid transparent` on the borderless variants — so the interior is identical whether or not a border is drawn.
+`border-box` moves the problem inward rather than removing it: the border now eats 1px of interior at the top and bottom, so a control whose content is not centred, or whose remaining interior is an odd number of pixels, still loses a rounding to one side. That is the 1px nobody can grep for. The fix is to keep the border in the box at all times - `border: 1px solid transparent` on the borderless variants - so the interior is identical whether or not a border is drawn.
 
 **A derived height is also a defect you cannot search for.** An explicit height is one token you can grep and diff. A derived one is an emergent property of three separate declarations, so a row can be wrong in one control out of eight and no query finds it: in utility-class codebases the same padding appears in different orders (`rounded-md px-3 py-2` and `rounded-md border transition-colors px-3 py-2`), and a find-and-replace fixes some of them and silently skips the rest. Each miss is 2px, invisible on its own, and the reason the row still looks broken after you "fixed" it.
 
@@ -207,9 +207,9 @@ The same reasoning applies to a lone letter used as a mark, where the offset fol
 
 **The cursor belongs to the class too.** `<button>` renders with `cursor: default` in every browser, and a framework reset does not necessarily fix it: Tailwind v4's preflight does not. The cursor is the cheapest affordance a pointer user gets and the one that reads before any hover colour arrives, so a control that looks clickable and keeps the arrow reads as inert. It survives review precisely because the hover state usually is implemented and only the cursor is wrong. Verify rather than assume, since preflight contents change between majors: `grep -n "cursor" node_modules/tailwindcss/preflight.css`. An element made interactive without a native tag (`<div role="button">`) needs the cursor, a focus style and key handling; the cursor alone is the shallowest part of that.
 
-When those controls are joined edge to edge, the family radius applies to the group, not to each child: the outer corners keep `--radius-base` and the inner joints go square, so the bar reads as one control. Collapse the shared borders to a single line too — two abutting 1px borders render as a 2px seam that no other member of the family has.
+When those controls are joined edge to edge, the family radius applies to the group, not to each child: the outer corners keep `--radius-base` and the inner joints go square, so the bar reads as one control. Collapse the shared borders to a single line too - two abutting 1px borders render as a 2px seam that no other member of the family has.
 
-The same logic runs vertically when a control opens. A select, multiselect, date picker or combobox and the panel it drops are one seam: the trigger keeps the family radius on its top corners and squares off the bottom, the panel squares its top and carries the family radius at the bottom, so the open control reads as one taller shape rather than two stacked ones. Whatever sits at the seam — a hairline divider, a small caret notch, nothing at all — does not change the corners. The panel's border is the trigger's border continuing, at the same width and colour, and the trigger's height stays `--control-h` while it is open.
+The same logic runs vertically when a control opens. A select, multiselect, date picker or combobox and the panel it drops are one seam: the trigger keeps the family radius on its top corners and squares off the bottom, the panel squares its top and carries the family radius at the bottom, so the open control reads as one taller shape rather than two stacked ones. Whatever sits at the seam - a hairline divider, a small caret notch, nothing at all - does not change the corners. The panel's border is the trigger's border continuing, at the same width and colour, and the trigger's height stays `--control-h` while it is open.
 
 For a group that wraps several controls in one shared surface (a balance beside an avatar, a segmented control, an input with an attached button) pin the height on the wrapper and set it on the children too. Stretching alone is a layout side effect that a later `align-items` change or an absolutely positioned child quietly removes.
 
@@ -236,13 +236,13 @@ Equal `height` proves the boxes match; equal `top` proves they share a baseline;
 
 #### Grouping Non-Buttons Beside a Button Row
 
-A toolbar often has to carry items that are not buttons: a balance, a status, an avatar, a count. Dropped loose into a row of buttons they read as broken buttons. The fix is common region (see [[gestalt-ui-organisation]]) — one surface that says "these belong together and are not the same thing as those" — and the surface, not the item, carries the grouping.
+A toolbar often has to carry items that are not buttons: a balance, a status, an avatar, a count. Dropped loose into a row of buttons they read as broken buttons. The fix is common region (see [[gestalt-ui-organisation]]) - one surface that says "these belong together and are not the same thing as those" - and the surface, not the item, carries the grouping.
 
 Ways to draw that region, quietest first:
 
 | Treatment | Reads as | Use when |
 |---|---|---|
-| Background tint (2–8% neutral) | A resting surface | Default. Quiet enough to sit beside outlined buttons without competing |
+| Background tint (2-8% neutral) | A resting surface | Default. Quiet enough to sit beside outlined buttons without competing |
 | Border | A container | The row already has borderless buttons, so a border still distinguishes |
 | Inner shadow | Recessed, a well | The group is an input-like or display region rather than a set of actions |
 | Gradient | Raised and physical | Rarely. It re-adds the button affordance you were trying to remove |
@@ -252,11 +252,11 @@ Whichever you choose:
 - **Match the buttons' `border-radius` exactly.** A different radius beside them reads as a foreign element, not a sibling.
 - **Match the height.** Same rule as above; the group is one control's worth of vertical space.
 - **Pick one treatment.** Tint plus border plus inner shadow is three ways of saying the same thing, and at toolbar scale the element cannot absorb the weight (see Small Component Restraint).
-- **Keep the children plain.** No fills, no borders of their own — the region already grouped them. Their only state is hover, slightly stronger than the resting surface.
+- **Keep the children plain.** No fills, no borders of their own - the region already grouped them. Their only state is hover, slightly stronger than the resting surface.
 - **Do not let a child's hover redraw the group.** Give the wrapper its own border and divider colours, static ones. If members reuse the standalone button style, hovering a single segment restyles the whole unit's outline, and the group appears to twitch.
 - **One icon per group, not one per segment.** Three segments each carrying the same download icon is the icon repeated three times, not three labelled choices. Show it only where the label cannot fit, e.g. at narrow widths.
 
-**Direction carries the meaning.** Raised and recessed are the same two effects pointed opposite ways, and they make opposite promises — pressable versus readable. A recessed surface needs all three parts: the gradient running dark to light *downward*, the inset shadow on the *top* edge, and a light hairline on the *bottom* edge to close the well. Skip the last and the top shadow reads as grime rather than depth. Flip the first two and you have rebuilt the lit-from-above button you were trying not to be.
+**Direction carries the meaning.** Raised and recessed are the same two effects pointed opposite ways, and they make opposite promises - pressable versus readable. A recessed surface needs all three parts: the gradient running dark to light *downward*, the inset shadow on the *top* edge, and a light hairline on the *bottom* edge to close the well. Skip the last and the top shadow reads as grime rather than depth. Flip the first two and you have rebuilt the lit-from-above button you were trying not to be.
 
 ```css
 /* Recessed: a readout. */
@@ -264,7 +264,7 @@ background-image: linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
 box-shadow: inset 0 1px 2px rgba(0,0,0,0.07), inset 0 -1px 0 rgba(255,255,255,0.6);
 ```
 
-Tune both themes separately — the same alpha values that read as a subtle well on light read as flat or as a smear on dark.
+Tune both themes separately - the same alpha values that read as a subtle well on light read as flat or as a smear on dark.
 
 ### Shadow
 Interactive components use a consistent shadow logic:
@@ -283,16 +283,16 @@ The same colour roles apply uniformly across all components:
 | Error border | `--color-error` |
 | Disabled | `--color-text-secondary` at reduced opacity |
 | Selected / active fill | `--color-primary` |
-| Hover background | `--color-primary` at 8–12% opacity |
+| Hover background | `--color-primary` at 8-12% opacity |
 
 ### One Interaction Language
-The colour table above defines *what* each state looks like; this rule governs *how many* interaction patterns a product is allowed to have. **Pick one and reuse it — don't run 3–4 different hover/active/interaction patterns within the same product.**
+The colour table above defines *what* each state looks like; this rule governs *how many* interaction patterns a product is allowed to have. **Pick one and reuse it - don't run 3-4 different hover/active/interaction patterns within the same product.**
 
-The user already knows what site they're on. Variety *between* products is expected; variety *within* one is taxing — every new pattern is another thing to learn mid-task. So converge:
+The user already knows what site they're on. Variety *between* products is expected; variety *within* one is taxing - every new pattern is another thing to learn mid-task. So converge:
 
 - **One hover response.** If interactive elements lift on hover, they all lift; if they shift background tint, they all shift tint. Don't mix lift, underline, colour-swap, and scale across sibling components.
-- **One active/pressed response,** one focus ring, one selected treatment — applied identically everywhere (this is why the colour roles above are shared tokens, not per-component choices).
-- **One motion signature** — the same easing and duration for the same *kind* of transition, so hovers, reveals, and toggles feel like one hand made them (see `micro-interactions`).
+- **One active/pressed response,** one focus ring, one selected treatment - applied identically everywhere (this is why the colour roles above are shared tokens, not per-component choices).
+- **One motion signature** - the same easing and duration for the same *kind* of transition, so hovers, reveals, and toggles feel like one hand made them (see `micro-interactions`).
 
 A tight, repeated interaction vocabulary is what makes a product feel learnable: the user learns the pattern once and trusts it everywhere.
 
@@ -300,37 +300,37 @@ A tight, repeated interaction vocabulary is what makes a product feel learnable:
 
 | Component | Shares radius | Shares height | Shares border | Shares colour logic |
 |---|---|---|---|---|
-| Button | ✓ | ✓ | — (filled) | ✓ |
+| Button | ✓ | ✓ | - (filled) | ✓ |
 | Input / textarea | ✓ | ✓ | ✓ | ✓ |
 | Select | ✓ | ✓ | ✓ | ✓ |
-| Checkbox | `--radius-sm` | — | ✓ | ✓ |
-| Radio | `--radius-full` | — | ✓ | ✓ |
-| Toggle / switch | `--radius-full` | ✓ | — | ✓ |
+| Checkbox | `--radius-sm` | - | ✓ | ✓ |
+| Radio | `--radius-full` | - | ✓ | ✓ |
+| Toggle / switch | `--radius-full` | ✓ | - | ✓ |
 | Pill / tag | `--radius-full` | ✓ | ✓ optional | ✓ |
-| Badge | `--radius-sm` or `--radius-full` | — | — | ✓ |
+| Badge | `--radius-sm` or `--radius-full` | - | - | ✓ |
 | Date picker / calendar | `--radius-base` | ✓ | ✓ | ✓ |
-| Slider | `--radius-full` (track + thumb) | — | — | ✓ |
+| Slider | `--radius-full` (track + thumb) | - | - | ✓ |
 | Segmented control / button bar | ✓ outer corners only | ✓ | ✓ shared | ✓ |
 | Search input | ✓ | ✓ | ✓ | ✓ |
 | Combobox | ✓ | ✓ | ✓ | ✓ |
 
 ## Family Resemblance, Distinct Roles
 
-Shared DNA makes components look *related* — it must not make them look *interchangeable*. The riskiest pairs are the ones that share the most: a pill-shaped button next to a pill-shaped badge, a bordered button next to a bordered input. When they blur, users click badges that do nothing and skip buttons that looked like labels.
+Shared DNA makes components look *related* - it must not make them look *interchangeable*. The riskiest pairs are the ones that share the most: a pill-shaped button next to a pill-shaped badge, a bordered button next to a bordered input. When they blur, users click badges that do nothing and skip buttons that looked like labels.
 
 The rule: **role must be readable before interaction.** From appearance alone, the user can tell what is clickable, what is editable, and what is read-only.
 
-- **Button** — clickable: solid fill or a firm border, `cursor: pointer`, a hover response.
-- **Badge / tag** — read-only: muted fill, smaller type, **no hover response and no pointer cursor, ever** — those two signals are reserved for interactive elements and are exactly what separates a badge from a button of the same shape.
-- **Input** — editable: border with an empty interior, placeholder, text cursor.
+- **Button** - clickable: solid fill or a firm border, `cursor: pointer`, a hover response.
+- **Badge / tag** - read-only: muted fill, smaller type, **no hover response and no pointer cursor, ever** - those two signals are reserved for interactive elements and are exactly what separates a badge from a button of the same shape.
+- **Input** - editable: border with an empty interior, placeholder, text cursor.
 
-**An input and a button side by side are the pair that fails most often.** Both are a rounded box of the same height with a 1px border, and once the button is a ghost or outline variant the two are the same drawing. Keep the height identical — that is family — and put the difference in the interior: the input stays empty with a placeholder and a text cursor, the button carries a fill or a firm border, a label set in the button weight, and a pointer. If the only thing telling them apart is that one has text in it, the form is one placeholder away from ambiguity.
+**An input and a button side by side are the pair that fails most often.** Both are a rounded box of the same height with a 1px border, and once the button is a ghost or outline variant the two are the same drawing. Keep the height identical - that is family - and put the difference in the interior: the input stays empty with a placeholder and a text cursor, the button carries a fill or a firm border, a label set in the button weight, and a pointer. If the only thing telling them apart is that one has text in it, the form is one placeholder away from ambiguity.
 
-Distinguish through at least two visual channels (fill + size, border + cursor) — never by colour alone, and never by height. Squint test: with labels unreadable, can you still sort the buttons from the badges from the inputs? If not, the family has collapsed into one component.
+Distinguish through at least two visual channels (fill + size, border + cursor) - never by colour alone, and never by height. Squint test: with labels unreadable, can you still sort the buttons from the badges from the inputs? If not, the family has collapsed into one component.
 
 ## Semantic Chip Components
 
-Generic `Badge` components lead to misuse — the same component ends up used for statuses, code tokens, keyboard shortcuts, and categorical labels, with style overrides scattered across the codebase.
+Generic `Badge` components lead to misuse - the same component ends up used for statuses, code tokens, keyboard shortcuts, and categorical labels, with style overrides scattered across the codebase.
 
 **The pattern: one component per meaning, not one component with many variants.**
 
@@ -343,9 +343,9 @@ A product's inline labels typically fall into a small set of distinct meanings. 
 | `Kbd` | Keyboard shortcut | `<kbd>`, mono, tight radius |
 | `Metric` | Measured value (`1.2s`, `42px`) | Mono, tight radius |
 
-Add product-specific types as needed (e.g. `Flag` for CLI products, `Token` for API products). Each new type gets its own component — not a new `variant` prop on an existing one.
+Add product-specific types as needed (e.g. `Flag` for CLI products, `Token` for API products). Each new type gets its own component - not a new `variant` prop on an existing one.
 
-Each component encodes exactly one meaning. Appearance follows from it — callers never pass colour or shape props.
+Each component encodes exactly one meaning. Appearance follows from it - callers never pass colour or shape props.
 
 **Sizing:** use `em`-relative padding so a chip renders at the right size for whatever text context it sits in (heading, body, caption) without per-context overrides.
 
@@ -382,10 +382,10 @@ export function Kbd({ children }: { children: ReactNode }) {
 
 ## Alignment on a Line
 
-When a line mixes element types — label, badge, status dot, value, icon — they must read as one aligned row, not a jumble of differently-sized pieces.
+When a line mixes element types - label, badge, status dot, value, icon - they must read as one aligned row, not a jumble of differently-sized pieces.
 
 - **Same type size on the line.** Text next to a badge or chip shares the surrounding typeface size; a badge must not silently shrink or enlarge its row. Use `leading-none` and `align-middle` (as in the chip `BASE` above) so every element sits on a shared centre line.
-- **Centre status indicators.** A traffic-light dot (red/amber/green) is **vertically centred against the text it annotates** — aligned to the label's cap-height centre, not the baseline.
+- **Centre status indicators.** A traffic-light dot (red/amber/green) is **vertically centred against the text it annotates** - aligned to the label's cap-height centre, not the baseline.
 - **A badge beside text sits on the text.** Align it to the baseline or centre it optically on the x-height. Grow badge padding symmetrically so it stays centred against its neighbour, not only inside itself.
 - **One optical centre line.** If badges, text, and icons jump up and down, the row reads as broken even when each piece is fine alone.
 
@@ -396,15 +396,15 @@ Size a count badge with `border-box`, a height and a `min-width` of the same val
 
 The smaller the component, the less it can carry. Restraint that looks plain at large sizes is what keeps small components legible.
 
-- **Avoid multi-border / boxed-in containers.** Don't stack bordered layers (a bordered chip inside a bordered cell inside a bordered card) — a small element can't absorb the weight. Prefer one border or none; use fill or spacing instead. The small-scale companion to the 2-Step border rule.
-- **At most one icon.** Two or three icons in a pill, badge, or row create clutter and ambiguity about which is actionable. If you need more, the component has outgrown its size — promote it to a larger pattern.
+- **Avoid multi-border / boxed-in containers.** Don't stack bordered layers (a bordered chip inside a bordered cell inside a bordered card) - a small element can't absorb the weight. Prefer one border or none; use fill or spacing instead. The small-scale companion to the 2-Step border rule.
+- **At most one icon.** Two or three icons in a pill, badge, or row create clutter and ambiguity about which is actionable. If you need more, the component has outgrown its size - promote it to a larger pattern.
 - **Multi-card-container design → pivot.** Card-in-card-in-card nesting solves grouping with boxes instead of spacing and hierarchy. Flatten it, group with whitespace and headings (see [[gestalt-ui-organisation]]), and keep the card metaphor for the outermost meaningful container only.
 
 If the brand uses gradients, apply them consistently:
 
 - A gradient on a primary button should use the same gradient angle and stops as gradient usage elsewhere in the product
 - Hover state: slightly shift the gradient lightness, not the hue
-- Do not use gradients on some button variants and flat colour on others — pick one approach per variant and apply it universally
+- Do not use gradients on some button variants and flat colour on others - pick one approach per variant and apply it universally
 
 ## Reuse the Product's Own Marks
 
@@ -423,14 +423,14 @@ A new view that needs marks for states (same, changed, added, removed) searches 
 - [ ] Do all bordered components use at most two border-width options (e.g., 1px and 4px)?
 - [ ] Does focus state look identical across all focusable components?
 - [ ] Does error state look identical across all components that can have errors?
-- [ ] Is there a single interaction language — one hover response, one active/pressed response, one focus ring, one motion signature — reused across the product, rather than 3–4 competing patterns?
-- [ ] Are all radius values derived from the same base token — not set independently per component?
+- [ ] Is there a single interaction language - one hover response, one active/pressed response, one focus ring, one motion signature - reused across the product, rather than 3-4 competing patterns?
+- [ ] Are all radius values derived from the same base token - not set independently per component?
 - [ ] Do pills and tags use `--radius-full` consistently?
-- [ ] Can a button, badge, and input be told apart from appearance alone (squint test) — with non-interactive elements carrying no hover response or pointer cursor?
+- [ ] Can a button, badge, and input be told apart from appearance alone (squint test) - with non-interactive elements carrying no hover response or pointer cursor?
 - [ ] Is gradient usage (if any) consistent across all button variants?
 - [ ] Before building a new component, was the existing library (and codebase) checked for one that fits as-is, or a one-off that could be generalised with a small change, rather than cloning?
 - [ ] Could a new component be added to the library using only existing tokens?
-- [ ] Are inline labels, statuses, code tokens, keyboard hints, and metrics separate components — not variants of a generic Badge?
+- [ ] Are inline labels, statuses, code tokens, keyboard hints, and metrics separate components - not variants of a generic Badge?
 - [ ] Do chip/badge components use `em`-relative sizing so they scale with their text context?
 - [ ] Is chip colour defined in CSS classes (not inline props) so light/dark lives in one place?
 - [ ] On rows mixing text, badges, and icons, does everything share one type size and centre line?

@@ -6,7 +6,7 @@
 // in collab/vela-cli-team-projects.ts) deliberately drops every non-`synced`
 // row so teammates never open empty project shells. The realtime reconciler
 // (collab/workspace-projects-reconciler.ts) was fed exactly that
-// display-filtered list as its "remote membership" — so a mere publish
+// display-filtered list as its "remote membership" - so a mere publish
 // failure on the owner's side became indistinguishable from a real unshare,
 // and the demote direction rewrote the viewer's read-only mirror into
 // `visibility: 'personal'` + `createdByWorkspaceMemberId: <viewer>` +
@@ -16,9 +16,9 @@
 // `team_project_owner_conflict` (the failed row still occupies the
 // ownership slot; see vela services/api/src/team-projects/postgres.ts).
 //
-// The remote payloads below run through the REAL vela CLI wire parsers —
+// The remote payloads below run through the REAL vela CLI wire parsers -
 // `createVelaCliTeamProjectCatalog` (display, drops non-synced) and
-// `createVelaCliTeamProjectCatalogClient` (raw membership, keeps them) —
+// `createVelaCliTeamProjectCatalogClient` (raw membership, keeps them) -
 // composed by the REAL `reconcilerRemoteTeamProjects` source selector, so
 // this suite fails against the display-filtered wiring and passes against
 // the membership wiring without mimicking either parser.
@@ -65,7 +65,7 @@ interface HubCatalogRow {
   syncState: 'pending_upload' | 'syncing' | 'synced' | 'failed';
 }
 
-/** One raw hub catalog row, shaped like `vela team-projects list` output —
+/** One raw hub catalog row, shaped like `vela team-projects list` output -
  *  satisfying BOTH real wire parsers (`toTeamProject` needs
  *  projectId/ownerMemberId/createdAt, `toVelaTeamProjectRecord` additionally
  *  needs id/workspaceId/resourceId/syncState/updatedAt). */
@@ -196,7 +196,7 @@ describe('reconciler remote membership vs the display-filtered catalog (recvqzjn
       });
   }
 
-  /** Real db.ts wiring for the reconciler — the same functions server.ts
+  /** Real db.ts wiring for the reconciler - the same functions server.ts
    *  itself calls (mirrors workspace-projects-reconcile-http.test.ts). */
   function reconcileAsReader(listRemoteTeamProjects: () => Promise<readonly RemoteTeamProjectRef[]>) {
     return reconcileWorkspaceProjectsWithRemote({
@@ -354,7 +354,7 @@ describe('reconciler remote membership vs the display-filtered catalog (recvqzjn
     seedProject(projectId, 'Website Clone Visual Verify');
     seedForeignTeamMirror(projectId);
 
-    // The hub still registers the row to its owner — only its latest publish
+    // The hub still registers the row to its owner - only its latest publish
     // failed. The display read drops it; membership must not.
     const result = await reconcileAsReader(
       remoteMembershipReader([

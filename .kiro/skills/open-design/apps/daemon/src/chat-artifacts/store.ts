@@ -264,7 +264,7 @@ export function setSnapshotMotionPreview(db: SqliteDb, id: string, preview: impo
  * The column was `NOT NULL` with a CHECK constraint, so a database created by
  * an earlier build of this (unreleased) subsystem would reject every insert the
  * current code makes, and SQLite refuses `DROP COLUMN` on a column a CHECK
- * mentions. The rows themselves are still good — only the column is gone — so
+ * mentions. The rows themselves are still good - only the column is gone - so
  * this copies them across rather than dropping the table.
  */
 function dropLegacyOpenPolicyColumn(db: SqliteDb): void {
@@ -417,7 +417,7 @@ export function getLiveWorkspaceArtifactByPath(
 
 /**
  * Follow a rename. The identity survives; `source_path_at_capture` on old
- * snapshots deliberately does not move — it records where the bytes came from
+ * snapshots deliberately does not move - it records where the bytes came from
  * at the time, which is history, not a lookup key.
  */
 export function renameWorkspaceArtifactPath(

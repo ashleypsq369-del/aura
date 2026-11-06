@@ -111,7 +111,7 @@ function isOpenAiChatModelId(id: string): boolean {
     normalized.includes('stable-diffusion') ||
     normalized.includes('flux') ||
     // BAAI's BGE embedding family (e.g. `BAAI/bge-large-en-v1.5`, served by
-    // gateways like SiliconFlow) doesn't match any of the substrings above —
+    // gateways like SiliconFlow) doesn't match any of the substrings above -
     // `bge-reranker-*` variants are already caught by the `rerank` check, but
     // the plain embedding models slip through and 404 when a chat-completion
     // test is run against them (issue #5367).
@@ -263,7 +263,7 @@ function providerModelsHeaders(
     return { authorization: `Bearer ${apiKey}` };
   }
   if (protocol === 'aihubmix') {
-    // The catalogue is public — only attach Bearer auth (+ APP-Code) when the
+    // The catalogue is public - only attach Bearer auth (+ APP-Code) when the
     // user actually supplied a key. An empty `Bearer ` would be rejected by
     // some gateways, so send no headers when the key is blank.
     return apiKey.trim() ? aihubmixHeaders(apiKey) : {};

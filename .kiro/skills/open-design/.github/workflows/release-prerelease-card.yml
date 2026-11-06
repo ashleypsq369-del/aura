@@ -5,7 +5,7 @@ name: release-prerelease-card
 # The old card was a custom-bot webhook post at the very end of the pipeline:
 # one immutable message, delivered only once everything had finished, and blind
 # to whether the packages had actually shipped. This replaces it with a Feishu
-# *application* bot, which can PATCH a message it sent — so one card is created
+# *application* bot, which can PATCH a message it sent - so one card is created
 # on this job's first poll, while every platform is still queued, and is edited
 # in place as the platforms, the code tests, and the packaged smoke report in.
 # Each platform row carries its own build time and the footer carries the whole
@@ -17,12 +17,12 @@ name: release-prerelease-card
 # API of the three runs involved (build/publish, tests, smoke).
 #
 # It is dispatched by release-prerelease.yml's `dispatch_validation` job at the
-# moment the build commit is resolved — before any package exists — and it holds
+# moment the build commit is resolved - before any package exists - and it holds
 # a concurrency group of its own, so its long watch cannot delay a build.
 #
 # Being the ONLY prerelease notification makes every way this workflow can break
 # a silent one: the pipeline stays green, the packages ship, and the channel
-# hears nothing. `fallback_notice` below is the answer — it fires only when the
+# hears nothing. `fallback_notice` below is the answer - it fires only when the
 # card did not reach the group, and it delivers through the custom-bot webhook,
 # a different bot with a different secret, so an expired application credential
 # cannot take the alert down with the card.
@@ -67,7 +67,7 @@ run-name: prerelease card · ${{ inputs.version }} · origin-run ${{ inputs.orig
 
 permissions:
   # Reads the job state of the build, test, and smoke runs. It writes nothing to
-  # the repository — the only side effect is a Feishu message.
+  # the repository - the only side effect is a Feishu message.
   actions: read
   contents: read
 
@@ -134,7 +134,7 @@ jobs:
           # Reproduces `git log --no-merges --pretty=format:'%s (%h)' PREV..CUR`
           # against the compare API, so the card needs no git history at all:
           #   * `select((.parents | length) < 2)` is --no-merges.
-          #   * %s is the subject — the first paragraph folded onto one line —
+          #   * %s is the subject - the first paragraph folded onto one line -
           #     so split on the blank line, then collapse any interior newline.
           #   * %h abbreviated to 10 characters, which is what git's automatic
           #     abbreviation resolves to on this repository's object count.
@@ -192,7 +192,7 @@ jobs:
     needs: card
     # `always() && !cancelled()` is load-bearing, not decoration. GitHub applies
     # an implicit `success()` to a job with `needs`, which would skip this one in
-    # exactly the case it exists for — a card job that died — without ever
+    # exactly the case it exists for - a card job that died - without ever
     # evaluating the conditions below. (The same trap skipped
     # release-prerelease.yml's `dispatch_smoke` for N runs.) `card` is this
     # workflow's only other job and sits downstream of nothing, so that break is
@@ -219,7 +219,7 @@ jobs:
       # The OTHER bot, on purpose. The card posts through the Feishu application
       # bot (FEISHU_APP_ID / FEISHU_APP_SECRET / FEISHU_RELEASE_CHAT_ID); this
       # posts through the custom-bot webhook that the retired one-shot card used.
-      # A fallback sharing the primary's credentials would cover nothing —
+      # A fallback sharing the primary's credentials would cover nothing -
       # "the application bot expired or was removed from the chat" is one of the
       # ways the card goes silent, and it must not take the alert down too.
       FEISHU_SIGN_SECRET: ${{ secrets.FEISHU_RELEASE_SIGN_SECRET }}
@@ -229,7 +229,7 @@ jobs:
         uses: actions/checkout@v6.0.2
         with:
           # Both scripts below import nothing but node builtins, so this job
-          # needs no dependency install — which is the point: the last-resort
+          # needs no dependency install - which is the point: the last-resort
           # path should have as little between it and the POST as possible.
           fetch-depth: 1
       - name: Setup Node.js
@@ -252,7 +252,7 @@ jobs:
           # release-prerelease.yml this caller holds no version_metadata_url.
           # It reconstructs the same R2 object and HEADs it, which is the same
           # authority by a different route, and asks the origin run whether the
-          # pipeline is still going — that is what tells "never shipped" apart
+          # pipeline is still going - that is what tells "never shipped" apart
           # from "has not shipped yet" when the card dies early.
           ORIGIN_RUN_ID: ${{ inputs.origin_run_id }}
           ORIGIN_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.origin_run_id }}
@@ -266,7 +266,7 @@ jobs:
         # Both notification paths being down at once is an incident of its own,
         # and a red job in the Actions list is the only channel left to say so.
         # `always()` because the whole point is to speak after something
-        # broke — without it GitHub's implicit success() skips this step in
+        # broke - without it GitHub's implicit success() skips this step in
         # every run where an earlier step already failed. The outcome check
         # is the other half: never act on a composer that did not finish.
         if: >-

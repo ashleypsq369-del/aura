@@ -16,7 +16,7 @@ const PETSHARE_BASE = 'https://ihzwckyzfcuktrljwpha.supabase.co/functions/v1/pet
 const HATCHERY_LIST = 'https://j20.nz/hatchery/api/pets.json';
 
 export interface SyncOptions {
-  // 'petshare' | 'hatchery' | 'all' — controls which catalogs we hit.
+  // 'petshare' | 'hatchery' | 'all' - controls which catalogs we hit.
   source?: 'petshare' | 'hatchery' | 'all';
   // Re-download pets that already have a folder on disk.
   force?: boolean;
@@ -37,7 +37,7 @@ export interface SyncResult {
   total: number;
   // Absolute path of the on-disk pet root we wrote into.
   rootDir: string;
-  // Up to a handful of human-readable error messages — surfaced in the
+  // Up to a handful of human-readable error messages - surfaced in the
   // UI so users get actionable feedback when a transient catalog hiccup
   // breaks an otherwise-good run.
   errors: string[];
@@ -275,7 +275,7 @@ export async function syncCommunityPets(options: SyncOptions = {}): Promise<Sync
   }
 
   // Earlier sources win when two catalogs publish the same folder name
-  // — matches the CLI script's de-duplication so a sync from the UI
+  // - matches the CLI script's de-duplication so a sync from the UI
   // produces the same on-disk layout as `pnpm sync:community-pets`.
   const dedup = new Map<string, PetTask>();
   for (const task of tasks) {

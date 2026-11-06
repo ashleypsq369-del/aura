@@ -6,7 +6,7 @@ type EnvMap = NodeJS.ProcessEnv | Record<string, string | undefined>;
 // Publicly named console origins already used by the web client. Each value is
 // a Cloud *base* that callers append a console path to (`/dashboard`,
 // `/settings`), so the `/cloud` segment belongs here rather than at each call
-// site — every consumer concatenates, none resolves against it as a URL base.
+// site - every consumer concatenates, none resolves against it as a URL base.
 //
 // The test entry moved off `vela.powerformer.net` onto
 // `open-design.powerformer.net/cloud` when vela cut the test Cloud domain over

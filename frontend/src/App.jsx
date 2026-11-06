@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+﻿import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster as SonnerToaster } from 'sonner';
@@ -402,7 +402,7 @@ function AppRoutes() {
  <Route path="/reset-password" element={<ResetPassword />} />
  <Route path="/provider-register" element={<ProviderRegister />} />
  <Route path="/get-started" element={<RoleSelector />} />
- {/* Legal pages — public, no auth needed */}
+ {/* Legal pages - public, no auth needed */}
  <Route path="/terms" element={<TermsOfService />} />
  <Route path="/privacy" element={<PrivacyPolicy />} />
  <Route path="/about" element={<About />} />

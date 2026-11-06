@@ -1,4 +1,4 @@
-// Red spec — plugin uninstall id must be treated as an opaque registry key,
+// Red spec - plugin uninstall id must be treated as an opaque registry key,
 // never as a filesystem path fragment.
 //
 // `POST /api/plugins/:id/uninstall` passes `req.params.id` straight into
@@ -84,7 +84,7 @@ afterAll(async () => {
   await rm(scratchRoot, { recursive: true, force: true });
 });
 
-describe('POST /api/plugins/:id/uninstall — traversal in plugin id', () => {
+describe('POST /api/plugins/:id/uninstall - traversal in plugin id', () => {
   it('rejects a traversal id and never deletes outside the plugin registry root', async () => {
     const pluginsRoot = defaultRegistryRoots().userPluginsRoot;
     const rel = path.relative(pluginsRoot, outsideDir);
@@ -96,7 +96,7 @@ describe('POST /api/plugins/:id/uninstall — traversal in plugin id', () => {
 
     const resp = await fetch(`${baseUrl}/api/plugins/${encodedId}/uninstall`, { method: 'POST' });
     // Evidence for the report: the daemon answers 200 and names the folder it
-    // recursively deleted — outside the data root.
+    // recursively deleted - outside the data root.
     console.log('uninstall response:', resp.status, JSON.stringify(await resp.json()));
 
     // Disk assertion: the victim directory outside the data root survives.

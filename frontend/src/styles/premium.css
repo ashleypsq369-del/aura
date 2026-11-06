@@ -1,5 +1,5 @@
-/*
- * premium.css — Project Aura Design Upgrade
+﻿/*
+ * premium.css - Project Aura Design Upgrade
  * ============================================
  * Adds texture, depth, elevation hierarchy, and visual character.
  * Techniques: noise grain, multi-layer shadows, colored borders,
@@ -13,14 +13,14 @@
    Inspired by: Linear app, Stripe dashboard.
    Applied via .grain class on containers, or globally on body.            */
 
-/* Grain SVG as data URI — 65x65 tile, very subtle */
+/* Grain SVG as data URI - 65x65 tile, very subtle */
 :root {
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='65' height='65' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   --grain-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='65' height='65' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
 }
 
-/* Grain overlay — disabled, keep clean */
-/* body::before removed — standard healthcare bg only */
+/* Grain overlay - disabled, keep clean */
+/* body::before removed - standard healthcare bg only */
 
 /* Grain on cards (subtle inner texture) */
 .card-grain {
@@ -42,13 +42,13 @@
    Three elevation levels with distinct shadow profiles.
    Real product design uses colored shadows that match the surface.        */
 
-/* Level 0 — flat, just a border */
+/* Level 0 - flat, just a border */
 .elevation-0 {
   box-shadow: none;
   border: 1px solid #e2e8f0;
 }
 
-/* Level 1 — resting card: subtle lift */
+/* Level 1 - resting card: subtle lift */
 .elevation-1 {
   box-shadow:
     0 1px 2px rgba(0,0,0,0.04),
@@ -56,7 +56,7 @@
     0 0 0 1px rgba(0,0,0,0.04);
 }
 
-/* Level 2 — hover/active card: clear depth */
+/* Level 2 - hover/active card: clear depth */
 .elevation-2 {
   box-shadow:
     0 2px 4px rgba(0,0,0,0.04),
@@ -64,7 +64,7 @@
     0 0 0 1px rgba(0,0,0,0.04);
 }
 
-/* Level 3 — modal/drawer: strong elevation */
+/* Level 3 - modal/drawer: strong elevation */
 .elevation-3 {
   box-shadow:
     0 4px 8px rgba(0,0,0,0.05),
@@ -73,7 +73,7 @@
     0 0 0 1px rgba(0,0,0,0.05);
 }
 
-/* Teal-tinted card shadow — for primary action cards */
+/* Teal-tinted card shadow - for primary action cards */
 .elevation-teal {
   box-shadow:
     0 2px 4px rgba(13,148,136,0.06),
@@ -98,7 +98,7 @@ html.dark .elevation-3 {
 }
 
 
-/* ── 3. AMBIENT BACKGROUND — removed, using standard flat bg ── */
+/* ── 3. AMBIENT BACKGROUND - removed, using standard flat bg ── */
 .ambient-bg { background: #f4f6f8; }
 .ambient-bg-clinical { background: #f4f6f8; }
 html.dark .ambient-bg { background: #0f172a; }
@@ -124,7 +124,7 @@ html.dark .ambient-bg-clinical { background: #0f172a; }
 
 
 /* ── 5. PREMIUM BUTTON STYLES ────────────────────────────────────────────────
-   Buttons should feel tactile — slight inner shadow top edge (bevel),
+   Buttons should feel tactile - slight inner shadow top edge (bevel),
    subtle gradient, and crisp shadow on hover.                             */
 
 .btn-premium-teal {
@@ -205,7 +205,7 @@ html.dark .section-title {
   color: #e2e8f0;
 }
 
-/* Stat numbers — tabular, bold, large */
+/* Stat numbers - tabular, bold, large */
 .stat-value {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -213,7 +213,7 @@ html.dark .section-title {
   line-height: 1;
 }
 
-/* Metadata / label text — tight, uppercase, tracked */
+/* Metadata / label text - tight, uppercase, tracked */
 .meta-label {
   font-size: 0.6875rem;  /* 11px */
   font-weight: 700;
@@ -226,7 +226,7 @@ html.dark .meta-label {
   color: #475569;
 }
 
-/* Feature badge — small pill with colored dot */
+/* Feature badge - small pill with colored dot */
 .feature-badge {
   display: inline-flex;
   align-items: center;
@@ -242,7 +242,7 @@ html.dark .meta-label {
 
 /* ── 7. GLASSMORPHISM CARDS ──────────────────────────────────────────────────
    Use sparingly on top-of-hierarchy elements (modals, drawers, overlays).
-   Requires a colorful background behind — place these over gradients.     */
+   Requires a colorful background behind - place these over gradients.     */
 
 .glass {
   background: rgba(255, 255, 255, 0.72);
@@ -338,7 +338,7 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 
 
 /* ── 10. CHIP STYLE ──────────────────────────────────────────────────────────
-   Alternative to badges — rounder, for categories and filters.            */
+   Alternative to badges - rounder, for categories and filters.            */
 
 .chip-teal    { background: #f0fdf4; color: #0f766e; border: 1px solid #99f6e4; }
 .chip-rose    { background: #fff1f2; color: #be185d; border: 1px solid #fecdd3; }
@@ -350,7 +350,7 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 .chip-pink    { background: #fdf2f8; color: #9d174d; border: 1px solid #f9a8d4; }
 
 
-/* ── 11. PAGE TINTS — same standard bg for all routes ── */
+/* ── 11. PAGE TINTS - same standard bg for all routes ── */
 .page-tint-dashboard,
 .page-tint-patients,
 .page-tint-alerts,
@@ -415,7 +415,7 @@ html.dark .divider {
 
 
 /* ── 14. ANIMATED BORDER GRADIENT ────────────────────────────────────────────
-   For key focus elements — active patient card, selected item, etc.       */
+   For key focus elements - active patient card, selected item, etc.       */
 
 @keyframes border-spin {
   from { background-position: 0% 50%; }

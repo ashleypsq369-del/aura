@@ -78,7 +78,7 @@ describe('artifact runtime compatibility normalizer', () => {
   // Port-path regression coverage for orbit-style React prototypes. This pattern leans on
   // the full Motion hook set (useScroll/useTransform/useAnimationFrame/useMotionValue), which only the
   // framer-motion React UMD build exposes. A single-file prototype that reaches for the vanilla
-  // motion.js DOM bundle throws `useScroll is not a function` and renders blank — this is the artifact
+  // motion.js DOM bundle throws `useScroll is not a function` and renders blank - this is the artifact
   // the normalizer must repair at the write boundary.
   const orbitPrototypeHtml = `<!doctype html>
 <html>

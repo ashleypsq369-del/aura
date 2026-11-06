@@ -12,7 +12,7 @@ import {
 } from '../src/inline-assets.js';
 
 // FS-backed reader that mirrors the production GET /api/projects/:id/export
-// shape — stat for size, readFile for body — so this suite exercises the
+// shape - stat for size, readFile for body - so this suite exercises the
 // helper through the same handle contract callers use in apps/daemon/src/
 // import-export-routes.ts. The in-memory-reader edge cases live in
 // export-inline-route.test.ts; this file covers FS round-trip,
@@ -124,7 +124,7 @@ describe('inlineRelativeAssets (FS-backed)', () => {
     expect(out).toContain('<link rel="stylesheet" href="missing.css">');
   });
 
-  it('mixes a present and a missing asset — the present one inlines, the missing one stays as a URL ref', async () => {
+  it('mixes a present and a missing asset - the present one inlines, the missing one stays as a URL ref', async () => {
     write('present.js', 'ok');
     const html =
       '<link rel="stylesheet" href="missing.css"><script src="present.js"></script>';

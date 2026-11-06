@@ -213,7 +213,7 @@ export interface ReportRunCompletedFromDaemonOpts {
   run: DaemonRunRecord;
   persistedRunStatus?: string;
   persistedEndedAt?: number;
-  /** App version info — collected once at daemon startup and reused. */
+  /** App version info - collected once at daemon startup and reused. */
   appVersion?: AppVersionInfo | null;
   /** Exact identity persisted by the caller before crossing the network. */
   deliveryIdempotencyKey?: string;
@@ -224,7 +224,7 @@ export interface ReportRunCompletedFromDaemonOpts {
 
 /**
  * Returns the host/runtime info that doesn't change inside one daemon
- * process. Cheap to call repeatedly — cached at module level.
+ * process. Cheap to call repeatedly - cached at module level.
  */
 let cachedRuntime: RuntimeInfo | undefined;
 function getRuntimeInfo(appVersion?: AppVersionInfo | null): RuntimeInfo {
@@ -474,7 +474,7 @@ function turnInfoFromRun(
   // `run.model` is the request-side selection and can be the `default`
   // placeholder. When the request did not pin an explicit model, prefer the
   // model the agent actually reported so Langfuse traces are labeled with the
-  // resolved model — matching the agent-reported fallback `server.ts` already
+  // resolved model - matching the agent-reported fallback `server.ts` already
   // applies to PostHog `run_finished` (and so the two sinks agree per run).
   if (hasExplicitRequestedModelForAnalytics(run.model)) {
     turn.model = run.model;
@@ -587,7 +587,7 @@ function eventTimestamp(
 }
 
 function redactLocalPaths(value: string): string {
-  // macOS /Users, Linux /home + /root, Windows C:\Users — Linux is a primary
+  // macOS /Users, Linux /home + /root, Windows C:\Users - Linux is a primary
   // supported environment, so Bash inputs like `cat /home/alice/.env` must not
   // leak home directories into Langfuse tool spans.
   return value
@@ -1883,7 +1883,7 @@ export interface ReportRunFeedbackFromDaemonOpts {
  * Result for the POST /api/runs/:id/feedback handler. Telemetry is
  * best-effort and the network call runs after the response is sent, but
  * the handler still tells the caller whether the report was at least
- * enqueued — useful for QA and e2e.
+ * enqueued - useful for QA and e2e.
  */
 export type FeedbackReportOutcome =
   | { status: 'accepted'; deliveryStatus?: 'queued' | 'unavailable'; reason?: string }

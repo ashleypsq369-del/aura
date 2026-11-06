@@ -2,7 +2,7 @@
  * PDF Brand Guide Generator
  *
  * Renders extraction results as a minimal, professional brand guide PDF
- * using Playwright's page.pdf() — no extra dependencies.
+ * using Playwright's page.pdf() - no extra dependencies.
  *
  * The HTML itself is built by buildHTML() in brand-guide.ts, which has no
  * browser dependency. Import that module directly if you only need the HTML.
@@ -33,7 +33,7 @@ function contentTypeFromUrl(url: string): string | null {
  * The PDF renders via page.setContent() in an about:blank context with no base
  * URL, so a remote <img src> never loads and every logo slot shows a
  * broken-image glyph. Resolve the logo to a self-contained data URI up front;
- * if the bytes cannot be fetched, drop the logo entirely — a guide without a
+ * if the bytes cannot be fetched, drop the logo entirely - a guide without a
  * logo beats one with broken-image placeholders on every page.
  */
 export async function inlineLogoForPdf(data, fetchImpl = fetch) {

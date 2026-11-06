@@ -1,4 +1,4 @@
-// Plan §3.S2 / spec §1 / §10 / §20.3 / §21.3.2 — code-migration pipeline e2e.
+// Plan §3.S2 / spec §1 / §10 / §20.3 / §21.3.2 - code-migration pipeline e2e.
 //
 // Exercises every Phase 6/7/8 atom impl in sequence on a Next.js
 // fixture repo:
@@ -13,7 +13,7 @@
 //   diff-review   → review/{diff.patch, summary.md, decision.json, meta.json}
 //   handoff       → ArtifactManifest with handoffKind='patch'
 //
-// The test does NOT run an actual `pnpm typecheck` / `pnpm test` —
+// The test does NOT run an actual `pnpm typecheck` / `pnpm test` -
 // we pass `'true'` as the build/test command so the runner just
 // records the no-op exit-0 receipt. The point is the pipe shape:
 // every atom reads what the previous atom wrote, the audit trail
@@ -70,7 +70,7 @@ afterEach(async () => {
   await rm(path.dirname(repo), { recursive: true, force: true });
 });
 
-describe('code-migration pipeline — full atom chain', () => {
+describe('code-migration pipeline - full atom chain', () => {
   it('runs every atom in sequence and ends on a patch-tier ArtifactManifest', async () => {
     // 1. code-import.
     const importIndex = await runCodeImport({ repoPath: repo, cwd });
@@ -83,7 +83,7 @@ describe('code-migration pipeline — full atom chain', () => {
     expect(tokenValues).toContain('#5b8def');
 
     // 3. token-map. design-extract picks up the inline hex but not
-    //    the JSX-quoted spacing literal — that's expected, the
+    //    the JSX-quoted spacing literal - that's expected, the
     //    SKILL.md fragment documents the regex's CSS-property bias.
     //    Color crosswalk is enough for this smoke chain.
     const mapping = await runTokenMap({ cwd, designSystem });

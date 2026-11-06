@@ -1,21 +1,21 @@
 // Core quality-stage floor for design-artifact generation.
 //
 // Why: template / community plugins frequently declare a generate-only
-// pipeline — `stages: [{ id: 'generate', atoms: ['file-write','live-artifact'] }]`
-// — so they can ship a locked reference seed without re-running
+// pipeline - `stages: [{ id: 'generate', atoms: ['file-write','live-artifact'] }]`
+// - so they can ship a locked reference seed without re-running
 // discovery. But `resolveAppliedPipeline` returns that declaration
 // verbatim (`source: 'declared'`), so it REPLACES the core scenario
 // pipeline. The `plan` (TodoWrite) and `critique` (5-dimension quality /
 // anti-slop) stages then never run: the agent generates with no
 // harness-driven critique loop and, at best, narrates a self-evaluation
-// inline — unverifiable theater. Observed symptom: "using a plugin
-// skipped the five-stage main flow — no todolist, no real anti-slop".
+// inline - unverifiable theater. Observed symptom: "using a plugin
+// skipped the five-stage main flow - no todolist, no real anti-slop".
 //
 // This floor guarantees that any pipeline producing a code/document
 // design artifact (a `generate` stage whose atoms include `file-write`
 // or `live-artifact`) carries a `plan` and a `critique` stage, whether
 // the artifact came from a free-form prompt (od-default / od-new-generation,
-// which already declare both — a no-op here) or a template/plugin.
+// which already declare both - a no-op here) or a template/plugin.
 //
 // Deliberately OUT OF SCOPE:
 //   - Pure media generation (image/video/audio) stays generate-only; a
@@ -36,7 +36,7 @@
 //     reference seed, so we add the todolist without re-exploring
 //     directions the template intentionally locked.
 //
-// Pure module — no fs / SQLite / network — so the daemon's apply path
+// Pure module - no fs / SQLite / network - so the daemon's apply path
 // stays pure.
 
 import type { PluginPipeline, PipelineStage } from '@open-design/contracts';
@@ -93,7 +93,7 @@ export function ensureCoreQualityStages(input: EnsureCoreStagesInput): PluginPip
   // Pure media (image/video/audio) stays generate-only. Two shapes reach
   // here for a media manifest:
   //   - It DECLARED its own pipeline (every shipped media plugin ships an
-  //     example-driven generate-only pipeline) — leave it verbatim; never
+  //     example-driven generate-only pipeline) - leave it verbatim; never
   //     inject plan/critique even though the atoms look like a code artifact.
   //   - It OMITTED `od.pipeline` and fell back to the new-generation
   //     scenario (the fallback keys on taskKind only, ignoring mode), so it
@@ -123,7 +123,7 @@ export function ensureCoreQualityStages(input: EnsureCoreStagesInput): PluginPip
   // matched generate stage so the restored loop is exactly
   // plan -> generate -> critique. The runner executes stages strictly in
   // declaration order, so a pipeline with post-generate work (e.g.
-  // generate -> handoff) must keep critique between generate and handoff —
+  // generate -> handoff) must keep critique between generate and handoff -
   // appending critique to the very end would let downstream stages consume
   // or publish output before the quality loop runs.
   const next: PipelineStage[] = [];

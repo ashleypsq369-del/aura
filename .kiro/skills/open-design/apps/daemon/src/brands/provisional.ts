@@ -1,9 +1,9 @@
-// provisional — build a usable Brand deterministically from raw prefetch
-// material (no LLM, no network, no Date/random — same input always yields the
+// provisional - build a usable Brand deterministically from raw prefetch
+// material (no LLM, no network, no Date/random - same input always yields the
 // same Brand).
 //
 // `brandFromMaterial` runs `seedFromMaterial` to get base colors/font, derives
-// the 6–7 semantic color roles from a neutral ramp, lifts the obvious copy
+// the 6-7 semantic color roles from a neutral ramp, lifts the obvious copy
 // (name / first heading / first body line) out of the material, ranks the
 // downloaded logo candidates, and hands the assembled object to
 // `validateBrand` so the result is normalized and guaranteed valid.
@@ -14,7 +14,7 @@ import type { LogoCandidate, PrefetchResult } from './prefetch.js';
 import { seedFromMaterial } from './seed.js';
 import { validateBrand } from './validate.js';
 
-/** Best-effort hostname for a URL — falls back to the trimmed raw string. */
+/** Best-effort hostname for a URL - falls back to the trimmed raw string. */
 function hostname(url: string): string {
   try {
     return new URL(url).hostname;
@@ -32,7 +32,7 @@ function nameFromHost(host: string): string {
 
 /**
  * Prefer-best-mark ordering for logo candidates. The harvester pushes whatever
- * it finds in DOM order — an inline header SVG (frequently a nav/UI glyph)
+ * it finds in DOM order - an inline header SVG (frequently a nav/UI glyph)
  * often lands first, which makes a junky preview. Image-blind, so we lean on
  * the candidate's source kind: clean app / favicon marks win, then header logo
  * images, then inline SVGs, and marketing og:image banners last. Ties keep
@@ -84,7 +84,7 @@ const SANS_FALLBACK = [
 
 /**
  * Deterministically build a provisional Brand from prefetch material. The
- * shape is intentionally minimal — voice/imagery/layout stay near-empty.
+ * shape is intentionally minimal - voice/imagery/layout stay near-empty.
  * Passing through `validateBrand` normalizes the object (and enforces the
  * background/foreground/accent color roles).
  */
@@ -100,7 +100,7 @@ export function brandFromMaterial(material: PrefetchResult, sourceUrl: string): 
   const description = (material.description || paragraphs[0] || '').trim();
 
   // A full neutral ramp derived deterministically from the measured base
-  // colors, so the instant preview shows a real 6–7 swatch palette (background
+  // colors, so the instant preview shows a real 6-7 swatch palette (background
   // / surface / foreground / muted / border / accent) instead of a bare three.
   const bg = seed.colorBgBase;
   const fg = seed.colorTextBase;

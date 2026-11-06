@@ -37,7 +37,7 @@ export interface PublicFilePublicationStore {
    * Replace only the persisted share address of the publication at this slug.
    * The address is a function of (project, slug) alone, so the slug is the
    * whole guard: a row republished under another slug is left untouched. The
-   * revision witness and publish time are deliberately not rotated — this is a
+   * revision witness and publish time are deliberately not rotated - this is a
    * presentation refresh, not a new publication. Returns whether a row changed.
    */
   updateLink(scope: PublicFilePublicationScope, slug: string, url: string | null): boolean;

@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 /**
- * W2 red spec — "Continue the run" must never land in a session that has never
+ * W2 red spec - "Continue the run" must never land in a session that has never
  * heard the original request.
  *
  * Two surfaces offer Continue on a resumable failed run, and they disagree with
@@ -22,7 +22,7 @@ import { startServer } from '../src/server.js';
  *
  * So a user can fail a turn, change the model in Settings, and press Continue.
  * The daemon then rejects the stored session (`model_changed`) and opens a
- * FRESH one — and the only thing it is asked to send is the canonical continue
+ * FRESH one - and the only thing it is asked to send is the canonical continue
  * prompt, whose whole meaning ("continue it from where you left off ...
  * otherwise complete the original request") depends on the original request
  * being in context.
@@ -120,7 +120,7 @@ describe('resume continue prompt context', () => {
     });
 
     // Turn 2, exactly the `od run continue <runId>` request shape: the continue
-    // prompt as `message`, no `currentPrompt`, no transcript — plus the flag
+    // prompt as `message`, no `currentPrompt`, no transcript - plus the flag
     // that declares the message is a directive rather than a request.
     const continued = await postRun(started.url, encoded, {
       message: RESUME_CONTINUE_PROMPT,

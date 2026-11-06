@@ -27,7 +27,7 @@ export const CAROUSEL_NEXT_SELECTOR =
   'button[class*="carousel"][class*="next"], button[class*="slider"][class*="next"]';
 
 /**
- * True when clicking the element is safe — it will not navigate away and
+ * True when clicking the element is safe - it will not navigate away and
  * destroy the page execution context. Anchors with a real href navigate; a
  * missing href, "#", or an in-page fragment ("#section") does not.
  *

@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 // ---------------------------------------------------------------------------
-// GET /api/projects/:id/raw/* — cache revalidation behaviour.
+// GET /api/projects/:id/raw/* - cache revalidation behaviour.
 //
 // Covers, live preview, and screenshot export all load project HTML + its
 // fonts/CSS/images through /raw/, and (in the packaged app) the export window
@@ -117,7 +117,7 @@ describe('GET /api/projects/:id/raw/* cache revalidation', () => {
     const before = await fetch(rawUrl('styles.css'));
     const oldEtag = before.headers.get('etag')!;
 
-    // Rewrite with different content+size so size/mtime — and thus the ETag — change.
+    // Rewrite with different content+size so size/mtime - and thus the ETag - change.
     await writeFile(
       path.join(projectsRoot, projectId, 'styles.css'),
       Buffer.from('body{color:#abcdef;background:#000}'),
@@ -132,7 +132,7 @@ describe('GET /api/projects/:id/raw/* cache revalidation', () => {
   it('treats If-None-Match as authoritative when both validators are sent (no stale 304)', async () => {
     // Same-second rewrite: ETag changes immediately but Last-Modified stays
     // identical at HTTP-date (second) granularity. A client that sends the stale
-    // ETag AND the current Last-Modified must get 200 — If-None-Match wins, so
+    // ETag AND the current Last-Modified must get 200 - If-None-Match wins, so
     // the If-Modified-Since match must NOT produce a 304 for changed bytes.
     const dir = path.join(projectsRoot, projectId);
     await writeFile(path.join(dir, 'precedence.css'), Buffer.from('a{color:#111}'));
@@ -153,7 +153,7 @@ describe('GET /api/projects/:id/raw/* cache revalidation', () => {
 
   it('busts the cache when transform-substituted content changes (dist rewrite => 200)', async () => {
     // /raw/vite-entry.html is served as dist/index.html (Vite substitution). The
-    // validator must reflect the SENT bytes, not the unchanged source entry — so
+    // validator must reflect the SENT bytes, not the unchanged source entry - so
     // rewriting only dist/index.html must return 200, not a stale 304.
     const dir = path.join(projectsRoot, projectId);
     const first = await fetch(rawUrl('vite-entry.html'));
@@ -183,7 +183,7 @@ describe('GET /api/projects/:id/raw/* cache revalidation', () => {
     const etag = head.headers.get('etag')!;
     // Our /raw/ validator is weak; RFC 9110 §13.1.5 forbids weak validators with
     // If-Range, so an entity-tag If-Range must NOT authorize a 206 even when it
-    // "matches" — a same-size rewrite / mtime collision could otherwise splice
+    // "matches" - a same-size rewrite / mtime collision could otherwise splice
     // stale + fresh bytes. Full 200 instead.
     expect(etag.startsWith('W/')).toBe(true);
     const etagRange = await fetch(rawUrl('resume.mp4'), {

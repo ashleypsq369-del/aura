@@ -1728,7 +1728,7 @@ export function analyzeDeployPlan(input: {
   // appears as an explicit U+FEFF escape rather than a literal
   // zero-width character in the regex source. The comment body is
   // tempered (`(?:[^-]|-(?!->))*`) rather than a lazy `[\s\S]*?` so each
-  // comment matches deterministically — a lazy body inside the outer `*`
+  // comment matches deterministically - a lazy body inside the outer `*`
   // backtracks 2^n ways on a comment-only prolog with no doctype (ReDoS).
   if (!new RegExp('^\\uFEFF?\\s*(?:<!--(?:[^-]|-(?!->))*-->\\s*)*<!doctype\\s+html', 'i').test(source)) {
     pushUnique(acc, {
@@ -2271,7 +2271,7 @@ function cloudflareError(json: JsonObject, status: number, fallback: string) {
   // API rejection, where the provider's HTTP status IS the signal. The client
   // (apps/web/src/providers/registry.ts) only falls back to `HTTP_${status}`
   // when the envelope code is generic, so stamping one code here would fold
-  // auth (403), quota (429) and upstream faults (5xx) into a single bucket —
+  // auth (403), quota (429) and upstream faults (5xx) into a single bucket -
   // the opposite of what this file's specific codes are for. Add a code here
   // only for a failure whose CAUSE is known, not merely its status.
   return new DeployError(message, status, json);
@@ -2299,7 +2299,7 @@ function vercelError(json: JsonObject, status: number) {
   if (code === 'forbidden' || /permission/i.test(message)) {
     return new DeployError("You don't have permission to create a project.", status, json, 'PROVIDER_FORBIDDEN');
   }
-  // Catch-all — no structured code, so the client keeps bucketing by the real
+  // Catch-all - no structured code, so the client keeps bucketing by the real
   // provider status. See cloudflareError above.
   return new DeployError(message, status, json);
 }

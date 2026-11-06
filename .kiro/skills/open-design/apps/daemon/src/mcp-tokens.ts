@@ -7,7 +7,7 @@
 // atomic write + per-dataDir mutex pattern the rest of the daemon uses.
 //
 // File mode: chmod 0600 on POSIX so other local users can't read raw
-// bearer tokens. This is best-effort — we log and continue if the chmod
+// bearer tokens. This is best-effort - we log and continue if the chmod
 // fails (e.g. on Windows / some networked filesystems).
 
 import { chmod, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
@@ -19,7 +19,7 @@ import path from 'node:path';
  * of an OAuth 2.0 token-endpoint response (RFC 6749 §5.1), plus the OAuth
  * client context the original authorization-code exchange used. Refresh
  * tokens are bound (RFC 6749 §6) to the client that received them, so we
- * have to refresh against the same `client_id` / `redirect_uri` pair —
+ * have to refresh against the same `client_id` / `redirect_uri` pair -
  * persisting the context here is what lets us do that without re-running
  * authorization.
  */
@@ -28,7 +28,7 @@ export interface StoredMcpToken {
   accessToken: string;
   /** Refresh token (RFC 6749 §6) if the auth server issued one. */
   refreshToken?: string;
-  /** Absolute epoch ms at which `accessToken` expires. Optional — some
+  /** Absolute epoch ms at which `accessToken` expires. Optional - some
    * providers never expire. */
   expiresAt?: number;
   /** RFC 6749 §5.1 token_type. Almost always `Bearer`. */
@@ -247,7 +247,7 @@ export async function readAllTokens(
 
 /** True when the stored token is past its `expiresAt` (or within `skew`
  * milliseconds of expiring). Returns false when no `expiresAt` is recorded
- * — many providers issue non-expiring tokens. */
+ * - many providers issue non-expiring tokens. */
 export function isTokenExpired(
   token: StoredMcpToken,
   now: number = Date.now(),

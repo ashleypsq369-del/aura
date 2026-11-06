@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 // #895 red spec: the daemon already classifies a failure's fine-grained cause
-// (failure_category / failure_detail — see run-failure-classification.ts) for
+// (failure_category / failure_detail - see run-failure-classification.ts) for
 // telemetry and retry policy, but historically kept it daemon-internal. The
 // chat can only render specific guidance ("quota exhausted, retrying won't
 // help") if that classification reaches the client, so the run-status response
@@ -16,7 +16,7 @@ import { startServer } from '../src/server.js';
 //
 // A hard-quota failure is the sharp case: it arrives with the opaque
 // AGENT_EXECUTION_FAILED code (text-only signal), so the coarse `errorCode`
-// alone can't distinguish it from any other execution failure — only
+// alone can't distinguish it from any other execution failure - only
 // `failureDetail: 'hard_quota'` can. On origin/main these fields are absent
 // from the DTO, so this goes red there and green on the branch.
 
@@ -75,7 +75,7 @@ describe('run-status failure classification', () => {
 
     expect(failed.status).toBe('failed');
     // The specific cause the chat maps to a "quota exhausted, retrying is
-    // futile" card — not derivable from `errorCode` alone for this text-only
+    // futile" card - not derivable from `errorCode` alone for this text-only
     // signal.
     expect(failed.failureCategory).toBe('rate_limit');
     expect(failed.failureDetail).toBe('hard_quota');

@@ -168,7 +168,7 @@ export const opencodeAgentDef = {
     promptViaStdin: true,
     // OpenCode's CLI carries its own session across spawns: on a follow-up turn
     // the daemon resumes the captured session id (`-s <id>`) instead of
-    // re-flattening the transcript. Capture-style — the resume handle is the
+    // re-flattening the transcript. Capture-style - the resume handle is the
     // `sessionID` captured from the stream, not a daemon-minted id.
     resumesSessionViaCli: true,
     capturesSessionIdFromStream: true,

@@ -1,4 +1,4 @@
-// Plan §3.D — atom worker registry.
+// Plan §3.D - atom worker registry.
 //
 // Stage D of plugin-driven-flow-plan replaces the canned stub stage
 // runner inside `firePipelineForRun` with a per-atom worker model.
@@ -18,7 +18,7 @@
 //     defaults
 //   - permissive defaults (`critique.score: 4`, `preview.ok: true`,
 //     `user.confirmed: true`) keep the happy path converging in one
-//     iteration when no atom contradicts them — matches v1 stub
+//     iteration when no atom contradicts them - matches v1 stub
 //     behaviour for backwards compatibility.
 
 import type Database from 'better-sqlite3';
@@ -81,7 +81,7 @@ export function listRegisteredAtomIds(): string[] {
 }
 
 // Permissive defaults mirror the v1 stub's canned signals so the
-// registry runner stays at parity for unobserved atoms — swapping
+// registry runner stays at parity for unobserved atoms - swapping
 // from stub → registry never regresses happy-path convergence.
 // Real worker observations REPLACE these defaults wholesale (rather
 // than min-merging) so a real score of 5 never gets clipped to the
@@ -104,7 +104,7 @@ export interface StageRegistryOutcome {
 // Walk every atom in the stage, invoke its registered worker (if
 // any), then layer the resulting real-observation map over the
 // permissive defaults. Worker failures are captured as notes and
-// never crash the stage — the devloop scheduler keeps its
+// never crash the stage - the devloop scheduler keeps its
 // iteration cap as the safety net.
 export async function runStageWithRegistry(
   ctx: AtomWorkerContext,

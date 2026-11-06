@@ -1,5 +1,5 @@
 // Tests for `apps/daemon/src/design-system-preview.ts`. This module exports
-// a single public function — `renderDesignSystemPreview` — but its behavior is
+// a single public function - `renderDesignSystemPreview` - but its behavior is
 // driven by several internal extractors (color/font parsers, neutral filter,
 // hint-based color picker). We exercise those extractors through the public
 // API by crafting DESIGN.md fixtures that pin each branch.
@@ -31,7 +31,7 @@ function cssVar(html: string, name: string): string | null {
   return m ? (m[1] ?? '').trim() : null;
 }
 
-describe('renderDesignSystemPreview — extractColors (color section parsing)', () => {
+describe('renderDesignSystemPreview - extractColors (color section parsing)', () => {
   it('parses Form A `- **Name**: `#hex`` entries and preserves order', () => {
     // Form A regex: bold around the name, colon outside the bold.
     const md = [
@@ -58,8 +58,8 @@ describe('renderDesignSystemPreview — extractColors (color section parsing)', 
       '',
       '## Palette',
       '',
-      '- **Stripe Purple** (`#533afd`) — primary brand color.',
-      '- **Slate Ink** (`#0a2540`) — headings.',
+      '- **Stripe Purple** (`#533afd`) - primary brand color.',
+      '- **Slate Ink** (`#0a2540`) - headings.',
     ].join('\n');
 
     const html = renderDesignSystemPreview('stripe', md);
@@ -104,7 +104,7 @@ describe('renderDesignSystemPreview — extractColors (color section parsing)', 
   });
 });
 
-describe('renderDesignSystemPreview — pickColor (hint-based selection)', () => {
+describe('renderDesignSystemPreview - pickColor (hint-based selection)', () => {
   it('picks the brand/primary color into --accent', () => {
     const md = [
       '# Brand',
@@ -147,7 +147,7 @@ describe('renderDesignSystemPreview — pickColor (hint-based selection)', () =>
   });
 });
 
-describe('renderDesignSystemPreview — firstNonNeutral (saturation fallback)', () => {
+describe('renderDesignSystemPreview - firstNonNeutral (saturation fallback)', () => {
   it('skips low-saturation neutrals and picks the first vivid color for --accent', () => {
     // No brand/primary names → pickColor returns null, firstNonNeutral runs.
     // Greys/whites/blacks should be skipped; the vivid red should win.
@@ -184,7 +184,7 @@ describe('renderDesignSystemPreview — firstNonNeutral (saturation fallback)', 
   });
 });
 
-describe('renderDesignSystemPreview — extractFonts (typography parsing)', () => {
+describe('renderDesignSystemPreview - extractFonts (typography parsing)', () => {
   it('parses display/body/mono font declarations into the :root block', () => {
     const md = [
       '# Fonts',
@@ -229,7 +229,7 @@ describe('renderDesignSystemPreview — extractFonts (typography parsing)', () =
   });
 });
 
-describe('renderDesignSystemPreview — end-to-end render', () => {
+describe('renderDesignSystemPreview - end-to-end render', () => {
   it('produces a complete HTML document with all major sections', () => {
     const md = [
       '# Example',
@@ -248,7 +248,7 @@ describe('renderDesignSystemPreview — end-to-end render', () => {
     const html = renderDesignSystemPreview('example', md);
 
     expect(html.startsWith('<!doctype html>')).toBe(true);
-    expect(html).toContain('<title>Example — design system preview</title>');
+    expect(html).toContain('<title>Example - design system preview</title>');
     expect(html).toContain('class="palette"');
     expect(html).toContain('class="typo-row"');
     expect(html).toContain('class="components"');
@@ -262,7 +262,7 @@ describe('renderDesignSystemPreview — end-to-end render', () => {
     const html = renderDesignSystemPreview('linear', md);
 
     // cleanTitle should drop the "Design System Inspired by" prefix.
-    expect(html).toContain('<title>Linear — design system preview</title>');
+    expect(html).toContain('<title>Linear - design system preview</title>');
     expect(html).toContain('<h1>Linear</h1>');
   });
 
@@ -280,7 +280,7 @@ describe('renderDesignSystemPreview — end-to-end render', () => {
     // Raw <b> should never leak into the title; only the escaped form.
     expect(html).not.toContain('<title><b>Evil</b>');
     expect(html).toContain('&lt;b&gt;Evil&lt;/b&gt;Brand');
-    // The id is rendered inside the badge with escapeHtml — the closing
+    // The id is rendered inside the badge with escapeHtml - the closing
     // sequence `">` must be encoded so an attacker cannot break out.
     expect(html).toContain('id&quot;&gt;danger');
     // Subtitle escapes too.
@@ -306,7 +306,7 @@ describe('renderDesignSystemPreview — end-to-end render', () => {
 
     const html = renderDesignSystemPreview('fallback-id', md);
 
-    expect(html).toContain('<title>fallback-id — design system preview</title>');
+    expect(html).toContain('<title>fallback-id - design system preview</title>');
     expect(html).toContain('<h1>fallback-id</h1>');
   });
 });

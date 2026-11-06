@@ -111,7 +111,7 @@ function normalizeDesignCanvasWheelHandling(source: string): {
   const gestureBlock = /    \/\/ Safari sends native gesture\* events for trackpad pinch with a smooth\n[\s\S]*?    const onGestureEnd = \(e\) => \{ e\.preventDefault\(\); isGesturing = false; \};/;
   // Check both regexes against the original source so callers can tell
   // wheel-only drift from gesture-only drift. If `wheelBlock` does not
-  // match we leave the source untouched and skip the gesture rewrite —
+  // match we leave the source untouched and skip the gesture rewrite -
   // a partial rewrite that swapped the gesture handler against an
   // unchanged wheel handler would be worse than no rewrite at all.
   const wheelMatched = wheelBlock.test(source);
@@ -141,10 +141,10 @@ function normalizeDesignCanvasWheelHandling(source: string): {
     // smooth trackpad pinch deltas inside the Cmd branch: a single mouse
     // notch arrives as deltaY≈100, and Math.exp(-100*0.01)≈0.367 would shrink
     // the canvas by ~63% per click. The notched ratio Math.exp(-sign*0.18)
-    // gives ~17% per click — the same feel the original Claude export had
+    // gives ~17% per click - the same feel the original Claude export had
     // before this normalizer collapsed both paths. We also accept ctrlKey
     // here because Chromium/Firefox synthesize wheel events with
-    // \`ctrlKey: true\` during a trackpad pinch — without that, smooth pinch
+    // \`ctrlKey: true\` during a trackpad pinch - without that, smooth pinch
     // would silently fall through to panByWheel(e) and the canvas would
     // pan instead of zoom on those browsers.
     const isNotchedWheel = (e) =>

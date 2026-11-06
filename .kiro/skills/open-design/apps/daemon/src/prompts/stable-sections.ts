@@ -6,7 +6,7 @@ import { createHash } from 'node:crypto';
  * A resumed agent session holds the stable instruction prefix (daemon prompt +
  * tool contract + client system prompt). When any byte of it changes between
  * turns we must re-send the whole block, which also invalidates the upstream
- * prompt cache for everything downstream of it — including the conversation
+ * prompt cache for everything downstream of it - including the conversation
  * history. `stable_prompt_cache_miss_reason='stable-prompt-changed'` records
  * THAT this happened; this module records WHICH named input caused it.
  *
@@ -14,12 +14,12 @@ import { createHash } from 'node:crypto';
  * composed prompt on its `---` separators. The question a drift event has to
  * answer is "what caused the prefix to move", and the cause is always an input;
  * splitting the output would report which bytes differ but still leave the
- * mapping back to a cause to a human diffing Langfuse traces by hand — which is
+ * mapping back to a cause to a human diffing Langfuse traces by hand - which is
  * the manual step this exists to remove.
  *
  * INVARIANT: the sha256 over the whole composed block (`stablePromptHash`) is
  * the only source of truth for cache hit/miss. Section hashes are attribution
- * metadata and must never gate a re-send decision — a section-map bug must be
+ * metadata and must never gate a re-send decision - a section-map bug must be
  * able to mislabel a drift event but never to suppress or fabricate one.
  */
 
@@ -34,7 +34,7 @@ import { createHash } from 'node:crypto';
  */
 const SECTION_INPUTS = {
   // Auto-extracted personal memory. Known to churn WITHIN a session as the
-  // extractor sediments new facts — the dominant first-resume drift cause.
+  // extractor sediments new facts - the dominant first-resume drift cause.
   memory: ['memoryBody', 'memoryHooks'],
   // Project intent: artifact kind, fidelity, speaker-notes/animation intent,
   // plus the derived deck/media/platform signals. Those signals are latched per
@@ -79,14 +79,14 @@ const SECTION_INPUTS = {
   // Dormant by design: #5336 moved the connected-MCP directive out of the
   // cached prefix into the per-turn slice, because it reflects live OAuth token
   // validity and flipped mid-conversation. The key is absent today, so this
-  // section never reports — it exists so that re-admitting that input (or any
+  // section never reports - it exists so that re-admitting that input (or any
   // future live-token input under this name) is attributed on sight rather than
   // rediscovered by hand.
   mcp: ['connectedExternalMcp'],
   runtime: [
     'agentId',
     // Derived from `agentId` + `streamFormat`, so it can never move on its own
-    // — but it IS a composer argument name, and this table is keyed on those.
+    // - but it IS a composer argument name, and this table is keyed on those.
     // Listing it keeps a future caller that passes a note without changing the
     // agent from landing in `unattributed`.
     'planToolNote',
@@ -159,7 +159,7 @@ export function computeStableSectionHashes(
  *
  * Returns an empty list when nothing tracked moved. Callers that already know
  * the overall prefix changed should read that emptiness as `unattributed`
- * rather than as "no drift" — see `describeChangedStableSections`.
+ * rather than as "no drift" - see `describeChangedStableSections`.
  */
 export function diffStableSections(
   storedSections: StableSectionHashes | null | undefined,

@@ -1,4 +1,4 @@
-// Plan §3.A2 / spec §9.1 / §5.3 — capability grant + revoke unit test.
+// Plan §3.A2 / spec §9.1 / §5.3 - capability grant + revoke unit test.
 //
 // `installed_plugins.capabilities_granted` has exactly two writers in v1:
 // the install path (sets the default tier) and the trust path

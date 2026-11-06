@@ -48,18 +48,18 @@ retrieval:
 
 # Responsive Paradigms
 
-Mobile, tablet, and desktop are fundamentally different interaction contexts. The input method, screen real estate, viewing distance, and session intent all differ. Responsive design is not the same layout at different widths — it is a different design decision at each breakpoint.
+Mobile, tablet, and desktop are fundamentally different interaction contexts. The input method, screen real estate, viewing distance, and session intent all differ. Responsive design is not the same layout at different widths - it is a different design decision at each breakpoint.
 
 ## The Three Paradigms
 
 ### Mobile (< 768px)
-- **Input:** Touch — fingers, not a cursor. Tap targets ≥ 44×44px.
+- **Input:** Touch - fingers, not a cursor. Tap targets ≥ 44×44px.
 - **Navigation:** Bottom tab bar (thumb reachable) or hamburger drawer. Top navigation is hard to reach.
 - **Session:** Often interrupted, task-focused, shorter. Show the most important thing first.
 - **Content:** Single column. Vertical scroll only. No hover states.
 - **Primary action:** Floating action button (FAB) or full-width button at the bottom of the screen.
 
-### Tablet (768px–1024px)
+### Tablet (768px-1024px)
 - **Input:** Touch and sometimes keyboard/trackpad. Hybrid paradigm.
 - **Navigation:** Can support a persistent sidebar at landscape orientation; collapses to drawer at portrait.
 - **Content:** Two-column layouts work. Master-detail patterns (list + detail side by side) are natural.
@@ -75,17 +75,17 @@ Mobile, tablet, and desktop are fundamentally different interaction contexts. Th
 
 ## Section Behaviour Across Breakpoints
 
-Not every section needs to appear on every breakpoint at the same position — or at all.
+Not every section needs to appear on every breakpoint at the same position - or at all.
 
 ### Sections can be hidden on mobile
 Secondary content (related articles, supplementary sidebars, decorative illustrations) can be hidden below a breakpoint. Ask: does a mobile user need this? If no, `display: none` at mobile is correct.
 
 ### Stacking is the default; repositioning is allowed within the same container
-The default responsive move is simply to **stack** — a horizontal row of blocks becomes a vertical column as the viewport narrows. This preserves order and grouping, so the user's mental model of the page survives the breakpoint unchanged. Reach for it first.
+The default responsive move is simply to **stack** - a horizontal row of blocks becomes a vertical column as the viewport narrows. This preserves order and grouping, so the user's mental model of the page survives the breakpoint unchanged. Reach for it first.
 
-**Repositioning an element is also allowed — but only if it stays within roughly the same container area / region.** A sidebar that sits to the left on desktop can move below the main content on mobile, or collapse into an expandable section: it's still "the stuff next to / around the main content", just re-flowed. That's fine.
+**Repositioning an element is also allowed - but only if it stays within roughly the same container area / region.** A sidebar that sits to the left on desktop can move below the main content on mobile, or collapse into an expandable section: it's still "the stuff next to / around the main content", just re-flowed. That's fine.
 
-What to avoid: repositioning that **moves an element into a different container or scope** — a control lifted from its card into the global header reads as a different UI, not a reflow. Keep the parent region stable; change only how it flows within it.
+What to avoid: repositioning that **moves an element into a different container or scope** - a control lifted from its card into the global header reads as a different UI, not a reflow. Keep the parent region stable; change only how it flows within it.
 
 ```
 Desktop:              Mobile:
@@ -114,11 +114,11 @@ An element that is `position: sticky` on desktop may need to become a fixed bott
 |---|---|
 | Persistent top nav or sidebar | Bottom tab bar or hamburger drawer |
 | Visible labels + icons | Icons only (bottom nav) or full list (drawer) |
-| Hover states on nav items | None — touch only |
+| Hover states on nav items | None - touch only |
 | Dropdowns on hover | Tap to expand, full-screen or sheet |
 
-### Labels can be shortened — but the full meaning must be recoverable
-As space tightens, a label can be **shortened** or dropped to **icon-only**. Shortening hides information, so keep the full version reachable — the same "clamp + recover" contract as truncated text (see [[repeated-component-alignment]]):
+### Labels can be shortened - but the full meaning must be recoverable
+As space tightens, a label can be **shortened** or dropped to **icon-only**. Shortening hides information, so keep the full version reachable - the same "clamp + recover" contract as truncated text (see [[repeated-component-alignment]]):
 
 - **Recover it** via `title` / `aria-label` (required for icon-only controls), or in a detail view / the desktop layout.
 - **Icon-only** is valid *only if the icon is unambiguous* and still carries its label via `aria-label`. A cryptic icon is worse than the long word.
@@ -127,7 +127,7 @@ As space tightens, a label can be **shortened** or dropped to **icon-only**. Sho
 
 ## Mobile-First Approach
 
-Design and build mobile first, then enhance for larger screens. Mobile forces prioritisation — what makes it onto mobile is what actually matters.
+Design and build mobile first, then enhance for larger screens. Mobile forces prioritisation - what makes it onto mobile is what actually matters.
 
 ```css
 /* Mobile first: base styles are mobile */
@@ -182,10 +182,10 @@ Show gestures on touch and keys on keyboard, decided from the pointer and hover 
 
 ## Review Checklist
 
-- [ ] Does mobile navigation use a bottom tab bar or drawer — not a top nav that requires thumb stretching?
+- [ ] Does mobile navigation use a bottom tab bar or drawer - not a top nav that requires thumb stretching?
 - [ ] Are touch targets ≥ 44×44px on all interactive elements?
 - [ ] Are secondary sections hidden or collapsed on mobile rather than just shrunk?
-- [ ] Does sticky positioning adapt per breakpoint — not every sticky desktop element stays sticky on mobile?
+- [ ] Does sticky positioning adapt per breakpoint - not every sticky desktop element stays sticky on mobile?
 - [ ] Is the layout built mobile-first with progressive enhancement upward?
 - [ ] Are hover-dependent interactions (tooltips, dropdowns) replaced with tap equivalents on touch?
 - [ ] Does the primary action remain reachable with one thumb on mobile?

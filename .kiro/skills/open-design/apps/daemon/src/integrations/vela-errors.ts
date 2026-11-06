@@ -84,7 +84,7 @@ function containsInsufficientBalanceSignal(value: string): boolean {
  * `/ - _ . :` are treated as word characters here, so `session/new`,
  * `session/load`, `sessionId` and `session_token_ttl` read as single names and
  * do not satisfy the noun. Spelling the boundary this way states which sense of
- * the word is meant instead of listing the protocol names that must not count —
+ * the word is meant instead of listing the protocol names that must not count -
  * the next ACP method or config key needs no amendment here.
  */
 const AUTH_SESSION_NOUN = String.raw`session(?![\w./:-]*[\w])`;
@@ -103,14 +103,14 @@ const INVALID_AUTH_SESSION_PATTERN = new RegExp(
 
 /**
  * True when `value` reports that the caller's **sign-in session** is invalid or
- * expired — the one state a relogin fixes.
+ * expired - the one state a relogin fixes.
  *
  * The word `session` heads two unrelated nouns in this product: the account's
  * sign-in session, and the ACP method/field family (`session/new`,
  * `session/load`, `sessionId`). A bare `includes('invalid session')` cannot
  * tell them apart, so an agent that answers `session/new` with an unparseable
- * frame — `invalid session/new response: …`, a defect in the agent's own build
- * — was reported to the user as `auth / auth_required / user_action: login`.
+ * frame - `invalid session/new response: …`, a defect in the agent's own build
+ * - was reported to the user as `auth / auth_required / user_action: login`.
  * Requiring the credential noun to be the whole word keeps the account sense
  * and drops the protocol sense.
  */
@@ -131,7 +131,7 @@ function reportsInvalidAuthSession(value: string): boolean {
  * adds needs no amendment here.
  *
  * `storage/amr-terminal-report-outbox.ts:293` already reads `unauthenticated`
- * this way — as an exact envelope code — when vela hands it one structurally.
+ * this way - as an exact envelope code - when vela hands it one structurally.
  */
 const VELA_AUTH_CODE_PATTERN = /(?<![\w.-])(?:auth_required|unauthenticated)(?![\w.-])/;
 
@@ -143,7 +143,7 @@ function reportsVelaAuthCode(value: string): boolean {
  * `not logged in` said about the AMR/vela account specifically.
  *
  * vela's CLI refuses to run with `profile %q is not logged in; run \`vela
- * login\`` (`apps/cli/internal/commands/control.go:92`) — the phrase and the
+ * login\`` (`apps/cli/internal/commands/control.go:92`) - the phrase and the
  * account it belongs to are in the same breath. Everything else that prints
  * this phrase into a run's failure text is some other principal's sign-in:
  * `npm ERR! you are not logged in to this registry`, `gh: not authenticated`,
@@ -163,17 +163,17 @@ function reportsVelaSignInMissing(value: string): boolean {
 
 /**
  * vela's link gateway rewrites an upstream 401/403 into an HTTP 500 under its
- * own code — `upstream_provider_unauthenticated` /
+ * own code - `upstream_provider_unauthenticated` /
  * `upstream_provider_forbidden`
  * (`services/link/internal/handlers/openai.go:2074`,
- * `normalizeUpstreamAuthFailure`) — and pairs it with "Upstream provider
+ * `normalizeUpstreamAuthFailure`) - and pairs it with "Upstream provider
  * credentials are missing or invalid."
  *
  * The credentials named are the PLATFORM's, configured in the gateway. The
  * caller holds none of them and no sign-in reaches them, so this is a service
  * outage (catalogue R-053) and must never be answered with a sign-in prompt.
  * Exported because the two agent-agnostic classifiers that read the same
- * sentence — `runtimes/auth.ts` and `run-failure-classification.ts` — have to
+ * sentence - `runtimes/auth.ts` and `run-failure-classification.ts` - have to
  * agree with this one; a self-identifying code outranks a guess read off the
  * prose it travels with.
  */
@@ -291,7 +291,7 @@ export function classifyAmrAccountFailure(
     };
   }
 
-  // This branch's answer is not "some credential failed" — it is "YOUR AMR
+  // This branch's answer is not "some credential failed" - it is "YOUR AMR
   // Cloud sign-in failed; sign in to AMR Cloud again", and the paths it feeds
   // (`agent-protocol/acp/updates.ts:143,:170`, `server.ts:15411,:15937`) put
   // that sentence in front of the user. A run's failure text does not support

@@ -1,4 +1,4 @@
-// Plan §3.N4 / spec §23.3.3 — bundled scenario plugins roster.
+// Plan §3.N4 / spec §23.3.3 - bundled scenario plugins roster.
 //
 // Each `taskKind` enum value (new-generation / code-migration /
 // figma-migration / tune-collab) maps to exactly one *canonical* bundled

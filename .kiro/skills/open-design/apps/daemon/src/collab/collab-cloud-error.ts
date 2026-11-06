@@ -7,7 +7,7 @@
  * NNN: code`). Routes must not flatten that into an unconditional 502: an
  * upstream 401/403/404 is an authoritative rejection the web client should
  * see as such, while only genuine infrastructure failures stay 502/503. The
- * raw error (command line, stderr) belongs in the daemon log only — never in
+ * raw error (command line, stderr) belongs in the daemon log only - never in
  * an HTTP response body.
  */
 

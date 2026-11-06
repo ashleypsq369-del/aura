@@ -14,7 +14,7 @@ import { readVelaControlApiContext, readVelaRuntimeLinkContext } from './vela.js
 
 // A-lane billing 收口. Instead of the daemon holding billing credentials, it
 // shells out to `vela billing summary --format json`, which authenticates with
-// the same vela login session AMR + the resource CLI use — one identity, and
+// the same vela login session AMR + the resource CLI use - one identity, and
 // the billing truth lives in the vela backend. This is the read-side twin of
 // the resource CLI adapter (see vela-cli-resource-adapter.ts): the client shows
 // real credits + plan tier instead of a placeholder, and it degrades to null
@@ -426,7 +426,7 @@ export interface BillingCheckoutOptions extends FetchVelaBillingOptions {
  * Start a team-subscription checkout via the CLI 收口 and return the Stripe
  * checkout URL to open, or null when the CLI / session / backend route is
  * unavailable. Mirrors A's `POST …/billing/team-subscription/checkout-sessions`
- * behind `vela billing checkout`. Never throws — a null return means "no URL",
+ * behind `vela billing checkout`. Never throws - a null return means "no URL",
  * so the caller shows an error toast instead of crashing.
  */
 export async function fetchBillingCheckoutUrl(
@@ -675,7 +675,7 @@ function parseWorkspaceBillingRevisionClock(
  * An exchange rate is only usable when it is a positive finite number. B sends
  * money-adjacent fields as numbers or as decimal strings, so both are read, but
  * a zero / negative / unparseable rate is reported as absent rather than as a
- * bad divisor — a client that divides by it would print wrong money.
+ * bad divisor - a client that divides by it would print wrong money.
  */
 function positiveRate(value: unknown): number | null {
   if (typeof value !== 'number' && typeof value !== 'string') return null;

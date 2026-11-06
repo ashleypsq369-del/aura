@@ -1,4 +1,4 @@
-// Phase 7 entry slice / spec §10 / §22.4 — build-test runner.
+// Phase 7 entry slice / spec §10 / §22.4 - build-test runner.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
@@ -16,7 +16,7 @@ afterEach(async () => {
   await rm(tmp, { recursive: true, force: true });
 });
 
-describe('runBuildTest — explicit overrides', () => {
+describe('runBuildTest - explicit overrides', () => {
   it('reports status=passing when both commands exit 0', async () => {
     const report = await runBuildTest({
       cwd: tmp,
@@ -71,7 +71,7 @@ describe('runBuildTest — explicit overrides', () => {
   });
 });
 
-describe('runBuildTest — package.json inference', () => {
+describe('runBuildTest - package.json inference', () => {
   it('derives commands from npm scripts when no override is supplied', async () => {
     await writeFile(
       path.join(tmp, 'package.json'),

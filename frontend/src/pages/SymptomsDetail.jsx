@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+﻿import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -117,7 +117,7 @@ export default function SymptomsDetail() {
          stats={symptoms.length > 0 ? [
            { label: 'Total Reports',   value: symptoms.length,          color: '#2dd4bf' },
            { label: 'Avg Pain',        value: `${avgPainLevel}/10`,     color: avgPainLevel >= 7 ? '#f87171' : avgPainLevel >= 4 ? '#fbbf24' : '#4ade80' },
-           { label: 'Most Frequent',   value: topSymptoms[0]?.label || '—', color: '#a78bfa' },
+           { label: 'Most Frequent',   value: topSymptoms[0]?.label || '-', color: '#a78bfa' },
            { label: 'Last 7 Days',     value: last7,                    color: last7 > 0 ? '#fbbf24' : '#4ade80', pulse: last7 > 5 },
          ] : undefined}
        >
@@ -176,7 +176,7 @@ export default function SymptomsDetail() {
              </motion.div>
            )}
 
-           {/* History — PatientDataTable DNA */}
+           {/* History - PatientDataTable DNA */}
            <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.25 }}
              style={{ background:'var(--card-bg)', borderRadius:16, border:'1px solid var(--card-border)', overflow:'hidden', marginTop:24 }}>
              <div style={{ height:3, background:'linear-gradient(90deg,#e11d48,#7c3aed,#0891b2)' }} />
@@ -187,7 +187,7 @@ export default function SymptomsDetail() {
                </div>
              </div>
 
-             {/* Column headers — same style as PatientDataTable */}
+             {/* Column headers - same style as PatientDataTable */}
              <div style={{ display:'grid', gridTemplateColumns:'1fr 80px 100px 1fr 120px 90px', padding:'8px 16px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
                {['Date & Time','Pain','Severity','Symptoms Present','Notes','AI Explain'].map(h=>(
                  <span key={h} style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', textTransform:'uppercase', letterSpacing:'0.06em' }}>{h}</span>
@@ -203,12 +203,12 @@ export default function SymptomsDetail() {
              ) : symptoms.map((s, idx) => {
                const sev   = getPainSeverity(s.pain_level ?? 0);
                const flags = [s.nausea&&'Nausea', s.fatigue&&'Fatigue', s.anxiety&&'Anxiety', s.dyspnea&&'Dyspnea'].filter(Boolean);
-               /* gradient avatar — same palette as PatientDataTable */
+               /* gradient avatar - same palette as PatientDataTable */
                const GRADS = ['linear-gradient(135deg,#e11d48,#f97316)','linear-gradient(135deg,#f97316,#d97706)','linear-gradient(135deg,#7c3aed,#e11d48)','linear-gradient(135deg,#0d9488,#0891b2)','linear-gradient(135deg,#dc2626,#7c3aed)','linear-gradient(135deg,#d97706,#ea580c)'];
                const grad  = GRADS[idx % GRADS.length];
                /* badge class matches PatientDataTable exactly */
                const badgeClass = s.pain_level >= 8 ? 'badge-critical' : s.pain_level >= 5 ? 'badge-high' : s.pain_level >= 3 ? 'badge-moderate' : 'badge-low';
-               /* risk bar — same as PatientDataTable risk_score column */
+               /* risk bar - same as PatientDataTable risk_score column */
                const barPct   = Math.round((s.pain_level ?? 0) * 10);
                const barColor = s.pain_level >= 8 ? '#e11d48' : s.pain_level >= 5 ? '#f97316' : '#10b981';
 
@@ -218,7 +218,7 @@ export default function SymptomsDetail() {
                    onMouseEnter={e=>e.currentTarget.style.background='var(--page-bg)'}
                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
 
-                   {/* Date — gradient avatar + date/time, same as PatientDataTable Patient column */}
+                   {/* Date - gradient avatar + date/time, same as PatientDataTable Patient column */}
                    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                      <div style={{ width:36, height:36, borderRadius:'50%', background:grad, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:700, color:'#fff', flexShrink:0, boxShadow:'0 2px 6px rgba(0,0,0,0.15)' }}>
                        {String(idx+1).padStart(2,'0')}
@@ -233,17 +233,17 @@ export default function SymptomsDetail() {
                      </div>
                    </div>
 
-                   {/* Pain score with bar — same as PatientDataTable risk_score column */}
+                   {/* Pain score with bar - same as PatientDataTable risk_score column */}
                    <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
                      <span style={{ fontSize:14, fontWeight:900, color:sev.color, fontVariantNumeric:'tabular-nums' }}>
-                       {s.pain_level ?? '—'}<span style={{ fontSize:11, fontWeight:500, color:'var(--text-400)' }}>/10</span>
+                       {s.pain_level ?? '-'}<span style={{ fontSize:11, fontWeight:500, color:'var(--text-400)' }}>/10</span>
                      </span>
                      <div style={{ width:44, height:4, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
                        <div style={{ height:'100%', width:`${barPct}%`, background:barColor, borderRadius:99 }}/>
                      </div>
                    </div>
 
-                   {/* Severity badge — same badge-* classes as PatientDataTable RiskBadge */}
+                   {/* Severity badge - same badge-* classes as PatientDataTable RiskBadge */}
                    <span className={badgeClass} style={{ display:'inline-block', width:'fit-content' }}>{sev.label}</span>
 
                    {/* Symptom flags */}
@@ -255,10 +255,10 @@ export default function SymptomsDetail() {
 
                    {/* Notes */}
                    <span style={{ fontSize:11, color:'var(--text-500)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
-                     {s.notes || '—'}
+                     {s.notes || '-'}
                    </span>
 
-                   {/* AI Explain — labeled button, same style as VitalsDetail */}
+                   {/* AI Explain - labeled button, same style as VitalsDetail */}
                    <button onClick={() => explainSymptom('pain', s.pain_level)} disabled={loadingAI}
                      style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', borderRadius:8, background:'#f5f3ff', border:'1px solid #e9d5ff', cursor:'pointer', fontSize:11, fontWeight:700, color:'#7c3aed', opacity:loadingAI?0.5:1, whiteSpace:'nowrap', transition:'all 0.12s' }}
                      onMouseEnter={e=>{e.currentTarget.style.background='#ede9fe';}}

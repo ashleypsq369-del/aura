@@ -1,11 +1,11 @@
 // @ts-nocheck
 /**
- * deck — a pitch deck that follows docs/content-structures/slides-deck.md.
+ * deck - a pitch deck that follows docs/content-structures/slides-deck.md.
  *
  * It adopts the §1-A pitch skeleton (Sequoia / Kawasaki lineage) verbatim:
  *   Cover · Problem · Solution · Why now · Market · Product ·
  *   Business model · Competition & Moat · Traction · Team · Ask
- * — one idea per slide, big type, minimal words.
+ * - one idea per slide, big type, minimal words.
  *
  * Every slide title is an *assertion headline* (§3 「标题即论点」): a full
  * conclusion sentence, never a section label, so reading only the titles tells
@@ -26,8 +26,8 @@
  * so type can scale against both axes, and every slide body is wrapped in a
  * `.f-fit` layer that the runtime shrinks-to-fit: after layout it measures the
  * body and, if the content is taller/wider than the fixed 16:9 frame, applies a
- * single downward `transform: scale()` about the centre so NO brand copy — of
- * any length, at any viewport — can ever be clipped, truncated, or spill the
+ * single downward `transform: scale()` about the centre so NO brand copy - of
+ * any length, at any viewport - can ever be clipped, truncated, or spill the
  * frame. The deterministic output is audited at build time by
  * `auditDeckLayout` (apps/daemon/src/brands/engine/deck-layout-guard.ts).
  */
@@ -115,7 +115,7 @@ const DECK_CSS = `
       .s-metric .l { margin-top: 1.2cqi; font-size: 1.5cqi; line-height: 1.35; color: var(--brand-color-text-tertiary); }
       .frame--accent .s-metric .l { color: rgba(255,255,255,0.78); }
 
-      /* market funnel bars — value labels live OUTSIDE the proportional track in
+      /* market funnel bars - value labels live OUTSIDE the proportional track in
          their own auto column, so a long label can never wrap/clip the bar. */
       .s-bars { display: flex; flex-direction: column; gap: 1.8cqi; margin-top: 3.4cqi; max-width: 82cqi; }
       .s-bar { display: grid; grid-template-columns: 12cqi 1fr auto; align-items: center; gap: 2cqi; }
@@ -197,7 +197,7 @@ const DECK_CSS = `
 
 const DECK_SCRIPT = `
 (function () {
-  /* od-deck-fit: shrink-to-fit guarantee — keep every slide's content inside
+  /* od-deck-fit: shrink-to-fit guarantee - keep every slide's content inside
      the fixed 16:9 frame so brand copy of any length never clips. */
   function fitFrame(body) {
     var fit = body.querySelector('.f-fit');
@@ -294,7 +294,7 @@ function leadAdj(brand: Brand, fallback = "purposeful"): string {
   return cap(a || fallback);
 }
 
-/** A short noun for the brand's category — derived, never invented copy. */
+/** A short noun for the brand's category - derived, never invented copy. */
 function categoryWord(brand: Brand): string {
   const v = brand.voice.vocabulary.use.map((w) => w.trim()).filter((w) => w.length > 2)[0];
   return v ? v.toLowerCase() : "this category";
@@ -333,7 +333,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
 
   // ── slide content (titles are assertion headlines, one idea each) ──────────
   const slides: Slide[] = [
-    // 1 — COVER (accent, most confident page)
+    // 1 - COVER (accent, most confident page)
     {
       kicker: adjLine,
       variant: "accent",
@@ -342,7 +342,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           <p class="s-lede" style="font-size:2.6cqi;color:rgba(255,255,255,0.92);">${esc(tagline)}</p>`,
     },
 
-    // 2 — PROBLEM (assertion: the pain is real, big, costly)
+    // 2 - PROBLEM (assertion: the pain is real, big, costly)
     {
       kicker: "The problem",
       variant: "surface",
@@ -358,7 +358,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
               },
               {
                 title: "Every loop costs a day",
-                body: "Iteration stalls in coordination — approvals, exports, re-dos — long before anything ships.",
+                body: "Iteration stalls in coordination - approvals, exports, re-dos - long before anything ships.",
                 icon: ICON.x,
               },
               {
@@ -371,7 +371,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           )}`,
     },
 
-    // 3 — SOLUTION (assertion: one different way to solve it)
+    // 3 - SOLUTION (assertion: one different way to solve it)
     {
       kicker: "The solution",
       body: `<span class="s-kicker">The solution</span>
@@ -386,20 +386,20 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 4 — WHY NOW (golden-line slide, §3 金句页 — inflection point)
+    // 4 - WHY NOW (golden-line slide, §3 金句页 - inflection point)
     {
       kicker: "Why now",
       body: `<span class="s-kicker">Why now</span>
           <p class="s-quote">The shift toward <span class="s-accent">${esc(
             leadAdj(brand).toLowerCase(),
-          )}</span>, accountable ${esc(category)} is happening now — and the teams that move first set the standard.</p>
+          )}</span>, accountable ${esc(category)} is happening now - and the teams that move first set the standard.</p>
           <div class="s-byline">
             <span class="av">${esc(initials(name))}</span>
             <div><div class="n">${esc(name)}</div><div class="r">${esc(host)}</div></div>
           </div>`,
     },
 
-    // 5 — MARKET (assertion: the pool is big enough to bet on)
+    // 5 - MARKET (assertion: the pool is big enough to bet on)
     {
       kicker: "Market",
       variant: "surface",
@@ -410,7 +410,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 6 — PRODUCT (assertion: it exists and it's good — div/SVG wireframe)
+    // 6 - PRODUCT (assertion: it exists and it's good - div/SVG wireframe)
     {
       kicker: "Product",
       body: `<span class="s-kicker">Product</span>
@@ -424,7 +424,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 7 — BUSINESS MODEL (assertion: the unit economics work)
+    // 7 - BUSINESS MODEL (assertion: the unit economics work)
     {
       kicker: "Business model",
       variant: "surface",
@@ -449,7 +449,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 8 — COMPETITION & MOAT (assertion: we're different, with a moat)
+    // 8 - COMPETITION & MOAT (assertion: we're different, with a moat)
     {
       kicker: "Competition & moat",
       body: `<span class="s-kicker">Competition &amp; moat</span>
@@ -466,12 +466,12 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 9 — TRACTION (accent, strongest page — §1-A note: most valuable slide)
+    // 9 - TRACTION (accent, strongest page - §1-A note: most valuable slide)
     {
       kicker: "Traction",
       variant: "accent",
       body: `<span class="s-kicker">Traction</span>
-          <h2 class="s-title" style="font-size:5cqi;">People already want this — and the line is going up.</h2>
+          <h2 class="s-title" style="font-size:5cqi;">People already want this - and the line is going up.</h2>
           <div class="s-grid" style="grid-template-columns:repeat(4,1fr);margin-top:5cqi;">
             ${stats
               .map(
@@ -481,10 +481,10 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
               )
               .join("\n            ")}
           </div>
-          <p class="s-lede" style="color:rgba(255,255,255,0.78);font-size:1.5cqi;max-width:64cqi;margin-top:3.4cqi;">Illustrative figures — replace with your live numbers before pitching.</p>`,
+          <p class="s-lede" style="color:rgba(255,255,255,0.78);font-size:1.5cqi;max-width:64cqi;margin-top:3.4cqi;">Illustrative figures - replace with your live numbers before pitching.</p>`,
     },
 
-    // 10 — TEAM (assertion: this team can pull it off)
+    // 10 - TEAM (assertion: this team can pull it off)
     {
       kicker: "Team",
       variant: "surface",
@@ -503,7 +503,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
           </div>`,
     },
 
-    // 11 — THE ASK (accent, unambiguous close — §2 诉求页)
+    // 11 - THE ASK (accent, unambiguous close - §2 诉求页)
     {
       kicker: "The ask",
       variant: "accent",
@@ -516,7 +516,7 @@ export function renderDeck(brand: Brand, tokens: DesignTokens): string {
               .map(
                 (a) => `<div class="item"><span class="b">${ICON.check}</span><span><span class="k">${esc(
                   a.k,
-                )}</span> — ${esc(a.v)}</span></div>`,
+                )}</span> - ${esc(a.v)}</span></div>`,
               )
               .join("\n            ")}
           </div>
@@ -561,7 +561,7 @@ ${slideHtml}
     </div>`;
 
   return document({
-    title: `${name} — Pitch deck`,
+    title: `${name} - Pitch deck`,
     tokens,
     brand,
     body,
@@ -579,7 +579,7 @@ ${slideHtml}
  */
 function taglineClause(tagline: string, name: string): string {
   let t = tagline.trim().replace(/\.$/, "");
-  const lead = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b[\\s—–:-]*`, "i");
+  const lead = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b[\\s--:-]*`, "i");
   t = t.replace(lead, "").trim();
   // If it already starts with a verb-ish lowercase clause, keep it; otherwise
   // fold it into a "is the way to …" frame so the sentence still closes.
@@ -589,7 +589,7 @@ function taglineClause(tagline: string, name: string): string {
   return `is how teams get ${t.charAt(0).toLowerCase()}${t.slice(1)}`;
 }
 
-/** TAM/SAM/SOM funnel as themed bars — illustrative, explicitly labelled. */
+/** TAM/SAM/SOM funnel as themed bars - illustrative, explicitly labelled. */
 function marketBars(): string {
   const rows: Array<{ tag: string; w: number; v: string; color: string }> = [
     { tag: "TAM", w: 100, v: "$48B total market", color: `var(--brand-color-primary)` },
@@ -610,7 +610,7 @@ function competeAxes(): [string, string, string] {
   return ["Built for teams", "Fast to value", "On-brand by default"];
 }
 
-/** Competition rows: incumbents (no) vs. us (yes) — §2 「维度要诚实」. */
+/** Competition rows: incumbents (no) vs. us (yes) - §2 「维度要诚实」. */
 function competeRows(name: string, partners: string[]): string {
   const yes = `<span class="mk yes">${ICON.check}</span>`;
   const no = `<span class="mk no">${ICON.x}</span>`;
@@ -631,7 +631,7 @@ function competeRows(name: string, partners: string[]): string {
   ].join("\n            ");
 }
 
-/** The Ask: concrete ask / use-of-funds / milestone — never vague (§2). */
+/** The Ask: concrete ask / use-of-funds / milestone - never vague (§2). */
 function askItems(brand: Brand): Array<{ k: string; v: string }> {
   const adj = brand.voice.adjectives.map((s) => s.trim()).filter(Boolean)[0] ?? "category-defining";
   return [

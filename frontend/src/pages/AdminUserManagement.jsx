@@ -1,5 +1,5 @@
-/**
- * AdminUserManagement — User CRUD, role management, care-setting approvals
+﻿/**
+ * AdminUserManagement - User CRUD, role management, care-setting approvals
  * Route: /admin/users
  *
  * Built with: AdminPageShell + DataTable (TanStack) + Dialog (Radix) + StatusDot
@@ -46,7 +46,7 @@ const CARE_SETTINGS = {
   long_term_residential:'Long-Term Residential',
 };
 
-/* ─── Role badge — Services TYPE_META pill style ───────────────────── */
+/* ─── Role badge - Services TYPE_META pill style ───────────────────── */
 function RoleBadge({ role }) {
   const color = ROLE_COLOR[role] || '#64748b';
   return (
@@ -542,7 +542,7 @@ export default function AdminUserManagement() {
         const val = info.getValue();
         return val
           ? <span style={{ fontSize: 11, color: 'var(--c-teal)' }}>{CARE_SETTINGS[val] || val}</span>
-          : <span style={{ fontSize: 11, color: 'var(--text-400)' }}>—</span>;
+          : <span style={{ fontSize: 11, color: 'var(--text-400)' }}>-</span>;
       },
       meta: { thStyle: { width: 160 } },
     }),
@@ -690,7 +690,7 @@ export default function AdminUserManagement() {
                 <p style={{ fontSize: 12, color: '#92400e', flex: 1, minWidth: 0, margin: 0 }}>
                   <strong>{u.full_name}</strong> requests care setting →{' '}
                   <strong>{CARE_SETTINGS[u.care_setting_change_request] || u.care_setting_change_request}</strong>
-                  {u.care_setting_change_reason && ` — "${u.care_setting_change_reason}"`}
+                  {u.care_setting_change_reason && ` - "${u.care_setting_change_reason}"`}
                 </p>
                 <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                   <button onClick={() => approveSettingMut.mutate({ id: u.id, setting: u.care_setting_change_request })}

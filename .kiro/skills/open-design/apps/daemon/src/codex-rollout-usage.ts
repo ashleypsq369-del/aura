@@ -1,13 +1,13 @@
 // codex reports only a cumulative `turn.completed` usage on the exec/json
 // stream the daemon consumes, so the stream cannot tell us the cache-hit rate
-// of a turn's OPENING model call — the signal session-reuse moves. codex does
+// of a turn's OPENING model call - the signal session-reuse moves. codex does
 // record per-call usage in its rollout JSONL though: each `token_count`
 // `event_msg` carries `info.last_token_usage` (the most recent single call,
 // OpenAI-style where `input_tokens` INCLUDES the `cached_input_tokens` subset).
 //
 // A rollout accumulates every turn of a session, one `task_started` per turn.
 // The first `token_count` after the LAST `task_started` is the opening call of
-// the turn the daemon just finished — exactly the first-call number we want.
+// the turn the daemon just finished - exactly the first-call number we want.
 // This module is the pure extractor; locating the rollout file for a run lives
 // at the call site (it needs CODEX_HOME + the captured session id).
 
@@ -52,7 +52,7 @@ export function codexSessionIdFromRunEvents(events: unknown): string | null {
 }
 
 /**
- * Extract the first-call usage of the rollout's LAST turn — the turn the daemon
+ * Extract the first-call usage of the rollout's LAST turn - the turn the daemon
  * has just finished. Returns null when the rollout has no completed first call
  * to read (no `last_token_usage`, or an empty/zero-input call), so callers can
  * cleanly fall back to leaving the codex first-call fields unset rather than

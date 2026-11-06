@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { parseManifest } from '@open-design/plugin-runtime';
 
 // The pitch-deck example's prompt instructs the agent to "confirm three
-// things first" — name + one-line pitch, key traction numbers, ask + use
-// of funds — but until #2215 those facts existed only as English prose
+// things first" - name + one-line pitch, key traction numbers, ask + use
+// of funds - but until #2215 those facts existed only as English prose
 // inside the prompt. The platform's required-input gate at apply time
 // (apps/daemon/src/plugins/apply.ts:validateInputs) has nothing structured
 // to enforce in that shape, so an agent could route through od-default

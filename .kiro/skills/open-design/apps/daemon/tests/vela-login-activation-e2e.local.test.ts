@@ -9,7 +9,7 @@ import {
 
 // REAL end-to-end of the daemon capture seam: spawn an actual `vela login`
 // child, let it print the device-authorization URL/code to stdout, and assert
-// readVelaLoginStatus() surfaces them while in flight. Then cancel — we never
+// readVelaLoginStatus() surfaces them while in flight. Then cancel - we never
 // approve, so the user's existing login is untouched (vela only writes config
 // on approval). Skipped automatically where the vela CLI isn't installed.
 function shouldRunRealVelaE2E(): boolean {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ModalContent.jsx - Structured display building blocks for modals
  * ================================================================
  * Provides consistent, well-designed content patterns for all modal types:
@@ -14,7 +14,7 @@
  *
  * INFORMATION DISPLAY (read-only)
  * <InfoRow> - label / value pair in a row
- * <InfoGrid> - 2–3 column grid of InfoRows
+ * <InfoGrid> - 2-3 column grid of InfoRows
  * <InfoBadge> - colour-coded status pill
  * <InfoAlert> - contextual alert/callout box (info/warning/danger/success)
  * <InfoSection> - titled section with icon inside a modal body

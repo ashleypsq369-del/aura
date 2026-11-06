@@ -5,7 +5,7 @@ import {
 
 // These tests pin the rendering of metadata.promptTemplate inside the
 // composed system prompt. The composer is the trust boundary between the
-// user-editable template body in the New Project panel and the agent — if
+// user-editable template body in the New Project panel and the agent - if
 // it stops escaping fences, stops emitting attribution, or stops tagging
 // the kind, the agent's behavior changes silently. Cover the security
 // path (escape) plus the happy path and the empty / missing-field paths
@@ -29,7 +29,7 @@ const baseSummary = {
   },
 };
 
-describe('composeSystemPrompt — metadata.promptTemplate', () => {
+describe('composeSystemPrompt - metadata.promptTemplate', () => {
   it('pins the API batch-mode discovery skip before the normal discovery rules', () => {
     const out = composeSystemPrompt({
       metadata: {
@@ -38,7 +38,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
       },
     });
 
-    const overrideIdx = out.indexOf('Automated project mode — skip discovery form');
+    const overrideIdx = out.indexOf('Automated project mode - skip discovery form');
     const discoveryIdx = out.indexOf('# OD core directives');
     expect(overrideIdx).toBeGreaterThanOrEqual(0);
     expect(discoveryIdx).toBeGreaterThanOrEqual(0);
@@ -52,14 +52,14 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
       metadata: { kind: 'prototype' },
     });
 
-    const overrideIdx = out.indexOf('# Plan mode — editable document first');
+    const overrideIdx = out.indexOf('# Plan mode - editable document first');
     const discoveryIdx = out.indexOf('# OD core directives');
     expect(overrideIdx).toBeGreaterThanOrEqual(0);
     expect(discoveryIdx).toBeGreaterThanOrEqual(0);
     expect(overrideIdx).toBeLessThan(discoveryIdx);
     expect(out).toContain('do NOT emit `<question-form id="discovery">`');
     expect(out).toContain('`<question-form id="task-type">`');
-    expect(out).toContain('Quick brief — 30 seconds');
+    expect(out).toContain('Quick brief - 30 seconds');
     expect(out).toContain('<question-form id="plan-brief">');
     expect(out).toContain('plan-document-specific questions');
   });
@@ -160,7 +160,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
     });
 
     // The composer wraps the body in its own ```text fence. The two
-    // fences below are the open + close it emits — there must be no
+    // fences below are the open + close it emits - there must be no
     // *third* triple-backtick run inside the body, which would be the
     // escape sequence we're guarding against.
     const fenceCount = (out.match(/```/g) ?? []).length;
@@ -193,7 +193,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
     expect(out).toContain('truncated');
     // Find the rendered prompt body inside the ```text fence and assert
     // its length is at most the declared 4000-char cap plus the small
-    // truncation marker. We compare against the body specifically — the
+    // truncation marker. We compare against the body specifically - the
     // composed system prompt as a whole is dominated by the discovery /
     // identity / media contract sections, so a total-length check would
     // be drowned out and brittle.
@@ -222,7 +222,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
     expect(out).not.toContain('Reference prompt template');
     // The summary metadata header line is also gated on a non-empty
     // prompt, so the agent doesn't see a half-rendered reference. The
-    // bullet uses bold markdown (`**referenceTemplate**:`) — assert on
+    // bullet uses bold markdown (`**referenceTemplate**:`) - assert on
     // that exact form to avoid colliding with prose elsewhere in the
     // base prompt that may casually mention "reference template".
     expect(out).not.toContain('**referenceTemplate**:');
@@ -234,7 +234,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
         kind: 'prototype',
         fidelity: 'high-fidelity',
         // Even if a stale promptTemplate is present, kind=prototype
-        // shouldn't render it — the agent for prototypes needs a design
+        // shouldn't render it - the agent for prototypes needs a design
         // system, not an image template.
         promptTemplate: { ...baseSummary },
       },
@@ -503,10 +503,10 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
     expect(out).toContain('<question-form id="elevenlabs-voice" title="Choose an ElevenLabs voice">');
     expect(out).toContain('"type": "select"');
     expect(out).toContain('"allowCustom": false');
-    expect(out).toContain('"label": "Rachel — american · female"');
+    expect(out).toContain('"label": "Rachel - american · female"');
     expect(out).toContain('"value": "21m00Tcm4TlvDq8ikWAM"');
-    expect(out).toContain('"label": "Adam — american · male"');
-    expect(out).toContain('"label": "Voice 50 — mandarin"');
+    expect(out).toContain('"label": "Adam - american · male"');
+    expect(out).toContain('"label": "Voice 50 - mandarin"');
     expect(out).toContain('"value": "voice-50"');
     expect(out).not.toContain('showing the first 12');
     expect(out).toContain('If the provider default can safely satisfy the brief');
@@ -514,7 +514,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
       'Only when voice selection would materially change the requested result',
     );
     expect(out).toContain(
-      'Conditional template — do not emit unless the voice-selection policy above requires clarification',
+      'Conditional template - do not emit unless the voice-selection policy above requires clarification',
     );
   });
 
@@ -522,16 +522,16 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
    * OPEND-2707(2026-09-08 裁决:「改彻底,提示词也改」)。
    *
    * 这道题是**全仓唯一**由仓库自己写出 `help` 的地方,而澄清卡已经不画每题副标题了
-   * —— 那句「the answer submits the matching Voice ID」写了直接丢掉。它偏偏是**有用
+   * -- 那句「the answer submits the matching Voice ID」写了直接丢掉。它偏偏是**有用
    * 信息**:选项的可见文字是音色描述,交上去的却是 `voice_id`,不说一声用户是看不出来的。
    *
    * 所以这里不是删掉,是**换承载位**:并进 `label`。`FormQuestion` 没有题级
-   * `description`(只有选项有),`placeholder` 归 "Choose a voice" 占着 ——
+   * `description`(只有选项有),`placeholder` 归 "Choose a voice" 占着 --
    * `label` 是唯一还会渲染、又属于这道题本身的位置。
    *
    * 顺带守住第二件事:这份 JSON 会被 `JSON.stringify` 整段拼进系统提示词,
    * 模型每次读到都等于看了一份「一道题可以长这样」的范例。留着 `"help"` 这个键,
-   * 撤发问就撤了个寂寞 —— 模型会照抄。
+   * 撤发问就撤了个寂寞 -- 模型会照抄。
    */
   it('把 Voice ID 那句话并进题面,提示词里不再出现 help 这个键', () => {
     const out = composeSystemPrompt({
@@ -546,7 +546,7 @@ describe('composeSystemPrompt — metadata.promptTemplate', () => {
       ],
     });
 
-    expect(out).toContain('"label": "Voice — the answer submits the matching Voice ID"');
+    expect(out).toContain('"label": "Voice - the answer submits the matching Voice ID"');
     expect(out).not.toContain('"help"');
     expect(out).not.toContain('Select a voice description');
     // 换承载位,不是丢信息:那句话的实质仍然在提示词里。

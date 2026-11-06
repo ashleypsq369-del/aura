@@ -218,11 +218,11 @@ export interface RegisterCollabContextRoutesDeps {
    */
   refreshWorkspaceDirectoryAfterMutation?: () => Promise<WorkspaceDirectoryFetchResult>;
   /**
-   * Collab realtime hop-2 — the workspace-scoped invalidation SSE seams. When
+   * Collab realtime hop-2 - the workspace-scoped invalidation SSE seams. When
    * both are provided the daemon registers `GET /api/workspace/events`; the route
    * adds its per-connection sink to `workspaceEventSinks` (fed by the
    * workspace-invalidation poller) and drops it on disconnect. Omitted in tests
-   * that do not exercise the stream — the route then 404s cleanly.
+   * that do not exercise the stream - the route then 404s cleanly.
    */
   createSseResponse?: (res: unknown, opts?: unknown) => {
     send: (event: string, data: unknown, id?: string | number | null) => boolean;
@@ -399,7 +399,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
   // opendesign:// invite deeplink and POSTs the nonce here. The daemon consumes
   // the one-time continuation on B with the signed-in vela session and returns
   // the resolved workspace context so the client can switch into the team
-  // workspace. The nonce is single-use — B enforces subject match + one consume.
+  // workspace. The nonce is single-use - B enforces subject match + one consume.
   app.post('/api/workspace/invite/continue', async (req, res) => {
     const body = req.body as { nonce?: unknown } | null;
     const nonce = body && typeof body.nonce === 'string' ? body.nonce : '';
@@ -427,7 +427,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
   // with the signed-in vela session. Every outcome is typed: a missing session
   // 401s, a missing workspace 409s, and B's per-invite failures (including a 404
   // when B's create endpoint is absent locally) come back as `ok: false` results
-  // — the endpoint never crashes on the backend being unavailable.
+  // - the endpoint never crashes on the backend being unavailable.
   app.post('/api/workspace/invite', async (req, res) => {
     const items = parseInviteCreateItems(req.body);
     if (items.length === 0) return res.status(400).json({ error: 'missing_invites' });
@@ -505,7 +505,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
   // `members-changed`, `workspace-context-changed`, `billing-changed`); the web
   // re-fetches the affected resource on receipt. Modeled on the project events
   // SSE (`/api/projects/:id/events`): one flat sink set, dropped on disconnect
-  // via `res.on('close')`. No event buffer — a disconnect gap is closed by the
+  // via `res.on('close')`. No event buffer - a disconnect gap is closed by the
   // client's reconnect snapshot re-fetch, not a server-side replay.
   const { createSseResponse, workspaceEventSinks } = deps;
   if (createSseResponse && workspaceEventSinks) {
@@ -644,7 +644,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
     // A directory row only authorizes a switch while it is a LIVE membership.
     // Matching on the id alone would let a listed-but-removed membership (or a
     // deleted workspace) through, and this entry is also what gets synthesized
-    // into the response below — so an unfiltered match could describe a
+    // into the response below - so an unfiltered match could describe a
     // workspace the caller no longer holds. This matches the context provider's
     // directory-selection predicate.
     const selected = directory.find(
@@ -697,7 +697,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
       );
     }
     // Warm this exact workspace's cold caches before responding, but never
-    // await them — a slow upstream must not delay the tab-local selection.
+    // await them - a slow upstream must not delay the tab-local selection.
     deps.onWorkspaceSwitched?.(workspaceId);
     const body: WorkspaceActiveResponse = { activeWorkspaceId: workspaceId, context: resolved };
     void deps.observeWorkspace?.(req, resolved, workspaceGroupProperties(resolved));
@@ -781,7 +781,7 @@ export function registerCollabContextRoutes(app: Express, deps: RegisterCollabCo
   //   independently scoped v2 wallet response.
   //
   // The URL is the selection source. Authorization is an independent
-  // membership lookup — never daemon-global active/current state — so two
+  // membership lookup - never daemon-global active/current state - so two
   // clients can address different workspaces without switching each other.
   // Account metadata and workspace money remain independently nullable.
   app.put('/api/workspace/billing/interests/:clientId', async (req, res) => {

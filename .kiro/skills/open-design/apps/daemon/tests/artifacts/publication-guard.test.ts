@@ -34,7 +34,7 @@ const markdownManifest = {
   metadata: { identifier: 'pitch-notes' },
 };
 
-describe('artifact publication guard — placeholder detection', () => {
+describe('artifact publication guard - placeholder detection', () => {
   it('finds every shipped placeholder when present in generated HTML', () => {
     const html = `
       <!doctype html>
@@ -99,7 +99,7 @@ describe('artifact publication guard — placeholder detection', () => {
   });
 });
 
-describe('artifact publication guard — wired into writeProjectFile', () => {
+describe('artifact publication guard - wired into writeProjectFile', () => {
   it('rejects html artifacts that still contain pitch-deck placeholders', async () => {
     const projectsRoot = await mkdtemp(path.join(tmpdir(), 'od-publication-guard-html-'));
     try {

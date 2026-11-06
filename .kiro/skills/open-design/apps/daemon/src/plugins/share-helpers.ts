@@ -277,7 +277,7 @@ export function reconcileAssistantMessageOnRunEnd(
       // client often writes `canceled` first (it stops its own stream); the
       // origin would then never land. It is written unconditionally for a
       // cancelled run because it is the daemon's own answer to a question the
-      // client cannot answer for itself — `runStatus: 'canceled'` alone cannot
+      // client cannot answer for itself - `runStatus: 'canceled'` alone cannot
       // tell a user's Stop from a shutdown or project cleanup, and the pause
       // line in chat treats `user_stop` as proof.
       if (finalStatus.status === 'canceled' && finalStatus.cancelOrigin) {

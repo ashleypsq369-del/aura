@@ -1,14 +1,14 @@
 // @ts-nocheck
 /**
- * poster — a 3:4 print-style sheet (~900×1200) built to the content-structure
+ * poster - a 3:4 print-style sheet (~900×1200) built to the content-structure
  * playbook in docs/content-structures/poster.md: 3 秒拦住人,传达一件事.
  *
  * Two variants share one beautiful slot template:
- *   • Statement (default) — a single brand-voice 金句 IS the focal. Huge headline
+ *   • Statement (default) - a single brand-voice 金句 IS the focal. Huge headline
  *     on the upper rule-of-thirds line, generous whitespace, logo as a small
  *     confident signature at the bottom. Accent shows up exactly once, on the
  *     focal. This is the default because every brand has a voice to fill it.
- *   • Event — kept for brands whose copy implies a gathering/launch/release.
+ *   • Event - kept for brands whose copy implies a gathering/launch/release.
  *     Adds the 5W key-facts grid (What / When / Where / Who / How), each its own
  *     aligned block, plus one clear CTA (scan / short link) with a line-drawn
  *     code motif. Still one focal, still a signature logo.
@@ -56,7 +56,7 @@ const POSTER_CSS = `
         grid-template-rows: auto 1fr auto;
         padding: 9cqi;
       }
-      /* hairline frame inset — quiet print-mark, not a banner */
+      /* hairline frame inset - quiet print-mark, not a banner */
       .poster::after {
         content: "";
         position: absolute; inset: 4cqi;
@@ -112,7 +112,7 @@ const POSTER_CSS = `
       /* When + Where are the most-looked-up facts → give them more weight */
       .p-fact--lead .p-fact-v { font-size: 4cqi; }
 
-      /* CTA block — one action, scan / short link, with a line-drawn code mark */
+      /* CTA block - one action, scan / short link, with a line-drawn code mark */
       .p-cta { display: flex; align-items: center; gap: 3.4cqi; padding-top: 4cqi; border-top: var(--brand-line-width) solid var(--brand-color-border-secondary); }
       .p-cta-copy { min-width: 0; }
       .p-cta-action { font-family: var(--display-family); font-weight: var(--brand-font-weight-strong); font-size: 3cqi; color: var(--brand-color-text); margin: 0 0 0.6cqi; letter-spacing: -0.01em; }
@@ -129,7 +129,7 @@ function kickerLine(brand: Brand): string {
 }
 
 /**
- * The 金句 — a single brand-voice line that IS the focal. Prefer the tagline
+ * The 金句 - a single brand-voice line that IS the focal. Prefer the tagline
  * (the brand's own voice); fall back to the first messaging pillar's title, then
  * to a confident line built from the brand name. Never a stock ad slogan.
  */
@@ -171,7 +171,7 @@ function focalMarkup(headline: string): string {
 /**
  * Heuristic: does this brand's copy imply an actual EVENT (a gathering, launch,
  * release, conference …)? Only then is the 5W Event layout the right structure;
- * otherwise the Statement 金句 is the honest default. Deterministic — pure text
+ * otherwise the Statement 金句 is the honest default. Deterministic - pure text
  * scan, no Date/random.
  */
 function impliesEvent(brand: Brand): boolean {
@@ -193,7 +193,7 @@ function impliesEvent(brand: Brand): boolean {
 /**
  * Build the 5W facts for an Event poster from brand fields, with production
  * fallbacks so the grid is always full and aligned. We never invent a real
- * date/venue out of thin air — fallbacks read as deliberate placeholders the
+ * date/venue out of thin air - fallbacks read as deliberate placeholders the
  * brand would fill in, not lorem ipsum.
  */
 function eventFacts(brand: Brand): Array<{ k: string; v: string; lead?: boolean }> {
@@ -215,13 +215,13 @@ function eventFacts(brand: Brand): Array<{ k: string; v: string; lead?: boolean 
 // ─────────────────────────── line-drawn code motif ──────────────────────────
 
 /**
- * A deterministic, line-drawn "scan me" mark (not a real, scannable QR — the
+ * A deterministic, line-drawn "scan me" mark (not a real, scannable QR - the
  * engine has no link to encode, and the doc only needs the CTA to *read* as a
  * code). Pattern is fixed (no random), themed via --brand-color-text so it
  * inverts with the theme. Generous quiet zone via the surrounding padding.
  */
 function codeMotif(): string {
-  // 7×7 fixed bit grid with three finder-style corners — reads as a code.
+  // 7×7 fixed bit grid with three finder-style corners - reads as a code.
   const ROWS = [
     "1111111",
     "1001011",
@@ -256,7 +256,7 @@ function renderStatement(brand: Brand): string {
 
   // Focal size adapts to length so a long 金句 never clips the canvas while a
   // short one still fills the room (the rule-of-thirds focal). Three buckets,
-  // all within the 90–160px-equivalent band at export size.
+  // all within the 90-160px-equivalent band at export size.
   const len = headline.length;
   const focalSize = len <= 18 ? "16.5cqi" : len <= 34 ? "12.5cqi" : len <= 60 ? "9.5cqi" : "7.4cqi";
 
@@ -350,7 +350,7 @@ ${impliesEvent(brand) ? renderEvent(brand) : renderStatement(brand)}
     </div>`;
 
   return document({
-    title: `${brand.name} — Poster`,
+    title: `${brand.name} - Poster`,
     tokens,
     brand,
     body,

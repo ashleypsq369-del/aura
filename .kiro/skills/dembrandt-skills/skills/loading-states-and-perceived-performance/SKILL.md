@@ -65,7 +65,7 @@ Users don't mind waiting as much if they understand *what* they are waiting for 
 | Wait Duration | Best Pattern | Use for |
 |---|---|---|
 | **Short (< 1s)** | **Inline Spinner / Loader** | Button actions, small updates, quick data fetches |
-| **Medium (1s – 3s)** | **Skeleton Screen** | Cards, lists, dashboards, profile pages |
+| **Medium (1s - 3s)** | **Skeleton Screen** | Cards, lists, dashboards, profile pages |
 | **Long (> 3s)** | **Determinate Progress Bar** | File uploads, complex exports, heavy processing |
 | **Full Page** | **Staggered Entry / Animated Sections** | Initial app load, hero sections, immersive transitions |
 
@@ -76,7 +76,7 @@ Users don't mind waiting as much if they understand *what* they are waiting for 
 Use spinners for small, contained actions where the layout doesn't change significantly.
 
 - **Button Spinners:** Replace button text or sit alongside it. The button should enter a `disabled` state to prevent double-submissions.
-- **Micro-Loaders:** A small 16–24px circle for inline updates (e.g., saving a single field).
+- **Micro-Loaders:** A small 16-24px circle for inline updates (e.g., saving a single field).
 - **Animation Tip:** A "spring-loaded" rotation (easing in and out) feels more premium than a constant linear rotation.
 
 ```css
@@ -120,7 +120,7 @@ A subtle, moving gradient that travels across the skeleton elements.
 ### Rules for Skeletons
 - **Match the shape:** If the final content is a round avatar, use a round skeleton. If it's a 2-line heading, use two bars of varying widths.
 - **Stay Recessive:** Skeletons should use your most subtle grey (`--color-grey-100` or `grey-50`). They should not draw focus.
-- **Fade into Reality:** When data arrives, fade the actual content in over the skeleton (150–200ms) rather than snapping.
+- **Fade into Reality:** When data arrives, fade the actual content in over the skeleton (150-200ms) rather than snapping.
 
 ---
 
@@ -155,15 +155,15 @@ For hero sections, you might use a more complex animation:
 
 ---
 
-## Load in Priority Order — and Prefetch What's Next
+## Load in Priority Order - and Prefetch What's Next
 
 Don't wait for everything before showing anything. Load in the order of **value to the user**, so the thing they came for appears first and the rest fills in around it. This is both a perceived-performance win and a code-efficiency one: you fetch and render less up front.
 
-- **First, the highest-value content** — the key figure, the primary record, the above-the-fold answer. Render it the moment it's ready.
-- **Then the next tier, then the next** — secondary panels, related lists, and below-the-fold sections stream in behind it (skeletons hold their space so nothing shifts — see the skeleton section above).
+- **First, the highest-value content** - the key figure, the primary record, the above-the-fold answer. Render it the moment it's ready.
+- **Then the next tier, then the next** - secondary panels, related lists, and below-the-fold sections stream in behind it (skeletons hold their space so nothing shifts - see the skeleton section above).
 - **Fetch only what the current view needs.** Defer data for tabs, drawers, and off-screen sections until they're opened, rather than loading the whole page's worth of data at once.
 
-**Prefetch the predictable next step** — next page, a hovered row's detail, the next wizard step — in the background so it's instant. Don't speculatively load everything; only where there's an obvious next move.
+**Prefetch the predictable next step** - next page, a hovered row's detail, the next wizard step - in the background so it's instant. Don't speculatively load everything; only where there's an obvious next move.
 
 ## Advanced: Optimistic UI
 
@@ -223,12 +223,12 @@ A loading state buys patience. It does not buy time, and it cannot rescue a requ
 - [ ] Does the skeleton screen match the physical layout of the incoming content?
 - [ ] Is there a subtle shimmer animation on skeletons to signal "active loading"?
 - [ ] Are buttons disabled during loading to prevent duplicate actions?
-- [ ] Does content fade in over skeletons (150–200ms) rather than blinking into existence?
+- [ ] Does content fade in over skeletons (150-200ms) rather than blinking into existence?
 - [ ] For full-page loads, is a staggered entry used to guide the eye?
 - [ ] Is `prefers-reduced-motion` respected for all loading animations?
 - [ ] In "Optimistic UI" moments, is there a clear rollback path if the action fails?
 - [ ] Does content load in priority order (highest-value first, rest streaming in), fetching only what the current view needs rather than everything up front?
-- [ ] Where the next step is predictable, is it prefetched so it feels instant — without speculatively loading everything?
+- [ ] Where the next step is predictable, is it prefetched so it feels instant - without speculatively loading everything?
 
 ## Common Anti-Patterns
 

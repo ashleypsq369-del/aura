@@ -1,5 +1,5 @@
-/**
- * BriefPainInventoryForm.jsx — Comprehensive Pain Assessment
+﻿/**
+ * BriefPainInventoryForm.jsx - Comprehensive Pain Assessment
  * Redesigned: PageHeader + segmented sliders + tag toggles
  */
 import { useState } from 'react';
@@ -54,7 +54,7 @@ function PainSlider({ label, value, onChange }) {
           aria-label={label} />
       </div>
       <div className="flex justify-between text-[10px] text-[var(--text-400)] mt-1">
-        <span>0 — None</span><span>10 — Worst</span>
+        <span>0 - None</span><span>10 - Worst</span>
       </div>
     </div>
   );
@@ -94,7 +94,7 @@ export default function BriefPainInventoryForm() {
       return apiClient.post('/api/assessments/pain', data);
     },
     onSuccess: (res) => {
-      if (res.offline) toast.success('Saved offline — will sync when online', { duration: 5000 });
+      if (res.offline) toast.success('Saved offline - will sync when online', { duration: 5000 });
       else {
         toast.success('Pain assessment saved');
         if (res.data.alerts_generated?.length > 0)
@@ -140,7 +140,7 @@ export default function BriefPainInventoryForm() {
         </button>
         {!navigator.onLine && (
           <span className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-xs font-semibold text-amber-700">
-            <WifiOff size={13} /> Offline — will sync
+            <WifiOff size={13} /> Offline - will sync
           </span>
         )}
       </PageHeader>
@@ -249,7 +249,7 @@ export default function BriefPainInventoryForm() {
                 onChange={e => setMedicationEffectiveness(parseInt(e.target.value))}
                 className="w-full accent-teal-600" aria-label="Medication effectiveness" />
               <div className="flex justify-between text-[10px] text-[var(--text-400)] mt-0.5">
-                <span>0% — No relief</span><span>100% — Complete relief</span>
+                <span>0% - No relief</span><span>100% - Complete relief</span>
               </div>
             </div>
           </div>

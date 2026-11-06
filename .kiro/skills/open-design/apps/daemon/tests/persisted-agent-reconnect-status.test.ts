@@ -9,7 +9,7 @@ import { daemonAgentPayloadToPersistedAgentEvent } from '../src/runtimes/chat-ru
  * Recorded case (isolated data dir `~/.od-chatpanel-preview`, conversation
  * `f75a2c50-…`): codex's connection to the model dropped mid-turn, the daemon
  * surfaced one `Reconnecting... 1/5`, and after the reconnect the model wrote
- * its whole conclusion a second time — differently worded, because it was
+ * its whole conclusion a second time - differently worded, because it was
  * re-generated rather than replayed. The transcript therefore holds two
  * conclusions.
  *
@@ -30,9 +30,9 @@ describe('重连状态落库', () => {
   });
 
   /**
-   * The guard on the other side. The labels below are polling-shaped — they
+   * The guard on the other side. The labels below are polling-shaped - they
    * describe a state, fire repeatedly, and are superseded by whatever comes
-   * next — so replaying them adds empty rows and nothing else. Whoever widens
+   * next - so replaying them adds empty rows and nothing else. Whoever widens
    * the reconnect change must not take these with it.
    */
   test('真正的轮询噪音仍然不落库', () => {

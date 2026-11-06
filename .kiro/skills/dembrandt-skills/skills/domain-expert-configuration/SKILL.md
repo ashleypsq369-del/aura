@@ -1,6 +1,6 @@
 ---
 name: domain-expert-configuration
-description: Settings for experts who are not developers — domain language, sane defaults, grouping by professional concept. Use when designing settings panels, solver configuration or constraint editors.
+description: Settings for experts who are not developers - domain language, sane defaults, grouping by professional concept. Use when designing settings panels, solver configuration or constraint editors.
 metadata:
   priority: 6
   pathPatterns:
@@ -50,9 +50,9 @@ retrieval:
 
 # Domain Expert Configuration
 
-A domain expert configuration UI exposes the parameters of a complex system — an optimisation algorithm, a planning engine, a simulation — to users who understand the problem domain deeply but have no knowledge of the system's internals.
+A domain expert configuration UI exposes the parameters of a complex system - an optimisation algorithm, a planning engine, a simulation - to users who understand the problem domain deeply but have no knowledge of the system's internals.
 
-The challenge: the system's parameters are defined in technical terms (weights, thresholds, flags, tolerances). The user thinks in domain terms (how long to wait, when to retry, how to group results). The UI must translate between these two vocabularies — always favouring the user's language.
+The challenge: the system's parameters are defined in technical terms (weights, thresholds, flags, tolerances). The user thinks in domain terms (how long to wait, when to retry, how to group results). The UI must translate between these two vocabularies - always favouring the user's language.
 
 ---
 
@@ -74,7 +74,7 @@ If you cannot write a domain label for a parameter, question whether the user sh
 
 ## Grouping by Domain Concept
 
-Parameters should be grouped by the aspect of the real-world problem they control — not by their technical category (booleans together, numbers together) and not alphabetically.
+Parameters should be grouped by the aspect of the real-world problem they control - not by their technical category (booleans together, numbers together) and not alphabetically.
 
 A processing tool might group as:
 

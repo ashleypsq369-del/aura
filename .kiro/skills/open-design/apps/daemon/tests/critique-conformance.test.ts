@@ -303,7 +303,7 @@ describe('adapter conformance harness (Phase 10)', () => {
     // closed in round 2.
     async function* incompleteShippingRound(): AsyncIterable<string> {
       yield '<CRITIQUE_RUN version="1" maxRounds="2" threshold="0.1" scale="10">\n';
-      // Round 1 — all five close.
+      // Round 1 - all five close.
       yield '  <ROUND n="1">\n';
       yield '    <PANELIST role="designer">\n';
       yield '      <ARTIFACT mime="text/html"><![CDATA[<p>v1</p>]]></ARTIFACT>\n';
@@ -316,7 +316,7 @@ describe('adapter conformance harness (Phase 10)', () => {
       yield '      <REASON>more work</REASON>\n';
       yield '    </ROUND_END>\n';
       yield '  </ROUND>\n';
-      // Round 2 — only designer + critic close (the cumulative bug
+      // Round 2 - only designer + critic close (the cumulative bug
       // would let this slide; the fix catches it).
       yield '  <ROUND n="2">\n';
       yield '    <PANELIST role="designer">\n';

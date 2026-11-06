@@ -1,5 +1,5 @@
 // Motion reference pack: turns a user's reference video (an attached project
-// file or a link) into measured facts the agent can rebuild a film from —
+// file or a link) into measured facts the agent can rebuild a film from -
 // duration, size, fps, audio presence, shot cuts, a frame at every shot and a
 // contact sheet. The agent reads these files; nothing here interprets the film.
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';

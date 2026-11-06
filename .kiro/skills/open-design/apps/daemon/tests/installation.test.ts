@@ -20,8 +20,8 @@ import {
  * return that id so the next event ships with the same distinct_id.
  *
  * Two directories per test:
- *   - `dataDir`     — simulates `<namespace>/data/`
- *   - `installDir`  — simulates the channel root (`<userData>/`)
+ *   - `dataDir`     - simulates `<namespace>/data/`
+ *   - `installDir`  - simulates the channel root (`<userData>/`)
  * They live as siblings so we can independently reset either side.
  */
 
@@ -67,7 +67,7 @@ describe('installation.json migration', () => {
       JSON.stringify({ installationId: 'legacy-id-8' }),
       'utf8',
     );
-    // No installation.json yet — readAppConfig should backfill it.
+    // No installation.json yet - readAppConfig should backfill it.
     await readAppConfig(dataDir);
     const persisted = await readInstallationFile(installDir);
     expect(persisted.installationId).toBe('legacy-id-8');
@@ -75,7 +75,7 @@ describe('installation.json migration', () => {
 
   it('serves installation.json even when app-config.json was wiped (namespace churn / clean reinstall)', async () => {
     await writeInstallationFile(installDir, { installationId: 'stable-id' });
-    // dataDir is empty — no app-config.json
+    // dataDir is empty - no app-config.json
     const cfg = await readAppConfig(dataDir);
     expect(cfg.installationId).toBe('stable-id');
   });
@@ -130,7 +130,7 @@ describe('installation.json migration', () => {
   });
 
   it('clears installation.json when "Delete my data" sets installationId to null', async () => {
-    // First write a real id — both files now hold it.
+    // First write a real id - both files now hold it.
     await writeAppConfig(dataDir, { installationId: 'before-delete' });
     expect((await readInstallationFile(installDir)).installationId).toBe('before-delete');
     // "Delete my data" path: PUT /api/app-config with installationId: null.

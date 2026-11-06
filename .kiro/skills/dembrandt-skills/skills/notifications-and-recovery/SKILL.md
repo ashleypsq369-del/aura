@@ -55,7 +55,7 @@ retrieval:
 
 # Notifications and Recovery
 
-When something changes — success, failure, or anything in between — the user must know. And when something goes wrong, they must always have a path forward. A notification without a recovery action is just an apology.
+When something changes - success, failure, or anything in between - the user must know. And when something goes wrong, they must always have a path forward. A notification without a recovery action is just an apology.
 
 ---
 
@@ -63,13 +63,13 @@ When something changes — success, failure, or anything in between — the user
 
 | Pattern | When to use | Dismissal |
 |---|---|---|
-| **Toast** | Transient result of a user action (saved, sent, deleted) | Auto-dismiss 4–6s, manual close |
+| **Toast** | Transient result of a user action (saved, sent, deleted) | Auto-dismiss 4-6s, manual close |
 | **Inline error** | Field-level validation, form errors | Clears on correction |
 | **Alert banner** | Persistent issue affecting the current context | Manual dismiss or resolved state |
 | **Modal / dialog** | Blocking error requiring a decision before continuing | User action required |
-| **Empty state** | No data yet — guide the user to the first action | Replaced by the first item |
+| **Empty state** | No data yet - guide the user to the first action | Replaced by the first item |
 | **Skeleton / loading** | Async content pending | Replaced by content |
-| **In-place confirmation** | Inline edit saved, row updated, item toggled | Auto-clears after 2–3s |
+| **In-place confirmation** | Inline edit saved, row updated, item toggled | Auto-clears after 2-3s |
 
 ---
 
@@ -77,9 +77,9 @@ When something changes — success, failure, or anything in between — the user
 
 Toasts confirm that a background action completed. They appear without interrupting the user's flow.
 
-**Placement:** bottom-center or bottom-right. Never top-center — it competes with page content and navigation.
+**Placement:** bottom-center or bottom-right. Never top-center - it competes with page content and navigation.
 
-**Duration:** 4–6 seconds for information. Errors should persist until dismissed — the user needs time to read and act.
+**Duration:** 4-6 seconds for information. Errors should persist until dismissed - the user needs time to read and act.
 
 **Anatomy:**
 ```
@@ -88,7 +88,7 @@ Toasts confirm that a background action completed. They appear without interrupt
 
 - Icon: colour-coded (green ✓ success, red ✗ error, orange ⚠ warning, blue ℹ info)
 - Message: one sentence, plain language
-- Action (optional): "Undo", "Retry", "View" — one action maximum
+- Action (optional): "Undo", "Retry", "View" - one action maximum
 - Close button: always present on errors; optional on success
 
 ```
@@ -106,7 +106,7 @@ Toasts confirm that a background action completed. They appear without interrupt
 Inline errors appear adjacent to the element that caused them. They are the most contextual and actionable form of error feedback.
 
 **Form validation:**
-- Validate on blur (leaving a field), not on every keystroke — keystroke validation is noisy
+- Validate on blur (leaving a field), not on every keystroke - keystroke validation is noisy
 - Validate on submit for the complete form
 - Show the error message directly below the field, in red, with an icon
 - The field border changes to `--color-error`
@@ -120,7 +120,7 @@ Inline errors appear adjacent to the element that caused them. They are the most
 
 **In-place editing:**
 - When a field is edited inline (table cell, card title), show save/cancel controls adjacent to the field
-- On save: brief success indicator ("✓ Saved") that fades after 2s — do not navigate away
+- On save: brief success indicator ("✓ Saved") that fades after 2s - do not navigate away
 - On error: inline error message below the field with a retry option
 - On cancel: restore the original value immediately
 
@@ -128,7 +128,7 @@ Inline errors appear adjacent to the element that caused them. They are the most
 
 ## Alert Banners
 
-Banners are persistent — they stay until the condition is resolved or the user dismisses them.
+Banners are persistent - they stay until the condition is resolved or the user dismisses them.
 
 **Use for:**
 - Service degradation ("Some features are temporarily unavailable")
@@ -140,10 +140,10 @@ Banners are persistent — they stay until the condition is resolved or the user
 
 **Anatomy:**
 ```
-[Icon] [Message — describes the issue and its scope] [Action] [×]
+[Icon] [Message - describes the issue and its scope] [Action] [×]
 ```
 
-- One banner at a time per region — multiple simultaneous banners create alarm fatigue
+- One banner at a time per region - multiple simultaneous banners create alarm fatigue
 - Dismissible unless the condition is blocking
 - Colour follows status colour conventions: red (error), orange (warning), blue (info), green (success/resolved)
 
@@ -163,7 +163,7 @@ For transient failures (network, timeout, rate limit):
 
 - Retry button triggers the same action
 - After 3 failed retries, escalate: "Still having trouble? [Contact support]"
-- Show a spinner during retry — do not let the user click multiple times
+- Show a spinner during retry - do not let the user click multiple times
 
 ### Undo
 For destructive or irreversible actions (delete, archive, send):
@@ -172,21 +172,21 @@ For destructive or irreversible actions (delete, archive, send):
 "Message sent.  [Undo]  ×"
 ```
 
-- Undo window: 5–10 seconds. Toast persists for this duration.
+- Undo window: 5-10 seconds. Toast persists for this duration.
 - After the window closes, the action is final
-- Undo is preferable to confirmation dialogs for low-stakes actions — it is faster and less disruptive
+- Undo is preferable to confirmation dialogs for low-stakes actions - it is faster and less disruptive
 
 ### Autosave and Draft Recovery
 For long-form inputs (forms, documents, editors):
 
-- Autosave every 30–60 seconds silently
-- On save failure: "Autosave failed — your changes are stored locally. [Retry save]"
+- Autosave every 30-60 seconds silently
+- On save failure: "Autosave failed - your changes are stored locally. [Retry save]"
 - On return after crash or close: "You have unsaved changes from [time]. [Restore] [Discard]"
 
 ### Graceful Degradation
 When a feature fails but the rest of the product still works:
 
-- Show an error state for the failed section only — do not blank the entire page
+- Show an error state for the failed section only - do not blank the entire page
 - Offer a fallback: "Could not load recommendations. [Browse all products →]"
 - Log the error silently; surface only what the user needs to know
 
@@ -196,10 +196,10 @@ When a feature fails but the rest of the product still works:
 
 Loading is not an error, but it is a state that needs design.
 
-- **Skeleton screens** for content-heavy pages — show the layout shape while data loads
+- **Skeleton screens** for content-heavy pages - show the layout shape while data loads
 - **Spinners** for targeted async actions (button loading, inline refresh)
 - **Progress bars** for long operations with known duration (file upload, multi-step processing)
-- Never show a blank screen while loading — always show something
+- Never show a blank screen while loading - always show something
 
 Skeleton screens reduce perceived wait time compared to spinners. Match the skeleton shape to the actual content layout.
 
@@ -209,21 +209,21 @@ Skeleton screens reduce perceived wait time compared to spinners. Match the skel
 
 Toasts and banners are *transient*; a **notification center** is the persistent place a user goes to review and control what reaches them. Two things make it work.
 
-**Easy to reach, and easy to control.** The user must get to their notification preferences with almost no digging (a bell icon → the center → settings). And keep the control model **coarse — 1 to 3 categories at most**, each with a simple level:
+**Easy to reach, and easy to control.** The user must get to their notification preferences with almost no digging (a bell icon → the center → settings). And keep the control model **coarse - 1 to 3 categories at most**, each with a simple level:
 
-- `Off (0)` — none of this category
-- `Minimal` — only the important ones
-- `All / granular` — everything
+- `Off (0)` - none of this category
+- `Minimal` - only the important ones
+- `All / granular` - everything
 
-Don't build a wall of per-event toggles. Two real needs dominate: **silence everything**, or **keep one or two categories**. Design straight for those — a prominent "mute all" / "mark all read" plus 1–3 category switches.
+Don't build a wall of per-event toggles. Two real needs dominate: **silence everything**, or **keep one or two categories**. Design straight for those - a prominent "mute all" / "mark all read" plus 1-3 category switches.
 
-**Minimise reading.** The center is scanned, not read. Group by category, lead each item with a recognisable icon and the entity/action (not a paragraph), show unread state clearly, and let the whole list be cleared in one action. Reading is time (see [[ui-density]]) — a notification center that demands careful reading defeats its purpose.
+**Minimise reading.** The center is scanned, not read. Group by category, lead each item with a recognisable icon and the entity/action (not a paragraph), show unread state clearly, and let the whole list be cleared in one action. Reading is time (see [[ui-density]]) - a notification center that demands careful reading defeats its purpose.
 
 ## Notification Accessibility
 
-- Errors use `role="alert"` — announced immediately by screen readers
-- Status updates use `role="status"` — announced politely (after current speech)
-- Toasts must be reachable by keyboard — do not use `pointer-events: none` on the close button
+- Errors use `role="alert"` - announced immediately by screen readers
+- Status updates use `role="status"` - announced politely (after current speech)
+- Toasts must be reachable by keyboard - do not use `pointer-events: none` on the close button
 - Auto-dismissing toasts must have sufficient duration (`prefers-reduced-motion` users may need more time to read)
 
 ```html

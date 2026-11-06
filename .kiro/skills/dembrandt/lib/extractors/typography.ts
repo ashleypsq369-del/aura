@@ -8,7 +8,7 @@ import type { VariableFontAxis } from '../types.js';
  * makes apple.com resolve to SF Pro Text even though large lead paragraphs
  * override to SF Pro Display and out-volume it. But a site that sets no
  * font-family on <body> inherits the UA default (e.g. "Times"), which no
- * visible text uses — there the most-used body family is the real answer (e.g.
+ * visible text uses - there the most-used body family is the real answer (e.g.
  * nyt-franklin on nytimes.com, not the UA "Times"). Coverage ties keep the
  * first-seen family for determinism. Returns null when neither signal yields a
  * family. Pure and exported so the disambiguation is unit-testable without a
@@ -28,7 +28,7 @@ const UA_DEFAULT_FAMILIES = new Set(['times', 'times new roman', 'serif']);
  *
  * So a family must carry real usage to stay: at least MIN_FAMILY_SHARE of counted
  * elements, and at least MIN_FAMILY_COUNT of them. The share is what does the
- * work — an absolute floor alone would either strip a small page bare or let a
+ * work - an absolute floor alone would either strip a small page bare or let a
  * widget through on a large one. Nothing is deleted silently: the dropped
  * families are reported so a caller can see what the floor removed.
  *
@@ -92,7 +92,7 @@ export function pickBodyFamily(bodyComputedFamily: string | null, weights: Recor
 /**
  * Parse `font-variation-settings` strings (e.g. `"wght" 600, "slnt" -4`) into
  * per-axis ranges across the page. Pure and exported so it is unit-testable
- * without a browser. Only explicit variation settings count — we do not infer
+ * without a browser. Only explicit variation settings count - we do not infer
  * an axis from font-weight, which would conflate static and variable fonts.
  */
 export function parseVariableAxes(settings: string[]): VariableFontAxis[] {
@@ -114,7 +114,7 @@ export function parseVariableAxes(settings: string[]): VariableFontAxis[] {
 /**
  * Parse `font-feature-settings` strings (e.g. `"ss01" on, "tnum" off`) into a
  * deduped, sorted list of *enabled* OpenType feature tags. Features explicitly
- * turned off (`off` or `0`) are excluded — a brand's letterforms are defined by
+ * turned off (`off` or `0`) are excluded - a brand's letterforms are defined by
  * what is on, not what was switched off.
  */
 export function parseOpenTypeFeatures(settings: string[]): string[] {
@@ -145,7 +145,7 @@ export function filterFontUrls(urls: string[]): string[] {
     try {
       parsed = new URL(url);
     } catch {
-      continue; // not a parseable absolute URL — skip
+      continue; // not a parseable absolute URL - skip
     }
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') continue;
     if (FONT_FILE_EXTENSIONS.test(parsed.pathname)) {
@@ -484,7 +484,7 @@ export async function extractTypography(page) {
   });
 
   // Aggregate the raw variation/feature strings in Node so the parsing stays
-  // unit-testable. Attach to sources only when present — no empty arrays.
+  // unit-testable. Attach to sources only when present - no empty arrays.
   const variableAxes = parseVariableAxes(data.variationSettings);
   const openTypeFeatures = parseOpenTypeFeatures(data.featureSettings);
   const urls = filterFontUrls(data.fontUrlCandidates);

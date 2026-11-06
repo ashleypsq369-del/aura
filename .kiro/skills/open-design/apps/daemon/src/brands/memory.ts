@@ -10,9 +10,9 @@
 //
 // So when a brand is finalized we sediment it into memory as a small, coherent
 // set of entries:
-//   - one `user` entry  — the default visual direction (palette + type + layout)
-//   - one `reference`   — the brand voice (tone, pillars, vocabulary, imagery)
-//   - several `rule`s   — enforceable checks (palette-only, type stack, layout
+//   - one `user` entry  - the default visual direction (palette + type + layout)
+//   - one `reference`   - the brand voice (tone, pillars, vocabulary, imagery)
+//   - several `rule`s   - enforceable checks (palette-only, type stack, layout
 //                          posture, logo usage) the self-verify pass can read.
 //
 // This module is intentionally pure (no fs / network) so it is trivially
@@ -88,7 +88,7 @@ export function brandToMemoryEntries(brand: Brand): BrandMemoryEntryInput[] {
   if (nonEmpty(brand.layout?.spacing)) layoutBits.push(brand.layout.spacing);
   if (layoutBits.length > 0) visualLines.push(`- Layout: ${layoutBits.join('; ')}`);
   visualLines.push(
-    `- When to apply: design work for ${name} — use these tokens as the default visual language unless the user asks otherwise.`,
+    `- When to apply: design work for ${name} - use these tokens as the default visual language unless the user asks otherwise.`,
   );
   entries.push({
     id: `user_brand_${slug}_visual`,
@@ -130,7 +130,7 @@ export function brandToMemoryEntries(brand: Brand): BrandMemoryEntryInput[] {
     const allowed = brand.colors.map((c) => c.hex).join(', ');
     const accent = brand.colors.find((c) => c.role === 'accent');
     const accentNote = accent
-      ? ` The accent ${accent.name || accent.hex} (${accent.hex}) is a high-signal color — use it sparingly, not as a large wash.`
+      ? ` The accent ${accent.name || accent.hex} (${accent.hex}) is a high-signal color - use it sparingly, not as a large wash.`
       : '';
     entries.push({
       id: `rule_brand_${slug}_palette`,
@@ -203,7 +203,7 @@ export interface ReflowBrandToMemoryResult {
 
 /**
  * Sediment a finalized brand into the filesystem memory store. Gated on the
- * master memory switch (`enabled`) — when memory is off we write nothing, the
+ * master memory switch (`enabled`) - when memory is off we write nothing, the
  * same contract every other extraction path honors. Best-effort per entry: a
  * single bad entry does not abort the rest. Re-finalizing the same brand
  * overwrites its entries in place (ids are deterministic from the brand name).

@@ -82,8 +82,8 @@ export function redactVelaCommandError(error: unknown, args: readonly string[]):
 /**
  * A failed Vela command still carries meaning on stdout.
  *
- * `vela image gen --json` prints the complete task object — including its
- * structured `error` block — and only then exits non-zero. Rejecting with the
+ * `vela image gen --json` prints the complete task object - including its
+ * structured `error` block - and only then exits non-zero. Rejecting with the
  * bare exec error therefore threw away the one thing that distinguishes a
  * content-safety rejection from a provider outage, leaving every caller with
  * nothing but "Command failed with exit code 1".

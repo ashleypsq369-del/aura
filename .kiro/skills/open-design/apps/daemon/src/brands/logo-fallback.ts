@@ -3,9 +3,9 @@
 // The agent is expected to save real logo markup under the project `logos/`
 // dir, but it sometimes fails to (proprietary inline SVG, anti-bot wall, or it
 // simply forgets). To make sure `brand.html` almost never shows "No logo
-// found", this module fetches the site's icon assets directly — the
+// found", this module fetches the site's icon assets directly - the
 // `apple-touch-icon`, `<link rel=icon>`/favicon, `og:image`, `/favicon.ico`,
-// and finally public favicon services — and saves whatever it can into
+// and finally public favicon services - and saves whatever it can into
 // `logos/`. Everything is timeout-bounded and failure-tolerant: offline or a
 // hostile origin just yields an empty result, preserving the prior behavior.
 
@@ -167,7 +167,7 @@ function fileSlug(kind: string, index: number, ext: string): string {
  * Fetch the site's icon/og assets and save any usable ones into `logosDir`.
  * Returns the saved files ranked best-primary-first. Best-effort: any failure
  * (offline, blocked, non-image) yields whatever was salvageable, possibly an
- * empty array — never throws.
+ * empty array - never throws.
  */
 export async function harvestFallbackLogos(
   siteUrl: string,
@@ -211,7 +211,7 @@ export async function harvestFallbackLogos(
 
   // Last resort: public favicon services keyed by hostname (never touch the
   // origin, so they survive hotlink protection / bot walls). Google falls back
-  // to a tiny generic globe for unknown domains — the size check rejects that.
+  // to a tiny generic globe for unknown domains - the size check rejects that.
   if (saved.length === 0) {
     const services: Array<{ url: string; accept: (buf: Buffer) => boolean }> = [
       {
@@ -241,7 +241,7 @@ export async function harvestFallbackLogos(
  * Ensure `logosDir` has at least one logo and `logo` carries a primary. When
  * `logo.primary` is already set this is a no-op. When logo files already sit on
  * disk (agent-saved or seed-harvested) but `logo.primary` is empty, those files
- * are adopted into `logo.primary`/`logo.alternates` — otherwise the kit page
+ * are adopted into `logo.primary`/`logo.alternates` - otherwise the kit page
  * would report "No logo found" despite real marks living in `logos/`. Only when
  * the dir is genuinely empty does it harvest fallback marks over the network.
  * Mutates and returns `logo`. Best-effort.
@@ -257,7 +257,7 @@ export async function ensureLogoFallback(
   if (hasAnyFile(logosDir)) {
     const adopted = adoptExistingLogos(logosDir, logo);
     if (adopted.changed) return adopted;
-    // Files exist but none look like usable marks — fall through and try the
+    // Files exist but none look like usable marks - fall through and try the
     // network harvest below as a last resort.
   }
   let harvested: FallbackLogo[] = [];
@@ -289,7 +289,7 @@ function logoExtRank(name: string): number {
  * the best mark (by extension priority, then name) becomes `logo.primary` and
  * the rest become `logo.alternates`, each as a `logos/<file>` path relative to
  * the dir owner. No-op when `logo.primary` is set or the dir holds no image
- * files. Mutates and returns the slot. Pure filesystem — never touches the
+ * files. Mutates and returns the slot. Pure filesystem - never touches the
  * network.
  */
 export function adoptExistingLogos(logosDir: string, logo: LogoSlot): { changed: boolean } {

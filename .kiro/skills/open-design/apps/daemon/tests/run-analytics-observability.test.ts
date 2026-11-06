@@ -507,7 +507,7 @@ describe('scanRunEventsForUsageAnalytics', () => {
 
   it('keeps inclusive OpenAI usage (cache_read <= input) byte-identical after the additive fix', () => {
     // Guards the discriminator: an inclusive payload (cached ⊆ input) must stay
-    // on the input-as-total path — effective = input, uncached = input - read —
+    // on the input-as-total path - effective = input, uncached = input - read -
     // exactly as before, so the additive repair cannot regress codex/openai.
     const result = scanRunEventsForUsageAnalytics(
       [
@@ -795,7 +795,7 @@ describe('scanRunEventsForUsageAnalytics', () => {
     expect(result.cache_hit_ratio).toBeCloseTo(60 / 240);
     // The reverse scan above takes the LAST usage event (240 / cache_read 60).
     // The forward first-call scan must instead surface the turn's OPENING call
-    // (120 / cache_read 20) — the session-reuse signal that the within-turn
+    // (120 / cache_read 20) - the session-reuse signal that the within-turn
     // aggregate masks.
     expect(result.first_call_input_tokens).toBe(120);
     expect(result.first_call_cache_read_input_tokens).toBe(20);
@@ -806,7 +806,7 @@ describe('scanRunEventsForUsageAnalytics', () => {
     const result = scanRunEventsForUsageAnalytics(
       [
         // Opening call of a resumed turn: tiny uncached delta over a fully
-        // cached prefix — the cache-hit signal session reuse produces.
+        // cached prefix - the cache-hit signal session reuse produces.
         {
           event: 'agent',
           data: {
@@ -848,7 +848,7 @@ describe('scanRunEventsForUsageAnalytics', () => {
   it('includes anthropic cache_creation in the first-call denominator (matches last-call)', () => {
     // A cold opening call writes a large cache (cache_creation) while reading
     // little. The first-call denominator must be input + cache_read +
-    // cache_creation — identical to the last-call definition — so the two
+    // cache_creation - identical to the last-call definition - so the two
     // ratios are comparable. A single usage event makes first == last.
     const result = scanRunEventsForUsageAnalytics(
       [
@@ -879,7 +879,7 @@ describe('scanRunEventsForUsageAnalytics', () => {
   it('honors the full cache-creation alias matrix on the first call (nested cache_creation)', () => {
     // A provider that emits cache creation only via the nested
     // `cache_creation.input_tokens` alias (not the flat key) must still land in
-    // the first-call denominator — otherwise it overstates the cache hit. This
+    // the first-call denominator - otherwise it overstates the cache hit. This
     // locks the first-call extraction to the same alias matrix the last-call
     // path already supports.
     const result = scanRunEventsForUsageAnalytics(
@@ -1517,7 +1517,7 @@ describe('summarizeToolAnalytics', () => {
       data: { type: 'tool_use', id: `id-${i}`, name: `Tool${i}` },
     }));
     const result = summarizeToolAnalytics(events);
-    // All ToolN collapse to `other` (not the Tool family — ToolN ≠ Tool).
+    // All ToolN collapse to `other` (not the Tool family - ToolN ≠ Tool).
     expect(result.tool_name_count).toBe(1);
     expect(result.tool_names).toEqual(['other']);
     expect(result.tool_names_csv).toBe('other');

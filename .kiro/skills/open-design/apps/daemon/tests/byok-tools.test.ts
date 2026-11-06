@@ -72,7 +72,7 @@ describe('executeGenerateImage', () => {
       const url = String(input);
       // Asset downloads route through assertAndFetchExternalAsset which
       // replaces the caller's dispatcher with the shared validating one
-      // (issue #5478). Keyed on the asset URL — NOT on `redirect: 'error'`,
+      // (issue #5478). Keyed on the asset URL - NOT on `redirect: 'error'`,
       // which other providers also set on submit hops that must keep the
       // caller dispatcher.
       if (url === 'https://93.184.216.34/generated/cat.png') {
@@ -204,7 +204,7 @@ describe('executeGenerateImage', () => {
     const fetchMock = vi.fn(async (input: unknown, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith('/v1/image/sync')) {
-        // Registry default is the first SenseAudio entry — 2.0 today.
+        // Registry default is the first SenseAudio entry - 2.0 today.
         expect(JSON.parse(String(init?.body)).model).toBe('senseaudio-image-2.0-260319');
         return new Response(
           JSON.stringify({ url: 'https://93.184.216.34/d.png' }),
@@ -234,7 +234,7 @@ describe('executeGenerateImage', () => {
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/invalid projectId/);
     // ensureProject runs up front so the unsafe id is caught BEFORE
-    // any senseaudio upstream call goes out — no token spent, no
+    // any senseaudio upstream call goes out - no token spent, no
     // attempt to write outside the project tree.
     expect(fetchMock).not.toHaveBeenCalled();
   });
@@ -385,7 +385,7 @@ describe('executeGenerateImage', () => {
   });
 });
 
-describe('BYOK_SENSEAUDIO_TOOLS — video', () => {
+describe('BYOK_SENSEAUDIO_TOOLS - video', () => {
   it('exposes a generate_video tool definition with the documented param surface', () => {
     const video = BYOK_SENSEAUDIO_TOOLS.find(
       (t) => t.function.name === 'generate_video',
@@ -431,7 +431,7 @@ describe('executeGenerateSpeech', () => {
       });
       expect(JSON.parse(String(init?.body))).toEqual({
         model: 'senseaudio-tts-1.5-260319',
-        text: 'Meet saddle2 — the way work was supposed to feel.',
+        text: 'Meet saddle2 - the way work was supposed to feel.',
         stream: false,
         voice_setting: {
           voice_id: 'female_0033_b',
@@ -457,7 +457,7 @@ describe('executeGenerateSpeech', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const result = await executeGenerateSpeech(
-      { text: 'Meet saddle2 — the way work was supposed to feel.' },
+      { text: 'Meet saddle2 - the way work was supposed to feel.' },
       {
         projectRoot: root,
         projectsRoot,
@@ -632,7 +632,7 @@ describe('executeGenerateVideo', () => {
     projectId: PROJECT_ID,
     upstreamApiKey: 'sa-byok-key',
     upstreamBaseUrl: 'https://api.senseaudio.cn',
-    // Keep tests fast — 1 ms between polls instead of the production 5 s.
+    // Keep tests fast - 1 ms between polls instead of the production 5 s.
     videoPollIntervalMs: 1,
   });
 
@@ -644,7 +644,7 @@ describe('executeGenerateVideo', () => {
       const url = String(input);
       // Asset downloads route through assertAndFetchExternalAsset which
       // replaces the caller's dispatcher with the shared validating one
-      // (issue #5478). Keyed on the asset URL — NOT on `redirect: 'error'`,
+      // (issue #5478). Keyed on the asset URL - NOT on `redirect: 'error'`,
       // because submit/poll hops must keep the caller dispatcher.
       if (url === 'https://93.184.216.34/video/done.mp4') {
         expect(init?.dispatcher).toBe(getAssetValidatingDispatcher());
@@ -767,7 +767,7 @@ describe('executeGenerateVideo', () => {
     expect(result.ok).toBe(true);
   });
 
-  it('clamps duration outside the 4–15 range and rejects non-enum aspect_ratio / resolution', async () => {
+  it('clamps duration outside the 4-15 range and rejects non-enum aspect_ratio / resolution', async () => {
     const fetchMock = vi.fn(async (input: unknown, init?: RequestInit) => {
       const url = String(input);
       if (url.endsWith('/v1/video/create')) {
@@ -866,8 +866,8 @@ describe('executeGenerateVideo', () => {
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/timed out/);
     // 1× create + 120× poll = 121 fetches (10-min ceiling at 5 s
-    // intervals — kept generous because doubao-seedance frequently
-    // spends 3–8 min on the gateway for 1080p+audio jobs).
+    // intervals - kept generous because doubao-seedance frequently
+    // spends 3-8 min on the gateway for 1080p+audio jobs).
     expect(fetchMock).toHaveBeenCalledTimes(121);
   }, 30_000);
 
@@ -970,7 +970,7 @@ describe('executeAIHubMixGenerateVideo', () => {
     projectId: PROJECT_ID,
     upstreamApiKey: 'ahm-byok-key',
     upstreamBaseUrl: 'https://aihubmix.com/v1',
-    // Keep tests fast — 1 ms between polls instead of the production 5 s.
+    // Keep tests fast - 1 ms between polls instead of the production 5 s.
     videoPollIntervalMs: 1,
   });
 
@@ -982,7 +982,7 @@ describe('executeAIHubMixGenerateVideo', () => {
       const url = String(input);
       // Asset downloads route through assertAndFetchExternalAsset which
       // replaces the caller's dispatcher with the shared validating one
-      // (issue #5478). Keyed on the asset URL — NOT on `redirect: 'error'`,
+      // (issue #5478). Keyed on the asset URL - NOT on `redirect: 'error'`,
       // because the AIHubMix submit hop itself sets redirect:'error' and
       // must still keep the caller dispatcher (this was the gap the
       // redirect heuristic silently hid).
@@ -1269,7 +1269,7 @@ describe('executeAIHubMixGenerateVideo', () => {
     ['aihubmix-veo-3.1-lite-generate-preview', 10, 8], // veo, clamp to 8
     ['aihubmix-sora-2', 5, '4'], // sora 4/8/12
     ['aihubmix-sora-2', 11, '12'], // sora, 11→12
-    // (seedance uses `duration` not `seconds` — covered by media-adapters.test)
+    // (seedance uses `duration` not `seconds` - covered by media-adapters.test)
   ])('snaps seconds to the model family allowed set (%s, %d → %s)', async (model, duration, expected) => {
     let submitBody: any = null;
     const fetchMock = vi.fn(async (input: unknown, init?: RequestInit) => {
@@ -1433,7 +1433,7 @@ describe('executeAIHubMixGenerateVideo', () => {
   // "`inlineData`/`referenceImages` isn't supported by this model" when ANY veo
   // variant is handed a reference (verified by probing data-URL/public-URL/object
   // forms against both). We catch it before the upstream call and tell the user
-  // how to recover. Veo is text-to-video only here — including the non-lite one.
+  // how to recover. Veo is text-to-video only here - including the non-lite one.
   it.each([
     'aihubmix-veo-3.1-lite-generate-preview',
     'aihubmix-veo-3.1-generate-preview',
@@ -1488,7 +1488,7 @@ describe('executeAIHubMixGenerateVideo', () => {
 
   it('detects "params ignored" (prompt echoed empty + generic error) and returns an actionable unsupported-model message', async () => {
     // Reproduces the happyhorse-* signature: AIHubMix accepts the request but
-    // doesn't map our fields onto the model — the failed body echoes prompt:""
+    // doesn't map our fields onto the model - the failed body echoes prompt:""
     // and only the catch-all "Video generation failed".
     const fetchMock = vi.fn(async (input: unknown) => {
       const url = String(input);

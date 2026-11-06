@@ -1,4 +1,4 @@
-// Plan §3.KK2 — summarisePluginEvents() pure roll-up.
+// Plan §3.KK2 - summarisePluginEvents() pure roll-up.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {

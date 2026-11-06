@@ -126,8 +126,8 @@ describe('buildProjectArchive', () => {
   });
 
   it('throws ENOENT with "does not exist" when the archive root is missing', async () => {
-    // Distinct from the "empty directory" case so callers — and on-call
-    // engineers reading logs — can tell a deleted project from a project
+    // Distinct from the "empty directory" case so callers - and on-call
+    // engineers reading logs - can tell a deleted project from a project
     // that simply has no archivable files.
     await expect(buildProjectArchive(projectsRoot, projectId, 'no-such-dir')).rejects.toMatchObject(
       { code: 'ENOENT', message: expect.stringMatching(/does not exist/) },
@@ -234,7 +234,7 @@ describe('buildProjectArchive', () => {
 
   it('keeps phone.html and iphone-upgrade.html as real screens when outside frames/ directory', async () => {
     // phone.html as a carrier storefront, iphone-upgrade.html as a product
-    // surface — they must not be silently dropped from manifest screens.
+    // surface - they must not be silently dropped from manifest screens.
     const dir = path.join(projectsRoot, projectId, 'carrier-app');
     await mkdir(path.join(dir, 'frames'), { recursive: true });
     await writeFile(path.join(dir, 'phone.html'), '<!doctype html>phone storefront');

@@ -49,7 +49,7 @@ const TEAM_PROJECT = 'p-team-awaiting';
 const UNBOUND_PROJECT = 'p-unbound-awaiting';
 const ANSWERED_PROJECT = 'p-unbound-answered';
 const QUIET_PROJECT = 'p-unbound-quiet';
-/** Awaiting input, but no run of its own — must never surface through another
+/** Awaiting input, but no run of its own - must never surface through another
  *  project's query. */
 const RUNLESS_PROJECT = 'p-unbound-runless';
 const WORKSPACE_ID = 'ws-awaiting';
@@ -261,7 +261,7 @@ type RunListBody = {
   awaitingInputConversationIds?: string[];
 };
 
-describe('GET /api/runs — awaitingInputConversationIds (P0-24 N4)', () => {
+describe('GET /api/runs - awaitingInputConversationIds (P0-24 N4)', () => {
   it('names the conversation holding the unanswered question, only among the returned runs', async () => {
     const baseUrl = await startServer();
     const body = (await (await fetch(`${baseUrl}/api/runs?projectId=${UNBOUND_PROJECT}`)).json()) as RunListBody;
@@ -272,7 +272,7 @@ describe('GET /api/runs — awaitingInputConversationIds (P0-24 N4)', () => {
   });
 });
 
-describe('GET /api/runs — awaitingInputProjectIds', () => {
+describe('GET /api/runs - awaitingInputProjectIds', () => {
   it('flags a project whose succeeded run left a question the user has not answered', async () => {
     const baseUrl = await startServer();
     const response = await fetch(`${baseUrl}/api/runs?projectId=${UNBOUND_PROJECT}`);
@@ -297,7 +297,7 @@ describe('GET /api/runs — awaitingInputProjectIds', () => {
   it('never names a project the returned runs do not reveal', async () => {
     const baseUrl = await startServer();
     // RUNLESS_PROJECT is awaiting input in the database, but it has no run in
-    // this feed — so a query for another project must not leak its id.
+    // this feed - so a query for another project must not leak its id.
     const body = (await (await fetch(`${baseUrl}/api/runs?projectId=${UNBOUND_PROJECT}`)).json()) as RunListBody;
     expect(body.awaitingInputProjectIds).not.toContain(RUNLESS_PROJECT);
     expect(body.awaitingInputProjectIds).not.toContain(TEAM_PROJECT);

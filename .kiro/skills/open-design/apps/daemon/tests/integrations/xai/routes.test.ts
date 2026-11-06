@@ -514,7 +514,7 @@ describe('xai-routes', () => {
     );
     expect(status.connected).toBe(true);
 
-    // Open another OAuth flow — that opens a new listener.
+    // Open another OAuth flow - that opens a new listener.
     await fetch(`${app.baseUrl}/api/xai/oauth/start`, { method: 'POST' });
     stopMock.mockClear();
 
@@ -525,7 +525,7 @@ describe('xai-routes', () => {
     expect((await jsonOf(cancelResp)).ok).toBe(true);
     expect(stopMock).toHaveBeenCalled();
 
-    // Token survives — Cancel is non-destructive.
+    // Token survives - Cancel is non-destructive.
     status = await fetch(`${app.baseUrl}/api/xai/auth/status`).then((r) =>
       jsonOf(r),
     );
@@ -636,7 +636,7 @@ describe('xAI Responses API parsers', () => {
   });
 });
 
-describe('xai-routes — cross-origin guard', () => {
+describe('xai-routes - cross-origin guard', () => {
   let projectRoot: string;
   let app: TestApp;
 

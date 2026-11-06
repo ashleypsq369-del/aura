@@ -1,10 +1,10 @@
-/**
- * Card.jsx — Premium healthcare card components
+﻿/**
+ * Card.jsx - Premium healthcare card components
  * ─────────────────────────────────────────────
  * Design system: ui-ux-pro-max Healthcare App palette (No.8)
  *   Primary #0891B2  Accent #059669  Bg #ECFEFF
  *   Card: var(--card-bg)  Border: var(--card-border)
- * Style: Neumorphism/Soft UI — ui-ux-pro-max recommends for health/wellness
+ * Style: Neumorphism/Soft UI - ui-ux-pro-max recommends for health/wellness
  * Typography: Inter body + Poppins headings (weight hierarchy)
  */
 import { forwardRef } from 'react';

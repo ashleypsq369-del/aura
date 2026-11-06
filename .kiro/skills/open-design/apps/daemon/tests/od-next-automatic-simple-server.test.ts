@@ -1290,7 +1290,7 @@ process.stdin.on('end', () => {
       frozenProtocolFixture.legacy = false;
       await stopServer(started); started = await startDaemon();
       const request = {
-        ...publicRunRequest(fixture, 'Continue production using that plan. Audience: children aged 6–8.', `continue-${outcome}`),
+        ...publicRunRequest(fixture, 'Continue production using that plan. Audience: children aged 6-8.', `continue-${outcome}`),
         ...(outcome === 'plan_ready' ? {} : { taskExecutionId: old.taskExecutionId }),
       };
       let continued: Awaited<ReturnType<typeof postRun>>;
@@ -1314,7 +1314,7 @@ process.stdin.on('end', () => {
       expect(invocations[1]!.argv).not.toContain('resume');
       expect(invocations[1]!.stdin).toContain('Keep the blue background.');
       expect(invocations[1]!.stdin).toContain('Plan: one blue dog battle page.');
-      expect(invocations[1]!.stdin).toContain('Audience: children aged 6–8.');
+      expect(invocations[1]!.stdin).toContain('Audience: children aged 6-8.');
       expect(invocations[1]!.stdin).not.toContain('Historical V2 output:');
       expect(invocations[1]!.stdin).not.toContain('{invalid legacy plan');
       expect(await readFile(path.join(invocations[1]!.cwd, 'index.html'), 'utf8')).toContain('Dog battle');
@@ -1404,7 +1404,7 @@ process.stdin.on('end', () => {
       .toBe('off');
 
     // A typo is refused rather than absorbed. Dropping it would leave the key
-    // unconfigured, and unconfigured is `active` — so an absorbed typo would
+    // unconfigured, and unconfigured is `active` - so an absorbed typo would
     // revoke this opt-out while the caller saw success. That is the one
     // failure mode a control switch must not have.
     const typo = await fetch(`${started.url}/api/app-config`, {
@@ -1421,7 +1421,7 @@ process.stdin.on('end', () => {
 
     // Count first, compare after: the canceled run above may or may not have
     // reached a spawn, so what this asserts is the invocations the ordinary
-    // run added — not the whole log.
+    // run added - not the whole log.
     const invocationsBefore = (await readProjectInvocations(fixture.logPath, fixture.projectId)).length;
     const afterOptOut = await postRun(started.url, publicRunRequest(
       fixture,
@@ -1435,11 +1435,11 @@ process.stdin.on('end', () => {
     expect(ordinaryInvocations).toHaveLength(1);
     expect(ordinaryInvocations[0]?.stdin).toContain('skill_name="discovery"');
     expect(ordinaryInvocations[0]?.stdin).not.toContain('open-design.strategy-state/v2');
-    expect(ordinaryInvocations[0]?.stdin).not.toContain('Deck framework — DO NOT EDIT');
+    expect(ordinaryInvocations[0]?.stdin).not.toContain('Deck framework - DO NOT EDIT');
 
     // The operator-facing surface names the authority that decided, so the
     // person who just configured the mode can confirm theirs is the one in
-    // effect rather than inferring it from the resulting mode — which matters
+    // effect rather than inferring it from the resulting mode - which matters
     // more now that `default` and a saved `off` resolve to opposite routes.
     const status = await fetch(`${started.url}/api/strategies/od-next/rollout`);
     expect(status.status).toBe(200);
@@ -1449,7 +1449,7 @@ process.stdin.on('end', () => {
       effectiveMode: 'active',
     });
     // Two full runs against a real server, plus config writes and a status
-    // read — the heaviest case in this file, and the only one that drives more
+    // read - the heaviest case in this file, and the only one that drives more
     // than a single run. The suite default of 20s leaves it no headroom on a
     // slow runner.
   }, 60_000);
@@ -1471,7 +1471,7 @@ process.stdin.on('end', () => {
     });
 
     // A Skill that no longer resolves is dropped, exactly as the ordinary
-    // route drops it — it is not evidence the user claimed the route.
+    // route drops it - it is not evidence the user claimed the route.
     expect(created.strategyTask).toMatchObject({ inputStage: 'request', terminal: false });
     expect(await readDurableRunState(created.runId as string)).toMatchObject({
       strategyRolloutDecision: { effectiveMode: 'active' },
@@ -1524,7 +1524,7 @@ process.stdin.on('end', () => {
       await waitForRunTerminal(started.url, created.runId as string);
       // A delta, not an absolute: this suite shares one data root across its
       // tests, and what this case proves is that the rolled-back preparation
-      // left nothing behind — not that the whole file ran no strategy task.
+      // left nothing behind - not that the whole file ran no strategy task.
       expect((database().prepare(
         'SELECT COUNT(*) AS count FROM strategy_task_executions',
       ).get() as { count: number }).count).toBe(strategyTaskCountAtStart);
@@ -1946,7 +1946,7 @@ process.stdin.on('end', () => {
     // This used to cover the instance stop latch and its compare-and-swap
     // reset. Both are gone: nothing but the saved mode turns OD Next off, so
     // there is no latch to inspect and no operator recovery to protect. What is
-    // still worth an endpoint is the authority — `default` and a saved `off`
+    // still worth an endpoint is the authority - `default` and a saved `off`
     // produce opposite routes, and the mode alone does not say which happened.
     const fixture = await createPublicRolloutFixture('rollout-control', 'design');
     started = fixture.started;
@@ -1992,7 +1992,7 @@ process.stdin.on('end', () => {
     });
 
     // The reset endpoint and its CLI subcommand are both gone, and gone the
-    // same way — a daemon that still answered it would be a daemon that still
+    // same way - a daemon that still answered it would be a daemon that still
     // had something to reset.
     const reset = await fetch(`${started.url}/api/strategies/od-next/rollout/reset`, {
       method: 'POST',
@@ -2016,7 +2016,7 @@ process.stdin.on('end', () => {
     expect(resetCli.code).toBe(2);
     // Named, not silently absent from a usage dump. `reset` shipped in 0.21.0
     // and 0.21.1, so an operator who scripted it gets told what happened and
-    // what replaced it — and gets a non-zero exit, because the recovery it
+    // what replaced it - and gets a non-zero exit, because the recovery it
     // asked for neither happened nor can.
     expect(resetCli.stderr).toContain('od strategy rollout reset was removed');
     expect(resetCli.stderr).toContain('OD Next is active by default');
@@ -2539,8 +2539,8 @@ process.stdin.on('end', () => {
   // lifecycle installed on POST /api/runs; the repair and production Runs the
   // daemon allocates for the SAME logical task are started straight off
   // `internalRunCreation.start(...)` and never enter it. Every OD Next rate
-  // computed per physical Run — volume, success, failure, cancellation,
-  // duration — is therefore measured on the request stage alone.
+  // computed per physical Run - volume, success, failure, cancellation,
+  // duration - is therefore measured on the request stage alone.
   it('installs the run analytics lifecycle on every physical Run of an automatic chain', async () => {
     const fixture = await createFixture('repair');
     const analyticsHeaders = {
@@ -2573,7 +2573,7 @@ process.stdin.on('end', () => {
         .map((mapping, index) => (recoveries[index] ? null : mapping.inputStage))
         .filter(Boolean),
     ).toEqual([]);
-    // One stable identity per physical Run — a shared insert id would collapse
+    // One stable identity per physical Run - a shared insert id would collapse
     // three Runs into one row on ingest.
     const insertIds = recoveries.map((recovery) => recovery?.insertId);
     expect(new Set(insertIds).size).toBe(2);
@@ -2944,7 +2944,7 @@ process.stdin.on('end', () => {
       status: 'succeeded',
       strategyTask: { outcome: 'completed', terminal: true },
     });
-    // The stale snapshot really did reach the Run — otherwise this asserts nothing.
+    // The stale snapshot really did reach the Run - otherwise this asserts nothing.
     const events = await readFile(terminal.eventsLogPath, 'utf8');
     expect(events).toContain('Deliver the runnable entry');
     expect(terminal.endedWithUnfinishedWork).toBe(true);

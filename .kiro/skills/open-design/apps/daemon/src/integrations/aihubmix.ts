@@ -1,11 +1,11 @@
-// AIHubMix BYOK provider — shared identity + outbound header helper.
+// AIHubMix BYOK provider - shared identity + outbound header helper.
 //
 // AIHubMix (https://aihubmix.com) is an OpenAI-wire-compatible aggregator
 // gateway: a single API key fronts OpenAI / Anthropic / Gemini models, routed
 // by model name on the upstream side (`claude*` → Anthropic, `gemini*/imagen*`
 // → Gemini, everything else → OpenAI). Because the wire shape is identical to
 // OpenAI's, the chat proxy, connection test, model discovery and media
-// renderers all reuse the OpenAI call shape — the ONLY thing that differs is
+// renderers all reuse the OpenAI call shape - the ONLY thing that differs is
 // the outbound headers, which is why every outbound call point funnels through
 // `aihubmixHeaders()` rather than hand-building `Authorization` inline.
 //
@@ -44,7 +44,7 @@ export function aihubmixHeaders(apiKey: string): Record<string, string> {
 /**
  * The APP-Code attribution header on its own (no auth). For the Anthropic /
  * Gemini routes, which carry their own auth header (`x-api-key` /
- * `x-goog-api-key`) — spread this alongside it so every AIHubMix request,
+ * `x-goog-api-key`) - spread this alongside it so every AIHubMix request,
  * whatever the wire protocol, still carries APP-Code.
  */
 export function aihubmixAppCodeHeader(): Record<string, string> {
@@ -75,7 +75,7 @@ export function classifyAIHubMixModel(model: string): AIHubMixProtocol {
 }
 
 /**
- * Origin of the configured AIHubMix base URL — the three protocol clients all
+ * Origin of the configured AIHubMix base URL - the three protocol clients all
  * derive their endpoint from it:
  *   openai    → `${origin}/v1`
  *   anthropic → `${origin}` (+ /v1/messages)
@@ -173,14 +173,14 @@ export function aihubmixWireModel(catalogId: string): string {
 }
 
 // AIHubMix's unified /videos API uses a single `seconds` (string) field for
-// every model family, but the *valid values* differ per family — an
+// every model family, but the *valid values* differ per family - an
 // out-of-set duration 400s (e.g. Veo rejects 5; only 4/6/8 are allowed, which
 // AIHubMix forwards to Google's native `durationSeconds`). Snap the requested
 // duration to the family's nearest allowed value (ties prefer the shorter one).
 //   veo:  4, 6, 8   (default 8)
 //   sora: 4, 8, 12  (default 4)
 //   wan:  5, 10     (default 5)
-//   seedance/doubao + unknown: accepts a range — clamp to 3–12.
+//   seedance/doubao + unknown: accepts a range - clamp to 3-12.
 // `wireModel` is the upstream name (prefix already stripped).
 export function aihubmixVideoSeconds(wireModel: string, requested: number): string {
   const m = (wireModel || '').toLowerCase();
@@ -205,7 +205,7 @@ export function aihubmixVideoSeconds(wireModel: string, requested: number): stri
 //   GET https://aihubmix.com/api/v1/models?type=llm
 //   GET https://aihubmix.com/api/v1/models?type=image_generation
 // (public, no auth required) returning `{ data: [{ model_id, model_name,
-// types, ... }] }` — note `model_id`/`model_name`, not the OpenAI `id`. This
+// types, ... }] }` - note `model_id`/`model_name`, not the OpenAI `id`. This
 // lives under the host's `/api/v1` path, not the chat base's `/v1`, so we
 // derive the origin from the configured base URL and append the catalogue path.
 export type AIHubMixCatalogType = 'llm' | 'image_generation' | 'tts' | 'video';
@@ -228,7 +228,7 @@ export interface AIHubMixCatalogModel {
 // AIHubMix tags every catalogue row with a comma-separated `types` field
 // (e.g. "llm", "llm,search", "image_generation,llm"). These are the
 // media-generation capabilities that belong to the dedicated image/video/audio
-// pickers — NOT the chat model picker.
+// pickers - NOT the chat model picker.
 const AIHUBMIX_MEDIA_GENERATION_TYPES = new Set(['image_generation', 'video', 'tts']);
 
 function aihubmixRowTypes(row: unknown): string[] {
@@ -246,7 +246,7 @@ export interface ParseAIHubMixCatalogOptions {
    *  dual-tagged image models (e.g. `gpt-image-2` → "image_generation,llm") leak
    *  into the chat catalogue. The chat model picker passes this; the media
    *  pickers (which query `?type=image_generation` / `video` / `tts`) leave it
-   *  off so their own catalogues stay intact. Rows with no `types` are kept —
+   *  off so their own catalogues stay intact. Rows with no `types` are kept -
    *  absent metadata shouldn't hide an otherwise-valid chat model. */
   chatOnly?: boolean;
 }

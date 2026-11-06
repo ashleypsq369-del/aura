@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AuraChat.jsx - Aura Companion v5
  * Emotional/care support for patients, family, caregivers.
  * NO navigation tiles - sidebar handles navigation.
@@ -329,7 +329,7 @@ export default function AuraChat() {
  }}
  onClick={e=>e.stopPropagation()}>
 
- {/* ── Header — single 56px row, Intercom/Crisp pattern ── */}
+ {/* ── Header - single 56px row, Intercom/Crisp pattern ── */}
  <div className="flex-shrink-0 flex items-center gap-3 px-4"
  style={{
  height: 56,
@@ -347,7 +347,7 @@ export default function AuraChat() {
  <AuraMascot size={24} isThinking={thinking} isStreaming={loading&&!thinking}/>
  </div>
 
- {/* Name + status — single line each */}
+ {/* Name + status - single line each */}
  <div style={{ flex: 1, minWidth: 0 }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
  <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', lineHeight: 1 }}>Aura</span>
@@ -374,7 +374,7 @@ export default function AuraChat() {
  </div>
  </div>
 
- {/* Action icons — right-aligned, compact */}
+ {/* Action icons - right-aligned, compact */}
  <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0 }}>
  {[
  { Icon: History, onClick: ()=>setView(v=>v==='history'?'chat':'history'), title:'History', active: view==='history' },
@@ -400,7 +400,7 @@ export default function AuraChat() {
  </div>
  </div>
 
- {/* ── Safety bar — slim single line ── */}
+ {/* ── Safety bar - slim single line ── */}
  <div className="flex-shrink-0 flex items-center gap-2 px-4"
  style={{ height: 28, background: '#fef3c7', borderBottom: '1px solid #fde68a' }}>
  <AlertTriangle size={10} style={{ color: '#d97706', flexShrink: 0 }}/>
@@ -466,7 +466,7 @@ export default function AuraChat() {
  </div>
  <div className="text-center">
  <p className="font-bold text-sm mb-0.5" style={{color:T.nameText}}>I'm here for you</p>
- <p className="text-xs leading-relaxed" style={{color:T.subText}}>Ask me anything — symptoms, medications,<br/>emotional support, or just to talk.</p>
+ <p className="text-xs leading-relaxed" style={{color:T.subText}}>Ask me anything - symptoms, medications,<br/>emotional support, or just to talk.</p>
  </div>
  {isPatient&&(
  <div className="w-full">
@@ -568,7 +568,7 @@ export default function AuraChat() {
  <div ref={msgEndRef}/>
  </div>
 
- {/* Scroll pill — positioned above input, not over messages */}
+ {/* Scroll pill - positioned above input, not over messages */}
  <AnimatePresence>
  {!atBottom&&(
  <motion.button initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:8}} onClick={scrollToBottom}

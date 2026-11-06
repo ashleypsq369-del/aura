@@ -41,7 +41,7 @@ export function isPrivateTeamProjectOfCreator(
  * Writes the same row state the reconciler's owner `bind` would, and only for
  * the creator's own active private row in exactly this workspace; any other
  * shape is left to the reconciler. Returns true when, after this call, the row
- * is the creator's active team row in this workspace — whether this call or a
+ * is the creator's active team row in this workspace - whether this call or a
  * reconcile that raced it after registration wrote it. Callers pair it with
  * `isPrivateTeamProjectOfCreator` read before registration to tell "this
  * publish made it team-visible" from "it already was". Synchronous and

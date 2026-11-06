@@ -48,11 +48,11 @@ retrieval:
 
 A unit is not a formatting preference. It is a declaration of what happens to a value when the user enlarges text.
 
-- `rem` — this value belongs to the text and must grow with it.
-- `px` — this value belongs to the screen and must stay put.
-- `%`, `fr`, `ch`, `clamp()`, `min()` — this value belongs to the available space.
+- `rem` - this value belongs to the text and must grow with it.
+- `px` - this value belongs to the screen and must stay put.
+- `%`, `fr`, `ch`, `clamp()`, `min()` - this value belongs to the available space.
 
-Pick the unit by answering that question, not by picking a house style and applying it everywhere. Both absolutist positions — all-rem and all-px — produce defects, and they are different defects.
+Pick the unit by answering that question, not by picking a house style and applying it everywhere. Both absolutist positions - all-rem and all-px - produce defects, and they are different defects.
 
 ## Zoom Is Not the Font-Size Setting
 
@@ -83,14 +83,14 @@ A product that hard-codes every dimension in px answers the first user and silen
 
 **Small icons inside controls** where the icon is a fixed glyph rather than text.
 
-**Sub-pixel corrections** — the `-1px` that makes two borders overlap instead of doubling.
+**Sub-pixel corrections** - the `-1px` that makes two borders overlap instead of doubling.
 
 ## Use Relative Units For
 
 Layout widths and gaps. This is where the "lock it in px so it stays stable" instinct goes wrong: a px-locked container is not stable, it is brittle. The text inside it still grows, and a fixed box is exactly what makes growing text clip.
 
 ```css
-/* Brittle — the box cannot absorb anything */
+/* Brittle - the box cannot absorb anything */
 .card   { width: 320px; height: 180px; }
 .sidebar { width: 280px; }
 
@@ -103,7 +103,7 @@ Layout widths and gaps. This is where the "lock it in px so it stays stable" ins
 
 ## Media Queries
 
-Use `em` in media queries. Media-query `rem` and `em` both resolve against the browser's default font size, ignoring any `html { font-size }` you set — so `em` is the honest spelling, and both respect the user's preference where a px breakpoint does not. A user with a large default font size gets the layout their effective text size warrants, not the one their device width claims.
+Use `em` in media queries. Media-query `rem` and `em` both resolve against the browser's default font size, ignoring any `html { font-size }` you set - so `em` is the honest spelling, and both respect the user's preference where a px breakpoint does not. A user with a large default font size gets the layout their effective text size warrants, not the one their device width claims.
 
 ```css
 @media (min-width: 48em) { /* ~768px at default settings */ }
@@ -115,7 +115,7 @@ Use `em` in media queries. Media-query `rem` and `em` both resolve against the b
 html { font-size: 62.5%; } /* Do not do this */
 ```
 
-The 62.5% trick exists to make rem arithmetic easy — `1.6rem` for 16px. It buys you mental arithmetic and pays for it by overriding the user's stated preference by default. Keep the root at the browser default and let the tooling do the division.
+The 62.5% trick exists to make rem arithmetic easy - `1.6rem` for 16px. It buys you mental arithmetic and pays for it by overriding the user's stated preference by default. Keep the root at the browser default and let the tooling do the division.
 
 ## A Measured Container Must Not Depend on What It Sizes
 

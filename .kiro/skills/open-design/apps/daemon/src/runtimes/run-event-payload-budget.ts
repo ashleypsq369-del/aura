@@ -1,17 +1,17 @@
 /**
- * I1 — A persisted run event never carries an unbounded payload.
+ * I1 - A persisted run event never carries an unbounded payload.
  *
  * Every event the daemon stores for a chat turn (`messages.events_json`,
- * `message_event_batches.events_json`) — and every `raw` line it streams to the
- * browser — fits {@link RUN_EVENT_JSON_BUDGET_BYTES}. An event that would not
+ * `message_event_batches.events_json`) - and every `raw` line it streams to the
+ * browser - fits {@link RUN_EVENT_JSON_BUDGET_BYTES}. An event that would not
  * fit has its payload shortened here, deterministically, with an explicit
  * inline marker (`[open-design: …]`) naming how many bytes were cut, and a
  * `truncated: { originalBytes }` field on the event itself.
  *
  * Why a budget exists at all (incident 2026-09-14): cursor-agent's
  * `tool_call` completion lines carry the whole edited file twice and its
- * `user` line echoes the whole composed prompt. Nothing parses those lines —
- * they fall through to `raw` — yet they were streamed and stored verbatim at
+ * `user` line echoes the whole composed prompt. Nothing parses those lines -
+ * they fall through to `raw` - yet they were streamed and stored verbatim at
  * ~1.4 MB per turn, until the renderer, the daemon and `GET …/messages` (V8's
  * maximum string length) all ran out of room on one long conversation.
  *
@@ -21,8 +21,8 @@
  *   rendered at all. The size-sensitive client heuristic
  *   (`LARGE_TOOL_RESULT_CHARS = 8_000` in `apps/web/src/providers/daemon.ts`)
  *   still sees a shortened result as "large".
- * - Consumers that parse payloads read small, head-anchored structures —
- *   media-generation JSON lines, file paths, commands, TodoWrite snapshots —
+ * - Consumers that parse payloads read small, head-anchored structures -
+ *   media-generation JSON lines, file paths, commands, TodoWrite snapshots -
  *   all of which fit untouched. Events are only shortened when they exceed the
  *   64 KiB budget, so e.g. a 40 KB tool result is stored exactly as before.
  * - 16 KiB keeps hundreds of lines of head and tail context for a human
@@ -30,11 +30,11 @@
  *   stays in the low MBs instead of growing with every file the agent touches.
  *
  * What is never shortened: `text` and `thinking`. They are the assistant's
- * answer and reasoning — the transcript itself, mirrored into
- * `messages.content` — bounded by the model's output, not by tool payloads.
+ * answer and reasoning - the transcript itself, mirrored into
+ * `messages.content` - bounded by the model's output, not by tool payloads.
  *
  * Shortening preserves what downstream code relies on: the event count (no
- * event is ever dropped — client/daemon merge guards compare counts), the
+ * event is ever dropped - client/daemon merge guards compare counts), the
  * event kind and identity fields (`id`, `name`, `toolUseId`, `isError`), JSON
  * validity of structured payloads, and the `+N −M` line counts of Write/Edit
  * rows (carried as `od_diff_stat`, the field the web's `diffStat` already
@@ -76,7 +76,7 @@ function utf8Bytes(value: string): number {
 
 /**
  * True when `json` fits `budget` UTF-8 bytes. A UTF-16 code unit encodes to
- * 1–3 bytes, so the character count brackets the byte count and the exact
+ * 1-3 bytes, so the character count brackets the byte count and the exact
  * (linear) byte count is only taken when the bracket is inconclusive.
  */
 function jsonFitsBudget(json: string, budget = RUN_EVENT_JSON_BUDGET_BYTES): boolean {
@@ -167,7 +167,7 @@ export function truncateTextToUtf8Budget(value: string, budgetBytes: number): st
 
 /**
  * Every string inside `value` longer than `leafBudget` bytes, shortened. The
- * structure — and every untouched branch, by reference — is preserved, so the
+ * structure - and every untouched branch, by reference - is preserved, so the
  * result stays valid JSON of the same shape.
  */
 function capStringLeaves(value: unknown, leafBudget: number, depth = 0): unknown {
@@ -323,7 +323,7 @@ function lineCount(value: string): number {
 
 /**
  * The `+N −M` a Write/Edit row shows, computed from the ORIGINAL input before
- * its text is shortened, and carried as `od_diff_stat` — the field
+ * its text is shortened, and carried as `od_diff_stat` - the field
  * `diffStat` in `apps/web/src/runtime/chat/format.ts` already prefers (codex
  * patches use it the same way). Mirrors that function's two branches exactly
  * (same tool names, same `split('\n').length` count) so a shortened row shows

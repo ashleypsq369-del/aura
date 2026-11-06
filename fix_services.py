@@ -49,10 +49,10 @@ NEW_SECTION = r"""        {/* ── ROLE IMAGE SLIDESHOW ── */}
             })}
           </div>
 
-          {/* Slideshow — 1 large featured + 2x2 thumbnail grid */}
+          {/* Slideshow - 1 large featured + 2x2 thumbnail grid */}
           <div style={{ display:'grid', gridTemplateColumns:'260px 1fr', gap:12, height:210 }}>
 
-            {/* Large featured card — rotates every 4s */}
+            {/* Large featured card - rotates every 4s */}
             {(() => {
               const entries = Object.entries(TYPE_META);
               const [key, meta] = entries[slideIdx % entries.length];

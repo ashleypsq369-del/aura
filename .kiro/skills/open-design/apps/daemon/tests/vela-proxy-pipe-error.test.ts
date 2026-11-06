@@ -1,7 +1,7 @@
 // Regression: the AMR/vela API proxy pipes the upstream response body to the
 // client (`upstreamRes.pipe(res)`) and the client upload body to the upstream
 // (`req.pipe(upstream)`). `.pipe()` does not forward a source `'error'`, and a
-// stream that emits `'error'` with no listener throws — an unhandled exception
+// stream that emits `'error'` with no listener throws - an unhandled exception
 // that crashes the privileged daemon. A mid-stream upstream ECONNRESET, or a
 // client aborting an upload, would therefore take the whole daemon down. Only
 // the outbound ClientRequest had a handler; the two piped stream bodies did not.
@@ -18,7 +18,7 @@ import { pipeProxyStreamWithGuard } from '../src/routes/vela.js';
 const flush = () => new Promise((resolve) => setTimeout(resolve, 20));
 
 describe('vela proxy pipe error guard', () => {
-  it('CONTROL: a bare pipe (the pre-fix shape) throws on a source error — the daemon-crash vector', () => {
+  it('CONTROL: a bare pipe (the pre-fix shape) throws on a source error - the daemon-crash vector', () => {
     const source = new PassThrough();
     const dest = new PassThrough();
     source.pipe(dest); // exactly what upstreamRes.pipe(res) / req.pipe(upstream) did

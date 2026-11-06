@@ -118,7 +118,7 @@ export function doctorPlugin(
     }
   }
 
-  // Plan §3.K3 / spec §10.3.5 — surface.component capability gate.
+  // Plan §3.K3 / spec §10.3.5 - surface.component capability gate.
   // A plugin that ships a custom React component must declare the
   // `genui:custom-component` capability so the trust gate at apply
   // time can refuse it for restricted installs.
@@ -205,7 +205,7 @@ export function summarizeDoctor(report: DoctorReport): string {
 }
 
 export function buildRegistryViewFromManifest(_manifest: PluginManifest, fallback: RegistryView): RegistryView {
-  // Phase 1 stub — returns the fallback unchanged. Phase 2A will overlay
+  // Phase 1 stub - returns the fallback unchanged. Phase 2A will overlay
   // bundled-plugin-specific catalogs when the plugin ships its own skills /
   // design systems within `<plugin>/skills/` etc.
   return fallback;

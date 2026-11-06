@@ -1,5 +1,5 @@
 # Dogfood for action.yml: run the published composite action against our own
-# site. No baseline — this verifies the action mechanics (browser install,
+# site. No baseline - this verifies the action mechanics (browser install,
 # CLI invocation, report output), not the drift verdict, so extraction churn
 # can't make it flaky.
 name: action-smoke

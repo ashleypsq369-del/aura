@@ -8,7 +8,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 /**
- * OPEND-2566 — 断线重连之后,同一份回答被存了两遍。
+ * OPEND-2566 - 断线重连之后,同一份回答被存了两遍。
  *
  * 这不是手搓两条一样的事件塞进库里。整条链路是真的:
  *   - 第 0 次尝试:agent 调了一次工具、拿到工具结果、把结论**完整地流了出来**,
@@ -108,7 +108,7 @@ describe('OPEND-2566 duplicate answer after an upstream reconnect', () => {
       });
 
     // 屏幕上那一份:SSE 上真的流过两遍(模型重采样了)。这一条不是被测行为,
-    // 是把「内容层」和「存储层」分开的量法 —— 它绿着,说明上游确实生成了两次。
+    // 是把「内容层」和「存储层」分开的量法 -- 它绿着,说明上游确实生成了两次。
     const streamedText = events
       .filter((event) => event.event === 'agent' && event.data.type === 'text_delta')
       .map((event) => String(event.data.delta ?? ''))
@@ -175,7 +175,7 @@ if (attempts === 0) {
       content: [{ type: 'tool_result', tool_use_id: 'tool-dup', content: 'read once', is_error: false }]
     }
   });
-  // 结论已经完整地流到了屏幕上,但 turn 还没关 —— 然后上游断了。
+  // 结论已经完整地流到了屏幕上,但 turn 还没关 -- 然后上游断了。
   for (const piece of [conclusion.slice(0, 20), conclusion.slice(20)]) {
     emit({
       type: 'stream_event',

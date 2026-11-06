@@ -33,7 +33,7 @@ import { checkRobotsTxt, fetchRobotsRules, filterAllowedUrls, robotsAgentFor, ro
 const { version } = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
 
 /**
- * @modelcontextprotocol/sdk and zod are regular dependencies since 0.23.1 —
+ * @modelcontextprotocol/sdk and zod are regular dependencies since 0.23.1 -
  * they were optional peers before, which broke the documented npx install
  * (npx never installs optional peers, and the suggested `npm i` remedy cannot
  * reach the npx cache tree). The deferred import stays as a backstop so a
@@ -60,7 +60,7 @@ async function loadMcpDeps() {
   }
 }
 
-// extractBranding expects a spinner — stub it for MCP context
+// extractBranding expects a spinner - stub it for MCP context
 const nullSpinner = {
   text: "",
   start(msg) { this.text = msg; return this; },

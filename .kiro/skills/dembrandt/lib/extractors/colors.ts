@@ -144,8 +144,8 @@ export async function extractColors(page) {
       return diff > 180 ? 360 - diff : diff;
     }
 
-    // "primary" qualified by a rendering role names a slot on a surface — the
-    // text on the primary button, a border — not the brand primary itself.
+    // "primary" qualified by a rendering role names a slot on a surface - the
+    // text on the primary button, a border - not the brand primary itself.
     const ROLE_QUALIFIED_PRIMARY =
       /(?:foreground|fg|text|ink|label|caption|border|outline|ring|divider|icon|placeholder|muted|hover|active|disabled)[-_ ]?primary|primary[-_ ]?(?:foreground|fg|text|ink|label|border|outline|ring|icon|content|hover|active|disabled)/;
 
@@ -249,7 +249,7 @@ export async function extractColors(page) {
     // Black and white CTA fills never compete with a chromatic candidate.
     const ctaNeutralMap = new Map();
 
-    // Mirror of CONTEXT_SCORES (lib/extractors/color-heuristics.ts) — kept inline
+    // Mirror of CONTEXT_SCORES (lib/extractors/color-heuristics.ts) - kept inline
     // because page.evaluate runs in an isolated realm and cannot import. Card /
     // section / input / badge families lift colours on repeated content surfaces
     // above the structural-noise threshold.
@@ -319,7 +319,7 @@ export async function extractColors(page) {
       if (isColorSample(el, rect)) return;
 
       const bgColor = toLegacy(computed.backgroundColor);
-      // `color` inherits, so a wrapper that paints no text still reports one —
+      // `color` inherits, so a wrapper that paints no text still reports one -
       // and for an unstyled <a> that is the browser's default link blue, which
       // then outranks the brand. Read the text colour only off elements that
       // actually render text.
@@ -358,7 +358,7 @@ export async function extractColors(page) {
       // silent. Median labelled brand-colour xpath depth is ~10, so own-class
       // scoring alone misses content buried inside a labelled wrapper. Mirror of
       // ancestorLiftScore (color-heuristics.ts): bounded to 4 hops, only weights
-      // <= ancestorLiftMax, and only when own score is still baseline — so cost
+      // <= ancestorLiftMax, and only when own score is still baseline - so cost
       // stays low and already-branded elements are never altered.
       if (score <= ancestorLiftMax) {
         let lift = 0;
@@ -387,7 +387,7 @@ export async function extractColors(page) {
 
       if (isCta) {
         score = Math.max(score, 25);
-        // CTA background is a strong primary signal — count occurrences
+        // CTA background is a strong primary signal - count occurrences
         const ctaNorm = normalizeColor(bgColor);
         if (ctaNorm) {
           const existing = ctaPrimaryMap.get(ctaNorm) || { original: bgColor, count: 0 };
@@ -677,7 +677,7 @@ export async function extractColors(page) {
     // saturated accent (e.g. a cyan brand mark beside a navy primary). Surface
     // the accent as its own token so the two are not collapsed: the most
     // chromatic high-/medium-confidence palette colour whose hue is clearly
-    // different from primary. Additive only — never alters the primary pick,
+    // different from primary. Additive only - never alters the primary pick,
     // which already resolves most brands correctly.
     if (semanticColors.primary) {
       const primaryNorm = normalizeColor(semanticColors.primary);
@@ -691,7 +691,7 @@ export async function extractColors(page) {
       if (accent) semanticColors.accent = accent.c.color;
     }
 
-    // Full detected set — every colour that passed the alpha>=0.3 gate, with NO
+    // Full detected set - every colour that passed the alpha>=0.3 gate, with NO
     // frequency threshold and NO perceptual merge, so near-identical shades survive
     // as the design signal they are (six reds stay six reds). This is the high-recall
     // candidate set the ML pipeline consumes; the curated `palette` above remains the
@@ -781,8 +781,8 @@ export async function extractColors(page) {
 
 /**
  * Confidence is a claim about brand identity, and semantic context alone cannot
- * carry it. The palette scored context only, so a single hero element — or a
- * declared token the page never actually paints — came out "high" off one
+ * carry it. The palette scored context only, so a single hero element - or a
+ * declared token the page never actually paints - came out "high" off one
  * occurrence. Spacing and radii have gated on usage from the start; this gives
  * colour the same floor. A colour seen once is medium at best, whatever its
  * score says, and two occurrences are the least that can support "high".
@@ -849,7 +849,7 @@ function hoverVariant(hex) {
   const rgb = hexToRgb(hex);
   if (!rgb) return null;
   const lum = relativeLuminance(rgb);
-  // Lighten dark colors, darken light ones — always move toward better contrast
+  // Lighten dark colors, darken light ones - always move toward better contrast
   const factor = lum < 0.18 ? 1.2 : 0.85;
   const clamp = v => Math.min(255, Math.max(0, Math.round(v)));
   const r = clamp(rgb.r * factor);
@@ -867,7 +867,7 @@ function toOpaque(color) {
 }
 
 function isSameHueFamily(rgb, primaryRgb, threshold = 30) {
-  // Compare hue in HSL space — same hue ±threshold degrees = variant
+  // Compare hue in HSL space - same hue ±threshold degrees = variant
   function toHsl({ r, g, b }) {
     r /= 255; g /= 255; b /= 255;
     const max = Math.max(r, g, b), min = Math.min(r, g, b);

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * artifacts/_shared — the bits every artifact (or 2+ of them) needs: the HTML
+ * artifacts/_shared - the bits every artifact (or 2+ of them) needs: the HTML
  * document shell, the brand-font resolver, the derived-copy helpers (tagline /
  * blurb / pillars / feature & FAQ & pricing copy) and a couple of small markup
  * helpers (wordmark / inverse button / section head). Kept pure: every export
@@ -157,7 +157,7 @@ export function brandBlurb(brand: Brand): string {
   return (
     brand.description?.trim() ||
     brand.voice.tone?.trim() ||
-    `${brand.name} — a brand system derived from a single source.`
+    `${brand.name} - a brand system derived from a single source.`
   );
 }
 
@@ -174,12 +174,12 @@ export function pillarList(brand: Brand): string[] {
 }
 
 /**
- * Pillars are often written as "Title — longer explanation" (or with ":" / "·").
+ * Pillars are often written as "Title - longer explanation" (or with ":" / "·").
  * Split on the first such separator so cards get a short title and a real body
  * instead of a truncated sentence as the title.
  */
 export function splitPillar(pillar: string): { title: string; body?: string } {
-  const m = pillar.match(/^(.{2,60}?)\s*(?:—|–|:|·)\s+(.{12,})$/);
+  const m = pillar.match(/^(.{2,60}?)\s*(?:-|-|:|·)\s+(.{12,})$/);
   if (m) return { title: cap(m[1].trim()), body: cap(m[2].trim()) };
   return { title: cap(pillar) };
 }
@@ -212,7 +212,7 @@ export function featureCards(brand: Brand): Array<{ title: string; body: string 
         body:
           split.body ??
           (adj
-            ? `${cap(adj)} by design — and built into every surface ${brand.name} ships.`
+            ? `${cap(adj)} by design - and built into every surface ${brand.name} ships.`
             : FEATURE_FALLBACKS[i].body),
       });
     } else {
@@ -224,7 +224,7 @@ export function featureCards(brand: Brand): Array<{ title: string; body: string 
 
 export function howSteps(brand: Brand): Array<{ title: string; body: string }> {
   return [
-    { title: "Connect", body: `Point ${brand.name} at what you already have — no rebuild required.` },
+    { title: "Connect", body: `Point ${brand.name} at what you already have - no rebuild required.` },
     { title: "Make it yours", body: "Adjust the defaults until they fit the way your team works." },
     { title: "Launch", body: "Go live with confidence, then iterate from real feedback." },
   ];
@@ -235,7 +235,7 @@ export function faqItems(brand: Brand): Array<{ title: string; body: string }> {
     { title: `What is ${brand.name}?`, body: brandBlurb(brand) },
     {
       title: "How long does it take to get started?",
-      body: "Most teams are up and running in under an hour. There is nothing to install and no migration to plan — connect, customize, launch.",
+      body: "Most teams are up and running in under an hour. There is nothing to install and no migration to plan - connect, customize, launch.",
     },
     {
       title: "Can I try it before committing?",
@@ -299,7 +299,7 @@ export function quoteCards(brand: Brand): Array<{ quote: string; name: string; r
       role: "Head of Design, Northwind",
     },
     {
-      quote: `We were skeptical, then we shipped our first project ${a1 ? `— genuinely ${a1} — ` : ""}in a single afternoon. The team never looked back.`,
+      quote: `We were skeptical, then we shipped our first project ${a1 ? `- genuinely ${a1} - ` : ""}in a single afternoon. The team never looked back.`,
       name: "Jonas Weber",
       role: "Engineering Lead, Lumen Labs",
     },
@@ -326,7 +326,7 @@ export function statItems(): Array<{ value: string; label: string }> {
   ];
 }
 
-/** A short logo wordmark — uses the brand name (the engine works text-only). */
+/** A short logo wordmark - uses the brand name (the engine works text-only). */
 export function wordmark(brand: Brand, opts?: { color?: string }): string {
   const color = opts?.color ?? varRef("colorText");
   return `<span style="font-family:var(--display-family);font-weight:${varRef(

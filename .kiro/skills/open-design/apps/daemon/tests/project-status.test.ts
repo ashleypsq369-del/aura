@@ -60,7 +60,7 @@ function seedProject(db: Database.Database, projectId: string, runStatus = 'succ
   return `${projectId}-conversation`;
 }
 
-// A renderable question-form body — JSON with a non-empty `questions` array.
+// A renderable question-form body - JSON with a non-empty `questions` array.
 // Awaiting-input is a *renderable* form latch, so every fixture that should
 // latch has to carry a body the parser can actually render, not a bare tag.
 const RENDERABLE_BODY = '{"questions":[{"id":"surface","label":"Which surface?"}]}';
@@ -149,7 +149,7 @@ test('plain text question does not mark awaiting input', () => {
 
 // The production regression (OD Next strategy turn, PR #7016): the agent said
 // it had nothing to ask and still wrote the literal marker as a declaration
-// line — unclosed, prose instead of JSON. Nothing renders, so there is no form
+// line - unclosed, prose instead of JSON. Nothing renders, so there is no form
 // for the user to answer, yet the substring match latched the project on
 // `Needs input` with no exit but a user message that will never come.
 const STRAY_MARKER = '策略判断信息充足，将直接进入生产。\n\n<question-form> 无需提出';

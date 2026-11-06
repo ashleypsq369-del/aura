@@ -147,14 +147,14 @@ describe('Langfuse message finalization gate', () => {
   // `agy -c` carries its own conversation memory, so packing the
   // rendered web transcript (the `## user` / `## assistant` blocks)
   // into the user request duplicates context the upstream CLI already
-  // has — AND the embedded copy includes the literal `<question-form>`
+  // has - AND the embedded copy includes the literal `<question-form>`
   // markup the agent emitted earlier, which the model can then re-emit
   // after it is answered, looking like the discovery form loop never breaks.
   // With `skipTranscript: true`, only the latest user turn ships and
   // the misleading "## Full conversation transcript" header is dropped.
   it('drops the transcript and transcript header when skipTranscript is true', () => {
     const currentPrompt = [
-      '[form answers — discovery]',
+      '[form answers - discovery]',
       '- output: Dashboard / tool UI',
       '- brand: Pick a direction for me [value: pick_direction]',
     ].join('\n');
@@ -173,15 +173,15 @@ describe('Langfuse message finalization gate', () => {
       skipTranscript: true,
     });
 
-    // The form-answer transition still fires — that drives RULE 2 / 3.
+    // The form-answer transition still fires - that drives RULE 2 / 3.
     expect(prompt).toContain('The user has answered the discovery form.');
     // The latest user turn is preserved verbatim.
     expect(prompt).toContain(currentPrompt);
-    // The transcript header is dropped — it was misleading because the
+    // The transcript header is dropped - it was misleading because the
     // body underneath is no longer a transcript.
     expect(prompt).not.toContain('## Full conversation transcript');
     // The prior assistant turn's `<question-form>` markup must NOT
-    // leak in — that's the form-loop regression we're guarding.
+    // leak in - that's the form-loop regression we're guarding.
     // (The transition block legitimately mentions "<question-form>"
     // in prose, so the assertion targets the opening tag the prior
     // turn carried, not the bare substring.)
@@ -195,7 +195,7 @@ describe('Langfuse message finalization gate', () => {
   // answers twice in the same `# User request`.
   it('ships the submitted form answers exactly once on the resume (skipTranscript) path', () => {
     const currentPrompt = [
-      '[form answers — discovery]',
+      '[form answers - discovery]',
       '- output: Dashboard / tool UI',
       '- brand: Pick a direction for me [value: pick_direction]',
     ].join('\n');
@@ -221,14 +221,14 @@ describe('Langfuse message finalization gate', () => {
   // plain agents (GPT-OSS-120B Medium, Gemini 3.5 Flash) to skip
   // RULE 1's form example on follow-up turns. We pin the trigger
   // condition AND the specific anti-patterns the literal carries,
-  // because silently weakening any of them — e.g. dropping the
-  // markdown-fence ban or the "subagents stopped" hallucination ban —
+  // because silently weakening any of them - e.g. dropping the
+  // markdown-fence ban or the "subagents stopped" hallucination ban -
   // reintroduces the form-echo regression we hit in PR #3157 on GPT-OSS.
   it('FORM_ANSWERED_SYSTEM_OVERRIDE pins the anti-patterns weak plain agents need spelled out', async () => {
     const { FORM_ANSWERED_SYSTEM_OVERRIDE } = await import('../src/server.js');
 
     expect(FORM_ANSWERED_SYSTEM_OVERRIDE).toContain(
-      '## OVERRIDE — submitted form answers are authoritative',
+      '## OVERRIDE - submitted form answers are authoritative',
     );
     expect(FORM_ANSWERED_SYSTEM_OVERRIDE).not.toContain('turn 2 or later');
     expect(FORM_ANSWERED_SYSTEM_OVERRIDE).toContain(
@@ -257,15 +257,15 @@ describe('Langfuse message finalization gate', () => {
 
   it('FORM_ANSWERED_GENERIC_OVERRIDE is used for non-discovery/task-type form ids', () => {
     // Non-build-transition forms should get a smaller override that only
-    // suppresses re-asking — not the RULE 2 / RULE 3 / artifact directive.
+    // suppresses re-asking - not the RULE 2 / RULE 3 / artifact directive.
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).toContain(
-      '## OVERRIDE — submitted form answers are authoritative',
+      '## OVERRIDE - submitted form answers are authoritative',
     );
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).not.toContain('turn 2 or later');
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).toContain('Do not ask the same form again');
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).toContain('new, materially');
     // Must NOT contain the artifact-build directive that only applies to
-    // discovery / task-type — sending it for an unrelated form id would give
+    // discovery / task-type - sending it for an unrelated form id would give
     // the model contradictory instructions.
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).not.toContain('RULE 2');
     expect(FORM_ANSWERED_GENERIC_OVERRIDE).not.toContain('RULE 3');
@@ -274,7 +274,7 @@ describe('Langfuse message finalization gate', () => {
 
   it('FORM_ANSWERED_SYSTEM_OVERRIDE only fires through composeChatUserRequestForAgent\'s transition gate', async () => {
     // Defense-in-depth check: a turn that is NOT a form-answer follow-up
-    // (no `[form answers — …]` header in `currentPrompt`) must not
+    // (no `[form answers - …]` header in `currentPrompt`) must not
     // surface any of the OVERRIDE language, even when `message` carries
     // a transcript that mentions question-form. Otherwise we'd suppress
     // the legitimate turn-1 form ask.
@@ -282,7 +282,7 @@ describe('Langfuse message finalization gate', () => {
     const currentPrompt = '继续做点修改';
 
     const prompt = composeChatUserRequestForAgent(transcript, currentPrompt);
-    expect(prompt).not.toContain('OVERRIDE — submitted form answers are authoritative');
+    expect(prompt).not.toContain('OVERRIDE - submitted form answers are authoritative');
     expect(prompt).not.toContain('RULE 1 does not require another form');
   });
 

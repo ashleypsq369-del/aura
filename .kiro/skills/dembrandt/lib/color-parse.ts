@@ -2,10 +2,10 @@
  * Spec-complete CSS color parser (CSS Color Level 4).
  *
  * One entry point, parseCssColor(), accepts every color notation a stylesheet
- * or computed style can contain — named colors, hex (3/4/6/8), legacy
+ * or computed style can contain - named colors, hex (3/4/6/8), legacy
  * comma-separated rgb()/rgba()/hsl()/hsla(), modern space-separated syntax
  * with slash alpha, hwb(), lab()/lch() (D50), oklab()/oklch(), and color()
- * with the common predefined spaces — and resolves it to sRGB 8-bit channels
+ * with the common predefined spaces - and resolves it to sRGB 8-bit channels
  * plus float alpha. Out-of-gamut values are mapped by the CSS Color 4
  * chroma-reduction algorithm, not channel clipping.
  *

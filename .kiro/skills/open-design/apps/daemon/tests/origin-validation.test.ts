@@ -451,7 +451,7 @@ describe('daemon origin validation middleware', () => {
   // where Express strips the `/api` mount prefix, so it must match
   // `/library/...` (NOT `/api/library/...`). If the prefix were wrong, a
   // first-contact (unpaired) extension hitting /api/library/ingest would fall
-  // through to the global origin validator and get 403 — breaking the
+  // through to the global origin validator and get 403 - breaking the
   // fresh-install capture/import flow.
 
   it('lets an unpaired browser-extension origin reach /api/library/ingest', async () => {
@@ -671,7 +671,7 @@ describe('isLocalSameOrigin: OD_ALLOWED_ORIGINS bypass for reverse-proxy deploym
     expect(isLocalSameOrigin(req, 7457, env)).toBe(false);
   });
 
-  it('preserves the no-Origin behavior — falls back to loopback host validation', () => {
+  it('preserves the no-Origin behavior - falls back to loopback host validation', () => {
     const reqLoopback = {
       headers: { host: '127.0.0.1:7457' },
     };

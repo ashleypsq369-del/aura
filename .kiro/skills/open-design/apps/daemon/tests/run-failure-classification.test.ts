@@ -29,7 +29,7 @@ vi.mock('../src/integrations/vela-errors.js', () => ({
   },
 }));
 
-// Only `classifyAgentServiceFailure` is stubbed — this suite wants a
+// Only `classifyAgentServiceFailure` is stubbed - this suite wants a
 // deterministic service class per row. `reportsToolPrincipalAuthFailure` is
 // kept REAL via `importOriginal`: it answers a different question (whose
 // credential failed), and a hand-written stand-in for it would let these rows
@@ -999,7 +999,7 @@ describe('classifyRunFailure', () => {
 // (SIGINT / exit 130) must NOT be laundered into a retryable `timeout`. Each
 // has a non-retryable home so the safe-retry policy never re-spawns an
 // OOM/crash that is near-certain to reproduce.
-describe('classifyRunFailure — signal and interrupt attribution', () => {
+describe('classifyRunFailure - signal and interrupt attribution', () => {
   function classifySignal(
     signal: string,
     message = '',
@@ -1428,7 +1428,7 @@ describe('classifyRunFailure — signal and interrupt attribution', () => {
     expect(
       classify(
         'AGENT_EXECUTION_FAILED',
-        'API Error: API returned an empty or malformed response (HTTP 200) — check for a proxy or gateway intercepting the request',
+        'API Error: API returned an empty or malformed response (HTTP 200) - check for a proxy or gateway intercepting the request',
       ),
     ).toMatchObject({
       failure_category: 'upstream_unavailable',
@@ -1508,7 +1508,7 @@ describe('cpu_unsupported (AVX2) crash classification', () => {
   // build requiring AVX2; on CPUs without it the child dies with an illegal
   // instruction BEFORE readiness, vela surfaces an ACP fatal, and the daemon
   // stamps runtime_close: fatal_rpc_error. The crash text must win over the
-  // fatal_rpc_error close-reason promotion — retrying the same binary on the
+  // fatal_rpc_error close-reason promotion - retrying the same binary on the
   // same CPU deterministically fails again.
   it('classifies a Bun illegal-instruction crash under an ACP fatal close as cpu_unsupported', () => {
     const stderr = [
@@ -1535,7 +1535,7 @@ describe('cpu_unsupported (AVX2) crash classification', () => {
   it('classifies the abort-after-panic shape (exit status 3) via its stderr banner', () => {
     // Production shape (Langfuse trace 266a5706, 0.15.0 stable): on a CPU with
     // AVX but not AVX2 (Sandy/Ivy Bridge era), Bun panics on an illegal
-    // instruction, panics again during the panic, and abort()s — so the exit
+    // instruction, panics again during the panic, and abort()s - so the exit
     // status vela reports is 3, not STATUS_ILLEGAL_INSTRUCTION. Only the
     // stderr banner carries the truth.
     const stderr = [
@@ -1571,7 +1571,7 @@ describe('cpu_unsupported (AVX2) crash classification', () => {
   });
 
   it('classifies a bare STATUS_ILLEGAL_INSTRUCTION exit under an ACP fatal close as cpu_unsupported', () => {
-    // No Bun crash banner — vela only reports the raw Windows exit status
+    // No Bun crash banner - vela only reports the raw Windows exit status
     // (0xC000001D, decimal 3221225501 in Go/Node exit-status text).
     expect(
       classify(
@@ -1604,7 +1604,7 @@ describe('cpu_unsupported (AVX2) crash classification', () => {
   });
 
   it('keeps a STATUS_ILLEGAL_INSTRUCTION exit outside the opencode startup context retryable', () => {
-    // The raw status code is generic Windows SIGILL — any agent binary can die
+    // The raw status code is generic Windows SIGILL - any agent binary can die
     // with it for reasons that have nothing to do with AVX2. Without vela's
     // bundled-opencode startup wrapper text it must stay on the existing
     // fatal_rpc_error path instead of surfacing the processor-support card.
@@ -1623,7 +1623,7 @@ describe('cpu_unsupported (AVX2) crash classification', () => {
   it('does not claim an illegal-instruction crash without the no_avx2 feature line', () => {
     // A SIGILL on an AVX2-capable machine (runtime bug, corrupted jump) prints
     // the same "Illegal instruction" panic but a CPU-feature line WITHOUT
-    // no_avx2. That must keep the retryable fatal_rpc_error path — labeling it
+    // no_avx2. That must keep the retryable fatal_rpc_error path - labeling it
     // "Processor not supported" would mislead the user and drop the retry.
     const stderr = [
       'Bun v1.3.14 (0d9b296a) Windows x64',
@@ -1877,7 +1877,7 @@ describe('execution_failed close-reason refinement', () => {
 
   it('does not override an already-specific process_exit detail with the close reason', () => {
     // AGENT_EXIT_1 classifies to the specific `exit_code` detail; a stream_error
-    // close reason must not relabel it — only the opaque bucket is refined.
+    // close reason must not relabel it - only the opaque bucket is refined.
     expect(
       classify('AGENT_EXIT_1', '', [
         errorEvent('AGENT_EXIT_1', ''),
@@ -1893,7 +1893,7 @@ describe('execution_failed close-reason refinement', () => {
 // text, so the English-only detectors miss them. Real production texts were
 // sampled from Langfuse (#3408 P1). Each must land in its true product-view
 // category instead of the engineering-view opaque bucket.
-describe('classifyRunFailure — AMR/vela reclassification out of execution_failed', () => {
+describe('classifyRunFailure - AMR/vela reclassification out of execution_failed', () => {
   it('classifies a vela Chinese pre-charge (insufficient balance) failure as insufficient_balance', () => {
     const result = classify(
       'AGENT_EXECUTION_FAILED',
@@ -1961,7 +1961,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
     expect(result?.retryable).toBe(true);
   });
 
-  // A genuine quota exhaustion must keep its existing hard_quota reading — the
+  // A genuine quota exhaustion must keep its existing hard_quota reading - the
   // window-limit branch above must not swallow the whole `usage limit` family.
   it('keeps a genuine session-limit exhaustion on hard_quota', () => {
     const result = classify(
@@ -2033,7 +2033,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
   // Blocking point 1: rpc_close_reason=empty_output must NOT outrank a
   // structured RATE_LIMITED error code.  The child exits cleanly after the
   // provider rejects the request with a rate-limit, and the daemon stamps
-  // rpc_close_reason=empty_output — but RATE_LIMITED is the authoritative
+  // rpc_close_reason=empty_output - but RATE_LIMITED is the authoritative
   // signal and must win.
   it('classifies RATE_LIMITED + rpc_close_reason=empty_output as rate_limit, not empty_output', () => {
     const result = classify(
@@ -2049,7 +2049,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
     expect(result?.retryable).toBe(true);
   });
 
-  // Blocking point 1: hard quota text + rpc_close_reason=empty_output — the
+  // Blocking point 1: hard quota text + rpc_close_reason=empty_output - the
   // quota exhaustion text must win over the empty_output close reason.
   it('classifies hard quota text + rpc_close_reason=empty_output as hard_quota, not empty_output', () => {
     const result = classifyForAgent(
@@ -2066,7 +2066,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
     expect(result?.retryable).toBe(false);
   });
 
-  // Blocking point 1: upstream failure + rpc_close_reason=empty_output — the
+  // Blocking point 1: upstream failure + rpc_close_reason=empty_output - the
   // upstream signal must win over the empty_output close reason.
   it('classifies UPSTREAM_UNAVAILABLE + rpc_close_reason=empty_output as upstream_unavailable, not empty_output', () => {
     const result = classify(
@@ -2084,12 +2084,12 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
 
   // Blocking point 2: the bare \bquota\b word is intentionally absent from
   // isHardQuotaText so advisory phrases like "checking quota" in the daemon's
-  // own empty-output fallback message do not match — confirmed by the existing
+  // own empty-output fallback message do not match - confirmed by the existing
   // advisory-quota test above.  This test pins the specific exhaustion phrase
   // "exceeded your current quota" that MUST still match even without the bare
   // \bquota\b term in the pattern.
   it('still matches "exceeded your current quota" as hard_quota without bare \\bquota\\b in the pattern', () => {
-    // No rpc_close_reason=empty_output — goes through the text-heuristic path.
+    // No rpc_close_reason=empty_output - goes through the text-heuristic path.
     const result = classify(
       'RATE_LIMITED',
       'API error: you have exceeded your current quota for this billing period.',
@@ -2136,7 +2136,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
     expect(result?.retryable).toBe(false);
   });
 
-  // Advisory phrases from antigravityQuotaGuidance() — these are in the
+  // Advisory phrases from antigravityQuotaGuidance() - these are in the
   // user-facing guidance string, not in any upstream error, and must NOT
   // trigger hard_quota classification.
   it('does not classify "has its own quota" advisory phrase as hard_quota', () => {
@@ -2159,7 +2159,7 @@ describe('classifyRunFailure — AMR/vela reclassification out of execution_fail
 // The agent binary being absent at its resolved path also leaks into the opaque
 // execution_failed bucket (#3408 P1). Real production texts sampled from
 // Langfuse. These are an install/PATH problem, not an opaque engine failure.
-describe('classifyRunFailure — binary-not-found reclassification out of execution_failed', () => {
+describe('classifyRunFailure - binary-not-found reclassification out of execution_failed', () => {
   it('classifies a Windows "is not recognized as an internal or external command" as cli_not_installed', () => {
     const result = classify(
       'AGENT_EXECUTION_FAILED',
@@ -2181,7 +2181,7 @@ describe('classifyRunFailure — binary-not-found reclassification out of execut
 
 // Batch A: more named causes that currently leak into execution_failed, routed
 // to existing categories. Real production texts sampled from Langfuse (#3408 P1).
-describe('classifyRunFailure — batch A reclassification out of execution_failed', () => {
+describe('classifyRunFailure - batch A reclassification out of execution_failed', () => {
   it('classifies a local-runtime "Prefill context too large" as prompt_too_large', () => {
     const result = classify(
       'AGENT_EXECUTION_FAILED',
@@ -2265,7 +2265,7 @@ describe('classifyRunFailure — batch A reclassification out of execution_faile
   });
 });
 
-describe('classifyRunFailure — BYOK OpenCode reclassification out of stream_error', () => {
+describe('classifyRunFailure - BYOK OpenCode reclassification out of stream_error', () => {
   it('classifies missing BYOK OpenCode run config as fixable agent config', () => {
     const result = classifyForAgent(
       'byok-opencode',
@@ -2459,7 +2459,7 @@ describe('classifyRunFailure — BYOK OpenCode reclassification out of stream_er
   });
 });
 
-describe('classifyRunFailure — custom Anthropic endpoint disconnects', () => {
+describe('classifyRunFailure - custom Anthropic endpoint disconnects', () => {
   it('classifies configured custom Anthropic endpoint drops as stream_disconnected', () => {
     const result = classify(
       'AGENT_CONNECTION_DROPPED',
@@ -2474,7 +2474,7 @@ describe('classifyRunFailure — custom Anthropic endpoint disconnects', () => {
   });
 });
 
-describe('classifyRunFailure — AMR sampled failures', () => {
+describe('classifyRunFailure - AMR sampled failures', () => {
   it('classifies Windows opencode readiness crash status as process_crashed', () => {
     const result = classify(
       'AGENT_SIGNAL_SIGTERM',
@@ -2502,7 +2502,7 @@ describe('classifyRunFailure — AMR sampled failures', () => {
   });
 });
 
-describe('classifyRunFailure — sampled 0.15.1 provider request failures', () => {
+describe('classifyRunFailure - sampled 0.15.1 provider request failures', () => {
   it.each([
     {
       name: 'HTTP 413 request body rejection',
@@ -2652,7 +2652,7 @@ describe('classifyRunFailure — sampled 0.15.1 provider request failures', () =
 describe('被硬杀掉的进程不许被文本蒙混成别的原因', () => {
   /**
    * 真机复现(2026-08-27):对 daemon 起的 claude 子进程 `kill -9`,
-   * run 落库是 `signal: SIGKILL / exitCode: null` —— 教科书式的 S19,
+   * run 落库是 `signal: SIGKILL / exitCode: null` -- 教科书式的 S19,
    * 可分类器给出的是 `auth / stale_profile`,聊天里那张卡于是让用户去跑
    * `/login`。**用户的登录一点问题都没有**,被杀是外部动作。
    *
@@ -2660,11 +2660,11 @@ describe('被硬杀掉的进程不许被文本蒙混成别的原因', () => {
    * `signalInterruptClassification` 前面几百行,于是缓冲区里碰巧留下的
    * 半截 stderr 就能盖过「操作系统把它杀了」这个结构性事实。
    *
-   * 本文件里那句注释早就写对了道理 ——「a signal is the strongest evidence
-   * we have」—— 只是没有覆盖到强制信号这一档。
+   * 本文件里那句注释早就写对了道理 --「a signal is the strongest evidence
+   * we have」-- 只是没有覆盖到强制信号这一档。
    *
    * 收窄到**强制信号**(SIGKILL 与那几个崩溃信号):它们从来不是子进程
-   * 「说」出来的,文本再像也解释不了它们。SIGTERM / SIGINT 不动 ——
+   * 「说」出来的,文本再像也解释不了它们。SIGTERM / SIGINT 不动 --
    * 那两个确实会伴随优雅关闭与中断,文本在那儿是有意义的。
    */
   const killedWithProfileNoise = (signal: string) =>
@@ -2696,7 +2696,7 @@ describe('被硬杀掉的进程不许被文本蒙混成别的原因', () => {
 
   /**
    * ⚠️ 这一条才是**真机那一份**。上面三条我一开始写的是
-   * `errorCode: 'AGENT_SIGNAL_SIGKILL'` —— 那个形状产品根本产不出来:
+   * `errorCode: 'AGENT_SIGNAL_SIGKILL'` -- 那个形状产品根本产不出来:
    * 真跑一次 `kill -9`,run 落库是 `errorCode: 'AGENT_EXECUTION_FAILED'`,
    * 信号只在 `status.signal` 里。于是我的「修复」在单测里绿了、在浏览器里
    * 一点没变。**能复现不等于复现的是同一条路。**
@@ -2720,7 +2720,7 @@ describe('被硬杀掉的进程不许被文本蒙混成别的原因', () => {
   });
 
   it('still lets the text speak for SIGTERM and SIGINT', () => {
-    // 这两个是优雅关闭 / 中断会走的路,文本在那儿确实更有信息量 —— 不许顺手改掉。
+    // 这两个是优雅关闭 / 中断会走的路,文本在那儿确实更有信息量 -- 不许顺手改掉。
     for (const signal of ['SIGTERM', 'SIGINT']) {
       expect(killedWithProfileNoise(signal)?.failure_category).toBe('auth');
     }

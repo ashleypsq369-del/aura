@@ -199,7 +199,7 @@ export async function captureFrozenSkillPackageFromSelections(input: {
  * under `plugins/_official/examples/`, deliberately outside the skill-like
  * roots, so the 183 shipped examples never appear in the Skill picker or in
  * any other consumer of that catalogue. Capture therefore takes the resolved
- * folder rather than an id plus a catalogue to look it up in — a new entry
+ * folder rather than an id plus a catalogue to look it up in - a new entry
  * point adds a resolver, not a catalogue root.
  *
  * The canonical id is ADOPTED from the folder's own SKILL.md, by exactly the
@@ -213,7 +213,7 @@ export async function captureFrozenSkillPackageFromSelections(input: {
  *
  * Adoption does not weaken the freeze. The catalogue entry point cross-checks
  * the declared name because the caller's id came from an earlier, separate
- * listing pass — that check catches a folder swapped between listing and
+ * listing pass - that check catches a folder swapped between listing and
  * capture. Here the caller hands over the directory itself, and the read is
  * already bracketed by the realpath / `O_NOFOLLOW` / dev-ino fencing below, so
  * the manifest is read inside the fence rather than claimed outside it.
@@ -240,7 +240,7 @@ export interface ResolvedFrozenSkillSourceV1 {
  * Capture already-resolved skill-like folders into a frozen package.
  *
  * Sibling of `captureFrozenSkillPackage`: same bounds, same digests, same
- * `O_NOFOLLOW` / TOCTOU guarantees, same package identity — only the way a
+ * `O_NOFOLLOW` / TOCTOU guarantees, same package identity - only the way a
  * selection is named differs (see `ResolvedFrozenSkillSourceV1`).
  */
 export async function captureFrozenSkillPackageFromSources(input: {
@@ -364,7 +364,7 @@ export function getFrozenSkillPackage(
  *
  * Returns '' when the user selected no Skill: an empty roster carries only a
  * schema string and a digest of nothing, so the slot is omitted rather than
- * emitted empty — the same no-empty-slot rule the spec mandates for
+ * emitted empty - the same no-empty-slot rule the spec mandates for
  * `attachments`. The package identity itself stays verifiable through the
  * persisted strategy task record.
  */
@@ -448,11 +448,11 @@ interface FrozenSkillCaptureTarget {
   /**
    * How this capture establishes the selection's canonical id.
    *
-   * `catalog` — the caller looked the Skill up in a catalogue keyed by id, so
+   * `catalog` - the caller looked the Skill up in a catalogue keyed by id, so
    * the manifest must still declare that id; a folder swapped between the
    * listing pass and this read is caught here.
    *
-   * `declared` — the caller resolved the folder itself, so there is no earlier
+   * `declared` - the caller resolved the folder itself, so there is no earlier
    * claim to cross-check and the id is adopted from the manifest read inside
    * the fence. See `ResolvedFrozenSkillSourceV1`.
    */
@@ -532,12 +532,12 @@ async function captureSelection(
   //    checklist, and is rejected for saying so. 47 of the 183 shipped example
   //    manifests trip it, including all three default cards.
   //  - It only ever saw SKILL.md. `captureSideFile` never checked side files,
-  //    so a `references/checklist.md` — the actual shape of the default cards
-  //    — always bypassed it anyway.
+  //    so a `references/checklist.md` - the actual shape of the default cards
+  //    - always bypassed it anyway.
   //
   // Nothing downstream depended on it: the serializer asserts only that
   // `userSelectedSkills` names at least one Skill and has a non-empty body.
-  // The guard stays where its corpus is controlled and it does work — the
+  // The guard stays where its corpus is controlled and it does work - the
   // first-party recipe assets, via `verifyOdNextRecipeV2`.
   //
   // Instruction conflicts between a user-selected Skill and the strategy are
@@ -607,7 +607,7 @@ function adoptedCanonicalId(input: {
  *
  * The side-file roster is regex-derived from prose, so a Skill can name a path
  * it does not actually ship: a stale link, an illustrative path, a filename
- * inside a code sample. `example-hyperframes` does exactly that today — its
+ * inside a code sample. `example-hyperframes` does exactly that today - its
  * SKILL.md links `references/transitions/catalog.md`, which now ships
  * flattened as `references/transitions.md`.
  *
@@ -616,7 +616,7 @@ function adoptedCanonicalId(input: {
  *
  * - **Absent.** A path that resolves to nothing was never part of the Skill.
  * - **Over budget.** A file past {@link MAX_SIDE_FILE_BYTES} is a bundled
- *   binary the roster happened to name — `example-open-design-landing` links a
+ *   binary the roster happened to name - `example-open-design-landing` links a
  *   multi-hundred-KB `assets/hero.png`. It is too large to carry, which says
  *   nothing about whether the Skill's prose is worth carrying.
  *
@@ -624,12 +624,12 @@ function adoptedCanonicalId(input: {
  * screenshot must not delete the entire Skill from the task. A path that IS
  * there and within budget but is a symlink, sits behind a symlinked directory,
  * or changes while being read is a tamper signal and still fails the whole
- * capture through `captureSideFile` — the size read here is a cheap pre-check,
+ * capture through `captureSideFile` - the size read here is a cheap pre-check,
  * never the authority: `readBoundedNoFollow` re-enforces the same limit on the
  * bytes it actually reads.
  *
  * Anything this probe cannot classify is reported as carryable, so that real
- * bounded no-follow read — not this pre-check — makes the decision.
+ * bounded no-follow read - not this pre-check - makes the decision.
  */
 async function sideFileIsSkippable(root: string, relativePath: string): Promise<boolean> {
   const segments = relativePath.split('/');

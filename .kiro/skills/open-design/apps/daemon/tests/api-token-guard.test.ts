@@ -1,4 +1,4 @@
-// Plan §3.K1 / spec §15.7 — bound-API-token guard.
+// Plan §3.K1 / spec §15.7 - bound-API-token guard.
 //
 // Two halves:
 //   1. The daemon refuses to start with OD_BIND_HOST=0.0.0.0 when no

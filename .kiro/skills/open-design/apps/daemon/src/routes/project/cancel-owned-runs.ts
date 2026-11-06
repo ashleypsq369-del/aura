@@ -14,8 +14,8 @@ interface RunCancellationService {
  * subprocess: without this the child keeps consuming provider quota, the run
  * stays non-terminal in `GET /api/runs` with no UI trace, and for a project
  * delete the process keeps writing into a directory that has been removed out
- * from under it (#5468). The run service already knows how to stop a run —
- * `cancel` terminates the child and marks it `canceled` — so the delete
+ * from under it (#5468). The run service already knows how to stop a run -
+ * `cancel` terminates the child and marks it `canceled` - so the delete
  * handlers just have to call it for the runs they would otherwise strand.
  *
  * `list({ status: 'active' })` already filters to non-terminal runs, and

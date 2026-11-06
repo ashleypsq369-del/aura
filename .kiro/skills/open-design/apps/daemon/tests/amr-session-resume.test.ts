@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { startServer } from '../src/server.js';
 
 // End-to-end coverage for AMR (vela) ACP session resume through the FULL server
-// close handler — not just `attachAcpSession` in isolation.
+// close handler - not just `attachAcpSession` in isolation.
 //
 // AMR is `resumesSessionViaAcpLoad`: turn 1 issues `session/new` and the daemon
 // captures vela's durable `openCodeSessionId`; the next turn in the same
@@ -21,14 +21,14 @@ import { startServer } from '../src/server.js';
 // which the ACP bridge turns into a FATAL. The daemon must STILL recognize it as
 // a resume failure, clear the stale handle, surface a retryable error, and let
 // the NEXT turn start a fresh `session/new` (re-seeded with the full transcript)
-// — one cold turn, never a conversation wedged retrying a dead `session/load`.
+// - one cold turn, never a conversation wedged retrying a dead `session/load`.
 //
 // Regression note: turn-2's error code is `AGENT_EXECUTION_FAILED` whether or
 // not the handle is cleared, so the load-bearing assertions are turn-3 (must
 // SUCCEED via a fresh session) and the session-bind sequence
 // (['new','load','new'], not ['new','load','load']). Before the close-handler
-// ordering fix — where `hasFatalError()` short-circuited BEFORE the
-// resume-failure reseed block — the dead handle was never cleared, so turn-3
+// ordering fix - where `hasFatalError()` short-circuited BEFORE the
+// resume-failure reseed block - the dead handle was never cleared, so turn-3
 // resumed it again, going ['new','load','load'] and failing.
 
 type StartedServer = {
@@ -49,7 +49,7 @@ type RunEvent = { event: string; data: unknown };
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FAKE_VELA = path.join(HERE, 'fixtures', 'fake-vela.mjs');
 
-describe('AMR (vela) ACP session resume — full server cycle', () => {
+describe('AMR (vela) ACP session resume - full server cycle', () => {
   const originalEnv = snapshotEnv();
   let started: StartedServer | null = null;
   let binDir: string | null = null;
@@ -188,7 +188,7 @@ describe('AMR (vela) ACP session resume — full server cycle', () => {
     // bridge calls fail() -> send('error') for the failed session/load BEFORE the
     // close handler clears the stale handle and re-runs the turn fresh. That
     // recovery is meant to be INVISIBLE, so the run's event log must carry no
-    // client-visible `error` event — only the internal suppression diagnostic.
+    // client-visible `error` event - only the internal suppression diagnostic.
     const turn2 = await sendRunAndWait(started.url, conversationId, 'second request');
     expect(turn2.status).toBe('succeeded');
 
@@ -233,7 +233,7 @@ describe('AMR (vela) ACP session resume — full server cycle', () => {
     expect((await sendRunAndWait(started.url, conversationId, 'second request')).status)
       .toBe('succeeded');
 
-    // No handle was ever stored, so BOTH turns open a fresh session — never a
+    // No handle was ever stored, so BOTH turns open a fresh session - never a
     // session/load against a non-existent upstream session.
     expect(await readInvocations(logPath)).toEqual(['new', 'new']);
   });
@@ -465,7 +465,7 @@ describe('AMR (vela) ACP session resume — full server cycle', () => {
 // so VELA_BIN resolves to a real executable regardless of the fixture's mode.
 // The daemon's `agentCliEnv` is allowlisted (only VELA_BIN survives for AMR), so
 // behavior knobs are baked into the wrapper's OWN env here instead of passed
-// through config — the wrapper exports them before exec'ing fake-vela.
+// through config - the wrapper exports them before exec'ing fake-vela.
 async function writeVelaWrapper(
   dir: string,
   name: string,

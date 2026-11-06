@@ -102,7 +102,7 @@ describe('mcp-tokens storage', () => {
       savedAt: Date.now(),
     });
     const s = await stat(path.join(dataDir, 'mcp-tokens.json'));
-    // Mask off file-type bits — only the permission bits are interesting.
+    // Mask off file-type bits - only the permission bits are interesting.
     expect(s.mode & 0o777).toBe(0o600);
   });
 
@@ -129,7 +129,7 @@ describe('mcp-tokens storage', () => {
     expect(out.servers.good?.accessToken).toBe('abc');
     expect(out.servers.bad_no_token).toBeUndefined();
     expect(out.servers.bad_shape).toBeUndefined();
-    // __proto__ is reserved — sanitizer must NOT have set it as a real
+    // __proto__ is reserved - sanitizer must NOT have set it as a real
     // own property (which would be a prototype-pollution vector). The
     // implicit access via `.__proto__` returns Object.prototype, so we
     // check Object.hasOwn instead of toBeUndefined.

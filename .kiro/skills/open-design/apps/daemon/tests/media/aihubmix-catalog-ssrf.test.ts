@@ -5,7 +5,7 @@ import { startServer } from '../../src/server.js';
 
 // The AIHubMix catalogue route is an unauthenticated public GET. Its outbound
 // fetch target is hard-coded to the official AIHubMix origin and a caller-
-// supplied `baseUrl` query is deliberately ignored — otherwise a request like
+// supplied `baseUrl` query is deliberately ignored - otherwise a request like
 // `?baseUrl=http://169.254.169.254/` would make the daemon issue a server-side
 // request to a private/metadata host (SSRF). Regression guard for the BLOCKING
 // review on `/api/media/providers/aihubmix/models`.
@@ -62,7 +62,7 @@ describe('aihubmix catalogue route SSRF guard', () => {
     const body = (await resp.json()) as { ok: boolean };
     expect(body.ok).toBe(true);
 
-    // Exactly one upstream call, and it targets aihubmix.com — never the
+    // Exactly one upstream call, and it targets aihubmix.com - never the
     // attacker-supplied metadata host.
     expect(upstreamUrls).toHaveLength(1);
     expect(upstreamUrls[0]).toBe('https://aihubmix.com/api/v1/models?type=image_generation');

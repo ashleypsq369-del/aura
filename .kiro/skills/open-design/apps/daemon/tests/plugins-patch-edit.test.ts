@@ -1,4 +1,4 @@
-// Phase 7 entry slice — patch-edit atom impl.
+// Phase 7 entry slice - patch-edit atom impl.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -26,7 +26,7 @@ async function seedPlan(steps: Array<Record<string, unknown>>, ownership: Array<
   await writeFile(path.join(cwd, 'plan', 'ownership.json'), JSON.stringify(ownership, null, 2) + '\n');
 }
 
-describe('applyPatchForStep — happy paths', () => {
+describe('applyPatchForStep - happy paths', () => {
   it('applies a single-file edit + records the receipt', async () => {
     await seedPlan([
       { id: 'rewrite-button', files: ['Button.tsx'], rationale: '', risk: 'low', status: 'pending' },
@@ -93,7 +93,7 @@ describe('applyPatchForStep — happy paths', () => {
   });
 });
 
-describe('applyPatchForStep — safety guards', () => {
+describe('applyPatchForStep - safety guards', () => {
   it('refuses a hunk whose target is not in step.files[]', async () => {
     await seedPlan([
       { id: 'rewrite-button', files: ['Button.tsx'], rationale: '', risk: 'low', status: 'pending' },

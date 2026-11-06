@@ -83,7 +83,7 @@ describe('aihubmix shared helpers', () => {
   it('drops media-generation rows from the chat catalogue (chatOnly)', () => {
     // AIHubMix's `?type=llm` matches any model whose `types` merely CONTAINS
     // `llm`, so dual-tagged image models leak in. The chat picker must keep
-    // genuine chat models only — media models have their own pickers.
+    // genuine chat models only - media models have their own pickers.
     const parsed = parseAIHubMixCatalog(
       {
         data: [
@@ -178,7 +178,7 @@ describe('aihubmix media generation', () => {
   });
 
   it('renders a dynamic catalogue image id not in the static registry', async () => {
-    // aihubmix-qwen-image-2.0-pro is NOT in IMAGE_MODELS — it comes from the
+    // aihubmix-qwen-image-2.0-pro is NOT in IMAGE_MODELS - it comes from the
     // live catalogue. generateMedia must synthesize a def and strip the prefix
     // to the wire name rather than throwing "unknown model".
     const fetchMock = vi.fn().mockResolvedValueOnce(
@@ -206,7 +206,7 @@ describe('aihubmix media generation', () => {
   it('routes a Gemini-family catalogue image model to the gemini generateContent wire', async () => {
     // gemini/imagen image models reject the OpenAI /images/generations shape, so
     // the media renderer must branch to the Gemini-native endpoint and read the
-    // inline base64 image — mirroring the chat tool's classifyAIHubMixModel split.
+    // inline base64 image - mirroring the chat tool's classifyAIHubMixModel split.
     const fetchMock = vi.fn().mockResolvedValueOnce(
       jsonResp({
         candidates: [

@@ -41,7 +41,7 @@ function parseYamlSubset(src: string): FrontmatterObject {
     // A block sequence may sit at the SAME indentation as its parent mapping
     // key (the flush-left `key:` / `- item` style). Such a `- ` item belongs
     // to the pending key placeholder at its own indent, so don't pop that
-    // placeholder the way a normal dedent would — it is either the empty
+    // placeholder the way a normal dedent would - it is either the empty
     // object still awaiting a value or the array we already started for it.
     const isSeqItem = line.startsWith('- ');
     while (stack.length > 1 && indent <= (stack[stack.length - 1]?.indent ?? -1)) {

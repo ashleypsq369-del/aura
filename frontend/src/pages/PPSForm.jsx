@@ -1,5 +1,5 @@
-/**
- * PPSForm.jsx — Palliative Performance Scale
+﻿/**
+ * PPSForm.jsx - Palliative Performance Scale
  * Redesigned: PageHeader + clean score display + domain details
  */
 import { useState } from 'react';
@@ -23,9 +23,9 @@ const RISK_LEVEL_CLASSES = {
 };
 
 const PPS_LEVELS = {
-  100: { ambulation:'Full',          activity:'Normal — no disease',            self_care:'Complete', intake:'Normal',         consciousness:'Full',                description:'Full ambulation, normal activity, no disease evidence' },
-  90:  { ambulation:'Full',          activity:'Normal — some disease',          self_care:'Complete', intake:'Normal',         consciousness:'Full',                description:'Full ambulation, normal activity with effort, some disease' },
-  80:  { ambulation:'Full',          activity:'Normal with effort — extensive', self_care:'Complete', intake:'Normal/reduced', consciousness:'Full',                description:'Full ambulation, normal activity with effort, extensive disease' },
+  100: { ambulation:'Full',          activity:'Normal - no disease',            self_care:'Complete', intake:'Normal',         consciousness:'Full',                description:'Full ambulation, normal activity, no disease evidence' },
+  90:  { ambulation:'Full',          activity:'Normal - some disease',          self_care:'Complete', intake:'Normal',         consciousness:'Full',                description:'Full ambulation, normal activity with effort, some disease' },
+  80:  { ambulation:'Full',          activity:'Normal with effort - extensive', self_care:'Complete', intake:'Normal/reduced', consciousness:'Full',                description:'Full ambulation, normal activity with effort, extensive disease' },
   70:  { ambulation:'Reduced',       activity:'Unable to work',                 self_care:'Complete', intake:'Normal/reduced', consciousness:'Full',                description:'Reduced ambulation, unable to do work, significant disease' },
   60:  { ambulation:'Reduced',       activity:'Unable hobbies/housework',       self_care:'Occasional assistance', intake:'Normal/reduced', consciousness:'Full/confusion', description:'Reduced ambulation, unable to do hobbies or housework' },
   50:  { ambulation:'Mainly sit/lie',activity:'Unable any work',                self_care:'Considerable assistance', intake:'Reduced', consciousness:'Full/confusion', description:'Mainly sitting or lying, unable to do any work' },
@@ -45,8 +45,8 @@ function getPpsColor(score) {
 function getPpsLabel(score) {
   if (score >= 70) return 'Good functional status';
   if (score >= 50) return 'Moderate functional decline';
-  if (score >= 30) return 'Significant decline — intensive care needed';
-  return 'Critical — end-of-life care discussion';
+  if (score >= 30) return 'Significant decline - intensive care needed';
+  return 'Critical - end-of-life care discussion';
 }
 
 const DOMAIN_LABELS = [
@@ -132,7 +132,7 @@ export default function PPSForm() {
         <div className="flex items-start gap-3 px-4 py-3 bg-blue-50 rounded-xl border border-blue-200">
           <Activity size={15} className="text-blue-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-blue-800">
-            Select the PPS level <strong>(10–100%)</strong> that best describes the patient's current functional status
+            Select the PPS level <strong>(10-100%)</strong> that best describes the patient's current functional status
             across ambulation, activity, self-care, intake, and consciousness.
           </p>
         </div>
@@ -208,7 +208,7 @@ export default function PPSForm() {
             {/* Domain details */}
             <div className="mt-5 pt-4 border-t border-[var(--card-border)]">
               <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">
-                PPS {ppsScore}% — {currentLevel.description}
+                PPS {ppsScore}% - {currentLevel.description}
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {DOMAIN_LABELS.map(([title, key]) => (

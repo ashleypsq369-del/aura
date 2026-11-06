@@ -1,5 +1,5 @@
-/**
- * QualityOfLifeForm.jsx — FACT-G Quality of Life Assessment
+﻿/**
+ * QualityOfLifeForm.jsx - FACT-G Quality of Life Assessment
  * Redesigned: PageHeader + domain sections + clean option buttons
  */
 import { useState } from 'react';
@@ -148,7 +148,7 @@ export default function QualityOfLifeForm() {
       return apiClient.post('/api/assessments/qol', data);
     },
     onSuccess: (res) => {
-      if (res.offline) toast.success('Saved offline — will sync when online', { duration: 5000 });
+      if (res.offline) toast.success('Saved offline - will sync when online', { duration: 5000 });
       else toast.success('Quality of Life assessment saved');
       queryClient.invalidateQueries(['qol', patientId]);
       queryClient.invalidateQueries(['assessment-overview', patientId]);

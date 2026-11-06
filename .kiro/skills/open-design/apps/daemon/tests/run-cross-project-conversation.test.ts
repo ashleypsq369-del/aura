@@ -1,8 +1,8 @@
 // Regression: a run must not attach to a conversation owned by a DIFFERENT
 // project. POST /api/runs reads `projectId` and `conversationId` independently
 // from the request body. The run's cwd is derived from `projectId`, but every
-// persistence key — the pinned assistant/user message rows, the native
-// agent_sessions row, and the resume lookup — is keyed on `conversationId`.
+// persistence key - the pinned assistant/user message rows, the native
+// agent_sessions row, and the resume lookup - is keyed on `conversationId`.
 // routes/runs.ts fetches `getConversation(db, conversationId)` only to read
 // `sessionMode`; it never checks that the conversation belongs to `projectId`.
 //
@@ -14,7 +14,7 @@
 //   { projectId: A, conversationId: <a conversation owned by B> }
 // runs with cwd = project A's folder but writes its messages into project B's
 // conversation (pinAssistantMessageOnRunCreate → messages.conversation_id = B),
-// and overwrites B's agent_sessions.cwd with A's folder — corrupting B's chat
+// and overwrites B's agent_sessions.cwd with A's folder - corrupting B's chat
 // history and B's resume identity.
 //
 // Invariant: a run for project A must never write into a conversation owned by
@@ -91,7 +91,7 @@ describe('run cross-project conversation ownership', () => {
 
     // INVARIANT: the run belongs to project A. Its message must never land in
     // project B's conversation. On main the ownership check is missing, so the
-    // request is accepted (202) and the row lands under convB — a cross-project
+    // request is accepted (202) and the row lands under convB - a cross-project
     // history/session corruption.
     expect(landedConversationId).not.toBe(convB);
     expect(runResponse.status).toBeGreaterThanOrEqual(400);
@@ -310,7 +310,7 @@ describe('run cross-project conversation ownership', () => {
 
   it('lets a retry rebind an assistantMessageId the daemon no longer owns', async () => {
     // nettee on #6418: the concurrency guard must reject only when the daemon
-    // STILL has the referenced run active — a normal retry rebinding a finished
+    // STILL has the referenced run active - a normal retry rebinding a finished
     // run (or a runId-less placeholder) stays allowed. The message row's own
     // runStatus is not authoritative for concurrency.
     started = (await startServer({ port: 0, returnServer: true })) as StartedServer;
@@ -322,7 +322,7 @@ describe('run cross-project conversation ownership', () => {
     const convA = await firstConversationId(url, projectA);
     expect(convA).toBeTruthy();
 
-    // Seed an assistant message owned by a TERMINAL (finished) run — a retry
+    // Seed an assistant message owned by a TERMINAL (finished) run - a retry
     // should be able to rebind it via the atomic claim.
     const assistantId = `assistant_active_${randomUUID()}`;
     const seed = await fetch(
@@ -343,7 +343,7 @@ describe('run cross-project conversation ownership', () => {
     expect(seed.status).toBe(200);
 
     // A run submitted with this assistantMessageId must not be rejected as
-    // RUN_IN_PROGRESS — the terminal old run is rebindable.
+    // RUN_IN_PROGRESS - the terminal old run is rebindable.
     const resp = await fetch(`${url}/api/runs`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },

@@ -2,7 +2,7 @@
 //
 // Ties the offline decoder (`fig-decode.ts`) to the shared REST-path helpers
 // (`walkNode` + `liftTokens`) so an uploaded `.fig` produces the exact same
-// `figma/` snapshot the OAuth `figma-extract` atom writes — plus a thumbnail
+// `figma/` snapshot the OAuth `figma-extract` atom writes - plus a thumbnail
 // and an agent-facing `DESIGN-context.md` inventory. Everything downstream
 // (design-system generation, the chat reshape run, `token-map`) consumes that
 // one snapshot.
@@ -41,7 +41,7 @@ const MAX_CONTEXT_COMPONENTS = 30;
 
 /**
  * Decode `.fig` bytes fully offline and write the canonical snapshot.
- * Never throws on a partially-decodable file — it degrades to the assets
+ * Never throws on a partially-decodable file - it degrades to the assets
  * the ZIP layer recovered and reports that in `inventory.decoded`.
  */
 export async function importFigmaFromBytes(
@@ -184,14 +184,14 @@ function renderDesignContext(args: ContextArgs): string {
   const componentNames = Array.from(
     new Set(tree.filter((n) => COMPONENT_NAME_RE.test(n.name)).map((n) => n.name.trim())),
   ).slice(0, MAX_CONTEXT_COMPONENTS);
-  const fonts = inventory.fonts.map((f) => `- ${f.family} — ${f.styles.join(', ')}`);
-  const colors = tokens.colors.slice(0, MAX_CONTEXT_COLORS).map((c) => `- \`${c.value}\`${c.name ? ` — ${c.name}` : ''}`);
+  const fonts = inventory.fonts.map((f) => `- ${f.family} - ${f.styles.join(', ')}`);
+  const colors = tokens.colors.slice(0, MAX_CONTEXT_COLORS).map((c) => `- \`${c.value}\`${c.name ? ` - ${c.name}` : ''}`);
 
   const lines: string[] = [
     `# Figma import: ${label}`,
     '',
     inventory.decoded
-      ? 'Decoded fully offline from the `.fig` (no Figma account). This is the binding visual contract for anything built from it — use the real tokens, type, spacing, and assets below rather than re-inventing them.'
+      ? 'Decoded fully offline from the `.fig` (no Figma account). This is the binding visual contract for anything built from it - use the real tokens, type, spacing, and assets below rather than re-inventing them.'
       : 'Only the embedded assets and preview could be recovered from this `.fig` (the node tree did not decode). Build from the thumbnail and assets, and ask for a fresh export or a screenshot if more fidelity is needed.',
     '',
     '## Snapshot',
@@ -199,7 +199,7 @@ function renderDesignContext(args: ContextArgs): string {
     `- Tree: \`figma/tree.json\` (${inventory.nodeCount} nodes)`,
     `- Tokens: \`figma/tokens.json\``,
     `- Assets: \`figma/assets/\` (${inventory.assetCount} files)`,
-    thumbnailPath ? `- Preview: \`${thumbnailPath}\` — treat as visual ground truth` : '- Preview: none shipped in this file',
+    thumbnailPath ? `- Preview: \`${thumbnailPath}\` - treat as visual ground truth` : '- Preview: none shipped in this file',
     '',
     '## Inventory',
     '',
@@ -237,12 +237,12 @@ function buildSuggestedPrompt(
   notes: string | undefined,
 ): string {
   const parts: string[] = [
-    `I imported the Figma file "${label}". The decoded design snapshot is in \`${path.dirname(contextPath)}/\` — read \`${contextPath}\` first for the inventory, tokens, and components.`,
+    `I imported the Figma file "${label}". The decoded design snapshot is in \`${path.dirname(contextPath)}/\` - read \`${contextPath}\` first for the inventory, tokens, and components.`,
     thumbnailPath
       ? `Use \`${thumbnailPath}\` as the visual ground truth and \`figma/assets/\` for any embedded logos/icons (don't redraw them).`
       : '',
     inventory.decoded
-      ? 'Build a clean, responsive webpage that reproduces this design, binding every screen to the real tokens, type, and spacing from `figma/tokens.json` — semantic HTML, not absolute-positioned layers.'
+      ? 'Build a clean, responsive webpage that reproduces this design, binding every screen to the real tokens, type, and spacing from `figma/tokens.json` - semantic HTML, not absolute-positioned layers.'
       : 'The node tree did not fully decode; rebuild the page from the preview and assets, matching the colors and type you can see.',
   ];
   if (notes && notes.trim()) parts.push(`Author notes: ${notes.trim()}`);

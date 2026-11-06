@@ -33,17 +33,17 @@ const ACCEPT_SELECTORS = [
   '[class*="cookie"] button[class*="primary"]',
   '[id*="cookie"] button[class*="primary"]',
   '[class*="gdpr"] button', '[id*="gdpr"] button',
-  // CMP patterns — main document
+  // CMP patterns - main document
   '.sp-message-open .message-button',
   '#sp-cc-accept', '.optanon-allow-all',
-  // CMP patterns — inside the CMP's own iframe, where the wrapper class above
+  // CMP patterns - inside the CMP's own iframe, where the wrapper class above
   // does not exist and the button stands alone
   '.message-button', '.sp_choice_type_11',
   '#truste-consent-button', '.trustarc-agree-btn',
   '.qc-cmp2-summary-buttons button[mode="primary"]',
   '#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll',
   '#CybotCookiebotDialogBodyButtonAccept',
-  // Shadow-DOM CMPs — these ids/classes only resolve once the shadow root is
+  // Shadow-DOM CMPs - these ids/classes only resolve once the shadow root is
   // pierced, which the deep query below does
   '#uc-btn-accept-banner', '[data-testid="uc-accept-all-button"]',
   '.osano-cm-accept-all', '.cky-btn-accept',
@@ -56,7 +56,7 @@ const ACCEPT_TEXT = /^(accept|allow|agree|i agree|got it|ok|okay|understood|cont
 const REJECT_TEXT = /\b(reject|decline|deny|manage|settings|preferences|customi[sz]e|options|necessary only|more info)\b/i;
 
 /**
- * Runs inside the page/frame — Playwright serializes this function, so it must
+ * Runs inside the page/frame - Playwright serializes this function, so it must
  * stay self-contained and reference nothing from module scope. Returns the
  * selector that was clicked, or null.
  */
@@ -184,7 +184,7 @@ export async function dismissConsent(page: Page): Promise<string | null> {
     } catch {
       // Detached frame, cross-origin eval refusal, or a click that navigated
       // the page and destroyed the execution context. Only the last is a
-      // dismissal, and it is indistinguishable here — so keep sweeping the
+      // dismissal, and it is indistinguishable here - so keep sweeping the
       // remaining frames rather than claiming either outcome.
       continue;
     }

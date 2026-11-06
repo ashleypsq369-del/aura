@@ -13,7 +13,7 @@ import { closeDatabase, openDatabase } from '../src/db.js';
  * `migratePreviewCommentsAllowMultiplePerElement` rebuild this table:
  * CREATE a new one, INSERT SELECT an EXPLICIT column list across, DROP the
  * old. A column added BEFORE those run is not in either list, so when an
- * older database upgrades it is silently dropped — along with everything
+ * older database upgrades it is silently dropped - along with everything
  * stored in it. Two comments in db.ts warn about this; nothing enforced it.
  *
  * These tests enforce it, by upgrading a database old enough to actually
@@ -52,7 +52,7 @@ function columnNames(db: InstanceType<typeof Database>, table: string): string[]
 
 /**
  * Write a preview_comments table shaped the way it was BEFORE either rebuild
- * migration existed — no slide_index, no allow-multiple-per-element rework —
+ * migration existed - no slide_index, no allow-multiple-per-element rework -
  * so that opening it drives both rebuilds for real.
  */
 function seedLegacyDatabase(dir: string): void {
@@ -110,14 +110,14 @@ describe('preview_comments author columns', () => {
     const db = openDatabase(dir, { dataDir: dir });
 
     // Prove we are looking at the UPGRADED legacy database and not a fresh
-    // one. `slide_index` alone would not prove it — a fresh database has that
+    // one. `slide_index` alone would not prove it - a fresh database has that
     // column too, so asserting on it by itself passes even when the seed was
     // written to the wrong path and silently ignored. The legacy row is what
     // only the seeded database can have.
     const seeded = db
       .prepare(`SELECT note FROM preview_comments WHERE id = ?`)
       .get('comment-legacy') as { note?: string } | undefined;
-    expect(seeded?.note, 'legacy row absent — this is a fresh database, not an upgrade').toBe(
+    expect(seeded?.note, 'legacy row absent - this is a fresh database, not an upgrade').toBe(
       'A note from before any of this existed',
     );
 
@@ -129,7 +129,7 @@ describe('preview_comments author columns', () => {
     for (const column of AUTHOR_COLUMNS) {
       expect(
         columns,
-        `${column} was dropped by a table rebuild — it must be added AFTER `
+        `${column} was dropped by a table rebuild - it must be added AFTER `
           + 'backfillPreviewCommentPinSeqAndSortKey in db.ts, not before',
       ).toContain(column);
     }

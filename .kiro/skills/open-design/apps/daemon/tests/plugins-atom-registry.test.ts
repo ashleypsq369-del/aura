@@ -1,4 +1,4 @@
-// Stage D of plugin-driven-flow-plan — atom worker registry tests.
+// Stage D of plugin-driven-flow-plan - atom worker registry tests.
 //
 // Covers:
 //   - Registration / lookup / clearing surface.
@@ -10,7 +10,7 @@
 //     stage so a bad atom never blocks the run.
 //   - The built-in `critique-theater` worker reads
 //     `run_devloop_iterations` and surfaces the lowest numeric score
-//     it can find — and falls through silently when no score is
+//     it can find - and falls through silently when no score is
 //     present yet (e.g. the first iteration before the agent has
 //     written a critique).
 //   - Built-in registration is idempotent and the test-only reset

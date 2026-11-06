@@ -1,4 +1,4 @@
-// Plan §3.LL1 — verifySqliteIntegrity() pure helper.
+// Plan §3.LL1 - verifySqliteIntegrity() pure helper.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, rm } from 'node:fs/promises';

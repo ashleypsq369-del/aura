@@ -213,7 +213,7 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
       //   - field === ''      → CLEAR the stored key (the picker's
       //                          drift-resync effect fires this when
       //                          the user clears their BYOK chat
-      //                          API key — keeping the old daemon-
+      //                          API key - keeping the old daemon-
       //                          side credential would silently keep
       //                          calling the provider after the user
       //                          intentionally removed it from the
@@ -281,8 +281,8 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
   // `kind === 'extract'` and surface a small "Memory updated (N new)"
   // notification. Payload shape: MemoryChangeEvent (see ./memory.ts).
   //
-  // The same connection also forwards `extraction` events — one per LLM
-  // extraction phase transition — so the settings panel can render a
+  // The same connection also forwards `extraction` events - one per LLM
+  // extraction phase transition - so the settings panel can render a
   // live "recent extractions" list. We multiplex on a single SSE stream
   // so the browser opens one connection instead of two.
   app.get('/api/memory/events', async (_req, res) => {
@@ -526,7 +526,7 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
     }
   });
 
-  // Imperative extract — used by CLI chats internally and by BYOK /
+  // Imperative extract - used by CLI chats internally and by BYOK /
   // API-mode chats from the web app, which never reach the chat-run
   // path on the daemon. Mirrors the two-phase hook the daemon's chat
   // route applies inline:
@@ -536,7 +536,7 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
   //     markers land in memory before the prompt is composed, and the
   //     same turn's assistant reply already reflects them.
   //   - Post-turn (`userMessage` + `assistantMessage` supplied): queue
-  //     the LLM extractor in the background — it speaks SSE /
+  //     the LLM extractor in the background - it speaks SSE /
   //     extraction-history on its own and may take several seconds, so
   //     we don't block the HTTP response on it. The heuristic is
   //     skipped on this branch because the caller already ran it
@@ -564,7 +564,7 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
       const changed = hasAssistant
         ? []
         : await extractFromMessage(RUNTIME_DATA_DIR, userMessage, extractionOrigin ? { extractionOrigin } : undefined);
-      // BYOK chat config — only forwarded by the web app for API-mode
+      // BYOK chat config - only forwarded by the web app for API-mode
       // chats. We strip the surface to the five fields pickProvider()
       // actually consumes and validate the provider against the four
       // shapes the extractor speaks; an unknown / missing provider
@@ -629,7 +629,7 @@ export function registerMemoryRoutes(app: Express, ctx: RegisterMemoryRoutesDeps
   // string the daemon would have folded into the system prompt for a
   // CLI run. `ProjectView.composedSystemPrompt()` calls it before each
   // BYOK turn and passes the result into `composeSystemPrompt`'s
-  // `memoryBody` field — without this, the Memory tab is a no-op for
+  // `memoryBody` field - without this, the Memory tab is a no-op for
   // BYOK users even though the UI saves model/index/entries for them.
   app.get('/api/memory/system-prompt', async (_req, res) => {
     try {

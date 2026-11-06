@@ -1,5 +1,5 @@
-/**
- * AdminPageShell — shared layout for all admin pages
+﻿/**
+ * AdminPageShell - shared layout for all admin pages
  *
  * Design DNA from Services page:
  *  - Gradient topbar accent strip (kente-inspired bottom border)
@@ -11,9 +11,9 @@
  *
  * Structure:
  *   [gradient sticky topbar: breadcrumb | meta counters | actions]
- *   [tab bar — sliding underline]
+ *   [tab bar - sliding underline]
  *   [warm card content surface]
- *     [toolbar strip — filter pills / search]
+ *     [toolbar strip - filter pills / search]
  *     [page content]
  */
 import { useRef, useEffect } from 'react';
@@ -25,15 +25,15 @@ export default function AdminPageShell({
   tabs       = [],   // [{ id, label, Icon?, badge? }]
   activeTab,
   onTabChange,
-  actions,           // right slot — buttons
-  toolbar,           // tinted strip below tab bar — filter pills etc.
+  actions,           // right slot - buttons
+  toolbar,           // tinted strip below tab bar - filter pills etc.
   maxWidth   = '1200px',
   children,
 }) {
   const indicatorRef = useRef(null);
   const tabRefs      = useRef({});
 
-  /* Animate the sliding tab underline — spring feel like Services pill */
+  /* Animate the sliding tab underline - spring feel like Services pill */
   useEffect(() => {
     const el      = tabRefs.current[activeTab];
     const ind     = indicatorRef.current;
@@ -58,13 +58,13 @@ export default function AdminPageShell({
     >
 
       {/* ══ Sticky chrome ═══════════════════════════════════════════
-          Gradient header — same DNA as Services hero strip.
+          Gradient header - same DNA as Services hero strip.
           Stays white/card-bg but gets the kente accent strip at bottom.
       ═══════════════════════════════════════════════════════════════ */}
       <div style={{
         position: 'sticky', top: 0, zIndex: 20, flexShrink: 0,
         background: 'var(--card-bg)',
-        /* Kente-inspired bottom accent — same as PageHeader */
+        /* Kente-inspired bottom accent - same as PageHeader */
         borderBottom: '1px solid var(--card-border)',
         boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
       }}>
@@ -96,7 +96,7 @@ export default function AdminPageShell({
 
           {/* Right: meta + actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
-            {/* Stat strip — same weight as Services counter strip */}
+            {/* Stat strip - same weight as Services counter strip */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 2,
               padding: '4px 10px', borderRadius: 20,
@@ -163,7 +163,7 @@ export default function AdminPageShell({
                   >
                     {Icon && <Icon size={12} />}
                     {label}
-                    {/* Badge with pulse — same as AvailBadge pulse in Services */}
+                    {/* Badge with pulse - same as AvailBadge pulse in Services */}
                     {badge != null && badge > 0 && (
                       <span style={{
                         position: 'relative',
@@ -199,7 +199,7 @@ export default function AdminPageShell({
       </div>
 
       {/* ══ Content surface ═════════════════════════════════════════
-          Warm card surface — same depth approach as ProviderCard:
+          Warm card surface - same depth approach as ProviderCard:
           rounded corners, subtle border, soft shadow.
       ═══════════════════════════════════════════════════════════════ */}
       <div style={{
@@ -217,7 +217,7 @@ export default function AdminPageShell({
           display: 'flex', flexDirection: 'column',
         }}>
 
-          {/* Toolbar strip — tinted, like the category chips row in Services */}
+          {/* Toolbar strip - tinted, like the category chips row in Services */}
           {toolbar && (
             <div style={{
               padding: '10px 20px',

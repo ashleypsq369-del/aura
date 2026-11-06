@@ -1,5 +1,5 @@
 // Skill registry. Scans one or more on-disk roots for SKILL.md files, parses
-// front-matter, returns listing. No watching in this MVP — re-scans on every
+// front-matter, returns listing. No watching in this MVP - re-scans on every
 // GET /api/skills, which is fine for dozens of skills.
 //
 // Roots are passed in priority order: the first one wins on `id` collisions
@@ -105,11 +105,11 @@ export interface SkillInfo {
   body: string;
   dir: string;
   /**
-   * True for a skill materialized locally from a TEAMMATE's team share — the
+   * True for a skill materialized locally from a TEAMMATE's team share - the
    * puller's copy, never the sharer's own (mirrors design-systems'
    * `metadata.json` `teamSynced` flag; see `isTeamSyncedUserDesignSystem` in
    * design-systems/index.ts). Sourced from the generic `workspace_resources`
-   * binding's `visibility` column (`'team'` — written by `syncSharedTeamSkill`'s
+   * binding's `visibility` column (`'team'` - written by `syncSharedTeamSkill`'s
    * `markTeamSynced` in server.ts), so it only appears when the caller asked to
    * be workspace-scoped (`db` + `workspaceId` both passed to `listSkills`).
    * Without this, a skill pulled from the team was indistinguishable from one
@@ -156,7 +156,7 @@ export function findSkillById(skills: unknown, id: unknown): SkillInfo | undefin
 export interface ListSkillsOptions {
   /**
    * Narrow the listing to skills visible from this workspace (see
-   * `workspace_resources` in `db.ts`). Requires `db` — both are optional so
+   * `workspace_resources` in `db.ts`). Requires `db` - both are optional so
    * legacy callers can deliberately keep an unscoped local catalog. HTTP
    * resource routes and project/run prompt resolution pass the exact
    * Workspace plus creator member.
@@ -196,7 +196,7 @@ function skillVisibleFromWorkspace(
 
 /**
  * Pure counterpart of {@link skillVisibleFromWorkspace} that takes an
- * already-fetched binding row instead of looking it up again — lets
+ * already-fetched binding row instead of looking it up again - lets
  * `listSkills`'s final scoping pass reuse the one binding read for both the
  * visibility check and the `teamSynced` annotation below, instead of hitting
  * `workspace_resources` twice per entry.
@@ -278,7 +278,7 @@ export async function listSkills(
         ) {
           continue;
         }
-        // Skip when an earlier root already surfaced this id — the first
+        // Skip when an earlier root already surfaced this id - the first
         // root wins so user shadows built-in. Done before we read the
         // rest of the frontmatter to keep the shadowed-skill path cheap.
         if (seenIds.has(parentId)) continue;
@@ -408,14 +408,14 @@ export async function listSkills(
           });
         }
       } catch {
-        // Skip unreadable entries — this is discovery, not validation.
+        // Skip unreadable entries - this is discovery, not validation.
       }
     }
   }
   // `options.workspaceId === undefined` (key omitted entirely) is the
   // "never asked to be scoped" case every non-`GET /api/skills` caller uses.
-  // A caller that DID pass the key — even as `null`, which `GET /api/skills`
-  // does whenever the request carries no `x-od-workspace-id` header — must
+  // A caller that DID pass the key - even as `null`, which `GET /api/skills`
+  // does whenever the request carries no `x-od-workspace-id` header - must
   // still go through `skillVisibleFromWorkspace` below so a claimed skill is
   // hidden from a headerless reader instead of silently passing through here.
   out.sort((a, b) => (a.featured ?? Number.POSITIVE_INFINITY) - (b.featured ?? Number.POSITIVE_INFINITY));
@@ -423,8 +423,8 @@ export async function listSkills(
   const scopeDb = options.db;
   const scopeId = options.workspaceId;
   // A derived `<parent>:<child>` example card has no `workspace_resources`
-  // row of its own — only the parent skill is ever bound (see
-  // `importUserSkill`'s caller) — so resolve derived ids back to their
+  // row of its own - only the parent skill is ever bound (see
+  // `importUserSkill`'s caller) - so resolve derived ids back to their
   // parent before checking visibility.
   return out
     .map((entry) => {
@@ -442,7 +442,7 @@ export async function listSkills(
     )
     // A live binding whose visibility is `'team'` is the puller's copy of a
     // teammate's share (see `syncSharedTeamSkill`'s `markTeamSynced` in
-    // server.ts) — never the sharer's own skill, which is never bound this
+    // server.ts) - never the sharer's own skill, which is never bound this
     // way. Tombstoned Team bindings were removed by the visibility filter.
     .map(({ entry, binding }) =>
       binding?.visibility === "team" ? { ...entry, teamSynced: true } : entry,
@@ -452,13 +452,13 @@ export async function listSkills(
 // Discover example artifacts that live alongside SKILL.md under
 // `<dir>/examples/`. Only the single-file layout is surfaced:
 //
-//   `examples/<name>.html` — pre-baked, self-contained sample.
+//   `examples/<name>.html` - pre-baked, self-contained sample.
 //
 // We deliberately do not surface the subfolder layout (e.g. live-artifact's
 // `examples/<name>/template.html` + `data.json`) because those templates
 // still hold `{{data.x}}` placeholders that only the daemon-side renderer
 // fills in. Showing the raw template would render visible placeholder
-// braces in the gallery — worse than not surfacing the example at all.
+// braces in the gallery - worse than not surfacing the example at all.
 // To ship a subfolder-style example, place the baked output beside the
 // folder as `examples/<name>.html` (the canonical render) and keep the
 // subfolder around as agent-readable source.
@@ -531,18 +531,18 @@ export function splitDerivedSkillId(id: unknown): DerivedSkillIdParts | null {
 }
 
 // Skills that ship side files (e.g. `assets/template.html`, `references/*.md`)
-// need the agent to know where the skill lives on disk — relative paths in the
+// need the agent to know where the skill lives on disk - relative paths in the
 // SKILL.md body would otherwise resolve against the agent's CWD, which is the
 // project folder (`.od/projects/<id>/`), not the skill folder.
 //
 // We prepend a short preamble that advertises two paths:
 //
-//   1. A CWD-relative alias path (`.od-skills/<folder>/`) — the primary one.
+//   1. A CWD-relative alias path (`.od-skills/<folder>/`) - the primary one.
 //      Before spawning the agent the chat handler copies the active skill
 //      into `<cwd>/.od-skills/<folder>/` (see `cwd-aliases.ts`), so this
 //      path is inside the agent's working directory on every CLI and is
 //      not blocked by directory-access policies (issue #430).
-//   2. The absolute repo path — a fallback for the cases the staged copy
+//   2. The absolute repo path - a fallback for the cases the staged copy
 //      cannot exist for: `/api/runs` calls without a project (cwd falls
 //      back to the repo root, where the absolute path *is* an in-cwd
 //      path), or environments where staging fails. Claude/Copilot are
@@ -558,7 +558,7 @@ function withSkillRootPreamble(body: string, dir: string): string {
   const exampleFile = referencedFiles[0];
   const relativeGuidance = exampleFile
     ? "> below references side files such as `" + exampleFile + "`, prefer the\n" +
-      "> relative form rooted at the first path above — e.g. open `" +
+      "> relative form rooted at the first path above - e.g. open `" +
       skillRootRel + "/" + exampleFile + "`."
     : "> below references side files, prefer the relative form rooted at the\n" +
       "> first path above.";
@@ -624,7 +624,7 @@ async function dirHasAttachments(dir: string): Promise<boolean> {
 
 // Craft sections live at <projectRoot>/craft/<name>.md. We accept any
 // alphanumeric+dash slug here so adding a new section is as simple as
-// dropping a file in craft/ and listing its name in the skill — no
+// dropping a file in craft/ and listing its name in the skill - no
 // daemon-side allowlist to keep in sync. The compose path checks the
 // file actually exists before injecting; missing files fall through
 // silently. The frontend can render the requested list verbatim.
@@ -650,7 +650,7 @@ function normalizeDefaultFor(value: unknown): string[] {
 }
 
 // Optional `od.fidelity` hint for prototype skills. Only 'wireframe' and
-// 'high-fidelity' are meaningful — anything else collapses to null so the
+// 'high-fidelity' are meaningful - anything else collapses to null so the
 // caller falls back to the form default ('high-fidelity').
 function normalizeFidelity(value: unknown): "wireframe" | "high-fidelity" | null {
   if (value === "wireframe" || value === "high-fidelity") return value;
@@ -726,7 +726,7 @@ function normalizeFeatured(value: unknown): number | null {
 }
 
 // Prefer an explicitly authored `od.example_prompt`. Fall back to the
-// skill description's first sentence — it's already written in actionable
+// skill description's first sentence - it's already written in actionable
 // language ("Admin / analytics dashboard in a single HTML file…") so it
 // serves as a passable starter prompt.
 function derivePrompt(data: SkillFrontmatter): string {
@@ -770,7 +770,7 @@ function normalizeSurface(value: unknown, mode: SkillMode): SkillSurface {
   return "web";
 }
 
-// Validate platform tag — only desktop / mobile are meaningful for the
+// Validate platform tag - only desktop / mobile are meaningful for the
 // Examples gallery. Falls back to autodetecting "mobile" from descriptions
 // so legacy skills sort under the right pill without authoring changes.
 function normalizePlatform(value: unknown, mode: SkillMode, body: unknown, description: unknown): SkillPlatform {
@@ -803,7 +803,7 @@ const KNOWN_SCENARIOS = new Set([
 // to lowercase letters, digits, and dashes so the value can flow straight
 // into the UI as a filter pill class without escaping. Empty / non-string
 // values become null so the filter row hides instead of rendering an empty
-// pill. We intentionally do not lock down a fixed vocabulary here — the
+// pill. We intentionally do not lock down a fixed vocabulary here - the
 // curated catalogue under skills/ owns the canonical category set, and
 // user-imported skills are free to introduce their own.
 function normalizeCategory(value: unknown): string | null {
@@ -1012,9 +1012,9 @@ export interface SkillUpdateInput {
 // the next listSkills() pass will surface in place of the bundled copy.
 // On the very first shadow-creation we also clone the built-in's side
 // files (assets/, references/, scripts/, examples/, ...) so the shadow
-// folder is self-contained and downstream resolvers — `/api/skills/:id/
+// folder is self-contained and downstream resolvers - `/api/skills/:id/
 // files`, `/example`, `/assets/*`, the system-prompt preamble, and the
-// per-turn cwd staging — keep finding the bundled tree even though the
+// per-turn cwd staging - keep finding the bundled tree even though the
 // user's `SKILL.md` is what we serve.
 export async function updateUserSkill(
   userSkillsRoot: string,
@@ -1050,7 +1050,7 @@ export async function updateUserSkill(
   // is true, we are editing an already-shadowed skill (or a pure user
   // skill); re-cloning would clobber the user's tweaks under the side
   // tree. If `sourceDir` is missing or already points at the shadow,
-  // there is nothing to clone — same dir.
+  // there is nothing to clone - same dir.
   const shouldCloneSideFiles =
     !dirExisted &&
     typeof input.sourceDir === "string" &&
@@ -1076,7 +1076,7 @@ export async function updateUserSkill(
 // Copy every entry in `sourceDir` into `destDir` except `SKILL.md` and
 // dotfiles. Used by `updateUserSkill` to build a self-contained shadow
 // folder over a built-in skill on first edit. We dereference symlinks
-// for the same reason `stageActiveSkill` does — the shadow lives under
+// for the same reason `stageActiveSkill` does - the shadow lives under
 // runtime data and must not link back into a read-only resource tree.
 async function cloneSkillSideFiles(
   sourceDir: string,
@@ -1135,7 +1135,7 @@ export async function listSkillFiles(skillDir: string): Promise<SkillFileEntry[]
     for (const entry of entries) {
       if (out.length >= SKILL_FILES_MAX_ENTRIES) return;
       if (entry.name.startsWith(".")) continue;
-      // Refuse symlinks defensively — readdir's withFileTypes already
+      // Refuse symlinks defensively - readdir's withFileTypes already
       // returns isSymbolicLink(), but we double-check via the Dirent's
       // kind methods to keep this aligned with the read paths elsewhere.
       if (entry.isSymbolicLink()) continue;

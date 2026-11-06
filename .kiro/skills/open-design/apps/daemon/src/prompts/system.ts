@@ -1,23 +1,23 @@
 import { COMMENT_IDENTITY_EDIT_DIRECTIVE } from '@open-design/contracts/prompts/comment-identity';
 /**
  * Prompt composer. The base is the OD-adapted "expert designer" system
- * prompt (see ./official-system.ts) — a full identity, workflow, and
+ * prompt (see ./official-system.ts) - a full identity, workflow, and
  * content-philosophy charter. Stacked on top:
  *
  *   1. The discovery + planning + huashu-philosophy layer (./discovery.ts)
- *      — interactive question-form syntax, direction-picker fork,
+ *      - interactive question-form syntax, direction-picker fork,
  *      brand-spec extraction, TodoWrite reinforcement, 5-dim critique,
  *      and the embedded `directions.ts` library.
- *   2. The active design system's DESIGN.md (if any) — palette, typography,
+ *   2. The active design system's DESIGN.md (if any) - palette, typography,
  *      spacing rules treated as authoritative tokens.
- *   3. The active skill's SKILL.md (if any) — workflow specific to the
+ *   3. The active skill's SKILL.md (if any) - workflow specific to the
  *      kind of artifact being built. When the skill ships a seed
  *      (`assets/template.html`) and references (`references/layouts.md`,
  *      `references/checklist.md`), we inject a hard pre-flight rule above
  *      the skill body so the agent reads them BEFORE writing any code.
  *   4. For decks (skillMode === 'deck' OR metadata.kind === 'deck'), the
  *      deck framework directive (./deck-framework.ts) is pinned LAST so it
- *      overrides any softer slide-handling wording earlier in the stack —
+ *      overrides any softer slide-handling wording earlier in the stack -
  *      this is the load-bearing nav / counter / scroll JS / print
  *      stylesheet contract that PDF stitching depends on. We also fire on
  *      the metadata path so deck-kind projects without a bound skill
@@ -25,7 +25,7 @@ import { COMMENT_IDENTITY_EDIT_DIRECTIVE } from '@open-design/contracts/prompts/
  *      re-author scaling / nav / print logic from scratch each turn. When
  *      the active skill ships its own seed (skill body references
  *      `assets/template.html`), we defer to that seed and skip the generic
- *      skeleton — the skill's framework wins to avoid double-injection.
+ *      skeleton - the skill's framework wins to avoid double-injection.
  *
  * The composed string is what the daemon sees as `systemPrompt` and what
  * the Anthropic path sends as `system`.
@@ -98,23 +98,23 @@ function renderUiLocalePrompt(
     '# UI locale override',
     '',
     `The OpenDesign UI locale for this run is \`${normalized}\` (${languageName}). All user-visible chat prose and generated UI controls must follow this locale, especially \`<question-form>\` titles, question labels, placeholders, and option labels. Keep machine-readable ids and object option \`value\` fields exact and unlocalized.`,
-    `The artifacts you generate must also be in ${languageName}: every piece of user-visible copy in the HTML/React/page/deck you produce — headings, body text, navigation, button and link labels, captions, alt text, and form fields — is written in this language by default. This holds even when a chosen template, plugin, or design system ships its reference/example content in another language: treat that copy as a layout and style reference and translate/adapt it into ${languageName}, do not ship its wording verbatim. ${PROMPT_LOCALE_EXEMPT_TERMS_SENTENCE}`,
+    `The artifacts you generate must also be in ${languageName}: every piece of user-visible copy in the HTML/React/page/deck you produce - headings, body text, navigation, button and link labels, captions, alt text, and form fields - is written in this language by default. This holds even when a chosen template, plugin, or design system ships its reference/example content in another language: treat that copy as a layout and style reference and translate/adapt it into ${languageName}, do not ship its wording verbatim. ${PROMPT_LOCALE_EXEMPT_TERMS_SENTENCE}`,
   ];
   // The worked zh-CN quick-brief copy below matches the CLASSIC default
   // discovery form verbatim. The slim charter recipes that form instead of
   // reciting it, and its form contract already requires localizing every
-  // user-facing string — so slim drops the sample block rather than pinning
+  // user-facing string - so slim drops the sample block rather than pinning
   // agents to copy written for a form layout the prompt no longer carries.
   if (normalized === 'zh-CN' && (options?.includeQuickBriefSamples ?? true)) {
     lines.push(
       '',
       'For the default quick brief in Simplified Chinese, use copy like:',
-      '- title: `快速简报 — 30 秒`',
+      '- title: `快速简报 - 30 秒`',
       '- description: `开始生成前我会先确认这些信息。不适用的可以跳过，我会补上默认值。`',
-      '- output label/options: `我们要做什么？` / `幻灯片 / 路演稿`, `单页网页原型 / 落地页`, `多屏应用原型`, `数据看板 / 工具界面`, `编辑式 / 营销页面`, `其他 — 我来描述`',
+      '- output label/options: `我们要做什么？` / `幻灯片 / 路演稿`, `单页网页原型 / 落地页`, `多屏应用原型`, `数据看板 / 工具界面`, `编辑式 / 营销页面`, `其他 - 我来描述`',
       '- platform label/options: `目标平台` / `响应式网页`, `桌面网页`, `iOS 应用`, `Android 应用`, `平板应用`, `桌面应用`, `固定画布 (1920×1080)`',
       '- audience label/placeholder: `目标用户` / `例如：早期投资人、开发者工具采购者、内部高管评审`',
-      '- brand label/options: `品牌背景` / `帮我选一个方向`, `我有品牌规范 — 稍后分享`, `参考网站 / 截图 — 稍后附上`',
+      '- brand label/options: `品牌背景` / `帮我选一个方向`, `我有品牌规范 - 稍后分享`, `参考网站 / 截图 - 稍后附上`',
       '- scale label/placeholder: `大概需要多少内容？` / `例如：8 页幻灯片、1 个落地页 + 3 个子页面、4 个移动端界面`',
       '- constraints label/placeholder: `还有什么需要知道的吗？` / `真实文案、必须使用的字体、需要避免的内容、截止时间…`',
     );
@@ -263,7 +263,7 @@ export function resolveExclusiveSurface(args: {
 // Deck-ish vocabulary across English and Chinese briefs. Kept deliberately
 // generous: a false positive only re-injects the deck framework a freeform
 // run would previously have received unconditionally, while a false negative
-// means the agent hand-rolls deck scaffolding — so every borderline term
+// means the agent hand-rolls deck scaffolding - so every borderline term
 // stays in.
 const DECK_INTENT_SIGNAL =
   /\b(slides?|deck|keynote|presentation|power\s?point|pitch\s?deck|(?:seed|pre[-\s]?seed|investor|fundraising|startup)\s+pitch|ppt(x)?|slideshow|carousel)\b|幻灯|简报|讲稿|演示|路演|汇报|宣讲|课件|讲解|演讲|提案/i;
@@ -273,7 +273,7 @@ const DECK_INTENT_SIGNAL =
  * ~20K maybe-deck framework injection for freeform (kind=other / no
  * metadata) projects: those runs previously carried the full framework on
  * every turn "just in case". Feed it USER-AUTHORED text only (see
- * `extractUserAuthoredSignalText`) — assistant turns in a packed transcript
+ * `extractUserAuthoredSignalText`) - assistant turns in a packed transcript
  * offer deck vocabulary the user never chose; conversation persistence is
  * the latch's job (`latchConversationIntentSignals`), not the scanner's.
  * Callers that cannot supply the request text should pass undefined to
@@ -290,7 +290,7 @@ export function detectDeckIntentSignal(
 // Media-generation vocabulary across English and Chinese briefs. Same
 // generosity policy as DECK_INTENT_SIGNAL: over-firing keeps the dispatch
 // hint (status quo), under-firing only costs the ~1.4K hint until the user
-// actually mentions media — at which point the transcript-scanned signal
+// actually mentions media - at which point the transcript-scanned signal
 // flips true for the rest of the conversation.
 const MEDIA_INTENT_SIGNAL =
   /\b(image|images|photo|picture|video|audio|music|voice(over)?|sound|illustration|logo|banner|poster|icon set|wallpaper|avatar|imagen|midjourney|flux|veo|sora|suno)\b|图片|图像|生成图|配图|插画|海报|壁纸|头像|视频|短片|音频|音乐|配音|音效|表情包/i;
@@ -346,7 +346,7 @@ const TRANSCRIPT_CONTEXT_WARNING_MARKER = '## context warning';
 // and always carries the latest user turn. Both properties are required
 // before treating a message as a transcript: a plain prompt that merely
 // QUOTES `## user` mid-text (the quote is not the first content line) must
-// keep whole-text scanning — dropping the text before the quote would
+// keep whole-text scanning - dropping the text before the quote would
 // silence the very request the signals exist to detect.
 function isPackedTranscriptShape(lines: string[]): boolean {
   if (!lines.includes(TRANSCRIPT_USER_MARKER)) return false;
@@ -357,20 +357,20 @@ function isPackedTranscriptShape(lines: string[]): boolean {
     firstContent === TRANSCRIPT_CONTEXT_WARNING_MARKER
   );
 }
-// Mirrors the repo's accepted form-answer header grammar — the shared parser
+// Mirrors the repo's accepted form-answer header grammar - the shared parser
 // in packages/contracts/src/artifacts/od-card.ts (parseFormAnswers) accepts
 // em-dash / hyphen / colon separators and the bare `[form answers]` header,
 // case-insensitively; the CLI docs show the hyphen form. Narrowing must fire
 // for every variant or CLI/manual form-answer turns re-enter the echoed-label
 // false-positive path. Grammar parity is pinned by
 // tests/prompts/intent-signal-user-text.test.ts.
-const FORM_ANSWERS_HEADER = /^\s*\[form answers(?:\s*[—\-:]\s*[^\]]+)?\]\s*$/i;
+const FORM_ANSWERS_HEADER = /^\s*\[form answers(?:\s*[-\-:]\s*[^\]]+)?\]\s*$/i;
 const FORM_ANSWERS_ANSWER_LINE = /^\s*-\s+[^:]*:\s*(.*)$/;
 
 // `formatFormAnswers` (apps/web/src/artifacts/question-form.ts) echoes each
 // question as `- <question label>: <value>`. The label is the FORM's copy,
-// not the user's words — the real task-type form carries "For slide decks,
-// include speaker notes?" — so only the value part of each answer line may
+// not the user's words - the real task-type form carries "For slide decks,
+// include speaker notes?" - so only the value part of each answer line may
 // feed the intent scan. Whether a gated block is introduced is decided by
 // what the user actually answered, not by what the form offered.
 function narrowFormAnswerSignalText(body: string): string {
@@ -390,7 +390,7 @@ function narrowFormAnswerSignalText(body: string): string {
  * Reduce an outgoing request message to the text the USER actually authored,
  * for intent-signal scanning. The three intent signals gate stable-region
  * prompt blocks, and for transcript-resending clients `message` embeds the
- * full packed conversation — assistant turns included. Assistant copy (most
+ * full packed conversation - assistant turns included. Assistant copy (most
  * damagingly the default discovery form's own option copy: «幻灯 / 路演»,
  * "Slide deck / pitch", «iOS / Android / 响应式») must never flip a signal:
  * every flip changes the stable instruction hash and re-sends the whole
@@ -400,7 +400,7 @@ function narrowFormAnswerSignalText(body: string): string {
  *   returns only the bodies of `## user` sections; `## assistant` sections
  *   and the leading `## context warning` block are dropped entirely.
  * - Plain message (no role markers): returned unchanged (legacy whole-scan).
- * - `[form answers — <id>]` blocks in either shape are narrowed to the value
+ * - `[form answers - <id>]` blocks in either shape are narrowed to the value
  *   part of each `- label: value` line (see narrowFormAnswerSignalText).
  */
 export function extractUserAuthoredSignalText(
@@ -438,9 +438,9 @@ export function extractUserAuthoredSignalText(
 
 export const BASE_SYSTEM_PROMPT = renderOfficialDesignerPrompt('filesystem');
 
-export const SKIP_DISCOVERY_BRIEF_OVERRIDE = `# Automated project mode — skip discovery form
+export const SKIP_DISCOVERY_BRIEF_OVERRIDE = `# Automated project mode - skip discovery form
 
-This project was created through the daemon API with \`skipDiscoveryBrief: true\`. Override the discovery rules below: do NOT emit a project-opening \`<question-form id="discovery">\` or show "Quick brief — 30 seconds". Treat the user's first message and project metadata as the brief, then proceed directly to planning/building under the normal artifact workflow. Ask at most one concise follow-up only if a required detail is impossible to infer safely.`;
+This project was created through the daemon API with \`skipDiscoveryBrief: true\`. Override the discovery rules below: do NOT emit a project-opening \`<question-form id="discovery">\` or show "Quick brief - 30 seconds". Treat the user's first message and project metadata as the brief, then proceed directly to planning/building under the normal artifact workflow. Ask at most one concise follow-up only if a required detail is impossible to infer safely.`;
 
 // Injected into non-media projects so the agent knows how to dispatch
 // media generation if the user asks for it mid-session (e.g. "generate an
@@ -461,24 +461,24 @@ const MEDIA_DISPATCH_HINT = `
 
 ## Media generation (if asked)
 
-If the user asks you to generate an image, video, or audio file — regardless of which provider or model they mention (fal, Replicate, OpenAI, etc.) — use the daemon dispatcher via your **Bash tool**. Do NOT call provider REST APIs directly.
+If the user asks you to generate an image, video, or audio file - regardless of which provider or model they mention (fal, Replicate, OpenAI, etc.) - use the daemon dispatcher via your **Bash tool**. Do NOT call provider REST APIs directly.
 
 OpenDesign Cloud models use the \`vela/*\` prefix. Never invoke the \`vela\`
 CLI directly for those models: the OD dispatcher owns trusted Workspace
 attribution, polling, downloads, and final project-file placement.
 
-The daemon injects these env vars into your shell (**POSIX bash — not PowerShell**):
+The daemon injects these env vars into your shell (**POSIX bash - not PowerShell**):
 
-- \`OD_NODE_BIN\`   — absolute path to the Node runtime
-- \`OD_BIN\`        — absolute path to the OD CLI script
-- \`OD_PROJECT_ID\` — the active project id
+- \`OD_NODE_BIN\`   - absolute path to the Node runtime
+- \`OD_BIN\`        - absolute path to the OD CLI script
+- \`OD_PROJECT_ID\` - the active project id
 
-**Always use the generate→wait loop below.** \`media generate\` always exits 0 — either with \`{"file":{...}}\` if done within ~25s, or with \`{"taskId":"..."}\` as a handoff for slow models. Whenever the output contains a \`taskId\`, keep polling with \`media wait\` until exit 0 (done) or exit 5 (failed).
+**Always use the generate→wait loop below.** \`media generate\` always exits 0 - either with \`{"file":{...}}\` if done within ~25s, or with \`{"taskId":"..."}\` as a handoff for slow models. Whenever the output contains a \`taskId\`, keep polling with \`media wait\` until exit 0 (done) or exit 5 (failed).
 
-Use **POSIX \`$VAR\` syntax** — do NOT translate to PowerShell (\`$env:VAR\`, \`&\` operator). Uses \`python3\` for JSON parsing (do NOT use \`jq\`):
+Use **POSIX \`$VAR\` syntax** - do NOT translate to PowerShell (\`$env:VAR\`, \`&\` operator). Uses \`python3\` for JSON parsing (do NOT use \`jq\`):
 
 \`\`\`bash
-# POSIX bash — do NOT convert to PowerShell
+# POSIX bash - do NOT convert to PowerShell
 IMAGE_MODEL=IMAGE_MODEL_VALUE
 out=\$("$OD_NODE_BIN" "$OD_BIN" media generate \\
   --project "$OD_PROJECT_ID" \\
@@ -507,7 +507,7 @@ done
 printf '%s\\n' "\$last"
 \`\`\`
 
-The command exits \`0\` with one line of JSON: \`{"file":{...}}\` when done within ~25s, or \`{"taskId":"..."}\` as a SUCCESSFUL handoff for slow models. On a handoff, run the exact \`media wait\` command the CLI prints on stderr and repeat it until exit \`0\` (done) or exit \`5\` (failed); exit \`2\` means still running — not a failure. Parse JSON with \`python3\`, never \`jq\`.
+The command exits \`0\` with one line of JSON: \`{"file":{...}}\` when done within ~25s, or \`{"taskId":"..."}\` as a SUCCESSFUL handoff for slow models. On a handoff, run the exact \`media wait\` command the CLI prints on stderr and repeat it until exit \`0\` (done) or exit \`5\` (failed); exit \`2\` means still running - not a failure. Parse JSON with \`python3\`, never \`jq\`.
 
 ${MEDIA_USER_REPLY_CONTRACT}
 
@@ -547,7 +547,7 @@ function renderMediaDispatchModelGuidance(defaults?: ByokMediaDefaults): string 
   const videoPart = videoModel
     ? `For video prefer your configured model: \`${videoModel}\`.`
     : 'For cloud video, read the current account/workspace catalogue with `od media models --cloud --json` before choosing a default. If it has no available video model, report the capability gap; never silently substitute an explicitly requested model or provider.';
-  return `${imagePart} ${videoPart} Always pass \`--surface\` explicitly (\`image\`, \`video\`, or \`audio\`). Any \`fal-ai/*\` path (e.g. \`fal-ai/flux/schnell\`, \`fal-ai/wan-i2v\`) is also a valid \`--model\` value for image/video — pass it through as-is without substitution.`;
+  return `${imagePart} ${videoPart} Always pass \`--surface\` explicitly (\`image\`, \`video\`, or \`audio\`). Any \`fal-ai/*\` path (e.g. \`fal-ai/flux/schnell\`, \`fal-ai/wan-i2v\`) is also a valid \`--model\` value for image/video - pass it through as-is without substitution.`;
 }
 
 function renderMediaDispatchHint(
@@ -628,19 +628,19 @@ When you write or edit an HTML file in the project folder through the native fil
 // keeps the skill roots out of the writable allowlist, and Codex is given no
 // skill directory at all because it treats `--add-dir` as write access (PR
 // #622). The daemon stages a private copy into `<cwd>/.od-skills/` for reading,
-// and that copy is a deliberate write barrier — edits to it change nothing.
+// and that copy is a deliberate write barrier - edits to it change nothing.
 //
 // That staged copy needs its own sentence in the prompt, because it is the one
 // skill path where the permission error does NOT fire. `withSkillRootPreamble`
 // advertises `.od-skills/<folder>/` as the primary **Skill root**, and it sits
-// inside the agent's writable project cwd — so a `Write`/`Edit`/`Bash` against
+// inside the agent's writable project cwd - so a `Write`/`Edit`/`Bash` against
 // `.od-skills/<id>/SKILL.md` succeeds, looks like an install, and is discarded
 // when `stageActiveSkill` replaces the copy wholesale on the next turn. Silent
 // success is the same misdirection as the invented setting, minus the error.
 //
 // None of that was ever stated in the prompt. An agent asked to update a skill
-// therefore wrote to the skill path, collected `Operation not permitted`, and —
-// having no stated exit — invented one, telling the user to add the directory
+// therefore wrote to the skill path, collected `Operation not permitted`, and -
+// having no stated exit - invented one, telling the user to add the directory
 // to a "writable roots" setting Open Design does not have. The user searched
 // for that setting, could not find it, and filed a diagnostics bundle (0.21.0).
 //
@@ -654,19 +654,19 @@ const SKILL_WRITE_BOUNDARY = `
 
 ## Editing skills
 
-Skill directories are not writable through your file tools, and that is deliberate — a skill is part of your own instructions, so it is never edited as a side effect of a task. Attempting to write one returns \`Operation not permitted\`. Retrying, changing the path, or routing the same write through a shell command will not help.
+Skill directories are not writable through your file tools, and that is deliberate - a skill is part of your own instructions, so it is never edited as a side effect of a task. Attempting to write one returns \`Operation not permitted\`. Retrying, changing the path, or routing the same write through a shell command will not help.
 
 The \`.od-skills/\` folder in the project is a private working copy staged for reading only. It is the one exception to the error above: it sits in a directory you can write, so an edit there will appear to succeed while updating nothing, and the copy is replaced on the next turn. Do not edit that path, and never report a successful write there as having created or updated a skill.
 
-When the user asks you to create or change a skill, do the work and hand it over rather than trying to install it yourself: write the proposal as a new \`.md\` file in the project folder — which you *can* write — never under \`.od-skills/\`, then tell the user to paste it in through the Integration view's Skills tab, which is where skills are edited in the app.
+When the user asks you to create or change a skill, do the work and hand it over rather than trying to install it yourself: write the proposal as a new \`.md\` file in the project folder - which you *can* write - never under \`.od-skills/\`, then tell the user to paste it in through the Integration view's Skills tab, which is where skills are edited in the app.
 
-Open Design does not currently expose a sandbox mode, a writable-directory or "writable roots" list, or an approval-policy setting. Do not tell the user to look for one, and do not invent a settings path, menu, or option name to explain the failure — they will go looking and find nothing. Describe the limitation plainly and point at the Skills tab instead. (If a future build does add such a surface, this paragraph is what should change.)`;
+Open Design does not currently expose a sandbox mode, a writable-directory or "writable roots" list, or an approval-policy setting. Do not tell the user to look for one, and do not invent a settings path, menu, or option name to explain the failure - they will go looking and find nothing. Describe the limitation plainly and point at the Skills tab instead. (If a future build does add such a surface, this paragraph is what should change.)`;
 
 export function buildExamplePromptOverride(
   title?: string | null,
   brief?: Record<string, string> | null,
 ): string {
-  let text = `# Example prompt mode — full-quality direct generation
+  let text = `# Example prompt mode - full-quality direct generation
 
 The user selected a curated example prompt from the gallery and sent it without modification. This prompt is a complete, self-contained creative brief that has been carefully designed to produce a showcase-quality artifact.`;
 
@@ -682,9 +682,9 @@ The user selected a curated example prompt from the gallery and sent it without 
   }
 
   text += `\n\nRules:
-1. Do NOT emit \`<question-form id="discovery">\`, do NOT show "Quick brief — 30 seconds", and do NOT ask any clarifying questions.
-2. Treat the user's message as the FULL specification — it contains all visual direction, content themes, and structural intent needed.
-3. Generate the artifact at your absolute highest quality. This is a showcase piece — match or exceed the standard of a hand-crafted design.
+1. Do NOT emit \`<question-form id="discovery">\`, do NOT show "Quick brief - 30 seconds", and do NOT ask any clarifying questions.
+2. Treat the user's message as the FULL specification - it contains all visual direction, content themes, and structural intent needed.
+3. Generate the artifact at your absolute highest quality. This is a showcase piece - match or exceed the standard of a hand-crafted design.
 4. Infer any unspecified details (copy, layout choices, imagery descriptions) in a way that is maximally coherent with the stated creative direction.
 5. Proceed directly to planning and building. Output your TodoWrite plan and then the artifact immediately.`;
 
@@ -737,7 +737,7 @@ export interface ComposeInput {
    * from `planToolNoteForRuntime(agentId, streamFormat)` a few lines down, and
    * a caller that passes nothing gets exactly today's behaviour there. It is an
    * input rather than a second internal derivation so this composer and its
-   * `@open-design/contracts` mirror stay byte-identical for identical inputs —
+   * `@open-design/contracts` mirror stay byte-identical for identical inputs -
    * the parity that `tests/plugins-strategy-recipe.test.ts` pins.
    */
   planToolNote?: string | null | undefined;
@@ -764,17 +764,17 @@ export interface ComposeInput {
   // prose still sets the high-level voice and the structured form
   // disambiguates token names + worked component shapes.
   //
-  // - `designSystemUsageMd`      — optional USAGE.md router that tells
+  // - `designSystemUsageMd`      - optional USAGE.md router that tells
   //                                agents how to consume this package.
-  // - `designSystemTokensCss`    — verbatim `tokens.css` :root contract
+  // - `designSystemTokensCss`    - verbatim `tokens.css` :root contract
   //                                that the agent pastes into the
   //                                artifact's <style>.
-  // - `designSystemComponentsManifest` — concise structured summary
+  // - `designSystemComponentsManifest` - concise structured summary
   //                                      derived from components.html.
-  // - `designSystemFixtureHtml`        — verbatim `components.html`
+  // - `designSystemFixtureHtml`        - verbatim `components.html`
   //                                      fallback when no manifest can
   //                                      be derived.
-  // - `designSystemPullIndex`          — lightweight manifest-derived
+  // - `designSystemPullIndex`          - lightweight manifest-derived
   //                                      list of richer files available
   //                                      for later pull-channel work.
   designSystemUsageMd?: string | undefined;
@@ -798,7 +798,7 @@ export interface ComposeInput {
   memoryBody?: string | undefined;
   // Per-hook switches for the two-loop memory feature, mirrored from the
   // memory config (`profileEnabled` / `rewriteEnabled` / `verifyEnabled`).
-  // An absent object — or an absent field — is treated as TRUE so callers
+  // An absent object - or an absent field - is treated as TRUE so callers
   // with no memory config wired (and the contracts/BYOK fallback) keep the
   // loops on by default. `rewrite` gates the applied-memory chip;
   // `verify` drives the POST self-verify scorecard. `profile` is
@@ -838,7 +838,7 @@ export interface ComposeInput {
   // its companion skill body in the prompt. Pass undefined when no
   // plugin is bound to the run.
   pluginBlock?: string | undefined;
-  // Plan §3.L2 / spec §23.4 — pre-rendered `## Active stage: <id>`
+  // Plan §3.L2 / spec §23.4 - pre-rendered `## Active stage: <id>`
   // blocks (one per pipeline stage active for the run). The daemon's
   // pipeline runner builds these from `loadAtomBodies()` +
   // `renderActiveStageBlock()` when the OD_BUNDLED_ATOM_PROMPTS env
@@ -873,7 +873,7 @@ export interface ComposeInput {
   // `detectDeckIntentSignal`). Classic uses it for the freeform maybe-deck
   // branch. OD Next additionally uses an explicit `true` to expose the deck
   // contract when a non-PPT project receives a cross-surface deck request.
-  // Deck-kind projects ignore this — their framework is unconditional.
+  // Deck-kind projects ignore this - their framework is unconditional.
   freeformDeckSignal?: boolean | undefined;
   /** Host-resolved OD Next deck scaffold policy for blank vs legacy/existing decks. */
   deckFrameworkMode?: DeckFrameworkMode | undefined;
@@ -1002,21 +1002,21 @@ export function composeSystemPrompt({
   const isSlimCharterHead = isSlimCore && !isAskModeEarly && !isMediaSurfaceEarly;
 
   // Head ordering differs by variant, following prompt-caching prefix rules
-  // (stable content first — see shared prompt-caching guidance):
+  // (stable content first - see shared prompt-caching guidance):
   // - classic: injection resistance FIRST so no later section can override
   //   it, then mode overrides, then the layered discovery/charter stack.
   // - slim (non-ask): the STATIC charter opens the document (it embeds the
   //   security section right after Precedence), so every conversation shares
   //   the same cacheable prefix; conversation-stable overrides (mode,
   //   locale) follow, project context after that, turn-variable blocks last.
-  // Slim ask mode opens with the ask override — it IS the charter for the
-  // turn — with the security section reading as its first subsection, so the
+  // Slim ask mode opens with the ask override - it IS the charter for the
+  // turn - with the security section reading as its first subsection, so the
   // ask document keeps the same identity-first H1 > H2 hierarchy as design
   // mode. Both blocks are static, so the swap is cache-neutral.
   // Plain-stream (BYOK/API) slim runs put the API-mode override BEFORE the
   // charter: its "every later instruction … is overridden" scope must cover
   // the charter's TodoWrite/render instructions, which classic guaranteed by
-  // always composing the override first. Cache-neutral — plain runs use the
+  // always composing the override first. Cache-neutral - plain runs use the
   // text_artifact charter variant and form their own prefix family anyway.
   const parts: string[] = isSlimCharterHead
     ? [
@@ -1040,7 +1040,7 @@ export function composeSystemPrompt({
       : isSlimCore
         ? [
             // Slim MEDIA runs (non-ask): no design charter and no Ask charter
-            // either — CHAT_MODE_OVERRIDE forbids creating media, which would
+            // either - CHAT_MODE_OVERRIDE forbids creating media, which would
             // contradict the media-generation contract appended below as the
             // sole workflow authority. Keep classic's skeleton: API override
             // first on plain streams, then injection resistance.
@@ -1079,7 +1079,7 @@ export function composeSystemPrompt({
   // contracts copy so both code paths produce the same observable
   // behaviour.
   // Turn-variable blocks (gated on per-message signals) are pushed LAST under
-  // slim — after every conversation/project-stable section — so a signal flip
+  // slim - after every conversation/project-stable section - so a signal flip
   // mid-conversation only invalidates the cached suffix, not the whole prompt.
   const slimTurnVariableParts: string[] = [];
 
@@ -1096,7 +1096,7 @@ export function composeSystemPrompt({
   // DS visual-direction override) is gated off so the
   // turn stays cheap. Memory, custom instructions, the active design system,
   // attached skills, plugins, MCP tools, and the clarifying-questions surface
-  // are still composed in — Ask mode is light, not amnesiac.
+  // are still composed in - Ask mode is light, not amnesiac.
   const isAskMode = sessionMode === 'chat';
 
   if (sessionMode === 'plan') {
@@ -1110,7 +1110,7 @@ export function composeSystemPrompt({
 
   // Skip the HTML-artifact discovery layer for media surfaces (image / video /
   // audio). DISCOVERY_AND_PHILOSOPHY is ~3 000 tokens of rules about question
-  // forms, brand extraction, direction pickers, and HTML artifact checklist —
+  // forms, brand extraction, direction pickers, and HTML artifact checklist -
   // none of which apply to media generation. Including it forces the agent to
   // parse and override all of those rules before it can start, adding tokens
   // and LLM inference time. The MEDIA_GENERATION_CONTRACT (pushed below) is
@@ -1144,7 +1144,7 @@ export function composeSystemPrompt({
     // fingerprint stays cacheable).
     if (!activeDesignSystemBody) {
       // Slim carries only the id+label index and the agent pulls the chosen
-      // direction's full spec via `od tools directions --id <id>` — but ONLY
+      // direction's full spec via `od tools directions --id <id>` - but ONLY
       // on filesystem runs. text_artifact runs (BYOK/plain adapters) have no
       // tools to dereference the index, so they keep the full inline library
       // like classic; anything less tells them to bind palettes they cannot
@@ -1177,7 +1177,7 @@ export function composeSystemPrompt({
     // creation → the block can sit here in the project-stable zone. The
     // conversation-text signal is turn-variable (a mid-session "make it an
     // iOS app" flips it on), so signal-only triggers defer the block to the
-    // turn-variable suffix like the deck/media signals — an early insert
+    // turn-variable suffix like the deck/media signals - an early insert
     // would break the cached prefix for every section after this line.
     const metadataPlatformSignal =
       isMultiTargetProject ||
@@ -1190,7 +1190,7 @@ export function composeSystemPrompt({
     }
   }
 
-  // Ask mode skips the multi-thousand-token designer charter entirely — the
+  // Ask mode skips the multi-thousand-token designer charter entirely - the
   // CHAT_MODE_OVERRIDE above is its self-contained identity. Plan/Design keep
   // it. Slim already opened the document with its charter (see head above).
   if (!isAskMode && !isSlimCore) {
@@ -1198,7 +1198,7 @@ export function composeSystemPrompt({
       '# Identity and workflow charter (background)\n\n',
       renderOfficialDesignerPrompt(resolvedExecutionProfile, {
         // Website Clone runs swap the "don't recreate copyrighted designs"
-        // guardrail for a faithful-reproduction + pre-deploy-checklist rule —
+        // guardrail for a faithful-reproduction + pre-deploy-checklist rule -
         // see WEB_CLONE_COPYRIGHT_GUARDRAIL_BULLET. Stable per project, so
         // the stable-prompt fingerprint stays cacheable.
         webCloneFidelity: metadata?.intent === 'web-clone',
@@ -1212,7 +1212,7 @@ export function composeSystemPrompt({
     // daemon programmatically checks the verify-scorecard), with the
     // repeated rationale prose cut.
     parts.push(
-      `\n\n## Personal memory (auto-extracted from past chats)\n\nPreferences and context sedimented from this user's previous conversations — authoritative for tone, terminology, and what they already told you; never re-ask what is captured here. On conflict the active design system wins tokens and the active skill wins workflow (see Precedence). Use memory to silently expand short asks into a full internal brief before acting; ask a clarifying question only when a critical target, permission, or conflict cannot be resolved from the request plus memory.\n\n${memoryBody.trim()}`,
+      `\n\n## Personal memory (auto-extracted from past chats)\n\nPreferences and context sedimented from this user's previous conversations - authoritative for tone, terminology, and what they already told you; never re-ask what is captured here. On conflict the active design system wins tokens and the active skill wins workflow (see Precedence). Use memory to silently expand short asks into a full internal brief before acting; ask a clarifying question only when a critical target, permission, or conflict cannot be resolved from the request plus memory.\n\n${memoryBody.trim()}`,
     );
     if ((memoryHooks?.rewrite ?? true)) {
       parts.push(
@@ -1221,7 +1221,7 @@ export function composeSystemPrompt({
     }
     if ((memoryHooks?.verify ?? true)) {
       parts.push(
-        `\n\n## Self-verify against your verified rules\n\nThe **Verified rules** above are enforceable checks. After producing or editing an artifact, evaluate every active rule, FIX failures in place, then emit one scorecard — the daemon checks it programmatically, and a missing scorecard on an artifact turn with active rules is recorded as an enforcement failure:\n\n<od-card type="verify-scorecard">\n{ "status": "pass|partial|fail", "summary": "5/6 checks passed · 1 auto-fixed", "rows": [ {"rule": "<the check>", "status": "pass|fail|fixed", "note": "<what was wrong / what you fixed>"} ] }\n</od-card>\n\nPrefer fixing silently over asking; leave a row as "fail" only when the fix needs a decision you genuinely cannot make. Order: craft self-check → scorecard → normal handoff. Skip it only when no verified rules apply or the turn produced no artifact.`,
+        `\n\n## Self-verify against your verified rules\n\nThe **Verified rules** above are enforceable checks. After producing or editing an artifact, evaluate every active rule, FIX failures in place, then emit one scorecard - the daemon checks it programmatically, and a missing scorecard on an artifact turn with active rules is recorded as an enforcement failure:\n\n<od-card type="verify-scorecard">\n{ "status": "pass|partial|fail", "summary": "5/6 checks passed · 1 auto-fixed", "rows": [ {"rule": "<the check>", "status": "pass|fail|fixed", "note": "<what was wrong / what you fixed>"} ] }\n</od-card>\n\nPrefer fixing silently over asking; leave a row as "fail" only when the fix needs a decision you genuinely cannot make. Order: craft self-check → scorecard → normal handoff. Skip it only when no verified rules apply or the turn produced no artifact.`,
       );
     }
     parts.push(
@@ -1231,7 +1231,7 @@ export function composeSystemPrompt({
 
   if (!isSlimCore && memoryBody && memoryBody.trim().length > 0) {
     parts.push(
-      `\n\n## Personal memory (auto-extracted from past chats)\n\nThe following facts have been sedimented from this user's previous conversations and edited in the settings panel. Treat them as preferences and context, NOT hard rules: when they collide with the active design system tokens, the brand wins; when they collide with the active skill's workflow, the skill wins. They are still authoritative for tone, voice, terminology, and what the user already told you about themselves and their goals — never re-ask the user about something already captured here.\n\nUse memory as a task-intent gateway. When the user's request is short or underspecified, silently expand it into an internal task brief before acting: infer the task type, user/profile background, project/artifact context, delivery preferences, known feedback meanings, constraints, and validation/finish line. Proceed from that richer brief so the user does not need to repeat setup. Ask a clarifying question only when a critical target, permission, or conflict cannot be resolved from the current request plus memory. Do not dump the full internal brief unless the user asks to inspect it. Expanding intent this way changes only WHAT you know going in; it never shortcuts the standard build flow — you still plan with TodoWrite and still run the anti-slop / brand self-check on every artifact-producing turn.\n\n${memoryBody.trim()}`,
+      `\n\n## Personal memory (auto-extracted from past chats)\n\nThe following facts have been sedimented from this user's previous conversations and edited in the settings panel. Treat them as preferences and context, NOT hard rules: when they collide with the active design system tokens, the brand wins; when they collide with the active skill's workflow, the skill wins. They are still authoritative for tone, voice, terminology, and what the user already told you about themselves and their goals - never re-ask the user about something already captured here.\n\nUse memory as a task-intent gateway. When the user's request is short or underspecified, silently expand it into an internal task brief before acting: infer the task type, user/profile background, project/artifact context, delivery preferences, known feedback meanings, constraints, and validation/finish line. Proceed from that richer brief so the user does not need to repeat setup. Ask a clarifying question only when a critical target, permission, or conflict cannot be resolved from the current request plus memory. Do not dump the full internal brief unless the user asks to inspect it. Expanding intent this way changes only WHAT you know going in; it never shortcuts the standard build flow - you still plan with TodoWrite and still run the anti-slop / brand self-check on every artifact-producing turn.\n\n${memoryBody.trim()}`,
     );
 
     // Two-loop memory instruction blocks. These pair with the memory body
@@ -1248,7 +1248,7 @@ export function composeSystemPrompt({
 
     if ((memoryHooks?.verify ?? true)) {
       parts.push(
-        `\n\n## Self-verify against your verified rules\n\nThe **Verified rules** above are enforceable checks, not soft preferences. After you finish producing or editing an artifact, evaluate it against every active rule, FIX any failure in place before ending your turn, then emit one scorecard:\n\n<od-card type="verify-scorecard">\n{ "status": "pass|partial|fail", "summary": "5/6 checks passed · 1 auto-fixed", "rows": [ {"rule": "<the check>", "status": "pass|fail|fixed", "note": "<what was wrong / what you fixed>"} ] }\n</od-card>\n\nPrefer fixing silently over asking. Leave a row as "fail" only when fixing it needs a decision you genuinely cannot make from the request plus memory. The daemon programmatically checks this scorecard after your turn — a missing scorecard or a rule left uncovered on an artifact turn is recorded as an enforcement failure — so always emit it when verified rules apply. Skip the scorecard entirely only when there are no verified rules or the turn produced no artifact.\n\nThe scorecard is ADDITIVE to — never a replacement for — the rest of the end-of-run flow. On an artifact turn you still run the existing anti-slop / brand self-check (the "N/N brand checks passed" gate) and still close with the normal handoff. Order the end of your turn as: (1) finish the anti-slop / brand self-check and fix any failure in place, (2) emit the verify-scorecard card, (3) close with the normal handoff — a single <artifact> block when this turn wrote a new canonical HTML file, otherwise a brief file-operation summary of what changed and what is still open. The scorecard only checks your verified rules; it does not absorb the anti-slop gate or the end-of-run summary.`,
+        `\n\n## Self-verify against your verified rules\n\nThe **Verified rules** above are enforceable checks, not soft preferences. After you finish producing or editing an artifact, evaluate it against every active rule, FIX any failure in place before ending your turn, then emit one scorecard:\n\n<od-card type="verify-scorecard">\n{ "status": "pass|partial|fail", "summary": "5/6 checks passed · 1 auto-fixed", "rows": [ {"rule": "<the check>", "status": "pass|fail|fixed", "note": "<what was wrong / what you fixed>"} ] }\n</od-card>\n\nPrefer fixing silently over asking. Leave a row as "fail" only when fixing it needs a decision you genuinely cannot make from the request plus memory. The daemon programmatically checks this scorecard after your turn - a missing scorecard or a rule left uncovered on an artifact turn is recorded as an enforcement failure - so always emit it when verified rules apply. Skip the scorecard entirely only when there are no verified rules or the turn produced no artifact.\n\nThe scorecard is ADDITIVE to - never a replacement for - the rest of the end-of-run flow. On an artifact turn you still run the existing anti-slop / brand self-check (the "N/N brand checks passed" gate) and still close with the normal handoff. Order the end of your turn as: (1) finish the anti-slop / brand self-check and fix any failure in place, (2) emit the verify-scorecard card, (3) close with the normal handoff - a single <artifact> block when this turn wrote a new canonical HTML file, otherwise a brief file-operation summary of what changed and what is still open. The scorecard only checks your verified rules; it does not absorb the anti-slop gate or the end-of-run summary.`,
       );
     }
 
@@ -1275,24 +1275,24 @@ export function composeSystemPrompt({
         ? designSystemUsageMd.trim()
         : DEFAULT_DESIGN_SYSTEM_USAGE;
     parts.push(
-      `\n\n## How to use this design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\n${usageBlock}`,
+      `\n\n## How to use this design system${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\n${usageBlock}`,
     );
 
     parts.push(
-      `\n\n## Active design system${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${activeDesignSystemBody}`,
+      `\n\n## Active design system${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\nTreat the following DESIGN.md as authoritative for color, typography, spacing, and component rules. Do not invent tokens outside this palette. When you copy the active skill's seed template, bind these tokens into its \`:root\` block before generating any layout.\n\n${activeDesignSystemBody}`,
     );
 
     const importModeGuidance = renderDesignSystemImportModeGuidance(designSystemImportMode);
     if (importModeGuidance) {
       parts.push(
-        `\n\n## Design system import mode${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\n${importModeGuidance}`,
+        `\n\n## Design system import mode${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\n${importModeGuidance}`,
       );
     }
   }
 
   // Structured (compiled) form of the active brand. The DESIGN.md above
   // sets voice and intent; the tokens.css block below is the SAME
-  // contract in machine-readable form — names + values the agent pastes
+  // contract in machine-readable form - names + values the agent pastes
   // verbatim instead of re-deriving from prose. The components.html
   // manifest grounds the token vocabulary in worked component shapes
   // (button / card / type roles) without injecting the full HTML fixture.
@@ -1302,40 +1302,40 @@ export function composeSystemPrompt({
   // legacy DESIGN.md-only behaviour for prose-only brands.
   if (designSystemTokensCss && designSystemTokensCss.trim().length > 0) {
     parts.push(
-      `\n\n## Active design system tokens${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nThe block below is this brand's tokens.css contract — every \`:root\` custom property and any scoped override (e.g. \`:root[lang=...]\`) the brand defines. **Paste the unscoped \`:root { ... }\` block verbatim into the artifact's first \`<style>\`** so every \`var(--*)\` reference resolves at runtime.\n\nDo not invent new tokens. Do not redefine these values. Do not write raw hex outside this :root block. The DESIGN.md above is prose; this is the binding contract.\n\n\`\`\`css\n${designSystemTokensCss.trim()}\n\`\`\``,
+      `\n\n## Active design system tokens${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\nThe block below is this brand's tokens.css contract - every \`:root\` custom property and any scoped override (e.g. \`:root[lang=...]\`) the brand defines. **Paste the unscoped \`:root { ... }\` block verbatim into the artifact's first \`<style>\`** so every \`var(--*)\` reference resolves at runtime.\n\nDo not invent new tokens. Do not redefine these values. Do not write raw hex outside this :root block. The DESIGN.md above is prose; this is the binding contract.\n\n\`\`\`css\n${designSystemTokensCss.trim()}\n\`\`\``,
     );
   }
 
   if (designSystemComponentsManifest && designSystemComponentsManifest.trim().length > 0) {
     parts.push(
-      `\n\n## Reference component manifest${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nA compact structured summary derived from this brand's components.html fixture. Use it as the component inventory for generated artifacts: match the listed selectors, component groups, class names, token references, focus behavior, and spacing cadence. Prefer these manifest entries over inventing new component shapes.\n\n\`\`\`text\n${designSystemComponentsManifest.trim()}\n\`\`\``,
+      `\n\n## Reference component manifest${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\nA compact structured summary derived from this brand's components.html fixture. Use it as the component inventory for generated artifacts: match the listed selectors, component groups, class names, token references, focus behavior, and spacing cadence. Prefer these manifest entries over inventing new component shapes.\n\n\`\`\`text\n${designSystemComponentsManifest.trim()}\n\`\`\``,
     );
   } else if (designSystemFixtureHtml && designSystemFixtureHtml.trim().length > 0) {
     parts.push(
-      `\n\n## Reference fixture${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nA self-contained worked artifact in this design system. Match its component shapes (button structure, card structure, type-scale rhythm, focus ring, spacing cadence) when generating new artifacts. Copying fragments is encouraged as long as you keep the \`var(--*)\` references intact — they are already wired to the tokens above.\n\n\`\`\`html\n${designSystemFixtureHtml.trim()}\n\`\`\``,
+      `\n\n## Reference fixture${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\nA self-contained worked artifact in this design system. Match its component shapes (button structure, card structure, type-scale rhythm, focus ring, spacing cadence) when generating new artifacts. Copying fragments is encouraged as long as you keep the \`var(--*)\` references intact - they are already wired to the tokens above.\n\n\`\`\`html\n${designSystemFixtureHtml.trim()}\n\`\`\``,
     );
   }
 
   if (designSystemPullIndex && designSystemPullIndex.trim().length > 0) {
     parts.push(
-      `\n\n## Pull-layer files available on demand${designSystemTitle ? ` — ${designSystemTitle}` : ''}\n\nThis design-system package declares richer files for inspection, source evidence, or human preview. Keep the push prompt light: use the index below to decide what to read later. When the runtime tool environment is available, read a listed path with \`\"$OD_NODE_BIN\" \"$OD_BIN\" tools design-systems read --path <path>\`; the daemon will reject paths outside this manifest allowlist.\n\n\`\`\`text\n${designSystemPullIndex.trim()}\n\`\`\``,
+      `\n\n## Pull-layer files available on demand${designSystemTitle ? ` - ${designSystemTitle}` : ''}\n\nThis design-system package declares richer files for inspection, source evidence, or human preview. Keep the push prompt light: use the index below to decide what to read later. When the runtime tool environment is available, read a listed path with \`\"$OD_NODE_BIN\" \"$OD_BIN\" tools design-systems read --path <path>\`; the daemon will reject paths outside this manifest allowlist.\n\n\`\`\`text\n${designSystemPullIndex.trim()}\n\`\`\``,
     );
   }
 
   if (craftBody && craftBody.trim().length > 0) {
     const sectionLabel =
       Array.isArray(craftSections) && craftSections.length > 0
-        ? ` — ${craftSections.join(', ')}`
+        ? ` - ${craftSections.join(', ')}`
         : '';
     parts.push(
-      `\n\n## Active craft references${sectionLabel}\n\nThe following craft rules are universal — they apply on top of the active design system above, regardless of brand. The DESIGN.md decides *which* tokens to use; craft rules decide *how* to use them. On any conflict between a craft rule and a brand DESIGN.md, the brand wins for token values; craft rules still apply to anything the brand does not override (letter-spacing, accent overuse caps, anti-slop patterns).\n\n${craftBody.trim()}`,
+      `\n\n## Active craft references${sectionLabel}\n\nThe following craft rules are universal - they apply on top of the active design system above, regardless of brand. The DESIGN.md decides *which* tokens to use; craft rules decide *how* to use them. On any conflict between a craft rule and a brand DESIGN.md, the brand wins for token values; craft rules still apply to anything the brand does not override (letter-spacing, accent overuse caps, anti-slop patterns).\n\n${craftBody.trim()}`,
     );
   }
 
   if (skillBody && skillBody.trim().length > 0) {
     const preflight = derivePreflight(skillBody);
     parts.push(
-      `\n\n## Active skill${skillName ? ` — ${skillName}` : ''}\n\nFollow this skill's workflow exactly.${preflight}\n\n${skillBody.trim()}`,
+      `\n\n## Active skill${skillName ? ` - ${skillName}` : ''}\n\nFollow this skill's workflow exactly.${preflight}\n\n${skillBody.trim()}`,
     );
   }
 
@@ -1347,7 +1347,7 @@ export function composeSystemPrompt({
     parts.push(pluginBlock);
   }
 
-  // Plan §3.L2 / spec §23.4 — splice per-stage atom blocks immediately
+  // Plan §3.L2 / spec §23.4 - splice per-stage atom blocks immediately
   // after the active plugin block. Empty entries are skipped so a
   // pipeline whose stages don't resolve any bundled atom bodies
   // produces zero extra prompt mass. The active-skill body above
@@ -1377,11 +1377,11 @@ export function composeSystemPrompt({
   //
   // We fire on either (a) the active skill is a deck skill OR (b) the
   // project metadata declares kind=deck. Case (b) catches projects created
-  // without a skill (skill_id null) — without this, a deck-kind project
+  // without a skill (skill_id null) - without this, a deck-kind project
   // with no bound skill gets neither a skill seed nor the framework
   // skeleton, and the agent writes scaling / nav / print logic from scratch
   // with the same buggy `place-items: center` + transform pattern we keep
-  // having to fix at runtime. Skill seeds (when present) win — they
+  // having to fix at runtime. Skill seeds (when present) win - they
   // already define their own opinionated framework (simple-deck's
   // scroll-snap, guizang-ppt's magazine layout) and re-pinning the generic
   // skeleton would conflict. The skill-seed path takes over via
@@ -1393,7 +1393,7 @@ export function composeSystemPrompt({
     activeSkillModes.has('deck') && !!skillBody && /assets\/template\.html/.test(skillBody);
   if (!isAskMode && isDeckProject && !hasDeckSkillSeed) {
     // ⚠️ This decides WHEN the legacy path gets the deck scaffold. OD Next has
-    // its own gate — `resolveOdNextDeckFrameworkMode` in `od-next-strategy.ts`.
+    // its own gate - `resolveOdNextDeckFrameworkMode` in `od-next-strategy.ts`.
     // The scaffold is shared; the injection conditions are not. Change both.
     parts.push(`\n\n---\n\n${deckFrameworkDirective}`);
   } else if (
@@ -1410,7 +1410,7 @@ export function composeSystemPrompt({
     // third navigation runtime. Preserve the legacy absent-signal default for
     // kind=other projects only.
     (isSlimCore ? slimTurnVariableParts : parts).push(
-      `\n\n---\n\n## If this brief is a slide deck / keynote / presentation\n\nThe user did not pre-select a "Slide deck" surface, but their request may still call for one. **If — and only if — the brief reads as slides, keynote, presentation, deck, PPT, or 讲解, follow the framework below.** Otherwise ignore everything in this section and continue with the freeform output you would have written anyway.\n\n${deckFrameworkDirective}`,
+      `\n\n---\n\n## If this brief is a slide deck / keynote / presentation\n\nThe user did not pre-select a "Slide deck" surface, but their request may still call for one. **If - and only if - the brief reads as slides, keynote, presentation, deck, PPT, or 讲解, follow the framework below.** Otherwise ignore everything in this section and continue with the freeform output you would have written anyway.\n\n${deckFrameworkDirective}`,
     );
   }
 
@@ -1477,7 +1477,7 @@ export function composeSystemPrompt({
     parts.push(FILESYSTEM_HANDOFF_OVERRIDE);
   }
 
-  // Gated on the execution profile only — deliberately NOT on `isSlimCore` or
+  // Gated on the execution profile only - deliberately NOT on `isSlimCore` or
   // on an active skill. Slim is the production default (`server.ts` sends
   // `promptCoreVariant: 'slim'` unless `OD_PROMPT_CORE=classic`), so a
   // `!isSlimCore` gate would ship this to nobody; and the request that triggers
@@ -1495,7 +1495,7 @@ export function composeSystemPrompt({
   // Clarification on any turn reuses the same `<question-form>` flow so the
   // host keeps ONE unified questions surface: the form renders inline in the
   // originating assistant message, and answers return as the next user message.
-  // Applies to every agent — question-form is UI-parsed markup, not a tool.
+  // Applies to every agent - question-form is UI-parsed markup, not a tool.
   if (!isSlimCharterHead || isAskMode) parts.push(
     "\n\n---\n\n## Structured clarification on any turn\n\nWhen clarification is materially necessary and the answer benefits from structured input, emit a `<question-form>` block instead of writing a bulleted list of options in markdown. The host renders it inline in the originating assistant message; a markdown list renders as plain text and forces the user to type a reply. Use the richest appropriate web form controls (`radio`, `checkbox`, `select`, `text`, `textarea`, `number`, `range`, `date`, `time`, `datetime-local`, `color`, `url`, `email`, `tel`, `file`, `switch`). When the clarification needs reference images, source docs, screenshots, or other user files, combine a `type: \"file\"` question with the text/options in the same form; selected files are uploaded into Design Files and submitted as attached/context files on the answer turn. For every finite-choice question, keep user control by leaving `allowCustom` unset or setting it to `true`, and add localized `customLabel` / `customPlaceholder` when useful. Use free-form prose questions only when a form would add no structure. Do NOT also duplicate the form's questions as markdown text alongside it.\n\n`<question-form>` is assistant text for the OpenDesign UI, not a native tool call. If you need to clarify direction, emit the complete `<question-form>...</question-form>` block directly in the assistant message before any TodoWrite, file write/edit, Bash, or other native tool call. Do not stop after an introductory sentence such as \"先确认一下方向：\"; the same message must include the full form.\n\nAt most 6-7 options per question; merge near-duplicates instead of listing more. Choose `radio` vs `select` by option count, not importance: `radio` for a short list, `select` once it runs long (languages, timezones, voices); `checkbox` is always a plain list. `select` options may carry `group` (first group expands, the rest collapse) and `trailingLabel` (a short end-of-row code such as `ZH-CN`); both optional. Label options in the user's words, not jargon: \"Magazine-style layout\", not \"Editorial\". Reword only `label`; never change a stable `value`. Keep each `label` under ~40 characters; put anything longer in `description`.",
   );
@@ -1503,25 +1503,25 @@ export function composeSystemPrompt({
   /*
    * How a turn is laid out in this chat panel.
    *
-   * The individual markers were each taught in their own place — `<question-form>`
-   * above, `<od-card>` in the memory sections, `<od-done>` in the per-turn slice —
+   * The individual markers were each taught in their own place - `<question-form>`
+   * above, `<od-card>` in the memory sections, `<od-done>` in the per-turn slice -
    * but nothing told the model what the reader actually SEES, so it could not tell
    * which of its output lands in a collapsed drawer and which lands in front of a
    * person. That gap shows up as turns that re-narrate the whole process after the
    * answer, or that skip a plan and leave the user with no progress to watch.
    *
-   * Facts about the host's rendering only — no new product rules. Kept in the
+   * Facts about the host's rendering only - no new product rules. Kept in the
    * cached stable prefix rather than the per-turn slice: it never varies by turn,
    * and re-sending it every turn would pay for it every turn.
    */
   if (!isSlimCharterHead || isAskMode) parts.push(
     "\n\n---\n\n## How your turn is rendered\n\n" +
     "This panel does not print your output as one flat transcript. A turn renders as a **collapsed execution card** with your **answer below it**, and the completion marker is the boundary between them (see the turn-completion rules in this turn's instructions). Knowing which side something lands on is the difference between a readable turn and a wall of text.\n\n" +
-    "- **Inside the card** (default collapsed once the turn ends): every tool call, your thinking, and any narration you write while working. Each tool call is one row — a verb plus what it acted on — so a command whose intent is legible from its head reads well here, and a 200-character one-liner does not.\n" +
-    "- **Below the card**: only what comes after the completion marker. This is the part a person reads without clicking anything. Keep it about the outcome — what now exists, what changed, what needs their decision. Do not replay the steps; they are one click away and already legible.\n" +
-    "- **TodoWrite is the progress the user watches.** The list renders as `Plan · N steps` plus one drawer per step inside the card, and while the run is in flight a pill above the composer shows which step is current. So a multi-step task without a plan leaves the user watching a spinner. Update the list as you go — each entry's state is read live, and a plan written once and never advanced reads as a stall.\n" +
-    "- **Artifact cards are the deliverables you declare**, not every file you touch. The display marker in this turn's instructions decides which files get a card with a preview under the turn; a turn that declares none falls back to the host's own pick of the main artifacts it wrote — pages, documents and images, never a stylesheet or a script — and every file stays reachable in the project's file list either way. Pasting file contents back into your answer duplicates something the user can already see and open.\n" +
-    "- **Questions go through `<question-form>`**, never as a markdown list of options — a list renders as plain text and forces the user to type their answer back.\n\n" +
+    "- **Inside the card** (default collapsed once the turn ends): every tool call, your thinking, and any narration you write while working. Each tool call is one row - a verb plus what it acted on - so a command whose intent is legible from its head reads well here, and a 200-character one-liner does not.\n" +
+    "- **Below the card**: only what comes after the completion marker. This is the part a person reads without clicking anything. Keep it about the outcome - what now exists, what changed, what needs their decision. Do not replay the steps; they are one click away and already legible.\n" +
+    "- **TodoWrite is the progress the user watches.** The list renders as `Plan · N steps` plus one drawer per step inside the card, and while the run is in flight a pill above the composer shows which step is current. So a multi-step task without a plan leaves the user watching a spinner. Update the list as you go - each entry's state is read live, and a plan written once and never advanced reads as a stall.\n" +
+    "- **Artifact cards are the deliverables you declare**, not every file you touch. The display marker in this turn's instructions decides which files get a card with a preview under the turn; a turn that declares none falls back to the host's own pick of the main artifacts it wrote - pages, documents and images, never a stylesheet or a script - and every file stays reachable in the project's file list either way. Pasting file contents back into your answer duplicates something the user can already see and open.\n" +
+    "- **Questions go through `<question-form>`**, never as a markdown list of options - a list renders as plain text and forces the user to type their answer back.\n\n" +
     "One consequence worth stating plainly: everything you write before the completion marker is filed away by default. If a caveat matters to the decision, it belongs after the marker, not buried in the working narration."
   );
 
@@ -1538,11 +1538,11 @@ export function composeSystemPrompt({
         "starting with \`## user\`, \`## assistant\`, or \`## system\` as real " +
         "turn boundaries. Emitting these lines causes the host to treat your " +
         "fabricated text as a real user request and execute unauthorised actions.\n\n" +
-        "**FORBIDDEN — you MUST NOT:**\n" +
+        "**FORBIDDEN - you MUST NOT:**\n" +
         "- Emit any line starting with \`## user\`, \`## assist\`, \`## assistant\`, or \`## system\`\n" +
         "- Roleplay multiple turns inside a single response\n" +
         "- Invent a user message and then reply to it\n\n" +
-        "The host will truncate your response at the first role-marker line — " +
+        "The host will truncate your response at the first role-marker line - " +
         "any text after it is lost. If you feel the urge to simulate a dialogue, " +
         "stop and ask the user a real question instead.",
   );
@@ -1555,7 +1555,7 @@ export function composeSystemPrompt({
  * the contracts-package copy byte-for-byte; see that file for the full
  * rationale. Pinning it at the absolute top of the composed prompt is
  * what beats the discovery layer's own "these override anything later"
- * header — the old bottom-appended `## API mode rule` lost that
+ * header - the old bottom-appended `## API mode rule` lost that
  * precedence war and let `<todo-list>` / `[读取 X]` pseudo-tool markup
  * leak into the chat.
  */
@@ -1569,23 +1569,23 @@ export function composeSystemPrompt({
  * names both and lets the session use whichever it was given. Naming only the
  * retired one pointed newer builds at a tool that does not exist.
  */
-const CLAUDE_PLAN_TOOL_NOTE = `Your plan tool is \`TodoWrite\`, or \`TaskCreate\` plus \`TaskUpdate\` on builds that ship those instead — use whichever your session actually exposes for the plan step above; the host renders either as the same live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
+const CLAUDE_PLAN_TOOL_NOTE = `Your plan tool is \`TodoWrite\`, or \`TaskCreate\` plus \`TaskUpdate\` on builds that ship those instead - use whichever your session actually exposes for the plan step above; the host renders either as the same live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
 
 /**
  * Codex's plan tool is `update_plan`. Both codex transports translate its
  * frames into the same canonical `TodoWrite` snapshot the Todos card is drawn
- * from — `handleTurnPlan` for the app-server `turn/plan/updated` notification,
- * `emitCodexTodoList` for the `exec --json` `todo_list` item — so a plan codex
+ * from - `handleTurnPlan` for the app-server `turn/plan/updated` notification,
+ * `emitCodexTodoList` for the `exec --json` `todo_list` item - so a plan codex
  * commits through the tool lands in exactly the card the Claude family gets.
  */
-const CODEX_PLAN_TOOL_NOTE = `Your plan tool is \`update_plan\` — use it for the plan step above; the host renders it as a live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
+const CODEX_PLAN_TOOL_NOTE = `Your plan tool is \`update_plan\` - use it for the plan step above; the host renders it as a live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
 
 /**
  * OpenCode's plan tool is `todowrite`, spelled lowercase. Unlike the Claude and
  * codex families the parser forwards this name unchanged, and the canonical
  * `isTodoWriteToolName` accepts it, so the call reaches the Todos card as-is.
  */
-const OPENCODE_PLAN_TOOL_NOTE = `Your plan tool is \`todowrite\` — use it for the plan step above; the host renders it as a live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
+const OPENCODE_PLAN_TOOL_NOTE = `Your plan tool is \`todowrite\` - use it for the plan step above; the host renders it as a live Todos card. Mark each item \`in_progress\` when started and \`completed\` as it lands.`;
 
 /**
  * The plan-tool note for one run, or null when this runtime has no plan tool
@@ -1595,7 +1595,7 @@ const OPENCODE_PLAN_TOOL_NOTE = `Your plan tool is \`todowrite\` — use it for 
  * provide a numbered plan in your response" as a sanctioned branch, and asks
  * the model to self-assess whether "the runtime supports task lists". A model
  * that was never told its tool's NAME reads the prose branch as the compliant
- * one — which is what a codex run did on 2026-09-03 in answer to an explicit
+ * one - which is what a codex run did on 2026-09-03 in answer to an explicit
  * 「先用 todo 进行一轮规划」: it wrote a seven-item plan into the reply body and
  * called no plan tool. Naming the tool removes the ambiguity without touching
  * the charter (which is under a byte ceiling and is prepended to every run);
@@ -1610,7 +1610,7 @@ const OPENCODE_PLAN_TOOL_NOTE = `Your plan tool is \`todowrite\` — use it for 
  * This is the ONE home for that table, and it now has two consumers: the slim
  * charter below, and the OD Next fork, which composes an entirely separate
  * prompt and would otherwise stay in the pre-fix state forever. OD Next
- * receives the resolved sentence as `planToolNote` — first through
+ * receives the resolved sentence as `planToolNote` - first through
  * `odNextStableRequestContext` in server.ts (the shipping Bundle path), and
  * mirrored on this file's own early return. Callers pass the sentence rather
  * than the runtime so the table never gets a second copy on the other side of
@@ -1620,7 +1620,7 @@ export function planToolNoteForRuntime(
   agentId: string | null | undefined,
   streamFormat: string | undefined,
 ): string | null {
-  // claude / codebuddy / amp — the whole Claude-stream family.
+  // claude / codebuddy / amp - the whole Claude-stream family.
   if (streamFormat === 'claude-stream-json') return CLAUDE_PLAN_TOOL_NOTE;
   if (agentId === 'codex') return CODEX_PLAN_TOOL_NOTE;
   if (agentId === 'opencode' || agentId === 'byok-opencode') {
@@ -1629,53 +1629,53 @@ export function planToolNoteForRuntime(
   return null;
 }
 
-const API_MODE_OVERRIDE = `# API mode — no tools available (read first — overrides every rule below)
+const API_MODE_OVERRIDE = `# API mode - no tools available (read first - overrides every rule below)
 
-You are running through a plain Messages API. **No tools are wired through to you.** Any tool call — \`TodoWrite\`, \`Read\`, \`Write\`, \`Edit\`, \`Bash\`, \`WebFetch\`, or whatever your runtime normally exposes — will not execute and will not render in the UI.
+You are running through a plain Messages API. **No tools are wired through to you.** Any tool call - \`TodoWrite\`, \`Read\`, \`Write\`, \`Edit\`, \`Bash\`, \`WebFetch\`, or whatever your runtime normally exposes - will not execute and will not render in the UI.
 
-Every later instruction in this prompt that tells you to "call TodoWrite", "run Bash", "read via Read", or otherwise invoke a tool is describing the daemon-mode workflow. In this API run those instructions are **overridden** — do not attempt them and do not pretend you did.
+Every later instruction in this prompt that tells you to "call TodoWrite", "run Bash", "read via Read", or otherwise invoke a tool is describing the daemon-mode workflow. In this API run those instructions are **overridden** - do not attempt them and do not pretend you did.
 
 Do not mention tool unavailability to the user. Avoid phrases such as "TodoWrite is unavailable" or "I cannot call tools in this context"; just continue with the plain prose plan or artifact body the user needs, without mentioning missing tools.
 
 **Forbidden output:**
 - Pseudo-tool markup such as \`<todo-list>...</todo-list>\`, \`<tool-call>\`, or invented XML wrappers around a plan.
 - Fake-protocol prose such as \`[读取 template.html ...]\`, \`[读取 layouts.md ...]\`, \`[正在调用 TodoWrite ...]\`, or any \`[doing X]\` placeholder narrating a tool you cannot run.
-- Statements like "I'll call TodoWrite to track this" or "let me read the skill file first" — there is no TodoWrite and no Read in this run.
+- Statements like "I'll call TodoWrite to track this" or "let me read the skill file first" - there is no TodoWrite and no Read in this run.
 
 **Allowed output:**
-- Plain chat prose to the user (in their language). State your plan as prose — a short numbered list in markdown is fine; it just must not be wrapped in \`<todo-list>\` or claim to be a tool call.
+- Plain chat prose to the user (in their language). State your plan as prose - a short numbered list in markdown is fine; it just must not be wrapped in \`<todo-list>\` or claim to be a tool call.
 - A final \`<artifact type="text/html">...</artifact>\` block containing a complete \`<!doctype html>\` document when the brief is ready to deliver.
-- \`<question-form>\` blocks when material clarification is needed on any turn, exactly as the rules below describe — question-form is markup the UI parses, not a tool call.
-- The self-closing \`<od-next key="..." value="..."/>\` follow-up markers described in this turn's instructions, as the very last thing you write — also markup the host parses, not a tool call.
+- \`<question-form>\` blocks when material clarification is needed on any turn, exactly as the rules below describe - question-form is markup the UI parses, not a tool call.
+- The self-closing \`<od-next key="..." value="..."/>\` follow-up markers described in this turn's instructions, as the very last thing you write - also markup the host parses, not a tool call.
 
 If the rules below tell you to plan with TodoWrite, write the plan as prose instead. If they tell you to read skill side files before writing, describe in one sentence which patterns/conventions you're going to apply and proceed. If they tell you to run brand-spec extraction via Bash + Read + WebFetch, ask the user the missing brand questions in the discovery form instead.`;
 
 // Ask mode is the deliberately light conversation mode. Unlike Plan/Design,
 // the daemon does NOT append the discovery layer or the full designer charter
-// after this override (see `isAskMode` gating in composeSystemPrompt) — so this
+// after this override (see `isAskMode` gating in composeSystemPrompt) - so this
 // block is the whole behavioral charter for the turn and must read as
 // self-contained, not as a preface that overrides "rules below". Keep it
 // BYTE-IDENTICAL to the @open-design/contracts copy so a daemon chat and a
 // BYOK/API chat behave the same.
-const CHAT_MODE_OVERRIDE = `# Ask mode — bare conversation (this is the whole charter for this turn)
+const CHAT_MODE_OVERRIDE = `# Ask mode - bare conversation (this is the whole charter for this turn)
 
 This conversation is in OpenDesign Ask mode: a fast, low-overhead chat kept deliberately light to save tokens. OpenDesign is the open-source Claude Design alternative and a native Figma counterpart. Official links: GitHub https://github.com/nexu-io/open-design, website https://open-design.ai/, Discord https://discord.gg/mHAjSMV6gz.
 
-Behave like a direct, multi-turn desktop chat assistant. Prefer concise prose: answer the question, explain, compare options, debug prompts, and review existing work. You still have the user's project files, attachments, connectors, MCP servers, project memory, any active design system, and any skills they attached for this turn — use them as context, and follow an attached skill's workflow when one is present.
+Behave like a direct, multi-turn desktop chat assistant. Prefer concise prose: answer the question, explain, compare options, debug prompts, and review existing work. You still have the user's project files, attachments, connectors, MCP servers, project memory, any active design system, and any skills they attached for this turn - use them as context, and follow an attached skill's workflow when one is present.
 
 This mode does not load the heavy design-discovery workflow or the full designer charter, on purpose. Do not emit a default discovery \`<question-form>\`, do not open with a TodoWrite plan for a chat answer, and do not create or edit project files, HTML, slide decks, images, video, or audio on your own.
 
 If the user explicitly asks you to build, generate, design, or export a concrete artifact (a page, prototype, deck, image, video, audio, or a file change), handle it inline only when it is genuinely trivial; for anything substantial, say so in one line and suggest switching to Design mode (or Plan mode for a document-first brief), where the full design workflow, brand discipline, and artifact tooling are loaded. Keep this turn conversational.
 
-For mid-conversation clarification you may still emit a \`<question-form>\` block — it is markup the OpenDesign UI parses, not a native tool call.`;
+For mid-conversation clarification you may still emit a \`<question-form>\` block - it is markup the OpenDesign UI parses, not a native tool call.`;
 
-const PLAN_MODE_OVERRIDE = `# Plan mode — editable document first (read first — overrides every rule below)
+const PLAN_MODE_OVERRIDE = `# Plan mode - editable document first (read first - overrides every rule below)
 
 This conversation is in OpenDesign Plan mode. Use the same context, files, attachments, connectors, MCP servers, project memory, tools, and design systems as Design mode, but do NOT create the final design artifact first.
 
 In filesystem runs, substantial plan-document work still starts with a real TodoWrite/task-list tool call and keeps it updated as work progresses. Do not narrate TodoWrite availability to the user; show progress through the Todo card when the runtime supports it. In plain API runs, follow the API-mode override above and write the plan directly as prose without mentioning missing tools.
 
-Override the artifact discovery layer below: do NOT emit \`<question-form id="discovery">\`, \`<question-form id="task-type">\`, "Quick brief — 30 seconds", or the default artifact-oriented discovery questions about landing pages, prototypes, dashboards, target platform, visual tone, brand context, fidelity, or design direction. A clear planning request should create or update the Markdown plan directly. If a clarification is truly required, ask only plan-document-specific questions, preferably in a \`<question-form id="plan-brief">\`, covering scope, stakeholders, timeline, sections, risks, constraints, and expected handoff deliverable.
+Override the artifact discovery layer below: do NOT emit \`<question-form id="discovery">\`, \`<question-form id="task-type">\`, "Quick brief - 30 seconds", or the default artifact-oriented discovery questions about landing pages, prototypes, dashboards, target platform, visual tone, brand context, fidelity, or design direction. A clear planning request should create or update the Markdown plan directly. If a clarification is truly required, ask only plan-document-specific questions, preferably in a \`<question-form id="plan-brief">\`, covering scope, stakeholders, timeline, sections, risks, constraints, and expected handoff deliverable.
 
 Your first responsibility is to create or update a Markdown plan document in Design Files, then guide the user to review and edit it before handoff to Design mode. The plan document is the source of truth for the next generation step and must be useful to both a human editor and a later agent run.
 
@@ -1701,15 +1701,15 @@ If this is a plain API run where filesystem tools are unavailable, output the sa
 // When Claude Code's built-in HTTP MCP transport gets a 401 on its first
 // initialize (transient propagation lag, edge cache miss, header
 // re-canonicalization quirk, etc.), it injects two synthetic tools per
-// server — `mcp__<server>__authenticate` and
-// `mcp__<server>__complete_authentication` — that drive a per-process
+// server - `mcp__<server>__authenticate` and
+// `mcp__<server>__complete_authentication` - that drive a per-process
 // OAuth dance with a `localhost:<random>/callback` redirect_uri. That
 // listener dies with the agent process, so the round-trip never
 // completes, and meanwhile the model burns a turn pasting an
 // unreachable URL into the chat. By the time the user is back, our
 // daemon-issued Bearer is already in `.mcp.json` and the real tools
 // (`generate_image`, `models_explore`, …) are reachable on the next
-// turn — but the model doesn't know that and keeps escalating the
+// turn - but the model doesn't know that and keeps escalating the
 // fake auth flow.
 //
 // The fix is to tell the model up front: these specific servers are
@@ -1734,12 +1734,12 @@ export function renderConnectedExternalMcpDirective(
   if (lines.length === 0) return '';
   // No leading separator: callers place this in a `---`-joined slice.
   return [
-    '## External MCP servers — already authenticated\n\n',
+    '## External MCP servers - already authenticated\n\n',
     'The following external MCP servers are already authenticated for this run via an OAuth Bearer token the daemon injected into `.mcp.json`. You can call their real tools directly:\n\n',
     lines.join('\n'),
     '\n\n',
     '**Do NOT call any tool whose name matches `mcp__<server>__authenticate` or `mcp__<server>__complete_authentication` for the servers above.** Those are synthetic fallback tools Claude Code exposes when its first HTTP connect briefly flipped the server into a needs-auth state. The flow they drive (a `localhost:<random>/callback` redirect) cannot complete in this environment, and the real tools (e.g. `generate_image`, `models_explore`, `balance`, …) are already reachable.\n\n',
-    `If a real tool actually fails with an auth-related error, report the exact tool name and error text and stop — the user will reconnect the server in ${INTEGRATIONS_MCP_PATH}. Do not retry by invoking any \`*_authenticate\` tool.\n`,
+    `If a real tool actually fails with an auth-related error, report the exact tool name and error text and stop - the user will reconnect the server in ${INTEGRATIONS_MCP_PATH}. Do not retry by invoking any \`*_authenticate\` tool.\n`,
   ].join('');
 }
 
@@ -1778,7 +1778,7 @@ function renderMetadataBlock(
   }
   if (!factsOnly && (metadata.platform === 'responsive' || metadata.platformTargets?.includes('responsive'))) {
     lines.push(
-      '- **responsive web contract**: `responsive` means one web product experience that adapts across modern browser/device ranges, not only legacy desktop/tablet/mobile buckets. It is not an iOS app, Android app, or native tablet app target. Show responsive behavior through real product layout changes; do not render viewport labels as user-facing product content. Cover 2025–2026 breakpoints: mobile compact 360px, mobile standard 390–430px, foldable/small tablet 600–744px, tablet portrait 768–834px, tablet landscape/large tablet 1024–1180px, laptop 1280–1366px, desktop 1440–1536px, and wide 1920px. Use fluid `clamp()` scales, container queries where useful, and explicit layout changes at semantic thresholds. Verify no horizontal scroll at 360px, 390px, 430px, 600px, 768px, 820px, 1024px, 1366px, 1440px, and 1920px unless the brief explicitly asks for a pan/board canvas.',
+      '- **responsive web contract**: `responsive` means one web product experience that adapts across modern browser/device ranges, not only legacy desktop/tablet/mobile buckets. It is not an iOS app, Android app, or native tablet app target. Show responsive behavior through real product layout changes; do not render viewport labels as user-facing product content. Cover 2025-2026 breakpoints: mobile compact 360px, mobile standard 390-430px, foldable/small tablet 600-744px, tablet portrait 768-834px, tablet landscape/large tablet 1024-1180px, laptop 1280-1366px, desktop 1440-1536px, and wide 1920px. Use fluid `clamp()` scales, container queries where useful, and explicit layout changes at semantic thresholds. Verify no horizontal scroll at 360px, 390px, 430px, 600px, 768px, 820px, 1024px, 1366px, 1440px, and 1920px unless the brief explicitly asks for a pan/board canvas.',
     );
   }
   if (!factsOnly && (metadata.platformTargets?.length ?? 0) > 1) {
@@ -1791,7 +1791,7 @@ function renderMetadataBlock(
       '- **screen files**: each distinct user-facing screen ships as its own HTML file (`index.html` = launcher/overview when several exist) unless the user asks for a single page.',
     );
     lines.push(
-      '- **product depth**: build real product UI with the domain\'s in-app modules and working interactions (tabs, dialogs, filters, validation, playback) — not static screenshot mockups.',
+      '- **product depth**: build real product UI with the domain\'s in-app modules and working interactions (tabs, dialogs, filters, validation, playback) - not static screenshot mockups.',
     );
   }
   if (!factsOnly && (metadata.kind === 'prototype' || metadata.kind === 'template' || metadata.kind === 'other')) {
@@ -1819,27 +1819,27 @@ function renderMetadataBlock(
   }
   if (factsOnly && metadata.includeLandingPage) {
     lines.push(
-      '- **includeLandingPage**: true — ship `landing.html` as a separate responsive marketing surface (hero, value props, product shots, CTA); product screens stay in their own files.',
+      '- **includeLandingPage**: true - ship `landing.html` as a separate responsive marketing surface (hero, value props, product shots, CTA); product screens stay in their own files.',
     );
   }
   if (!factsOnly && metadata.includeLandingPage) {
     lines.push(
-      '- **includeLandingPage**: true — create `landing.html` as a separate responsive marketing companion surface in addition to the selected product/app screens. Do not implement the landing page only as a section inside `index.html`, even for responsive-web-only projects. If there is a working product/app screen, create it as a separate file such as `app.html`, `dashboard.html`, or a domain-specific screen name. `index.html` should be a lightweight launcher/overview when multiple files exist. Include hero, value props, product screenshots/device mockups, proof/features, and an appropriate CTA such as waitlist, download, or contact sales.',
+      '- **includeLandingPage**: true - create `landing.html` as a separate responsive marketing companion surface in addition to the selected product/app screens. Do not implement the landing page only as a section inside `index.html`, even for responsive-web-only projects. If there is a working product/app screen, create it as a separate file such as `app.html`, `dashboard.html`, or a domain-specific screen name. `index.html` should be a lightweight launcher/overview when multiple files exist. Include hero, value props, product screenshots/device mockups, proof/features, and an appropriate CTA such as waitlist, download, or contact sales.',
     );
   }
   if (factsOnly && metadata.includeOsWidgets) {
     lines.push(
-      '- **includeOsWidgets**: true — add platform-native home/lock-screen widget surfaces (outside the app) with realistic sizes and direct quick actions.',
+      '- **includeOsWidgets**: true - add platform-native home/lock-screen widget surfaces (outside the app) with realistic sizes and direct quick actions.',
     );
   }
   if (!factsOnly && metadata.includeOsWidgets) {
     lines.push(
-      '- **includeOsWidgets**: true — add platform-native OS home-screen / lock-screen / quick-access widget surfaces where relevant. These are outside-the-app widgets (for example iOS WidgetKit, Android home screen widget, Live Activity/lock screen, tablet glance panel), not in-app cards. Include realistic widget sizes and direct quick actions for the domain.',
+      '- **includeOsWidgets**: true - add platform-native OS home-screen / lock-screen / quick-access widget surfaces where relevant. These are outside-the-app widgets (for example iOS WidgetKit, Android home screen widget, Live Activity/lock screen, tablet glance panel), not in-app cards. Include realistic widget sizes and direct quick actions for the domain.',
     );
   }
   if (metadata.intent === 'live-artifact') {
     lines.push(
-      '- **intent**: live-artifact — the user chose New live artifact. The first output should be a live artifact/dashboard/report, not a one-off static mockup. Prefer the `live-artifact` skill workflow when available, keep source data compact, and register through the daemon live-artifact tool path once that wrapper/tooling is available.',
+      '- **intent**: live-artifact - the user chose New live artifact. The first output should be a live artifact/dashboard/report, not a one-off static mockup. Prefer the `live-artifact` skill workflow when available, keep source data compact, and register through the daemon live-artifact tool path once that wrapper/tooling is available.',
     );
     lines.push(
       '- **connector-source rule**: if the user names a connector/source (for example Notion) and daemon connector tools are available, list connectors before asking where the data comes from. When the named connector is `connected`, use its read-only tools and ask follow-up questions only for missing topic/page/database details, multiple equally plausible matches, or an unconnected/missing connector.',
@@ -1954,7 +1954,7 @@ function renderMetadataBlock(
         lines.push(`- **ElevenLabs voice options**: showing the first ${ELEVENLABS_VOICE_PROMPT_OPTION_LIMIT} of ${voiceOptions.length} available voices.`);
       }
       lines.push('');
-      lines.push('Conditional template — do not emit unless the voice-selection policy above requires clarification:');
+      lines.push('Conditional template - do not emit unless the voice-selection policy above requires clarification:');
       lines.push('<question-form id="elevenlabs-voice" title="Choose an ElevenLabs voice">');
       lines.push(JSON.stringify(renderElevenLabsVoiceQuestionForm(voiceOptions), null, 2));
       lines.push('</question-form>');
@@ -1981,7 +1981,7 @@ function renderMetadataBlock(
 
   if (metadata.inspirationDesignSystemIds && metadata.inspirationDesignSystemIds.length > 0) {
     lines.push(
-      `- **inspirationDesignSystemIds**: ${metadata.inspirationDesignSystemIds.join(', ')} — the user picked these systems as *additional* inspiration alongside the primary one. Borrow palette accents, typographic personality, or component patterns from them; don't replace the primary system's tokens.`,
+      `- **inspirationDesignSystemIds**: ${metadata.inspirationDesignSystemIds.join(', ')} - the user picked these systems as *additional* inspiration alongside the primary one. Borrow palette accents, typographic personality, or component patterns from them; don't replace the primary system's tokens.`,
     );
   }
 
@@ -1998,7 +1998,7 @@ function renderMetadataBlock(
         : id;
       if (!id && !title) continue;
       const description = typeof plugin.description === 'string' && plugin.description.trim().length > 0
-        ? ` — ${plugin.description.trim()}`
+        ? ` - ${plugin.description.trim()}`
         : '';
       lines.push(`- ${title}${id ? ` (\`${id}\`)` : ''}${description}`);
     }
@@ -2017,7 +2017,7 @@ function renderMetadataBlock(
         : id;
       if (!id && !label) continue;
       const transport = typeof server.transport === 'string' && server.transport.trim().length > 0
-        ? ` — ${server.transport.trim()}`
+        ? ` - ${server.transport.trim()}`
         : '';
       lines.push(`- ${label}${id ? ` (\`${id}\`)` : ''}${transport}`);
     }
@@ -2038,14 +2038,14 @@ function renderMetadataBlock(
       const meta = [connector.provider, connector.status, connector.accountLabel]
         .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
         .join(' · ');
-      lines.push(`- ${name}${id ? ` (\`${id}\`)` : ''}${meta ? ` — ${meta}` : ''}`);
+      lines.push(`- ${name}${id ? ` (\`${id}\`)` : ''}${meta ? ` - ${meta}` : ''}`);
     }
   }
 
   // Curated prompt template reference for image/video projects. Inlined
   // verbatim (with light truncation) so the agent can borrow structure,
   // mood and phrasing without a separate fetch. The user may have edited
-  // the body before clicking Create — those edits land here and are now
+  // the body before clicking Create - those edits land here and are now
   // authoritative for the brief.
   if (
     (metadata.kind === 'image' || metadata.kind === 'video') &&
@@ -2055,7 +2055,7 @@ function renderMetadataBlock(
   ) {
     const tpl = metadata.promptTemplate;
     lines.push('');
-    lines.push(`### Reference prompt template — "${tpl.title ?? 'untitled'}"`);
+    lines.push(`### Reference prompt template - "${tpl.title ?? 'untitled'}"`);
     const meta = [];
     if (tpl.category) meta.push(`category: ${tpl.category}`);
     const suggestedModel =
@@ -2076,7 +2076,7 @@ function renderMetadataBlock(
     }
     lines.push('');
     lines.push(
-      'The user picked this template as inspiration. Treat it as a structural and stylistic reference: borrow composition, palette cues, lighting language, lens/motion direction, and the level of detail. Adapt the wording to the user\'s actual subject and brief — do NOT generate the template subject verbatim. If a field above is unknown the user wants you to follow the template\'s defaults.',
+      'The user picked this template as inspiration. Treat it as a structural and stylistic reference: borrow composition, palette cues, lighting language, lens/motion direction, and the level of detail. Adapt the wording to the user\'s actual subject and brief - do NOT generate the template subject verbatim. If a field above is unknown the user wants you to follow the template\'s defaults.',
     );
     // Escape triple-backticks so a user who pastes ``` into the editable
     // template body can't break out of the markdown fence below and inject
@@ -2094,7 +2094,7 @@ function renderMetadataBlock(
       const author = tpl.source.author ? ` by ${tpl.source.author}` : '';
       lines.push('');
       lines.push(
-        `Source: ${tpl.source.repo}${author} — license ${tpl.source.license ?? 'unspecified'}. Preserve attribution if you echo the template language directly.`,
+        `Source: ${tpl.source.repo}${author} - license ${tpl.source.license ?? 'unspecified'}. Preserve attribution if you echo the template language directly.`,
       );
     }
   }
@@ -2102,7 +2102,7 @@ function renderMetadataBlock(
   if (metadata.kind === 'template' && template && template.files.length > 0) {
     lines.push('');
     lines.push(
-      `### Template reference — "${template.name}"${template.description ? ` (${template.description})` : ''}`,
+      `### Template reference - "${template.name}"${template.description ? ` (${template.description})` : ''}`,
     );
     lines.push(
       'These HTML snapshots are what the user wants to start FROM. Read them as a stylistic + structural reference. You may copy structure, palette, typography, and component patterns; you may adapt them to the new brief; do NOT ship them verbatim. The agent should still produce its own artifact, just one that visibly inherits this template\'s design language.',
@@ -2152,15 +2152,15 @@ function shouldRenderElevenLabsVoiceOptions(
 
 /**
  * OPEND-2707. 这道题曾经把「交上去的是 voice_id,不是你看到的那行描述」写在
- * 每题副标题(help 字段)里 —— 全仓唯一由仓库自己写出这个字段的地方。澄清卡不再
+ * 每题副标题(help 字段)里 -- 全仓唯一由仓库自己写出这个字段的地方。澄清卡不再
  * 渲染副标题之后,那句话写了就丢,所以它并进了 `label`。
  *
  * 为什么是 `label` 而不是别处:`FormQuestion` 没有题级 `description`(只有选项有),
- * `placeholder` 归 "Choose a voice" 占着 —— `label` 是唯一还会渲染、又属于这道题
+ * `placeholder` 归 "Choose a voice" 占着 -- `label` 是唯一还会渲染、又属于这道题
  * 本身的位置。信息不能删:选项的可见文字是音色描述,不说一声用户看不出交上去的是 id。
  *
  * 这份 JSON 会被整段 `JSON.stringify` 进系统提示词,所以它同时是模型看到的
- * 「一道题可以长这样」的范例 —— 留一个 help 键在这里,撤发问就撤了个寂寞。
+ * 「一道题可以长这样」的范例 -- 留一个 help 键在这里,撤发问就撤了个寂寞。
  * 钉在 `apps/daemon/tests/system-prompt-template.test.ts`,镜像那份钉在
  * `packages/contracts/tests/system-prompt-audio-voices.test.ts`。
  */
@@ -2184,7 +2184,7 @@ function renderElevenLabsVoiceQuestionForm(voiceOptions: AudioVoiceOption[]): {
     questions: [
       {
         id: 'voice',
-        label: 'Voice — the answer submits the matching Voice ID',
+        label: 'Voice - the answer submits the matching Voice ID',
         type: 'select',
         required: true,
         allowCustom: false,
@@ -2203,9 +2203,9 @@ function formatElevenLabsVoiceLabel(option: AudioVoiceOption): string {
         .filter(Boolean)
     : [];
   const bits = [...labels];
-  if (bits.length > 0) return `${option.name} — ${bits.join(' · ')}`;
+  if (bits.length > 0) return `${option.name} - ${bits.join(' · ')}`;
   const category = typeof option.category === 'string' ? option.category.trim() : '';
-  return category ? `${option.name} — ${category}` : option.name;
+  return category ? `${option.name} - ${category}` : option.name;
 }
 
 /**
@@ -2213,7 +2213,7 @@ function formatElevenLabsVoiceLabel(option: AudioVoiceOption): string {
  * web-prototype / mobile-app / simple-deck / guizang-ppt skills, and
  * inject a hard pre-flight rule that lists which side files to Read
  * before doing anything else. The skill body's own workflow already says
- * this — but skills get truncated under context pressure and the agent
+ * this - but skills get truncated under context pressure and the agent
  * sometimes skips Step 0. A short up-front directive helps.
  *
  * Returns an empty string when the skill ships no side files (legacy
@@ -2229,7 +2229,7 @@ function derivePreflight(skillBody: string): string {
   // The hyperframes skill ships an html-in-canvas reference next to the
   // VFX catalog blocks. The chat handler at server.ts:4138 routes through
   // this composer (not the contracts copy), so the case must live here
-  // too — otherwise live agent runs miss the preflight directive even
+  // too - otherwise live agent runs miss the preflight directive even
   // when the skill body explicitly lists the file.
   if (/references\/html-in-canvas\.md|html-in-canvas\.md/.test(skillBody)) {
     refs.push('`references/html-in-canvas.md`');

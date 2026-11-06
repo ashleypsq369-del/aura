@@ -205,7 +205,7 @@ export function codexOpenDesignShellEnvironmentArgs(): string[] {
 // resolves to something other than `none`, and its own embedded model catalog
 // ships `"default_reasoning_summary": "none"` for the current frontier models
 // (verbatim from the `gpt-5.6-sol` entry in codex-cli 0.149.1). The result is a
-// turn that provably reasons — `turn.completed` reports the reasoning tokens —
+// turn that provably reasons - `turn.completed` reports the reasoning tokens -
 // while the JSON stream carries no reasoning item at all.
 //
 // Measured on codex-cli 0.149.1, one prompt, two invocations differing only in
@@ -242,13 +242,13 @@ export function codexReasoningSummaryArgs(): string[] {
 //
 // `handleTurnPlan` in agent-protocol/codex-app-server/normalize.ts already
 // turns exactly that notification into a `todo_list` frame, so asking for the
-// tool is the whole fix — no parser change is involved.
+// tool is the whole fix - no parser change is involved.
 //
 // Two supporting facts, both read out of the 0.153.0 binary rather than
 // guessed, explain why this stopped working without anyone touching OD:
 // codex's embedded model catalog carries the `update_plan` briefing in the
-// `gpt-5.2` entry ONLY — `gpt-5.4`, `gpt-5.4-mini`, `gpt-5.5`, and the whole
-// `gpt-5.6-*` family mention it zero times — and those newer models run
+// `gpt-5.2` entry ONLY - `gpt-5.4`, `gpt-5.4-mini`, `gpt-5.5`, and the whole
+// `gpt-5.6-*` family mention it zero times - and those newer models run
 // `"tool_mode": "code_mode_only"`. So on a current model the tool is both
 // unbriefed and unregistered by default.
 //
@@ -320,7 +320,7 @@ export const codexAgentDef = {
     // Prompt is delivered via stdin pipe (gated by `promptViaStdin: true`
     // below) to avoid Windows `spawn ENAMETOOLONG` while keeping Codex on
     // its structured JSON stream. Recent Codex CLI versions reject a bare
-    // `-` argv sentinel — passing both the pipe and `-` produces
+    // `-` argv sentinel - passing both the pipe and `-` produces
     // `error: unexpected argument '-' found` and the agent exits with
     // code 2 before any prompt is read (see issue #237). The pipe alone
     // is sufficient for stdin delivery.
@@ -341,7 +341,7 @@ export const codexAgentDef = {
       // Capture-style resume: when the daemon has a stored Codex thread id for
       // this conversation it asks the CLI to continue that session with
       // `exec resume <thread_id>` instead of `exec` (a fresh session). Codex
-      // mints its own id, so the daemon does not specify one — it captures the
+      // mints its own id, so the daemon does not specify one - it captures the
       // id from the create turn's `thread.started.thread_id` event (see the
       // json-event-stream `codex` parser) and replays it here on resume.
       const resumeSessionId =
@@ -458,7 +458,7 @@ export const CODEX_APP_SERVER_STREAM_FORMAT = 'codex-app-server';
  * Lowest codex release `auto` mode will switch to.
  *
  * Three numbers matter, established by reading the codex source at each tag
- * rather than by reading the protocol declarations — a method NAME routinely
+ * rather than by reading the protocol declarations - a method NAME routinely
  * appears releases before anything emits it, and a declared-but-unwired method
  * looks supported while streaming nothing:
  *
@@ -466,7 +466,7 @@ export const CODEX_APP_SERVER_STREAM_FORMAT = 'codex-app-server';
  *                 `turn/interrupt` land wired; `ThreadStartParams.sandbox` and
  *                 `TurnStartParams.summary` exist from day one.
  *   rust-v0.59.0  first emit of `item/agentMessage/delta` (PR #6559) and of the
- *                 reasoning summary deltas — i.e. the streaming this transport
+ *                 reasoning summary deltas - i.e. the streaming this transport
  *                 exists for. Also the first `turn/completed` emit.
  *   rust-v0.64.0  first emit of `thread/tokenUsage/updated`. This is the
  *                 CAPABILITY floor: below it the transport still works but
@@ -477,7 +477,7 @@ export const CODEX_APP_SERVER_STREAM_FORMAT = 'codex-app-server';
  * accepts a `capabilities` object at all (PR #10231). Below it our handshake
  * would be sending a field the server has no place to put, and we would be
  * guessing at how its deserializer treats the extra key. Refusing to guess
- * costs nothing real — codex ships roughly two stable releases a week, so
+ * costs nothing real - codex ships roughly two stable releases a week, so
  * everything below this floor is long superseded.
  *
  * Two notifications land later than this floor and degrade quietly when
@@ -578,7 +578,7 @@ export function codexResolvedSandboxMode(): 'workspace-write' | 'danger-full-acc
  *    and `sandbox_workspace_write.writable_roots` into the SAME
  *    `workspace_roots` list, and `SandboxPolicy::get_writable_roots_with_cwd`
  *    then appends cwd, `/tmp`, and `$TMPDIR` on top of whatever is configured.
- *    Both entry points are therefore additive over the same defaults — this
+ *    Both entry points are therefore additive over the same defaults - this
  *    grants no access `--add-dir` would not have granted.
  *  - `--disable plugins`, the same per-run plugin isolation flag.
  */
@@ -614,9 +614,9 @@ function buildCodexAppServerArgs(
  *
  * Under `exec-json` this returns the SAME OBJECT the registry exports. That is
  * the rollback guarantee in its strongest available form: with the switch off
- * there is no derived def, no copied field, and nothing downstream — the spawn
+ * there is no derived def, no copied field, and nothing downstream - the spawn
  * branch, the `start` SSE payload, the execution-profile lookup, the resume
- * bookkeeping — can observe that this code exists.
+ * bookkeeping - can observe that this code exists.
  */
 export function withCodexTransport(
   def: RuntimeAgentDef,
@@ -672,7 +672,7 @@ export function resetCodexVersionProbeCache(): void {
  *
  * This is the single choke point where the codex transport switch is applied.
  * For every non-codex agent, and for codex with the switch off, the argument is
- * returned unchanged — same object, same behaviour.
+ * returned unchanged - same object, same behaviour.
  */
 export function applyCodexTransportOverride(
   def: RuntimeAgentDef | null,

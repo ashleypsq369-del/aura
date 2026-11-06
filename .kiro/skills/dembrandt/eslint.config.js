@@ -25,7 +25,7 @@ export default tseslint.config(
       // anti-bot init scripts and color parsing legitimately use control/escape regex.
       'no-control-regex': 'off',
       // false-positives on defensive `let x = []` before a try, and on trailing
-      // counter increments — both idiomatic here. Not worth the noise.
+      // counter increments - both idiomatic here. Not worth the noise.
       'no-useless-assignment': 'off',
     },
   },

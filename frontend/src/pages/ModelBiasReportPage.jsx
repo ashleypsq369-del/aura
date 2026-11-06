@@ -1,5 +1,5 @@
-/**
- * ModelBiasReportPage — AI fairness & demographic bias analysis
+﻿/**
+ * ModelBiasReportPage - AI fairness & demographic bias analysis
  * Route: /admin/model-bias-report
  *
  * Built with: AdminPageShell + DataTable (TanStack) + StatusDot
@@ -96,7 +96,7 @@ function GroupSubRow({ row, threshold, overall }) {
           <p className="text-xs leading-relaxed" style={{ color: '#991b1b' }}>
             <strong>Action required.</strong>{' '}
             {(Math.abs(disp) * 100).toFixed(1)}% deviation from population mean.{' '}
-            {data.count < 30 ? 'Small sample — collect more data before acting.' : 'Investigate with clinical experts and document findings.'}
+            {data.count < 30 ? 'Small sample - collect more data before acting.' : 'Investigate with clinical experts and document findings.'}
           </p>
         </div>
       )}
@@ -304,7 +304,7 @@ export default function ModelBiasReportPage() {
               }}
             >
               <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-400)', marginBottom: 12 }}>
-                Disparity from population mean — {CATS[cat]?.label}
+                Disparity from population mean - {CATS[cat]?.label}
               </p>
               <ResponsiveContainer width="100%" height={Math.max(120, tableData.length * 36)}>
                 <BarChart
@@ -402,7 +402,7 @@ export default function ModelBiasReportPage() {
                   ['Avg AI difference', `${overrideStats.average_difference > 0 ? '+' : ''}${((overrideStats.average_difference || 0) * 100).toFixed(1)}%`,
                                         overrideStats.average_difference > 0 ? '#ef4444' : '#10b981'],
                   ['AI bias direction', overrideStats.direction || 'Neutral', 'var(--text-700)'],
-                  ['Recommendation',    overrideStats.recommendation || '—',  '#10b981'],
+                  ['Recommendation',    overrideStats.recommendation || '-',  '#10b981'],
                 ].map(([label, val, color]) => (
                   <div key={label} className="flex items-center justify-between">
                     <span className="text-xs" style={{ color: 'var(--text-600)' }}>{label}</span>
@@ -460,8 +460,8 @@ export default function ModelBiasReportPage() {
                 {[
                   ['Clinician agreement',  `${impactData.clinician_agreement_rate || 0}%`, '#10b981'],
                   ['High-risk alerts',     impactData.high_risk_alerts || 0, '#ef4444'],
-                  ['Clinician engagement', impactData.ai_benefit_indicators?.clinician_engagement || '—', 'var(--c-teal)'],
-                  ['Model reliability',    impactData.ai_benefit_indicators?.model_reliability || '—',
+                  ['Clinician engagement', impactData.ai_benefit_indicators?.clinician_engagement || '-', 'var(--c-teal)'],
+                  ['Model reliability',    impactData.ai_benefit_indicators?.model_reliability || '-',
                                            impactData.ai_benefit_indicators?.model_reliability === 'High' ? '#10b981' : '#f59e0b'],
                 ].map(([label, val, color]) => (
                   <div key={label} className="flex items-center justify-between">
@@ -471,7 +471,7 @@ export default function ModelBiasReportPage() {
                 ))}
               </div>
               <div className="rounded-xl p-4 text-xs" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534' }}>
-                <strong>Academic basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle — ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
+                <strong>Academic basis:</strong> Tilala et al. (2024). Biomedical Ethics in AI: Justice Principle - ensuring fair and equitable distribution of AI benefits and risks across all patient demographics.
               </div>
             </>
           ) : (

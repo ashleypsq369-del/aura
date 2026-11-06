@@ -283,7 +283,7 @@ describe('PUT /api/workspace/active keeps exact enrichment tab-local', () => {
       ({ ok: status >= 200 && status < 300, status, json: async () => body }) as unknown as Response;
 
     // Call 1 (the route's read, which gets cached) still lists TEAM.
-    // Call 2+ (resolveExact's fresh read) no longer does — enrichment returns
+    // Call 2+ (resolveExact's fresh read) no longer does - enrichment returns
     // null without mutating the legacy pin.
     const fetchImpl = (async (url: URL | string, init?: RequestInit) => {
       const u = String(url);

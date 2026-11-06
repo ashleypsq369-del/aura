@@ -1,4 +1,4 @@
-// Golden daemon-event snapshots — addresses the regression-signal point
+// Golden daemon-event snapshots - addresses the regression-signal point
 // from review on #3241: smoke-testing that mocks RUN catches only crashes
 // or protocol-level garbage; it does NOT catch a parser change that
 // semantically reshapes the events the daemon emits to the UI.
@@ -42,7 +42,7 @@ const CASES: Array<{ agent: 'claude' | 'codex' | 'opencode'; trace: string }> = 
 ];
 
 // Replace per-spawn-volatile fields with stable sentinels so the
-// snapshot stays diffable across runs. Currently only `sessionId` —
+// snapshot stays diffable across runs. Currently only `sessionId` -
 // claude's mock emits a fresh UUID every spawn. Opencode/codex carry
 // the recording's own session/thread id so they're already stable.
 function normalizeVolatile(events: unknown[]): unknown[] {
@@ -89,7 +89,7 @@ const recordingsAvailable =
   CASES.every(c => existsSync(join(RECORDINGS_DIR, `${c.trace}.jsonl`)));
 
 describe.skipIf(!recordingsAvailable)(
-  'mocks goldens — daemon event shape regression',
+  'mocks goldens - daemon event shape regression',
   () => {
     for (const { agent, trace } of CASES) {
       it(`${agent} ${trace.slice(0, 8)}`, () => {

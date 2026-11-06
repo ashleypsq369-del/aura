@@ -1,5 +1,5 @@
-/**
- * StatusDot — semantic status indicator
+﻿/**
+ * StatusDot - semantic status indicator
  *
  * Services design DNA:
  *  - Same pulse animation as AvailBadge in Services

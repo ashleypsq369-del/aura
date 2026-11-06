@@ -7,7 +7,7 @@ import {
 } from '../../src/collab/sync-digest.js';
 
 // B's `GET /api/v1/collab/sync-digest` hands out four OPAQUE tokens. The only
-// legal operation is `===` against a token we stored earlier — they are built
+// legal operation is `===` against a token we stored earlier - they are built
 // from `max(updated_at) || ':' || count(*)`, so there is no ordering relation
 // between two values and no timestamp to parse out.
 
@@ -37,7 +37,7 @@ describe('parseSyncDigest', () => {
   });
 
   it('accepts the empty-table token shapes verbatim', () => {
-    // `'0:0'` / `'0'` are values, not sentinels — nothing may special-case them.
+    // `'0:0'` / `'0'` are values, not sentinels - nothing may special-case them.
     const empty = { catalogToken: '0:0', membersToken: '0:0', contextToken: '0', billingToken: '' };
     expect(parseSyncDigest(empty)).toEqual(empty);
   });
@@ -87,7 +87,7 @@ describe('createSyncDigestReader', () => {
     let called = 0;
     const read = createSyncDigestReader({
       // A dev daemon on any other source has no hub to ask and must not dial
-      // production — the same gate the hub events subscriber uses.
+      // production - the same gate the hub events subscriber uses.
       env: { OD_WORKSPACE_CONTEXT_SOURCE: 'stub' },
       getWorkspaceId: () => 'ws-1',
       readSession: () => session(),
@@ -143,7 +143,7 @@ describe('createSyncDigestReader', () => {
     });
 
     // Callers treat null as "cannot prove the snapshot is current", which is a
-    // real fetch — a digest outage degrades, it never fails a page load.
+    // real fetch - a digest outage degrades, it never fails a page load.
     await expect(read()).resolves.toBeNull();
     expect(errors).toHaveLength(1);
   });

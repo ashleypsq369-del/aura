@@ -7,10 +7,10 @@ lines = open(path, encoding='utf-8').readlines()
 before = lines[:38]
 after  = lines[56:]
 
-# Carefully chosen Pexels photos — African healthcare professionals / relevant contexts
+# Carefully chosen Pexels photos - African healthcare professionals / relevant contexts
 # These IDs are verified to show correct content
 NEW_TYPE_META = """const TYPE_META = {
-  // Pexels photos — African/diverse healthcare contexts
+  // Pexels photos - African/diverse healthcare contexts
   nurse:           { color:'#0d9488', bg:'#f0fdfa', label:'Palliative Nurse',
     icon:Stethoscope,
     img:'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&fit=crop&crop=faces,top' },

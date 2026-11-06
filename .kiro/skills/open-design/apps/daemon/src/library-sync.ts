@@ -1,4 +1,4 @@
-// OD Library reconcile — mirror design systems and agent-produced project
+// OD Library reconcile - mirror design systems and agent-produced project
 // deliverables into the Library as *referenced* assets, so the Library is the
 // single place a user sees everything they've made (clips, uploads, design
 // systems, agent output) and can re-consume any of it.
@@ -52,7 +52,7 @@ export interface ReconcileLibraryResult {
 // video). pdf, presentation, audio, and document/spreadsheet/code/text are not
 // modeled by LibraryAssetKind, so syncing them would produce broken thumbnails;
 // they're intentionally left out of this slice. `sketch` covers .svg and
-// sketch-*.png (renderable as images) — the OD-internal `.sketch.json` editable
+// sketch-*.png (renderable as images) - the OD-internal `.sketch.json` editable
 // format is skipped explicitly below.
 const DELIVERABLE_KINDS = new Set(['html', 'image', 'video', 'sketch']);
 
@@ -85,7 +85,7 @@ function libraryKindFor(projectFileKind: string | undefined): LibraryAssetKind {
 function isDeliverable(file: ProjectFileLike): boolean {
   if (file.type === 'dir') return false;
   if (!file.kind || !DELIVERABLE_KINDS.has(file.kind)) return false;
-  // OD-internal editable sketch doc — not a flat, renderable deliverable.
+  // OD-internal editable sketch doc - not a flat, renderable deliverable.
   if (file.name.endsWith('.sketch.json')) return false;
   return true;
 }
@@ -155,7 +155,7 @@ async function resolveDesignSystemPreview(
     if (pages[0]?.path) candidates.push(pages[0].path);
     if (manifest.files?.components) candidates.push(manifest.files.components);
   } catch {
-    // No / unreadable manifest — fall back to conventional locations.
+    // No / unreadable manifest - fall back to conventional locations.
   }
   candidates.push(
     'components.html',
@@ -292,7 +292,7 @@ async function reconcileProjects(
         if (!isDeliverable(file)) continue;
         const rel = file.path ?? file.name;
         if (!rel) continue;
-        // Cheap "already synced?" guard — no bytes read.
+        // Cheap "already synced?" guard - no bytes read.
         if (findReferencedAssetByOrigin(db, project.id, rel)) {
           result.deduped += 1;
           continue;

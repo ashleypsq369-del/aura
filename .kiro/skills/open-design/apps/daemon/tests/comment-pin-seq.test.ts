@@ -43,7 +43,7 @@ function target(patch: Record<string, unknown> = {}) {
 /** Opens a fresh sqlite db under its own temp dir, seeded with one project +
  *  one conversation. Standalone (does not reuse the module-level `tempDir`
  *  var) so a test can hold two independent "devices" open in the same
- *  process by re-opening whichever one it needs next — see the concurrency
+ *  process by re-opening whichever one it needs next - see the concurrency
  *  test below for why that matters. */
 function newDeviceDb(label: string) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `od-pin-seq-${label}-`));
@@ -124,7 +124,7 @@ describe('pin_seq assignment (recvq5BVsolIxi)', () => {
     expect(edited?.note).toBe('First, edited');
   });
 
-  it('scopes pin_seq per (project, file) — a different file restarts at 1', () => {
+  it('scopes pin_seq per (project, file) - a different file restarts at 1', () => {
     const db = seededDb();
     const onIndex = upsertPreviewComment(db, 'project-1', 'conversation-1', {
       target: target({ filePath: 'index.html', elementId: 'a' }),
@@ -207,7 +207,7 @@ describe('pin_seq cloud reconciliation (recvq5BVsolIxi)', () => {
     expect(stillConfirmed?.pinSeq).toBe(501);
   });
 
-  it('a non-team comment is already final (pin_seq_confirmed=1) — confirming it later is a no-op', () => {
+  it('a non-team comment is already final (pin_seq_confirmed=1) - confirming it later is a no-op', () => {
     const db = seededDb();
     const created = upsertPreviewComment(db, 'project-1', 'conversation-1', {
       target: target({ elementId: 'a' }),
@@ -259,11 +259,11 @@ describe('pin_seq cloud reconciliation (recvq5BVsolIxi)', () => {
   });
 });
 
-describe('pin_seq concurrency — two devices, no collision after confirmation (recvq5BVsolIxi)', () => {
+describe('pin_seq concurrency - two devices, no collision after confirmation (recvq5BVsolIxi)', () => {
   it('two devices creating a comment in the same poll window get colliding provisional numbers but distinct confirmed ones', () => {
     // Device A creates its own new comment on a team-shared project. It
     // computes pin_seq from ITS OWN local rows only (there are none yet), so
-    // it lands on 1 — a provisional guess, unconfirmed.
+    // it lands on 1 - a provisional guess, unconfirmed.
     const deviceA = newDeviceDb('a');
     extraTempDirs.push(deviceA.dir);
     const commentA = upsertPreviewComment(
@@ -275,8 +275,8 @@ describe('pin_seq concurrency — two devices, no collision after confirmation (
     );
     expect(commentA?.pinSeq).toBe(1);
 
-    // Device B — a SEPARATE local sqlite file, standing in for a second
-    // daemon on a second machine — independently creates its OWN new comment
+    // Device B - a SEPARATE local sqlite file, standing in for a second
+    // daemon on a second machine - independently creates its OWN new comment
     // within the same ~5s poll window, before either side's collab-cloud
     // sync has caught up. Opening it closes device A's handle (the daemon
     // process model is one active db at a time); the file on disk keeps
@@ -296,7 +296,7 @@ describe('pin_seq concurrency — two devices, no collision after confirmation (
     expect(commentB?.pinSeq).toBe(commentA?.pinSeq);
 
     // The collab-cloud push for device B's comment resolves first (order is
-    // arbitrary — the mechanism does not depend on which side wins the
+    // arbitrary - the mechanism does not depend on which side wins the
     // network race) with its globally-serialized, project-wide seq.
     expect(confirmPreviewCommentPinSeq(deviceB.db, 'project-1', commentB!.id, 502)).toBe(true);
     const confirmedB = getPreviewComment(deviceB.db, 'project-1', 'conversation-1', commentB!.id);
@@ -308,7 +308,7 @@ describe('pin_seq concurrency — two devices, no collision after confirmation (
     const confirmedA = getPreviewComment(deviceAAgain, 'project-1', 'conversation-1', commentA!.id);
     expect(confirmedA?.pinSeq).toBe(501);
 
-    // No collision once both sides are confirmed — the whole point of the fix.
+    // No collision once both sides are confirmed - the whole point of the fix.
     expect(confirmedA?.pinSeq).not.toBe(confirmedB?.pinSeq);
 
     // And the system converges: when device A later PULLS device B's comment

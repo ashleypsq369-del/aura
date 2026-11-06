@@ -316,15 +316,15 @@ const stripTrailingSeparators = (value: string): string =>
  * `workdir`/`cwd` argument, its ACP bridge puts the *session working directory*
  * into `locations` (`m()` → `_o()` in the bundled bridge), which is rank-1
  * evidence here. vela does not forward `locations` today, so nothing reaches
- * production — but the day it does, every shell command would render a file
+ * production - but the day it does, every shell command would render a file
  * link pointing at a directory. Guard it at the source rather than teaching
  * each consumer to distrust `file_path`.
  *
  * Three signals, cheapest first, none of them a filesystem probe (the path may
  * not exist yet, and this runs per frame):
- *  1. A trailing separator, or `.` / `..` — a directory by spelling.
+ *  1. A trailing separator, or `.` / `..` - a directory by spelling.
  *  2. Equality with the session cwd.
- *  3. `locations` on an execute-family tool — the fallback described above.
+ *  3. `locations` on an execute-family tool - the fallback described above.
  *     Shell tools have no write target, so nothing legitimate is lost.
  */
 function acpPathCandidateIsDirectory(
@@ -531,7 +531,7 @@ function acpToolNameFromTitle(title: string): string | null {
 /**
  * Execute-family names that Langfuse treats as partial-redact only (secret+path
  * lexical masking, not full payload replacement). Custom `kind:other` tools must
- * never inherit these labels — a malicious or misconfigured MCP adapter can
+ * never inherit these labels - a malicious or misconfigured MCP adapter can
  * otherwise place private content in `rawInput` and bypass fail-closed redaction.
  * Keep in sync with `PARTIAL_REDACT_TOOL_NAMES_LOWER` in langfuse-trace.ts.
  */
@@ -608,7 +608,7 @@ export function acpTelemetryToolCallId(raw: string): string {
  * title "update …" stays Read). That keeps content-tool redaction and analytics
  * families aligned with Langfuse's canonical name set. Kind `other` is the
  * exception: it is recognized for stickiness but is not a family, so an
- * explicit identifier-like name still wins there for UI/transcript — except
+ * explicit identifier-like name still wins there for UI/transcript - except
  * Bash-like partial-redact labels, which collapse to `Other` so custom MCP
  * tools cannot bypass Langfuse fail-closed payload redaction. The same rule
  * applies when `kind` is missing: a bare `name: "Bash"` (or Bash-like title)
@@ -633,16 +633,16 @@ export function acpToolName(update: JsonObject): string {
    *
    * vela 的 ACP 桥从不发 `name`,只把原始 opencode 工具名塞进 `kind`
    * (`acp_runtime.go` 的 `mapOpenCodeToolPart`)。`todowrite` 不在 canonical
-   * 家族白名单里,于是会掉到下面的 title 启发式 —— 而那里的 `/\bwrite\b/`
+   * 家族白名单里,于是会掉到下面的 title 启发式 -- 而那里的 `/\bwrite\b/`
    * 因为**词边界**匹配不到 `todowrite` 里的 write,最后走「首词 title-case」
    * 兜底,发出 `Todowrite`;title 再带一句描述(`todowrite: 复刻列表页`)时
    * 首词是 `Todowrite:`,带冒号被 `sanitizeAcpCustomToolName` 拒掉,退成 `Other`
-   * —— 清单在 AMR 上就此整个消失。
+   * -- 清单在 AMR 上就此整个消失。
    *
    * 讽刺的是 AMR 跑的就是 opencode 本人:直连 BYOK-opencode 一切正常,
    * 走 AMR 就没了,纯粹是传输层把名字改坏。九家 ACP runtime 同受影响。
    *
-   * 归一成契约里的规范名,而不是靠下游宽容 —— 传输层保真是它自己的职责,
+   * 归一成契约里的规范名,而不是靠下游宽容 -- 传输层保真是它自己的职责,
    * 把坏账留给每个未来的消费者才是真的贵。判据只有一个出处:`isTodoWriteToolName`。
    */
   if (isTodoWriteToolName(kindRaw) || isTodoWriteToolName(update.name)) {
@@ -805,7 +805,7 @@ export function isAcpExecuteToolName(toolName: string): boolean {
  * Content tools (Read/Write/…) keep full bodies so the local UI and Langfuse
  * content-tool redactor can each do their job. Execute/Bash is different:
  * Langfuse only applies lexical secret+path masking to Bash, and ACP only
- * started forwarding execute results with the full-transcript change — so a
+ * started forwarding execute results with the full-transcript change - so a
  * `cat .env` body would ship to telemetry almost intact. Replace raw stdout
  * with a length summary before emit.
  */
@@ -824,7 +824,7 @@ export function acpSafeToolResultContent(toolName: string, content: string): str
  *    (rejects dotted identifiers like `Image.open`).
  *
  * Returns `null` when no concrete path is present. Does not use `toolCallId`
- * as a path — callers decide how to key pathless writes.
+ * as a path - callers decide how to key pathless writes.
  *
  * @param update - A parsed ACP `session/update` params object.
  * @returns An absolute or relative file path string, or `null` when absent.

@@ -1,11 +1,11 @@
 /**
  * Build a fully-formed product webpage that demonstrates a design system in
- * action — not just a list of tokens, but a real-feeling marketing /
+ * action - not just a list of tokens, but a real-feeling marketing /
  * product page (nav, hero, social proof, feature grid, dashboard preview,
  * pricing, testimonials, FAQ, CTA, footer) styled entirely from the
  * tokens we extract from the system's DESIGN.md.
  *
- * Same parsing utilities as preview.js — kept inline rather
+ * Same parsing utilities as preview.js - kept inline rather
  * than imported so the two views can evolve independently.
  */
 
@@ -112,7 +112,7 @@ export function renderDesignSystemShowcase(id: string, raw: string): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(productName)} — showcase</title>
+  <title>${escapeHtml(productName)} - showcase</title>
   <style>
     :root {
       --bg: ${bg};
@@ -395,14 +395,14 @@ export function renderDesignSystemShowcase(id: string, raw: string): string {
       <div class="container">
         <div class="section-eyebrow">What it does</div>
         <h2 class="section-title">Every primitive a fast team needs.</h2>
-        <p class="section-lede">A system styled entirely from the tokens of ${escapeHtml(productName)} — palette, typography, surfaces, and motion. Drop it into any product and it stays in character.</p>
+        <p class="section-lede">A system styled entirely from the tokens of ${escapeHtml(productName)} - palette, typography, surfaces, and motion. Drop it into any product and it stays in character.</p>
         <div class="features">
-          ${featureCard('★', 'Tokens that compose', 'Color, type, spacing, and elevation defined once and reused across every surface — from a marketing hero to a row in a table.')}
+          ${featureCard('★', 'Tokens that compose', 'Color, type, spacing, and elevation defined once and reused across every surface - from a marketing hero to a row in a table.')}
           ${featureCard('◐', 'Light & dark in lockstep', 'Every component ships with both modes. The accent reads as confident in either context, and contrast meets WCAG AA out of the box.')}
           ${featureCard('⌘', 'Desktop-first, but mobile-honest', 'Layouts collapse from a 12-column desktop grid to a focused single column without losing density or rhythm.')}
-          ${featureCard('▣', 'Production-grade primitives', '40+ components — from the obvious (button, input) to the load-bearing (data table, command bar, empty states).')}
+          ${featureCard('▣', 'Production-grade primitives', '40+ components - from the obvious (button, input) to the load-bearing (data table, command bar, empty states).')}
           ${featureCard('↗', 'Designed for handoff', 'Every spec carries a Figma frame, a code snippet, and a "do/don’t" pair so engineers don’t have to guess.')}
-          ${featureCard('∞', 'Built to evolve', 'Tokens version semver-style. A palette refresh ships through one file — no component code touches.')}
+          ${featureCard('∞', 'Built to evolve', 'Tokens version semver-style. A palette refresh ships through one file - no component code touches.')}
         </div>
       </div>
     </section>
@@ -411,7 +411,7 @@ export function renderDesignSystemShowcase(id: string, raw: string): string {
       <div class="container">
         <div class="section-eyebrow">In production</div>
         <h2 class="section-title">A workspace, fully styled.</h2>
-        <p class="section-lede">This is the same component library you'd use in your app — rendered with ${escapeHtml(productName)} tokens.</p>
+        <p class="section-lede">This is the same component library you'd use in your app - rendered with ${escapeHtml(productName)} tokens.</p>
         <div class="preview-frame">
           <div class="preview-titlebar"><span></span><span></span><span></span></div>
           <div class="preview-app">
@@ -505,9 +505,9 @@ export function renderDesignSystemShowcase(id: string, raw: string): string {
         <h2 class="section-title">Questions, answered.</h2>
         <div class="faq">
           ${faq('Is this a Figma library, a code library, or both?', 'Both. Tokens flow from one source of truth into Figma styles and into the codegen pipeline at the same time.')}
-          ${faq('Can we ship our own brand theme?', 'Yes — fork the token file, change the palette and type stack, and every component reskins automatically.')}
+          ${faq('Can we ship our own brand theme?', 'Yes - fork the token file, change the palette and type stack, and every component reskins automatically.')}
           ${faq('What about accessibility?', 'Color contrast meets WCAG AA on every surface. Components ship with focus rings, ARIA roles, and keyboard handling.')}
-          ${faq('How do you handle dark mode?', 'Every token has a paired dark value. The system flips at the document level — no per-component overrides needed.')}
+          ${faq('How do you handle dark mode?', 'Every token has a paired dark value. The system flips at the document level - no per-component overrides needed.')}
         </div>
       </div>
     </section>
@@ -671,7 +671,7 @@ export function extractColors(raw: string): ColorToken[] {
       .trim()
       .replace(/[.;]+$/, '');
     if (seen.has(key)) {
-      // Already recorded — but if this occurrence carries a richer role
+      // Already recorded - but if this occurrence carries a richer role
       // description, upgrade the stored entry so role-based lookups don't
       // fall back to the bare name.
       if (cleanRole) {
@@ -751,7 +751,7 @@ function escapeRegex(s: string): string {
 
 // Match a hint as a whole word inside `text` (case-insensitive). We use word
 // boundaries so descriptive color names like "Cardinal Red" don't satisfy a
-// "card" hint, and "Gem Pink" doesn't satisfy "ink" — both real bugs the
+// "card" hint, and "Gem Pink" doesn't satisfy "ink" - both real bugs the
 // substring-based version produced for the Duolingo and Canva showcases.
 function matchesHint(text: string, hint: string): boolean {
   if (!text) return false;

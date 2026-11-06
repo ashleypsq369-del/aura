@@ -1,12 +1,12 @@
 // 红测:「谁停的这一轮」必须**落库**。
 //
 // 交付稿第 81 格那一行灰字(`PauseLine`)只有在 `cancelOrigin === 'user_stop'`
-// 时才画 —— 客户端今天只看 `runStatus: 'canceled'`,会把「用户按停」和
+// 时才画 -- 客户端今天只看 `runStatus: 'canceled'`,会把「用户按停」和
 // 「daemon 关机 / 项目清理杀掉」混成一种,照那个判据画,daemon 重启后这一行
 // 会**谎报**「你手动停了任务」。
 //
 // 所以这个字段必须是**存下来的列**,不是内存里的客户端旗标:刷新之后那一行
-// 还得在,而且还得是同一个来源。`upsertMessage` 是显式列名写入 —— 不加列的话
+// 还得在,而且还得是同一个来源。`upsertMessage` 是显式列名写入 -- 不加列的话
 // PUT 上来的 `cancelOrigin` 会被整个丢掉(`forkedInto` / `sendFailed` 两次都踩过)。
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';

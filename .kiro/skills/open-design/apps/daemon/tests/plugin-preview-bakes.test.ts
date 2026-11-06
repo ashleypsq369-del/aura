@@ -206,7 +206,7 @@ describe('applyBakedPreviews', () => {
   it('says so when there is no manifest at all, instead of disabling bakes silently', async () => {
     // A missing manifest disables every baked preview and sends every plugin to
     // the live-iframe path, which presents as nothing worse than a slower
-    // gallery — the same "silently disable with no trace" failure the malformed
+    // gallery - the same "silently disable with no trace" failure the malformed
     // branch already warns about. An image built without `data/` lands here, so
     // the notice is what makes the cause greppable rather than inferred.
     tmpDir = await mkdtemp(path.join(os.tmpdir(), 'od-bakes-missing-'));

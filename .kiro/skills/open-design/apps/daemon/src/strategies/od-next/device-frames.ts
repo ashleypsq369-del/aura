@@ -47,7 +47,7 @@ export class InvalidOdNextDeviceFrameRootError extends Error {
  * subject to the same rule: when it is occupied by something we did not write,
  * there is no trustworthy ownership record and the directory is left alone
  * entirely. "Something we did not write" is decided against what this
- * materializer can ever produce — a key set inside {@link MANAGED_SHELL_FILES}
+ * materializer can ever produce - a key set inside {@link MANAGED_SHELL_FILES}
  * and 64-hex digests. A manifest naming anything else is not a manifest of
  * ours, and must not be allowed to nominate that name for deletion.
  */
@@ -56,8 +56,8 @@ const OD_NEXT_DEVICE_FRAME_MANIFEST_SCHEMA = 'open-design.od-next-device-frames/
 
 /**
  * Every filename this materializer can ever stage, retire, or record. The
- * manifest lives in a directory the project controls, so this set — not the
- * manifest's own key list — is what bounds the files it may touch.
+ * manifest lives in a directory the project controls, so this set - not the
+ * manifest's own key list - is what bounds the files it may touch.
  */
 const MANAGED_SHELL_FILES: ReadonlySet<string> = new Set(OD_NEXT_MANAGED_RESOURCE_FILES);
 
@@ -82,8 +82,8 @@ export interface OdNextDeviceFrameStagingResult {
   staged: string[];
   /**
    * Managed names left alone because the bytes on disk are not provably ours:
-   * a file we never wrote, a shell edited since we staged it, or — when the
-   * control file itself is occupied — every managed name under the root.
+   * a file we never wrote, a shell edited since we staged it, or - when the
+   * control file itself is occupied - every managed name under the root.
    */
   skipped: string[];
 }
@@ -140,8 +140,8 @@ function digest(text: string): string {
 
 /**
  * Classify the control file. Only a plain file holding exactly what this
- * materializer writes — our schema, keys drawn from {@link MANAGED_SHELL_FILES},
- * 64-hex digests — counts as `ours`. Everything else is `foreign`: unreadable
+ * materializer writes - our schema, keys drawn from {@link MANAGED_SHELL_FILES},
+ * 64-hex digests - counts as `ours`. Everything else is `foreign`: unreadable
  * files, malformed JSON, a foreign schema, and same-schema content naming a
  * file we would never stage. "We could not understand it" is not evidence that
  * we wrote it, and neither is "it looks close enough".

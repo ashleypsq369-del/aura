@@ -1,4 +1,4 @@
-// Plan §3.L3 / spec §10.3.5 / §9.2 — plugin asset endpoint.
+// Plan §3.L3 / spec §10.3.5 / §9.2 - plugin asset endpoint.
 //
 // Validates the daemon-side half of the SandboxedComponentSurface
 // contract:
@@ -63,7 +63,7 @@ beforeAll(async () => {
   // For test simplicity we open a private DB and skip the daemon's
   // registry. The asset route reads through `getInstalledPlugin(db,…)`
   // backed by the daemon's own DB, so we must use the install route.
-  // But install requires SAFE_BASENAME id matching the folder name —
+  // But install requires SAFE_BASENAME id matching the folder name -
   // achievable by pointing at our prepared fixture.
   const installResp = await fetch(`${baseUrl}/api/plugins/install`, {
     method: 'POST',

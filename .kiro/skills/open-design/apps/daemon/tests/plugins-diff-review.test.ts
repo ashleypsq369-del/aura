@@ -1,4 +1,4 @@
-// Phase 7-8 entry slice — diff-review atom impl.
+// Phase 7-8 entry slice - diff-review atom impl.
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
@@ -30,7 +30,7 @@ async function seedReceipts(steps: Array<{ id: string; risk?: string; rationale?
   }
 }
 
-describe('runDiffReview — artefact emission', () => {
+describe('runDiffReview - artefact emission', () => {
   it('produces diff.patch / summary.md / meta.json from receipts', async () => {
     await seedReceipts(
       [{ id: 'rewrite-button', risk: 'low', rationale: 'tighten copy' }],
@@ -67,7 +67,7 @@ describe('runDiffReview — artefact emission', () => {
   });
 });
 
-describe('runDiffReview — decision file', () => {
+describe('runDiffReview - decision file', () => {
   it("composes an 'accept' decision with all touched files when accepted_files is omitted", async () => {
     await seedReceipts(
       [{ id: 'a' }],

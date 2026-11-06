@@ -16,7 +16,7 @@ export type EgressResolver = (host: string) => Promise<string[]>;
 export type EgressAllow = (address: string, host: string, port: number) => Promise<boolean>;
 
 export interface EgressProxy {
-  /** `http://127.0.0.1:<port>` — pass to the child as its proxy. */
+  /** `http://127.0.0.1:<port>` - pass to the child as its proxy. */
   url: string;
   close: () => Promise<void>;
 }
@@ -74,8 +74,8 @@ async function pickAddress(
 }
 
 /**
- * Start the proxy on 127.0.0.1 and a free port. Every connection — a CONNECT
- * tunnel or a plain absolute-URI request — resolves its target once, checks the
+ * Start the proxy on 127.0.0.1 and a free port. Every connection - a CONNECT
+ * tunnel or a plain absolute-URI request - resolves its target once, checks the
  * resolved address, and dials that address. A refused target is answered with
  * 403 and never dialled, so the download fails instead of being reported
  * complete.

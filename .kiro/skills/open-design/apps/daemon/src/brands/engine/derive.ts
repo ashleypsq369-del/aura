@@ -1,12 +1,12 @@
 // @ts-nocheck
 /**
- * derive.ts — the heart of the engine.
+ * derive.ts - the heart of the engine.
  *
  * Takes a tiny SeedToken (~20 fields) and DERIVES the full DesignTokens style
  * system, exactly the way Ant Design turns ~30 seeds into hundreds of map
  * tokens. Nothing here is hand-authored; every value traces back to a seed via
  * a deterministic algorithm. The three theme algorithms (default / dark /
- * compact) are the SAME seed run through different math — that is what makes
+ * compact) are the SAME seed run through different math - that is what makes
  * "light / dark / compact" variants instead of three separate hand-built sets.
  *
  * Pipeline (see types.ts):  SeedToken ──deriveTokens(algorithm)──▶ DesignTokens
@@ -35,7 +35,7 @@ interface RGB {
   b: number;
 }
 
-/** Parse "#rgb" / "#rrggbb" into an RGB triple (0–255). Falls back to black. */
+/** Parse "#rgb" / "#rrggbb" into an RGB triple (0-255). Falls back to black. */
 function parseHex(input: string): RGB {
   let hex = input.trim().replace(/^#/, "");
   if (hex.length === 3) {
@@ -64,7 +64,7 @@ function toHex({ r, g, b }: RGB): string {
 }
 
 /**
- * Composite `fg` over `bg` at the given alpha (0–1), returning an opaque hex.
+ * Composite `fg` over `bg` at the given alpha (0-1), returning an opaque hex.
  * This is how Ant turns its "neutral text uses transparency" rule into the
  * solid token values consumers can paint with on the known base background.
  */
@@ -92,14 +92,14 @@ function lightThemeTextBase(input: string | undefined): string {
 
 /**
  * A seed marks a dark-first brand only when it carries BOTH a confidently dark
- * canvas AND a light foreground — the exact gate `neutralBases()` in seed.ts
+ * canvas AND a light foreground - the exact gate `neutralBases()` in seed.ts
  * uses (dark bg + light fg → keep the dark canvas). Both must be checked here:
  * the seed-override path (`rebuildSystem` → `sanitizeSeedOverrides`) can merge a
  * background-only override such as `{ colorBgBase: "#050505" }` onto an
  * otherwise light brand. Keying off `colorBgBase` alone would flip derivation to
  * the dark ladder (forcing a white text base) while the seed still carried a
  * dark `colorTextBase`, and `tokensToThemeJson(seed, defaultThemeAlgorithm(seed))`
- * would then export `algorithm:"dark"` over that dark text — the very
+ * would then export `algorithm:"dark"` over that dark text - the very
  * ConfigProvider mismatch this predicate exists to prevent. Thresholds mirror
  * seed.ts (dark ≤ 0.3, light ≥ 0.6).
  */
@@ -115,7 +115,7 @@ function seedPrefersDark(seed: SeedToken): boolean {
  * dark-first seed derives its default `tokens.default.json`, `variables.css`,
  * and `kit.html` with dark palette + neutral math (see `deriveTokens` below),
  * so the exported `theme.json` must carry `"dark"` to stay consistent with
- * them — otherwise a ConfigProvider consumer applies the light algorithm to a
+ * them - otherwise a ConfigProvider consumer applies the light algorithm to a
  * dark canvas. Light and ambiguous seeds stay `"default"`. This is the single
  * shared decision every `theme.json` producer must route through.
  */
@@ -177,7 +177,7 @@ function statesFromPalette(palette: string[], algorithm: ThemeAlgorithm): ColorS
 // ─────────────────────────── numeric ladders ────────────────────────────────
 
 /**
- * Snap a px size to an even integer — this is Ant's own genFontSizes helper
+ * Snap a px size to an even integer - this is Ant's own genFontSizes helper
  * (`size % 2 ? size + 1 : size`): round, then bump odd up to the next even.
  */
 function toEven(n: number): number {
@@ -188,7 +188,7 @@ function toEven(n: number): number {
 /**
  * The modular type scale. index 1 is forced to the base size; every other step
  * is round(base * e^((i-1)/5)) snapped even (see toEven). Returns 10 steps
- * (indices 0–9), matching Ant's genFontSizes output shape.
+ * (indices 0-9), matching Ant's genFontSizes output shape.
  *
  * Note: this is a faithful port of the *formula* the spec mandates, so for
  * base 14 it yields [12,14,18,22,26,32,38,46,58,70]. Ant's published v5 ladder
@@ -240,7 +240,7 @@ function neutralAlphas(algorithm: ThemeAlgorithm): NeutralAlphas {
     };
   }
   // default & compact share the light neutral ladder (color layer is orthogonal
-  // to the density layer — see brand-framework.md §2a).
+  // to the density layer - see brand-framework.md §2a).
   return {
     text: [0.88, 0.65, 0.45, 0.25],
     fill: [0.15, 0.06, 0.04, 0.02],
@@ -336,7 +336,7 @@ export function deriveTokens(seed: SeedToken, algorithm: ThemeAlgorithm = "defau
   // Each of the 8 steps is sizeUnit*(sizeStep + n). With the default 4/4 seed the
   // offsets below produce exactly [4,8,12,16,20,24,32,48]. Compact drops the
   // effective sizeStep (4 -> 2) so the whole ladder collapses to a denser rhythm
-  // [4,8,8,12,16,16,24,32] — colors stay identical, only density changes.
+  // [4,8,8,12,16,16,24,32] - colors stay identical, only density changes.
   const unit = seed.sizeUnit;
   const step = isCompact ? Math.max(2, seed.sizeStep - 2) : seed.sizeStep;
   const spacingOffsets = isCompact
@@ -382,7 +382,7 @@ export function deriveTokens(seed: SeedToken, algorithm: ThemeAlgorithm = "defau
     colorPrimaryActive: primary.active,
     colorPrimaryText: primary.text,
 
-    // functional — success / warning / error / info / link
+    // functional - success / warning / error / info / link
     colorSuccess: successStates.base,
     colorSuccessBg: successStates.bg,
     colorSuccessBorder: successStates.border,

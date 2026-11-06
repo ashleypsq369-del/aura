@@ -17,7 +17,7 @@
 // 是快照,但跳过去产物永远指向最新的"). Cover and click therefore disagree, on
 // purpose, for both kinds: the card is evidence of what the turn produced, the
 // click is a door into the live workspace. There is no per-kind open policy to
-// return — the ref's `workspaceArtifactId` already names the one target.
+// return - the ref's `workspaceArtifactId` already names the one target.
 
 import type { ChatArtifactDisplayPolicy } from './types.js';
 
@@ -37,7 +37,7 @@ export interface ChatArtifactPolicy {
  * is the same order of magnitude as an image.
  *
  * VIDEO / AUDIO ARE DELIBERATELY OUT. User ruling 2026-09-02: 「视频音频先不存
- * 快照了」. This is a capacity ruling, not a capability one — the store holds a
+ * 快照了」. This is a capacity ruling, not a capability one - the store holds a
  * video perfectly well. One blob is capped at 64 MiB and one project at 2 GiB
  * (`quota.ts`), so a few video iterations exhaust a project's budget, and an
  * exhausted budget fails the WHOLE batch with `quota_exceeded`. Keeping video

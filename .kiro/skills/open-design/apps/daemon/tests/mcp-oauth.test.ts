@@ -18,7 +18,7 @@ import {
   refreshAccessToken,
 } from '../src/mcp-oauth.js';
 
-// Tiny fetch mock — looks up the URL in a Map and returns canned JSON.
+// Tiny fetch mock - looks up the URL in a Map and returns canned JSON.
 type FetchInput = Parameters<typeof fetch>[0];
 type FetchInit = Parameters<typeof fetch>[1];
 
@@ -479,7 +479,7 @@ describe('beginAuth (end-to-end with mocked discovery + DCR)', () => {
   it('falls back to the resource origin when no protected-resource metadata is published', async () => {
     const fetchImpl = (async (input: FetchInput, init?: FetchInit) => {
       const url = typeof input === 'string' ? input : input.toString();
-      // Both discovery probes for the resource come back 404 — caller falls
+      // Both discovery probes for the resource come back 404 - caller falls
       // back to assuming the origin IS the auth server.
       if (url.endsWith('/oauth-protected-resource/mcp')) {
         return new Response('404', { status: 404 });

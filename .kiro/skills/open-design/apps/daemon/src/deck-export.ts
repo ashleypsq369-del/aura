@@ -8,7 +8,7 @@ import type { DesktopRenderSlidesInput } from '@open-design/sidecar-proto';
 
 // pptxgenjs ships a default-export class, but its NodeNext typings resolve the
 // default to the module namespace (no construct signature). At runtime the ESM
-// build's default IS the class — except under tsx (the tools-dev daemon
+// build's default IS the class - except under tsx (the tools-dev daemon
 // runtime), which loads the CJS build and double-wraps it so `Module.default`
 // is `{ default: PptxGenJS }`, and `new PptxGenJSModule.default()` dies with
 // "PptxGenJS is not a constructor". Resolve every known shape once at module
@@ -44,7 +44,7 @@ export interface BuildDeckRenderInputOptions {
   fileName: string;
   index?: number;
   // Directory the desktop renderer writes the rendered images into (returned as
-  // file paths) instead of base64 data URLs — keeps large images off the IPC.
+  // file paths) instead of base64 data URLs - keeps large images off the IPC.
   // Project metadata. Imported-folder projects keep their workspace under
   // `metadata.baseDir`; without it readProjectFile falls back to
   // `<data>/projects/:id` and 404s for those projects (see resolveProjectDir).
@@ -150,7 +150,7 @@ export function decodeSlideDataUrls(urls: string[]): SlideImage[] {
 const PPTX_SLIDE_WIDTH_IN = 13.333;
 
 /**
- * Assembles per-slide images into a screenshot-based .pptx — one full-bleed
+ * Assembles per-slide images into a screenshot-based .pptx - one full-bleed
  * image per slide. The slide aspect ratio follows the deck's authored size
  * (`opts.aspect` = width/height); falls back to 16:9. The slides are
  * pixel-perfect images (not editable text), the "exactly what you see" export
@@ -188,7 +188,7 @@ export async function buildScreenshotPptx(
 }
 
 /**
- * Assembles per-slide images into a screenshot-based .pdf — one page per slide,
+ * Assembles per-slide images into a screenshot-based .pdf - one page per slide,
  * each page sized to its image. Pixel-perfect, raster (not selectable text).
  * Full pages render as JPEG (small); deck slides as PNG (crisp).
  */

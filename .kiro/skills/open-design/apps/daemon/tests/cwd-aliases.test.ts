@@ -352,7 +352,7 @@ describe('stageActiveSkill', () => {
       () => Promise.reject(enospc),
     );
 
-    // Not a cross-filesystem rejection — propagates to the existing
+    // Not a cross-filesystem rejection - propagates to the existing
     // degrade path instead of attempting the stream-copy fallback.
     expect(result.staged).toBe(false);
     expect(result.reason).toMatch(/ENOSPC/);

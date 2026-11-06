@@ -15,8 +15,8 @@ import {
   type ProactiveContentPullDeps,
 } from '../../src/collab/proactive-content-pull.js';
 
-// The background pull size guard (issue #6518, incident #6512) decides —
-// BEFORE any blob download — whether a background-lane content pull for a
+// The background pull size guard (issue #6518, incident #6512) decides -
+// BEFORE any blob download - whether a background-lane content pull for a
 // shared project version is worth materializing on every member's disk. It
 // reads the version's manifest entry count through an authorize-only Vela
 // probe and defers versions above the threshold to the foreground lane.
@@ -24,7 +24,7 @@ import {
 // Fail-closed here means PULL AS BEFORE: an unknown count, an old CLI without
 // the probe, or a probe failure must all degrade to the pre-guard behavior
 // (materialize normally). A deferred version must never be re-probed on every
-// sweep round — one authorize per scope+version, remembered like the module's
+// sweep round - one authorize per scope+version, remembered like the module's
 // other in-memory cursors.
 
 const scope = {
@@ -67,7 +67,7 @@ describe('createBackgroundPullSizeGuard', () => {
   });
 
   // Measured against a live Team workspace: 12 shared projects of ~2.9 MB each
-  // (12 files apiece — an order of magnitude under the per-project threshold),
+  // (12 files apiece - an order of magnitude under the per-project threshold),
   // and a member who did nothing but open the client pulled 23 MB across 8
   // projects within 50s. The daemon's own sweep log showed why:
   //
@@ -75,7 +75,7 @@ describe('createBackgroundPullSizeGuard', () => {
   //
   // Every project cleared the gate, because the gate is evaluated per
   // project/version and each one is individually small. `headChecks=4` is a
-  // per-round batch size, not a ceiling — later rounds keep going. Nothing in
+  // per-round batch size, not a ceiling - later rounds keep going. Nothing in
   // the path expresses "this member has already been given enough for one
   // session", so onboarding cost grows linearly with team size, unbounded.
   //
@@ -120,7 +120,7 @@ describe('createBackgroundPullSizeGuard', () => {
 
   it('reports WHY it deferred, so the two ceilings are not confused', async () => {
     // Observed live: a 12-entry project deferred by the budget logged
-    // "deferred (oversized) ... entries=12 maxEntries=2000" — which reads as a
+    // "deferred (oversized) ... entries=12 maxEntries=2000" - which reads as a
     // contradiction and points at the wrong knob. The two ceilings need
     // different responses (raise the per-project threshold vs. raise the
     // session budget), so the reason has to travel with the observation.
@@ -149,7 +149,7 @@ describe('createBackgroundPullSizeGuard', () => {
     // item; later catch-up rounds revisit the still-unmaterialized head. With
     // the budget branch recording nothing, every round repeated the remote
     // authorize-only probe and emitted another deferral log for every project
-    // past the budget — unbounded remote calls for a decision that cannot
+    // past the budget - unbounded remote calls for a decision that cannot
     // change until the process restarts.
     //
     // Caching it is safe: every map in this guard is process-local already, so
@@ -178,7 +178,7 @@ describe('createBackgroundPullSizeGuard', () => {
   it('classifies an oversized project as oversized even when the budget is low', async () => {
     // Review finding on #7403. Checking the cumulative ceiling first meant a
     // project that independently exceeds `maxEntries` got labelled
-    // `budget-exhausted` whenever the remaining budget happened to be smaller —
+    // `budget-exhausted` whenever the remaining budget happened to be smaller -
     // pointing at the wrong knob AND missing the oversized-version cache, so it
     // was re-probed on every later round. The per-project ceiling is a
     // permanent property of the version and must be decided first.
@@ -189,7 +189,7 @@ describe('createBackgroundPullSizeGuard', () => {
     const guard = createBackgroundPullSizeGuard({
       maxEntries: 2000,
       // Budget large enough to admit the small project, then too small to
-      // admit the oversized one — the exact window where ordering decides
+      // admit the oversized one - the exact window where ordering decides
       // which label (and which cache) the oversized project gets.
       maxCumulativeEntries: 100,
       inspect,
@@ -229,8 +229,8 @@ describe('createBackgroundPullSizeGuard', () => {
   // nobody could justify without production data), and the counter that would
   // have produced that data ran only when the ceiling was already on. Every
   // default-configured client therefore measured nothing, which is why the
-  // ceiling stayed unset. Counting always — and enforcing only when a ceiling
-  // is set — is what makes it choosable.
+  // ceiling stayed unset. Counting always - and enforcing only when a ceiling
+  // is set - is what makes it choosable.
   it('reports the volume it cleared even when the cumulative ceiling is off', async () => {
     const guard = createBackgroundPullSizeGuard({
       maxEntries: 2000,
@@ -432,7 +432,7 @@ describe('inspectAuthorizedTeamProjectPull (authorize-only Vela probe)', () => {
       ownerMemberId: 'wm-owner',
       projectId: 'proj-1',
       // Derived, not arbitrary: projectResourceIdFor(projectId, {teamId,
-      // memberId}) — the receipt validator recomputes this, so a hand-written
+      // memberId}) - the receipt validator recomputes this, so a hand-written
       // id would (correctly) read as a foreign receipt.
       resourceId: `project-${Buffer.from(
         JSON.stringify(['team-1', 'wm-owner', 'proj-1']),
@@ -498,7 +498,7 @@ describe('inspectAuthorizedTeamProjectPull (authorize-only Vela probe)', () => {
   // The probe's answer is only usable if the receipt is bound to THIS pull.
   // projectId + version + workspaceId are not the whole binding: the same
   // workspace carries many principals, so a receipt for another owner or
-  // viewer could otherwise be accepted as 'counted' — and an oversized count
+  // viewer could otherwise be accepted as 'counted' - and an oversized count
   // there gets cached as a deferral, suppressing background materialization
   // for a scope that was never actually inspected. That is the opposite of
   // the fail-open promise, so every scope-binding field must match.
@@ -662,8 +662,8 @@ describe('background size guard composed with the proactive pull lanes', () => {
     expect(deps.pullCalls).toEqual([]);
 
     // User opens the project: the foreground lane (POST /collab/pull in
-    // routes/collab-sync.ts) runs the shared pull directly — it has no
-    // assessBackgroundContentPull hook at all — then server.ts reports the
+    // routes/collab-sync.ts) runs the shared pull directly - it has no
+    // assessBackgroundContentPull hook at all - then server.ts reports the
     // durable landing through observeMaterialized.
     const foregroundOutcome = await deps.pullSharedProject(
       {

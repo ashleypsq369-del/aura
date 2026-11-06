@@ -189,7 +189,7 @@ export function createCreatedProjectWorkspaceResolver(deps: {
  * Write the `workspace_projects` row for a project this daemon just created.
  *
  * INVARIANT: a project created while this daemon knows a signed-in workspace
- * always gets a binding row. A project with no row is not a harmless default —
+ * always gets a binding row. A project with no row is not a harmless default -
  * `GET /api/projects/:id/workspace-scope` answers `unbound` for it, which strips
  * the workspace off the run request (`ProjectView`'s `projectRunWorkspaceContext`
  * → an OpenDesign Cloud run nothing can bill) and blanks the balance/plan area
