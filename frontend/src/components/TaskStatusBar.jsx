@@ -69,72 +69,82 @@ function TaskRow({ task, onAcknowledge, acknowledging }) {
  const isReq = task.required;
  const isAppt = task.type === 'appointment';
 
+ // Resolve destination — use task.link first, fall back by task name
+ const getDestination = () => {
+   const pid = task.patient_id;
+   if (task.link && !task.link.includes('{patient_id}')) return task.link;
+   if (task.link && pid) return task.link.replace('{patient_id}', pid);
+   const name = (task.name || '').toLowerCase();
+   if (name.includes('vital') && pid)      return `/patients/${pid}/vitals`;
+   if (name.includes('esas') && pid)        return `/assessments/${pid}/esas`;
+   if (name.includes('pps') && pid)         return `/assessments/${pid}/pps`;
+   if (name.includes('assessment') && pid)  return `/assessments/${pid}`;
+   if (name.includes('medication'))          return '/medications';
+   if (name.includes('appointment'))         return '/appointments';
+   if (name.includes('symptom') && pid)     return `/patients/${pid}/symptoms`;
+   if (name.includes('wound') && pid)       return `/patients/${pid}/wound-care`;
+   if (name.includes('wellness') || name.includes('wellbeing')) return '/wellness-checkin';
+   if (name.includes('message'))            return '/messages';
+   if (pid)                                  return `/patients/${pid}`;
+   return '/dashboard';
+ };
+
+ const dest = getDestination();
+
  return (
  <motion.div
  initial={{ opacity: 0, x: -6 }}
  animate={{ opacity: 1, x: 0 }}
- className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors border
- ${task.done
- ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/20'
- : isReq
- ? 'bg-red-50/60 dark:bg-red-900/10 border-red-100 dark:border-red-900/30'
- : 'bg-[var(--card-bg)]/30 border-[var(--card-border)]/50/50'
+ onClick={() => { if (!task.done) navigate(dest); }}
+ className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors border group ${
+   task.done
+     ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/20 cursor-default'
+     : isReq
+     ? 'bg-red-50/60 dark:bg-red-900/10 border-red-100 dark:border-red-900/30 cursor-pointer hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20'
+     : 'bg-[var(--page-bg)] border-[var(--card-border)] cursor-pointer hover:border-teal-400'
  }`}
  >
  {/* Status icon */}
  {task.done
- ? <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0"/>
- : isReq
- ? <AlertCircle size={16} className="text-red-400 flex-shrink-0"/>
- : <Circle size={16} className="text-slate-300 flex-shrink-0"/>
+   ? <CheckCircle2 size={16} className="text-emerald-500 flex-shrink-0"/>
+   : isReq
+   ? <AlertCircle size={16} className="text-red-400 flex-shrink-0"/>
+   : <Circle size={16} className="text-slate-300 flex-shrink-0"/>
  }
 
  {/* Feature icon */}
- <div className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
- ${task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : isAppt ? 'bg-blue-100 dark:bg-blue-900/30' : isReq ? 'bg-red-50 dark:bg-red-900/20' : 'bg-slate-100'}`}>
- <Icon size={13} className={task.done ? 'text-emerald-600' : isAppt ? 'text-teal-600' : isReq ? 'text-red-500' : 'text-slate-500'}/>
+ <div className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center ${
+   task.done ? 'bg-emerald-100 dark:bg-emerald-800/30' : isAppt ? 'bg-blue-100 dark:bg-blue-900/30' : isReq ? 'bg-red-50 dark:bg-red-900/20' : 'bg-[var(--card-bg)] border border-[var(--card-border)]'
+ }`}>
+   <Icon size={13} className={task.done ? 'text-emerald-600' : isAppt ? 'text-teal-600' : isReq ? 'text-teal-600' : 'text-[var(--text-500)]'}/>
  </div>
 
  {/* Text */}
  <div className="flex-1 min-w-0">
- <p className={`text-xs font-semibold leading-tight truncate
- ${task.done ? 'text-[var(--text-400)] line-through' : 'text-[var(--text-700)]'}`}>
- {task.name}
- </p>
- {task.description && !task.done && (
- <p className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] truncate mt-0.5">{task.description}</p>
- )}
+   <p className={`text-xs font-semibold leading-tight truncate ${
+     task.done ? 'text-[var(--text-400)] line-through' : 'text-[var(--text-800)]'
+   }`}>{task.name}</p>
+   {task.description && !task.done && (
+     <p className="text-[11px] text-[var(--text-400)] truncate mt-0.5">{task.description}</p>
+   )}
  </div>
 
- {/* Badges + action */}
+ {/* Action */}
  <div className="flex items-center gap-1.5 flex-shrink-0">
- {isReq && !task.done && (
- <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white ">
- Required
- </span>
- )}
- {isAppt && (
- <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-teal-600 ">
- Appt
- </span>
- )}
- {!task.done && task.link && (
- <button
- onClick={() => navigate(task.link.replace('{patient_id}', patientId || ''))}
- className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
- >
- Do Now
- </button>
- )}
- {!task.done && !isReq && !task.link && (
- <button
- onClick={() => onAcknowledge(task.id)}
- disabled={acknowledging === task.id}
- className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-[var(--text-600)] hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
- >
- {acknowledging === task.id ? '…' : 'Mark Done'}
- </button>
- )}
+   {isReq && !task.done && (
+     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-600 text-white">Required</span>
+   )}
+   {!task.done && (
+     <button
+       onClick={e => { e.stopPropagation(); navigate(dest); }}
+       className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
+     >
+       Do Now
+     </button>
+   )}
+   {task.done && (
+     <CheckCircle2 size={14} className="text-emerald-500"/>
+   )}
  </div>
  </motion.div>
  );
@@ -234,7 +244,7 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  <motion.div initial={{opacity:0,y:-12,scale:0.97}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:-12}}
  transition={{type:'spring',damping:30,stiffness:400}}
  onClick={e=>e.stopPropagation()}
- style={{pointerEvents:'all',background:'var(--card-bg)',borderRadius:16,width:'100%',maxWidth:420,maxHeight:'80vh',overflow:'hidden',display:'flex',flexDirection:'column',boxShadow:'0 12px 60px rgba(15,23,42,0.22)'}}>
+ style={{pointerEvents:'all',background:'var(--card-bg)',border:'1px solid var(--card-border)',borderRadius:16,width:'100%',maxWidth:420,maxHeight:'80vh',overflow:'hidden',display:'flex',flexDirection:'column',boxShadow:'0 12px 60px rgba(15,23,42,0.22)'}}>
  {/* Header */}
  <div style={{height:3,background:'linear-gradient(90deg,#0d9488,#0891b2)',flexShrink:0}} />
  <div style={{padding:'14px 18px',borderBottom:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
@@ -266,7 +276,16 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  const isReq = task.required;
  return (
  <div key={task.id}
- onClick={() => { if(!task.done && task.link){ navigate(task.link.replace('{patient_id}', patientId || '')); setShowModal(false); } }}
+ onClick={() => {
+                   if (!task.done) {
+                     const pid = task.patient_id;
+                     const link = task.link && pid ? task.link.replace('{patient_id}', pid) : task.link;
+                     const name = (task.name || '').toLowerCase();
+                     const dest = link || (name.includes('vital') && pid ? `/patients/${pid}/vitals` : name.includes('esas') && pid ? `/assessments/${pid}/esas` : name.includes('medication') ? '/medications' : name.includes('appointment') ? '/appointments' : pid ? `/patients/${pid}` : '/dashboard');
+                     navigate(dest);
+                     setShowModal(false);
+                   }
+                 }}
  style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:10,
  background: task.done ? '#f0fdf4' : isReq ? '#fef2f2' : 'var(--page-bg)',
  border:`1px solid ${task.done?'#bbf7d0':isReq?'#fca5a5':'var(--card-border)'}`,
@@ -280,14 +299,10 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  </div>
  {task.done
  ? <CheckCircle2 size={14} style={{color:'#22c55e',flexShrink:0}}/>
- : isReq
- ? <span style={{fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:99,background:'#fee2e2',color:'#dc2626',flexShrink:0}}>Required</span>
- : task.link
- ? <button onClick={e=>{e.stopPropagation();acknowledgeMutation.mutate(task.id)}} disabled={acknowledging===task.id}
- style={{fontSize:11,fontWeight:600,padding:'4px 10px',borderRadius:7,background:'var(--card-bg)',border:'1px solid var(--card-border)',color:'var(--text-600)',cursor:'pointer'}}>
- {acknowledging===task.id?'…':'Done'}
+ : <button onClick={e=>{e.stopPropagation();acknowledgeMutation.mutate(task.id)}} disabled={acknowledging===task.id}
+   style={{fontSize:11,fontWeight:700,padding:'4px 10px',borderRadius:7,background:'#0d9488',color:'#fff',border:'none',cursor:'pointer',opacity:acknowledging===task.id?0.5:1}}>
+   {acknowledging===task.id?'...':'Do Now'}
  </button>
- : null
  }
  </div>
  );
@@ -358,12 +373,12 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  <div className="flex items-center gap-2 flex-shrink-0">
  <button
  onClick={(e) => { e.stopPropagation(); refetch(); }}
- className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-[var(--text-400)] hover:text-teal-600 transition-colors"
+ className="p-1.5 rounded-lg bg-[var(--page-bg)] border border-[var(--card-border)] text-[var(--text-500)] hover:text-teal-600 hover:border-teal-400 transition-colors"
  title="Refresh"
  >
  <RefreshCw size={12}/>
  </button>
- <div className="text-slate-400">
+ <div className="text-[var(--text-400)]">
  {expanded ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
  </div>
  </div>

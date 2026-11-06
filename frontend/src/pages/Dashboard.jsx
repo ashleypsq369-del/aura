@@ -288,7 +288,7 @@ export default function Dashboard() {
  <PageHeader
  image="/resources/cards/header-caregiver-dash.jpg"
  title="Caregiver Dashboard"
- subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'Carer'} · Your daily care tasks`}
+ subtitle={`Welcome, ${user?.full_name?.split(' ')[0] || 'Carer'} - Your daily care tasks`}
  icon={Heart}
  />
  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -306,67 +306,61 @@ export default function Dashboard() {
  <div className="mb-6">
  <TaskStatusBar />
  </div>
- <div className="bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] overflow-hidden">
- <div className="px-6 py-4 border-b border-[var(--card-border)] flex items-center justify-between">
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
+ <div className="px-5 py-3.5 border-b border-[var(--card-border)] flex items-center justify-between">
  <div>
- <h2 className="text-base font-bold text-[var(--text-800)] mb-0.5">Your Patients</h2>
- <p className="text-[var(--text-500)] text-xs">Click any row to view care details</p>
+ <h2 className="text-sm font-bold text-[var(--text-800)]">Your Patients</h2>
+ <p className="text-[var(--text-400)] text-xs">Click any row to view care details</p>
  </div>
- <span className="chip-violet">Assigned</span>
+ <span className="badge-stable">Assigned</span>
  </div>
- <div className="overflow-x-auto">
- <table className="w-full">
- <thead>
- <tr className="bg-slate-100 border-b-2 border-[var(--card-border)]">
- <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Patient</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Age</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Status</th>
- <th className="text-left py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Next Task</th>
- <th className="text-right py-3 px-6 text-xs font-bold text-[var(--text-700)] uppercase tracking-wide">Action</th>
- </tr>
- </thead>
- <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+ <div className="divide-y divide-[var(--card-border)]">
  {assignedPatients.map((patient, index) => {
  const pid = patient.patient_id || patient.id;
+ const gradients = [
+ 'linear-gradient(135deg,#7c3aed,#db2777)',
+ 'linear-gradient(135deg,#059669,#0d9488)',
+ 'linear-gradient(135deg,#1d4ed8,#0891b2)',
+ 'linear-gradient(135deg,#d97706,#ea580c)',
+ ];
+ const alertCount = patient.active_alerts || 0;
  return (
- <motion.tr key={pid}
- initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.03 }}
+ <motion.div key={pid}
+ initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.04 }}
  onClick={() => navigate(`/patients/${pid}`)}
- className="bg-[var(--card-bg)] hover:bg-purple-50 dark:hover:bg-slate-800 cursor-pointer transition-all border-l-4 border-transparent hover:border-purple-600 h-[56px]">
- <td className="py-3 px-6">
- <div className="flex items-center space-x-2.5">
- <div className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
- style={{ background: ['linear-gradient(135deg,#7c3aed,#db2777)','linear-gradient(135deg,#059669,#0d9488)','linear-gradient(135deg,#1d4ed8,#0891b2)','linear-gradient(135deg,#d97706,#ea580c)'][index % 4] }}>
+ className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--page-bg)] cursor-pointer transition-colors group border-l-2 border-transparent hover:border-teal-500">
+ {/* Avatar */}
+ <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+ style={{ background: gradients[index % 4] }}>
  {patient.full_name?.charAt(0)}
  </div>
- <div>
- <div className="text-sm font-bold text-[var(--text-900)]">{patient.full_name}</div>
- <div className="text-xs text-[var(--text-500)] dark:text-slate-400">{patient.primary_diagnosis || patient.patient_code}</div>
+ {/* Name + diagnosis */}
+ <div className="flex-1 min-w-0">
+ <p className="text-sm font-bold text-[var(--text-900)] truncate">{patient.full_name}</p>
+ <p className="text-xs text-[var(--text-400)] truncate">{patient.primary_diagnosis || patient.patient_code}</p>
  </div>
- </div>
- </td>
- <td className="py-3 px-6 text-sm text-[var(--text-700)] font-medium">{patient.age}</td>
- <td className="py-3 px-6"><span className="badge-low">{patient.status || 'Active'}</span></td>
- <td className="py-3 px-6 text-sm text-[var(--text-600)] dark:text-slate-400">
- {patient.active_alerts > 0 ? `${patient.active_alerts} active alert(s)` : 'No pending alerts'}
- </td>
- <td className="py-3 px-6 text-right">
+ {/* Age */}
+ <span className="text-xs font-semibold text-[var(--text-500)] flex-shrink-0 hidden sm:block w-8 text-center">{patient.age}</span>
+ {/* Status */}
+ <span className="badge-low flex-shrink-0 hidden sm:inline-flex">{patient.status || 'Active'}</span>
+ {/* Alerts */}
+ <span className={`text-xs font-semibold flex-shrink-0 hidden md:block min-w-[90px] ${alertCount > 0 ? 'text-red-500' : 'text-[var(--text-400)]'}`}>
+ {alertCount > 0 ? `${alertCount} alert${alertCount !== 1 ? 's' : ''}` : 'No alerts'}
+ </span>
+ {/* CTA */}
  <button onClick={e => { e.stopPropagation(); navigate(`/patients/${pid}`); }}
- className="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-all text-xs border-2 border-purple-500">
- View Care Info
+ className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold transition-colors">
+ View <ChevronRight size={11} />
  </button>
- </td>
- </motion.tr>
+ </motion.div>
  );
  })}
- </tbody>
- </table>
- <div className="px-6 py-4 bg-[var(--card-bg)] border-t border-[var(--card-border)] text-center">
- <button onClick={() => navigate('/patients')}
- className="inline-flex items-center px-5 py-2.5 bg-[var(--card-bg)] border-2 border-purple-600 text-purple-700 dark:text-purple-300 rounded-lg font-bold hover:bg-purple-50 dark:hover:bg-slate-600 transition-all shadow-md text-sm">
- View All Patients
- </button>
  </div>
+ <div className="px-5 py-3 border-t border-[var(--card-border)] text-center bg-[var(--page-bg)]">
+ <button onClick={() => navigate('/patients')}
+ className="text-xs font-bold text-teal-600 hover:text-teal-700 transition-colors">
+ View all patients →
+ </button>
  </div>
  </div>
  </div>
