@@ -230,7 +230,7 @@ export default function FamilyConsentSettings() {
  granted ? 'bg-teal-600' : 'bg-slate-300'
  }`}
  >
- <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-md transition-transform ${
+ <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
  granted ? 'translate-x-5' : 'translate-x-0'
  }`} />
  </button>

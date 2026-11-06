@@ -13,11 +13,12 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import LegalModal from '../components/LegalModal';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import {
  Loader2, User as UserIcon, Mail, Phone, Lock,
  Eye, EyeOff, Search, X, ChevronDown,
  CheckCircle, AlertCircle,
- Building2, Heart, Home, Stethoscope, BedDouble, Calendar,
+ Building2, Heart, Home, Stethoscope, BedDouble, Calendar, Sparkles, ArrowRight,
 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -305,6 +306,8 @@ export default function Register() {
  const [country, setCountry] = useState(COUNTRIES[0]); // Ghana default
  const [showTermsModal, setShowTermsModal] = useState(false);
  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+ const [showSetupModal, setShowSetupModal] = useState(false);
+ const [registeredUser, setRegisteredUser] = useState(null);
 
  const [form, setForm] = useState({
  full_name:'', username:'', email:'',
@@ -394,7 +397,8 @@ export default function Register() {
  localStorage.setItem('user', JSON.stringify(user));
  setUser(user);
  toast.success('Account created! Welcome to Project Aura.');
- navigate('/setup');
+ setRegisteredUser(user);
+ setShowSetupModal(true);
  },
  onError: (err) => setServerErr(err.response?.data?.detail || 'Registration failed. Please try again.'),
  });
@@ -750,9 +754,82 @@ export default function Register() {
  </div>
  </div>
 
- {/* Legal Modals - open without leaving the page */}
+ {/* Legal Modals */}
  <LegalModal type="terms"   open={showTermsModal}   onClose={() => setShowTermsModal(false)}   onAccept={() => setTerms(true)} />
  <LegalModal type="privacy" open={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} />
+
+ {/* Questionnaire opt-in modal */}
+ <AnimatePresence>
+ {showSetupModal && createPortal(
+ <>
+ <motion.div key="qom-bg"
+ initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+ style={{ position: 'fixed', inset: 0, zIndex: 9900, background: 'rgba(0,0,0,0.5)' }}
+ />
+ <div style={{ position: 'fixed', inset: 0, zIndex: 9901, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, pointerEvents: 'none' }}>
+ <motion.div key="qom-card"
+ initial={{ opacity: 0, y: 20, scale: 0.97 }}
+ animate={{ opacity: 1, y: 0, scale: 1 }}
+ exit={{ opacity: 0, y: 10, scale: 0.97 }}
+ transition={{ type: 'spring', damping: 28, stiffness: 340 }}
+ onClick={e => e.stopPropagation()}
+ style={{ pointerEvents: 'all', background: '#ffffff', borderRadius: 14, width: '100%', maxWidth: 460, overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', fontFamily: "'Inter','system-ui',sans-serif" }}
+ >
+ <div style={{ height: 3, background: 'linear-gradient(90deg,#0d9488,#0891b2)' }} />
+ <div style={{ padding: '20px 22px 16px' }}>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+ <div style={{ width: 40, height: 40, borderRadius: 11, background: '#f0fdf4', border: '1px solid #d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <Sparkles size={19} style={{ color: '#0d9488' }} />
+ </div>
+ <div>
+ <p style={{ fontSize: 15, fontWeight: 800, color: '#0f172a', margin: 0 }}>Welcome, {registeredUser?.full_name?.split(' ')[0] || 'there'}!</p>
+ <p style={{ fontSize: 12, color: '#64748b', margin: '2px 0 0' }}>Your account is ready</p>
+ </div>
+ </div>
+ <p style={{ fontSize: 13, color: '#334155', lineHeight: 1.65, margin: 0 }}>
+ Would you like to personalise your care experience? A short questionnaire tailors your dashboard, symptom tracking, and care plan to your specific needs.
+ </p>
+ </div>
+ <div style={{ padding: '0 22px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+ <button
+ onClick={() => { setShowSetupModal(false); navigate('/setup'); }}
+ style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 11, border: '2px solid #0d9488', background: '#f0fdf4', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+ onMouseEnter={e => e.currentTarget.style.background='#dcfce7'}
+ onMouseLeave={e => e.currentTarget.style.background='#f0fdf4'}
+ >
+ <div style={{ width: 36, height: 36, borderRadius: 10, background: '#0d9488', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <Sparkles size={16} style={{ color: '#fff' }} />
+ </div>
+ <div style={{ flex: 1, minWidth: 0 }}>
+ <p style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', margin: 0 }}>Personalise my care</p>
+ <p style={{ fontSize: 11, color: '#64748b', margin: '2px 0 0' }}>3-5 minutes - tailors the whole app to you</p>
+ </div>
+ <ArrowRight size={15} style={{ color: '#0d9488', flexShrink: 0 }} />
+ </button>
+ <button
+ onClick={() => { setShowSetupModal(false); navigate(registeredUser?.role === 'patient' ? '/my-space' : '/dashboard'); }}
+ style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', borderRadius: 11, border: '1px solid #e2e8f0', background: '#ffffff', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+ onMouseEnter={e => e.currentTarget.style.background='#f8fafc'}
+ onMouseLeave={e => e.currentTarget.style.background='#ffffff'}
+ >
+ <div style={{ width: 36, height: 36, borderRadius: 10, background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <ArrowRight size={16} style={{ color: '#94a3b8' }} />
+ </div>
+ <div style={{ flex: 1, minWidth: 0 }}>
+ <p style={{ fontSize: 13, fontWeight: 600, color: '#475569', margin: 0 }}>Skip for now</p>
+ <p style={{ fontSize: 11, color: '#94a3b8', margin: '2px 0 0' }}>Use standard settings - personalise later in Settings</p>
+ </div>
+ </button>
+ </div>
+ <p style={{ fontSize: 11, color: '#94a3b8', textAlign: 'center', padding: '0 22px 16px', margin: 0 }}>
+ You can always retake the questionnaire from Settings at any time
+ </p>
+ </motion.div>
+ </div>
+ </>,
+ document.body
+ )}
+ </AnimatePresence>
  </>
  );
 }

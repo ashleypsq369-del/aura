@@ -1486,26 +1486,38 @@ function FieldRenderer({ field, value, onChange }) {
 
  if (field.type === 'esas-slider') {
  const val = value ?? 0;
- const color = val >= 7 ? 'bg-red-500' : val >= 4 ? 'bg-amber-500' : 'bg-teal-600';
- const ringColor = val >= 7 ? 'ring-red-300' : val >= 4 ? 'ring-amber-300' : 'ring-teal-300';
+ const pct = val * 10;
+ const trackColor = val >= 7 ? '#ef4444' : val >= 4 ? '#f59e0b' : '#0d9488';
+ const label = val === 0 ? 'None' : val <= 3 ? 'Mild' : val <= 6 ? 'Moderate' : val <= 8 ? 'Severe' : 'Very Severe';
  return (
- <div>
- <label className="block text-sm font-semibold text-[var(--text-700)] mb-2">{field.label}</label>
- <div className="bg-[var(--card-bg)] rounded-xl p-4 border border-slate-200">
+ <div className="space-y-1.5">
+ <label className="block text-sm font-semibold text-[var(--text-800)]">{field.label}</label>
+ <div className="bg-[var(--page-bg)] rounded-xl p-4 border border-[var(--card-border)]">
+ {/* Segmented track */}
+ <div className="relative mb-3">
+ <div className="flex gap-0.5 h-2 rounded-full overflow-hidden">
+ {[...Array(10)].map((_, i) => (
+ <div key={i} className="flex-1 rounded-sm transition-all"
+ style={{ backgroundColor: i < val ? trackColor : 'var(--card-border)' }} />
+ ))}
+ </div>
  <input type="range" min={field.min} max={field.max} value={val}
  onChange={e => onChange(parseInt(e.target.value))}
- className="w-full h-1.5 rounded-full accent-teal-600 mb-3"
- style={{ background: `linear-gradient(to right, #0f766e 0%, #0f766e ${val * 10}%, #e2e8f0 ${val * 10}%, #e2e8f0 100%)` }} />
- <div className="flex items-center justify-between">
- <span className="text-xs text-[var(--text-400)] font-medium">{field.labels[0]}</span>
- <div className={`w-9 h-9 rounded-full ${color} ring-2 ${ringColor} flex items-center justify-center shadow`}>
- <span className="text-white text-xs font-bold">{val}</span>
+ className="absolute inset-0 w-full opacity-0 cursor-pointer h-full" />
  </div>
- <span className="text-xs text-[var(--text-400)] font-medium">{field.labels[10]}</span>
+ {/* Labels row */}
+ <div className="flex items-center justify-between">
+ <span className="text-xs text-[var(--text-400)]">{field.labels?.[0] || '0 - None'}</span>
+ <div className="flex items-center gap-2">
+ <span className="text-lg font-black tabular-nums" style={{ color: trackColor }}>{val}</span>
+ <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: trackColor + '18', color: trackColor }}>{label}</span>
+ </div>
+ <span className="text-xs text-[var(--text-400)]">{field.labels?.[10] || '10 - Worst'}</span>
  </div>
  {val >= 7 && (
- <p className="text-xs text-red-600 font-semibold mt-2.5 text-center bg-red-50 rounded-lg py-1.5 border border-red-200">
- ⚠️ Score of {val} - your care team will be notified
+ <p className="mt-2.5 text-xs text-[var(--text-500)] flex items-center gap-1.5">
+ <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
+ Your care team will be notified of this score
  </p>
  )}
  </div>
