@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
 import apiClient, { careSettingsAPI, patientsAPI } from '../api/client';
+import Modal, { ModalFooter } from '../components/Modal';
 import PageHeader from '../components/PageHeader';
 import SearchableSelect from '../components/ui/SearchableSelect';
 

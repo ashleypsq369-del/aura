@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Register.jsx - Project Aura
  * Healthcare-standard signup form (NHS / MyChart / Epic conventions):
  * • One card, two steps, plenty of breathing room
@@ -27,47 +27,47 @@ import { useAuth } from '../context/AuthContext';
 import LoginSlideshow from '../components/LoginSlideshow';
 import { API_URL } from '../api/client';
 
-// ─── Countries (ITU-T E.164) ──────────────────────────────────────────────────
+// --- Countries (ITU-T E.164) ---
 const COUNTRIES = [
- { code:'GH', name:'Ghana', dial:'+233', flag:'🇬🇭', max:9 },
- { code:'NG', name:'Nigeria', dial:'+234', flag:'🇳🇬', max:10 },
- { code:'ZA', name:'South Africa', dial:'+27', flag:'≡ƒç┐≡ƒçª', max:9 },
- { code:'KE', name:'Kenya', dial:'+254', flag:'🇰🇪', max:9 },
- { code:'ET', name:'Ethiopia', dial:'+251', flag:'🇪🇹', max:9 },
- { code:'EG', name:'Egypt', dial:'+20', flag:'🇪🇬', max:10 },
- { code:'TZ', name:'Tanzania', dial:'+255', flag:'≡ƒç╣≡ƒç┐', max:9 },
- { code:'UG', name:'Uganda', dial:'+256', flag:'🇺🇬', max:9 },
- { code:'CI', name:"C├┤te d'Ivoire", dial:'+225', flag:'🇨🇮', max:10 },
- { code:'CM', name:'Cameroon', dial:'+237', flag:'🇨🇲', max:9 },
- { code:'SN', name:'Senegal', dial:'+221', flag:'🇸🇳', max:9 },
- { code:'MA', name:'Morocco', dial:'+212', flag:'🇲🇦', max:9 },
- { code:'RW', name:'Rwanda', dial:'+250', flag:'🇷🇼', max:9 },
- { code:'ZW', name:'Zimbabwe', dial:'+263', flag:'≡ƒç┐≡ƒç╝', max:9 },
- { code:'ZM', name:'Zambia', dial:'+260', flag:'≡ƒç┐≡ƒç▓', max:9 },
- { code:'LR', name:'Liberia', dial:'+231', flag:'≡ƒç▒≡ƒç╖', max:8 },
- { code:'SL', name:'Sierra Leone', dial:'+232', flag:'≡ƒç╕≡ƒç▒', max:8 },
- { code:'GN', name:'Guinea', dial:'+224', flag:'🇬🇳', max:9 },
- { code:'BJ', name:'Benin', dial:'+229', flag:'🇧🇯', max:8 },
- { code:'TG', name:'Togo', dial:'+228', flag:'🇹🇬', max:8 },
- { code:'BF', name:'Burkina Faso', dial:'+226', flag:'🇧🇫', max:8 },
- { code:'ML', name:'Mali', dial:'+223', flag:'≡ƒç▓≡ƒç▒', max:8 },
- { code:'NE', name:'Niger', dial:'+227', flag:'🇳🇪', max:8 },
- { code:'SS', name:'South Sudan', dial:'+211', flag:'🇸🇸', max:9 },
- { code:'SD', name:'Sudan', dial:'+249', flag:'🇸🇩', max:9 },
- { code:'GB', name:'United Kingdom', dial:'+44', flag:'🇬🇧', max:10 },
- { code:'US', name:'United States', dial:'+1', flag:'🇺🇸', max:10 },
- { code:'CA', name:'Canada', dial:'+1', flag:'🇨🇦', max:10 },
- { code:'AU', name:'Australia', dial:'+61', flag:'🇦🇺', max:9 },
- { code:'DE', name:'Germany', dial:'+49', flag:'≡ƒç⌐≡ƒç¬', max:11 },
- { code:'FR', name:'France', dial:'+33', flag:'🇫🇷', max:9 },
- { code:'IN', name:'India', dial:'+91', flag:'🇮🇳', max:10 },
- { code:'BR', name:'Brazil', dial:'+55', flag:'🇧🇷', max:11 },
- { code:'IT', name:'Italy', dial:'+39', flag:'🇮🇹', max:10 },
- { code:'ES', name:'Spain', dial:'+34', flag:'🇪🇸', max:9 },
- { code:'NL', name:'Netherlands', dial:'+31', flag:'≡ƒç│≡ƒç▒', max:9 },
- { code:'IE', name:'Ireland', dial:'+353', flag:'🇮🇪', max:9 },
- { code:'SA', name:'Saudi Arabia', dial:'+966', flag:'🇸🇦', max:9 },
- { code:'AE', name:'UAE', dial:'+971', flag:'🇦🇪', max:9 },
+  { code:'GH', name:'Ghana',           dial:'+233', flag:'GH', max:9  },
+  { code:'NG', name:'Nigeria',          dial:'+234', flag:'NG', max:10 },
+  { code:'ZA', name:'South Africa',     dial:'+27',  flag:'ZA', max:9  },
+  { code:'KE', name:'Kenya',            dial:'+254', flag:'KE', max:9  },
+  { code:'ET', name:'Ethiopia',         dial:'+251', flag:'ET', max:9  },
+  { code:'EG', name:'Egypt',            dial:'+20',  flag:'EG', max:10 },
+  { code:'TZ', name:'Tanzania',         dial:'+255', flag:'TZ', max:9  },
+  { code:'UG', name:'Uganda',           dial:'+256', flag:'UG', max:9  },
+  { code:'CI', name:"Cote d'Ivoire",    dial:'+225', flag:'CI', max:10 },
+  { code:'CM', name:'Cameroon',         dial:'+237', flag:'CM', max:9  },
+  { code:'SN', name:'Senegal',          dial:'+221', flag:'SN', max:9  },
+  { code:'MA', name:'Morocco',          dial:'+212', flag:'MA', max:9  },
+  { code:'RW', name:'Rwanda',           dial:'+250', flag:'RW', max:9  },
+  { code:'ZW', name:'Zimbabwe',         dial:'+263', flag:'ZW', max:9  },
+  { code:'ZM', name:'Zambia',           dial:'+260', flag:'ZM', max:9  },
+  { code:'LR', name:'Liberia',          dial:'+231', flag:'LR', max:8  },
+  { code:'SL', name:'Sierra Leone',     dial:'+232', flag:'SL', max:8  },
+  { code:'GN', name:'Guinea',           dial:'+224', flag:'GN', max:9  },
+  { code:'BJ', name:'Benin',            dial:'+229', flag:'BJ', max:8  },
+  { code:'TG', name:'Togo',             dial:'+228', flag:'TG', max:8  },
+  { code:'BF', name:'Burkina Faso',     dial:'+226', flag:'BF', max:8  },
+  { code:'ML', name:'Mali',             dial:'+223', flag:'ML', max:8  },
+  { code:'NE', name:'Niger',            dial:'+227', flag:'NE', max:8  },
+  { code:'SS', name:'South Sudan',      dial:'+211', flag:'SS', max:9  },
+  { code:'SD', name:'Sudan',            dial:'+249', flag:'SD', max:9  },
+  { code:'GB', name:'United Kingdom',   dial:'+44',  flag:'GB', max:10 },
+  { code:'US', name:'United States',    dial:'+1',   flag:'US', max:10 },
+  { code:'CA', name:'Canada',           dial:'+1',   flag:'CA', max:10 },
+  { code:'AU', name:'Australia',        dial:'+61',  flag:'AU', max:9  },
+  { code:'DE', name:'Germany',          dial:'+49',  flag:'DE', max:11 },
+  { code:'FR', name:'France',           dial:'+33',  flag:'FR', max:9  },
+  { code:'IN', name:'India',            dial:'+91',  flag:'IN', max:10 },
+  { code:'BR', name:'Brazil',           dial:'+55',  flag:'BR', max:11 },
+  { code:'IT', name:'Italy',            dial:'+39',  flag:'IT', max:10 },
+  { code:'ES', name:'Spain',            dial:'+34',  flag:'ES', max:9  },
+  { code:'NL', name:'Netherlands',      dial:'+31',  flag:'NL', max:9  },
+  { code:'IE', name:'Ireland',          dial:'+353', flag:'IE', max:9  },
+  { code:'SA', name:'Saudi Arabia',     dial:'+966', flag:'SA', max:9  },
+  { code:'AE', name:'UAE',              dial:'+971', flag:'AE', max:9  },
 ];
 
 // ─── Care settings ────────────────────────────────────────────────────────────
@@ -170,7 +170,7 @@ function CountrySelector({ selected, onChange }) {
 
  return (
  <div className="relative flex-shrink-0" ref={wrapRef}>
- {/* Trigger */}
+ {/* == Trigger == */}
  <button
  type="button"
  onClick={() => setOpen(o => !o)}
@@ -178,12 +178,12 @@ function CountrySelector({ selected, onChange }) {
  aria-haspopup="listbox"
  aria-label={`Phone country: ${selected.name} ${selected.dial}`}
  >
- <span className="text-lg leading-none select-none">{selected.flag}</span>
+ <span className="text-xs font-bold leading-none select-none bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-mono">{selected.flag}</span>
  <span className="text-sm font-semibold text-[var(--text-700)] font-mono tracking-tight">{selected.dial}</span>
  <ChevronDown size={13} className={`text-[var(--text-400)] transition-transform duration-200 ${open ? 'rotate-180':''}`} />
  </button>
 
- {/* Dropdown */}
+ {/* == Dropdown == */}
  <AnimatePresence>
  {open && (
  <motion.div
@@ -194,7 +194,7 @@ function CountrySelector({ selected, onChange }) {
  className="absolute top-full left-0 mt-1.5 w-72 bg-slate-50 border border-[var(--card-border)] rounded-2xl shadow-2xl z-[200] overflow-hidden"
  role="listbox"
  >
- {/* Search bar */}
+ {/* == Search bar == */}
  <div className="p-2.5 border-b border-slate-100">
  <div className="relative">
  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] pointer-events-none"/>
@@ -215,7 +215,7 @@ function CountrySelector({ selected, onChange }) {
  </div>
  </div>
 
- {/* Country list */}
+ {/* == Country list == */}
  <div className="max-h-52 overflow-y-auto overscroll-contain">
  {list.length === 0 ? (
  <p className="text-center text-sm text-[var(--text-400)] py-8">No results for "{query}"</p>
@@ -230,7 +230,7 @@ function CountrySelector({ selected, onChange }) {
  c.code === selected.code ? 'bg-teal-50/60' : ''
  }`}
  >
- <span className="text-xl leading-none w-7 text-center flex-shrink-0">{c.flag}</span>
+ <span className="text-[10px] font-bold leading-none w-7 text-center flex-shrink-0 bg-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">{c.flag}</span>
  <span className={`flex-1 truncate font-medium ${c.code === selected.code ? 'text-teal-700':'text-slate-700'}`}>{c.name}</span>
  <span className="font-mono text-xs text-[var(--text-400)] flex-shrink-0">{c.dial}</span>
  {c.code === selected.code && <CheckCircle size={14} className="text-teal-500 flex-shrink-0"/>}
@@ -431,7 +431,7 @@ export default function Register() {
  {/* ── Card ───────────────────────────────────────────────────────── */}
  <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-[var(--card-border)] overflow-hidden">
 
- {/* Header banner */}
+ {/* == Header banner == */}
  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5">
  <div className="flex items-center gap-3 mb-4">
  <div className="w-11 h-11 bg-slate-50 rounded-xl flex items-center justify-center shadow overflow-hidden flex-shrink-0">
@@ -471,10 +471,10 @@ export default function Register() {
  </div>
  </div>
 
- {/* Body */}
+ {/* == Body == */}
  <div className="px-6 py-6 space-y-5">
 
- {/* Server error */}
+ {/* == Server error == */}
  <AnimatePresence>
  {serverErr && (
  <motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:'auto'}} exit={{opacity:0,height:0}}
@@ -485,11 +485,11 @@ export default function Register() {
  )}
  </AnimatePresence>
 
- {/* ΓòÉΓòÉ STEP 1 ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
+ {/* == STEP 1 == */}
  {step === 1 && (
  <form onSubmit={handleStep1} noValidate className="space-y-4">
 
- {/* Full name */}
+ {/* == Full name == */}
  <InputGroup id="full_name" label="Full name" required error={errors.full_name}
  hint={!errors.full_name ? 'Use your name as it appears on official documents' : undefined}>
  <div className={inputWrap(errors.full_name)}>
@@ -508,7 +508,7 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Username */}
+ {/* == Username == */}
  <InputGroup id="username" label="Username" required error={errors.username}
  success={!errors.username && form.username.length >= 3 && touched.username ? 'Username looks good' : undefined}
  hint={!errors.username && !touched.username ? 'Lowercase letters, numbers and underscores' : undefined}>
@@ -527,7 +527,7 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Email */}
+ {/* == Email == */}
  <InputGroup id="email" label="Email address" required error={errors.email}>
  <div className={inputWrap(errors.email)}>
  <IconSlot err={errors.email}><Mail size={15}/></IconSlot>
@@ -565,7 +565,7 @@ export default function Register() {
  </div>
  </InputGroup>
 
- {/* Password */}
+ {/* == Password == */}
  <InputGroup id="password" label="Password" required error={errors.password}
  hint={!errors.password && !touched.password ? 'At least 8 characters, one uppercase letter and one number' : undefined}>
  <div className={inputWrap(errors.password)}>
@@ -592,7 +592,7 @@ export default function Register() {
  )}
  </InputGroup>
 
- {/* Confirm password */}
+ {/* == Confirm password == */}
  <InputGroup id="confirm_password" label="Confirm password" required error={errors.confirm_password}
  success={!errors.confirm_password && form.confirm_password && form.confirm_password === form.password ? 'Passwords match' : undefined}>
  <div className={inputWrap(errors.confirm_password)}>
@@ -652,7 +652,7 @@ export default function Register() {
  </form>
  )}
 
- {/* ΓòÉΓòÉ STEP 2 ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */}
+ {/* == STEP 2 == */}
  {step === 2 && (
  <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -677,20 +677,20 @@ export default function Register() {
  : 'border-[var(--card-border)] bg-slate-50 hover:border-slate-300 hover:bg-slate-50'
  }`}
  >
- {/* Icon circle */}
+ {/* == Icon circle == */}
  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
  sel ? `${a.bg} border-2 ${a.border}` : 'bg-slate-100'
  }`}>
  <Icon size={18} className={sel ? a.text : 'text-slate-500'}/>
  </div>
 
- {/* Text */}
+ {/* == Text == */}
  <div className="flex-1 min-w-0">
  <p className={`font-semibold text-sm ${sel ? a.text : 'text-slate-800'}`}>{s.label}</p>
  <p className="text-xs text-[var(--text-500)] mt-0.5 leading-snug">{s.description}</p>
  </div>
 
- {/* Radio indicator */}
+ {/* == Radio indicator == */}
  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
  sel ? `${a.border} bg-slate-50` : 'border-slate-300 bg-slate-50'
  }`}>
@@ -702,7 +702,7 @@ export default function Register() {
  </div>
  </div>
 
- {/* Terms */}
+ {/* == Terms == */}
  <label className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors bg-slate-50/80 ${terms ? 'border-teal-400 bg-teal-50/60' : 'border-[var(--card-border)] hover:border-teal-300'}`}>
  <input type="checkbox" checked={terms} onChange={e => { setTerms(e.target.checked); setServerErr(''); }}
  className="mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer"/>
