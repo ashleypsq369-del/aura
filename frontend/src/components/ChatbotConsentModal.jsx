@@ -1,98 +1,189 @@
+/**
+ * ChatbotConsentModal
+ * Redesigned to match FocusedAIExplanation DNA:
+ * portal · spring animation · fixed header / scrollable body / fixed footer
+ * inline styles · no AI-template colored box grids
+ */
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle, Heart, ShieldCheck, Sparkles } from 'lucide-react';
-import ModalShell from './ui/ModalShell';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Sparkles, Shield, Phone, Check, AlertTriangle } from 'lucide-react';
+
+const CAN = [
+  'Navigate the platform and answer questions',
+  'Explain your medications and care plan',
+  'Offer emotional support and reassurance',
+  'Summarise your health records',
+  'Guide you through features',
+];
+
+const CANNOT = [
+  'Diagnose medical conditions',
+  'Prescribe or change medications',
+  'Handle emergencies — call 193',
+  'Replace your doctor or care team',
+  'Modify your health records',
+];
 
 export default function ChatbotConsentModal({ isOpen, onAccept, onDecline, userName }) {
   const [agreed, setAgreed] = useState(false);
+  const firstName = userName?.split(' ')[0] || null;
 
-  return (
-    <ModalShell
-      open={isOpen}
-      onClose={onDecline}
-      title="Meet Aura AI"
-      description={userName ? `Hi ${userName?.split(' ')[0]}, a quick note before we chat` : 'A quick note before we chat'}
-      icon={Sparkles}
-      accent="teal"
-      size="md"
-      zIndex={60}
-      footer={
-        <div className="flex items-center justify-between gap-3">
-          <button onClick={onDecline}
-            className="px-4 py-2 text-sm font-semibold text-[var(--text-600)] hover:text-[var(--text-900)] border border-slate-300 rounded-xl hover:bg-white dark:hover:bg-slate-700 transition-all">
-            Use Human Support
-          </button>
-          <button onClick={onAccept} disabled={!agreed}
-            className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2 ${
-              agreed ? 'bg-teal-700 hover:bg-teal-800 text-white shadow-md' : 'bg-slate-200 text-[var(--text-400)] cursor-not-allowed'
-            }`}>
-            <Sparkles size={15}/> Start Chatting with Aura
-          </button>
-        </div>
-      }
-    >
-      <div className="space-y-4">
-        {/* Critical disclaimer */}
-        <div className="flex gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
-          <AlertTriangle size={18} className="text-amber-600 flex-shrink-0 mt-0.5" strokeWidth={2.5}/>
-          <div>
-            <p className="font-bold text-amber-900 dark:text-amber-300 text-sm">Aura is an AI, not a medical professional</p>
-            <p className="text-amber-800 dark:text-amber-400 text-xs mt-1 leading-relaxed">
-              I cannot diagnose, prescribe, or provide emergency care. For urgent medical needs, contact your care team or call <strong>193</strong>.
-            </p>
-          </div>
-        </div>
+  if (!isOpen) return null;
 
-        {/* CAN / CANNOT */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-700 rounded-xl p-3.5">
-            <p className="text-xs font-bold text-teal-700 dark:text-teal-400  mb-2 flex items-center gap-1.5">
-              <CheckCircle size={12}/> What I can do
-            </p>
-            <ul className="space-y-1.5 text-xs text-teal-900 dark:text-teal-200">
-              {['Navigate the platform','View your records','Answer care questions','Offer emotional support','Explain features'].map(t => (
-                <li key={t} className="flex items-start gap-1.5"><span className="text-teal-500 font-bold mt-0.5">✓</span>{t}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-3.5">
-            <p className="text-xs font-bold text-red-700 dark:text-red-400  mb-2 flex items-center gap-1.5">
-              <AlertTriangle size={12}/> What I cannot do
-            </p>
-            <ul className="space-y-1.5 text-xs text-red-900 dark:text-red-200">
-              {['Diagnose conditions','Prescribe medications','Handle emergencies','Replace your doctor','Modify records'].map(t => (
-                <li key={t} className="flex items-start gap-1.5"><span className="text-red-500 font-bold mt-0.5">✗</span>{t}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+  return createPortal(
+    <AnimatePresence>
+      <>
+        {/* Backdrop */}
+        <motion.div
+          key="ccm-bg"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={onDecline}
+          style={{ position: 'fixed', inset: 0, zIndex: 9500, background: 'rgba(0,0,0,0.45)' }}
+        />
 
-        {/* Privacy */}
-        <div className="flex gap-3 p-3.5 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl">
-          <ShieldCheck size={16} className="text-[var(--text-500)] flex-shrink-0 mt-0.5"/>
-          <p className="text-xs text-[var(--text-600)] dark:text-[var(--text-400)] leading-relaxed">
-            Conversations are securely stored and may be reviewed by your care team. Aura has <strong>read-only</strong> access to your health data. All data is HIPAA-compliant and encrypted.
-          </p>
-        </div>
+        {/* Card */}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9501, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, pointerEvents: 'none' }}>
+          <motion.div
+            key="ccm-card"
+            initial={{ opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.97 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 340 }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              pointerEvents: 'all',
+              background: '#ffffff',
+              borderRadius: 14,
+              width: '100%',
+              maxWidth: 480,
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+              fontFamily: "'Inter','system-ui',sans-serif",
+            }}
+          >
+            {/* Teal accent bar */}
+            <div style={{ height: 3, background: 'linear-gradient(90deg,#0d9488,#0891b2)', flexShrink: 0 }} />
 
-        {/* Emergency */}
-        <div className="flex gap-3 p-3.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl">
-          <Heart size={16} className="text-red-500 flex-shrink-0 mt-0.5"/>
-          <div className="text-xs text-red-800 dark:text-red-300 leading-relaxed">
-            <p className="font-bold mb-1">Emergency contacts (Ghana)</p>
-            <p>🚨 Medical Emergency: <strong>193</strong> (Ambulance)</p>
-            <p>📞 National Emergency: <strong>112</strong></p>
-          </div>
-        </div>
+            {/* Fixed header */}
+            <div style={{
+              padding: '16px 20px 14px',
+              borderBottom: '1px solid #f1f5f9',
+              display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+              flexShrink: 0,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: '#f0fdf4', border: '1px solid #d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Sparkles size={18} style={{ color: '#0d9488' }} />
+                </div>
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', margin: 0 }}>Meet Aura AI</p>
+                  <p style={{ fontSize: 12, color: '#64748b', margin: '2px 0 0' }}>
+                    {firstName ? `Hi ${firstName}, a quick note before we chat` : 'A quick note before we chat'}
+                  </p>
+                </div>
+              </div>
+              <button onClick={onDecline} style={{ width: 30, height: 30, borderRadius: 8, background: '#f1f5f9', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', flexShrink: 0 }}>
+                <X size={14} strokeWidth={2.5} />
+              </button>
+            </div>
 
-        {/* Consent checkbox */}
-        <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-400 transition-colors bg-[var(--card-bg)]">
-          <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded text-teal-600 border-slate-400 focus:ring-teal-500 cursor-pointer accent-teal-600"/>
-          <span className="text-sm text-[var(--text-700)] leading-relaxed">
-            I understand Aura is an AI assistant. For medical concerns I will contact my care team or emergency services.
-          </span>
-        </label>
-      </div>
-    </ModalShell>
+            {/* Scrollable body */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+              {/* Disclaimer — compact single block */}
+              <div style={{ display: 'flex', gap: 10, padding: '12px 14px', background: '#fffbeb', borderRadius: 10, border: '1px solid #fde68a' }}>
+                <AlertTriangle size={15} style={{ color: '#d97706', flexShrink: 0, marginTop: 1 }} />
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#92400e', margin: 0 }}>Not a medical professional</p>
+                  <p style={{ fontSize: 12, color: '#78350f', margin: '3px 0 0', lineHeight: 1.5 }}>
+                    Aura cannot diagnose, prescribe, or handle emergencies. For urgent needs call <strong>193</strong> or contact your care team.
+                  </p>
+                </div>
+              </div>
+
+              {/* Capabilities — info row grid, not colored boxes */}
+              <div>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 10px' }}>CAPABILITIES</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>
+                  {/* Can */}
+                  <div style={{ padding: '12px 0 12px 0', borderRight: '1px solid #f1f5f9' }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#0d9488', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Check size={11} /> What Aura can do
+                    </p>
+                    {CAN.map(t => (
+                      <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 5 }}>
+                        <span style={{ fontSize: 10, color: '#0d9488', fontWeight: 700, flexShrink: 0, marginTop: 2 }}>+</span>
+                        <span style={{ fontSize: 12, color: '#334155', lineHeight: 1.4 }}>{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Cannot */}
+                  <div style={{ padding: '12px 0 12px 12px' }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <X size={11} /> What Aura cannot do
+                    </p>
+                    {CANNOT.map(t => (
+                      <div key={t} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 5 }}>
+                        <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 700, flexShrink: 0, marginTop: 2 }}>-</span>
+                        <span style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.4 }}>{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Privacy + emergency — single compact row */}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ flex: 1, display: 'flex', gap: 8, padding: '10px 12px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', alignItems: 'flex-start' }}>
+                  <Shield size={13} style={{ color: '#94a3b8', flexShrink: 0, marginTop: 1 }} />
+                  <p style={{ fontSize: 11, color: '#64748b', margin: 0, lineHeight: 1.5 }}>Conversations are <strong>securely stored</strong> and may be reviewed by your care team. HIPAA-compliant.</p>
+                </div>
+                <div style={{ flex: 1, display: 'flex', gap: 8, padding: '10px 12px', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0', alignItems: 'flex-start' }}>
+                  <Phone size={13} style={{ color: '#94a3b8', flexShrink: 0, marginTop: 1 }} />
+                  <p style={{ fontSize: 11, color: '#64748b', margin: 0, lineHeight: 1.5 }}>Emergency: <strong style={{ color: '#dc2626' }}>193</strong><br />National: <strong>112</strong></p>
+                </div>
+              </div>
+
+              {/* Consent */}
+              <label style={{
+                display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer',
+                padding: '12px 14px', borderRadius: 10,
+                border: `2px solid ${agreed ? '#0d9488' : '#e2e8f0'}`,
+                background: agreed ? '#f0fdf4' : '#ffffff',
+                transition: 'all 0.15s',
+              }}>
+                <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
+                  style={{ marginTop: 2, width: 15, height: 15, accentColor: '#0d9488', cursor: 'pointer', flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: '#334155', lineHeight: 1.55 }}>
+                  I understand Aura is an AI. For medical concerns I will contact my care team or emergency services.
+                </span>
+              </label>
+            </div>
+
+            {/* Fixed footer */}
+            <div style={{ padding: '12px 20px', background: '#fafafa', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexShrink: 0 }}>
+              <button onClick={onDecline} style={{ padding: '9px 16px', borderRadius: 9, border: '1px solid #e2e8f0', background: '#ffffff', color: '#475569', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                Use Human Support
+              </button>
+              <button onClick={onAccept} disabled={!agreed} style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '9px 18px', borderRadius: 9, border: 'none',
+                background: agreed ? '#0d9488' : '#e2e8f0',
+                color: agreed ? '#ffffff' : '#94a3b8',
+                fontSize: 13, fontWeight: 700, cursor: agreed ? 'pointer' : 'not-allowed',
+                transition: 'all 0.15s',
+              }}>
+                <Sparkles size={13} /> Start chatting with Aura
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </>
+    </AnimatePresence>,
+    document.body
   );
 }

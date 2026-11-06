@@ -68,8 +68,8 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
   const { data: profile } = useQuery({
     queryKey:  ['profile-avatar', targetId],
     queryFn:   () => apiClient.get('/api/profile').then(r => r.data),
-    enabled:   !!targetId && !userId,
-    staleTime: 30 * 1000,   // 30s - short but not 0 (avoids thrashing)
+    enabled:   !!targetId,
+    staleTime: 60 * 1000,
     retry:     false,
   });
 
@@ -96,12 +96,17 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
 
   // 1. Real photo
   if (avatarUrl && !imgErr) {
-    const base = avatarUrl.startsWith('http') ? avatarUrl : `${API_BASE}${avatarUrl}`;
-    // Cache-bust: use last 8 chars of UUID filename - stable across renders, changes per upload
+    // If it's a /resources/ path, it's a static asset on the frontend (Vercel)
+    // not an uploaded file on the backend — use it as a relative URL
+    const isStaticAsset = avatarUrl.startsWith('/resources/');
+    const base = isStaticAsset
+      ? ''  // relative URL — served by Vercel/frontend
+      : (avatarUrl.startsWith('http') ? '' : API_BASE);
     const bust = avatarUrl.split('/').pop()?.replace(/\.[^.]+$/, '').slice(-8) || '1';
+    const src = isStaticAsset ? avatarUrl : `${base}${avatarUrl}?v=${bust}`;
     return (
       <div style={wrap} className={className} onClick={onClick}>
-        <img src={`${base}?v=${bust}`} alt={name || 'Profile photo'}
+        <img src={src} alt={name || 'Profile photo'}
           onError={() => setImgErr(true)}
           style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}/>
       </div>
