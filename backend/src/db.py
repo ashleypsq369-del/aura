@@ -1767,8 +1767,11 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def authenticate_user(username: str, password: str, db: Session) -> Optional[User]:
-    """Authenticate user - uses verify_password for bcrypt + SHA-256 compat."""
+    """Authenticate user by username OR email - uses verify_password for bcrypt + SHA-256 compat."""
+    # Try username first, then email
     user = db.query(User).filter(User.username == username).first()
+    if not user:
+        user = db.query(User).filter(User.email == username).first()
     if user and verify_password(password, user.hashed_password):
         user.last_login = datetime.utcnow()
         user.failed_logins = 0

@@ -7,16 +7,14 @@ import LoginSlideshow from '../components/LoginSlideshow';
 import LegalModal from '../components/LegalModal';
 
 // ── client-side validation ────────────────────────────────────────────────
-function validate(username, password) {
+function validate(identifier, password) {
   const errors = {};
-  if (!username.trim()) {
-    errors.username = 'Username is required';
-  } else if (username.length < 3) {
-    errors.username = 'Username must be at least 3 characters';
-  } else if (username.length > 50) {
-    errors.username = 'Username cannot exceed 50 characters';
-  } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-    errors.username = 'Username can only contain letters, numbers and underscores';
+  if (!identifier.trim()) {
+    errors.username = 'Username or email is required';
+  } else if (identifier.trim().length < 3) {
+    errors.username = 'Must be at least 3 characters';
+  } else if (identifier.trim().length > 100) {
+    errors.username = 'Cannot exceed 100 characters';
   }
 
   if (!password) {
@@ -54,7 +52,7 @@ export default function Login() {
     setFieldErrors({});
     setLoading(true);
 
-    const result = await login(username, password);
+    const result = await login(username.trim(), password);
     if (result.success) {
       const savedUserStr = localStorage.getItem('user');
       if (savedUserStr) {
@@ -140,7 +138,7 @@ export default function Login() {
               {/* Username */}
               <div>
                 <label className="block text-[11px] font-bold text-[var(--text-600)]  mb-1.5">
-                  Username <span className="text-red-500">*</span>
+                  Username or Email <span className="text-red-500">*</span>
                 </label>
                 <div className={`flex items-center gap-0 border rounded-xl overflow-hidden transition-all bg-slate-50
                   ${fieldErrors.username
@@ -155,12 +153,8 @@ export default function Login() {
                     value={username}
                     onChange={e => {
                       setUsername(e.target.value);
-                      // Re-validate if already shown an error
                       if (fieldErrors.username) {
-                        const err = e.target.value.length < 3 ? 'Username must be at least 3 characters'
-                          : e.target.value.length > 50 ? 'Username cannot exceed 50 characters'
-                          : !/^[a-zA-Z0-9_]+$/.test(e.target.value) ? 'Letters, numbers and underscores only'
-                          : undefined;
+                        const err = e.target.value.trim().length < 3 ? 'Must be at least 3 characters' : undefined;
                         setFieldErrors(p => ({ ...p, username: err }));
                       }
                     }}
@@ -169,12 +163,11 @@ export default function Login() {
                       if (errors.username) setFieldErrors(p => ({ ...p, username: errors.username }));
                     }}
                     className="flex-1 px-3 py-2.5 outline-none text-sm text-[var(--text-900)] font-medium bg-transparent"
-                    placeholder="Enter your username"
+                    placeholder="Username or email address"
                     required
                     disabled={loading}
-                    autoComplete="username"
-                    maxLength={50}
-                    minLength={3}
+                    autoComplete="username email"
+                    maxLength={100}
                     autoCapitalize="none"
                     spellCheck={false}
                   />

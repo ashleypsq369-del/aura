@@ -163,7 +163,9 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
     user = authenticate_user(data.username, data.password, db)
 
     if not user:
-        user_check = db.query(User).filter(User.username == data.username).first()
+        user_check = db.query(User).filter(
+            (User.username == data.username) | (User.email == data.username)
+        ).first()
         if user_check:
             user_check.failed_logins = (user_check.failed_logins or 0) + 1
             if user_check.failed_logins >= 5:
