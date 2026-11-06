@@ -249,17 +249,17 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  <div style={{height:3,background:'linear-gradient(90deg,#0d9488,#0891b2)',flexShrink:0}} />
  <div style={{padding:'14px 18px',borderBottom:'1px solid var(--card-border)',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
  <div style={{display:'flex',alignItems:'center',gap:10}}>
- <ListChecks size={16} style={{color:'var(--c-teal)'}} />
+ <ListChecks size={16} style={{color:'#0d9488'}} />
  <div>
  <p style={{fontWeight:800,fontSize:14,color:'var(--text-900)',margin:0}}>Today's Care Tasks</p>
  <p style={{fontSize:11,color:'var(--text-400)',margin:0}}>{reqDone}/{reqTotal} required done</p>
  </div>
  </div>
  <div style={{display:'flex',gap:6}}>
- <button onClick={()=>refetch()} style={{width:28,height:28,borderRadius:8,background:'var(--page-bg)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-400)'}}>
+ <button onClick={()=>refetch()} style={{width:30,height:30,borderRadius:8,background:'transparent',border:'1px solid var(--card-border)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-500)'}}>
  <RefreshCw size={12}/>
  </button>
- <button onClick={()=>setShowModal(false)} style={{width:28,height:28,borderRadius:8,background:'var(--page-bg)',border:'none',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-500)'}}>
+ <button onClick={()=>setShowModal(false)} style={{width:30,height:30,borderRadius:8,background:'transparent',border:'1px solid var(--card-border)',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--text-500)'}}>
  <X size={13}/>
  </button>
  </div>
@@ -274,34 +274,32 @@ export default function TaskStatusBar({ compact = false, patientId = null }) {
  {tasks.map(task => {
  const Icon = ICON_MAP[task.icon] || Activity;
  const isReq = task.required;
+ const _mpid = task.patient_id;
+ const _mlink = task.link && _mpid ? task.link.replace('{patient_id}', String(_mpid)) : task.link;
+ const _mn = (task.name || '').toLowerCase();
+ const dest = _mlink || (_mn.includes('vital') && _mpid ? `/patients/${_mpid}/vitals` : _mn.includes('esas') && _mpid ? `/assessments/${_mpid}/esas` : _mn.includes('pps') && _mpid ? `/assessments/${_mpid}/pps` : _mn.includes('assessment') && _mpid ? `/assessments/${_mpid}` : _mn.includes('medication') ? '/medications' : _mn.includes('appointment') ? '/appointments' : _mn.includes('symptom') && _mpid ? `/patients/${_mpid}/symptoms` : _mn.includes('wound') && _mpid ? `/patients/${_mpid}/wound-care` : _mn.includes('wellness') || _mn.includes('wellbeing') ? '/wellness-checkin' : _mn.includes('message') ? '/messages' : _mpid ? `/patients/${_mpid}` : '/dashboard');
  return (
  <div key={task.id}
- onClick={() => {
-                   if (!task.done) {
-                     const pid = task.patient_id;
-                     const link = task.link && pid ? task.link.replace('{patient_id}', pid) : task.link;
-                     const name = (task.name || '').toLowerCase();
-                     const dest = link || (name.includes('vital') && pid ? `/patients/${pid}/vitals` : name.includes('esas') && pid ? `/assessments/${pid}/esas` : name.includes('medication') ? '/medications' : name.includes('appointment') ? '/appointments' : pid ? `/patients/${pid}` : '/dashboard');
-                     navigate(dest);
-                     setShowModal(false);
-                   }
-                 }}
+ onClick={() => { if (!task.done) { navigate(dest); setShowModal(false); } }}
  style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',borderRadius:10,
- background: task.done ? '#f0fdf4' : isReq ? '#fef2f2' : 'var(--page-bg)',
- border:`1px solid ${task.done?'#bbf7d0':isReq?'#fca5a5':'var(--card-border)'}`,
+ background: task.done ? 'rgba(22,163,74,0.08)' : 'var(--page-bg)',
+ border:`1px solid ${task.done?'rgba(22,163,74,0.2)':'var(--card-border)'}`,
  cursor: task.done ? 'default' : 'pointer',transition:'all 0.12s'}}>
- <div style={{width:30,height:30,borderRadius:9,background:task.done?'#dcfce7':isReq?'#fee2e2':'#0d948815',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
- {task.done ? <CheckCircle2 size={15} style={{color:'#16a34a'}}/> : <Icon size={14} style={{color:isReq?'#dc2626':'#0d9488'}}/>}
+ <div style={{width:30,height:30,borderRadius:9,background:task.done?'rgba(22,163,74,0.12)':'rgba(13,148,136,0.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+ {task.done ? <CheckCircle2 size={15} style={{color:'#16a34a'}}/> : <Icon size={14} style={{color:'#0d9488'}}/>}
  </div>
  <div style={{flex:1,minWidth:0}}>
- <p style={{fontWeight:600,fontSize:12,color:task.done?'#15803d':isReq?'#dc2626':'var(--text-800)',margin:0,textDecoration:task.done?'line-through':'none',opacity:task.done?0.7:1}}>{task.name}</p>
+ <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+   <p style={{fontWeight:600,fontSize:12,color:task.done?'var(--text-400)':'var(--text-800)',margin:0,textDecoration:task.done?'line-through':'none',opacity:task.done?0.6:1}}>{task.name}</p>
+   {!task.done && isReq && <span style={{fontSize:9,fontWeight:700,padding:'1px 6px',borderRadius:99,background:'#dc2626',color:'#fff',flexShrink:0}}>Required</span>}
+ </div>
  {task.description && <p style={{fontSize:11,color:'var(--text-400)',margin:'1px 0 0',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{task.description}</p>}
  </div>
  {task.done
  ? <CheckCircle2 size={14} style={{color:'#22c55e',flexShrink:0}}/>
- : <button onClick={e=>{e.stopPropagation();acknowledgeMutation.mutate(task.id)}} disabled={acknowledging===task.id}
-   style={{fontSize:11,fontWeight:700,padding:'4px 10px',borderRadius:7,background:'#0d9488',color:'#fff',border:'none',cursor:'pointer',opacity:acknowledging===task.id?0.5:1}}>
-   {acknowledging===task.id?'...':'Do Now'}
+ : <button onClick={e=>{e.stopPropagation();navigate(dest);setShowModal(false);}}
+   style={{fontSize:11,fontWeight:700,padding:'5px 11px',borderRadius:7,background:'#0d9488',color:'#fff',border:'none',cursor:'pointer',flexShrink:0}}>
+   Do Now
  </button>
  }
  </div>
