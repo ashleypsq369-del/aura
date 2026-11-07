@@ -115,7 +115,7 @@ export default function Layout({ children }) {
  };
 
  return (
- <div className="flex h-screen overflow-hidden text-[#2C3531]">
+ <div className="flex overflow-hidden text-[#2C3531]" style={{ height: '100dvh', minHeight: '-webkit-fill-available' }}>
  {/* Sidebar */}
  <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} onOpenAura={() => window.dispatchEvent(new CustomEvent('aura:open'))} />
 
@@ -313,8 +313,8 @@ export default function Layout({ children }) {
  role="main"
  id="main-content"
  aria-label="Main content"
- className={`flex-1 overflow-y-auto relative flex flex-col ${getPageClass()}`}
- style={{ scrollbarWidth: 'thin' }}
+ className={`flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col min-w-0 ${getPageClass()}`}
+ style={{ scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch' }}
  > {/* Assisted Mode Banner - shown when assisted mode is active */}
  {a11ySettings.assistedMode && (
  <div className="assisted-mode-banner sticky top-0 z-20 bg-gradient-to-r from-violet-600 to-purple-700 text-white px-6 py-2.5 flex items-center justify-between shadow-md">

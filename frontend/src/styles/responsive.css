@@ -1,0 +1,169 @@
+/**
+ * responsive.css
+ * Critical cross-device layout fixes.
+ * Targets: Android 6+ (Chrome 53+), iOS 11+, Samsung Browser 6+,
+ *          all modern desktop browsers.
+ */
+
+/* ── Root shell: use dynamic viewport height everywhere ──────────────────── */
+#root {
+  height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available; /* iOS Safari fix */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html {
+  height: 100%;
+  /* Prevent white flash on page load on Android */
+  background-color: var(--page-bg, #e8f5f5);
+}
+
+body {
+  height: 100%;
+  /* Prevent body from expanding beyond viewport on mobile */
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* ── Sidebar + main layout: prevent overflow bleed ───────────────────────── */
+.flex.overflow-hidden {
+  max-width: 100vw;
+  max-height: 100dvh;
+}
+
+/* ── All flex containers: min-width 0 to prevent children overflowing ────── */
+/* This is THE single most common cause of bleed on mobile */
+[class*="flex-1"],
+[class*="flex-col"],
+[class*="flex-row"] {
+  min-width: 0;
+}
+
+/* ── Text truncation on narrow screens ───────────────────────────────────── */
+.truncate {
+  max-width: 100%;
+}
+
+/* ── Fixed/sticky elements: safe area on notched phones ─────────────────── */
+header, .header-gradient {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* ── Sidebar overlay on mobile: full viewport width ─────────────────────── */
+@media (max-width: 1023px) {
+  /* Mobile sidebar uses fixed positioning - must not bleed */
+  aside {
+    max-width: min(280px, 85vw);
+  }
+}
+
+/* ── Cards and containers: never exceed viewport width ──────────────────── */
+.rounded-xl, .rounded-2xl, .rounded-lg {
+  max-width: 100%;
+}
+
+/* ── Grid fixes: prevent columns from blowing past screen ───────────────── */
+@media (max-width: 640px) {
+  /* Force single column on very narrow screens for critical grids */
+  .grid-cols-2,
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  /* Reduce font sizes that are too large on small screens */
+  .text-3xl { font-size: 1.5rem !important; }
+  .text-4xl { font-size: 1.75rem !important; }
+  .text-5xl { font-size: 2rem !important; }
+
+  /* Reduce excessive padding on mobile */
+  .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .py-8 { padding-top: 1.25rem !important; padding-bottom: 1.25rem !important; }
+}
+
+/* ── Modal/portal fix: always fits viewport ──────────────────────────────── */
+[style*="position: fixed"], [style*="position:fixed"] {
+  max-width: 100vw !important;
+  max-height: 100dvh !important;
+}
+
+/* ── Image cards: prevent height overflow on small screens ──────────────── */
+@media (max-width: 480px) {
+  [style*="height:170px"],
+  [style*="height: 170px"] {
+    height: 120px !important;
+  }
+  [style*="height:130px"],
+  [style*="height: 130px"] {
+    height: 100px !important;
+  }
+}
+
+/* ── Sticky header: don't cover too much of the viewport on short phones ─── */
+@media (max-height: 600px) {
+  .sticky.top-0 {
+    position: relative !important;
+  }
+}
+
+/* ── Table: horizontal scroll on mobile instead of overflow ─────────────── */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* ── Buttons: prevent text wrapping causing misalignment ────────────────── */
+button {
+  white-space: nowrap;
+}
+
+/* Exception: allow wrapping in full-width buttons */
+button.w-full,
+button[style*="width:'100%'"],
+button[style*="width: 100%"] {
+  white-space: normal;
+}
+
+/* ── Input: ensure inputs don't overflow their containers on old Android ─── */
+input, textarea, select {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ── PageHeader image band: cap height on small screens ─────────────────── */
+@media (max-width: 640px) {
+  .img-card {
+    min-height: 100px !important;
+    max-height: 140px !important;
+  }
+}
+
+/* ── Fix for Android Chrome gap at bottom (100vh vs viewport) ─────────────── */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+  .h-screen {
+    height: 100dvh;
+  }
+}
+
+/* ── Samsung Internet: fix for gap in flex layout ────────────────────────── */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  .flex {
+    flex-shrink: 1;
+  }
+}
+
+/* ── Scrollbar: thin on all platforms ───────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(13,148,136,0.3) transparent;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: rgba(13,148,136,0.3); border-radius: 99px; }
