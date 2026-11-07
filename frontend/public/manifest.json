@@ -1,10 +1,10 @@
 {
-  "name": "Project Aura - Palliative Care",
+  "name": "Project Aura — Palliative Care",
   "short_name": "Project Aura",
   "description": "AI-powered palliative care platform for patients, families and clinicians",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "background_color": "#fefdf8",
   "theme_color": "#0d9488",
   "icons": [
