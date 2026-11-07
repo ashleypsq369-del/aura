@@ -3,6 +3,7 @@
 @import "./styles/interactive.css";
 @import "./styles/design-system.css";
 @import "./styles/responsive.css";
+@import "./styles/fluid-overrides.css";
 
 /* ── Universal mobile-first reset ─────────────────────────────────────────── */
 /* Prevents overflow bleed, fixes box-sizing, safe-area insets, touch behavior */
