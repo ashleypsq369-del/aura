@@ -33,6 +33,7 @@ class FeedbackCreate(BaseModel):
     url: str
     user_id: Optional[int] = None
     user_role: Optional[str] = None
+    user_name: Optional[str] = None
     email: Optional[str] = None
     browser: Optional[str] = None
     timestamp: Optional[str] = None
@@ -71,7 +72,7 @@ def send_feedback_email(data: FeedbackCreate):
             f"<h2>Project Aura Feedback</h2>",
             f"<p><strong>Type:</strong> {data.type}</p>",
             f"<p><strong>Page:</strong> {data.page} ({data.url})</p>",
-            f"<p><strong>User:</strong> ID={data.user_id} Role={data.user_role} Email={data.email}</p>",
+            f"<p><strong>User:</strong> {data.user_name or 'Anonymous'} (ID={data.user_id}, Role={data.user_role}, Email={data.email})</p>",
             f"<p><strong>Time:</strong> {data.timestamp}</p>",
             "<hr>",
         ]
@@ -150,6 +151,7 @@ async def submit_feedback(
             "bug_type": data.bug_type,
             "description": data.description,
             "email": data.email,
+            "user_name": data.user_name,
         }),
         success=True,
         created_at=datetime.utcnow(),

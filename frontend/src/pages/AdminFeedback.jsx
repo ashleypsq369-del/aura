@@ -69,7 +69,7 @@ function DetailPanel({ item, onClose, onDelete }) {
   const RF   = item.rating ? RATING_FACE[item.rating] : null;
   const meta = [
     { Icon:Globe, label:'Page',  value:item.page },
-    { Icon:User,  label:'User',  value:item.user_id ? `#${item.user_id}` : 'Anonymous' },
+    { Icon:User,  label:'Name',  value:item.user_name || (item.user_id ? `User #${item.user_id}` : 'Anonymous') },
     { Icon:User,  label:'Role',  value:item.user_role || '-' },
     { Icon:Mail,  label:'Email', value:item.email || '-' },
     { Icon:Clock, label:'Time',  value:item.created_at ? new Date(item.created_at).toLocaleString('en-GB') : '-' },
@@ -252,6 +252,16 @@ export default function AdminFeedback() {
     col.accessor('page', {
       header: 'Page',
       cell: info => <span style={{ fontSize:11, color:'var(--text-500)' }}>{info.getValue()||'-'}</span>,
+    }),
+    col.accessor('user_name', {
+      header: 'Submitted By',
+      cell: info => {
+        const name = info.getValue();
+        const row = info.row.original;
+        const display = name || (row.user_id ? `User #${row.user_id}` : 'Anonymous');
+        return <span style={{ fontSize:11, fontWeight:600, color:'var(--text-700)' }}>{display}</span>;
+      },
+      meta: { thStyle:{ width:140 } },
     }),
     col.accessor('user_role', {
       header: 'Role',

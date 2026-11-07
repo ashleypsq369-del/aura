@@ -150,6 +150,7 @@ export default function FeedbackWidget() {
   const payload = (type, extra = {}) => ({
     type, page: pageName, url: location.pathname,
     user_id: user?.id, user_role: user?.role,
+    user_name: user?.full_name || user?.username || null,
     email: email || user?.email,
     browser: navigator.userAgent.slice(0, 200),
     timestamp: new Date().toISOString(), ...extra,
