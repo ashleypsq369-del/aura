@@ -34,6 +34,7 @@ class FeedbackCreate(BaseModel):
     user_id: Optional[int] = None
     user_role: Optional[str] = None
     user_name: Optional[str] = None
+    context_type: Optional[str] = None   # 'page' | 'modal' | 'general'
     email: Optional[str] = None
     browser: Optional[str] = None
     timestamp: Optional[str] = None
