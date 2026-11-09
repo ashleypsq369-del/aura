@@ -565,7 +565,7 @@ export default function Caregivers() {
 
       {/* ─── Vertical sidebar layout ──────────────────────────────────────── */}
       <div style={{ maxWidth:1200, margin:'16px auto 0', padding:'0 20px 48px' }}>
-        <div style={{
+        <div className="mobile-stack" style={{
           background:'var(--card-bg)',
           border:'1px solid var(--card-border)',
           borderRadius:16, overflow:'hidden',
@@ -574,7 +574,7 @@ export default function Caregivers() {
         }}>
 
           {/* ── LEFT: vertical nav ──────────────────────────────────────── */}
-          <nav style={{
+          <nav className="mobile-sidebar" style={{
             width:200, flexShrink:0,
             borderRight:'1px solid var(--card-border)',
             display:'flex', flexDirection:'column',
@@ -659,7 +659,7 @@ export default function Caregivers() {
           </nav>
 
           {/* ── RIGHT: content panel ─────────────────────────────────────── */}
-          <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column' }}>
+          <div className="mobile-main" style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column' }}>
 
             {/* Content header - title + tab-specific toolbar */}
             <div style={{ padding:'12px 20px', borderBottom:'1px solid var(--card-border)', display:'flex', alignItems:'center', gap:12, flexWrap:'wrap', minHeight:52 }}>

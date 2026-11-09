@@ -415,8 +415,8 @@ export default function Register() {
  <>
  <div className="min-h-screen flex flex-col lg:flex-row">
 
- {/* Slideshow - fixed full-bg on mobile, left half on desktop */}
- <div className="fixed inset-0 lg:hidden z-0 pointer-events-none">
+ {/* Slideshow - compact banner on mobile, left half on desktop */}
+ <div className="block lg:hidden w-full flex-shrink-0" style={{ height: 220 }}>
  <LoginSlideshow />
  </div>
  <div className="hidden lg:block lg:w-[45%] xl:w-1/2 lg:sticky lg:top-0 lg:min-h-screen flex-shrink-0 overflow-hidden z-0">
@@ -424,7 +424,7 @@ export default function Register() {
  </div>
 
  {/* ── Form panel ───────────────────────────────────────────────────── */}
- <div className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-8 lg:px-10 min-h-screen lg:min-h-0 overflow-y-auto bg-slate-50/0 lg:bg-slate-50">
+ <div className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-8 lg:px-10 min-h-0 overflow-y-auto bg-slate-50">
  <motion.div
  initial={{ opacity:0, y:16 }}
  animate={{ opacity:1, y:0 }}
@@ -433,7 +433,7 @@ export default function Register() {
  >
 
  {/* ── Card ───────────────────────────────────────────────────────── */}
- <div className="bg-white/95 lg:bg-slate-50 backdrop-blur-xl lg:backdrop-blur-none rounded-2xl shadow-2xl lg:shadow-lg border border-white/30 lg:border-[var(--card-border)] overflow-hidden">
+ <div className="bg-white lg:bg-slate-50 rounded-2xl shadow-xl lg:shadow-lg border border-[var(--card-border)] overflow-hidden">
 
  {/* == Header banner == */}
  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5">

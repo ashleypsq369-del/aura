@@ -1150,7 +1150,7 @@ export default function AIInsights() {
 
      {/* Tab bar - pill segment control */}
      <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
-       <div style={{ display:'flex', gap:2, padding:'10px 0' }}>
+       <div style={{ display:'flex', gap:2, padding:'10px 0', overflowX:'auto', flexWrap:'nowrap', scrollbarWidth:'none' }}>
          {[
            { id:'risk',   label:'Risk Stratification', Icon:Brain    },
            { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
@@ -1165,7 +1165,7 @@ export default function AIInsights() {
                  color: active ? '#fff' : 'var(--text-500)',
                  background: active ? 'linear-gradient(135deg,#0d9488,#0891b2)' : 'transparent',
                  border:'none', borderRadius:8,
-                 cursor:'pointer', whiteSpace:'nowrap', transition:'all 0.15s',
+                 cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, transition:'all 0.15s',
                  boxShadow: active ? '0 2px 8px rgba(13,148,136,0.25)' : 'none',
                }}
                onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background='var(--page-bg)'; e.currentTarget.style.color='var(--text-700)'; }}}

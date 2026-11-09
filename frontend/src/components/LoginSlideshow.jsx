@@ -167,11 +167,11 @@ export default function LoginSlideshow() {
  <span className="text-[11px] font-bold text-white ">{slide.tag}</span>
  </div>
  {/* Frosted dark pill wraps title + body - guaranteed contrast on any photo */}
- <div className="bg-black/55 backdrop-blur-sm rounded-2xl px-4 py-3 max-w-sm border border-teal-400/60">
- <h2 className="img-heading font-serif text-xl lg:text-2xl font-bold leading-snug mb-1.5 [text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_12px_rgba(0,0,0,0.8)]">
+ <div className="bg-black/55 backdrop-blur-sm rounded-2xl px-3 py-2 sm:px-4 sm:py-3 max-w-sm border border-teal-400/60">
+ <h2 className="img-heading font-serif text-base sm:text-xl lg:text-2xl font-bold leading-snug mb-1 sm:mb-1.5 [text-shadow:0_2px_6px_rgba(0,0,0,1),0_0_12px_rgba(0,0,0,0.8)]">
  {slide.title}
  </h2>
- <p className="text-white text-sm leading-relaxed hidden sm:block"
+ <p className="text-white text-xs sm:text-sm leading-relaxed"
  style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
  {slide.body}
  </p>

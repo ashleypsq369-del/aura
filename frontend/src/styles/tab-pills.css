@@ -142,3 +142,61 @@ html.dark .pill-scroll-wrap::after {
 html.dark .pill-scroll-wrap::before {
   background: linear-gradient(to right, var(--card-bg, #1e293b) 0%, transparent 100%);
 }
+
+/* ── 10. Mobile two-column → single-column stack ────────────────────────── */
+/*
+ * Applied to any flex container that holds a fixed-width left sidebar
+ * next to a main content area. On screens narrower than 768 px the
+ * sidebar drops above the content instead of squishing side-by-side.
+ *
+ * Usage: add className="mobile-stack" to the outer flex container
+ *        add className="mobile-sidebar" to the left panel element
+ */
+@media (max-width: 768px) {
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  /* Sidebar becomes full-width, drops its right border, gains a bottom border */
+  .mobile-stack > .mobile-sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-shrink: 1 !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--card-border) !important;
+  }
+  /* The main panel next to the sidebar fills remaining space */
+  .mobile-stack > .mobile-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* Messages: full-screen panel — both sidebar and chat take 100% width  */
+  .messages-outer {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+  .messages-outer > .lg-sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-shrink: 0;
+    border-right: none !important;
+    border-bottom: 1px solid var(--card-border) !important;
+    height: auto !important;
+  }
+  .messages-outer > .lg-chat {
+    width: 100% !important;
+    flex: 1;
+    height: auto !important;
+    min-height: 60vh;
+  }
+
+  /* AdminFeedback: hide the fixed-width detail panel inline; use mobile sheet */
+  .admin-feedback-master-detail > .detail-panel-desktop {
+    display: none !important;
+  }
+}

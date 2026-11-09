@@ -392,7 +392,7 @@ export default function AdminFeedback() {
       )}
 
       {/* Master / Detail */}
-      <div style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
+      <div className="admin-feedback-master-detail" style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
         {/* Table - hides on mobile when detail is open */}
         <div style={{ flex:1, minWidth:0, display: selected ? undefined : undefined }}>
           <DataTable
@@ -415,6 +415,7 @@ export default function AdminFeedback() {
           {selected && (
             <motion.div
               key="detail"
+              className="detail-panel-desktop"
               initial={{ opacity:0, x:16 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:16 }}
               transition={{ type:'spring', damping:28, stiffness:320 }}
               style={{

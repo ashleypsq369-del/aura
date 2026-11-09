@@ -89,8 +89,8 @@ export default function Login() {
     <div className="min-h-screen flex flex-col lg:flex-row text-[#2C3531]">
 
       {/* ── Slideshow ─────────────────────────────────────────────────────── */}
-      {/* Mobile: fixed full-screen background */}
-      <div className="fixed inset-0 lg:hidden z-0">
+      {/* Mobile: compact banner at the top */}
+      <div className="block lg:hidden w-full flex-shrink-0" style={{ height: 220 }}>
         <LoginSlideshow />
       </div>
 
@@ -100,16 +100,16 @@ export default function Login() {
       </div>
 
       {/* ── Sign-in panel ─────────────────────────────────────────────────── */}
-      {/* Mobile: overlays the slideshow with a semi-transparent card */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:px-8 min-h-screen lg:min-h-0">
+      {/* Mobile: sits below the banner */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:px-8 min-h-0 lg:min-h-screen bg-slate-50">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
           className="w-full max-w-sm"
         >
-          {/* Glass effect on mobile, solid white on desktop */}
-          <div className="bg-white/90 lg:bg-slate-50 backdrop-blur-md lg:backdrop-blur-none rounded-2xl shadow-2xl border border-white/50 lg:border-[var(--card-border)] p-6 sm:p-8">
+          {/* Solid card on mobile and desktop */}
+          <div className="bg-white lg:bg-slate-50 rounded-2xl shadow-xl border border-[var(--card-border)] p-6 sm:p-8">
 
             {/* Header */}
             <div className="text-center mb-5">
