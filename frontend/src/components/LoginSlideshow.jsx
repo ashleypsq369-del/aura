@@ -153,7 +153,7 @@ export default function LoginSlideshow() {
  </div>
 
  {/* Slide text content - sits in the upper-middle third on desktop, centred on mobile */}
- <div className="absolute inset-0 z-20 flex flex-col justify-center p-5 lg:px-8" style={{ paddingBottom: '15%' }}>
+ <div className="absolute inset-0 z-20 flex flex-col justify-center p-4 lg:px-8" style={{ paddingBottom: '12%' }}>
  <AnimatePresence mode="wait">
  <motion.div
  key={`text-${current}`}

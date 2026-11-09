@@ -170,20 +170,21 @@ export default function Settings() {
  {/* -- Tab bar - teal, compact ------------------------------------ */}
  <div className="rounded-xl border border-[var(--card-border)] mb-5 overflow-hidden"
  style={{ background: 'var(--card-bg, #e8fafa)' }}>
- <div className="flex overflow-x-auto">
+ <div className="flex overflow-x-auto scrollbar-none">
  {tabs.map(({ id, label, icon: Icon, tip }) => (
  <button
  key={id}
  onClick={() => setTab(id)}
  title={tip}
- className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 transition-all min-w-[70px]
+ className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all min-w-[48px]
  ${tab === id
- ? 'border-teal-600 text-teal-700 dark:text-teal-400 bg-teal-50/80 dark:bg-teal-900/20'
- : 'border-transparent text-[var(--text-500)] dark:text-[var(--text-400)] hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50/40 dark:hover:bg-teal-900/10'
+ ? 'bg-teal-600 text-white'
+ : 'border-b border-[var(--card-border)] text-[var(--text-500)] hover:text-teal-600 hover:bg-teal-50/40'
  }`}
  >
- <Icon size={13} />
+ <Icon size={tab === id ? 15 : 13} />
  <span className="hidden sm:inline">{label}</span>
+ <span className="inline sm:hidden text-[9px] leading-tight text-center max-w-[44px] truncate">{label}</span>
  </button>
  ))}
  </div>

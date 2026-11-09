@@ -155,9 +155,9 @@ export default function Layout({ children }) {
  </button>
 
  {/* Logo visible on small screens when sidebar is hidden */}
- <div className="lg:hidden flex items-center gap-2">
- <img src="/logo.png" alt="Project Aura" className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5" />
- <div className="flex flex-col">
+ <div className="lg:hidden flex items-center gap-1.5">
+ <img src="/logo.png" alt="Project Aura" className="w-7 h-7 rounded-lg object-contain bg-white/10 p-0.5 flex-shrink-0" />
+ <div className="hidden sm:flex flex-col">
  <span className="font-bold text-sm leading-none" style={{ color: '#ffffff' }}>Project Aura</span>
  <span className="text-[11px] uppercase tracking-wider font-semibold" style={{ color: '#D4A017' }}>Healthcare</span>
  </div>
@@ -249,7 +249,7 @@ export default function Layout({ children }) {
  align="end"
  trigger={
  <button
- className="flex items-center gap-1.5 px-1.5 sm:px-2 h-9 text-sm font-semibold hover:bg-white/20 rounded-lg transition-all flex-shrink-0"
+ className="flex items-center gap-1 px-1.5 h-9 text-sm font-semibold hover:bg-white/20 rounded-lg transition-all flex-shrink-0"
  style={{ color: '#ffffff' }}
  aria-label="Profile and settings menu"
  data-tip="Profile & settings"
@@ -261,8 +261,7 @@ export default function Layout({ children }) {
  showRing
  onClick={undefined}
  />
- <span className="hidden md:inline">{user?.full_name?.split(' ')[0] || 'User'}</span>
- <Settings size={14} strokeWidth={2.5} style={{ color: 'rgba(255,255,255,0.75)' }} />
+ <span className="hidden lg:inline">{user?.full_name?.split(' ')[0] || 'User'}</span>
  </button>
  }
  items={[
