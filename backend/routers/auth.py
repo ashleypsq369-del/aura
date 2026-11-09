@@ -189,7 +189,8 @@ async def login(request: Request, data: LoginRequest, db: Session = Depends(get_
     # If no prefs row exists yet (e.g. seeded demo accounts), treat as complete
     # so demo users don't get stuck in the onboarding loop.
     questionnaire_complete = prefs.questionnaire_complete if prefs else True
-    needs_questionnaire = (user.role in ["patient", "family"]) and not questionnaire_complete
+    questionnaire_skipped  = getattr(prefs, 'questionnaire_skipped', False) if prefs else False
+    needs_questionnaire = (user.role in ["patient", "family"]) and not questionnaire_complete and not questionnaire_skipped
 
     access_token = create_access_token(data={"sub": str(user.id), "role": user.role})
 

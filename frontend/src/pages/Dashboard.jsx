@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -126,9 +126,12 @@ export default function Dashboard() {
  }, [alerts]);
 
  useEffect(() => {
- if (user && navigator.onLine) prefetchForOffline();
+ if (user && navigator.onLine) {
+   // Use a ref flag so we only prefetch once per mount, not on every render
+   prefetchForOffline();
+ }
  // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [user?.id]); // use user.id so it only re-runs on actual user change, not re-renders
+ }, []); // run once on mount only
 
  useEffect(() => {
  const load = async () => {

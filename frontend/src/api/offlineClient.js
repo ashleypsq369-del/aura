@@ -284,11 +284,9 @@ export async function prefetchForOffline(patientId = null) {
       ]);
     }
     
-    toast.success('Offline data ready', { id: 'offline-prefetch', duration: 2500 });
-    
     console.log('✅ Prefetch complete');
   } catch (error) {
-    console.error('Prefetch failed:', error);
+    // non-fatal, silently ignore
   }
 }
 

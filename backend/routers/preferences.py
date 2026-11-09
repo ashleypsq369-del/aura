@@ -73,7 +73,7 @@ async def save_preferences(
     ALL_BOOL_COLS = {
         "has_dependants", "wants_spiritual_care", "wants_peer_connection",
         "wants_community", "ai_analysis_consent", "ai_data_sharing_consent",
-        "care_team_sharing", "questionnaire_complete",
+        "care_team_sharing", "questionnaire_complete", "questionnaire_skipped",
     }
     # All list columns → JSON string
     ALL_JSON_COLS = {
