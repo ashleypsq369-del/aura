@@ -977,7 +977,7 @@ export default function Services() {
 
               {/* Popular + slide dots - single line, no wrap */}
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:12, gap:10 }}>
-                <div style={{ display:'flex', alignItems:'center', gap:6, overflow:'hidden' }}>
+                <div style={{ display:'flex', alignItems:'center', gap:6, overflowX:'auto', overflowY:'visible', scrollbarWidth:'none', WebkitOverflowScrolling:'touch', flexShrink:1, minWidth:0 }}>
                   <span style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontWeight:600, flexShrink:0 }}>Popular:</span>
                   {['Palliative Nurse','Counsellor','Physiotherapist','Accra'].map(s => (
                     <button key={s} onClick={() => { setSearch(s); setPage(1); }}

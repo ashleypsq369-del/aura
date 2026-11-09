@@ -534,10 +534,10 @@ function DeepDivePanel({ patient, navigate, onClose }) {
 
  {/* -- Pill tab bar -- */}
  <div className="flex-shrink-0 px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50">
- <div className="flex gap-1 bg-[var(--card-bg)] rounded-xl p-1 shadow-sm border border-[var(--card-border)]/50">
+ <div className="flex gap-1 bg-[var(--card-bg)] rounded-xl p-1 shadow-sm border border-[var(--card-border)]/50 overflow-x-auto" style={{ scrollbarWidth:'none', WebkitOverflowScrolling:'touch' }}>
  {TABS.map(({ id, label, Icon: Ic }) => (
  <button key={id} onClick={() => setInnerTab(id)}
- className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+ className="flex-shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap"
  style={innerTab === id
  ? { background: '#0d9488', color: 'white', boxShadow: '0 2px 8px rgba(13,148,136,0.25)' }
  : { color: '#94a3b8' }}

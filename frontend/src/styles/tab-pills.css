@@ -1,0 +1,144 @@
+/**
+ * tab-pills.css
+ * Global fix for all horizontal scrolling tab/pill bars.
+ * Prevents text bleed, adds scroll affordance, snaps cleanly.
+ * Targets every overflow-x-auto flex container with buttons/pills.
+ */
+
+/* ── 1. All horizontal pill/tab scroll containers ────────────────────────── */
+/* Wraps the overflow container in a position:relative so we can add a fade */
+.pill-scroll-wrap {
+  position: relative;
+  overflow: hidden;    /* clips the fade pseudo-element */
+}
+
+/* Right fade — shows user there are more items */
+.pill-scroll-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 100%;
+  background: linear-gradient(to left, var(--card-bg, #fff) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Left fade — shows when scrolled right */
+.pill-scroll-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+  background: linear-gradient(to right, var(--card-bg, #fff) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;           /* hidden until JS adds .scrolled-left class */
+  transition: opacity 0.2s;
+}
+
+.pill-scroll-wrap.scrolled-left::before {
+  opacity: 1;
+}
+
+/* ── 2. The actual scrollable row ────────────────────────────────────────── */
+.pill-scroll-row {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;           /* hide scrollbar Firefox */
+  padding-bottom: 2px;             /* prevent bottom clip on shadow */
+  padding-right: 40px;             /* space for the fade gradient */
+  flex-wrap: nowrap;               /* NEVER wrap - always scroll */
+}
+
+.pill-scroll-row::-webkit-scrollbar {
+  display: none;                   /* hide scrollbar Chrome/Safari */
+}
+
+/* ── 3. Every pill/tab button inside ─────────────────────────────────────── */
+.pill-scroll-row > button,
+.pill-scroll-row > a,
+.pill-scroll-row > [role="tab"] {
+  flex-shrink: 0;          /* NEVER compress — this is THE key fix */
+  scroll-snap-align: start;
+  white-space: nowrap;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── 4. Global fix for ALL existing overflow-x-auto flex rows ───────────── */
+/* Catches all the existing tab bars without needing to add pill-scroll-row */
+.overflow-x-auto.flex > *,
+.overflow-x-auto > .flex > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Prevent text inside pills from ever wrapping or overflowing */
+.overflow-x-auto button,
+.overflow-x-auto [role="tab"] {
+  flex-shrink: 0;
+  white-space: nowrap;
+  max-width: none;     /* never truncate pill text */
+}
+
+/* ── 5. Specific fix for Services "Popular:" pills ───────────────────────── */
+/* These have overflow:hidden on the container which clips them */
+[style*="overflow: hidden"] > div > button,
+[style*="overflow:hidden"] > div > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── 6. Page-level tab bars (CommunityHub, Reports, etc.) ────────────────── */
+/* Add right padding so last tab isn't hidden under the fade */
+.flex.gap-1\.5.overflow-x-auto,
+.flex.gap-1.overflow-x-auto,
+.flex.gap-2.overflow-x-auto {
+  padding-right: 16px;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+}
+
+.flex.gap-1\.5.overflow-x-auto::-webkit-scrollbar,
+.flex.gap-1.overflow-x-auto::-webkit-scrollbar,
+.flex.gap-2.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── 7. Prevent the bubble/pill text from being cut by parent overflow ────── */
+/* The "bleed" the user described: parent clips the pill mid-character */
+.overflow-x-auto {
+  overflow-x: auto !important;   /* ensure it actually scrolls, never clips */
+  overflow-y: visible;
+}
+
+/* ── 8. Assessment form score buttons (0-10 row) ────────────────────────── */
+/* WellnessCheckin ScoreButton row: 11 circles that overflow on small screens */
+.flex.items-center.justify-between.gap-1.overflow-x-auto {
+  justify-content: flex-start !important;  /* don't space-between when scrolling */
+  gap: 4px !important;
+}
+
+.flex.items-center.justify-between.gap-1.overflow-x-auto > button {
+  flex-shrink: 0;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+/* ── 9. Dark mode — fade uses dark background ────────────────────────────── */
+html.dark .pill-scroll-wrap::after {
+  background: linear-gradient(to left, var(--card-bg, #1e293b) 0%, transparent 100%);
+}
+
+html.dark .pill-scroll-wrap::before {
+  background: linear-gradient(to right, var(--card-bg, #1e293b) 0%, transparent 100%);
+}
