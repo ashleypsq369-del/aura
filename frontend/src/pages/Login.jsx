@@ -57,7 +57,10 @@ export default function Login() {
       const savedUserStr = localStorage.getItem('user');
       if (savedUserStr) {
         const u = JSON.parse(savedUserStr);
-        if (u.needs_questionnaire && !u.questionnaire_skipped) {
+        // Check a durable skip flag that survives backend user-object overwrites
+        const skipped = localStorage.getItem('questionnaire_skipped') === 'true';
+        const needsQ  = u.needs_questionnaire && !skipped;
+        if (needsQ) {
           navigate('/setup');
         } else {
           // Role-based landing pages

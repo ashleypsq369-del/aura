@@ -1145,6 +1145,8 @@ export default function PersonalisationQuest() {
  const user = JSON.parse(localStorage.getItem('user') || '{}');
  const updated = { ...user, needs_questionnaire: false };
  localStorage.setItem('user', JSON.stringify(updated));
+ // Durable skip flag -- survives future backend user-object overwrites on login
+ localStorage.setItem('questionnaire_skipped', 'true');
 
  // ── Immediately apply questionnaire answers to app settings ──────────
  // Language

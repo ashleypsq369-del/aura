@@ -27,8 +27,10 @@ export default function Welcome() {
   }, [user, token, navigate]);
 
   const activateAndGo = async (dest, skipQuestionnaire = false) => {
-    // If skipping, mark in the API so Dashboard doesn't redirect back to /setup
+    // Patch the user object AND write a durable skip key that survives
+    // future login responses overwriting the user object in localStorage.
     if (skipQuestionnaire) {
+      localStorage.setItem('questionnaire_skipped', 'true');
       try {
         await fetch(`${import.meta.env.VITE_API_URL || ''}/api/preferences/my`, {
           method: 'PUT',
@@ -37,10 +39,13 @@ export default function Welcome() {
         });
       } catch (_) { /* non-fatal */ }
     }
+    const patchedUser = skipQuestionnaire
+      ? { ...user, needs_questionnaire: false, questionnaire_skipped: true }
+      : user;
     localStorage.setItem('auth_token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(patchedUser));
     localStorage.removeItem('pending_user');
-    setUser(user);
+    setUser(patchedUser);
     navigate(dest, { replace: true });
   };
 

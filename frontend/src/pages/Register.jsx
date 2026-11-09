@@ -709,7 +709,7 @@ export default function Register() {
  {/* == Terms == */}
  <label className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors bg-slate-50/80 ${terms ? 'border-teal-400 bg-teal-50/60' : 'border-[var(--card-border)] hover:border-teal-300'}`}>
  <input type="checkbox" checked={terms} onChange={e => { setTerms(e.target.checked); setServerErr(''); }}
- className="mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer"/>
+ className={`mt-0.5 w-4 h-4 flex-shrink-0 rounded accent-teal-600 cursor-pointer ${terms ? 'hidden' : ''}`}/>
  <p className="text-xs text-[var(--text-600)] leading-relaxed">
  {terms ? (
    <span className="flex items-center gap-1.5 text-teal-700 font-semibold">
