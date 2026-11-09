@@ -196,21 +196,21 @@ export default function Layout({ children }) {
  </nav>
  </div>
 
- {/* User Section - Right Side - sm sizes hidden on xs to prevent overflow */}
+ {/* User Section - Right Side */}
  <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
- {/* Dark mode quick toggle - hidden on xs */}
+ {/* Dark mode quick toggle */}
  <button
  onClick={() => updateTheme(isDark ? 'light' : 'dark')}
- className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
+ className="flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
  aria-label="Toggle dark mode"
  >
  {isDark ? <Sun size={16} className="text-yellow-300" /> : <Moon size={16} className="text-white/80" />}
  </button>
 
- {/* Aura Companion - hidden on xs */}
+ {/* Aura Companion */}
  <button
  onClick={() => window.dispatchEvent(new CustomEvent('aura:open'))}
- className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
+ className="flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
  aria-label="Open Aura care companion"
  title="Aura - Care Companion"
  >
@@ -232,7 +232,7 @@ export default function Layout({ children }) {
  {/* Notification Center */}
  <NotificationCenter />
 
- {/* Task status pill - sits neatly between notifications and alerts */}
+ {/* Task status pill - hidden on xs to save space */}
  {user && (
  <div className="hidden sm:flex items-center">
  <TaskStatusBar compact />
