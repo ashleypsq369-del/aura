@@ -26,8 +26,17 @@ export default function Welcome() {
     }
   }, [user, token, navigate]);
 
-  const activateAndGo = (dest) => {
-    // Now it's safe to call setUser — we're already on the right page
+  const activateAndGo = async (dest, skipQuestionnaire = false) => {
+    // If skipping, mark in the API so Dashboard doesn't redirect back to /setup
+    if (skipQuestionnaire) {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || ''}/api/preferences/my`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ questionnaire_complete: true, questionnaire_skipped: true }),
+        });
+      } catch (_) { /* non-fatal */ }
+    }
     localStorage.setItem('auth_token', token);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.removeItem('pending_user');
@@ -35,13 +44,13 @@ export default function Welcome() {
     navigate(dest, { replace: true });
   };
 
-  const handlePersonalise = () => activateAndGo('/setup');
+  const handlePersonalise = () => activateAndGo('/setup', false);
 
   const handleSkip = () => {
     const dest = user?.role === 'patient' ? '/my-space'
       : user?.role === 'family'   ? '/dashboard'
       : '/dashboard';
-    activateAndGo(dest);
+    activateAndGo(dest, true);
   };
 
   if (!user) return null;
