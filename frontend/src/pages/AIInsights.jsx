@@ -845,32 +845,36 @@ export default function AIInsights() {
     onError: ()=>toast.error('Scan failed'),
   });
 
+  /* Only show patients who have actual ML risk data.
+     Start from riskMap (ML-scored patients), enrich with base demographics. */
   const allPatients = useMemo(()=>{
     const riskMap={};
     (batchRisk?.patients||[]).forEach(p=>{ const pid=p.id||p.patient_id; if(pid) riskMap[pid]=p; });
     (sysData?.high_risk_patients||[]).forEach(p=>{ const pid=p.id||p.patient_id; if(pid&&!riskMap[pid]) riskMap[pid]=p; });
-    const base=Array.isArray(patientsBase)?patientsBase:[];
-    const merged={};
-    base.forEach(p=>{
-      const pid=p.id; if(!pid) return;
-      const risk=riskMap[pid]||{};
-      merged[pid]={
-        ...p,
-        risk_level:   risk.risk_level||risk.overall_level||p.risk_level||'unknown',
-        overall_risk: risk.overall_risk??risk.risk_score??p.risk_score??0,
-        top_concern:  risk.top_concern||p.top_concern||null,
-        key_concerns: risk.key_concerns||[],
-        tasks:        risk.tasks||null,
-      };
-    });
-    Object.values(riskMap).forEach(p=>{
-      const pid=p.id||p.patient_id;
-      if(!pid||merged[pid]) return;
-      merged[pid]={ ...p, id:pid, full_name:p.full_name||p.patient_name||'Unknown',
-        risk_level:p.risk_level||p.overall_level||'unknown',
-        overall_risk:p.overall_risk??p.risk_score??0 };
-    });
-    return Object.values(merged).sort((a,b)=>(b.overall_risk||0)-(a.overall_risk||0));
+
+    // Build a lookup of base patient demographics for enrichment only
+    const baseMap={};
+    (Array.isArray(patientsBase)?patientsBase:[]).forEach(p=>{ if(p.id) baseMap[p.id]=p; });
+
+    // Start from ML-scored patients only — no ML entry = not shown
+    return Object.values(riskMap)
+      .map(p=>{
+        const pid=p.id||p.patient_id;
+        const demo=baseMap[pid]||{};
+        return {
+          ...demo,          // demographics first (age, gender, care_setting, diagnosis)
+          ...p,             // ML data overlays (risk_level, overall_risk, top_concern, tasks)
+          id: pid,
+          full_name:    demo.full_name    || p.full_name    || p.patient_name || 'Unknown',
+          risk_level:   p.risk_level      || p.overall_level || 'unknown',
+          overall_risk: p.overall_risk    ?? p.risk_score   ?? 0,
+          top_concern:  p.top_concern     || demo.top_concern || null,
+          key_concerns: p.key_concerns    || [],
+          tasks:        p.tasks           || null,
+        };
+      })
+      .filter(p=>p.overall_risk>0 || ['critical','high','moderate'].includes((p.risk_level||'').toLowerCase()))
+      .sort((a,b)=>(b.overall_risk||0)-(a.overall_risk||0));
   }, [patientsBase, batchRisk, sysData]);
 
   const visiblePatients = useMemo(()=>{

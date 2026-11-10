@@ -60,11 +60,15 @@ function AlertRow({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading,
   const TypeIcon = ikey ? TypeIconMap[ikey] : cfg.Icon;
 
   return (
-    <tr
+    <motion.tr
+      layout
+      initial={{ opacity:0, y:-6 }}
+      animate={{ opacity:1, y:0 }}
+      exit={{ opacity:0, x:40, transition:{ duration:0.22 } }}
+      transition={{ duration:0.18 }}
       style={{
         background: index%2===0 ? 'var(--card-bg)' : 'var(--page-bg)',
         borderBottom: '1px solid var(--card-border)',
-        transition: 'background 0.1s',
       }}
       onMouseEnter={e=>(e.currentTarget.style.background='color-mix(in srgb,#0d9488 4%,var(--card-bg))')}
       onMouseLeave={e=>(e.currentTarget.style.background=index%2===0?'var(--card-bg)':'var(--page-bg)')}
@@ -151,7 +155,7 @@ function AlertRow({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading,
           </button>
         </div>
       </td>
-    </tr>
+    </motion.tr>
   );
 }
 
@@ -239,17 +243,19 @@ function AlertsTable({ alerts, mlBatch, onAck, pendingAck, onExplain, explainLoa
           </tr>
         </thead>
         <tbody>
-          {alerts.map((a,i) => resolved
-            ? <ResolvedRow key={a.id} alert={a} onNavigate={onNavigate} index={i}/>
-            : (
-              <AlertRow key={a.id} alert={a} index={i}
-                mlRisk={getML(a.patient_id)}
-                onAck={onAck} ackPending={pendingAck===a.id}
-                onExplain={onExplain} explainLoading={explainLoading}
-                onNavigate={onNavigate}
-              />
-            )
-          )}
+          <AnimatePresence mode="popLayout">
+            {alerts.map((a,i) => resolved
+              ? <ResolvedRow key={a.id} alert={a} onNavigate={onNavigate} index={i}/>
+              : (
+                <AlertRow key={a.id} alert={a} index={i}
+                  mlRisk={getML(a.patient_id)}
+                  onAck={onAck} ackPending={pendingAck===a.id}
+                  onExplain={onExplain} explainLoading={explainLoading}
+                  onNavigate={onNavigate}
+                />
+              )
+            )}
+          </AnimatePresence>
         </tbody>
       </table>
     </div>
@@ -294,14 +300,27 @@ export default function Alerts() {
 
   const ackMutation = useMutation({
     mutationFn: id => apiClient.put(`/api/alerts/${id}/acknowledge`),
-    onMutate:   id  => setPendingAck(id),
-    onSuccess:  ()  => {
-      queryClient.invalidateQueries(['alerts']);
-      queryClient.invalidateQueries(['alerts-unread-count']);
+    onMutate: id => {
+      setPendingAck(id);
+      // Optimistic: immediately mark as acknowledged in cache so row disappears instantly
+      queryClient.setQueryData(['alerts'], old =>
+        old?.map(a => a.id === id
+          ? { ...a, is_acknowledged:true, acknowledged:true }
+          : a)
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey:['alerts'] });
+      queryClient.invalidateQueries({ queryKey:['alerts-unread-count'] });
       setPendingAck(null);
       clinicalToast.success('Alert resolved');
     },
-    onError: () => { setPendingAck(null); clinicalToast.error('Could not resolve alert'); },
+    onError: (_, id) => {
+      // Rollback optimistic change on failure
+      queryClient.invalidateQueries({ queryKey:['alerts'] });
+      setPendingAck(null);
+      clinicalToast.error('Could not resolve alert');
+    },
   });
 
   const explainAlert = async (alert) => {
@@ -317,10 +336,10 @@ export default function Alerts() {
   };
 
   const kpi = useMemo(() => ({
-    critical: rawAlerts?.filter(a=>a.severity==='critical'&&!a.is_acknowledged).length||0,
-    high:     rawAlerts?.filter(a=>a.severity==='high'&&!a.is_acknowledged).length||0,
-    active:   rawAlerts?.filter(a=>!a.is_acknowledged).length||0,
-    resolved: rawAlerts?.filter(a=>a.is_acknowledged&&a.acknowledged_at&&
+    critical: rawAlerts?.filter(a=>a.severity==='critical'&&!a.acknowledged).length||0,
+    high:     rawAlerts?.filter(a=>a.severity==='high'&&!a.acknowledged).length||0,
+    active:   rawAlerts?.filter(a=>!a.acknowledged).length||0,
+    resolved: rawAlerts?.filter(a=>a.acknowledged&&a.acknowledged_at&&
       new Date(a.acknowledged_at).toDateString()===new Date().toDateString()).length||0,
   }), [rawAlerts]);
 
@@ -334,8 +353,8 @@ export default function Alerts() {
     });
     const sort = arr=>[...arr].sort((a,b)=>(sevOrd[a.severity]??4)-(sevOrd[b.severity]??4)||new Date(b.created_at)-new Date(a.created_at));
     return {
-      activeAlerts: sort(base.filter(a=>!a.is_acknowledged)),
-      ackedAlerts:  [...base.filter(a=>a.is_acknowledged)].sort((a,b)=>new Date(b.acknowledged_at||b.created_at)-new Date(a.acknowledged_at||a.created_at)),
+      activeAlerts: sort(base.filter(a=>!a.acknowledged)),
+      ackedAlerts:  [...base.filter(a=>a.acknowledged)].sort((a,b)=>new Date(b.acknowledged_at||b.created_at)-new Date(a.acknowledged_at||a.created_at)),
     };
   }, [rawAlerts, searchTerm, filterSeverity]);
 
