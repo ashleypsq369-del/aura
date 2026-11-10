@@ -144,19 +144,22 @@ function DetailOverlay({ patient, onClose }) {
           WebkitBackdropFilter:'blur(4px)',
         }}/>
 
-      {/* Drawer — slides in from the right */}
+      {/* Drawer — slides in from the right as a floating rounded card */}
       <motion.div key="ai-card"
-        initial={{ x:'100%' }}
-        animate={{ x:0 }}
-        exit   ={{ x:'100%' }}
-        transition={{ type:'spring', damping:32, stiffness:320 }}
+        initial={{ x:'calc(100% + 24px)', opacity:0 }}
+        animate={{ x:0, opacity:1 }}
+        exit   ={{ x:'calc(100% + 24px)', opacity:0 }}
+        transition={{ type:'spring', damping:30, stiffness:300 }}
         onClick={e=>e.stopPropagation()}
         style={{
-          position:'fixed', right:0, top:0, bottom:0, zIndex:9401,
-          width:'min(520px, 92vw)',
+          position:'fixed',
+          right:16, top:16, bottom:16,
+          zIndex:9401,
+          width:'min(480px, calc(100vw - 32px))',
           background:'#ffffff',
-          borderLeft:'1px solid #e2e8f0',
-          boxShadow:'-8px 0 40px rgba(0,0,0,0.12)',
+          borderRadius:16,
+          border:'1px solid #e2e8f0',
+          boxShadow:'0 8px 48px rgba(0,0,0,0.16), 0 2px 12px rgba(0,0,0,0.08)',
           display:'flex', flexDirection:'column',
           fontFamily:"'Inter','system-ui',sans-serif",
           overflow:'hidden',
