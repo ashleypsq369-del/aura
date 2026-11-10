@@ -156,111 +156,118 @@ function DetailOverlay({ patient, onClose }) {
           right:16, top:16, bottom:16,
           zIndex:9401,
           width:'min(480px, calc(100vw - 32px))',
-          background:'#ffffff',
+          background:'var(--card-bg)',
           borderRadius:16,
-          border:'1px solid #e2e8f0',
+          border:'1px solid var(--card-border)',
           boxShadow:'0 8px 48px rgba(0,0,0,0.16), 0 2px 12px rgba(0,0,0,0.08)',
           display:'flex', flexDirection:'column',
           fontFamily:"'Inter','system-ui',sans-serif",
           overflow:'hidden',
         }}
       >
-          {/* ── Modal header ── */}
-          <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid #f1f5f9', flexShrink:0 }}>
-            <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:12 }}>
-              {/* Patient identity */}
-              <div style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
-                <div style={{ width:42, height:42, borderRadius:10, flexShrink:0,
-                  background:cfg.avatarBg, display:'flex', alignItems:'center', justifyContent:'center',
-                  color:'#fff', fontWeight:800, fontSize:14 }}>
-                  {initials(name)}
-                </div>
-                <div style={{ minWidth:0 }}>
-                  <p style={{ margin:'0 0 2px', fontSize:15, fontWeight:700, color:'#0f172a' }}>{name}</p>
-                  <p style={{ margin:0, fontSize:12, color:'#64748b' }}>
-                    {[patient.patient_code, patient.primary_diagnosis?.split('(')[0]?.trim()].filter(Boolean).join(' · ')}
-                  </p>
-                  <p style={{ margin:0, fontSize:11, color:'#94a3b8' }}>
-                    {[patient.age&&`${patient.age}y`, patient.gender, patient.care_setting].filter(Boolean).join(' · ')}
-                  </p>
-                </div>
+          {/* ── Header: single compact row ── */}
+          <div style={{ padding:'12px 16px 0', borderBottom:'1px solid var(--card-border)', flexShrink:0 }}>
+
+            {/* Row 1: avatar · name+meta · risk% · toggle · close */}
+            <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+              {/* Avatar */}
+              <div style={{ width:38, height:38, borderRadius:10, flexShrink:0,
+                background:cfg.avatarBg, display:'flex', alignItems:'center', justifyContent:'center',
+                color:'#fff', fontWeight:800, fontSize:13 }}>
+                {initials(name)}
               </div>
-              {/* Risk + controls */}
-              <div style={{ display:'flex', alignItems:'flex-start', gap:10, flexShrink:0 }}>
-                <div style={{ textAlign:'right' }}>
-                  <p style={{ margin:'0 0 2px', fontSize:20, fontWeight:900, color:cfg.color, lineHeight:1 }}>{riskPct}%</p>
-                  <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99,
-                    background:cfg.pill, color:cfg.text, letterSpacing:'0.04em', textTransform:'uppercase' }}>
-                    {cfg.label}
-                  </span>
-                </div>
-                {/* Focused / Comprehensive toggle */}
-                <div style={{ display:'flex', borderRadius:7, border:'1px solid #e2e8f0', overflow:'hidden' }}>
-                  {['focused','comprehensive'].map(v=>(
-                    <button key={v} onClick={()=>setView(v)} style={{
-                      padding:'4px 10px', fontSize:11, fontWeight:600, border:'none', cursor:'pointer',
-                      background:view===v?'#0d9488':'transparent',
-                      color:view===v?'#fff':'#64748b', transition:'all 0.15s',
-                    }}>
-                      {v.charAt(0).toUpperCase()+v.slice(1)}
-                    </button>
-                  ))}
-                </div>
-                <button onClick={onClose}
-                  style={{ width:28, height:28, borderRadius:'50%', background:'#f1f5f9',
-                    border:'none', cursor:'pointer', display:'flex', alignItems:'center',
-                    justifyContent:'center', color:'#64748b', flexShrink:0 }}>
-                  <X size={14}/>
-                </button>
+
+              {/* Name + meta — grows */}
+              <div style={{ flex:1, minWidth:0 }}>
+                <p style={{ margin:0, fontSize:14, fontWeight:700, color:'var(--text-900)',
+                  overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{name}</p>
+                <p style={{ margin:0, fontSize:11, color:'var(--text-400)',
+                  overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                  {[patient.patient_code, patient.primary_diagnosis?.split('(')[0]?.trim(),
+                    patient.age&&`${patient.age}y`, patient.gender].filter(Boolean).join(' · ')}
+                </p>
               </div>
+
+              {/* Risk% + badge */}
+              <div style={{ flexShrink:0, textAlign:'center' }}>
+                <p style={{ margin:'0 0 2px', fontSize:18, fontWeight:900, color:cfg.color, lineHeight:1 }}>{riskPct}%</p>
+                <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99,
+                  background:cfg.pill, color:cfg.text, letterSpacing:'0.04em', textTransform:'uppercase' }}>
+                  {cfg.label}
+                </span>
+              </div>
+
+              {/* Close */}
+              <button onClick={onClose}
+                style={{ width:28, height:28, borderRadius:'50%', background:'var(--page-bg)',
+                  border:'1px solid var(--card-border)', cursor:'pointer', display:'flex',
+                  alignItems:'center', justifyContent:'center', color:'var(--text-400)', flexShrink:0 }}>
+                <X size={13}/>
+              </button>
             </div>
 
-            {/* Info row */}
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', borderTop:'1px solid #f1f5f9',
-              borderBottom:'1px solid #f1f5f9', margin:'10px -18px 0', padding:'8px 18px', gap:4 }}>
+            {/* Row 2: info strip */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)',
+              borderTop:'1px solid var(--card-border)', margin:'0 -16px',
+              padding:'8px 16px', gap:4, background:'var(--page-bg)' }}>
               {[
-                { label:'RISK LEVEL', value:cfg.label, color:cfg.color },
-                { label:'AI SCORE',   value:`${riskPct}%`, color:cfg.color },
-                { label:'DRUG FLAGS', value:interactions.length,
-                  color:severeInts.length>0?'#dc2626':'#0d9488' },
-                { label:'DOMAINS',    value:domains.length, color:'#0d9488' },
+                { label:'RISK LEVEL', value:cfg.label,              color:cfg.color },
+                { label:'AI SCORE',   value:`${riskPct}%`,          color:cfg.color },
+                { label:'DRUG FLAGS', value:interactions.length,    color:severeInts.length>0?'#dc2626':'#0d9488' },
+                { label:'DOMAINS',    value:domains.length,         color:'#0d9488' },
               ].map(it=>(
                 <div key={it.label}>
-                  <p style={{ margin:'0 0 1px', fontSize:10, fontWeight:600, color:'#94a3b8', letterSpacing:'0.06em' }}>{it.label}</p>
-                  <p style={{ margin:0, fontSize:14, fontWeight:700, color:it.color||'#0f172a' }}>{it.value}</p>
+                  <p style={{ margin:'0 0 1px', fontSize:9, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.07em' }}>{it.label}</p>
+                  <p style={{ margin:0, fontSize:14, fontWeight:700, color:it.color }}>{it.value}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* ── Tab bar ── */}
-          <div style={{ display:'flex', borderBottom:'1px solid #f1f5f9', flexShrink:0 }}>
+          {/* ── Tab bar + Focused/Comprehensive toggle (only on AI tab) ── */}
+          <div style={{ display:'flex', alignItems:'center', borderBottom:'1px solid var(--card-border)',
+            flexShrink:0, padding:'0 16px', gap:0 }}>
             {TABS.map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)} style={{
                 flex:1, padding:'9px 4px', fontSize:12, fontWeight:tab===t.id?700:500,
-                color:tab===t.id?'#0d9488':'#64748b', background:'transparent', border:'none',
+                color:tab===t.id?'#0d9488':'var(--text-400)', background:'transparent', border:'none',
                 borderBottom:tab===t.id?'2px solid #0d9488':'2px solid transparent',
                 cursor:'pointer', transition:'all 0.15s',
               }}>{t.label}</button>
             ))}
+            {/* Focused / Comprehensive — only visible on AI Explanation tab */}
+            {tab==='ai' && (
+              <div style={{ display:'flex', borderRadius:7, border:'1px solid var(--card-border)',
+                overflow:'hidden', flexShrink:0, marginLeft:8 }}>
+                {['focused','comprehensive'].map(v=>(
+                  <button key={v} onClick={()=>setView(v)} style={{
+                    padding:'4px 9px', fontSize:10, fontWeight:600, border:'none', cursor:'pointer',
+                    background:view===v?'#0d9488':'var(--card-bg)',
+                    color:view===v?'#fff':'var(--text-400)',
+                    transition:'all 0.15s', whiteSpace:'nowrap',
+                  }}>
+                    {v==='focused'?'Focused':'Full'}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Scrollable body ── */}
-          <div style={{ flex:1, overflowY:'auto', padding:18, display:'flex', flexDirection:'column', gap:14 }}>
+          <div style={{ flex:1, overflowY:'auto', padding:16, display:'flex', flexDirection:'column', gap:12 }}>
             {isLoading ? (
               <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'40px 0', gap:10 }}>
                 <Loader2 size={22} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
-                <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>Running AI analysis…</p>
+                <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>Running AI analysis…</p>
               </div>
             ) : (
               <>
                 {/* ── SUMMARY tab ── */}
                 {tab==='summary' && (
                   <>
-                    {/* Severe drug alert */}
                     {severeInts.length>0 && (
                       <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 12px',
-                        background:'#fef2f2', borderRadius:8, border:'1px solid #fca5a5' }}>
+                        background:'rgba(220,38,38,0.08)', borderRadius:8, border:'1px solid rgba(220,38,38,0.25)' }}>
                         <AlertTriangle size={13} style={{ color:'#dc2626', flexShrink:0 }}/>
                         <p style={{ margin:0, fontSize:12, fontWeight:600, color:'#dc2626' }}>
                           {severeInts.length} severe drug interaction{severeInts.length>1?'s':''} — review before administering
@@ -268,50 +275,47 @@ function DetailOverlay({ patient, onClose }) {
                       </div>
                     )}
 
-                    {/* AI confidence */}
                     {confidence!=null && (
                       <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <span style={{ fontSize:12, color:'#64748b', flexShrink:0 }}>AI confidence</span>
-                        <div style={{ flex:1, height:5, background:'#e2e8f0', borderRadius:99, overflow:'hidden' }}>
+                        <span style={{ fontSize:12, color:'var(--text-500)', flexShrink:0 }}>AI confidence</span>
+                        <div style={{ flex:1, height:5, background:'var(--card-border)', borderRadius:99, overflow:'hidden' }}>
                           <motion.div initial={{ width:0 }} animate={{ width:`${Math.round(confidence*100)}%` }}
                             transition={{ duration:0.8, ease:'easeOut' }}
                             style={{ height:'100%', background:'#0d9488', borderRadius:99 }}/>
                         </div>
-                        <span style={{ fontSize:13, fontWeight:700, color:'#0f172a', flexShrink:0 }}>
+                        <span style={{ fontSize:13, fontWeight:700, color:'var(--text-900)', flexShrink:0 }}>
                           {Math.round(confidence*100)}%
                         </span>
                       </div>
                     )}
 
-                    {/* Clinical concerns */}
                     {mlRisk?.key_concerns?.length>0 && (
                       <div>
-                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>CLINICAL CONCERNS</p>
-                        <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                        <p style={{ margin:'0 0 8px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>CLINICAL CONCERNS</p>
+                        <div style={{ display:'flex', flexDirection:'column' }}>
                           {mlRisk.key_concerns.slice(0,5).map((c,i)=>(
-                            <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'7px 0',
-                              borderBottom:i<Math.min(mlRisk.key_concerns.length,5)-1?'1px solid #f8fafc':'none' }}>
-                              <span style={{ fontSize:12, fontWeight:600, color:'#f59e0b', flexShrink:0, minWidth:16 }}>{i+1}.</span>
-                              <p style={{ margin:0, fontSize:13, color:'#1e293b', lineHeight:1.55 }}>{c}</p>
+                            <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'6px 0',
+                              borderBottom:i<Math.min(mlRisk.key_concerns.length,5)-1?'1px solid var(--card-border)':'none' }}>
+                              <span style={{ fontSize:12, fontWeight:700, color:'#f59e0b', flexShrink:0, minWidth:16 }}>{i+1}.</span>
+                              <p style={{ margin:0, fontSize:12, color:'var(--text-700)', lineHeight:1.55 }}>{c}</p>
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
 
-                    {/* Recommended actions */}
                     {mlRisk?.recommended_actions?.length>0 && (
                       <div>
-                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>RECOMMENDED ACTIONS</p>
-                        <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                        <p style={{ margin:'0 0 8px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>RECOMMENDED ACTIONS</p>
+                        <div style={{ display:'flex', flexDirection:'column' }}>
                           {mlRisk.recommended_actions.slice(0,5).map((a,i)=>{
                             const urgent = /urgent|immediate|critical/i.test(a);
                             return (
-                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'7px 0',
-                                borderBottom:i<Math.min(mlRisk.recommended_actions.length,5)-1?'1px solid #f8fafc':'none' }}>
-                                <span style={{ fontSize:12, fontWeight:600, color:'#94a3b8', flexShrink:0, minWidth:16 }}>{i+1}</span>
-                                <p style={{ margin:0, fontSize:13, color:'#1e293b', lineHeight:1.55, flex:1, fontWeight:urgent?700:400 }}>{a}</p>
-                                {urgent && <span style={{ fontSize:11, fontWeight:700, color:'#dc2626', flexShrink:0 }}>URGENT</span>}
+                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'6px 0',
+                                borderBottom:i<Math.min(mlRisk.recommended_actions.length,5)-1?'1px solid var(--card-border)':'none' }}>
+                                <span style={{ fontSize:12, fontWeight:600, color:'var(--text-400)', flexShrink:0, minWidth:16 }}>{i+1}</span>
+                                <p style={{ margin:0, fontSize:12, color:'var(--text-700)', lineHeight:1.55, flex:1, fontWeight:urgent?700:400 }}>{a}</p>
+                                {urgent && <span style={{ fontSize:10, fontWeight:700, color:'#dc2626', flexShrink:0 }}>URGENT</span>}
                               </div>
                             );
                           })}
@@ -319,38 +323,36 @@ function DetailOverlay({ patient, onClose }) {
                       </div>
                     )}
 
-                    {/* Drug interactions */}
                     {interactions.length>0 && (
                       <div>
-                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>
+                        <p style={{ margin:'0 0 8px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>
                           MEDICATION INTERACTIONS
-                          <span style={{ marginLeft:8, fontSize:11, fontWeight:700, padding:'1px 7px',
-                            borderRadius:99, background:'#fee2e2', color:'#dc2626' }}>
+                          <span style={{ marginLeft:8, fontSize:10, fontWeight:700, padding:'1px 7px',
+                            borderRadius:99, background:'rgba(220,38,38,0.1)', color:'#dc2626' }}>
                             {interactions.length}
                           </span>
                         </p>
-                        <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                        <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
                           {interactions.slice(0,5).map((it,i)=>{
                             const sev=['severe','SEVERE','major'].includes(it.severity);
                             const { d1, d2 } = drugPair(it);
                             return (
-                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10,
-                                padding:'8px 12px', borderRadius:8,
-                                background:sev?'#fef2f2':'#fffbeb',
-                                border:`1px solid ${sev?'#fca5a5':'#fde68a'}` }}>
-                                <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99,
+                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:9, padding:'8px 10px',
+                                borderRadius:8, background:sev?'rgba(220,38,38,0.07)':'rgba(245,158,11,0.07)',
+                                border:`1px solid ${sev?'rgba(220,38,38,0.2)':'rgba(245,158,11,0.2)'}` }}>
+                                <span style={{ fontSize:10, fontWeight:700, padding:'2px 6px', borderRadius:99,
                                   background:sev?'#dc2626':'#f59e0b', color:'#fff', flexShrink:0, alignSelf:'flex-start' }}>
                                   {it.severity?.toUpperCase()}
                                 </span>
                                 <div style={{ minWidth:0 }}>
                                   {d1&&d2
-                                    ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'#1e293b' }}>{d1} + {d2}</p>
+                                    ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'var(--text-800)' }}>{d1} + {d2}</p>
                                     : d1
-                                      ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'#1e293b' }}>{d1}</p>
-                                      : <p style={{ margin:'0 0 2px', fontSize:12, color:'#94a3b8', fontStyle:'italic' }}>Drug details pending</p>
+                                      ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'var(--text-800)' }}>{d1}</p>
+                                      : <p style={{ margin:'0 0 2px', fontSize:12, color:'var(--text-400)', fontStyle:'italic' }}>Drug details pending</p>
                                   }
                                   {it.description && (
-                                    <p style={{ margin:0, fontSize:11, color:'#64748b', lineHeight:1.5 }}>{it.description}</p>
+                                    <p style={{ margin:0, fontSize:11, color:'var(--text-500)', lineHeight:1.5 }}>{it.description}</p>
                                   )}
                                 </div>
                               </div>
@@ -360,14 +362,14 @@ function DetailOverlay({ patient, onClose }) {
                       </div>
                     )}
 
-                    {/* No concerns fallback */}
                     {!mlRisk?.key_concerns?.length && !mlRisk?.recommended_actions?.length && (
                       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                         padding:'32px 24px', gap:8, textAlign:'center',
-                        background:'linear-gradient(135deg,#f0fdf490,#dcfce790)', borderRadius:10, border:'1px solid #bbf7d0' }}>
-                        <CheckCircle size={28} style={{ color:'#16a34a', opacity:0.7 }}/>
-                        <p style={{ margin:0, fontWeight:700, fontSize:14, color:'#15803d' }}>No critical concerns</p>
-                        <p style={{ margin:0, fontSize:12, color:'#16a34a' }}>Patient indicators are within acceptable ranges.</p>
+                        background:'rgba(13,148,136,0.06)', borderRadius:10,
+                        border:'1px solid rgba(13,148,136,0.2)' }}>
+                        <CheckCircle size={28} style={{ color:'#0d9488', opacity:0.7 }}/>
+                        <p style={{ margin:0, fontWeight:700, fontSize:14, color:'#0d9488' }}>No critical concerns</p>
+                        <p style={{ margin:0, fontSize:12, color:'var(--text-500)' }}>Patient indicators are within acceptable ranges.</p>
                       </div>
                     )}
                   </>
@@ -377,28 +379,27 @@ function DetailOverlay({ patient, onClose }) {
                 {tab==='ai' && (
                   <>
                     {view==='focused' ? (
-                      /* Focused: top concerns driving the score */
                       <>
                         {shapFeatures?.length>0 ? (
                           <div>
-                            <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>
+                            <p style={{ margin:'0 0 8px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>
                               {mlRisk?.tasks?.[Object.keys(mlRisk.tasks)[0]]?.shap_available
                                 ? 'SHAP — FACTORS DRIVING THIS RISK SCORE'
                                 : 'CLINICAL FEATURE IMPORTANCE'}
                             </p>
-                            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                            <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
                               {shapFeatures.slice(0,5).map((f,i)=>{
                                 const isRisk = f.impact==='increases_risk'||f.shap_value>0;
                                 const col    = isRisk?'#dc2626':'#0d9488';
                                 return (
                                   <div key={i} style={{ display:'flex', alignItems:'center', gap:10 }}>
-                                    <span style={{ fontSize:11, color:'#94a3b8', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
-                                    <span style={{ fontSize:12, color:'#334155', flex:1, minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</span>
-                                    <div style={{ width:80, height:5, background:'#e2e8f0', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
+                                    <span style={{ fontSize:10, color:'var(--text-400)', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
+                                    <span style={{ fontSize:12, color:'var(--text-700)', flex:1, minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</span>
+                                    <div style={{ width:72, height:5, background:'var(--card-border)', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
                                       <div style={{ height:'100%', width:`${Math.round((f.pct/Math.max(...shapFeatures.map(x=>x.pct),1))*100)}%`, background:col, borderRadius:99 }}/>
                                     </div>
-                                    <span style={{ fontSize:11, fontWeight:700, color:col, width:60, textAlign:'right', flexShrink:0 }}>
-                                      {isRisk?'Raises':'Lowers'} risk
+                                    <span style={{ fontSize:10, fontWeight:700, color:col, width:52, textAlign:'right', flexShrink:0 }}>
+                                      {isRisk?'Raises':'Lowers'}
                                     </span>
                                   </div>
                                 );
@@ -408,17 +409,16 @@ function DetailOverlay({ patient, onClose }) {
                         ) : (
                           <div style={{ textAlign:'center', padding:'32px 24px' }}>
                             <CheckCircle size={28} style={{ color:'#0d9488', opacity:0.5, margin:'0 auto 8px' }}/>
-                            <p style={{ fontWeight:600, color:'#475569', margin:'0 0 4px' }}>No significant risk drivers</p>
-                            <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>This patient's clinical indicators are within normal ranges.</p>
+                            <p style={{ fontWeight:600, color:'var(--text-600)', margin:'0 0 4px' }}>No significant risk drivers</p>
+                            <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>Clinical indicators are within normal ranges.</p>
                           </div>
                         )}
                       </>
                     ) : (
-                      /* Comprehensive: all 8 features with value + impact bar */
                       <>
-                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>CONTRIBUTING FACTORS (ALL)</p>
+                        <p style={{ margin:'0 0 8px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>ALL CONTRIBUTING FACTORS</p>
                         {shapFeatures?.length>0 ? (
-                          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                          <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
                             {shapFeatures.map((f,i)=>{
                               const isRisk = f.impact==='increases_risk'||f.shap_value>0;
                               const col    = isRisk?'#dc2626':'#0d9488';
@@ -429,15 +429,15 @@ function DetailOverlay({ patient, onClose }) {
                                 : null;
                               return (
                                 <div key={i} style={{ display:'flex', alignItems:'center', gap:10 }}>
-                                  <span style={{ fontSize:11, color:'#94a3b8', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
+                                  <span style={{ fontSize:10, color:'var(--text-400)', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
                                   <div style={{ flex:1, minWidth:0 }}>
-                                    <p style={{ margin:'0 0 1px', fontSize:12, color:'#334155', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</p>
-                                    {valStr && <p style={{ margin:0, fontSize:10, color:'#94a3b8' }}>Value: <strong style={{ color:'#475569' }}>{valStr}</strong></p>}
+                                    <p style={{ margin:'0 0 1px', fontSize:12, color:'var(--text-700)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</p>
+                                    {valStr && <p style={{ margin:0, fontSize:10, color:'var(--text-400)' }}>Value: <strong style={{ color:'var(--text-600)' }}>{valStr}</strong></p>}
                                   </div>
-                                  <div style={{ width:100, height:5, background:'#e2e8f0', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
+                                  <div style={{ width:90, height:5, background:'var(--card-border)', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
                                     <div style={{ height:'100%', width:`${Math.round((f.pct/Math.max(...shapFeatures.map(x=>x.pct),1))*100)}%`, background:col, borderRadius:99 }}/>
                                   </div>
-                                  <span style={{ fontSize:11, fontWeight:700, color:col, width:56, textAlign:'right', flexShrink:0 }}>
+                                  <span style={{ fontSize:11, fontWeight:700, color:col, width:20, textAlign:'right', flexShrink:0 }}>
                                     {isRisk?<TrendingUp size={10}/>:<TrendingDown size={10}/>}
                                   </span>
                                 </div>
@@ -445,17 +445,16 @@ function DetailOverlay({ patient, onClose }) {
                             })}
                           </div>
                         ) : (
-                          <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>No feature data available.</p>
+                          <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>No feature data available.</p>
                         )}
                       </>
                     )}
 
-                    {/* Legend */}
                     <div style={{ display:'flex', gap:16, paddingTop:4 }}>
-                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#94a3b8' }}>
+                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-400)' }}>
                         <span style={{ width:8, height:8, borderRadius:'50%', background:'#dc2626', flexShrink:0 }}/>Raises risk
                       </span>
-                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#94a3b8' }}>
+                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-400)' }}>
                         <span style={{ width:8, height:8, borderRadius:'50%', background:'#0d9488', flexShrink:0 }}/>Lowers risk
                       </span>
                     </div>
@@ -465,28 +464,28 @@ function DetailOverlay({ patient, onClose }) {
                 {/* ── DOMAINS tab ── */}
                 {tab==='domains' && (
                   <>
-                    <p style={{ margin:'0 0 10px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>RISK PROBABILITY ACROSS 8 CLINICAL DOMAINS</p>
+                    <p style={{ margin:'0 0 10px', fontSize:10, fontWeight:700, color:'var(--text-400)', letterSpacing:'0.08em' }}>RISK PROBABILITY ACROSS CLINICAL DOMAINS</p>
                     {domains.length===0 ? (
-                      <p style={{ fontSize:12, color:'#94a3b8', textAlign:'center', padding:'32px 0' }}>No domain data available yet.</p>
+                      <p style={{ fontSize:12, color:'var(--text-400)', textAlign:'center', padding:'32px 0' }}>No domain data available yet.</p>
                     ) : (
-                      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                      <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
                         {domains.slice(0,8).map(([key,task])=>{
                           const pct = Math.round((task.probability||0)*100);
                           const col = pct>70?'#dc2626':pct>40?'#ea580c':pct>15?'#d97706':'#0d9488';
                           return (
-                            <div key={key} style={{ padding:'10px 12px', borderRadius:8,
-                              background:'var(--card-bg)', border:'1px solid var(--card-border)' }}>
-                              <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-                                <p style={{ margin:0, fontSize:12, fontWeight:600, color:'#1e293b' }}>{DOMAIN_LABELS[key]||key}</p>
+                            <div key={key} style={{ padding:'9px 11px', borderRadius:8,
+                              background:'var(--page-bg)', border:'1px solid var(--card-border)' }}>
+                              <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
+                                <p style={{ margin:0, fontSize:12, fontWeight:600, color:'var(--text-800)' }}>{DOMAIN_LABELS[key]||key}</p>
                                 <span style={{ fontSize:12, fontWeight:700, color:col }}>{pct}%</span>
                               </div>
-                              <div style={{ height:5, borderRadius:99, background:'#e2e8f0', overflow:'hidden' }}>
+                              <div style={{ height:5, borderRadius:99, background:'var(--card-border)', overflow:'hidden' }}>
                                 <motion.div style={{ height:'100%', background:col, borderRadius:99 }}
                                   initial={{ width:0 }} animate={{ width:`${pct}%` }}
                                   transition={{ duration:0.4, ease:'easeOut' }}/>
                               </div>
                               {task.top_features?.[0] && (
-                                <p style={{ margin:'4px 0 0', fontSize:11, color:'#94a3b8' }}>
+                                <p style={{ margin:'3px 0 0', fontSize:11, color:'var(--text-400)' }}>
                                   Main factor: {task.top_features[0].display_name||task.top_features[0].feature}
                                 </p>
                               )}
@@ -499,30 +498,30 @@ function DetailOverlay({ patient, onClose }) {
                 )}
 
                 {/* Feedback */}
-                <div style={{ paddingTop:8, borderTop:'1px solid #f1f5f9' }}>
+                <div style={{ paddingTop:8, borderTop:'1px solid var(--card-border)' }}>
                   {!fbSent ? (
-                    <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
-                      <span style={{ fontSize:12, color:'#64748b' }}>Was this helpful?</span>
+                    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+                      <span style={{ fontSize:12, color:'var(--text-500)' }}>Was this helpful?</span>
                       {[
-                        { type:'helpful',    label:'Helpful',      Icon:ThumbsUp    },
-                        { type:'partial',    label:'Partial',      Icon:Activity    },
-                        { type:'not_helpful',label:'Not helpful',  Icon:ThumbsDown  },
+                        { type:'helpful',    label:'Helpful',     Icon:ThumbsUp   },
+                        { type:'partial',    label:'Partial',     Icon:Activity   },
+                        { type:'not_helpful',label:'Not helpful', Icon:ThumbsDown },
                       ].map(({ type, label, Icon })=>(
                         <button key={type} onClick={()=>{ setFeedback(type); setFbSent(true); }} style={{
                           display:'flex', alignItems:'center', gap:5,
-                          padding:'5px 12px', borderRadius:6, border:'1px solid #e2e8f0',
-                          background:feedback===type?'#f0fdf4':'transparent',
-                          color:feedback===type?'#16a34a':'#475569',
-                          fontSize:12, fontWeight:500, cursor:'pointer', transition:'all 0.12s',
+                          padding:'4px 10px', borderRadius:6, border:'1px solid var(--card-border)',
+                          background:feedback===type?'rgba(13,148,136,0.1)':'transparent',
+                          color:feedback===type?'#0d9488':'var(--text-500)',
+                          fontSize:11, fontWeight:500, cursor:'pointer', transition:'all 0.12s',
                         }}>
-                          <Icon size={13}/>{label}
+                          <Icon size={12}/>{label}
                         </button>
                       ))}
                     </div>
                   ) : (
                     <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                      <CheckCircle size={14} style={{ color:'#16a34a' }}/>
-                      <span style={{ fontSize:12, color:'#475569' }}>Thank you for your feedback.</span>
+                      <CheckCircle size={14} style={{ color:'#0d9488' }}/>
+                      <span style={{ fontSize:12, color:'var(--text-500)' }}>Thank you for your feedback.</span>
                     </div>
                   )}
                 </div>
@@ -531,34 +530,34 @@ function DetailOverlay({ patient, onClose }) {
           </div>
 
           {/* ── Footer ── */}
-          <div style={{ padding:'10px 18px', borderTop:'1px solid #f1f5f9', display:'flex',
-            alignItems:'center', gap:8, flexShrink:0, background:'#fafafa' }}>
+          <div style={{ padding:'10px 14px', borderTop:'1px solid var(--card-border)', display:'flex',
+            alignItems:'center', gap:7, flexShrink:0, background:'var(--page-bg)' }}>
             <input value={followUp} onChange={e=>setFollowUp(e.target.value)}
-              placeholder="Ask a follow-up question…"
-              style={{ flex:1, padding:'7px 12px', border:'1px solid #e2e8f0', borderRadius:7,
-                fontSize:12, color:'#334155', background:'#fff', outline:'none' }}
+              placeholder="Ask a follow-up…"
+              style={{ flex:1, padding:'6px 10px', border:'1px solid var(--card-border)', borderRadius:7,
+                fontSize:12, color:'var(--text-800)', background:'var(--card-bg)', outline:'none' }}
               onFocus={e=>(e.target.style.borderColor='#0d9488')}
-              onBlur={e=>(e.target.style.borderColor='#e2e8f0')}/>
+              onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
             <button onClick={copyToNote} style={{
-              display:'flex', alignItems:'center', gap:5, padding:'7px 12px', borderRadius:7,
-              border:'1px solid #e2e8f0', background:'#fff', color:'#475569',
-              fontSize:12, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap',
+              display:'flex', alignItems:'center', gap:5, padding:'6px 10px', borderRadius:7,
+              border:'1px solid var(--card-border)', background:'var(--card-bg)', color:'var(--text-600)',
+              fontSize:11, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap',
             }}>
-              <Copy size={12}/>{copied?'Copied!':'Copy note'}
+              <Copy size={11}/>{copied?'Copied!':'Copy'}
             </button>
             <button onClick={()=>navigate(`/patients/${pid}`)} style={{
-              display:'flex', alignItems:'center', gap:5, padding:'7px 14px', borderRadius:7,
-              background:acked?'#059669':'#0d9488', color:'#fff', border:'none',
-              fontSize:12, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', transition:'background 0.2s',
+              display:'flex', alignItems:'center', gap:5, padding:'6px 12px', borderRadius:7,
+              background:'#0d9488', color:'#fff', border:'none',
+              fontSize:11, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap',
             }}>
-              <ExternalLink size={12}/>Open record
+              <ExternalLink size={11}/>Open record
             </button>
           </div>
 
           {/* Disclaimer */}
-          <p style={{ textAlign:'center', fontSize:10, color:'#94a3b8',
-            padding:'5px 20px 8px', margin:0, background:'#fafafa',
-            borderTop:'1px solid #f1f5f9', flexShrink:0 }}>
+          <p style={{ textAlign:'center', fontSize:10, color:'var(--text-300)',
+            padding:'4px 20px 7px', margin:0, background:'var(--page-bg)',
+            borderTop:'1px solid var(--card-border)', flexShrink:0 }}>
             AI-generated decision support. Does not replace clinical judgment.
           </p>
         </motion.div>
