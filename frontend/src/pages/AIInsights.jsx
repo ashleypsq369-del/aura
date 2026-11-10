@@ -133,32 +133,35 @@ function DetailOverlay({ patient, onClose }) {
 
   const modal = (
     <>
-      {/* Backdrop */}
+      {/* Blurred backdrop — click outside to close */}
       <motion.div key="ai-bg"
         initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
         onClick={onClose}
-        style={{ position:'fixed', inset:0, zIndex:9500, background:'rgba(0,0,0,0.45)' }}/>
+        style={{
+          position:'fixed', inset:0, zIndex:9400,
+          background:'rgba(15,23,42,0.18)',
+          backdropFilter:'blur(4px)',
+          WebkitBackdropFilter:'blur(4px)',
+        }}/>
 
-      {/* Card */}
-      <div style={{ position:'fixed', inset:0, zIndex:9501, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
-        <motion.div key="ai-card"
-          initial={{ opacity:0, y:16, scale:0.97 }}
-          animate={{ opacity:1, y:0,  scale:1    }}
-          exit   ={{ opacity:0, y:8,  scale:0.97 }}
-          transition={{ type:'spring', damping:30, stiffness:360 }}
-          onClick={e=>e.stopPropagation()}
-          style={{
-            pointerEvents:'all',
-            background:'#ffffff',
-            borderRadius:14,
-            width:'100%', maxWidth:580,
-            maxHeight:'92vh',
-            display:'flex', flexDirection:'column',
-            boxShadow:'0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
-            fontFamily:"'Inter','system-ui',sans-serif",
-            overflow:'hidden',
-          }}
-        >
+      {/* Drawer — slides in from the right */}
+      <motion.div key="ai-card"
+        initial={{ x:'100%' }}
+        animate={{ x:0 }}
+        exit   ={{ x:'100%' }}
+        transition={{ type:'spring', damping:32, stiffness:320 }}
+        onClick={e=>e.stopPropagation()}
+        style={{
+          position:'fixed', right:0, top:0, bottom:0, zIndex:9401,
+          width:'min(520px, 92vw)',
+          background:'#ffffff',
+          borderLeft:'1px solid #e2e8f0',
+          boxShadow:'-8px 0 40px rgba(0,0,0,0.12)',
+          display:'flex', flexDirection:'column',
+          fontFamily:"'Inter','system-ui',sans-serif",
+          overflow:'hidden',
+        }}
+      >
           {/* ── Modal header ── */}
           <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid #f1f5f9', flexShrink:0 }}>
             <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:12 }}>
@@ -556,7 +559,6 @@ function DetailOverlay({ patient, onClose }) {
             AI-generated decision support. Does not replace clinical judgment.
           </p>
         </motion.div>
-      </div>
     </>
   );
 
