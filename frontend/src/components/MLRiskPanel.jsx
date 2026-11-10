@@ -169,7 +169,7 @@ function TaskCard({ taskKey, task }) {
  {/* title text-xs font-semibold */}
  <p className="text-xs font-semibold text-[var(--text-800)] truncate">{meta.label}</p>
  <p className="text-[11px] text-[var(--text-400)]">
- {task.shap_available ? 'SHAP values' : 'Feature importance'} · {task.top_features?.length ?? 0} factors
+ {task.shap_available ? 'AI-explained' : 'Risk factors'} · {task.top_features?.length ?? 0} factors
  </p>
  </div>
 
@@ -215,11 +215,11 @@ function TaskCard({ taskKey, task }) {
  <div className="flex items-center gap-1.5 pt-2 pb-1.5">
  <Zap size={10} className="text-[var(--text-400)]"/>
  <p className="text-[11px] font-bold text-[var(--text-400)] ">
- {task.shap_available ? 'SHAP Feature Impact' : 'Feature Importance'}
+ {task.shap_available ? 'Key Risk Drivers' : 'Risk Factors'}
  </p>
  {task.shap_available && (
  <span className="ml-auto text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
- SHAP
+ AI-explained
  </span>
  )}
  </div>
@@ -264,8 +264,8 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <Brain size={14} className="text-teal-600 animate-pulse" />
  </div>
  <div>
- <p className="text-xs font-semibold text-[var(--text-700)]">Running ML Risk Models...</p>
- <p className="text-[11px] text-[var(--text-400)]">XGBoost + SHAP analysis</p>
+ <p className="text-xs font-semibold text-[var(--text-700)]">Calculating clinical risk score…</p>
+ <p className="text-[11px] text-[var(--text-400)]">Aura AI is analysing patient data</p>
  </div>
  </div>
  );
@@ -276,9 +276,9 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <div className="bg-[var(--card-bg)] rounded-2xl border border-amber-200 shadow-sm p-4 flex items-center gap-3">
  <Info size={14} className="text-amber-500 flex-shrink-0" />
  <p className="text-xs text-amber-700">
- ML models not available.
+ Clinical risk analysis unavailable.
  {error?.response?.status === 503
- ? ' Run train_models_now.py to enable predictions.'
+ ? ' AI models need initialising — contact your administrator.'
  : ' Check backend connection.'}
  </p>
  </div>
@@ -327,15 +327,14 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  <Brain size={14} className="text-teal-600"/>
  </div>
  <div className="flex items-center gap-2 flex-wrap">
- <p className="text-xs font-semibold text-[var(--text-800)] leading-none">ML Risk Assessment</p>
+ <p className="text-xs font-semibold text-[var(--text-800)] leading-none">Clinical Risk Score</p>
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
- XGBoost
- </span>
+ Aura AI </span>
  {data?.tasks && Object.values(data.tasks).some(t => t.shap_available) && (
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"/>
- SHAP Live
+ Explained
  </span>
  )}
  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
@@ -418,7 +417,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  {/* ── Task detail cards with SHAP (expandable) ── */}
  <div className="space-y-2">
  <p className="text-[11px] font-bold text-[var(--text-400)] px-1 flex items-center gap-1.5">
- <Brain size={10}/> SHAP Breakdown - tap any task to expand
+ <Brain size={10}/> Clinical risk drivers — tap any domain to expand
  </p>
  {sortedTasks.map(([key, task]) => (
  <TaskCard key={key} taskKey={key} task={task} />

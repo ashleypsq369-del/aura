@@ -1,162 +1,166 @@
 /**
- * MLRiskSummaryCard - compact ML risk teaser on PatientDetail
- * Clean white card with solid colored badges (no bars, no faint tints)
- * Clicking navigates to /patients/:id/ml-risk for full SHAP detail
+ * MLRiskSummaryCard — compact single-row card with gauge + domain chips
  */
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Brain, ChevronRight, Loader2, AlertTriangle, TrendingUp, CheckCircle, AlertCircle, Activity, Shield } from 'lucide-react';
+import { Brain, ChevronRight, Loader2, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
 import { mlAPI } from '../api/client';
 
-/* ── Risk level config - solid colors, always readable ─────────────────────── */
-const RISK_CFG = {
- critical: {
- badgeBg: 'bg-red-600', badgeText: 'text-white',
- iconColor: '#e11d48', borderL: 'border-l-red-500',
- labelText: 'text-red-700',label: 'Critical', Icon: AlertTriangle,
- topStripeBg: 'bg-red-500',
- },
- high: {
- badgeBg: 'bg-orange-500', badgeText: 'text-white',
- iconColor: '#f97316', borderL: 'border-l-orange-500',
- labelText: 'text-orange-700', label: 'High Risk', Icon: AlertCircle,
- topStripeBg: 'bg-orange-400',
- },
- moderate: {
- badgeBg: 'bg-amber-500', badgeText: 'text-white',
- iconColor: '#d97706', borderL: 'border-l-amber-400',
- labelText: 'text-amber-700', label: 'Moderate', Icon: Activity,
- topStripeBg: 'bg-amber-400',
- },
- low: {
- badgeBg: 'bg-teal-600', badgeText: 'text-white',
- iconColor: '#0d9488', borderL: 'border-l-teal-500',
- labelText: 'text-teal-700', label: 'Stable', Icon: CheckCircle,
- topStripeBg: 'bg-teal-400',
- },
- normal: {
- badgeBg: 'bg-teal-600', badgeText: 'text-white',
- iconColor: '#0d9488', borderL: 'border-l-teal-500',
- labelText: 'text-teal-700', label: 'Normal', Icon: CheckCircle,
- topStripeBg: 'bg-teal-400',
- },
- unknown: {
- badgeBg: 'bg-slate-500', badgeText: 'text-white',
- iconColor: '#94a3b8', borderL: 'border-l-slate-400',
- labelText: 'text-slate-500', label: 'Unknown', Icon: Shield,
- topStripeBg: 'bg-slate-400',
- },
+const RISK = {
+  critical: { label:'Critical',  stroke:'#dc2626', text:'#dc2626', badge:'#dc2626' },
+  high:     { label:'High Risk', stroke:'#ea580c', text:'#ea580c', badge:'#ea580c' },
+  moderate: { label:'Moderate',  stroke:'#d97706', text:'#d97706', badge:'#d97706' },
+  low:      { label:'Stable',    stroke:'#0d9488', text:'#0d9488', badge:'#0d9488' },
+  normal:   { label:'Normal',    stroke:'#0d9488', text:'#0d9488', badge:'#0d9488' },
+  unknown:  { label:'No data',   stroke:'#94a3b8', text:'#94a3b8', badge:'#94a3b8' },
+};
+const cfg = l => RISK[(l||'').toLowerCase()] || RISK.unknown;
+
+const domainCol = p => p>70?'#dc2626':p>40?'#ea580c':p>15?'#d97706':'#0d9488';
+
+const DOMAIN_LABELS = {
+  vital_risk:'Vital Signs', symptom_burden:'Symptoms',
+  functional_decline:'Function', cognitive_impairment:'Cognition',
+  mental_health_risk:'Mental Health', medication_risk:'Medication',
+  caregiver_burden:'Caregiver', admission_risk:'Admission Risk',
 };
 
-const TASK_SHORT = {
- vital_risk: 'Vitals', symptom_burden: 'Symptoms',
- functional_decline: 'ADL', cognitive_impairment: 'Cognition',
- mental_health_risk: 'Mental', medication_risk: 'Meds',
- caregiver_burden: 'Caregiver', admission_risk: 'Admission',
-};
+/* SVG arc gauge — size 64, thickness 5 */
+function Arc({ pct, stroke, size=64, t=5 }) {
+  const r = (size-t)/2, c = 2*Math.PI*r;
+  const arc = c*0.75, fill = arc*(pct/100), off = c*0.25/2;
+  return (
+    <svg width={size} height={size} style={{ transform:'rotate(135deg)', flexShrink:0 }}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none"
+        stroke="var(--card-border)" strokeWidth={t}
+        strokeDasharray={`${arc} ${c}`} strokeDashoffset={-off} strokeLinecap="round"/>
+      <motion.circle cx={size/2} cy={size/2} r={r} fill="none"
+        stroke={stroke} strokeWidth={t}
+        strokeDasharray={`${arc} ${c}`} strokeDashoffset={-off} strokeLinecap="round"
+        initial={{ strokeDasharray:`0 ${c}` }}
+        animate={{ strokeDasharray:`${fill} ${c-fill}` }}
+        transition={{ duration:0.7, ease:'easeOut' }}
+        style={{ filter:`drop-shadow(0 0 3px ${stroke}60)` }}/>
+    </svg>
+  );
+}
 
 export default function MLRiskSummaryCard({ patientId }) {
- const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { data, isLoading } = useQuery({
+    queryKey: ['ml-risk', patientId],
+    queryFn: () => mlAPI.getPatientRisk(patientId).then(r => r.data),
+    enabled: !!patientId, staleTime: 5*60*1000, retry:1,
+  });
 
- const { data, isLoading } = useQuery({
- queryKey: ['ml-risk', patientId],
- queryFn: () => mlAPI.getPatientRisk(patientId).then(r => r.data),
- enabled: !!patientId,
- staleTime: 5 * 60 * 1000,
- retry: 1,
- });
+  const level   = data?.overall_level || 'unknown';
+  const c       = cfg(level);
+  const pct     = Math.round((data?.overall_risk ?? 0) * 100);
+  const concern = data?.key_concerns?.[0];
 
- const level = data?.overall_level || 'unknown';
- const cfg = RISK_CFG[level] || RISK_CFG.unknown;
- const pct = Math.round((data?.overall_risk ?? 0) * 100);
- const concern = data?.key_concerns?.[0];
+  const domains = Object.entries(data?.tasks || {})
+    .map(([k,t]) => ({ key:k, pct:Math.round((t.probability||0)*100) }))
+    .filter(d => d.pct > 5)
+    .sort((a,b) => b.pct-a.pct)
+    .slice(0,6);
 
- // Only show tasks with actual risk (> 0%)
- const activeTasks = Object.entries(data?.tasks || {})
- .map(([k, t]) => [k, Math.round((t.probability || 0) * 100)])
- .filter(([, p]) => p > 5)
- .sort(([, a], [, b]) => b - a)
- .slice(0, 6);
+  if (isLoading) return (
+    <div style={{ padding:'10px 14px', borderRadius:12, border:'1px solid var(--card-border)',
+      background:'var(--card-bg)', display:'flex', alignItems:'center', gap:10 }}>
+      <Loader2 size={14} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
+      <p style={{ margin:0, fontSize:12, color:'var(--text-500)' }}>Calculating risk score…</p>
+    </div>
+  );
 
- return (
- <motion.button
- whileHover={{ y: -1, boxShadow: '0 8px 24px rgba(0,0,0,0.10)' }}
- whileTap={{ scale: 0.99 }}
- onClick={() => navigate(`/patients/${patientId}/ml-risk`)}
- className={`w-full text-left rounded-2xl border border-[var(--card-border)] border-l-4 ${cfg.borderL} bg-[var(--card-bg)] overflow-hidden shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all`}
- >
- {/* Top strip for critical/high */}
- {(level === 'critical' || level === 'high') && (
- <div className={`h-0.5 w-full ${cfg.topStripeBg} animate-pulse`} />
- )}
+  return (
+    <motion.button
+      whileHover={{ y:-1 }} whileTap={{ scale:0.99 }}
+      onClick={() => navigate(`/patients/${patientId}/ml-risk`)}
+      style={{
+        width:'100%', textAlign:'left', display:'block', padding:0,
+        borderRadius:12, border:'1px solid var(--card-border)',
+        borderLeft:`3px solid ${c.stroke}`, background:'var(--card-bg)',
+        cursor:'pointer', outline:'none', fontFamily:'inherit', overflow:'hidden',
+        boxShadow:'0 1px 3px rgba(0,0,0,0.05)', transition:'box-shadow 0.15s',
+      }}
+    >
+      {/* ── Single header row ── */}
+      <div style={{ display:'flex', alignItems:'center', gap:12, padding:'10px 12px' }}>
 
- {/* Header */}
- <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5">
- <div className="flex items-center gap-2.5">
- <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center flex-shrink-0">
- <Brain size={16} className="text-teal-700" />
- </div>
- <div>
- <p className="text-sm font-bold text-[var(--text-900)] leading-tight">ML Risk Assessment</p>
- <p className="text-[11px] text-slate-400">XGBoost · SHAP · 8 models</p>
- </div>
- </div>
+        {/* Gauge */}
+        <div style={{ position:'relative', width:64, height:64, flexShrink:0 }}>
+          <Arc pct={pct} stroke={c.stroke}/>
+          <div style={{ position:'absolute', inset:0, display:'flex',
+            flexDirection:'column', alignItems:'center', justifyContent:'center',
+            pointerEvents:'none' }}>
+            <span style={{ fontSize:14, fontWeight:900, color:c.text, lineHeight:1 }}>{pct}%</span>
+            <span style={{ fontSize:8, fontWeight:700, color:'var(--text-400)',
+              letterSpacing:'0.05em', textTransform:'uppercase' }}>risk</span>
+          </div>
+        </div>
 
- {isLoading ? (
- <Loader2 size={16} className="animate-spin text-[var(--text-400)] flex-shrink-0" />
- ) : (
- <div className="flex items-center gap-2 flex-shrink-0">
- <span className="text-2xl font-black tabular-nums text-slate-900">{pct}%</span>
- <div className="flex flex-col items-end gap-1">
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${cfg.badgeBg} ${cfg.badgeText} uppercase tracking-wide`}>
- {cfg.label}
- </span>
- <ChevronRight size={13} className="text-slate-300" />
- </div>
- </div>
- )}
- </div>
+        {/* Title block */}
+        <div style={{ flex:1, minWidth:0 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3, flexWrap:'wrap' }}>
+            <span style={{ fontSize:12, fontWeight:700, color:'var(--text-900)' }}>Clinical Risk Score</span>
+            <span style={{ fontSize:9, fontWeight:800, padding:'2px 7px', borderRadius:99,
+              background:c.badge, color:'#fff', textTransform:'uppercase', letterSpacing:'0.04em' }}>
+              {c.label}
+            </span>
+          </div>
+          <p style={{ margin:'0 0 4px', fontSize:10, color:'var(--text-400)' }}>Powered by Aura AI</p>
 
- {/* Top concern */}
- {concern && (
- <div className="mx-4 mb-2 flex items-start gap-1.5 px-2.5 py-1.5 bg-amber-50 border border-amber-200 rounded-lg">
- <AlertTriangle size={11} className="text-amber-500 flex-shrink-0 mt-0.5" />
- <p className="text-[11px] text-amber-900 font-semibold leading-snug line-clamp-1">{concern}</p>
- </div>
- )}
+          {/* Concern inline */}
+          {concern && (
+            <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+              <AlertTriangle size={10} style={{ color:'#d97706', flexShrink:0 }}/>
+              <p style={{ margin:0, fontSize:11, color:'var(--text-600)', fontWeight:500,
+                overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                {concern}
+              </p>
+            </div>
+          )}
+        </div>
 
- {/* Active task pills - only non-zero risks */}
- {activeTasks.length > 0 ? (
- <div className="px-4 pb-3 flex flex-wrap gap-1.5">
- {activeTasks.map(([key, p]) => {
- const [bg, txt] = p > 70 ? ['bg-red-600', 'text-white']
- : p > 40 ? ['bg-orange-500', 'text-white']
- : p > 15 ? ['bg-amber-400', 'text-white']
- : ['bg-slate-400', 'text-white'];
- return (
- <span key={key}
- className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black shadow-sm ${bg} ${txt}`}>
- {TASK_SHORT[key] || key}
- <span className="bg-white/25 rounded-full px-1">{p}%</span>
- </span>
- );
- })}
- </div>
- ) : !isLoading && data && (
- <div className="px-4 pb-3">
- <span className="inline-flex items-center gap-1.5 text-[11px] text-teal-700 font-semibold">
- <CheckCircle size={12} className="text-teal-500" /> No elevated risk domains detected
- </span>
- </div>
- )}
+        <ChevronRight size={13} style={{ color:'var(--text-300)', flexShrink:0 }}/>
+      </div>
 
- {/* Footer */}
- <div className="px-4 py-2 border-t border-[var(--card-border)]/50 flex items-center gap-1 text-[11px] text-[var(--text-400)] font-medium bg-slate-50">
- <Brain size={9} className="text-teal-400" />
- Tap for full SHAP breakdown &amp; clinical analysis
- <ChevronRight size={10} className="ml-auto text-slate-300" />
- </div>
- </motion.button>
- );
+      {/* ── Domain chips — inline wrap, compact ── */}
+      {domains.length > 0 && (
+        <div style={{ padding:'0 12px 10px', display:'flex', flexWrap:'wrap', gap:5 }}>
+          {domains.map(d => {
+            const col = domainCol(d.pct);
+            return (
+              <div key={d.key} style={{
+                display:'inline-flex', alignItems:'center', gap:5,
+                padding:'3px 8px 3px 4px', borderRadius:99,
+                border:`1px solid ${col}30`, background:`${col}0d`,
+              }}>
+                {/* tiny arc */}
+                <div style={{ position:'relative', width:22, height:22, flexShrink:0 }}>
+                  <Arc pct={d.pct} stroke={col} size={22} t={2.5}/>
+                  <div style={{ position:'absolute', inset:0, display:'flex',
+                    alignItems:'center', justifyContent:'center', pointerEvents:'none' }}>
+                    <span style={{ fontSize:6, fontWeight:800, color:col }}/>
+                  </div>
+                </div>
+                <span style={{ fontSize:10, color:'var(--text-600)', whiteSpace:'nowrap' }}>
+                  {DOMAIN_LABELS[d.key]||d.key}
+                </span>
+                <span style={{ fontSize:10, fontWeight:800, color:col }}>{d.pct}%</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {!isLoading && data && domains.length === 0 && (
+        <div style={{ padding:'0 12px 10px', display:'flex', alignItems:'center', gap:5 }}>
+          <CheckCircle size={11} style={{ color:'#0d9488' }}/>
+          <span style={{ fontSize:11, color:'#0d9488', fontWeight:500 }}>No elevated risk domains</span>
+        </div>
+      )}
+    </motion.button>
+  );
 }
