@@ -544,41 +544,41 @@ function SettingCard({ template: t, index, isSelected, onSelect }) {
       onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSelect()}
       role="button" tabIndex={0}
       style={{ outline:'none' }}
-      className={`cursor-pointer rounded-2xl border overflow-hidden relative transition-all min-h-[150px] ${
+      className={`cursor-pointer rounded-2xl border overflow-hidden transition-all flex flex-col ${
         isSelected ? 'ring-2 ring-offset-2 ring-teal-400 shadow-lg border-teal-400' : 'border-[var(--card-border)] hover:shadow-lg hover:border-teal-300'
       }`}
     >
-      {/* Fallback bg */}
-      <div className="absolute inset-0" style={{ backgroundColor: c.fallback, zIndex:0, opacity:0 }} />
-      {img && (
-        <img src={img} alt="" aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ zIndex:1 }} loading="lazy"
-          onError={e => { e.currentTarget.style.display = 'none'; }} />
-      )}
-      <div className="absolute inset-0" style={{ background:'linear-gradient(160deg,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.45) 60%,rgba(0,0,0,0.25) 100%)', zIndex:2, pointerEvents:'none' }} />
-
-      <div className="relative p-4 h-full flex flex-col justify-between" style={{ zIndex:3 }}>
-        <div>
-          <div className="flex items-start justify-between mb-2">
-            <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${c.header} flex items-center justify-center shadow-md border border-white/20`}>
-              <Icon size={16} className="text-white" />
-            </div>
-            <ChevronRight size={16} className={`text-white/80 mt-0.5 transition-transform ${isSelected ? 'rotate-90' : ''}`} />
+      {/* Image top half — fixed height, no text on top of it */}
+      <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 90, background: c.fallback }}>
+        {img && (
+          <img src={img} alt="" aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            loading="lazy"
+            onError={e => { e.currentTarget.style.display = 'none'; }} />
+        )}
+        {/* Icon + chevron float over image with strong bg */}
+        <div className="absolute inset-0 flex items-start justify-between p-3">
+          <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${c.header} flex items-center justify-center shadow-lg border-2 border-white/40 flex-shrink-0`}>
+            <Icon size={14} className="text-white" />
           </div>
-          <h3 className="font-bold text-sm leading-tight mb-1 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
-            {t.label}
-          </h3>
-          <p className="text-xs leading-relaxed line-clamp-2 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]" style={{ color:'rgba(255,255,255,0.9)' }}>
-            {t.focus}
-          </p>
+          <div className="w-6 h-6 rounded-lg bg-black/50 flex items-center justify-center flex-shrink-0">
+            <ChevronRight size={12} className="text-white" />
+          </div>
         </div>
+      </div>
+
+      {/* Text area — solid opaque background, guaranteed readable */}
+      <div className="px-3 py-2.5 bg-[var(--card-bg)] flex-1">
+        <h3 className="font-bold text-sm leading-tight mb-0.5 text-[var(--text-900)]">
+          {t.label}
+        </h3>
+        <p className="text-xs text-[var(--text-500)] leading-relaxed line-clamp-2">
+          {t.focus}
+        </p>
         {t.patient_count !== undefined && (
-          <div className="mt-3">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-black/40 backdrop-blur-sm text-white text-xs font-bold rounded-full border border-white/30">
-              <Users size={10} /> {t.patient_count} patients
-            </span>
-          </div>
+          <span className="inline-flex items-center gap-1 mt-1.5 text-[11px] font-semibold text-[var(--text-400)]">
+            <Users size={9}/> {t.patient_count} patients
+          </span>
         )}
       </div>
     </motion.div>
