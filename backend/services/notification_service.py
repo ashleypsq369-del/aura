@@ -1,458 +1,390 @@
 ﻿"""
 NotificationQueue Service - Monitor and Alert System
-Monitors appointments, medications, and critical vitals
-Sends alerts to patients, caregivers, and clinicians
+=====================================================
+Fixed: All NotificationQueue rows now use recipient_id + body (correct DB columns).
+       Deduplication queries also fixed to use recipient_id.
+       Alerts correctly routed per role:
+         - Medication reminder  → patient + assigned caregivers + family
+         - Missed medication    → patient + assigned caregivers + family + primary clinician
+         - Critical vitals      → primary clinician + assigned caregivers + family
+         - Appointment 24h      → patient + primary clinician + family
+         - Appointment 1h       → patient + primary clinician
 """
 
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from src.db import (
     Appointment, Medication, Vital, Alert, NotificationQueue,
-    Patient, User, PatientFamilyLink, MedicationAdherenceLog
+    Patient, User, PatientFamilyLink, MedicationAdherenceLog,
+    CaregiverAssignment,
 )
 
 
+# ── Helper: get all user ids who should be notified about a patient ──────────
+
+def _patient_recipients(db: Session, patient_id: int, include_roles: list) -> list:
+    """
+    Returns list of user_ids who should receive notifications about patient_id,
+    filtered by role list.
+
+    include_roles: any subset of ['patient','family','caregiver','clinician']
+    """
+    ids = []
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        return ids
+
+    if 'patient' in include_roles and patient.user_id:
+        ids.append(patient.user_id)
+
+    if 'clinician' in include_roles and patient.primary_clinician_id:
+        ids.append(patient.primary_clinician_id)
+
+    if 'family' in include_roles:
+        for link in db.query(PatientFamilyLink).filter(
+            PatientFamilyLink.patient_id == patient_id
+        ).all():
+            if link.family_user_id:
+                ids.append(link.family_user_id)
+
+    if 'caregiver' in include_roles:
+        try:
+            for assignment in db.query(CaregiverAssignment).filter(
+                CaregiverAssignment.patient_id == patient_id,
+                CaregiverAssignment.active == True
+            ).all():
+                if assignment.caregiver_id:
+                    ids.append(assignment.caregiver_id)
+        except Exception:
+            pass  # table may not exist yet
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique = []
+    for uid in ids:
+        if uid not in seen:
+            seen.add(uid)
+            unique.append(uid)
+    return unique
+
+
+def _make_notif(recipient_id: int, notification_type: str, title: str, body: str,
+                related_alert_id: int = None) -> NotificationQueue:
+    """Single factory for NotificationQueue rows — always uses correct column names."""
+    return NotificationQueue(
+        recipient_id=recipient_id,
+        notification_type=notification_type,
+        title=title,
+        body=body[:500] if body else '',
+        related_alert_id=related_alert_id,
+        is_read=False,
+        is_sent=True,
+        sent_at=datetime.utcnow(),
+    )
+
+
+def _already_sent(db: Session, recipient_id: int, notification_type: str,
+                  related_alert_id: int, since: timedelta) -> bool:
+    """Deduplication check using correct column name."""
+    return db.query(NotificationQueue).filter(
+        NotificationQueue.recipient_id == recipient_id,
+        NotificationQueue.notification_type == notification_type,
+        NotificationQueue.related_alert_id == related_alert_id,
+        NotificationQueue.created_at >= datetime.utcnow() - since,
+    ).first() is not None
+
+
+# ── Appointment reminders ─────────────────────────────────────────────────────
+
 def check_upcoming_appointments(db: Session):
     """
-    Check for upcoming appointments and create notifications
-    - 24 hours before: Reminder to patient and caregiver
-    - 1 hour before: Final reminder
+    24h and 1h appointment reminders.
+    Recipients: patient + primary clinician + family
     """
     now = datetime.utcnow()
-    tomorrow = now + timedelta(hours=24)
-    one_hour_ahead = now + timedelta(hours=1)
-    
     alerts_created = 0
-    
-    # Find appointments in next 24 hours (for 24h reminder)
-    appointments_24h = db.query(Appointment).filter(
+
+    # 24h reminders
+    for appt in db.query(Appointment).filter(
         Appointment.scheduled_at >= now,
-        Appointment.scheduled_at <= tomorrow,
-        Appointment.status == 'scheduled'
-    ).all()
-    
-    for appt in appointments_24h:
-        # Check if we already sent 24h reminder
-        existing = db.query(NotificationQueue).filter(
-            NotificationQueue.recipient_id == appt.patient_id,
-            NotificationQueue.notification_type == 'appointment_reminder_24h',
-            NotificationQueue.related_alert_id == appt.id,
-            NotificationQueue.created_at >= now - timedelta(hours=1)
-        ).first()
-        
-        if not existing:
-            # Create notification for patient
-            notification = NotificationQueue(
-                recipient_id=appt.patient_id,
-                notification_type='appointment_reminder_24h',
-                title='Appointment Tomorrow',
-                body=f"Reminder: {appt.appointment_type} appointment tomorrow at {appt.scheduled_at.strftime('%I:%M %p')} at {appt.location}",
+        Appointment.scheduled_at <= now + timedelta(hours=24),
+        Appointment.status == 'scheduled',
+    ).all():
+        time_str = appt.scheduled_at.strftime('%I:%M %p')
+        loc_str  = appt.location or 'the clinic'
+
+        for uid in _patient_recipients(db, appt.patient_id, ['patient', 'clinician', 'family']):
+            if _already_sent(db, uid, 'appointment_reminder_24h', appt.id, timedelta(hours=1)):
+                continue
+            is_patient = True  # all get useful context
+            db.add(_make_notif(
+                uid, 'appointment_reminder_24h',
+                'Appointment Tomorrow',
+                f"{appt.appointment_type} appointment tomorrow at {time_str} at {loc_str}",
                 related_alert_id=appt.id,
-                is_read=False,
-                is_sent=True,
-                sent_at=now
-            )
-            db.add(notification)
+            ))
             alerts_created += 1
-            
-            # Alert caregiver/family
-            family_links = db.query(PatientFamilyLink).filter(
-                PatientFamilyLink.patient_id == appt.patient_id
-            ).all()
-            
-            for link in family_links:
-                family_notif = NotificationQueue(
-                    recipient_id=link.family_user_id,
-                    notification_type='appointment_reminder_24h',
-                    title=f'Appointment Reminder for Patient',
-                    body=f"Patient has {appt.appointment_type} appointment tomorrow at {appt.scheduled_at.strftime('%I:%M %p')}",
-                    related_alert_id=appt.id,
-                    is_read=False,
-                    is_sent=True,
-                    sent_at=now
-                )
-                db.add(family_notif)
-    
-    # Find appointments in next 1 hour (for 1h reminder)
-    appointments_1h = db.query(Appointment).filter(
+
+    # 1h reminders — patient + clinician only
+    for appt in db.query(Appointment).filter(
         Appointment.scheduled_at >= now,
-        Appointment.scheduled_at <= one_hour_ahead,
-        Appointment.status == 'scheduled'
-    ).all()
-    
-    for appt in appointments_1h:
-        # Check if we already sent 1h reminder
-        existing = db.query(NotificationQueue).filter(
-            NotificationQueue.recipient_id == appt.patient_id,
-            NotificationQueue.notification_type == 'appointment_reminder_1h',
-            NotificationQueue.related_alert_id == appt.id,
-            NotificationQueue.created_at >= now - timedelta(minutes=30)
-        ).first()
-        
-        if not existing:
-            # Create urgent notification for patient
-            notification = NotificationQueue(
-                recipient_id=appt.patient_id,
-                notification_type='appointment_reminder_1h',
-                title='Appointment Starting Soon!',
-                body=f"Your {appt.appointment_type} appointment starts in less than 1 hour at {appt.location}",
+        Appointment.scheduled_at <= now + timedelta(hours=1),
+        Appointment.status == 'scheduled',
+    ).all():
+        time_str = appt.scheduled_at.strftime('%I:%M %p')
+        loc_str  = appt.location or 'the clinic'
+
+        for uid in _patient_recipients(db, appt.patient_id, ['patient', 'clinician']):
+            if _already_sent(db, uid, 'appointment_reminder_1h', appt.id, timedelta(minutes=30)):
+                continue
+            db.add(_make_notif(
+                uid, 'appointment_reminder_1h',
+                'Appointment in 1 Hour',
+                f"{appt.appointment_type} appointment starts in less than 1 hour at {loc_str} ({time_str})",
                 related_alert_id=appt.id,
-                is_read=False,
-                is_sent=True,
-                sent_at=now
-            )
-            db.add(notification)
+            ))
             alerts_created += 1
-    
+
     db.commit()
     return alerts_created
 
+
+# ── Medication reminders ──────────────────────────────────────────────────────
 
 def check_medication_schedule(db: Session):
     """
-    Check for upcoming and missed medications
-    - 15 minutes before: Reminder to patient
-    - At dose time: Alert to take medication
-    - 30 minutes after: Mark as missed, alert caregiver
+    15-min reminder and 30-min missed-dose detection.
+    Reminder   → patient + assigned caregivers
+    Missed     → patient + caregivers + family + primary clinician
     """
     now = datetime.utcnow()
     alerts_created = 0
-    
-    # Get all active medications
-    active_meds = db.query(Medication).filter(
-        Medication.is_active == True
-    ).all()
-    
-    for med in active_meds:
-        # Skip PRN medications (take as needed)
+
+    for med in db.query(Medication).filter(Medication.is_active == True).all():
         if med.is_prn:
             continue
-        
-        # Calculate next scheduled dose based on frequency
-        next_dose_time = calculate_next_dose_time(med, now)
-        
-        if not next_dose_time:
+
+        next_dose = calculate_next_dose_time(med, now)
+        if not next_dose:
             continue
-        
-        # Check if dose is upcoming (within 15 minutes)
-        if timedelta(minutes=0) <= (next_dose_time - now) <= timedelta(minutes=15):
-            # Create reminder notification
-            existing = db.query(NotificationQueue).filter(
-                NotificationQueue.patient_id == med.patient_id,
-                NotificationQueue.notification_type == 'medication_reminder',
-                NotificationQueue.related_id == med.id,
-                NotificationQueue.created_at >= now - timedelta(minutes=10)
-            ).first()
-            
-            if not existing:
-                notification = NotificationQueue(
-                    patient_id=med.patient_id,
-                    notification_type='medication_reminder',
-                    title='Medication Due Soon',
-                    message=f"Time to take {med.name} ({med.dose}) in 15 minutes",
-                    # priority='medium',
-                    related_alert_id=med.id,
-                    is_read=False
-                )
-                db.add(notification)
-                alerts_created += 1
-        
-        # Check if dose time has passed (missed dose)
-        if now > next_dose_time + timedelta(minutes=30):
-            # Check if already logged as taken
-            taken_log = db.query(MedicationAdherenceLog).filter(
+
+        # ── Upcoming dose (within 15 minutes) ────────────────────────────
+        if timedelta(minutes=0) <= (next_dose - now) <= timedelta(minutes=15):
+            patient = db.query(Patient).filter(Patient.id == med.patient_id).first()
+            if patient:
+                for uid in _patient_recipients(db, med.patient_id, ['patient', 'caregiver']):
+                    if _already_sent(db, uid, 'medication_reminder', med.id, timedelta(minutes=10)):
+                        continue
+                    is_caregiver = (uid != getattr(patient, 'user_id', None))
+                    db.add(_make_notif(
+                        uid, 'medication_reminder',
+                        'Medication Due Soon',
+                        f"{'Patient due: ' if is_caregiver else ''}{med.name} {med.dose} in 15 minutes.",
+                        related_alert_id=med.id,
+                    ))
+                    alerts_created += 1
+
+        # ── Missed dose (30+ minutes past schedule) ───────────────────────
+        if now > next_dose + timedelta(minutes=30):
+            taken = db.query(MedicationAdherenceLog).filter(
                 MedicationAdherenceLog.medication_id == med.id,
-                MedicationAdherenceLog.scheduled_at == next_dose_time,
-                MedicationAdherenceLog.taken == True
+                MedicationAdherenceLog.scheduled_at == next_dose,
+                MedicationAdherenceLog.taken == True,
             ).first()
-            
-            if not taken_log:
-                # Check if already created missed alert
-                existing = db.query(NotificationQueue).filter(
-                    NotificationQueue.patient_id == med.patient_id,
-                    NotificationQueue.notification_type == 'medication_missed',
-                    NotificationQueue.related_id == med.id,
-                    NotificationQueue.created_at >= next_dose_time
+
+            if not taken:
+                patient = db.query(Patient).filter(Patient.id == med.patient_id).first()
+                if not patient:
+                    continue
+
+                # Log it once
+                already_logged = db.query(MedicationAdherenceLog).filter(
+                    MedicationAdherenceLog.medication_id == med.id,
+                    MedicationAdherenceLog.scheduled_at == next_dose,
                 ).first()
-                
-                if not existing:
-                    # Log as missed
-                    missed_log = MedicationAdherenceLog(
+                if not already_logged:
+                    db.add(MedicationAdherenceLog(
                         medication_id=med.id,
                         patient_id=med.patient_id,
-                        scheduled_at=next_dose_time,
+                        scheduled_at=next_dose,
                         taken=False,
-                        skipped_reason='Missed - not taken within 30 minutes'
-                    )
-                    db.add(missed_log)
-                    
-                    # Alert patient
-                    notification = NotificationQueue(
-                        patient_id=med.patient_id,
-                        notification_type='medication_missed',
-                        title='Missed Medication',
-                        message=f"You missed your {med.name} dose scheduled for {next_dose_time.strftime('%I:%M %p')}",
-                        # priority='high',
-                        related_alert_id=med.id,
-                        is_read=False
-                    )
-                    db.add(notification)
-                    
-                    # Alert caregiver/family
-                    family_links = db.query(PatientFamilyLink).filter(
-                        PatientFamilyLink.patient_id == med.patient_id
-                    ).all()
-                    
-                    for link in family_links:
-                        family_notif = NotificationQueue(
-                            user_id=link.family_user_id,
-                            notification_type='medication_missed',
-                            title='Patient Missed Medication',
-                            message=f"Patient missed {med.name} dose at {next_dose_time.strftime('%I:%M %p')}",
-                            # priority='high',
-                            related_alert_id=med.id,
-                            is_read=False
-                        )
-                        db.add(family_notif)
-                    
+                        skipped_reason='Missed - not taken within 30 minutes',
+                    ))
+
+                time_str = next_dose.strftime('%I:%M %p')
+                for uid in _patient_recipients(db, med.patient_id,
+                                               ['patient', 'caregiver', 'family', 'clinician']):
+                    if _already_sent(db, uid, 'medication_missed', med.id,
+                                     timedelta(minutes=45)):
+                        continue
+                    is_patient = (uid == getattr(patient, 'user_id', None))
+                    title = 'Missed Medication' if is_patient else f'Patient Missed Medication'
+                    body  = (f"You missed {med.name} {med.dose} scheduled at {time_str}."
+                             if is_patient else
+                             f"{patient.full_name} missed {med.name} {med.dose} at {time_str}.")
+                    db.add(_make_notif(uid, 'medication_missed', title, body,
+                                       related_alert_id=med.id))
                     alerts_created += 1
-    
+
     db.commit()
     return alerts_created
 
+
+# ── Critical vitals ───────────────────────────────────────────────────────────
 
 def check_critical_vitals(db: Session):
     """
-    Monitor latest vitals for critical values
-    Alert clinician and caregiver immediately for:
-    - O2 saturation < 90%
-    - Heart rate < 50 or > 120
-    - Blood pressure systolic > 180 or < 90
-    - Temperature > 38.5°C or < 35°C
+    Scan latest vitals (last 30 min) for threshold breaches.
+    Recipients: primary clinician + assigned caregivers + family
+    Patient is NOT alerted for critical vitals — that would cause panic.
     """
     alerts_created = 0
-    
-    # Get all active patients
-    patients = db.query(Patient).filter(
+
+    for patient in db.query(Patient).filter(
         Patient.status.in_(['active', 'critical'])
-    ).all()
-    
-    for patient in patients:
-        # Get latest vitals (within last 30 minutes)
-        latest_vital = db.query(Vital).filter(
+    ).all():
+        vital = db.query(Vital).filter(
             Vital.patient_id == patient.id,
-            Vital.recorded_at >= datetime.utcnow() - timedelta(minutes=30)
+            Vital.recorded_at >= datetime.utcnow() - timedelta(minutes=30),
         ).order_by(Vital.recorded_at.desc()).first()
-        
-        if not latest_vital:
+
+        if not vital:
             continue
-        
-        critical_issues = []
-        
-        # Check O2 saturation
-        if latest_vital.oxygen_saturation and latest_vital.oxygen_saturation < 90:
-            critical_issues.append(f"Critical hypoxemia: O2 sat {latest_vital.oxygen_saturation}%")
-        
-        # Check heart rate
-        if latest_vital.heart_rate:
-            if latest_vital.heart_rate < 50:
-                critical_issues.append(f"Critical bradycardia: HR {latest_vital.heart_rate} bpm")
-            elif latest_vital.heart_rate > 120:
-                critical_issues.append(f"Critical tachycardia: HR {latest_vital.heart_rate} bpm")
-        
-        # Check blood pressure
-        if latest_vital.blood_pressure_sys:
-            if latest_vital.blood_pressure_sys > 180:
-                critical_issues.append(f"Critical hypertension: BP {latest_vital.blood_pressure_sys} mmHg")
-            elif latest_vital.blood_pressure_sys < 90:
-                critical_issues.append(f"Critical hypotension: BP {latest_vital.blood_pressure_sys} mmHg")
-        
-        # Check temperature
-        if latest_vital.temperature:
-            if latest_vital.temperature > 38.5:
-                critical_issues.append(f"High fever: {latest_vital.temperature}°C")
-            elif latest_vital.temperature < 35:
-                critical_issues.append(f"Hypothermia: {latest_vital.temperature}°C")
-        
-        if critical_issues:
-            # Check if alert already exists for this vital reading
-            existing = db.query(Alert).filter(
-                Alert.patient_id == patient.id,
-                Alert.alert_type == 'critical_vitals',
-                Alert.created_at >= latest_vital.recorded_at - timedelta(minutes=5)
-            ).first()
-            
-            if not existing:
-                # Create critical alert
-                alert = Alert(
-                    patient_id=patient.id,
-                    alert_type='critical_vitals',
-                    severity='critical',
-                    message='; '.join(critical_issues),
-                    triggered_value=f"Vitals recorded at {latest_vital.recorded_at.strftime('%I:%M %p')}",
-                    is_acknowledged=False
-                )
-                db.add(alert)
-                
-                # Notify clinician
-                if patient.primary_clinician_id:
-                    clinician_notif = NotificationQueue(
-                        user_id=patient.primary_clinician_id,
-                        notification_type='critical_vitals',
-                        title=f'🚨 CRITICAL VITALS: {patient.full_name}',
-                        message='; '.join(critical_issues),
-                        # priority='critical',
-                        related_alert_id=patient.id,
-                        is_read=False
-                    )
-                    db.add(clinician_notif)
-                
-                # Notify caregiver/family
-                family_links = db.query(PatientFamilyLink).filter(
-                    PatientFamilyLink.patient_id == patient.id
-                ).all()
-                
-                for link in family_links:
-                    family_notif = NotificationQueue(
-                        user_id=link.family_user_id,
-                        notification_type='critical_vitals',
-                        title=f'Patient Needs Immediate Attention',
-                        message=f"Critical vital signs detected. Please check on patient immediately.",
-                        # priority='critical',
-                        related_alert_id=patient.id,
-                        is_read=False
-                    )
-                    db.add(family_notif)
-                
-                alerts_created += 1
-    
+
+        issues = []
+        if vital.oxygen_saturation and vital.oxygen_saturation < 90:
+            issues.append(f"SpO2 {vital.oxygen_saturation}% (critical: <90%)")
+        if vital.heart_rate:
+            if vital.heart_rate < 50:
+                issues.append(f"HR {vital.heart_rate} bpm (bradycardia)")
+            elif vital.heart_rate > 120:
+                issues.append(f"HR {vital.heart_rate} bpm (tachycardia)")
+        if vital.blood_pressure_sys:
+            if vital.blood_pressure_sys > 180:
+                issues.append(f"BP {vital.blood_pressure_sys} mmHg (hypertension)")
+            elif vital.blood_pressure_sys < 90:
+                issues.append(f"BP {vital.blood_pressure_sys} mmHg (hypotension)")
+        if vital.temperature:
+            if vital.temperature > 38.5:
+                issues.append(f"Temp {vital.temperature}°C (fever)")
+            elif vital.temperature < 35:
+                issues.append(f"Temp {vital.temperature}°C (hypothermia)")
+
+        if not issues:
+            continue
+
+        # Dedup: skip if alert already created for this patient in last 6h
+        existing_alert = db.query(Alert).filter(
+            Alert.patient_id == patient.id,
+            Alert.alert_type == 'critical_vitals',
+            Alert.created_at >= datetime.utcnow() - timedelta(hours=6),
+        ).first()
+
+        if existing_alert:
+            continue
+
+        # Create the Alert row
+        alert = Alert(
+            patient_id=patient.id,
+            alert_type='critical_vitals',
+            severity='critical',
+            message='; '.join(issues),
+            triggered_value='; '.join(issues),
+            is_acknowledged=False,
+        )
+        db.add(alert)
+        db.flush()  # get alert.id before using it
+
+        body_staff = (f"CRITICAL: {patient.full_name} — {'; '.join(issues)}. "
+                      f"Recorded at {vital.recorded_at.strftime('%H:%M')}.")
+        body_family = (f"The care team has been alerted about {patient.full_name}. "
+                       f"Issues detected: {'; '.join(issues)}.")
+
+        # Staff (clinician + caregivers) get the clinical detail
+        for uid in _patient_recipients(db, patient.id, ['clinician', 'caregiver']):
+            db.add(_make_notif(uid, 'critical_vitals',
+                               f'🚨 Critical Vitals: {patient.full_name}',
+                               body_staff, related_alert_id=alert.id))
+
+        # Family get a less clinical version
+        for uid in _patient_recipients(db, patient.id, ['family']):
+            db.add(_make_notif(uid, 'critical_vitals',
+                               f'Patient Update: {patient.full_name}',
+                               body_family, related_alert_id=alert.id))
+
+        # Also try to deliver via push/SMS
+        try:
+            for uid in _patient_recipients(db, patient.id, ['clinician', 'caregiver']):
+                _deliver_to_user(db, uid, f'Critical Vitals: {patient.full_name}',
+                                 body_staff, 'critical_vitals', patient.full_name, critical=True)
+        except Exception:
+            pass
+
+        alerts_created += 1
+
     db.commit()
     return alerts_created
 
 
-def calculate_next_dose_time(medication: Medication, current_time: datetime) -> datetime:
-    """
-    Calculate next scheduled dose time based on medication frequency
-    Returns None if cannot calculate
-    """
-    if not medication.frequency:
-        return None
-    
-    freq = medication.frequency.lower()
-    
-    # Parse frequency
-    if 'every 4 hours' in freq or 'q4h' in freq:
-        hours = 4
-    elif 'every 6 hours' in freq or 'q6h' in freq:
-        hours = 6
-    elif 'every 8 hours' in freq or 'q8h' in freq:
-        hours = 8
-    elif 'every 12 hours' in freq or 'q12h' in freq or 'twice daily' in freq or 'bid' in freq:
-        hours = 12
-    elif 'once daily' in freq or 'daily' in freq or 'qd' in freq:
-        hours = 24
-    elif 'twice a day' in freq:
-        hours = 12
-    elif 'three times a day' in freq or 'tid' in freq:
-        hours = 8
-    elif 'four times a day' in freq or 'qid' in freq:
-        hours = 6
-    else:
-        return None
-    
-    # Calculate next dose (round to next interval)
-    start_time = medication.start_date or medication.created_at
-    hours_since_start = (current_time - start_time).total_seconds() / 3600
-    next_dose_interval = int(hours_since_start / hours) + 1
-    next_dose_time = start_time + timedelta(hours=hours * next_dose_interval)
-    
-    return next_dose_time
+# ── Message notification ──────────────────────────────────────────────────────
+
+def create_message_notification(db: Session, recipient_id: int, sender_name: str,
+                                 message_preview: str):
+    """Create in-app notification for a new chat message."""
+    try:
+        db.add(_make_notif(
+            recipient_id, 'new_message',
+            f'New message from {sender_name}',
+            message_preview[:100] if message_preview else 'You have a new message',
+        ))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        import logging
+        logging.getLogger(__name__).error(f"Message notification failed: {e}")
 
 
-def send_alert_to_role(db: Session, patient_id: int, alert_type: str, message: str, 
-                       role: str, priority: str = 'medium'):
-    """
-    Send alert to specific role (clinician, caregiver, patient)
-    """
+# ── Generic role-targeted alert ───────────────────────────────────────────────
+
+def send_alert_to_role(db: Session, patient_id: int, alert_type: str,
+                       message: str, role: str, priority: str = 'medium'):
+    """Send a notification to all users of a given role linked to patient_id."""
+    role_map = {
+        'clinician': ['clinician'],
+        'caregiver':  ['caregiver'],
+        'patient':    ['patient'],
+        'family':     ['family'],
+        'all_staff':  ['clinician', 'caregiver'],
+        'all':        ['patient', 'family', 'clinician', 'caregiver'],
+    }
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
-    if not patient:
-        return
-    
-    if role == 'clinician' and patient.primary_clinician_id:
-        notification = NotificationQueue(
-            user_id=patient.primary_clinician_id,
-            notification_type=alert_type,
-            title=f'Alert for {patient.full_name}',
-            message=message,
-            # priority=priority,
-            related_alert_id=patient_id,
-            is_read=False
-        )
-        db.add(notification)
-    
-    elif role == 'caregiver':
-        family_links = db.query(PatientFamilyLink).filter(
-            PatientFamilyLink.patient_id == patient_id
-        ).all()
-        
-        for link in family_links:
-            notification = NotificationQueue(
-                user_id=link.family_user_id,
-                notification_type=alert_type,
-                title='Patient Alert',
-                message=message,
-                # priority=priority,
-                related_alert_id=patient_id,
-                is_read=False
-            )
-            db.add(notification)
-    
-    elif role == 'patient':
-        notification = NotificationQueue(
-            patient_id=patient_id,
-            notification_type=alert_type,
-            title='Health Alert',
-            message=message,
-            # priority=priority,
-            related_alert_id=patient_id,
-            is_read=False
-        )
-        db.add(notification)
-    
+    pname   = patient.full_name if patient else 'Patient'
+
+    for uid in _patient_recipients(db, patient_id, role_map.get(role, [role])):
+        db.add(_make_notif(uid, alert_type, f'Alert: {pname}', message,
+                           related_alert_id=patient_id))
     db.commit()
 
 
+# ── Bulk dispatch helper ──────────────────────────────────────────────────────
 
-def create_message_notification(db: Session, recipient_id: int, sender_name: str, message_preview: str):
-    """
-    Create notification for new message
-    Used by messaging system
-    """
-    try:
-        notification = NotificationQueue(
-            recipient_id=recipient_id,
-            notification_type='new_message',
-            title=f'New message from {sender_name}',
-            body=message_preview[:100] if message_preview else 'You have a new message',
-            is_read=False,
-            is_sent=True,
-            sent_at=datetime.utcnow()
-        )
-        db.add(notification)
-        db.commit()
-        return notification
-    except Exception as e:
-        db.rollback()
-        print(f"❌ Failed to create message notification: {e}")
-        return None
+def dispatch_to_users(db: Session, recipient_ids: list, alert_type: str,
+                      title: str, body: str, related_alert_id: int = None):
+    """Send the same notification to a list of user IDs."""
+    for uid in recipient_ids:
+        db.add(_make_notif(uid, alert_type, title, body,
+                           related_alert_id=related_alert_id))
+    db.commit()
 
+
+# ── Push + SMS delivery wrapper ───────────────────────────────────────────────
 
 def _deliver_to_user(db, user_id: int, title: str, body: str,
                      alert_type: str, patient_name: str = "", critical: bool = False):
-    """Fire SMS + Web Push delivery for a user alongside the DB notification."""
+    """Fire Web Push + SMS delivery alongside the DB notification."""
     try:
         from services.delivery_service import deliver_notification
-        from src.db import PushSubscription, User
+        from src.db import PushSubscription
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             return
@@ -478,165 +410,99 @@ def _deliver_to_user(db, user_id: int, title: str, body: str,
 
 def dispatch_critical_alert(db, patient_id: int, alert_type: str,
                              message: str, patient_name: str = ""):
-    """
-    Create in-app notification AND fire SMS + Push for critical alerts.
-    Call this from check_critical_vitals, ML risk triggers, crisis detection.
-    """
-    from src.db import Patient, PatientFamilyLink, NotificationQueue, User
+    """Called from ML/alert routers to push an urgent notification to staff."""
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
-    if patient and not patient_name:
-        patient_name = patient.full_name or f"Patient #{patient_id}"
+    if not patient:
+        return
 
-    # Recipients: clinicians + family
-    recipient_ids = []
-    if patient and patient.primary_clinician_id:
-        recipient_ids.append(patient.primary_clinician_id)
-    for link in db.query(PatientFamilyLink).filter(
-        PatientFamilyLink.patient_id == patient_id
-    ).all():
-        recipient_ids.append(link.family_user_id)
-
-    title = f"🚨 {alert_type.replace('_', ' ').title()} - {patient_name}"
-
-    for uid in recipient_ids:
-        # In-app notification
-        notif = NotificationQueue(
-            recipient_id=uid,
-            notification_type=alert_type,
-            title=title,
-            body=message,
-            is_sent=True,
-            sent_at=__import__('datetime').datetime.utcnow(),
-            is_read=False,
-        )
-        db.add(notif)
-        # SMS + Push
-        _deliver_to_user(db, uid, title, message, alert_type, patient_name, critical=True)
-
+    for uid in _patient_recipients(db, patient_id, ['clinician', 'caregiver']):
+        db.add(_make_notif(uid, alert_type,
+                           f'🚨 Alert: {patient_name or patient.full_name}',
+                           message, related_alert_id=patient_id))
+        _deliver_to_user(db, uid, f'Alert: {patient_name or patient.full_name}',
+                         message, alert_type, patient_name, critical=True)
     db.commit()
 
 
-# ─── Booking / Services notifications ────────────────────────────────────────
+# ── Medication dose time calculator ──────────────────────────────────────────
 
-def notify_booking_confirmed(db: Session, booking_id: int):
-    """Send confirmation notification to patient and provider."""
-    try:
-        from src.db import ProviderBooking
-        booking = db.query(ProviderBooking).filter(ProviderBooking.id == booking_id).first()
-        if not booking:
-            return
+def calculate_next_dose_time(medication: Medication, current_time: datetime):
+    """Calculate next scheduled dose time from frequency string."""
+    if not medication.frequency:
+        return None
 
-        date_str = booking.requested_date.strftime('%A %d %B') if booking.requested_date else 'your upcoming date'
-        time_str = f' at {booking.start_time}' if booking.start_time else ''
+    freq = medication.frequency.lower()
 
-        # Notify patient
-        if booking.patient_id:
-            db.add(NotificationQueue(
-                recipient_id=booking.patient_id,
-                notification_type='booking_confirmed',
-                title='Booking Confirmed',
-                body=f'Your session on {date_str}{time_str} has been confirmed by your provider.',
-                is_read=False,
-                created_at=datetime.utcnow(),
-            ))
+    if any(x in freq for x in ['every 4', 'q4h', '4-hourly']):
+        hours = 4
+    elif any(x in freq for x in ['every 6', 'q6h', '6-hourly']):
+        hours = 6
+    elif any(x in freq for x in ['every 8', 'q8h', 'three times', 'tid', '3 times']):
+        hours = 8
+    elif any(x in freq for x in ['every 12', 'q12h', 'twice daily', 'twice a day', 'bd', 'bid']):
+        hours = 12
+    elif any(x in freq for x in ['once daily', 'daily', 'qd', 'od', 'every 24']):
+        hours = 24
+    else:
+        return None
 
-        # Notify provider
-        if booking.provider_id:
-            db.add(NotificationQueue(
-                recipient_id=booking.provider_id,
-                notification_type='booking_request',
-                title='New Booking Request',
-                body=f'You have a new booking request for {date_str}{time_str}.',
-                is_read=False,
-                created_at=datetime.utcnow(),
-            ))
+    start = getattr(medication, 'start_date', None) or getattr(medication, 'created_at', None)
+    if not start:
+        return None
 
-        db.commit()
-    except Exception as e:
-        print(f'[notify_booking_confirmed] Error: {e}')
+    hours_elapsed = (current_time - start).total_seconds() / 3600
+    next_interval = int(hours_elapsed / hours) + 1
+    return start + timedelta(hours=hours * next_interval)
 
 
-def notify_booking_cancelled(db: Session, booking_id: int, cancelled_by: str = 'patient'):
-    """Send cancellation notifications."""
-    try:
-        from src.db import ProviderBooking
-        booking = db.query(ProviderBooking).filter(ProviderBooking.id == booking_id).first()
-        if not booking:
-            return
+# ── Booking notifications (services marketplace) ─────────────────────────────
 
-        date_str = booking.requested_date.strftime('%A %d %B') if booking.requested_date else 'your session'
-        notify_id = booking.provider_id if cancelled_by == 'patient' else booking.patient_id
-
-        if notify_id:
-            db.add(NotificationQueue(
-                recipient_id=notify_id,
-                notification_type='booking_cancelled',
-                title='Booking Cancelled',
-                body=f'The booking for {date_str} has been cancelled.',
-                is_read=False,
-                created_at=datetime.utcnow(),
-            ))
-        db.commit()
-    except Exception as e:
-        print(f'[notify_booking_cancelled] Error: {e}')
+def notify_booking_confirmed(db: Session, booking):
+    """Notify patient and provider when a booking is confirmed."""
+    if getattr(booking, 'patient_id', None):
+        db.add(_make_notif(
+            booking.patient_id, 'booking_confirmed',
+            'Booking Confirmed',
+            f"Your appointment has been confirmed.",
+            related_alert_id=booking.id,
+        ))
+    if getattr(booking, 'provider_id', None):
+        db.add(_make_notif(
+            booking.provider_id, 'booking_request',
+            'New Booking Request',
+            f"You have a new appointment booking.",
+            related_alert_id=booking.id,
+        ))
+    db.commit()
 
 
-def check_upcoming_bookings(db: Session):
-    """
-    Send 24h reminders for upcoming confirmed bookings.
-    Called by the scheduler.
-    """
-    try:
-        from src.db import ProviderBooking
-        now  = datetime.utcnow()
-        tomorrow = now + timedelta(hours=25)
-        today    = now + timedelta(hours=23)
+def notify_booking_cancelled(db: Session, booking, notify_id: int):
+    db.add(_make_notif(
+        notify_id, 'booking_cancelled',
+        'Booking Cancelled',
+        f"An appointment booking has been cancelled.",
+        related_alert_id=booking.id,
+    ))
+    db.commit()
 
-        bookings = db.query(ProviderBooking).filter(
-            ProviderBooking.status == 'confirmed',
-            ProviderBooking.requested_date >= today.date(),
-            ProviderBooking.requested_date <= tomorrow.date(),
-        ).all()
 
-        for b in bookings:
-            for uid in [b.patient_id, b.provider_id]:
-                if not uid:
-                    continue
-                existing = db.query(NotificationQueue).filter(
-                    NotificationQueue.recipient_id == uid,
-                    NotificationQueue.notification_type == 'booking_reminder',
-                    NotificationQueue.body.contains(str(b.id)),
-                    NotificationQueue.created_at >= now - timedelta(hours=2),
-                ).first()
-                if not existing:
-                    date_str = b.requested_date.strftime('%A %d %B') if b.requested_date else 'tomorrow'
-                    time_str = f' at {b.start_time}' if b.start_time else ''
-                    db.add(NotificationQueue(
-                        recipient_id=uid,
-                        notification_type='booking_reminder',
-                        title='Session Reminder',
-                        body=f'Reminder: your care session is tomorrow ({date_str}{time_str}). Booking #{b.id}',
-                        is_read=False,
-                        created_at=datetime.utcnow(),
-                    ))
-        db.commit()
-        return len(bookings)
-    except Exception as e:
-        print(f'[check_upcoming_bookings] Error: {e}')
-        return 0
+def notify_booking_reminders(db: Session, bookings_due: list):
+    for uid, b in bookings_due:
+        date_str = b.requested_date.strftime('%A %d %B') if getattr(b, 'requested_date', None) else 'soon'
+        time_str = f" at {b.start_time}" if getattr(b, 'start_time', None) else ''
+        db.add(_make_notif(
+            uid, 'booking_reminder',
+            'Appointment Reminder',
+            f"You have an appointment on {date_str}{time_str}.",
+            related_alert_id=b.id,
+        ))
+    db.commit()
 
 
 def notify_provider_approved(db: Session, provider_user_id: int):
-    """Notify a provider that their application has been approved."""
-    try:
-        db.add(NotificationQueue(
-            recipient_id=provider_user_id,
-            notification_type='provider_approved',
-            title='Application Approved!',
-            body='Congratulations - your provider application has been approved. You are now live on Aura Services.',
-            is_read=False,
-            created_at=datetime.utcnow(),
-        ))
-        db.commit()
-    except Exception as e:
-        print(f'[notify_provider_approved] Error: {e}')
+    db.add(_make_notif(
+        provider_user_id, 'provider_approved',
+        'Application Approved',
+        'Your provider application has been approved. You can now receive bookings.',
+    ))
+    db.commit()
