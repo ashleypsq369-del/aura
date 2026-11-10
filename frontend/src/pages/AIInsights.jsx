@@ -1,1262 +1,1057 @@
 ﻿/**
- * AIInsights · Clinical Intelligence Hub v3
- * ==========================================
- * Design: Premium medical dark-header + card-based layout
- * Inspired by: Dribbble Netra (deep-slate + glow), Behance patient management
- * (dense cards, avatar rings, real-time indicators), fuselabcreative (surface
- * critical first, single-action deep-dive, coherent color system).
- *
- * Layout:
- * [Gradient dark hero header with KPI pills]
- * [3 main tabs: Risk | Drugs | System]
- * [LEFT: patient card list 55% | RIGHT: deep-dive panel 45% (sticky)]
+ * AIInsights - Clinical Intelligence Hub
+ * Purpose-built AI risk table. Click row → portal overlay matching FocusedAIExplanation quality.
  */
 import { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
- Brain, AlertTriangle, CheckCircle, TrendingDown, Search,
- RefreshCw, Activity, AlertCircle, Zap, Pill, Clock,
- Users, TrendingUp, ExternalLink, Loader2, BarChart2,
- Shield, X, Cpu, Beaker, ChevronRight, ListFilter,
- Heart, Target, Stethoscope,
+  Brain, AlertTriangle, CheckCircle, TrendingDown, Search,
+  RefreshCw, Zap, Pill, TrendingUp, ExternalLink,
+  Loader2, BarChart2, X, ChevronRight, Copy,
+  ThumbsUp, ThumbsDown, Activity,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { aiAPI, advancedMlAPI, mlAPI, patientsAPI } from '../api/client';
 import PageHeader from '../components/PageHeader';
 import toast from '../utils/toast';
-import {
- ResponsiveContainer, RadialBarChart, RadialBar,
- BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid,
-} from 'recharts';
 
-/* --- Design tokens ----------------------------------------------------------- */
-const RISK = {
- critical: {
- border: 'border-l-red-500', glow: 'shadow-red-500/20',
- ring: 'ring-2 ring-red-500/40', bg: 'bg-slate-50',
- badge: 'bg-red-600 text-white', text: 'text-red-600',
- barColor: '#e11d48', gradFrom: 'from-red-600', gradTo: 'to-rose-700',
- dot: 'bg-red-500 animate-pulse',label: 'Critical', Icon: AlertTriangle,
- avatarGrad: 'from-red-600 to-rose-700',
- topStripe: true,
- },
- high: {
- border: 'border-l-orange-500', glow: 'shadow-orange-500/20',
- ring: 'ring-2 ring-orange-400/40', bg: 'bg-slate-50',
- badge: 'bg-orange-500 text-white', text: 'text-orange-600',
- barColor: '#f97316', gradFrom: 'from-orange-500', gradTo: 'to-amber-600',
- dot: 'bg-orange-500', label: 'High Risk', Icon: AlertCircle,
- avatarGrad: 'from-orange-500 to-amber-600',
- topStripe: false,
- },
- moderate: {
- border: 'border-l-amber-500', glow: 'shadow-amber-400/15',
- ring: 'ring-2 ring-amber-400/30', bg: 'bg-slate-50',
- badge: 'bg-amber-500 text-white', text: 'text-amber-600',
- barColor: '#d97706', gradFrom: 'from-amber-500', gradTo: 'to-orange-500',
- dot: 'bg-amber-500', label: 'Moderate', Icon: Activity,
- avatarGrad: 'from-amber-500 to-orange-500',
- topStripe: false,
- },
- low: {
- border: 'border-l-teal-500', glow: 'shadow-teal-500/10',
- ring: '', bg: 'bg-slate-50',
- badge: 'bg-teal-600 text-white',text: 'text-teal-600',
- barColor: '#0d9488', gradFrom: 'from-teal-600', gradTo: 'to-emerald-600',
- dot: 'bg-teal-500', label: 'Stable', Icon: CheckCircle,
- avatarGrad: 'from-teal-500 to-emerald-600',
- topStripe: false,
- },
- unknown: {
- border: 'border-l-slate-400', glow: '',
- ring: '', bg: 'bg-slate-50',
- badge: 'bg-slate-500 text-white',text: 'text-slate-500',
- barColor: '#94a3b8', gradFrom: 'from-slate-500', gradTo: 'to-slate-600',
- dot: 'bg-slate-400', label: 'Unknown', Icon: Shield,
- avatarGrad: 'from-slate-500 to-slate-600',
- topStripe: false,
- },
+/* ── Risk config ─────────────────────────────────────────────────────────── */
+const RISK_CFG = {
+  critical: { label:'Critical', color:'#dc2626', bg:'#fef2f2', border:'#fca5a5', pill:'#dc2626', text:'#fff', avatarBg:'linear-gradient(135deg,#dc2626,#b91c1c)' },
+  high:     { label:'High',     color:'#ea580c', bg:'#fff7ed', border:'#fed7aa', pill:'#ea580c', text:'#fff', avatarBg:'linear-gradient(135deg,#ea580c,#c2410c)' },
+  moderate: { label:'Moderate', color:'#d97706', bg:'#fffbeb', border:'#fde68a', pill:'#d97706', text:'#fff', avatarBg:'linear-gradient(135deg,#d97706,#b45309)' },
+  low:      { label:'Stable',   color:'#0d9488', bg:'#f0fdfa', border:'#99f6e4', pill:'#0d9488', text:'#fff', avatarBg:'linear-gradient(135deg,#0d9488,#0891b2)' },
+  unknown:  { label:'Unknown',  color:'#64748b', bg:'#f8fafc', border:'#e2e8f0', pill:'#64748b', text:'#fff', avatarBg:'linear-gradient(135deg,#64748b,#475569)' },
+};
+function riskCfg(level) {
+  const l = (level||'').toLowerCase();
+  if (l==='critical'||l==='crisis') return RISK_CFG.critical;
+  if (l==='high')                   return RISK_CFG.high;
+  if (l==='moderate'||l==='medium') return RISK_CFG.moderate;
+  if (l==='low'||l==='stable'||l==='normal') return RISK_CFG.low;
+  return RISK_CFG.unknown;
+}
+
+const DOMAIN_LABELS = {
+  vital_risk:'Vital Signs', symptom_burden:'Symptom Burden',
+  functional_decline:'Function', cognitive_impairment:'Cognition',
+  mental_health_risk:'Mental Health', medication_risk:'Medication',
+  caregiver_burden:'Caregiver', admission_risk:'Admission Risk',
 };
 
-function riskToken(level) {
- const l = (level || '').toLowerCase();
- if (l === 'crisis' || l === 'critical') return RISK.critical;
- if (l === 'high') return RISK.high;
- if (l === 'moderate' || l === 'medium') return RISK.moderate;
- if (l === 'low' || l === 'normal' || l === 'stable') return RISK.low;
- return RISK.unknown;
+function initials(name='') {
+  return name.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
 }
 
-const TASK_SHORT = {
- vital_risk: 'Vitals', symptom_burden: 'Symptoms',
- functional_decline: 'ADL', cognitive_impairment: 'Cognition',
- mental_health_risk: 'Mental', medication_risk: 'Meds',
- caregiver_burden: 'Caregiver', admission_risk: 'Admission',
-};
-
-function getInitials(name = '') {
- return name.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '?';
+function drugPair(it) {
+  const d1 = it.drug1||it.medication_1||it.drug_name_1||it.med1||it.medication1||'';
+  const d2 = it.drug2||it.medication_2||it.drug_name_2||it.med2||it.medication2||'';
+  return { d1, d2 };
 }
 
-/* --- Mini radial risk gauge -------------------------------------------------- */
-function RiskGauge({ score = 0, size = 52 }) {
- const pct = Math.round(score * 100);
- const color = score > 0.7 ? '#e11d48' : score > 0.4 ? '#f97316' : '#16a34a';
- return (
- <div className="flex flex-col items-center" style={{ width: size }}>
- <ResponsiveContainer width={size} height={Math.round(size * 0.72)}>
- <RadialBarChart cx="50%" cy="82%" innerRadius="56%" outerRadius="88%"
- barSize={6} data={[{ value: pct, fill: color }]} startAngle={180} endAngle={0}>
- <RadialBar minAngle={4} background={{ fill: '#f1f5f9' }} clockWise dataKey="value" cornerRadius={4} />
- </RadialBarChart>
- </ResponsiveContainer>
- <span className="font-black tabular-nums leading-none" style={{ fontSize: size < 50 ? 10 : 12, color }}>{pct}%</span>
- </div>
- );
+/* ── Score bar ───────────────────────────────────────────────────────────── */
+function ScoreBar({ pct, color }) {
+  return (
+    <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:90 }}>
+      <div style={{ flex:1, height:6, borderRadius:99, background:'var(--page-bg)', overflow:'hidden', minWidth:48 }}>
+        <div style={{ height:'100%', width:`${pct}%`, background:color, borderRadius:99, transition:'width 0.4s ease' }}/>
+      </div>
+      <span style={{ fontSize:12, fontWeight:800, tabularNums:true, color, minWidth:34, textAlign:'right' }}>{pct}%</span>
+    </div>
+  );
 }
 
-/* --- 8-task compact pill grid · solid colors, white text, skip zeros ---------- */
-function TaskGrid({ tasks }) {
- if (!tasks || !Object.keys(tasks).length) return null;
- const entries = Object.entries(tasks)
- .map(([key, t]) => [key, t, Math.round((t.probability || 0) * 100)])
- .filter(([, , pct]) => pct > 0) // skip 0% tasks
- .sort(([, , a], [, , b]) => b - a); // highest first
+/* ── Detail overlay — portal, matches FocusedAIExplanation quality ───────── */
+function DetailOverlay({ patient, onClose }) {
+  const pid      = String(patient.id||patient.patient_id);
+  const cfg      = riskCfg(patient.risk_level);
+  const navigate = useNavigate();
+  const [tab,      setTab]      = useState('summary');
+  const [view,     setView]     = useState('focused');   // focused | comprehensive
+  const [feedback, setFeedback] = useState(null);
+  const [fbSent,   setFbSent]   = useState(false);
+  const [copied,   setCopied]   = useState(false);
+  const [acked,    setAcked]    = useState(false);
+  const [followUp, setFollowUp] = useState('');
 
- if (!entries.length) return null; // all zeros · show nothing
+  const { data:mlRisk, isLoading } = useQuery({
+    queryKey: ['ml-risk', pid],
+    queryFn: ()=>mlAPI.getPatientRisk(pid).then(r=>r.data),
+    enabled:!!pid, staleTime:5*60*1000, retry:false,
+  });
+  const { data:drugData } = useQuery({
+    queryKey: ['drug-ints', pid],
+    queryFn: ()=>advancedMlAPI.getDrugInteractions(pid).then(r=>r.data),
+    enabled:!!pid, staleTime:5*60*1000, retry:false,
+  });
 
- return (
- <div className="flex flex-wrap gap-1 mt-2">
- {entries.slice(0, 6).map(([key, , pct]) => {
- const [bg, txt, borderC] = pct > 70
- ? ['#fef2f2', '#dc2626', '#fca5a5']
- : pct > 40
- ? ['#fff7ed', '#ea580c', '#fed7aa']
- : pct > 15
- ? ['#fefce8', '#ca8a04', '#fde68a']
- : ['#f8fafc', '#64748b', '#e2e8f0'];
- return (
- <span key={key}
- className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-semibold"
- style={{ background: bg, color: txt, border: `1px solid ${borderC}` }}>
- {TASK_SHORT[key] || key}
- <span className="font-bold opacity-80">{pct}%</span>
- </span>
- );
- })}
- </div>
- );
+  const riskPct    = Math.round((mlRisk?.overall_risk??patient.overall_risk??0)*100);
+  const interactions = drugData?.interactions||[];
+  const severeInts   = interactions.filter(i=>['severe','SEVERE','major'].includes(i.severity));
+  const confidence   = mlRisk?.confidence ?? mlRisk?.model_confidence ?? null;
+
+  const shapFeatures = useMemo(()=>{
+    if (!mlRisk?.tasks) return null;
+    const map={};
+    Object.values(mlRisk.tasks).forEach(t=>{
+      (t.top_features||[]).forEach(f=>{
+        const k=f.display_name||f.feature;
+        if (!map[k]||(f.pct||0)>(map[k].pct||0)) map[k]=f;
+      });
+    });
+    const arr=Object.values(map).filter(f=>(f.pct||0)>0).sort((a,b)=>(b.pct||0)-(a.pct||0)).slice(0,8);
+    if (!arr.length) return null;
+    return arr.map(f=>({
+      name:f.display_name||f.feature,
+      shap_value:f.shap_value||0, pct:f.pct||0,
+      impact:f.impact, value:f.value,
+    }));
+  }, [mlRisk]);
+
+  const domains = Object.entries(mlRisk?.tasks||{})
+    .filter(([,t])=>(t.probability||0)>0)
+    .sort(([,a],[,b])=>(b.probability||0)-(a.probability||0));
+
+  const name = patient.full_name||patient.patient_name||'Patient';
+
+  const copyToNote = () => {
+    const concerns = (mlRisk?.key_concerns||[]).map((c,i)=>`${i+1}. ${c}`).join('\n');
+    const actions  = (mlRisk?.recommended_actions||[]).map((a,i)=>`${i+1}. ${a}`).join('\n');
+    const text     = `AI Clinical Intelligence — ${name}\nRisk: ${cfg.label} (${riskPct}%)\n\nClinical Concerns:\n${concerns||'None'}\n\nRecommended Actions:\n${actions||'None'}`;
+    navigator.clipboard?.writeText(text).catch(()=>{});
+    setCopied(true);
+    setTimeout(()=>setCopied(false), 2000);
+  };
+
+  const TABS = [
+    { id:'summary', label:'Summary'      },
+    { id:'ai',      label:'AI Explanation'},
+    { id:'domains', label:'Risk Domains'  },
+  ];
+
+  const modal = (
+    <>
+      {/* Backdrop */}
+      <motion.div key="ai-bg"
+        initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+        onClick={onClose}
+        style={{ position:'fixed', inset:0, zIndex:9500, background:'rgba(0,0,0,0.45)' }}/>
+
+      {/* Card */}
+      <div style={{ position:'fixed', inset:0, zIndex:9501, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+        <motion.div key="ai-card"
+          initial={{ opacity:0, y:16, scale:0.97 }}
+          animate={{ opacity:1, y:0,  scale:1    }}
+          exit   ={{ opacity:0, y:8,  scale:0.97 }}
+          transition={{ type:'spring', damping:30, stiffness:360 }}
+          onClick={e=>e.stopPropagation()}
+          style={{
+            pointerEvents:'all',
+            background:'#ffffff',
+            borderRadius:14,
+            width:'100%', maxWidth:580,
+            maxHeight:'92vh',
+            display:'flex', flexDirection:'column',
+            boxShadow:'0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+            fontFamily:"'Inter','system-ui',sans-serif",
+            overflow:'hidden',
+          }}
+        >
+          {/* ── Modal header ── */}
+          <div style={{ padding:'14px 18px 12px', borderBottom:'1px solid #f1f5f9', flexShrink:0 }}>
+            <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:12 }}>
+              {/* Patient identity */}
+              <div style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
+                <div style={{ width:42, height:42, borderRadius:10, flexShrink:0,
+                  background:cfg.avatarBg, display:'flex', alignItems:'center', justifyContent:'center',
+                  color:'#fff', fontWeight:800, fontSize:14 }}>
+                  {initials(name)}
+                </div>
+                <div style={{ minWidth:0 }}>
+                  <p style={{ margin:'0 0 2px', fontSize:15, fontWeight:700, color:'#0f172a' }}>{name}</p>
+                  <p style={{ margin:0, fontSize:12, color:'#64748b' }}>
+                    {[patient.patient_code, patient.primary_diagnosis?.split('(')[0]?.trim()].filter(Boolean).join(' · ')}
+                  </p>
+                  <p style={{ margin:0, fontSize:11, color:'#94a3b8' }}>
+                    {[patient.age&&`${patient.age}y`, patient.gender, patient.care_setting].filter(Boolean).join(' · ')}
+                  </p>
+                </div>
+              </div>
+              {/* Risk + controls */}
+              <div style={{ display:'flex', alignItems:'flex-start', gap:10, flexShrink:0 }}>
+                <div style={{ textAlign:'right' }}>
+                  <p style={{ margin:'0 0 2px', fontSize:20, fontWeight:900, color:cfg.color, lineHeight:1 }}>{riskPct}%</p>
+                  <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99,
+                    background:cfg.pill, color:cfg.text, letterSpacing:'0.04em', textTransform:'uppercase' }}>
+                    {cfg.label}
+                  </span>
+                </div>
+                {/* Focused / Comprehensive toggle */}
+                <div style={{ display:'flex', borderRadius:7, border:'1px solid #e2e8f0', overflow:'hidden' }}>
+                  {['focused','comprehensive'].map(v=>(
+                    <button key={v} onClick={()=>setView(v)} style={{
+                      padding:'4px 10px', fontSize:11, fontWeight:600, border:'none', cursor:'pointer',
+                      background:view===v?'#0d9488':'transparent',
+                      color:view===v?'#fff':'#64748b', transition:'all 0.15s',
+                    }}>
+                      {v.charAt(0).toUpperCase()+v.slice(1)}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={onClose}
+                  style={{ width:28, height:28, borderRadius:'50%', background:'#f1f5f9',
+                    border:'none', cursor:'pointer', display:'flex', alignItems:'center',
+                    justifyContent:'center', color:'#64748b', flexShrink:0 }}>
+                  <X size={14}/>
+                </button>
+              </div>
+            </div>
+
+            {/* Info row */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', borderTop:'1px solid #f1f5f9',
+              borderBottom:'1px solid #f1f5f9', margin:'10px -18px 0', padding:'8px 18px', gap:4 }}>
+              {[
+                { label:'RISK LEVEL', value:cfg.label, color:cfg.color },
+                { label:'AI SCORE',   value:`${riskPct}%`, color:cfg.color },
+                { label:'DRUG FLAGS', value:interactions.length,
+                  color:severeInts.length>0?'#dc2626':'#0d9488' },
+                { label:'DOMAINS',    value:domains.length, color:'#0d9488' },
+              ].map(it=>(
+                <div key={it.label}>
+                  <p style={{ margin:'0 0 1px', fontSize:10, fontWeight:600, color:'#94a3b8', letterSpacing:'0.06em' }}>{it.label}</p>
+                  <p style={{ margin:0, fontSize:14, fontWeight:700, color:it.color||'#0f172a' }}>{it.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Tab bar ── */}
+          <div style={{ display:'flex', borderBottom:'1px solid #f1f5f9', flexShrink:0 }}>
+            {TABS.map(t=>(
+              <button key={t.id} onClick={()=>setTab(t.id)} style={{
+                flex:1, padding:'9px 4px', fontSize:12, fontWeight:tab===t.id?700:500,
+                color:tab===t.id?'#0d9488':'#64748b', background:'transparent', border:'none',
+                borderBottom:tab===t.id?'2px solid #0d9488':'2px solid transparent',
+                cursor:'pointer', transition:'all 0.15s',
+              }}>{t.label}</button>
+            ))}
+          </div>
+
+          {/* ── Scrollable body ── */}
+          <div style={{ flex:1, overflowY:'auto', padding:18, display:'flex', flexDirection:'column', gap:14 }}>
+            {isLoading ? (
+              <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'40px 0', gap:10 }}>
+                <Loader2 size={22} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
+                <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>Running AI analysis…</p>
+              </div>
+            ) : (
+              <>
+                {/* ── SUMMARY tab ── */}
+                {tab==='summary' && (
+                  <>
+                    {/* Severe drug alert */}
+                    {severeInts.length>0 && (
+                      <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 12px',
+                        background:'#fef2f2', borderRadius:8, border:'1px solid #fca5a5' }}>
+                        <AlertTriangle size={13} style={{ color:'#dc2626', flexShrink:0 }}/>
+                        <p style={{ margin:0, fontSize:12, fontWeight:600, color:'#dc2626' }}>
+                          {severeInts.length} severe drug interaction{severeInts.length>1?'s':''} — review before administering
+                        </p>
+                      </div>
+                    )}
+
+                    {/* AI confidence */}
+                    {confidence!=null && (
+                      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                        <span style={{ fontSize:12, color:'#64748b', flexShrink:0 }}>AI confidence</span>
+                        <div style={{ flex:1, height:5, background:'#e2e8f0', borderRadius:99, overflow:'hidden' }}>
+                          <motion.div initial={{ width:0 }} animate={{ width:`${Math.round(confidence*100)}%` }}
+                            transition={{ duration:0.8, ease:'easeOut' }}
+                            style={{ height:'100%', background:'#0d9488', borderRadius:99 }}/>
+                        </div>
+                        <span style={{ fontSize:13, fontWeight:700, color:'#0f172a', flexShrink:0 }}>
+                          {Math.round(confidence*100)}%
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Clinical concerns */}
+                    {mlRisk?.key_concerns?.length>0 && (
+                      <div>
+                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>CLINICAL CONCERNS</p>
+                        <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                          {mlRisk.key_concerns.slice(0,5).map((c,i)=>(
+                            <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'7px 0',
+                              borderBottom:i<Math.min(mlRisk.key_concerns.length,5)-1?'1px solid #f8fafc':'none' }}>
+                              <span style={{ fontSize:12, fontWeight:600, color:'#f59e0b', flexShrink:0, minWidth:16 }}>{i+1}.</span>
+                              <p style={{ margin:0, fontSize:13, color:'#1e293b', lineHeight:1.55 }}>{c}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Recommended actions */}
+                    {mlRisk?.recommended_actions?.length>0 && (
+                      <div>
+                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>RECOMMENDED ACTIONS</p>
+                        <div style={{ display:'flex', flexDirection:'column', gap:0 }}>
+                          {mlRisk.recommended_actions.slice(0,5).map((a,i)=>{
+                            const urgent = /urgent|immediate|critical/i.test(a);
+                            return (
+                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'7px 0',
+                                borderBottom:i<Math.min(mlRisk.recommended_actions.length,5)-1?'1px solid #f8fafc':'none' }}>
+                                <span style={{ fontSize:12, fontWeight:600, color:'#94a3b8', flexShrink:0, minWidth:16 }}>{i+1}</span>
+                                <p style={{ margin:0, fontSize:13, color:'#1e293b', lineHeight:1.55, flex:1, fontWeight:urgent?700:400 }}>{a}</p>
+                                {urgent && <span style={{ fontSize:11, fontWeight:700, color:'#dc2626', flexShrink:0 }}>URGENT</span>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Drug interactions */}
+                    {interactions.length>0 && (
+                      <div>
+                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>
+                          MEDICATION INTERACTIONS
+                          <span style={{ marginLeft:8, fontSize:11, fontWeight:700, padding:'1px 7px',
+                            borderRadius:99, background:'#fee2e2', color:'#dc2626' }}>
+                            {interactions.length}
+                          </span>
+                        </p>
+                        <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                          {interactions.slice(0,5).map((it,i)=>{
+                            const sev=['severe','SEVERE','major'].includes(it.severity);
+                            const { d1, d2 } = drugPair(it);
+                            return (
+                              <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10,
+                                padding:'8px 12px', borderRadius:8,
+                                background:sev?'#fef2f2':'#fffbeb',
+                                border:`1px solid ${sev?'#fca5a5':'#fde68a'}` }}>
+                                <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99,
+                                  background:sev?'#dc2626':'#f59e0b', color:'#fff', flexShrink:0, alignSelf:'flex-start' }}>
+                                  {it.severity?.toUpperCase()}
+                                </span>
+                                <div style={{ minWidth:0 }}>
+                                  {d1&&d2
+                                    ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'#1e293b' }}>{d1} + {d2}</p>
+                                    : d1
+                                      ? <p style={{ margin:'0 0 2px', fontSize:12, fontWeight:600, color:'#1e293b' }}>{d1}</p>
+                                      : <p style={{ margin:'0 0 2px', fontSize:12, color:'#94a3b8', fontStyle:'italic' }}>Drug details pending</p>
+                                  }
+                                  {it.description && (
+                                    <p style={{ margin:0, fontSize:11, color:'#64748b', lineHeight:1.5 }}>{it.description}</p>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* No concerns fallback */}
+                    {!mlRisk?.key_concerns?.length && !mlRisk?.recommended_actions?.length && (
+                      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                        padding:'32px 24px', gap:8, textAlign:'center',
+                        background:'linear-gradient(135deg,#f0fdf490,#dcfce790)', borderRadius:10, border:'1px solid #bbf7d0' }}>
+                        <CheckCircle size={28} style={{ color:'#16a34a', opacity:0.7 }}/>
+                        <p style={{ margin:0, fontWeight:700, fontSize:14, color:'#15803d' }}>No critical concerns</p>
+                        <p style={{ margin:0, fontSize:12, color:'#16a34a' }}>Patient indicators are within acceptable ranges.</p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* ── AI EXPLANATION tab ── */}
+                {tab==='ai' && (
+                  <>
+                    {view==='focused' ? (
+                      /* Focused: top concerns driving the score */
+                      <>
+                        {shapFeatures?.length>0 ? (
+                          <div>
+                            <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>
+                              {mlRisk?.tasks?.[Object.keys(mlRisk.tasks)[0]]?.shap_available
+                                ? 'SHAP — FACTORS DRIVING THIS RISK SCORE'
+                                : 'CLINICAL FEATURE IMPORTANCE'}
+                            </p>
+                            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                              {shapFeatures.slice(0,5).map((f,i)=>{
+                                const isRisk = f.impact==='increases_risk'||f.shap_value>0;
+                                const col    = isRisk?'#dc2626':'#0d9488';
+                                return (
+                                  <div key={i} style={{ display:'flex', alignItems:'center', gap:10 }}>
+                                    <span style={{ fontSize:11, color:'#94a3b8', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
+                                    <span style={{ fontSize:12, color:'#334155', flex:1, minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</span>
+                                    <div style={{ width:80, height:5, background:'#e2e8f0', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
+                                      <div style={{ height:'100%', width:`${Math.round((f.pct/Math.max(...shapFeatures.map(x=>x.pct),1))*100)}%`, background:col, borderRadius:99 }}/>
+                                    </div>
+                                    <span style={{ fontSize:11, fontWeight:700, color:col, width:60, textAlign:'right', flexShrink:0 }}>
+                                      {isRisk?'Raises':'Lowers'} risk
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ textAlign:'center', padding:'32px 24px' }}>
+                            <CheckCircle size={28} style={{ color:'#0d9488', opacity:0.5, margin:'0 auto 8px' }}/>
+                            <p style={{ fontWeight:600, color:'#475569', margin:'0 0 4px' }}>No significant risk drivers</p>
+                            <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>This patient's clinical indicators are within normal ranges.</p>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* Comprehensive: all 8 features with value + impact bar */
+                      <>
+                        <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>CONTRIBUTING FACTORS (ALL)</p>
+                        {shapFeatures?.length>0 ? (
+                          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                            {shapFeatures.map((f,i)=>{
+                              const isRisk = f.impact==='increases_risk'||f.shap_value>0;
+                              const col    = isRisk?'#dc2626':'#0d9488';
+                              const valStr = f.value!=null&&f.value!==0
+                                ? (typeof f.value==='number'
+                                    ? f.value%1===0?String(f.value):f.value.toFixed(1)
+                                    : String(f.value))
+                                : null;
+                              return (
+                                <div key={i} style={{ display:'flex', alignItems:'center', gap:10 }}>
+                                  <span style={{ fontSize:11, color:'#94a3b8', width:16, flexShrink:0, fontWeight:700 }}>#{i+1}</span>
+                                  <div style={{ flex:1, minWidth:0 }}>
+                                    <p style={{ margin:'0 0 1px', fontSize:12, color:'#334155', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{f.name}</p>
+                                    {valStr && <p style={{ margin:0, fontSize:10, color:'#94a3b8' }}>Value: <strong style={{ color:'#475569' }}>{valStr}</strong></p>}
+                                  </div>
+                                  <div style={{ width:100, height:5, background:'#e2e8f0', borderRadius:99, flexShrink:0, overflow:'hidden' }}>
+                                    <div style={{ height:'100%', width:`${Math.round((f.pct/Math.max(...shapFeatures.map(x=>x.pct),1))*100)}%`, background:col, borderRadius:99 }}/>
+                                  </div>
+                                  <span style={{ fontSize:11, fontWeight:700, color:col, width:56, textAlign:'right', flexShrink:0 }}>
+                                    {isRisk?<TrendingUp size={10}/>:<TrendingDown size={10}/>}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>No feature data available.</p>
+                        )}
+                      </>
+                    )}
+
+                    {/* Legend */}
+                    <div style={{ display:'flex', gap:16, paddingTop:4 }}>
+                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#94a3b8' }}>
+                        <span style={{ width:8, height:8, borderRadius:'50%', background:'#dc2626', flexShrink:0 }}/>Raises risk
+                      </span>
+                      <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#94a3b8' }}>
+                        <span style={{ width:8, height:8, borderRadius:'50%', background:'#0d9488', flexShrink:0 }}/>Lowers risk
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                {/* ── DOMAINS tab ── */}
+                {tab==='domains' && (
+                  <>
+                    <p style={{ margin:'0 0 10px', fontSize:11, fontWeight:700, color:'#94a3b8', letterSpacing:'0.08em' }}>RISK PROBABILITY ACROSS 8 CLINICAL DOMAINS</p>
+                    {domains.length===0 ? (
+                      <p style={{ fontSize:12, color:'#94a3b8', textAlign:'center', padding:'32px 0' }}>No domain data available yet.</p>
+                    ) : (
+                      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                        {domains.slice(0,8).map(([key,task])=>{
+                          const pct = Math.round((task.probability||0)*100);
+                          const col = pct>70?'#dc2626':pct>40?'#ea580c':pct>15?'#d97706':'#0d9488';
+                          return (
+                            <div key={key} style={{ padding:'10px 12px', borderRadius:8,
+                              background:'var(--card-bg)', border:'1px solid var(--card-border)' }}>
+                              <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
+                                <p style={{ margin:0, fontSize:12, fontWeight:600, color:'#1e293b' }}>{DOMAIN_LABELS[key]||key}</p>
+                                <span style={{ fontSize:12, fontWeight:700, color:col }}>{pct}%</span>
+                              </div>
+                              <div style={{ height:5, borderRadius:99, background:'#e2e8f0', overflow:'hidden' }}>
+                                <motion.div style={{ height:'100%', background:col, borderRadius:99 }}
+                                  initial={{ width:0 }} animate={{ width:`${pct}%` }}
+                                  transition={{ duration:0.4, ease:'easeOut' }}/>
+                              </div>
+                              {task.top_features?.[0] && (
+                                <p style={{ margin:'4px 0 0', fontSize:11, color:'#94a3b8' }}>
+                                  Main factor: {task.top_features[0].display_name||task.top_features[0].feature}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Feedback */}
+                <div style={{ paddingTop:8, borderTop:'1px solid #f1f5f9' }}>
+                  {!fbSent ? (
+                    <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
+                      <span style={{ fontSize:12, color:'#64748b' }}>Was this helpful?</span>
+                      {[
+                        { type:'helpful',    label:'Helpful',      Icon:ThumbsUp    },
+                        { type:'partial',    label:'Partial',      Icon:Activity    },
+                        { type:'not_helpful',label:'Not helpful',  Icon:ThumbsDown  },
+                      ].map(({ type, label, Icon })=>(
+                        <button key={type} onClick={()=>{ setFeedback(type); setFbSent(true); }} style={{
+                          display:'flex', alignItems:'center', gap:5,
+                          padding:'5px 12px', borderRadius:6, border:'1px solid #e2e8f0',
+                          background:feedback===type?'#f0fdf4':'transparent',
+                          color:feedback===type?'#16a34a':'#475569',
+                          fontSize:12, fontWeight:500, cursor:'pointer', transition:'all 0.12s',
+                        }}>
+                          <Icon size={13}/>{label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                      <CheckCircle size={14} style={{ color:'#16a34a' }}/>
+                      <span style={{ fontSize:12, color:'#475569' }}>Thank you for your feedback.</span>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* ── Footer ── */}
+          <div style={{ padding:'10px 18px', borderTop:'1px solid #f1f5f9', display:'flex',
+            alignItems:'center', gap:8, flexShrink:0, background:'#fafafa' }}>
+            <input value={followUp} onChange={e=>setFollowUp(e.target.value)}
+              placeholder="Ask a follow-up question…"
+              style={{ flex:1, padding:'7px 12px', border:'1px solid #e2e8f0', borderRadius:7,
+                fontSize:12, color:'#334155', background:'#fff', outline:'none' }}
+              onFocus={e=>(e.target.style.borderColor='#0d9488')}
+              onBlur={e=>(e.target.style.borderColor='#e2e8f0')}/>
+            <button onClick={copyToNote} style={{
+              display:'flex', alignItems:'center', gap:5, padding:'7px 12px', borderRadius:7,
+              border:'1px solid #e2e8f0', background:'#fff', color:'#475569',
+              fontSize:12, fontWeight:600, cursor:'pointer', whiteSpace:'nowrap',
+            }}>
+              <Copy size={12}/>{copied?'Copied!':'Copy note'}
+            </button>
+            <button onClick={()=>navigate(`/patients/${pid}`)} style={{
+              display:'flex', alignItems:'center', gap:5, padding:'7px 14px', borderRadius:7,
+              background:acked?'#059669':'#0d9488', color:'#fff', border:'none',
+              fontSize:12, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap', transition:'background 0.2s',
+            }}>
+              <ExternalLink size={12}/>Open record
+            </button>
+          </div>
+
+          {/* Disclaimer */}
+          <p style={{ textAlign:'center', fontSize:10, color:'#94a3b8',
+            padding:'5px 20px 8px', margin:0, background:'#fafafa',
+            borderTop:'1px solid #f1f5f9', flexShrink:0 }}>
+            AI-generated decision support. Does not replace clinical judgment.
+          </p>
+        </motion.div>
+      </div>
+    </>
+  );
+
+  if (typeof document==='undefined') return null;
+  return createPortal(<AnimatePresence>{modal}</AnimatePresence>, document.body);
 }
 
-/* --- SHAP / Feature Importance display --------------------------------------- */
-function ShapBars({ features, shapAvailable }) {
- if (!features?.length) return (
- <div className="flex flex-col items-center justify-center py-6 gap-3 text-center">
- <div className="w-12 h-12 rounded-2xl bg-teal-100 flex items-center justify-center">
- <CheckCircle size={22} className="text-teal-600" />
- </div>
- <p className="text-sm font-bold text-slate-700">Low Risk Profile</p>
- <p className="text-xs text-[var(--text-400)] max-w-[200px]">
- No significant risk drivers detected. This patient appears to have a stable health profile.
- </p>
- </div>
- );
-
- const maxPct = Math.max(...features.map(f => f.pct || 0), 1);
-
- return (
- <div className="space-y-2.5">
- {/* Mode indicator */}
- <div className="flex items-center gap-2 pb-1">
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide ${
- shapAvailable
- ? 'bg-teal-600 text-white'
- : 'bg-amber-500 text-white'
- }`}>
- {shapAvailable ? 'XGBoost SHAP' : 'Feature Importance'}
- </span>
- <span className="text-[11px] text-slate-500">
- {shapAvailable
- ? 'Real SHAP values · mathematically precise feature contributions'
- : 'Fallback: XGBoost feature importance (SHAP computation unavailable)'
- }
- </span>
- </div>
-
- {features.map((f, i) => {
- const risk = f.impact === 'increases_risk' || f.shap_value > 0;
- const neutral = f.impact === 'neutral';
- // Bar width relative to max pct in this set
- const barW = Math.round((f.pct / maxPct) * 100);
-
- const rowCls = neutral
- ? 'bg-[var(--card-bg)] border-slate-200'
- : risk
- ? 'bg-red-50 border-red-100'
- : 'bg-emerald-50 border-emerald-100';
-
- const barCls = neutral
- ? 'bg-slate-400'
- : risk
- ? 'bg-gradient-to-r from-red-500 to-rose-600'
- : 'bg-gradient-to-r from-emerald-500 to-teal-600';
-
- const iconCls = neutral
- ? 'bg-slate-400'
- : risk ? 'bg-red-500' : 'bg-emerald-500';
-
- return (
- <motion.div key={i}
- initial={{ opacity: 0, y: 4 }}
- animate={{ opacity: 1, y: 0 }}
- transition={{ delay: i * 0.04 }}
- className={`rounded-xl border p-3 ${rowCls}`}
- >
- {/* Row top: icon + name + value badges */}
- <div className="flex items-start gap-2.5 mb-2">
- {/* Direction dot */}
- <span className={`w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5 ${iconCls}`}>
- {neutral ? (
- <span className="w-2 h-2 rounded-full bg-slate-50" />
- ) : risk ? (
- <TrendingUp size={11} className="text-white" />
- ) : (
- <TrendingDown size={11} className="text-white" />
- )}
- </span>
-
- <div className="flex-1 min-w-0">
- <p className="text-xs font-bold text-[var(--text-800)] leading-tight truncate">
- {f.name}
- </p>
- {/* Clinical measurement value */}
- {f.feature_value !== undefined && f.feature_value !== 0 && (
- <p className="text-[11px] text-[var(--text-500)] mt-0.5">
- Value: <span className="font-bold text-slate-700">{
- typeof f.feature_value === 'number'
- ? f.feature_value % 1 === 0
- ? f.feature_value
- : f.feature_value.toFixed(1)
- : f.feature_value
- }</span>
- </p>
- )}
- </div>
-
- {/* SHAP / importance badges */}
- <div className="flex flex-col items-end gap-1 flex-shrink-0">
- {/* Importance % badge */}
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
- neutral
- ? 'bg-slate-100 text-slate-600'
- : risk
- ? 'bg-red-600 text-white'
- : 'bg-emerald-600 text-white'
- }`}>
- {f.pct.toFixed(1)}% importance
- </span>
- {/* SHAP value (only if real SHAP, not zero) */}
- {shapAvailable && f.shap_value !== 0 && (
- <span className="text-[11px] text-[var(--text-400)] font-mono">
- SHAP: {f.shap_value > 0 ? '+' : ''}{f.shap_value.toFixed(4)}
- </span>
- )}
- </div>
- </div>
-
- {/* Relative importance bar */}
- <div className="h-1.5 rounded-full bg-white/80 overflow-hidden">
- <motion.div
- className={`h-full rounded-full ${barCls}`}
- initial={{ width: 0 }}
- animate={{ width: `${barW}%` }}
- transition={{ duration: 0.5, delay: i * 0.04 }}
- />
- </div>
- </motion.div>
- );
- })}
-
- <div className="flex gap-4 pt-1 border-t border-slate-100">
- <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
- <span className="w-2.5 h-2.5 rounded-full bg-red-500" />Increases risk
- </span>
- <span className="flex items-center gap-1.5 text-[11px] text-slate-400">
- <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />Decreases risk
- </span>
- <span className="flex items-center gap-1.5 text-[11px] text-[var(--text-400)] ml-auto">
- Bar width = relative importance
- </span>
- </div>
- </div>
- );
-}
-
-/* --- Premium patient card ----------------------------------------------------
- Design: Avatar ring with risk color glow, compact data density, two CTA buttons
- ------------------------------------------------------------------------------- */
-function PatientCard({ p, isSelected, onSelect, onNavigate }) {
- const tok = riskToken(p.risk_level);
- const pct = Math.round((p.overall_risk || 0) * 100);
- const name = p.full_name || p.patient_name || 'Unknown Patient';
-
- return (
- <motion.div
- layout
- initial={{ opacity: 0, y: 10 }}
- animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.97 }}
- whileHover={{ y: -1 }}
- transition={{ type: 'spring', damping: 28, stiffness: 400 }}
- className={`
- relative rounded-2xl border border-[var(--card-border)] overflow-hidden cursor-pointer
- shadow-sm transition-all duration-150
- border-l-4 ${tok.border}
- ${isSelected
- ? `${tok.ring} shadow-lg`
- : `hover:shadow-md hover:border-slate-300`
- }
- `}
- style={{ background: '#ffffff' }}
- onClick={() => onSelect(p.id)}
- >
- {/* Critical pulsing top border */}
- {(p.risk_level?.toLowerCase() === 'critical' || p.risk_level?.toLowerCase() === 'crisis') && (
- <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-600 via-rose-400 to-red-600 animate-pulse" />
- )}
-
- <div className="p-4">
- {/* Top row: Avatar + name + risk badge + gauge */}
- <div className="flex items-start gap-3 mb-3">
- {/* Avatar with risk-colored ring */}
- <div className="relative flex-shrink-0">
- <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tok.avatarGrad} flex items-center justify-center text-white font-black text-sm shadow-md`}>
- {getInitials(name)}
- </div>
- {/* Live status dot */}
- <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${tok.dot}`} />
- </div>
-
- {/* Patient info */}
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
- <span className="font-bold text-[var(--text-900)] text-sm leading-tight truncate">{name}</span>
- <span className={`text-[11px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide ${tok.badge}`}>
- {tok.label}
- </span>
- </div>
- <div className="flex items-center gap-2 text-[11px] text-[var(--text-400)] dark:text-slate-500">
- {p.patient_code && <span className="font-semibold">{p.patient_code}</span>}
- {p.age && <><span className="opacity-40">·</span><span>{p.age}y</span></>}
- {p.gender && <><span className="opacity-40">·</span><span>{p.gender}</span></>}
- </div>
- </div>
-
- {/* Risk gauge */}
- <div className="flex-shrink-0">
- <RiskGauge score={p.overall_risk || 0} size={48} />
- </div>
- </div>
-
- {/* Diagnosis / top concern */}
- {(p.top_concern || p.primary_diagnosis) && (
- <div className="flex items-start gap-1.5 mb-2.5">
- <Target size={11} className="text-amber-400 flex-shrink-0 mt-0.5" />
- <p className="text-[11px] text-[var(--text-600)] dark:text-[var(--text-400)] leading-snug line-clamp-1 font-medium">
- {p.top_concern || p.primary_diagnosis}
- </p>
- </div>
- )}
-
- {/* First key concern */}
- {p.key_concerns?.[0] && (
- <div className="flex items-start gap-1.5 mb-2.5 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100 dark:border-amber-900/30">
- <AlertTriangle size={10} className="text-amber-500 flex-shrink-0 mt-0.5" />
- <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-snug line-clamp-1">{p.key_concerns[0]}</p>
- </div>
- )}
-
- {/* Task mini-bars grid */}
- {p.tasks && Object.keys(p.tasks).length > 0 && (
- <div className="mb-3">
- <TaskGrid tasks={p.tasks} />
- </div>
- )}
-
- {/* Action buttons */}
- <div className="flex items-center gap-2 pt-2.5 border-t border-[var(--card-border)]/50/50">
- <button
- onClick={e => { e.stopPropagation(); onNavigate(p.id || p.patient_id); }}
- className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-[var(--text-700)] rounded-lg text-xs font-bold transition"
- >
- <ExternalLink size={11} /> View Patient
- </button>
- <button
- onClick={e => { e.stopPropagation(); onSelect(p.id); }}
- className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ml-auto ${
- isSelected
- ? 'bg-teal-700 text-white'
- : 'bg-teal-600 hover:bg-teal-700 text-white'
- }`}
- >
- <Brain size={11} /> {isSelected ? 'Close' : 'Deep-Dive'}
- </button>
- </div>
- </div>
- </motion.div>
- );
-}
-
-/* --- Deep-Dive right panel · redesigned ------------------------------------ */
-function DeepDivePanel({ patient, navigate, onClose }) {
- const pid = String(patient.id || patient.patient_id);
- const [innerTab, setInnerTab] = useState('overview');
- const tok = riskToken(patient.risk_level);
-
- const { data: mlRisk, isLoading: mlLoad } = useQuery({
- queryKey: ['ml-risk', pid],
- queryFn: () => mlAPI.getPatientRisk(pid).then(r => r.data),
- enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
- });
- const { data: deterioration } = useQuery({
- queryKey: ['deterioration', pid],
- queryFn: () => advancedMlAPI.getDeterioration(pid).then(r => r.data),
- enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
- });
- const { data: drugData } = useQuery({
- queryKey: ['drug-ints', pid],
- queryFn: () => advancedMlAPI.getDrugInteractions(pid).then(r => r.data),
- enabled: !!pid, staleTime: 5 * 60 * 1000, retry: false,
- });
-
- const riskScore = mlRisk?.overall_risk ?? (patient.overall_risk || 0);
- const severeInts = (drugData?.interactions || []).filter(i => ['severe','SEVERE','major'].includes(i.severity));
-
- const shapFeatures = useMemo(() => {
- if (!mlRisk?.tasks) return null;
-
- // Collect top features from all tasks, deduplicate by display_name,
- // keep whichever task gives the highest pct (importance %)
- const map = {};
- Object.values(mlRisk.tasks).forEach(t => {
- (t.top_features || []).forEach(f => {
- const k = f.display_name || f.feature;
- if (!map[k] || (f.pct || 0) > (map[k].pct || 0)) {
- map[k] = f;
- }
- });
- });
-
- const arr = Object.values(map)
- .filter(f => (f.pct || f.importance || 0) > 0) // only features with non-zero importance
- .sort((a, b) => (b.pct || b.importance || 0) - (a.pct || a.importance || 0))
- .slice(0, 10);
-
- if (!arr.length) return null;
-
- return arr.map(f => ({
- name: f.display_name || f.feature,
- shap_value: f.shap_value, // raw SHAP value (may be 0 for fallback)
- pct: f.pct || 0, // importance % · always meaningful
- impact: f.impact,
- feature_value: f.value, // actual clinical measurement
- shap_available: mlRisk.tasks[Object.keys(mlRisk.tasks)[0]]?.shap_available ?? false,
- }));
- }, [mlRisk]);
-
- const sortedTasks = Object.entries(mlRisk?.tasks || {}).sort(([, a], [, b]) => (b.probability || 0) - (a.probability || 0));
-
- const TABS = [
- { id: 'overview', label: 'Overview', Icon: Stethoscope },
- { id: 'shap', label: 'AI Explain', Icon: Zap },
- { id: 'domains', label: 'Domains', Icon: BarChart2 },
- { id: 'timeline', label: 'Timeline', Icon: TrendingDown },
- ];
-
- /* avatar initials */
- const initials = (patient.full_name || patient.patient_name || 'P')
- .split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
- const riskPct = Math.round(riskScore * 100);
- const hdrBg = tok.label === 'Critical' ? 'linear-gradient(135deg,#991b1b,#b91c1c)'
- : tok.label === 'High' ? 'linear-gradient(135deg,#9a3412,#c2410c)'
- : (tok.label === 'Moderate' || tok.label === 'Medium') ? 'linear-gradient(135deg,#92400e,#b45309)'
- : 'linear-gradient(135deg,#065f46,#0f766e)';
-
- return (
- <motion.div key={pid}
- initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 24 }}
- transition={{ type: 'spring', damping: 28, stiffness: 320 }}
- className="flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-[var(--card-border)] bg-[var(--card-bg)]"
- style={{ height: 'calc(100vh - 200px)', minHeight: 520 }}
- >
- {/* -- Header -- */}
- <div className="flex-shrink-0 relative overflow-hidden" style={{ background: hdrBg }}>
- <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white, transparent 60%)' }} />
- <div className="relative px-5 py-4">
- <div className="flex items-start gap-3">
- <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-base flex-shrink-0 shadow-lg"
- style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>
- {initials}
- </div>
- <div className="flex-1 min-w-0">
- <p className="font-bold text-white text-base leading-tight truncate">{patient.full_name || patient.patient_name}</p>
- <p className="text-white/60 text-xs mt-0.5 truncate">{patient.patient_code} · {patient.primary_diagnosis?.split('(')[0]?.trim() || ' - '}</p>
- <div className="flex items-center gap-2 mt-2">
- <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wide">{tok.label}</span>
- {patient.age && <span className="text-[11px] text-white/50">{patient.age}y</span>}
- </div>
- </div>
- <div className="flex flex-col items-center flex-shrink-0">
- <span className="text-3xl font-black text-white tabular-nums leading-none">{riskPct}%</span>
- <span className="text-[11px] text-white/50 font-bold uppercase mt-0.5">risk</span>
- </div>
- <button onClick={onClose}
- className="w-8 h-8 rounded-xl flex items-center justify-center text-white transition flex-shrink-0 self-start"
- style={{ background: 'rgba(255,255,255,0.15)' }}
- onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.3)'}
- onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.15)'}>
- <X size={14} />
- </button>
- </div>
- </div>
- </div>
-
- {/* Drug interaction alert bar */}
- {severeInts.length > 0 && (
- <div className="flex items-center gap-2 px-4 py-2 bg-red-600 flex-shrink-0">
- <Pill size={11} className="text-white flex-shrink-0" />
- <p className="text-xs font-bold text-white">
- {severeInts.length} severe drug interaction{severeInts.length > 1 ? 's' : ''} · review before administering
- </p>
- </div>
- )}
-
- {/* -- Pill tab bar -- */}
- <div className="flex-shrink-0 px-4 py-2.5 bg-[var(--card-bg)] border-b border-[var(--card-border)]/50">
- <div className="flex gap-1 bg-[var(--card-bg)] rounded-xl p-1 shadow-sm border border-[var(--card-border)]/50 overflow-x-auto" style={{ scrollbarWidth:'none', WebkitOverflowScrolling:'touch' }}>
- {TABS.map(({ id, label, Icon: Ic }) => (
- <button key={id} onClick={() => setInnerTab(id)}
- className="flex-shrink-0 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap"
- style={innerTab === id
- ? { background: '#0d9488', color: 'white', boxShadow: '0 2px 8px rgba(13,148,136,0.25)' }
- : { color: '#94a3b8' }}
- onMouseEnter={e => { if (innerTab !== id) e.currentTarget.style.color = '#475569'; }}
- onMouseLeave={e => { if (innerTab !== id) e.currentTarget.style.color = '#94a3b8'; }}>
- <Ic size={11} className="flex-shrink-0" />{label}
- </button>
- ))}
- </div>
- </div>
-
- {/* -- Tab body -- */}
- <div className="flex-1 overflow-y-auto overscroll-contain">
- {mlLoad ? (
- <div className="flex flex-col items-center justify-center h-full gap-3">
- <div className="w-10 h-10 rounded-full border-2 border-violet-200 border-t-violet-600 animate-spin" />
- <p className="text-xs text-slate-400">Analysing with XGBoost - </p>
- </div>
- ) : (
- <div className="p-4 space-y-3">
- {/* -- OVERVIEW -- */}
- {innerTab === 'overview' && <>
- <div className="grid grid-cols-3 gap-2">
- {[
- { label:'Overall Risk', value:`${riskPct}%`, sub: tok.label,
- color: tok.label==='Critical'?'#ef4444':tok.label==='High'?'#f97316':tok.label==='Moderate'?'#f59e0b':'#10b981' },
- { label:'Domains', value: sortedTasks.filter(([,t])=>(t.probability||0)>0).length, sub:'elevated', color:'#818cf8' },
- { label:'Drug Flags', value: severeInts.length||(drugData?.interactions?.length??0), sub:'interactions',
- color: severeInts.length>0?'#ef4444':'#10b981' },
- ].map(s => (
- <div key={s.label} className="rounded-xl p-3 text-center bg-[var(--card-bg)] border border-[var(--card-border)]/50">
- <p className="text-xl font-black tabular-nums leading-none" style={{ color: s.color }}>{s.value}</p>
- <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-0.5">{s.sub}</p>
- <p className="text-[11px] text-[var(--text-500)] font-semibold mt-0.5">{s.label}</p>
- </div>
- ))}
- </div>
- {/* Key concerns */}
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
- <AlertTriangle size={13} className="text-amber-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)]">Key Concerns</p>
- {mlRisk?.key_concerns?.length > 0 && <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">{mlRisk.key_concerns.length}</span>}
- </div>
- <div className="p-3 space-y-2">
- {mlRisk?.key_concerns?.length ? mlRisk.key_concerns.slice(0,5).map((c,i) => (
- <div key={i} className="flex items-start gap-2.5">
- <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-black">{i+1}</span>
- <p className="text-xs text-[var(--text-700)] leading-relaxed">{c}</p>
- </div>
- )) : (
- <div className="flex items-center gap-2 py-1 text-slate-400">
- <CheckCircle size={13} className="text-emerald-500 flex-shrink-0" />
- <p className="text-xs">No critical concerns flagged</p>
- </div>
- )}
- </div>
- </div>
-
- {/* Recommended actions */}
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
- <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)]">Recommended Actions</p>
- </div>
- <div className="p-3 space-y-2">
- {mlRisk?.recommended_actions?.length ? mlRisk.recommended_actions.slice(0,4).map((a,i) => (
- <div key={i} className="flex items-start gap-2.5">
- <span className="w-4 h-4 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5"><span className="w-1.5 h-1.5 rounded-full bg-teal-500"/></span>
- <p className="text-xs text-[var(--text-700)] leading-relaxed">{a}</p>
- </div>
- )) : <p className="text-xs text-[var(--text-400)] py-1">Continue current care plan and monitoring schedule.</p>}
- </div>
- </div>
-
- {/* Drug interactions */}
- {drugData?.interactions?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
- <Pill size={13} className="text-red-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)]">Drug Interactions</p>
- <span className="ml-auto text-[11px] font-black px-2 py-0.5 rounded-full bg-red-100 text-red-700">{drugData.interactions.length}</span>
- </div>
- <div className="divide-y divide-slate-100 dark:divide-slate-700">
- {drugData.interactions.slice(0,4).map((it,i) => {
- const sev=['severe','SEVERE','major'].includes(it.severity);
- return (
- <div key={i} className="px-4 py-2.5 flex items-center gap-3">
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${sev?'bg-red-600 text-white':'bg-amber-500 text-white'}`}>{it.severity}</span>
- <p className="text-xs font-semibold flex-1 min-w-0 truncate text-[var(--text-800)]">{it.drug1} + {it.drug2}</p>
- </div>
- );
- })}
- </div>
- </div>
- )}
- {drugData && !drugData.interactions?.length && (
- <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-3 flex items-center gap-2">
- <CheckCircle size={14} className="text-emerald-600 flex-shrink-0"/>
- <p className="text-xs font-semibold text-emerald-800">No drug interactions · medication profile is clear</p>
- </div>
- )}
- </>}
-
- {/* -- AI EXPLANATION -- */}
- {innerTab === 'shap' && (<>
- <div className="flex items-center gap-2 px-1">
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${sortedTasks.some(([,t])=>t.shap_available)?'bg-teal-600 text-white':'bg-amber-500 text-white'}`}>
- {sortedTasks.some(([,t])=>t.shap_available)?'XGBoost SHAP':'Feature Importance'}
- </span>
- <p className="text-[11px] text-slate-400">Factors driving this risk prediction</p>
- </div>
- <ShapBars features={shapFeatures} shapAvailable={sortedTasks.some(([,t])=>t.shap_available)} />
- </>)}
-
- {/* -- DOMAINS -- */}
- {innerTab === 'domains' && (() => {
- const nonZero = sortedTasks.filter(([,t])=>(t.probability||0)>0);
- const display = nonZero.length>0?nonZero:sortedTasks;
- return (
- <div className="space-y-2">
- <p className="text-[11px] text-[var(--text-400)] px-1">Risk probability across XGBoost clinical domains</p>
- {display.slice(0,8).map(([key,task]) => {
- const pct = Math.round((task.probability||0)*100);
- const barC = pct>70?'#ef4444':pct>40?'#f97316':pct>15?'#f59e0b':'#10b981';
- const valC = pct>70?'text-red-600 dark:text-red-400':pct>40?'text-orange-600 dark:text-orange-400':pct>15?'text-amber-600 dark:text-amber-400':'text-emerald-600 dark:text-emerald-400';
- return (
- <div key={key} className="rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 px-4 py-3">
- <div className="flex items-center justify-between mb-2">
- <p className="text-xs font-bold text-[var(--text-800)]">{TASK_SHORT[key]||key}</p>
- <span className={`text-xs font-black tabular-nums ${valC}`}>{pct}%</span>
- </div>
- <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
- <motion.div className="h-full rounded-full" style={{ background: barC }}
- initial={{ width: 0 }} animate={{ width: `${pct}%` }}
- transition={{ duration: 0.5, ease: 'easeOut' }} />
- </div>
- {task.top_features?.[0] && (
- <p className="text-[11px] text-[var(--text-400)] mt-1.5 truncate">Top factor: {task.top_features[0].display_name}</p>
- )}
- </div>
- );
- })}
- </div>
- );
- })()}
-
- {/* -- TIMELINE -- */}
- {innerTab === 'timeline' && (
- !deterioration ? (
- <div className="flex flex-col items-center justify-center gap-3 py-10">
- <Loader2 size={20} className="animate-spin text-teal-400" />
- <p className="text-sm text-slate-400">Loading deterioration analysis - </p>
- </div>
- ) : (
- <div className="space-y-3">
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- {(() => {
- const dr = deterioration.deterioration_risk||0;
- const drPct = Math.round(dr*100);
- const drC = dr>0.5?'#ef4444':dr>0.25?'#f59e0b':'#10b981';
- const trend = deterioration.trend_direction||'stable';
- const tC = trend==='worsening'?'#ef4444':trend==='improving'?'#10b981':'#94a3b8';
- return (<>
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 p-4 text-center">
- <p className="text-3xl font-black tabular-nums leading-none" style={{color:drC}}>{drPct}%</p>
- <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">Deterioration Risk</p>
- </div>
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 p-4 text-center">
- <p className="text-xl font-black capitalize leading-none mt-1" style={{color:tC}}>{trend}</p>
- <p className="text-[11px] text-[var(--text-400)] uppercase tracking-wide mt-1.5">30-Day Trend</p>
- </div>
- </>);
- })()}
- </div>
- {deterioration.top_drivers?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
- <TrendingDown size={13} className="text-amber-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)]">Top Deterioration Drivers</p>
- </div>
- <div className="p-3 space-y-2">
- {deterioration.top_drivers.slice(0,4).map((d,i) => (
- <div key={i} className="flex items-start gap-2.5">
- <span className="w-5 h-5 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5 text-[11px] font-black">{i+1}</span>
- <p className="text-xs text-[var(--text-700)] leading-relaxed">{d.reason||d}</p>
- </div>
- ))}
- </div>
- </div>
- )}
- {(!deterioration.top_drivers||deterioration.top_drivers.length===0) && (
- <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-4 flex items-center gap-3">
- <CheckCircle size={18} className="text-emerald-600 flex-shrink-0" />
- <div>
- <p className="text-sm font-bold text-emerald-800">Stable Trajectory</p>
- <p className="text-xs text-emerald-700 mt-0.5">No significant deterioration drivers over 30 days.</p>
- </div>
- </div>
- )}
- {deterioration.recommendations?.length > 0 && (
- <div className="rounded-2xl bg-[var(--card-bg)] border border-[var(--card-border)]/50 overflow-hidden">
- <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[var(--card-border)]/50">
- <CheckCircle size={13} className="text-teal-500 flex-shrink-0" />
- <p className="text-xs font-bold text-[var(--text-700)]">Recommendations</p>
- </div>
- <div className="p-3 space-y-2">
- {deterioration.recommendations.slice(0,3).map((r,i) => (
- <div key={i} className="flex items-start gap-2.5">
- <span className="w-4 h-4 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5"><span className="w-1.5 h-1.5 rounded-full bg-teal-500"/></span>
- <p className="text-xs text-[var(--text-700)] leading-relaxed">{r}</p>
- </div>
- ))}
- </div>
- </div>
- )}
- </div>
- )
- )}
-
- {/* Open full record */}
- <button onClick={() => navigate(`/patients/${pid}`)}
- className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm text-white transition shadow-sm"
- style={{ background: 'linear-gradient(135deg,#0d9488,#0891b2)' }}
- onMouseEnter={e => e.currentTarget.style.opacity='.88'}
- onMouseLeave={e => e.currentTarget.style.opacity='1'}>
- <ExternalLink size={13} /> Open Full Patient Record
- </button>
-
- </div>
- )}
- </div>
- </motion.div>
- );
-}
-
-/* --- Drug Interactions Tab -------------------------------------------------- */
+/* ── Drug interactions tab ───────────────────────────────────────────────── */
 function DrugInteractionsTab() {
- const { data: drugAll, isLoading } = useQuery({
- queryKey: ['all-drug-ints'],
- queryFn: () => advancedMlAPI.getAllDrugInteractions().then(r => r.data),
- staleTime: 10 * 60 * 1000, retry: false,
- });
- const patients = drugAll?.patients || [];
- const severeCount = patients.filter(p => p.severe > 0).length;
- const totalInts = patients.reduce((s, p) => s + (p.total || p.interactions?.length || 0), 0);
- const allInts = patients
- .flatMap(p => (p.interactions || []).map(i => ({ ...i, patient_name: p.patient_name })))
- .sort((a, b) => { const o = { severe:0, SEVERE:0, major:1, moderate:2, minor:3 }; return (o[a.severity]??4)-(o[b.severity]??4); });
-
- if (isLoading) return (
- <div className="flex flex-col items-center justify-center py-20 gap-3">
- <Loader2 size={24} className="animate-spin text-teal-500" />
- <p className="text-sm text-slate-400">Scanning all patient medications - </p>
- </div>
- );
-
- return (
- <div className="space-y-4">
- {/* Compact stat row · no giant gradient blocks */}
- <div className="grid grid-cols-3 gap-3">
- {[
- { label: 'Patients Affected', value: patients.length,
- icon: Users, iconBg: '#fff7ed', iconColor: '#ea580c', valColor: '#9a3412' },
- { label: 'Severe / Major', value: severeCount,
- icon: AlertTriangle, iconBg: '#fef2f2', iconColor: '#dc2626', valColor: '#991b1b' },
- { label: 'Total Detected', value: totalInts,
- icon: Pill, iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
- ].map(({ label, value, icon: Ico, iconBg, iconColor, valColor }) => (
- <div key={label} className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] px-4 py-3 flex items-center gap-3 shadow-sm">
- <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
- style={{ backgroundColor: iconBg }}>
- <Ico size={15} style={{ color: iconColor }} />
- </div>
- <div className="min-w-0">
- <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{label}</p>
- <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{value}</p>
- </div>
- </div>
- ))}
- </div>
- {allInts.length === 0 ? (
- <div className="flex flex-col items-center justify-center py-12 gap-3 text-slate-400">
- <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
- <CheckCircle size={20} className="text-emerald-500" />
- </div>
- <p className="font-semibold text-emerald-700 text-sm">No drug interactions detected</p>
- <p className="text-xs text-slate-400">All patient medications are currently clear.</p>
- </div>
- ) : (
- <div className="space-y-2">
- {allInts.map((it, i) => {
- const sev = ['severe','SEVERE','major'].includes(it.severity);
- return (
- <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
- className={`rounded-xl border p-3.5 ${sev ? 'bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-950/10 dark:border-amber-800'}`}>
- <div className="flex items-start justify-between gap-3">
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap mb-1">
- <span className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase ${sev ? 'bg-red-600 text-white' : 'bg-amber-500 text-white'}`}>{it.severity}</span>
- <span className="text-xs font-bold text-[var(--text-800)]">{it.drug1} + {it.drug2}</span>
- </div>
- {it.description && <p className="text-[11px] text-[var(--text-600)] dark:text-slate-400">{it.description}</p>}
- </div>
- {it.patient_name && <span className="text-[11px] text-[var(--text-400)] flex-shrink-0">{it.patient_name}</span>}
- </div>
- </motion.div>
- );
- })}
- </div>
- )}
- </div>
- );
+  const { data:drugAll, isLoading } = useQuery({
+    queryKey: ['drug-interactions-all'],
+    queryFn: ()=>advancedMlAPI.getAllDrugInteractions?.().then(r=>r.data).catch(()=>({ patients:[] })),
+    staleTime: 10*60*1000, retry:false,
+  });
+  const withInts = (drugAll?.patients||[]).filter(p=>p.interactions?.length>0);
+  if (isLoading) return (
+    <div style={{ display:'flex', justifyContent:'center', padding:'64px 0' }}>
+      <Loader2 size={20} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
+    </div>
+  );
+  if (!withInts.length) return (
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+      padding:'64px 24px', gap:10, textAlign:'center' }}>
+      <CheckCircle size={32} style={{ color:'#0d9488', opacity:0.5 }}/>
+      <p style={{ fontWeight:600, color:'#475569', margin:0 }}>No drug interactions detected</p>
+      <p style={{ fontSize:12, color:'#94a3b8', margin:0 }}>All patient medication profiles are clear.</p>
+    </div>
+  );
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+      {withInts.map(p=>(
+        <div key={p.patient_id} style={{ borderRadius:12, border:'1px solid var(--card-border)',
+          overflow:'hidden', background:'var(--card-bg)' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 14px',
+            borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+            <div style={{ width:28, height:28, borderRadius:7, flexShrink:0,
+              background:'linear-gradient(135deg,#0d9488,#0891b2)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              color:'#fff', fontSize:11, fontWeight:700 }}>
+              {initials(p.patient_name||'')}
+            </div>
+            <p style={{ margin:0, fontSize:13, fontWeight:600, color:'var(--text-800)', flex:1 }}>{p.patient_name}</p>
+            {p.severe_count>0 && (
+              <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:99,
+                background:'#dc2626', color:'#fff' }}>
+                {p.severe_count} severe
+              </span>
+            )}
+          </div>
+          <div>
+            {p.interactions.slice(0,3).map((it,i)=>{
+              const sev=['severe','SEVERE','major'].includes(it.severity);
+              const { d1, d2 } = drugPair(it);
+              return (
+                <div key={i} style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 14px',
+                  borderBottom:i<Math.min(p.interactions.length,3)-1?'1px solid var(--card-border)':'none' }}>
+                  <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99, flexShrink:0,
+                    background:sev?'#dc2626':'#f59e0b', color:'#fff' }}>
+                    {it.severity?.toUpperCase()}
+                  </span>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    {d1&&d2
+                      ? <p style={{ margin:'0 0 1px', fontSize:12, fontWeight:600, color:'var(--text-800)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{d1} + {d2}</p>
+                      : <p style={{ margin:0, fontSize:12, color:'#94a3b8', fontStyle:'italic' }}>Drug details pending</p>
+                    }
+                    {it.description && (
+                      <p style={{ margin:0, fontSize:11, color:'var(--text-400)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{it.description}</p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-/* --- System Overview Tab ----------------------------------------------------- */
+/* ── System overview tab ─────────────────────────────────────────────────── */
 function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
- const { data: mlStatus } = useQuery({
- queryKey: ['ml-status'],
- queryFn: () => mlAPI.getStatus().then(r => r.data),
- staleTime: 5 * 60 * 1000, retry: false,
- });
- const patients = batchRisk?.patients || [];
- const distData = [
- { name: 'Critical', count: patients.filter(p => p.risk_level === 'critical').length, fill: '#e11d48' },
- { name: 'High', count: patients.filter(p => p.risk_level === 'high').length, fill: '#f97316' },
- { name: 'Moderate', count: patients.filter(p => p.risk_level === 'moderate').length, fill: '#d97706' },
- { name: 'Low', count: patients.filter(p => ['low','normal'].includes(p.risk_level)).length, fill: '#16a34a' },
- ].filter(d => d.count > 0);
-
- const stats = [
- { l: 'Total Monitored', v: patients.length,
- iconBg: '#f0fdfa', iconColor: '#0d9488', valColor: '#0f766e' },
- { l: 'Critical', v: patients.filter(p => p.risk_level === 'critical').length,
- iconBg: '#fef2f2', iconColor: '#dc2626', valColor: '#991b1b' },
- { l: 'Deteriorating', v: (sysData?.deteriorating_patients || []).length,
- iconBg: '#fffbeb', iconColor: '#d97706', valColor: '#92400e' },
- { l: 'Stable', v: (sysData?.stable_patients || []).length,
- iconBg: '#f0fdf4', iconColor: '#16a34a', valColor: '#166534' },
- { l: 'ML Tasks Loaded', v: (mlStatus?.total_tasks || 8) + 4,
- iconBg: '#f5f3ff', iconColor: '#7c3aed', valColor: '#4c1d95' },
- { l: 'SHAP Active', v: mlStatus?.shap_enabled ? 'Yes' : (mlStatus ? 'No' : ' - '),
- iconBg: '#f8fafc', iconColor: '#475569', valColor: '#1e293b' },
- ];
-
- return (
- <div className="space-y-5">
- <div className="grid grid-cols-3 gap-3">
- {stats.map(({ l, v, iconBg, iconColor, valColor }) => (
- <div key={l} className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] px-4 py-3 flex items-center gap-3 shadow-sm">
- <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
- style={{ backgroundColor: iconBg }}>
- <BarChart2 size={14} style={{ color: iconColor }} />
- </div>
- <div className="min-w-0">
- <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-400)] mb-0.5">{l}</p>
- <p className="text-xl font-bold tabular-nums leading-none" style={{ color: valColor }}>{v}</p>
- </div>
- </div>
- ))}
- </div>
-
- {distData.length > 0 && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-4">
- <p className="text-xs font-bold text-[var(--text-500)] mb-3 flex items-center gap-1">
- <BarChart2 size={12} className="text-teal-500" /> Patient Risk Distribution
- </p>
- <ResponsiveContainer width="100%" height={130}>
- <BarChart data={distData} barCategoryGap="30%">
- <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
- <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
- <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={24} />
- <Tooltip contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, fontSize: 12 }} cursor={{ fill: '#f8fafc' }} />
- <Bar dataKey="count" name="Patients" radius={[5, 5, 0, 0]}>
- {distData.map((d, i) => <Cell key={i} fill={d.fill} />)}
- </Bar>
- </BarChart>
- </ResponsiveContainer>
- </div>
- )}
-
- {mlStatus && (
- <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-4">
- <p className="text-xs font-bold text-[var(--text-500)] mb-3 flex items-center gap-1">
- <Cpu size={12} className="text-teal-500" /> Model Health
- </p>
- <div className="space-y-2.5">
- {[
- { label: 'Status', value: mlStatus.available ? '?? Online' : '?? Offline' },
- { label: 'Loaded Tasks', value: `${(mlStatus.loaded_tasks?.length || 0) + 4} / ${(mlStatus.total_tasks || 8) + 4} (8 XGBoost + 4 Advanced)` },
- { label: 'SHAP Explanations', value: mlStatus.shap_enabled ? '? Active' : '? Disabled' },
- ].map(({ label, value }) => (
- <div key={label} className="flex items-center justify-between py-1.5 border-b border-[var(--card-border)]/50 last:border-0">
- <span className="text-xs text-slate-500">{label}</span>
- <span className="text-xs font-bold text-[var(--text-800)]">{value}</span>
- </div>
- ))}
- {mlStatus.loaded_tasks?.length > 0 && (
- <div className="flex flex-wrap gap-1 pt-1">
- {mlStatus.loaded_tasks.map(t => (
- <span key={t} className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-violet-50 text-teal-700 border border-violet-100">
- {TASK_SHORT[t] || t}
- </span>
- ))}
- </div>
- )}
- </div>
- </div>
- )}
-
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] p-4">
- <div className="flex items-center gap-3 mb-3">
- <div className="w-8 h-8 rounded-lg bg-violet-50 border border-violet-200 flex items-center justify-center">
- <Beaker size={15} className="text-teal-600" />
- </div>
- <div>
- <p className="font-semibold text-[var(--text-800)] text-sm">Proactive Risk Scan</p>
- <p className="text-[11px] text-[var(--text-500)] dark:text-slate-400">XGBoost across all active patients</p>
- </div>
- </div>
- <button onClick={onScan} disabled={scanning}
- className="w-full py-2 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-lg font-semibold text-sm transition flex items-center justify-center gap-2">
- {scanning ? <Loader2 size={13} className="animate-spin" /> : <Zap size={13} />}
- {scanning ? 'Scanning patients - ' : 'Run Proactive Scan'}
- </button>
- </div>
- </div>
- );
+  const models = Object.entries(batchRisk?.model_performance||{});
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+      <div style={{ borderRadius:12, border:'1px solid var(--card-border)', overflow:'hidden', background:'var(--card-bg)' }}>
+        <div style={{ padding:'10px 14px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+          <p style={{ margin:0, fontSize:12, fontWeight:700, color:'var(--text-700)' }}>AI System Status</p>
+        </div>
+        <div style={{ padding:14, display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+          {[
+            { label:'ML Models',       value:batchRisk?.ml_available!==false?'8 Active':'Offline', ok:batchRisk?.ml_available!==false },
+            { label:'Last Scan',       value:batchRisk?.generated_at?new Date(batchRisk.generated_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'Never', ok:true },
+            { label:'Patients Scanned',value:batchRisk?.total_patients??0, ok:true },
+            { label:'Explainability',  value:'XGBoost SHAP', ok:true },
+          ].map(s=>(
+            <div key={s.label} style={{ borderRadius:8, border:'1px solid var(--card-border)', padding:10 }}>
+              <p style={{ margin:'0 0 1px', fontSize:12, fontWeight:700, color:'var(--text-800)' }}>{s.value}</p>
+              <p style={{ margin:'0 0 2px', fontSize:11, color:'var(--text-400)' }}>{s.label}</p>
+              <span style={{ fontSize:10, fontWeight:700, color:s.ok?'#0d9488':'#dc2626' }}>
+                {s.ok?'● Active':'● Offline'}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+      {models.length>0 && (
+        <div style={{ borderRadius:12, border:'1px solid var(--card-border)', overflow:'hidden', background:'var(--card-bg)' }}>
+          <div style={{ padding:'10px 14px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+            <p style={{ margin:0, fontSize:12, fontWeight:700, color:'var(--text-700)' }}>Model AUC Scores</p>
+          </div>
+          <div style={{ padding:14, display:'flex', flexDirection:'column', gap:8 }}>
+            {models.map(([key,m])=>{
+              const auc=m.auc_roc||m.auc||0;
+              return (
+                <div key={key} style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <p style={{ margin:0, fontSize:12, color:'var(--text-700)', width:120, flexShrink:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                    {DOMAIN_LABELS[key]||key}
+                  </p>
+                  <div style={{ flex:1, height:5, borderRadius:99, background:'var(--page-bg)', overflow:'hidden' }}>
+                    <div style={{ height:'100%', width:`${auc*100}%`, background:'#0d9488', borderRadius:99 }}/>
+                  </div>
+                  <span style={{ fontSize:12, fontWeight:700, color:'var(--text-700)', width:40, textAlign:'right' }}>
+                    {(auc*100).toFixed(1)}%
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      <button onClick={onScan} disabled={scanning} style={{
+        width:'100%', padding:'10px 0', borderRadius:10, fontSize:13, fontWeight:700,
+        color:'#fff', border:'none', cursor:'pointer', display:'flex', alignItems:'center',
+        justifyContent:'center', gap:6, opacity:scanning?0.6:1,
+        background:'linear-gradient(135deg,#0d9488,#0891b2)',
+      }}>
+        {scanning?<Loader2 size={14} style={{ animation:'spin 1s linear infinite' }}/>:<Zap size={14}/>}
+        {scanning?'Scanning all patients…':'Run Proactive AI Scan'}
+      </button>
+    </div>
+  );
 }
 
-/* --- Main component ---------------------------------------------------------- */
+/* ── Purpose-built AI Risk Table ─────────────────────────────────────────── */
+function RiskTable({ patients, deepDiveId, onSelect }) {
+  if (!patients.length) return (
+    <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+      padding:'64px 24px', gap:10, textAlign:'center' }}>
+      <Brain size={36} style={{ color:'#0d9488', opacity:0.4 }}/>
+      <p style={{ fontWeight:600, color:'var(--text-600)', margin:'0 0 4px' }}>No patients found</p>
+      <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>Try adjusting the risk filter or search term.</p>
+    </div>
+  );
+  return (
+    <div style={{ overflowX:'auto' }}>
+      <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
+        <thead>
+          <tr style={{ borderBottom:'2px solid var(--card-border)' }}>
+            {['Patient','Risk Level','AI Score','Top Concern',''].map((h,i)=>(
+              <th key={i} style={{
+                padding:'9px 12px', textAlign:'left',
+                fontSize:11, fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase',
+                color:'var(--text-400)', background:'var(--page-bg)', whiteSpace:'nowrap',
+              }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {patients.map((p,i)=>{
+            const cfg  = riskCfg(p.risk_level);
+            const pct  = Math.round((p.overall_risk||0)*100);
+            const name = p.full_name||p.patient_name||'Unknown';
+            const diag = p.primary_diagnosis||null;
+            const concern = p.top_concern||(p.key_concerns?.[0])||diag||null;
+            const isSelected = deepDiveId===p.id;
+            const isCrit = ['critical','crisis'].includes((p.risk_level||'').toLowerCase());
+
+            return (
+              <tr key={p.id}
+                onClick={()=>onSelect(p.id)}
+                style={{
+                  borderBottom:'1px solid var(--card-border)',
+                  background: isSelected
+                    ? 'color-mix(in srgb,#0d9488 7%,var(--card-bg))'
+                    : i%2===0 ? 'var(--card-bg)' : 'var(--page-bg)',
+                  cursor:'pointer', transition:'background 0.1s',
+                  outline: isSelected?'2px solid #0d9488':'none',
+                  outlineOffset:'-2px',
+                }}
+                onMouseEnter={e=>{ if(!isSelected) e.currentTarget.style.background='color-mix(in srgb,#0d9488 4%,var(--card-bg))'; }}
+                onMouseLeave={e=>{ if(!isSelected) e.currentTarget.style.background=i%2===0?'var(--card-bg)':'var(--page-bg)'; }}
+              >
+                {/* Patient */}
+                <td style={{ padding:'10px 12px' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    {isCrit && <span style={{ width:3, height:28, borderRadius:99, background:'#dc2626', flexShrink:0 }}/>}
+                    <div style={{ width:32, height:32, borderRadius:8, flexShrink:0,
+                      background:cfg.avatarBg, display:'flex', alignItems:'center',
+                      justifyContent:'center', color:'#fff', fontSize:11, fontWeight:700 }}>
+                      {initials(name)}
+                    </div>
+                    <div style={{ minWidth:0 }}>
+                      <p style={{ margin:'0 0 1px', fontWeight:600, fontSize:13, color:'var(--text-900)',
+                        overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>{name}</p>
+                      {diag && (
+                        <p style={{ margin:0, fontSize:11, color:'var(--text-400)',
+                          overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>{diag}</p>
+                      )}
+                    </div>
+                  </div>
+                </td>
+                {/* Risk level */}
+                <td style={{ padding:'10px 12px' }}>
+                  <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:99,
+                    background:cfg.pill, color:cfg.text }}>
+                    {cfg.label}
+                  </span>
+                </td>
+                {/* AI Score */}
+                <td style={{ padding:'10px 12px' }}>
+                  <ScoreBar pct={pct} color={cfg.color}/>
+                </td>
+                {/* Top Concern */}
+                <td style={{ padding:'10px 12px', maxWidth:200 }}>
+                  <p style={{ margin:0, fontSize:12, color:'var(--text-700)',
+                    overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}
+                    title={concern||''}>
+                    {concern || <span style={{ color:'var(--text-300)', fontStyle:'italic' }}>None flagged</span>}
+                  </p>
+                </td>
+                {/* View button */}
+                <td style={{ padding:'10px 12px' }}>
+                  <button onClick={e=>{ e.stopPropagation(); onSelect(p.id); }}
+                    style={{
+                      display:'inline-flex', alignItems:'center', gap:4,
+                      padding:'5px 12px', borderRadius:7, fontSize:12, fontWeight:600,
+                      background:isSelected?'#0d9488':'var(--page-bg)',
+                      color:isSelected?'#fff':'var(--text-600)',
+                      border:`1px solid ${isSelected?'#0d9488':'var(--card-border)'}`,
+                      cursor:'pointer', transition:'all 0.15s',
+                    }}>
+                    <ChevronRight size={11} style={{ transform:isSelected?'rotate(90deg)':'none', transition:'transform 0.15s' }}/>
+                    {isSelected?'Viewing':'View'}
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ── Main page ───────────────────────────────────────────────────────────── */
 export default function AIInsights() {
- const navigate = useNavigate();
- const queryClient = useQueryClient();
+  const navigate     = useNavigate();
+  const queryClient  = useQueryClient();
+  const [activeTab,  setActiveTab]  = useState('risk');
+  const [filterRisk, setFilterRisk] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [deepDiveId, setDeepDiveId] = useState(null);
 
- const [activeTab, setActiveTab] = useState('risk');
- const [filterRisk, setFilterRisk] = useState('all');
- const [searchTerm, setSearchTerm] = useState('');
- const [deepDiveId, setDeepDiveId] = useState(null);
+  const { data:sysData,  isLoading:sysLoad,  refetch:refetchSys } = useQuery({
+    queryKey: ['ai-insights-sys'],
+    queryFn: ()=>aiAPI.getSystemOverview().then(r=>r.data),
+    staleTime: 5*60*1000, retry:false,
+  });
+  const { data:batchRisk, isLoading:batchLoad } = useQuery({
+    queryKey: ['batch-risk'],
+    queryFn: ()=>mlAPI.getAllPatientsRisk().then(r=>r.data),
+    staleTime: 5*60*1000, retry:false,
+  });
+  const { data:patientsBase } = useQuery({
+    queryKey: ['patients-ai'],
+    queryFn: ()=>patientsAPI.getAll().then(r=>Array.isArray(r.data)?r.data:r.data?.patients||[]),
+    staleTime: 5*60*1000, retry:false,
+  });
+  const scanMutation = useMutation({
+    mutationFn: ()=>mlAPI.triggerProactiveScan(),
+    onSuccess: ()=>{ queryClient.invalidateQueries(['batch-risk']); toast.success('AI scan complete'); },
+    onError: ()=>toast.error('Scan failed'),
+  });
 
- /* -- Fetches --------------------------------------------------------------- */
- const { data: sysData, isLoading: sysLoad, refetch: refetchSys } = useQuery({
- queryKey: ['system-insights'],
- queryFn: () => aiAPI.getSystemInsights().then(r => r.data),
- refetchInterval: 30000, staleTime: 25000, retry: false,
- });
- const { data: batchRisk, isLoading: batchLoad } = useQuery({
- queryKey: ['batch-risk'],
- queryFn: () => mlAPI.getAllPatientsRisk().then(r => r.data),
- staleTime: 5 * 60 * 1000, retry: false,
- });
- const { data: patientsRaw } = useQuery({
- queryKey: ['patients-list'],
- queryFn: () => patientsAPI.getAll().then(r => r.data),
- staleTime: 5 * 60 * 1000,
- });
- const patientsMap = useMemo(() => {
- const arr = Array.isArray(patientsRaw) ? patientsRaw : patientsRaw?.patients || [];
- return Object.fromEntries(arr.map(p => [String(p.id), p]));
- }, [patientsRaw]);
+  const allPatients = useMemo(()=>{
+    const riskMap={};
+    (batchRisk?.patients||[]).forEach(p=>{ const pid=p.id||p.patient_id; if(pid) riskMap[pid]=p; });
+    (sysData?.high_risk_patients||[]).forEach(p=>{ const pid=p.id||p.patient_id; if(pid&&!riskMap[pid]) riskMap[pid]=p; });
+    const base=Array.isArray(patientsBase)?patientsBase:[];
+    const merged={};
+    base.forEach(p=>{
+      const pid=p.id; if(!pid) return;
+      const risk=riskMap[pid]||{};
+      merged[pid]={
+        ...p,
+        risk_level:   risk.risk_level||risk.overall_level||p.risk_level||'unknown',
+        overall_risk: risk.overall_risk??risk.risk_score??p.risk_score??0,
+        top_concern:  risk.top_concern||p.top_concern||null,
+        key_concerns: risk.key_concerns||[],
+        tasks:        risk.tasks||null,
+      };
+    });
+    Object.values(riskMap).forEach(p=>{
+      const pid=p.id||p.patient_id;
+      if(!pid||merged[pid]) return;
+      merged[pid]={ ...p, id:pid, full_name:p.full_name||p.patient_name||'Unknown',
+        risk_level:p.risk_level||p.overall_level||'unknown',
+        overall_risk:p.overall_risk??p.risk_score??0 };
+    });
+    return Object.values(merged).sort((a,b)=>(b.overall_risk||0)-(a.overall_risk||0));
+  }, [patientsBase, batchRisk, sysData]);
 
- const scanMutation = useMutation({
- mutationFn: () => mlAPI.triggerScan(),
- onSuccess: () => {
- toast.success('Proactive scan started');
- setTimeout(() => { queryClient.invalidateQueries(['system-insights']); queryClient.invalidateQueries(['batch-risk']); }, 5000);
- },
- onError: () => toast.error('Scan failed'),
- });
+  const visiblePatients = useMemo(()=>{
+    let base=allPatients;
+    if (filterRisk!=='all') {
+      base=base.filter(p=>{
+        const l=(p.risk_level||'').toLowerCase();
+        if (filterRisk==='critical') return l==='critical'||l==='crisis';
+        if (filterRisk==='high')     return l==='high';
+        if (filterRisk==='moderate') return l==='moderate'||l==='medium';
+        if (filterRisk==='stable')   return l==='low'||l==='stable'||l==='normal';
+        return true;
+      });
+    }
+    if (searchTerm) {
+      const q=searchTerm.toLowerCase();
+      base=base.filter(p=>
+        p.full_name?.toLowerCase().includes(q)||
+        p.patient_code?.toLowerCase().includes(q)||
+        p.primary_diagnosis?.toLowerCase().includes(q)||
+        p.top_concern?.toLowerCase().includes(q)
+      );
+    }
+    return base;
+  }, [allPatients, filterRisk, searchTerm]);
 
- /* -- Build unified patient list -------------------------------------------- */
- const allPatients = useMemo(() => {
- const batchArr = batchRisk?.patients || [];
- const sysLists = [
- ...(sysData?.critical_patients || []),
- ...(sysData?.deteriorating_patients || []),
- ...(sysData?.stable_patients || []),
- ];
- const merged = {};
- [...sysLists, ...batchArr].forEach(p => {
- const pid = String(p.id || p.patient_id || '');
- if (!pid) return;
- const meta = patientsMap[pid] || {};
- const prev = merged[pid] || {};
- merged[pid] = {
- ...meta, ...prev, ...p, id: pid,
- full_name: p.full_name || p.patient_name || meta.full_name || prev.full_name || 'Unknown',
- risk_level: p.risk_level || p.overall_level || prev.risk_level || 'unknown',
- overall_risk: p.overall_risk || p.risk_score || prev.overall_risk || 0,
- };
- });
- const order = { critical:0, high:1, moderate:2, low:3, normal:3, stable:3, unknown:4 };
- return Object.values(merged).sort((a, b) => {
- const oa = order[(a.risk_level||'').toLowerCase()] ?? 4;
- const ob = order[(b.risk_level||'').toLowerCase()] ?? 4;
- return oa !== ob ? oa - ob : (b.overall_risk||0) - (a.overall_risk||0);
- });
- }, [batchRisk, sysData, patientsMap]);
+  const kpi = useMemo(()=>({
+    total:    allPatients.length,
+    critical: allPatients.filter(p=>['critical','crisis'].includes((p.risk_level||'').toLowerCase())).length,
+    high:     allPatients.filter(p=>(p.risk_level||'').toLowerCase()==='high').length,
+    stable:   allPatients.filter(p=>['low','stable','normal'].includes((p.risk_level||'').toLowerCase())).length,
+  }), [allPatients]);
 
- /* -- Filter ---------------------------------------------------------------- */
- const visiblePatients = useMemo(() => {
- let base = allPatients;
- if (filterRisk === 'critical') base = base.filter(p => ['critical','crisis'].includes((p.risk_level||'').toLowerCase()));
- else if (filterRisk === 'high') base = base.filter(p => (p.risk_level||'').toLowerCase() === 'high');
- else if (filterRisk === 'moderate') base = base.filter(p => ['moderate','medium'].includes((p.risk_level||'').toLowerCase()));
- else if (filterRisk === 'stable') base = base.filter(p => ['low','normal','stable'].includes((p.risk_level||'').toLowerCase()));
- if (!searchTerm.trim()) return base;
- const q = searchTerm.toLowerCase();
- return base.filter(p =>
- p.full_name?.toLowerCase().includes(q) ||
- p.patient_code?.toLowerCase().includes(q) ||
- p.primary_diagnosis?.toLowerCase().includes(q) ||
- p.top_concern?.toLowerCase().includes(q)
- );
- }, [allPatients, filterRisk, searchTerm]);
+  const deepDivePatient = useMemo(()=>
+    deepDiveId ? (visiblePatients.find(p=>p.id===deepDiveId)||allPatients.find(p=>p.id===deepDiveId)||null) : null
+  , [deepDiveId, visiblePatients, allPatients]);
 
- const kpi = useMemo(() => ({
- total: allPatients.length,
- critical: allPatients.filter(p => ['critical','crisis'].includes((p.risk_level||'').toLowerCase())).length,
- high: allPatients.filter(p => (p.risk_level||'').toLowerCase() === 'high').length,
- stable: allPatients.filter(p => ['low','normal','stable'].includes((p.risk_level||'').toLowerCase())).length,
- }), [allPatients]);
+  const isLoading = sysLoad && batchLoad && !patientsBase?.length;
 
- const deepDivePatient = useMemo(() =>
- deepDiveId
- ? visiblePatients.find(p => p.id === deepDiveId) || allPatients.find(p => p.id === deepDiveId) || null
- : null
- , [deepDiveId, visiblePatients, allPatients]);
+  return (
+    <div style={{ minHeight:'100vh', paddingBottom:32, background:'var(--page-bg)' }}>
 
- const isLoading = sysLoad || batchLoad;
+      <PageHeader
+        image="/resources/headers/header-ai-insights.jpg"
+        title="AI Clinical Intelligence"
+        subtitle="Real-time risk stratification across all patients"
+        icon={Brain}
+        stats={[
+          { label:'Patients',  value:kpi.total,    color:'#2dd4bf', onClick:()=>setFilterRisk('all') },
+          { label:'Critical',  value:kpi.critical, color:'#f87171', pulse:kpi.critical>0, onClick:()=>setFilterRisk('critical') },
+          { label:'High Risk', value:kpi.high,     color:'#fbbf24', onClick:()=>setFilterRisk('high') },
+          { label:'Stable',    value:kpi.stable,   color:'#4ade80', onClick:()=>setFilterRisk('stable') },
+        ]}
+      >
+        {activeTab==='risk' && (
+          <>
+            <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:280 }}>
+              <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+              <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
+                placeholder="Search patients…"
+                style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20,
+                  border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)',
+                  outline:'none', boxSizing:'border-box' }}
+                onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
+                onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
+            </div>
+            <div style={{ display:'flex', gap:4 }}>
+              {[
+                {v:'all',      l:'All',      c:'#334155'},
+                {v:'critical', l:'Critical', c:'#dc2626'},
+                {v:'high',     l:'High',     c:'#ea580c'},
+                {v:'moderate', l:'Moderate', c:'#d97706'},
+                {v:'stable',   l:'Stable',   c:'#0d9488'},
+              ].map(({v,l,c})=>{
+                const active=filterRisk===v;
+                return (
+                  <button key={v} onClick={()=>setFilterRisk(v)} style={{
+                    padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
+                    cursor:'pointer', transition:'all 0.15s',
+                    border:active?`1.5px solid ${c}`:'1px solid var(--card-border)',
+                    background:active?`${c}12`:'var(--card-bg)',
+                    color:active?c:'var(--text-500)',
+                  }}>{l}</button>
+                );
+              })}
+            </div>
+          </>
+        )}
+        <div style={{ display:'flex', gap:6, marginLeft:'auto', flexShrink:0 }}>
+          <button onClick={()=>{ refetchSys(); queryClient.invalidateQueries(['batch-risk']); toast.success('Refreshed'); }}
+            style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
+              fontSize:11, fontWeight:600, border:'1px solid var(--card-border)', background:'var(--card-bg)',
+              color:'var(--text-600)', cursor:'pointer' }}>
+            <RefreshCw size={12}/> Refresh
+          </button>
+          <button onClick={()=>scanMutation.mutate()} disabled={scanMutation.isPending}
+            style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
+              fontSize:11, fontWeight:700, border:'none', cursor:'pointer',
+              background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff',
+              opacity:scanMutation.isPending?0.6:1 }}>
+            {scanMutation.isPending?<Loader2 size={11} style={{ animation:'spin 1s linear infinite' }}/>:<Zap size={11}/>}
+            {scanMutation.isPending?'Scanning…':'Run AI Scan'}
+          </button>
+        </div>
+      </PageHeader>
 
- /* -- KPI pills config ------------------------------------------------------ */
- const KPI_PILLS = [
- { v: 'all',      label: 'All Patients', count: kpi.total,    activeColor: '#0d9488', icon: Users },
- { v: 'critical', label: 'Critical',     count: kpi.critical, activeColor: '#ef4444', icon: AlertTriangle },
- { v: 'high',     label: 'High Risk',    count: kpi.high,     activeColor: '#f97316', icon: TrendingUp },
- { v: 'stable',   label: 'Stable',       count: kpi.stable,   activeColor: '#10b981', icon: Heart },
- ];
+      <div style={{ maxWidth:1300, margin:'16px auto 0', padding:'0 20px 40px' }}>
+        <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden' }}>
 
- return (
- <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}
- style={{ minHeight:'100vh', paddingBottom:32, background:'var(--page-bg)' }}>
+          {/* Tab bar */}
+          <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
+            <div style={{ display:'flex', gap:2, padding:'10px 0', overflowX:'auto', scrollbarWidth:'none' }}>
+              {[
+                { id:'risk',   label:'Risk Stratification', Icon:Brain     },
+                { id:'drugs',  label:'Drug Interactions',   Icon:Pill      },
+                { id:'system', label:'System Overview',     Icon:BarChart2 },
+              ].map(({ id, label, Icon:Ico })=>{
+                const active=activeTab===id;
+                return (
+                  <button key={id} onClick={()=>{ setActiveTab(id); if(id!=='risk') setDeepDiveId(null); }}
+                    style={{
+                      display:'flex', alignItems:'center', gap:6, padding:'7px 14px',
+                      fontSize:12, fontWeight:active?700:500,
+                      color:active?'#fff':'var(--text-500)',
+                      background:active?'linear-gradient(135deg,#0d9488,#0891b2)':'transparent',
+                      border:'none', borderRadius:8, cursor:'pointer', whiteSpace:'nowrap', flexShrink:0,
+                    }}
+                    onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background='var(--page-bg)'; e.currentTarget.style.color='var(--text-700)'; }}}
+                    onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-500)'; }}}
+                  >
+                    <Ico size={12} style={{ opacity:active?1:0.7 }}/>{label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
- {/* PageHeader with image - kept */}
- <PageHeader
- image="/resources/headers/header-ai-insights.jpg"
- title="AI Clinical Intelligence"
- subtitle="XGBoost · 8 Models · Real SHAP · Auto-refresh 30s"
- icon={Brain}
- stats={[
- { label:'All',      value:kpi.total,    color:'#2dd4bf', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('all');} },
- { label:'Critical', value:kpi.critical, color:'#f87171', pulse:kpi.critical>0, onClick:()=>{setActiveTab('risk');setFilterRisk('critical');} },
- { label:'High Risk',value:kpi.high,     color:'#fbbf24', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('high');} },
- { label:'Stable',   value:kpi.stable,   color:'#4ade80', pulse:false,         onClick:()=>{setActiveTab('risk');setFilterRisk('stable');} },
- ]}
- >
- {/* Risk tab search + filter - only shown when on risk tab */}
- {activeTab === 'risk' && (
- <>
- <div style={{ position:'relative', flex:1, minWidth:160, maxWidth:300 }}>
- <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
- <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
- placeholder="Search patients, diagnoses…"
- style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', outline:'none', boxSizing:'border-box', transition:'border-color 0.15s' }}
- onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
- onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
- </div>
- <div style={{ display:'flex', gap:4 }}>
- {[{v:'all',l:'All'},{v:'critical',l:'Crisis'},{v:'high',l:'High'},{v:'moderate',l:'Medium'},{v:'stable',l:'Stable'}].map(({v,l})=>{
- const colors={critical:'#ef4444',high:'#f97316',moderate:'#f59e0b',stable:'#10b981',all:'#334155'};
- const c=colors[v]||'#334155'; const active=filterRisk===v;
- return (
- <button key={v} onClick={()=>setFilterRisk(v)} style={{
- padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
- border: active ? `1.5px solid ${c}` : '1px solid var(--card-border)',
- background: active ? `${c}12` : 'var(--card-bg)',
- color: active ? c : 'var(--text-500)',
- }}>{l}</button>
- );
- })}
- </div>
- </>
- )}
- {/* Action buttons - always visible */}
- <div style={{ display:'flex', gap:6, marginLeft:'auto', flexShrink:0 }}>
- <button onClick={()=>{refetchSys();queryClient.invalidateQueries(['batch-risk']);toast.success('Refreshed');}} style={{
- display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
- fontSize:11, fontWeight:600, border:'1px solid var(--card-border)', background:'var(--card-bg)',
- color:'var(--text-600)', cursor:'pointer', transition:'all 0.15s',
- }}
- onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--c-teal)';e.currentTarget.style.color='var(--c-teal)';}}
- onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--card-border)';e.currentTarget.style.color='var(--text-600)';}}>
- <RefreshCw size={12}/> Refresh
- </button>
- <button onClick={()=>scanMutation.mutate()} disabled={scanMutation.isPending} style={{
- display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:20,
- fontSize:11, fontWeight:700, border:'none', cursor:scanMutation.isPending?'not-allowed':'pointer',
- background:'linear-gradient(135deg,#7c3aed,#6d28d9)', color:'#fff',
- boxShadow:'0 2px 8px rgba(124,58,237,0.3)', opacity:scanMutation.isPending?0.6:1, transition:'opacity 0.15s',
- }}>
- {scanMutation.isPending?<Loader2 size={11} className="animate-spin"/>:<Zap size={11}/>}
- {scanMutation.isPending?'Scanning…':'Run AI Scan'}
- </button>
- </div>
- </PageHeader>
+          {/* Body */}
+          <div style={{ padding:20 }}>
+            {activeTab==='risk' && (
+              isLoading ? (
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                  padding:'64px 0', gap:10 }}>
+                  <Loader2 size={28} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
+                  <p style={{ fontSize:13, color:'var(--text-500)', margin:0 }}>Loading patients…</p>
+                </div>
+              ) : (
+                <>
+                  {batchRisk?.ml_available===false && (
+                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12, padding:'8px 12px',
+                      borderRadius:8, background:'#fffbeb', border:'1px solid #fde68a' }}>
+                      <AlertTriangle size={13} style={{ color:'#d97706', flexShrink:0 }}/>
+                      <p style={{ margin:0, fontSize:12, fontWeight:600, color:'#92400e' }}>
+                        ML models offline — showing base patient data
+                      </p>
+                    </div>
+                  )}
+                  <RiskTable
+                    patients={visiblePatients}
+                    deepDiveId={deepDiveId}
+                    onSelect={id=>setDeepDiveId(prev=>prev===id?null:id)}
+                  />
+                </>
+              )
+            )}
+            {activeTab==='drugs'  && <DrugInteractionsTab/>}
+            {activeTab==='system' && (
+              <SystemOverviewTab
+                batchRisk={batchRisk} sysData={sysData}
+                onScan={()=>scanMutation.mutate()} scanning={scanMutation.isPending}
+              />
+            )}
+          </div>
+        </div>
+      </div>
 
- {/* ── Unified tab container ── */}
- <div style={{ maxWidth:1300, margin:'16px auto 0', padding:'0 20px 40px' }}>
-   <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:16, overflow:'hidden', boxShadow:'0 2px 12px rgba(0,0,0,0.06)' }}>
-
-     {/* Tab bar - pill segment control */}
-     <div style={{ borderBottom:'1px solid var(--card-border)', padding:'0 20px' }}>
-       <div style={{ display:'flex', gap:2, padding:'10px 0', overflowX:'auto', flexWrap:'nowrap', scrollbarWidth:'none' }}>
-         {[
-           { id:'risk',   label:'Risk Stratification', Icon:Brain    },
-           { id:'drugs',  label:'Drug Interactions',   Icon:Pill     },
-           { id:'system', label:'System Overview',      Icon:BarChart2 },
-         ].map(({ id, label, Icon: Ico }) => {
-           const active = activeTab === id;
-           return (
-             <button key={id} onClick={()=>{ setActiveTab(id); setDeepDiveId(null); }}
-               style={{
-                 display:'flex', alignItems:'center', gap:6,
-                 padding:'7px 14px', fontSize:12, fontWeight: active ? 700 : 500,
-                 color: active ? '#fff' : 'var(--text-500)',
-                 background: active ? 'linear-gradient(135deg,#0d9488,#0891b2)' : 'transparent',
-                 border:'none', borderRadius:8,
-                 cursor:'pointer', whiteSpace:'nowrap', flexShrink:0, transition:'all 0.15s',
-                 boxShadow: active ? '0 2px 8px rgba(13,148,136,0.25)' : 'none',
-               }}
-               onMouseEnter={e=>{ if(!active){ e.currentTarget.style.background='var(--page-bg)'; e.currentTarget.style.color='var(--text-700)'; }}}
-               onMouseLeave={e=>{ if(!active){ e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--text-500)'; }}}
-             >
-               <Ico size={12} style={{ opacity: active ? 1 : 0.7 }} />{label}
-             </button>
-           );
-         })}
-       </div>
-     </div>
-
-     {/* Tab content */}
-     <div style={{ padding:'20px' }}>
-
- {/* Risk tab content */}
- {activeTab === 'risk' && (
- isLoading ? (
- <div className="flex flex-col items-center justify-center gap-4 py-24">
- <div className="relative w-20 h-20">
- <div className="w-20 h-20 rounded-full border-4 border-violet-100 border-t-violet-600 animate-spin" />
- <div className="absolute inset-0 flex items-center justify-center">
- <Brain size={24} className="text-teal-600" />
- </div>
- </div>
- <div className="text-center">
- <p className="font-bold text-[var(--text-700)]">Running ML analysis - </p>
- <p className="text-xs text-[var(--text-400)] mt-1">XGBoost · 8 models · Real SHAP</p>
- </div>
- </div>
- ) : (
- <div className={deepDivePatient ? 'grid gap-5 lg:grid-cols-[1fr_420px]' : ''}>
- {/* Patient card list */}
- <div className="space-y-3">
- {/* Heading row */}
- <div className="flex items-center justify-between">
- <h2 className="text-sm font-bold text-[var(--text-700)] flex items-center gap-2">
- <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
- {filterRisk === 'all' ? 'All Patients' : `${filterRisk.charAt(0).toUpperCase() + filterRisk.slice(1)} Risk`}
- <span className="px-2 py-0.5 bg-slate-100 text-[var(--text-600)] rounded-full text-xs font-semibold">{visiblePatients.length}</span>
- </h2>
- {batchRisk?.ml_available === false && (
- <span className="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
- ? ML offline · rule-based fallback
- </span>
- )}
- </div>
-
- {visiblePatients.length === 0 ? (
- <div className="flex flex-col items-center justify-center bg-[var(--card-bg)] rounded-2xl border border-dashed border-slate-300 py-20 gap-4">
- <CheckCircle className="w-14 h-14 text-emerald-400 opacity-50" />
- <p className="font-bold text-[var(--text-600)] dark:text-slate-400">No patients match current filters</p>
- <button onClick={() => { setFilterRisk('all'); setSearchTerm(''); }}
- className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-sm font-bold transition">
- Show All Patients
- </button>
- </div>
- ) : (
- <AnimatePresence mode="popLayout">
- <div className="grid gap-3 sm:grid-cols-1">
- {visiblePatients.map((p, idx) => (
- <PatientCard
- key={p.id || `p-${idx}`}
- p={p}
- isSelected={deepDiveId === p.id}
- onSelect={id => setDeepDiveId(prev => prev === id ? null : id)}
- onNavigate={id => navigate(`/patients/${id}`)}
- />
- ))}
- </div>
- </AnimatePresence>
- )}
- </div>
-
- {/* Deep-dive panel */}
- <AnimatePresence>
- {deepDivePatient && (
- <div className="lg:sticky lg:top-4 self-start">
- <DeepDivePanel patient={deepDivePatient} navigate={navigate} onClose={() => setDeepDiveId(null)} />
- </div>
- )}
- </AnimatePresence>
- </div>
- )
- )}
-
- {activeTab === 'drugs' && <DrugInteractionsTab />}
- {activeTab === 'system' && <SystemOverviewTab batchRisk={batchRisk} sysData={sysData} onScan={() => scanMutation.mutate()} scanning={scanMutation.isPending} />}
-     </div>
-   </div>
- </div>
- </motion.div>
- );
+      {/* Detail overlay — portal, opens on row click */}
+      <AnimatePresence>
+        {deepDivePatient && (
+          <DetailOverlay
+            patient={deepDivePatient}
+            onClose={()=>setDeepDiveId(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }

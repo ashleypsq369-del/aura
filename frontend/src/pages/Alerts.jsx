@@ -1,8 +1,6 @@
 ﻿/**
  * Alerts - Clinical Safety Alerts
- * Redesigned: underline tab bar, gradient card accents, card-surface filter bar,
- * gradient avatar/icon badges, Services-inspired button and badge treatment.
- * PageHeader image kept as requested.
+ * Table layout: Severity · Type · Patient · Message · Time · Actions
  */
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,7 +8,7 @@ import {
   Bell, AlertTriangle, CheckCircle, XCircle,
   Search, Brain, ExternalLink, Activity, Zap, Pill,
   TrendingDown, ChevronDown, ChevronUp, Clock, ShieldAlert,
-  ListFilter, X,
+  X,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -26,14 +24,12 @@ import ReminderBell from '../components/ReminderBell';
 
 /* ─── Severity config ─────────────────────────────────────────────────────── */
 const SEV = {
-  critical: { badge: 'badge-critical', Icon: XCircle,       label: 'Critical', pulse: true  },
-  high:     { badge: 'badge-high',     Icon: AlertTriangle,  label: 'High',     pulse: false },
-  medium:   { badge: 'badge-stable',   Icon: Bell,           label: 'Medium',   pulse: false },
-  low:      { badge: 'badge-low',      Icon: Bell,           label: 'Low',      pulse: false },
+  critical: { Icon: XCircle,      label:'Critical', pill:'#dc2626', text:'#fff', dot:'#dc2626', pulse:true  },
+  high:     { Icon: AlertTriangle, label:'High',     pill:'#ea580c', text:'#fff', dot:'#ea580c', pulse:false },
+  medium:   { Icon: Bell,          label:'Medium',   pill:'#0d9488', text:'#fff', dot:'#0d9488', pulse:false },
+  low:      { Icon: Bell,          label:'Low',      pill:'#94a3b8', text:'#fff', dot:'#94a3b8', pulse:false },
 };
-
-const SEV_COLOR  = { critical:'#ef4444', high:'#f59e0b', medium:'#0d9488', low:'#94a3b8' };
-const SEV_GRAD   = { critical:'linear-gradient(135deg,#ef4444,#dc2626)', high:'linear-gradient(135deg,#f59e0b,#d97706)', medium:'linear-gradient(135deg,#0d9488,#0891b2)', low:'linear-gradient(135deg,#94a3b8,#64748b)' };
+function sevCfg(s) { return SEV[s]||SEV.low; }
 
 const TYPE_ICONS = {
   vital_abnormal:'vital', deterioration:'det', deterioration_trend:'det',
@@ -44,7 +40,8 @@ const TYPE_LABELS = {
   appointment_due:'Appointment Due', deterioration:'Deteriorating', deterioration_trend:'ML Deterioration',
   drug_interaction:'Drug Interaction', ml_risk:'ML High Risk', ml_high_risk:'ML High Risk', system:'System',
 };
-const alertLabel = t => TYPE_LABELS[t] || (t||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || 'Alert';
+const alertLabel = t => TYPE_LABELS[t]||(t||'').replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase())||'Alert';
+const TypeIconMap = { vital:Activity, det:TrendingDown, drug:Pill, ml:Zap };
 const sevOrd = { critical:0, high:1, medium:2, low:3 };
 
 function timeAgo(iso) {
@@ -53,159 +50,208 @@ function timeAgo(iso) {
   if (m<1) return 'just now';
   if (m<60) return `${m}m ago`;
   if (m<1440) return `${Math.round(m/60)}h ago`;
-  return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  return new Date(iso).toLocaleDateString('en-GB',{ day:'numeric', month:'short' });
 }
 
-/* ─── Alert card ──────────────────────────────────────────────────────────── */
-function AlertCard({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading, onNavigate }) {
-  const cfg   = SEV[alert.severity] || SEV.low;
-  const color = SEV_COLOR[alert.severity] || SEV_COLOR.low;
-  const grad  = SEV_GRAD[alert.severity]  || SEV_GRAD.low;
-
-  const TypeIconMap = { vital:Activity, det:TrendingDown, drug:Pill, ml:Zap };
-  const ikey = TYPE_ICONS[alert.alert_type];
-  const Icon = ikey ? TypeIconMap[ikey] : cfg.Icon;
+/* ─── Table row — Severity+Type merged into one "Alert" column ───────────── */
+function AlertRow({ alert, mlRisk, onAck, ackPending, onExplain, explainLoading, onNavigate, index }) {
+  const cfg      = sevCfg(alert.severity);
+  const ikey     = TYPE_ICONS[alert.alert_type];
+  const TypeIcon = ikey ? TypeIconMap[ikey] : cfg.Icon;
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity:0, y:8 }}
-      animate={{ opacity:1, y:0 }}
-      exit={{ opacity:0, y:-6 }}
+    <tr
       style={{
-        borderRadius: 14,
-        overflow: 'hidden',
-        background: 'var(--card-bg)',
-        border: '1px solid var(--card-border)',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+        background: index%2===0 ? 'var(--card-bg)' : 'var(--page-bg)',
+        borderBottom: '1px solid var(--card-border)',
+        transition: 'background 0.1s',
       }}
+      onMouseEnter={e=>(e.currentTarget.style.background='color-mix(in srgb,#0d9488 4%,var(--card-bg))')}
+      onMouseLeave={e=>(e.currentTarget.style.background=index%2===0?'var(--card-bg)':'var(--page-bg)')}
     >
-      {/* Gradient top accent - matches Services ProviderCard band */}
-      <div style={{ height: 3, background: grad }} />
-
-      <div style={{ padding: '12px 16px', display:'flex', alignItems:'flex-start', gap: 12 }}>
-        {/* Icon badge */}
-        <div style={{
-          width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-          background: `${color}15`,
-          display:'flex', alignItems:'center', justifyContent:'center',
-          animation: cfg.pulse ? 'pulse 2s infinite' : 'none',
-        }}>
-          <Icon size={16} style={{ color }} />
-        </div>
-
-        <div style={{ flex:1, minWidth:0 }}>
-          {/* Title row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:6, marginBottom:4 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-              <span style={{ fontWeight:700, fontSize:12, color:'var(--text-800)' }}>
-                {alertLabel(alert.alert_type)}
-              </span>
-              <span className={cfg.badge}>{cfg.label}</span>
-              {mlRisk && (
-                <span style={{
-                  fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:99,
-                  background:'#ede9fe', color:'#6d28d9',
-                  display:'inline-flex', alignItems:'center', gap:3,
-                }}>
-                  <Zap size={9} /> ML {(mlRisk.overall_risk*100).toFixed(0)}%
-                </span>
-              )}
-            </div>
-            <span style={{ fontSize:10, color:'var(--text-400)', display:'flex', alignItems:'center', gap:4, flexShrink:0 }}>
-              <Clock size={10} />{timeAgo(alert.created_at)}
+      {/* Alert = Severity dot + badge + type label (merged) */}
+      <td style={{ padding:'10px 12px', whiteSpace:'nowrap' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:7 }}>
+          <span style={{
+            width:8, height:8, borderRadius:'50%', flexShrink:0,
+            background:cfg.dot, animation:cfg.pulse?'pulse 2s infinite':'none',
+          }}/>
+          <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99,
+            background:cfg.pill, color:cfg.text, flexShrink:0 }}>
+            {cfg.label}
+          </span>
+          <TypeIcon size={12} style={{ color:cfg.dot, flexShrink:0 }}/>
+          <span style={{ fontSize:12, fontWeight:600, color:'var(--text-700)' }}>
+            {alertLabel(alert.alert_type)}
+          </span>
+          {mlRisk && (
+            <span style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:99,
+              background:'#ede9fe', color:'#6d28d9', display:'inline-flex', alignItems:'center', gap:3 }}>
+              <Zap size={9}/> {(mlRisk.overall_risk*100).toFixed(0)}%
             </span>
-          </div>
-
-          {/* Message */}
-          <p style={{ fontSize:12, color:'var(--text-600)', lineHeight:1.5, marginBottom:10 }}>
-            {alert.message}
-          </p>
-
-          {/* Actions row */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:6 }}>
-            {alert.patient_name && (
-              <span style={{
-                fontSize:11, fontWeight:600, padding:'2px 10px', borderRadius:99,
-                background:'var(--page-bg)', color:'var(--text-600)',
-                border:'1px solid var(--card-border)',
-              }}>
-                {alert.patient_name}
-              </span>
-            )}
-            <div style={{ display:'flex', alignItems:'center', gap:6, marginLeft:'auto', flexWrap:'wrap' }}>
-              <ReminderBell
-                label={`${alertLabel(alert.alert_type)}${alert.patient_name?` - ${alert.patient_name}`:''}`}
-                type="custom" size="xs"
-              />
-              {alert.patient_id && (
-                <button onClick={()=>onNavigate(alert.patient_id)} style={{
-                  display:'inline-flex', alignItems:'center', gap:5,
-                  padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-                  background:'var(--c-teal)', color:'#fff', border:'none', cursor:'pointer',
-                  transition:'opacity 0.15s',
-                }}
-                onMouseEnter={e=>(e.currentTarget.style.opacity='0.85')}
-                onMouseLeave={e=>(e.currentTarget.style.opacity='1')}>
-                  <ExternalLink size={10} /> Patient
-                </button>
-              )}
-              <button onClick={()=>onExplain(alert)} disabled={explainLoading} style={{
-                display:'inline-flex', alignItems:'center', gap:5,
-                padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:600,
-                background:'var(--page-bg)', color:'var(--text-600)',
-                border:'1px solid var(--card-border)', cursor:'pointer',
-                opacity: explainLoading ? 0.5 : 1, transition:'all 0.15s',
-              }}
-              onMouseEnter={e=>(e.currentTarget.style.borderColor='var(--c-teal)')}
-              onMouseLeave={e=>(e.currentTarget.style.borderColor='var(--card-border)')}>
-                <Brain size={10} /> Explain
-              </button>
-              <button onClick={()=>onAck(alert.id)} disabled={ackPending} style={{
-                display:'inline-flex', alignItems:'center', gap:5,
-                padding:'4px 10px', borderRadius:8, fontSize:11, fontWeight:700,
-                background:'linear-gradient(135deg,#10b981,#059669)',
-                color:'#fff', border:'none', cursor:'pointer',
-                opacity: ackPending ? 0.5 : 1, transition:'opacity 0.15s',
-                boxShadow:'0 2px 6px rgba(16,185,129,0.25)',
-              }}>
-                <CheckCircle size={10} /> {ackPending ? '…' : 'Resolve'}
-              </button>
-            </div>
-          </div>
+          )}
         </div>
-      </div>
-    </motion.div>
+      </td>
+
+      {/* Patient */}
+      <td style={{ padding:'10px 12px', whiteSpace:'nowrap' }}>
+        {alert.patient_name
+          ? <span style={{ fontSize:12, fontWeight:600, color:'var(--text-700)' }}>{alert.patient_name}</span>
+          : <span style={{ fontSize:12, color:'var(--text-300)', fontStyle:'italic' }}>None</span>}
+      </td>
+
+      {/* Message */}
+      <td style={{ padding:'10px 12px', maxWidth:300 }}>
+        <p style={{ margin:0, fontSize:12, color:'var(--text-600)', lineHeight:1.4,
+          overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}
+          title={alert.message}>
+          {alert.message}
+        </p>
+      </td>
+
+      {/* Time */}
+      <td style={{ padding:'10px 12px', whiteSpace:'nowrap' }}>
+        <span style={{ fontSize:11, color:'var(--text-400)', display:'flex', alignItems:'center', gap:4 }}>
+          <Clock size={10}/>{timeAgo(alert.created_at)}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td style={{ padding:'10px 12px' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:5, flexWrap:'nowrap' }}>
+          <ReminderBell
+            label={`${alertLabel(alert.alert_type)}${alert.patient_name?` - ${alert.patient_name}`:''}`}
+            type="custom" size="xs"
+          />
+          {alert.patient_id && (
+            <button onClick={()=>onNavigate(alert.patient_id)} style={{
+              display:'inline-flex', alignItems:'center', gap:4,
+              padding:'4px 9px', borderRadius:7, fontSize:11, fontWeight:700,
+              background:'var(--c-teal)', color:'#fff', border:'none', cursor:'pointer',
+            }}>
+              <ExternalLink size={10}/> Patient
+            </button>
+          )}
+          <button onClick={()=>onExplain(alert)} disabled={explainLoading} style={{
+            display:'inline-flex', alignItems:'center', gap:4,
+            padding:'4px 9px', borderRadius:7, fontSize:11, fontWeight:600,
+            background:'var(--page-bg)', color:'var(--text-600)',
+            border:'1px solid var(--card-border)', cursor:'pointer', opacity:explainLoading?0.5:1,
+          }}>
+            <Brain size={10}/> Explain
+          </button>
+          <button onClick={()=>onAck(alert.id)} disabled={ackPending} style={{
+            display:'inline-flex', alignItems:'center', gap:4,
+            padding:'4px 9px', borderRadius:7, fontSize:11, fontWeight:700,
+            background:'linear-gradient(135deg,#10b981,#059669)',
+            color:'#fff', border:'none', cursor:'pointer', opacity:ackPending?0.5:1,
+            boxShadow:'0 2px 6px rgba(16,185,129,0.25)',
+          }}>
+            <CheckCircle size={10}/> {ackPending?'…':'Resolve'}
+          </button>
+        </div>
+      </td>
+    </tr>
   );
 }
 
-/* ─── KPI strip ───────────────────────────────────────────────────────────── */
-function KpiStrip({ kpi, filterSeverity, filterStatus, setFilterSeverity, setFilterStatus }) {
-  const items = [
-    { key:'critical', label:'Critical',   value:kpi.critical, color:'#ef4444', grad:'#ef4444', active: filterSeverity==='critical' && filterStatus==='active', onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },
-    { key:'high',     label:'High',       value:kpi.high,     color:'#f59e0b', grad:'#f59e0b', active: filterSeverity==='high'     && filterStatus==='active', onClick:()=>{setFilterSeverity('high');    setFilterStatus('active');} },
-    { key:'active',   label:'Active',     value:kpi.active,   color:'#0d9488', grad:'#0d9488', active: filterSeverity==='all'      && filterStatus==='active', onClick:()=>{setFilterSeverity('all');     setFilterStatus('active');} },
-    { key:'resolved', label:'Resolved',   value:kpi.resolved, color:'#10b981', grad:'#10b981', active: filterStatus==='acknowledged',                          onClick:()=>{setFilterSeverity('all');     setFilterStatus('acknowledged');} },
-  ];
+/* ─── Resolved compact row ────────────────────────────────────────────────── */
+function ResolvedRow({ alert, onNavigate, index }) {
+  const cfg  = sevCfg(alert.severity);
+  const ikey = TYPE_ICONS[alert.alert_type];
+  const TypeIcon = ikey ? TypeIconMap[ikey] : cfg.Icon;
   return (
-    <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
-      {items.map(({ key, label, value, color, grad, active, onClick }) => (
-        <button key={key} onClick={onClick} style={{
-          display:'flex', alignItems:'center', gap:10,
-          padding:'10px 16px', borderRadius:12,
-          background: active ? `${color}12` : 'var(--card-bg)',
-          border: active ? `1.5px solid ${color}` : '1px solid var(--card-border)',
-          cursor:'pointer', transition:'all 0.15s',
-          boxShadow: active ? `0 2px 10px ${color}20` : '0 1px 4px rgba(0,0,0,0.05)',
-        }}>
-          <span style={{ fontSize:22, fontWeight:900, color: active ? color : 'var(--text-800)', lineHeight:1 }}>
-            {value}
-          </span>
-          <span style={{ fontSize:11, fontWeight:600, color: active ? color : 'var(--text-500)', whiteSpace:'nowrap' }}>
-            {label}
-          </span>
-        </button>
-      ))}
+    <tr style={{
+      background: index%2===0 ? 'var(--card-bg)' : 'var(--page-bg)',
+      borderBottom:'1px solid var(--card-border)', opacity:0.72,
+      transition:'opacity 0.15s',
+    }}
+    onMouseEnter={e=>(e.currentTarget.style.opacity='1')}
+    onMouseLeave={e=>(e.currentTarget.style.opacity='0.72')}>
+      {/* Alert (merged) */}
+      <td style={{ padding:'8px 12px', whiteSpace:'nowrap' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+          <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99,
+            background:cfg.pill, color:cfg.text }}>{cfg.label}</span>
+          <TypeIcon size={12} style={{ color:cfg.dot, flexShrink:0 }}/>
+          <span style={{ fontSize:12, fontWeight:600, color:'var(--text-700)' }}>{alertLabel(alert.alert_type)}</span>
+        </div>
+      </td>
+      <td style={{ padding:'8px 12px' }}>
+        <span style={{ fontSize:12, color:'var(--text-500)' }}>{alert.patient_name||''}</span>
+      </td>
+      <td style={{ padding:'8px 12px', maxWidth:280 }}>
+        <p style={{ margin:0, fontSize:11, color:'var(--text-400)',
+          overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+          {alert.message}
+        </p>
+      </td>
+      <td style={{ padding:'8px 12px' }}>
+        <span style={{ fontSize:11, color:'var(--text-400)', display:'flex', alignItems:'center', gap:4 }}>
+          <CheckCircle size={10} style={{ color:'#10b981' }}/>{timeAgo(alert.acknowledged_at||alert.created_at)}
+        </span>
+      </td>
+      <td style={{ padding:'8px 12px' }}>
+        {alert.patient_id && (
+          <button onClick={()=>onNavigate(alert.patient_id)}
+            style={{ fontSize:11, fontWeight:600, color:'var(--c-teal)',
+              background:'none', border:'none', cursor:'pointer' }}>
+            View
+          </button>
+        )}
+      </td>
+    </tr>
+  );
+}
+
+/* ─── Alerts table wrapper ────────────────────────────────────────────────── */
+function AlertsTable({ alerts, mlBatch, onAck, pendingAck, onExplain, explainLoading, onNavigate, resolved }) {
+  const getML = pid => mlBatch?.ml_available&&pid
+    ? mlBatch.patients?.find(p=>p.patient_id===pid)||null : null;
+
+  if (!alerts.length) return (
+    <div style={{ textAlign:'center', padding:'48px 24px' }}>
+      <div style={{ width:52, height:52, borderRadius:16,
+        background:'linear-gradient(135deg,#10b981,#059669)',
+        display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
+        <CheckCircle size={26} style={{ color:'#fff' }}/>
+      </div>
+      <p style={{ fontWeight:700, fontSize:14, color:'#15803d', marginBottom:4 }}>All clear</p>
+      <p style={{ fontSize:12, color:'#16a34a' }}>No alerts match your filters.</p>
+    </div>
+  );
+
+  /* 5 columns: Alert (merged) · Patient · Message · Time · Actions */
+  const headers = ['Alert','Patient','Message','Time','Actions'];
+
+  return (
+    <div style={{ overflowX:'auto' }}>
+      <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
+        <thead>
+          <tr style={{ borderBottom:'2px solid var(--card-border)' }}>
+            {headers.map(h=>(
+              <th key={h} style={{
+                padding:'10px 12px', textAlign:'left',
+                fontSize:11, fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase',
+                color:'var(--text-400)', background:'var(--page-bg)', whiteSpace:'nowrap',
+              }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {alerts.map((a,i) => resolved
+            ? <ResolvedRow key={a.id} alert={a} onNavigate={onNavigate} index={i}/>
+            : (
+              <AlertRow key={a.id} alert={a} index={i}
+                mlRisk={getML(a.patient_id)}
+                onAck={onAck} ackPending={pendingAck===a.id}
+                onExplain={onExplain} explainLoading={explainLoading}
+                onNavigate={onNavigate}
+              />
+            )
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -215,12 +261,10 @@ export default function Alerts() {
   const navigate      = useNavigate();
   const queryClient   = useQueryClient();
   const { subscribe } = useWS();
-  const { theme }     = useAppSettings();
-  const isDark        = theme === 'dark';
 
   useEffect(() => {
-    const u1 = subscribe('new_alert',    () => queryClient.invalidateQueries({ queryKey:['alerts'] }));
-    const u2 = subscribe('alert_update', () => queryClient.invalidateQueries({ queryKey:['alerts'] }));
+    const u1 = subscribe('new_alert',    ()=>queryClient.invalidateQueries({ queryKey:['alerts'] }));
+    const u2 = subscribe('alert_update', ()=>queryClient.invalidateQueries({ queryKey:['alerts'] }));
     return () => { u1(); u2(); };
   }, [subscribe, queryClient]);
 
@@ -233,29 +277,31 @@ export default function Alerts() {
   const [focusedData,    setFocusedData]    = useState(null);
   const [explainLoading, setExplainLoading] = useState(false);
 
-  const { data: rawAlerts, isLoading } = useQuery({
+  const { data:rawAlerts, isLoading } = useQuery({
     queryKey: ['alerts'],
     queryFn:  async () => {
       const res = await apiClient.get('/api/alerts');
-      return (res.data||[]).map(a=>({...a, acknowledged: a.acknowledged ?? a.is_acknowledged ?? false}));
+      return (res.data||[]).map(a=>({ ...a, acknowledged:a.acknowledged??a.is_acknowledged??false }));
     },
     refetchInterval: 30000,
   });
 
-  const { data: mlBatch } = useQuery({
+  const { data:mlBatch } = useQuery({
     queryKey: ['ml-batch-risk'],
-    queryFn:  () => mlAPI.getAllPatientsRisk().then(r=>r.data),
-    staleTime: 5*60*1000, retry: false,
+    queryFn:  ()=>mlAPI.getAllPatientsRisk().then(r=>r.data),
+    staleTime: 5*60*1000, retry:false,
   });
-
-  const getML = pid => mlBatch?.ml_available && pid
-    ? mlBatch.patients?.find(p=>p.patient_id===pid) || null : null;
 
   const ackMutation = useMutation({
     mutationFn: id => apiClient.put(`/api/alerts/${id}/acknowledge`),
-    onMutate:   id => setPendingAck(id),
-    onSuccess:  ()  => { queryClient.invalidateQueries(['alerts']); queryClient.invalidateQueries(['alerts-unread-count']); setPendingAck(null); clinicalToast.success('Alert resolved'); },
-    onError:    ()  => { setPendingAck(null); clinicalToast.error('Could not resolve alert'); },
+    onMutate:   id  => setPendingAck(id),
+    onSuccess:  ()  => {
+      queryClient.invalidateQueries(['alerts']);
+      queryClient.invalidateQueries(['alerts-unread-count']);
+      setPendingAck(null);
+      clinicalToast.success('Alert resolved');
+    },
+    onError: () => { setPendingAck(null); clinicalToast.error('Could not resolve alert'); },
   });
 
   const explainAlert = async (alert) => {
@@ -272,9 +318,10 @@ export default function Alerts() {
 
   const kpi = useMemo(() => ({
     critical: rawAlerts?.filter(a=>a.severity==='critical'&&!a.is_acknowledged).length||0,
-    high:     rawAlerts?.filter(a=>a.severity==='high'    &&!a.is_acknowledged).length||0,
+    high:     rawAlerts?.filter(a=>a.severity==='high'&&!a.is_acknowledged).length||0,
     active:   rawAlerts?.filter(a=>!a.is_acknowledged).length||0,
-    resolved: rawAlerts?.filter(a=>a.is_acknowledged&&a.acknowledged_at&&new Date(a.acknowledged_at).toDateString()===new Date().toDateString()).length||0,
+    resolved: rawAlerts?.filter(a=>a.is_acknowledged&&a.acknowledged_at&&
+      new Date(a.acknowledged_at).toDateString()===new Date().toDateString()).length||0,
   }), [rawAlerts]);
 
   const { activeAlerts, ackedAlerts } = useMemo(() => {
@@ -283,7 +330,7 @@ export default function Alerts() {
     const base = rawAlerts.filter(a => {
       const mS = !q||a.alert_type?.toLowerCase().includes(q)||a.message?.toLowerCase().includes(q)||a.patient_name?.toLowerCase().includes(q);
       const mV = filterSeverity==='all'||a.severity===filterSeverity;
-      return mS && mV;
+      return mS&&mV;
     });
     const sort = arr=>[...arr].sort((a,b)=>(sevOrd[a.severity]??4)-(sevOrd[b.severity]??4)||new Date(b.created_at)-new Date(a.created_at));
     return {
@@ -301,62 +348,51 @@ export default function Alerts() {
       initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
       style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}
     >
-      {/* PageHeader - stats on right, filters in children toolbar below image */}
       <PageHeader
         image="/resources/african/african-nurse-female.jpg"
         title="Clinical Alerts"
-        subtitle="Active patient safety alerts - sorted by severity"
+        subtitle="Active patient safety alerts — sorted by severity"
         icon={ShieldAlert}
         stats={[
-          { label:'Critical',       value:kpi.critical,  color:'#f87171', pulse:kpi.critical>0, onClick:()=>{setFilterSeverity('critical');setFilterStatus('active');} },
-          { label:'High',           value:kpi.high,      color:'#fbbf24', pulse:false,           onClick:()=>{setFilterSeverity('high');    setFilterStatus('active');} },
-          { label:'Active',         value:kpi.active,    color:'#2dd4bf', pulse:false,           onClick:()=>{setFilterSeverity('all');     setFilterStatus('active');} },
-          { label:'Resolved today', value:kpi.resolved,  color:'#4ade80', pulse:false,           onClick:()=>{setFilterSeverity('all');     setFilterStatus('acknowledged');} },
+          { label:'Critical',       value:kpi.critical, color:'#f87171', pulse:kpi.critical>0, onClick:()=>{ setFilterSeverity('critical'); setFilterStatus('active'); } },
+          { label:'High',           value:kpi.high,     color:'#fbbf24', pulse:false,           onClick:()=>{ setFilterSeverity('high');     setFilterStatus('active'); } },
+          { label:'Active',         value:kpi.active,   color:'#2dd4bf', pulse:false,           onClick:()=>{ setFilterSeverity('all');      setFilterStatus('active'); } },
+          { label:'Resolved today', value:kpi.resolved, color:'#4ade80', pulse:false,           onClick:()=>{ setFilterSeverity('all');      setFilterStatus('acknowledged'); } },
         ]}
       >
         {/* Search */}
         <div style={{ position:'relative', flex:1, minWidth:180, maxWidth:340 }}>
-          <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }} />
-          <input
-            value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
+          <Search size={13} style={{ position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:'var(--text-400)', pointerEvents:'none' }}/>
+          <input value={searchTerm} onChange={e=>setSearchTerm(e.target.value)}
             placeholder="Search alerts, patients…"
-            style={{
-              width:'100%', height:34, paddingLeft:32, paddingRight:12,
-              fontSize:12, borderRadius:20,
-              border:'1px solid var(--card-border)',
-              background:'var(--page-bg)', color:'var(--text-800)',
-              outline:'none', boxSizing:'border-box', transition:'border-color 0.15s',
-            }}
+            style={{ width:'100%', height:34, paddingLeft:32, paddingRight:12, fontSize:12, borderRadius:20,
+              border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)',
+              outline:'none', boxSizing:'border-box' }}
             onFocus={e=>(e.target.style.borderColor='var(--c-teal)')}
-            onBlur={e=>(e.target.style.borderColor='var(--card-border)')}
-          />
+            onBlur={e=>(e.target.style.borderColor='var(--card-border)')}/>
         </div>
 
-        {/* Separator */}
-        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }} />
+        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }}/>
 
         {/* Severity pills */}
         <div style={{ display:'flex', alignItems:'center', gap:4 }}>
           <span style={{ fontSize:10, fontWeight:600, color:'var(--text-400)', marginRight:2, whiteSpace:'nowrap' }}>Severity</span>
-          {['all','critical','high','medium','low'].map(s => {
-            const active = filterSeverity===s;
-            const col = SEV_COLOR[s] || '#334155';
+          {['all','critical','high','medium','low'].map(s=>{
+            const active=filterSeverity===s;
+            const col=SEV[s]?.dot||'#334155';
             return (
               <button key={s} onClick={()=>setFilterSeverity(s)} style={{
                 padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
-                border: active ? `1.5px solid ${col}` : '1px solid var(--card-border)',
-                background: active ? `${col}12` : 'var(--card-bg)',
-                color: active ? col : 'var(--text-500)',
+                border:active?`1.5px solid ${col}`:'1px solid var(--card-border)',
+                background:active?`${col}12`:'var(--card-bg)',
+                color:active?col:'var(--text-500)',
                 cursor:'pointer', transition:'all 0.15s', textTransform:'capitalize',
-              }}>
-                {s==='all'?'All':s}
-              </button>
+              }}>{s==='all'?'All':s}</button>
             );
           })}
         </div>
 
-        {/* Separator */}
-        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }} />
+        <div style={{ width:1, height:22, background:'var(--card-border)', flexShrink:0 }}/>
 
         {/* Status pills */}
         <div style={{ display:'flex', alignItems:'center', gap:4 }}>
@@ -364,13 +400,11 @@ export default function Alerts() {
           {[{v:'active',l:'Active'},{v:'all',l:'All'},{v:'acknowledged',l:'Resolved'}].map(({v,l})=>(
             <button key={v} onClick={()=>setFilterStatus(v)} style={{
               padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600,
-              border: filterStatus===v ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
-              background: filterStatus===v ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
-              color: filterStatus===v ? 'var(--c-teal)' : 'var(--text-500)',
+              border:filterStatus===v?'1.5px solid var(--c-teal)':'1px solid var(--card-border)',
+              background:filterStatus===v?'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))':'var(--card-bg)',
+              color:filterStatus===v?'var(--c-teal)':'var(--text-500)',
               cursor:'pointer', transition:'all 0.15s',
-            }}>
-              {l}
-            </button>
+            }}>{l}</button>
           ))}
         </div>
 
@@ -378,142 +412,114 @@ export default function Alerts() {
         {(filterSeverity!=='all'||searchTerm) && (
           <div style={{ display:'flex', alignItems:'center', gap:5, marginLeft:'auto' }}>
             {filterSeverity!=='all' && (
-              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#fee2e2', color:'#dc2626', display:'inline-flex', alignItems:'center', gap:3 }}>
-                {filterSeverity} <button onClick={()=>setFilterSeverity('all')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#dc2626', lineHeight:1, padding:0 }}>×</button>
+              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99,
+                background:'#fee2e2', color:'#dc2626', display:'inline-flex', alignItems:'center', gap:3 }}>
+                {filterSeverity}
+                <button onClick={()=>setFilterSeverity('all')} style={{
+                  fontWeight:900, background:'none', border:'none', cursor:'pointer',
+                  color:'#dc2626', lineHeight:1, padding:0 }}>
+                  <X size={10}/>
+                </button>
               </span>
             )}
             {searchTerm && (
-              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99, background:'#f5f3ff', color:'#7c3aed', display:'inline-flex', alignItems:'center', gap:3 }}>
-                "{searchTerm}" <button onClick={()=>setSearchTerm('')} style={{ fontWeight:900, background:'none', border:'none', cursor:'pointer', color:'#7c3aed', lineHeight:1, padding:0 }}>×</button>
+              <span style={{ fontSize:11, fontWeight:600, padding:'2px 8px', borderRadius:99,
+                background:'#f5f3ff', color:'#7c3aed', display:'inline-flex', alignItems:'center', gap:3 }}>
+                "{searchTerm}"
+                <button onClick={()=>setSearchTerm('')} style={{
+                  fontWeight:900, background:'none', border:'none', cursor:'pointer',
+                  color:'#7c3aed', lineHeight:1, padding:0 }}>
+                  <X size={10}/>
+                </button>
               </span>
             )}
           </div>
         )}
       </PageHeader>
 
-      <div style={{ maxWidth:1100, margin:'0 auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:20 }}>
-
-        {/* Content */}
-        <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
-          {isLoading ? <ListSkeleton items={5} /> : (
-            <>
-              {/* Active alerts */}
-              {showActive && (
-                <div>
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-                    <h2 style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, fontWeight:700, color:'var(--text-800)', margin:0 }}>
-                      <span style={{ width:8, height:8, borderRadius:'50%', background:'#ef4444', animation:'pulse 2s infinite', flexShrink:0 }} />
-                      Active Alerts
-                      <span style={{ fontSize:11, fontWeight:800, padding:'2px 8px', borderRadius:99, background:'#fee2e2', color:'#dc2626' }}>
-                        {activeAlerts.length}
-                      </span>
-                    </h2>
-                    {activeAlerts.length > 0 && (
-                      <span style={{ fontSize:11, color:'var(--text-400)' }}>Sorted: critical first</span>
-                    )}
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'20px 20px 0', display:'flex', flexDirection:'column', gap:20 }}>
+        {isLoading ? <ListSkeleton items={5}/> : (
+          <>
+            {/* Active alerts table */}
+            {showActive && (
+              <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:14, overflow:'hidden' }}>
+                {/* Section header */}
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
+                  padding:'12px 16px', borderBottom:'1px solid var(--card-border)', background:'var(--page-bg)' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <span style={{ width:8, height:8, borderRadius:'50%', background:'#ef4444',
+                      animation:'pulse 2s infinite', flexShrink:0 }}/>
+                    <h2 style={{ margin:0, fontSize:13, fontWeight:700, color:'var(--text-800)' }}>Active Alerts</h2>
+                    <span style={{ fontSize:11, fontWeight:800, padding:'2px 8px', borderRadius:99,
+                      background:'#fee2e2', color:'#dc2626' }}>
+                      {activeAlerts.length}
+                    </span>
                   </div>
-
-                  {activeAlerts.length === 0 ? (
-                    <div style={{
-                      borderRadius:14, padding:'40px 24px', textAlign:'center',
-                      background:'linear-gradient(135deg,#f0fdf490,#dcfce790)',
-                      border:'1px solid #bbf7d0',
-                    }}>
-                      <div style={{ width:56, height:56, borderRadius:18, background:'linear-gradient(135deg,#10b981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px', boxShadow:'0 4px 14px rgba(16,185,129,0.3)' }}>
-                        <CheckCircle size={28} style={{ color:'#fff' }} />
-                      </div>
-                      <p style={{ fontWeight:700, fontSize:15, color:'#15803d', marginBottom:4 }}>All clear</p>
-                      <p style={{ fontSize:12, color:'#16a34a' }}>No active alerts match your filters.</p>
-                    </div>
-                  ) : (
-                    <AnimatePresence>
-                      <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                        {activeAlerts.map(a => (
-                          <AlertCard key={a.id} alert={a} mlRisk={getML(a.patient_id)}
-                            onAck={id=>ackMutation.mutate(id)} ackPending={pendingAck===a.id}
-                            onExplain={explainAlert} explainLoading={explainLoading}
-                            onNavigate={pid=>navigate(`/patients/${pid}`)}
-                          />
-                        ))}
-                      </div>
-                    </AnimatePresence>
+                  {activeAlerts.length>0 && (
+                    <span style={{ fontSize:11, color:'var(--text-400)' }}>Sorted: critical first</span>
                   )}
                 </div>
-              )}
 
-              {/* Resolved accordion */}
-              {showAcked && ackedAlerts.length > 0 && (
-                <div>
-                  <button
-                    onClick={()=>setAckedExpanded(v=>!v)}
-                    style={{
-                      width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between',
-                      padding:'12px 16px', borderRadius:12, border:'1px solid var(--card-border)',
-                      background: ackedExpanded ? '#f0fdf4' : 'var(--card-bg)',
-                      cursor:'pointer', transition:'all 0.15s',
-                    }}
-                  >
-                    <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                      <CheckCircle size={15} style={{ color: ackedExpanded ? '#16a34a' : 'var(--text-400)' }} />
-                      <span style={{ fontSize:13, fontWeight:700, color: ackedExpanded ? '#15803d' : 'var(--text-700)' }}>
-                        Resolved Alerts
-                      </span>
-                      <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99, background: ackedExpanded ? '#bbf7d0' : 'var(--page-bg)', color: ackedExpanded ? '#15803d' : 'var(--text-400)' }}>
-                        {ackedAlerts.length}
-                      </span>
-                    </div>
-                    {ackedExpanded
-                      ? <ChevronUp  size={15} style={{ color:'#16a34a' }} />
-                      : <ChevronDown size={15} style={{ color:'var(--text-400)' }} />}
-                  </button>
+                <AlertsTable
+                  alerts={activeAlerts} mlBatch={mlBatch} resolved={false}
+                  onAck={id=>ackMutation.mutate(id)} pendingAck={pendingAck}
+                  onExplain={explainAlert} explainLoading={explainLoading}
+                  onNavigate={pid=>navigate(`/patients/${pid}`)}
+                />
+              </div>
+            )}
 
-                  <AnimatePresence>
-                    {ackedExpanded && (
-                      <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }} style={{ overflow:'hidden' }}>
-                        <div style={{ display:'flex', flexDirection:'column', gap:6, paddingTop:8 }}>
-                          {ackedAlerts.slice(0,25).map(a => {
-                            const cfg = SEV[a.severity]||SEV.low;
-                            return (
-                              <div key={a.id} style={{
-                                display:'flex', alignItems:'center', gap:10,
-                                borderRadius:10, padding:'8px 14px', opacity:0.75,
-                                background:'var(--card-bg)', border:'1px solid var(--card-border)',
-                                transition:'opacity 0.15s',
-                              }}
-                              onMouseEnter={e=>(e.currentTarget.style.opacity='1')}
-                              onMouseLeave={e=>(e.currentTarget.style.opacity='0.75')}>
-                                <CheckCircle size={12} style={{ color:'#10b981', flexShrink:0 }} />
-                                <div style={{ flex:1, minWidth:0 }}>
-                                  <div style={{ display:'flex', alignItems:'center', gap:6, flexWrap:'wrap' }}>
-                                    <span style={{ fontSize:11, fontWeight:600, color:'var(--text-700)' }}>{alertLabel(a.alert_type)}</span>
-                                    <span className={cfg.badge}>{cfg.label}</span>
-                                    {a.patient_name && <span style={{ fontSize:11, color:'var(--text-400)' }}>{a.patient_name}</span>}
-                                  </div>
-                                  <p style={{ fontSize:11, color:'var(--text-400)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{a.message}</p>
-                                </div>
-                                <span style={{ fontSize:10, color:'var(--text-400)', flexShrink:0 }}>{timeAgo(a.acknowledged_at||a.created_at)}</span>
-                                {a.patient_id && (
-                                  <button onClick={()=>navigate(`/patients/${a.patient_id}`)} style={{ fontSize:11, fontWeight:600, color:'var(--c-teal)', background:'none', border:'none', cursor:'pointer', flexShrink:0 }}>
-                                    View
-                                  </button>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+            {/* Resolved accordion */}
+            {showAcked && ackedAlerts.length>0 && (
+              <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)', borderRadius:14, overflow:'hidden' }}>
+                <button
+                  onClick={()=>setAckedExpanded(v=>!v)}
+                  style={{
+                    width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between',
+                    padding:'12px 16px', border:'none', cursor:'pointer', transition:'all 0.15s',
+                    background: ackedExpanded ? '#f0fdf4' : 'var(--card-bg)',
+                    borderBottom: ackedExpanded ? '1px solid var(--card-border)' : 'none',
+                  }}
+                >
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <CheckCircle size={15} style={{ color:ackedExpanded?'#16a34a':'var(--text-400)' }}/>
+                    <span style={{ fontSize:13, fontWeight:700, color:ackedExpanded?'#15803d':'var(--text-700)' }}>
+                      Resolved Alerts
+                    </span>
+                    <span style={{ fontSize:11, fontWeight:700, padding:'2px 8px', borderRadius:99,
+                      background:ackedExpanded?'#bbf7d0':'var(--page-bg)',
+                      color:ackedExpanded?'#15803d':'var(--text-400)' }}>
+                      {ackedAlerts.length}
+                    </span>
+                  </div>
+                  {ackedExpanded
+                    ? <ChevronUp  size={15} style={{ color:'#16a34a' }}/>
+                    : <ChevronDown size={15} style={{ color:'var(--text-400)' }}/>}
+                </button>
+
+                <AnimatePresence>
+                  {ackedExpanded && (
+                    <motion.div
+                      initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }}
+                      exit={{ height:0, opacity:0 }} style={{ overflow:'hidden' }}>
+                      <AlertsTable
+                        alerts={ackedAlerts.slice(0,30)} mlBatch={null} resolved={true}
+                        onAck={()=>{}} pendingAck={null}
+                        onExplain={()=>{}} explainLoading={false}
+                        onNavigate={pid=>navigate(`/patients/${pid}`)}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {/* AI Explanation overlay */}
       {showFocused && focusedData && (
-        <FocusedAIExplanation data={focusedData} onClose={()=>{ setShowFocused(false); setFocusedData(null); }} />
+        <FocusedAIExplanation data={focusedData} onClose={()=>{ setShowFocused(false); setFocusedData(null); }}/>
       )}
     </motion.div>
   );
