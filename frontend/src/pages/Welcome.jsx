@@ -78,7 +78,7 @@ export default function Welcome() {
           background: '#ffffff',
           borderRadius: 16,
           width: '100%',
-          maxWidth: 460,
+          maxWidth: 420,
           overflow: 'hidden',
           boxShadow: '0 20px 60px rgba(0,0,0,0.12)',
         }}
@@ -87,7 +87,7 @@ export default function Welcome() {
         <div style={{ height: 4, background: 'linear-gradient(90deg,#0d9488,#0891b2,#7c3aed)' }} />
 
         {/* Header */}
-        <div style={{ padding: '28px 28px 20px', textAlign: 'center' }}>
+        <div style={{ padding: '24px 20px 16px', textAlign: 'center' }}>
           <div style={{
             width: 56, height: 56, borderRadius: 16,
             background: '#f0fdf4', border: '2px solid #d1fae5',
@@ -105,65 +105,65 @@ export default function Welcome() {
         </div>
 
         {/* Options */}
-        <div style={{ padding: '0 28px 28px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ padding: '0 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
 
           {/* Personalise */}
           <button
             onClick={handlePersonalise}
             style={{
-              display: 'flex', alignItems: 'center', gap: 16,
-              padding: '16px 18px', borderRadius: 12,
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '14px 16px', borderRadius: 12,
               border: '2px solid #0d9488', background: '#f0fdf4',
               cursor: 'pointer', textAlign: 'left', width: '100%',
-              transition: 'all 0.15s',
+              transition: 'all 0.15s', boxSizing: 'border-box',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#dcfce7'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#f0fdf4'; e.currentTarget.style.transform = 'none'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#dcfce7'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#f0fdf4'; }}
           >
             <div style={{
-              width: 42, height: 42, borderRadius: 12,
+              width: 38, height: 38, borderRadius: 10,
               background: '#0d9488', display: 'flex',
               alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <Sparkles size={20} style={{ color: '#fff' }} />
+              <Sparkles size={18} style={{ color: '#fff' }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', margin: '0 0 3px' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', margin: '0 0 2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Personalise my care
               </p>
-              <p style={{ fontSize: 12, color: '#64748b', margin: 0, lineHeight: 1.4 }}>
-                3-5 minutes - tailors your dashboard, symptom tracking and features to you
+              <p style={{ fontSize: 11, color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                3-5 mins · tailors your dashboard and features
               </p>
             </div>
-            <ArrowRight size={18} style={{ color: '#0d9488', flexShrink: 0 }} />
+            <ArrowRight size={16} style={{ color: '#0d9488', flexShrink: 0 }} />
           </button>
 
           {/* Skip */}
           <button
             onClick={handleSkip}
             style={{
-              display: 'flex', alignItems: 'center', gap: 16,
-              padding: '16px 18px', borderRadius: 12,
+              display: 'flex', alignItems: 'center', gap: 12,
+              padding: '14px 16px', borderRadius: 12,
               border: '1.5px solid #e2e8f0', background: '#ffffff',
               cursor: 'pointer', textAlign: 'left', width: '100%',
-              transition: 'all 0.15s',
+              transition: 'all 0.15s', boxSizing: 'border-box',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
             onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
           >
             <div style={{
-              width: 42, height: 42, borderRadius: 12,
+              width: 38, height: 38, borderRadius: 10,
               background: '#f8fafc', border: '1.5px solid #e2e8f0',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              <LayoutDashboard size={20} style={{ color: '#94a3b8' }} />
+              <LayoutDashboard size={18} style={{ color: '#94a3b8' }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 15, fontWeight: 600, color: '#475569', margin: '0 0 3px' }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#475569', margin: '0 0 2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 Go to my dashboard
               </p>
-              <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.4 }}>
-                Use standard settings for now - you can personalise later in Settings
+              <p style={{ fontSize: 11, color: '#94a3b8', margin: 0, lineHeight: 1.4 }}>
+                Use standard settings · personalise later in Settings
               </p>
             </div>
           </button>

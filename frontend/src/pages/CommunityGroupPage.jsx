@@ -195,42 +195,42 @@ export default function CommunityGroupPage() {
     <div className="flex flex-col bg-[var(--card-bg)]" style={{ height: 'calc(100vh - 60px)' }}>
 
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0 shadow-md"
+      <div className="flex items-center gap-2 px-3 py-2.5 flex-shrink-0"
         style={{ background: `linear-gradient(135deg, ${color}ee, ${color}bb)` }}>
         <button onClick={() => navigate('/community')}
-          className="w-9 h-9 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center transition flex-shrink-0">
-          <ArrowLeft size={18} className="text-white" />
+          className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition flex-shrink-0">
+          <ArrowLeft size={16} className="text-white" />
         </button>
-        <div className="w-10 h-10 rounded-full bg-white/25 flex items-center justify-center text-white font-black text-sm flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-white/25 flex items-center justify-center text-white font-black text-xs flex-shrink-0">
           {groupInitials(group?.name || '')}
         </div>
         <button onClick={() => setShowInfo(!showInfo)} className="flex-1 text-left min-w-0">
-          <p className="font-bold text-white text-base leading-tight truncate">{group?.name}</p>
-          <p className="text-white/75 text-xs">{group?.member_count ?? 0} members · anonymous · tap for info</p>
+          <p className="font-bold text-white text-sm leading-tight truncate">{group?.name}</p>
+          <p className="text-white/70 text-[11px]">{group?.member_count ?? 0} members</p>
         </button>
-        <div className="flex items-center gap-1.5 flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <button onClick={() => setShowSearch(s => !s)}
-            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition">
-            <Search size={15} />
+            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center text-white transition">
+            <Search size={14} />
           </button>
           {group && !group.joined ? (
             <button onClick={() => toggleMutation.mutate()} disabled={toggleMutation.isPending}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--card-bg)] text-sm font-bold rounded-xl transition hover:bg-slate-100" style={{ color }}>
-              <UserPlus size={14} /> Join
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-[var(--card-bg)] text-xs font-bold rounded-lg transition hover:bg-slate-100" style={{ color }}>
+              <UserPlus size={13} /> Join
             </button>
           ) : (
             <button onClick={() => toggleMutation.mutate()} disabled={toggleMutation.isPending}
-              className="px-3 py-1.5 bg-white/20 hover:bg-red-500 text-white text-xs font-bold rounded-xl transition border border-white/30">
+              className="px-2.5 py-1.5 bg-white/20 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition border border-white/30">
               Leave
             </button>
           )}
           <button onClick={() => setReminderOpen(true)}
-            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition">
-            <Bell size={15} />
+            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center text-white transition">
+            <Bell size={14} />
           </button>
           <button onClick={() => setShowInfo(!showInfo)}
-            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition">
-            <Info size={15} />
+            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center text-white transition">
+            <Info size={14} />
           </button>
         </div>
       </div>
@@ -341,11 +341,11 @@ export default function CommunityGroupPage() {
               <AnimatePresence>
                 {showEmojiPicker && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    className="px-3 py-2 bg-[var(--card-bg)] dark:bg-slate-750 border-b border-[var(--card-border)]">
-                    <div className="grid grid-cols-10 gap-1">
+                    className="px-3 py-2 bg-[var(--card-bg)] border-b border-[var(--card-border)]">
+                    <div className="grid grid-cols-10 gap-0.5">
                       {EMOJI_GRID.map(e => (
                         <button key={e} onClick={() => insertEmoji(e)}
-                          className="w-8 h-8 flex items-center justify-center text-xl hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition">
+                          className="w-7 h-7 flex items-center justify-center text-base hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition">
                           {e}
                         </button>
                       ))}
@@ -354,10 +354,10 @@ export default function CommunityGroupPage() {
                 )}
               </AnimatePresence>
 
-              <div className="flex items-end gap-2 p-3">
+              <div className="flex items-end gap-2 px-3 py-2">
                 <button onClick={() => setShowEmojiPicker(s => !s)}
-                  className={`w-9 h-9 flex items-center justify-center rounded-xl transition flex-shrink-0 ${showEmojiPicker ? 'bg-teal-100 text-teal-600' : 'text-[var(--text-400)] hover:text-teal-500 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
-                  <Smile size={20} />
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg transition flex-shrink-0 ${showEmojiPicker ? 'text-teal-600' : 'text-[var(--text-400)] hover:text-teal-500'}`}>
+                  <Smile size={18} />
                 </button>
                 <textarea
                   ref={textareaRef}
@@ -366,20 +366,20 @@ export default function CommunityGroupPage() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
                   maxLength={280}
                   rows={1}
-                  placeholder="Share anonymously… (Enter to send, Shift+Enter for new line)"
-                  className="flex-1 px-4 py-2.5 border-2 border-[var(--card-border)] rounded-2xl text-sm resize-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none transition bg-[var(--card-bg)] text-[var(--text-900)]"
-                  style={{ maxHeight: '96px', overflowY: 'auto' }}
+                  placeholder="Share anonymously…"
+                  className="flex-1 px-3 py-2 border border-[var(--card-border)] rounded-2xl text-sm resize-none focus:border-teal-500 focus:outline-none transition bg-[var(--card-bg)] text-[var(--text-900)]"
+                  style={{ maxHeight: '80px', overflowY: 'auto', lineHeight: '1.4' }}
                 />
                 <button
                   onClick={handleSubmit}
                   disabled={createPostMutation.isPending || !postContent.trim()}
-                  className="w-10 h-10 flex items-center justify-center rounded-2xl text-white flex-shrink-0 transition disabled:opacity-50 hover:opacity-90"
-                  style={{ backgroundColor: color }}>
-                  {createPostMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  className="w-9 h-9 flex items-center justify-center rounded-full text-white flex-shrink-0 transition disabled:opacity-40"
+                  style={{ backgroundColor: postContent.trim() ? color : 'var(--card-border)' }}>
+                  {createPostMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 </button>
               </div>
-              <p className="text-[11px] text-[var(--text-400)] pb-2 pl-4 flex items-center gap-1">
-                🔒 Your identity is protected · <span className={postContent.length > 250 ? 'text-red-500 font-bold' : ''}>{postContent.length}/280</span>
+              <p className="text-[10px] text-[var(--text-400)] pb-1.5 px-4">
+                🔒 Anonymous · {postContent.length}/280
               </p>
             </div>
           )}
@@ -538,10 +538,10 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
               {isActiveReactionPicker && (
                 <motion.div initial={{ opacity: 0, scale: 0.9, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="absolute bottom-8 left-0 bg-[var(--card-bg)] rounded-2xl shadow-xl border border-[var(--card-border)] p-2 z-20 flex gap-1">
+                  className="absolute bottom-8 left-0 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] p-1.5 z-20 flex gap-0.5">
                   {REACTIONS.map(r => (
                     <button key={r.type} onClick={() => onReact(r.type)} title={r.label}
-                      className="w-9 h-9 flex items-center justify-center text-xl hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition hover:scale-125">
+                      className="w-8 h-8 flex items-center justify-center text-base hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition hover:scale-110">
                       {r.emoji}
                     </button>
                   ))}
@@ -567,13 +567,14 @@ function PostBubble({ post, onReact, onFlag, onReply, isActiveReactionPicker, on
                 {showFlag && (
                   <motion.div initial={{ opacity: 0, scale: 0.95, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute right-0 bottom-7 w-36 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] p-2.5 z-10">
-                    <p className="text-xs font-semibold text-[var(--text-700)] mb-2">Report this post?</p>
-                    <div className="flex gap-1.5">
+                    className="absolute right-0 bottom-8 bg-[var(--card-bg)] rounded-xl shadow-xl border border-[var(--card-border)] p-3 z-10"
+                    style={{ width: 150, minWidth: 150 }}>
+                    <p className="text-xs font-semibold text-[var(--text-700)] mb-2.5">Report this post?</p>
+                    <div className="flex gap-2">
                       <button onClick={() => { onFlag(); setShowFlag(false); }}
-                        className="flex-1 py-1.5 bg-red-600 text-white text-[11px] font-bold rounded-lg hover:bg-red-700">Report</button>
+                        className="flex-1 py-1.5 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 whitespace-nowrap">Report</button>
                       <button onClick={() => setShowFlag(false)}
-                        className="flex-1 py-1.5 border border-[var(--card-border)] text-[11px] rounded-lg hover:bg-[var(--card-bg)] dark:hover:bg-slate-700">Cancel</button>
+                        className="flex-1 py-1.5 border border-[var(--card-border)] text-xs rounded-lg hover:bg-[var(--page-bg)] whitespace-nowrap">Cancel</button>
                     </div>
                   </motion.div>
                 )}
