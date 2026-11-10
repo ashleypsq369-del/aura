@@ -705,13 +705,15 @@ function SystemOverviewTab({ batchRisk, sysData, onScan, scanning }) {
 }
 
 /* ── Purpose-built AI Risk Table ─────────────────────────────────────────── */
-function RiskTable({ patients, deepDiveId, onSelect }) {
+function RiskTable({ patients, deepDiveId, onSelect, onNavigate }) {
   if (!patients.length) return (
     <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       padding:'64px 24px', gap:10, textAlign:'center' }}>
       <Brain size={36} style={{ color:'#0d9488', opacity:0.4 }}/>
-      <p style={{ fontWeight:600, color:'var(--text-600)', margin:'0 0 4px' }}>No patients found</p>
-      <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>Try adjusting the risk filter or search term.</p>
+      <p style={{ fontWeight:600, color:'var(--text-600)', margin:'0 0 4px' }}>No AI risk data yet</p>
+      <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>
+        Run an AI scan to stratify your patient population.
+      </p>
     </div>
   );
   return (
@@ -719,7 +721,7 @@ function RiskTable({ patients, deepDiveId, onSelect }) {
       <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
         <thead>
           <tr style={{ borderBottom:'2px solid var(--card-border)' }}>
-            {['Patient','Risk Level','AI Score','Top Concern',''].map((h,i)=>(
+            {['Patient','Risk Level','AI Score','Top Concern','Actions'].map((h,i)=>(
               <th key={i} style={{
                 padding:'9px 12px', textAlign:'left',
                 fontSize:11, fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase',
@@ -791,20 +793,36 @@ function RiskTable({ patients, deepDiveId, onSelect }) {
                     {concern || <span style={{ color:'var(--text-300)', fontStyle:'italic' }}>None flagged</span>}
                   </p>
                 </td>
-                {/* View button */}
+                {/* Actions — AI explanation + direct patient record */}
                 <td style={{ padding:'10px 12px' }}>
-                  <button onClick={e=>{ e.stopPropagation(); onSelect(p.id); }}
-                    style={{
-                      display:'inline-flex', alignItems:'center', gap:4,
-                      padding:'5px 12px', borderRadius:7, fontSize:12, fontWeight:600,
-                      background:isSelected?'#0d9488':'var(--page-bg)',
-                      color:isSelected?'#fff':'var(--text-600)',
-                      border:`1px solid ${isSelected?'#0d9488':'var(--card-border)'}`,
-                      cursor:'pointer', transition:'all 0.15s',
-                    }}>
-                    <ChevronRight size={11} style={{ transform:isSelected?'rotate(90deg)':'none', transition:'transform 0.15s' }}/>
-                    {isSelected?'Viewing':'View'}
-                  </button>
+                  <div style={{ display:'flex', alignItems:'center', gap:5 }}>
+                    {/* AI explanation drawer */}
+                    <button onClick={e=>{ e.stopPropagation(); onSelect(p.id); }}
+                      title="View AI explanation"
+                      style={{
+                        display:'inline-flex', alignItems:'center', gap:4,
+                        padding:'5px 10px', borderRadius:7, fontSize:11, fontWeight:600,
+                        background:isSelected?'#0d9488':'var(--page-bg)',
+                        color:isSelected?'#fff':'var(--text-600)',
+                        border:`1px solid ${isSelected?'#0d9488':'var(--card-border)'}`,
+                        cursor:'pointer', transition:'all 0.15s', whiteSpace:'nowrap',
+                      }}>
+                      <Brain size={10}/>
+                      {isSelected?'Viewing':'AI'}
+                    </button>
+                    {/* Open full patient record */}
+                    <button onClick={e=>{ e.stopPropagation(); onNavigate(p.id); }}
+                      title="Open patient record"
+                      style={{
+                        display:'inline-flex', alignItems:'center', gap:4,
+                        padding:'5px 10px', borderRadius:7, fontSize:11, fontWeight:700,
+                        background:'linear-gradient(135deg,#0d9488,#0891b2)',
+                        color:'#fff', border:'none', cursor:'pointer',
+                        whiteSpace:'nowrap',
+                      }}>
+                      <ExternalLink size={10}/>Record
+                    </button>
+                  </div>
                 </td>
               </tr>
             );
@@ -920,7 +938,7 @@ export default function AIInsights() {
       <PageHeader
         image="/resources/headers/header-ai-insights.jpg"
         title="AI Clinical Intelligence"
-        subtitle="Real-time risk stratification across all patients"
+        subtitle="Patients ranked by ML risk — click AI for explanation, Record to open their chart"
         icon={Brain}
         stats={[
           { label:'Patients',  value:kpi.total,    color:'#2dd4bf', onClick:()=>setFilterRisk('all') },
@@ -1036,6 +1054,7 @@ export default function AIInsights() {
                     patients={visiblePatients}
                     deepDiveId={deepDiveId}
                     onSelect={id=>setDeepDiveId(prev=>prev===id?null:id)}
+                    onNavigate={id=>navigate(`/patients/${id}`)}
                   />
                 </>
               )
