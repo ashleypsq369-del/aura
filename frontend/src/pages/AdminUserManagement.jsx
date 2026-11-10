@@ -13,7 +13,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   Users, Plus, Edit2, KeyRound, Loader2,
   CheckCircle, AlertCircle, Download, Shield,
-  MoreVertical, AlertTriangle, Clock, X,
+  MoreVertical, AlertTriangle, Clock, X, Building2, MapPin, Phone, Mail,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -415,7 +415,29 @@ export default function AdminUserManagement() {
   const [showCreate,   setShowCreate]   = useState(false);
   const [editUser,     setEditUser]     = useState(null);
   const [tempPwd,      setTempPwd]      = useState(null);
+  const [activeTab,    setActiveTab]    = useState('users'); // 'users' | 'org_requests'
   const qc = useQueryClient();
+
+  // Org requests stored in localStorage (until backend wired)
+  const [orgRequests, setOrgRequests]   = useState(() => {
+    try { return JSON.parse(localStorage.getItem('org_requests') || '[]'); } catch { return []; }
+  });
+  const pendingOrgs = orgRequests.filter(r => r.status === 'pending');
+
+  const approveOrg = (idx) => {
+    const updated = [...orgRequests];
+    updated[idx].status = 'approved';
+    setOrgRequests(updated);
+    localStorage.setItem('org_requests', JSON.stringify(updated));
+    toast.success(`Organisation approved — create their admin account using "Add User"`);
+  };
+  const rejectOrg = (idx) => {
+    const updated = [...orgRequests];
+    updated[idx].status = 'rejected';
+    setOrgRequests(updated);
+    localStorage.setItem('org_requests', JSON.stringify(updated));
+    toast.success('Request rejected');
+  };
 
   const { data: usersData, isLoading } = useQuery({
     queryKey: ['admin-users', roleFilter, statusFilter],
@@ -676,8 +698,112 @@ export default function AdminUserManagement() {
         }
         toolbar={filterPills}
       >
+        {/* Tab switcher: Users | Org Requests */}
+        <div style={{ display:'flex', gap:6, marginBottom:16 }}>
+          {[
+            { id:'users',        label:'Users',              count: total },
+            { id:'org_requests', label:'Organisation Requests', count: pendingOrgs.length, alert: pendingOrgs.length > 0 },
+          ].map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id)}
+              style={{
+                display:'flex', alignItems:'center', gap:6,
+                padding:'6px 14px', borderRadius:9, fontSize:12, fontWeight:700,
+                cursor:'pointer', transition:'all 0.15s',
+                border: activeTab===t.id ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
+                background: activeTab===t.id ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',
+                color: activeTab===t.id ? 'var(--c-teal)' : 'var(--text-500)',
+              }}>
+              {t.label}
+              <span style={{
+                fontSize:10, fontWeight:800, padding:'1px 7px', borderRadius:99,
+                background: t.alert ? '#ef4444' : activeTab===t.id ? 'var(--c-teal)' : 'var(--page-bg)',
+                color: (t.alert || activeTab===t.id) ? '#fff' : 'var(--text-400)',
+              }}>{t.count}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Organisation Requests panel */}
+        {activeTab === 'org_requests' && (
+          <div style={{ marginBottom:16 }}>
+            {pendingOrgs.length === 0 ? (
+              <div style={{ textAlign:'center', padding:'48px 20px', color:'var(--text-400)' }}>
+                <Building2 size={32} style={{ margin:'0 auto 10px', display:'block', opacity:0.3 }}/>
+                <p style={{ fontSize:13, fontWeight:600 }}>No pending organisation requests</p>
+                <p style={{ fontSize:12, marginTop:4 }}>When institutions register, their requests appear here for approval</p>
+              </div>
+            ) : (
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {orgRequests.map((req, idx) => req.status === 'pending' && (
+                  <div key={idx} style={{
+                    display:'flex', alignItems:'flex-start', gap:14, flexWrap:'wrap',
+                    padding:'14px 16px', borderRadius:12,
+                    background:'var(--card-bg)', border:'1px solid var(--card-border)',
+                    borderLeft:'3px solid #0d9488',
+                  }}>
+                    <div style={{ width:38, height:38, borderRadius:10, background:'#f0fdfa', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                      <Building2 size={18} style={{ color:'#0d9488' }}/>
+                    </div>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <p style={{ fontSize:13, fontWeight:800, color:'var(--text-900)', margin:'0 0 2px' }}>{req.org_name || req.full_name}</p>
+                      <p style={{ fontSize:11, color:'var(--text-500)', margin:'0 0 6px' }}>
+                        {req.org_type?.replace(/_/g,' ')} · {req.region}{req.district ? ` · ${req.district}` : ''}
+                      </p>
+                      <div style={{ display:'flex', flexWrap:'wrap', gap:'4px 16px' }}>
+                        {req.contact_name && (
+                          <span style={{ fontSize:11, color:'var(--text-600)', display:'flex', alignItems:'center', gap:4 }}>
+                            👤 {req.contact_name}{req.contact_role ? ` · ${req.contact_role}` : ''}
+                          </span>
+                        )}
+                        {req.contact_email && (
+                          <span style={{ fontSize:11, color:'var(--text-600)', display:'flex', alignItems:'center', gap:4 }}>
+                            <Mail size={10}/> {req.contact_email}
+                          </span>
+                        )}
+                        {req.contact_phone && (
+                          <span style={{ fontSize:11, color:'var(--text-600)', display:'flex', alignItems:'center', gap:4 }}>
+                            <Phone size={10}/> {req.contact_phone}
+                          </span>
+                        )}
+                        {req.staff_count && (
+                          <span style={{ fontSize:11, color:'var(--text-600)', display:'flex', alignItems:'center', gap:4 }}>
+                            <Users size={10}/> {req.staff_count} staff
+                          </span>
+                        )}
+                      </div>
+                      {req.services_offered && (
+                        <p style={{ fontSize:11, color:'var(--text-500)', marginTop:5, fontStyle:'italic' }}>
+                          Services: {req.services_offered}
+                        </p>
+                      )}
+                      {req.reason && (
+                        <p style={{ fontSize:11, color:'var(--text-600)', marginTop:3 }}>
+                          "{req.reason}"
+                        </p>
+                      )}
+                      <p style={{ fontSize:10, color:'var(--text-400)', marginTop:5 }}>
+                        Submitted: {req.submitted_at ? new Date(req.submitted_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'Unknown'}
+                      </p>
+                    </div>
+                    <div style={{ display:'flex', gap:8, flexShrink:0 }}>
+                      <button onClick={() => approveOrg(orgRequests.indexOf(req))}
+                        style={{ padding:'6px 16px', borderRadius:8, fontSize:12, fontWeight:700, color:'#fff', border:'none', cursor:'pointer', background:'#0d9488', display:'flex', alignItems:'center', gap:5 }}>
+                        <CheckCircle size={12}/> Approve
+                      </button>
+                      <button onClick={() => rejectOrg(orgRequests.indexOf(req))}
+                        style={{ padding:'6px 14px', borderRadius:8, fontSize:12, fontWeight:600, color:'#dc2626', border:'1px solid #fca5a5', background:'transparent', cursor:'pointer' }}>
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Care setting change request banners */}
-        {changeRequests.length > 0 && (
+        {activeTab === 'users' && changeRequests.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
             {changeRequests.map(u => (
               <div key={u.id} style={{
@@ -709,16 +835,19 @@ export default function AdminUserManagement() {
           </div>
         )}
 
-        <DataTable
-          columns={columns}
-          data={users}
-          isLoading={isLoading}
-          searchColumnId="full_name"
-          searchPlaceholder="Search name, email, username…"
-          emptyTitle="No users found"
-          emptyBody="Try adjusting your filters."
-          pageSize={25}
-        />
+        {/* Users table - only when on users tab */}
+        {activeTab === 'users' && (
+          <DataTable
+            columns={columns}
+            data={users}
+            isLoading={isLoading}
+            searchColumnId="full_name"
+            searchPlaceholder="Search name, email, username…"
+            emptyTitle="No users found"
+            emptyBody="Try adjusting your filters."
+            pageSize={25}
+          />
+        )}
       </AdminPageShell>
 
       {/* Dialogs */}

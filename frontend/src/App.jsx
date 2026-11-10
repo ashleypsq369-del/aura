@@ -49,6 +49,7 @@ import Appointments from './pages/Appointments';
 import Caregivers from './pages/Caregivers';
 import CareGuide from './pages/CareGuide';
 import AdaptiveCareGuide from './pages/AdaptiveCareGuide';
+import ProcedureTraining from './pages/ProcedureTraining';
 import AssessmentDashboard from './pages/AssessmentDashboard';
 import ESASForm from './pages/ESASForm';
 import PPSForm from './pages/PPSForm';
@@ -161,6 +162,10 @@ import DailyCareLog from './pages/DailyCareLog';
 import PreClinicChecklist from './pages/PreClinicChecklist';
 import ResidentialLog from './pages/ResidentialLog';
 import BereavedFamilyDashboard from './pages/BereavedFamilyDashboard';
+// New gap features
+import RegisterPending from './pages/RegisterPending';
+import WoundCareAssessment from './pages/WoundCareAssessment';
+import PaediatricAssessment from './pages/PaediatricAssessment';
 
 const queryClient = new QueryClient({
  defaultOptions: {
@@ -399,6 +404,7 @@ function AppRoutes() {
  {/* Public Routes */}
  <Route path="/login" element={<Login />} />
  <Route path="/register" element={<Register />} />
+ <Route path="/register/pending" element={<RegisterPending />} />
  <Route path="/welcome" element={<Welcome />} />
  <Route path="/forgot-password" element={<ForgotPassword />} />
  <Route path="/reset-password" element={<ResetPassword />} />
@@ -441,7 +447,7 @@ function AppRoutes() {
  <Route path="/patients/:patientId/care-plan" element={<CarePlanDetail />} />
  <Route path="/patients/:patientId/appointments" element={<Appointments />} />
  <Route path="/patients/:patientId/wellbeing" element={<WellbeingDetail />} />
- <Route path="/patients/:patientId/wound-care" element={<WoundCareModule />} />
+
  <Route path="/patients/:patientId/ml-risk" element={<MLRiskDetail />} />
  <Route path="/ai-insights" element={<AIInsights />} />
  <Route path="/alerts" element={<Alerts />} />
@@ -450,6 +456,9 @@ function AppRoutes() {
  <Route path="/caregivers" element={<Caregivers />} />
  <Route path="/care-guide" element={<CareGuide />} />
  <Route path="/care-guide/:patientId" element={<AdaptiveCareGuide />} />
+ <Route path="/procedure-training" element={<ProcedureTraining />} />
+ <Route path="/patients/:patientId/wound-care" element={<WoundCareAssessment />} />
+ <Route path="/patients/:patientId/paediatric-assessment" element={<PaediatricAssessment />} />
  <Route path="/assessments/:patientId" element={<AssessmentDashboard />} />
  <Route path="/assessments/:patientId/esas" element={<ESASForm />} />
  <Route path="/assessments/:patientId/pps" element={<PPSForm />} />

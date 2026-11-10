@@ -4,7 +4,7 @@ import {
  LayoutDashboard, Users, Brain, Bell, Pill, Calendar, 
  HeartHandshake, FileText, Infinity as InfinityIcon,
  BookOpen, MessagesSquare, Map, User, Shield, UserCog, X, MessageCircle, Mail, Heart, Target,
- Sparkles, ClipboardList, Home, Activity, ChevronLeft, ChevronRight, Briefcase,
+ Sparkles, ClipboardList, Home, Activity, ChevronLeft, ChevronRight, Briefcase, Stethoscope,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { alertsAPI } from '../../api/client';
@@ -94,6 +94,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Services', path: '/services', icon: Briefcase },
  { name: 'Resources', path: '/resources', icon: BookOpen },
  { name: 'Care Guide', path: '/care-guide', icon: FileText },
+ { name: 'Procedure Training', path: '/procedure-training', icon: Stethoscope },
  { name: 'Care Settings', path: '/care-settings', icon: Map },
  { name: 'Shift Handover', path: '/shift-handover', icon: ClipboardList },
  { name: 'Pre-Clinic', path: '/pre-clinic', icon: ClipboardList },
@@ -144,6 +145,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'Daily Care Log', path: '/daily-care-log', icon: Home },
  { name: 'Residential Log',path: '/residential-log', icon: ClipboardList },
  { name: 'Care Settings', path: '/care-settings', icon: Map },
+ { name: 'Procedure Training', path: '/procedure-training', icon: Stethoscope },
  { name: 'Resources', path: '/resources', icon: BookOpen },
  { name: 'Community', path: '/community', icon: MessagesSquare },
  { name: 'My Profile', path: '/profile', icon: User },

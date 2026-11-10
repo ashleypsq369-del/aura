@@ -375,6 +375,8 @@ export default function Register() {
  if (form.phone && form.phone.length < 4) newErrors.phone = 'Phone number is too short';
 
  if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
+ // Organisations skip step 2 (no personal care setting needed)
+ if (form.role === 'organisation') { registerMutation.mutate(form); return; }
  setStep(2);
  window.scrollTo(0, 0);
  };
@@ -393,6 +395,11 @@ export default function Register() {
  }),
  onSuccess: (res) => {
  const { access_token, user } = res.data;
+ // Organisation requests → pending approval screen
+ if (form.role === 'organisation') {
+ navigate('/register/pending', { state: { org_name: form.org_name || form.full_name, email: form.email } });
+ return;
+ }
  // Store token but DON'T call setUser yet — that would trigger auth redirects
  // Navigate to /welcome with user data; /welcome makes the questionnaire choice
  // then calls setUser and goes to the right destination
@@ -405,7 +412,8 @@ export default function Register() {
 
  const handleSubmit = (e) => {
  e.preventDefault();
- if (!form.care_setting) { setServerErr('Please select your care setting.'); return; }
+ // Organisation requests skip care setting
+ if (form.role !== 'organisation' && !form.care_setting) { setServerErr('Please select your care setting.'); return; }
  if (!terms) { setServerErr('Please accept the Terms of Service to continue.'); return; }
  registerMutation.mutate(form);
  };
@@ -627,7 +635,18 @@ export default function Register() {
  className="w-full h-11 px-3 border-2 border-[var(--card-border)] rounded-xl text-sm text-[var(--text-800)] font-medium outline-none focus:border-slate-300 bg-slate-50 transition-all appearance-none cursor-pointer">
  <option value="patient">A patient</option>
  <option value="family">A family member (not a caregiver)</option>
+ <option value="organisation">An organisation or institution</option>
  </select>
+ </InputGroup>
+ )}
+ {/* Organisation name — shown when org role selected */}
+ {form.role === 'organisation' && (
+ <InputGroup id="org_name" label="Organisation / Institution Name" required
+ hint="e.g. Korle Bu Teaching Hospital, Ansmed Home Care">
+ <input id="org_name" type="text" value={form.org_name || ''}
+ onChange={e => setField('org_name', e.target.value)}
+ placeholder="Full name of your organisation"
+ className="w-full h-11 px-3 border-2 border-[var(--card-border)] rounded-xl text-sm text-[var(--text-800)] outline-none focus:border-teal-500 bg-slate-50 transition-all"/>
  </InputGroup>
  )}
  {/* Show role pill when pre-selected */}
