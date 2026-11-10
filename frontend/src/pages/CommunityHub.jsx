@@ -213,59 +213,14 @@ export default function CommunityHub() {
  </div>
  ) : (
  <>
- {/* ML/signal-driven smart recommendations */}
+ {/* Suggested groups — no AI-banner, just a clean section header */}
  {mlRecommendedGroups.length > 0 && activeTab === 'all' && !search && (
- <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
- className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl overflow-hidden shadow-sm">
- <div className="px-4 py-3 border-b border-[var(--card-border)]/50 flex items-center gap-2">
- <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center flex-shrink-0">
- <Brain size={14} className="text-teal-600" />
- </div>
- <h3 className="text-sm font-semibold text-[var(--text-800)] flex-1">Smart Group Recommendations</h3>
- <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
- {mlRecommendedGroups.length} for you
- </span>
- </div>
- {(signals?.communityTags?.length > 0 || signals?.condition) && (
- <div className="px-4 pt-2 pb-1">
- <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] flex items-center gap-1.5 flex-wrap">
- <Sparkles size={11} className="text-teal-500" />
- Matched to your profile:
- {signals.condition && <span className="font-semibold text-slate-700"> {signals.condition}</span>}
- {signals.communityTags?.slice(0,3).map(t => (
- <span key={t} className="px-1.5 py-0.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-[11px] font-semibold">{t}</span>
- ))}
- </p>
- </div>
- )}
- <div className="p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
- {mlRecommendedGroups.map(g => {
- const color = groupColor(g.name);
- return (
- <button key={g.id}
- onClick={() => navigate(`/community/${g.id}`)}
- className="text-left flex items-start gap-3 p-3 bg-[var(--card-bg)] hover:bg-teal-50 dark:hover:bg-slate-700 rounded-xl border border-[var(--card-border)] hover:border-teal-300 transition-all group shadow-sm">
- <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 bg-slate-200 text-[var(--text-700)]">
- {groupInitials(g.name)}
- </div>
- <div className="flex-1 min-w-0">
- <p className="text-xs font-bold text-[var(--text-900)] group-hover:text-teal-700 dark:group-hover:text-violet-300 truncate">{g.name}</p>
- <p className="text-[11px] text-[var(--text-500)] dark:text-[var(--text-400)] truncate mt-0.5">{g.description || 'Supportive community group'}</p>
- <div className="flex items-center gap-1.5 mt-1">
- <span className="text-[11px] text-[var(--text-400)] dark:text-[var(--text-500)] flex items-center gap-0.5">
- <Users size={9} /> {g.member_count ?? 0}
- </span>
- {g.condition_tags?.slice(0,2).map(t => (
- <span key={t} className="text-[11px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--card-bg)] border border-teal-400 text-teal-700 dark:bg-violet-900/40 dark:border-violet-600 dark:text-violet-300">{t}</span>
- ))}
+ <div>
+ <p className="text-xs font-semibold text-[var(--text-400)] uppercase tracking-wider mb-3">Suggested for you</p>
+ <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+ {mlRecommendedGroups.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
  </div>
  </div>
- <MessagesSquare size={13} className="text-teal-400 flex-shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
- </button>
- );
- })}
- </div>
- </motion.div>
  )}
 
  {/* Personalised banner */}
@@ -278,18 +233,18 @@ export default function CommunityHub() {
 
  {recommended.length > 0 && (
  <div>
- <p className="text-xs font-bold text-[var(--text-500)] uppercase tracking-wider mb-3">
- Recommended for you
+ <p className="text-xs font-semibold text-[var(--text-400)] uppercase tracking-wider mb-3">
+ Recommended
  </p>
- <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
  {recommended.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
  </div>
  </div>
  )}
  {others.length > 0 && (
  <div>
- {recommended.length > 0 && <p className="text-xs font-bold text-[var(--text-400)] mb-3 mt-5">All Groups</p>}
- <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+ {recommended.length > 0 && <p className="text-xs font-semibold text-[var(--text-400)] uppercase tracking-wider mb-3 mt-5">All Groups</p>}
+ <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
  {others.map(g => <GroupCard key={g.id} group={g} onToggle={() => toggleMutation.mutate(g.id)} pending={toggleMutation.isPending} onOpen={() => navigate(`/community/${g.id}`)} />)}
  </div>
  </div>
@@ -310,89 +265,60 @@ export default function CommunityHub() {
 function GroupCard({ group, onToggle, pending, onOpen }) {
   const initials = groupInitials(group.name);
   const color    = groupColor(group.name);
-
-  // Pick a cover image based on group tags
-  const COVER_IMGS = {
-    cancer:       'https://images.pexels.com/photos/6823568/pexels-photo-6823568.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-    grief:        'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-    spiritual:    'https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-    mental_health:'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-    caregiver:    'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-    palliative:   'https://images.pexels.com/photos/7578806/pexels-photo-7578806.jpeg?auto=compress&cs=tinysrgb&w=400&h=220&fit=crop',
-  };
-  const tags = group.condition_tags || [];
-  const coverImg = COVER_IMGS[tags.find(t => COVER_IMGS[t])] || null;
+  const tags     = group.condition_tags || [];
 
   return (
     <motion.div
-      initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }}
-      whileHover={{ y:-5, boxShadow:'0 18px 50px rgba(0,0,0,0.3)' }}
+      initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }}
       onClick={onOpen}
       style={{
-        background:'var(--card-bg)', borderRadius:20, overflow:'hidden',
-        border:'1.5px solid var(--card-border)', cursor:'pointer',
-        display:'flex', flexDirection:'column',
-        boxShadow:'0 2px 16px rgba(0,0,0,0.2)',
-        transition:'box-shadow 0.2s',
+        background:'var(--card-bg)',
+        borderRadius:12,
+        border:'1px solid var(--card-border)',
+        borderLeft:`3px solid ${color}`,
+        cursor:'pointer',
+        display:'flex',
+        flexDirection:'column',
+        transition:'border-color 0.15s, box-shadow 0.15s',
+        overflow:'hidden',
       }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow='0 2px 12px rgba(0,0,0,0.08)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow='none'; }}
     >
-      {/* ── Cover image / colour block ── */}
-      <div style={{ height:130, position:'relative', overflow:'hidden', background:`linear-gradient(135deg,${color}cc,${color}66)`, flexShrink:0 }}>
-        {coverImg && (
-          <img src={coverImg} alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.3 }}/>
-        )}
-        {/* Dark gradient bottom */}
-        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%)' }}/>
-
-        {/* Member count badge top-right */}
-        <div style={{
-          position:'absolute', top:10, right:10,
-          display:'flex', alignItems:'center', gap:4,
-          background:'rgba(0,0,0,0.55)', backdropFilter:'blur(4px)',
-          borderRadius:8, padding:'3px 9px', border:'1px solid rgba(255,255,255,0.1)',
-        }}>
-          <Users size={10} style={{ color:'#94a3b8' }}/>
-          <span style={{ fontSize:11, fontWeight:700, color:'#e2e8f0' }}>{group.member_count ?? 0}</span>
-        </div>
-
-        {/* Joined badge top-left */}
-        {group.joined && (
+      {/* Card body */}
+      <div style={{ padding:'14px 16px', flex:1 }}>
+        {/* Header row */}
+        <div style={{ display:'flex', alignItems:'flex-start', gap:11, marginBottom:8 }}>
+          {/* Avatar */}
           <div style={{
-            position:'absolute', top:10, left:10,
-            display:'flex', alignItems:'center', gap:4,
-            background:color, borderRadius:8, padding:'3px 9px',
-            boxShadow:`0 2px 8px ${color}55`,
-          }}>
-            <Check size={9} style={{ color:'#fff' }}/>
-            <span style={{ fontSize:10, fontWeight:800, color:'#fff' }}>Joined</span>
-          </div>
-        )}
-
-        {/* Avatar circle at bottom overlapping */}
-        <div style={{ position:'absolute', bottom:-20, left:16 }}>
-          <div style={{
-            width:44, height:44, borderRadius:14,
-            background:`linear-gradient(135deg,${color},${color}bb)`,
+            width:38, height:38, borderRadius:10, flexShrink:0,
+            background:`${color}18`,
             display:'flex', alignItems:'center', justifyContent:'center',
-            border:'2.5px solid var(--card-bg)', boxShadow:`0 4px 14px ${color}44`,
-            fontSize:14, fontWeight:900, color:'#fff',
-            fontFamily:'"Inter",-apple-system,sans-serif',
+            fontSize:13, fontWeight:800, color,
           }}>
             {initials}
           </div>
+          <div style={{ flex:1, minWidth:0 }}>
+            <p style={{ fontWeight:700, color:'var(--text-900)', fontSize:13, lineHeight:1.3, margin:'0 0 2px',
+              overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+              {group.name}
+            </p>
+            <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+              <span style={{ fontSize:11, color:'var(--text-500)', display:'flex', alignItems:'center', gap:3 }}>
+                <Users size={10}/> {group.member_count ?? 0} members
+              </span>
+              {group.joined && (
+                <span style={{ fontSize:10, fontWeight:700, color, background:`${color}15`, padding:'1px 7px', borderRadius:99 }}>
+                  Joined
+                </span>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* ── Card body ── */}
-      <div style={{ padding:'28px 16px 0', flex:1, display:'flex', flexDirection:'column' }}>
-        {/* Name */}
-        <p style={{ fontWeight:800, color:'var(--text-900)', fontSize:14, lineHeight:1.25, margin:'0 0 4px' }}>
-          {group.name}
-        </p>
 
         {/* Description */}
         <p style={{
-          fontSize:11, color:'var(--text-500)', lineHeight:1.55, margin:'0 0 10px',
+          fontSize:12, color:'var(--text-500)', lineHeight:1.5, margin:'0 0 10px',
           display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden',
         }}>
           {group.description || 'A supportive community group for patients and caregivers.'}
@@ -400,65 +326,42 @@ function GroupCard({ group, onToggle, pending, onOpen }) {
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div style={{ display:'flex', gap:5, flexWrap:'wrap', marginBottom:10 }}>
+          <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
             {tags.slice(0,3).map(t => (
               <span key={t} style={{
-                fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:6,
-                background:'var(--card-border)33', color:'var(--text-500)', border:'1px solid var(--card-border)',
-                textTransform:'capitalize',
-              }}>{t.replace('_',' ')}</span>
+                fontSize:10, fontWeight:600, padding:'2px 8px', borderRadius:99,
+                background:'var(--page-bg)', color:'var(--text-600)',
+                border:'1px solid var(--card-border)',
+              }}>{t.replace(/_/g,' ')}</span>
             ))}
-            {tags.length > 3 && (
-              <span style={{ fontSize:9, color:'#475569', padding:'2px 6px' }}>+{tags.length-3}</span>
-            )}
           </div>
         )}
-
-        {/* Stats row */}
-        <div style={{ display:'flex', borderTop:'1px solid var(--card-border)', paddingTop:10, marginBottom:12 }}>
-          {[
-            { v: group.member_count ?? 0, l:'Members' },
-            { v: group.joined ? 'Joined' : 'Open',  l: group.joined ? 'Status' : 'Status' },
-          ].map((s, i) => (
-            <div key={s.l} style={{ flex:1, textAlign:'center', borderRight: i<1?'1px solid var(--card-border)':'none' }}>
-              <p style={{ fontSize:13, fontWeight:800, color: s.v === 'Joined' ? '#0d9488' : 'var(--text-900)', margin:0, lineHeight:1 }}>{s.v}</p>
-              <p style={{ fontSize:9, color:'var(--text-500)', margin:'2px 0 0', fontWeight:600 }}>{s.l}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      {/* ── CTA ── */}
-      <div style={{ padding:'0 14px 14px', display:'flex', flexDirection:'column', gap:7 }}>
+      {/* Footer actions */}
+      <div style={{ padding:'10px 16px 12px', display:'flex', gap:7, borderTop:'1px solid var(--card-border)' }}
+           onClick={e => e.stopPropagation()}>
         <button
-          onClick={e => { e.stopPropagation(); onOpen(); }}
+          onClick={onOpen}
           style={{
-            width:'100%', padding:'11px 0', borderRadius:12, fontSize:13, fontWeight:800,
+            flex:1, padding:'7px 0', borderRadius:8, fontSize:12, fontWeight:700,
             background:color, color:'#fff', border:'none', cursor:'pointer',
-            display:'flex', alignItems:'center', justifyContent:'center', gap:7,
-            boxShadow:`0 4px 14px ${color}44`, transition:'opacity 0.15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.opacity='0.88'}
-          onMouseLeave={e => e.currentTarget.style.opacity='1'}
-        >
-          <MessagesSquare size={14}/> Open Group
+            display:'flex', alignItems:'center', justifyContent:'center', gap:5,
+          }}>
+          <MessagesSquare size={12}/> Open
         </button>
         <button
-          onClick={e => { e.stopPropagation(); onToggle(); }}
+          onClick={onToggle}
           disabled={pending}
           style={{
-            width:'100%', padding:'9px 0', borderRadius:12, fontSize:12, fontWeight:700,
-            background:'var(--card-border)22', color: group.joined?'#ef4444':'var(--text-600)',
-            border:`1.5px solid ${group.joined?'#ef444444':'var(--card-border)'}`,
-
-            cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:6,
-            transition:'all 0.15s',
-          }}
-        >
-          {group.joined
-            ? <><X size={12}/> Leave</>
-            : <><UserPlus size={12}/> Join Group</>
-          }
+            padding:'7px 14px', borderRadius:8, fontSize:12, fontWeight:600,
+            background:'var(--page-bg)',
+            color: group.joined ? '#dc2626' : 'var(--text-700)',
+            border:`1px solid ${group.joined ? '#fca5a5' : 'var(--card-border)'}`,
+            cursor:'pointer', display:'flex', alignItems:'center', gap:4, whiteSpace:'nowrap',
+            transition:'all 0.12s',
+          }}>
+          {group.joined ? <><X size={11}/> Leave</> : <><UserPlus size={11}/> Join</>}
         </button>
       </div>
     </motion.div>

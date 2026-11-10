@@ -9,10 +9,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Send, Search, Users, AlertCircle, Plus,
+  Send, Search, Users, Plus,
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Stethoscope, Phone, Video, Smile, Reply,
-  MoreVertical, ArrowLeft,
+  Stethoscope, Smile, Reply, ArrowLeft,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -509,12 +508,10 @@ export default function Messages() {
                 </div>
               </div>
               <div style={{ display:'flex', gap:4 }}>
-                {[{ Icon:Phone, tip:'Voice call' }, { Icon:Video, tip:'Video call' }, { Icon:MoreVertical, tip:'Options' }].map(({ Icon, tip }) => (
-                  <button key={tip} title={tip} onClick={() => toast(`${tip} coming soon`, { icon:'ℹ️' })}
-                    style={{ width:34, height:34, borderRadius:9, background:`${S.border}44`, border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:S.t600 }}>
-                    <Icon size={15}/>
-                  </button>
-                ))}
+                <button onClick={() => setSelectedConv(null)} title="Back"
+                  style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 2px', color:S.t600, display:'flex', alignItems:'center' }}>
+                  <ArrowLeft size={18}/>
+                </button>
               </div>
             </div>
 
@@ -556,11 +553,11 @@ export default function Messages() {
                           </div>
                         )}
                         <div style={{
-                          padding:'9px 13px', position:'relative',
-                          borderRadius:isOwn?'16px 16px 4px 16px':'16px 16px 16px 4px',
-                          background:isOwn?'linear-gradient(135deg,#0d9488,#0891b2)':S.cardBg,
+                          padding:'8px 12px', position:'relative',
+                          borderRadius:isOwn?'14px 14px 3px 14px':'14px 14px 14px 3px',
+                          background:isOwn?'#0d9488':S.cardBg,
                           color:isOwn?'#fff':S.t900,
-                          boxShadow:isOwn?'0 3px 12px rgba(13,148,136,0.3)':`0 1px 6px rgba(0,0,0,0.07)`,
+                          boxShadow:'none',
                           border:isOwn?'none':`1px solid ${S.border}`,
                         }}>
                           {quote && (
@@ -584,7 +581,7 @@ export default function Messages() {
                           {isOwn && <span style={{ fontSize:9, color:S.amber }}>{msg.is_read?'✓✓':'✓'}</span>}
                           <span style={{ fontSize:9, color:S.amber }}>{time}</span>
                           <button onClick={() => { setReplyingTo(msg); inputRef.current?.focus(); }}
-                            style={{ background:'none', border:'none', cursor:'pointer', padding:1, color:S.t500, opacity:0 }}
+                            style={{ background:'none', border:'none', cursor:'pointer', padding:1, color:S.t500 }}
                             className="reply-btn">
                             <Reply size={10}/>
                           </button>
@@ -603,7 +600,7 @@ export default function Messages() {
             </div>
 
             {/* Input area */}
-            <form onSubmit={handleSend} style={{ background:S.cardBg, borderTop:`1px solid ${S.border}`, padding:'10px 14px' }}>
+            <form onSubmit={handleSend} style={{ background:S.cardBg, borderTop:`1px solid ${S.border}`, padding:'8px 10px 10px' }}>
               <AnimatePresence>
                 {replyingTo && (
                   <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
@@ -621,11 +618,11 @@ export default function Messages() {
               <AnimatePresence>
                 {showEmojiPicker && (
                   <motion.div initial={{ height:0, opacity:0 }} animate={{ height:'auto', opacity:1 }} exit={{ height:0, opacity:0 }}
-                    style={{ background:S.pageBg, borderRadius:10, marginBottom:8, padding:8, border:`1px solid ${S.border}`, overflow:'hidden' }}>
-                    <div style={{ display:'grid', gridTemplateColumns:'repeat(10,1fr)', gap:3 }}>
+                    style={{ background:S.cardBg, borderRadius:8, marginBottom:6, padding:'6px 8px', border:`1px solid ${S.border}`, overflow:'hidden' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(10,1fr)', gap:1 }}>
                       {EMOJI_GRID.map(e => (
                         <button key={e} type="button" onClick={() => insertEmoji(e)}
-                          style={{ width:30, height:30, borderRadius:7, border:'none', background:'none', cursor:'pointer', fontSize:17, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                          style={{ width:28, height:28, borderRadius:5, border:'none', background:'none', cursor:'pointer', fontSize:14, display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1 }}>
                           {e}
                         </button>
                       ))}
@@ -646,34 +643,44 @@ export default function Messages() {
                 </div>
               )}
 
-              <div style={{ display:'flex', alignItems:'flex-end', gap:7 }}>
+              <div style={{ display:'flex', alignItems:'flex-end', gap:6 }}>
+                {/* Emoji toggle */}
                 <button type="button" onClick={() => setShowEmoji(s=>!s)}
-                  style={{ width:36, height:36, borderRadius:9, border:'none', cursor:'pointer', flexShrink:0, background:showEmojiPicker?'rgba(13,148,136,0.12)':S.pageBg, color:showEmojiPicker?S.teal:S.t600, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <Smile size={17}/>
+                  style={{ width:34, height:34, borderRadius:8, border:'none', cursor:'pointer', flexShrink:0,
+                    background:'transparent', color:showEmojiPicker?'#0d9488':S.t500,
+                    display:'flex', alignItems:'center', justifyContent:'center', transition:'color 0.12s' }}>
+                  <Smile size={16}/>
                 </button>
+                {/* Attach toggle */}
                 <button type="button" onClick={() => setShowFileUpload(s=>!s)}
-                  style={{ width:36, height:36, borderRadius:9, border:'none', cursor:'pointer', flexShrink:0, background:showFileUpload?'rgba(13,148,136,0.12)':S.pageBg, color:showFileUpload?S.teal:S.t600, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <Paperclip size={17}/>
+                  style={{ width:34, height:34, borderRadius:8, border:'none', cursor:'pointer', flexShrink:0,
+                    background:'transparent', color:showFileUpload?'#0d9488':S.t500,
+                    display:'flex', alignItems:'center', justifyContent:'center', transition:'color 0.12s' }}>
+                  <Paperclip size={16}/>
                 </button>
+                {/* Text input */}
                 <textarea ref={inputRef} value={newMessage} rows={1}
                   onChange={e => setNewMessage(e.target.value)}
                   onKeyDown={e => { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); handleSend(e); }}}
-                  placeholder="Type a message… (Enter to send)"
-                  style={{ flex:1, border:`1.5px solid ${S.border}`, borderRadius:11, padding:'9px 12px', fontSize:13, color:S.t900, background:S.pageBg, outline:'none', resize:'none', maxHeight:72, overflowY:'auto', lineHeight:1.5, transition:'border-color 0.15s' }}
+                  placeholder="Message…"
+                  style={{ flex:1, border:`1px solid ${S.border}`, borderRadius:22, padding:'9px 14px',
+                    fontSize:14, color:S.t900, background:S.cardBg, outline:'none', resize:'none',
+                    maxHeight:96, overflowY:'auto', lineHeight:1.45, transition:'border-color 0.15s',
+                    fontFamily:'inherit' }}
                   onFocus={e => e.target.style.borderColor='#0d9488'}
                   onBlur={e => e.target.style.borderColor=`var(--card-border)`}
                 />
+                {/* Send */}
                 <motion.button type="submit" whileTap={{ scale:0.9 }}
                   disabled={(!newMessage.trim() && !attachedFiles.length) || sendMut.isPending}
                   style={{
-                    width:40, height:40, borderRadius:11, border:'none', cursor:'pointer', flexShrink:0,
-                    background: (!newMessage.trim() && !attachedFiles.length)?`${S.border}66`:'linear-gradient(135deg,#0d9488,#0891b2)',
+                    width:36, height:36, borderRadius:'50%', border:'none', cursor:'pointer', flexShrink:0,
+                    background: (!newMessage.trim() && !attachedFiles.length)?S.border:'#0d9488',
                     color: (!newMessage.trim() && !attachedFiles.length)?S.t500:'#fff',
                     display:'flex', alignItems:'center', justifyContent:'center',
-                    boxShadow: (!newMessage.trim() && !attachedFiles.length)?'none':'0 3px 12px rgba(13,148,136,0.35)',
-                    transition:'all 0.15s',
+                    transition:'background 0.15s',
                   }}>
-                  {sendMut.isPending ? <Loader2 size={16} style={{ animation:'spin 1s linear infinite' }}/> : <Send size={16}/>}
+                  {sendMut.isPending ? <Loader2 size={14} className="animate-spin"/> : <Send size={14}/>}
                 </motion.button>
               </div>
             </form>
