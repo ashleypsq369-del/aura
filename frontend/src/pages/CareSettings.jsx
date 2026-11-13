@@ -1,4 +1,4 @@
-﻿/**
+/**
  * CareSettings.jsx - Palliative Care Delivery Models
  * Fixed: dead ProStatCard import removed, dynamic border-${color}-500 → inline styles,
  * ChangeRequestsPanel filtered API, SettingCard keyboard accessible, img-heading removed
@@ -423,7 +423,7 @@ export default function CareSettings() {
                       <p className="text-xs text-amber-700 mt-0.5">If your care needs have changed, submit a request - an admin will review and approve it.</p>
                     </div>
                     <button onClick={() => setShowRequestModal(true)}
-                      className="flex-shrink-0 px-4 py-2 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition">
+                      className="flex-shrink-0 px-4 py-2 bg-teal-600 text-white text-sm font-semibold rounded-xl hover:bg-teal-700 transition">
                       Request Change
                     </button>
                   </div>

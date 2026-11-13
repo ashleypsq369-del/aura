@@ -11,33 +11,41 @@ import toast from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
 import SearchableSelect from '../components/ui/SearchableSelect';
 
-// ─── Type config - matches Settings icon style ────────────────────────────────
+// --- Type config: semantic 3-colour system ---
+// teal  = informational (messages, updates, confirmations)
+// amber = time-sensitive reminders (appointments, medications)
+// red   = critical/alert (missed, crisis, high-risk)
+const TEAL  = { bar: '#0d9488', bg: 'rgba(13,148,136,0.08)',  color: '#0d9488' };
+const AMBER = { bar: '#d97706', bg: 'rgba(217,119,6,0.08)',   color: '#b45309' };
+const RED   = { bar: '#dc2626', bg: 'rgba(220,38,38,0.08)',   color: '#b91c1c' };
+const SLATE = { bar: '#64748b', bg: 'rgba(100,116,139,0.06)', color: '#475569' };
+
 const TYPE_CONFIG = {
- medication_reminder: { icon: Pill, label: 'Medication', bar: '#2563eb', bg: '#eff6ff', color: '#1d4ed8' },
- appointment_reminder: { icon: Calendar, label: 'Appointment', bar: '#7c3aed', bg: '#f5f3ff', color: '#6d28d9' },
- appointment_reminder_24h: { icon: Calendar, label: 'Appointment', bar: '#7c3aed', bg: '#f5f3ff', color: '#6d28d9' },
- appointment_reminder_1h: { icon: Calendar, label: 'Appt Soon', bar: '#7c3aed', bg: '#f5f3ff', color: '#6d28d9' },
- medication_missed: { icon: Pill, label: 'Missed Dose', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
- new_message: { icon: MessageCircle, label: 'Message', bar: '#059669', bg: '#f0fdf4', color: '#047857' },
- community_event: { icon: Users, label: 'Community', bar: '#0891b2', bg: '#f0f9ff', color: '#0369a1' },
- community_post: { icon: Users, label: 'Community', bar: '#0891b2', bg: '#f0f9ff', color: '#0369a1' },
- peer_support: { icon: Heart, label: 'Support', bar: '#db2777', bg: '#fdf2f8', color: '#be185d' },
- care_plan_update: { icon: FileText, label: 'Care Plan', bar: '#0284c7', bg: '#f0f9ff', color: '#0369a1' },
- assessment_reminder: { icon: Activity, label: 'Assessment', bar: '#d97706', bg: '#fffbeb', color: '#92400e' },
- report_available: { icon: FileText, label: 'Report', bar: '#64748b', bg: '#f8fafc', color: '#475569' },
- alert_generated: { icon: AlertTriangle, label: 'Alert', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
- medical_flag: { icon: AlertTriangle, label: 'Flag', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
- crisis_alert: { icon: AlertTriangle, label: 'Crisis', bar: '#991b1b', bg: '#fff1f2', color: '#991b1b' },
- ml_risk_alert: { icon: Activity, label: 'ML Risk', bar: '#7c3aed', bg: '#f5f3ff', color: '#6d28d9' },
- critical_vitals: { icon: Activity, label: 'Vitals', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
- high_risk: { icon: AlertTriangle, label: 'High Risk', bar: '#ea580c', bg: '#fff7ed', color: '#c2410c' },
- // Services & bookings
- booking_confirmed: { icon: Calendar, label: 'Booking Confirmed', bar: '#0d9488', bg: '#f0fdfa', color: '#0d9488' },
- booking_cancelled: { icon: Calendar, label: 'Booking Cancelled', bar: '#dc2626', bg: '#fef2f2', color: '#b91c1c' },
- booking_reminder:  { icon: Clock,    label: 'Booking Reminder',  bar: '#7c3aed', bg: '#faf5ff', color: '#7c3aed' },
- booking_request:   { icon: Calendar, label: 'New Booking',       bar: '#0891b2', bg: '#f0f9ff', color: '#0369a1' },
- provider_approved: { icon: Activity, label: 'Provider Approved', bar: '#059669', bg: '#f0fdf4', color: '#047857' },
- provider_review:   { icon: FileText, label: 'Review Received',   bar: '#d97706', bg: '#fffbeb', color: '#92400e' },
+  medication_reminder:      { icon: Pill,          label: 'Medication',       ...AMBER },
+  appointment_reminder:     { icon: Calendar,      label: 'Appointment',      ...AMBER },
+  appointment_reminder_24h: { icon: Calendar,      label: 'Appointment',      ...AMBER },
+  appointment_reminder_1h:  { icon: Calendar,      label: 'Appt Soon',        ...AMBER },
+  medication_missed:        { icon: Pill,          label: 'Missed Dose',      ...RED   },
+  new_message:              { icon: MessageCircle, label: 'Message',          ...TEAL  },
+  community_event:          { icon: Users,         label: 'Community',        ...TEAL  },
+  community_post:           { icon: Users,         label: 'Community',        ...TEAL  },
+  peer_support:             { icon: Heart,         label: 'Support',          ...TEAL  },
+  care_plan_update:         { icon: FileText,      label: 'Care Plan',        ...TEAL  },
+  assessment_reminder:      { icon: Activity,      label: 'Assessment',       ...AMBER },
+  report_available:         { icon: FileText,      label: 'Report',           ...SLATE },
+  alert_generated:          { icon: AlertTriangle, label: 'Alert',            ...RED   },
+  medical_flag:             { icon: AlertTriangle, label: 'Flag',             ...RED   },
+  crisis_alert:             { icon: AlertTriangle, label: 'Crisis',           ...RED   },
+  ml_risk_alert:            { icon: Activity,      label: 'Risk Alert',       ...RED   },
+  critical_vitals:          { icon: Activity,      label: 'Vitals',           ...RED   },
+  high_risk:                { icon: AlertTriangle, label: 'High Risk',        ...RED   },
+  booking_confirmed:        { icon: Calendar,      label: 'Booking Confirmed',...TEAL  },
+  booking_cancelled:        { icon: Calendar,      label: 'Booking Cancelled',...RED   },
+  booking_reminder:         { icon: Clock,         label: 'Booking Reminder', ...AMBER },
+  booking_request:          { icon: Calendar,      label: 'New Booking',      ...TEAL  },
+  provider_approved:        { icon: Activity,      label: 'Provider Approved',...TEAL  },
+  provider_review:          { icon: FileText,      label: 'Review Received',  ...AMBER },
+  system:                   { icon: Bell,          label: 'System',           ...SLATE },
 };
 const DEFAULT_CFG = { icon: Bell, label: 'Notification', bar: '#94a3b8', bg: '#f8fafc', color: '#64748b' };
 const getCfg = (t) => TYPE_CONFIG[t] || DEFAULT_CFG;

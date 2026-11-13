@@ -107,7 +107,7 @@ function TaskRow({ task, onNavigate, isCaregiverView, onAcknowledge, ackPending 
             {task.name}
           </p>
           {!task.done && task.required && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 flex-shrink-0">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-700 flex-shrink-0">
               Required
             </span>
           )}
@@ -205,7 +205,7 @@ function TaskModal({ data, onClose, onNavigate, onAcknowledge, ackMutation, onRe
                   <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-900)', margin: 0 }}>
                     Today's Care Tasks
                     {pending > 0 && (
-                      <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#ef4444', color: '#fff' }}>
+                      <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#0d9488', color: '#fff' }}>
                         {pending} pending
                       </span>
                     )}
@@ -255,7 +255,7 @@ function TaskModal({ data, onClose, onNavigate, onAcknowledge, ackMutation, onRe
               {required.length > 0 && (
                 <section>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-400)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <Lock size={10} style={{ color: '#f87171' }} />
+                    <Lock size={10} style={{ color: '#d97706' }} />
                     Required Today - {required_completed}/{required_total}
                   </p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -367,7 +367,7 @@ export function TaskStatusBar() {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-bold text-[var(--text-900)]">Today's Care Tasks</span>
               {pending > 0 && (
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-600 text-white">
                   {pending} pending
                 </span>
               )}
@@ -420,7 +420,7 @@ export function TaskStatusBar() {
                 >
                   <Icon size={13} className="text-teal-600 flex-shrink-0" />
                   <span className="flex-1 min-w-0 text-xs font-semibold text-[var(--text-800)] truncate">{task.name}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">Required</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-700 flex-shrink-0">Required</span>
                   <ChevronRight size={12} className="text-[var(--text-400)] group-hover:text-teal-500 flex-shrink-0" />
                 </button>
               );
@@ -560,7 +560,7 @@ export default function DailyTaskChecklist({ compact = false, patientId = null }
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-bold text-[var(--text-900)]">Today's Care Tasks</span>
                 {pending > 0 && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-teal-600 text-white">
                     {pending} pending
                   </span>
                 )}

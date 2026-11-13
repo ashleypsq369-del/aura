@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Medications - redesigned to match Alerts.jsx design system
  * Pattern: motion.div min-h-screen space-y-5 pb-8, px-6 sections
  */
@@ -523,9 +523,9 @@ export default function Medications() {
  {/* Personalisation banners */}
  {isPatient && painLevel >= 7 && (
  <div className="px-6">
- <div className="border-l-4 border-l-rose-500 bg-rose-50 border border-rose-200 rounded-r-xl px-4 py-3 flex items-start gap-3">
- <Sparkles size={15} className="text-rose-500 flex-shrink-0 mt-0.5"/>
- <p className="text-sm text-rose-800 font-medium">High pain level noted ({painLevel}/10) - take medications exactly as prescribed. Contact your care team if pain is uncontrolled.</p>
+ <div className="border-l-4 border-l-amber-500 bg-[var(--page-bg)] border border-[var(--card-border)] rounded-r-xl px-4 py-3 flex items-start gap-3">
+ <Sparkles size={15} className="text-amber-600 flex-shrink-0 mt-0.5"/>
+ <p className="text-sm text-[var(--text-700)] font-medium">High pain level noted ({painLevel}/10) - take medications exactly as prescribed. Contact your care team if pain is uncontrolled.</p>
  </div>
  </div>
  )}

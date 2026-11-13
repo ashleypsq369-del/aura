@@ -81,14 +81,14 @@ export default function InlineTaskReminder({ taskId, message, doneMsg = null }) 
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -8 }}
  transition={{ duration: 0.2 }}
- className="flex items-center gap-3 px-4 py-2.5 mx-4 sm:mx-6 mt-4 rounded-xl bg-amber-50 border-2 border-amber-300"
+ className="flex items-center gap-3 px-4 py-2.5 mx-4 sm:mx-6 mt-4 rounded-xl bg-[var(--page-bg)] border border-[var(--card-border)]"
  >
- <AlertCircle size={14} className="text-amber-700 flex-shrink-0"/>
- <p className="flex-1 text-xs font-semibold text-amber-900 leading-snug">
+ <AlertCircle size={14} className="text-[var(--text-500)] flex-shrink-0"/>
+ <p className="flex-1 text-xs font-medium text-[var(--text-700)] leading-snug">
  {message}
  </p>
  <button onClick={handleDismiss}
- className="text-amber-500 hover:text-amber-700 transition-colors flex-shrink-0">
+ className="text-[var(--text-400)] hover:text-[var(--text-700)] transition-colors flex-shrink-0">
  <X size={13}/>
  </button>
  </motion.div>

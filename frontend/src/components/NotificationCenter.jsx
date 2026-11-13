@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bell, Calendar, Pill, AlertTriangle,
@@ -48,13 +48,14 @@ function getSeverity(type) {
   const med      = ['medication_reminder'];
   const msg      = ['new_message','community_post','community_reply','peer_support'];
   const booking  = ['booking_confirmed','booking_cancelled','booking_reminder','booking_request','provider_approved','provider_review'];
-  if (critical.includes(type)) return { bar: '#dc2626', badge: '#fee2e2', icon: '#dc2626', label: 'critical' };
-  if (high.includes(type))     return { bar: '#ea580c', badge: '#ffedd5', icon: '#ea580c', label: 'high'     };
-  if (appt.includes(type))     return { bar: '#0d9488', badge: '#f0fdfa', icon: '#0d9488', label: 'appt'    };
-  if (med.includes(type))      return { bar: '#0891b2', badge: '#ecfeff', icon: '#0891b2', label: 'med'     };
-  if (msg.includes(type))      return { bar: '#059669', badge: '#d1fae5', icon: '#059669', label: 'msg'     };
-  if (booking.includes(type))  return { bar: '#0d9488', badge: '#f0fdfa', icon: '#0d9488', label: 'service' };
-  return                              { bar: '#94a3b8', badge: '#f1f5f9', icon: '#64748b', label: 'info'    };
+  // Semantic 3-colour: red=critical, amber=reminder, teal=info
+  if (critical.includes(type)) return { bar: '#dc2626', badge: 'rgba(220,38,38,0.08)',  icon: '#dc2626', label: 'critical' };
+  if (high.includes(type))     return { bar: '#dc2626', badge: 'rgba(220,38,38,0.08)',  icon: '#dc2626', label: 'high'     };
+  if (appt.includes(type))     return { bar: '#d97706', badge: 'rgba(217,119,6,0.08)',  icon: '#b45309', label: 'appt'    };
+  if (med.includes(type))      return { bar: '#d97706', badge: 'rgba(217,119,6,0.08)',  icon: '#b45309', label: 'med'     };
+  if (msg.includes(type))      return { bar: '#0d9488', badge: 'rgba(13,148,136,0.08)', icon: '#0d9488', label: 'msg'     };
+  if (booking.includes(type))  return { bar: '#0d9488', badge: 'rgba(13,148,136,0.08)', icon: '#0d9488', label: 'service' };
+  return                              { bar: '#64748b', badge: 'rgba(100,116,139,0.06)',icon: '#475569', label: 'info'    };
 }
 
 function getIcon(type) {
