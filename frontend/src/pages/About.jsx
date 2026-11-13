@@ -21,7 +21,7 @@ export default function About() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }}>
 
-      {/* -- Header - same pattern as Terms/Privacy ------------------- */}
+      {/* ── Header - same pattern as Terms/Privacy ─────────────────── */}
       <div style={{
         background: 'linear-gradient(135deg,#071520 0%,#0b3028 50%,#0d9488 100%)',
         padding: '32px 24px 40px',
@@ -42,7 +42,7 @@ export default function About() {
             <div>
               <h1 style={{ color:'#fff', fontSize:24, fontWeight:900, margin:0 }}>About Aura Care</h1>
               <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>
-                Group 31 � University of Mines and Technology, Tarkwa � March 2026
+                Group 31 · University of Mines and Technology, Tarkwa · March 2026
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* -- Content --------------------------------------------------- */}
+      {/* ── Content ─────────────────────────────────────────────────── */}
       <div style={{ maxWidth:800, margin:'0 auto', padding:'32px 24px 64px' }}>
 
         {/* What it is */}
@@ -246,9 +246,9 @@ export default function About() {
 
         {/* Footer links */}
         <p style={{ textAlign:'center', fontSize:12, color:'var(--text-400)', marginTop:28 }}>
-          � 2026 Aura Care � Group 31 � UMaT Tarkwa �{' '}
+          © 2026 Aura Care · Group 31 · UMaT Tarkwa ·{' '}
           <Link to="/terms" style={{ color:'var(--c-teal)', textDecoration:'none' }}>Terms</Link>
-          {' � '}
+          {' · '}
           <Link to="/privacy" style={{ color:'var(--c-teal)', textDecoration:'none' }}>Privacy</Link>
         </p>
 

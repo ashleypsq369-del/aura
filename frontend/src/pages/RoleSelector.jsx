@@ -57,7 +57,7 @@ const ROLES = [
   },
 ];
 
-/* -- Animated role card ----------------------------------- */
+/* ── Animated role card ─────────────────────────────────── */
 function RoleCard({ role, idx, selected, onSelect }) {
   const Icon    = role.icon;
   const [g1, g2] = role.gradient;
@@ -150,7 +150,7 @@ function RoleCard({ role, idx, selected, onSelect }) {
   );
 }
 
-/* -- Main ------------------------------------------------- */
+/* ── Main ───────────────────────────────────────────────── */
 export default function RoleSelector() {
   const navigate  = useNavigate();
   const [selected, setSelected] = useState(null);

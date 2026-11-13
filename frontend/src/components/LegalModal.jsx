@@ -9,7 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-/* --- Content ---------------------------------------------------- */
+/* ─── Content ──────────────────────────────────────────────────── */
 
 const TERMS_CONTENT = [
   { heading: 'General Site Usage', sub: 'Last Revised: October 2026',
@@ -55,11 +55,11 @@ const ABOUT_CONTENT = [
   { heading: 'Why we built it',
     body: `Ghana has no dedicated palliative ward in any of its teaching hospitals. Around 48% of Ghanaians pay for healthcare entirely out of pocket. The tools that exist today are fragmented, expensive, and built for other healthcare systems. None of the platforms we reviewed had clinical AI. None had bereavement support. None were built for the Ghanaian context.\n\nWe built Aura as our final-year project to fill those gaps and leave behind a working prototype that others can build on.` },
   { heading: 'Who it is for',
-    body: `Five roles use the platform, each with their own view of the same care:\n\n� Clinician - oversees all patients, reviews AI risk scores with explanations, manages care plans\n� Caregiver - handles day-to-day visits, logs tasks, accesses care guides and handover notes\n� Patient - tracks symptoms, medications, and appointments, reads their care journey\n� Family - stays informed about their loved one's care, receives bereavement support\n� Admin - manages accounts, audit trails, and platform settings` },
+    body: `Five roles use the platform, each with their own view of the same care:\n\n• Clinician - oversees all patients, reviews AI risk scores with explanations, manages care plans\n• Caregiver - handles day-to-day visits, logs tasks, accesses care guides and handover notes\n• Patient - tracks symptoms, medications, and appointments, reads their care journey\n• Family - stays informed about their loved one's care, receives bereavement support\n• Admin - manages accounts, audit trails, and platform settings` },
   { heading: 'How it works',
     body: `Patients and caregivers log symptoms and vitals through the app. Eight AI models process that data and flag risks across pain, breathing, anxiety, depression, falls risk, and more. Every alert comes with a chart showing which factors drove the score, so clinicians can see why the system flagged something and decide whether to act.\n\nAppointments, medications, assessments, care plans, and messages all live in one place. The platform works offline and syncs when the connection returns.` },
   { heading: 'The team - Group 31',
-    body: `Built by three final-year Computer Science and Engineering students at the University of Mines and Technology (UMaT), Tarkwa, supervised by Dr. Alfred Adutwum Amponsah.\n\nPaul Smith Quaidoo � SRI.41.008.131.22\nAbdul-Basit Issah � SRI.41.008.098.22\nAlhassan Hina Ahmed � SRI.41.008.023.22` },
+    body: `Built by three final-year Computer Science and Engineering students at the University of Mines and Technology (UMaT), Tarkwa, supervised by Dr. Alfred Adutwum Amponsah.\n\nPaul Smith Quaidoo · SRI.41.008.131.22\nAbdul-Basit Issah · SRI.41.008.098.22\nAlhassan Hina Ahmed · SRI.41.008.023.22` },
   { heading: 'A note on this version',
     body: `This is an academic prototype submitted for a BSc degree. It has not been through a clinical trial, a formal security audit, or real-world patient testing. All patient data in the demo is synthetic. It should not be used for actual clinical decisions.\n\nIf you are a developer, researcher, or healthcare organisation interested in building on this work, please get in touch.` },
 ];
@@ -70,7 +70,7 @@ const CONFIG = {
   about:   { title: 'About Aura Care',   items: ABOUT_CONTENT,  maxWidth: 560, showAccept: false, acceptLabel: 'Got it',  declineLabel: 'Close'   },
 };
 
-/* --- Modal ------------------------------------------------------- */
+/* ─── Modal ─────────────────────────────────────────────────────── */
 export default function LegalModal({ type = 'terms', open, onClose, onAccept }) {
   const cfg = CONFIG[type] || CONFIG.terms;
   const [phase, setPhase] = useState('idle'); // 'idle' | 'accepted' | 'closing'
