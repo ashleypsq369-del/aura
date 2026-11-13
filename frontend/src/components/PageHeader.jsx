@@ -80,7 +80,7 @@ export default function PageHeader({
   const hasStats    = stats?.length > 0;
   const hasChildren = !!children;
 
-  /* Image height - compact if no stats */
+  /* Image height - compact on mobile via CSS, controlled via inline on desktop */
   const imgHeight = compact ? 110 : hasStats ? 180 : 140;
 
   return (
@@ -307,11 +307,11 @@ export default function PageHeader({
             style={{
               maxWidth:   '1200px',
               margin:     '0 auto',
-              padding:    '10px 20px',
+              padding:    'clamp(8px, 2vw, 10px) clamp(12px, 4vw, 20px)',
               display:    'flex',
               alignItems: 'center',
               flexWrap:   'wrap',
-              gap:        10,
+              gap:        8,
             }}
           >
             {children}

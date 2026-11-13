@@ -319,3 +319,45 @@ html.dark .pill-scroll-wrap::before {
     display: none !important;
   }
 }
+
+/* ── PageHeader: shorter image on mobile ── */
+@media (max-width: 640px) {
+  .img-card {
+    height: 110px !important;
+  }
+}
+
+/* ── CareSettings / any page tabs: scroll not overflow on mobile ── */
+@media (max-width: 640px) {
+  /* Tab bars that use inline flex */
+  [data-tab-bar] {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  [data-tab-bar]::-webkit-scrollbar { display: none; }
+  [data-tab-bar] button {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* ── Patients table: horizontal scroll on mobile ── */
+@media (max-width: 768px) {
+  .patients-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ── Alerts table: horizontal scroll on mobile ── */
+@media (max-width: 768px) {
+  [data-page="alerts"] table {
+    min-width: 560px;
+  }
+  [data-page="alerts"] .overflow-x-auto,
+  [data-page="alerts"] [style*="overflowX"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}

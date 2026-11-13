@@ -152,11 +152,11 @@ export default function CareSettings() {
   /* ── Tabs ── */
   const tabs = isStaff
     ? [
-        { id:'overview',   label:'Overview',          icon: BarChart3  },
-        { id:'settings',   label:'Care Settings',     icon: BookOpen   },
-        { id:'matrix',     label:'User Interactions', icon: Users      },
-        { id:'assign',     label:'Assign Patient',    icon: UserCheck  },
-        { id:'requests',   label:'Change Requests',   icon: Bell       },
+        { id:'overview',   label:'Overview',      icon: BarChart3  },
+        { id:'settings',   label:'Settings',      icon: BookOpen   },
+        { id:'matrix',     label:'Users',         icon: Users      },
+        { id:'assign',     label:'Assign',        icon: UserCheck  },
+        { id:'requests',   label:'Requests',      icon: Bell       },
       ]
     : isPatient || isFamily
     ? [
