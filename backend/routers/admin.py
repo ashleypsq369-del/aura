@@ -54,7 +54,7 @@ async def list_users(
     is_active: Optional[bool] = None,
     search: Optional[str] = None,
     page: int = Query(1, ge=1),
-    per_page: int = Query(20, le=100),
+    per_page: int = Query(20, le=500),
     _: User = Depends(require_role("admin")),
     db: Session = Depends(get_db)
 ):

@@ -722,27 +722,56 @@ export default function Messages() {
             placeholder="Search by name or role..."
             style={{ width:'100%', paddingLeft:32, paddingRight:10, paddingTop:8, paddingBottom:8, borderRadius:9, border:`1.5px solid ${S.border}`, fontSize:12, color:S.t900, background:S.cardBg, outline:'none', boxSizing:'border-box' }}/>
         </div>
-        <div style={{ maxHeight:260, overflowY:'auto', display:'flex', flexDirection:'column', gap:3 }}>
-          {physicians.filter(p => !newChatSearch || p.name.toLowerCase().includes(newChatSearch.toLowerCase()) || p.role.toLowerCase().includes(newChatSearch.toLowerCase())).map(person => (
-            <button key={person.id} onClick={() => { handleStartChat(person.id); setNewChatSearch(''); }}
-              style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 10px', borderRadius:10, background:'none', border:'none', cursor:'pointer', textAlign:'left', transition:'background 0.12s' }}
-              onMouseEnter={e => e.currentTarget.style.background=`${S.border}44`}
-              onMouseLeave={e => e.currentTarget.style.background='none'}>
-              <div style={{ width:34, height:34, borderRadius:'50%', background:gradFor(person.id), display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:12, fontWeight:800, flexShrink:0 }}>
-                {person.name[0]}
+        <div style={{ maxHeight:300, overflowY:'auto', display:'flex', flexDirection:'column', gap:2 }}>
+          {(() => {
+            const filtered = physicians.filter(p =>
+              !newChatSearch ||
+              (p.name||'').toLowerCase().includes(newChatSearch.toLowerCase()) ||
+              (p.role||'').toLowerCase().includes(newChatSearch.toLowerCase()) ||
+              (p.username||'').toLowerCase().includes(newChatSearch.toLowerCase())
+            );
+            if (filtered.length === 0) return (
+              <div style={{ textAlign:'center', padding:'32px 0', color:S.t500 }}>
+                <Users size={28} style={{ margin:'0 auto 8px', display:'block', color:S.border }}/>
+                <p style={{ fontSize:12, fontWeight:600, margin:0 }}>
+                  {newChatSearch ? `No users match "${newChatSearch}"` : 'No users available'}
+                </p>
+                <p style={{ fontSize:11, color:S.t400, margin:'4px 0 0' }}>
+                  {newChatSearch ? 'Try a different name or role' : 'Users will appear here once they register'}
+                </p>
               </div>
-              <div style={{ flex:1 }}>
-                <p style={{ fontSize:13, fontWeight:700, color:S.t900, margin:0 }}>{person.name}</p>
-                <p style={{ fontSize:10, color:S.amber, margin:0 }}>{person.role}</p>
-              </div>
-            </button>
-          ))}
-          {physicians.length === 0 && (
-            <div style={{ textAlign:'center', padding:'28px 0', color:S.t500 }}>
-              <Users size={28} style={{ margin:'0 auto 7px', display:'block', color:S.border }}/>
-              <p style={{ fontSize:12 }}>No users available</p>
-            </div>
-          )}
+            );
+            // Group by role for easier scanning
+            const roleOrder = ['clinician','admin','caregiver','family','patient'];
+            const sorted = [...filtered].sort((a,b) => {
+              const ra = roleOrder.indexOf(a.role), rb = roleOrder.indexOf(b.role);
+              if (ra !== rb) return (ra === -1 ? 99 : ra) - (rb === -1 ? 99 : rb);
+              return (a.name||'').localeCompare(b.name||'');
+            });
+            const roleColors = { clinician:'#0d9488', admin:'#4338ca', caregiver:'#059669', family:'#db2777', patient:'#0891b2' };
+            return sorted.map(person => (
+              <button key={person.id} onClick={() => { handleStartChat(person.id); setNewChatSearch(''); }}
+                style={{ display:'flex', alignItems:'center', gap:10, padding:'9px 10px', borderRadius:10, background:'none', border:'none', cursor:'pointer', textAlign:'left', transition:'background 0.12s', width:'100%' }}
+                onMouseEnter={e => e.currentTarget.style.background=`${S.border}44`}
+                onMouseLeave={e => e.currentTarget.style.background='none'}>
+                <div style={{ width:36, height:36, borderRadius:10, background:gradFor(person.id), display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:13, fontWeight:800, flexShrink:0 }}>
+                  {(person.name||'?')[0].toUpperCase()}
+                </div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <p style={{ fontSize:13, fontWeight:700, color:S.t900, margin:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{person.name}</p>
+                  <p style={{ fontSize:10, color:S.t500, margin:0 }}>@{person.username}</p>
+                </div>
+                <span style={{
+                  fontSize:9, fontWeight:800, padding:'2px 7px', borderRadius:99, flexShrink:0,
+                  background: `${roleColors[person.role] || '#64748b'}18`,
+                  color: roleColors[person.role] || '#64748b',
+                  textTransform:'uppercase', letterSpacing:'0.05em',
+                }}>
+                  {person.role}
+                </span>
+              </button>
+            ));
+          })()}
         </div>
       </Modal>
 

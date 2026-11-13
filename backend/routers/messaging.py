@@ -618,61 +618,29 @@ async def get_available_physicians(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get list of users available for messaging based on role"""
+    """Get list of all active users available for messaging (excluding self and providers)."""
     try:
-        # Different logic based on user role
-        if current_user.role == 'patient':
-            # Patients can message: their clinician, caregivers, and family members
-            users = db.query(User).filter(
-                User.role.in_(['clinician', 'admin', 'caregiver', 'family']),
-                User.is_active == True,
-                User.id != current_user.id
-            ).all()
-            
-        elif current_user.role in ['clinician', 'admin']:
-            # Clinicians can message: patients, other clinicians, caregivers, family
-            users = db.query(User).filter(
-                User.is_active == True,
-                User.id != current_user.id
-            ).all()
-            
-        elif current_user.role == 'family':
-            # Family can message: clinicians, caregivers, other family, and their linked patient
-            users = db.query(User).filter(
-                User.role.in_(['clinician', 'admin', 'caregiver', 'family', 'patient']),
-                User.is_active == True,
-                User.id != current_user.id
-            ).all()
-            
-        elif current_user.role == 'caregiver':
-            # Caregivers can message: clinicians, their assigned patients, family, other caregivers
-            users = db.query(User).filter(
-                User.is_active == True,
-                User.id != current_user.id
-            ).all()
-            
-        else:
-            # Default: can message clinicians and admins
-            users = db.query(User).filter(
-                User.role.in_(['clinician', 'admin']),
-                User.is_active == True,
-                User.id != current_user.id
-            ).all()
-        
+        # All roles can message any active user except providers (service accounts)
+        # and themselves
+        users = db.query(User).filter(
+            User.is_active == True,
+            User.id != current_user.id,
+            User.role.notin_(['provider'])   # providers use the services hub, not messages
+        ).order_by(User.role, User.full_name).all()
+
         result = []
         for user in users:
             # Get unread count for this user (if any conversation exists)
             conversation = db.query(Conversation).join(ConversationParticipant).filter(
                 ConversationParticipant.user_id.in_([current_user.id, user.id])
             ).first()
-            
+
             unread_count = 0
             if conversation:
                 participant = db.query(ConversationParticipant).filter(
                     ConversationParticipant.conversation_id == conversation.id,
                     ConversationParticipant.user_id == current_user.id
                 ).first()
-                
                 if participant and participant.last_read_at:
                     unread_count = db.query(Message).filter(
                         Message.conversation_id == conversation.id,
@@ -680,7 +648,7 @@ async def get_available_physicians(
                         Message.sender_id == user.id,
                         Message.is_deleted == False
                     ).count()
-            
+
             result.append({
                 'id': user.id,
                 'name': user.full_name,
@@ -688,9 +656,9 @@ async def get_available_physicians(
                 'username': user.username,
                 'unread_count': unread_count
             })
-        
+
         return {"physicians": result}
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch users: {str(e)}")
 
