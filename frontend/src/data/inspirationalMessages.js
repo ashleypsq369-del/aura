@@ -1,5 +1,5 @@
 /**
- * 444 motivational & inspirational messages for Project Aura
+ * 444 motivational & inspirational messages for Aura Care
  * Palliative care focused  --  compassion, courage, clinical excellence, resilience
  */
 export const MESSAGES = [
@@ -472,11 +472,11 @@ export const MESSAGES = [
   "Thank a colleague today. Gratitude is clinical glue.",
   "Acknowledge great work when you see it  --  it breeds more great work.",
   "Celebrate the life well-ended as you celebrate the life well-saved.",
-  "Project Aura: where every life is seen, every person is honoured.",
+  "Aura Care: where every life is seen, every person is honoured.",
   "Care without technology is incomplete. Technology without care is useless.",
   "The future of palliative care is compassionate, connected, and data-informed.",
   "You are building the future of care right now, today, in this moment.",
-  "This is Project Aura  --  because every life deserves to shine.",
+  "This is Aura Care  --  because every life deserves to shine.",
 
   // Final 9  --  reaching 444
   "Your presence at the bedside is irreplaceable. No algorithm replaces it.",

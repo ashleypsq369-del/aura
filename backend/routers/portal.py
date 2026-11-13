@@ -1,5 +1,5 @@
 """
-Patient Portal and Journey Router  --  Project Aura
+Patient Portal and Journey Router  --  Aura Care
 Provides adaptive user landing payload, care templates, and timeline tracking.
 """
 

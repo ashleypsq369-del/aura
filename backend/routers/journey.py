@@ -1,5 +1,5 @@
 """
-Patient Journey Timeline Router  --  Project Aura
+Patient Journey Timeline Router  --  Aura Care
 View patient journey events (admissions, milestones, alerts, changes)
 """
 

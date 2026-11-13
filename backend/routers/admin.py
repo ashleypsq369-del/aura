@@ -1,5 +1,5 @@
 """
-Admin Router  --  Project Aura
+Admin Router  --  Aura Care
 User management and audit log (admin role only).
 """
 

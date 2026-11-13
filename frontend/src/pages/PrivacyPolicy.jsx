@@ -1,5 +1,5 @@
-﻿/**
- * PrivacyPolicy.jsx - Project Aura Privacy Policy
+/**
+ * PrivacyPolicy.jsx - Aura Care Privacy Policy
  * Public route: /privacy
  */
 import { useNavigate } from 'react-router-dom';
@@ -67,7 +67,7 @@ export default function PrivacyPolicy() {
             </div>
             <div>
               <h1 style={{ color:'#fff', fontSize:24, fontWeight:900, margin:0 }}>Privacy Policy</h1>
-              <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>Project Aura Healthcare Platform · Last updated October 2026</p>
+              <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>Aura Care Healthcare Platform � Last updated October 2026</p>
             </div>
           </div>
           <p style={{ color:'rgba(255,255,255,0.75)', fontSize:14, lineHeight:1.7, maxWidth:600, margin:0 }}>

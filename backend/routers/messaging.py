@@ -1,5 +1,5 @@
 """
-Messaging Router  --  Project Aura
+Messaging Router  --  Aura Care
 Real-time messaging system for patient-physician communication,
 alert notifications, and user-to-user messaging.
 """

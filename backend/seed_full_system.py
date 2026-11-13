@@ -1,7 +1,7 @@
 """
 seed_full_system.py
 ===================
-FULL SYSTEM DATA SEED for Project Aura.
+FULL SYSTEM DATA SEED for Aura Care.
 
 Populates every page, component, and feature with rich, realistic Ghanaian
 palliative-care data so that EVERY role sees real content on every screen.
@@ -140,7 +140,7 @@ def main():
     db = SessionLocal()
 
     print("=" * 65)
-    print("PROJECT AURA  --  FULL SYSTEM DATA SEED")
+    print("Aura Care  --  FULL SYSTEM DATA SEED")
     print("=" * 65)
 
     # ── SECTION 1: USERS ─────────────────────────────────────────────────────
@@ -1270,7 +1270,7 @@ def main():
             is_ghana_specific=ghana,
             difficulty_level=level,
             language="en",
-            source="Project Aura Clinical Team",
+            source="Aura Care Clinical Team",
             is_published=True,
             view_count=random.randint(20, 200),
             helpful_count=random.randint(5, 60),
@@ -1408,10 +1408,10 @@ def main():
          "Overall risk 73.1%. Deterioration trend: pain 7/10 trending up over 14 days. Review care plan.", False),
         (dr_mensah,   "appointment_reminder",  "Palliative Care Review Tomorrow",
          "Ama Asante Boateng -- Palliative Care Review tomorrow at 09:00 at Korle Bu. Patient and family confirmed.", False),
-        (dr_mensah,   "system",                "Welcome to Project Aura",
+        (dr_mensah,   "system",                "Welcome to Aura Care",
          "Your account is ready. Dashboard shows all 11 patients. AI Insights tab has full XGBoost risk table.", True),
 
-        (dr_osei,     "system",                "Welcome to Project Aura",
+        (dr_osei,     "system",                "Welcome to Aura Care",
          "Dr. Osei, your clinician account is ready. You have access to all 11 patient records.", True),
         (dr_osei,     "care_update",           "Critical Patient -- Yaw Asiedu",
          "Yaw Asiedu (PAT-007) has been flagged as critical. SpO2 85.2%. Immediate review required.", False),
@@ -1425,7 +1425,7 @@ def main():
 
         (carer_kwesi, "appointment_reminder",  "Home Visit -- Kofi Mensah Junior",
          "Home visit scheduled for Kofi Mensah Junior today at 15:00. Family member Akosua will be present.", False),
-        (carer_kwesi, "system",                "Welcome to Project Aura",
+        (carer_kwesi, "system",                "Welcome to Aura Care",
          "Your caregiver account is active. You have 3 assigned patients. Check the Caregivers page for workload.", True),
 
         (test_admin,  "system",                "System Status Report",

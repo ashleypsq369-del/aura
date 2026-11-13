@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 ProjectAura -- Dissertation Diagrams (Pure Academic Style)
 ==========================================================
@@ -41,7 +41,7 @@ def savefig(fig, name):
     print(f'  {name}  ({os.path.getsize(path)//1024} KB)')
 
 
-# ── Primitives ────────────────────────────────────────────────
+# -- Primitives ------------------------------------------------
 
 def rect(ax, cx, cy, w, h, text, fs=11, bold=True):
     """White rounded box, black border, black text. Returns edge dict."""
@@ -114,9 +114,9 @@ def sublabel(ax, cx, y, text):
             fontsize=9, color=GRAY, style='italic')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.1 - SDLC WATERFALL
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_1():
     # Exactly 5 phases as described in report Section 3.3.1-3.3.5
     BH, GAP = 0.72, 0.35
@@ -129,7 +129,7 @@ def fig3_1():
     fig_title(ax, W/2, fig_h - 0.08,
               'Figure 3.1 - Software Development Life Cycle')
     sublabel(ax, W/2, fig_h - 0.40,
-             'Project AURA - Waterfall Model (Royce, 1970)')
+             'Aura Care - Waterfall Model (Royce, 1970)')
 
     labels = [
         '1.  Requirements Analysis',
@@ -151,13 +151,13 @@ def fig3_1():
     savefig(fig, 'fig3_1_sdlc.png')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.2 - SYSTEM ARCHITECTURE
 # Matches report Section 3.4: 5 functional pillars as named
 # in the figure caption: Data Input Layer, Intelligent
 # Monitoring Core, Adaptive Care Guide, Unified Care
 # Dashboard, and Continuity Bridge
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_2():
     fig, ax = plt.subplots(figsize=(9, 12))
     ax.set_xlim(0, 9); ax.set_ylim(0, 12); ax.axis('off')
@@ -171,7 +171,7 @@ def fig3_2():
     BW = 7.0
     CX = 4.5
 
-    # ── Five functional pillars (vertical stack) ─────────────────
+    # -- Five functional pillars (vertical stack) -----------------
     # 1. Data Input Layer (top - users enter data here)
     r1 = rect(ax, CX, 10.60, BW, BH,
               '1.  Data Input Layer\n'
@@ -206,7 +206,7 @@ def fig3_2():
               'Memory Vault  |  Grief Journal  |  Grief Screening  |  Digital Legacy  |  Heir Access',
               fs=9.5)
 
-    # ── Infrastructure band (bottom) ──────────────────────────────
+    # -- Infrastructure band (bottom) ------------------------------
     ax.text(CX, 3.05,
             'FastAPI Backend  (Port 8000)  +  SQLAlchemy  +  SQLite / PostgreSQL  +  WebSocket',
             ha='center', va='center', fontsize=9, color=GRAY, style='italic')
@@ -214,12 +214,12 @@ def fig3_2():
             'React 19 + Vite Frontend  |  JWT Auth + RBAC  |  Audit Log  |  Offline-First Cache',
             ha='center', va='center', fontsize=9, color=GRAY, style='italic')
 
-    # ── Users (top) ───────────────────────────────────────────────
+    # -- Users (top) -----------------------------------------------
     ax.text(CX, 11.25,
             'Users:  Clinician  |  Caregiver  |  Patient  |  Family  |  Admin',
             ha='center', va='center', fontsize=10, color=FG, fontweight='bold')
 
-    # ── Arrows down the pillar spine ─────────────────────────────
+    # -- Arrows down the pillar spine -----------------------------
     arrow_down(ax, r1, r2)
     arrow_down(ax, r2, r3)
     arrow_xy(ax, r3['cx'], r3['bottom'], r4_l['cx'], r4_l['top'])
@@ -227,15 +227,15 @@ def fig3_2():
     arrow_xy(ax, r4_l['cx'], r4_l['bottom'], r5['cx'], r5['top'])
     arrow_xy(ax, r4_r['cx'], r4_r['bottom'], r5['cx'], r5['top'])
 
-    # User → Data Input
+    # User ? Data Input
     arrow_xy(ax, CX, 11.08, CX, r1['top'])
 
     savefig(fig, 'fig3_2_architecture.png')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.3 - ERD  (clean entity boxes)
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_3():
     fig, ax = plt.subplots(figsize=(13, 9))
     ax.set_xlim(0, 13); ax.set_ylim(0, 9); ax.axis('off')
@@ -309,10 +309,10 @@ def fig3_3():
     savefig(fig, 'fig3_3_erd.png')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.4 - AI / SHAP PIPELINE
 # Same fan-out / fan-in pattern as reference image
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_4():
     fig, ax = plt.subplots(figsize=(7, 11))
     ax.set_xlim(0, 7); ax.set_ylim(0, 11); ax.axis('off')
@@ -357,9 +357,9 @@ def fig3_4():
     savefig(fig, 'fig3_4_ai_pipeline.png')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.5 - SECURITY / DATA-FLOW
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_5():
     BH, GAP = 0.58, 0.44
     N       = 7
@@ -393,9 +393,9 @@ def fig3_5():
     savefig(fig, 'fig3_5_security.png')
 
 
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 # FIG 3.6 - SYSTEM PROCESS FLOWCHART  (with diamonds + fan)
-# ══════════════════════════════════════════════════════════════
+# --------------------------------------------------------------
 def fig3_6():
     RW, RH = 4.0, 0.58
     DW, DH = 3.6, 0.56
@@ -411,7 +411,7 @@ def fig3_6():
     def D(cy, lbl):  return diamond(ax, CX, cy, DW, DH, lbl, fs=10)
     def O(cy, lbl):  return oval(ax,    CX, cy, OW, OH, lbl, fs=11)
 
-    # Elements top → bottom
+    # Elements top ? bottom
     e_start  = O(16.20, 'START')
     e_open   = R(15.30, 'User opens application')
     e_d_log  = D(14.30, 'Valid login?')
@@ -482,7 +482,7 @@ def fig3_6():
     savefig(fig, 'fig3_6_flowchart.png')
 
 
-# ── Run all ───────────────────────────────────────────────────
+# -- Run all ---------------------------------------------------
 print('=' * 52)
 print('ProjectAura - Pure Academic Diagram Generator')
 print('=' * 52)

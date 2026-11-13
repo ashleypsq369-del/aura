@@ -167,7 +167,7 @@ const columns = [
 ];
 
 // -- Main component --------------------------------------------------------
-export default function PatientDataTable({ patients = [], onViewPatient, loading = false }) {
+export default function PatientDataTable({ patients = [], onViewPatient, loading = false, hideSearch = false }) {
  const [sorting, setSorting] = useState([{ id: 'risk_level', desc: false }]);
  const [globalFilter, setGlobalFilter] = useState('');
 

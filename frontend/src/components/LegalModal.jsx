@@ -1,4 +1,4 @@
-﻿/**
+/**
  * LegalModal - Terms, Privacy Policy, About
  * Portal-rendered white card modal. Scrollable body.
  * Accept closes + calls onAccept. Decline/Close just closes.
@@ -9,15 +9,15 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-/* ─── Content ──────────────────────────────────────────────────── */
+/* --- Content ---------------------------------------------------- */
 
 const TERMS_CONTENT = [
   { heading: 'General Site Usage', sub: 'Last Revised: October 2026',
-    body: `Welcome to Project Aura. This platform is provided as a service to healthcare professionals, patients, and their families. It may be used for care coordination, symptom tracking, and informational purposes only. Because these Terms contain legal obligations, please read them carefully.` },
+    body: `Welcome to Aura Care. This platform is provided as a service to healthcare professionals, patients, and their families. It may be used for care coordination, symptom tracking, and informational purposes only. Because these Terms contain legal obligations, please read them carefully.` },
   { heading: '1. YOUR AGREEMENT',
-    body: `By creating an account or using Project Aura, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use this platform.\n\nWe reserve the right to change or modify these Terms at any time. Such changes take effect immediately upon posting. Continued use constitutes your agreement to the modified Terms.` },
+    body: `By creating an account or using Aura Care, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use this platform.\n\nWe reserve the right to change or modify these Terms at any time. Such changes take effect immediately upon posting. Continued use constitutes your agreement to the modified Terms.` },
   { heading: '2. NATURE OF THE SERVICE',
-    body: `Project Aura is a palliative care coordination platform. It facilitates communication, symptom tracking, care planning, and resource access. It does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals. In an emergency, call 999 or 112 immediately.` },
+    body: `Aura Care is a palliative care coordination platform. It facilitates communication, symptom tracking, care planning, and resource access. It does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals. In an emergency, call 999 or 112 immediately.` },
   { heading: '3. USER ACCOUNTS',
     body: `Each account is assigned a role (Patient, Family, Caregiver, Clinician, or Provider) that determines access permissions. You are responsible for keeping your login credentials confidential. Do not share your account. Report any suspected unauthorised access to: admin@projectaura.gh` },
   { heading: '4. HEALTH INFORMATION AND CONSENT',
@@ -27,9 +27,9 @@ const TERMS_CONTENT = [
   { heading: '6. AI FEATURES DISCLAIMER',
     body: `AI insights (risk scoring, symptom analysis, care recommendations) are decision-support tools only. Clinical decisions must always be made by qualified healthcare professionals. AI outputs may contain errors. The Platform is not liable for decisions made solely on AI-generated content.` },
   { heading: '7. LIMITATION OF LIABILITY',
-    body: `To the maximum extent permitted by law, Project Aura and its developers are not liable for any indirect, incidental, or consequential damages arising from use of the Platform. The Platform is provided as-is, without warranty.` },
+    body: `To the maximum extent permitted by law, Aura Care and its developers are not liable for any indirect, incidental, or consequential damages arising from use of the Platform. The Platform is provided as-is, without warranty.` },
   { heading: '8. CONTACT',
-    body: `Questions: legal@projectaura.gh\nProject Aura, Group 31, Ghana. Last updated: October 2026.` },
+    body: `Questions: legal@projectaura.gh\nAura Care, Group 31, Ghana. Last updated: October 2026.` },
 ];
 
 const PRIVACY_CONTENT = [
@@ -50,16 +50,16 @@ const PRIVACY_CONTENT = [
 ];
 
 const ABOUT_CONTENT = [
-  { heading: 'What is Project Aura?',
-    body: `Project Aura is a web platform built to help coordinate palliative care, the kind of care given to people living with serious, life-limiting illness. It connects everyone involved in a patient's care: clinicians, caregivers, the patient, and their family, all in one place.\n\nClinicians get AI-powered risk alerts with plain explanations. Families stay informed. Caregivers have everything they need for each visit. And when a patient passes, the platform keeps supporting the family through bereavement.` },
+  { heading: 'What is Aura Care?',
+    body: `Aura Care is a web platform built to help coordinate palliative care, the kind of care given to people living with serious, life-limiting illness. It connects everyone involved in a patient's care: clinicians, caregivers, the patient, and their family, all in one place.\n\nClinicians get AI-powered risk alerts with plain explanations. Families stay informed. Caregivers have everything they need for each visit. And when a patient passes, the platform keeps supporting the family through bereavement.` },
   { heading: 'Why we built it',
     body: `Ghana has no dedicated palliative ward in any of its teaching hospitals. Around 48% of Ghanaians pay for healthcare entirely out of pocket. The tools that exist today are fragmented, expensive, and built for other healthcare systems. None of the platforms we reviewed had clinical AI. None had bereavement support. None were built for the Ghanaian context.\n\nWe built Aura as our final-year project to fill those gaps and leave behind a working prototype that others can build on.` },
   { heading: 'Who it is for',
-    body: `Five roles use the platform, each with their own view of the same care:\n\n• Clinician - oversees all patients, reviews AI risk scores with explanations, manages care plans\n• Caregiver - handles day-to-day visits, logs tasks, accesses care guides and handover notes\n• Patient - tracks symptoms, medications, and appointments, reads their care journey\n• Family - stays informed about their loved one's care, receives bereavement support\n• Admin - manages accounts, audit trails, and platform settings` },
+    body: `Five roles use the platform, each with their own view of the same care:\n\n� Clinician - oversees all patients, reviews AI risk scores with explanations, manages care plans\n� Caregiver - handles day-to-day visits, logs tasks, accesses care guides and handover notes\n� Patient - tracks symptoms, medications, and appointments, reads their care journey\n� Family - stays informed about their loved one's care, receives bereavement support\n� Admin - manages accounts, audit trails, and platform settings` },
   { heading: 'How it works',
     body: `Patients and caregivers log symptoms and vitals through the app. Eight AI models process that data and flag risks across pain, breathing, anxiety, depression, falls risk, and more. Every alert comes with a chart showing which factors drove the score, so clinicians can see why the system flagged something and decide whether to act.\n\nAppointments, medications, assessments, care plans, and messages all live in one place. The platform works offline and syncs when the connection returns.` },
   { heading: 'The team - Group 31',
-    body: `Built by three final-year Computer Science and Engineering students at the University of Mines and Technology (UMaT), Tarkwa, supervised by Dr. Alfred Adutwum Amponsah.\n\nPaul Smith Quaidoo · SRI.41.008.131.22\nAbdul-Basit Issah · SRI.41.008.098.22\nAlhassan Hina Ahmed · SRI.41.008.023.22` },
+    body: `Built by three final-year Computer Science and Engineering students at the University of Mines and Technology (UMaT), Tarkwa, supervised by Dr. Alfred Adutwum Amponsah.\n\nPaul Smith Quaidoo � SRI.41.008.131.22\nAbdul-Basit Issah � SRI.41.008.098.22\nAlhassan Hina Ahmed � SRI.41.008.023.22` },
   { heading: 'A note on this version',
     body: `This is an academic prototype submitted for a BSc degree. It has not been through a clinical trial, a formal security audit, or real-world patient testing. All patient data in the demo is synthetic. It should not be used for actual clinical decisions.\n\nIf you are a developer, researcher, or healthcare organisation interested in building on this work, please get in touch.` },
 ];
@@ -67,10 +67,10 @@ const ABOUT_CONTENT = [
 const CONFIG = {
   terms:   { title: 'Terms and Conditions', items: TERMS_CONTENT,  maxWidth: 480, showAccept: true,  acceptLabel: 'Accept',  declineLabel: 'Decline' },
   privacy: { title: 'Privacy Policy',       items: PRIVACY_CONTENT, maxWidth: 480, showAccept: false, acceptLabel: 'Got it',  declineLabel: 'Close'   },
-  about:   { title: 'About Project Aura',   items: ABOUT_CONTENT,  maxWidth: 560, showAccept: false, acceptLabel: 'Got it',  declineLabel: 'Close'   },
+  about:   { title: 'About Aura Care',   items: ABOUT_CONTENT,  maxWidth: 560, showAccept: false, acceptLabel: 'Got it',  declineLabel: 'Close'   },
 };
 
-/* ─── Modal ─────────────────────────────────────────────────────── */
+/* --- Modal ------------------------------------------------------- */
 export default function LegalModal({ type = 'terms', open, onClose, onAccept }) {
   const cfg = CONFIG[type] || CONFIG.terms;
   const [phase, setPhase] = useState('idle'); // 'idle' | 'accepted' | 'closing'

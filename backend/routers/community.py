@@ -1,5 +1,5 @@
 """
-Community Hub Router  --  Project Aura
+Community Hub Router  --  Aura Care
 Anonymised support groups, 280-char posts, reactions, flagging, and moderation.
 """
 

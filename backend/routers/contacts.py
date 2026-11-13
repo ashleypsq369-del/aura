@@ -1,5 +1,5 @@
 """
-Contacts Router  --  Project Aura
+Contacts Router  --  Aura Care
 WhatsApp-style contacts management for healthcare communication
 """
 

@@ -1,5 +1,5 @@
-﻿"""
-Database layer for Project Aura - COMPLETE KIRO SPECIFICATION
+"""
+Database layer for Aura Care - COMPLETE KIRO SPECIFICATION
 All 21 tables - SIMPLIFIED (no circular relationships)
 """
 
@@ -1174,9 +1174,9 @@ class UserFeatureOverride(Base):
     Admin-controlled per-user feature gates.
     Overrides the care-setting defaults from SETTING_FEATURE_GATES.
     state: 'enabled' | 'disabled' | 'locked'
-      enabled  → force-show this feature even if care setting hides it
-      disabled → force-hide this feature regardless of care setting
-      locked   → hidden AND the user cannot request access
+      enabled  ? force-show this feature even if care setting hides it
+      disabled ? force-hide this feature regardless of care setting
+      locked   ? hidden AND the user cannot request access
     source: 'admin' | 'questionnaire' | 'request_approved'
     """
     __tablename__ = 'user_feature_overrides'
@@ -1289,7 +1289,7 @@ class CommunityPost(Base):
     id = Column(Integer, primary_key=True)
     group_id = Column(Integer, ForeignKey('community_groups.id'), nullable=False)
     author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    display_name = Column(String(100))     # e.g. "Kofi · Cancer Journey" (anonymised)
+    display_name = Column(String(100))     # e.g. "Kofi � Cancer Journey" (anonymised)
     content = Column(String(280), nullable=False)
     is_moderated = Column(Boolean, default=False)
     is_hidden = Column(Boolean, default=False)
@@ -1702,7 +1702,7 @@ def init_database():
     except Exception as e:
         print(f"Schema migration note: {e}")
 
-    # ── Services marketplace column migrations ────────────────────────────────
+    # -- Services marketplace column migrations --------------------------------
     try:
         inspector2 = inspect(engine)
         with engine.begin() as conn:
@@ -2333,7 +2333,7 @@ CARE_SETTING_TYPES = {
         "color": "rose",
         "description": "Intensive, comfort-first care specifically tailored for patients in the final months of life who have decided to stop all curative or life-prolonging medical treatments. Focuses deeply on dignity, psychological peace, and spiritual comfort.",
         "focus": "Comfort, dignity, and peaceful end-of-life",
-        "who_it_serves": ["Patients with prognosis of ≤6 months", "Patients who have elected to stop curative treatment", "Families preparing for end-of-life"],
+        "who_it_serves": ["Patients with prognosis of =6 months", "Patients who have elected to stop curative treatment", "Families preparing for end-of-life"],
         "care_team_roles": ["Hospice Nurse", "Hospice Physician", "Chaplain", "Bereavement Counsellor", "Social Worker"],
         "key_interventions": ["Comfort-only medication management", "24/7 symptom support", "Spiritual and existential care", "Family emotional and practical support", "Bereavement preparation and follow-up"],
         "indicators": ["pps_score_under_40", "curative_treatment_stopped", "end_of_life_prognosis", "patient_comfort_goals"],
@@ -2450,7 +2450,7 @@ class CareSettingInteraction(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
-# ── Comprehensive AI Tables (moved from add_comprehensive_ai_tables.py) ──────
+# -- Comprehensive AI Tables (moved from add_comprehensive_ai_tables.py) ------
 
 class PatientAllergy(Base):
     """Patient Allergies - Critical for medication safety"""

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ const PATIENT_STEPS = [
  // -- STEP 1: About You ----------------------------------------------------
  {
  id: 1,
- title: "Welcome to Project Aura",
+ title: "Welcome to Aura Care",
  subtitle: "Let's take a few minutes to personalise your care experience. Your answers help every part of the system work for you.",
  fields: [
  {
@@ -557,7 +557,7 @@ const PATIENT_STEPS = [
  {
  id: 10,
  title: "AI-Powered Personalised Care",
- subtitle: "Project Aura uses AI to analyse your health data and generate personalised care plans, predictions, and recommendations. We need your consent.",
+ subtitle: "Aura Care uses AI to analyse your health data and generate personalised care plans, predictions, and recommendations. We need your consent.",
  fields: [
  {
  name: "ai_analysis_consent",
@@ -598,7 +598,7 @@ const FAMILY_STEPS = [
  // STEP 1: About You
  {
  id: 1,
- title: "Welcome to Project Aura",
+ title: "Welcome to Aura Care",
  subtitle: "You're here as a family member or loved one. These questions help us support you and tailor how you're involved in care. Your answers are private.",
  fields: [
  {
@@ -1148,14 +1148,14 @@ export default function PersonalisationQuest() {
  // Durable skip flag -- survives future backend user-object overwrites on login
  localStorage.setItem('questionnaire_skipped', 'true');
 
- // ── Immediately apply questionnaire answers to app settings ──────────
+ // -- Immediately apply questionnaire answers to app settings ----------
  // Language
  if (submittedData.language_pref && submittedData.language_pref !== 'en') {
  localStorage.setItem('app_language', submittedData.language_pref);
  document.documentElement.lang = submittedData.language_pref;
  }
 
- // Tech comfort → font size and sidebar mode
+ // Tech comfort ? font size and sidebar mode
  const techToFont = { high: 'medium', medium: 'medium', low: 'large', basic: 'xlarge' };
  const fontSz = techToFont[submittedData.tech_comfort] || 'medium';
  if (fontSz !== 'medium') {
@@ -1165,7 +1165,7 @@ export default function PersonalisationQuest() {
  document.documentElement.classList.add(`text-${fontSz}`);
  }
 
- // Basic tech comfort → simplified sidebar (icons only, keep it clean)
+ // Basic tech comfort ? simplified sidebar (icons only, keep it clean)
  if (submittedData.tech_comfort === 'basic' || submittedData.tech_comfort === 'low') {
  const sidebar = JSON.parse(localStorage.getItem('sidebar_settings') || '{}');
  localStorage.setItem('sidebar_default_state', 'icons');
@@ -1176,12 +1176,12 @@ export default function PersonalisationQuest() {
  }));
  }
 
- // Info style → notifications frequency preference
+ // Info style ? notifications frequency preference
  if (submittedData.info_frequency) {
  localStorage.setItem('info_frequency_pref', submittedData.info_frequency);
  }
 
- // Activity level → if bedbound/very_low, enable reduced motion + large touch
+ // Activity level ? if bedbound/very_low, enable reduced motion + large touch
  if (submittedData.activity_level === 'bedbound' || submittedData.activity_level === 'very_low') {
  const a11y = JSON.parse(localStorage.getItem('accessibility_settings') || '{}');
  localStorage.setItem('accessibility_settings', JSON.stringify({
@@ -1189,12 +1189,12 @@ export default function PersonalisationQuest() {
  }));
  }
 
- // High burnout or caregiver struggle → show AI widgets prominently
+ // High burnout or caregiver struggle ? show AI widgets prominently
  if (submittedData.caregiver_burnout_risk === 'burnout' || submittedData.caregiver_burnout_risk === 'struggling') {
  localStorage.setItem('show_ai_widgets', 'true');
  }
 
- // AI consent → control AI widgets visibility
+ // AI consent ? control AI widgets visibility
  if (submittedData.ai_analysis_consent === 'no') {
  localStorage.setItem('show_ai_widgets', 'false');
  }
@@ -1224,17 +1224,17 @@ export default function PersonalisationQuest() {
  localStorage.setItem('app_notifications', 'true');
  }
 
- // Wants community → persist for sidebar quick-link priority
+ // Wants community ? persist for sidebar quick-link priority
  if (submittedData.wants_community === 'yes') {
  localStorage.setItem('wants_community', 'true');
  }
 
- // Legacy interest → unlock Memory Vault prompt
+ // Legacy interest ? unlock Memory Vault prompt
  if (submittedData.legacy_interest === 'yes') {
  localStorage.setItem('legacy_interest', 'true');
  }
 
- // ── Save care-setting feature overrides derived from questionnaire answers ──
+ // -- Save care-setting feature overrides derived from questionnaire answers --
  if (submittedData.care_setting) {
  const GATES = {
  hospital_based: { hidden: [] },
@@ -1254,7 +1254,7 @@ export default function PersonalisationQuest() {
  }, { headers: { Authorization: `Bearer ${token2}` } }).catch(() => {});
  }
 
- // ── Derive and save UI profile from questionnaire answers ─────────────
+ // -- Derive and save UI profile from questionnaire answers -------------
  // Dynamic import is async - use .then() since onSuccess is sync
  import('../context/UIProfileContext').then(({ deriveUIProfile }) => {
  const profileKey = deriveUIProfile(submittedData, user);
@@ -1267,7 +1267,7 @@ export default function PersonalisationQuest() {
  if (['cognitive','distressed','elderly'].includes(profileKey)) html.classList.add('reduce-motion');
  }).catch(() => {});
 
- // ─────────────────────────────────────────────────────────────────────
+ // ---------------------------------------------------------------------
  fireMilestone('stars');
  setIsComplete(true);
  const dest = user.role === 'patient' ? '/my-space' :
@@ -1442,7 +1442,7 @@ export default function PersonalisationQuest() {
  <ArrowLeft size={15} /> Back
  </button>
 
- {/* Skip option — always visible, navigates to dashboard without completing */}
+ {/* Skip option � always visible, navigates to dashboard without completing */}
  <button
  onClick={() => {
  try {

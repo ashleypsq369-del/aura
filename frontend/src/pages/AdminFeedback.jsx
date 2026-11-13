@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AdminFeedback - Feedback & bug report inbox
  * Route: /admin/feedback
  * Built on: AdminPageShell + DataTable + Dialog (Radix)
@@ -25,7 +25,7 @@ import { API_URL } from '../api/client';
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 const col   = createColumnHelper();
 
-/* ─── Config ──────────────────────────────────────────────────────── */
+/* --- Config -------------------------------------------------------- */
 const TYPE = {
   rating:      { label: 'Rating',      Icon: Star,     color: '#f59e0b', bg: '#fffbeb' },
   ux_feedback: { label: 'UX Feedback', Icon: ThumbsUp, color: '#0d9488', bg: '#f0fdfa' },
@@ -45,7 +45,7 @@ function relTime(ts) {
   return new Date(ts).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'2-digit' });
 }
 
-/* ─── Type badge ───────────────────────────────────────────────────── */
+/* --- Type badge ----------------------------------------------------- */
 function TypeBadge({ type, rating }) {
   const cfg  = TYPE[type] || TYPE.ux_feedback;
   const Icon = cfg.Icon;
@@ -56,13 +56,13 @@ function TypeBadge({ type, rating }) {
       </div>
       <span style={{ fontSize:10, fontWeight:600, color:cfg.color }}>{cfg.label}</span>
       {type==='rating' && rating && (
-        <span style={{ fontSize:10, fontWeight:700, color:RATING_COLOR[rating] }}>{'★'.repeat(rating)}</span>
+        <span style={{ fontSize:10, fontWeight:700, color:RATING_COLOR[rating] }}>{'?'.repeat(rating)}</span>
       )}
     </div>
   );
 }
 
-/* ─── Detail panel ─────────────────────────────────────────────────── */
+/* --- Detail panel --------------------------------------------------- */
 function DetailPanel({ item, onClose, onDelete }) {
   const cfg  = TYPE[item.type] || TYPE.ux_feedback;
   const Icon = cfg.Icon;
@@ -85,7 +85,7 @@ function DetailPanel({ item, onClose, onDelete }) {
           </div>
           <div>
             <p style={{ fontSize:13, fontWeight:700, color:'var(--text-900)', margin:0 }}>{cfg.label}</p>
-            <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{item.page} · {relTime(item.created_at)}</p>
+            <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>{item.page} � {relTime(item.created_at)}</p>
           </div>
         </div>
         <div style={{ display:'flex', gap:4 }}>
@@ -174,7 +174,7 @@ function DetailPanel({ item, onClose, onDelete }) {
 
       {item.email && (
         <div style={{ padding:'12px 16px', borderTop:'1px solid var(--card-border)', flexShrink:0 }}>
-          <a href={`mailto:${item.email}?subject=Re: Your Project Aura Feedback`}
+          <a href={`mailto:${item.email}?subject=Re: Your Aura Care Feedback`}
             style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, width:'100%', padding:'9px 0', borderRadius:10, background:'var(--c-teal)', color:'#fff', fontSize:12, fontWeight:700, textDecoration:'none' }}>
             <Mail size={12} /> Reply to {item.email}
           </a>
@@ -184,9 +184,9 @@ function DetailPanel({ item, onClose, onDelete }) {
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════
+/* -------------------------------------------------------------------
    Main page
-═══════════════════════════════════════════════════════════════════ */
+------------------------------------------------------------------- */
 export default function AdminFeedback() {
   const qc = useQueryClient();
   const [typeFilter, setTypeFilter] = useState('all');
@@ -308,7 +308,7 @@ export default function AdminFeedback() {
         { label:'total', value:stats.total },
         { label:'bugs',  value:stats.bugs,  color:'#e11d48' },
         { label:'UX',    value:stats.ux,    color:'var(--c-teal)' },
-        ...(stats.avg ? [{ label:'avg', value:`★ ${stats.avg}`, color:'#f59e0b' }] : []),
+        ...(stats.avg ? [{ label:'avg', value:`? ${stats.avg}`, color:'#f59e0b' }] : []),
       ]}
       toolbar={typeFilterPills}
       actions={
@@ -400,7 +400,7 @@ export default function AdminFeedback() {
             data={items}
             isLoading={isLoading}
             searchColumnId="summary"
-            searchPlaceholder="Search by page, type, content…"
+            searchPlaceholder="Search by page, type, content�"
             emptyTitle="No submissions yet"
             emptyBody="Feedback from the floating widget will appear here."
             noResultsTitle="No results"

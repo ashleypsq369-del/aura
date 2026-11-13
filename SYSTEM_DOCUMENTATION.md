@@ -1,4 +1,4 @@
-# Project Aura - Complete System Documentation
+# Aura Care - Complete System Documentation
 
 > AI-powered palliative care platform built for Ghana's healthcare context.
 > Full-stack: React 19 + FastAPI + SQLite + XGBoost + self-hosted NLP.
@@ -34,7 +34,7 @@
 
 ## 1. System Overview
 
-Project Aura is a comprehensive **palliative care management platform** designed for hospitals, hospices, home care, and outpatient settings in Ghana. It serves five user roles across the full continuum of care - from initial diagnosis through death and bereavement.
+Aura Care is a comprehensive **palliative care management platform** designed for hospitals, hospices, home care, and outpatient settings in Ghana. It serves five user roles across the full continuum of care - from initial diagnosis through death and bereavement.
 
 ### Core Capabilities
 
@@ -1098,4 +1098,4 @@ python ace.py
 
 ---
 
-*Document generated: June 2026 - Project Aura v1.0*
+*Document generated: June 2026 - Aura Care v1.0*

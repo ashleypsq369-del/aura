@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-QUICK SEED SCRIPT  --  Project Aura Extension Data
+QUICK SEED SCRIPT  --  Aura Care Extension Data
 Seeds resources, templates, groups, preferences
 Run: python seed_complete_data.py
 """
@@ -128,7 +128,7 @@ COMMUNITY_GROUPS = [
 
 def main():
     print("="*60)
-    print("PROJECT AURA  --  COMPLETE DATA SEEDING")
+    print("Aura Care  --  COMPLETE DATA SEEDING")
     print("="*60)
     
     init_database()

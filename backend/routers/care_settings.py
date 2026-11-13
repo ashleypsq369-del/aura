@@ -1,7 +1,7 @@
 """
 Care Settings Router
 =====================
-The 5 palliative care delivery models integrated into Project Aura:
+The 5 palliative care delivery models integrated into Aura Care:
   1. Hospital-Based Palliative Care
   2. Hospice Care
   3. Home-Based Palliative Care

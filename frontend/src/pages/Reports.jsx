@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Reports Page - ProjectAura (Redesigned)
  * =========================================
  * Uses:
@@ -37,7 +37,7 @@ import SearchableSelect from '../components/ui/SearchableSelect';
 
 const authH = () => ({ Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
-/* ── Report metadata ─────────────────────────────────────────── */
+/* -- Report metadata ------------------------------------------- */
 const REPORT_META = {
  patient_summary: { icon: FileText, color:'#0891b2', tab:'clinical', needsPatient:true },
  mdt_handover: { icon: ClipboardCheck,color:'#0369a1', tab:'clinical' },
@@ -62,11 +62,11 @@ const TABS = [
 
 const CHART_COLORS = ['#0891b2','#7c3aed','#059669','#dc2626','#d97706','#be123c']; // eslint-disable-line no-unused-vars
 
-/* ── Helpers ──────────────────────────────────────────────────── */
+/* -- Helpers ---------------------------------------------------- */
 function fmt(iso) { if(!iso) return ' - '; return new Date(iso).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
 function fmtD(iso) { if(!iso) return ' - '; return new Date(iso).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
 
-/* ── Shared atoms ────────────────────────────────────────────── */
+/* -- Shared atoms ---------------------------------------------- */
 function KpiGrid({items}) {
  return (
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
@@ -113,7 +113,7 @@ function Sec({title,icon:Icon,color='#0d9488',children,collapsible=false}) {
  );
 }
 
-/* ── Searchable patient/user pickers ─────────────────────────── */
+/* -- Searchable patient/user pickers --------------------------- */
 function PatientPicker({value,onChange}) {
  const [q,setQ]=useState('');const [open,setOpen]=useState(false);
  const {data}=useQuery({queryKey:['pts-rpt'],queryFn:()=>axios.get(`${API_URL}/api/patients`,{headers:authH()}).then(r=>r.data),staleTime:5*60*1000});
@@ -124,13 +124,13 @@ function PatientPicker({value,onChange}) {
  <div className="relative">
  <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">Patient</label>
  <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
- <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient…'}</span>
+ <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:'Select patient�'}</span>
  <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
  <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
  <div className="p-2 border-b border-[var(--card-border)]/50">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search�" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
  {filtered.slice(0,30).map(p=>(
  <button key={p.id} type="button" onClick={()=>{onChange(p.id);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs hover:bg-teal-50 dark:hover:bg-teal-900/20 flex items-center justify-between">
@@ -154,13 +154,13 @@ function UserPicker({value,onChange,label='User',roles}) {
  <div className="relative">
  <label className="block text-[11px] font-bold text-[var(--text-400)] mb-1">{label}</label>
  <button type="button" onClick={()=>setOpen(!open)} className="w-full flex items-center justify-between border border-slate-300 rounded-xl px-3 py-2 text-sm bg-[var(--card-bg)] text-left">
- <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s…`}</span>
+ <span className={sel?'text-[var(--text-800)]':'text-slate-400'}>{sel?`${sel.full_name} (#${sel.id})`:`All ${label.toLowerCase()}s�`}</span>
  <ChevronDown size={14} className="text-[var(--text-400)] flex-shrink-0"/>
  </button>
  {open&&(
  <div className="absolute z-50 mt-1 w-full bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl shadow-xl max-h-60 overflow-y-auto">
  <div className="p-2 border-b border-[var(--card-border)]/50">
- <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search…" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
+ <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search�" className="w-full text-xs px-2 py-1.5 border border-[var(--card-border)] rounded-lg bg-[var(--card-bg)] outline-none"/>
  </div>
  <button type="button" onClick={()=>{onChange(null);setOpen(false);setQ('');}} className="w-full text-left px-3 py-2 text-xs text-[var(--text-400)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 border-b border-[var(--card-border)]/50"> - All {label.toLowerCase()}s</button>
  {filtered.slice(0,30).map(u=>(
@@ -175,7 +175,7 @@ function UserPicker({value,onChange,label='User',roles}) {
  );
 }
 
-/* ── Report body renderers ────────────────────────────────────── */
+/* -- Report body renderers -------------------------------------- */
 function PatientSummaryBody({data}) {
  const p=data.patient||{};const crit=data.critical_events||{};
  const esas=data.symptom_assessments?.esas_trend||[];
@@ -222,7 +222,7 @@ function PatientSummaryBody({data}) {
  <Tbl headers={['Medication','Dose','Frequency','Route','Active']}
  rows={(data.medications?.list||[]).map(m=>[
  m.name, m.dose||' - ', m.frequency||' - ', m.route||' - ',
- m.is_active ? '✓ Active' : '✗ Stopped',
+ m.is_active ? '? Active' : '? Stopped',
  ])}/>
  </Sec>
  <Sec title="Audit Trail" icon={Shield} color="#374151" collapsible>
@@ -230,7 +230,7 @@ function PatientSummaryBody({data}) {
  <Tbl headers={['Timestamp','Action','Role','Success']}
  rows={(data.audit_trail?.actions||[]).slice(0,15).map(a=>[
  fmt(a.timestamp), a.action, a.user_role,
- a.success ? '✓' : '✗',
+ a.success ? '?' : '?',
  ])}/>
  </Sec>
  </div>
@@ -253,7 +253,7 @@ function MdtHandoverBody({data}) {
  <span className="text-[11px] text-slate-500">{p.diagnosis}</span>
  </div>
  {p.recent_alerts.map((a,i)=>(
- <p key={i} className="text-xs text-red-700">⚠ {a.severity.toUpperCase()} - {a.message}</p>
+ <p key={i} className="text-xs text-red-700">? {a.severity.toUpperCase()} - {a.message}</p>
  ))}
  {p.outstanding?.esas_overdue&&<p className="text-xs text-amber-700 mt-0.5">ESAS overdue ({p.last_esas_days!=null?`${p.last_esas_days}d ago`:'never done'})</p>}
  {p.assigned_caregivers?.length>0&&<p className="text-[11px] text-[var(--text-500)] mt-0.5">Assigned: {p.assigned_caregivers.join(', ')}</p>}
@@ -268,7 +268,7 @@ function MdtHandoverBody({data}) {
  p.risk_level || ' - ',
  p.last_esas_days!=null ? `${p.last_esas_days}d ago` : 'Never',
  p.last_vitals_hours!=null ? `${p.last_vitals_hours}h ago` : 'Never',
- p.recent_alerts.length > 0 ? `⚠ ${p.recent_alerts.length}` : ' - ',
+ p.recent_alerts.length > 0 ? `? ${p.recent_alerts.length}` : ' - ',
  p.appointments_today || ' - ',
  p.assigned_caregivers?.join(', ') || ' - ',
  ])}
@@ -380,7 +380,7 @@ function AssessmentCompletionBody({data}) {
  rows={(data.patients||[]).map(p=>{const a=p.assessments||{};
  const d=(item)=>{if(!item||item.days_since==null)return 'Never';return `${item.days_since}d ${item.overdue?'(!)':''}`;};
  return[p.patient_name, p.risk_level||' - ', d(a.esas), d(a.pps), d(a.phq9), d(a.gad7),
- p.overdue_count>0 ? p.overdue.join(', ') : '✓ Up to date',
+ p.overdue_count>0 ? p.overdue.join(', ') : '? Up to date',
  ];
  })}/>
  </Sec>
@@ -398,7 +398,7 @@ function BereavementBody({data}) {
  {atRisk.map(f=>(
  <div key={f.family_user_id} className="mb-2.5 p-3 rounded-xl border border-rose-200 bg-rose-50">
  <p className="font-bold text-sm text-slate-800">{f.family_name} <span className="text-[var(--text-500)] font-normal">({f.relationship})</span></p>
- <p className="text-xs text-slate-600">Patient: {f.patient_name} · Status: {f.patient_status}</p>
+ <p className="text-xs text-slate-600">Patient: {f.patient_name} � Status: {f.patient_status}</p>
  {f.phq9_score!=null&&<p className="text-xs text-amber-700">PHQ-9: {f.phq9_score} - {f.phq9_severity}</p>}
  {f.gad7_score!=null&&<p className="text-xs text-purple-700">GAD-7: {f.gad7_score} - {f.gad7_severity}</p>}
  {f.bereavement_entries===0&&<p className="text-xs text-red-600">No bereavement support engagement recorded</p>}
@@ -413,7 +413,7 @@ function BereavementBody({data}) {
  f.phq9_score!=null ? `${f.phq9_score} (${f.phq9_severity||' - '})` : ' - ',
  f.gad7_score!=null ? `${f.gad7_score} (${f.gad7_severity||' - '})` : ' - ',
  `${f.bereavement_entries} entries`,
- f.at_risk ? '⚠ Yes - Follow up needed' : '✓ OK',
+ f.at_risk ? '? Yes - Follow up needed' : '? OK',
  ])}/>
  </Sec>
  </div>
@@ -424,7 +424,7 @@ function GenericBody({data}) {
  return <pre className="text-xs overflow-auto bg-[var(--card-bg)] rounded-xl p-4 max-h-96">{JSON.stringify(data,null,2)}</pre>;
 }
 
-/* ── Additional body renderers for all 12 report types ───────── */
+/* -- Additional body renderers for all 12 report types --------- */
 function MedicationAdherenceBody({data}) {
  const s = data.summary || {};
  const statusColor = s.adherence_status === 'good' ? '#059669'
@@ -438,7 +438,7 @@ function MedicationAdherenceBody({data}) {
  {s.overall_adherence_pct != null ? s.overall_adherence_pct + '%' : 'No data'}
  </p>
  <p className="text-xs text-[var(--text-600)] mt-1">
- {s.adherence_status === 'good' && '≥80% - Meeting clinical threshold (NHS Medicines Management)'}
+ {s.adherence_status === 'good' && '=80% - Meeting clinical threshold (NHS Medicines Management)'}
  {s.adherence_status === 'warning' && '60-79% - Below threshold. Review with prescriber.'}
  {s.adherence_status === 'critical'&& '<60% - Critical. Immediate clinical review required.'}
  {s.adherence_status === 'no_data' && 'No adherence logs found for this period.'}
@@ -464,7 +464,7 @@ function MedicationAdherenceBody({data}) {
  rows={(data.medications||[]).map(m=>[
  m.name, m.dose||' - ', m.frequency||' - ', m.taken, m.missed,
  m.adherence_pct != null ? m.adherence_pct+'%' : 'No data',
- m.status==='good'?'✓ Good':m.status==='warning'?'⚠ Low':m.status==='critical'?'✗ Critical':' - ',
+ m.status==='good'?'? Good':m.status==='warning'?'? Low':m.status==='critical'?'? Critical':' - ',
  ])}/>
  </Sec>
  </div>
@@ -505,7 +505,7 @@ function CarePlanProgressBody({data}) {
  <Sec title="Overdue Goals" icon={AlertTriangle} color="#dc2626">
  <Tbl headers={['Goal','Category','Priority','Progress','Target Date']}
  rows={(data.overdue_goals||[]).map(g=>[
- g.title.length>45?g.title.substring(0,45)+'…':g.title,
+ g.title.length>45?g.title.substring(0,45)+'�':g.title,
  g.category, g.priority, `${g.progress}%`, fmtD(g.target_date),
  ])}/>
  </Sec>
@@ -513,7 +513,7 @@ function CarePlanProgressBody({data}) {
  <Sec title="All Goals" icon={FileText} color="#374151" collapsible>
  <Tbl headers={['Goal','Category','Status','Progress','Checklist','Source']}
  rows={(data.goals||[]).map(g=>[
- g.title.length>40?g.title.substring(0,40)+'…':g.title,
+ g.title.length>40?g.title.substring(0,40)+'�':g.title,
  g.category||' - ', g.status, `${g.progress}%`,
  g.checklist.total>0?`${g.checklist.completed}/${g.checklist.total}`:' - ',
  g.ai_suggested?'AI':'Manual',
@@ -551,7 +551,7 @@ function AuditTrailBody({data}) {
  rows={(data.entries||[]).slice(0,80).map(e=>[
  fmt(e.timestamp),e.user_name||' - ',e.user_role||' - ',e.action,
  e.resource_type||' - ',e.patient_id?'#'+e.patient_id:' - ',
- e.severity,e.success?'✓':'✗',
+ e.severity,e.success?'?':'?',
  ])}/>
  </Sec>
  </div>
@@ -568,7 +568,7 @@ function IncidentsBody({data}) {
  rows={(data.incidents||[]).map(i=>[
  fmt(i.created_at),i.patient_name||' - ',i.alert_type||' - ',i.severity,
  i.response_time_mins!=null?i.response_time_mins.toFixed(1)+'m':'Pending',
- i.is_acknowledged?'✓':'✗',i.overdue?'⚠ Yes':'No',
+ i.is_acknowledged?'?':'?',i.overdue?'? Yes':'No',
  ])}/>
  </Sec>
  </div>
@@ -585,7 +585,7 @@ function CaregiverBody({data}) {
  </div>
  <div>
  <p className="font-bold text-slate-800">{cgv.name||'Unknown'}</p>
- <p className="text-xs text-[var(--text-500)] capitalize">{cgv.role} · @{cgv.username}</p>
+ <p className="text-xs text-[var(--text-500)] capitalize">{cgv.role} � @{cgv.username}</p>
  </div>
  </div>
  <KpiGrid items={[{label:'Patients Assigned',value:s.assigned_patients},{label:'Total Actions',value:s.total_actions},{label:'Active Mins',value:s.total_active_mins},{label:'Vitals Logged',value:s.vitals_logged,color:'#0891b2'}]}/>
@@ -599,7 +599,7 @@ function CaregiverBody({data}) {
  );
 }
 
-/* ── Report Viewer ───────────────────────────────────────────── */
+/* -- Report Viewer --------------------------------------------- */
 function ReportViewer({data,onClose}) {
  const meta = REPORT_META[data.report_type] || {};
  const Icon = meta.icon || FileText;
@@ -674,18 +674,18 @@ function ReportViewer({data,onClose}) {
  <div class="rpt-hdr">
  <div class="rpt-hdr-left">
  <h1>${data.report_title}</h1>
- <div class="rpt-hdr-meta">Generated: ${fmt(data.generated_at)} · By: ${genBy} (${data.generated_by?.role || ''})</div>
+ <div class="rpt-hdr-meta">Generated: ${fmt(data.generated_at)} � By: ${genBy} (${data.generated_by?.role || ''})</div>
  ${data.period ? `<div class="rpt-hdr-meta">Period: ${fmtD(data.period.from)} - ${fmtD(data.period.to)}</div>` : ''}
  ${data.standard ? `<div style="font-size:9px;color:#94a3b8;margin-top:4px;">Standards: ${data.standard}</div>` : ''}
  </div>
  <div class="rpt-hdr-right">
- <div class="brand">Project Aura</div>
+ <div class="brand">Aura Care</div>
  <div style="font-size:10px;color:#64748b;">Palliative Care Platform</div>
  </div>
  </div>
  ${data.confidentiality ? `<div class="confidentiality">${data.confidentiality}</div>` : ''}
  ${previewEl.innerHTML}
- <div class="footer">Project Aura · Printed ${new Date().toLocaleString('en-GB')} · ${data.confidentiality || 'CLINICAL IN CONFIDENCE'}</div>
+ <div class="footer">Aura Care � Printed ${new Date().toLocaleString('en-GB')} � ${data.confidentiality || 'CLINICAL IN CONFIDENCE'}</div>
  </body></html>`;
 
  const doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -731,7 +731,7 @@ function ReportViewer({data,onClose}) {
  </div>
  <div>
  <p className="font-bold text-[var(--text-900)] text-sm leading-tight">{data.report_title}</p>
- <p className="text-xs text-[var(--text-500)] mt-0.5">Generated {fmt(data.generated_at)} · {genBy} ({data.generated_by?.role})</p>
+ <p className="text-xs text-[var(--text-500)] mt-0.5">Generated {fmt(data.generated_at)} � {genBy} ({data.generated_by?.role})</p>
  {data.period&&<p className="text-xs text-slate-400">{fmtD(data.period.from)} - {fmtD(data.period.to)}</p>}
  </div>
  </div>
@@ -742,7 +742,7 @@ function ReportViewer({data,onClose}) {
  </button>
  <button onClick={onClose}
  className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] hover:bg-[var(--card-bg)] text-[var(--text-500)] text-lg">
- ✕
+ ?
  </button>
  </div>
  </div>
@@ -763,7 +763,7 @@ function ReportViewer({data,onClose}) {
  );
 }
 
-/* ── Report Card ──────────────────────────────────────────────── */
+/* -- Report Card ------------------------------------------------ */
 function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  const meta=REPORT_META[report.id]||{};
  const Icon=meta.icon||FileText;
@@ -795,7 +795,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  <button onClick={()=>onGenerate(report.id)} disabled={generating===report.id||blocked}
  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-bold text-xs text-white transition-all disabled:opacity-50 active:scale-95"
  style={{backgroundColor:color}}>
- {generating===report.id?<><Loader2 size={12} className="animate-spin"/> Generating…</>:<><FileText size={12}/> Generate</>}
+ {generating===report.id?<><Loader2 size={12} className="animate-spin"/> Generating�</>:<><FileText size={12}/> Generate</>}
  </button>
  <button onClick={()=>setExpanded(!expanded)}
  className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] hover:bg-[var(--card-bg)] dark:hover:bg-slate-700 transition">
@@ -824,7 +824,7 @@ function ReportCard({report,onGenerate,generating,patientId,caregiverId}) {
  );
 }
 
-/* ── Main Reports Page ────────────────────────────────────────── */
+/* -- Main Reports Page ------------------------------------------ */
 export default function Reports() {
  const {user}=useAuth();
  const navigate=useNavigate();
@@ -901,11 +901,11 @@ export default function Reports() {
  return (
  <div className="min-h-screen pb-12">
  <PageHeader image="/resources/african/african-health-tech.jpg" title="Clinical Reports"
- subtitle="Secure, audited report generation · 12 report types · HIPAA §164.312(b) compliant" icon={FileText}/>
+ subtitle="Secure, audited report generation � 12 report types � HIPAA �164.312(b) compliant" icon={FileText}/>
 
  <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
- {/* ── Tab navigation ── */}
+ {/* -- Tab navigation -- */}
  <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-1.5 flex gap-1">
  {TABS.map(tab=>{
  const Icon=tab.icon;
@@ -921,7 +921,7 @@ export default function Reports() {
  })}
  </div>
 
- {/* ── Parameters panel (only when tab has reports needing selection) ── */}
+ {/* -- Parameters panel (only when tab has reports needing selection) -- */}
  {showParams&&(
  <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] p-5">
  <h2 className="text-xs font-bold text-[var(--text-500)] mb-4 flex items-center gap-2">
@@ -948,7 +948,7 @@ export default function Reports() {
  onChange={v => setMinSeverity(v || 'high')}
  allowClear={false}
  options={['low','moderate','high','critical'].map(s => ({ value: s, label: s.charAt(0).toUpperCase()+s.slice(1) }))}
- placeholder="Severity…"
+ placeholder="Severity�"
  />
  </div>
  <button onClick={()=>{setPatientId(null);setUserId(null);setCaregiverId(null);setDateFrom('');setDateTo('');}}
@@ -967,13 +967,13 @@ export default function Reports() {
  </div>
  )}
 
- {/* ── Tab description ── */}
+ {/* -- Tab description -- */}
  <div className="flex items-center gap-2">
  {TABS.find(t=>t.id===activeTab)&&(()=>{const t=TABS.find(t=>t.id===activeTab);const Icon=t.icon;return(<><Icon size={14} className="text-slate-400"/><p className="text-sm text-slate-500">{t.desc}</p></>);})()}
  <span className="ml-auto text-xs text-slate-400">{tabReports.length} report{tabReports.length!==1?'s':''}</span>
  </div>
 
- {/* ── Report cards grid ── */}
+ {/* -- Report cards grid -- */}
  {typesLoading?(
  <div className="flex items-center justify-center py-16"><Loader2 size={32} className="animate-spin text-teal-500"/></div>
  ):(
@@ -991,17 +991,17 @@ export default function Reports() {
  </div>
  )}
 
- {/* ── Security notice ── */}
+ {/* -- Security notice -- */}
  <div className="flex items-start gap-3 px-5 py-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl">
  <Lock size={14} className="text-amber-600 flex-shrink-0 mt-0.5"/>
  <div>
  <p className="text-xs font-bold text-amber-800 dark:text-amber-300">Security Notice</p>
- <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">All report generations are logged to the system audit trail. Reports contain identifiable clinical data - handle per HIPAA §164.312(b), GDPR Art.30, and your organisation's data governance policy.</p>
+ <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">All report generations are logged to the system audit trail. Reports contain identifiable clinical data - handle per HIPAA �164.312(b), GDPR Art.30, and your organisation's data governance policy.</p>
  </div>
  </div>
  </div>
 
- {/* ── Report viewer ── */}
+ {/* -- Report viewer -- */}
  <AnimatePresence>
  {showViewer&&reportData&&(
  <ReportViewer data={reportData} onClose={()=>setShowViewer(false)}/>

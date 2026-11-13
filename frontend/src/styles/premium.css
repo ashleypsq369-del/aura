@@ -1,5 +1,5 @@
-﻿/*
- * premium.css - Project Aura Design Upgrade
+/*
+ * premium.css - Aura Care Design Upgrade
  * ============================================
  * Adds texture, depth, elevation hierarchy, and visual character.
  * Techniques: noise grain, multi-layer shadows, colored borders,
@@ -8,7 +8,7 @@
  * Inspired by: Linear, Vercel, Stripe, Raycast, Notion
  */
 
-/* ── 1. NOISE / GRAIN TEXTURE ────────────────────────────────────────────────
+/* -- 1. NOISE / GRAIN TEXTURE ------------------------------------------------
    A subtle SVG noise overlay gives surfaces physical texture.
    Inspired by: Linear app, Stripe dashboard.
    Applied via .grain class on containers, or globally on body.            */
@@ -38,7 +38,7 @@
 }
 
 
-/* ── 2. ELEVATED CARD SYSTEM ─────────────────────────────────────────────────
+/* -- 2. ELEVATED CARD SYSTEM -------------------------------------------------
    Three elevation levels with distinct shadow profiles.
    Real product design uses colored shadows that match the surface.        */
 
@@ -98,14 +98,14 @@ html.dark .elevation-3 {
 }
 
 
-/* ── 3. AMBIENT BACKGROUND - removed, using standard flat bg ── */
+/* -- 3. AMBIENT BACKGROUND - removed, using standard flat bg -- */
 .ambient-bg { background: #f4f6f8; }
 .ambient-bg-clinical { background: #f4f6f8; }
 html.dark .ambient-bg { background: #0f172a; }
 html.dark .ambient-bg-clinical { background: #0f172a; }
 
 
-/* ── 4. SHARP CARD BORDERS ───────────────────────────────────────────────────
+/* -- 4. SHARP CARD BORDERS ---------------------------------------------------
    Instead of uniform slate-200 borders everywhere, use left-accent borders
    on data cards. The left colored stripe communicates hierarchy and status. */
 
@@ -123,7 +123,7 @@ html.dark .ambient-bg-clinical { background: #0f172a; }
 .card-top-violet { border-top: 3px solid #7c3aed !important; }
 
 
-/* ── 5. PREMIUM BUTTON STYLES ────────────────────────────────────────────────
+/* -- 5. PREMIUM BUTTON STYLES ------------------------------------------------
    Buttons should feel tactile - slight inner shadow top edge (bevel),
    subtle gradient, and crisp shadow on hover.                             */
 
@@ -176,7 +176,7 @@ html.dark .btn-premium-ghost:hover {
 }
 
 
-/* ── 6. PREMIUM TYPOGRAPHY ───────────────────────────────────────────────────
+/* -- 6. PREMIUM TYPOGRAPHY ---------------------------------------------------
    Use the DM Serif Display font boldly for page titles.
    Add letter-spacing and weight variation for visual interest.            */
 
@@ -240,7 +240,7 @@ html.dark .meta-label {
 }
 
 
-/* ── 7. GLASSMORPHISM CARDS ──────────────────────────────────────────────────
+/* -- 7. GLASSMORPHISM CARDS --------------------------------------------------
    Use sparingly on top-of-hierarchy elements (modals, drawers, overlays).
    Requires a colorful background behind - place these over gradients.     */
 
@@ -281,7 +281,7 @@ html.dark .glass-strong {
 }
 
 
-/* ── 8. INNER HIGHLIGHT LINE ─────────────────────────────────────────────────
+/* -- 8. INNER HIGHLIGHT LINE -------------------------------------------------
    A 1px top edge highlight makes cards look like they have physical depth.
    Stolen from Raycast and Linear's card designs.                          */
 
@@ -300,7 +300,7 @@ html.dark .card-highlight {
 }
 
 
-/* ── 9. STATUS BADGE SYSTEM ──────────────────────────────────────────────────
+/* -- 9. STATUS BADGE SYSTEM --------------------------------------------------
    Consistent colored badge tokens used across the app.                    */
 
 .badge-critical {
@@ -337,7 +337,7 @@ html.dark .badge-low      { background: rgba(22,163,74,0.15); border-color: rgba
 html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba(37,99,235,0.3); color: #60a5fa; }
 
 
-/* ── 10. CHIP STYLE ──────────────────────────────────────────────────────────
+/* -- 10. CHIP STYLE ----------------------------------------------------------
    Alternative to badges - rounder, for categories and filters.            */
 
 .chip-teal    { background: #f0fdf4; color: #0f766e; border: 1px solid #99f6e4; }
@@ -350,7 +350,7 @@ html.dark .badge-info     { background: rgba(37,99,235,0.15); border-color: rgba
 .chip-pink    { background: #fdf2f8; color: #9d174d; border: 1px solid #f9a8d4; }
 
 
-/* ── 11. PAGE TINTS - same standard bg for all routes ── */
+/* -- 11. PAGE TINTS - same standard bg for all routes -- */
 .page-tint-dashboard,
 .page-tint-patients,
 .page-tint-alerts,
@@ -370,7 +370,7 @@ html.dark .page-tint-journey,
 html.dark .page-tint-patient { background: #0a0a0a !important; }
 
 
-/* ── 12. DIVIDER WITH CHARACTER ──────────────────────────────────────────────
+/* -- 12. DIVIDER WITH CHARACTER ----------------------------------------------
    Instead of plain <hr>, use gradient dividers.                           */
 
 .divider {
@@ -389,7 +389,7 @@ html.dark .divider {
 }
 
 
-/* ── 13. GRADIENT TEXT ───────────────────────────────────────────────────────
+/* -- 13. GRADIENT TEXT -------------------------------------------------------
    For hero numbers, page counts, key metrics.                             */
 
 .text-gradient-teal {
@@ -414,7 +414,7 @@ html.dark .divider {
 }
 
 
-/* ── 14. ANIMATED BORDER GRADIENT ────────────────────────────────────────────
+/* -- 14. ANIMATED BORDER GRADIENT --------------------------------------------
    For key focus elements - active patient card, selected item, etc.       */
 
 @keyframes border-spin {
@@ -437,7 +437,7 @@ html.dark .divider {
 }
 
 
-/* ── 15. CARD HOVER LIFT SYSTEM ──────────────────────────────────────────────
+/* -- 15. CARD HOVER LIFT SYSTEM ----------------------------------------------
    Different lift amounts for different card types.                         */
 
 .hover-lift-sm:hover {
@@ -459,7 +459,7 @@ html.dark .divider {
 }
 
 
-/* ── 16. SCROLLBAR PREMIUM STYLING ──────────────────────────────────────────
+/* -- 16. SCROLLBAR PREMIUM STYLING ------------------------------------------
    Thin, nearly invisible scrollbar that appears on hover.                 */
 
 .scroll-premium {
@@ -486,7 +486,7 @@ html.dark .scroll-premium:hover {
 }
 
 
-/* ── 17. INPUT PREMIUM ───────────────────────────────────────────────────────
+/* -- 17. INPUT PREMIUM -------------------------------------------------------
    Inputs with subtle inner shadow and smooth transitions.                 */
 
 .input-premium {
@@ -519,7 +519,7 @@ html.dark .input-premium:focus {
 html.dark .input-premium::placeholder { color: #475569; }
 
 
-/* ── 18. PREMIUM TABLE ───────────────────────────────────────────────────────
+/* -- 18. PREMIUM TABLE -------------------------------------------------------
    Clean, crisp tables with proper density and hover states.               */
 
 .table-premium {
@@ -553,7 +553,7 @@ html.dark .table-premium tbody tr { border-bottom-color: #1e293b; }
 html.dark .table-premium tbody tr:hover { background: #1e293b; }
 
 
-/* ── 19. HEADER GRADIENT SYSTEM ─────────────────────────────────────────────
+/* -- 19. HEADER GRADIENT SYSTEM ---------------------------------------------
    The teal header gradient is the app's primary visual signature.
    Enhance it with more depth and subtle texture.                          */
 
@@ -580,7 +580,7 @@ html.dark .table-premium tbody tr:hover { background: #1e293b; }
 }
 
 
-/* ── 20. ANIMATION UTILITIES ─────────────────────────────────────────────────
+/* -- 20. ANIMATION UTILITIES -------------------------------------------------
    Subtle entrance animations for page elements.                            */
 
 @keyframes fade-up {

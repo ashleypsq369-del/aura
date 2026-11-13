@@ -1126,7 +1126,7 @@ def call_anthropic_api(messages: list, system_prompt: str) -> str:
         return None
 
 
-SYSTEM_PROMPT = """You are Aura Assistant, a compassionate AI support tool for Project Aura, a palliative care platform in Ghana.
+SYSTEM_PROMPT = """You are Aura Assistant, a compassionate AI support tool for Aura Care, a palliative care platform in Ghana.
 
 Your role:
 - Help caregivers and families understand care information

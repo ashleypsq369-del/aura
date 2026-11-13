@@ -1,7 +1,7 @@
 /**
  * OrganisationOnboarding.jsx
  * ==========================
- * Public-facing page for institutions to request to join Project Aura.
+ * Public-facing page for institutions to request to join Aura Care.
  * Route: /join  (no auth required)
  *
  * Form submits to POST /api/organisations/request
@@ -147,10 +147,10 @@ export default function OrganisationOnboarding() {
       {/* Header */}
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <img src="/logo.png" alt="Project Aura" className="w-9 h-9 rounded-xl object-contain" />
-          <span className="font-bold text-slate-800 text-lg">Project Aura</span>
+          <img src="/logo.png" alt="Aura Care" className="w-9 h-9 rounded-xl object-contain" />
+          <span className="font-bold text-slate-800 text-lg">Aura Care</span>
         </div>
-        <h1 className="text-2xl font-black text-slate-900 mb-1">Join Project Aura</h1>
+        <h1 className="text-2xl font-black text-slate-900 mb-1">Join Aura Care</h1>
         <p className="text-sm text-slate-600">Register your organisation and bring your team on board</p>
       </div>
 
@@ -284,7 +284,7 @@ export default function OrganisationOnboarding() {
                 ))}
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                By submitting, you confirm you are authorised to register this organisation on Project Aura. Our team will review and contact you within 2-3 working days. No payment is required at this stage.
+                By submitting, you confirm you are authorised to register this organisation on Aura Care. Our team will review and contact you within 2-3 working days. No payment is required at this stage.
               </p>
             </motion.div>
           )}

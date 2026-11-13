@@ -1,5 +1,5 @@
 """
-Create Test Messages  --  Project Aura
+Create Test Messages  --  Aura Care
 Creates sample conversations and messages between various users for testing
 """
 
@@ -430,6 +430,6 @@ def create_test_messages():
 
 if __name__ == "__main__":
     print("="*60)
-    print("🧪 Creating Test Messages for Project Aura")
+    print("🧪 Creating Test Messages for Aura Care")
     print("="*60)
     create_test_messages()

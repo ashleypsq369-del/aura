@@ -1,5 +1,5 @@
 """
-Notifications Router - Project Aura
+Notifications Router - Aura Care
 Handles routine notifications (medications, appointments, messages, etc.)
 Different from Alerts (medical emergencies)
 """

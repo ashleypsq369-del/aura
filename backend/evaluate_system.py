@@ -1,7 +1,7 @@
 """
 evaluate_system.py
 ==================
-Full system evaluation for Project Aura.
+Full system evaluation for Aura Care.
 Tests: ML models, metrics, SHAP, live API endpoints, database health,
        advanced ML (P6-P11), LLM status, and data integrity.
 

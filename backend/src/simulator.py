@@ -1,5 +1,5 @@
 """
-Scenario Simulator for Project Aura
+Scenario Simulator for Aura Care
 Generates synthetic patient data and simulates patient journeys
 """
 
@@ -486,7 +486,7 @@ def generate_simulation_report(journey_logs: List[Dict[str, Any]],
     """
     report = []
     report.append("=" * 80)
-    report.append("PROJECT AURA - SIMULATION REPORT")
+    report.append("Aura Care - SIMULATION REPORT")
     report.append("=" * 80)
     report.append(f"Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}")
     report.append("")

@@ -1,5 +1,5 @@
-﻿﻿/**
- * Register.jsx - Project Aura
+﻿/**
+ * Register.jsx - Aura Care
  * Healthcare-standard signup form (NHS / MyChart / Epic conventions):
  * • One card, two steps, plenty of breathing room
  * • Inline errors on blur; live re-check while typing once touched
@@ -447,11 +447,11 @@ export default function Register() {
  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5">
  <div className="flex items-center gap-3 mb-4">
  <div className="w-11 h-11 bg-slate-50 rounded-xl flex items-center justify-center shadow overflow-hidden flex-shrink-0">
- <img src="/logo.png" alt="Project Aura" className="w-10 h-10 object-contain" />
+ <img src="/logo.png" alt="Aura Care" className="w-10 h-10 object-contain" />
  </div>
  <div>
  <h1 className="text-white font-bold text-lg leading-none">Create your account</h1>
- <p className="text-teal-100 text-xs mt-0.5">Project Aura · Palliative Care Platform</p>
+ <p className="text-teal-100 text-xs mt-0.5">Aura Care · Palliative Care Platform</p>
  </div>
  </div>
 
@@ -767,7 +767,7 @@ export default function Register() {
  </div>
 
  <p className="text-center text-[11px] text-white/60 lg:text-[var(--text-400)] mt-3 drop-shadow-sm select-none">
- © {new Date().getFullYear()} Project Aura · Group 31 · All rights reserved
+ © {new Date().getFullYear()} Aura Care · Group 31 · All rights reserved
  </p>
  </motion.div>
  </div>

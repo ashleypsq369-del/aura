@@ -1,5 +1,5 @@
 """
-Legacy & Heir Management Router  --  Project Aura
+Legacy & Heir Management Router  --  Aura Care
 Digital legacy planning, heir designation, and posthumous content delivery.
 
 LEGAL COMPLIANCE:

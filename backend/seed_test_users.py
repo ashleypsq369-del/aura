@@ -45,7 +45,7 @@ def rdate(days_ago_min=0, days_ago_max=60):
 def main():
     db = get_session()
     print("=" * 60)
-    print("PROJECT AURA -- Test User Seeder")
+    print("Aura Care -- Test User Seeder")
     print("=" * 60)
 
     # -- Helpers ---------------------------------------------------------------
@@ -367,7 +367,7 @@ def main():
             db.add(NotificationQueue(
                 recipient_id=user.id,
                 notification_type="system",
-                title="Welcome to Project Aura",
+                title="Welcome to Aura Care",
                 body="Your account is ready. All patient data and ML risk assessments are live.",
                 is_read=False,
             ))

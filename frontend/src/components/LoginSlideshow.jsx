@@ -36,7 +36,7 @@ const SLIDES = [
  icon: Heart,
  tag: 'Palliative Support',
  title: 'Personalised Palliative Journeys',
- body: "Every care journey is unique. Project Aura builds a care plan tailored to each patient's condition, culture, and values.",
+ body: "Every care journey is unique. Aura Care builds a care plan tailored to each patient's condition, culture, and values.",
  color: 'from-slate-950/85 via-slate-700/55 to-transparent',
  },
  {
@@ -143,10 +143,10 @@ export default function LoginSlideshow() {
  <div className="absolute top-0 left-0 right-0 p-6 z-20">
  <div className="flex items-center gap-3">
  <div className="w-9 h-9 bg-[var(--card-bg)] rounded-xl flex items-center justify-center border border-white/25 overflow-hidden">
- <img src="/logo.png" alt="Project Aura" className="w-8 h-8 object-contain" />
+ <img src="/logo.png" alt="Aura Care" className="w-8 h-8 object-contain" />
  </div>
  <div>
- <p className="font-bold text-white text-sm tracking-wide leading-none">Project Aura</p>
+ <p className="font-bold text-white text-sm tracking-wide leading-none">Aura Care</p>
  <p className="text-white/55 text-[11px] mt-0.5">Palliative Care · Ghana</p>
  </div>
  </div>

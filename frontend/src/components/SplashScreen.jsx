@@ -1,6 +1,6 @@
 /**
- * SplashScreen.jsx - Project Aura intro animation
- * Fetches project-aura-splash.html and injects it directly into the DOM
+ * SplashScreen.jsx - Aura Care intro animation
+ * Fetches aura-care-splash.html and injects it directly into the DOM
  * using dangerouslySetInnerHTML - no iframe, no CSP/X-Frame-Options issues.
  * Plays a soothing ambient chord via Web Audio API.
  * Shows once per browser session (sessionStorage flag).
@@ -77,7 +77,7 @@ export default function SplashScreen({ onDone }) {
 
  useEffect(() => {
  // Fetch and inject the HTML
- fetch('/project-aura-splash.html')
+ fetch('/aura-care-splash.html')
  .then(r => r.text())
  .then(html => {
  // Extract just the <body> content and <style> tags
@@ -153,7 +153,7 @@ export default function SplashScreen({ onDone }) {
  alignItems: 'center', justifyContent: 'center',
  gap: 24, background: '#fefdf8',
  }}>
- <img src="/logo.png" alt="Project Aura"
+ <img src="/logo.png" alt="Aura Care"
  style={{ width: 140, height: 140, objectFit: 'contain',
  animation: 'spin 1.2s ease-in-out' }} />
  <p style={{ fontFamily: 'Georgia,serif', fontSize: 28, fontWeight: 700,

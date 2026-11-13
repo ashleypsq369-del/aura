@@ -299,7 +299,7 @@ export default function Settings() {
  </div>
  <div className="flex-1">
  <p className="text-sm font-medium text-teal-700">Install App</p>
- <p className="text-xs text-[var(--text-500)]">Add Project Aura to your home screen for offline use</p>
+ <p className="text-xs text-[var(--text-500)]">Add Aura Care to your home screen for offline use</p>
  </div>
  <ChevronRight size={16} className="text-[var(--text-400)]" />
  </button>

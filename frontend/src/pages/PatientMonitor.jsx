@@ -1,8 +1,8 @@
-﻿/**
- * PatientMonitor - redesigned to match Project Aura design system
+/**
+ * PatientMonitor - redesigned to match Aura Care design system
  * Route: /patient/:id (legacy deep-link, separate from /patients/:patientId)
- * Teal palette · no old .card / text-charcoal / text-muted CSS classes
- * Tabs: Vitals · Symptoms · Medications · Appointments · Care Plan
+ * Teal palette � no old .card / text-charcoal / text-muted CSS classes
+ * Tabs: Vitals � Symptoms � Medications � Appointments � Care Plan
  */
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -25,7 +25,7 @@ import {
  Plus, X, Loader2,
 } from 'lucide-react';
 
-/* ─── Vital status helpers ───────────────────────────────────────────────── */
+/* --- Vital status helpers ------------------------------------------------- */
 const getStatus = (v, min, max) => {
  if (v == null) return 'unknown';
  if (v < min || v > max) return 'critical';
@@ -40,7 +40,7 @@ const STATUS_STYLE = {
  unknown: { bg: '#f8fafc', border: '#e2e8f0', text: '#64748b', badge: ' - ' },
 };
 
-/* ─── VitalCard ─────────────────────────────────────────────────────────── */
+/* --- VitalCard ----------------------------------------------------------- */
 function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
  const s = STATUS_STYLE[status] || STATUS_STYLE.unknown;
  return (
@@ -71,7 +71,7 @@ function VitalCard({ icon: Icon, label, value, unit, status, normalRange }) {
  );
 }
 
-/* ─── Section card wrapper ───────────────────────────────────────────────── */
+/* --- Section card wrapper ------------------------------------------------- */
 function Section({ title, children }) {
  return (
  <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden">
@@ -86,7 +86,7 @@ function Section({ title, children }) {
  );
 }
 
-/* ─── Symptom badge ──────────────────────────────────────────────────────── */
+/* --- Symptom badge -------------------------------------------------------- */
 function SymBadge({ label, color = '#0d9488' }) {
  return (
  <span className="px-2 py-0.5 rounded-lg text-[11px] font-semibold"
@@ -96,7 +96,7 @@ function SymBadge({ label, color = '#0d9488' }) {
  );
 }
 
-/* ─── Main Component ─────────────────────────────────────────────────────── */
+/* --- Main Component ------------------------------------------------------- */
 export default function PatientMonitor() {
  const { id } = useParams();
  const navigate = useNavigate();
@@ -149,7 +149,7 @@ export default function PatientMonitor() {
  time: new Date(v.recorded_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
  'Heart Rate': Math.round(v.heart_rate ?? 0),
  'BP Systolic': Math.round(v.blood_pressure_sys ?? v.blood_pressure_systolic ?? 0),
- 'O₂ Sat': parseFloat((v.oxygen_saturation ?? 0).toFixed(1)),
+ 'O2 Sat': parseFloat((v.oxygen_saturation ?? 0).toFixed(1)),
  'Temp': parseFloat((v.temperature ?? 0).toFixed(1)),
  }));
 
@@ -167,7 +167,7 @@ export default function PatientMonitor() {
  return (
  <div className="min-h-screen pb-10 space-y-5" style={{ background: '#c2dde8' }}>
 
- {/* ── Header ── */}
+ {/* -- Header -- */}
  <div className="relative overflow-hidden rounded-b-2xl"
  style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 100%)' }}>
  <div className="absolute inset-0 opacity-10"
@@ -184,10 +184,10 @@ export default function PatientMonitor() {
  </div>
  <div>
  <h1 className="text-white font-bold text-lg leading-tight">
- {patient?.full_name || 'Loading…'}
+ {patient?.full_name || 'Loading�'}
  </h1>
  <p className="text-white/70 text-xs">
- {patient?.patient_code} · {patient?.age}y · {patient?.gender}
+ {patient?.patient_code} � {patient?.age}y � {patient?.gender}
  </p>
  </div>
  </div>
@@ -214,15 +214,15 @@ export default function PatientMonitor() {
  )}
  </div>
 
- {/* ── Vitals stat strip - Services DNA inside header ── */}
+ {/* -- Vitals stat strip - Services DNA inside header -- */}
  {latest && (
  <div className="mt-4 flex flex-wrap items-stretch gap-0 overflow-hidden rounded-xl"
  style={{ background:'rgba(0,0,0,0.32)', backdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.14)', display:'inline-flex' }}>
  {[
  { label:'Heart Rate', value:`${Math.round(latest.heart_rate??0)} bpm`, icon:Heart, status:getStatus(latest.heart_rate,60,100) },
  { label:'Blood Pressure', value:`${Math.round(latest.blood_pressure_sys??0)}/${Math.round(latest.blood_pressure_dia??0)}`, icon:Activity, status:getStatus(latest.blood_pressure_sys,90,140) },
- { label:'O₂ Sat', value:`${parseFloat((latest.oxygen_saturation??0).toFixed(1))}%`, icon:Droplets, status:getStatus(latest.oxygen_saturation,95,100) },
- { label:'Temp', value:`${parseFloat((latest.temperature??0).toFixed(1))}°C`, icon:Thermometer, status:getStatus(latest.temperature,36.5,37.5) },
+ { label:'O2 Sat', value:`${parseFloat((latest.oxygen_saturation??0).toFixed(1))}%`, icon:Droplets, status:getStatus(latest.oxygen_saturation,95,100) },
+ { label:'Temp', value:`${parseFloat((latest.temperature??0).toFixed(1))}�C`, icon:Thermometer, status:getStatus(latest.temperature,36.5,37.5) },
  ].map((v, i) => {
  const statusColor = v.status==='critical' ? '#f87171' : v.status==='warning' ? '#fbbf24' : '#4ade80';
  return (
@@ -247,7 +247,7 @@ export default function PatientMonitor() {
  </div>
  </div>
 
- {/* ── Tab bar ── */}
+ {/* -- Tab bar -- */}
  <div className="px-6">
  <div className="flex gap-0 border-b border-[var(--card-border)] overflow-x-auto bg-[var(--card-bg)] rounded-t-xl">
  {TABS.map(({ id, label, icon: Icon }) => (
@@ -262,7 +262,7 @@ export default function PatientMonitor() {
  </div>
  </div>
 
- {/* ── Tab content ── */}
+ {/* -- Tab content -- */}
  <div className="px-6">
  <AnimatePresence mode="wait">
  <motion.div key={activeTab}
@@ -272,7 +272,7 @@ export default function PatientMonitor() {
  transition={{ duration: 0.18 }}
  className="space-y-4">
 
- {/* ── VITALS ── */}
+ {/* -- VITALS -- */}
  {activeTab === 'vitals' && (
  <>
  {/* Record vitals button - staff only */}
@@ -295,7 +295,7 @@ export default function PatientMonitor() {
  <Legend wrapperStyle={{ fontSize: 12 }} />
  <Line type="monotone" dataKey="Heart Rate" stroke="#dc2626" strokeWidth={2} dot={{ r: 2 }} />
  <Line type="monotone" dataKey="BP Systolic" stroke="#0d9488" strokeWidth={2} dot={{ r: 2 }} />
- <Line type="monotone" dataKey="O₂ Sat" stroke="#0891b2" strokeWidth={2} dot={{ r: 2 }} />
+ <Line type="monotone" dataKey="O2 Sat" stroke="#0891b2" strokeWidth={2} dot={{ r: 2 }} />
  <Line type="monotone" dataKey="Temp" stroke="#d97706" strokeWidth={2} dot={{ r: 2 }} />
  </LineChart>
  </ResponsiveContainer>
@@ -309,7 +309,7 @@ export default function PatientMonitor() {
  <table className="w-full text-sm">
  <thead>
  <tr className="border-b border-[var(--card-border)]/50">
- {['Time','HR','BP','O₂ Sat','Temp'].map(h => (
+ {['Time','HR','BP','O2 Sat','Temp'].map(h => (
  <th key={h} className="pb-2 text-left text-xs font-semibold text-[var(--text-400)] pr-4">{h}</th>
  ))}
  </tr>
@@ -325,7 +325,7 @@ export default function PatientMonitor() {
  {Math.round(v.blood_pressure_sys ?? v.blood_pressure_systolic ?? 0)}/{Math.round(v.blood_pressure_dia ?? v.blood_pressure_diastolic ?? 0)}
  </td>
  <td className="py-2 pr-4 font-medium text-[var(--text-700)]">{(v.oxygen_saturation ?? 0).toFixed(1)}%</td>
- <td className="py-2 font-medium text-[var(--text-700)]">{(v.temperature ?? 0).toFixed(1)}°C</td>
+ <td className="py-2 font-medium text-[var(--text-700)]">{(v.temperature ?? 0).toFixed(1)}�C</td>
  </tr>
  ))}
  </tbody>
@@ -338,7 +338,7 @@ export default function PatientMonitor() {
  </>
  )}
 
- {/* ── SYMPTOMS ── */}
+ {/* -- SYMPTOMS -- */}
  {activeTab === 'symptoms' && (
  <Section title="Symptom Log">
  {symptoms && symptoms.length > 0 ? (
@@ -376,7 +376,7 @@ export default function PatientMonitor() {
  </Section>
  )}
 
- {/* ── MEDICATIONS ── */}
+ {/* -- MEDICATIONS -- */}
  {activeTab === 'medications' && (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
  {medications && medications.length > 0 ? medications.map((m, i) => (
@@ -406,7 +406,7 @@ export default function PatientMonitor() {
  </div>
  )}
 
- {/* ── APPOINTMENTS ── */}
+ {/* -- APPOINTMENTS -- */}
  {activeTab === 'appointments' && (
  <div className="space-y-3">
  {appointments && appointments.length > 0 ? appointments.map((a, i) => (
@@ -442,7 +442,7 @@ export default function PatientMonitor() {
  </div>
  )}
 
- {/* ── CARE PLAN ── */}
+ {/* -- CARE PLAN -- */}
  {activeTab === 'careplan' && (
  <div className="space-y-3">
  <Section title="Care Pathway">
@@ -452,7 +452,7 @@ export default function PatientMonitor() {
  </p>
  <p className="text-xs text-[var(--text-500)] mt-1">
  Risk score: {patient?.risk_score ? `${Math.round(patient.risk_score * 100)}%` : ' - '}
- {' · '}Level: {patient?.risk_level || ' - '}
+ {' � '}Level: {patient?.risk_level || ' - '}
  </p>
  </div>
  </Section>
@@ -501,7 +501,7 @@ export default function PatientMonitor() {
  </AnimatePresence>
  </div>
 
- {/* ── Record Vitals Modal ── */}
+ {/* -- Record Vitals Modal -- */}
  <AnimatePresence>
  {showVitalsModal && (
  <>
@@ -528,8 +528,8 @@ export default function PatientMonitor() {
  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
  {[
  { key:'heart_rate', label:'Heart Rate (bpm)', placeholder:'e.g. 72' },
- { key:'oxygen_saturation', label:'O₂ Saturation (%)', placeholder:'e.g. 98' },
- { key:'temperature', label:'Temperature (°C)', placeholder:'e.g. 37.0' },
+ { key:'oxygen_saturation', label:'O2 Saturation (%)', placeholder:'e.g. 98' },
+ { key:'temperature', label:'Temperature (�C)', placeholder:'e.g. 37.0' },
  { key:'respiratory_rate', label:'Respiratory Rate', placeholder:'e.g. 16' },
  ].map(f => (
  <div key={f.key}>
@@ -563,7 +563,7 @@ export default function PatientMonitor() {
  <div>
  <label style={{ fontSize:11, fontWeight:700, color:'var(--text-500)', display:'block', marginBottom:4 }}>Notes (optional)</label>
  <textarea value={vitalsForm.notes} onChange={e=>setVitalsForm(p=>({...p,notes:e.target.value}))} rows={2}
- placeholder="Any clinical observations…"
+ placeholder="Any clinical observations�"
  style={{ width:'100%', padding:'8px 10px', borderRadius:8, border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-800)', fontSize:13, outline:'none', resize:'none', boxSizing:'border-box', fontFamily:'inherit' }}
  onFocus={e=>e.target.style.borderColor='var(--c-teal)'}
  onBlur={e=>e.target.style.borderColor='var(--card-border)'} />
@@ -571,7 +571,7 @@ export default function PatientMonitor() {
  <button onClick={() => recordVitalsMutation.mutate(vitalsForm)}
  disabled={recordVitalsMutation.isPending || !vitalsForm.heart_rate}
  style={{ width:'100%', padding:'11px 0', borderRadius:10, background:'linear-gradient(135deg,#0d9488,#0891b2)', color:'#fff', border:'none', cursor:'pointer', fontSize:14, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center', gap:8, opacity: recordVitalsMutation.isPending || !vitalsForm.heart_rate ? 0.6 : 1 }}>
- {recordVitalsMutation.isPending ? <><Loader2 size={14} className="animate-spin"/> Saving…</> : <><CheckCircle size={14}/> Save Vitals</>}
+ {recordVitalsMutation.isPending ? <><Loader2 size={14} className="animate-spin"/> Saving�</> : <><CheckCircle size={14}/> Save Vitals</>}
  </button>
  </div>
  </motion.div>

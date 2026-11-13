@@ -1,5 +1,5 @@
 """
-Patients Router  --  Project Aura
+Patients Router  --  Aura Care
 CRUD operations for patient records with full intake validation and RBAC.
 """
 

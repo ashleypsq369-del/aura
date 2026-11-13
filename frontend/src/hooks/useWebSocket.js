@@ -1,5 +1,5 @@
 /**
- * useWebSocket - Project Aura Real-Time Hook
+ * useWebSocket - Aura Care Real-Time Hook
  * ============================================
  * Connects to the FastAPI WebSocket endpoint with:
  * - Auto-reconnect with exponential backoff (max 30s)
@@ -125,7 +125,7 @@ export default function useWebSocket() {
  setUnreadAlerts(unreadAlerts + 1);
  // Show browser notification if supported
  if (Notification.permission === 'granted' && data.severity === 'critical') {
- new Notification('🚨 Critical Alert - Project Aura', {
+ new Notification('🚨 Critical Alert - Aura Care', {
  body: `${data.patient_name}: ${data.message}`,
  icon: '/favicon.svg',
  });

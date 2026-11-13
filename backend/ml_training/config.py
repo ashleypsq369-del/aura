@@ -18,7 +18,7 @@ for directory in [DATA_DIR, MODELS_DIR, LOGS_DIR, MEDICAL_KNOWLEDGE_DIR]:
     directory.mkdir(exist_ok=True)
 
 # ========== DATABASE ==========
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../../project_aura.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///../../aura_care.db")
 
 # ========== MEDICAL DATA SOURCES ==========
 # Public palliative care datasets

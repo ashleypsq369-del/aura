@@ -156,7 +156,7 @@ Table                Title                                                      
 
 3.2                  Principal tools and technologies by architectural layer      47
 
-4.1                  High-level composition of the Project AURA codebase         52
+4.1                  High-level composition of the Aura Care codebase         52
 
 4.2                  Clinical weighting applied when combining the eight domain models  54
 
@@ -344,7 +344,7 @@ METHODOLOGY AND SYSTEM DESIGN
 
 3.1 Introduction
 
-This chapter presents the methodology and system design followed in the development of Project AURA, the AI framework for personalised and explainable palliative care support introduced in Chapter One. It sets out the research approach adopted, justifies the choice of the Waterfall model as the software development life cycle, and describes the system architecture, database design, artificial intelligence model design, security architecture, tools and technologies, and process flows that together define how the problems identified in Chapters One and Two were translated into a working system. The design is organised around four functional pillars that recur throughout the chapter: the Intelligent Monitoring Core, the Adaptive Care Guide, the Unified Care Dashboard, and the Continuity Bridge.
+This chapter presents the methodology and system design followed in the development of Aura Care, the AI framework for personalised and explainable palliative care support introduced in Chapter One. It sets out the research approach adopted, justifies the choice of the Waterfall model as the software development life cycle, and describes the system architecture, database design, artificial intelligence model design, security architecture, tools and technologies, and process flows that together define how the problems identified in Chapters One and Two were translated into a working system. The design is organised around four functional pillars that recur throughout the chapter: the Intelligent Monitoring Core, the Adaptive Care Guide, the Unified Care Dashboard, and the Continuity Bridge.
 
 3.2 Research Approach
 
@@ -493,7 +493,7 @@ This same pipeline is re-invoked immediately after a clinician submits a new ESA
 
 3.10 Summary
 
-This chapter has set out the methodology and system design underpinning Project AURA. A design science research approach was adopted, realised through a five phase Waterfall software development life cycle appropriate to the fixed timeline and supervised structure of a final year capstone project. The resulting system was described as a layered architecture built around four functional pillars, namely the Intelligent Monitoring Core, the Adaptive Care Guide, the Unified Care Dashboard, and the Continuity Bridge, each directly traceable to a gap identified in the literature review in Chapter Two. The database schema, the design and honestly reported performance of the eight explainable XGBoost risk models, the security and privacy architecture, the technology stack, and the two central runtime process flows were each described in turn. The following chapter presents the implementation of this design in greater technical detail together with the results of system testing and evaluation.
+This chapter has set out the methodology and system design underpinning Aura Care. A design science research approach was adopted, realised through a five phase Waterfall software development life cycle appropriate to the fixed timeline and supervised structure of a final year capstone project. The resulting system was described as a layered architecture built around four functional pillars, namely the Intelligent Monitoring Core, the Adaptive Care Guide, the Unified Care Dashboard, and the Continuity Bridge, each directly traceable to a gap identified in the literature review in Chapter Two. The database schema, the design and honestly reported performance of the eight explainable XGBoost risk models, the security and privacy architecture, the technology stack, and the two central runtime process flows were each described in turn. The following chapter presents the implementation of this design in greater technical detail together with the results of system testing and evaluation.
 
 ---
 
@@ -506,11 +506,11 @@ This chapter describes how the architecture, database design, artificial intelli
 
 4.2 Development and Runtime Environment
 
-Project AURA is a full stack application composed of a React and Vite single page frontend, a FastAPI backend, a SQLAlchemy data access layer, and an XGBoost and SHAP based inference layer, as set out architecturally in Section 3.4. For development and demonstration, the backend and frontend development servers are run independently, with a lightweight launcher provided so that both processes can be brought up together with a single command rather than requiring two separate terminal sessions, a small convenience that mattered during repeated demonstration of the system to the project supervisor. Configuration values that differ between a development and a production deployment, namely the database connection string, the JSON Web Token signing secret, and the API keys for the large language model providers used by the conversational assistant, are externalised into environment variables rather than hard coded into the source, consistent with the deployment principle described in Section 3.3.5 and allowing the same codebase to be pointed at a production database and served behind a production process manager without any code change.
+Aura Care is a full stack application composed of a React and Vite single page frontend, a FastAPI backend, a SQLAlchemy data access layer, and an XGBoost and SHAP based inference layer, as set out architecturally in Section 3.4. For development and demonstration, the backend and frontend development servers are run independently, with a lightweight launcher provided so that both processes can be brought up together with a single command rather than requiring two separate terminal sessions, a small convenience that mattered during repeated demonstration of the system to the project supervisor. Configuration values that differ between a development and a production deployment, namely the database connection string, the JSON Web Token signing secret, and the API keys for the large language model providers used by the conversational assistant, are externalised into environment variables rather than hard coded into the source, consistent with the deployment principle described in Section 3.3.5 and allowing the same codebase to be pointed at a production database and served behind a production process manager without any code change.
 
 Table 4.1 summarises the scale of the codebase produced during implementation, expressed in the same units used by the system master documentation that was compiled once the Implementation phase was complete. The figures give a sense of the size of the artefact evaluated in Chapter Five: a frontend of sixty five routed pages and roughly sixty reusable components, a backend of forty route groups and ten services, an inference layer of eight independently trained models, and a relational schema of approximately forty SQLAlchemy models organised into six functional groups, as first listed in Section 3.5.
 
-Table 4.1: High-level composition of the Project AURA codebase at the end of the implementation phase
+Table 4.1: High-level composition of the Aura Care codebase at the end of the implementation phase
 
 | Layer | Component type | Count |
 |---|---|---|

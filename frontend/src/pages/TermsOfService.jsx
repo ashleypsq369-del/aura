@@ -1,5 +1,5 @@
-﻿/**
- * TermsOfService.jsx - Project Aura Terms of Service
+/**
+ * TermsOfService.jsx - Aura Care Terms of Service
  * Public route: /terms
  * Linked from Register.jsx checkbox and any footer
  */
@@ -12,13 +12,13 @@ const SECTIONS = [
     icon: FileText,
     color: '#0d9488',
     title: '1. Acceptance of Terms',
-    body: `By creating an account or using Project Aura ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Platform. These terms apply to all users including patients, family members, caregivers, clinicians, and healthcare providers.`,
+    body: `By creating an account or using Aura Care ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Platform. These terms apply to all users including patients, family members, caregivers, clinicians, and healthcare providers.`,
   },
   {
     icon: Heart,
     color: '#e11d48',
     title: '2. Nature of the Service',
-    body: `Project Aura is a palliative care coordination platform designed to support healthcare professionals and families managing serious illness care in Ghana and beyond. The Platform facilitates communication, symptom tracking, care planning, and resource access. It is a support tool only - it does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals.`,
+    body: `Aura Care is a palliative care coordination platform designed to support healthcare professionals and families managing serious illness care in Ghana and beyond. The Platform facilitates communication, symptom tracking, care planning, and resource access. It is a support tool only - it does not replace professional medical advice, diagnosis, or treatment. Always seek guidance from qualified healthcare professionals.`,
   },
   {
     icon: Users,
@@ -42,13 +42,13 @@ const SECTIONS = [
     icon: Globe,
     color: '#d97706',
     title: '6. AI Features & Clinical Decision Support',
-    body: `Project Aura uses artificial intelligence features including risk scoring, symptom analysis, and care recommendations. These are decision-support tools only. Clinical decisions must always be made by qualified healthcare professionals. AI outputs are not guarantees and may contain errors. The Platform disclaims liability for any clinical decisions made solely on the basis of AI-generated content.`,
+    body: `Aura Care uses artificial intelligence features including risk scoring, symptom analysis, and care recommendations. These are decision-support tools only. Clinical decisions must always be made by qualified healthcare professionals. AI outputs are not guarantees and may contain errors. The Platform disclaims liability for any clinical decisions made solely on the basis of AI-generated content.`,
   },
   {
     icon: AlertTriangle,
     color: '#ea580c',
     title: '7. Limitation of Liability',
-    body: `To the maximum extent permitted by law, Project Aura and its developers shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform. The Platform is provided "as is" without warranty of any kind. In an emergency, always call your national emergency number (in Ghana: 999 or 112).`,
+    body: `To the maximum extent permitted by law, Aura Care and its developers shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform. The Platform is provided "as is" without warranty of any kind. In an emergency, always call your national emergency number (in Ghana: 999 or 112).`,
   },
   {
     icon: FileText,
@@ -60,7 +60,7 @@ const SECTIONS = [
     icon: FileText,
     color: '#334155',
     title: '9. Contact',
-    body: `For questions about these Terms, contact us at: legal@projectaura.gh | Project Aura, Group 31, Ghana. These Terms were last updated: October 2026.`,
+    body: `For questions about these Terms, contact us at: legal@projectaura.gh | Aura Care, Group 31, Ghana. These Terms were last updated: October 2026.`,
   },
 ];
 
@@ -85,11 +85,11 @@ export default function TermsOfService() {
             </div>
             <div>
               <h1 style={{ color:'#fff', fontSize:24, fontWeight:900, margin:0 }}>Terms of Service</h1>
-              <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>Project Aura Healthcare Platform · Last updated October 2026</p>
+              <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>Aura Care Healthcare Platform � Last updated October 2026</p>
             </div>
           </div>
           <p style={{ color:'rgba(255,255,255,0.75)', fontSize:14, lineHeight:1.7, maxWidth:600, margin:0 }}>
-            Please read these terms carefully before using Project Aura. They govern your use of our palliative care coordination platform.
+            Please read these terms carefully before using Aura Care. They govern your use of our palliative care coordination platform.
           </p>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function TermsOfService() {
 
         <div style={{ marginTop:32, padding:'20px 24px', background:'rgba(13,148,136,0.06)', borderRadius:14, border:'1.5px solid rgba(13,148,136,0.2)', textAlign:'center' }}>
           <p style={{ fontSize:13, color:'var(--text-700)', margin:0 }}>
-            By using Project Aura, you confirm that you have read, understood, and agree to these Terms of Service.
+            By using Aura Care, you confirm that you have read, understood, and agree to these Terms of Service.
           </p>
           <button onClick={() => navigate(-1)}
             style={{ marginTop:14, padding:'10px 28px', borderRadius:10, background:'#0d9488', color:'#fff', border:'none', cursor:'pointer', fontSize:13, fontWeight:700 }}>

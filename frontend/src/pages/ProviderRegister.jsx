@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ProviderRegister - 5-step professional registration wizard
  * Public route: /provider-register
  * Uses the same InputGroup/inputWrap/IconSlot/VALIDATORS pattern as Register.jsx
@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 import LoginSlideshow from '../components/LoginSlideshow';
 import PasswordStrength from '../components/PasswordStrength';
 
-/* ── Constants ──────────────────────────────────────────────────────────────── */
+/* -- Constants ---------------------------------------------------------------- */
 const ICON_MAP = { Stethoscope, Activity, Heart, Brain, Users, Hand, FileText };
 
 const GHANA_REGIONS = [
@@ -43,7 +43,7 @@ const FALLBACK_TYPES = [
   { key:'chaplain',       label:'Chaplain / Spiritual Care',description:'Interfaith spiritual support for patients and families', icon_name:'Heart', color:'#0369a1', min_pass_score:60, assessment_questions:[], required_certifications:['Theology Degree or Chaplaincy Certificate'] },
 ];
 
-/* ── Background images for full-screen cycling ─────────────────────────────── */
+/* -- Background images for full-screen cycling ------------------------------- */
 const BG_IMAGES = [
   '/resources/slideshow/care-1.jpg',
   '/resources/slideshow/care-2.jpg',
@@ -215,7 +215,7 @@ const VALIDATORS = {
   },
 };
 
-/* ── Reusable form components (matches Register.jsx quality) ────────────────── */
+/* -- Reusable form components (matches Register.jsx quality) ------------------ */
 function InputGroup({ id, label, required, error, success, hint, children }) {
   return (
     <div className="space-y-1.5">
@@ -260,7 +260,7 @@ function IconSlot({ err, children }) {
   );
 }
 
-/* ── Step 1: Account ─────────────────────────────────────────────────────────── */
+/* -- Step 1: Account ----------------------------------------------------------- */
 function StepAccount({ form, set, errors, touched, onBlur }) {
   const [showPw, setShowPw]   = useState(false);
   const [showCpw, setShowCpw] = useState(false);
@@ -435,7 +435,7 @@ function StepAccount({ form, set, errors, touched, onBlur }) {
   );
 }
 
-/* ── Step 2: Service Type ────────────────────────────────────────────────────── */
+/* -- Step 2: Service Type ------------------------------------------------------ */
 function StepServiceType({ form, set, types }) {
   return (
     <div className="space-y-2">
@@ -562,7 +562,7 @@ function StepServiceType({ form, set, types }) {
   );
 }
 
-/* ── Step 3: Professional Profile ───────────────────────────────────────────── */
+/* -- Step 3: Professional Profile --------------------------------------------- */
 function StepProfile({ form, set, errors, onBlur, selectedType }) {
   const isClinic = ['nurse','doctor','physiotherapist'].includes(form.service_type);
   const [quals, setQuals] = useState(form.qualifications?.length ? form.qualifications : [{ title:'', institution:'', year:'' }]);
@@ -711,7 +711,7 @@ function StepProfile({ form, set, errors, onBlur, selectedType }) {
   );
 }
 
-/* ── Step 4: Knowledge Assessment ───────────────────────────────────────────── */
+/* -- Step 4: Knowledge Assessment --------------------------------------------- */
 function StepAssessment({ form, set, questions, serviceColor }) {
   const [current, setCurrent] = useState(0);
   const answers = form.assessment_answers || {};
@@ -825,7 +825,7 @@ function StepAssessment({ form, set, questions, serviceColor }) {
   );
 }
 
-/* ── Step 5: Documents & Submit ─────────────────────────────────────────────── */
+/* -- Step 5: Documents & Submit ----------------------------------------------- */
 function StepDocuments({ form, set }) {
   const fileRef = useRef();
   const [docs, setDocs] = useState(form.document_names || []);
@@ -892,14 +892,14 @@ function StepDocuments({ form, set }) {
           I declare that all information provided is accurate and truthful. I agree to the{' '}
           <span className="text-teal-600 font-semibold">Terms of Service</span>,{' '}
           <span className="text-teal-600 font-semibold">Privacy Policy</span>, and the
-          Project Aura Provider Code of Conduct. I consent to background verification checks.
+          Aura Care Provider Code of Conduct. I consent to background verification checks.
         </p>
       </label>
     </div>
   );
 }
 
-/* ── Main component ──────────────────────────────────────────────────────────── */
+/* -- Main component ------------------------------------------------------------ */
 const EMPTY = {
   full_name:'', username:'', email:'', password:'', confirm_password:'',
   phone:'', gender:'', date_of_birth:'', address:'', location:'',
@@ -1147,8 +1147,8 @@ export default function ProviderRegister() {
         {/* Header badge */}
         <div className="flex items-center justify-center mb-4">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full">
-            <img src="/logo.png" alt="Project Aura" className="w-5 h-5 rounded-lg"/>
-            <span className="text-xs font-bold tracking-wide" style={{ color: '#ffffff' }}>Project Aura</span>
+            <img src="/logo.png" alt="Aura Care" className="w-5 h-5 rounded-lg"/>
+            <span className="text-xs font-bold tracking-wide" style={{ color: '#ffffff' }}>Aura Care</span>
             <span style={{ color: 'rgba(255,255,255,0.35)' }}>|</span>
             <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#D4A017' }}>Provider Registration</span>
           </div>

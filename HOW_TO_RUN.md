@@ -1,4 +1,4 @@
-c# Project Aura - How to Run
+c# Aura Care - How to Run
 
 ## What you need (install once)
 

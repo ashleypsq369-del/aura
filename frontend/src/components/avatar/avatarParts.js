@@ -1,6 +1,6 @@
 /**
  * avatarParts.js - All customizable avatar component options
- * Snapchat/Bitmoji-style avatar builder for Project Aura
+ * Snapchat/Bitmoji-style avatar builder for Aura Care
  */
 
 // -- Skin tones -------------------------------------------------------------

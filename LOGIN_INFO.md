@@ -1,4 +1,4 @@
-# Project Aura - Login Information
+# Aura Care - Login Information
 
 ## Application URLs
 

@@ -11,7 +11,7 @@ export default function SignOutModal({ isOpen, onClose, onConfirm }) {
     <AlertDialog
       open={isOpen}
       onOpenChange={(open) => { if (!open) onClose(); }}
-      title="Sign out of Project Aura?"
+      title="Sign out of Aura Care?"
       description="You'll need to sign in again to access your account. Any unsaved changes will be lost."
       confirmLabel="Sign Out"
       cancelLabel="Stay signed in"

@@ -404,7 +404,7 @@ Shows: Overall risk %, SHAP feature bars, domain breakdown
    - Chrome: Ctrl + Shift + N
 2. Go to: `http://localhost:5173/login`
 3. The login page shows:
-   - Project Aura logo and branding
+   - Aura Care logo and branding
    - Username + password fields
    - Login button
    - Slideshow background images

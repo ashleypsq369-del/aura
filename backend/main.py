@@ -1,8 +1,8 @@
 """
-Project Aura - FastAPI Backend
+Aura Care - FastAPI Backend
 Complete KIRO Specification Implementation
 
-Copyright (c) 2024-2026 Project Aura - Group 31
+Copyright (c) 2024-2026 Aura Care - Group 31
 All Rights Reserved.
 Proprietary software - see LICENSE file for terms.
 Unauthorised copying, distribution, or use is strictly prohibited.
@@ -82,7 +82,7 @@ from routers import websocket as ws_router
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Project Aura API",
+    title="Aura Care API",
     version="1.0.0",
     description="AI-Powered Palliative Care Support Platform for Ghana"
 )
@@ -94,7 +94,7 @@ app.add_middleware(SlowAPIMiddleware)
 
 # CORS Configuration - locked to known origins; set ALLOWED_ORIGINS env var to extend
 # In production (Koyeb + Vercel), set ALLOWED_ORIGINS to your Vercel URL, e.g.:
-#   ALLOWED_ORIGINS=https://project-aura.vercel.app,https://your-custom-domain.com
+#   ALLOWED_ORIGINS=https://aura-care.vercel.app,https://your-custom-domain.com
 _ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173"
@@ -238,7 +238,7 @@ async def startup_event():
     from src.db import init_database, get_session, User, Patient, Alert
     
     print("\n" + "="*60)
-    print("PROJECT AURA - STARTING UP")
+    print("Aura Care - STARTING UP")
     print("="*60)
     
     # Initialize database
@@ -290,7 +290,7 @@ async def startup_event():
     print("Starting care task compliance scanner...")
     asyncio.create_task(compliance_scan_loop())
     
-    print("\nProject Aura API Ready")
+    print("\nAura Care API Ready")
     print(f"API Docs: http://localhost:8000/docs")
     print(f"Frontend: http://localhost:5173")
     print("="*60 + "\n")
@@ -527,7 +527,7 @@ async def compliance_scan_loop():
 async def root():
     """API info endpoint (moved from / so SPA can own the root)"""
     return {
-        "message": "Project Aura API",
+        "message": "Aura Care API",
         "version": "1.0.0",
         "status": "operational",
         "docs": "/docs"
@@ -537,7 +537,7 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "Project Aura API"}
+    return {"status": "healthy", "service": "Aura Care API"}
 
 
 @app.get("/")
@@ -548,7 +548,7 @@ async def serve_root():
         from fastapi.responses import FileResponse as _FR
         return _FR(str(_idx))
     return {
-        "message": "Project Aura API",
+        "message": "Aura Care API",
         "version": "1.0.0",
         "status": "operational",
         "docs": "/docs"

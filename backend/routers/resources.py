@@ -1,5 +1,5 @@
 """
-Educational Resources Router  --  Project Aura
+Educational Resources Router  --  Aura Care
 Search, bookmark, recommended, and helpful feedback.
 """
 

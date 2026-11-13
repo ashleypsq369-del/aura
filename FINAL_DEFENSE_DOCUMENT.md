@@ -1,4 +1,4 @@
-# PROJECT AURA - FINAL DEFENSE DOCUMENT
+# Aura Care - FINAL DEFENSE DOCUMENT
 ## Group 31 | UMaT Tarkwa | BSc Computer Science & Engineering
 ### Title: An AI Framework for Personalised and Explainable Palliative Care Systems
 
@@ -16,7 +16,7 @@
 ## PART 1 - SYSTEM OVERVIEW (Say this in under 90 seconds)
 
 **What the system is:**
-Project AURA is a full-stack, AI-powered palliative care platform built specifically for the Ghanaian healthcare context. It has four functional pillars working together in one web application:
+Aura Care is a full-stack, AI-powered palliative care platform built specifically for the Ghanaian healthcare context. It has four functional pillars working together in one web application:
 
 1. **Intelligent Monitoring Core** - captures clinical data (vitals, symptoms, assessments), runs 8 XGBoost risk models, generates SHAP explanations, and proactively alerts clinicians
 2. **Adaptive Care Guide** - AI-generated care plans personalised per patient diagnosis and onboarding preferences

@@ -1,5 +1,5 @@
 /**
- * VoiceControlService.js - Project Aura
+ * VoiceControlService.js - Aura Care
  * =======================================
  * Hands-free navigation via Web Speech API SpeechRecognition.
  * Designed for patients with motor impairments or dementia.

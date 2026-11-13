@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Loader2, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginSlideshow from '../components/LoginSlideshow';
 import LegalModal from '../components/LegalModal';
 
-// ── client-side validation ────────────────────────────────────────────────
+// -- client-side validation ------------------------------------------------
 function validate(identifier, password) {
   const errors = {};
   if (!identifier.trim()) {
@@ -91,7 +91,7 @@ export default function Login() {
      */
     <div className="min-h-screen flex flex-col lg:flex-row text-[#2C3531]">
 
-      {/* ── Slideshow ─────────────────────────────────────────────────────── */}
+      {/* -- Slideshow ------------------------------------------------------- */}
       {/* Mobile: compact banner at the top */}
       <div className="block lg:hidden w-full flex-shrink-0" style={{ height: 220 }}>
         <LoginSlideshow />
@@ -102,7 +102,7 @@ export default function Login() {
         <LoginSlideshow />
       </div>
 
-      {/* ── Sign-in panel ─────────────────────────────────────────────────── */}
+      {/* -- Sign-in panel --------------------------------------------------- */}
       {/* Mobile: sits below the banner */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:px-8 min-h-0 lg:min-h-screen bg-slate-50">
         <motion.div
@@ -117,7 +117,7 @@ export default function Login() {
             {/* Header */}
             <div className="text-center mb-5">
               <div className="w-20 h-20 bg-slate-50 border border-[var(--card-border)] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm overflow-hidden">
-                <img src="/logo.png" alt="Project Aura" className="w-16 h-16 object-contain" />
+                <img src="/logo.png" alt="Aura Care" className="w-16 h-16 object-contain" />
               </div>
               <h2 className="text-lg font-bold text-[var(--text-900)] mb-1">Welcome back</h2>
               <p className="text-xs text-[var(--text-500)] font-medium">Sign in to continue your care journey</p>
@@ -242,7 +242,7 @@ export default function Login() {
                     <AlertCircle size={11} />{fieldErrors.password}
                   </p>
                 )}
-                <p className="mt-1 text-[11px] text-slate-400">Min 8 characters · Max 128 characters</p>
+                <p className="mt-1 text-[11px] text-slate-400">Min 8 characters � Max 128 characters</p>
               </div>
 
               {/* Sign In button */}
@@ -261,7 +261,7 @@ export default function Login() {
 
             {/* Register link */}
             <p className="mt-4 text-center text-xs text-[var(--text-500)]">
-              New to Project Aura?{' '}
+              New to Aura Care?{' '}
               <Link to="/get-started" className="text-teal-600 font-bold hover:underline">Create an account</Link>
             </p>
 
@@ -334,19 +334,19 @@ export default function Login() {
                 style={{ fontSize:12, fontWeight:700, color:'#0f766e', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'#0d9488', textUnderlineOffset:3 }}>
                 About
               </button>
-              <span style={{ color:'#475569', margin:'0 10px', fontWeight:400 }}>·</span>
+              <span style={{ color:'#475569', margin:'0 10px', fontWeight:400 }}>�</span>
               <button type="button" onClick={() => setLegalModal('terms')}
                 style={{ fontSize:12, fontWeight:600, color:'#334155', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'#94a3b8', textUnderlineOffset:3 }}>
                 Terms
               </button>
-              <span style={{ color:'#475569', margin:'0 10px', fontWeight:400 }}>·</span>
+              <span style={{ color:'#475569', margin:'0 10px', fontWeight:400 }}>�</span>
               <button type="button" onClick={() => setLegalModal('privacy')}
                 style={{ fontSize:12, fontWeight:600, color:'#334155', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'#94a3b8', textUnderlineOffset:3 }}>
                 Privacy
               </button>
             </p>
             <p style={{ fontSize:11, color:'#475569', margin:0, fontWeight:500 }}>
-              © {new Date().getFullYear()} Project Aura · Group 31 · Palliative Care Ghana
+              � {new Date().getFullYear()} Aura Care � Group 31 � Palliative Care Ghana
             </p>
           </div>
         </motion.div>

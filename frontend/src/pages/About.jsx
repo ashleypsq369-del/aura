@@ -1,5 +1,5 @@
-﻿/**
- * About.jsx - Project Aura About Page
+/**
+ * About.jsx - Aura Care About Page
  * Public route: /about
  * Same layout pattern as TermsOfService / PrivacyPolicy.
  * Brief, honest, human - not a slide deck.
@@ -21,7 +21,7 @@ export default function About() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }}>
 
-      {/* ── Header - same pattern as Terms/Privacy ─────────────────── */}
+      {/* -- Header - same pattern as Terms/Privacy ------------------- */}
       <div style={{
         background: 'linear-gradient(135deg,#071520 0%,#0b3028 50%,#0d9488 100%)',
         padding: '32px 24px 40px',
@@ -40,9 +40,9 @@ export default function About() {
                 onError={e => { e.currentTarget.style.display='none'; }}/>
             </div>
             <div>
-              <h1 style={{ color:'#fff', fontSize:24, fontWeight:900, margin:0 }}>About Project Aura</h1>
+              <h1 style={{ color:'#fff', fontSize:24, fontWeight:900, margin:0 }}>About Aura Care</h1>
               <p style={{ color:'rgba(255,255,255,0.6)', fontSize:13, margin:'4px 0 0' }}>
-                Group 31 · University of Mines and Technology, Tarkwa · March 2026
+                Group 31 � University of Mines and Technology, Tarkwa � March 2026
               </p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function About() {
         </div>
       </div>
 
-      {/* ── Content ─────────────────────────────────────────────────── */}
+      {/* -- Content --------------------------------------------------- */}
       <div style={{ maxWidth:800, margin:'0 auto', padding:'32px 24px 64px' }}>
 
         {/* What it is */}
@@ -65,10 +65,10 @@ export default function About() {
               display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
               <Info size={16} style={{ color:'#0d9488' }}/>
             </div>
-            <h2 style={{ fontSize:15, fontWeight:700, color:'var(--text-900)', margin:0 }}>What is Project Aura?</h2>
+            <h2 style={{ fontSize:15, fontWeight:700, color:'var(--text-900)', margin:0 }}>What is Aura Care?</h2>
           </div>
           <p style={{ fontSize:13, color:'var(--text-600)', lineHeight:1.8, margin:0 }}>
-            Project Aura is a web platform built to help coordinate palliative care - the kind of care
+            Aura Care is a web platform built to help coordinate palliative care - the kind of care
             given to people living with serious, life-limiting illness. It connects the people involved
             in a patient's care: clinicians, caregivers, patients themselves, and family members,
             all in one place. Clinicians get AI-powered risk alerts. Families stay informed.
@@ -246,9 +246,9 @@ export default function About() {
 
         {/* Footer links */}
         <p style={{ textAlign:'center', fontSize:12, color:'var(--text-400)', marginTop:28 }}>
-          © 2026 Project Aura · Group 31 · UMaT Tarkwa ·{' '}
+          � 2026 Aura Care � Group 31 � UMaT Tarkwa �{' '}
           <Link to="/terms" style={{ color:'var(--c-teal)', textDecoration:'none' }}>Terms</Link>
-          {' · '}
+          {' � '}
           <Link to="/privacy" style={{ color:'var(--c-teal)', textDecoration:'none' }}>Privacy</Link>
         </p>
 

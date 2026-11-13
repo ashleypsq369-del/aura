@@ -1,5 +1,5 @@
 """
-Database layer for Project Aura - COMPLETE KIRO SPECIFICATION
+Database layer for Aura Care - COMPLETE KIRO SPECIFICATION
 All 21 tables as specified in the KIRO prompt
 """
 

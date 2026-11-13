@@ -1,4 +1,4 @@
-(# PROJECT AURA 🌅
+(# Aura Care 🌅
 ## AI-Powered Palliative Care Support Platform
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
@@ -17,7 +17,7 @@
 
 ## 🎯 Project Overview
 
-Project Aura is a final-year university project that combines **Explainable AI**, **real-time monitoring**, and **bereavement support** into a single, compassionate platform designed specifically for Ghanaian palliative care.
+Aura Care is a final-year university project that combines **Explainable AI**, **real-time monitoring**, and **bereavement support** into a single, compassionate platform designed specifically for Ghanaian palliative care.
 
 ### Key Features
 

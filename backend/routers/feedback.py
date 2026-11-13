@@ -1,4 +1,4 @@
-﻿"""
+"""
 Feedback & Bug Report Router
 Receives feedback/bug reports from the FeedbackWidget and:
 1. Stores them in the database
@@ -62,15 +62,15 @@ def send_feedback_email(data: FeedbackCreate):
 
         # Build subject
         type_labels = {
-            "rating":      f"⭐ Page Rating - {data.rating}/5 on {data.page}",
-            "ux_feedback": f"💬 UX Feedback on {data.page}",
-            "bug_report":  f"🐛 Bug Report [{data.bug_type or 'general'}] on {data.page}",
+            "rating":      f"? Page Rating - {data.rating}/5 on {data.page}",
+            "ux_feedback": f"?? UX Feedback on {data.page}",
+            "bug_report":  f"?? Bug Report [{data.bug_type or 'general'}] on {data.page}",
         }
-        subject = type_labels.get(data.type, f"📝 Feedback - {data.page}")
+        subject = type_labels.get(data.type, f"?? Feedback - {data.page}")
 
         # Build body
         lines = [
-            f"<h2>Project Aura Feedback</h2>",
+            f"<h2>Aura Care Feedback</h2>",
             f"<p><strong>Type:</strong> {data.type}</p>",
             f"<p><strong>Page:</strong> {data.page} ({data.url})</p>",
             f"<p><strong>User:</strong> {data.user_name or 'Anonymous'} (ID={data.user_id}, Role={data.user_role}, Email={data.email})</p>",

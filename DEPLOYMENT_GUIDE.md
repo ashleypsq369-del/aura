@@ -1,4 +1,4 @@
-# Project Aura - Free Deployment Guide
+# Aura Care - Free Deployment Guide
 ## Stack: Koyeb (backend) + Neon (PostgreSQL) + Vercel (frontend)
 
 Everything is already configured. Follow these steps in order.
@@ -22,7 +22,7 @@ git init  # skip if already a git repo
 git add .
 git commit -m "Initial deployment setup"
 # When creating the repo on github.com, set it to PRIVATE
-git remote add origin https://github.com/YOUR_USERNAME/project-aura.git
+git remote add origin https://github.com/YOUR_USERNAME/aura-care.git
 git push -u origin main
 ```
 
@@ -36,7 +36,7 @@ git push -u origin main
 ## Step 2 - Set Up Neon PostgreSQL (Free Database)
 
 1. Go to [https://console.neon.tech](https://console.neon.tech) and sign up free
-2. Click **New Project** → name it `project-aura` → click Create
+2. Click **New Project** → name it `aura-care` → click Create
 3. On the dashboard, click **Connection string** → choose **Pooled connection**
 4. Copy the URL - it looks like:
    ```
@@ -50,7 +50,7 @@ git push -u origin main
 
 1. Go to [https://app.koyeb.com](https://app.koyeb.com) and sign up free
 2. Click **Create Service** → choose **GitHub**
-3. Connect your GitHub account and select your `project-aura` repo
+3. Connect your GitHub account and select your `aura-care` repo
 4. Configure the service:
    - **Branch**: `main`
    - **Build**: Buildpack (auto-detected)
@@ -71,7 +71,7 @@ git push -u origin main
 
 6. Click **Deploy**
 7. Wait ~3 minutes for build to complete
-8. Copy your Koyeb URL - looks like: `https://project-aura-api-xxxx.koyeb.app`
+8. Copy your Koyeb URL - looks like: `https://aura-care-api-xxxx.koyeb.app`
 
 ---
 
@@ -101,9 +101,9 @@ Or use the Neon SQL editor:
    - **Output Directory**: `dist`
 5. Add **Environment Variable**:
    - Name: `VITE_API_URL`
-   - Value: *(your Koyeb URL from Step 3, e.g. `https://project-aura-api-xxxx.koyeb.app`)*
+   - Value: *(your Koyeb URL from Step 3, e.g. `https://aura-care-api-xxxx.koyeb.app`)*
 6. Click **Deploy**
-7. Wait ~2 minutes - Vercel gives you a URL like: `https://project-aura-xyz.vercel.app`
+7. Wait ~2 minutes - Vercel gives you a URL like: `https://aura-care-xyz.vercel.app`
 
 ---
 
@@ -111,7 +111,7 @@ Or use the Neon SQL editor:
 
 1. Go back to Koyeb → your service → **Environment Variables**
 2. Add/update:
-   - `ALLOWED_ORIGINS` = `https://project-aura-xyz.vercel.app`
+   - `ALLOWED_ORIGINS` = `https://aura-care-xyz.vercel.app`
    - (replace with your actual Vercel URL)
 3. Click **Redeploy**
 

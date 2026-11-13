@@ -194,7 +194,7 @@ Table    Title                                                          Page
 2.1      Summary of Related Works                                        9
 3.1      Held-out test performance of the eight XGBoost risk models     23
 3.2      Principal tools and technologies by architectural layer        25
-4.1      High-level composition of the Project AURA codebase           28
+4.1      High-level composition of the Aura Care codebase           28
 4.2      Clinical weighting applied when combining the eight domain
          models                                                         30
 4.3      The six phases of the patient journey                          31
@@ -580,7 +580,7 @@ METHODOLOGY AND SYSTEM DESIGN
 
 3.1 Introduction
 
-This chapter presents the methodology and system design behind Project AURA. It covers
+This chapter presents the methodology and system design behind Aura Care. It covers
 the research approach, the software development life cycle, the system architecture, the
 database design, the AI model design and explainability approach, the security
 architecture, the technology stack, and the key runtime process flows. Four functional
@@ -942,7 +942,7 @@ the engineering problems encountered and how each was resolved.
 
 4.2 Development and Runtime Environment
 
-Project AURA is a full-stack application with a React/Vite frontend, a FastAPI backend,
+Aura Care is a full-stack application with a React/Vite frontend, a FastAPI backend,
 a SQLAlchemy data access layer, and an XGBoost/SHAP inference layer. A lightweight
 launcher starts both servers together with a single command. All configuration - database
 connection string, JWT signing secret, and LLM API keys - is externalised to environment
@@ -950,7 +950,7 @@ variables, consistent with the deployment principle described in Section 3.3.5.
 
 Table 4.1 gives the scale of the codebase at the end of the implementation phase.
 
-Table 4.1: High-level composition of the Project AURA codebase
+Table 4.1: High-level composition of the Aura Care codebase
 
 Layer               Component type                              Count
 Frontend            Routed pages                                65

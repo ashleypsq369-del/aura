@@ -1,5 +1,5 @@
 """
-WebSocket Router - Project Aura Real-Time System
+WebSocket Router - Aura Care Real-Time System
 =================================================
 Channels:
   /ws/{user_id}                - per-user authenticated connection

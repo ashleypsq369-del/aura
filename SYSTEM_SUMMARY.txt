@@ -1,8 +1,8 @@
 ╔═══════════════════════════════════════════════════════════════════╗
-║               PROJECT AURA - COMPLETE SYSTEM SUMMARY              ║
+║               Aura Care - COMPLETE SYSTEM SUMMARY              ║
 ╚═══════════════════════════════════════════════════════════════════╝
 
-🌅 PROJECT AURA: AI-Powered Palliative Care Platform for Ghana
+🌅 Aura Care: AI-Powered Palliative Care Platform for Ghana
 
 ═══════════════════════════════════════════════════════════════════
 

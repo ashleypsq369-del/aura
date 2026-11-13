@@ -1,6 +1,6 @@
 """
 Seeding Script for Educational Resources, Care Templates, and Community Groups
-Project Aura  --  40 Resources + Care Templates + Support Groups
+Aura Care  --  40 Resources + Care Templates + Support Groups
 """
 
 import json
@@ -196,7 +196,7 @@ def seed_data():
             },
             {
                 "title": "Sharing Your Story: The Memory Vault",
-                "summary": "How to use Project Aura's Memory Vault to record your legacy and share memories.",
+                "summary": "How to use Aura Care's Memory Vault to record your legacy and share memories.",
                 "content": "The Memory Vault is a special place where you can write down memories, record stories, upload photos, or leave messages for your loved ones. It is a powerful way to celebrate your life and pass down your wisdom and family history to the next generation.",
                 "category": "Emotional Support", "condition_tags": ["general"],
                 "topic_tags": ["legacy", "family"], "format": "article", "language": "en", "is_ghana_specific": False, "difficulty_level": "simple"
@@ -289,7 +289,7 @@ def seed_data():
             },
             {
                 "title": "Honoring Cultural Death and Bereavement Customs",
-                "summary": "How Project Aura supports families with funeral planning and cultural customs.",
+                "summary": "How Aura Care supports families with funeral planning and cultural customs.",
                 "content": "We understand the importance of traditional funeral customs and community mourning. Our bereavement team helps families navigate the initial steps after a loss, coordinate with community leaders, and manage the transition with respect for your specific family and cultural practices.",
                 "category": "Spiritual Care", "condition_tags": ["general"],
                 "topic_tags": ["death", "grief", "culture"], "format": "article", "language": "en", "is_ghana_specific": True, "difficulty_level": "standard"

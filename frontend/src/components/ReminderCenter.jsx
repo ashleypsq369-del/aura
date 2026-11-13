@@ -148,7 +148,7 @@ export default function ReminderCenter() {
  const msg = `⏰ Reminder: ${r.label}`;
  toast.info(msg, { duration: 8000 });
  if (Notification.permission === 'granted') {
- new Notification('Project Aura Reminder', { body: r.label, icon: '/logo.png' });
+ new Notification('Aura Care Reminder', { body: r.label, icon: '/logo.png' });
  }
  // Mark as notified (unless repeating)
  if (r.repeat === 'none') {

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RoleSelector - "Who are you?" pre-registration screen
  * Premium motion: staggered entrance, spring hover, selection burst, gradient shimmer
  * Route: /get-started  (public)
@@ -57,7 +57,7 @@ const ROLES = [
   },
 ];
 
-/* ── Animated role card ─────────────────────────────────── */
+/* -- Animated role card ----------------------------------- */
 function RoleCard({ role, idx, selected, onSelect }) {
   const Icon    = role.icon;
   const [g1, g2] = role.gradient;
@@ -150,7 +150,7 @@ function RoleCard({ role, idx, selected, onSelect }) {
   );
 }
 
-/* ── Main ───────────────────────────────────────────────── */
+/* -- Main ------------------------------------------------- */
 export default function RoleSelector() {
   const navigate  = useNavigate();
   const [selected, setSelected] = useState(null);
@@ -195,7 +195,7 @@ export default function RoleSelector() {
               className="inline-block mb-3"
             >
               <div className="relative">
-                <img src="/logo.png" alt="Project Aura" className="w-12 h-12 rounded-2xl mx-auto shadow-lg"/>
+                <img src="/logo.png" alt="Aura Care" className="w-12 h-12 rounded-2xl mx-auto shadow-lg"/>
                 <motion.div
                   animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.15, 0.5] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -213,7 +213,7 @@ export default function RoleSelector() {
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Sparkles size={13} style={{ color: '#0d9488' }}/>
                 <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: '#0d9488' }}>
-                  Project Aura
+                  Aura Care
                 </span>
               </div>
               <h1 className="text-xl font-bold" style={{ color: 'var(--text-900)' }}>Welcome! How will you use Aura?</h1>

@@ -1,7 +1,7 @@
 """
 llm_chatbot.py
 ==============
-True LLM ChatBot router for Project Aura.
+True LLM ChatBot router for Aura Care.
 Provides:
   POST /api/llm-chatbot/chat                        -- Standard chat (JSON)
   GET  /api/llm-chatbot/stream                      -- Server-Sent Events streaming

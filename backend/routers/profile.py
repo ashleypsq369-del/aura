@@ -1,5 +1,5 @@
 """
-User Profile Router  --  Project Aura
+User Profile Router  --  Aura Care
 GET/PUT own profile, notification preferences, session history, avatar upload.
 Demographics (gender, dob, address, location, avatar_url) stored in UserExtended.
 """

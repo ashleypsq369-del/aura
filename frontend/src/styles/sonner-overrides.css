@@ -1,11 +1,11 @@
-﻿/**
- * Sonner toast overrides - Project Aura clinical design
+/**
+ * Sonner toast overrides - Aura Care clinical design
  * ======================================================
  * Sonner applies position via CSS vars --offset, --width, --right, --left.
  * We override those here. The toaster is position:fixed by Sonner itself.
  */
 
-/* ── Position: top-right, well below the 60px header ────────────────── */
+/* -- Position: top-right, well below the 60px header ------------------ */
 [data-sonner-toaster] {
   --offset: 80px !important;
   top: 80px !important;
@@ -13,7 +13,7 @@
   left: auto !important;
 }
 
-/* ── Toast card ──────────────────────────────────────────────────────── */
+/* -- Toast card -------------------------------------------------------- */
 [data-sonner-toast] {
   border-radius: 10px !important;
   padding: 11px 14px !important;
@@ -29,20 +29,20 @@
   width: auto !important;
 }
 
-/* ── Light mode - default (no type) ─────────────────────────────────── */
+/* -- Light mode - default (no type) ----------------------------------- */
 :root [data-sonner-toast]:not([data-type]) {
   background: #ffffff !important;
   border: 1px solid rgba(0, 0, 0, 0.09) !important;
   color: #0f172a !important;
 }
 
-/* ── Toast title ─────────────────────────────────────────────────────── */
+/* -- Toast title ------------------------------------------------------- */
 [data-sonner-toast] [data-title] {
   font-size: 13px !important;
   font-weight: 600 !important;
 }
 
-/* ── Toast description ───────────────────────────────────────────────── */
+/* -- Toast description ------------------------------------------------- */
 [data-sonner-toast] [data-description] {
   font-size: 12px !important;
   font-weight: 400 !important;
@@ -50,14 +50,14 @@
   margin-top: 2px !important;
 }
 
-/* ── Icon ────────────────────────────────────────────────────────────── */
+/* -- Icon -------------------------------------------------------------- */
 [data-sonner-toast] [data-icon] {
   width: 16px !important;
   height: 16px !important;
   flex-shrink: 0 !important;
 }
 
-/* ── Action button ───────────────────────────────────────────────────── */
+/* -- Action button ----------------------------------------------------- */
 [data-sonner-toast] [data-button] {
   font-size: 12px !important;
   font-weight: 600 !important;
@@ -66,10 +66,10 @@
   height: auto !important;
 }
 
-/* ── No left border decoration ───────────────────────────────────────── */
+/* -- No left border decoration ----------------------------------------- */
 [data-sonner-toast]::before { display: none !important; }
 
-/* ── Dark mode ───────────────────────────────────────────────────────── */
+/* -- Dark mode --------------------------------------------------------- */
 .dark [data-sonner-toast],
 [data-theme='dark'] [data-sonner-toast] {
   background: #1e293b !important;
@@ -77,7 +77,7 @@
   color: #f1f5f9 !important;
 }
 
-/* ── Typed colours ───────────────────────────────────────────────────── */
+/* -- Typed colours ----------------------------------------------------- */
 [data-sonner-toast][data-type='success'] {
   background: #f0fdf4 !important;
   border-color: #bbf7d0 !important;
@@ -118,21 +118,21 @@
 }
 
 
-/* ── Light mode - default (no type) ─────────────────────────────────── */
+/* -- Light mode - default (no type) ----------------------------------- */
 :root [data-sonner-toast]:not([data-type]) {
   background: #ffffff !important;
   border: 1px solid rgba(0, 0, 0, 0.09) !important;
   color: #0f172a !important;
 }
 
-/* ── Toast title ─────────────────────────────────────────────────────── */
+/* -- Toast title ------------------------------------------------------- */
 [data-sonner-toast] [data-title] {
   font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
 }
 
-/* ── Toast description ───────────────────────────────────────────────── */
+/* -- Toast description ------------------------------------------------- */
 [data-sonner-toast] [data-description] {
   font-size: 12px !important;
   font-weight: 400 !important;
@@ -140,7 +140,7 @@
   margin-top: 2px !important;
 }
 
-/* ── Close button - absolute top-right of the toast card ────────────── */
+/* -- Close button - absolute top-right of the toast card -------------- */
 /* The <li data-sonner-toast> is position:relative, so we can abs-position */
 [data-sonner-toast] [data-close-button],
 [data-sonner-toaster] [data-close-button],
@@ -190,7 +190,7 @@ button[data-close-button] svg {
   height: 9px !important;
 }
 
-/* ── Icon ────────────────────────────────────────────────────────────── */
+/* -- Icon -------------------------------------------------------------- */
 [data-sonner-toast] [data-icon] {
   width: 16px !important;
   height: 16px !important;
@@ -198,7 +198,7 @@ button[data-close-button] svg {
   margin-top: 1px !important;
 }
 
-/* ── Action button ───────────────────────────────────────────────────── */
+/* -- Action button ----------------------------------------------------- */
 [data-sonner-toast] [data-button] {
   font-size: 12px !important;
   font-weight: 600 !important;
@@ -208,10 +208,10 @@ button[data-close-button] svg {
   line-height: 1.5 !important;
 }
 
-/* ── No left border decoration ───────────────────────────────────────── */
+/* -- No left border decoration ----------------------------------------- */
 [data-sonner-toast]::before { display: none !important; }
 
-/* ── Dark mode ───────────────────────────────────────────────────────── */
+/* -- Dark mode --------------------------------------------------------- */
 .dark [data-sonner-toast],
 [data-theme='dark'] [data-sonner-toast] {
   background: #1e293b !important;
@@ -225,7 +225,7 @@ button[data-close-button] svg {
   color: #94a3b8 !important;
 }
 
-/* ── Typed colours (richColors) - keep them but refine ──────────────── */
+/* -- Typed colours (richColors) - keep them but refine ---------------- */
 [data-sonner-toast][data-type='success'] {
   background: #f0fdf4 !important;
   border-color: #bbf7d0 !important;
@@ -274,7 +274,7 @@ button[data-close-button] svg {
 }
 
 
-/* ── Toast card - compact, not full-width ────────────────────────────── */
+/* -- Toast card - compact, not full-width ------------------------------ */
 [data-sonner-toast] {
   position: relative !important;
   border-radius: 12px !important;
@@ -296,21 +296,21 @@ button[data-close-button] svg {
   flex-wrap: nowrap !important;
 }
 
-/* ── Light mode card ─────────────────────────────────────────────────── */
+/* -- Light mode card --------------------------------------------------- */
 :root [data-sonner-toast]:not([data-type]) {
   background: #ffffff !important;
   border: 1px solid rgba(0, 0, 0, 0.07) !important;
   color: #0f172a !important;
 }
 
-/* ── Toast title ─────────────────────────────────────────────────────── */
+/* -- Toast title ------------------------------------------------------- */
 [data-sonner-toast] [data-title] {
   font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: -0.01em !important;
 }
 
-/* ── Toast description ───────────────────────────────────────────────── */
+/* -- Toast description ------------------------------------------------- */
 [data-sonner-toast] [data-description] {
   font-size: 12px !important;
   font-weight: 400 !important;
@@ -318,7 +318,7 @@ button[data-close-button] svg {
   margin-top: 2px !important;
 }
 
-/* ── Close button - pushed to far right as a flex sibling ────────────── */
+/* -- Close button - pushed to far right as a flex sibling -------------- */
 /* Sonner renders [data-close-button] as a sibling inside the li flex container,
    NOT as a child of the content. Use order + margin-left:auto, NOT position:absolute. */
 [data-sonner-toast] [data-close-button],
@@ -371,7 +371,7 @@ button[data-close-button] svg {
   height: 10px !important;
 }
 
-/* ── Action button ───────────────────────────────────────────────────── */
+/* -- Action button ----------------------------------------------------- */
 [data-sonner-toast] [data-button] {
   font-size: 12px !important;
   font-weight: 600 !important;
@@ -381,7 +381,7 @@ button[data-close-button] svg {
   line-height: 1.5 !important;
 }
 
-/* ── Icon container - no background box ─────────────────────────────── */
+/* -- Icon container - no background box ------------------------------- */
 [data-sonner-toast] [data-icon] {
   width: 16px !important;
   height: 16px !important;
@@ -389,7 +389,7 @@ button[data-close-button] svg {
   margin-top: 0 !important;
 }
 
-/* ── Dark mode ───────────────────────────────────────────────────────── */
+/* -- Dark mode --------------------------------------------------------- */
 .dark [data-sonner-toast],
 [data-theme='dark'] [data-sonner-toast] {
   background: #1e293b !important;
@@ -419,7 +419,7 @@ button[data-close-button] svg {
   color: #f1f5f9 !important;
 }
 
-/* ── Rich color overrides - keep Sonner's richColors but refine ──────── */
+/* -- Rich color overrides - keep Sonner's richColors but refine -------- */
 /* Success */
 [data-sonner-toast][data-type='success'] {
   background: #f0fdf4 !important;
@@ -475,7 +475,7 @@ button[data-close-button] svg {
   color: #0f172a !important;
 }
 
-/* ── No vertical left border - Sonner doesn't have one by default ─────── */
+/* -- No vertical left border - Sonner doesn't have one by default ------- */
 /* (this ensures no theme adds one via box-shadow tricks) */
 [data-sonner-toast]::before {
   display: none !important;

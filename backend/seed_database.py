@@ -1,5 +1,5 @@
 """
-Database Seeder for Project Aura - KIRO Specification
+Database Seeder for Aura Care - KIRO Specification
 Seeds all demo data with realistic Ghana-specific content
 """
 

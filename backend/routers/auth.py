@@ -1,5 +1,5 @@
-﻿"""
-Authentication Router  --  Project Aura
+"""
+Authentication Router  --  Aura Care
 JWT auth + registration + password reset + change password
 """
 
@@ -37,7 +37,7 @@ ACCESS_TOKEN_EXPIRE_HOURS = int(os.getenv("ACCESS_TOKEN_EXPIRE_HOURS", "8"))
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
-# ─── Pydantic Models ──────────────────────────────────────────────────────────
+# --- Pydantic Models ----------------------------------------------------------
 
 class Token(BaseModel):
     access_token: str
@@ -96,7 +96,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-# ─── Helpers ──────────────────────────────────────────────────────────────────
+# --- Helpers ------------------------------------------------------------------
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
@@ -154,7 +154,7 @@ def require_role(*roles):
     return check_role
 
 
-# ─── Endpoints ────────────────────────────────────────────────────────────────
+# --- Endpoints ----------------------------------------------------------------
 
 @router.post("/login", response_model=Token)
 @limiter.limit("10/minute")
@@ -259,7 +259,7 @@ async def register(http_request: Request, request: RegisterRequest, db: Session 
     db.add(new_user)
     db.flush()  # get new_user.id
 
-    # ── Auto-create a Patient record for patient-role registrations ──────────
+    # -- Auto-create a Patient record for patient-role registrations ----------
     auto_patient_id = request.linked_patient_id
     if request.role == "patient" and not auto_patient_id:
         try:
@@ -396,15 +396,15 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
             import httpx
             payload = {
                 "personalizations": [{"to": [{"email": user.email}]}],
-                "from": {"email": os.getenv("SENDGRID_FROM_EMAIL", "noreply@projectaura.health"), "name": "Project Aura"},
-                "subject": "Project Aura  --  Password Reset",
+                "from": {"email": os.getenv("SENDGRID_FROM_EMAIL", "noreply@projectaura.health"), "name": "Aura Care"},
+                "subject": "Aura Care  --  Password Reset",
                 "content": [{
                     "type": "text/plain",
                     "value": (
                         f"Hello {user.full_name or user.username},\n\n"
-                        f"A password reset was requested for your Project Aura account.\n\n"
+                        f"A password reset was requested for your Aura Care account.\n\n"
                         f"Click the link below to reset your password (expires in 1 hour):\n{reset_link}\n\n"
-                        f"If you did not request this, ignore this email.\n\nProject Aura Team"
+                        f"If you did not request this, ignore this email.\n\nAura Care Team"
                     )
                 }]
             }
@@ -430,9 +430,9 @@ async def forgot_password(request: ForgotPasswordRequest, db: Session = Depends(
             msg = MIMEText(
                 f"Hello {user.full_name or user.username},\n\n"
                 f"Click the link below to reset your password (expires in 1 hour):\n{reset_link}\n\n"
-                f"If you did not request this, ignore this email.\n\nProject Aura Team"
+                f"If you did not request this, ignore this email.\n\nAura Care Team"
             )
-            msg['Subject'] = 'Project Aura  --  Password Reset'
+            msg['Subject'] = 'Aura Care  --  Password Reset'
             msg['From']    = smtp_user
             msg['To']      = user.email
             smtp_port = int(os.getenv("SMTP_PORT", "587"))

@@ -1,15 +1,15 @@
-﻿/*
- * design-system.css - Project Aura
+/*
+ * design-system.css - Aura Care
  * Cyan-tinted card design with full light/dark mode via CSS custom properties.
  *
- * Light:  Page #c2dde8  Card #e8fafa  Text #0a1f2e→#4d88a0
- * Dark:   Page #0a0a0a  Card #0f1f26  Text #e8edf3→#445a6a
+ * Light:  Page #c2dde8  Card #e8fafa  Text #0a1f2e?#4d88a0
+ * Dark:   Page #0a0a0a  Card #0f1f26  Text #e8edf3?#445a6a
  *
  * All text colour classes use CSS vars - they flip automatically
  * when html.dark is present. No duplicate dark: rule needed.
  */
 
-/* ── TOKEN LAYER: single source of truth ─────────────────────────────────── */
+/* -- TOKEN LAYER: single source of truth ----------------------------------- */
 :root {
   --page-bg:     #c2dde8;
   --card-bg:     #e8fafa;
@@ -52,7 +52,7 @@ html.dark {
   --c-rose:    #fb7185;
 }
 
-/* ── BASE LAYER ─────────────────────────────────────────────────────────── */
+/* -- BASE LAYER ----------------------------------------------------------- */
 @layer base {
   body {
     background-color: var(--page-bg) !important;
@@ -67,7 +67,7 @@ html.dark {
   }
 }
 
-/* ── COMPONENT LAYER ─────────────────────────────────────────────────────── */
+/* -- COMPONENT LAYER ------------------------------------------------------- */
 @layer components {
 
   /* Page wrappers */
@@ -128,7 +128,7 @@ html.dark {
   /* Note: .bg-slate-100 NOT globally overridden - it's used on buttons (bg-slate-100
      on 'Keep going', filter chips, tab bars) and must stay neutral grey. */
 
-  /* ── TEXT COLOURS - auto-flip via vars ── */
+  /* -- TEXT COLOURS - auto-flip via vars -- */
   .text-slate-900, .text-gray-900   { color: var(--text-900) !important; }
   .text-slate-800, .text-gray-800   { color: var(--text-800) !important; }
   .text-slate-700, .text-gray-700   { color: var(--text-700) !important; }
@@ -150,11 +150,11 @@ html.dark {
   .text-amber-600, .text-amber-700  { color: var(--c-warn) !important; }
   .text-rose-600, .text-rose-700    { color: var(--c-rose) !important; }
 
-  /* ── BORDERS - neutral, no teal on inputs ── */
+  /* -- BORDERS - neutral, no teal on inputs -- */
   .border-slate-200 { border-color: #e2e8f0 !important; }
   .border-slate-100 { border-color: #f1f5f9 !important; }
 
-  /* ── INPUTS - white in light, dark navy in dark ── */
+  /* -- INPUTS - white in light, dark navy in dark -- */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
   textarea, select {
     font-size: 13px;
@@ -182,7 +182,7 @@ html.dark {
     outline: none !important;
   }
 
-  /* ── HEADER ── */
+  /* -- HEADER -- */
   header[role="banner"] {
     background: linear-gradient(to right,#0b2d26,#0d6b5e,#0d7399,#1a3a6e) !important;
     position: relative;
@@ -199,13 +199,13 @@ html.dark {
     pointer-events:none;
   }
 
-  /* ── SIDEBAR ── */
+  /* -- SIDEBAR -- */
   aside, .sidebar-root,
   nav[aria-label="Sidebar navigation"], .sidebar-inner {
     background: linear-gradient(180deg,#0b3028 0%,#0d3b2e 30%,#0c3040 65%,#0d1f3c 100%) !important;
   }
 
-  /* ── BUTTONS: remaining blue → teal ── */
+  /* -- BUTTONS: remaining blue ? teal -- */
   .bg-blue-600 { background-color: #0d9488 !important; }
   .bg-blue-700 { background-color: #0f766e !important; }
   /* bg-primary fallback - used in some legacy components */
@@ -215,7 +215,7 @@ html.dark {
   .border-primary { border-color: #0d9488 !important; }
   .focus\:ring-primary\/30:focus { --tw-ring-color: rgba(13,148,136,0.30) !important; }
 
-  /* ── TYPOGRAPHY ── */
+  /* -- TYPOGRAPHY -- */
   h1 { font-size: 1.25rem  !important; font-weight: 700; letter-spacing: -0.01em; -webkit-text-fill-color: unset; }
   h2 { font-size: 1.05rem  !important; font-weight: 600; -webkit-text-fill-color: unset; }
   h3 { font-size: 0.95rem  !important; font-weight: 600; -webkit-text-fill-color: unset; }
@@ -232,7 +232,7 @@ html.dark {
     color: var(--text-500) !important;
   }
 
-  /* ── PADDING SCALE ── */
+  /* -- PADDING SCALE -- */
   .p-4  { padding: 12px !important; }
   .p-5  { padding: 16px !important; }
   .p-6  { padding: 18px !important; }
@@ -242,7 +242,7 @@ html.dark {
   .py-5 { padding-top:14px !important; padding-bottom:14px !important; }
   .py-6 { padding-top:16px !important; padding-bottom:16px !important; }
 
-  /* ── TABLE ── */
+  /* -- TABLE -- */
   thead th {
     font-size:11px !important; font-weight:600 !important;
     text-transform:none !important; letter-spacing:0.02em !important;
@@ -254,7 +254,7 @@ html.dark {
   tbody tr       { border-bottom: 1px solid color-mix(in srgb,var(--card-border) 40%,transparent); }
   tbody tr:hover { background: color-mix(in srgb,var(--card-bg) 70%,var(--page-bg)) !important; }
 
-  /* ── PASTEL BACKGROUNDS - dark softening ── */
+  /* -- PASTEL BACKGROUNDS - dark softening -- */
   html.dark .bg-red-50     { background-color:rgba(220,38,38,0.10)  !important; }
   html.dark .bg-amber-50   { background-color:rgba(217,119,6,0.10)  !important; }
   html.dark .bg-teal-50    { background-color:rgba(13,148,136,0.10) !important; }
@@ -264,7 +264,7 @@ html.dark {
   html.dark .bg-slate-50   { background-color:var(--card-bg)        !important; }
   html.dark .bg-slate-100  { background-color:color-mix(in srgb,var(--card-bg) 80%,#0a0a0a) !important; }
 
-  /* ── BADGES ── */
+  /* -- BADGES -- */
   .badge-critical,.badge-high,.badge-moderate,
   .badge-low,.badge-stable,.badge-info {
     display:inline-flex; align-items:center; gap:3px;
@@ -291,7 +291,7 @@ html.dark {
   html.dark .badge-info     { background:rgba(8,145,178,0.15);  color:#67e8f9; border-color:rgba(8,145,178,0.35);  }
 }
 
-/* ── Force white text on dark hero sections - beats ALL cascade ── */
+/* -- Force white text on dark hero sections - beats ALL cascade -- */
 .hero-text-white                { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
 .hero-text-white *              { color: inherit !important; -webkit-text-fill-color: inherit !important; }
 .hero-text-white h1,
@@ -308,14 +308,14 @@ html.dark {
 .on-dark-bg .text-secondary     { color: #d97706 !important; -webkit-text-fill-color: #d97706 !important; }
 .on-dark-bg .text-muted         { color: rgba(255,255,255,0.65) !important; -webkit-text-fill-color: rgba(255,255,255,0.65) !important; }
 
-/* ── Dropdown menu icon colour ── */
+/* -- Dropdown menu icon colour -- */
 .dropdown-icon { color: var(--text-600) !important; }
 
-/* ── Services notification badges ── */
+/* -- Services notification badges -- */
 .notif-services { --bar: #0d9488; --badge: #f0fdfa; --icon: #0d9488; }
 .notif-booking  { --bar: #7c3aed; --badge: #faf5ff; --icon: #7c3aed; }
 
-/* ── GLOBAL: remove teal ring/border on all focused inputs ─────────────────
+/* -- GLOBAL: remove teal ring/border on all focused inputs -----------------
    Overrides all focus-within:ring-teal-* and focus:ring-teal-* Tailwind classes
    across 27+ components - cleaner than editing each file individually.       */
 *:focus,
@@ -348,14 +348,14 @@ html.dark {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════════
+/* ---------------------------------------------------------------------------
    ADMIN PAGE SCOPE - neutralise global !important overrides
    All admin pages mount inside <div data-admin="true">. Because attribute
    selectors ([data-admin]) have higher specificity than plain class selectors
    (.p-5), these rules win without needing their own !important.
-   ══════════════════════════════════════════════════════════════════════════ */
+   -------------------------------------------------------------------------- */
 
-/* ── Padding scale: restore Tailwind defaults inside admin ── */
+/* -- Padding scale: restore Tailwind defaults inside admin -- */
 [data-admin] .p-2   { padding: 8px;  }
 [data-admin] .p-3   { padding: 12px; }
 [data-admin] .p-4   { padding: 16px; }
@@ -371,7 +371,7 @@ html.dark {
 [data-admin] .py-5  { padding-top: 20px; padding-bottom: 20px; }
 [data-admin] .py-6  { padding-top: 24px; padding-bottom: 24px; }
 
-/* ── Height/width: restore inside admin ── */
+/* -- Height/width: restore inside admin -- */
 [data-admin] .h-12  { height: 48px;  }
 [data-admin] .h-10  { height: 40px;  }
 [data-admin] .h-9   { height: 36px;  }
@@ -380,14 +380,14 @@ html.dark {
 [data-admin] .w-8   { width: 32px;   }
 [data-admin] .w-6   { width: 24px;   }
 
-/* ── Background: admin pages own their own background - stop bleeding ── */
+/* -- Background: admin pages own their own background - stop bleeding -- */
 [data-admin],
 [data-admin] .min-h-screen,
 [data-admin] .min-h-full {
   background-color: var(--page-bg);
 }
 
-/* ── Input overrides: respect dark mode inside admin modals ── */
+/* -- Input overrides: respect dark mode inside admin modals -- */
 [data-admin] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
 [data-admin] textarea,
 [data-admin] select {
@@ -396,7 +396,7 @@ html.dark {
   border-color: var(--card-border) !important;
 }
 
-/* ── Table head/body: let DataTable control its own chrome ── */
+/* -- Table head/body: let DataTable control its own chrome -- */
 [data-admin] thead th {
   background: color-mix(in srgb, var(--card-bg) 55%, var(--page-bg)) !important;
   color: var(--text-400) !important;
@@ -411,12 +411,12 @@ html.dark {
   border-bottom: 1px solid color-mix(in srgb, var(--card-border) 50%, transparent) !important;
 }
 
-/* ── Typography: let admin pages use their own font sizes ── */
+/* -- Typography: let admin pages use their own font sizes -- */
 [data-admin] h1 { font-size: inherit !important; }
 [data-admin] h2 { font-size: inherit !important; }
 [data-admin] h3 { font-size: inherit !important; }
 [data-admin] h4 { font-size: inherit !important; }
 
-/* ── Rounded utilities - not overridden globally but kept consistent ── */
+/* -- Rounded utilities - not overridden globally but kept consistent -- */
 [data-admin] .rounded-2xl { border-radius: 16px; }
 [data-admin] .rounded-xl  { border-radius: 12px; }
