@@ -27,17 +27,9 @@ export default function Welcome() {
   }, [user, token, navigate]);
 
   const activateAndGo = async (dest, skipQuestionnaire = false) => {
-    // Patch the user object AND write a durable skip key that survives
-    // future login responses overwriting the user object in localStorage.
+    // Write localStorage immediately so navigation works even if the API call fails
     if (skipQuestionnaire) {
       localStorage.setItem('questionnaire_skipped', 'true');
-      try {
-        await fetch(`${import.meta.env.VITE_API_URL || ''}/api/preferences/my`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ questionnaire_complete: true, questionnaire_skipped: true }),
-        });
-      } catch (_) { /* non-fatal */ }
     }
     const patchedUser = skipQuestionnaire
       ? { ...user, needs_questionnaire: false, questionnaire_skipped: true }
@@ -46,6 +38,17 @@ export default function Welcome() {
     localStorage.setItem('user', JSON.stringify(patchedUser));
     localStorage.removeItem('pending_user');
     setUser(patchedUser);
+
+    // Fire-and-forget preference update — non-fatal, don't block navigation
+    if (skipQuestionnaire) {
+      const apiBase = import.meta.env.VITE_API_URL || '';
+      fetch(`${apiBase}/api/preferences/my`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ questionnaire_complete: true, questionnaire_skipped: true }),
+      }).catch(() => { /* non-fatal — localStorage flag is the source of truth */ });
+    }
+
     navigate(dest, { replace: true });
   };
 

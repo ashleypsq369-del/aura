@@ -416,16 +416,18 @@ export default function Settings() {
  onClick={async () => {
  try {
  const token = localStorage.getItem('auth_token');
- await fetch(`${window.__AURA_API || ''}/api/preferences/my`, {
+ const apiBase = import.meta.env.VITE_API_URL || '';
+ await fetch(`${apiBase}/api/preferences/my`, {
  method: 'PUT',
  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
  body: JSON.stringify({ questionnaire_complete: true, questionnaire_skipped: true }),
  });
+ localStorage.setItem('questionnaire_skipped', 'true');
  const stored = localStorage.getItem('user');
  if (stored) {
  try { const u = JSON.parse(stored); u.needs_questionnaire = false; localStorage.setItem('user', JSON.stringify(u)); } catch {}
  }
- toast.success('Using standard settings - personalise any time from here');
+ toast.success('Using standard settings — personalise any time from here');
  } catch { toast.error('Could not save preference'); }
  }}
  className="w-full flex items-center gap-4 p-4 bg-[var(--page-bg)] border border-[var(--card-border)] rounded-xl hover:bg-[var(--card-bg)] transition text-left group"

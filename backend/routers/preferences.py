@@ -201,6 +201,16 @@ async def save_preferences(
     }
 
 
+@router.put("/my")
+async def update_my_preferences(
+    data: Dict[str, Any],
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update the current user's own preferences (upsert)."""
+    return await save_preferences(data, current_user, db)
+
+
 @router.get("/my")
 async def get_my_preferences(
     current_user: User = Depends(get_current_user),
