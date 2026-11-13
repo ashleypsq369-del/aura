@@ -205,7 +205,7 @@ function StopModal({ med, onClose, onConfirm, pending }) {
  );
 }
 
-/* ── Medication row (same feel as AlertCard) ─────────────────────────────── */
+/* ── Medication row — mobile-first layout ────────────────────────────────── */
 function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTaken, todayTaken, isTakingLoading }) {
  const isActive = med.is_active;
  const dose = nextDose(med);
@@ -213,73 +213,69 @@ function MedRow({ med, index, canEdit, canLogAdherence, onEdit, onStop, onMarkTa
  <motion.div layout initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-6}}
  className="group rounded-lg border bg-[var(--card-bg)] transition-shadow hover:shadow-sm"
  style={{ borderLeft:`3px solid ${isActive?'#0d9488':'#cbd5e1'}`, borderColor:'#c8d0da' }}>
- <div className="flex items-center gap-3 px-3 py-2.5">
+
+ {/* Main row */}
+ <div className="flex items-start gap-2.5 px-3 py-2.5">
  {/* Icon */}
- <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive?'bg-teal-50 text-teal-600':'bg-slate-100 text-slate-400'}`}>
+ <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${isActive?'bg-teal-50 text-teal-600':'bg-slate-100 text-slate-400'}`}>
  <Pill size={14}/>
  </div>
 
- {/* Left: name + dose info */}
+ {/* Content */}
  <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap">
- <span className="font-semibold text-[var(--text-800)] text-sm truncate">{med.name}</span>
- <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-[var(--text-500)] border border-slate-200'}`}>
+ {/* Name row — full width, never truncates */}
+ <div className="flex items-center gap-2 flex-wrap mb-0.5">
+ <span className="font-semibold text-[var(--text-800)] text-sm leading-snug">{med.name}</span>
+ <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0 ${isActive?'bg-teal-50 text-teal-700 border border-teal-200':'bg-slate-100 text-[var(--text-500)] border border-slate-200'}`}>
  {isActive ? 'Active' : 'Stopped'}
  </span>
  {med.frequency === 'prn' && (
- <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">PRN</span>
+ <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200 flex-shrink-0">PRN</span>
  )}
  {dose && (
- <span className={`text-[11px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 ${
- dose.hoursUntil < 1 ? 'bg-red-50 text-red-600' : dose.hoursUntil < 4 ? 'bg-amber-50 text-amber-600' : 'bg-[var(--card-bg)] text-slate-500'
+ <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0 ${
+ dose.hoursUntil < 1 ? 'bg-red-50 text-red-600 border border-red-200' : dose.hoursUntil < 4 ? 'bg-amber-50 text-amber-600 border border-amber-200' : 'bg-slate-50 text-slate-500 border border-slate-200'
  }`}>
- <Bell size={8}/> {dose.hoursUntil < 1 ? 'Due now' : dose.next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
+ <Bell size={8}/>{dose.hoursUntil < 1 ? 'Due now' : dose.next.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}
  </span>
  )}
  {isActive && todayTaken === true && (
- <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-0.5">
- <CheckCircle size={8}/> Taken
+ <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-0.5 flex-shrink-0">
+ <CheckCircle size={8}/>Taken
  </span>
  )}
- {isActive && todayTaken === false && (
- <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-red-50 text-red-600 border border-red-200 flex items-center gap-0.5">
- <AlertTriangle size={8}/> Not confirmed
- </span>
- )}
- </div>
- <p className="text-xs text-[var(--text-500)] mt-0.5">
- {med.dose} · {freqLabel(med.frequency)}{med.route ? ` · ${med.route}` : ''}
- {med.indication ? <> · <span className="text-slate-400">{med.indication}</span></> : null}
- </p>
  </div>
 
- {/* Right: date + actions */}
- <div className="flex items-center gap-2 flex-shrink-0">
- <span className="text-[11px] text-[var(--text-400)] hidden sm:flex items-center gap-1">
- <Clock size={10}/>
- {med.start_date ? new Date(med.start_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : ' - '}
- </span>
+ {/* Dose details — single readable line */}
+ <p className="text-xs text-[var(--text-500)] leading-relaxed">
+ <span className="font-medium text-[var(--text-700)]">{med.dose}</span>
+ {med.frequency ? <> · {freqLabel(med.frequency)}</> : null}
+ {med.route ? <> · {med.route}</> : null}
+ {med.indication ? <> · <span className="text-[var(--text-400)]">{med.indication}</span></> : null}
+ </p>
+
+ {/* Action row */}
+ <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
  <ReminderBell label={`${med.name} - ${med.dose}`} type="medication" size="sm" />
- {/* Patient / Caregiver: Mark Taken */}
  {isActive && canLogAdherence && todayTaken !== true && (
  <button onClick={() => onMarkTaken(med.id)} disabled={isTakingLoading}
  className="flex items-center gap-1 px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-[11px] font-bold transition disabled:opacity-50">
- {isTakingLoading ? <Loader2 size={10} className="animate-spin"/> : <CheckCircle size={10}/>} Taken
+ {isTakingLoading ? <Loader2 size={10} className="animate-spin"/> : <CheckCircle size={10}/>}Taken
  </button>
  )}
- {/* Clinician: Edit + Stop - compact icon buttons */}
  {canEdit && isActive && (
- <div className="flex items-center gap-1">
+ <>
  <button onClick={() => onEdit(med)}
  className="flex items-center gap-1 px-2 py-1 text-[var(--text-500)] hover:text-[var(--text-700)] hover:bg-slate-100 rounded-lg text-[11px] font-medium transition">
- <Edit2 size={10}/> Edit
+ <Edit2 size={10}/>Edit
  </button>
  <button onClick={() => onStop(med)}
  className="flex items-center gap-1 px-2 py-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg text-[11px] font-medium transition">
- <Ban size={10}/> Stop
+ <Ban size={10}/>Stop
  </button>
- </div>
+ </>
  )}
+ </div>
  </div>
  </div>
  </motion.div>

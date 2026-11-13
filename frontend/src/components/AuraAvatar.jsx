@@ -301,7 +301,7 @@ export default function AuraAvatar() {
  top: -(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 200),
  bottom: 0,
  }}
- className="fixed bottom-4 right-4 z-[80] select-none touch-none"
+ className="fixed bottom-4 right-4 z-[80] select-none touch-none hidden sm:block"
  style={{ userSelect: 'none', maxWidth: 'calc(100vw - 16px)' }}
  >
  <div className="relative flex flex-col items-start gap-2">

@@ -213,6 +213,7 @@ export default function FeedbackWidget() {
         onClick={() => { if (!hasMoved.current) { setOpen(v => !v); if (open) reset(); } }}
         style={{ position:'fixed', left:pos.x, top:pos.y, zIndex:8000,
           cursor:dragging.current?'grabbing':'grab', userSelect:'none', touchAction:'none' }}
+        data-feedback-widget=""
       >
         <motion.div whileHover={{ scale:1.04 }} whileTap={{ scale:0.96 }}
           style={{

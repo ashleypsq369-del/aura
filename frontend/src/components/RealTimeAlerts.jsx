@@ -97,8 +97,8 @@ export default function RealTimeAlerts() {
  <AlertCircle size={20} color="#ffffff" />
  {totalCount > 0 && (
  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
- className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full font-bold flex items-center justify-center border-2 border-white shadow"
- style={{ fontSize: 9, minWidth: 18, minHeight: 18, padding: '0 3px' }}>
+ className="absolute -top-0.5 -right-0.5 bg-red-600 text-white rounded-full font-bold flex items-center justify-center border border-white shadow real-time-badge"
+ style={{ fontSize: 9, minWidth: 15, minHeight: 15, padding: '0 2px' }}>
  {totalCount > 20 ? '20+' : totalCount}
  </motion.span>
  )}

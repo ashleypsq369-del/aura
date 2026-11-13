@@ -198,7 +198,7 @@ export default function Layout({ children }) {
 
  {/* User Section - Right Side */}
  <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
- {/* Dark mode quick toggle */}
+ {/* Dark mode — always visible */}
  <button
  onClick={() => updateTheme(isDark ? 'light' : 'dark')}
  className="flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
@@ -207,7 +207,7 @@ export default function Layout({ children }) {
  {isDark ? <Sun size={16} className="text-yellow-300" /> : <Moon size={16} className="text-white/80" />}
  </button>
 
- {/* Aura Companion */}
+ {/* Aura Companion — always visible */}
  <button
  onClick={() => window.dispatchEvent(new CustomEvent('aura:open'))}
  className="flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
@@ -232,16 +232,18 @@ export default function Layout({ children }) {
  {/* Notification Center */}
  <NotificationCenter />
 
- {/* Task status pill - hidden on xs to save space */}
+ {/* Task status pill - hidden on mobile to save space */}
  {user && (
- <div className="hidden sm:flex items-center">
+ <div className="hidden md:flex items-center">
  <TaskStatusBar compact />
  </div>
  )}
 
- {/* Real-Time Alerts - clinical staff only */}
+ {/* Real-Time Alerts - clinical staff only, hidden on mobile */}
  {user?.role && ['admin', 'clinician', 'caregiver'].includes(user.role) && (
+ <div className="hidden sm:flex">
  <RealTimeAlerts />
+ </div>
  )}
  
  {/* Profile Avatar - Radix DropdownMenu (WAI-ARIA compliant) */}

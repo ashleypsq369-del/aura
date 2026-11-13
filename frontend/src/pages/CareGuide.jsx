@@ -728,12 +728,12 @@ export default function CareGuide() {
         </button>
       </PageHeader>
 
-      {/* ── Two-column layout ── */}
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'16px 20px 48px',
+      {/* ── Two-column layout — stacks on mobile ── */}
+      <div className="care-guide-layout" style={{ maxWidth:1200, margin:'0 auto', padding:'16px 20px 48px',
         display:'grid', gridTemplateColumns:'200px 1fr', gap:16, alignItems:'start' }}>
 
-        {/* ── LEFT: chapter nav ── */}
-        <div style={{ position:'sticky', top:16 }}>
+        {/* ── LEFT: chapter nav — sticky on desktop, normal on mobile ── */}
+        <div className="care-guide-nav" style={{ position:'sticky', top:16 }}>
           <div style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)',
             borderRadius:10, overflow:'hidden' }}>
             <div style={{ padding:'8px 12px', borderBottom:'1px solid var(--card-border)',

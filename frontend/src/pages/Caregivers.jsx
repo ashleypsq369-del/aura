@@ -171,7 +171,15 @@ function WorkerCard({ cg, workload, burnoutLevel, gradPair, trust, onBurnoutClic
 
         {/* Contact */}
         <div style={{ display:'flex', flexDirection:'column', gap:2 }}>
-          {cg.email && <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-500)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}><Mail size={10} style={{ color:'var(--text-400)', flexShrink:0 }} />{cg.email}</p>}
+          {cg.email && (
+            <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-500)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+              <Mail size={10} style={{ color:'var(--text-400)', flexShrink:0 }}/>
+              {/* Show truncated email — hide long domain on mobile */}
+              <span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                {cg.email.length > 28 ? cg.email.replace(/@.*/, '@…') : cg.email}
+              </span>
+            </p>
+          )}
           {cg.phone && <p style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'var(--text-500)' }}><Phone size={10} style={{ color:'var(--text-400)', flexShrink:0 }} />{cg.phone}</p>}
         </div>
 
@@ -527,10 +535,10 @@ export default function Caregivers() {
                 </button>
               )}
             </div>
-            <div style={{ display:'flex', gap:5 }}>
+            <div className="caregiver-filters" style={{ display:'flex', gap:5 }}>
               {FILTERS.map(f=>(
                 <button key={f.id} onClick={()=>{setFilter(f.id);setPage(0);}} style={{
-                  display:'flex', alignItems:'center', gap:5,
+                  display:'flex', alignItems:'center', gap:5, flexShrink:0,
                   padding:'4px 11px', borderRadius:20, fontSize:11, fontWeight:600, cursor:'pointer', transition:'all 0.15s',
                   border: filter===f.id ? '1.5px solid var(--c-teal)' : '1px solid var(--card-border)',
                   background: filter===f.id ? 'color-mix(in srgb,var(--c-teal) 10%,var(--card-bg))' : 'var(--card-bg)',

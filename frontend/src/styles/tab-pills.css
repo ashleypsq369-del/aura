@@ -200,3 +200,122 @@ html.dark .pill-scroll-wrap::before {
     display: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE FIXES — applied from screenshots audit
+   Covers: CareGuide grid, header badges, Feedback button,
+           Caregivers pills, Resources bottom bar, general card spacing
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CareGuide: single column on mobile ── */
+@media (max-width: 768px) {
+  .care-guide-layout {
+    grid-template-columns: 1fr !important;
+    padding: 12px 12px 40px !important;
+  }
+  .care-guide-nav {
+    position: static !important;
+  }
+  .care-guide-nav > div {
+    /* Collapse nav to a compact horizontal scroll strip on mobile */
+    border-radius: 10px;
+  }
+  /* Nav items become a horizontal scroll row */
+  .care-guide-nav > div > div:last-child {
+    max-height: none !important;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 2px;
+    padding: 6px 8px;
+  }
+  .care-guide-nav > div > div:last-child::-webkit-scrollbar { display: none; }
+  .care-guide-nav > div > div:last-child button {
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-bottom: none !important;
+    border-right: 1px solid var(--card-border);
+  }
+}
+
+/* ── RealTimeAlerts badge — smaller border on mobile ── */
+@media (max-width: 640px) {
+  /* Shrink the red badge border so it doesn't look enormous */
+  .real-time-badge {
+    border-width: 1px !important;
+    min-width: 15px !important;
+    min-height: 15px !important;
+  }
+}
+
+/* ── Feedback floating button — don't cover content ── */
+@media (max-width: 640px) {
+  /* Push feedback button up so it doesn't overlap bottom content */
+  [data-feedback-widget] {
+    bottom: 12px !important;
+    right: 10px !important;
+    transform: scale(0.88);
+    transform-origin: bottom right;
+  }
+}
+
+/* ── General card padding reduction on mobile ── */
+@media (max-width: 640px) {
+  /* PageHeader children toolbar wraps better */
+  [data-page] > div:first-child {
+    gap: 8px !important;
+  }
+  /* Reduce outer page padding */
+  [data-page] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ── Resources bottom action bar — icons readable ── */
+@media (max-width: 640px) {
+  .resource-action-bar {
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+  .resource-action-bar button {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+  }
+}
+
+/* ── Caregivers filter pills — scroll not wrap ── */
+@media (max-width: 640px) {
+  .caregiver-filters {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    padding-bottom: 4px;
+  }
+  .caregiver-filters::-webkit-scrollbar { display: none; }
+  .caregiver-filters > * {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* ── Header: reduce right-side gaps on small screens ── */
+@media (max-width: 480px) {
+  header .flex.items-center.gap-0\\.5 {
+    gap: 1px !important;
+  }
+  /* Make header icon buttons slightly smaller */
+  header button.w-8.h-8 {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+/* ── Prevent AuraMascot tooltip from covering content on mobile ── */
+@media (max-width: 640px) {
+  .aura-mascot-tooltip {
+    display: none !important;
+  }
+}
