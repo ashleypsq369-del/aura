@@ -262,7 +262,7 @@ export default function ESASForm() {
                 className="bg-[var(--card-bg)] border-l-4 border-teal-500 rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-bold text-[var(--text-900)] flex items-center gap-2">
-                    <Brain size={14} className="text-purple-500" /> Updated Risk Assessment
+                    <Brain size={14} className="text-teal-600" /> Updated Risk Assessment
                   </p>
                   {mlResult.overall_level && (
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full border capitalize ${RISK_LEVEL_CLASSES[mlResult.overall_level] || RISK_LEVEL_CLASSES.low}`}>

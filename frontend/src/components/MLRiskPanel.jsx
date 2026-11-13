@@ -260,7 +260,7 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  if (isLoading) {
  return (
  <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-sm p-4 flex items-center gap-3">
- <div className="w-7 h-7 rounded-lg bg-violet-50 flex items-center justify-center">
+ <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center">
  <Brain size={14} className="text-teal-600 animate-pulse" />
  </div>
  <div>
@@ -323,12 +323,12 @@ export default function MLRiskPanel({ patientId, compact = false }) {
  {/* Header bar - px-4 py-3 */}
  <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--card-border)]/50">
  <div className="flex items-center gap-2.5">
- <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-violet-50">
+ <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-teal-50">
  <Brain size={14} className="text-teal-600"/>
  </div>
  <div className="flex items-center gap-2 flex-wrap">
  <p className="text-xs font-semibold text-[var(--text-800)] leading-none">Clinical Risk Score</p>
- <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-violet-50 text-teal-700 border border-violet-200">
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-teal-50 text-teal-700 border border-teal-200">
  <span className="w-1.5 h-1.5 rounded-full bg-teal-500"/>
  Aura AI </span>
  {data?.tasks && Object.values(data.tasks).some(t => t.shap_available) && (

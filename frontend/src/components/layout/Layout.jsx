@@ -217,11 +217,11 @@ export default function Layout({ children }) {
  <MessageCircle size={16} className="text-white/80" strokeWidth={2}/>
  </button>
 
- {/* Aura Copilot - clinical roles only, hidden on mobile */}
+ {/* Aura Copilot - clinical roles only — visible on tablet+, hidden only on xs */}
  {user?.role && ['admin', 'clinician', 'caregiver'].includes(user.role) && (
  <button
  onClick={() => window.dispatchEvent(new CustomEvent('aura:copilot-open'))}
- className="hidden md:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
+ className="hidden sm:flex w-8 h-8 items-center justify-center flex-shrink-0 rounded-lg hover:bg-white/20 transition-all"
  aria-label="Open Aura clinical copilot"
  title="Aura Copilot - Clinical Assistant"
  >

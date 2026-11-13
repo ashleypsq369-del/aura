@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -402,7 +402,7 @@ function FamilyDashboard({ user, summary, navigate }) {
 
  const eventTypeConfig = {
  admission: { Icon: UserPlus, color: 'border-teal-500', bg: 'bg-teal-50', iconCls: 'text-teal-600', label: 'Admission' },
- medication_started: { Icon: Pill, color: 'border-purple-500', bg: 'bg-purple-50', iconCls: 'text-purple-600', label: 'Medication' },
+ medication_started: { Icon: Pill, color: 'border-blue-500', bg: 'bg-blue-50', iconCls: 'text-blue-600', label: 'Medication' },
  medication_changed: { Icon: Pill, color: 'border-amber-500', bg: 'bg-amber-50', iconCls: 'text-amber-600', label: 'Medication' },
  assessment: { Icon: FileText, color: 'border-teal-500', bg: 'bg-blue-50', iconCls: 'text-teal-600', label: 'Assessment' },
  daily_care_log: { Icon: Activity, color: 'border-green-500', bg: 'bg-green-50', iconCls: 'text-green-600', label: 'Care Log' },

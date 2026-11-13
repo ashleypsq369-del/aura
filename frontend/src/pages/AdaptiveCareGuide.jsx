@@ -84,8 +84,8 @@ export default function AdaptiveCareGuide() {
                   §  AI-Powered
                 </span>
               </div>
-              <p className="text-purple-100 font-semibold">{guideData.patient_name}</p>
-              <p className="text-purple-200 text-sm">{guideData.diagnosis || 'Diagnosis not recorded'}</p>
+              <p className="text-teal-100 font-semibold">{guideData.patient_name}</p>
+              <p className="text-teal-200 text-sm">{guideData.diagnosis || 'Diagnosis not recorded'}</p>
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className="px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full capitalize">
                   Profile: {(guideData.disease_profile || '').replace(/_/g,' ')}
@@ -100,7 +100,7 @@ export default function AdaptiveCareGuide() {
           </div>
           <button
             onClick={() => navigate(`/patients/${patientId}/care-plan`)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[var(--card-bg)] text-purple-700 rounded-xl font-bold text-sm hover:bg-purple-50 transition shadow-md"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[var(--card-bg)] text-teal-700 rounded-xl font-bold text-sm hover:bg-teal-50 transition shadow-md"
           >
             <FileText size={16}/> View Full Care Plan
           </button>
@@ -186,7 +186,7 @@ export default function AdaptiveCareGuide() {
       {sortedProtocols.length > 0 ? (
         <div className="space-y-4">
           <h2 className="font-bold text-[var(--text-900)] text-lg flex items-center gap-2">
-            <Sparkles size={18} className="text-purple-600"/> Disease-Specific Protocols
+            <Sparkles size={18} className="text-teal-600"/> Disease-Specific Protocols
           </h2>
           {sortedProtocols.map((protocol, idx) => {
             const pstyle = PRIORITY_STYLE[protocol.priority] || PRIORITY_STYLE.medium;

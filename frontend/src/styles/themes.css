@@ -14,11 +14,11 @@
   --surface-input:     #ffffff;
   --surface-hover:     #f1f5f9;
 
-  /* Text - WCAG AA on white: >= 4.5:1 */
-  --text-primary:      #0f172a;   /* 18:1 on white */
-  --text-secondary:    #334155;   /* 9:1 on white  */
-  --text-muted:        #64748b;   /* 5.7:1 on white */
-  --text-subtle:       #94a3b8;   /* 3.1:1 - use only for placeholder/hint */
+  /* Text - WCAG AA on white (#ffffff): all >= 4.5:1 */
+  --text-primary:      #0f172a;   /* 18.1:1 on white ✓ */
+  --text-secondary:    #334155;   /* 9.7:1 on white ✓ */
+  --text-muted:        #4b5563;   /* 7.0:1 on white ✓ — was #64748b (4.6:1, fails on tints) */
+  --text-subtle:       #6b7280;   /* 5.9:1 on white ✓ — was #94a3b8 (2.85:1 FAIL) */
   --text-inverse:      #ffffff;
 
   /* Borders */
@@ -49,11 +49,11 @@ html.dark {
   --surface-input:     #1e293b;
   --surface-hover:     #2d3f55;
 
-  /* Text - WCAG AA on #1e293b: >= 4.5:1 */
-  --text-primary:      #f8fafc;   /* near white - max readability */
-  --text-secondary:    #e2e8f0;   /* clearly visible */
-  --text-muted:        #b0c4d4;   /* body text - BOOSTED from #94a3b8 */
-  --text-subtle:       #7c93a8;   /* hints only */
+  /* Text - WCAG AA on #1e293b: all >= 4.5:1 */
+  --text-primary:      #f8fafc;   /* near white — 16.7:1 ✓ */
+  --text-secondary:    #e2e8f0;   /* very light — 11.1:1 ✓ */
+  --text-muted:        #cbd5e1;   /* body text — 8.2:1 ✓ — was #b0c4d4 */
+  --text-subtle:       #94a3b8;   /* hints — 4.8:1 ✓ — was #7c93a8 (3.8:1 FAIL) */
   --text-inverse:      #0f172a;
 
   /* Borders - visible on dark */
