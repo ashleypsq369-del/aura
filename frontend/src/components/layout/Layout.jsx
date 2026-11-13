@@ -39,7 +39,7 @@ export default function Layout({ children }) {
  const navigate = useNavigate();
  const isDark = theme === 'dark';
 
- // Map route ? page color class for background tinting
+ // Map route → page color class for background tinting
  const getPageClass = () => {
  const p = location.pathname;
  if (p === '/' || p === '/dashboard') return 'page-tint-dashboard';
@@ -265,7 +265,7 @@ export default function Layout({ children }) {
  </button>
  }
  items={[
- { type: 'label', label: `${user?.full_name || 'User'} � ${user?.role?.toUpperCase()}` },
+ { type: 'label', label: `${user?.full_name || 'User'} · ${user?.role?.toUpperCase()}` },
  { type: 'separator' },
  { label: 'My Avatar', icon: User, desc: 'Customise your avatar', onClick: () => setShowAvatarBuilder(true) },
  { label: 'My Profile', icon: User, desc: 'View and edit profile', onClick: () => navigate('/profile') },
@@ -318,7 +318,7 @@ export default function Layout({ children }) {
  {a11ySettings.assistedMode && (
  <div className="assisted-mode-banner sticky top-0 z-20 bg-gradient-to-r from-violet-600 to-purple-700 text-white px-6 py-2.5 flex items-center justify-between shadow-md">
  <div className="flex items-center gap-2">
- <span className="text-lg">??</span>
+ <span className="text-lg">🧠</span>
  <div>
  <span className="font-bold text-sm">Assisted Mode active</span>
  <span className="text-purple-200 text-xs ml-2">- large text & buttons enabled</span>
@@ -354,19 +354,19 @@ export default function Layout({ children }) {
        style={{ fontSize:12, fontWeight:700, color:'var(--c-teal)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--c-teal)', textUnderlineOffset:3 }}>
        About
      </button>
-     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>�</span>
+     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('terms')}
        style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--text-300)', textUnderlineOffset:3 }}>
        Terms
      </button>
-     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>�</span>
+     <span style={{ color:'var(--text-300)', margin:'0 8px' }}>·</span>
      <button type="button" onClick={() => setLegalModal('privacy')}
        style={{ fontSize:12, fontWeight:600, color:'var(--text-500)', background:'none', border:'none', cursor:'pointer', padding:0, textDecoration:'underline', textDecorationColor:'var(--text-300)', textUnderlineOffset:3 }}>
        Privacy
      </button>
    </p>
    <p style={{ fontSize:11, color:'var(--text-400)', margin:0 }}>
-     � {new Date().getFullYear()} Aura Care � Group 31 � All rights reserved � For academic &amp; demonstration use only
+     © {new Date().getFullYear()} Aura Care · Group 31 · All rights reserved · For academic &amp; demonstration use only
    </p>
  </footer>
 

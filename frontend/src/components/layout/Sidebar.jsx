@@ -196,7 +196,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  })();
  const activeItemRef = useRef(null);
 
- // Match exact path OR sub-routes (e.g. /care-guide/123 ? /care-guide)
+ // Match exact path OR sub-routes (e.g. /care-guide/123 → /care-guide)
  const isActive = (path) =>
  location.pathname === path ||
  (path !== '/' && path !== '/dashboard' && path !== '/my-space' &&
@@ -381,7 +381,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  <div className="px-2 py-3 border-t border-white/10 flex-shrink-0">
  <button
  onClick={() => { setIsOpen(false); onOpenAura?.(); }}
- data-tip={!showLabels && sidebarSettings.showLabels ? 'Open Aura AI Companion ?' : undefined}
+ data-tip={!showLabels && sidebarSettings.showLabels ? 'Open Aura AI Companion ✨' : undefined}
  className={`
  sidebar-tip w-full flex items-center px-2 py-2.5 rounded-lg transition-all duration-150 relative group
  ${showLabels ? 'justify-start' : 'justify-center'}
@@ -401,10 +401,10 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  {showLabels && (
    <div style={{ marginTop:10, paddingTop:10, borderTop:'1px solid rgba(255,255,255,0.08)' }}>
      <p style={{ fontSize:10, color:'rgba(255,255,255,0.28)', textAlign:'center', lineHeight:1.6, margin:0 }}>
-       � 2026 Aura Care � Group 31
+       © 2026 Aura Care · Group 31
      </p>
      <p style={{ fontSize:10, color:'rgba(255,255,255,0.18)', textAlign:'center', margin:'2px 0 0' }}>
-       UMaT Tarkwa � Academic prototype
+       UMaT Tarkwa · Academic prototype
      </p>
    </div>
  )}
