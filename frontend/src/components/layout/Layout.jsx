@@ -170,6 +170,13 @@ export default function Layout({ children }) {
  className="hidden md:flex items-center space-x-1.5 text-xs font-semibold"
  style={{ color: 'rgba(255,255,255,0.9)' }}
  >
+         {pathnames.length > 1 && (
+           <button onClick={() => navigate(-1)}
+             className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/20 transition-all flex-shrink-0"
+             aria-label="Go back" title="Go back">
+             <ChevronRight size={15} strokeWidth={2.5} style={{ color:'rgba(255,255,255,0.65)', transform:'rotate(180deg)' }}/>
+           </button>
+         )}
  <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'}
  className="hover:bg-white/20 transition-colors px-2 py-1 rounded-lg"
  style={{ color: 'rgba(255,255,255,0.9)' }}>
@@ -290,6 +297,7 @@ export default function Layout({ children }) {
  className="md:hidden px-4 py-2 text-[11px] text-white/90 flex items-center space-x-1.5 overflow-x-auto whitespace-nowrap font-semibold border-b border-teal-700/30"
  style={{ background: '#0f766e' }}
  >
+ {pathnames.length > 1 && (<button onClick={() => navigate(-1)} className="flex items-center justify-center w-5 h-5 rounded hover:bg-white/20 transition-all" aria-label="Go back"><ChevronRight size={12} strokeWidth={3} className="text-white/70" style={{ transform:'rotate(180deg)' }}/></button>)}
  <Link to={user?.role === 'patient' ? '/my-space' : '/dashboard'} className="hover:text-white px-1.5 py-0.5 rounded-lg hover:bg-white/20">Home</Link>
  {pathnames.map((value, index) => {
  const label = getBreadcrumbName(value);

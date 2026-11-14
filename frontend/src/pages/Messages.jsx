@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Messages - Adaptive light/dark messaging interface
  * - Full CSS var support (light + dark mode)
  * - Contacts tab correctly opens the person's chat
@@ -21,6 +21,7 @@ import Modal, { ModalFooter } from '../components/Modal';
 import { useWS } from '../context/WebSocketContext';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../api/client';
+import AvatarDisplay from '../components/avatar/AvatarDisplay';
 
 /* ─── Emoji ─────────────────────────────────────────────── */
 const EMOJI_GRID = [
@@ -390,9 +391,7 @@ export default function Messages() {
                     <button key={member.user_id}
                       onClick={() => handleContactMessage(member.user_id)}
                       style={{ width:'100%', display:'flex', alignItems:'center', gap:9, padding:'7px 9px', borderRadius:10, marginBottom:4, background:`rgba(13,148,136,0.08)`, border:`1.5px solid rgba(13,148,136,0.2)`, cursor:'pointer', textAlign:'left' }}>
-                      <div style={{ width:32, height:32, borderRadius:'50%', background:'linear-gradient(135deg,#0d9488,#059669)', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:11, fontWeight:800, flexShrink:0 }}>
-                        {member.avatar_initials}
-                      </div>
+                      <AvatarDisplay userId={member.user_id} size={32} />
                       <div style={{ flex:1, minWidth:0 }}>
                         <p style={{ fontSize:12, fontWeight:700, color:S.t900, margin:0 }}>{member.name}</p>
                         <p style={{ fontSize:10, color:S.teal, fontWeight:600, margin:0 }}>{member.relation}</p>
@@ -440,9 +439,7 @@ export default function Messages() {
                       onMouseLeave={e => { if(!isActive) e.currentTarget.style.background='transparent'; }}
                     >
                       <div style={{ position:'relative', flexShrink:0 }}>
-                        <div style={{ width:42, height:42, borderRadius:'50%', background:gradFor(conv.id), display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:13, fontWeight:800, boxShadow:'0 2px 8px rgba(0,0,0,0.15)' }}>
-                          {(other?.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}
-                        </div>
+                        <AvatarDisplay userId={other?.id || other?.user_id} size={42} />
                         {urgency !== 'normal' && (
                           <span style={{ position:'absolute', top:-2, right:-2, width:11, height:11, borderRadius:'50%', background:urg.color, border:`2px solid ${S.cardBg}`, animation:urgency==='urgent'?'pulse 2s infinite':'none' }}/>
                         )}
@@ -542,9 +539,7 @@ export default function Messages() {
                       style={{ display:'flex', justifyContent:isOwn?'flex-end':'flex-start', marginBottom:5, alignItems:'flex-end', gap:6 }}
                     >
                       {!isOwn && (
-                        <div style={{ width:26, height:26, borderRadius:'50%', background:gradFor(selectedConv.id), display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:9, fontWeight:800, flexShrink:0 }}>
-                          {(msg.sender.name||'?').charAt(0).toUpperCase()}
-                        </div>
+                        <AvatarDisplay userId={msg.sender.id} size={26} />
                       )}
                       <div style={{ maxWidth:'68%', display:'flex', flexDirection:'column', alignItems:isOwn?'flex-end':'flex-start' }}>
                         {isAlert && (
@@ -588,9 +583,7 @@ export default function Messages() {
                         </div>
                       </div>
                       {isOwn && (
-                        <div style={{ width:26, height:26, borderRadius:'50%', background:'linear-gradient(135deg,#0d9488,#059669)', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:9, fontWeight:800, flexShrink:0 }}>
-                          {(user.full_name||'Me').charAt(0).toUpperCase()}
-                        </div>
+                        <AvatarDisplay size={26} />
                       )}
                     </motion.div>
                   </div>

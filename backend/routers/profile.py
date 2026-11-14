@@ -23,6 +23,7 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 class ProfileUpdateRequest(BaseModel):
     full_name: Optional[str] = None
+    username: Optional[str] = None   # username change — uniqueness checked in handler
     phone: Optional[str] = None
     gender: Optional[str] = None
     date_of_birth: Optional[str] = None
@@ -108,6 +109,19 @@ async def update_profile(
         current_user.full_name = request.full_name
     if request.phone is not None:
         current_user.phone = request.phone
+    if request.username is not None:
+        new_uname = request.username.strip().lower()
+        if len(new_uname) < 3:
+            raise HTTPException(status_code=400, detail="Username must be at least 3 characters")
+        if len(new_uname) > 30:
+            raise HTTPException(status_code=400, detail="Username must be 30 characters or fewer")
+        import re
+        if not re.match(r'^[a-z0-9._]+$', new_uname):
+            raise HTTPException(status_code=400, detail="Username may only contain letters, numbers, dots, and underscores")
+        existing = db.query(User).filter(User.username == new_uname, User.id != current_user.id).first()
+        if existing:
+            raise HTTPException(status_code=409, detail="That username is already taken")
+        current_user.username = new_uname
 
     # ── UserExtended (demographic) ──
     ext = _get_or_create_extended(db, current_user.id)

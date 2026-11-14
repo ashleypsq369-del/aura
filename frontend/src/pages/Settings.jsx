@@ -8,7 +8,7 @@ import {
  Hand, Activity, Heart, RotateCcw, Info, Smile, RefreshCw,
  PanelLeft, PanelLeftClose, PanelLeftOpen, AlignJustify,
  Sparkles, LayoutGrid, Stethoscope, Briefcase, Users,
- Smartphone, Loader2, Keyboard, BookOpen,
+ Smartphone, Loader2, Keyboard, BookOpen, ArrowLeft,
 } from 'lucide-react';
 import Switch from '../components/ui/Switch';
 import { useAuth } from '../context/AuthContext';
@@ -167,35 +167,57 @@ export default function Settings() {
  </div>
  </motion.div>
 
- {/* -- Tab bar - teal, compact ------------------------------------ */}
- <div className="rounded-xl border border-[var(--card-border)] mb-5 overflow-hidden"
- style={{ background: 'var(--card-bg, #e8fafa)' }}>
- <div className="flex overflow-x-auto scrollbar-none">
+ {/* ── Settings layout: vertical sidebar nav + content panel ──────── */}
+ {/* Desktop: side-by-side. Mobile: list → tap → content (with back) */}
+ <div className="flex gap-5 items-start">
+
+ {/* ── LEFT: Nav menu (always visible desktop, hidden on mobile when tab active) ── */}
+ <div className={`
+ w-full sm:w-56 sm:flex-shrink-0 flex flex-col gap-1
+ rounded-xl border border-[var(--card-border)] overflow-hidden
+ sm:sticky sm:top-4
+ ${tab ? 'hidden sm:flex' : 'flex'}
+ `}
+ style={{ background: 'var(--card-bg)' }}>
  {tabs.map(({ id, label, icon: Icon, tip }) => (
  <button
  key={id}
  onClick={() => setTab(id)}
  title={tip}
- className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all min-w-[48px]
+ className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-all text-left
+ border-b border-[var(--card-border)] last:border-0
  ${tab === id
  ? 'bg-teal-600 text-white'
- : 'border-b border-[var(--card-border)] text-[var(--text-500)] hover:text-teal-600 hover:bg-teal-50/40'
+ : 'text-[var(--text-700)] hover:bg-teal-50 hover:text-teal-700'
  }`}
  >
- <Icon size={tab === id ? 15 : 13} />
- <span className="hidden sm:inline">{label}</span>
- <span className="inline sm:hidden text-[9px] leading-tight text-center max-w-[44px] truncate">{label}</span>
+ <Icon size={16} className="flex-shrink-0" />
+ <span className="flex-1">{label}</span>
+ {tab !== id && <ChevronRight size={14} className="text-[var(--text-300)]" />}
  </button>
  ))}
  </div>
- </div>
+
+ {/* ── RIGHT: Content panel ── */}
+ <div className={`flex-1 min-w-0 w-full ${tab ? 'block' : 'hidden sm:block'}`}>
+ {/* Mobile back button */}
+ {tab && (
+ <button
+ onClick={() => setTab(null)}
+ className="sm:hidden flex items-center gap-2 mb-4 text-sm font-semibold text-teal-700 hover:text-teal-800 transition-colors"
+ >
+ <ArrowLeft size={16} />
+ Back to Settings
+ </button>
+ )}
 
  <AnimatePresence mode="wait">
  <motion.div
  key={tab}
- initial={{ opacity: 0, y: 6 }}
- animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, y: -6 }}
+ initial={{ opacity: 0, x: 8 }}
+ animate={{ opacity: 1, x: 0 }}
+ exit={{ opacity: 0, x: -8 }}
+ transition={{ duration: 0.14 }}
  transition={{ duration: 0.15 }}
  >
 
@@ -900,8 +922,11 @@ export default function Settings() {
 
  </motion.div>
  </AnimatePresence>
- </div>
+ </div>{/* end content panel */}
+ </div>{/* end flex layout */}
+
       <ConfirmDialog />
+ </div>
  </div>
  );
 }

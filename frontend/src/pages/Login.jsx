@@ -63,8 +63,9 @@ export default function Login() {
         if (needsQ) {
           navigate('/setup');
         } else {
-          // Role-based landing pages
-          const dest = {
+          // Restore the last visited route if available, else role-based landing
+          const lastRoute = localStorage.getItem('last_route');
+          const roleDest = {
             patient:   '/my-space',
             family:    '/dashboard',
             caregiver: '/dashboard',
@@ -72,6 +73,8 @@ export default function Login() {
             admin:     '/dashboard',
             provider:  '/services',
           }[u.role] || '/dashboard';
+          const dest = lastRoute && lastRoute !== '/login' ? lastRoute : roleDest;
+          localStorage.removeItem('last_route');
           navigate(dest);
         }
       } else {

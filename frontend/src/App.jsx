@@ -215,12 +215,44 @@ function AppRoutes() {
  const { showAiWidgets, featureSettings } = useAppSettings();
  const { uiFlags } = usePersonalisationFlags();
  const location = useLocation();
- 
+
+ // ── Scroll restoration — save & restore per route ─────────────────────
+ // Saves scroll position in sessionStorage before navigating away,
+ // restores it when returning to the same route.
+ useEffect(() => {
+ const key = `scroll_${location.pathname}`;
+ const saved = sessionStorage.getItem(key);
+ if (saved) {
+ const y = parseInt(saved, 10);
+ // Small delay so the page has rendered before scrolling
+ requestAnimationFrame(() => {
+ const el = document.getElementById('main-content');
+ if (el) el.scrollTop = y;
+ else window.scrollTo(0, y);
+ });
+ }
+ const el = document.getElementById('main-content');
+ const target = el || window;
+ const handleScroll = () => {
+ sessionStorage.setItem(key, String(el ? el.scrollTop : window.scrollY));
+ };
+ target.addEventListener('scroll', handleScroll, { passive: true });
+ return () => target.removeEventListener('scroll', handleScroll);
+ }, [location.pathname]);
+
  // Initialize voice control hook
  useVoiceControl();
  
  // Initialize touch support (haptics + sounds)
  useTouchSupport();
+
+ // ── Persist last visited route ────────────────────────────────────────
+ useEffect(() => {
+ const publicRoutes = ['/', '/login', '/register', '/welcome', '/forgot-password', '/reset-password'];
+ if (!publicRoutes.includes(location.pathname)) {
+ localStorage.setItem('last_route', location.pathname + location.search);
+ }
+ }, [location.pathname, location.search]);
 
  // ── Global personalisation applier ────────────────────────────────────
  // Runs once per login session. Fetches questionnaire prefs from the backend

@@ -27,8 +27,11 @@ export default function Profile() {
   // Profile form state
   const [profileData, setProfileData] = useState({
     full_name: user.full_name || '',
+    username: user.username || '',
     email: user.email || '',
-    phone: user.phone || ''});
+    phone: user.phone || '',
+  });
+  const [usernameError, setUsernameError] = useState('');
 
   // Password form state
   const [passwordData, setPasswordData] = useState({
@@ -90,14 +93,20 @@ export default function Profile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['user-profile']);
-      // Update localStorage user
-      const updatedUser = { ...user, ...profileData };
+      // Update localStorage user with all changed fields
+      const updatedUser = { ...user, ...profileData, username: profileData.username || user.username };
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setEditMode(false);
+      setUsernameError('');
       toast.success('Profile updated successfully');
     },
     onError: (error) => {
-      toast.error(error.response?.data?.detail || 'Failed to update profile');
+      const msg = error.response?.data?.detail || 'Failed to update profile';
+      if (msg.toLowerCase().includes('username') || msg.toLowerCase().includes('taken')) {
+        setUsernameError(msg);
+      } else {
+        toast.error(msg);
+      }
     }
   });
 
@@ -124,7 +133,14 @@ export default function Profile() {
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    updateProfileMutation.mutate(profileData);
+    setUsernameError('');
+    // Basic client-side username validation
+    const uname = profileData.username.trim().toLowerCase();
+    if (uname && uname !== user.username) {
+      if (uname.length < 3) { setUsernameError('Must be at least 3 characters'); return; }
+      if (!/^[a-z0-9._]+$/.test(uname)) { setUsernameError('Only letters, numbers, dots and underscores'); return; }
+    }
+    updateProfileMutation.mutate({ ...profileData, username: uname || undefined });
   };
 
   const handlePasswordSubmit = (e) => {
@@ -292,9 +308,24 @@ export default function Profile() {
                 ))}
 
                 <div>
-                  <label className="block text-xs font-bold text-[var(--text-500)]  mb-1.5">Username</label>
-                  <p className="text-sm font-semibold text-slate-800">@{user.username}</p>
-                  <p className="text-xs text-[var(--text-400)] mt-0.5">Cannot be changed</p>
+                  <label className="block text-xs font-bold text-[var(--text-500)] mb-1.5">Username</label>
+                  {editMode ? (
+                    <div>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-400)] text-sm">@</span>
+                        <input type="text"
+                          value={profileData.username}
+                          onChange={e => { setProfileData({ ...profileData, username: e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, '') }); setUsernameError(''); }}
+                          placeholder="your_username"
+                          className="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"
+                        />
+                      </div>
+                      {usernameError && <p className="text-xs text-red-500 mt-1">{usernameError}</p>}
+                      <p className="text-xs text-[var(--text-400)] mt-0.5">Letters, numbers, dots and underscores only</p>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-semibold text-slate-800">@{user.username}</p>
+                  )}
                 </div>
 
                 {editMode && (
