@@ -220,6 +220,49 @@ async def start_conversation(
         raise HTTPException(status_code=500, detail=f"Failed to start conversation: {str(e)}")
 
 
+@router.delete("/conversations/{conversation_id}")
+async def delete_conversation(
+    conversation_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Remove a user from a conversation (soft-delete their participation).
+    If all participants have left, hard-deletes messages and conversation."""
+    try:
+        participant = db.query(ConversationParticipant).filter(
+            ConversationParticipant.conversation_id == conversation_id,
+            ConversationParticipant.user_id == current_user.id,
+            ConversationParticipant.is_active == True,
+        ).first()
+        if not participant:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+
+        # Soft-delete: mark participant as inactive
+        participant.is_active = False
+        db.flush()
+
+        # Check if any active participants remain
+        remaining = db.query(ConversationParticipant).filter(
+            ConversationParticipant.conversation_id == conversation_id,
+            ConversationParticipant.is_active == True,
+        ).count()
+
+        # If no one left, hard-delete messages and conversation
+        if remaining == 0:
+            db.query(Message).filter(Message.conversation_id == conversation_id).delete()
+            db.query(ConversationParticipant).filter(
+                ConversationParticipant.conversation_id == conversation_id
+            ).delete()
+            db.query(Conversation).filter(Conversation.id == conversation_id).delete()
+
+        db.commit()
+        return {"message": "Conversation removed successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete conversation: {str(e)}")
+
+
 @router.get("/conversations/{conversation_id}/messages")
 async def get_messages(
     conversation_id: int,

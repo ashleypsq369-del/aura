@@ -21,6 +21,30 @@ UPLOAD_DIR = Path("uploads/profiles")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
+# ── Public endpoint: fetch any user's basic avatar info ──────────────────────
+# Used by AvatarDisplay component to show other users' photos system-wide.
+# Returns only non-sensitive fields: avatar_url, full_name, role, gender.
+# Any authenticated user can call this — no admin required.
+@router.get("/user/{user_id}")
+async def get_user_avatar(
+    user_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get a user's public avatar info (name, role, avatar_url, gender). Auth required."""
+    target = db.query(User).filter(User.id == user_id).first()
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+    extended = db.query(UserExtended).filter(UserExtended.user_id == user_id).first()
+    return {
+        "id":         target.id,
+        "full_name":  target.full_name,
+        "role":       target.role,
+        "gender":     extended.gender if extended else None,
+        "avatar_url": extended.avatar_url if extended else None,
+    }
+
+
 class ProfileUpdateRequest(BaseModel):
     full_name: Optional[str] = None
     username: Optional[str] = None   # username change — uniqueness checked in handler

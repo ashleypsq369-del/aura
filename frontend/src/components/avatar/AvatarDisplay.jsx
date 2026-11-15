@@ -65,11 +65,16 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
   }, []);
 
   // Background query - populates on load / after page refresh
+  // Own profile: GET /api/profile (full data)
+  // Other user:  GET /api/profile/user/{id} (public avatar data only)
+  const isSelf = !userId || userId === user?.id;
   const { data: profile } = useQuery({
     queryKey:  ['profile-avatar', targetId],
-    queryFn:   () => apiClient.get('/api/profile').then(r => r.data),
+    queryFn:   () => isSelf
+      ? apiClient.get('/api/profile').then(r => r.data)
+      : apiClient.get(`/api/profile/user/${targetId}`).then(r => r.data),
     enabled:   !!targetId,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
     retry:     false,
   });
 

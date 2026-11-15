@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Send, Search, Users, Plus,
   MessageCircle, UserPlus, Loader2, MessagesSquare, Paperclip, X,
-  Stethoscope, Smile, Reply, ArrowLeft,
+  Stethoscope, Smile, Reply, ArrowLeft, Trash2, AlertTriangle,
 } from 'lucide-react';
 import axios from 'axios';
 import toast from '../utils/toast';
@@ -190,6 +190,19 @@ export default function Messages() {
     },
     onError: e => toast.error(e.response?.data?.detail || 'Failed'),
   });
+
+  /* Delete conversation */
+  const deleteMut = useMutation({
+    mutationFn: (convId) => axios.delete(`${API_URL}/api/messaging/conversations/${convId}`, { headers:authH }),
+    onSuccess: () => {
+      qc.invalidateQueries(['conversations']);
+      setSelectedConv(null);
+      toast.success('Conversation removed');
+    },
+    onError: e => toast.error(e.response?.data?.detail || 'Failed to remove'),
+  });
+
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   /* Auto-scroll */
   useEffect(() => { msgEnd.current?.scrollIntoView({ behavior:'smooth' }); }, [msgsData]);
@@ -429,9 +442,10 @@ export default function Messages() {
                     <motion.div key={conv.id}
                       initial={{ opacity:0 }} animate={{ opacity:1 }}
                       onClick={() => setSelectedConv(conv)}
+                      className="group"
                       style={{
                         display:'flex', alignItems:'center', gap:10, padding:'11px 12px',
-                        cursor:'pointer', transition:'background 0.12s',
+                        cursor:'pointer', transition:'background 0.12s', position:'relative',
                         background: isActive ? 'rgba(13,148,136,0.08)' : 'transparent',
                         borderLeft:`3px solid ${isActive?'#0d9488':urg.color||'transparent'}`,
                       }}
@@ -467,6 +481,20 @@ export default function Messages() {
                           </p>
                         </div>
                       </div>
+                      {/* Delete button — appears on hover */}
+                      <button
+                        onClick={e => { e.stopPropagation(); setConfirmDeleteId(conv.id); }}
+                        title="Remove conversation"
+                        style={{
+                          flexShrink:0, opacity:0, background:'none', border:'none', cursor:'pointer',
+                          padding:5, borderRadius:7, color:S.t400, transition:'all 0.15s',
+                        }}
+                        className="group-hover:opacity-100"
+                        onMouseEnter={e => { e.currentTarget.style.opacity='1'; e.currentTarget.style.color='#ef4444'; e.currentTarget.style.background='rgba(239,68,68,0.08)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color=S.t400; e.currentTarget.style.background='none'; }}
+                      >
+                        <Trash2 size={13}/>
+                      </button>
                     </motion.div>
                   );
                 })
@@ -496,21 +524,39 @@ export default function Messages() {
                   style={{ background:'none', border:'none', cursor:'pointer', padding:4, color:S.t600, display:'flex', alignItems:'center' }}>
                   <ArrowLeft size={18}/>
                 </button>
-                <div style={{ width:38, height:38, borderRadius:'50%', background:gradFor(selectedConv.id), display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:13, fontWeight:800, boxShadow:'0 2px 8px rgba(0,0,0,0.15)' }}>
-                  {(selectedConv.participants[0]?.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}
-                </div>
+                <AvatarDisplay userId={selectedConv.participants[0]?.id || selectedConv.participants[0]?.user_id} size={38} showRing />
                 <div>
                   <p style={{ fontSize:14, fontWeight:800, color:S.t900, margin:0 }}>{selectedConv.participants[0]?.name||'Unknown'}</p>
-                  <p style={{ fontSize:10, color:S.amber, fontWeight:600, margin:0 }}>{selectedConv.participants[0]?.role||'User'} · Active recently</p>
+                  <p style={{ fontSize:10, color:S.amber, fontWeight:600, margin:0, textTransform:'capitalize' }}>{selectedConv.participants[0]?.role||'User'} · Active recently</p>
                 </div>
               </div>
-              <div style={{ display:'flex', gap:4 }}>
-                <button onClick={() => setSelectedConv(null)} title="Back"
-                  style={{ background:'none', border:'none', cursor:'pointer', padding:'4px 2px', color:S.t600, display:'flex', alignItems:'center' }}>
-                  <ArrowLeft size={18}/>
-                </button>
-              </div>
+              <button onClick={() => setConfirmDeleteId(selectedConv.id)} title="Remove conversation"
+                style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 8px', borderRadius:8, color:S.t400,
+                  display:'flex', alignItems:'center', gap:5, fontSize:11, transition:'all 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.color='#ef4444'; e.currentTarget.style.background='rgba(239,68,68,0.08)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color=S.t400; e.currentTarget.style.background='none'; }}>
+                <Trash2 size={14}/><span>Remove</span>
+              </button>
             </div>
+
+            {/* Caution banner — shown when chatting with someone not in your care team */}
+            {(() => {
+              const otherId = selectedConv.participants[0]?.id || selectedConv.participants[0]?.user_id;
+              const isAssigned = careTeam.some(m => String(m.user_id) === String(otherId));
+              const otherRole = selectedConv.participants[0]?.role;
+              const showCaution = !isAssigned && ['clinician','caregiver'].includes(otherRole) && ['patient','family'].includes(user.role);
+              if (!showCaution) return null;
+              return (
+                <div style={{ display:'flex', alignItems:'flex-start', gap:9, padding:'8px 14px',
+                  background:'rgba(217,119,6,0.08)', borderBottom:`1px solid rgba(217,119,6,0.2)`, flexShrink:0 }}>
+                  <AlertTriangle size={13} style={{ color:'#d97706', flexShrink:0, marginTop:1 }}/>
+                  <p style={{ margin:0, fontSize:11, color:'var(--text-700)', lineHeight:1.5 }}>
+                    <strong style={{ color:'#b45309' }}>{selectedConv.participants[0]?.name}</strong> is not your assigned care team member.
+                    For medical advice, please contact your assigned clinician or caregiver.
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* Messages */}
             <div style={{ flex:1, overflowY:'auto', padding:'16px 16px 0', display:'flex', flexDirection:'column', gap:2 }}>
@@ -705,6 +751,50 @@ export default function Messages() {
         @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
         @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
       `}</style>
+
+      {/* ── Confirm Delete Modal ── */}
+      <AnimatePresence>
+        {confirmDeleteId && (
+          <>
+            <motion.div key="del-bg"
+              initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+              onClick={() => setConfirmDeleteId(null)}
+              style={{ position:'fixed', inset:0, zIndex:9500, background:'rgba(0,0,0,0.4)' }}/>
+            <div style={{ position:'fixed', inset:0, zIndex:9501, display:'flex', alignItems:'center', justifyContent:'center', padding:16, pointerEvents:'none' }}>
+              <motion.div key="del-card"
+                initial={{ scale:0.95, opacity:0 }} animate={{ scale:1, opacity:1 }} exit={{ scale:0.95, opacity:0 }}
+                transition={{ type:'spring', damping:28, stiffness:380 }}
+                onClick={e => e.stopPropagation()}
+                style={{ pointerEvents:'all', background:'var(--card-bg)', borderRadius:14, padding:'24px 20px', maxWidth:360, width:'100%',
+                  boxShadow:'0 8px 32px rgba(0,0,0,0.18)', textAlign:'center' }}>
+                <div style={{ width:48, height:48, borderRadius:14, background:'rgba(239,68,68,0.1)',
+                  display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px' }}>
+                  <Trash2 size={22} style={{ color:'#ef4444' }}/>
+                </div>
+                <p style={{ margin:'0 0 6px', fontSize:15, fontWeight:700, color:'var(--text-900)' }}>Remove conversation?</p>
+                <p style={{ margin:'0 0 20px', fontSize:12, color:'var(--text-500)', lineHeight:1.5 }}>
+                  This removes it from your list. The other person can still see it unless they also remove it.
+                </p>
+                <div style={{ display:'flex', gap:10 }}>
+                  <button onClick={() => setConfirmDeleteId(null)}
+                    style={{ flex:1, padding:'9px 0', borderRadius:9, fontSize:13, fontWeight:600,
+                      border:'1px solid var(--card-border)', background:'var(--page-bg)', color:'var(--text-600)', cursor:'pointer' }}>
+                    Cancel
+                  </button>
+                  <button onClick={() => { deleteMut.mutate(confirmDeleteId); setConfirmDeleteId(null); }}
+                    disabled={deleteMut.isPending}
+                    style={{ flex:1, padding:'9px 0', borderRadius:9, fontSize:13, fontWeight:700,
+                      border:'none', background:'#ef4444', color:'#fff', cursor:'pointer', opacity:deleteMut.isPending?0.6:1,
+                      display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+                    {deleteMut.isPending ? <Loader2 size={13} style={{ animation:'spin 1s linear infinite' }}/> : <Trash2 size={13}/>}
+                    Remove
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ── New Chat Modal ── */}
       <Modal isOpen={showNewChat} onClose={() => { setShowNewChat(false); setNewChatSearch(''); }}
