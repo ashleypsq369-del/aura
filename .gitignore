@@ -70,3 +70,15 @@ Thumbs.db
 
 # Backup folder
 frontend_old_backup/
+# ── One-off maintenance scripts (archived in backend/archived_scripts.zip) ──
+backend/check_*.py
+backend/fix_demo_*.py
+backend/patch_demo_*.py
+backend/prod_seed_*.py
+backend/reset_neon_*.py
+backend/migrate_columns.py
+backend/view_pg_db.py
+backend/generate_all_diagrams.py
+backend/evaluate_system.py
+backend/create_test_messages.py
+backend/scrub_secrets.py
