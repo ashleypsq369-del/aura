@@ -13,7 +13,7 @@ import {
   Upload, X, Plus, Loader2, Eye, EyeOff,
   Stethoscope, Activity, Heart, Brain, Users, Hand,
   FileText, User, Mail, Phone, Lock, Calendar, MapPin,
-  Search, ChevronDown, Globe,
+  Search, ChevronDown, Globe, Building2,
 } from 'lucide-react';
 import { servicesAPI } from '../api/client';
 import { toast } from 'sonner';
@@ -1192,7 +1192,7 @@ export default function ProviderRegister() {
             transition={{ duration:1.2, ease:'easeInOut' }}
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-teal-950/65" style={{ zIndex:2 }}/>
+        <div className="absolute inset-0 bg-teal-950/80" style={{ zIndex:2 }}/>
       </div>
 
       {/* Centered card */}
@@ -1215,20 +1215,20 @@ export default function ProviderRegister() {
           <div style={{ display:'inline-flex', background:'rgba(255,255,255,0.12)', borderRadius:12,
             padding:4, gap:3, border:'1px solid rgba(255,255,255,0.2)', backdropFilter:'blur(8px)' }}>
             {[
-              { id:'individual',   label:'Individual Professional', icon:'👤' },
-              { id:'organisation', label:'Organisation / Clinic',   icon:'🏥' },
-            ].map(({ id, label, icon }) => (
+              { id:'individual',   label:'Individual', Icon:Stethoscope },
+              { id:'organisation', label:'Organisation', Icon:Building2  },
+            ].map(({ id, label, Icon }) => (
               <button key={id}
                 onClick={() => { setRegistrationType(id); setStep(0); setOrgStep(0); setServerErr(''); }}
                 style={{
-                  padding:'8px 18px', borderRadius:9, fontSize:12, fontWeight:700,
+                  padding:'9px 20px', borderRadius:9, fontSize:12, fontWeight:700,
                   background: registrationType===id ? '#fff' : 'transparent',
-                  color: registrationType===id ? '#0d9488' : 'rgba(255,255,255,0.75)',
+                  color: registrationType===id ? '#0d9488' : 'rgba(255,255,255,0.85)',
                   border:'none', cursor:'pointer', transition:'all 0.18s',
                   boxShadow: registrationType===id ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
-                  display:'flex', alignItems:'center', gap:6,
+                  display:'flex', alignItems:'center', gap:7,
                 }}>
-                <span>{icon}</span>{label}
+                <Icon size={15} style={{ flexShrink:0 }}/>{label}
               </button>
             ))}
           </div>
@@ -1457,13 +1457,16 @@ export default function ProviderRegister() {
 
         {/* Step label */}
         <div className="text-center mb-3 on-dark-bg">
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.75)' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest"
+            style={{ color:'rgba(255,255,255,0.9)', textShadow:'0 1px 4px rgba(0,0,0,0.6)' }}>
             Step {step+1} of {STEPS.length}
           </p>
-          <h2 className="text-2xl font-bold mt-0.5 hero-text-white" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+          <h2 className="text-2xl font-bold mt-0.5"
+            style={{ color:'#ffffff', textShadow:'0 2px 12px rgba(0,0,0,0.7)', letterSpacing:'-0.01em' }}>
             {STEP_TITLES[step]}
           </h2>
-          <p className="text-sm mt-1 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.8)', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+          <p className="text-sm mt-1 max-w-md mx-auto"
+            style={{ color:'rgba(255,255,255,0.85)', textShadow:'0 1px 6px rgba(0,0,0,0.5)' }}>
             {STEP_SUBTITLES[step]}
           </p>
         </div>
