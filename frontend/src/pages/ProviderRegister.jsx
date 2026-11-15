@@ -13,7 +13,7 @@ import {
   Upload, X, Plus, Loader2, Eye, EyeOff,
   Stethoscope, Activity, Heart, Brain, Users, Hand,
   FileText, User, Mail, Phone, Lock, Calendar, MapPin,
-  Search, ChevronDown,
+  Search, ChevronDown, Globe,
 } from 'lucide-react';
 import { servicesAPI } from '../api/client';
 import { toast } from 'sonner';
@@ -927,6 +927,7 @@ const PROF_VALIDATORS = {
 
 export default function ProviderRegister() {
   const navigate = useNavigate();
+  const [registrationType, setRegistrationType] = useState('individual'); // 'individual' | 'organisation'
   const [step, setStep]         = useState(0);
   const [form, setForm]         = useState(EMPTY);
   const [errors, setErrors]     = useState({});
@@ -934,6 +935,61 @@ export default function ProviderRegister() {
   const [serverErr, setServerErr] = useState('');
   const [submitted, setSubmitted] = useState(null);
   const [bgIdx, setBgIdx]       = useState(0);
+
+  // Org registration state
+  const [orgForm, setOrgForm] = useState({
+    org_name: '', org_type: 'clinic', username: '', email: '', password: '',
+    phone: '', region: '', bio: '', website: '',
+    services_offered: [], terms: false,
+  });
+  const [orgStep, setOrgStep] = useState(0);
+  const [orgErrors, setOrgErrors] = useState({});
+  const [orgSubmitted, setOrgSubmitted] = useState(false);
+
+  const setOrg = (k, v) => setOrgForm(f => ({ ...f, [k]: v }));
+
+  const ORG_TYPES = [
+    { key:'hospital',  label:'Hospital',        color:'#0891b2' },
+    { key:'hospice',   label:'Hospice',          color:'#0d9488' },
+    { key:'clinic',    label:'Clinic',           color:'#059669' },
+    { key:'care_home', label:'Care Home',        color:'#7c3aed' },
+    { key:'ngo',       label:'NGO / Charity',   color:'#d97706' },
+    { key:'pharmacy',  label:'Pharmacy',         color:'#0369a1' },
+  ];
+
+  const ORG_SERVICES = [
+    'Palliative Nursing', 'Physician Services', 'Physiotherapy',
+    'Counselling', 'Spiritual Care', 'Social Work',
+    'Home Visits', 'Respite Care', 'Bereavement Support',
+    'Pain Management', 'Wound Care', 'Medication Management',
+  ];
+
+  const orgSubmitMut = useMutation({
+    mutationFn: (data) => servicesAPI.apply({ ...data, is_organisation: true }),
+    onSuccess: () => setOrgSubmitted(true),
+    onError: (e) => setServerErr(e?.response?.data?.detail || 'Registration failed'),
+  });
+
+  const handleOrgSubmit = () => {
+    if (!orgForm.terms) { setServerErr('Please accept the terms to continue'); return; }
+    if (!orgForm.org_name || !orgForm.email || !orgForm.password || !orgForm.username) {
+      setServerErr('Please fill in all required fields'); return;
+    }
+    orgSubmitMut.mutate({
+      full_name: orgForm.org_name,
+      username: orgForm.username,
+      email: orgForm.email,
+      password: orgForm.password,
+      phone: orgForm.phone,
+      role: 'organisation',
+      org_type: orgForm.org_type,
+      region: orgForm.region,
+      bio: orgForm.bio,
+      website: orgForm.website,
+      services_offered: orgForm.services_offered,
+      service_type: orgForm.org_type,
+    });
+  };
 
   // Cycle background every 6s
   useEffect(() => {
@@ -1154,7 +1210,239 @@ export default function ProviderRegister() {
           </div>
         </div>
 
-        {/* Progress dots */}
+        {/* Individual / Organisation toggle */}
+        <div className="flex justify-center mb-5">
+          <div style={{ display:'inline-flex', background:'rgba(255,255,255,0.12)', borderRadius:12,
+            padding:4, gap:3, border:'1px solid rgba(255,255,255,0.2)', backdropFilter:'blur(8px)' }}>
+            {[
+              { id:'individual',   label:'Individual Professional', icon:'👤' },
+              { id:'organisation', label:'Organisation / Clinic',   icon:'🏥' },
+            ].map(({ id, label, icon }) => (
+              <button key={id}
+                onClick={() => { setRegistrationType(id); setStep(0); setOrgStep(0); setServerErr(''); }}
+                style={{
+                  padding:'8px 18px', borderRadius:9, fontSize:12, fontWeight:700,
+                  background: registrationType===id ? '#fff' : 'transparent',
+                  color: registrationType===id ? '#0d9488' : 'rgba(255,255,255,0.75)',
+                  border:'none', cursor:'pointer', transition:'all 0.18s',
+                  boxShadow: registrationType===id ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
+                  display:'flex', alignItems:'center', gap:6,
+                }}>
+                <span>{icon}</span>{label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── ORGANISATION FLOW ── */}
+        {registrationType === 'organisation' && !orgSubmitted && (
+          <>
+            {/* Org step indicator */}
+            <div className="flex justify-center gap-2 mb-5">
+              {['Account & Identity','Organisation Details','Services & Submit'].map((s, i) => (
+                <div key={s} className="rounded-full transition-all duration-300"
+                  style={{ height:8, width: i===orgStep ? 32 : 8,
+                    background: i < orgStep ? '#2dd4bf' : i===orgStep ? '#0d9488' : 'rgba(255,255,255,0.2)' }}/>
+              ))}
+            </div>
+            <div className="text-center mb-3">
+              <p style={{ color:'rgba(255,255,255,0.75)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em' }}>
+                Step {orgStep+1} of 3
+              </p>
+              <h2 style={{ color:'#fff', fontSize:22, fontWeight:800, margin:'4px 0 2px', textShadow:'0 2px 8px rgba(0,0,0,0.4)' }}>
+                {['Create your account','Tell us about your organisation','Services & final step'][orgStep]}
+              </h2>
+            </div>
+
+            <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+              <div className="h-1.5 bg-teal-500"/>
+              {serverErr && (
+                <div className="mx-6 mt-4 p-3.5 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5">
+                  <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0"/>
+                  <p className="text-sm text-red-700 font-medium flex-1">{serverErr}</p>
+                  <button onClick={() => setServerErr('')} className="text-red-400 hover:text-red-600"><X size={13}/></button>
+                </div>
+              )}
+              <div className="px-7 py-6 space-y-4">
+                {orgStep === 0 && (
+                  <>
+                    <InputGroup id="org_name" label="Organisation name" required>
+                      <div className={inputWrap(orgErrors.org_name)}>
+                        <IconSlot><FileText size={15} className="text-slate-400"/></IconSlot>
+                        <input id="org_name" value={orgForm.org_name} onChange={e => setOrg('org_name', e.target.value)}
+                          placeholder="e.g. Korle Bu Palliative Unit" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                    <InputGroup id="org_username" label="Username" required>
+                      <div className={inputWrap(orgErrors.username)}>
+                        <IconSlot><User size={15} className="text-slate-400"/></IconSlot>
+                        <input id="org_username" value={orgForm.username} onChange={e => setOrg('username', e.target.value.toLowerCase().replace(/[^a-z0-9._]/g,''))}
+                          placeholder="korlebu_palliative" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                    <InputGroup id="org_email" label="Contact email" required>
+                      <div className={inputWrap(orgErrors.email)}>
+                        <IconSlot><Mail size={15} className="text-slate-400"/></IconSlot>
+                        <input id="org_email" type="email" value={orgForm.email} onChange={e => setOrg('email', e.target.value)}
+                          placeholder="contact@organisation.gh" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                    <InputGroup id="org_password" label="Password" required>
+                      <div className={inputWrap(orgErrors.password)}>
+                        <IconSlot><Lock size={15} className="text-slate-400"/></IconSlot>
+                        <input id="org_password" type="password" value={orgForm.password} onChange={e => setOrg('password', e.target.value)}
+                          placeholder="Minimum 8 characters" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                    <InputGroup id="org_phone" label="Phone number">
+                      <div className={inputWrap()}>
+                        <IconSlot><Phone size={15} className="text-slate-400"/></IconSlot>
+                        <input id="org_phone" value={orgForm.phone} onChange={e => setOrg('phone', e.target.value)}
+                          placeholder="+233 XX XXX XXXX" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                  </>
+                )}
+
+                {orgStep === 1 && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-bold text-[var(--text-600)] mb-2">Organisation type *</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {ORG_TYPES.map(t => (
+                          <button key={t.key} type="button" onClick={() => setOrg('org_type', t.key)}
+                            style={{
+                              padding:'10px 8px', borderRadius:10, fontSize:11, fontWeight:700,
+                              border:`2px solid ${orgForm.org_type===t.key ? t.color : '#e2e8f0'}`,
+                              background: orgForm.org_type===t.key ? `${t.color}12` : '#fff',
+                              color: orgForm.org_type===t.key ? t.color : '#64748b',
+                              cursor:'pointer', transition:'all 0.15s',
+                            }}>
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <InputGroup id="org_region" label="Region" required>
+                      <select value={orgForm.region} onChange={e => setOrg('region', e.target.value)}
+                        className="w-full h-11 px-3 border-2 rounded-xl text-sm outline-none bg-white">
+                        <option value="">Select region</option>
+                        {GHANA_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                      </select>
+                    </InputGroup>
+                    <InputGroup id="org_bio" label="About your organisation">
+                      <textarea value={orgForm.bio} onChange={e => setOrg('bio', e.target.value)}
+                        rows={3} placeholder="Describe your organisation, mission and the care you provide..."
+                        className="w-full border-2 border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none resize-none"/>
+                    </InputGroup>
+                    <InputGroup id="org_website" label="Website">
+                      <div className={inputWrap()}>
+                        <IconSlot><Globe size={15} className="text-slate-400"/></IconSlot>
+                        <input value={orgForm.website} onChange={e => setOrg('website', e.target.value)}
+                          placeholder="https://yourorganisation.gh" className="flex-1 h-11 px-3 text-sm outline-none bg-transparent"/>
+                      </div>
+                    </InputGroup>
+                  </>
+                )}
+
+                {orgStep === 2 && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-bold text-[var(--text-600)] mb-2">Services offered (select all that apply)</label>
+                      <div className="flex flex-wrap gap-2">
+                        {ORG_SERVICES.map(s => {
+                          const sel = orgForm.services_offered.includes(s);
+                          return (
+                            <button key={s} type="button"
+                              onClick={() => setOrg('services_offered', sel
+                                ? orgForm.services_offered.filter(x => x !== s)
+                                : [...orgForm.services_offered, s])}
+                              style={{
+                                padding:'5px 12px', borderRadius:99, fontSize:11, fontWeight:600,
+                                border:`1.5px solid ${sel ? '#0d9488' : '#e2e8f0'}`,
+                                background: sel ? '#0d948812' : '#fff',
+                                color: sel ? '#0d9488' : '#64748b', cursor:'pointer',
+                              }}>
+                              {s}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-800">
+                      <strong>What happens next:</strong> Your organisation account will be reviewed by our admin team within 2 business days.
+                      Once approved, your organisation page will appear in the Services directory and staff members can link to your organisation.
+                    </div>
+                    <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-[var(--card-border)] hover:border-teal-300 cursor-pointer bg-white">
+                      <input type="checkbox" checked={orgForm.terms} onChange={e => setOrg('terms', e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded accent-teal-600"/>
+                      <p className="text-xs text-[var(--text-600)] leading-relaxed">
+                        I confirm this organisation is legitimate and agrees to the{' '}
+                        <span className="text-teal-600 font-semibold">Terms of Service</span> and{' '}
+                        <span className="text-teal-600 font-semibold">Provider Code of Conduct</span>.
+                      </p>
+                    </label>
+                  </>
+                )}
+              </div>
+
+              <div className="px-7 pb-6 flex gap-3">
+                {orgStep > 0 && (
+                  <button onClick={() => setOrgStep(s => s-1)}
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-slate-200 text-sm font-semibold text-slate-600 hover:border-slate-300 transition-all">
+                    <ChevronLeft size={16}/>Back
+                  </button>
+                )}
+                {orgStep < 2 ? (
+                  <button onClick={() => {
+                    if (orgStep === 0 && (!orgForm.org_name || !orgForm.email || !orgForm.username || !orgForm.password)) {
+                      setServerErr('Please fill in all required fields'); return;
+                    }
+                    setServerErr(''); setOrgStep(s => s+1);
+                  }}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all"
+                    style={{ background:'#0d9488' }}>
+                    Continue<ChevronRight size={16}/>
+                  </button>
+                ) : (
+                  <button onClick={handleOrgSubmit} disabled={orgSubmitMut.isPending || !orgForm.terms}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50"
+                    style={{ background:'#0d9488' }}>
+                    {orgSubmitMut.isPending ? <><Loader2 size={15} className="animate-spin"/>Submitting…</> : <><CheckCircle size={15}/>Submit Organisation</>}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-white/60 mt-4">
+              Already registered? <Link to="/login" className="text-teal-300 font-semibold hover:text-white transition-colors">Sign in</Link>
+            </p>
+          </>
+        )}
+
+        {/* Org success */}
+        {registrationType === 'organisation' && orgSubmitted && (
+          <motion.div initial={{ opacity:0, scale:0.95 }} animate={{ opacity:1, scale:1 }}
+            className="bg-white/95 backdrop-blur-xl rounded-2xl p-8 text-center shadow-2xl border border-white/30">
+            <div className="w-20 h-20 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-5">
+              <CheckCircle size={44} className="text-teal-600"/>
+            </div>
+            <h2 className="text-2xl font-bold text-[var(--text-900)] mb-2">Organisation Registered!</h2>
+            <p className="text-[var(--text-600)] text-sm mb-5 leading-relaxed">
+              Your organisation <strong>{orgForm.org_name}</strong> has been submitted for review.
+              Our team will verify your details and approve your listing within <strong>2 business days</strong>.
+            </p>
+            <button onClick={() => navigate('/login')}
+              className="w-full py-3 rounded-xl text-sm font-bold text-white"
+              style={{ background:'#0d9488' }}>
+              Go to Login
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── INDIVIDUAL FLOW (original) ── */}
+        {registrationType === 'individual' && (
+        <>
         <div className="flex justify-center gap-2 mb-5">
           {STEPS.map((s, i) => (
             <div key={s} className="rounded-full transition-all duration-300 flex items-center justify-center"
@@ -1256,6 +1544,8 @@ export default function ProviderRegister() {
             Caregiver
           </Link>
         </div>
+        </>
+        )}
       </motion.div>
     </div>
   );
