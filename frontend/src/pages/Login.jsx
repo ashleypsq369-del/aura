@@ -65,6 +65,8 @@ export default function Login() {
         } else {
           // Restore the last visited route if available, else role-based landing
           const lastRoute = localStorage.getItem(`last_route_${u.id}`);
+          const badRoutes = ['/login', '/register', '/provider-register', '/get-started', '/welcome'];
+          const isValidLastRoute = lastRoute && !badRoutes.some(r => lastRoute.startsWith(r));
           const roleDest = {
             patient:   '/my-space',
             family:    '/dashboard',
@@ -73,7 +75,7 @@ export default function Login() {
             admin:     '/dashboard',
             provider:  '/provider-dashboard',
           }[u.role] || '/dashboard';
-          const dest = lastRoute && lastRoute !== '/login' ? lastRoute : roleDest;
+          const dest = isValidLastRoute ? lastRoute : roleDest;
           localStorage.removeItem(`last_route_${u.id}`);
           navigate(dest);
         }

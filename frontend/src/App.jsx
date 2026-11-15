@@ -250,8 +250,8 @@ function AppRoutes() {
 
  // ── Persist last visited route ────────────────────────────────────────
  useEffect(() => {
- const publicRoutes = ['/', '/login', '/register', '/welcome', '/forgot-password', '/reset-password'];
- if (!publicRoutes.includes(location.pathname)) {
+ const publicRoutes = ['/', '/login', '/register', '/register/pending', '/welcome', '/forgot-password', '/reset-password', '/provider-register', '/get-started'];
+ if (!publicRoutes.some(r => location.pathname === r || location.pathname.startsWith(r + '/'))) {
  if (user?.id) localStorage.setItem(`last_route_${user.id}`, location.pathname + location.search);
  }
  }, [location.pathname, location.search, user?.id]);
