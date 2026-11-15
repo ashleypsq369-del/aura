@@ -278,6 +278,7 @@ export default function Layout({ children }) {
  { type: 'separator' },
  { label: 'My Avatar', icon: User, desc: 'Customise your avatar', onClick: () => setShowAvatarBuilder(true) },
  { label: 'My Profile', icon: User, desc: 'View and edit profile', onClick: () => navigate('/profile') },
+ ...(user?.role === 'provider' ? [{ label: 'Provider Hub', icon: Briefcase, desc: 'Manage listings, bookings & profile', onClick: () => navigate('/provider-dashboard') }] : []),
  ...(user?.role === 'provider' ? [{ label: 'Provider Profile', icon: Briefcase, desc: 'Edit your services profile', onClick: () => navigate('/provider-register') }] : []),
  { label: 'Settings', icon: Settings, desc: 'App preferences & accessibility', onClick: () => navigate('/settings') },
  { label: isDark ? 'Light Mode' : 'Dark Mode', icon: isDark ? Sun : Moon, desc: isDark ? 'Switch to light theme' : 'Switch to dark theme', onClick: () => updateTheme(isDark ? 'light' : 'dark') },

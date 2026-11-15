@@ -71,7 +71,7 @@ export default function Login() {
             caregiver: '/dashboard',
             clinician: '/dashboard',
             admin:     '/dashboard',
-            provider:  '/services',
+            provider:  '/provider-dashboard',
           }[u.role] || '/dashboard';
           const dest = lastRoute && lastRoute !== '/login' ? lastRoute : roleDest;
           localStorage.removeItem(`last_route_${u.id}`);

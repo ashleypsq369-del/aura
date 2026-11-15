@@ -51,6 +51,7 @@ import CareGuide from './pages/CareGuide';
 import AdaptiveCareGuide from './pages/AdaptiveCareGuide';
 import ProcedureTraining from './pages/ProcedureTraining';
 import OrganisationProfile from './pages/OrganisationProfile';
+import ProviderDashboard from './pages/ProviderDashboard';
 import AssessmentDashboard from './pages/AssessmentDashboard';
 import ESASForm from './pages/ESASForm';
 import PPSForm from './pages/PPSForm';
@@ -552,6 +553,7 @@ function AppRoutes() {
  <Route path="/care-pathway-selector" element={<CarePathwaySelector />} />
  <Route path="/services" element={<Services />} />
  <Route path="/services/org/:id" element={<OrganisationProfile />} />
+ <Route path="/provider-dashboard" element={<ProviderDashboard />} />
  <Route path="/admin/users" element={<AdminUserManagement />} />
  <Route path="/admin/features" element={<AdminFeaturePanel />} />
  <Route path="/admin/feedback" element={<AdminFeedback />} />

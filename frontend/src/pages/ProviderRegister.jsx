@@ -16,6 +16,7 @@ import {
   Search, ChevronDown, Globe, Building2,
 } from 'lucide-react';
 import { servicesAPI } from '../api/client';
+import LegalModal from '../components/LegalModal';
 import { toast } from 'sonner';
 import LoginSlideshow from '../components/LoginSlideshow';
 import PasswordStrength from '../components/PasswordStrength';
@@ -826,7 +827,7 @@ function StepAssessment({ form, set, questions, serviceColor }) {
 }
 
 /* ── Step 5: Documents & Submit ─────────────────────────────────────────────── */
-function StepDocuments({ form, set }) {
+function StepDocuments({ form, set, onOpenLegal }) {
   const fileRef = useRef();
   const [docs, setDocs] = useState(form.document_names || []);
   const [terms, setTerms] = useState(form.terms || false);
@@ -889,10 +890,9 @@ function StepDocuments({ form, set }) {
           onChange={e => { setTerms(e.target.checked); set('terms', e.target.checked); }}
           className="mt-0.5 w-4 h-4 rounded accent-teal-600"/>
         <p className="text-xs text-[var(--text-600)] leading-relaxed">
-          I declare that all information provided is accurate and truthful. I agree to the{' '}
-          <span className="text-teal-600 font-semibold">Terms of Service</span>,{' '}
-          <span className="text-teal-600 font-semibold">Privacy Policy</span>, and the
-          Aura Care Provider Code of Conduct. I consent to background verification checks.
+          I declare all information is accurate. I agree to the{' '}
+          <button type="button" onClick={() => onOpenLegal?.('terms')} style={{background:'none',border:'none',cursor:'pointer',padding:0,color:'#0d9488',fontWeight:700,textDecoration:'underline',textUnderlineOffset:2}}>Terms of Service</button>{' and '}
+          <button type="button" onClick={() => onOpenLegal?.('privacy')} style={{background:'none',border:'none',cursor:'pointer',padding:0,color:'#0d9488',fontWeight:700,textDecoration:'underline',textUnderlineOffset:2}}>Privacy Policy</button>{' and the Aura Care Provider Code of Conduct. I consent to background verification checks.'}
         </p>
       </label>
     </div>
@@ -929,6 +929,7 @@ export default function ProviderRegister() {
   const navigate = useNavigate();
   const [registrationType, setRegistrationType] = useState('individual'); // 'individual' | 'organisation'
   const [step, setStep]         = useState(0);
+  const [legalModal, setLegalModal] = useState(null);
   const [form, setForm]         = useState(EMPTY);
   const [errors, setErrors]     = useState({});
   const [touched, setTouched]   = useState({});
@@ -1175,6 +1176,7 @@ export default function ProviderRegister() {
   }
 
   return (
+    <>
     <div className="min-h-screen relative flex items-center justify-center p-4 overflow-y-auto">
 
       {/* Full-screen cycling background */}
@@ -1202,9 +1204,9 @@ export default function ProviderRegister() {
 
         {/* Header badge */}
         <div className="flex items-center justify-center mb-4">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full">
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full">
             <img src="/logo.png" alt="Aura Care" className="w-5 h-5 rounded-lg"/>
-            <span className="text-xs font-bold tracking-wide" style={{ color: '#ffffff' }}>Aura Care</span>
+            <span className="text-xs font-bold tracking-wide" className="text-xs font-bold tracking-wide text-white">Aura Care</span>
             <span style={{ color: 'rgba(255,255,255,0.35)' }}>|</span>
             <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#D4A017' }}>Provider Registration</span>
           </div>
@@ -1500,7 +1502,7 @@ export default function ProviderRegister() {
                 {step === 1 && <StepServiceType form={form} set={set} types={types}/>}
                 {step === 2 && <StepProfile form={form} set={set} errors={errors} onBlur={onBlur} selectedType={selectedType}/>}
                 {step === 3 && <StepAssessment form={form} set={set} questions={questions} serviceColor={selectedType?.color}/>}
-                {step === 4 && <StepDocuments form={form} set={set}/>}
+                {step === 4 && <StepDocuments form={form} set={set} onOpenLegal={setLegalModal}/>}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -1551,5 +1553,9 @@ export default function ProviderRegister() {
         )}
       </motion.div>
     </div>
+
+    <LegalModal type="terms"   open={legalModal === 'terms'}   onClose={() => setLegalModal(null)} />
+    <LegalModal type="privacy" open={legalModal === 'privacy'} onClose={() => setLegalModal(null)} />
+    </>
   );
 }

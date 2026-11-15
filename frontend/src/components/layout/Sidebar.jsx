@@ -151,6 +151,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  { name: 'My Profile', path: '/profile', icon: User },
  ],
  provider: [
+ { name: 'Provider Hub', path: '/provider-dashboard', icon: Briefcase },
  { name: 'Services Hub', path: '/services', icon: Briefcase },
  { name: 'Messages', path: '/messages', icon: MessageCircle },
  { name: 'Appointments', path: '/appointments', icon: Calendar },
