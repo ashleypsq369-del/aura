@@ -26,11 +26,111 @@ import {
   Briefcase, Stethoscope, Activity, Heart, Brain, Users,
   Hand, FileText, ArrowRight, Filter, ChevronLeft,
   ChevronRight, Sparkles, Quote, Play, Check,
-  UserCheck, ThumbsUp, Zap, TrendingUp, Phone,
+  UserCheck, ThumbsUp, Zap, TrendingUp, Phone, Building2,
 } from 'lucide-react';
 import { servicesAPI } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import toast from '../utils/toast';
+
+/* ─────────────────────────── ORG CARD ──────────────────────────────────── */
+const ORG_TYPE_COLORS = {
+  hospital:  { color:'#0891b2', label:'Hospital'       },
+  hospice:   { color:'#0d9488', label:'Hospice'        },
+  clinic:    { color:'#059669', label:'Clinic'         },
+  care_home: { color:'#7c3aed', label:'Care Home'      },
+  ngo:       { color:'#d97706', label:'NGO / Charity'  },
+  default:   { color:'#0d9488', label:'Healthcare Org' },
+};
+
+function OrgCard({ org, onClick }) {
+  const meta = ORG_TYPE_COLORS[org.org_type] || ORG_TYPE_COLORS.default;
+  return (
+    <motion.div
+      whileHover={{ y:-4, boxShadow:'0 12px 32px rgba(0,0,0,0.12)' }}
+      whileTap={{ scale:0.98 }}
+      onClick={() => onClick(org)}
+      style={{
+        background:'var(--card-bg)', borderRadius:16,
+        border:'1.5px solid var(--card-border)',
+        overflow:'hidden', cursor:'pointer',
+        boxShadow:'0 2px 10px rgba(0,0,0,0.07)',
+        display:'flex', flexDirection:'column',
+      }}
+    >
+      {/* Top colour band */}
+      <div style={{ height:6, background:meta.color }}/>
+      <div style={{ padding:'18px 16px', flex:1, display:'flex', flexDirection:'column', gap:10 }}>
+        {/* Logo + name row */}
+        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+          <div style={{ width:48, height:48, borderRadius:12, flexShrink:0,
+            background: org.avatar_url ? 'transparent' : `${meta.color}14`,
+            border:`1.5px solid ${meta.color}30`,
+            display:'flex', alignItems:'center', justifyContent:'center',
+            overflow:'hidden' }}>
+            {org.avatar_url
+              ? <img src={org.avatar_url} alt={org.full_name}
+                  style={{ width:'100%', height:'100%', objectFit:'cover' }}
+                  onError={e => e.currentTarget.style.display='none'}/>
+              : <Building2 size={22} style={{ color:meta.color }}/>
+            }
+          </div>
+          <div style={{ minWidth:0 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+              <p style={{ margin:0, fontSize:14, fontWeight:800, color:'var(--text-900)',
+                overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                {org.full_name}
+              </p>
+              {org.is_verified && <BadgeCheck size={14} style={{ color:'#5eead4', flexShrink:0 }}/>}
+            </div>
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:2 }}>
+              <span style={{ fontSize:10, fontWeight:700, padding:'1px 7px', borderRadius:99,
+                background:`${meta.color}12`, color:meta.color }}>{meta.label}</span>
+              {org.region && (
+                <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:10,
+                  color:'var(--text-400)' }}>
+                  <MapPin size={9}/>{org.region}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Bio */}
+        {org.bio && (
+          <p style={{ margin:0, fontSize:12, color:'var(--text-500)', lineHeight:1.55,
+            display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical',
+            overflow:'hidden' }}>
+            {org.bio}
+          </p>
+        )}
+
+        {/* Stats */}
+        <div style={{ display:'flex', gap:12, paddingTop:8,
+          borderTop:'1px solid var(--card-border)' }}>
+          <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11,
+            color:'var(--text-500)' }}>
+            <Users size={11} style={{ color:meta.color }}/>{org.staff_count||0} staff
+          </span>
+          {org.average_rating && (
+            <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11,
+              color:'var(--text-500)' }}>
+              <Star size={10} style={{ color:'#f59e0b', fill:'#f59e0b' }}/>
+              {org.average_rating.toFixed(1)} ({org.total_reviews})
+            </span>
+          )}
+        </div>
+
+        {/* CTA */}
+        <button style={{ marginTop:'auto', width:'100%', padding:'9px 0', borderRadius:10,
+          fontSize:12, fontWeight:700, background:meta.color, color:'#fff',
+          border:'none', cursor:'pointer',
+          display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>
+          <Building2 size={12}/>View Organisation
+        </button>
+      </div>
+    </motion.div>
+  );
+}
 
 /* ─────────────────────────── CONSTANTS ─────────────────────────────────── */
 
@@ -815,6 +915,7 @@ export default function Services() {
   const [viewProvider, setViewProvider] = useState(null);
   const [bookProvider, setBookProvider] = useState(null);
   const [tab, setTab]                   = useState('browse');
+  const [browseMode, setBrowseMode]     = useState('individuals'); // 'individuals' | 'organisations'
   const [heroIdx, setHeroIdx]           = useState(0);
   const [slideIdx, setSlideIdx]         = useState(0);
   const [scrolled, setScrolled]         = useState(false);
@@ -863,6 +964,19 @@ export default function Services() {
   });
   const providers = providersData?.providers || [];
   const total     = providersData?.total || 0;
+
+  const { data: orgsData, isLoading: orgsLoading } = useQuery({
+    queryKey: ['organisations', search, filterRegion, page],
+    queryFn:  () => servicesAPI.getOrganisations({
+      search: search || undefined,
+      region: filterRegion || undefined,
+      page, per_page: 12,
+    }).then(r => r.data).catch(() => ({ organisations: [], total: 0 })),
+    staleTime: 5 * 60 * 1000,
+    enabled: browseMode === 'organisations',
+  });
+  const organisations = orgsData?.organisations || [];
+  const orgsTotal     = orgsData?.total || 0;
 
   // Featured = first 4 providers
   const featured = providers.slice(0, 4);
@@ -1099,32 +1213,104 @@ export default function Services() {
             })}
           </div>
         </section>
-        {/* ── PREMIUM TABS ── */}
+        {/* ── BROWSE / BOOKINGS TABS ── */}
         <div style={{
-          display:'inline-flex', background:'#f1f5f9', borderRadius:14, padding:4,
-          marginBottom:24, gap:2,
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          marginBottom:20, flexWrap:'wrap', gap:10,
         }}>
-          {[
-            { id:'browse',   label:'Browse Providers', icon:Stethoscope },
-            { id:'bookings', label:'My Bookings',       icon:Calendar    },
-          ].map(({ id, label, icon:Ic }) => (
-            <button key={id} onClick={() => setTab(id)} style={{
-              display:'flex', alignItems:'center', gap:7,
-              padding:'9px 18px', borderRadius:10, fontSize:13, fontWeight:700,
-              background: tab===id ? '#fff' : 'transparent',
-              color: tab===id ? '#0d9488' : '#64748b',
-              border:'none', cursor:'pointer', transition:'all 0.2s',
-              boxShadow: tab===id ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
-            }}>
-              <Ic size={14}/> {label}
-            </button>
-          ))}
+          <div style={{ display:'inline-flex', background:'#f1f5f9', borderRadius:14, padding:4, gap:2 }}>
+            {[
+              { id:'browse',   label:'Browse',      icon:Stethoscope },
+              { id:'bookings', label:'My Bookings',  icon:Calendar    },
+            ].map(({ id, label, icon:Ic }) => (
+              <button key={id} onClick={() => setTab(id)} style={{
+                display:'flex', alignItems:'center', gap:7,
+                padding:'9px 18px', borderRadius:10, fontSize:13, fontWeight:700,
+                background: tab===id ? '#fff' : 'transparent',
+                color: tab===id ? '#0d9488' : '#64748b',
+                border:'none', cursor:'pointer', transition:'all 0.2s',
+                boxShadow: tab===id ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+              }}>
+                <Ic size={14}/> {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Individual / Organisation toggle — only on browse tab */}
+          {tab === 'browse' && (
+            <div style={{ display:'inline-flex', background:'var(--page-bg)',
+              borderRadius:12, padding:3, gap:2,
+              border:'1px solid var(--card-border)' }}>
+              {[
+                { id:'individuals',   label:'Individuals', icon:UserCheck  },
+                { id:'organisations', label:'Organisations', icon:Building2 },
+              ].map(({ id, label, icon:Ic }) => (
+                <button key={id}
+                  onClick={() => { setBrowseMode(id); setPage(1); }}
+                  style={{
+                    display:'flex', alignItems:'center', gap:6, padding:'7px 14px',
+                    borderRadius:9, fontSize:12, fontWeight:700,
+                    background: browseMode===id ? 'var(--card-bg)' : 'transparent',
+                    color: browseMode===id ? '#0d9488' : 'var(--text-500)',
+                    border:'none', cursor:'pointer', transition:'all 0.15s',
+                    boxShadow: browseMode===id ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+                  }}>
+                  <Ic size={13}/>{label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* ── BROWSE TAB ── */}
         {tab === 'browse' && (
           <div>
-            {/* Filters row */}
+            {/* Organisations mode */}
+            {browseMode === 'organisations' && (
+              <div>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between',
+                  marginBottom:20, flexWrap:'wrap', gap:10 }}>
+                  <p style={{ fontSize:13, color:'var(--text-500)', margin:0 }}>
+                    <strong style={{ color:'var(--text-900)' }}>{orgsTotal}</strong> organisation{orgsTotal!==1?'s':''} registered
+                  </p>
+                  <select value={filterRegion} onChange={e => { setFilterRegion(e.target.value); setPage(1); }}
+                    style={{ border:'1.5px solid var(--card-border)', borderRadius:10, padding:'8px 12px',
+                      fontSize:12, color:'var(--text-800)', background:'var(--card-bg)', outline:'none' }}>
+                    <option value="">All Regions</option>
+                    {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                </div>
+
+                {orgsLoading ? (
+                  <div style={{ display:'flex', justifyContent:'center', padding:'64px 0' }}>
+                    <Loader2 size={24} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
+                  </div>
+                ) : organisations.length === 0 ? (
+                  <div style={{ background:'var(--card-bg)', borderRadius:16,
+                    border:'2px dashed var(--card-border)', padding:'64px 32px', textAlign:'center' }}>
+                    <Building2 size={36} style={{ color:'var(--text-300)', margin:'0 auto 12px', display:'block' }}/>
+                    <p style={{ fontWeight:700, color:'var(--text-600)', fontSize:15, margin:'0 0 6px' }}>
+                      No organisations yet
+                    </p>
+                    <p style={{ fontSize:12, color:'var(--text-400)', margin:0 }}>
+                      Organisations can register via the "Join as Provider" link.
+                      Approved organisations appear here.
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))', gap:16 }}>
+                    {organisations.map(org => (
+                      <OrgCard key={org.id} org={org}
+                        onClick={() => navigate(`/services/org/${org.id}`)}/>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Individuals mode */}
+            {browseMode === 'individuals' && (
+            <>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap', marginBottom:20 }}>
               <p style={{ fontSize:13, color:'#64748b' }}>
                 {providersError
@@ -1236,6 +1422,7 @@ export default function Services() {
                 )}
               </>
             )}
+            </>)}
           </div>
         )}
 

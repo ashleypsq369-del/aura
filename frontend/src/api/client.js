@@ -455,20 +455,24 @@ export const trustProfileAPI = {
 
 // ── Services Provider Marketplace ─────────────────────────────────────────────
 export const servicesAPI = {
-  getTypes:           ()           => apiClient.get('/api/services/types'),
-  getProviders:       (params)     => apiClient.get('/api/services/providers', { params }),
-  getProvider:        (id)         => apiClient.get(`/api/services/providers/${id}`),
-  getProviderSlots:   (id, date)   => apiClient.get(`/api/services/providers/${id}/slots`, { params: { date } }),
-  apply:              (data)       => apiClient.post('/api/services/apply', data),
-  getMyApplication:   ()           => apiClient.get('/api/services/my-application'),
-  getMyAvailability:  ()           => apiClient.get('/api/services/my-availability'),
-  setAvailability:    (slots)      => apiClient.post('/api/services/my-availability', slots),
-  createBooking:      (data)       => apiClient.post('/api/services/bookings', data),
-  getMyBookings:      ()           => apiClient.get('/api/services/bookings/mine'),
-  confirmBooking:     (id)         => apiClient.put(`/api/services/bookings/${id}/confirm`),
-  cancelBooking:      (id)         => apiClient.put(`/api/services/bookings/${id}/cancel`),
-  getProviderRatings: (id)         => apiClient.get(`/api/services/providers/${id}/ratings`),
-  submitRating:       (data)       => apiClient.post('/api/services/ratings', data),
+  getTypes:              ()        => apiClient.get('/api/services/types'),
+  getProviders:          (params)  => apiClient.get('/api/services/providers', { params }),
+  getProvider:           (id)      => apiClient.get(`/api/services/providers/${id}`),
+  getProviderSlots:      (id,date) => apiClient.get(`/api/services/providers/${id}/slots`, { params: { date } }),
+  apply:                 (data)    => apiClient.post('/api/services/apply', data),
+  getMyApplication:      ()        => apiClient.get('/api/services/my-application'),
+  getMyAvailability:     ()        => apiClient.get('/api/services/my-availability'),
+  setAvailability:       (slots)   => apiClient.post('/api/services/my-availability', slots),
+  createBooking:         (data)    => apiClient.post('/api/services/bookings', data),
+  getMyBookings:         ()        => apiClient.get('/api/services/bookings/mine'),
+  confirmBooking:        (id)      => apiClient.put(`/api/services/bookings/${id}/confirm`),
+  cancelBooking:         (id)      => apiClient.put(`/api/services/bookings/${id}/cancel`),
+  getProviderRatings:    (id)      => apiClient.get(`/api/services/providers/${id}/ratings`),
+  submitRating:          (data)    => apiClient.post('/api/services/ratings', data),
+  // Organisations
+  getOrganisations:      (params)  => apiClient.get('/api/services/organisations', { params }),
+  getOrganisation:       (id)      => apiClient.get(`/api/services/organisations/${id}`),
+  getOrganisationStaff:  (id)      => apiClient.get(`/api/services/organisations/${id}/staff`),
 };
 
 export const providerAdminAPI = {

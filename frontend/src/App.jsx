@@ -50,6 +50,7 @@ import Caregivers from './pages/Caregivers';
 import CareGuide from './pages/CareGuide';
 import AdaptiveCareGuide from './pages/AdaptiveCareGuide';
 import ProcedureTraining from './pages/ProcedureTraining';
+import OrganisationProfile from './pages/OrganisationProfile';
 import AssessmentDashboard from './pages/AssessmentDashboard';
 import ESASForm from './pages/ESASForm';
 import PPSForm from './pages/PPSForm';
@@ -211,7 +212,7 @@ function CareSettingRouteGuard({ children, featurePath }) {
 
 
 function AppRoutes() {
- const { isAuthenticated, logout } = useAuth();
+ const { isAuthenticated, logout, user } = useAuth();
  const { showAiWidgets, featureSettings } = useAppSettings();
  const { uiFlags } = usePersonalisationFlags();
  const location = useLocation();
@@ -250,15 +251,14 @@ function AppRoutes() {
  useEffect(() => {
  const publicRoutes = ['/', '/login', '/register', '/welcome', '/forgot-password', '/reset-password'];
  if (!publicRoutes.includes(location.pathname)) {
- localStorage.setItem('last_route', location.pathname + location.search);
+ if (user?.id) localStorage.setItem(`last_route_${user.id}`, location.pathname + location.search);
  }
- }, [location.pathname, location.search]);
+ }, [location.pathname, location.search, user?.id]);
 
  // ── Global personalisation applier ────────────────────────────────────
  // Runs once per login session. Fetches questionnaire prefs from the backend
  // and applies them to theme, a11y, sidebar, and notifications - so returning
  // users always get their chosen settings without re-doing the questionnaire.
- const { user } = useAuth();
  useEffect(() => {
  if (!isAuthenticated || !user?.id) return;
  // Only run once per session
@@ -551,7 +551,7 @@ function AppRoutes() {
  <Route path="/touch-demo" element={<TouchDemo />} />
  <Route path="/care-pathway-selector" element={<CarePathwaySelector />} />
  <Route path="/services" element={<Services />} />
- <Route path="/services" element={<Services />} />
+ <Route path="/services/org/:id" element={<OrganisationProfile />} />
  <Route path="/admin/users" element={<AdminUserManagement />} />
  <Route path="/admin/features" element={<AdminFeaturePanel />} />
  <Route path="/admin/feedback" element={<AdminFeedback />} />

@@ -64,7 +64,7 @@ export default function Login() {
           navigate('/setup');
         } else {
           // Restore the last visited route if available, else role-based landing
-          const lastRoute = localStorage.getItem('last_route');
+          const lastRoute = localStorage.getItem(`last_route_${u.id}`);
           const roleDest = {
             patient:   '/my-space',
             family:    '/dashboard',
@@ -74,7 +74,7 @@ export default function Login() {
             provider:  '/services',
           }[u.role] || '/dashboard';
           const dest = lastRoute && lastRoute !== '/login' ? lastRoute : roleDest;
-          localStorage.removeItem('last_route');
+          localStorage.removeItem(`last_route_${u.id}`);
           navigate(dest);
         }
       } else {

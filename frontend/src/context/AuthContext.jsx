@@ -111,16 +111,26 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setIsLoggingOut(true);
     try {
-      // Call backend logout endpoint (audit logs tracking)
       await authAPI.logout();
     } catch {
       // Proceed even if backend call fails
     }
-    
-    // Simulate brief transition (1.5 seconds)
+
     setTimeout(() => {
+      // Clear all user-specific state from storage
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user');
+      localStorage.removeItem('questionnaire_skipped');
+      // Clear user-scoped route — use the stored user id before wiping
+      try {
+        const stored = localStorage.getItem('user');
+        if (stored) {
+          const uid = JSON.parse(stored)?.id;
+          if (uid) localStorage.removeItem(`last_route_${uid}`);
+        }
+      } catch (_) {}
+      // Clear scroll positions for this session
+      Object.keys(sessionStorage).filter(k => k.startsWith('scroll_')).forEach(k => sessionStorage.removeItem(k));
       setUser(null);
       setIsLoggingOut(false);
     }, 1500);

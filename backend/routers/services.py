@@ -751,3 +751,128 @@ def submit_rating(
     db.commit()
     db.refresh(r)
     return {"id": r.id, "message": "Rating submitted - thank you!"}
+
+
+# ─── Organisation Endpoints ───────────────────────────────────────────────────
+
+@router.get("/organisations")
+async def list_organisations(
+    search:  Optional[str] = None,
+    region:  Optional[str] = None,
+    org_type:Optional[str] = None,
+    page:    int = Query(1, ge=1),
+    per_page:int = Query(12, le=50),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List approved organisations registered on the platform."""
+    query = db.query(User).filter(
+        User.role == "organisation",
+        User.is_active == True,
+        User.is_verified == True,
+    )
+    if search:
+        query = query.filter(User.full_name.ilike(f"%{search}%"))
+    total = query.count()
+    orgs  = query.offset((page - 1) * per_page).limit(per_page).all()
+    result = []
+    for org in orgs:
+        profile = db.query(UserProfile).filter(UserProfile.user_id == org.id).first()
+        ext     = db.query(UserExtended).filter(UserExtended.user_id == org.id).first()
+        staff_count = db.query(UserProfile).filter(
+            UserProfile.facility_name == org.full_name
+        ).count()
+        avg, count = _avg_rating(db, org.id)
+        result.append({
+            "id":           org.id,
+            "full_name":    org.full_name,
+            "org_type":     getattr(profile, "org_type", None) or "default",
+            "bio":          getattr(profile, "bio", None),
+            "region":       getattr(profile, "region", None),
+            "phone":        org.phone,
+            "email":        org.email,
+            "avatar_url":   ext.avatar_url   if ext else None,
+            "is_verified":  org.is_verified,
+            "average_rating": avg,
+            "total_reviews":  count,
+            "staff_count":    staff_count,
+            "services_offered": getattr(profile, "services_offered", []) or [],
+        })
+    return {"total": total, "page": page, "organisations": result}
+
+
+@router.get("/organisations/{org_id}")
+async def get_organisation(
+    org_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get a single organisation's full profile."""
+    org = db.query(User).filter(User.id == org_id, User.role == "organisation").first()
+    if not org:
+        raise HTTPException(404, "Organisation not found")
+    profile = db.query(UserProfile).filter(UserProfile.user_id == org.id).first()
+    ext     = db.query(UserExtended).filter(UserExtended.user_id == org.id).first()
+    avg, count = _avg_rating(db, org.id)
+    return {
+        "id":           org.id,
+        "full_name":    org.full_name,
+        "org_type":     getattr(profile, "org_type", None) or "default",
+        "bio":          getattr(profile, "bio", None),
+        "region":       getattr(profile, "region", None),
+        "phone":        org.phone,
+        "email":        org.email,
+        "website":      getattr(ext, "website", None),
+        "avatar_url":   ext.avatar_url   if ext else None,
+        "cover_image":  getattr(ext, "cover_image", None),
+        "is_verified":  org.is_verified,
+        "average_rating": avg,
+        "total_reviews":  count,
+        "services_offered": getattr(profile, "services_offered", []) or [],
+        "contact_user_id": org.id,
+    }
+
+
+@router.get("/organisations/{org_id}/staff")
+async def get_organisation_staff(
+    org_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List providers working for this organisation (matched by facility_name)."""
+    org = db.query(User).filter(User.id == org_id, User.role == "organisation").first()
+    if not org:
+        raise HTTPException(404, "Organisation not found")
+    # Staff = active providers whose facility_name matches the org name
+    profiles = db.query(UserProfile).filter(
+        UserProfile.facility_name == org.full_name
+    ).all()
+    staff = []
+    for prof in profiles:
+        u = db.query(User).filter(
+            User.id == prof.user_id,
+            User.role == "provider",
+            User.is_active == True,
+            User.is_verified == True,
+        ).first()
+        if not u:
+            continue
+        ext   = db.query(UserExtended).filter(UserExtended.user_id == u.id).first()
+        avg, cnt = _avg_rating(db, u.id)
+        app = db.query(ProviderApplication).filter(
+            ProviderApplication.user_id == u.id
+        ).order_by(ProviderApplication.id.desc()).first()
+        staff.append({
+            "id":               u.id,
+            "full_name":        u.full_name,
+            "professional_title": u.professional_title,
+            "service_type":     app.service_type if app else prof.specialisation,
+            "region":           prof.region,
+            "avatar_url":       ext.avatar_url if ext else None,
+            "is_verified":      u.is_verified,
+            "average_rating":   avg,
+            "total_reviews":    cnt,
+            "bio":              app.bio if app else None,
+            "years_experience": app.years_experience if app else 0,
+        })
+    return {"staff": staff, "total": len(staff)}
