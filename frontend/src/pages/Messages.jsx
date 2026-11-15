@@ -441,30 +441,16 @@ export default function Messages() {
                   return (
                     <motion.div key={conv.id}
                       initial={{ opacity:0 }} animate={{ opacity:1 }}
-                      className="group"
+                      onClick={() => setSelectedConv(conv)}
                       style={{
-                        position:'relative', overflow:'hidden',
+                        display:'flex', alignItems:'center', gap:10, padding:'11px 12px',
+                        cursor:'pointer', transition:'background 0.12s',
+                        background: isActive ? 'rgba(13,148,136,0.08)' : 'transparent',
                         borderLeft:`3px solid ${isActive?'#0d9488':urg.color||'transparent'}`,
                       }}
+                      onMouseEnter={e => { if(!isActive) e.currentTarget.style.background=`${S.border}44`; }}
+                      onMouseLeave={e => { if(!isActive) e.currentTarget.style.background='transparent'; }}
                     >
-                      {/* Main row — slides left on hover to reveal delete */}
-                      <div
-                        onClick={() => setSelectedConv(conv)}
-                        style={{
-                          display:'flex', alignItems:'center', gap:10, padding:'11px 12px',
-                          cursor:'pointer', transition:'transform 0.2s ease, background 0.12s',
-                          background: isActive ? 'rgba(13,148,136,0.08)' : 'transparent',
-                          position:'relative', zIndex:1,
-                        }}
-                        onMouseEnter={e => {
-                          if(!isActive) e.currentTarget.style.background=`${S.border}44`;
-                          e.currentTarget.style.transform='translateX(-52px)';
-                        }}
-                        onMouseLeave={e => {
-                          if(!isActive) e.currentTarget.style.background='transparent';
-                          e.currentTarget.style.transform='translateX(0)';
-                        }}
-                      >
                       <div style={{ position:'relative', flexShrink:0 }}>
                         <AvatarDisplay userId={other?.id || other?.user_id} size={42} />
                         {urgency !== 'normal' && (
@@ -494,20 +480,6 @@ export default function Messages() {
                           </p>
                         </div>
                       </div>
-                      </div>{/* end sliding row div */}
-                      {/* Delete button — revealed behind the row on hover (WhatsApp style) */}
-                      <button
-                        onClick={e => { e.stopPropagation(); setConfirmDeleteId(conv.id); }}
-                        title="Remove"
-                        style={{
-                          position:'absolute', right:0, top:0, bottom:0, width:52,
-                          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-                          gap:3, background:'#ef4444', border:'none', cursor:'pointer', zIndex:0,
-                        }}
-                      >
-                        <Trash2 size={16} style={{ color:'#fff' }}/>
-                        <span style={{ fontSize:9, fontWeight:700, color:'#fff', letterSpacing:'0.03em' }}>Remove</span>
-                      </button>
                     </motion.div>
                   );
                 })

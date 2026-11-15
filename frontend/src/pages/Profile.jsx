@@ -54,7 +54,7 @@ export default function Profile() {
       });
       toast.success('Profile photo updated!');
       // Fire window event so every AvatarDisplay instance shows the new photo instantly
-      window.dispatchEvent(new CustomEvent('avatar:updated', { detail: { url: res.data.avatar_url } }));
+      window.dispatchEvent(new CustomEvent('avatar:updated', { detail: { url: res.data.avatar_url, userId: user?.id } }));
       // Also invalidate cache for next page load
       queryClient.removeQueries({ queryKey: ['profile-avatar'] });
       setTimeout(() => queryClient.invalidateQueries({ queryKey: ['profile-avatar'] }), 500);

@@ -53,16 +53,20 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
   const [imgErr, setImgErr]             = useState(false);
   const [dicebearErr, setDicebearErr]   = useState(false);
 
-  // Listen for 'avatar:updated' event fired by Profile.jsx right after upload
+  // Listen for 'avatar:updated' event — fired after any user uploads a photo
   useEffect(() => {
     const handler = (e) => {
-      setOverrideUrl(e.detail.url);   // e.g. /uploads/profiles/uuid.jpg
-      setImgErr(false);               // clear any previous load error
-      setDicebearErr(false);
+      // e.detail.url = new avatar URL, e.detail.userId = whose avatar changed (optional)
+      const changedId = e.detail?.userId || user?.id;
+      if (String(changedId) === String(targetId) || !e.detail?.userId) {
+        setOverrideUrl(e.detail.url);
+        setImgErr(false);
+        setDicebearErr(false);
+      }
     };
     window.addEventListener('avatar:updated', handler);
     return () => window.removeEventListener('avatar:updated', handler);
-  }, []);
+  }, [targetId, user?.id]);
 
   // Background query - populates on load / after page refresh
   // Own profile: GET /api/profile (full data)
@@ -74,7 +78,8 @@ export default function AvatarDisplay({ size = 36, className = '', onClick, show
       ? apiClient.get('/api/profile').then(r => r.data)
       : apiClient.get(`/api/profile/user/${targetId}`).then(r => r.data),
     enabled:   !!targetId,
-    staleTime: 60 * 1000,   // 1 min — balance freshness vs requests
+    staleTime: 0,            // always revalidate in background — photos update live
+    cacheTime: 2 * 60 * 1000,
     retry:     false,
   });
 
