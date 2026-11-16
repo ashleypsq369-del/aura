@@ -37,13 +37,8 @@ input[type="submit"]:active,
   opacity: 0.9;
 }
 
-/* Touch target minimum size */
-button,
-a,
-input[type="button"],
-input[type="submit"],
-[role="button"],
-[role="link"] {
+/* Touch target minimum size — opt-in class only */
+.touch-target {
   min-height: 44px;
   min-width: 44px;
 }
@@ -251,20 +246,6 @@ input[type="radio"] + label {
    ============================================================================ */
 
 @media (max-width: 768px) {
-  /* Increase button sizes on mobile */
-  button {
-    min-height: 48px;
-    font-size: 1rem;
-    padding: 12px 20px;
-  }
-  
-  /* Larger tap targets for navigation */
-  nav a,
-  nav button {
-    min-height: 56px;
-    padding: 16px 20px;
-  }
-  
   /* Increase icon button sizes */
   .icon-button {
     min-width: 48px;
