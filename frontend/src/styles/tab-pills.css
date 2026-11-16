@@ -323,62 +323,7 @@ html.dark .pill-scroll-wrap::before {
 /* ── PageHeader: shorter image on mobile ── */
 @media (max-width: 640px) {
   .img-card {
-    height: 90px !important;
-  }
-
-  /* Title smaller on mobile */
-  .img-card h1 {
-    font-size: 15px !important;
-    line-height: 1.2 !important;
-  }
-
-  /* Subtitle smaller */
-  .img-card p {
-    font-size: 10px !important;
-  }
-
-  /* Icon smaller on mobile */
-  .img-card [aria-hidden="true"][style*="width: 40px"] {
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  /* PageHeader toolbar: compact padding, single-row scroll */
-  .img-card + div + div > div,
-  .img-card + div > div {
-    padding: 7px 12px !important;
-    gap: 6px !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    scrollbar-width: none !important;
-    -webkit-overflow-scrolling: touch;
-  }
-  .img-card + div + div > div::-webkit-scrollbar,
-  .img-card + div > div::-webkit-scrollbar { display: none; }
-
-  /* Filter pills in toolbar: never wrap, always scroll */
-  .img-card + div + div > div > button,
-  .img-card + div + div > div > div,
-  .img-card + div > div > button,
-  .img-card + div > div > div {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-    font-size: 11px !important;
-    padding: 4px 10px !important;
-    height: 30px !important;
-  }
-
-  /* Search inputs in toolbar: min-width so they don't collapse */
-  .img-card + div + div > div > div[style*="position:relative"],
-  .img-card + div > div > div[style*="position:relative"] {
-    min-width: 140px !important;
-    flex-shrink: 1 !important;
-  }
-
-  /* Separators in toolbar: hide on mobile */
-  .img-card + div + div > div > div[style*="width:1"],
-  .img-card + div > div > div[style*="width:1"] {
-    display: none !important;
+    height: 110px !important;
   }
 }
 

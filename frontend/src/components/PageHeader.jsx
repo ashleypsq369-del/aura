@@ -201,17 +201,18 @@ export default function PageHeader({
             </div>
           </motion.div>
 
-          {/* RIGHT - stat grid: hidden on mobile (shown below image instead) */}
+          {/* RIGHT - 2×2 grid of stats when 4 items, vertical stack otherwise */}
           {hasStats && (
             <motion.div
               initial={{ opacity: 0, x: 14 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3, delay: 0.12 }}
-              className="hidden sm:grid"
               style={{
+                display:             'grid',
                 gridTemplateColumns: stats.length >= 4 ? '1fr 1fr' : '1fr',
                 gap:                 '6px 12px',
                 flexShrink:          0,
+                paddingRight:        4,
                 background:          'rgba(0,0,0,0.38)',
                 backdropFilter:      'blur(12px)',
                 WebkitBackdropFilter:'blur(12px)',
@@ -243,15 +244,42 @@ export default function PageHeader({
                   onMouseEnter={onClick ? (e => { e.currentTarget.style.opacity = '0.72'; }) : undefined}
                   onMouseLeave={onClick ? (e => { e.currentTarget.style.opacity = '1'; }) : undefined}
                 >
-                  <div aria-hidden="true" style={{ width:3, height:22, borderRadius:2, background:color, flexShrink:0, boxShadow:`0 0 8px ${color}` }}/>
-                  <div style={{ display:'flex', flexDirection:'column', gap:1, textAlign:'left' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-                      {pulse && <span aria-hidden="true" style={{ width:6, height:6, borderRadius:'50%', background:color, animation:'pulse 2s infinite', flexShrink:0 }}/>}
-                      <span style={{ fontSize:15, fontWeight:900, color:'#ffffff', fontVariantNumeric:'tabular-nums', lineHeight:1, letterSpacing:'-0.03em', textShadow:`0 0 12px ${color}` }}>
+                  {/* Colored left-bar accent */}
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      width:        3,
+                      height:       26,
+                      borderRadius: 2,
+                      background:   color,
+                      flexShrink:   0,
+                      boxShadow:    `0 0 10px ${color}, 0 0 20px ${color}88`,
+                    }}
+                  />
+                  {/* Number + label */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      {pulse && (
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            width: 6, height: 6, borderRadius: '50%',
+                            background: color,
+                            animation: 'pulse 2s infinite',
+                            flexShrink: 0,
+                            boxShadow: `0 0 0 2px ${color}35`,
+                          }}
+                        />
+                      )}
+                      <span style={{
+                          fontSize: 16, fontWeight: 900, color: '#ffffff',
+                          fontVariantNumeric: 'tabular-nums', lineHeight: 1, letterSpacing: '-0.03em',
+                          textShadow: `0 0 14px ${color}, 0 1px 2px rgba(0,0,0,0.6)`,
+                        }}>
                         {value}
                       </span>
                     </div>
-                    <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.75)', whiteSpace:'nowrap', lineHeight:1 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', lineHeight: 1 }}>
                       {label}
                     </span>
                   </div>
@@ -263,56 +291,10 @@ export default function PageHeader({
         </div>
       </div>
 
-      {/* ══ Mobile stats strip — only on small screens, below the image ══ */}
-      {hasStats && (
-        <div
-          className="sm:hidden"
-          style={{
-            display:         'flex',
-            overflowX:       'auto',
-            scrollbarWidth:  'none',
-            gap:             0,
-            background:      'var(--card-bg)',
-            borderBottom:    '1px solid var(--card-border)',
-          }}
-        >
-          {stats.map(({ label, value, color = '#2dd4bf', pulse, onClick }, i) => {
-            const Tag = onClick ? 'button' : 'div';
-            return (
-              <Tag
-                key={label}
-                onClick={onClick}
-                style={{
-                  flex:           '1 0 auto',
-                  display:        'flex',
-                  alignItems:     'center',
-                  gap:            7,
-                  padding:        '8px 12px',
-                  background:     'transparent',
-                  border:         'none',
-                  borderRight:    i < stats.length - 1 ? '1px solid var(--card-border)' : 'none',
-                  cursor:         onClick ? 'pointer' : 'default',
-                  fontFamily:     'inherit',
-                  whiteSpace:     'nowrap',
-                }}
-              >
-                <span style={{ width:3, height:20, borderRadius:2, background:color, flexShrink:0 }}/>
-                <div style={{ display:'flex', flexDirection:'column', gap:1 }}>
-                  <span style={{ fontSize:14, fontWeight:900, color:'var(--text-900)', lineHeight:1, fontVariantNumeric:'tabular-nums' }}>
-                    {pulse && <span style={{ display:'inline-block', width:5, height:5, borderRadius:'50%', background:color, marginRight:4, verticalAlign:'middle', animation:'pulse 2s infinite' }}/>}
-                    {value}
-                  </span>
-                  <span style={{ fontSize:9, fontWeight:700, color:'var(--text-400)', textTransform:'uppercase', letterSpacing:'0.05em', lineHeight:1 }}>
-                    {label}
-                  </span>
-                </div>
-              </Tag>
-            );
-          })}
-        </div>
-      )}
-
-      {/* ══ Toolbar strip - search + filters slot ═══════════════════════ */}
+      {/* ══ Toolbar strip - search + filters slot (below image) ═══════
+          Renders children in a clean card-surface row directly under
+          the header image. No more padding wrapper needed in the page.
+      ══════════════════════════════════════════════════════════════ */}
       {hasChildren && (
         <div
           style={{
