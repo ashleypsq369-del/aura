@@ -1,0 +1,24 @@
+/**
+ * tokens.css — Design tokens for Aura Care
+ * T-1.3: z-index scale, touch targets, toggle states
+ * Import after tailwindcss in index.css
+ */
+
+:root {
+  /* Z-index scale — single source of truth */
+  --z-content:  0;
+  --z-sticky:  20;
+  --z-floating: 30;
+  --z-overlay:  40;
+  --z-sheet:    50;
+  --z-modal:    60;
+  --z-toast:    70;
+
+  /* Touch targets */
+  --touch-min: 44px;
+
+  /* Toggle track colours */
+  --toggle-off-track:  #94a3b8;
+  --toggle-off-border: #64748b;
+  --toggle-on-track:   #0d9488;
+}

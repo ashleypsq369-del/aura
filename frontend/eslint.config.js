@@ -43,4 +43,18 @@ export default defineConfig([
       'jsx-a11y/no-static-element-interactions': 'off',
     },
   },
+  // T-1.3: Warn on inline styles in new UI/layout components
+  // These folders should use Tailwind classes (responsive, themeable)
+  {
+    files: [
+      'src/components/ui/**/*.{js,jsx}',
+      'src/components/layout/**/*.{js,jsx}',
+    ],
+    rules: {
+      'no-restricted-syntax': ['warn', {
+        selector: "JSXAttribute[name.name='style']",
+        message: 'Prefer Tailwind classes over inline styles — inline styles cannot use media queries or dark mode.',
+      }],
+    },
+  },
 ])
