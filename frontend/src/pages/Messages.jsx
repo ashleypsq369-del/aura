@@ -328,7 +328,7 @@ export default function Messages() {
 
   /* ── RENDER ── */
   return (
-    <div className="messages-outer" style={{ display:'flex', height:'calc(100vh - 64px)', overflow:'hidden', background:S.pageBg }}>
+    <div className="messages-outer" style={{ display:'flex', height:'calc(100dvh - 64px)', overflow:'hidden', background:S.pageBg }}>
 
       {/* ══ SIDEBAR ══ */}
       <div

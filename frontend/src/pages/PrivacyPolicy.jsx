@@ -53,7 +53,7 @@ export default function PrivacyPolicy() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--page-bg)' }}>
+    <div style={{ minHeight:'100dvh', background:'var(--page-bg)' }}>
       {/* Header */}
       <div style={{ background:'linear-gradient(135deg,#071520 0%,#1d4ed8 50%,#0891b2 100%)', padding:'32px 24px 40px' }}>
         <div style={{ maxWidth:800, margin:'0 auto' }}>

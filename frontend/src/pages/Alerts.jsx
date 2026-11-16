@@ -365,7 +365,7 @@ export default function Alerts() {
     <motion.div
       data-page="alerts"
       initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
-      style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}
+      style={{ minHeight:'100dvh', paddingBottom:40, background:'var(--page-bg)' }}
     >
       <PageHeader
         image="/resources/african/african-nurse-female.jpg"

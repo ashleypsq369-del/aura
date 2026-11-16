@@ -176,7 +176,7 @@ export default function CareSettings() {
 
   return (
     <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.2 }}
-      style={{ minHeight:'100vh', paddingBottom:40, background:'var(--page-bg)' }}>
+      style={{ minHeight:'100dvh', paddingBottom:40, background:'var(--page-bg)' }}>
 
       <PageHeader
         image="/resources/african/african-hospital-ward.jpg"

@@ -698,7 +698,7 @@ export default function CareGuide() {
   };
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--page-bg)' }}>
+    <div style={{ minHeight:'100dvh', background:'var(--page-bg)' }}>
       <PageHeader
         image="/resources/african/african-doctor-female.jpg"
         title="Clinical Care Guide"
@@ -743,7 +743,7 @@ export default function CareGuide() {
             </div>
 
             {/* Nav items */}
-            <div style={{ maxHeight:'calc(100vh - 180px)', overflowY:'auto' }}>
+            <div style={{ maxHeight:'calc(100dvh - 180px)', overflowY:'auto' }}>
               {(search.trim() ? filtered : PROTOCOLS).map(p => {
                 const Icon    = p.icon;
                 const isActive = activeId === p.id && !search.trim();
@@ -791,7 +791,7 @@ export default function CareGuide() {
         <div ref={readRef}
           style={{ background:'var(--card-bg)', border:'1px solid var(--card-border)',
             borderRadius:12, padding:'24px 28px',
-            maxHeight:'calc(100vh - 100px)', overflowY:'auto' }}>
+            maxHeight:'calc(100dvh - 100px)', overflowY:'auto' }}>
           <AnimatePresence mode="wait">
             <motion.div key={protocol.id}
               initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}

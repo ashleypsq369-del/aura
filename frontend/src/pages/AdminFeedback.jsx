@@ -421,7 +421,7 @@ export default function AdminFeedback() {
               style={{
                 width:380, flexShrink:0, borderRadius:12,
                 border:'1px solid var(--card-border)', overflow:'hidden',
-                maxHeight:'calc(100vh - 160px)', position:'sticky', top:80,
+                maxHeight:'calc(100dvh - 160px)', position:'sticky', top:80,
               }}
             >
               <DetailPanel

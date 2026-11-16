@@ -247,7 +247,7 @@ export default function Sidebar({ isOpen, setIsOpen, onOpenAura }) {
  `}
  style={{
  height: isOpen ? '100dvh' : undefined,
- maxHeight: '100vh',
+ maxHeight: '100dvh',
  background: 'linear-gradient(180deg, #0b2d26 0%, #0d3b2e 25%, #0c3347 55%, #0d1f3c 85%, #0a1628 100%)',
  }}
  onMouseEnter={handleMouseEnter}

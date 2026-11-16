@@ -1350,7 +1350,7 @@ html.dark .bg-slate-50 { transition: background-color 0.20s ease !important; }
    SECTION 80: MESSAGES PAGE OUTER WRAPPER - h-[calc] flex container
    --------------------------------------------------------------------------- */
 
-html.dark .h-\[calc\(100vh-100px\)\].flex {
+html.dark .h-\[calc\(100dvh-100px\)\].flex {
   background: var(--surface-bg) !important;
 }
 

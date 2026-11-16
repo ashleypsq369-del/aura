@@ -177,7 +177,7 @@ html.dark .pill-scroll-wrap::before {
   .messages-outer {
     flex-direction: column !important;
     height: auto !important;
-    min-height: 100vh;
+    min-height: 100dvh;
   }
   .messages-outer > .lg-sidebar {
     width: 100% !important;

@@ -160,7 +160,7 @@ export default function OrganisationProfile() {
   };
 
   if (isLoading) return (
-    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center',
+    <div style={{ minHeight:'100dvh', display:'flex', alignItems:'center', justifyContent:'center',
       background:'var(--page-bg)' }}>
       <div style={{ textAlign:'center' }}>
         <div style={{ width:48, height:48, borderRadius:14, background:'rgba(13,148,136,0.1)',
@@ -197,7 +197,7 @@ export default function OrganisationProfile() {
   ];
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--page-bg)', paddingBottom:64 }}>
+    <div style={{ minHeight:'100dvh', background:'var(--page-bg)', paddingBottom:64 }}>
       {/* Back button */}
       <div style={{ maxWidth:1100, margin:'0 auto', padding:'16px 20px 0' }}>
         <button onClick={() => navigate(-1)}

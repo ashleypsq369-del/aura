@@ -238,7 +238,7 @@ export default function FeedbackWidget() {
             transition={{ duration:0.16, ease:'easeOut' }}
             style={{
               position:'fixed', left:panelX, top:Math.max(MARGIN, panelY), zIndex:8001,
-              width:panelW, maxHeight:`min(${panelH}px, calc(100vh - 80px))`,
+              width:panelW, maxHeight:`min(${panelH}px, calc(100dvh - 80px))`,
               background:'var(--card-bg)', borderRadius:16,
               boxShadow:'0 8px 40px rgba(0,0,0,0.22)', border:'1px solid var(--card-border)',
               display:'flex', flexDirection:'column', overflow:'hidden',

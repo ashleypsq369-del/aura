@@ -991,7 +991,7 @@ export default function Services() {
   };
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--page-bg)', paddingBottom:64 }}>
+    <div style={{ minHeight:'100dvh', background:'var(--page-bg)', paddingBottom:64 }}>
 
       {/* ── Sticky compressed search bar ── */}
       <AnimatePresence>

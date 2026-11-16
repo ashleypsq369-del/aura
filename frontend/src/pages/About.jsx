@@ -19,7 +19,7 @@ export default function About() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--page-bg)' }}>
 
       {/* ── Header - same pattern as Terms/Privacy ─────────────────── */}
       <div style={{

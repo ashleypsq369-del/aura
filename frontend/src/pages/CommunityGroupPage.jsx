@@ -192,7 +192,7 @@ export default function CommunityGroupPage() {
   const color = group ? groupColor(group.name) : '#0d9488';
 
   return (
-    <div className="flex flex-col bg-[var(--card-bg)]" style={{ height: 'calc(100vh - 60px)' }}>
+    <div className="flex flex-col bg-[var(--card-bg)]" style={{ height: 'calc(100dvh - 60px)' }}>
 
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-2.5 flex-shrink-0"

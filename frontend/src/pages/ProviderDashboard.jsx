@@ -122,14 +122,14 @@ export default function ProviderDashboard() {
   ];
 
   if (profileLoading) return (
-    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center',
+    <div style={{ minHeight:'100dvh', display:'flex', alignItems:'center', justifyContent:'center',
       background:'var(--page-bg)' }}>
       <Loader2 size={28} style={{ color:'#0d9488', animation:'spin 1s linear infinite' }}/>
     </div>
   );
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--page-bg)', paddingBottom:48 }}>
+    <div style={{ minHeight:'100dvh', background:'var(--page-bg)', paddingBottom:48 }}>
       <PageHeader
         title="Provider Dashboard"
         subtitle={`Welcome back, ${user?.full_name?.split(' ')[0] || 'Provider'}`}

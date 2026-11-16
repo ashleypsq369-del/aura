@@ -455,7 +455,7 @@ function FamilyDashboard({ user, summary, navigate }) {
 
  {/* RIGHT - sticky care updates column */}
  <div className="lg:sticky lg:top-4 self-start">
- <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+ <div className="bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] overflow-hidden flex flex-col" style={{ maxHeight: 'calc(100dvh - 100px)' }}>
  {/* Compact single-line header */}
  <div className="flex items-center justify-between px-3 py-2.5 border-b border-[var(--card-border)] flex-shrink-0">
  <div className="flex items-center gap-1.5">

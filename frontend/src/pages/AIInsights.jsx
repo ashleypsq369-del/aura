@@ -933,7 +933,7 @@ export default function AIInsights() {
   const isLoading = sysLoad && batchLoad && !patientsBase?.length;
 
   return (
-    <div style={{ minHeight:'100vh', paddingBottom:32, background:'var(--page-bg)' }}>
+    <div style={{ minHeight:'100dvh', paddingBottom:32, background:'var(--page-bg)' }}>
 
       <PageHeader
         image="/resources/headers/header-ai-insights.jpg"

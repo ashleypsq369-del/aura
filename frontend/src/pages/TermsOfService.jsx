@@ -68,7 +68,7 @@ export default function TermsOfService() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--page-bg)' }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--page-bg)' }}>
       {/* Header */}
       <div style={{
         background: 'linear-gradient(135deg,#071520 0%,#0b3028 50%,#0891b2 100%)',
