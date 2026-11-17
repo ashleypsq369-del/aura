@@ -98,7 +98,7 @@ export default function Login() {
 
       {/* ── Slideshow ─────────────────────────────────────────────────────── */}
       {/* Mobile: compact banner at the top */}
-      <div className="block lg:hidden w-full flex-shrink-0" style={{ height: 220 }}>
+      <div className="block lg:hidden w-full flex-shrink-0" style={{ height: 260 }}>
         <LoginSlideshow />
       </div>
 
